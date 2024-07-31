@@ -33,6 +33,9 @@
 	if (permission_exists('voicemail_view')) {
 		//access granted
 	}
+	elseif (permission_exists('voicemail_message_view')) {
+		header('Location: /app/voicemails/voicemail_messages.php');
+	}
 	else {
 		echo "access denied";
 		exit;
