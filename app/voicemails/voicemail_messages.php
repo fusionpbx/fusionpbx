@@ -285,7 +285,6 @@
 	$vm->order_by = $order_by;
 	$vm->order = $order;
 	$vm->offset = $offset;
-	$voicemails = $vm->messages();
 
 //count messages and detect if any transcriptions available
 	$new_messages = $num_rows = 0;
