@@ -8,6 +8,7 @@ if (session:ready()) then
 	json_data = session:getVariable("json_data");
 	caller_id_name = session:getVariable("caller_id_name");
 	caller_id_number = session:getVariable("caller_id_number");
+	destination_number = session:getVariable("destination_number");
 	message = session:getVariable("message");
 end
 
@@ -28,6 +29,7 @@ event:addHeader('uuid', uuid);
 event:addHeader('event_subclass', event_subclass);
 event:addHeader('caller_id_name', caller_id_name);
 event:addHeader('caller_id_number', caller_id_number);
+event:addHeader('destination_number', destination_number);
 event:addHeader('message', message);
 if (json_data) then
 	event:addBody(json_data);
