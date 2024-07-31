@@ -74,6 +74,14 @@
 					$this->database = $params['database'];
 				}
 
+			//assign the settings object
+				if (isset($params['settings'])) {
+					$this->settings = $params['settings'];
+				}
+				else {
+					$this->settings = new settings(["database" => $this->database]);
+				}
+
 			//assign private variables
 				$this->app_name = 'voicemail';
 				$this->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
@@ -83,14 +91,6 @@
 				$this->uuid_prefix = 'voicemail_';
 				$this->toggle_field = 'voicemail_enabled';
 				$this->toggle_values = ['true','false'];
-
-			//assign the settings object
-				if (isset($params['settings'])) {
-					$this->settings = $params['settings'];
-				}
-				else {
-					$this->settings = new settings(["database" => $this->database]);
-				}
 
 			//set the domain_uuid if not provided
 				if (empty($this->domain_uuid) || !is_uuid($this->domain_uuid)) {
@@ -258,7 +258,7 @@
 				}
 
 			//set the time zone
-				$time_zone = $this->settings('domain', 'time_zone', date_default_timezone_get());
+				$time_zone = $this->settings->get('domain', 'time_zone', date_default_timezone_get());
 
 			//get the message from the database
 				$sql = "select *, ";
@@ -291,7 +291,7 @@
 				}
 				//if paging offset defined, apply it along with rows per page
 				if (isset($this->offset)) {
-					$rows_per_page = $this->settings('domain', 'paging', 50);
+					$rows_per_page = $this->settings->get('domain', 'paging', 50);
 					$offset = isset($this->offset) && is_numeric($this->offset) ? $this->offset : 0;
 					$sql .= limit_offset($rows_per_page, $offset);
 				}
@@ -304,7 +304,7 @@
 				if (is_array($result)) {
 					foreach($result as &$row) {
 						//set the greeting directory
-						$path = $this->settings('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
+						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
 							$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
 						}
