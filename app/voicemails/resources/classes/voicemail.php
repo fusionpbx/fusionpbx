@@ -58,7 +58,7 @@
 		 * @var array Array of settings loaded from Default Settings
 		 */
 		private $settings;
-		
+
 		/**
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
@@ -132,14 +132,42 @@
 					return false;
 				}
 
-			//set the voicemail id and voicemail uuid arrays
-				if (isset($_SESSION['user']['extension'])) {
-					foreach ($_SESSION['user']['extension'] as $index => $row) {
-						$voicemail_ids[$index] = is_numeric($row['number_alias']) ? $row['number_alias'] : $row['user'];
+			//get the assigned extensions
+				$sql = "select e.extension_uuid, e.extension, e.number_alias, e.enabled, e.description ";
+				$sql .= "from v_extensions e, v_extension_users eu ";
+				$sql .= "where e.extension_uuid = eu.extension_uuid ";
+				$sql .= "and eu.user_uuid = :user_uuid ";
+				$sql .= "and e.domain_uuid = :domain_uuid ";
+				$sql .= "order by e.extension asc ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$parameters['user_uuid'] = $this->user_uuid;
+				$assigned_extensions = $this->database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+			//set the voicemail id arrays
+				if (isset($assigned_extensions)) {
+					foreach ($assigned_extensions as $index => $row) {
+						$voicemail_ids[] = (is_numeric($row['number_alias'])) ? $row['number_alias'] : $row['extension'];
 					}
 				}
-				if (isset($_SESSION['user']['voicemail'])) {
-					foreach ($_SESSION['user']['voicemail'] as $row) {
+
+			//get the assigned voicemails
+				$sql = "select * from v_voicemails ";
+				$sql .= "where voicemail_id  in (";
+				foreach($voicemail_ids as $i => $voicemail_id) {
+					if ($i > 0) { $sql .= ","; }
+					$sql .= ":voicemail_id_".$i;
+					$parameters['voicemail_id_'.$i] = $voicemail_id;
+				}
+				$sql .= ") ";
+				$sql .= "and domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$assigned_voicemails = $this->database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+			//set the voicemail uuid arrays
+				if (isset($assigned_voicemails)) {
+					foreach ($assigned_voicemails as $row) {
 						if (!empty($row['voicemail_uuid'])) {
 							$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 						}
