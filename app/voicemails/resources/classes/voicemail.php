@@ -89,7 +89,7 @@
 					$this->settings = $params['settings'];
 				}
 				else {
-					$this->settings = new settings();
+					$this->settings = new settings(["database" => $this->database]);
 				}
 
 			//set the domain_uuid if not provided
@@ -145,6 +145,7 @@
 				unset($sql, $parameters);
 
 			//set the voicemail id arrays
+				$voicemail_ids = [];
 				if (isset($assigned_extensions)) {
 					foreach ($assigned_extensions as $index => $row) {
 						$voicemail_ids[] = (is_numeric($row['number_alias'])) ? $row['number_alias'] : $row['extension'];
@@ -166,6 +167,7 @@
 				unset($sql, $parameters);
 
 			//set the voicemail uuid arrays
+				$voicemail_uuids = [];
 				if (isset($assigned_voicemails)) {
 					foreach ($assigned_voicemails as $row) {
 						if (!empty($row['voicemail_uuid'])) {
@@ -186,13 +188,11 @@
 					else {
 						//ensure that the requested voicemail box is assigned to this user
 						$found = false;
-						if (is_array($voicemail_uuids)) {
-							foreach($voicemail_uuids as $row) {
-								if ($voicemail_uuid == $row['voicemail_uuid']) {
-									$sql .= "and voicemail_uuid = :voicemail_uuid ";
-									$parameters['voicemail_uuid'] = $row['voicemail_uuid'];
-									$found = true;
-								}
+						foreach($voicemail_uuids as $row) {
+							if ($this->voicemail_uuid == $row['voicemail_uuid']) {
+								$sql .= "and voicemail_uuid = :voicemail_uuid ";
+								$parameters['voicemail_uuid'] = $row['voicemail_uuid'];
+								$found = true;
 							}
 						}
 						//id requested is not owned by the user return no results
@@ -242,11 +242,7 @@
 				if (is_array($voicemails)) {
 					foreach ($voicemails as &$row) {
 						//get the voicemail messages
-						$this->voicemail_uuid = $row['voicemail_uuid'];
-						$this->voicemail_id = $row['voicemail_id'];
-						$result = $this->voicemail_messages();
-						$voicemail_count = !empty($result) && is_array($result) ? count($result) : 0;
-						$row['messages'] = $result;
+						$row['messages'] = $this->voicemail_messages($row['voicemail_id']);
 					}
 				}
 
@@ -254,20 +250,15 @@
 				return $voicemails;
 		}
 
-		public function voicemail_messages() {
+		private function voicemail_messages($voicemail_id): array {
 
 			//check if for valid input
-				if (!is_numeric($this->voicemail_id) || !is_uuid($this->domain_uuid)) {
-					return false;
+				if (!is_numeric($voicemail_id) || !is_uuid($this->domain_uuid)) {
+					return [];
 				}
 
 			//set the time zone
-				if (isset($_SESSION['domain']['time_zone']['name'])) {
-					$time_zone = $_SESSION['domain']['time_zone']['name'];
-				}
-				else {
-					$time_zone = date_default_timezone_get();
-				}
+				$time_zone = $this->settings('domain', 'time_zone', date_default_timezone_get());
 
 			//get the message from the database
 				$sql = "select *, ";
@@ -276,10 +267,10 @@
 				$sql .= "from v_voicemail_messages as m, v_voicemails as v ";
 				$sql .= "where m.domain_uuid = :domain_uuid ";
 				$sql .= "and m.voicemail_uuid = v.voicemail_uuid ";
-				if (is_array($this->voicemail_id) && @sizeof($this->voicemail_id) != 0) {
+				if (is_array($voicemail_id) && @sizeof($voicemail_id) != 0) {
 					$x = 0;
 					$sql .= "and ( ";
-					foreach ($this->voicemail_id as $row) {
+					foreach ($voicemail_id as $row) {
 						$sql_where_or[] = "v.voicemail_id = :voicemail_id_".$x;
 						$parameters['voicemail_id_'.$x] = $row['voicemail_id'];
 						$x++;
@@ -290,7 +281,7 @@
 				}
 				else {
 					$sql .= "and v.voicemail_id = :voicemail_id ";
-					$parameters['voicemail_id'] = $this->voicemail_id;
+					$parameters['voicemail_id'] = $voicemail_id;
 				}
 				if (empty($this->order_by)) {
 					$sql .= "order by v.voicemail_id, m.created_epoch desc ";
@@ -300,7 +291,7 @@
 				}
 				//if paging offset defined, apply it along with rows per page
 				if (isset($this->offset)) {
-					$rows_per_page = $_SESSION['domain']['paging']['numeric'] != '' ? $_SESSION['domain']['paging']['numeric'] : 50;
+					$rows_per_page = $this->settings('domain', 'paging', 50);
 					$offset = isset($this->offset) && is_numeric($this->offset) ? $this->offset : 0;
 					$sql .= limit_offset($rows_per_page, $offset);
 				}
@@ -313,7 +304,7 @@
 				if (is_array($result)) {
 					foreach($result as &$row) {
 						//set the greeting directory
-						$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
+						$path = $this->settings('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
 							$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
 						}
@@ -330,6 +321,8 @@
 						$row['message_length_label'] = ($message_minutes > 0 ? $message_minutes.' min' : null).($message_seconds > 0 ? ' '.$message_seconds.' s' : null);
 						$row['created_date'] = date("j M Y g:i a",$row['created_epoch']);
 					}
+				} else {
+					$result = [];
 				}
 				return $result;
 		}
