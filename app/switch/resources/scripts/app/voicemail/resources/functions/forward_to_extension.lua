@@ -65,6 +65,7 @@
 						message_length = row["message_length"];
 						message_status = row["message_status"];
 						message_priority = row["message_priority"];
+						message_intro_base64 = row["message_intro_base64"];
 						message_base64 = row["message_base64"];
 				end);
 			end
@@ -97,6 +98,7 @@
 			table.insert(sql, "domain_uuid, ");
 			table.insert(sql, "voicemail_uuid, ");
 			if (storage_type == "base64") then
+				table.insert(sql, "message_intro_base64, ");
 				table.insert(sql, "message_base64, ");
 			end
 			table.insert(sql, "created_epoch, ");
@@ -112,6 +114,7 @@
 			table.insert(sql, ":domain_uuid, ");
 			table.insert(sql, ":forward_voicemail_uuid, ");
 			if (storage_type == "base64") then
+				table.insert(sql, ":message_intro_base64, ");
 				table.insert(sql, ":message_base64, ");
 			end
 			table.insert(sql, ":created_epoch, ");
@@ -126,6 +129,7 @@
 				voicemail_message_uuid = voicemail_message_uuid;
 				domain_uuid = domain_uuid;
 				forward_voicemail_uuid = forward_voicemail_uuid;
+				message_intro_base64 = message_intro_base64;
 				message_base64 = message_base64;
 				created_epoch = created_epoch;
 				caller_id_name = caller_id_name;
@@ -157,7 +161,7 @@
 			mwi_notify(forward_voicemail_id.."@"..domain_name, new_messages, saved_messages)
 			blf_notify(tonumber(new_messages) > 0, "voicemail+" .. forward_voicemail_id .. "@" .. domain_name)
 
-		--if local after email is true then copy the recording file
+		--if storage type is not base64 then copy the recording file
 			if (storage_type ~= "base64") then
 				mkdir(voicemail_dir.."/"..forward_voicemail_id);
 				copy(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, voicemail_dir.."/"..forward_voicemail_id.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);

@@ -53,8 +53,7 @@
 						session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 					end
 
-				--set the file full path
-					message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+				--set the full message intro path
 					message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
 
 				--record the message introduction
@@ -100,13 +99,13 @@
 							local file = require "resources.functions.file"
 
 						--get the content of the file
-							local file_content = assert(file.read_base64(message_intro_location));
+							file_content = assert(file.read_base64(message_intro_location));
 
 						--save the merged file as base64
-							local sql = [[UPDATE SET v_voicemail_messages
-									SET message_intro_base64 = :file_content 
-									WHERE domain_uuid = :domain_uuid
-									AND voicemail_message_uuid = :uuid]];
+							local sql = [[UPDATE v_voicemail_messages
+								SET message_intro_base64 = :file_content
+								WHERE domain_uuid = :domain_uuid
+								AND voicemail_message_uuid = :uuid]];
 							local params = {file_content = file_content, domain_uuid = domain_uuid, uuid = uuid};
 
 							if (debug["sql"]) then
@@ -116,6 +115,9 @@
 							local dbh = Database.new('system', 'base64')
 							dbh:query(sql, params)
 							dbh:release()
+
+						--delete intro file
+							os.remove(message_intro_location);
 					end
 		end
 

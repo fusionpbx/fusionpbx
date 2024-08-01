@@ -376,12 +376,14 @@
 
 			//remove the email file after it has been sent
 			if (is_array($email_queue_attachments) && @sizeof($email_queue_attachments) != 0) {
-				foreach($email_queue_attachments as $field) {
+				foreach ($email_queue_attachments as $field) {
 					$email_attachment_path = $field['email_attachment_path'];
 					$email_attachment_name = $field['email_attachment_name'];
-					if (file_exists($email_attachment_path.'/'.$email_attachment_name)) {
-						unlink($email_attachment_path.'/'.$email_attachment_name);
-					}
+					$email_attachment_name_no_prefix = str_replace(['msg_','intro_'], '', pathinfo($email_attachment_name, PATHINFO_BASENAME));
+					@unlink($email_attachment_path.'/'.$email_attachment_name);
+					@unlink($email_attachment_path.'/intro_'.$email_attachment_name_no_prefix);
+					@unlink($email_attachment_path.'/msg_'.$email_attachment_name_no_prefix);
+					@unlink($email_attachment_path.'/intro_msg_'.$email_attachment_name_no_prefix);
 				}
 			}
 
@@ -412,6 +414,25 @@
 				echo "event socket connection failed\n";
 			}
 		}
+
+		if ($settings->get('voicemail', 'storage_type') == 'base64') {
+			//delay the delete by a few seconds
+			sleep(3);
+
+			//remove message files after email sent
+			if (is_array($email_queue_attachments) && @sizeof($email_queue_attachments) != 0) {
+				foreach ($email_queue_attachments as $field) {
+					$email_attachment_path = $field['email_attachment_path'];
+					$email_attachment_name = $field['email_attachment_name'];
+					$email_attachment_name_no_prefix = str_replace(['msg_','intro_'], '', pathinfo($email_attachment_name, PATHINFO_BASENAME));
+					@unlink($email_attachment_path.'/'.$email_attachment_name);
+					@unlink($email_attachment_path.'/intro_'.$email_attachment_name_no_prefix);
+					@unlink($email_attachment_path.'/msg_'.$email_attachment_name_no_prefix);
+					@unlink($email_attachment_path.'/intro_msg_'.$email_attachment_name_no_prefix);
+				}
+			}
+		}
+
 
 		/*
 		//build insert array
