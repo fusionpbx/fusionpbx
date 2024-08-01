@@ -235,14 +235,11 @@
 				--prepare file
 					file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 
-				--find the location of sox, if installed
-					sox = os.execute('which sox');
-
 				--combine intro, if exists, with message for emailing (only)
 					intro = voicemail_dir.."/"..id.."/intro_"..uuid.."."..vm_message_ext;
 					combined = voicemail_dir.."/"..id.."/intro_msg_"..uuid.."."..vm_message_ext;
-					if (file_exists(intro) and sox ~= nil and sox ~= '') then
-						os.execute(sox.." "..intro.." "..file.." "..combined);
+					if (file_exists(intro) and file_exists(file)) then
+						os.execute("sox "..intro.." "..file.." "..combined);
 					end
 
 				--prepare the subject
