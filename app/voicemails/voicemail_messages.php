@@ -66,8 +66,15 @@
 		$voicemail->voicemail_id = $_REQUEST['id'];
 		$voicemail->voicemail_uuid = $_REQUEST['voicemail_uuid'];
 		$voicemail->voicemail_message_uuid = $_REQUEST['uuid'];
-		if (!$voicemail->message_download($domain_name)) {
-			echo "unable to download voicemail";
+		if (isset($_REQUEST['intro'])) {
+			if (!$voicemail->message_intro_download($domain_name)) {
+				echo "unable to download voicemail intro";
+			}
+		}
+		else {
+			if (!$voicemail->message_download($domain_name)) {
+				echo "unable to download voicemail";
+			}
 		}
 		unset($voicemail);
 		exit;
@@ -106,6 +113,10 @@
 		$action = $_POST['action'];
 		$voicemail_messages = $_POST['voicemail_messages'];
 	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
 
 //process the http post data by action
 	if (!empty($action) && !empty($voicemail_messages)) {
@@ -203,7 +214,7 @@
 						}
 						//set message
 							if ($messages_resent != 0) {
-								message::add($text['message-toggle'].': '.$messages_resent);
+								message::add($text['message-emails_resent'].': '.$messages_resent);
 							}
 					}
 					break;
@@ -242,10 +253,6 @@
 			}
 			exit;
 	}
-
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
 
 //get the html values and set them as variables
 	$order_by = $_GET["order_by"] ?? '';
@@ -440,7 +447,15 @@
 					echo "	<td class='hide-xs' style='".$bold."'>".escape($row['caller_id_number'])."&nbsp;</td>\n";
 					echo "	<td class='button center no-link no-wrap'>";
 					echo 		"<audio id='recording_audio_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_message_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&r=".uuid()."'></audio>";
-					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message');"]);
+					if (
+						($_SESSION['voicemail']['storage_type']['text'] == 'base64' && !empty($row['message_intro_base64'])) ||
+						file_exists($_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$field['voicemail_id'].'/intro_'.$row['voicemail_message_uuid'].'.wav') ||
+						file_exists($_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$field['voicemail_id'].'/intro_'.$row['voicemail_message_uuid'].'.mp3')
+						) {
+						echo 	"<audio id='recording_audio_intro_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' onended=\"recording_reset('intro_".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&intro&r=".uuid()."'></audio>";
+						echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'].' '.$text['label-introduction'],'icon'=>$_SESSION['theme']['button_icon_comment'],'id'=>'recording_button_intro_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('intro_".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message_intro');"]);
+					}
+					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'].' '.$text['label-message'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message');"]);
 					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".escape($row['voicemail_uuid'])."&uuid=".escape($row['voicemail_message_uuid'])."&t=bin&r=".uuid(),'onclick'=>"$(this).closest('tr').children('td').css('font-weight','normal');"]);
 					if (
 						(!empty($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && !empty($row['message_transcription'])) ||
