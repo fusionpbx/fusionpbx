@@ -4,13 +4,22 @@
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
+//convert to a key
+	$dashboard_key = str_replace(' ', '_', strtolower($dashboard_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/dashboard');
+	$text = $language->get($_SESSION['domain']['language']['code'], dirname($dashboard_url));
+
+//get the dashboard label
+	$dashboard_label = $text['title-'.$dashboard_key];
+	if (empty($dashboard_label)) {
+		$dashboard_label = $dashboard_name;
+	}
 
 //prepare variables
 	$dashboard_target = ($dashboard_target == 'new') ? '_blank' : '_self';
-	$window_parameters = 'aaa=bbb,';
+	$window_parameters = '';
 	if (!empty($dashboard_width) && !empty($dashboard_height)) {
 		$window_parameters .= "width=".$dashboard_width.",height=".$dashboard_height;
 	}
@@ -18,7 +27,7 @@
 //dashboard icon
 	echo "<div class='hud_box'>\n";
 	echo "	<div class='hud_content' ".(empty($dashboard_details_state) || $dashboard_details_state != "disabled" ? "onclick=\"$('#hud_icon_details').slideToggle('fast'); toggle_grid_row_end('".trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_')."');\"" : null).">\n";
-	echo "		<span class='hud_title' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\">".escape($dashboard_name)."</span>";
+	echo "		<span class='hud_title' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\">".escape($dashboard_label)."</span>";
 	echo "		<span class='hud_stat' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\"><i class=\"fas ".$dashboard_icon."\" style=\"font-size: 0.8em;\"></i></span>\n";
 	echo "	</div>\n";
 	if (empty($dashboard_details_state) || $dashboard_details_state != "disabled") {
