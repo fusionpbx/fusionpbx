@@ -37,13 +37,13 @@ $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'eb38610d-0dab-42e7-ac50-317a2d374c01';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
-$y++;
+$x++;
 
 //account settings icon
 $array['dashboard'][$x]['dashboard_uuid'] = '8aa9bb66-7a62-4a90-b52e-68bd4ccf325f';
 $array['dashboard'][$x]['dashboard_name'] = 'Account Settings';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
-$array['dashboard'][$x]['dashboard_icon'] = 'fa-user-friends';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-user-cog';
 $array['dashboard'][$x]['dashboard_url'] = '/core/users/user_edit.php?id=user';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
@@ -72,6 +72,44 @@ $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'aecc2944-4a09-484e-ae00-85b70bc7e5b8';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '8aa9bb66-7a62-4a90-b52e-68bd4ccf325f';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
+$x++;
+
+//logout icon
+$array['dashboard'][$x]['dashboard_uuid'] = 'b04ad600-9acc-45e5-a89a-d7a59a6fcb4c';
+$array['dashboard'][$x]['dashboard_name'] = 'Logout';
+$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-sign-out-alt';
+$array['dashboard'][$x]['dashboard_url'] = '/logout.php';
+$array['dashboard'][$x]['dashboard_target'] = 'self';
+$array['dashboard'][$x]['dashboard_width'] = '';
+$array['dashboard'][$x]['dashboard_height'] = '';
+$array['dashboard'][$x]['dashboard_content'] = '';
+$array['dashboard'][$x]['dashboard_content_text_align'] = '';
+$array['dashboard'][$x]['dashboard_content_details'] = '';
+$array['dashboard'][$x]['dashboard_chart_type'] = '';
+$array['dashboard'][$x]['dashboard_heading_text_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color'] = '';
+$array['dashboard'][$x]['dashboard_heading_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_number_background_color'] = '';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '#0292ff';
+$array['dashboard'][$x]['dashboard_number_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_background_color'] ='';
+$array['dashboard'][$x]['dashboard_background_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_detail_background_color'] = '';
+$array['dashboard'][$x]['dashboard_column_span'] = '1';
+$array['dashboard'][$x]['dashboard_row_span'] = '1';
+$array['dashboard'][$x]['dashboard_details_state'] = 'disabled';
+$array['dashboard'][$x]['dashboard_order'] = '55';
+$array['dashboard'][$x]['dashboard_enabled'] = 'true';
+$array['dashboard'][$x]['dashboard_description'] = '';
+$y = 0;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '226ba3a9-ba3c-46f9-ab9e-05e89bdaa7fd';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'b04ad600-9acc-45e5-a89a-d7a59a6fcb4c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 $y++;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '3cf3a248-c3e4-4403-9150-687771e85b10';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'b04ad600-9acc-45e5-a89a-d7a59a6fcb4c';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
 
 ?>
