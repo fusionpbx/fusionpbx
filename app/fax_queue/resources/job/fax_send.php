@@ -496,6 +496,20 @@
 				$email_subject = str_replace('${fax_duration}', $fax_duration, $email_subject);
 				$email_subject = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_subject);
 
+                // check if allowed to attach fax to email
+                $sql = "select domain_setting_value, domain_setting_enabled from v_domain_settings ";
+                $sql .= "where domain_uuid = :domain_uuid ";
+                $sql .= "and domain_setting_category = 'fax' ";
+                $sql .= "and domain_setting_subcategory='disallow_attachment' ";
+                $parameters['domain_uuid'] = $domain_uuid;
+                $database = new database;
+                $result = $database->select($sql, $parameters,'row');
+
+				error_log("$sql :" . implode(", ",$result), 0);
+
+				$disabled_attachment = ($result['domain_setting_value'] == 'true' && $result['$domain_setting_enabled']) ? true : false;
+                unset($sql,$parameters,$result);
+
 				//replace variables in email body
 				$email_body = str_replace('${domain_name}', $domain_uuid, $email_body);
 				$email_body = str_replace('${number_dialed}', $fax_number, $email_body);
@@ -523,12 +537,14 @@
 				//send the email
 				if (isset($fax_email_address) && !empty($fax_email_address)) {
 					//add the attachment
-					if (!empty($fax_file_name)) {
-						$email_attachments[0]['type'] = 'file';
-						$email_attachments[0]['name'] = $fax_file_name;
-						$email_attachments[0]['value'] = path_join($fax_file_dirname, '.', $fax_file_name);
+					// only if attachment is allowed
+					if (!$disabled_attachment) {
+						if (!empty($fax_file_name)) {
+							$email_attachments[0]['type'] = 'file';
+							$email_attachments[0]['name'] = $fax_file_name;
+							$email_attachments[0]['value'] = path_join($fax_file_dirname, '.', $fax_file_name);
+						}
 					}
-
 					$fax_email_address = str_replace(",", ";", $fax_email_address);
 					$email_addresses = explode(";", $fax_email_address);
 					foreach($email_addresses as $email_address) {
@@ -540,7 +556,9 @@
 							$email->body = $email_body;
 							$email->from_address = $email_from_address;
 							$email->from_name = $email_from_name;
-							$email->attachments = $email_attachments;
+							if (!$disabled_attachment) {
+								$email->attachments = $email_attachments;
+							}
 							$email->debug_level = 3;
 							$email_error = $mail->error;
 							//view_array($email);

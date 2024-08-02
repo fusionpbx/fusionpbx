@@ -471,21 +471,36 @@ if (!function_exists('fax_split_dtmf')) {
 			//echo "email_body ".$email_body."<br />\n";
 			//echo "<hr />\n";
 
-		//send the email
+		// check if allowed to attach fax to email
+			$sql = "select domain_setting_value, domain_setting_enabled from v_domain_settings ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and domain_setting_category = 'fax' ";
+			$sql .= "and domain_setting_subcategory='disallow_attachment' ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$result = $database->select($sql, $parameters,'row');
+
+			error_log("$sql : $result", 0);
+			$disabled_attachment = ($result['domain_setting_value'] == 'true' && $result['$domain_setting_enabled']) ? true : false;
+			unset($sql,$parameters,$result);
+
+			//send the email
 			if (isset($fax_email) && !empty($fax_email)) {
 				//add the attachment
-				if (!empty($fax_file_name)) {
-					$email_attachments[0]['type'] = 'file';
-					if ($pdf_file && file_exists($pdf_file)) {
-						$email_attachments[0]['name'] = $fax_file_name.'.pdf';
-						$email_attachments[0]['value'] = $pdf_file;
-					}
-					else {
-						$email_attachments[0]['name'] = $fax_file_name.'.tif';
-						$email_attachments[0]['value'] = $fax_file;
+				// only if attachment is allowed
+				if (!$disabled_attachment) {
+					if (!empty($fax_file_name)) {
+						$email_attachments[0]['type'] = 'file';
+						if ($pdf_file && file_exists($pdf_file)) {
+							$email_attachments[0]['name'] = $fax_file_name.'.pdf';
+							$email_attachments[0]['value'] = $pdf_file;
+						}
+						else {
+							$email_attachments[0]['name'] = $fax_file_name.'.tif';
+							$email_attachments[0]['value'] = $fax_file;
+						}
 					}
 				}
-
 				//$email_response = send_email($email_address, $email_subject, $email_body);
 				$email = new email;
 				$email->recipients = $fax_email;
@@ -493,8 +508,10 @@ if (!function_exists('fax_split_dtmf')) {
 				$email->body = $email_body;
 				$email->from_address = $email_from_address;
 				$email->from_name = $email_from_name;
-				$email->attachments = $email_attachments;
-				//$email->debug_level = 3;
+				if (!$disabled_attachment) {
+					$email->attachments = $email_attachments;
+				}
+				$email->debug_level = 3;
 				$response = $mail->error;
 				$sent = $email->send();
 			}
