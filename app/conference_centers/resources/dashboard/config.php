@@ -5,7 +5,7 @@ $array['dashboard'][$x]['dashboard_uuid'] = 'd1b26c96-6cfd-45ea-824f-0b5e16a9aab
 $array['dashboard'][$x]['dashboard_name'] = 'Conference Centers';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-hotel';
-$array['dashboard'][$x]['dashboard_url'] = '/app/fax/fax.php';
+$array['dashboard'][$x]['dashboard_url'] = '/app/conference_centers/conference_rooms.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
 $array['dashboard'][$x]['dashboard_height'] = '';
@@ -37,10 +37,6 @@ $y++;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'b78637e6-4dcd-422b-bac8-494caaef0359';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'd1b26c96-6cfd-45ea-824f-0b5e16a9aab9';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
-$y++;
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '7f659fa6-14c8-4648-9c24-1c4c5213934e';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'd1b26c96-6cfd-45ea-824f-0b5e16a9aab9';
-$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
 $y++;
 
 ?>
