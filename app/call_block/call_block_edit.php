@@ -358,7 +358,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	$document['title'] = $text['title-call-block'];
+	$document['title'] = $text['title-call_block'];
 	require_once "resources/header.php";
 
 //show the content
