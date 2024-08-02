@@ -2792,10 +2792,24 @@
 				//log the transaction results
 					if ($transaction_save && file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
 						try {
+
+							//get the domain_uuid
+							$domain_uuid = '';
+							foreach($old_array as &$data_array) {
+								foreach ($data_array as $row) {
+									if (!empty($row['domain_uuid'])) {
+										$domain_uuid = $row['domain_uuid'];
+									}
+								}
+							}
+
+							//insert the transaction into the database
 							$sql = "insert into ".self::TABLE_PREFIX."database_transactions ";
 							$sql .= "(";
 							$sql .= "database_transaction_uuid, ";
-							$sql .= "domain_uuid, ";
+							if (isset($domain_uuid) && is_uuid($domain_uuid)) {
+								$sql .= "domain_uuid, ";
+							}
 							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 								$sql .= "user_uuid, ";
 							}
@@ -2816,11 +2830,8 @@
 							$sql .= "values ";
 							$sql .= "(";
 							$sql .= "'".uuid()."', ";
-							if (is_null($this->domain_uuid)) {
-								$sql .= "null, ";
-							}
-							else {
-								$sql .= "'".$this->domain_uuid."', ";
+							if (isset($domain_uuid) && is_uuid($domain_uuid)) {
+								$sql .= ":domain_uuid, ";
 							}
 							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 								$sql .= ":user_uuid, ";
@@ -2850,6 +2861,9 @@
 							$sql .= ":transaction_result ";
 							$sql .= ")";
 							$statement = $this->db->prepare($sql);
+							if (isset($domain_uuid) && is_uuid($domain_uuid)) {
+								$statement->bindParam(':domain_uuid', $domain_uuid);
+							}
 							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 								$statement->bindParam(':user_uuid', $this->user_uuid);
 							}

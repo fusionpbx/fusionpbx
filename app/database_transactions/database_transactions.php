@@ -67,7 +67,7 @@
 	$sql .= "from v_database_transactions as t ";
 	$sql .= "left outer join v_domains as d using (domain_uuid) ";
 	$sql .= "left outer join v_users as u using (user_uuid) ";
-	$sql .= "where t.domain_uuid = :domain_uuid ";
+	$sql .= "where (t.domain_uuid = :domain_uuid or t.domain_uuid is null) ";
 	if (!empty($user_uuid)) {
 		$sql .= "and t.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $user_uuid;
@@ -99,13 +99,13 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select t.database_transaction_uuid, d.domain_name, u.username, ";
+	$sql = "select t.database_transaction_uuid, t.domain_uuid, d.domain_name, u.username, ";
 	$sql .= "t.user_uuid, t.app_name, t.app_uuid, t.transaction_code, ";
 	$sql .= "t.transaction_address, t.transaction_type, t.transaction_date ";
 	$sql .= "from v_database_transactions as t ";
 	$sql .= "left outer join v_domains as d using (domain_uuid) ";
 	$sql .= "left outer join v_users as u using (user_uuid) ";
-	$sql .= "where t.domain_uuid = :domain_uuid ";
+	$sql .= "where (t.domain_uuid = :domain_uuid or t.domain_uuid is null) ";
 	if (!empty($user_uuid)) {
 		$sql .= "and t.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $user_uuid;
@@ -127,7 +127,7 @@
 	$sql .= order_by($order_by, $order, 't.transaction_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$transactions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get users
@@ -190,10 +190,10 @@
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
-
-	if (!empty($result)) {
+	if (!empty($transactions)) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach($transactions as $row) {
+			if (empty($row['domain_name'])) { $row['domain_name'] = $text['label-global']; }
 			if (permission_exists('database_transaction_edit')) {
 				$list_row_url = "database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).(!empty($page) ? "&page=".urlencode($page) : null).(!empty($search) ? "&search=".urlencode($search) : null);
 			}
@@ -213,7 +213,6 @@
 			echo "</tr>\n";
 			$x++;
 		}
-		unset($result);
 	}
 
 	echo "</table>\n";
