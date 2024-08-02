@@ -67,6 +67,20 @@
 
 		public function __construct(array $params = []) {
 
+			//set the domain_uuid if not provided
+				if (!empty($params['domain_uuid']) && is_uuid($params['domain_uuid'])) {
+					$this->domain_uuid = $params['domain_uuid'];
+				} else {
+					$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
+				}
+
+			//set the user_uuid if not provided
+				if (!empty($params['user_uuid']) && is_uuid($params['user_uuid'])) {
+					$this->user_uuid = $params['user_uuid'];
+				} else {
+					$this->user_uuid = $_SESSION['user_uuid'] ?? '';
+				}
+
 			//database connection
 				if (empty($params['database'])) {
 					$this->database = database::new();
@@ -75,11 +89,11 @@
 				}
 
 			//assign the settings object
-				if (isset($params['settings'])) {
-					$this->settings = $params['settings'];
+				if (empty($params['settings'])) {
+					$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 				}
 				else {
-					$this->settings = new settings(["database" => $this->database]);
+					$this->settings = $params['settings'];
 				}
 
 			//assign private variables
@@ -92,15 +106,6 @@
 				$this->toggle_field = 'voicemail_enabled';
 				$this->toggle_values = ['true','false'];
 
-			//set the domain_uuid if not provided
-				if (empty($this->domain_uuid) || !is_uuid($this->domain_uuid)) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-				}
-
-			//set the user_uuid if not provided
-				if (empty($this->user_uuid) || !is_uuid($this->user_uuid)) {
-					$this->user_uuid = $_SESSION['user_uuid'];
-				}
 		}
 
 		public function get_voicemail_id() {
