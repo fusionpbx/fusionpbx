@@ -30,9 +30,9 @@ $array['dashboard'][$x]['dashboard_order'] = '50';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = '';
 $y = 0;
-//$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'd400d674-6427-40aa-8ac0-d6c2042912cf';
-//$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'ea3f5a8a-fc93-47d7-a632-a733522affc3';
-//$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
-//$y++;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '3a699f10-11f4-42e9-8900-e84d5210eddc';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'ea3f5a8a-fc93-47d7-a632-a733522affc3';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'fax';
+$y++;
 
 ?>
