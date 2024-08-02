@@ -87,6 +87,7 @@ if (!class_exists('dashboard')) {
 								//add to the array
 									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
 										$array[$this->table][$x]['dashboard_uuid'] = $record['dashboard_uuid'];
+										$array[$this->table.'_groups'][$x]['dashboard_uuid'] = $record['dashboard_uuid'];
 									}
 
 								//increment the id
