@@ -69,6 +69,8 @@ if ($domains_processed == 1) {
 				if (!empty($row['dashboard_number_text_color_hover'])) { $array['dashboard'][$x]['dashboard_number_text_color_hover'] = $row['dashboard_number_text_color_hover']; }
 				if (!empty($row['dashboard_icon'])) { $array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon']; }
 				if (!empty($row['dashboard_url'])) { $array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url']; }
+				if (!empty($row['dashboard_width'])) { $array['dashboard'][$x]['dashboard_width'] = $row['dashboard_width']; }
+				if (!empty($row['dashboard_height'])) { $array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height']; }
 				if (!empty($row['dashboard_target'])) { $array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target']; }
 				if (!empty($row['dashboard_heading_background_color'])) { $array['dashboard'][$x]['dashboard_heading_background_color'] = $row['dashboard_heading_background_color']; }
 				if (!empty($row['dashboard_heading_background_color_hover'])) { $array['dashboard'][$x]['dashboard_heading_background_color'] = $row['dashboard_heading_background_color_hover']; }
