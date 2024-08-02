@@ -447,7 +447,7 @@ else { //default: white
 		}
 
 	body {
-		z-index: 1;
+		z-index: auto;
 		position: absolute;
 		margin: 0;
 		padding: 0;
