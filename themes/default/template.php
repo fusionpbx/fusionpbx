@@ -1176,7 +1176,7 @@
 <body>
 
 	{*//video background *}
-	{if !empty($settings.theme.background_video)}
+	{if !empty(settings.theme.background_video_enabled) && $settings.theme.background_video_enabled == 'true' && !empty($settings.theme.background_video)}
 		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
 			<source src="{$settings.theme.background_video}" type="video/mp4">
 		</video>
