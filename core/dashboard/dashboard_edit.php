@@ -61,6 +61,7 @@
 	$dashboard_column_span = '';
 	$dashboard_row_span = '';
 	$dashboard_details_state = '';
+	$dashboard_parent_uuid = '';
 	$dashboard_order = '';
 	$dashboard_enabled = $row["dashboard_enabled"] ?? 'true';
 	$dashboard_description = '';
@@ -102,6 +103,7 @@
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
 		$dashboard_row_span = $_POST["dashboard_row_span"] ?? '';
 		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
+		$dashboard_parent_uuid = $_POST["dashboard_parent_uuid"] ?? '';
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
 		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
 		$dashboard_description = $_POST["dashboard_description"] ?? '';
@@ -250,6 +252,7 @@
 			$array['dashboard'][0]['dashboard_column_span'] = $dashboard_column_span;
 			$array['dashboard'][0]['dashboard_row_span'] = $dashboard_row_span;
 			$array['dashboard'][0]['dashboard_details_state'] = $dashboard_details_state;
+			$array['dashboard'][0]['dashboard_parent_uuid'] = $dashboard_parent_uuid;
 			$array['dashboard'][0]['dashboard_order'] = $dashboard_order;
 			$array['dashboard'][0]['dashboard_enabled'] = $dashboard_enabled;
 			$array['dashboard'][0]['dashboard_description'] = $dashboard_description;
@@ -311,6 +314,7 @@
 		$sql .= " dashboard_column_span, ";
 		$sql .= " dashboard_row_span, ";
 		$sql .= " dashboard_details_state, ";
+		$sql .= " dashboard_parent_uuid, ";
 		$sql .= " dashboard_order, ";
 		$sql .= " dashboard_enabled, ";
 		$sql .= " dashboard_description ";
@@ -342,6 +346,7 @@
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_row_span = $row["dashboard_row_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
+			$dashboard_parent_uuid = $row["dashboard_parent_uuid"];
 			$dashboard_order = $row["dashboard_order"];
 			$dashboard_enabled = $row["dashboard_enabled"] ?? 'false';
 			$dashboard_description = $row["dashboard_description"];
@@ -402,9 +407,9 @@
 	require_once "resources/header.php";
 
 //get the child groups
-	$sql = "select * from v_dashboard_groups as x, v_groups as g ";
-	$sql .= "where x.dashboard_uuid = :dashboard_uuid ";
-	$sql .= "and x.group_uuid = g.group_uuid ";
+	$sql = "SELECT * FROM v_dashboard_groups as x, v_groups as g ";
+	$sql .= "WHERE x.dashboard_uuid = :dashboard_uuid ";
+	$sql .= "AND x.group_uuid = g.group_uuid ";
 	$parameters['dashboard_uuid'] = $dashboard_uuid ?? '';
 	$dashboard_groups = $database->select($sql, $parameters, 'all');
 	unset ($sql, $parameters);
@@ -415,6 +420,14 @@
 	$sql .= "ORDER by group_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$groups = $database->execute($sql, $parameters, 'all');
+	unset ($sql, $parameters);
+
+//get the dashboards
+	$sql = "SELECT dashboard_uuid, dashboard_name FROM v_dashboard ";
+	$sql .= "WHERE dashboard_parent_uuid is null ";
+	$sql .= "ORDER by dashboard_order, dashboard_name asc ";
+	$parameters = null;
+	$dashboard_parents = $database->execute($sql, $parameters, 'all');
 	unset ($sql, $parameters);
 
 //set the assigned_groups array
@@ -943,6 +956,27 @@
 	echo $text['description-dashboard_details_state']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('dashboard_parent_uuid')) {
+		echo "	<tr>";
+		echo "		<td class='vncell'>".$text['label-dashboard_parent_uuid']."</td>";
+		echo "		<td class='vtable'>";
+		echo "			<select name=\"dashboard_parent_uuid\" class='formfld'>\n";
+		echo "			<option value=\"\"></option>\n";
+		foreach ($dashboard_parents as $field) {
+			if ($field['dashboard_uuid'] == $dashboard_parent_uuid) {
+				echo "			<option value='".escape($field['dashboard_uuid'])."' selected>".escape($field['dashboard_name'])."</option>\n";
+			}
+			else {
+				echo "			<option value='".escape($field['dashboard_uuid'])."'>".escape($field['dashboard_name'])."</option>\n";
+			}
+		}
+		echo "			</select>";
+		echo "<br />\n";
+		echo $text['description-dashboard_parent_uuid']."\n";
+		echo "		</td>";
+		echo "	</tr>";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
