@@ -31,7 +31,6 @@
 			$sql = "update v_default_settings ";
 			$sql .= "set default_setting_name = 'text' ";
 			$sql .= "where default_setting_name = 'var' ";
-			$database = new database;
 			$database->execute($sql, null);
 			unset($sql);
 
@@ -39,13 +38,11 @@
 			$sql = "delete from v_default_settings ";
 			$sql .= "where (default_setting_category is null and default_setting_subcategory is null) ";
 			$sql .= "or (default_setting_category = '' and default_setting_subcategory = '') ";
-			$database = new database;
 			$database->execute($sql, null);
 			unset($sql);
 
 		//populate the languages table, if necessary
 			$sql = "select count(*) from v_languages";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows == 0) {
 				$sql = "insert into v_languages (language_uuid, language, code) values ";
@@ -205,14 +202,12 @@
 				$sql .= "('".uuid()."', 'Welsh', 'cy'), ";
 				$sql .= "('".uuid()."', 'Xhosa', 'xh'), ";
 				$sql .= "('".uuid()."', 'Yiddish', 'yi') ";
-				$database = new database;
 				$database->execute($sql, null);
 				unset($sql, $parameters);
 			}
 
 		//populate the countries table, if necessary
 			$sql = "select count(*) from v_countries";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows == 0) {
 				$sql = "insert into v_countries (country_uuid, country, iso_a2, iso_a3, num, country_code) values ";
@@ -482,7 +477,6 @@
 				$sql .= "and default_setting_category = 'domain' ";
 				$parameters['language_code'] = $language_code;
 				$parameters['legacy_code'] = $legacy_code;
-				$database = new database;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 			}
@@ -498,7 +492,6 @@
 			$sql .= "and default_setting_category = 'domain' ";
 			$sql .= "and default_setting_subcategory = 'time_zone' ";
 			$sql .= "and default_setting_name = 'name' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 
@@ -509,7 +502,6 @@
 			$sql .= "where default_setting_category = 'login' ";
 			$sql .= "and default_setting_subcategory = 'destination' ";
 			$sql .= "and default_setting_name = 'url' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 

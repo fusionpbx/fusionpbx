@@ -45,7 +45,6 @@ if ($domains_processed == 1) {
 	//add the music_on_hold list to the database
 		if (!empty($setting->get('switch','conf'))) {
 			$sql = "select count(music_on_hold_uuid) from v_music_on_hold; ";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			unset($sql);
 
@@ -97,7 +96,6 @@ if ($domains_processed == 1) {
 							$p = new permissions;
 							$p->add('music_on_hold_add', 'temp');
 
-							$database = new database;
 							$database->app_name = 'app_name';
 							$database->app_uuid = 'app_uuid';
 							$database->save($array, false);

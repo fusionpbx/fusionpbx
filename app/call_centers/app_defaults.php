@@ -33,7 +33,6 @@ if ($domains_processed == 1) {
 		$sql .= "	WHERE d.domain_uuid = c.domain_uuid ";
 		$sql .= ") ";
 		$sql .= "WHERE queue_context is null; ";
-		$database = new database;
 		$database->execute($sql);
 		unset($sql);
 
@@ -44,7 +43,6 @@ if ($domains_processed == 1) {
 		$sql .= "from v_call_center_tiers as t, v_domains as d ";
 		$sql .= "where t.domain_uuid = d.domain_uuid ";
 		$sql .= "and (t.call_center_queue_uuid is null or t.call_center_agent_uuid is null) ";
-		$database = new database;
 		$tiers = $database->select($sql, null, 'all');
 		if (!empty($tiers)) {
 			foreach ($tiers as $index => &$row) {
@@ -63,7 +61,6 @@ if ($domains_processed == 1) {
 				$p = new permissions;
 				$p->add('call_center_tier_edit', 'temp');
 
-				$database = new database;
 				$database->app_name = 'call_centers';
 				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->save($array, false);
@@ -83,7 +80,6 @@ if ($domains_processed == 1) {
 		$sql .= "from v_call_center_queues as q, v_dialplans as dp, v_domains as d ";
 		$sql .= "where q.domain_uuid = d.domain_uuid ";
 		$sql .= "and (q.dialplan_uuid = dp.dialplan_uuid or q.dialplan_uuid is null) ";
-		$database = new database;
 		$call_center_queues = $database->select($sql, null, 'all');
 		$id = 0;
 		if (!empty($call_center_queues)) {
@@ -177,7 +173,6 @@ if ($domains_processed == 1) {
 				$p->add("dialplan_edit", "temp");
 
 			//save to the data
-				$database = new database;
 				$database->app_name = 'call_centers';
 				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->save($array, false);

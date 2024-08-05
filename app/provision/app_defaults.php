@@ -31,7 +31,6 @@ if ($domains_processed == 1) {
 	$sql = "select device_uuid, device_address ";
 	$sql .= "from v_devices ";
 	$sql .= "where (device_address like '%-%' or device_address like '%:%') ";
-	$database = database::new();
 	$result = $database->select($sql, null, 'all');
 	if (!empty($result)) {
 		foreach ($result as $row) {

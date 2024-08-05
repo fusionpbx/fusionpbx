@@ -31,7 +31,6 @@ if ($domains_processed == 1) {
 		$group->defaults();
 
 	//create the user view combines username, organization, contact first and last name
-		$database = new database;
 		$database->execute("DROP VIEW view_users;", null);
 
 		$sql = "CREATE VIEW view_users AS ( \n";
@@ -80,14 +79,12 @@ if ($domains_processed == 1) {
 		$sql .= "	where 1 = 1 \n";
 		$sql .= "	order by u.username asc \n";
 		$sql .= "); \n";
-		$database = new database;
 		$database->execute($sql, null);
 		unset($sql);
 
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select * from v_user_groups ";
 		$sql .= "where group_uuid is null; ";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result)) {
 			foreach($result as $row) {
@@ -96,7 +93,6 @@ if ($domains_processed == 1) {
 						$sql = "select group_uuid from v_groups ";
 						$sql .= "where group_name = :group_name ";
 						$parameters['group_name'] = $row['group_name'];
-						$database = new database;
 						$group_uuid = $database->execute($sql, $parameters, 'column');
 						unset($sql, $parameters);
 					//set the user_group_uuid
@@ -105,7 +101,6 @@ if ($domains_processed == 1) {
 						$sql .= "where user_group_uuid = :user_group_uuid; ";
 						$parameters['group_uuid'] = $group_uuid;
 						$parameters['user_group_uuid'] = $row['user_group_uuid'];
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 				}
@@ -116,7 +111,6 @@ if ($domains_processed == 1) {
 	//update users email if they are all null
 		$sql = "select count(*) from v_users ";
 		$sql .= "where user_email is not null; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 			$sql = "with users AS ( ";
@@ -130,14 +124,12 @@ if ($domains_processed == 1) {
 			$sql .= "set user_email = users.email_address ";
 			$sql .= "from users ";
 			$sql .= "where v_users.user_uuid = users.user_uuid;";
-			$database = new database;
 			$database->execute($sql, null);
 		}
 
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select count(*) from v_default_settings ";
 		$sql .= "where default_setting_category = 'user'; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows > 0) {
 			//build the array
@@ -171,7 +163,6 @@ if ($domains_processed == 1) {
 			$p->add("default_setting_edit", 'temp');
 
 			//save to the data
-			$database = new database;
 			$database->app_name = 'default_setting';
 			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 			$database->save($array, false);
@@ -187,7 +178,6 @@ if ($domains_processed == 1) {
 			//add the email templates to the database
 			$sql = "select count(*) as num_rows from v_email_templates ";
 			$sql .= "where email_template_uuid = '05b529c4-fba7-4071-bab3-143b076392e7' ";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows == 0) {
 				//build the array
@@ -223,7 +213,6 @@ if ($domains_processed == 1) {
 				$p->add("email_template_edit", 'temp');
 
 				//save to the data
-				$database = new database;
 				$database->app_name = 'email_templates';
 				$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
 				$database->save($array, false);
@@ -238,13 +227,11 @@ if ($domains_processed == 1) {
 	//update the user_type when the value is null
 		$sql = "select count(*) from v_users ";
 		$sql .= "where user_type is null; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows > 0) {
 			$sql = "update v_users ";
 			$sql .= "set user_type = 'default' ";
 			$sql .= "where user_type is null;";
-			$database = new database;
 			$database->execute($sql, null);
 		}
 

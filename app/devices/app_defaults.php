@@ -28,14 +28,12 @@ if ($domains_processed == 1) {
 	//set all lines to enabled (true) where null or empty string
 		$sql = "select device_line_uuid from v_device_lines ";
 		$sql .= "where enabled is null or enabled = '' ";
-		$database = new database;
 		$device_lines = $database->select($sql, null, 'all');
 		if (!empty($device_lines)) {
 			$sql = "update v_device_lines set ";
 			$sql .= "enabled = 'true' ";
 			$sql .= "where enabled is null ";
 			$sql .= "or enabled = '' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 		}
@@ -44,7 +42,6 @@ if ($domains_processed == 1) {
 	//set label to user_id if the label is null
 		$sql = "select count(*) from v_device_lines ";
 		$sql .= "where label is null ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 			$sql = "update v_device_lines ";
@@ -58,7 +55,6 @@ if ($domains_processed == 1) {
 		$sql .= "where d.device_uuid = k.device_uuid  ";
 		$sql .= "and k.device_uuid is not null ";
 		$sql .= "and k.device_key_vendor is null ";
-		$database = new database;
 		$device_keys = $database->select($sql, null, 'all');
 		if (!empty($device_keys)) {
 			foreach ($device_keys as $index => &$row) {
@@ -69,7 +65,6 @@ if ($domains_processed == 1) {
 				$p = new permissions;
 				$p->add('device_key_edit', 'temp');
 
-				$database = new database;
 				$database->app_name = 'devices';
 				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 				$database->save($array);
@@ -83,13 +78,11 @@ if ($domains_processed == 1) {
 
 	//set the device profile keys
 		$sql = "select count(*) from v_device_profile_keys ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 			//get the device profile keys from device_keys table
 			$sql = "select * from v_device_keys ";
 			$sql .= "where device_profile_uuid is not null ";
-			$database = new database;
 			$device_profile_keys = $database->select($sql, null, 'all');
 
 			//loop through the device_keys to build the data array
@@ -116,7 +109,6 @@ if ($domains_processed == 1) {
 				$p = new permissions;
 				$p->add('device_profile_key_add', 'temp');
 
-				$database = new database;
 				$database->app_name = 'devices';
 				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 				$database->save($array);
@@ -130,13 +122,11 @@ if ($domains_processed == 1) {
 
 	//set the device profile settings
 		$sql = "select count(*) from v_device_profile_settings ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 			//get the device profile keys from device_keys table
 			$sql = "select * from v_device_settings ";
 			$sql .= "where device_profile_uuid is not null ";
-			$database = new database;
 			$device_profile_keys = $database->select($sql, null, 'all');
 
 			//loop through the device_keys to build the data array
@@ -157,7 +147,6 @@ if ($domains_processed == 1) {
 				$p = new permissions;
 				$p->add('device_profile_setting_add', 'temp');
 
-				$database = new database;
 				$database->app_name = 'devices';
 				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 				$database->save($array);
@@ -171,7 +160,6 @@ if ($domains_processed == 1) {
 
 	//add device vendor functions to the database
 		$sql = "select count(*) from v_device_vendors; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 
@@ -180,7 +168,6 @@ if ($domains_processed == 1) {
 
 			//get the groups and create an array to use the name to get the uuid
 				$sql = "select * from v_groups ";
-				$database = new database;
 				$groups = $database->select($sql, null, 'all');
 				foreach ($groups as $row) {
 					if ($row['domain_uuid'] == '') {
@@ -243,7 +230,6 @@ if ($domains_processed == 1) {
 					$p->add('device_vendor_function_add', 'temp');
 					$p->add('device_vendor_function_group_add', 'temp');
 
-					$database = new database;
 					$database->app_name = 'devices';
 					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 					$database->save($array);

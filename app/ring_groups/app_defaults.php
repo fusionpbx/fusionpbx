@@ -30,7 +30,6 @@ if ($domains_processed == 1) {
 	//select ring groups with an empty context
 	$sql = "select * from v_ring_groups ";
 	$sql .= "where ring_group_context is null ";
-	$database = new database;
 	$ring_groups = $database->select($sql, null, 'all');
 	if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
 		//get the domain list
@@ -53,7 +52,6 @@ if ($domains_processed == 1) {
 				$p = new permissions;
 				$p->add('ring_group_edit', 'temp');
 			//execute update
-				$database = new database;
 				$database->app_name = 'ring_groups';
 				$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 				$database->save($array, false);
@@ -67,7 +65,6 @@ if ($domains_processed == 1) {
 	$sql = "update v_ring_group_destinations ";
 	$sql .= "set destination_enabled = true ";
 	$sql .= "where destination_enabled is null; ";
-	$database = new database;
 	$database->execute($sql, null);
 	unset($sql);
 

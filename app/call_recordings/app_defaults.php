@@ -27,7 +27,6 @@
 if ($domains_processed == 1) {
 
 	//create the user view combines username, organization, contact first and last name
-	$database = new database;
 	$database->execute("DROP VIEW view_call_recordings;", null);
 	$sql = "CREATE VIEW view_call_recordings AS ( \n";
 	$sql .= "	select domain_uuid, xml_cdr_uuid as call_recording_uuid, \n";
@@ -40,7 +39,6 @@ if ($domains_processed == 1) {
 	$sql .= "	and record_path is not null \n";
 	$sql .= "	order by start_stamp desc \n";
 	$sql .= "); \n";
-	$database = new database;
 	$database->execute($sql, null);
 	unset($sql);
 
