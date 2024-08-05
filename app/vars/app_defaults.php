@@ -114,10 +114,7 @@ if ($domains_processed == 1) {
 
 	//set country depend variables as country code and international direct dialing code (exit code)
 		if (!function_exists('set_country_vars')) {
-			function set_country_vars($x) {
-				//import the database object
-				global $database;
-
+			function set_country_vars($database, $x) {
 				//include the countrries
 				require "resources/countries.php";
 
@@ -214,7 +211,7 @@ if ($domains_processed == 1) {
 		}
 
 	//set country code variables
-		set_country_vars($x);
+		set_country_vars($database, $x);
 
 	//save the vars.xml file
 		save_var_xml();
