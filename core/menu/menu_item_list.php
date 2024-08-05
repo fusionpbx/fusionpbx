@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//initialize the database
+	$database = new database;
+
 //get the http post data
 	if (!empty($_POST['menu_items'])) {
 		$action = $_POST['action'];
@@ -76,9 +79,9 @@
 	$tmp_menu_item_order = 0;
 
 //add the build db child menu list
-	function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid) {
+	function build_db_child_menu_list ($database, $menu_item_level, $menu_item_uuid) {
 		global $menu_uuid, $list_row_edit_button, $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete, $page, $text, $x;
-	
+
 		//check for sub menus
 		$menu_item_level = $menu_item_level+1;
 		$sql = "select * from v_menu_items ";
@@ -87,7 +90,6 @@
 		$sql .= "order by menu_item_title, menu_item_order asc ";
 		$parameters['menu_uuid'] = $menu_uuid;
 		$parameters['menu_item_parent_uuid'] = $menu_item_uuid;
-		$database = new database;
 		$result2 = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 		if (!empty($result2) && sizeof($result2) != 0) {
@@ -117,7 +119,6 @@
 				$sql .= "	g.group_name asc ";
 				$parameters['menu_uuid'] = $menu_uuid;
 				$parameters['menu_item_uuid'] = $menu_item_uuid;
-				$database = new database;
 				$sub_result = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters, $group_array);
 
