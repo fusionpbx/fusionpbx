@@ -29,7 +29,6 @@
 
 		//add the sip profiles to the database
 			$sql = "select count(*) from v_sip_profiles ";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			unset($sql);
 
@@ -127,7 +126,6 @@
 							$p->add('sip_profile_setting_add', 'temp');
 
 						//execute insert
-							$database = new database;
 							$database->app_name = 'sip_profiles';
 							$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
 							$database->save($array, false);
@@ -147,7 +145,6 @@
 
 		//upgrade - add missing sip profiles domain settings
 			$sql = "select count(*) from v_sip_profile_domains ";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			unset($sql);
 
@@ -181,7 +178,6 @@
 						$sql = "select sip_profile_uuid from v_sip_profiles ";
 						$sql .= "where sip_profile_name = :sip_profile_name ";
 						$parameters['sip_profile_name'] = $sip_profile_name;
-						$database = new database;
 						$sip_profile_uuid = $database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
@@ -206,7 +202,6 @@
 							$p->add('sip_profile_domain_add', 'temp');
 
 						//execute insert
-							$database = new database;
 							$database->app_name = 'sip_profiles';
 							$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
 							$database->save($array, false);
@@ -227,7 +222,6 @@
 			$sql .= "sip_profile_enabled = 'true' ";
 			$sql .= "where sip_profile_enabled is null ";
 			$sql .= "or sip_profile_enabled = '' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 

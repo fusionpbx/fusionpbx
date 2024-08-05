@@ -29,7 +29,6 @@ if ($domains_processed == 1) {
 	//base64 decode the description - added for backwards comptability with old versions of FusionPBX
 		$sql = "select * from v_vars \n";
 		$sql .= "where var_description like '%=';\n";
-		$database = new database;
 		$vars = $database->select($sql, null, 'all');
 		if (!empty($vars)) {
 			foreach($vars as $row) {
@@ -46,7 +45,6 @@ if ($domains_processed == 1) {
 
 	//add the variables to the database
 		$sql = "select count(*) from v_vars ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		unset($sql);
 
@@ -103,7 +101,6 @@ if ($domains_processed == 1) {
 
 			//execute insert
 				if (!empty($array)) {
-					$database = new database;
 					$database->app_name = 'vars';
 					$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 					$database->save($array, false);
@@ -127,7 +124,6 @@ if ($domains_processed == 1) {
 				$sql .= "and default_setting_category = 'domain' ";
 				$sql .= "and default_setting_subcategory = 'country' ";
 				$sql .= "and default_setting_enabled = 'true';";
-				$database = new database;
 				$country_iso = $database->select($sql, null, 'column');
 				unset($sql);
 
@@ -142,7 +138,6 @@ if ($domains_processed == 1) {
 					$sql = "select count(*) from v_vars ";
 					$sql .= "where var_name = 'default_country' ";
 					$sql .= "and var_category = 'Defaults' ";
-					$database = new database;
 					$num_rows = $database->select($sql, null, 'column');
 					unset($sql);
 
@@ -162,7 +157,6 @@ if ($domains_processed == 1) {
 					$sql = "select count(*) from v_vars ";
 					$sql .= "where var_name = 'default_countrycode' ";
 					$sql .= "and var_category = 'Defaults' ";
-					$database = new database;
 					$num_rows = $database->select($sql, null, 'column');
 					unset($sql);
 
@@ -182,7 +176,6 @@ if ($domains_processed == 1) {
 					$sql = "select count(*) from v_vars ";
 					$sql .= "where var_name = 'default_exitcode' ";
 					$sql .= "and var_category = 'Defaults' ";
-					$database = new database;
 					$num_rows = $database->select($sql, null, 'column');
 					unset($sql);
 
@@ -205,7 +198,6 @@ if ($domains_processed == 1) {
 						$p->add("var_add", "temp");
 
 					//execute inserts
-						$database = new database;
 						$database->app_name = 'vars';
 						$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 						$database->save($array, false);

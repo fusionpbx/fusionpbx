@@ -30,12 +30,10 @@ if ($domains_processed == 1) {
 
 	//get the conference room count
 	$sql = "select count(*) from v_conference_rooms; ";
-	$database = new database;
 	$conference_room_count = $database->select($sql, null, 'column');
 
 	//get the count of moderator and participant pins that are null
 	$sql = "select count(*) from v_conference_rooms where moderator_pin is null and participant_pin is null; ";
-	$database = new database;
 	$pin_null_count = $database->select($sql, null, 'column');
 
 	//if missing move pin numbers from meetings table to the conference rooms table
@@ -50,14 +48,12 @@ if ($domains_processed == 1) {
 		$sql .= 	"WHERE r.meeting_uuid = m.meeting_uuid  ";
 		$sql .= "	) AS subquery ";
 		$sql .= "WHERE v_conference_rooms.conference_room_uuid = subquery.conference_room_uuid; ";
-		$database = new database;
 		$database->execute($sql);
 		unset($sql);
 	}
 
 	//get the count of moderator and participant pins that are null
 	$sql = "select count(*) from v_conference_room_users; ";
-	$database = new database;
 	$conference_room_user_count = $database->select($sql, null, 'column');
 
 	//check if meeting_users table exists
@@ -66,7 +62,6 @@ if ($domains_processed == 1) {
 	//count the meeting users table
 	if ($table_exists) {
 		$sql = "select count(*) from v_meeting_users; ";
-		$database = new database;
 		$meeting_user_count = $database->select($sql, null, 'column');
 	}
 
@@ -78,7 +73,6 @@ if ($domains_processed == 1) {
 		$sql .= "SELECT r.domain_uuid, m.meeting_user_uuid as conference_room_user_uuid, r.conference_room_uuid, m.user_uuid ";
 		$sql .= "FROM v_conference_rooms as r, v_meeting_users as m ";
 		$sql .= "WHERE r.meeting_uuid = m.meeting_uuid; ";
-		$database = new database;
 		$database->execute($sql);
 		unset($sql);
 	}

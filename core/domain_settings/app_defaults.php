@@ -31,7 +31,6 @@
 			$sql = "update v_domain_settings ";
 			$sql .= "set domain_setting_name = 'text' ";
 			$sql .= "where domain_setting_name = 'var' ";
-			$database = new database;
 			$database->execute($sql, null);
 			unset($sql, $parameters);
 
@@ -49,7 +48,6 @@
 				$sql .= "and domain_setting_category = 'domain'";
 				$parameters['language_code'] = $language_code;
 				$parameters['legacy_code'] = $legacy_code;
-				$database = new database;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 			}
@@ -59,7 +57,6 @@
 			$sql .= "set domain_setting_value = '#fafafa' ";
 			$sql .= "where domain_setting_subcategory = 'message_default_color' ";
 			$sql .= "and domain_setting_value = '#ccffcc' ";
-			$database = new database;
 			$database->execute($sql, null);
 			unset($sql, $parameters);
 
@@ -67,7 +64,6 @@
 			$sql .= "set domain_setting_value = '#666' ";
 			$sql .= "where domain_setting_subcategory = 'message_default_background_color' ";
 			$sql .= "and domain_setting_value = '#004200' ";
-			$database = new database;
 			$database->execute($sql, null);
 			unset($sql, $parameters);
 

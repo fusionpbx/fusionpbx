@@ -33,7 +33,6 @@ if ($domains_processed == 1) {
 		$sql .= "and dialplan_detail_tag = 'action'\n";
 		$sql .= "and (dialplan_detail_type = 'transfer' or dialplan_detail_type = 'bridge')\n";
 		$sql .= "order by dialplan_detail_order;\n";
-		$database = new database;
 		$extensions = $database->select($sql, null, 'all');
 		unset($sql);
 
@@ -45,7 +44,6 @@ if ($domains_processed == 1) {
 				$parameters['destination_app'] = $row['destination_app'];
 				$parameters['destination_data'] = $row['destination_data'];
 				$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
-				$database = new database;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 			}
@@ -55,7 +53,6 @@ if ($domains_processed == 1) {
 	//use destinations actions to
 		$sql = "select * from v_destinations ";
 		$sql .= "where destination_actions is null ";
-		$database = new database;
 		$destinations = $database->select($sql, null, 'all');
 		if (is_array($destinations)) {
 			//pre-set the numbers
@@ -90,7 +87,6 @@ if ($domains_processed == 1) {
 						$p->add('destination_edit', 'temp');
 		
 						//create the database object and save the data
-						$database = new database;
 						$database->app_name = 'destinations';
 						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 						$database->save($array, false);
@@ -117,7 +113,6 @@ if ($domains_processed == 1) {
 				$p->add('destination_edit', 'temp');
 
 				//create the database object and save the data
-				$database = new database;
 				$database->app_name = 'destinations';
 				$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 				$database->save($array, false);
