@@ -648,10 +648,9 @@ if (!class_exists('domains')) {
 					//get the email queue settings
 						$setting = new settings(["domain_uuid" => $domain_uuid]);
 
-					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
+					//get the list of installed apps from the core and mod directories and run the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
 						foreach ($default_list as &$default_path) {
-							//echo $default_path."<br />\n";
 							include($default_path);
 						}
 
