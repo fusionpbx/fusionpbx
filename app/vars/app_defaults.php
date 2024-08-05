@@ -104,7 +104,6 @@ if ($domains_processed == 1) {
 					$database->app_name = 'vars';
 					$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 					$database->save($array, false);
-					$message = $database->message;
 				}
 
 			//revoke temporary permissions
@@ -116,8 +115,13 @@ if ($domains_processed == 1) {
 	//set country depend variables as country code and international direct dialing code (exit code)
 		if (!function_exists('set_country_vars')) {
 			function set_country_vars($x) {
+				//import the database object
+				global $database;
+
+				//include the countrries
 				require "resources/countries.php";
 
+				//get the country iso
 				$sql = "select default_setting_value ";
 				$sql .= "from v_default_settings ";
 				$sql .= "where default_setting_name = 'iso_code' ";
