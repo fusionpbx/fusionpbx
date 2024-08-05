@@ -349,7 +349,7 @@
 			global $domain_uuid;
 			$sql = "select * from v_user_groups ";
 			$sql .= "where group_name = 'superadmin' ";
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			$superadmin_list = "||";
 			if (is_array($result) && @sizeof($result) != 0) {
@@ -394,7 +394,7 @@
 			$sql = "select distinct(" . $field_name . ") as " . $field_name . " ";
 			$sql .= "from " . $table_name . " " . $sql_where_optional . " ";
 			$sql .= "order by " . (!empty($sql_order_by) ? $sql_order_by : $field_name . ' asc');
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as $field) {
@@ -442,7 +442,7 @@
 				$sql = "select distinct(" . $field_name . ") as " . $field_name . " from " . $table_name . " " . $sql_where_optional . " ";
 			}
 
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as $field) {
@@ -682,7 +682,7 @@
 			$sql .= "and username = :username ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['username'] = $username;
-			$database = new database;
+			$database = database::new();
 			$num_rows = $database->select($sql, $parameters, 'column');
 			return $num_rows > 0 ? true : false;
 		}
@@ -699,7 +699,7 @@
 			$sql .= "and username = :username ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['username'] = $username;
-			$database = new database;
+			$database = database::new();
 			$user_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -710,7 +710,7 @@
 				$sql .= "and user_uuid = :user_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
 				$parameters['user_uuid'] = $user_uuid;
-				$database = new database;
+				$database = database::new();
 				$num_rows = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
@@ -726,7 +726,7 @@
 					$p = new permissions;
 					$p->add('extension_user_add', 'temp');
 					//execute insert
-					$database = new database;
+					$database = database::new();
 					$database->app_name = 'function-add_extension_user';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array);
@@ -776,7 +776,7 @@
 				$p->add('user_add', 'temp');
 				$p->add('user_group_add', 'temp');
 				//execute insert
-				$database = new database;
+				$database = database::new();
 				$database->app_name = 'function-user_add';
 				$database->app_uuid = '15a8d74b-ac7e-4468-add4-3e6ebdcb8e22';
 				$database->save($array);
@@ -1996,7 +1996,7 @@
 
 		function get_countries() {
 			$sql = "select * from v_countries order by country asc";
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			unset($sql);
 
