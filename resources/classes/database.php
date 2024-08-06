@@ -218,6 +218,13 @@
 			/**
 			 * Stores the application name making the request.
 			 * @var string App name making database request.
+			 * @access public
+			 */
+			public $name;
+
+			/**
+			 * Stores the application name making the request.
+			 * @var string App name making database request.
 			 * @see $app_uuid
 			 * @access public
 			 */
@@ -925,7 +932,7 @@
 					}
 			}
 
-			// Use this function to execute complex queries
+			// Use this function to run complex queries
 			public function execute($sql, $parameters = null, $return_type = 'all') {
 
 				//connect to the database if needed
@@ -936,7 +943,7 @@
 				//set the error mode
 					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-				//execute the query, and return the results
+				//run the query, and return the results
 					try {
 						$prep_statement = $this->db->prepare($sql);
 						if (is_array($parameters)) {
@@ -1038,7 +1045,7 @@
 					}
 					$sql .= ")\n";
 
-				//execute the query, show exceptions
+				//run the query, show exceptions
 					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				//reduce prepared statement latency
@@ -1046,7 +1053,7 @@
 						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 					}
 
-				//prepare the sql and parameters and then execute the query
+				//prepare the sql and parameters and then run the query
 					try {
 						//$this->sql = $sql;
 						//$this->db->exec($sql);
@@ -1354,7 +1361,7 @@
 									$message["message"] = "OK";
 									$message["code"] = "200";
 									$message["uuid"] = $id;
-									$message["details"][$m]["name"] = $this->name;
+									$message["details"][$m]["name"] = $this->app_name;
 									$message["details"][$m]["message"] = "OK";
 									$message["details"][$m]["code"] = "200";
 									//$message["details"][$m]["uuid"] = $parent_key_value;
@@ -1369,7 +1376,7 @@
 									$retval = false;
 									$message["message"] = "Bad Request";
 									$message["code"] = "400";
-									$message["details"][$m]["name"] = $this->name;
+									$message["details"][$m]["name"] = $this->app_name;
 									$message["details"][$m]["message"] = $e->getMessage();
 									$message["details"][$m]["code"] = "400";
 									$message["details"][$m]["sql"] = $sql;
@@ -2139,14 +2146,13 @@
 					$this->db->beginTransaction();
 
 				//loop through the array
-					if (is_array($array)) foreach ($array as $schema_name => $schema_array) {
+					if (is_array($array)) foreach ($array as $parent_name => $schema_array) {
 
-						$name = $schema_name;
 						if (is_array($schema_array)) foreach ($schema_array as $schema_id => $array) {
 
 							//set the variables
-								$table_name = self::TABLE_PREFIX.$name;
-								$parent_key_name = self::singular($name)."_uuid";
+								$table_name = self::TABLE_PREFIX.$parent_name;
+								$parent_key_name = self::singular($parent_name)."_uuid";
 								$parent_key_name = self::sanitize($parent_key_name);
 
 							//if the uuid is set then set parent key exists and value
@@ -2200,7 +2206,7 @@
 										//set the action
 											if (count($result) > 0) {
 												$action = "update";
-												$old_array[$schema_name] = $result;
+												$old_array[$parent_name] = $result;
 											}
 											else {
 												$action = "add";
@@ -2215,7 +2221,7 @@
 							//add a record
 								if ($action == "add") {
 
-									if (permission_exists(self::singular($this->name).'_add')) {
+									if (permission_exists(self::singular($parent_name).'_add')) {
 
 											$params = array();
 											$sql = "INSERT INTO ".$table_name." ";
@@ -2289,7 +2295,7 @@
 												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 											}
 
-											//execute the query and return the results
+											//run the query and return the results
 											try {
 												//$this->db->query(check_sql($sql));
 												$prep_statement = $this->db->prepare($sql);
@@ -2298,7 +2304,7 @@
 												$message["message"] = "OK";
 												$message["code"] = "200";
 												$message["uuid"] = $parent_key_value;
-												$message["details"][$m]["name"] = $this->name;
+												$message["details"][$m]["name"] = $this->app_name;
 												$message["details"][$m]["message"] = "OK";
 												$message["details"][$m]["code"] = "200";
 												$message["details"][$m]["uuid"] = $parent_key_value;
@@ -2314,7 +2320,7 @@
 												$retval = false;
 												$message["message"] = "Bad Request";
 												$message["code"] = "400";
-												$message["details"][$m]["name"] = $this->name;
+												$message["details"][$m]["name"] = $this->app_name;
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
 												$message["details"][$m]["array"] = $array;
@@ -2330,8 +2336,8 @@
 									}
 									else {
 										$retval = false;
-										$message["name"] = $this->name;
-										$message["message"] = "Forbidden, does not have '".self::singular($this->name)."_add'";
+										$message["name"] = $this->app_name;
+										$message["message"] = "Forbidden, does not have '".self::singular($parent_name)."_add'";
 										$message["code"] = "403";
 										$message["line"] = __line__;
 										$this->message[] = $message;
@@ -2341,7 +2347,7 @@
 
 							//edit a specific uuid
 								if ($action == "update") {
-									if (permission_exists(self::singular($this->name).'_edit')) {
+									if (permission_exists(self::singular($parent_name).'_edit')) {
 
 										//parent data
 											$params = array();
@@ -2392,7 +2398,7 @@
 												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 											}
 
-											//execute the query and return the results
+											//run the query and return the results
 											try {
 												$prep_statement = $this->db->prepare($sql);
 												$prep_statement->execute($params);
@@ -2400,7 +2406,7 @@
 												$message["message"] = "OK";
 												$message["code"] = "200";
 												$message["uuid"] = $parent_key_value;
-												$message["details"][$m]["name"] = $this->name;
+												$message["details"][$m]["name"] = $this->app_name;
 												$message["details"][$m]["message"] = "OK";
 												$message["details"][$m]["code"] = "200";
 												$message["details"][$m]["uuid"] = $parent_key_value;
@@ -2417,7 +2423,7 @@
 												$retval = false;
 												$message["message"] = "Bad Request";
 												$message["code"] = "400";
-												$message["details"][$m]["name"] = $this->name;
+												$message["details"][$m]["name"] = $this->app_name;
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
 												$message["details"][$m]["sql"] = $sql;
@@ -2431,7 +2437,7 @@
 									}
 									else {
 										$retval = false;
-										$message["message"] = "Forbidden, does not have '".self::singular($this->name)."_edit'";
+										$message["message"] = "Forbidden, does not have '".self::singular($parent_name)."_edit'";
 										$message["code"] = "403";
 										$message["line"] = __line__;
 										$this->message = $message;
@@ -2511,7 +2517,7 @@
 
 																	//add to the parent array
 																		if (is_array($child_array)) {
-																			$old_array[$schema_name][$schema_id][$key][] = $child_array;
+																			$old_array[$parent_name][$schema_id][$key][] = $child_array;
 																		}
 																}
 																unset($prep_statement);
@@ -2727,7 +2733,7 @@
 																$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 															}
 
-															//execute the query and return the results
+															//run the query and return the results
 															try {
 																$prep_statement = $this->db->prepare($sql);
 																$prep_statement->execute($params);
