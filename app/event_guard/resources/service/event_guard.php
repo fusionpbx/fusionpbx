@@ -181,7 +181,7 @@
 		//	print_r($json_array);
 		//}
 
-		//registration failed - block IP address unless they are registered,
+		//registration failed - block IP address unless they are registered
 		if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::register_failure') {
 			//not registered so block the address
 			if (!access_allowed($json_array['network-ip'])) {
