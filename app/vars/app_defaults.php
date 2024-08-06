@@ -111,7 +111,6 @@ if ($domains_processed == 1) {
 				$p->delete("var_edit", "temp");
 		}
 
-
 	//set country depend variables as country code and international direct dialing code (exit code)
 		if (!function_exists('set_country_vars')) {
 			function set_country_vars($database, $x) {
