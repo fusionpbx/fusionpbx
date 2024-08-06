@@ -102,9 +102,6 @@
 		}
 	}
 
-//show intentions for database to be global for all functions
-	global $database;
-
 //connect to the database
 	$database = database::new();
 
