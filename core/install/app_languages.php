@@ -1017,5 +1017,3 @@ $text['button-select']['ja-jp'] = "選択する";
 $text['button-select']['ko-kr'] = "선택하다";
 
 ?>
-
-

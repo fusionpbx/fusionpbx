@@ -3845,4 +3845,3 @@ $text['label-text']['ja-jp'] = "文章";
 $text['label-text']['ko-kr'] = "텍스트";
 
 ?>
-

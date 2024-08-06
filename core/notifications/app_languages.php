@@ -677,7 +677,3 @@ $text['description-notifications']['ja-jp'] = "FusionPBX プロジェクト関�
 $text['description-notifications']['ko-kr'] = "FusionPBX 프로젝트 관련 통신 및 기타 로컬 시스템 경고에 대한 알림 기본 설정을 지정합니다.";
 
 ?>
-
-
-
-

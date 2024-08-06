@@ -1327,4 +1327,3 @@ $text['description-domain-add']['ja-jp'] = "以下にドメインの詳細を入
 $text['description-domain-add']['ko-kr'] = "아래에 도메인 세부 정보를 입력하십시오.";
 
 ?>
-

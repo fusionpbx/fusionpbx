@@ -1887,4 +1887,3 @@ $text['sunday']['ja-jp'] = "日曜日";
 $text['sunday']['ko-kr'] = "일요일";
 
 ?>
-

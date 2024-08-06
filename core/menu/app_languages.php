@@ -1171,5 +1171,3 @@ $text['confirm-restore']['ja-jp'] = "このメニュー上のすべての<i>保�
 $text['confirm-restore']['ko-kr'] = "이 메뉴에서 모든 <i>보호되지 않은</i> 항목을 복원하려고 합니다.";
 
 ?>
-
-

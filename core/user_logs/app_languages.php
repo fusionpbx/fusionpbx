@@ -545,5 +545,3 @@ $text['description-location']['ja-jp'] = "所在地を入力してください�
 $text['description-location']['ko-kr'] = "위치를 입력하십시오.";
 
 ?>
-
-
