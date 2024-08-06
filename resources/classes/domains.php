@@ -646,7 +646,7 @@ if (!class_exists('domains')) {
 						$context = $domain_name;
 
 					//get the email queue settings
-						$setting = new settings(["domain_uuid" => $domain_uuid]);
+						$setting = new settings(["database" => $this->database, "domain_uuid" => $domain_uuid]);
 
 					//get the list of installed apps from the core and mod directories and run the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
