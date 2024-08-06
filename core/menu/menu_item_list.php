@@ -210,7 +210,7 @@
 
 				//check for additional sub menus
 				if (!empty($menu_item_uuid)) {
-					build_db_child_menu_list($db, $menu_item_level, $menu_item_uuid);
+					build_db_child_menu_list($database, $menu_item_level, $menu_item_uuid);
 				}
 			}
 			unset($result2, $row2);
@@ -393,7 +393,7 @@
 			//check for sub menus
 				$menu_item_level = 0;
 				if (is_uuid($menu_item_uuid)) {
-					build_db_child_menu_list($db, $menu_item_level, $menu_item_uuid);
+					build_db_child_menu_list($database, $menu_item_level, $menu_item_uuid);
 				}
 
 		}
