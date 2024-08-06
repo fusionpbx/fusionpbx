@@ -2103,19 +2103,17 @@
 			public function save(array &$array, bool $transaction_save = true) {
 
 				//prepare the values
-					$parent_key_value = null;
-					$parent_key_exists = null;
 					$parent_field_names = [];
 					$child_field_names = [];
 					$this->message = [];
-					$parent_key_name = null;
 					$parent_key_exists = false;
-					$child_key_name = null;
+					$parent_key_name = null;
+					$parent_key_value = null;
 					$child_key_exists = false;
-					$this->table = null;
+					$child_key_name = null;
+					$child_key_value = null;
 					$table_name = null;
 					$child_table_name = null;
-					$this->fields = null;
 
 				//set default return value
 					$retval = true;
