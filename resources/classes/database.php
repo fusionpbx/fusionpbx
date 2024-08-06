@@ -2101,6 +2101,22 @@
 			 * @return returns and array wih result details
 			 */
 			public function save(array &$array, bool $transaction_save = true) {
+
+				//prepare the values
+					$parent_key_value = null;
+					$parent_key_exists = null;
+					$parent_field_names = [];
+					$child_field_names = [];
+					$this->message = [];
+					$parent_key_name = null;
+					$parent_key_exists = false;
+					$child_key_name = null;
+					$child_key_exists = false;
+					$this->table = null;
+					$table_name = null;
+					$child_table_name = null;
+					$this->fields = null;
+
 				//set default return value
 					$retval = true;
 
@@ -2127,12 +2143,12 @@
 				//loop through the array
 					if (is_array($array)) foreach ($array as $schema_name => $schema_array) {
 
-						$this->name = $schema_name;
+						$name = $schema_name;
 						if (is_array($schema_array)) foreach ($schema_array as $schema_id => $array) {
 
 							//set the variables
-								$table_name = self::TABLE_PREFIX.$this->name;
-								$parent_key_name = self::singular($this->name)."_uuid";
+								$table_name = self::TABLE_PREFIX.$name;
+								$parent_key_name = self::singular($name)."_uuid";
 								$parent_key_name = self::sanitize($parent_key_name);
 
 							//if the uuid is set then set parent key exists and value
@@ -2204,7 +2220,7 @@
 									if (permission_exists(self::singular($this->name).'_add')) {
 
 											$params = array();
-											$sql = "INSERT INTO ".self::TABLE_PREFIX.$this->name." ";
+											$sql = "INSERT INTO ".$table_name." ";
 											$sql .= "(";
 											if (!$parent_key_exists) {
 												$sql .= $parent_key_name.", ";
@@ -2331,7 +2347,7 @@
 
 										//parent data
 											$params = array();
-											$sql = "UPDATE ".self::TABLE_PREFIX.$this->name." SET ";
+											$sql = "UPDATE ".$table_name." SET ";
 											if (is_array($array)) {
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
