@@ -47,6 +47,9 @@
 		$_GET['show'] = 'false';
 	}
 
+//connect to database
+	$database = database::new();
+
 //get post or get variables from http
 	if (!empty($_REQUEST)) {
 		$cdr_id = $_REQUEST["cdr_id"] ?? '';
@@ -571,7 +574,6 @@
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
-	$database = new database;
 	if ($archive_request && $_SESSION['cdr']['archive_database']['boolean'] == 'true') {
 		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
 		$database->host = $_SESSION['cdr']['archive_database_host']['text'];
@@ -583,7 +585,7 @@
 	}
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = is_array($result) ? sizeof($result) : 0;
-	unset($database, $sql, $parameters);
+	unset($sql, $parameters);
 
 //return the paging
 	if (empty($_REQUEST['export_format'])) {

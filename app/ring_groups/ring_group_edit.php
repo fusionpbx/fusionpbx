@@ -39,6 +39,9 @@
 		exit;
 	}
 
+//connect to database
+	$database = database::new();
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -64,7 +67,6 @@
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -83,7 +85,6 @@
 			$sql = "select domain_uuid from v_ring_groups ";
 			$sql .= "where ring_group_uuid = :ring_group_uuid ";
 			$parameters['ring_group_uuid'] = $ring_group_uuid;
-			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 		}
@@ -113,7 +114,6 @@
 			$p->add('ring_group_user_delete', 'temp');
 
 			//execute delete
-			$database = new database;
 			$database->app_name = 'ring_groups';
 			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->delete($array);
@@ -135,7 +135,6 @@
 		$sql = "select count(*) from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$total_ring_groups = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 
@@ -222,7 +221,6 @@
 				$sql = "select * from v_ring_groups ";
 				$sql .= "where  ring_group_uuid = :ring_group_uuid ";
 				$parameters['ring_group_uuid'] = $ring_group_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (!empty($row)) {
 					//if (!permission_exists(‘ring_group_domain')) {
@@ -253,7 +251,6 @@
 		$p->add('ring_group_user_add', 'temp');
 
 		//execute delete
-		$database = new database;
 		$database->app_name = 'ring_groups';
 		$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 		$database->save($array);
@@ -431,9 +428,8 @@
 						$parameters['ring_group_uuid'] = $ring_group_uuid;
 						$parameters['range_first_extension'] = $range_first_extension;
 						$parameters['range_second_extension'] = $range_second_extension;
-						$database = new database;
 						$extensions = $database->select($sql, $parameters, 'all');
-						unset($sql, $parameters, $database);
+						unset($sql, $parameters);
 						// echo var_dump($extensions);
 						foreach ($extensions as $extension) {
 							$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
@@ -493,7 +489,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database = new database;
 			$database->app_name = 'ring_groups';
 			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->save($array);
@@ -547,7 +542,6 @@
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where ring_group_uuid = :ring_group_uuid ";
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -602,7 +596,6 @@
 		$sql .= "order by destination_delay, destination_number asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_destinations = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -637,7 +630,6 @@
 		$sql .= "order by u.username asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -648,7 +640,6 @@
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
