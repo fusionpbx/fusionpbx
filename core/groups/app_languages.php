@@ -3017,5 +3017,3 @@ $text['message-permissions_reloaded']['ja-jp'] = "権限がリロードされま
 $text['message-permissions_reloaded']['ko-kr'] = "다시 로드된 권한";
 
 ?>
-
-

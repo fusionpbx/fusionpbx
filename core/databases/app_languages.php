@@ -573,5 +573,3 @@ $text['description-database-add']['ja-jp'] = "データベース接続情報。"
 $text['description-database-add']['ko-kr'] = "데이터베이스 연결 정보.";
 
 ?>
-
-

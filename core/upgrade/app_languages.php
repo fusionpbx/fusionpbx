@@ -1509,5 +1509,3 @@ $text['button-preview']['ja-jp'] = "プレビュー";
 $text['button-preview']['ko-kr'] = "시사";
 
 ?>
-
-

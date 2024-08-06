@@ -1434,5 +1434,3 @@ $text['button-toggle']['ja-jp'] = "トグル";
 $text['button-toggle']['ko-kr'] = "비녀장";
 
 ?>
-
-
