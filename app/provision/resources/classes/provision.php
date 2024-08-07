@@ -331,14 +331,9 @@
 							$sql = "select * from v_devices ";
 							$sql .= "where device_address = :device_address ";
 							$sql .= "and device_address <> '000000000000' ";
-							if ($this->settings->get('provision','http_domain_filter', 'false') === "true") {
-								$sql  .= "and domain_uuid=:domain_uuid ";
-								$parameters['domain_uuid'] = $domain_uuid;
-							}
 							$parameters['device_address'] = $device_address;
 							$row = $this->database->select($sql, $parameters, 'row');
 							unset($sql, $parameters);
-
 							if (is_array($row) && sizeof($row) != 0) {
 
 								//checks either device enabled
@@ -578,10 +573,6 @@
 					$sql = "select * from v_devices ";
 					$sql .= "where device_uuid = :device_uuid ";
 					$sql .= "and device_enabled = 'true' ";
-					if ($provision['http_domain_filter'] == "true") {
-						$sql  .= "and domain_uuid = :domain_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
-					}
 					$parameters['device_uuid'] = $device_uuid;
 					$row = $this->database->select($sql, $parameters, 'row');
 					if (is_array($row) && sizeof($row) != 0) {
@@ -589,30 +580,27 @@
 						unset($sql, $row, $parameters);
 						if (is_uuid($device_uuid_alternate)) {
 							//override the original device_uuid
-								$device_uuid = $device_uuid_alternate;
+							$device_uuid = $device_uuid_alternate;
+
 							//get the new devices information
-								$sql = "select * from v_devices ";
-								$sql .= "where device_uuid = :device_uuid ";
-								if($provision['http_domain_filter'] == "true") {
-									$sql  .= "and domain_uuid = :domain_uuid ";
-									$parameters['domain_uuid'] = $domain_uuid;
+							$sql = "select * from v_devices ";
+							$sql .= "where device_uuid = :device_uuid ";
+							$parameters['device_uuid'] = $device_uuid;
+							$row = $this->database->select($sql, $parameters, 'row');
+							if (is_array($row) && sizeof($row) != 0) {
+								if ($row["device_enabled"] == "true") {
+									$device_label = $row["device_label"];
+									$device_profile_uuid = $row["device_profile_uuid"];
+									$device_firmware_version = $row["device_firmware_version"];
+									$device_user_uuid = $row["device_user_uuid"];
+									$device_location = strtolower($row["device_location"]);
+									//keep the original device_vendor
+									$device_enabled = $row["device_enabled"];
+									//keep the original device_template
+									$device_description = $row["device_description"];
 								}
-								$parameters['device_uuid'] = $device_uuid;
-								$row = $this->database->select($sql, $parameters, 'row');
-								if (is_array($row) && sizeof($row) != 0) {
-									if ($row["device_enabled"] == "true") {
-										$device_label = $row["device_label"];
-										$device_profile_uuid = $row["device_profile_uuid"];
-										$device_firmware_version = $row["device_firmware_version"];
-										$device_user_uuid = $row["device_user_uuid"];
-										$device_location = strtolower($row["device_location"]);
-										//keep the original device_vendor
-										$device_enabled = $row["device_enabled"];
-										//keep the original device_template
-										$device_description = $row["device_description"];
-									}
-								}
-								unset($sql, $row, $parameters);
+							}
+							unset($sql, $row, $parameters);
 						}
 					}
 				}
