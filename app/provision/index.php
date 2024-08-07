@@ -84,13 +84,13 @@
 			405 => "Method Not Allowed",
 			406 => "Not Acceptable",
 		];
-		$error_string = $http_errors[$error] ?? '';
-		if (!empty($error_string)) {
-			header("HTTP/1.1 $error $error_string");
+		$error_message = $http_errors[$error] ?? '';
+		if (!empty($error_message)) {
+			header("HTTP/1.1 $error $error_message");
 			echo "<html>\n";
-			echo "<head><title>$error $error_string</title></head>\n";
+			echo "<head><title>$error $error_message</title></head>\n";
 			echo "<body bgcolor=\"white\">\n";
-			echo "<center><h1>$error $error_string</h1></center>\n";
+			echo "<center><h1>$error $error_message</h1></center>\n";
 			echo "<hr><center>nginx/1.12.1</center>\n";
 			echo "</body>\n";
 			echo "</html>\n";
