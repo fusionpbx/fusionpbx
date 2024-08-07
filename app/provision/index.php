@@ -74,12 +74,23 @@
 
 //send http error
 	function http_error($error) {
-		if ($error === "404") {
-			header("HTTP/1.0 404 Not Found");
+		//$error_int_val = intval($error);
+		$http_errors = [
+			400 => "Bad Request",
+			401 => "Unauthorized",
+			402 => "Payment Required",
+			403 => "Forbidden",
+			404 => "Not Found",
+			405 => "Method Not Allowed",
+			406 => "Not Acceptable",
+		];
+		$error_message = $http_errors[$error] ?? '';
+		if (!empty($error_message)) {
+			header("HTTP/1.1 $error $error_message");
 			echo "<html>\n";
-			echo "<head><title>404 Not Found</title></head>\n";
+			echo "<head><title>$error $error_message</title></head>\n";
 			echo "<body bgcolor=\"white\">\n";
-			echo "<center><h1>404 Not Found</h1></center>\n";
+			echo "<center><h1>$error $error_message</h1></center>\n";
 			echo "<hr><center>nginx/1.12.1</center>\n";
 			echo "</body>\n";
 			echo "</html>\n";
@@ -167,18 +178,27 @@
 			//}
 	}
 
+//get http_domain_filter from global settings only (can't be used per domain)
+	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', 'true') == 'true' ? true : false;
+
 //get the domain_uuid, domain_name, device_name and device_vendor
 	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
 	$sql .= "where device_address = :device_address ";
-	$sql .= "and d.domain_uuid = n.domain_uuid; ";
+	$sql .= "and d.domain_uuid = n.domain_uuid ";
 	$parameters['device_address'] = $device_address;
+	if ($domain_filter) {
+		$sql .= "and n.domain_name = :domain_name";
+		$parameters['domain_name'] = $_SERVER['HTTP_HOST'];
+	}
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
 		$domain_name = $row['domain_name'];
 		$device_vendor = $row['device_vendor'];
+	} else {
+		$result = 'false';
 	}
 	unset($sql, $parameters);
 
@@ -192,7 +212,6 @@
 			$sql = "select domain_uuid from v_domains ";
 			$sql .= "where domain_name = :domain_name ";
 			$parameters['domain_name'] = $domain_name;
-			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 	}
@@ -204,6 +223,11 @@
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".escape($_REQUEST['mac']));
 			http_error('404');
 		}
+	} else {
+		//check for a valid match
+			if (empty($device_uuid)) {
+				http_error(403);
+			}
 	}
 
 //use the device address to get the vendor
