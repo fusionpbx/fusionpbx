@@ -200,8 +200,8 @@
 		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'btn_save','style'=>'display: none; margin-left: 15px;']);
 	}
 	echo "<span id='expand_contract'>\n";
-		echo button::create(['type'=>'button','label'=>$text['button-expand_all'],'icon'=>$_SESSION['theme']['button_icon_expand'],'id'=>'btn_expand','name'=>'btn_expand','style'=>($expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideDown('fast'); $(this).hide(); $('#btn_contract').show();"]);
-		echo button::create(['type'=>'button','label'=>$text['button-collapse_all'],'icon'=>$_SESSION['theme']['button_icon_contract'],'id'=>'btn_contract','name'=>'btn_contract','style'=>(!$expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideUp('fast'); $(this).hide(); $('#btn_expand').show();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-expand_all'],'icon'=>$_SESSION['theme']['button_icon_expand'],'id'=>'btn_expand','name'=>'btn_expand','style'=>($expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideDown('fast'); $(this).hide(); $('#btn_contract').show(); toggle_grid_row_end_all();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-collapse_all'],'icon'=>$_SESSION['theme']['button_icon_contract'],'id'=>'btn_contract','name'=>'btn_contract','style'=>(!$expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideUp('fast'); $(this).hide(); $('#btn_expand').show(); toggle_grid_row_end_all();"]);
 	echo "</span>\n";
 	if (permission_exists('dashboard_edit')) {
 		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'id'=>'btn_edit','name'=>'btn_edit','style'=>'margin-left: 15px;','onclick'=>"edit_mode('on');"]);
@@ -419,19 +419,53 @@ foreach ($dashboard as $row) {
 
 <script>
 function toggle_grid_row_end(dashboard_name) {
-	var widget = document.getElementById(dashboard_name.toLowerCase().replace(/ /g, '_'));
-	var state = widget.getAttribute('data-state');
-	var current_row_end = widget.style.gridRowEnd;
+	let widget = document.getElementById(dashboard_name.toLowerCase().replace(/ /g, '_'));
+	let state = widget.getAttribute('data-state');
+	let current_row_end = widget.style.gridRowEnd;
+	let current_row_end_number = current_row_end.startsWith('span ') ? Number(current_row_end.replace('span ', '')) : 0;
 
 	if (state == 'expanded') {
-		widget.style.gridRowEnd = 'span ' + (Number(current_row_end.replace('span ', '')) - 3);
-		widget.dataset.state = "contracted";
+		widget.style.gridRowEnd = 'span ' + (current_row_end_number - 3);
+		widget.dataset.state = 'contracted';
 	}
 	else {
-		widget.style.gridRowEnd = 'span ' + (Number(current_row_end.replace('span ', '')) + 3);
+		widget.style.gridRowEnd = 'span ' + (current_row_end_number + 3);
 		widget.dataset.state = 'expanded';
 	}
 }
+
+let first_toggle = false;
+
+function toggle_grid_row_end_all() {
+    let widgets = document.querySelectorAll('div.widget');
+
+    widgets.forEach(div => {
+        let state = div.getAttribute('data-state');
+        let current_row_end = div.style.gridRowEnd;
+        let current_row_end_number = current_row_end.startsWith('span ') ? Number(current_row_end.replace('span ', '')) : 0;
+
+		// Skip if widget details state is disabled
+        if (state === 'disabled') {
+            return;
+        }
+
+		// On the first call, skip expanded widgets
+        if (!first_toggle && state === 'expanded') {
+            return;
+        }
+
+        if (state === 'expanded') {
+            div.style.gridRowEnd = 'span ' + (current_row_end_number - 3);
+            div.dataset.state = 'contracted';
+        } else {
+            div.style.gridRowEnd = 'span ' + (current_row_end_number + 3);
+            div.dataset.state = 'expanded';
+        }
+    });
+
+    first_toggle = true;
+}
+
 </script>
 
 <?php
