@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,6 +40,58 @@
 		exit;
 	}
 
+//set permissions
+	$permission = array();
+	$permission['xml_cdr_view'] = permission_exists('xml_cdr_view');
+	$permission['xml_cdr_search_extension'] = permission_exists('xml_cdr_search_extension');
+	$permission['xml_cdr_delete'] = permission_exists('xml_cdr_delete');
+	$permission['xml_cdr_domain'] = permission_exists('xml_cdr_domain');
+	$permission['xml_cdr_search_call_center_queues'] = permission_exists('xml_cdr_search_call_center_queues');
+	$permission['xml_cdr_statistics'] = permission_exists('xml_cdr_statistics');
+	$permission['xml_cdr_archive'] = permission_exists('xml_cdr_archive');
+	$permission['xml_cdr_all'] = permission_exists('xml_cdr_all');
+	$permission['xml_cdr_export'] = permission_exists('xml_cdr_export');
+	$permission['xml_cdr_export_csv'] = permission_exists('xml_cdr_export_csv');
+	$permission['xml_cdr_export_pdf'] = permission_exists('xml_cdr_export_pdf');
+	$permission['xml_cdr_search'] = permission_exists('xml_cdr_search');
+	$permission['xml_cdr_search_direction'] = permission_exists('xml_cdr_search_direction');
+	$permission['xml_cdr_b_leg'] = permission_exists('xml_cdr_b_leg');
+	$permission['xml_cdr_search_status'] = permission_exists('xml_cdr_search_status');
+	$permission['xml_cdr_search_caller_id'] = permission_exists('xml_cdr_search_caller_id');
+	$permission['xml_cdr_search_start_range'] = permission_exists('xml_cdr_search_start_range');
+	$permission['xml_cdr_search_duration'] = permission_exists('xml_cdr_search_duration');
+	$permission['xml_cdr_search_caller_destination'] = permission_exists('xml_cdr_search_caller_destination');
+	$permission['xml_cdr_search_destination'] = permission_exists('xml_cdr_search_destination');
+	$permission['xml_cdr_codecs'] = permission_exists('xml_cdr_codecs');
+	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
+	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
+	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
+	$permission['xml_cdr_search_order'] = permission_exists('xml_cdr_search_order');
+	$permission['xml_cdr_extension'] = permission_exists('xml_cdr_extension');
+	$permission['xml_cdr_caller_id_name'] = permission_exists('xml_cdr_caller_id_name');
+	$permission['xml_cdr_caller_id_number'] = permission_exists('xml_cdr_caller_id_number');
+	$permission['xml_cdr_caller_destination'] = permission_exists('xml_cdr_caller_destination');
+	$permission['xml_cdr_destination'] = permission_exists('xml_cdr_destination');
+	$permission['xml_cdr_start'] = permission_exists('xml_cdr_start');
+	$permission['xml_cdr_tta'] = permission_exists('xml_cdr_tta');
+	$permission['xml_cdr_duration'] = permission_exists('xml_cdr_duration');
+	$permission['xml_cdr_pdd'] = permission_exists('xml_cdr_pdd');
+	$permission['xml_cdr_mos'] = permission_exists('xml_cdr_mos');
+	$permission['xml_cdr_hangup_cause'] = permission_exists('xml_cdr_hangup_cause');
+	$permission['xml_cdr_custom_fields'] = permission_exists('xml_cdr_custom_fields');
+	$permission['xml_cdr_search_advanced'] = permission_exists('xml_cdr_search_advanced');
+	$permission['xml_cdr_direction'] = permission_exists('xml_cdr_direction');
+	$permission['xml_cdr_recording'] = permission_exists('xml_cdr_recording');
+	$permission['xml_cdr_recording_play'] = permission_exists('xml_cdr_recording_play');
+	$permission['xml_cdr_recording_download'] = permission_exists('xml_cdr_recording_download');
+	$permission['xml_cdr_account_code'] = permission_exists('xml_cdr_account_code');
+	$permission['xml_cdr_status'] = permission_exists('xml_cdr_status');
+	$permission['xml_cdr_details'] = permission_exists('xml_cdr_details');
+	$permission['xml_cdr_lose_race'] = permission_exists('xml_cdr_lose_race');
+	$permission['xml_cdr_cc_agent_leg'] = permission_exists('xml_cdr_cc_agent_leg');
+	$permission['xml_cdr_cc_side'] = permission_exists('xml_cdr_cc_side');
+	$permission['xml_cdr_call_center_queues'] = permission_exists('xml_cdr_call_center_queues');
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -53,7 +105,7 @@
 	$order_by = "";
 	$read_codec = '';
 	$write_codec = '';
-	if(!isset($_REQUEST['show'])) {
+	if (!isset($_REQUEST['show'])) {
 		//set to show only this domain
 		$_REQUEST['show'] = 'domain';
 	}
@@ -68,7 +120,7 @@
 	if (!$archive_request && $action != '' && count($xml_cdrs) > 0) {
 		switch ($action) {
 			case 'delete':
-				if (permission_exists('xml_cdr_delete')) {
+				if ($permission['xml_cdr_delete']) {
 					$obj = new xml_cdr;
 					$obj->delete($xml_cdrs);
 				}
@@ -84,10 +136,10 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //get the extensions
-	if (permission_exists('xml_cdr_search_extension')) {
+	if ($permission['xml_cdr_search_extension']) {
 		$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
+		if (!$permission['xml_cdr_domain'] && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
 			$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
 		}
 		$sql .= "order by extension asc, number_alias asc ";
@@ -97,7 +149,7 @@
 	}
 
 //get the call center queues
-	if (permission_exists('xml_cdr_search_call_center_queues')) {
+	if ($permission['xml_cdr_search_call_center_queues']) {
 		$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_extension asc ";
@@ -157,10 +209,10 @@
 	echo "</div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$archive_request) {
-		if (permission_exists('xml_cdr_statistics')) {
+		if ($permission['xml_cdr_statistics']) {
 			echo button::create(['type'=>'button','label'=>$text['button-statistics'],'icon'=>'chart-area','link'=>'xml_cdr_statistics.php']);
 		}
-		if (permission_exists('xml_cdr_archive')) {
+		if ($permission['xml_cdr_archive']) {
 			echo button::create(['type'=>'button','label'=>$text['button-archive'],'icon'=>'archive','link'=>'xml_cdr_archive.php'.($_REQUEST['show'] == 'all' ? '?show=all' : null)]);
 		}
 	}
@@ -201,7 +253,7 @@
 	echo "		<input type='hidden' name='leg' value='".escape($leg ?? '')."'>\n";
 	echo "		<input type='hidden' name='tta_min' value='".escape($tta_min ?? '')."'>\n";
 	echo "		<input type='hidden' name='tta_max' value='".escape($tta_max ?? '')."'>\n";
-	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+	if ($permission['xml_cdr_all'] && $_REQUEST['show'] == 'all') {
 		echo "	<input type='hidden' name='show' value='all'>\n";
 	}
 	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
@@ -225,22 +277,22 @@
 		echo button::create(['type'=>'button','label'=>$text['button-missed'],'icon'=>'phone-slash','link'=>'?status=missed']);
 	}
 
-	if (permission_exists('xml_cdr_export')) {
+	if ($permission['xml_cdr_export']) {
 		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'onclick'=>"toggle_select('export_format'); this.blur();"]);
 		echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
-		if (permission_exists('xml_cdr_export_csv')) {
+		if ($permission['xml_cdr_export_csv']) {
 			echo "			<option value='csv'>CSV</option>";
 		}
-		if (permission_exists('xml_cdr_export_pdf')) {
+		if ($permission['xml_cdr_export_pdf']) {
 			echo "			<option value='pdf'>PDF</option>";
 		}
 		echo "		</select>";
 	}
-	if (!$archive_request && permission_exists('xml_cdr_delete')) {
+	if (!$archive_request && $permission['xml_cdr_delete']) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] !== 'all') {
+	if ($permission['xml_cdr_all'] && $_REQUEST['show'] !== 'all') {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 	}
 	if ($paging_controls_mini != '') {
@@ -251,7 +303,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (!$archive_request && permission_exists('xml_cdr_delete')) {
+	if (!$archive_request && $permission['xml_cdr_delete']) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
@@ -259,12 +311,12 @@
 	echo "<br /><br />\n";
 
 //basic search of call detail records
-	if (permission_exists('xml_cdr_search')) {
+	if ($permission['xml_cdr_search']) {
 		echo "<form name='frm' id='frm' method='get'>\n";
 
 		echo "<div class='form_grid'>\n";
 
-		if (permission_exists('xml_cdr_search_direction')) {
+		if ($permission['xml_cdr_search_direction']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-direction']."\n";
@@ -276,7 +328,7 @@
 			echo "				<option value='outbound' ".(($direction == "outbound") ? "selected='selected'" : null).">".$text['label-outbound']."</option>\n";
 			echo "				<option value='local' ".(($direction == "local") ? "selected='selected'" : null).">".$text['label-local']."</option>\n";
 			echo "			</select>\n";
-			if (permission_exists('xml_cdr_b_leg')){
+			if ($permission['xml_cdr_b_leg']){
 				echo "		<select name='leg' class='formfld'>\n";
 				echo "			<option value=''></option>\n";
 				echo "			<option value='a' ".(!empty($_REQUEST["leg"]) && $leg == 'a' ? "selected='selected'" : null).">a-leg</option>\n";
@@ -286,7 +338,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_status')) {
+		if ($permission['xml_cdr_search_status']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-status']."\n";
@@ -305,7 +357,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_extension')) {
+		if ($permission['xml_cdr_search_extension']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-extension']."\n";
@@ -324,7 +376,7 @@
 			echo "	</div>\n";
 			unset($sql, $parameters, $extensions, $row, $selected);
 		}
-		if (permission_exists('xml_cdr_search_caller_id')) {
+		if ($permission['xml_cdr_search_caller_id']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-caller_id']."\n";
@@ -335,7 +387,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_start_range')) {
+		if ($permission['xml_cdr_search_start_range']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-start_range']."\n";
@@ -346,7 +398,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_duration')) {
+		if ($permission['xml_cdr_search_duration']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-duration']." (".$text['label-seconds'].")\n";
@@ -357,7 +409,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_caller_destination')) {
+		if ($permission['xml_cdr_search_caller_destination']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-caller_destination']."\n";
@@ -367,7 +419,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_destination')) {
+		if ($permission['xml_cdr_search_destination']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-destination']."\n";
@@ -377,7 +429,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_codecs')) {
+		if ($permission['xml_cdr_codecs']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-codecs']."\n";
@@ -388,7 +440,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_tta')) {
+		if ($permission['xml_cdr_search_tta']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-tta']." (".$text['label-seconds'].")\n";
@@ -400,7 +452,7 @@
 			echo "	</div>\n";
 		}
 
-		if (permission_exists('xml_cdr_search_hangup_cause')) {
+		if ($permission['xml_cdr_search_hangup_cause']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-hangup_cause']."\n";
@@ -450,7 +502,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_recording')) {
+		if ($permission['xml_cdr_search_recording']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-recording']."\n";
@@ -464,50 +516,50 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-		if (permission_exists('xml_cdr_search_order')) {
+		if ($permission['xml_cdr_search_order']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
 			echo "			".$text['label-order']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
 			echo "			<select name='order_by' class='formfld'>\n";
-			if (permission_exists('xml_cdr_extension')) {
+			if ($permission['xml_cdr_extension']) {
 				echo "			<option value='extension' ".($order_by == 'extension' ? "selected='selected'" : null).">".$text['label-extension']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_all')) {
+			if ($permission['xml_cdr_all']) {
 				echo "			<option value='domain_name' ".($order_by == 'domain_name' ? "selected='selected'" : null).">".$text['label-domain']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_caller_id_name')) {
+			if ($permission['xml_cdr_caller_id_name']) {
 				echo "			<option value='caller_id_name' ".($order_by == 'caller_id_name' ? "selected='selected'" : null).">".$text['label-caller_id_name']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_caller_id_number')) {
+			if ($permission['xml_cdr_caller_id_number']) {
 				echo "			<option value='caller_id_number' ".($order_by == 'caller_id_number' ? "selected='selected'" : null).">".$text['label-caller_id_number']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_caller_destination')) {
+			if ($permission['xml_cdr_caller_destination']) {
 				echo "			<option value='caller_destination' ".($order_by == 'caller_destination' ? "selected='selected'" : null).">".$text['label-caller_destination']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_destination')) {
+			if ($permission['xml_cdr_destination']) {
 				echo "			<option value='destination_number' ".($order_by == 'destination_number' ? "selected='selected'" : null).">".$text['label-destination']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_start')) {
+			if ($permission['xml_cdr_start']) {
 				echo "			<option value='start_stamp' ".($order_by == 'start_stamp' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_tta')) {
+			if ($permission['xml_cdr_tta']) {
 				echo "			<option value='tta' ".($order_by == 'tta' ? "selected='selected'" : null).">".$text['label-tta']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_duration')) {
+			if ($permission['xml_cdr_duration']) {
 				echo "			<option value='duration' ".($order_by == 'duration' ? "selected='selected'" : null).">".$text['label-duration']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_pdd')) {
+			if ($permission['xml_cdr_pdd']) {
 				echo "			<option value='pdd_ms' ".($order_by == 'pdd_ms' ? "selected='selected'" : null).">".$text['label-pdd']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_mos')) {
+			if ($permission['xml_cdr_mos']) {
 				echo "			<option value='rtp_audio_in_mos' ".($order_by == 'rtp_audio_in_mos' ? "selected='selected'" : null).">".$text['label-mos']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_hangup_cause')) {
+			if ($permission['xml_cdr_hangup_cause']) {
 				echo "			<option value='hangup_cause' ".($order_by == 'desc' ? "selected='selected'" : null).">".$text['label-hangup_cause']."</option>\n";
 			}
-			if (permission_exists('xml_cdr_custom_fields')) {
+			if ($permission['xml_cdr_custom_fields']) {
 				if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 					echo "			<option value='' disabled='disabled'></option>\n";
 					echo "			<optgroup label=\"".$text['label-custom_cdr_fields']."\">\n";
@@ -531,7 +583,7 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 
-			if (permission_exists('xml_cdr_search_call_center_queues')) {
+			if ($permission['xml_cdr_search_call_center_queues']) {
 				echo "	<div class='form_set'>\n";
 				echo "		<div class='label'>\n";
 				echo "			".$text['label-call_center_queue']."\n";
@@ -556,10 +608,10 @@
 
 		button::$collapse = false;
 		echo "<div style='float: right; padding-top: 15px; margin-left: 20px; white-space: nowrap;'>";
-		if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+		if ($permission['xml_cdr_all'] && $_REQUEST['show'] == 'all') {
 			echo "<input type='hidden' name='show' value='all'>\n";
 		}
-		if (!$archive_request && permission_exists('xml_cdr_search_advanced')) {
+		if (!$archive_request && $permission['xml_cdr_search_advanced']) {
 			echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>"xml_cdr_search.php".($_REQUEST['show'] == 'all' ? '?show=all' : null),'style'=>'margin-right: 15px;']);
 		}
 		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','link'=>($archive_request ? 'xml_cdr_archive.php' : 'xml_cdr.php')]);
@@ -581,7 +633,7 @@
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	$col_count = 0;
-	if (!$archive_request && permission_exists('xml_cdr_delete')) {
+	if (!$archive_request && $permission['xml_cdr_delete']) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($result) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
@@ -589,43 +641,43 @@
 	}
 
 //column headings
- 	if (permission_exists('xml_cdr_direction')) {
+ 	if ($permission['xml_cdr_direction']) {
 		echo "<th class='shrink'>&nbsp;</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_extension')) {
+	if ($permission['xml_cdr_extension']) {
 		echo "<th class='shrink'>".$text['label-extension']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == "all") {
+	if ($permission['xml_cdr_all'] && $_REQUEST['show'] == "all") {
 		echo "<th>".$text['label-domain']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_caller_id_name')) {
+	if ($permission['xml_cdr_caller_id_name']) {
 		echo "<th class='hide-md-dn' style='min-width: 90px;'>".$text['label-caller_id_name']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_caller_id_number')) {
+	if ($permission['xml_cdr_caller_id_number']) {
 		echo "<th>".$text['label-caller_id_number']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_caller_destination')) {
+	if ($permission['xml_cdr_caller_destination']) {
 		echo "<th class='no-wrap hide-md-dn'>".$text['label-caller_destination']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_destination')) {
+	if ($permission['xml_cdr_destination']) {
 		echo "<th class='shrink'>".$text['label-destination']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
+	if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
 		echo "<th class='center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_account_code')) {
+	if ($permission['xml_cdr_account_code']) {
 		echo "<th class='left'>".$text['label-accountcode']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_custom_fields')) {
+	if ($permission['xml_cdr_custom_fields']) {
 		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field']) && @sizeof($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
@@ -639,40 +691,40 @@
 			}
 		}
 	}
-	if (permission_exists('xml_cdr_start')) {
+	if ($permission['xml_cdr_start']) {
 		echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 		echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
 	}
-	if (permission_exists('xml_cdr_codecs')) {
+	if ($permission['xml_cdr_codecs']) {
 		echo "<th class='center shrink'>".$text['label-codecs']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_tta')) {
+	if ($permission['xml_cdr_tta']) {
 		echo "<th class='right hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_pdd')) {
+	if ($permission['xml_cdr_pdd']) {
 		echo "<th class='right hide-md-dn' title=\"".$text['description-pdd']."\">".$text['label-pdd']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_mos')) {
+	if ($permission['xml_cdr_mos']) {
 		echo "<th class='center hide-md-dn' title=\"".$text['description-mos']."\">".$text['label-mos']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_duration')) {
+	if ($permission['xml_cdr_duration']) {
 		echo "<th class='center hide-sm-dn'>".$text['label-duration']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_status')) {
+	if ($permission['xml_cdr_status']) {
 		echo "<th class='hide-sm-dn shrink'>".$text['label-status']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_hangup_cause')) {
+	if ($permission['xml_cdr_hangup_cause']) {
 		echo "<th class='hide-sm-dn shrink'>".$text['label-hangup_cause']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_details')) {
+	if ($permission['xml_cdr_details']) {
 		echo "<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -772,7 +824,7 @@
 					$duration = $row['duration'] ?? 0;
 
 				//determine recording properties
-					if (!empty($row['record_path']) && !empty($row['record_name']) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
+					if (!empty($row['record_path']) && !empty($row['record_name']) && $permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
 						$record_path = $row['record_path'];
 						$record_name = $row['record_name'];
 						//$record_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
@@ -788,15 +840,15 @@
 					$content = '';
 
 				//recording playback
-					if (permission_exists('xml_cdr_recording_play')) {
+					if ($permission['xml_cdr_recording_play']) {
 						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;' onclick=\"recording_play('".escape($row['xml_cdr_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['xml_cdr_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
 						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					}
-					if (permission_exists('xml_cdr_details')) {
+					if ($permission['xml_cdr_details']) {
 						$list_row_url = "xml_cdr_details.php?id=".urlencode($row['xml_cdr_uuid']).($_REQUEST['show'] ? "&show=all" : null);
 					}
 					$content .= "<tr class='list-row' href='".$list_row_url."'>\n";
-					if (!$archive_request && permission_exists('xml_cdr_delete')) {
+					if (!$archive_request && $permission['xml_cdr_delete']) {
 						$content .= "	<td class='checkbox middle'>\n";
 						$content .= "		<input type='checkbox' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 						$content .= "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
@@ -804,7 +856,7 @@
 					}
 
 				//determine call result and appropriate icon
-					if (permission_exists('xml_cdr_direction')) {
+					if ($permission['xml_cdr_direction']) {
 						$content .= "<td class='middle'>\n";
 						if ($theme_cdr_images_exist) {
 							if (!empty($row['direction'])) {
@@ -823,19 +875,19 @@
 						$content .= "</td>\n";
 					}
 				//extension
-					if (permission_exists('xml_cdr_extension')) {
+					if ($permission['xml_cdr_extension']) {
 						$content .= "	<td class='middle' nowrap='nowrap'>".$row['extension']." ".escape($row['extension_name'])."</td>\n";
 					}
 				//domain name
-					if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == "all") {
+					if ($permission['xml_cdr_all'] && $_REQUEST['show'] == "all") {
 						$content .= "	<td class='middle'>".$row['domain_name']."</td>\n";
 					}
 				//caller id name
-					if (permission_exists('xml_cdr_caller_id_name')) {
+					if ($permission['xml_cdr_caller_id_name']) {
 						$content .= "	<td class='middle overflow hide-md-dn' title=\"".escape($row['caller_id_name'])."\">".escape($row['caller_id_name'])."</td>\n";
 					}
 				//source
-					if (permission_exists('xml_cdr_caller_id_number')) {
+					if ($permission['xml_cdr_caller_id_number']) {
 						$content .= "	<td class='middle no-link no-wrap'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_id_number'])) {
@@ -848,7 +900,7 @@
 						$content .= "	</td>\n";
 					}
 				//caller destination
-					if (permission_exists('xml_cdr_caller_destination')) {
+					if ($permission['xml_cdr_caller_destination']) {
 						$content .= "	<td class='middle no-link no-wrap hide-md-dn'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_destination'])) {
@@ -861,7 +913,7 @@
 						$content .= "	</td>\n";
 					}
 				//destination
-					if (permission_exists('xml_cdr_destination')) {
+					if ($permission['xml_cdr_destination']) {
 						$content .= "	<td class='middle no-link no-wrap'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['destination_number'])) {
@@ -874,14 +926,14 @@
 						$content .= "	</td>\n";
 					}
 				//recording
-					if (permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
+					if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
 						if (!empty($record_path) || !empty($record_name)) {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
-							if (permission_exists('xml_cdr_recording_play')) {
+							if ($permission['xml_cdr_recording_play']) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
 								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
 							}
-							if (permission_exists('xml_cdr_recording_download')) {
+							if ($permission['xml_cdr_recording_download']) {
 								$content .= button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"download.php?id=".urlencode($row['xml_cdr_uuid'])."&t=bin"]);
 							}
 							$content .= 	"</td>\n";
@@ -891,13 +943,13 @@
 						}
 					}
 				//account code
-					if (permission_exists('xml_cdr_account_code')) {
+					if ($permission['xml_cdr_account_code']) {
 						$content .= "	<td class='middle no-link no-wrap'>";
 						$content .= 		$row['accountcode'];
 						$content .= "	</td>\n";
 					}
 				//custom cdr fields
-					if (permission_exists('xml_cdr_custom_fields')) {
+					if ($permission['xml_cdr_custom_fields']) {
 						if (!empty($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 							foreach ($_SESSION['cdr']['field'] as $field) {
 								$array = explode(",", $field);
@@ -909,24 +961,24 @@
 						}
 					}
 				//start
-					if (permission_exists('xml_cdr_start')) {
+					if ($permission['xml_cdr_start']) {
 						$content .= "	<td class='middle right no-wrap'>".$row['start_date_formatted']."</td>\n";
 						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$row['start_time_formatted']."</td>\n";
 					}
 				//codec
-					if (permission_exists('xml_cdr_codecs')) {
+					if ($permission['xml_cdr_codecs']) {
 						$content .= "	<td class='middle right no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
 					}
 				//tta (time to answer)
-					if (permission_exists('xml_cdr_tta')) {
+					if ($permission['xml_cdr_tta']) {
 						$content .= "	<td class='middle right hide-md-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta']."s" : "&nbsp;")."</td>\n";
 					}
 				//pdd (post dial delay)
-					if (permission_exists("xml_cdr_pdd")) {
+					if ($permission['xml_cdr_pdd']) {
 						$content .= "	<td class='middle right hide-md-dn'>".number_format(escape($row['pdd_ms'])/1000,2)."s</td>\n";
 					}
 				//mos (mean opinion score)
-					if (permission_exists("xml_cdr_mos")) {
+					if ($permission['xml_cdr_mos']) {
 						if(!empty($row['rtp_audio_in_mos']) && is_numeric($row['rtp_audio_in_mos'])) {
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
@@ -934,15 +986,15 @@
 						$content .= "	<td class='middle center hide-md-dn' ".($title ?? '').">".($value ?? '')."</td>\n";
 					}
 				//duration
-					if (permission_exists('xml_cdr_duration')) {
+					if ($permission['xml_cdr_duration']) {
 						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $duration)."</td>\n";
 					}
 				//call result/status
-					if (permission_exists("xml_cdr_status")) {
+					if ($permission['xml_cdr_status']) {
 						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($text['label-'.$status] ?? '')."</a></td>\n";
 					}
 				//hangup cause
-					if (permission_exists('xml_cdr_hangup_cause')) {
+					if ($permission['xml_cdr_hangup_cause']) {
 						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";
 					}
 					$content .= "</tr>\n";
@@ -950,7 +1002,7 @@
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}
-					else if ($row['leg'] == 'b' && permission_exists('xml_cdr_b_leg')) {
+					else if ($row['leg'] == 'b' && $permission['xml_cdr_b_leg']) {
 						echo $content;
 					}
 					unset($content);

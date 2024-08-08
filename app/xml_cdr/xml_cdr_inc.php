@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,7 +31,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_view')) {
+	if ($permission['xml_cdr_view']) {
 		//access granted
 	}
 	else {
@@ -116,7 +116,7 @@
 	}
 
 //check to see if permission does not exist
-	if (!permission_exists('xml_cdr_b_leg')) {
+	if (!$permission['xml_cdr_b_leg']) {
 		$leg = 'a';
 	}
 
@@ -139,7 +139,7 @@
 	}
 
 //set the assigned extensions
-	if (!permission_exists('xml_cdr_domain') && isset($_SESSION['user']['extension']) && is_array($_SESSION['user']['extension'])) {
+	if (!$permission['xml_cdr_domain'] && isset($_SESSION['user']['extension']) && is_array($_SESSION['user']['extension'])) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if (is_uuid($row['extension_uuid'])) {
 				$extension_uuids[] = $row['extension_uuid'];
@@ -195,7 +195,7 @@
 			}
 		}
 	}
-	if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
+	if ($_GET['show'] == 'all' && $permission['xml_cdr_all']) {
 		$param .= "&show=all";
 	}
 	if (!empty($order_by)) {
@@ -298,33 +298,33 @@
 			$sql .= $field.", \n";
 		}
 	}
-	if (permission_exists('xml_cdr_account_code')) {
+	if ($permission['xml_cdr_account_code']) {
 		$sql .= "c.accountcode, \n";
 	}
 	$sql .= "c.answer_stamp, \n";
 	$sql .= "c.status, \n";
 	$sql .= "c.sip_hangup_disposition, \n";
-	if (permission_exists("xml_cdr_pdd")) {
+	if ($permission['xml_cdr_pdd']) {
 		$sql .= "c.pdd_ms, \n";
 	}
-	if (permission_exists("xml_cdr_mos")) {
+	if ($permission['xml_cdr_mos']) {
 		$sql .= "c.rtp_audio_in_mos, \n";
 	}
 	$sql .= "(c.answer_epoch - c.start_epoch) as tta ";
-	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
+	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && $permission['xml_cdr_all']) {
 		$sql .= ", c.domain_name \n";
 	}
 	$sql .= "from v_xml_cdr as c \n";
 	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
 	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
-	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
+	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && $permission['xml_cdr_all']) {
 		$sql .= "where true \n";
 	}
 	else {
 		$sql .= "where c.domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
+	if (!$permission['xml_cdr_domain']) { //only show the user their calls
 		if (isset($extension_uuids) && is_array($extension_uuids) && @sizeof($extension_uuids)) {
 			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') \n";
 		}
@@ -484,7 +484,7 @@
 	}
 
 	//exclude ring group legs that were not answered
-	if (!permission_exists('xml_cdr_lose_race')) {
+	if (!$permission['xml_cdr_lose_race']) {
 		$sql .= "and hangup_cause != 'LOSE_RACE' \n";
 	}
 	if (!empty($status)) {
@@ -499,7 +499,7 @@
 		$sql .= "and bleg_uuid = :bleg_uuid \n";
 		$parameters['bleg_uuid'] = $bleg_uuid;
 	}
-	if (permission_exists('xml_cdr_account_code') && !empty($accountcode)) {
+	if ($permission['xml_cdr_account_code'] && !empty($accountcode)) {
 		$sql .= "and c.accountcode = :accountcode \n";
 		$parameters['accountcode'] = $accountcode;
 	}
@@ -545,16 +545,16 @@
 		}
 	}
 	//show agent originated legs only to those with the permission
-	if (!permission_exists('xml_cdr_cc_agent_leg')) {
+	if (!$permission['xml_cdr_cc_agent_leg']) {
 		$sql .= "and (cc_side is null or cc_side != 'agent') \n";
 	}
 	//call center queue search for member or agent
-	if (!empty($cc_side) && permission_exists('xml_cdr_cc_side')) {
+	if (!empty($cc_side) && $permission['xml_cdr_cc_side']) {
 		$sql .= "and cc_side = :cc_side \n";
 		$parameters['cc_side'] = $cc_side;
 	}
 	//show specific call center queue
-	if (!empty($call_center_queue_uuid) && permission_exists('xml_cdr_call_center_queues')) {
+	if (!empty($call_center_queue_uuid) && $permission['xml_cdr_call_center_queues']) {
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid \n";
 		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 	}
