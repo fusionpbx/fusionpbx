@@ -38,7 +38,7 @@
 		exit;
 	}
 
-//set the domain and user information
+//set the current domain and user information
 	$domain_name = $_SESSION['domain_name'] ?? '';
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
@@ -213,7 +213,7 @@
 //get the list
 	$sql = "select d.*, d2.device_label as alternate_label, ";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'DD Mon YYYY') as provisioned_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'HH12:MI:SS am') as provisioned_time_formatted \n";	
+	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'HH12:MI:SS am') as provisioned_time_formatted \n";
 	$sql .= "from v_devices as d, v_devices as d2 ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && $has_device_all) {
 		$sql .= ", v_domains as d3 ";
