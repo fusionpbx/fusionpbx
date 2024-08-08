@@ -37,9 +37,16 @@
 		echo "access denied";
 		exit;
 	}
-	
-//create database connection
+
+//set the domain and user information
+	$domain_name = $_SESSION['domain_name'] ?? '';
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
+	$user_name = $_SESSION['username'] ?? '';
+
+//create database connection and settings object
 	$database = database::new();
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //set all permissions
 	$has_device_import = permission_exists('device_import');
@@ -51,6 +58,7 @@
 	$has_device_vendor_view = permission_exists('device_vendor_view');
 	$has_device_profile_view = permission_exists('device_profile_view');
 	$has_device_add = permission_exists('device_add');
+	$has_show_all = &$has_device_domain_all;
 
 //add multi-lingual support
 	$language = new text;
@@ -92,28 +100,40 @@
 	$order = $_GET["order"] ?? '';
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
 //get total devices count from the database
 	$sql = "select count(*) from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	if (!$has_device_all && !$has_device_domain_all) {
 		$sql .= "and device_user_uuid = :user_uuid ";
-		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+		$parameters['user_uuid'] = $user_uuid;
 	}
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
 	$total_devices = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
+
+//update the has_device_add permission if the total device count is greater then set limit
+	$device_limit = $settings->get('limit', 'devices', null);
+	if ($has_device_add && $device_limit !== null) {
+		$has_device_add = $total_devices > $device_limit;
+	}
+
+//get the domains if user has permission for show all
+	$domains = [];
+	if ($has_device_domain_all) {
+		$rows = $database->select("select domain_uuid, domain_name from v_domains where domain_enabled = 'true'");
+		if (!empty($rows)) {
+			foreach ($rows as $row) {
+				$domains[$row['domain_uuid']] = $row['domain_name'];
+			}
+		}
+	}
 
 //get the devices profiles
 	$sql = "select * from v_device_profiles ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
 	$device_profiles = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -176,7 +196,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = intval($settings->get('domain', 'paging', 50));
 	$param = '';
 	if ($search) {
 		$param = "&search=".$search;
@@ -219,7 +239,7 @@
 	}
 	if (!$has_device_all && !$has_device_domain_all) {
 		$sql .= "and d.device_user_uuid = :user_uuid ";
-		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+		$parameters['user_uuid'] = $user_uuid;
 	}
 	if (!empty($search)) {
 		$sql .= "and (";
@@ -292,10 +312,10 @@
 	echo "	<div class='heading'><b>".$text['header-devices']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if ($has_device_import) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'device_imports.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'link'=>'device_imports.php']);
 	}
 	if ($has_device_export) {
-		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'device_download.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'link'=>'device_download.php']);
 	}
 	if ($has_device_vendor_view) {
 		echo button::create(['type'=>'button','label'=>$text['button-vendors'],'icon'=>'fax','link'=>'device_vendors.php']);
@@ -304,16 +324,16 @@
 		echo button::create(['type'=>'button','label'=>$text['button-profiles'],'icon'=>'clone','link'=>'device_profiles.php']);
 	}
 	$margin_left = $has_device_import || $has_device_export || $has_device_vendor_view || $has_device_profile_view ? "margin-left: 15px;" : null;
-	if ($has_device_add && (empty($_SESSION['limit']['devices']['numeric']) || ($total_devices < $_SESSION['limit']['devices']['numeric']))) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','style'=>$margin_left,'link'=>'device_edit.php']);
+	if ($has_device_add) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>$margin_left,'link'=>'device_edit.php']);
 		unset($margin_left);
 	}
 	if ($has_device_edit && $devices) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none; '.($margin_left ?? null),'onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none; '.($margin_left ?? null),'onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 		unset($margin_left);
 	}
 	if ($has_device_delete && $devices) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; '.($margin_left ?? null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; '.($margin_left ?? null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		unset($margin_left);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
@@ -322,7 +342,7 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme','button_icon_all'),'link'=>'?show=all']);
 		}
 	}
 
@@ -336,8 +356,8 @@
 	echo "			<option value='all' ".($fields == 'all' ? " selected='selected'" : null).">".$text['label-all']."</option>\n";
 	echo "		</select>";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'devices.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'devices.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
@@ -382,7 +402,7 @@
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'", $param ?? null);
 	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, null, $param ?? null);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'", $param ?? null);
-	if ($has_device_edit && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if ($has_device_edit && $settings->get('theme', 'list_row_edit_button', 'false') === 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -420,7 +440,7 @@
 				echo "	</td>\n";
 			}
 			if (!empty($_GET['show']) && $_GET['show'] == "all" && $has_device_all) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				echo "	<td>".escape($domains[$row['domain_uuid']])."</td>\n";
 			}
 			echo "	<td class='no-wrap'>";
 			echo $has_device_edit ? "<a href='".$list_row_url."'>".escape(format_device_address($row['device_address']))."</a>" : escape(format_device_address($row['device_address']));
@@ -450,9 +470,9 @@
 			echo "	</td>\n";
 			echo "	<td class='no-link'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['provisioned_date_formatted'])." ".escape($row['provisioned_time_formatted'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['device_description'])."&nbsp;</td>\n";
-			if ($has_device_edit && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if ($has_device_edit && $settings->get('theme', 'list_row_edit_button', 'false') === 'true') {
 				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme','button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
