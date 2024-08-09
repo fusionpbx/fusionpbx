@@ -7054,4 +7054,30 @@ $text['label-column_name']['zh-cn'] = "列名";
 $text['label-column_name']['ja-jp'] = "列名";
 $text['label-column_name']['ko-kr'] = "열 이름";
 
+$text['label-required']['en-us'] = "Required";
+$text['label-required']['en-gb'] = "Required";
+$text['label-required']['ar-eg'] = "مطلوب";
+$text['label-required']['de-at'] = "Erforderlich";
+$text['label-required']['de-ch'] = "Erforderlich";
+$text['label-required']['de-de'] = "Erforderlich";
+$text['label-required']['el-gr'] = "Απαιτείται";
+$text['label-required']['es-cl'] = "Requerido";
+$text['label-required']['es-mx'] = "Requerido";
+$text['label-required']['fr-ca'] = "Requis";
+$text['label-required']['fr-fr'] = "Requis";
+$text['label-required']['he-il'] = "נדרש";
+$text['label-required']['it-it'] = "Necessario";
+$text['label-required']['nl-nl'] = "Vereist";
+$text['label-required']['pl-pl'] = "Wymagany";
+$text['label-required']['pt-br'] = "Obrigatório";
+$text['label-required']['pt-pt'] = "Obrigatório";
+$text['label-required']['ro-ro'] = "Necesar";
+$text['label-required']['ru-ru'] = "Необходимый";
+$text['label-required']['sv-se'] = "Krav";
+$text['label-required']['uk-ua'] = "вимагається";
+$text['label-required']['tr-tr'] = "Gerekli";
+$text['label-required']['zh-cn'] = "必需的";
+$text['label-required']['ja-jp'] = "必要";
+$text['label-required']['ko-kr'] = "필수의";
+
 ?>
