@@ -349,6 +349,9 @@ if (!class_exists('xml_cdr')) {
 			//check for duplicate call uuid's
 				$duplicate_uuid = false;
 				$uuid = urldecode($xml->variables->uuid);
+				if (empty($uuid)) {
+					$uuid = urldecode($xml->variables->call_uuid);
+				}
 				if ($uuid != null && is_uuid($uuid)) {
 					//check for duplicates
 					$sql = "select count(xml_cdr_uuid) ";
