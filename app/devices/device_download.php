@@ -37,22 +37,56 @@
 		exit;
 	}
 
+//set the current domain and user information
+	$domain_name = $_SESSION['domain_name'] ?? '';
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
+	$user_name = $_SESSION['username'] ?? '';
+
+//create database connection and settings object
+	$database = database::new();
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//define label
+	$label_required = $text['label-required'];
 
 //define the functions
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
 		}
-		ob_start();
-		$df = fopen("php://output", 'w');
-		fputcsv($df, array_keys(reset($array)));
-		foreach ($array as $row) {
-			fputcsv($df, $row);
+
+		//get all headers as first device may not have all columns
+		$headers = [];
+		foreach ($array as $device) {
+			//get the column headers for this device
+			$columns = array_keys($device);
+			//check if there are more column headers than previous devices
+			if (count($columns) > count($headers)) {
+				//use the device with all columns
+				$headers = $columns;
+			}
 		}
-		fclose($df);
+
+		//find and remove the "|2" that denotes a duplicate header
+		foreach ($headers as &$header) {
+			$pos = strpos($header, '|');
+			if ($pos !== false) {
+				$header = substr($header, 0, $pos);
+			}
+		}
+
+		ob_start();
+		$file_pointer = fopen("php://output", 'w');
+		fputcsv($file_pointer, $headers);
+		foreach ($array as $row) {
+			fputcsv($file_pointer, $row);
+		}
+		fclose($file_pointer);
 		return ob_get_clean();
 	}
 
@@ -139,30 +173,41 @@
 		//iterate columns
 			if (is_array($column_group) && @sizeof($column_group) != 0) {
 
+				//device_uuid must be exported
+				$column_group['devices']['device_uuid'] = 'device_uuid';
+
 				$column_names = implode(", ", $column_group['devices']);
 				$sql = "select ".$column_names." from v_devices ";
-				$sql .= " where domain_uuid = :domain_uuid ";
+				$sql .= "where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
-				$database = new database;
 				$devices = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters, $column_names);
 
 				foreach($column_group as $table_name => $columns) {
 					if ($table_name !== 'devices') {
+						//device_uuid must be included in child table to match export row
+						$columns['device_uuid'] = 'device_uuid';
 						$column_names = implode(", ", $columns);
 						$sql = "select ".$column_names." from v_".$table_name." ";
 						$sql .= " where domain_uuid = :domain_uuid ";
 						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$$table_name = $database->select($sql, $parameters, 'all');
+						$child_table_result = $database->select($sql, $parameters, 'all');
 						$x = 0;
 						foreach($devices as $device) {
-							foreach($$table_name as $row) {
+							$header_match_count = 1;
+							//find the matching device within the linked table
+							foreach($child_table_result as $row) {
 								if ($device['device_uuid'] == $row['device_uuid']) {
 									foreach($row as $key => $value) {
-										$devices[$x][$key] = $value;
+										//check for multi-line devices
+										if ($key != 'device_uuid' && array_key_exists($key, $devices[$x])) {
+											//create a new key so that we don't overwrite data
+											$devices[$x][$key . '|' . $header_match_count] = $value;
+										} else {
+											$devices[$x][$key] = $value;
+										}
 									}
-									break;
+									$header_match_count++;
 								}
 							}
 							$x++;
@@ -221,9 +266,18 @@
 				$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
 				echo "<tr class='list-row' href='".($list_row_url ?? '')."'>\n";
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' class='checkbox_".$table_name."' name='column_group[".$table_name."][".$column_name."]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
+				//device_uuid must be selected on devices to avoid duplication on import
+				if ($table_name == 'devices' && $column_name == 'device_uuid') {
+					echo "		<input type='checkbox' title='$label_required' class='disabled_checkbox_devices' name='column_group[$table_name][$column_name]' id='checkbox_$x' value='$column_name' checked='checked' onclick='return false;'>\n";
+				} else {
+					echo "		<input type='checkbox' class='checkbox_".$table_name."' name='column_group[".$table_name."][".$column_name."]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
+				}
 				echo "	</td>\n";
-				echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
+				if ($table_name == 'devices' && $column_name == 'device_uuid') {
+					echo "	<td title='$label_required'>".$column_name."</td>";
+				} else {
+					echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
+				}
 				echo "</tr>";
 				$x++;
 			}
@@ -232,7 +286,7 @@
 			echo "</div>\n";
 		}
 	}
-	
+
 	//test the validation
 	//echo "		<input type='hidden' name='column_group[devices][xxx]'  value=\"xxx\">\n";
 	//echo "		<input type='hidden' name='column_group[device_lines][yyy]' value=\"yyy\">\n";
