@@ -177,8 +177,8 @@
 				$column_group['devices']['device_uuid'] = 'device_uuid';
 
 				$column_names = implode(", ", $column_group['devices']);
-				$sql = "select ".$column_names." from v_devices";
-				$sql .= " where domain_uuid = :domain_uuid ";
+				$sql = "select ".$column_names." from v_devices ";
+				$sql .= "where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
 				$devices = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters, $column_names);
