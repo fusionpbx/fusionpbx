@@ -84,8 +84,8 @@ if (!class_exists('button')) {
 					$button_icons == 'auto' ||
 					!$array['label']
 					)) {
-					$icon_class = is_array($array['icon']) ? $array['icon']['text'] : 'fas fa-'.$array['icon'];
-					$button .= "<span class='".$icon_class." fa-fw'></span>";
+					$icon_class = is_array($array['icon']) ? $array['icon']['text'] : $array['icon'];
+					$button .= "<span class='".(substr($icon_class, 0, 3) != 'fa-' ? 'fa-solid fa-' : null).$icon_class." fa-fw'></span>";
 				}
 			//label
 				if (!empty($array['label']) && (
@@ -167,7 +167,7 @@ if (!class_exists('button')) {
 
 	type		'button' (default) | 'submit' | 'link'
 	label		button text
-	icon		name without vendor prefix (e.g. 'user' instead of 'fa-user')
+	icon		name with full vendor style and prefix (e.g. 'fa-solid fa-user' instead of 'fa-user' or 'user')
 	value		submitted value (if type is also set to 'submit')
 	target		'_blank' | '_self' (default) | etc
 	onclick		javascript

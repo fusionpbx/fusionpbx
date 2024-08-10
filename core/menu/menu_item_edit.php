@@ -433,36 +433,61 @@
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-icon']."</td>";
 	echo "		<td class='vtable' style='vertical-align: bottom;'>";
-	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fas_icons.php')) {
-		include 'resources/fontawesome/fas_icons.php';
-		if (is_array($font_awesome_solid_icons) && @sizeof($font_awesome_solid_icons) != 0) {
-			// rebuild and sort array
-			foreach ($font_awesome_solid_icons as $i => $icon_class) {
-				$icon_label = str_replace('fa-', '', $icon_class);
+	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php')) {
+		include $_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php';
+		if (!empty($font_awesome_icons) && is_array($font_awesome_icons)) {
+			//initialize variables
+			$previous_icon_classes = $previous_icon_name = $previous_icon_style = '';
+			//rebuild array, parse and format label
+			foreach ($font_awesome_icons as $i => $icon_classes) {
+				//split classes
+				$icon_class = explode(' ', $icon_classes);
+				$icon_style = $icon_class[0];
+				$icon_name = $icon_class[1];
+				//determine label
+				$icon_label = str_replace('fa-', '', $icon_name);
 				$icon_label = str_replace('-', ' ', $icon_label);
 				$icon_label = ucwords($icon_label);
-				$icons[$icon_class] = $icon_label;
+				//update previous
+				if (
+					!empty($previous_icon_name) &&
+					!empty($previous_icon_style) &&
+					$icon_name == $previous_icon_name &&
+					$icon_style != $previous_icon_style
+					) {
+					$icons[$previous_icon_classes] = $icon_label.' - '.ucwords(str_replace('fa-', '', $previous_icon_style));
+					$append_style = true;
+				}
+				else {
+					$append_style = false;
+				}
+				//set current
+				$icons[$icon_classes] = $icon_label.($append_style ? ' - '.ucwords(str_replace('fa-', '', $icon_style)) : null);
+				//set previous values
+				$previous_icon_name = $icon_name;
+				$previous_icon_style = $icon_style;
+				$previous_icon_classes = $icon_classes;
 			}
-			asort($icons, SORT_STRING);
+			unset($icon_classes, $icon_class, $icon_style, $icon_name, $previous_icon_classes, $previous_icon_style, $previous_icon_name, $icon_label, $previous_icon_name, $previous_icon_style, $previous_icon_classes);
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 			echo "	<tr>\n";
 			echo "		<td>\n";
 			echo "			<select class='formfld' name='menu_item_icon' id='menu_item_icon' onchange=\"$('#icons').slideUp(); $('#grid_icon').fadeIn();\">\n";
 			echo "				<option value=''></option>\n";
 			foreach ($icons as $icon_class => $icon_label) {
-				$selected = ($menu_item_icon == $icon_class) ? "selected" : null;
+				$selected = $menu_item_icon == $icon_class ? "selected" : null;
 				echo "			<option value='".escape($icon_class)."' ".$selected.">".escape($icon_label)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "		</td>\n";
 			echo "		<td style='padding: 0 0 0 5px;'>\n";
-			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fas fa-th'></span></button>";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#icons').fadeIn(); $(this).fadeOut();\"><span class='fa-solid fa-th'></span></button>";
 			echo "		</td>\n";
 			echo "	</tr>\n";
 			echo "</table>\n";
 			echo "<div id='icons' style='clear: both; display: none; margin-top: 8px; padding-top: 10px; color: #000; max-height: 400px; overflow: auto;'>\n";
 			foreach ($icons as $icon_class => $icon_label) {
-				echo "<span class='fas ".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#menu_item_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+				echo "<span class='".escape($icon_class)." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon_label)."' onclick=\"$('#menu_item_icon').val('".escape($icon_class)."'); $('#icons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
 			}
 			echo "</div>";
 		}

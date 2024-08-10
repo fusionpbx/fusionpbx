@@ -4,7 +4,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = 'a294b771-a125-4d36-b51a-973540346fad';
 $array['dashboard'][$x]['dashboard_name'] = 'Destinations';
 $array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
-$array['dashboard'][$x]['dashboard_icon'] = 'fa-sign-in-alt';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-right-to-bracket';
 $array['dashboard'][$x]['dashboard_url'] = '/app/destinations/destinations.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';

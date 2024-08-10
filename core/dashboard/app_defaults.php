@@ -119,6 +119,16 @@ if ($domains_processed == 1) {
 		$p->delete('dashboard_add', 'temp');
 		$p->delete('dashboard_group_add', 'temp');
 
+	//update dashboard icons to be prefixed with v6.x font awesome style class name (e.g. 'fa-solid ')
+		$queries[] = "update v_dashboard set dashboard_icon = concat('fa-solid ', dashboard_icon) where dashboard_icon is not null and dashboard_icon not like 'fa-solid fa-%' and dashboard_icon not like 'fa-regular fa-%' and dashboard_icon not like 'fa-brands fa-%' ";
+
+	//execute array of queries
+		foreach ($queries as $sql) {
+			$database = new database;
+			$database->execute($sql);
+		}
+		unset($queries, $sql);
+
 }
 
 ?>
