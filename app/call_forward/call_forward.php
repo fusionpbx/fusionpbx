@@ -215,7 +215,7 @@
 		echo "	<div class='heading'><b>" . $text['header-call_forward'] . "</b></div>\n";
 		echo "	<div class='actions'>\n";
 		if ($num_rows > 10) {
-			echo button::create(['type' => 'button', 'label' => $text['button-view_all'], 'icon' => 'project-diagram', 'collapse' => false, 'link' => PROJECT_PATH . '/app/call_forward/call_forward.php']);
+			echo button::create(['type' => 'button', 'label' => $text['button-view_all'], 'icon' => 'diagram-project', 'collapse' => false, 'link' => PROJECT_PATH . '/app/call_forward/call_forward.php']);
 		}
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";

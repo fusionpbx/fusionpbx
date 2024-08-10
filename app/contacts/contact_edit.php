@@ -2330,7 +2330,7 @@ if (permission_exists('contact_relation_view')) {
 			}
 			echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
 			echo "				<a href='contact_edit.php?id=".escape($row['relation_contact_uuid'])."' target='_blank'>\n";
-			echo "					<span class='fas fa-user-friends' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 3px;'></span>\n";
+			echo "					<span class='fas fa-user-group' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 3px;'></span>\n";
 			echo "				</a>\n";
 			echo "			</div>\n";
 			echo "		</div>\n";

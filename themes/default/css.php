@@ -605,7 +605,10 @@ else { //default: white
 		background: <?=$menu_main_background_color_hover?>;
 		}
 
-	.navbar .navbar-nav > li > a > span.fas {
+	.navbar .navbar-nav > li > a > span.fas,
+	.navbar .navbar-nav > li > a > span.fa-solid,
+	.navbar .navbar-nav > li > a > span.fa-brands,
+	.navbar .navbar-nav > li > a > span.fa-regular {
 		margin: 1px 2px 0 0;
 		}
 
@@ -672,7 +675,10 @@ else { //default: white
 		}
 
 	/* sub menu item icon */
-	ul.dropdown-menu > li.nav-item > a.nav-link > span.fas {
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fas,
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-solid,
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-brands,
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-regular {
 		display: inline-block;
 		font-size: 8pt;
 		margin: 0 0 0 8px;
@@ -742,11 +748,11 @@ else { //default: white
 		min-height: 50px;
 		}
 
-	button.navbar-toggler > span.fas.fa-bars {
+	button.navbar-toggler > span.fa-solid.fa-bars {
 		color: <?=$menu_main_toggle_color?>;
 		}
 
-	button.navbar-toggler > span.fas.fa-bars:hover {
+	button.navbar-toggler > span.fa-solid.fa-bars:hover {
 		color: <?=$menu_main_toggle_color_hover?>;
 		}
 
@@ -1596,7 +1602,10 @@ else { //default: white
 		font-family: inherit;
 		}
 
-	button.btn > span.fas.fa-spin {
+	button.btn > span.fas.fa-spin,
+	button.btn > span.fa-solid.fa-spin,
+	button.btn > span.fa-brands.fa-spin,
+	button.btn > span.fa-regular.fa-spin {
 		display: inline-block;
 		}
 

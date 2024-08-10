@@ -41,7 +41,7 @@
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-colorpicker.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-pwstrength.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript'>{literal}window.FontAwesomeConfig = { autoReplaceSvg: false }{/literal}</script>
-	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/solid.min.js.php' defer></script>
+	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/all.min.js.php' defer></script>
 
 {*//web font loader *}
 	{if isset($settings.theme.font_loader) && $settings.theme.font_loader == 'true'}
@@ -1176,7 +1176,7 @@
 <body>
 
 	{*//video background *}
-	{if !empty($settings.theme.background_video_enabled) && $settings.theme.background_video_enabled == 'true' && !empty($settings.theme.background_video)}
+	{if !empty($settings.theme.background_video)}
 		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
 			<source src="{$settings.theme.background_video}" type="video/mp4">
 		</video>
