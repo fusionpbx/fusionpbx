@@ -464,7 +464,7 @@
 		echo "	xhttp.send();\n";
 		echo "	document.getElementById('icons').innerHTML = xhttp.responseText;\n";
 		echo "}\n";
-		//delay kepress for 1/2 second
+		//delay kepress action for 1/2 second
 		echo "var keypress_timer;\n";
 		echo "function delay_submit(search) {\n";
 		echo "	clearTimeout(keypress_timer);\n";

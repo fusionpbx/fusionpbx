@@ -105,7 +105,7 @@ if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/metadata/icons.
 		}
 	}
 }
-// view_array($font_awesome_icons);
+//view_array($font_awesome_icons);
 
 //output icons
 if (
