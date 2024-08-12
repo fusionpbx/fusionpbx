@@ -81,6 +81,10 @@
 		//linux
 		$config_exists = true;
 	}
+	elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
+		//Windows
+		$config_exists = true;
+	}
 	if ($config_exists) {
 		$msg = "Already Installed";
 		//report to user
@@ -99,6 +103,10 @@
 		elseif (file_exists("/etc/fusionpbx/config.php")) {
 			//linux
 			$config_path = "/etc/fusionpbx";
+		}
+		elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.php')) {
+			//Windows
+			$config_path =  getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' ;
 		}
 		if (isset($config_path)) {
 			if (is_writable($config_path)) {
@@ -350,14 +358,11 @@
 	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 	$domain_name = $domain_array[0];
 
-//temp directory
-	$_SESSION['server']['temp']['dir'] = '/tmp';
-
 //initialize a template object
 	$view = new template();
 	$view->engine = 'smarty';
 	$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/install/resources/views/';
-	$view->cache_dir = $_SESSION['server']['temp']['dir'];
+	$view->cache_dir = sys_get_temp_dir();
 	$view->init();
 
 //assign default values to the template

@@ -38,7 +38,6 @@
 			$sql = "select * from v_extensions ";
 			$sql .= "where directory_first_name <> '' ";
 			$sql .= "and directory_last_name is null ";
-			$database = new database;
 			$extensions = $database->select($sql, null, 'all');
 			unset($sql);
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
@@ -54,7 +53,6 @@
 					$p = new permissions;
 					$p->add('extension_edit', 'temp');
 
-					$database = new database;
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array, false);
@@ -74,7 +72,6 @@
 			$p = new permissions;
 			$p->add('default_setting_edit', 'temp');
 
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 
@@ -87,7 +84,6 @@
 				$sql .= "	select string_agg(convert_to(coalesce(r[2], length(length(r[1])::text) || length(r[1])::text || r[1]), 'UTF8'),'\\x00')\n";
 				$sql .= "	from regexp_matches(\$1, '0*([0-9]+)|([^0-9]+)', 'g') r;\n";
 				$sql .= "\$f\$;";
-				$database = new database;
 				$database->execute($sql);
 				unset($sql);
 			}
@@ -100,13 +96,11 @@
 		//update the extension_type when the value is null
 			$sql = "select count(*) from v_extensions ";
 			$sql .= "where extension_type is null; ";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows > 0) {
 				$sql = "update v_extensions ";
 				$sql .= "set extension_type = 'default' ";
 				$sql .= "where extension_type is null;";
-				$database = new database;
 				$database->execute($sql, null);
 			}
 

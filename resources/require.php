@@ -31,6 +31,9 @@
 	elseif (file_exists('/etc/fusionpbx/config.conf')) {
 		$config_file = '/etc/fusionpbx/config.conf';
 	}
+	elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
+		$config_file =  getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
+	}	
 	elseif (file_exists(__DIR__ . '/config.php')) {
 		//set a custom config_file variable after the config.php has been validated
 		$file_content = trim(file_get_contents(__DIR__ . '/config.php'));
@@ -123,7 +126,9 @@
 	}
 
 //additional includes
-	require_once "resources/php.php";
+	if (!defined('STDIN')) {
+		require_once "resources/php.php";
+	}
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
 		require_once "resources/pdo.php";

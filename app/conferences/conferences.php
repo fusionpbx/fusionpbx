@@ -100,7 +100,7 @@
 	}
 
 //prepare to page the results
-	if (if_group("superadmin") || if_group("admin")) {
+	if (permission_exists('conference_view')) {
 		//show all extensions
 		$sql = "select count(*) from v_conferences ";
 		$sql .= "where true ";

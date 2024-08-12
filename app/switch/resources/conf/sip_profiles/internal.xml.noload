@@ -103,7 +103,7 @@
 		<!-- extended info parsing -->
 		<param name="extended-info-parsing" value="true" enabled="false"/>
 
-		<param name="aggressive-nat-detection" value="true" enabled="true"/>
+		<param name="aggressive-nat-detection" value="true" enabled="false"/>
 		<!--
 		There are known issues (asserts and segfaults) when 100rel is enabled.
 		It is not recommended to enable 100rel at this time.

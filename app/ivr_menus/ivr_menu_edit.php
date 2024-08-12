@@ -426,7 +426,8 @@
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["context"]);
 					$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
-					//get all ivr parent menus
+
+				//get all ivr parent menus
 					$sql = "with recursive ivr_menus as ( ";
 					$sql .="	select ivr_menu_parent_uuid ";
 					$sql .="	 from v_ivr_menus ";
@@ -769,7 +770,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='".escape($ivr_menu_extension)."' required='required'>\n";
+	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='".escape($ivr_menu_extension)."' required='required' placeholder=\"".($_SESSION['ivr_menu']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";

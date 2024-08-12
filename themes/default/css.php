@@ -213,21 +213,21 @@ $dashboard_detail_background_color_center = $_SESSION['theme']['dashboard_detail
 $dashboard_border_radius = $_SESSION['theme']['dashboard_border_radius']['text'] ?? '5px';
 $dashboard_border_color = $_SESSION['theme']['dashboard_border_color']['text'] ?? '#dbe0ea';
 $dashboard_border_color_hover = $_SESSION['theme']['dashboard_border_color_hover']['text'] ?? '#cbd3e1';
-$dashboard_heading_text_color = $_SESSION['theme']['dashboard_heading_text_color']['text'] ?? '#fff';
-$dashboard_heading_text_color_hover = $_SESSION['theme']['dashboard_heading_text_color_hover']['text'] ?? '#fff';
-$dashboard_heading_text_size = $_SESSION['theme']['dashboard_heading_text_size']['text'] ?? '12pt';
-$dashboard_heading_text_font = $_SESSION['theme']['dashboard_heading_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
-$dashboard_heading_text_shadow_color = $_SESSION['theme']['dashboard_heading_text_shadow_color']['text'] ?? '#000';
-$dashboard_heading_background_color = $_SESSION['theme']['dashboard_heading_background_color']['text'] ?? '#8e96a5';
-$dashboard_heading_background_color_hover = $_SESSION['theme']['dashboard_heading_background_color_hover']['text'] ?? color_adjust($dashboard_heading_background_color, 0.03);
-$dashboard_number_text_color = $_SESSION['theme']['dashboard_number_text_color']['text'] ?? '#fff';
-$dashboard_number_text_color_hover = $_SESSION['theme']['dashboard_number_text_color_hover']['text'] ?? '#fff';
-$dashboard_number_text_font = $_SESSION['theme']['dashboard_number_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+$dashboard_heading_text_color = $_SESSION['theme']['dashboard_heading_text_color']['text'] ?? '#444';
+$dashboard_heading_text_color_hover = $_SESSION['theme']['dashboard_heading_text_color_hover']['text'] ?? '';
+$dashboard_heading_text_size = $_SESSION['theme']['dashboard_heading_text_size']['text'] ?? '13px';
+$dashboard_heading_text_font = $_SESSION['theme']['dashboard_heading_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
+$dashboard_heading_text_shadow_color = $_SESSION['theme']['dashboard_heading_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_heading_background_color = $_SESSION['theme']['dashboard_heading_background_color']['text'] ?? '';
+$dashboard_heading_background_color_hover = $_SESSION['theme']['dashboard_heading_background_color_hover']['text'] ?? '';
+$dashboard_number_text_color = $_SESSION['theme']['dashboard_number_text_color']['text'] ?? '#444';
+$dashboard_number_text_color_hover = $_SESSION['theme']['dashboard_number_text_color_hover']['text'] ?? '';
+$dashboard_number_text_font = $_SESSION['theme']['dashboard_number_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
 $dashboard_number_text_size = $_SESSION['theme']['dashboard_number_text_size']['text'] ?? '60pt';
-$dashboard_number_text_shadow_color = $_SESSION['theme']['dashboard_number_text_shadow_color']['text'] ?? '#737983';
-$dashboard_number_text_shadow_color_hover = $_SESSION['theme']['dashboard_number_text_shadow_color_hover']['text'] ?? '#737983';
-$dashboard_number_background_color = $_SESSION['theme']['dashboard_number_background_color']['text'] ?? '#a4aebf';
-$dashboard_number_background_color_hover = $_SESSION['theme']['dashboard_number_background_color_hover']['text'] ?? color_adjust($dashboard_number_background_color, 0.03);
+$dashboard_number_text_shadow_color = $_SESSION['theme']['dashboard_number_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_number_text_shadow_color_hover = $_SESSION['theme']['dashboard_number_text_shadow_color_hover']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_number_background_color = $_SESSION['theme']['dashboard_number_background_color']['text'] ?? '';
+$dashboard_number_background_color_hover = $_SESSION['theme']['dashboard_number_background_color_hover']['text'] ?? '';
 $dashboard_number_title_text_color = $_SESSION['theme']['dashboard_number_title_text_color']['text'] ?? '#fff';
 $dashboard_number_title_text_size = $_SESSION['theme']['dashboard_number_title_text_size']['text'] ?? '14px';
 $dashboard_number_title_text_font = $_SESSION['theme']['dashboard_number_title_text_font']['text'] ?? 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
@@ -450,7 +450,7 @@ else { //default: white
 		}
 
 	body {
-		z-index: 1;
+		z-index: auto;
 		position: absolute;
 		margin: 0;
 		padding: 0;
@@ -477,6 +477,18 @@ else { //default: white
 		-moz-background-size:cover;
 		-o-background-size:cover;
 		background-size:cover;
+		}
+
+	#background-video {
+		width: 100vw;
+		height: 100vh;
+		object-fit: cover;
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: -2;
 		}
 
 	pre {
@@ -593,7 +605,10 @@ else { //default: white
 		background: <?=$menu_main_background_color_hover?>;
 		}
 
-	.navbar .navbar-nav > li > a > span.fas {
+	.navbar .navbar-nav > li > a > span.fas,
+	.navbar .navbar-nav > li > a > span.fa-solid,
+	.navbar .navbar-nav > li > a > span.fa-brands,
+	.navbar .navbar-nav > li > a > span.fa-regular {
 		margin: 1px 2px 0 0;
 		}
 
@@ -660,7 +675,10 @@ else { //default: white
 		}
 
 	/* sub menu item icon */
-	ul.dropdown-menu > li.nav-item > a.nav-link > span.fas {
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fas,
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-solid,
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-brands,
+	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-regular {
 		display: inline-block;
 		font-size: 8pt;
 		margin: 0 0 0 8px;
@@ -730,11 +748,11 @@ else { //default: white
 		min-height: 50px;
 		}
 
-	button.navbar-toggler > span.fas.fa-bars {
+	button.navbar-toggler > span.fa-solid.fa-bars {
 		color: <?=$menu_main_toggle_color?>;
 		}
 
-	button.navbar-toggler > span.fas.fa-bars:hover {
+	button.navbar-toggler > span.fa-solid.fa-bars:hover {
 		color: <?=$menu_main_toggle_color_hover?>;
 		}
 
@@ -1584,7 +1602,10 @@ else { //default: white
 		font-family: inherit;
 		}
 
-	button.btn > span.fas.fa-spin {
+	button.btn > span.fas.fa-spin,
+	button.btn > span.fa-solid.fa-spin,
+	button.btn > span.fa-brands.fa-spin,
+	button.btn > span.fa-regular.fa-spin {
 		display: inline-block;
 		}
 
@@ -2358,7 +2379,7 @@ else { //default: white
 		cursor: not-allowed;
 		opacity: 0.5;
 		}
-		
+
 	div.ur_ext:after {
 		position: absolute;
 		content: "";
@@ -2568,6 +2589,7 @@ else { //default: white
 		letter-spacing: -0.02em;
 		color: <?=$dashboard_heading_text_color?>;
 		font-size: <?=$dashboard_heading_text_size?>;
+		font-weight: bold;
 		<?php
 		//calculate line height based on font size
 		$font_size = strtolower($dashboard_heading_text_size);

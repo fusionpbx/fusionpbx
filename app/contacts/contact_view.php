@@ -480,7 +480,7 @@
 	if (permission_exists('contact_relation_view')) {
 		echo "	<div class='box contact-details'>\n";
 		echo "		<div class='grid contact-details'>\n";
-		echo "			<div class='box' title=\"".$text['header-contact_relations']."\"><b class='fas fa-project-diagram fa-fw fa-lg'></b></div>\n";
+		echo "			<div class='box' title=\"".$text['header-contact_relations']."\"><b class='fas fa-diagram-project fa-fw fa-lg'></b></div>\n";
 		echo "			<div class='box'>\n";
 		require "contact_relations_view.php";
 		echo "			</div>\n";

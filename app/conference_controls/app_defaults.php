@@ -28,7 +28,6 @@
 
 		//add the conference controls list to the database
 		$sql = "select count(*) from v_conference_controls; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 
@@ -69,7 +68,6 @@
 						$p = new permissions;
 						$p->add('conference_control_add', 'temp');
 
-						$database = new database;
 						$database->app_name = 'conference_controls';
 						$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 						$database->save($array);
@@ -101,7 +99,6 @@
 								$p = new permissions;
 								$p->add('conference_control_detail_add', 'temp');
 
-								$database = new database;
 								$database->app_name = 'conference_controls';
 								$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 								$database->save($array);

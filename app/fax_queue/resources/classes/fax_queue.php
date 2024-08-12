@@ -247,6 +247,32 @@ if (!class_exists('fax_queue')) {
 			}
 		}
 
+		/**
+		 * Removes records from the v_fax_files and v_fax_logs tables. Called by the maintenance application.
+		 * @param settings $settings Settings object
+		 * @return void
+		 */
+		public static function database_maintenance(settings $settings): void {
+			$database = $settings->database();
+			$domains = maintenance_service::get_domains($database);
+			foreach ($domains as $domain_uuid => $domain_name) {
+				$domain_settings = new settings(['database'=>$database, 'domain_uuid'=>$domain_uuid]);
+				$retention_days = $domain_settings->get('fax_queue', 'database_retention_days', '');
+				//delete from v_fax_queue where fax_status = 'sent' and fax_date < NOW() - INTERVAL '$days_keep_fax_queue days'
+				if (!empty($retention_days) && is_numeric($retention_days)) {
+					$sql = "delete from v_fax_queue where fax_status = 'sent' and fax_date < NOW() - INTERVAL '$retention_days days'";
+					$sql .= " and domain_uuid = '$domain_uuid'";
+					$database->execute($sql);
+					$code = $database->message['code'] ?? 0;
+					if ($code == 200) {
+						maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
+					} else {
+						$message = $database->message['message'] ?? "An unknown error has occurred";
+						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,52 +42,99 @@
 	$language = new text;
 	$text = $language->get();
 
+//set defaults
+	$recording_name = '';
+	$recording_message = '';
+	$recording_description = '';
+	$recording_uuid = '';
+	$translate_enabled = false;
+	$language_enabled = false;
+
+//add the settings object
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$speech_enabled = $settings->get('speech', 'enabled', 'false');
+	$speech_engine = $settings->get('speech', 'engine', '');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
+//add the speech object and get the voices and languages arrays
+	if ($speech_enabled == 'true' && !empty($speech_engine)) {
+		$speech = new speech($settings);
+		$voices = $speech->get_voices();
+		//$speech_models = $speech->get_models();
+		//$translate_enabled = $speech->get_translate_enabled();
+		//$language_enabled = $speech->get_language_enabled();
+		//$languages = $speech->get_languages();
+	}
+
+//add the transcribe object and get the languages arrays
+	if ($transcribe_enabled == 'true' && !empty($transcribe_engine)) {
+		$transcribe = new transcribe($settings);
+		//$transcribe_models = $transcribe->get_models();
+		//$translate_enabled = $transcribe->get_translate_enabled();
+		//$language_enabled = $transcribe->get_language_enabled();
+		//$languages = $transcribe->get_languages();
+	}
+
 //get recording id
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$recording_uuid = $_REQUEST["id"];
+		$action = 'update';
+	}
+	else {
+		$action = 'add';
 	}
 
 //get the form value and set to php variables
-	if (count($_POST) > 0) {
-		$recording_filename = $_POST["recording_filename"];
-		$recording_filename_original = $_POST["recording_filename_original"];
+	if (!empty($_POST)) {
+		$recording_filename = $_POST["recording_filename"] ?? '';
+		$recording_filename_original = $_POST["recording_filename_original"] ?? '';
 		$recording_name = $_POST["recording_name"];
+		$recording_model = $_POST["recording_model"];
+		//$recording_language = $_POST["recording_language"];
+		//$translate = $_POST["translate"];
+		$recording_voice = $_POST["recording_voice"];
+		$recording_message = $_POST["recording_message"];
 		$recording_description = $_POST["recording_description"];
-
 		//sanitize recording filename and name
-		$recording_filename_ext = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
-		if (!in_array($recording_filename_ext, ['wav','mp3','ogg'])) {
-			$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
-			$recording_filename = str_replace('.', '', $recording_filename);
+		if (!empty($recording_filename)) {
+			$recording_filename_ext = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
+			if (!in_array($recording_filename_ext, ['wav','mp3','ogg'])) {
+				$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
+				$recording_filename = str_replace('.', '', $recording_filename);
+			}
+			$recording_filename = str_replace("\\", '', $recording_filename);
+			$recording_filename = str_replace('/', '', $recording_filename);
+			$recording_filename = str_replace('..', '', $recording_filename);
+			$recording_filename = str_replace(' ', '-', $recording_filename);
+			$recording_filename = str_replace("'", '', $recording_filename);
 		}
-		$recording_filename = str_replace("\\", '', $recording_filename);
-		$recording_filename = str_replace('/', '', $recording_filename);
-		$recording_filename = str_replace('..', '', $recording_filename);
-		$recording_filename = str_replace(' ', '_', $recording_filename);
-		$recording_filename = str_replace("'", '', $recording_filename);
 		$recording_name = str_replace("'", '', $recording_name);
 	}
 
-if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
-	//get recording uuid to edit
-		$recording_uuid = $_POST["recording_uuid"];
+//process the HTTP POST
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
+		//get recording uuid to edit
+		$recording_uuid = $_POST["recording_uuid"] ?? '';
 
-	//delete the recording
+		//delete the recording
 		if (permission_exists('recording_delete')) {
-			if ($_POST['action'] == 'delete' && is_uuid($recording_uuid)) {
+			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($recording_uuid)) {
 				//prepare
-					$array[0]['checked'] = 'true';
-					$array[0]['uuid'] = $recording_uuid;
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $recording_uuid;
+
 				//delete
-					$obj = new switch_recordings;
-					$obj->delete($array);
+				$obj = new switch_recordings;
+				$obj->delete($array);
+
 				//redirect
-					header('Location: recordings.php');
-					exit;
+				header('Location: recordings.php');
+				exit;
 			}
 		}
 
-	//validate the token
+		//validate the token
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
@@ -95,10 +142,10 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 			exit;
 		}
 
-	//check for all required data
+		//check for all required data
 		$msg = '';
-		if (empty($recording_filename)) { $msg .= $text['label-edit-file']."<br>\n"; }
-		if (empty($recording_name)) { $msg .= $text['label-edit-recording']."<br>\n"; }
+		if (empty($recording_name)) { $msg .= $text['label-edit_recording']."<br>\n"; }
+		//if (empty($recording_filename)) { $msg .= $text['label-edit_file']."<br>\n"; }
 		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -112,43 +159,116 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 			return;
 		}
 
-	//update the database
-	if (empty($_POST["persistformvar"])) {
-		if (permission_exists('recording_edit')) {
-			//if file name is not the same then rename the file
-				if ($recording_filename != $recording_filename_original) {
+		//add the recording_uuid
+		if (empty($recording_uuid)) {
+			$recording_uuid = uuid();
+		}
+
+		//set the default value
+		//if (empty($recording_model)) {
+		//	$recording_model = $settings->get('speech', 'model', '');
+		//}
+
+		//update the database
+		if (empty($_POST["persistformvar"])) {
+			if (permission_exists('recording_edit')) {
+
+				//set the recording format
+				$recording_format = $recording_format ?? 'wav';
+
+				//if file name is not the same then rename the file
+				if (!empty($recording_filename) && !empty($recording_filename_original) && $recording_filename != $recording_filename_original) {
 					rename($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename_original, $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
 				}
 
-			//build array
-				$array['recordings'][0]['domain_uuid'] = $domain_uuid;
-				$array['recordings'][0]['recording_filename'] = $recording_filename;
-				$array['recordings'][0]['recording_name'] = $recording_name;
-				$array['recordings'][0]['recording_description'] = $recording_description;
+				//build the setting object and get the recording path
+				$recording_path = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'];
+
+				//create the file name
+				if (empty($recording_filename)) {
+					$recording_filename = $recording_name.'.'.$recording_format;
+					$recording_filename = str_replace("\\", '', $recording_filename);
+					$recording_filename = str_replace('/', '', $recording_filename);
+					$recording_filename = str_replace('..', '', $recording_filename);
+					$recording_filename = str_replace(' ', '-', $recording_filename);
+					$recording_filename = str_replace("'", '', $recording_filename);
+				}
+
+				//determine whether to create the recording
+				$create_recording = false;
+				if ($speech_enabled == 'true' && !empty($recording_voice) && !empty($recording_message)) {
+					if ($action == 'add') {
+						$create_recording = true;
+					}
+					if ($action == 'update' && $_POST["create_recording"] == 'true') {
+						$create_recording = true;
+					}
+				}
+
+				//text to audio - make a new audio file from the message
+				if ($create_recording) {
+					$speech->audio_path = $recording_path;
+					$speech->audio_filename = $recording_filename;
+					$speech->audio_format = $recording_format;
+					//$speech->audio_model = $recording_model ?? '';
+					$speech->audio_voice = $recording_voice;
+					//$speech->audio_language = $recording_language;
+					//$speech->audio_translate = $translate;
+					$speech->audio_message = $recording_message;
+					$speech->speech();
+
+					//fix invalid riff & data header lengths in generated wave file
+					if ($speech_engine == 'openai') {
+						$recording_filename_temp = str_replace('.'.$recording_format, '.tmp.'.$recording_format, $recording_filename);
+						exec('sox --ignore-length '.$recording_path.'/'.$recording_filename.' '.$recording_path.'/'.$recording_filename_temp);
+						if (file_exists($recording_path.'/'.$recording_filename_temp)) {
+							exec('rm -f '.$recording_path.'/'.$recording_filename.' && mv '.$recording_path.'/'.$recording_filename_temp.' '.$recording_path.'/'.$recording_filename);
+						}
+						unset($recording_filename_temp);
+					}
+				}
+
+				//audio to text - get the transcription from the audio file
+				if ($transcribe_enabled == 'true' && empty($recording_message)) {
+					$transcribe->audio_path = $recording_path;
+					$transcribe->audio_filename = $recording_filename;
+					$recording_message = $transcribe->transcribe();
+				}
+
+				//build array
 				$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 				$array['recordings'][0]['recording_uuid'] = $recording_uuid;
+				$array['recordings'][0]['recording_filename'] = $recording_filename;
+				$array['recordings'][0]['recording_name'] = $recording_name;
+				if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+					$array['recordings'][0]['recording_voice'] = $recording_voice;
+					$array['recordings'][0]['recording_message'] = $recording_message;
+				}
+				$array['recordings'][0]['recording_description'] = $recording_description;
 
-			//execute update
+				//execute update
 				$database = new database;
 				$database->app_name = 'recordings';
 				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
 				unset($array);
 
-			//set message
+				//set message
 				message::add($text['message-update']);
 
-			//redirect
+				//redirect
 				header("Location: recordings.php");
 				exit;
+			}
 		}
 	}
-}
 
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$recording_uuid = $_GET["id"];
-		$sql = "select recording_name, recording_filename, recording_description from v_recordings ";
+		$sql = "select recording_name, recording_filename, ";
+		$sql .= "recording_voice, recording_message, recording_description ";
+		$sql .= "from v_recordings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and recording_uuid = :recording_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
@@ -158,6 +278,8 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 		if (is_array($row) && @sizeof($row) != 0) {
 			$recording_filename = $row["recording_filename"];
 			$recording_name = $row["recording_name"];
+			$recording_voice = $row["recording_voice"];
+			$recording_message = $row["recording_message"];
 			$recording_description = $row["recording_description"];
 		}
 		unset($sql, $parameters, $row);
@@ -178,7 +300,7 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	echo "	<div class='heading'><b>".$text['title-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recordings.php']);
-	if (permission_exists('recording_delete')) {
+	if (permission_exists('recording_delete') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
@@ -203,21 +325,153 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-file_name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
-	echo "    <input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
-	echo "<br />\n";
-	//echo $text['message-file']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (!empty($_REQUEST["id"])) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "    ".$text['label-file_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
+		echo "    <input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
+		echo "<br />\n";
+		echo $text['description-file_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+		//models
+		if (!empty($models)) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "    ".$text['label-model']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<select class='formfld' name='recording_model'>\n";
+			echo "		<option value=''></option>\n";
+			foreach ($models as $model_id => $model_name) {
+				echo "		<option value='".escape($model_id)."' ".($model_id == $recording_model ? "selected='selected'" : '').">".escape($model_name)."</option>\n";
+			}
+			echo "	</select>\n";
+			echo "<br />\n";
+			echo $text['description-model']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+		else {
+			echo "<input class='formfld' type='hidden' name='recording_model' maxlength='255' value=''>\n";
+		}
+
+		//voices
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "    ".$text['label-voice']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if (!empty($voices)) {
+			echo "	<select class='formfld' name='recording_voice'>\n";
+			echo "		<option value=''></option>\n";
+			foreach ($voices as $key => $voice) {
+				$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+				echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+			}
+			echo "	</select>\n";
+		}
+		else {
+			echo "		<input class='formfld' type='text' name='recording_voice' maxlength='255' value=\"".escape($recording_voice)."\">\n";
+		}
+		echo "<br />\n";
+		echo $text['description-voice']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if ($language_enabled) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "    ".$text['label-language']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			if (!empty($languages)) {
+				sort($languages);
+				echo "	<select class='formfld' name='recording_language'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($languages as $language) {
+					echo "		<option value='".escape($language)."' ".(!empty($recording_language) && $language == $recording_language ? "selected='selected'" : null).">".escape($language)."</option>\n";
+				}
+				echo "	</select>\n";
+			}
+			else {
+				echo "		<input class='formfld' type='text' name='recording_language' maxlength='255' value=\"".escape($recording_language)."\">\n";
+			}
+			echo "<br />\n";
+			echo $text['description-languages']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		if ($translate_enabled) {
+			echo "<tr>\n";
+			echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-translate']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+				echo "	<label class='switch'>\n";
+				echo "		<input type='checkbox' id='translate' name='translate' value='true' ".(!empty($translate) && $translate == 'true' ? "checked='checked'" : null).">\n";
+				echo "		<span class='slider'></span>\n";
+				echo "	</label>\n";
+			}
+			else {
+				echo "	<select class='formfld' id='translate' name='translate'>\n";
+				echo "		<option value='true'>".$text['option-true']."</option>\n";
+				echo "		<option value='false' ".(!empty($translate) && $translate == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "	</select>\n";
+			}
+			echo "<br />\n";
+			echo $text['description-translate']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "    ".$text['label-message']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <textarea class='formfld' name='recording_message' style='width: 300px; height: 150px;'>".escape($recording_message)."</textarea>\n";
+		echo "<br />\n";
+		echo $text['description-message']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if ($action == 'update') {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-create_recording']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' style='position: relative;' align='left'>\n";
+			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+				echo "	<label class='switch'>\n";
+				echo "		<input type='checkbox' id='create_recording' name='create_recording' value='true' ".(!empty($create_recording) && $create_recording == 'true' ? "checked='checked'" : null).">\n";
+				echo "		<span class='slider'></span>\n";
+				echo "	</label>\n";
+			}
+			else {
+				echo "	<select class='formfld' id='create_recording' name='create_recording'>\n";
+				echo "		<option value='true' ".($create_recording == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+				echo "		<option value='false' ".($create_recording == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "	</select>\n";
+			}
+			echo "<br />\n";
+			echo $text['description-create_recording']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Description\n";
+	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='recording_description' maxlength='255' value=\"".escape($recording_description)."\">\n";
@@ -229,7 +483,9 @@ if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 	echo "</table>";
 	echo "<br /><br />";
 
-	echo "<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
+	if (!empty($recording_uuid) && is_uuid($recording_uuid)) {
+		echo "<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
+	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";

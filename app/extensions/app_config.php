@@ -198,6 +198,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_copy";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_export";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -292,7 +293,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowecase letter in extension passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowercase letter in extension passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "256b0d87-a43e-4618-b96b-541e191879c7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
@@ -334,37 +335,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default value to set whether to record inbound, outbound, or all calls.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "40aac087-c335-44fa-9302-aaddb4bcca00";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_color_undefined";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5360dc50-6181-450c-a007-d2ce3e97d9de";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_caller_id_chart_color_undefined";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ea4c46";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "103a5aaa-00f8-4cbe-9988-0469a9b9e65d";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_color_defined";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c3255107-4038-44fc-9c49-f60c9b8cd8ed";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_caller_id_chart_color_defined";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "71b2a34c-86df-4ada-b7fc-70e4048dd202";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_border_color";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f5650002-e150-438c-8983-1379cf2cd04f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(0,0,0,0)";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7a96f83b-c408-418b-99b5-077fa11b7cf5";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_chart_border_width";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "100-199";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for extensions";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db521639-5c26-4cba-acc7-e8d6fe86657c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
@@ -373,6 +366,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring time (delay in seconds) before sending a call to voicemail";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed1833a1-8dd5-4ca7-8a78-b5329e909841";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "limit_max";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the maximum number of concurrent outbound calls allowed";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${domain_name}";
@@ -776,4 +777,3 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>
-

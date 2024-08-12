@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -171,7 +171,7 @@
 				$gateway_3_name = '';
 			}
 		//set additional variables
-			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'true';
+			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 			$dialplan_description = $_POST["dialplan_description"];
 	}
 
@@ -429,7 +429,7 @@
 						$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
-						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound';
+						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound'.(empty($dialplan_description) && !empty($abbrv) ? '.'.$abbrv : null);
 						$array['dialplans'][$x]['dialplan_order'] = '22';
 						$array['dialplans'][$x]['dialplan_continue'] = 'true';
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;

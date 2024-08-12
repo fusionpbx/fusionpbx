@@ -37,6 +37,7 @@
 	require "resources.functions.explode";
 	require "resources.functions.trim";
 	require "resources.functions.channel_utils";
+	require "resources.functions.is_uuid";
 
 --prepare the api object
 	api = freeswitch.API();
@@ -54,7 +55,7 @@
 	end
 
 --get the hostname
-	local hostname = trim(api:execute("switchname", ""));
+	local hostname = trim(api:execute("hostname", ""));
 
 -- redirect call to another box
 	local function make_proxy_call(destination, call_hostname)
@@ -286,7 +287,7 @@
 				params[param_name] = extension.."@"..domain_name;
 			end
 			sql = sql .. ") ";
-			sql = sql .. "AND call_uuid IS NOT NULL ";
+			--sql = sql .. "AND call_uuid IS NOT NULL ";
 			sql = sql .. "ORDER BY created_epoch DESC LIMIT 1 ";
 			if (debug["sql"]) then
 				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
@@ -294,14 +295,17 @@
 			local is_child
 			dbh:query(sql, params, function(row)
 				--for key, val in pairs(row) do
-			 	--	log.notice("row "..key.." "..val);
+				--	log.notice("row "..key.." "..val);
 				--end
 				--log.notice("-----------------------");
 				is_child = (row.uuid == row.call_uuid)
-				uuid = row.call_uuid;
+				uuid = row.uuid;
+				if (row.call_uuid ~= nil) then
+					uuid = row.call_uuid;
+				end
 				call_hostname = row.hostname;
 			end);
-			--log.notice("uuid: "..uuid);
+
 			--log.notice("call_hostname: "..call_hostname);
 			if is_child then
 				-- we need intercept `parent` call e.g. call in FIFO/CallCenter Queue
@@ -348,6 +352,7 @@
 	if (uuid ~= nil) then
 		if (session:getVariable("billmsec") == nil) then
 			if (hostname == call_hostname) then
+				log.noticef("intercept `%s`.", uuid)
 				session:execute("intercept", uuid);
 			else
 				session:execute("export", "sip_h_X-intercept_uuid="..uuid);
@@ -357,23 +362,23 @@
 	end
 
 --get the call center channel variables and set in the intercepted call
-	if (uuid ~= nil) then
+	if (uuid ~= nil and is_uuid(uuid)) then
 		call_center_queue_uuid = api:executeString("uuid_getvar ".. uuid .." call_center_queue_uuid");
-		if (call_center_queue_uuid ~= nil) then
+		if (call_center_queue_uuid ~= nil and is_uuid(call_center_queue_uuid)) then
 			session:execute("set", "call_center_queue_uuid="..call_center_queue_uuid);
 			session:execute("set", "cc_cause=answered");
 
-			cc_side = api:executeString("uuid_getvar  ".. uuid .." cc_side");
+			cc_side = api:executeString("uuid_getvar ".. uuid .." cc_side");
 			if (cc_side ~= nil) then
 				session:execute("set", "cc_side="..cc_side);
 			end
 
-			cc_queue = api:executeString("uuid_getvar  ".. uuid .." cc_queue");
+			cc_queue = api:executeString("uuid_getvar ".. uuid .." cc_queue");
 			if (cc_queue ~= nil) then
 				session:execute("set", "cc_queue="..cc_queue);
 			end
 
-			cc_queue_joined_epoch = api:executeString("uuid_getvar  ".. uuid .." cc_queue_joined_epoch");
+			cc_queue_joined_epoch = api:executeString("uuid_getvar ".. uuid .." cc_queue_joined_epoch");
 			if (cc_queue_joined_epoch ~= nil) then
 				session:execute("set", "cc_queue_joined_epoch="..cc_queue_joined_epoch);
 			end
@@ -385,3 +390,4 @@
 		--cmd = "originate user/1007@voip.example.com &intercept("..uuid..")";
 		--api = freeswitch.API();
 		--result = api:executeString(cmd);
+

@@ -57,6 +57,7 @@ class plugin_totp {
 			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
+			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
 		//get the username
 			if (isset($_SESSION["username"])) {
@@ -79,9 +80,6 @@ class plugin_totp {
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 				$domain_name = $domain_array[0];
 
-				//temp directory
-				$_SESSION['server']['temp']['dir'] = '/tmp';
-
 				//create token
 				//$object = new token;
 				//$token = $object->create('login');
@@ -94,7 +92,7 @@ class plugin_totp {
 				$view = new template();
 				$view->engine = 'smarty';
 				$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
-				$view->cache_dir = $_SESSION['server']['temp']['dir'];
+				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
 				//assign default values to the template
@@ -189,9 +187,6 @@ class plugin_totp {
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 				$domain_name = $domain_array[0];
 
-				//temp directory
-				$_SESSION['server']['temp']['dir'] = '/tmp';
-
 				//create token
 				//$object = new token;
 				//$token = $object->create('login');
@@ -204,7 +199,7 @@ class plugin_totp {
 				$view = new template();
 				$view->engine = 'smarty';
 				$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
-				$view->cache_dir = $_SESSION['server']['temp']['dir'];
+				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
 				//assign values to the template
@@ -218,6 +213,7 @@ class plugin_totp {
 				$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 				$view->assign("login_logo_source", $settings['theme']['logo']);
 				$view->assign("favicon", $settings['theme']['favicon']);
+				$view->assign("background_video", $settings['theme']['background_video']);
 				if (!empty($_SESSION['username'])) {
 					$view->assign("username", $_SESSION['username']);
 					$view->assign("button_cancel", $text['button-cancel']);

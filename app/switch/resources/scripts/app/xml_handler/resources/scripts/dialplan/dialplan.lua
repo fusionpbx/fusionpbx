@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013-2023 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -155,6 +155,12 @@
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
 
+		-- set the start time of the query
+			local start_time = os.time();
+
+		-- set the timeout value as needed
+			local timeout_seconds = 10;
+
 		--get the hostname
 			hostname = trim(api:execute("hostname", ""));
 
@@ -167,6 +173,7 @@
 
 		--get the dialplan xml
 			if (context_name == 'public' and dialplan_mode == 'single') then
+				--get the single inbound destination dialplan xml  from the database
 				sql = "SELECT (SELECT domain_name FROM v_domains WHERE domain_uuid = p.domain_uuid) as domain_name, "
 				sql = sql .. "(SELECT domain_enabled FROM v_domains WHERE domain_uuid = p.domain_uuid) as domain_enabled, p.dialplan_xml ";
 				sql = sql .. "FROM v_dialplans AS p ";
@@ -193,6 +200,7 @@
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
 				dbh:query(sql, params, function(row)
+					dialplan_found = true;
 					if (row.domain_uuid ~= nil) then
 						domain_name = row.domain_name;
 					else
@@ -202,28 +210,41 @@
 						xml:append(row.dialplan_xml);
 					end
 				end);
-				if (xml == nil) then
-					--sanitize the destination if not numeric	
-					if (type(destination_number) == "string") then
-						destination_number = destination_number:gsub("^%+", "");
-						destination_number = tonumber(destination_number);
-						if (type(tonumber(destination_number)) ~= "number") then
-							destination_number = 'not numeric';
+
+				--handle not found
+				if (dialplan_found == nil) then
+					--check if the sql query timed out
+					local current_time = os.time();
+					local elapsed_time = current_time - start_time;
+					if elapsed_time > timeout_seconds then
+						--sql query timed out - unset the xml object to prevent the xml not found
+						xml = nil;
+					end
+
+					if (xml ~= nil) then
+						--sanitize the destination if not numeric
+						if (type(destination_number) == "string") then
+							destination_number = destination_number:gsub("^%+", "");
+							destination_number = tonumber(destination_number);
+							if (type(tonumber(destination_number)) ~= "number") then
+								destination_number = 'not numeric';
+							end
 						end
+						if (type(destination_number) == "numeric") then
+							destination_number = tostring(destination_number);
+						end
+
+						--build 404 not found XML
+						xml:append([[		<extension name="not-found" continue="false" uuid="9913df49-0757-414b-8cf9-bcae2fd81ae7">]]);
+						xml:append([[			<condition field="" expression="">]]);
+						xml:append([[				<action application="set" data="call_direction=inbound" inline="true"/>]]);
+						xml:append([[				<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip} ]]..destination_number..[[" inline="true"/>]]);
+						xml:append([[			</condition>]]);
+						xml:append([[		</extension>]]);
 					end
-					if (type(destination_number) == "numeric") then
-						destination_number = tostring(destination_number);
-					end
-					
-					--build 404 not found XML
-					xml:append([[		<extension name="not-found" continue="false" uuid="9913df49-0757-414b-8cf9-bcae2fd81ae7">]]);
-					xml:append([[			<condition field="" expression="">]]);
-					xml:append([[				<action application="set" data="call_direction=inbound" inline="true"/>]]);
-					xml:append([[				<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip} ]]..destination_number..[[" inline="true"/>]]);
-					xml:append([[			</condition>]]);
-					xml:append([[		</extension>]]);
 				end
 			else
+				--get the domain diaplan xml from the database
 				sql = "select dialplan_xml from v_dialplans as p ";
 				if (context_name == "public" or string.match(context_name, "@")) then
 					sql = sql .. "where p.dialplan_context = :call_context ";
@@ -238,26 +259,31 @@
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
 				dbh:query(sql, params, function(row)
+					dialplan_found = true;
 					xml:append(row.dialplan_xml);
 				end);
 			end
 
 		--set the xml array and then concatenate the array to a string
-			xml:append([[		</context>]]);
-			xml:append([[	</section>]]);
-			xml:append([[</document>]]);
-			XML_STRING = xml:build();
+			if (dialplan_found ~= nil and dialplan_found) then
+				xml:append([[		</context>]]);
+				xml:append([[	</section>]]);
+				xml:append([[</document>]]);
+				XML_STRING = xml:build();
+			end
 
 		--close the database connection
 			dbh:release();
 
 		--set the cache
-			local ok, err = cache.set(dialplan_cache_key, XML_STRING, expire["dialplan"]);
-			if debug["cache"] then
-				if ok then
-					freeswitch.consoleLog("notice", "[xml_handler] " .. dialplan_cache_key .. " stored in the cache\n");
-				else
-					freeswitch.consoleLog("warning", "[xml_handler] " .. dialplan_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+			if (XML_STRING ~= nil) then
+				local ok, err = cache.set(dialplan_cache_key, XML_STRING, expire["dialplan"]);
+				if debug["cache"] then
+					if ok then
+						freeswitch.consoleLog("notice", "[xml_handler] " .. dialplan_cache_key .. " stored in the cache\n");
+					else
+						freeswitch.consoleLog("warning", "[xml_handler] " .. dialplan_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+					end
 				end
 			end
 

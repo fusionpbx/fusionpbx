@@ -23,8 +23,36 @@
 
 	  Contributor(s):
 	  Mark J Crane <markjcrane@fusionpbx.com>
+	  Tim Fry <tim@fusionpbx.com>
 	  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
-	 */
+	*/
+
+	if (!function_exists('str_starts_with')) {
+		/**
+		 * Checks if a string starts with a given substring
+		 * <p>Performs a case-sensitive check indicating if <b>haystack</b> begins with <b>needle</b>.</p>
+		 * @param string $haystack The string to search in.
+		 * @param string $needle The substring to search for in the <b>haystack</b>.
+		 * @return bool Returns <i>true</i> if <b>haystack</b> begins with <b>needle</b>, <i>false</i> otherwise
+		 * @link https://www.php.net/manual/en/function.str-starts-with.php Official PHP documentation
+		 */
+		function str_starts_with(string $haystack, string $needle): bool {
+			return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+		}
+	}
+
+	if (!function_exists('str_ends_with')) {
+		/**
+		 * Checks if a string ends with a given substring
+		 * <p>Performs a case-sensitive check indicating if <b>haystack</b> ends with <b>needle</b>.</p>
+		 * @param string $haystack The string to search in.
+		 * @param string $needle The substring to search for in the <b>haystack</b>.
+		 * @return bool Returns <i>true</i> if <b>haystack</b> ends with <b>needle</b>, <i>false</i> otherwise.
+		 */
+		function str_ends_with(string $haystack, string $needle): bool {
+			return substr_compare($haystack, $needle, -1*strlen($needle)) === 0;
+		}
+	}
 
 	if (!function_exists('mb_strtoupper')) {
 
@@ -278,7 +306,7 @@
 			//set default false
 			$result = false;
 			//search for the permission
-			if (count($_SESSION["groups"]) > 0) {
+			if (isset($_SESSION['groups']) && count($_SESSION["groups"]) > 0) {
 				foreach ($_SESSION["groups"] as $row) {
 					if ($row['group_name'] == $group) {
 						$result = true;
@@ -296,7 +324,8 @@
 	if (!function_exists('permission_exists')) {
 
 		function permission_exists($permission_name, $operator = 'or') {
-			$permission = new permissions;
+			$database = database::new();
+			$permission = new permissions($database);
 			return $permission->exists($permission_name);
 		}
 
@@ -320,7 +349,7 @@
 			global $domain_uuid;
 			$sql = "select * from v_user_groups ";
 			$sql .= "where group_name = 'superadmin' ";
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			$superadmin_list = "||";
 			if (is_array($result) && @sizeof($result) != 0) {
@@ -365,7 +394,7 @@
 			$sql = "select distinct(" . $field_name . ") as " . $field_name . " ";
 			$sql .= "from " . $table_name . " " . $sql_where_optional . " ";
 			$sql .= "order by " . (!empty($sql_order_by) ? $sql_order_by : $field_name . ' asc');
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as $field) {
@@ -413,7 +442,7 @@
 				$sql = "select distinct(" . $field_name . ") as " . $field_name . " from " . $table_name . " " . $sql_where_optional . " ";
 			}
 
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as $field) {
@@ -653,7 +682,7 @@
 			$sql .= "and username = :username ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['username'] = $username;
-			$database = new database;
+			$database = database::new();
 			$num_rows = $database->select($sql, $parameters, 'column');
 			return $num_rows > 0 ? true : false;
 		}
@@ -670,7 +699,7 @@
 			$sql .= "and username = :username ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['username'] = $username;
-			$database = new database;
+			$database = database::new();
 			$user_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -681,7 +710,7 @@
 				$sql .= "and user_uuid = :user_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
 				$parameters['user_uuid'] = $user_uuid;
-				$database = new database;
+				$database = database::new();
 				$num_rows = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
@@ -697,7 +726,7 @@
 					$p = new permissions;
 					$p->add('extension_user_add', 'temp');
 					//execute insert
-					$database = new database;
+					$database = database::new();
 					$database->app_name = 'function-add_extension_user';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array);
@@ -747,7 +776,7 @@
 				$p->add('user_add', 'temp');
 				$p->add('user_group_add', 'temp');
 				//execute insert
-				$database = new database;
+				$database = database::new();
 				$database->app_name = 'function-user_add';
 				$database->app_uuid = '15a8d74b-ac7e-4468-add4-3e6ebdcb8e22';
 				$database->save($array);
@@ -1967,7 +1996,7 @@
 
 		function get_countries() {
 			$sql = "select * from v_countries order by country asc";
-			$database = new database;
+			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			unset($sql);
 
@@ -2334,6 +2363,7 @@ if (!function_exists('git_pull')) {
 		$update_status = false;
 
 		if (sizeof($response_source_update) == 0) {
+			chdir($cwd);
 			return array('result' => false, 'message' => null);
 		}
 
@@ -2422,6 +2452,19 @@ if (!function_exists('git_find_repos')) {
 			unset($git_repo_name);
 		}
 		return $git_repos;
+	}
+}
+
+//get contents of the supplied url
+if (!function_exists('url_get_contents')) {
+	function url_get_contents($URL){
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_URL, $URL);
+		$data = curl_exec($ch);
+		curl_close($ch);
+		return $data;
 	}
 }
 

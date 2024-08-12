@@ -18,7 +18,11 @@
     <dialnumber_us_format perm="">on</dialnumber_us_format>
     <show_ivr_digits perm="">off</show_ivr_digits>
     <cw_dialtone perm="">{if isset($snom_dialtone_on_hold)}{$snom_dialtone_on_hold}{else}true{/if}</cw_dialtone>
-    <smartlabel_idle_default perm="PERMISSIONFLAGS">{if isset($snom_smartlabel_idle)}{$snom_smartlabel_idle}{else}short{/if}</smartlabel_idle_default>
+    <smartlabel_idle_default perm="">{if isset($snom_smartlabel_idle)}{$snom_smartlabel_idle}{else}short{/if}</smartlabel_idle_default>
+    <answer_after_policy perm="">{if isset($snom_answer_after_policy)}{$snom_answer_after_policy}{else}off{/if}</answer_after_policy>
+    <keyboard_lock_emergency perm="R">{if isset($snom_emergency_numbers)}{$snom_emergency_numbers}{else}911 112 110 999{/if}</keyboard_lock_emergency>
+    <status_msgs_that_are_blocked perm="R">HidConnected UxmConnected{if isset($snom_emergency_numbers)} EmergencyCallNumbersMisconfigured{/if}</status_msgs_that_are_blocked>
+    <ui_theme perm="RW">{if isset($snom_ui_theme)}{$snom_ui_theme}{/if}</ui_theme>
     <!-- Ringtones -->
     <alert_internal_ring_text perm="">alert-internal</alert_internal_ring_text>
     <alert_internal_ring_sound perm="">{if isset($snom_alert_internal)}{$snom_alert_internal}{else}Ringer1{/if}</alert_internal_ring_sound>
@@ -104,7 +108,8 @@
   <tbook e="2" complete="true">
     {foreach $contacts as $row}
     <item context="active" type="{if $row.category == "extensions"}colleagues{else}none{/if}" index="{$row@index}">
-      <name>{$row.contact_name_given} {$row.contact_name_family}</name>
+      <first_name>{$row.contact_name_given}</first_name>
+      <last_name>{$row.contact_name_family}</last_name>
       <number>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</number>
     </item>
     {/foreach}

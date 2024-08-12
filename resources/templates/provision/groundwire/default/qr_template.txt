@@ -1,0 +1,1 @@
+provlinkbs://{$server_address}/app/provision/index.php?address={$mac}

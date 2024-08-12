@@ -41,7 +41,6 @@
 					$sql .= "from v_recordings ";
 					$sql .= "where recording_base64 is null ";
 					$sql .= "or recording_base64 = '' ";
-					$database = new database;
 					$result = $database->select($sql, null, 'all');
 					if (is_array($result) && @sizeof($result) != 0) {
 						foreach ($result as &$row) {
@@ -64,7 +63,6 @@
 										$p = new permissions;
 										$p->add('recording_edit', 'temp');
 									//update recording record with base64
-										$database = new database;
 										$database->app_name = 'recordings';
 										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array, false);
@@ -84,7 +82,6 @@
 					$sql = "select recording_uuid, domain_uuid, recording_filename, recording_base64 ";
 					$sql .= "from v_recordings ";
 					$sql .= "where recording_base64 is not null ";
-					$database = new database;
 					$result = $database->select($sql, null, 'all');
 					if (!empty($result)) {
 						foreach ($result as &$row) {
@@ -116,7 +113,6 @@
 								$p->add('recording_edit', 'temp');
 
 							//update recording record
-								$database = new database;
 								$database->app_name = 'recordings';
 								$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 								$database->save($array, false);

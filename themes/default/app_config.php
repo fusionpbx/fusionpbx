@@ -63,6 +63,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a secondary background color, for a gradient effect.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f9e9e72-b998-4ebd-bb45-725c49126fc2";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_video";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/videos/backgrounds/video.mp4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the background video value to the video path.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4b4114fe-0382-43d1-a96e-aefb79c23ca9";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_video_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable use of background videos.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "18a0c698-738e-4d88-a592-115dde20730f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_user_visible";
@@ -327,6 +343,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the hide delay of the message bar (seconds).";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3e8e2dae-34ee-4ea8-9f8c-f8233594a780";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_image";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/themes/default/images/backgrounds/image.png";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the background image value to the image path.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "579ad7cc-20dc-4e13-a3de-ef377778e458";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_image_enabled";
@@ -339,8 +363,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "body_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ffffff";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(255,255,255,0.7)";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set then body background color (and opacity) of the content.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9011e469-f94b-4c45-9b08-8991c243292b";
@@ -355,7 +379,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "body_header_icon_user";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "user-circle";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-user-circle";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the icon to use next to the current user in the body header (Side Menu only).";
 		$y++;
@@ -363,7 +387,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "body_header_icon_domain";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "globe-americas";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-earth-americas";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the icon to use next to the current domain in the body header (Side Menu only).";
 		$y++;
@@ -371,7 +395,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "body_shadow_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#000000";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(255,255,255,0)";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the color (and opacity) of the body.";
 		$y++;
@@ -1038,6 +1062,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#737983";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the shadow color (and opacity) of the Dashboard block number title.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1fda5e52-d27a-45ac-b8ff-705347bc753c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_chart_text_size";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30px";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text size of the Dashboard chart number.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "093ed58c-7a8c-43e9-8ea0-c895dbed0750";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_chart_cutout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "75%";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the thickness of Dashboard doughnut charts in chart cutout percentage.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "caa50bb2-3db8-4c4d-9172-b60fa015a909";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -1971,7 +2011,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_item_main_sub_icon_expand";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "chevron-down";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-chevron-down";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the submenu indicator icon to use for the expand action (default: chevron-down).";
 		$y++;
@@ -1979,7 +2019,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_item_main_sub_icon_contract";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "chevron-up";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-chevron-up";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the submenu indicator icon to use for the contract action (default: chevron-up).";
 		$y++;
@@ -2123,7 +2163,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_add";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-plus";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-plus";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2131,7 +2171,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_all";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-globe";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-globe";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2139,7 +2179,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_domain";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-vector-square";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-vector-square";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2147,7 +2187,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_copy";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-copy";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-copy";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2155,7 +2195,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_paste";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-paste";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-paste";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2163,7 +2203,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_delete";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-trash";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-trash";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2171,7 +2211,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_upload";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-upload";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-upload";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2179,7 +2219,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_download";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-download";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-download";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2187,7 +2227,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_edit";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-pencil-alt";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-pencil-alt";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2195,7 +2235,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_pause";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-pause";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-pause";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2203,7 +2243,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_play";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-play";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-play";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2211,7 +2251,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_reset";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-undo-alt";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-undo-alt";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2219,7 +2259,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_refresh";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-redo-alt";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-redo-alt";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2227,7 +2267,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_reload";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-redo-alt";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-redo-alt";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2235,7 +2275,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_search";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-search";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-search";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2243,7 +2283,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_start";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-play";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-play";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2251,7 +2291,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_stop";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-stop";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-stop";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2259,7 +2299,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_toggle";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-toggle-on";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-toggle-on";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2267,7 +2307,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_users";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-users";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-users";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2275,7 +2315,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_user";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-user";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-user";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2283,7 +2323,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_sync";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-sync";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-sync";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2291,7 +2331,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_view";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-eye";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-eye";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2299,7 +2339,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_back";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-step-backward";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-step-backward";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2307,7 +2347,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_import";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-file-import";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-file-import";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2315,7 +2355,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_export";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-file-export";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-file-export";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2323,7 +2363,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_save";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-bolt";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-bolt";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2331,7 +2371,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_cancel";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-times";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-times";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2339,7 +2379,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_settings";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-cog";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-gear";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2347,7 +2387,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_email";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-envelope";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-envelope";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2355,7 +2395,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_expand";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-expand";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-expand";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2363,7 +2403,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_contract";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-compress";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-compress";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -2371,7 +2411,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_help";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-question";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-question";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "question mark icon";
 		$y++;
@@ -2379,9 +2419,17 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_info";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-info";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-info";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "information icon";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d53be7ff-f44a-42e8-93f7-bae334539e95";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_comment";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fa-solid fa-comment-dots";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "comment icon";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "814ed631-a315-4bde-a822-4038432ae2a6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";

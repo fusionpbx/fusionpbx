@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//initialize the database object
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -66,7 +69,6 @@
 	$sql .= "and extension_uuid = :extension_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['extension_uuid'] = $extension_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && @sizeof($row) != 0) {
 		$extension = $row["extension"];
@@ -140,9 +142,7 @@
 	$array['extensions'][0]['extension_type'] = $extension_type;
 	$array['extensions'][0]['enabled'] = $enabled;
 	$array['extensions'][0]['description'] = $description;
-	$database = new database;
 	$database->save($array);
-	$message = $database->message;
 	unset($array);
 
 //get the source extension voicemail data
@@ -154,7 +154,6 @@
 			$sql .= "and voicemail_id = :voicemail_id ";
 			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$voicemail_mailto = $row["voicemail_mail_to"];

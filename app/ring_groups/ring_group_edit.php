@@ -29,7 +29,6 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/classes/ringbacks.php";
 
 //check permissions
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
@@ -39,6 +38,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//connect to database
+	$database = database::new();
 
 //add multi-lingual support
 	$language = new text;
@@ -65,7 +67,6 @@
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -84,7 +85,6 @@
 			$sql = "select domain_uuid from v_ring_groups ";
 			$sql .= "where ring_group_uuid = :ring_group_uuid ";
 			$parameters['ring_group_uuid'] = $ring_group_uuid;
-			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 		}
@@ -98,50 +98,50 @@
 	}
 
 //delete the user from the ring group
-	if (
-		(!empty($_GET["a"])) == "delete"
+	if ((!empty($_GET["a"])) == "delete"
 		&& is_uuid($_REQUEST["user_uuid"])
-		&& permission_exists("ring_group_edit")
-		) {
-		//set the variables
+		&& permission_exists("ring_group_edit")) {
+			//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
-		//build array
+
+			//build array
 			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
 			$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
 			$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
-		//grant temporary permissions
+
+			//grant temporary permissions
 			$p = new permissions;
 			$p->add('ring_group_user_delete', 'temp');
-		//execute delete
-			$database = new database;
+
+			//execute delete
 			$database->app_name = 'ring_groups';
 			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->delete($array);
 			unset($array);
-		//revoke temporary permissions
+
+			//revoke temporary permissions
 			$p->delete('ring_group_user_delete', 'temp');
-		//save the message to a session variable
+
+			//save the message to a session variable
 			message::add($text['message-delete']);
-		//redirect the browser
+
+			//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
 	}
 
 //get total ring group count from the database, check limit, if defined
-	if ($action == 'add') {
-		if ($_SESSION['limit']['ring_groups']['numeric'] ?? '') {
-			$sql = "select count(*) from v_ring_groups ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
-			$total_ring_groups = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+	if ($action == 'add' && $_SESSION['limit']['ring_groups']['numeric'] ?? '') {
+		$sql = "select count(*) from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$total_ring_groups = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
-			if (is_numeric($_SESSION['limit']['ring_groups']['numeric']) && $total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
-				message::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
-				header('Location: ring_groups.php');
-				exit;
-			}
+		if (is_numeric($_SESSION['limit']['ring_groups']['numeric']) && $total_ring_groups >= $_SESSION['limit']['ring_groups']['numeric']) {
+			message::add($text['message-maximum_ring_groups'].' '.$_SESSION['limit']['ring_groups']['numeric'], 'negative');
+			header('Location: ring_groups.php');
+			exit;
 		}
 	}
 
@@ -215,33 +215,56 @@
 				$ring_group_context = $_SESSION['domain_name'];
 			}
 
+		//if the user doesn't have the correct permission then
+		//override domain_uuid and ring_group_context values
+			if ($action == 'update' && is_uuid($ring_group_uuid)) {
+				$sql = "select * from v_ring_groups ";
+				$sql .= "where  ring_group_uuid = :ring_group_uuid ";
+				$parameters['ring_group_uuid'] = $ring_group_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (!empty($row)) {
+					//if (!permission_exists(‘ring_group_domain')) {
+					//	$domain_uuid = $row["domain_uuid"];
+					//}
+					if (!permission_exists('ring_group_context')) {
+						$ring_group_context = $row["ring_group_context"];
+					}
+				}
+				unset($sql, $parameters, $row);
+			}
+
 	}
 
 //assign the user to the ring group
 	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete" && permission_exists("ring_group_edit")) {
 		//set the variables
-			$user_uuid = $_REQUEST["user_uuid"];
+		$user_uuid = $_REQUEST["user_uuid"];
+
 		//build array
-			$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
-			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
-			$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
-			$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
+		$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
+		$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
+		$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
+		$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
+
 		//grant temporary permissions
-			$p = new permissions;
-			$p->add('ring_group_user_add', 'temp');
+		$p = new permissions;
+		$p->add('ring_group_user_add', 'temp');
+
 		//execute delete
-			$database = new database;
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-			$database->save($array);
-			unset($array);
+		$database->app_name = 'ring_groups';
+		$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+		$database->save($array);
+		unset($array);
+
 		//revoke temporary permissions
-			$p->delete('ring_group_user_add', 'temp');
+		$p->delete('ring_group_user_add', 'temp');
+
 		//set message
-			message::add($text['message-add']);
+		message::add($text['message-add']);
+
 		//redirect the browser
-			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
-			exit;
+		header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+		exit;
 	}
 
 //process the HTTP POST
@@ -405,9 +428,8 @@
 						$parameters['ring_group_uuid'] = $ring_group_uuid;
 						$parameters['range_first_extension'] = $range_first_extension;
 						$parameters['range_second_extension'] = $range_second_extension;
-						$database = new database;
 						$extensions = $database->select($sql, $parameters, 'all');
-						unset($sql, $parameters, $database);
+						unset($sql, $parameters);
 						// echo var_dump($extensions);
 						foreach ($extensions as $extension) {
 							$array["ring_groups"][0]["ring_group_destinations"][$y]["ring_group_uuid"] = $ring_group_uuid;
@@ -467,7 +489,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database = new database;
 			$database->app_name = 'ring_groups';
 			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->save($array);
@@ -521,7 +542,6 @@
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where ring_group_uuid = :ring_group_uuid ";
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -559,9 +579,6 @@
 //set the defaults
 	$destination_delay_max = $_SESSION['ring_group']['destination_delay_max']['numeric'];
 	$destination_timeout_max = $_SESSION['ring_group']['destination_timeout_max']['numeric'];
-	if (empty($ring_group_ringback)) {
-		$ring_group_ringback = '${us-ring}';
-	}
 	if (empty($ring_group_call_timeout)) {
 		$ring_group_call_timeout = '30';
 	}
@@ -579,7 +596,6 @@
 		$sql .= "order by destination_delay, destination_number asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_destinations = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -614,7 +630,6 @@
 		$sql .= "order by u.username asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
-		$database = new database;
 		$ring_group_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -625,7 +640,6 @@
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -773,7 +787,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"".escape($ring_group_extension)."\" required='required' placeholder=\"".($_SESSION['ring_group']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -876,7 +890,7 @@
 	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
-	
+
 	echo "					<td class='vtable' id='destination_delayorder'>";
 	echo 						($ring_group_strategy == 'sequence' || $ring_group_strategy == 'rollover') ? $text['label-destination_order'] : $text['label-destination_delay'];
 	echo "					</td>\n";

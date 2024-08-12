@@ -41,7 +41,7 @@
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-colorpicker.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-pwstrength.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript'>{literal}window.FontAwesomeConfig = { autoReplaceSvg: false }{/literal}</script>
-	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/solid.min.js.php' defer></script>
+	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/all.min.js.php' defer></script>
 
 {*//web font loader *}
 	{if isset($settings.theme.font_loader) && $settings.theme.font_loader == 'true'}
@@ -777,6 +777,7 @@
 				audio_clock = setInterval(function () { update_progress(player_id); }, 20);
 
 				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
+				$('[id*=recording_button_intro]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>");
 				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_' + player_id + ']').css('display', 'none');
 
 				$('audio').each(function(){
@@ -789,7 +790,12 @@
 			else {
 				recording_audio.pause();
 				recording_id_playing = '';
-				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+				if (player_id.substring(0,6) == 'intro_') {
+					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
+				}
+				else {
+					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+				}
 				clearInterval(audio_clock);
 			}
 		}
@@ -806,7 +812,12 @@
 			if (document.getElementById('recording_progress_bar_' + player_id)) {
 				document.getElementById('recording_progress_bar_' + player_id).style.display='none';
 			}
-			document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+			if (player_id.substring(0,6) == 'intro_') {
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
+			}
+			else {
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+			}
 			clearInterval(audio_clock);
 		}
 
@@ -905,17 +916,23 @@
 			btn_toggle = document.getElementById("btn_toggle");
 			btn_delete = document.getElementById("btn_delete");
 			btn_download = document.getElementById("btn_download");
+			btn_transcribe = document.getElementById("btn_transcribe");
+			btn_resend = document.getElementById("btn_resend");
 			if (checked == true) {
 				if (btn_copy) { btn_copy.style.display = "inline"; }
 				if (btn_toggle) { btn_toggle.style.display = "inline"; }
 				if (btn_delete) { btn_delete.style.display = "inline"; }
 				if (btn_download) { btn_download.style.display = "inline"; }
+				if (btn_transcribe) { btn_transcribe.style.display = "inline"; }
+				if (btn_resend) { btn_resend.style.display = "inline"; }
 			}
 		 	else {
 				if (btn_copy) { btn_copy.style.display = "none"; }
 				if (btn_toggle) { btn_toggle.style.display = "none"; }
 				if (btn_delete) { btn_delete.style.display = "none"; }
 				if (btn_download) { btn_download.style.display = "none"; }
+				if (btn_transcribe) { btn_transcribe.style.display = "none"; }
+				if (btn_resend) { btn_resend.style.display = "none"; }
 		 	}
 		}
 		{/literal}
@@ -1086,7 +1103,7 @@
 
 				//add new options from the json results
 				for (var i=0; i < obj.length; i++) {
-					
+
 					//get the variables
 					domain_uuid = obj[i].domain_uuid;
 					domain_name = obj[i].domain_name;
@@ -1111,7 +1128,7 @@
 						div.style.background = '{$domain_selector_background_color_2}';
 					}
 
-					//set the active domain style 
+					//set the active domain style
 					if ('{$domain_uuid}' == obj[i].domain_uuid) {
 						div.style.background = '{$domain_active_background_color}';
 						div.style.fontWeight = 'bold';
@@ -1157,6 +1174,13 @@
 
 </head>
 <body>
+
+	{*//video background *}
+	{if !empty($settings.theme.background_video)}
+		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
+			<source src="{$settings.theme.background_video}" type="video/mp4">
+		</video>
+	{/if}
 
 	{*//message container *}
 		<div id='message_container'></div>

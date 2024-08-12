@@ -68,20 +68,21 @@
 		$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
 		$sql .= "t.transaction_code, t.transaction_address, t.transaction_type, t.transaction_date, ";
 		$sql .= "t.transaction_old, t.transaction_new, t.transaction_result ";
-		$sql .= "from v_database_transactions as t, v_domains as d, v_users as u ";
-		$sql .= "where t.domain_uuid = :domain_uuid ";
+		$sql .= "from v_database_transactions as t ";
+		$sql .= "left outer join v_domains as d using (domain_uuid) ";
+		$sql .= "left outer join v_users as u using (user_uuid) ";
+		$sql .= "where (t.domain_uuid = :domain_uuid or t.domain_uuid is null) ";
 		$sql .= "and t.database_transaction_uuid = :database_transaction_uuid ";
-		$sql .= "and t.user_uuid = u.user_uuid ";
-		$sql .= "and t.domain_uuid = d.domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['database_transaction_uuid'] = $database_transaction_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
+
 		if (!empty($row)) {
 			$user_uuid = $row["user_uuid"];
 			$app_name = $row["app_name"];
 			$app_uuid = $row["app_uuid"];
-			$domain_name = $row["domain_name"];
+			$domain_name = $row["domain_name"] ?? $text['label-global'];
 			$username = $row["username"];
 			$transaction_code = $row["transaction_code"];
 			$transaction_address = $row["transaction_address"];
@@ -109,7 +110,7 @@
 		//redirect the user
 			$_SESSION["message"] = $text['message-update'];
 			header("Location: database_transactions.php?".(!empty($search) ? "&search=".urlencode($search) : null).(!empty($page) ? "&page=".urlencode($page) : null));
-	} 
+	}
 
 //get the type if not provided
 	if (empty($transaction_type)) {
@@ -215,7 +216,7 @@
 		echo "	<textarea name='transaction_old' style='width: 100%; height: 80px;'>".escape($transaction_old)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	
+
 		echo "<tr>\n";
 		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-transaction_new']."\n";
@@ -224,7 +225,7 @@
 		echo "	<textarea name='transaction_new' style='width: 100%; height: 80px;'>".escape($transaction_new)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	
+
 		echo "<tr>\n";
 		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-transaction_result']."\n";
@@ -374,7 +375,7 @@
 				echo "	<td class=\"vtable\" style='color: #000000;'>".escape($row['name'])."</td>\n";
 				echo "	<td class=\"vtable\" style='color: #ff0000;'>".escape($row['value'])."</td>\n";
 				echo "</tr>\n";
-	
+
 				$previous_schema = $row['schema'];
 				$previous_row = $row['row'];
 			}
@@ -413,7 +414,7 @@
 				$table_header .= "	<th>new</th>\n";
 				$table_header .= "</tr>\n";
 				$_SESSION['table_header'] = $table_header;
-			
+
 			//show the difference
 				echo "<br />\n";
 				echo "<table width='100%'>\n";

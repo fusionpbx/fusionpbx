@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//initialize the database object
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -148,7 +151,6 @@
 			$sql = "select ".implode(', ', $selected_columns)." from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$extensions = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters, $selected_columns);
 
@@ -180,7 +182,7 @@
 
 	echo $text['description-extension_export'];
 	echo "<br /><br />\n";
-	
+
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='checkbox'>\n";

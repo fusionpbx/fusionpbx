@@ -58,7 +58,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-home";
+	$apps[$x]['menu'][$y]['icon'] = "fa-solid fa-house";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "5";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
@@ -93,7 +93,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-user";
+	$apps[$x]['menu'][$y]['icon'] = "fa-solid fa-user";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "10";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
@@ -124,7 +124,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-paper-plane";
+	$apps[$x]['menu'][$y]['icon'] = "fa-solid fa-paper-plane";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "20";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
@@ -159,7 +159,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-chart-bar";
+	$apps[$x]['menu'][$y]['icon'] = "fa-solid fa-chart-column";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "25";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
@@ -191,7 +191,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-cog";
+	$apps[$x]['menu'][$y]['icon'] = "fa-solid fa-gear";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "30";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
@@ -222,7 +222,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "c85bf816-b88d-40fa-8634-11b456928afa";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-sign-in-alt";
+	$apps[$x]['menu'][$y]['icon'] = "fa-solid fa-right-to-bracket";
 	$apps[$x]['menu'][$y]['path'] = "/login.php";
 	$apps[$x]['menu'][$y]['order'] = "99";
 	$apps[$x]['menu'][$y]['groups'][] = "public";
@@ -253,7 +253,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "0d29e9f4-0c9b-9d8d-cd2d-454899dc9bc4";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-sign-out-alt";
+	$apps[$x]['menu'][$y]['icon'] = "fa-solid fa-right-from-bracket";
 	$apps[$x]['menu'][$y]['path'] = "/logout.php";
 	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
