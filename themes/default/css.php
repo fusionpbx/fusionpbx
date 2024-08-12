@@ -502,7 +502,6 @@ else { //default: white
 		background: <?=$footer_background_color?>;
 		text-align: center;
 		vertical-align: middle;
-		margin-bottom: 60px;
 		padding: 8px;
 		<?php $br = format_border_radius($footer_border_radius, '0 0 4px 4px'); ?>
 		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
