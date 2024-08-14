@@ -196,12 +196,12 @@
 		echo "						labels: {\n";
 		echo "							usePointStyle: true,\n";
 		echo "							pointStyle: 'rect',\n";
-		echo "							color: '".$dashboard_heading_text_color."'\n";
+		echo "							color: '".$dashboard_label_text_color."'\n";
 		echo "						}\n";
 		echo "					},\n";
 		echo "					title: {\n";
 		echo "						text: '".$text['header-ring-group-forward']."',\n";
-		echo "						color: '".$dashboard_heading_text_color."'\n";
+		echo "						color: '".$dashboard_label_text_color."'\n";
 		echo "					}\n";
 		echo "				}\n";
 		echo "			},\n";
