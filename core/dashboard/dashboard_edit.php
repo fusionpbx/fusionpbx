@@ -54,8 +54,9 @@
 	$dashboard_content = '';
 	$dashboard_content_text_align = '';
 	$dashboard_content_details = '';
-	$dashboard_heading_text_color = '';
-	$dashboard_heading_background_color = '';
+	$dashboard_label_enabled = $row["dashboard_enabled"] ?? 'true';
+	$dashboard_label_text_color = '';
+	$dashboard_label_background_color = '';
 	$dashboard_number_text_color = '';
 	$dashboard_groups = [];
 	$dashboard_column_span = '';
@@ -91,10 +92,11 @@
 		$dashboard_content_details = $_POST["dashboard_content_details"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
 		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
-		$dashboard_heading_text_color = $_POST["dashboard_heading_text_color"] ?? '';
-		$dashboard_heading_text_color_hover = $_POST["dashboard_heading_text_color_hover"] ?? '';
-		$dashboard_heading_background_color = $_POST["dashboard_heading_background_color"] ?? '';
-		$dashboard_heading_background_color_hover = $_POST["dashboard_heading_background_color_hover"] ?? '';
+		$dashboard_label_enabled = $_POST["dashboard_label_enabled"] ?? '';
+		$dashboard_label_text_color = $_POST["dashboard_label_text_color"] ?? '';
+		$dashboard_label_text_color_hover = $_POST["dashboard_label_text_color_hover"] ?? '';
+		$dashboard_label_background_color = $_POST["dashboard_label_background_color"] ?? '';
+		$dashboard_label_background_color_hover = $_POST["dashboard_label_background_color_hover"] ?? '';
 		$dashboard_number_text_color = $_POST["dashboard_number_text_color"] ?? '';
 		$dashboard_number_text_color_hover = $_POST["dashboard_number_text_color_hover"] ?? '';
 		$dashboard_background_color = $_POST["dashboard_background_color"] ?? '';
@@ -240,10 +242,11 @@
 			$array['dashboard'][0]['dashboard_content_text_align'] = $dashboard_content_text_align;
 			$array['dashboard'][0]['dashboard_content_details'] = $dashboard_content_details;
 			$array['dashboard'][0]['dashboard_chart_type'] = $dashboard_chart_type;
-			$array['dashboard'][0]['dashboard_heading_text_color'] = $dashboard_heading_text_color;
-			$array['dashboard'][0]['dashboard_heading_text_color_hover'] = $dashboard_heading_text_color_hover;
-			$array['dashboard'][0]['dashboard_heading_background_color'] = $dashboard_heading_background_color;
-			$array['dashboard'][0]['dashboard_heading_background_color_hover'] = $dashboard_heading_background_color_hover;
+			$array['dashboard'][0]['dashboard_label_enabled'] = $dashboard_label_enabled;
+			$array['dashboard'][0]['dashboard_label_text_color'] = $dashboard_label_text_color;
+			$array['dashboard'][0]['dashboard_label_text_color_hover'] = $dashboard_label_text_color_hover;
+			$array['dashboard'][0]['dashboard_label_background_color'] = $dashboard_label_background_color;
+			$array['dashboard'][0]['dashboard_label_background_color_hover'] = $dashboard_label_background_color_hover;
 			$array['dashboard'][0]['dashboard_number_text_color'] = $dashboard_number_text_color;
 			$array['dashboard'][0]['dashboard_number_text_color_hover'] = $dashboard_number_text_color_hover;
 			$array['dashboard'][0]['dashboard_background_color'] = $dashboard_background_color;
@@ -302,10 +305,11 @@
 		$sql .= " dashboard_content_text_align, ";
 		$sql .= " dashboard_content_details, ";
 		$sql .= " dashboard_chart_type, ";
-		$sql .= " dashboard_heading_text_color, ";
-		$sql .= " dashboard_heading_text_color_hover, ";
-		$sql .= " dashboard_heading_background_color, ";
-		$sql .= " dashboard_heading_background_color_hover, ";
+		$sql .= " dashboard_label_enabled, ";
+		$sql .= " dashboard_label_text_color, ";
+		$sql .= " dashboard_label_text_color_hover, ";
+		$sql .= " dashboard_label_background_color, ";
+		$sql .= " dashboard_label_background_color_hover, ";
 		$sql .= " dashboard_number_text_color, ";
 		$sql .= " dashboard_number_text_color_hover, ";
 		$sql .= " dashboard_background_color, ";
@@ -334,10 +338,11 @@
 			$dashboard_content_text_align = $row["dashboard_content_text_align"];
 			$dashboard_content_details = $row["dashboard_content_details"];
 			$dashboard_chart_type = $row["dashboard_chart_type"];
-			$dashboard_heading_text_color = $row["dashboard_heading_text_color"];
-			$dashboard_heading_text_color_hover = $row["dashboard_heading_text_color_hover"];
-			$dashboard_heading_background_color = $row["dashboard_heading_background_color"];
-			$dashboard_heading_background_color_hover = $row["dashboard_heading_background_color_hover"];
+			$dashboard_label_enabled = $row["dashboard_label_enabled"];
+			$dashboard_label_text_color = $row["dashboard_label_text_color"];
+			$dashboard_label_text_color_hover = $row["dashboard_label_text_color_hover"];
+			$dashboard_label_background_color = $row["dashboard_label_background_color"];
+			$dashboard_label_background_color_hover = $row["dashboard_label_background_color_hover"];
 			$dashboard_number_text_color = $row["dashboard_number_text_color"];
 			$dashboard_number_text_color_hover = $row["dashboard_number_text_color_hover"];
 			$dashboard_background_color = $row["dashboard_background_color"];
@@ -776,49 +781,72 @@
 	}
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo $text['label-dashboard_heading_text_color']."\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_label_enabled'] ?? '';
+	echo "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_text_color' value='".escape($dashboard_heading_text_color)."'>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='dashboard_label_enabled' name='dashboard_label_enabled' value='true' ".($dashboard_label_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='dashboard_label_enabled' name='dashboard_label_enabled'>\n";
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($dashboard_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
-	echo $text['description-dashboard_heading_text_color']."\n";
+	echo $text['description-dashboard_label_enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_label_text_color']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_label_text_color' value='".escape($dashboard_label_text_color)."'>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_label_text_color']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
 		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo $text['label-dashboard_heading_text_color_hover']."\n";
+		echo $text['label-dashboard_label_text_color_hover']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_text_color_hover' value='".escape($dashboard_heading_text_color_hover)."'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_label_text_color_hover' value='".escape($dashboard_label_text_color_hover)."'>\n";
 		echo "<br />\n";
-		echo $text['description-dashboard_heading_text_color_hover']."\n";
+		echo $text['description-dashboard_label_text_color_hover']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo $text['label-dashboard_heading_background_color']."\n";
+	echo $text['label-dashboard_label_background_color']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color' value='".escape($dashboard_heading_background_color)."'>\n";
+	echo "	<input type='text' class='formfld colorpicker' name='dashboard_label_background_color' value='".escape($dashboard_label_background_color)."'>\n";
 	echo "<br />\n";
-	echo $text['description-dashboard_heading_background_color']."\n";
+	echo $text['description-dashboard_label_background_color']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
 		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo $text['label-dashboard_heading_background_color_hover']."\n";
+		echo $text['label-dashboard_label_background_color_hover']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_heading_background_color_hover' value='".escape($dashboard_heading_background_color_hover)."'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_label_background_color_hover' value='".escape($dashboard_label_background_color_hover)."'>\n";
 		echo "<br />\n";
-		echo $text['description-dashboard_heading_background_color_hover']."\n";
+		echo $text['description-dashboard_label_background_color_hover']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
