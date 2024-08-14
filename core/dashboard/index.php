@@ -86,10 +86,11 @@
 	$sql .= "dashboard_content_text_align, ";
 	$sql .= "dashboard_content_details, ";
 	$sql .= "dashboard_chart_type, ";
-	$sql .= "dashboard_heading_text_color, ";
-	$sql .= "dashboard_heading_text_color_hover, ";
-	$sql .= "dashboard_heading_background_color, ";
-	$sql .= "dashboard_heading_background_color_hover, ";
+	$sql .= "cast(dashboard_label_enabled as text), ";
+	$sql .= "dashboard_label_text_color, ";
+	$sql .= "dashboard_label_text_color_hover, ";
+	$sql .= "dashboard_label_background_color, ";
+	$sql .= "dashboard_label_background_color_hover, ";
 	$sql .= "dashboard_number_text_color, ";
 	$sql .= "dashboard_number_text_color_hover, ";
 	$sql .= "dashboard_background_color, ";
@@ -244,7 +245,7 @@ div.hud_content {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding-bottom: 13px;
+  align-content: start;
 }
 
 div.hud_chart {
@@ -256,16 +257,16 @@ div.hud_chart {
 <?php
 foreach ($dashboard as $row) {
 	$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
-	if (!empty($row['dashboard_heading_text_color']) || !empty($row['dashboard_heading_background_color'])) {
+	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
 		echo "#".$dashboard_name." .hud_title {\n";
-		if (!empty($row['dashboard_heading_text_color'])) { echo "	color: ".$row['dashboard_heading_text_color'].";\n"; }
-		if (!empty($row['dashboard_heading_background_color'])) { echo "	background-color: ".$row['dashboard_heading_background_color'].";\n"; }
+		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
+		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_heading_text_color_hover']) || !empty($row['dashboard_heading_background_color_hover'])) {
+	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
 		echo "#".$dashboard_name.":hover .hud_title {\n";
-		if (!empty($row['dashboard_heading_text_color_hover'])) { echo "	color: ".$row['dashboard_heading_text_color_hover'].";\n"; }
-		if (!empty($row['dashboard_heading_background_color_hover'])) { echo "	background-color: ".$row['dashboard_heading_background_color_hover'].";\n"; }
+		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
+		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_number_text_color'])) {
@@ -299,6 +300,14 @@ foreach ($dashboard as $row) {
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
 		echo "}\n";
 	}
+	if ($row['dashboard_label_enabled'] == false) {
+		echo "#".$dashboard_name." .hud_title {\n";
+		echo "	display: none;\n";
+		echo "}\n";
+		echo "#".$dashboard_name." .hud_content {\n";
+		echo "	align-content: center;\n";
+		echo "}\n";
+	}
 	if ($row['dashboard_path'] == "core/dashboard/resources/dashboard/icon.php") {
 		echo "#".$dashboard_name." div.hud_content,\n";
 		echo "#".$dashboard_name." span.hud_title,\n";
@@ -322,7 +331,7 @@ foreach ($dashboard as $row) {
 			echo "}\n";
 			echo "#".$dashboard_name." div.hud_content .fas {\n";
 			echo "	line-height: 0;\n";
-			echo "	font-size: 30pt;\n";
+			echo "	font-size: 24pt;\n";
 			echo "}\n";
 			break;
 		case 2:
@@ -336,6 +345,7 @@ foreach ($dashboard as $row) {
 			echo "}\n";
 			break;
 	}
+
 }
 ?>
 
@@ -484,7 +494,7 @@ function toggle_grid_row_end_all() {
 		$dashboard_content_text_align = $row['dashboard_content_text_align'] ?? '';
 		$dashboard_content_details = $row['dashboard_content_details'] ?? '';
 		$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
-		$dashboard_heading_text_color = $row['dashboard_heading_text_color'] ?? $settings->get('theme', 'dashboard_heading_text_color');
+		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
 		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
 		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
