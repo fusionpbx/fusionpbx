@@ -177,9 +177,9 @@
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, Tls Or Tcp -->
 		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'UDP'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
-		{if $row.sip_transport == 'TCP'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'TLS'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
 
 		<!-- SIP Listening Mode -->
 		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
