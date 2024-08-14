@@ -399,39 +399,39 @@ if (!function_exists('fax_split_dtmf')) {
 
 		if (isset($fax_forward_number) && !empty($fax_forward_number)) {
 			//show info
-				echo "fax_forward_number: $fax_forward_number\n";
+			echo "fax_forward_number: $fax_forward_number\n";
 
 			//add fax to the fax queue or send it directly
-				//build an array to add the fax to the queue
-				$array['fax_queue'][0]['fax_queue_uuid'] = uuid();
-				$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
-				$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
-				$array['fax_queue'][0]['fax_date'] = 'now()';
-				$array['fax_queue'][0]['hostname'] = gethostname();
-				$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
-				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-				$array['fax_queue'][0]['fax_number'] = $fax_forward_number;
-				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
-				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
-				$array['fax_queue'][0]['fax_file'] = $fax_file;
-				$array['fax_queue'][0]['fax_status'] = 'waiting';
-				$array['fax_queue'][0]['fax_retry_count'] = 0;
-				$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
+			//build an array to add the fax to the queue
+			$array['fax_queue'][0]['fax_queue_uuid'] = uuid();
+			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+			$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
+			$array['fax_queue'][0]['fax_date'] = 'now()';
+			$array['fax_queue'][0]['hostname'] = gethostname();
+			$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
+			$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+			$array['fax_queue'][0]['fax_number'] = $fax_forward_number;
+			$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
+			$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
+			$array['fax_queue'][0]['fax_file'] = $fax_file;
+			$array['fax_queue'][0]['fax_status'] = 'waiting';
+			$array['fax_queue'][0]['fax_retry_count'] = 0;
+			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
 
-				//add temporary permisison
-				$p = new permissions;
-				$p->add('fax_queue_add', 'temp');
+			//add temporary permisison
+			$p = new permissions;
+			$p->add('fax_queue_add', 'temp');
 
-				//save the data
-				$database->app_name = 'fax_queue';
-				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-				$database->save($array);
+			//save the data
+			$database->app_name = 'fax_queue';
+			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+			$database->save($array);
 
-				//remove temporary permisison
-				$p->delete('fax_queue_add', 'temp');
+			//remove temporary permisison
+			$p->delete('fax_queue_add', 'temp');
 
-				//add message to show in the browser
-				message::add($text['confirm-queued']);
+			//add message to show in the browser
+			message::add($text['confirm-queued']);
 
 		}
 	}
@@ -440,103 +440,103 @@ if (!function_exists('fax_split_dtmf')) {
 	if (!empty($fax_email) && file_exists($fax_file)) {
 
 		//get the language code
-			$language_code = $settings->get('domain', 'language', 'en-us');
+		$language_code = $settings->get('domain', 'language', 'en-us');
 
 		//get the template subcategory
-			if (!empty($fax_relay) && $fax_relay == 'true') {
-				$template_subcategory = 'relay';
-			}
-			else {
-				$template_subcategory = 'inbound';
-			}
+		if (!empty($fax_relay) && $fax_relay == 'true') {
+			$template_subcategory = 'relay';
+		}
+		else {
+			$template_subcategory = 'inbound';
+		}
 
 		//get the email template from the database
-			if (!empty($fax_email) && !empty($domain_uuid)) {
-				$sql = "select template_subject, template_body from v_email_templates ";
-				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-				$sql .= "and template_language = :template_language ";
-				$sql .= "and template_category = :template_category ";
-				$sql .= "and template_subcategory = :template_subcategory ";
-				$sql .= "and template_type = :template_type ";
-				$sql .= "and template_enabled = 'true' ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['template_language'] = $language_code;
-				$parameters['template_category'] = 'fax';
-				$parameters['template_subcategory'] = $template_subcategory;
-				$parameters['template_type'] = 'html';
-				$row = $database->select($sql, $parameters, 'row');
-				if (is_array($row)) {
-					$email_subject = $row['template_subject'];
-					$email_body = $row['template_body'];
-				}
-				unset($sql, $parameters);
+		if (!empty($fax_email) && !empty($domain_uuid)) {
+			$sql = "select template_subject, template_body from v_email_templates ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and template_language = :template_language ";
+			$sql .= "and template_category = :template_category ";
+			$sql .= "and template_subcategory = :template_subcategory ";
+			$sql .= "and template_type = :template_type ";
+			$sql .= "and template_enabled = 'true' ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['template_language'] = $language_code;
+			$parameters['template_category'] = 'fax';
+			$parameters['template_subcategory'] = $template_subcategory;
+			$parameters['template_type'] = 'html';
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row)) {
+				$email_subject = $row['template_subject'];
+				$email_body = $row['template_body'];
 			}
+			unset($sql, $parameters);
+		}
 
 		//replace variables in email subject
-			$email_subject = str_replace('${domain_name}', $domain_name, $email_subject);
-			$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
-			$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
-			$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
-			$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
-			$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
+		$email_subject = str_replace('${domain_name}', $domain_name, $email_subject);
+		$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
+		$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
+		$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
+		$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
+		$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
 
 		//replace variables in email body
-			$email_body = str_replace('${domain_name}', $domain_name, $email_body);
-			$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
-			$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
-			$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
-			$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
-			$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
+		$email_body = str_replace('${domain_name}', $domain_name, $email_body);
+		$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
+		$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
+		$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
+		$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
+		$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
 
 		//debug info
-			//echo "<hr />\n";
-			//echo "email_address ".$fax_email."<br />\n";
-			//echo "email_subject ".$email_subject."<br />\n";
-			//echo "email_body ".$email_body."<br />\n";
-			//echo "<hr />\n";
+		//echo "<hr />\n";
+		//echo "email_address ".$fax_email."<br />\n";
+		//echo "email_subject ".$email_subject."<br />\n";
+		//echo "email_body ".$email_body."<br />\n";
+		//echo "<hr />\n";
 
 		//send the email
-			if (isset($fax_email) && !empty($fax_email)) {
-				//add the attachment
-				if (!empty($fax_file_name)) {
-					$email_attachments[0]['type'] = 'file';
-					if ($pdf_file && file_exists($pdf_file)) {
-						$email_attachments[0]['name'] = $fax_file_name.'.pdf';
-						$email_attachments[0]['value'] = $pdf_file;
-					}
-					else {
-						$email_attachments[0]['name'] = $fax_file_name.'.tif';
-						$email_attachments[0]['value'] = $fax_file;
-					}
+		if (isset($fax_email) && !empty($fax_email)) {
+			//add the attachment
+			if (!empty($fax_file_name)) {
+				$email_attachments[0]['type'] = 'file';
+				if ($pdf_file && file_exists($pdf_file)) {
+					$email_attachments[0]['name'] = $fax_file_name.'.pdf';
+					$email_attachments[0]['value'] = $pdf_file;
 				}
-
-				//$email_response = send_email($email_address, $email_subject, $email_body);
-				$email = new email;
-				$email->recipients = $fax_email;
-				$email->subject = $email_subject;
-				$email->body = $email_body;
-				$email->from_address = $email_from_address;
-				$email->from_name = $email_from_name;
-				$email->attachments = $email_attachments;
-				//$email->debug_level = 3;
-				$response = $mail->error;
-				$sent = $email->send();
+				else {
+					$email_attachments[0]['name'] = $fax_file_name.'.tif';
+					$email_attachments[0]['value'] = $fax_file;
+				}
 			}
+
+			//$email_response = send_email($email_address, $email_subject, $email_body);
+			$email = new email;
+			$email->recipients = $fax_email;
+			$email->subject = $email_subject;
+			$email->body = $email_body;
+			$email->from_address = $email_from_address;
+			$email->from_name = $email_from_name;
+			$email->attachments = $email_attachments;
+			//$email->debug_level = 3;
+			$response = $mail->error;
+			$sent = $email->send();
+		}
 
 		//output to the log
-			echo "email_from_address: ".$email_from_address."\n";
-			echo "email_from_name: ".$email_from_address."\n";
-			echo "email_subject: $email_subject\n";
+		echo "email_from_address: ".$email_from_address."\n";
+		echo "email_from_name: ".$email_from_address."\n";
+		echo "email_subject: $email_subject\n";
 
 		//send the email
-			if ($sent) {
-				echo "Mailer Error";
-				$email_status='failed';
-			}
-			else {
-				echo "Message sent!";
-				$email_status='ok';
-			}
+		if ($sent) {
+			echo "Mailer Error";
+			$email_status='failed';
+		}
+		else {
+			echo "Message sent!";
+			$email_status='ok';
+		}
 	}
 
 //when the exit is called, capture the statements
@@ -550,21 +550,28 @@ function shutdown() {
 		if (class_exists('settings') && $settings instanceof settings) {
 			//temporary directory in default settings or use the system temp directory
 			$temp_dir = $settings->get('server', 'temp', sys_get_temp_dir());
-		} else {
+		}
+		else {
 			//settings is not available
 			$temp_dir = sys_get_temp_dir();
 		}
+
 		//open the file
 		$fp = fopen("$temp_dir/fax_to_email.log", "w");
+
 		//get the output from the buffer
 		$content = ob_get_contents();
+
 		//clean the buffer
 		ob_end_clean();
+
 		//write the contents of the buffer
 		fwrite($fp, $content);
+
 		//close the file pointer
 		fclose($fp);
-	} else {
+	}
+	else {
 		if ($debug_level > 2) {
 			var_dump($_REQUEST);
 		}
