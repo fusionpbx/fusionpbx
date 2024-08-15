@@ -793,7 +793,7 @@
 		echo "	</label>\n";
 	}
 	else {
-		echo "	<select class='formfld' id='dashboard_label_enabled' name='dashboard_label_enabled'>\n";
+		echo "	<select class='formfld' id='dashboard_label_enabled' name='dashboard_label_enabled' onchange=\"$('.type_label').toggle();\">\n";
 		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($dashboard_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
