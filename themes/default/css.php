@@ -213,13 +213,13 @@ $dashboard_detail_background_color_center = $_SESSION['theme']['dashboard_detail
 $dashboard_border_radius = $_SESSION['theme']['dashboard_border_radius']['text'] ?? '5px';
 $dashboard_border_color = $_SESSION['theme']['dashboard_border_color']['text'] ?? '#dbe0ea';
 $dashboard_border_color_hover = $_SESSION['theme']['dashboard_border_color_hover']['text'] ?? '#cbd3e1';
-$dashboard_heading_text_color = $_SESSION['theme']['dashboard_heading_text_color']['text'] ?? '#444';
-$dashboard_heading_text_color_hover = $_SESSION['theme']['dashboard_heading_text_color_hover']['text'] ?? '';
-$dashboard_heading_text_size = $_SESSION['theme']['dashboard_heading_text_size']['text'] ?? '13px';
-$dashboard_heading_text_font = $_SESSION['theme']['dashboard_heading_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
-$dashboard_heading_text_shadow_color = $_SESSION['theme']['dashboard_heading_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
-$dashboard_heading_background_color = $_SESSION['theme']['dashboard_heading_background_color']['text'] ?? '';
-$dashboard_heading_background_color_hover = $_SESSION['theme']['dashboard_heading_background_color_hover']['text'] ?? '';
+$dashboard_label_text_color = $_SESSION['theme']['dashboard_label_text_color']['text'] ?? '#444';
+$dashboard_label_text_color_hover = $_SESSION['theme']['dashboard_label_text_color_hover']['text'] ?? '';
+$dashboard_label_text_size = $_SESSION['theme']['dashboard_label_text_size']['text'] ?? '13px';
+$dashboard_label_text_font = $_SESSION['theme']['dashboard_label_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
+$dashboard_label_text_shadow_color = $_SESSION['theme']['dashboard_label_text_shadow_color']['text'] ?? 'rgba(0,0,0,0)';
+$dashboard_label_background_color = $_SESSION['theme']['dashboard_label_background_color']['text'] ?? '';
+$dashboard_label_background_color_hover = $_SESSION['theme']['dashboard_label_background_color_hover']['text'] ?? '';
 $dashboard_number_text_color = $_SESSION['theme']['dashboard_number_text_color']['text'] ?? '#444';
 $dashboard_number_text_color_hover = $_SESSION['theme']['dashboard_number_text_color_hover']['text'] ?? '';
 $dashboard_number_text_font = $_SESSION['theme']['dashboard_number_text_font']['text'] ?? 'Arial, Calibri, Candara, Segoe, "Segoe UI", Optima, sans-serif';
@@ -2583,15 +2583,15 @@ else { //default: white
 	span.hud_title {
 		display: block;
 		width: 100%;
-		font-family: <?=$dashboard_heading_text_font?>;
-		text-shadow: 0px 1px 2px <?=$dashboard_heading_text_shadow_color?>;
+		font-family: <?=$dashboard_label_text_font?>;
+		text-shadow: 0px 1px 2px <?=$dashboard_label_text_shadow_color?>;
 		letter-spacing: -0.02em;
-		color: <?=$dashboard_heading_text_color?>;
-		font-size: <?=$dashboard_heading_text_size?>;
+		color: <?=$dashboard_label_text_color?>;
+		font-size: <?=$dashboard_label_text_size?>;
 		font-weight: bold;
 		<?php
 		//calculate line height based on font size
-		$font_size = strtolower($dashboard_heading_text_size);
+		$font_size = strtolower($dashboard_label_text_size);
 		$tmp = str_replace(' ', '', $font_size);
 		$tmp = str_replace('pt', '', $tmp);
 		$tmp = str_replace('px', '', $tmp);
@@ -2602,15 +2602,15 @@ else { //default: white
 		?>
 		line-height: <?php echo ($line_height_number > 0) ? str_replace($font_size_number, $line_height_number, $font_size) : '26.25pt'; ?>;
 		text-align: center;
-		background: <?=$dashboard_heading_background_color?>;
-		border-bottom: 1px solid <?php echo color_adjust($dashboard_heading_background_color, 0.2); ?>;
+		background: <?=$dashboard_label_background_color?>;
+		border-bottom: 1px solid <?php echo color_adjust($dashboard_label_background_color, 0.2); ?>;
 		overflow: hidden;
 		}
 
 	span.hud_title:hover {
-		color: <?=$dashboard_heading_text_color_hover?>;
-		text-shadow: 0px 1px 2px <?=$dashboard_heading_text_shadow_color?>;
-		background: <?=$dashboard_heading_background_color_hover?>;
+		color: <?=$dashboard_label_text_color_hover?>;
+		text-shadow: 0px 1px 2px <?=$dashboard_label_text_shadow_color?>;
+		background: <?=$dashboard_label_background_color_hover?>;
 		cursor: pointer;
 		}
 
@@ -2641,7 +2641,7 @@ else { //default: white
 		overflow: hidden;
 		<?php
 		//calculate font padding
-		$font_size = strtolower($dashboard_heading_text_size);
+		$font_size = strtolower($dashboard_label_text_size);
 		$tmp = str_replace(' ', '', $font_size);
 		$tmp = str_replace('pt', '', $tmp);
 		$tmp = str_replace('px', '', $tmp);

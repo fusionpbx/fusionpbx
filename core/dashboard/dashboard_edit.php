@@ -788,12 +788,12 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dashboard_label_enabled' name='dashboard_label_enabled' value='true' ".($dashboard_label_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='dashboard_label_enabled' name='dashboard_label_enabled' value='true' ".($dashboard_label_enabled == 'true' ? "checked='checked'" : null)." onclick=\"$('.type_label').toggle();\">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
-		echo "	<select class='formfld' id='dashboard_label_enabled' name='dashboard_label_enabled'>\n";
+		echo "	<select class='formfld' id='dashboard_label_enabled' name='dashboard_label_enabled' onchange=\"$('.type_label').toggle();\">\n";
 		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($dashboard_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
@@ -803,7 +803,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='type_label' ".($dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_label_text_color']."\n";
 	echo "</td>\n";
@@ -815,7 +815,7 @@
 	echo "</tr>\n";
 
 	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon type_label' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_label_text_color_hover']."\n";
 		echo "</td>\n";
@@ -827,7 +827,7 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
+	echo "<tr class='type_label' ".($dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_label_background_color']."\n";
 	echo "</td>\n";
@@ -839,7 +839,7 @@
 	echo "</tr>\n";
 
 	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon type_label' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_label_background_color_hover']."\n";
 		echo "</td>\n";
