@@ -925,7 +925,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ffffff";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the color (and opacity) of the Dashboard block heading text.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the color (and opacity) of the Dashboard block label text.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b09126da-c68b-473c-83f8-8e9a7523ce37";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -933,7 +933,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ffffff";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the hover color (and opacity) of the Dashboard block heading text.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the hover color (and opacity) of the Dashboard block label text.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "759391b7-8af9-4661-a676-867e01e8f21f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -941,7 +941,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the font of the Dashboard block heading text.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the font of the Dashboard block label text.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1a52a4b6-5722-4fbe-ae4e-7b3d38cff437";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -949,7 +949,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.5pt";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the size of the Dashboard block heading text.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the size of the Dashboard block label text.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b7bdbe98-f667-42ed-8864-cf92e3b048df";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -957,7 +957,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#000000";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the shadow color (and opacity) of the Dashboard block heading text.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the shadow color (and opacity) of the Dashboard block label text.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6e33d5d8-679a-4fe2-bd6a-f192a8637e8b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -965,7 +965,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#000000";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the shadow hover color (and opacity) of the Dashboard block heading text.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the shadow hover color (and opacity) of the Dashboard block label text.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "320bae87-47dc-4b21-a2f0-eea875ce5b50";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
