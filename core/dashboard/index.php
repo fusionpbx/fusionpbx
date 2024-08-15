@@ -300,7 +300,7 @@ foreach ($dashboard as $row) {
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
 		echo "}\n";
 	}
-	if ($row['dashboard_label_enabled'] == false) {
+	if (!empty($row['dashboard_label_enabled']) && $row['dashboard_label_enabled'] == false) {
 		echo "#".$dashboard_name." .hud_title {\n";
 		echo "	display: none;\n";
 		echo "}\n";
