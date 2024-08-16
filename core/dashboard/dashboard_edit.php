@@ -54,7 +54,7 @@
 	$dashboard_content = '';
 	$dashboard_content_text_align = '';
 	$dashboard_content_details = '';
-	$dashboard_label_enabled = $row["dashboard_enabled"] ?? 'true';
+	$dashboard_label_enabled = 'true';
 	$dashboard_label_text_color = '';
 	$dashboard_label_background_color = '';
 	$dashboard_number_text_color = '';
@@ -64,7 +64,7 @@
 	$dashboard_details_state = '';
 	$dashboard_parent_uuid = '';
 	$dashboard_order = '';
-	$dashboard_enabled = $row["dashboard_enabled"] ?? 'true';
+	$dashboard_enabled = 'true';
 	$dashboard_description = '';
 	$dashboard_uuid = '';
 
@@ -92,7 +92,7 @@
 		$dashboard_content_details = $_POST["dashboard_content_details"] ?? '';
 		$dashboard_groups = $_POST["dashboard_groups"] ?? '';
 		$dashboard_chart_type = $_POST["dashboard_chart_type"] ?? '';
-		$dashboard_label_enabled = $_POST["dashboard_label_enabled"] ?? '';
+		$dashboard_label_enabled = $_POST["dashboard_label_enabled"] ?? 'false';
 		$dashboard_label_text_color = $_POST["dashboard_label_text_color"] ?? '';
 		$dashboard_label_text_color_hover = $_POST["dashboard_label_text_color_hover"] ?? '';
 		$dashboard_label_background_color = $_POST["dashboard_label_background_color"] ?? '';
@@ -1083,3 +1083,4 @@
 	require_once "resources/footer.php";
 
 ?>
+
