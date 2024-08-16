@@ -300,7 +300,7 @@ foreach ($dashboard as $row) {
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
 		echo "}\n";
 	}
-	if ($row['dashboard_label_enabled'] == false) {
+	if ($row['dashboard_label_enabled'] == 'false') {
 		echo "#".$dashboard_name." .hud_title {\n";
 		echo "	display: none;\n";
 		echo "}\n";
@@ -609,3 +609,4 @@ function toggle_grid_row_end_all() {
 	require_once "resources/footer.php";
 
 ?>
+
