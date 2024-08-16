@@ -788,14 +788,14 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dashboard_label_enabled' name='dashboard_label_enabled' value='true' ".($dashboard_label_enabled == 'true' ? "checked='checked'" : null)." onclick=\"$('.type_label').toggle();\">\n";
+		echo "		<input type='checkbox' id='dashboard_label_enabled' name='dashboard_label_enabled' value='true' ".(empty($dashboard_label_enabled) || $dashboard_label_enabled == 'true' ? "checked='checked'" : null)." onclick=\"$('.type_label').toggle();\">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='dashboard_label_enabled' name='dashboard_label_enabled' onchange=\"$('.type_label').toggle();\">\n";
 		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($dashboard_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='true' ".(empty($dashboard_label_enabled) || $dashboard_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
@@ -1083,4 +1083,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
