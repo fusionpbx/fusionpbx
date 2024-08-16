@@ -158,18 +158,21 @@
 				}
 
 			//get the assigned voicemails
-				$sql = "select * from v_voicemails ";
-				$sql .= "where voicemail_id  in (";
-				foreach($voicemail_ids as $i => $voicemail_id) {
-					if ($i > 0) { $sql .= ","; }
-					$sql .= ":voicemail_id_".$i;
-					$parameters['voicemail_id_'.$i] = $voicemail_id;
+				$assigned_voicemails = [];
+				if (!empty($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
+					$sql = "select * from v_voicemails ";
+					$sql .= "where voicemail_id  in (";
+					foreach($voicemail_ids as $i => $voicemail_id) {
+						if ($i > 0) { $sql .= ","; }
+						$sql .= ":voicemail_id_".$i;
+						$parameters['voicemail_id_'.$i] = $voicemail_id;
+					}
+					$sql .= ") ";
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$assigned_voicemails = $this->database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
 				}
-				$sql .= ") ";
-				$sql .= "and domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $this->domain_uuid;
-				$assigned_voicemails = $this->database->select($sql, $parameters, 'all');
-				unset($sql, $parameters);
 
 			//set the voicemail uuid arrays
 				$voicemail_uuids = [];
