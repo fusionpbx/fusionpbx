@@ -104,6 +104,7 @@
 	$sql .= "dashboard_description ";
 	$sql .= "from v_dashboard as d ";
 	$sql .= "where dashboard_enabled = 'true' ";
+	$sql .= "and dashboard_parent_uuid is null ";
 	$sql .= "and dashboard_uuid in (";
 	$sql .= "	select dashboard_uuid from v_dashboard_groups where group_uuid in (";
 	$sql .= "		".$group_uuids_in." ";
@@ -125,6 +126,7 @@
 					$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
 					if ($widget == $dashboard_name) {
 						$dashboard_order = $dashboard_order + 10;
+						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
 						$array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon'];
 						$array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url'];
@@ -134,7 +136,6 @@
 						$array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target'];
 						$array['dashboard'][$x]['dashboard_width'] = $row['dashboard_width'];
 						$array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height'];
-						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 						$array['dashboard'][$x]['dashboard_order'] = $dashboard_order;
 						$x++;
 					}
@@ -484,6 +485,7 @@ function toggle_grid_row_end_all() {
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach ($dashboard as $row) {
+		$dashboard_uuid = $row['dashboard_uuid'];
 		$dashboard_name = $row['dashboard_name'];
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url = $row['dashboard_url'] ?? '';
@@ -609,4 +611,3 @@ function toggle_grid_row_end_all() {
 	require_once "resources/footer.php";
 
 ?>
-
