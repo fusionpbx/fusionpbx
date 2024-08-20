@@ -43,6 +43,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'dashboard_parent_uuid';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
 	//dashboard
