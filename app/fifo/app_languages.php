@@ -779,30 +779,4 @@ $text['label-member_enabled']['zh-cn'] = "已启用";
 $text['label-member_enabled']['ja-jp'] = "有効";
 $text['label-member_enabled']['ko-kr'] = "활성화됨";
 
-$text['description-member_enabled']['en-us'] = "";
-$text['description-member_enabled']['en-gb'] = "";
-$text['description-member_enabled']['ar-eg'] = "";
-$text['description-member_enabled']['de-at'] = "";
-$text['description-member_enabled']['de-ch'] = "";
-$text['description-member_enabled']['de-de'] = "";
-$text['description-member_enabled']['el-gr'] = "";
-$text['description-member_enabled']['es-cl'] = "";
-$text['description-member_enabled']['es-mx'] = "";
-$text['description-member_enabled']['fr-ca'] = "";
-$text['description-member_enabled']['fr-fr'] = "";
-$text['description-member_enabled']['he-il'] = "";
-$text['description-member_enabled']['it-it'] = "";
-$text['description-member_enabled']['nl-nl'] = "";
-$text['description-member_enabled']['pl-pl'] = "";
-$text['description-member_enabled']['pt-br'] = "";
-$text['description-member_enabled']['pt-pt'] = "";
-$text['description-member_enabled']['ro-ro'] = "";
-$text['description-member_enabled']['ru-ru'] = "";
-$text['description-member_enabled']['sv-se'] = "";
-$text['description-member_enabled']['uk-ua'] = "";
-$text['description-member_enabled']['tr-tr'] = "";
-$text['description-member_enabled']['zh-cn'] = "";
-$text['description-member_enabled']['ja-jp'] = "";
-$text['description-member_enabled']['ko-kr'] = "";
-
 ?>
