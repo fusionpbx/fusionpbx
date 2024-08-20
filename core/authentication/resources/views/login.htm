@@ -77,6 +77,17 @@
 							<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder="{$label_username}" /><br />
 						{/if}
 						<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder="{$label_password}" /><br />
+						{if !empty($login_domain_name_visible) && $login_domain_name_visible == 'true'}
+							{if empty($login_domain_names)}
+								<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='domain_name' id='domain_name' placeholder="{$label_domain}" /><br />
+							{else}
+								<select class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name="domain_name" id="domain_name">
+									{foreach from=$login_domain_names item=option}
+									<option value="{$option}">{$option}</option>
+									{/foreach}
+								</select>
+							{/if}
+						{/if}
 					</div>
 					<div>
 						<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_login}' />
@@ -91,3 +102,4 @@
 		<script>document.getElementsByName('username')[0].focus();</script>
 	</body>
 </html>
+

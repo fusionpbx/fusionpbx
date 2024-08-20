@@ -52,6 +52,8 @@ class plugin_database {
 
 		//pre-process some settings
 			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
+			$settings['login']['domain_name_visible'] = !empty($_SESSION['login']['domain_name_visible']['boolean']) ? $_SESSION['login']['domain_name_visible']['boolean'] : '';
+			$settings['login']['domain_name'] = !empty($_SESSION['login']['domain_name']) ? $_SESSION['login']['domain_name'] : '';
 			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
 			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
 			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
@@ -96,18 +98,20 @@ class plugin_database {
 					$view->assign("login_title", $text['button-login']);
 					$view->assign("label_username", $text['label-username']);
 					$view->assign("label_password", $text['label-password']);
+					$view->assign("label_domain", $text['label-domain']);
 					$view->assign("button_login", $text['button-login']);
 
 				//assign default values to the template
 					$view->assign("project_path", PROJECT_PATH);
 					$view->assign("login_destination_url", $settings['login']['destination']);
+					$view->assign("login_domain_name_visible", $settings['login']['domain_name_visible']);
+					$view->assign("login_domain_names", $settings['login']['domain_name']);
 					$view->assign("favicon", $settings['theme']['favicon']);
 					$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
 					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
 					$view->assign("login_logo_source", $settings['theme']['logo']);
 					$view->assign("message_delay", $settings['theme']['message_delay']);
 					$view->assign("background_video", $settings['theme']['background_video']);
- 					//if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && $_SESSION['authentication']['plugin']['database']['authorized'] == 1 && !empty($_SESSION['username'])) {
 					if (!empty($_SESSION['username'])) {
 						$view->assign("login_password_description", $text['label-password_description']);
 						$view->assign("username", $_SESSION['username']);
@@ -135,6 +139,9 @@ class plugin_database {
 			//	exit;
 			//}
 
+
+
+
 		//add the authentication details
 			if (isset($_REQUEST["username"])) {
 				$this->username = $_REQUEST["username"];
@@ -143,22 +150,24 @@ class plugin_database {
 			if (isset($_REQUEST["password"])) {
 				$this->password = $_REQUEST["password"];
 			}
-			if (isset($_SESSION['username'])) {
-				$this->username = $_SESSION['username'];
-			}
 			if (isset($_REQUEST["key"])) {
 				$this->key = $_REQUEST["key"];
+			}
+			if (isset($_REQUEST["domain_name"])) {
+				$domain_name = $_REQUEST["domain_name"];
+				$this->domain_name = $_REQUEST["domain_name"];
 			}
 
 		//get the domain name
 			$auth = new authentication;
 			$auth->get_domain();
-			$this->domain_uuid = $_SESSION['domain_uuid'] ?? null;
-			$this->domain_name = $_SESSION['domain_name'] ?? null;
 			$this->username = $_SESSION['username'] ?? null;
+			//$this->domain_uuid = $_SESSION['domain_uuid'] ?? null;
+			//$this->domain_name = $_SESSION['domain_name'] ?? null;
 
 		//debug information
 			//echo "domain_uuid: ".$this->domain_uuid."<br />\n";
+			//view_array($this->domain_uuid, false);
 			//echo "domain_name: ".$this->domain_name."<br />\n";
 			//echo "username: ".$this->username."<br />\n";
 
@@ -330,3 +339,4 @@ class plugin_database {
 }
 
 ?>
+
