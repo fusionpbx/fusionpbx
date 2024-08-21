@@ -2,7 +2,7 @@
 
 $array['dashboard'][$x]['dashboard_uuid'] = '3bac3209-2f51-47db-b5fe-a1a804f49da9';
 $array['dashboard'][$x]['dashboard_name'] = 'Caller ID';
-$array['dashboard'][$x]['dashboard_path'] = 'app/extensions/resources/dashboard/caller_id.php';
+$array['dashboard'][$x]['dashboard_path'] = 'extensions/caller_id';
 $array['dashboard'][$x]['dashboard_order'] = '160';
 $array['dashboard'][$x]['dashboard_enabled'] = 'false';
 $array['dashboard'][$x]['dashboard_description'] = '';
@@ -23,7 +23,7 @@ $x++;
 //extensions icon
 $array['dashboard'][$x]['dashboard_uuid'] = '4b7b6652-7e5f-48d3-987e-971053f093a7';
 $array['dashboard'][$x]['dashboard_name'] = 'Extensions';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-suitcase';
 $array['dashboard'][$x]['dashboard_url'] = '/app/extensions/extensions.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';

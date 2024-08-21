@@ -118,6 +118,9 @@ if ($domains_processed == 1) {
 	//update dashboard icons to be prefixed with v6.x font awesome style class name (e.g. 'fa-solid ')
 		$queries[] = "update v_dashboard set dashboard_icon = concat('fa-solid ', dashboard_icon) where dashboard_icon is not null and dashboard_icon not like 'fa-solid fa-%' and dashboard_icon not like 'fa-regular fa-%' and dashboard_icon not like 'fa-brands fa-%' ";
 
+	//simplify the dashboard path
+		$queries[] = "update v_dashboard set dashboard_path =  regexp_replace(dashboard_path, 'app/|core/|resources/dashboard/|\.php', '', 'g') where dashboard_path like '%.php';";
+
 	//execute array of queries
 		foreach ($queries as $sql) {
 			$database = new database;
@@ -128,3 +131,4 @@ if ($domains_processed == 1) {
 }
 
 ?>
+

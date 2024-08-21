@@ -3,7 +3,7 @@
 //ivr menus icon
 $array['dashboard'][$x]['dashboard_uuid'] = '3af7af65-7861-4d05-a0bc-36d704458fa0';
 $array['dashboard'][$x]['dashboard_name'] = 'IVR Menus';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-diagram-project';
 $array['dashboard'][$x]['dashboard_url'] = '/app/ivr_menus/ivr_menus.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';

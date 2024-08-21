@@ -3,7 +3,7 @@
 //conference centers icon
 $array['dashboard'][$x]['dashboard_uuid'] = 'd1b26c96-6cfd-45ea-824f-0b5e16a9aab9';
 $array['dashboard'][$x]['dashboard_name'] = 'Conference Centers';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-hotel';
 $array['dashboard'][$x]['dashboard_url'] = '/app/conference_centers/conference_rooms.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';

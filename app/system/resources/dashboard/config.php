@@ -3,7 +3,7 @@
 $x++;
 $array['dashboard'][$x]['dashboard_uuid'] = 'c9b1f67a-d78a-4299-a16e-594a4b7cd246';
 $array['dashboard'][$x]['dashboard_name'] = 'System Status';
-$array['dashboard'][$x]['dashboard_path'] = 'app/system/resources/dashboard/system_status.php';
+$array['dashboard'][$x]['dashboard_path'] = 'system/system_status';
 $array['dashboard'][$x]['dashboard_order'] = '90';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'System information like Disk usage.';
@@ -15,7 +15,7 @@ $x++;
 
 $array['dashboard'][$x]['dashboard_uuid'] = 'beade936-846b-4f02-986c-a2de6fa762c2';
 $array['dashboard'][$x]['dashboard_name'] = 'System CPU Status';
-$array['dashboard'][$x]['dashboard_path'] = 'app/system/resources/dashboard/system_cpu_status.php';
+$array['dashboard'][$x]['dashboard_path'] = 'system/system_cpu_status';
 $array['dashboard'][$x]['dashboard_order'] = '100';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'System CPU information.';
@@ -27,7 +27,7 @@ $x++;
 
 $array['dashboard'][$x]['dashboard_uuid'] = 'bb76f7fc-669f-41dd-a636-6ddaee5deae1';
 $array['dashboard'][$x]['dashboard_name'] = 'System Counts';
-$array['dashboard'][$x]['dashboard_path'] = 'app/system/resources/dashboard/system_counts.php';
+$array['dashboard'][$x]['dashboard_path'] = 'system/system_counts';
 $array['dashboard'][$x]['dashboard_order'] = '110';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'A list of showing the count of active and inactive domains, devices, extensions, gateways, users, desttinations, ring groups and more';

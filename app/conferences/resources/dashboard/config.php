@@ -3,7 +3,7 @@
 //conferences icon
 $array['dashboard'][$x]['dashboard_uuid'] = 'c3c37d29-b654-4024-8ee4-d752b3e4db46';
 $array['dashboard'][$x]['dashboard_name'] = 'Conferences';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-comments';
 $array['dashboard'][$x]['dashboard_url'] = '/app/conferences/conferences.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';

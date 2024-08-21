@@ -3,7 +3,7 @@
 //call block icon
 $array['dashboard'][$x]['dashboard_uuid'] = 'e75f04ff-6d1b-4b39-af0f-e1d1860327c1';
 $array['dashboard'][$x]['dashboard_name'] = 'Call Block';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-ban';
 $array['dashboard'][$x]['dashboard_url'] = '/app/call_block/call_block.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
