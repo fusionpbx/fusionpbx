@@ -2,7 +2,7 @@
 
 $array['dashboard'][$x]['dashboard_uuid'] = 'f1c722d5-b714-4fa2-9664-5f6d24d44661';
 $array['dashboard'][$x]['dashboard_name'] = 'Device Keys';
-$array['dashboard'][$x]['dashboard_path'] = 'app/devices/resources/dashboard/device_keys.php';
+$array['dashboard'][$x]['dashboard_path'] = 'devices/device_keys';
 $array['dashboard'][$x]['dashboard_order'] = '150';
 $array['dashboard'][$x]['dashboard_enabled'] = 'false';
 $array['dashboard'][$x]['dashboard_description'] = '';

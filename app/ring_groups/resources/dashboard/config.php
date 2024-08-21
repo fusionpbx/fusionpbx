@@ -3,7 +3,7 @@
 //ring group forward
 $array['dashboard'][$x]['dashboard_uuid'] = 'b5da1d72-2cc7-422e-b05c-f07659aed419';
 $array['dashboard'][$x]['dashboard_name'] = 'Ring Group Forward';
-$array['dashboard'][$x]['dashboard_path'] = 'app/ring_groups/resources/dashboard/ring_group_forward.php';
+$array['dashboard'][$x]['dashboard_path'] = 'ring_groups/ring_group_forward';
 $array['dashboard'][$x]['dashboard_icon'] = '';
 $array['dashboard'][$x]['dashboard_url'] = '';
 $array['dashboard'][$x]['dashboard_target'] = 'self';

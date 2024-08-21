@@ -309,7 +309,7 @@ foreach ($dashboard as $row) {
 		echo "	align-content: center;\n";
 		echo "}\n";
 	}
-	if ($row['dashboard_path'] == "core/dashboard/resources/dashboard/icon.php") {
+	if ($row['dashboard_path'] == "dashboard/icon") {
 		echo "#".$dashboard_name." div.hud_content,\n";
 		echo "#".$dashboard_name." span.hud_title,\n";
 		echo "#".$dashboard_name." span.hud_stat {\n";
@@ -505,8 +505,19 @@ function toggle_grid_row_end_all() {
 		}
 
 		echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".trim(preg_replace("/[^a-z]/", '_', strtolower($dashboard_name)),'_')."' draggable='false'>\n";
-		include $row['dashboard_path'];
+		$dashboard_path_array = explode('/', $row['dashboard_path']);
+		$path_array = glob(dirname(__DIR__, 2).'/*/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php');
+		include $path_array[0];
+		//$file_name = dirname(__DIR__, 2).'/app/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php';
+		//if (file_exists(dirname(__DIR__, 2).'/core/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php')) {
+		//	include dirname(__DIR__, 2).'/core/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php';
+		//}
+		//elseif (file_exists(dirname(__DIR__, 2).'/app/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php')) {
+		//	include dirname(__DIR__, 2).'/app/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php';
+		//}
+
 		echo "</div>\n";
+
 		$x++;
 	}
 	echo "</div>\n";
@@ -611,3 +622,4 @@ function toggle_grid_row_end_all() {
 	require_once "resources/footer.php";
 
 ?>
+

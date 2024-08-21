@@ -3,7 +3,7 @@
 //new messages
 $array['dashboard'][$x]['dashboard_uuid'] = 'be2aaa22-d8f1-4d9b-b5f9-14a26da329cb';
 $array['dashboard'][$x]['dashboard_name'] = 'New Messages';
-$array['dashboard'][$x]['dashboard_path'] = 'app/voicemails/resources/dashboard/voicemails.php';
+$array['dashboard'][$x]['dashboard_path'] = 'voicemails/voicemails';
 $array['dashboard'][$x]['dashboard_icon'] = '';
 $array['dashboard'][$x]['dashboard_url'] = '';
 $array['dashboard'][$x]['dashboard_target'] = '';
@@ -47,7 +47,7 @@ $x++;
 //voicemails icon
 $array['dashboard'][$x]['dashboard_uuid'] = '230f2857-f14a-44cd-9c33-577f26a5ce45';
 $array['dashboard'][$x]['dashboard_name'] = 'Voicemails';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-envelope';
 $array['dashboard'][$x]['dashboard_url'] = '/app/voicemails/voicemails.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';

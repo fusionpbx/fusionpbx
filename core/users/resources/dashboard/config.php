@@ -3,7 +3,7 @@
 //users icon
 $array['dashboard'][$x]['dashboard_uuid'] = '57fd7761-6ffb-4a11-bdf0-4ce632f50c3c';
 $array['dashboard'][$x]['dashboard_name'] = 'Users';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-user-group';
 $array['dashboard'][$x]['dashboard_url'] = '/core/users/users.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
@@ -43,7 +43,7 @@ $x++;
 //account settings icon
 $array['dashboard'][$x]['dashboard_uuid'] = '8aa9bb66-7a62-4a90-b52e-68bd4ccf325f';
 $array['dashboard'][$x]['dashboard_name'] = 'Account Settings';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-user-gear';
 $array['dashboard'][$x]['dashboard_url'] = '/core/users/user_edit.php?id=user';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
@@ -79,7 +79,7 @@ $x++;
 //logout icon
 $array['dashboard'][$x]['dashboard_uuid'] = 'b04ad600-9acc-45e5-a89a-d7a59a6fcb4c';
 $array['dashboard'][$x]['dashboard_name'] = 'Logout';
-$array['dashboard'][$x]['dashboard_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-right-from-bracket';
 $array['dashboard'][$x]['dashboard_url'] = '/logout.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';

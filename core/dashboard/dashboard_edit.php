@@ -44,7 +44,7 @@
 
 //set the defaults
 	$dashboard_name = '';
-	$dashboard_path = '/core/dashboard/resources/dashboard/icon.php';
+	$dashboard_path = 'dashboard/icon';
  	//$dashboard_path = '';
 	$dashboard_icon = '';
 	$dashboard_url = '';
@@ -479,11 +479,11 @@
 //adjust form by type entered
 	echo "<script>\n";
 	echo "	function adjust_form() {\n";
-	echo "		if ($('#dashboard_path').val() == 'core/dashboard/resources/dashboard/icon.php') {\n";
+	echo "		if ($('#dashboard_path').val() == 'dashboard/icon') {\n";
 	echo "			$('.type_content').hide();\n";
 	echo "			$('.type_icon').show();\n";
 	echo "		}\n";
-	echo "		else if ($('#dashboard_path').val() == 'core/dashboard/resources/dashboard/content.php') {\n";
+	echo "		else if ($('#dashboard_path').val() == 'dashboard/content') {\n";
 	echo "			$('.type_icon').hide();\n";
 	echo "			$('.type_content').show();\n";
 	echo "		}\n";
@@ -548,7 +548,7 @@
 	echo "	<select name='dashboard_path' class='formfld' id='dashboard_path' onchange=\"adjust_form();\">\n";
 	echo "		<option value=''></option>\n";
 	foreach($dashboard_tools as $key => $value) {
-		echo "		<option value='$value' ".($value == $dashboard_path ? "selected='selected'" : null).">".$key."</option>\n";
+		echo "		<option value='$key' ".($key == $dashboard_path ? "selected='selected'" : null).">".$key."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -558,9 +558,9 @@
 
 	if (
 		$action == "add" ||
-		$dashboard_path == "core/dashboard/resources/dashboard/icon.php"
+		$dashboard_path == "dashboard/icon"
 		) {
-		echo "	<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">";
+		echo "	<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">";
 		echo "		<td class='vncell'>".$text['label-icon']."</td>";
 		echo "		<td class='vtable' style='vertical-align: bottom;'>";
 		if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php')) {
@@ -610,7 +610,7 @@
 		echo "		</td>";
 		echo "	</tr>";
 
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-link']."\n";
 		echo "</td>\n";
@@ -622,7 +622,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-width']."\n";
 		echo "</td>\n";
@@ -634,7 +634,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-height']."\n";
 		echo "</td>\n";
@@ -646,7 +646,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "class='type_icon' style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "class='type_icon' style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-target']."\n";
 		echo "</td>\n";
@@ -663,9 +663,9 @@
 
 	if (
 		$action == "add" ||
-		$dashboard_path == "core/dashboard/resources/dashboard/content.php"
+		$dashboard_path == "dashboard/content"
 		) {
-		echo "<tr class='type_content' ".($dashboard_path != 'core/dashboard/resources/dashboard/content.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_content' ".($dashboard_path != 'dashboard/content' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-content']."\n";
 		echo "</td>\n";
@@ -676,7 +676,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr class='type_content' ".($dashboard_path != 'core/dashboard/resources/dashboard/content.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_content' ".($dashboard_path != 'dashboard/content' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-dashboard_content_text_align']."\n";
 		echo "</td>\n";
@@ -693,10 +693,10 @@
 
 	if (
 		$action == "add" ||
-		$dashboard_path == "core/dashboard/resources/dashboard/content.php" ||
-		$dashboard_path == "core/dashboard/resources/dashboard/icon.php"
+		$dashboard_path == "dashboard/content" ||
+		$dashboard_path == "dashboard/icon"
 		) {
-		echo "<tr class='type_icon type_content' ".($dashboard_path != 'core/dashboard/resources/dashboard/content.php' && $dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon type_content' ".($dashboard_path != 'dashboard/content' && $dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-details']."\n";
 		echo "</td>\n";
@@ -752,18 +752,18 @@
 
 	if (
 		$action == "add" ||
-		$dashboard_path == "app/voicemails/resources/dashboard/voicemails.php" ||
-		$dashboard_path == "app/xml_cdr/resources/dashboard/missed_calls.php" ||
-		$dashboard_path == "app/xml_cdr/resources/dashboard/recent_calls.php" ||
-		$dashboard_path == "app/system/resources/dashboard/system_status.php" ||
-		$dashboard_path == "app/system/resources/dashboard/system_cpu_status.php" ||
-		$dashboard_path == "app/system/resources/dashboard/system_counts.php" ||
-		$dashboard_path == "app/switch/resources/dashboard/switch_status.php" ||
-		$dashboard_path == "app/domain_limits/resources/dashboard/domain_limits.php" ||
-		$dashboard_path == "app/call_forward/resources/dashboard/call_forward.php" ||
-		$dashboard_path == "app/ring_groups/resources/dashboard/ring_group_forward.php" ||
-		$dashboard_path == "app/extensions/resources/dashboard/caller_id.php" ||
-		$dashboard_path == "app/maintenance/resources/dashboard/maintenance.php"
+		$dashboard_path == "voicemails/voicemails" ||
+		$dashboard_path == "xml_cdr/missed_calls" ||
+		$dashboard_path == "xml_cdr/recent_calls" ||
+		$dashboard_path == "system/system_status" ||
+		$dashboard_path == "system/system_cpu_status" ||
+		$dashboard_path == "system/system_counts" ||
+		$dashboard_path == "switch/switch_status" ||
+		$dashboard_path == "domain_limits/domain_limits" ||
+		$dashboard_path == "call_forward/call_forward" ||
+		$dashboard_path == "ring_groups/ring_group_forward" ||
+		$dashboard_path == "extensions/caller_id" ||
+		$dashboard_path == "maintenance/maintenance"
 		) {
 		echo "<tr class='type_chart' ".($action == "add" ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -814,8 +814,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
-		echo "<tr class='type_icon type_label' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
+	if ($action == "add" || $dashboard_path == "dashboard/icon") {
+		echo "<tr class='type_icon type_label' ".($dashboard_path != 'dashboard/icon' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_label_text_color_hover']."\n";
 		echo "</td>\n";
