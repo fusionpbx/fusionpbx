@@ -119,6 +119,7 @@
 		$fax_destination_number = $_POST["fax_destination_number"];
 		$fax_prefix = $_POST["fax_prefix"];
 		$fax_email = implode(',',array_filter($_POST["fax_email"] ?? []));
+		$fax_file = $_POST["fax_file"];
 		$fax_email_connection_type = $_POST["fax_email_connection_type"];
 		$fax_email_connection_host = $_POST["fax_email_connection_host"];
 		$fax_email_connection_port = $_POST["fax_email_connection_port"];
@@ -332,6 +333,7 @@
 						$array['fax'][0]['fax_name'] = $fax_name;
 						if (permission_exists('fax_email')) {
 							$array['fax'][0]['fax_email'] = $fax_email;
+							$array['fax'][0]['fax_file'] = $fax_file;
 						}
 						if (permission_exists('fax_caller_id_name')) {
 							$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
@@ -426,6 +428,7 @@
 			$fax_prefix = $row["fax_prefix"];
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
+			$fax_file = $row["fax_file"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_toll_allow = $row["fax_toll_allow"];
@@ -602,7 +605,7 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
-		foreach($fax_emails as $email) {
+		foreach ($fax_emails as $email) {
 			echo "<tr>\n";
 			echo "<td>\n";
 			echo "	<input class='formfld' type=\"text\" name=\"fax_email[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
@@ -616,6 +619,20 @@
 		echo "</table>\n";
 		echo "<br />\n";
 		echo "	".$text['description-email']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".($text['label-email_fax_file'] ?? 'Fax File')."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='fax_file' id='fax_file'>\n";
+		echo "		<option value='attach' ".(empty($fax_file) || $fax_fax_file == 'attach' ? "selected='selected'" : null).">".$text['option-attachment']."</option>\n";
+		echo "		<option value='link' ".($fax_file == "link" ? "selected='selected'" : null).">".$text['option-download_link']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo ($text['description-email_fax_file'] ?? 'Select a fax file option.')."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

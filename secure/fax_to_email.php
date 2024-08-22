@@ -270,6 +270,7 @@ if (!function_exists('fax_split_dtmf')) {
 			case 'fax_extension':
 			case 'debug_level':
 			case 'config_file':
+			case 'fax_file_uuid':
 				//tansform the name of the key into the name of the variable using $$
 				$$key = $value;
 				break;
@@ -323,7 +324,7 @@ if (!function_exists('fax_split_dtmf')) {
 //ensure we have a domain_uuid
 	if (empty($domain_uuid)) {
 		exit("Domain '$domain_name' not found\n");
-}
+	}
 
 //ensure we have a fax extension
 	if (empty($fax_extension)) {
@@ -346,6 +347,7 @@ if (!function_exists('fax_split_dtmf')) {
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && @sizeof($row) != 0) {
 		$fax_email = $row["fax_email"];
+		$fax_email_file = $row["fax_file"];
 		$fax_uuid = $row["fax_uuid"];
 		$fax_accountcode = $row["fax_accountcode"];
 		$fax_prefix = $row["fax_prefix"];
@@ -451,7 +453,7 @@ if (!function_exists('fax_split_dtmf')) {
 		}
 
 		//get the email template from the database
-		if (!empty($fax_email) && !empty($domain_uuid)) {
+		if (!empty($domain_uuid)) {
 			$sql = "select template_subject, template_body from v_email_templates ";
 			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 			$sql .= "and template_language = :template_language ";
@@ -470,37 +472,40 @@ if (!function_exists('fax_split_dtmf')) {
 				$email_body = $row['template_body'];
 			}
 			unset($sql, $parameters);
-		}
 
-		//replace variables in email subject
-		$email_subject = str_replace('${domain_name}', $domain_name, $email_subject);
-		$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
-		$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
-		$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
-		$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
-		$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
+			//replace variables in email subject
+			$email_subject = str_replace('${domain_name}', $domain_name, $email_subject);
+			$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
+			$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
+			$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
+			$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
+			$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
 
-		//replace variables in email body
-		$email_body = str_replace('${domain_name}', $domain_name, $email_body);
-		$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
-		$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
-		$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
-		$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
-		$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
+			//replace variables in email body
+			$email_body = str_replace('${domain_name}', $domain_name, $email_body);
+			$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
+			$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
+			$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
+			$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
+			$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
+			if ($fax_email_file == 'link') {
+				$email_body = str_replace('${fax_file_message}', "<a href='https://".$domain_name.PROJECT_PATH.'/app/fax/fax_files.php?id='.$fax_uuid.'&fax_file_uuid='.$fax_file_uuid.'&a=download_link&type=fax_inbox&box=inbox&ext='.$fax_extension.'&filename='.urlencode($fax_file_name).(!empty($pdf_file) && file_exists($pdf_file) ? '.pdf' : '.tif')."'>".($text['label-fax_download'] ?? 'Download Fax')."</a>", $email_body);
+			}
+			else {
+				$email_body = str_replace('${fax_file_message}', ($text['label-fax_attached'] ?? 'Fax Attached'), $email_body);
+			}
 
-		//debug info
-		//echo "<hr />\n";
-		//echo "email_address ".$fax_email."<br />\n";
-		//echo "email_subject ".$email_subject."<br />\n";
-		//echo "email_body ".$email_body."<br />\n";
-		//echo "<hr />\n";
+			//debug info
+			//echo "<hr />\n";
+			//echo "email_address ".$fax_email."<br />\n";
+			//echo "email_subject ".$email_subject."<br />\n";
+			//echo "email_body ".$email_body."<br />\n";
+			//echo "<hr />\n";
 
-		//send the email
-		if (isset($fax_email) && !empty($fax_email)) {
 			//add the attachment
-			if (!empty($fax_file_name)) {
+			if (!empty($fax_file_name) && $fax_email_file != 'link') {
 				$email_attachments[0]['type'] = 'file';
-				if ($pdf_file && file_exists($pdf_file)) {
+				if (!empty($pdf_file) && file_exists($pdf_file)) {
 					$email_attachments[0]['name'] = $fax_file_name.'.pdf';
 					$email_attachments[0]['value'] = $pdf_file;
 				}
@@ -510,14 +515,16 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 			}
 
-			//$email_response = send_email($email_address, $email_subject, $email_body);
+			//send the email
 			$email = new email;
 			$email->recipients = $fax_email;
 			$email->subject = $email_subject;
 			$email->body = $email_body;
 			$email->from_address = $email_from_address;
 			$email->from_name = $email_from_name;
-			$email->attachments = $email_attachments;
+			if ($fax_email_file != 'link') {
+				$email->attachments = $email_attachments;
+			}
 			//$email->debug_level = 3;
 			$response = $mail->error;
 			$sent = $email->send();
