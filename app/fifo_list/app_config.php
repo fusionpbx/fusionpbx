@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Liste toutes les files d'attente actuellement utilisées avec une ou plus des personnes en attend.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "";
 		$apps[$x]['description']['nl-nl'] = "Toon alle wachtrijen waar aktieve bellers geplaatst zijn.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

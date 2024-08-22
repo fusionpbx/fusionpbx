@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Définir les variables utilisées par le switch, le provisioning et plus.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "";
 		$apps[$x]['description']['nl-nl'] = "Definieer variabelen die door de Pbx, voorzieningen, en andere onderdelen gebruikt worden";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
