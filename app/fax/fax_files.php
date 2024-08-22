@@ -131,7 +131,7 @@
 	}
 
 //download the fax
-	if (isset($fax_dir) && !empty($_GET['a']) && $_GET['a'] == "download") {
+	if (isset($fax_dir) && !empty($_GET['a']) && ($_GET['a'] == "download" || $_GET['a'] == 'download_link')) {
 
 		//sanitize the values that are used in the file name and path
 		$fax_extension = preg_replace('/[^0-9]/', '', $_GET['ext']);
@@ -158,6 +158,7 @@
 			$fax->order_by = $_GET['order_by'] ?? '';
 			$fax->order = $_GET['order'] ?? '';
 			$fax->box = $_GET['box'] ?? '';
+			$fax->download = $_GET['a'] == 'download_link' ? true : false;
 			$fax->fax_file_toggle($fax_files);
 			unset($fax, $fax_files);
 		}

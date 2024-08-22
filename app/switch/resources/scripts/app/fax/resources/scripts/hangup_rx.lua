@@ -214,28 +214,6 @@
 		fax_file_name = array[count(array)];
 	end
 
---fax to email
-	cmd = quote(shell_esc(php_dir).."/"..shell_esc(php_bin)).." "..quote(shell_esc(document_root).."/secure/fax_to_email.php").." ";
-	cmd = cmd .. "email="..quote(shell_esc(fax_email)).." ";
-	cmd = cmd .. "extension="..quote(shell_esc(fax_extension)).." ";
-	cmd = cmd .. "name="..quote(shell_esc(fax_file)).." ";
-	cmd = cmd .. "messages=" .. quote("result:"..shell_esc(fax_result_text).." sender:"..shell_esc(fax_remote_station_id).." pages:"..shell_esc(fax_document_total_pages)).." ";
-	cmd = cmd .. "domain="..quote(shell_esc(domain_name)).." ";
-	cmd = cmd .. "caller_id_name=" .. quote(shell_esc(caller_id_name) or '') .. " ";
-	cmd = cmd .. "caller_id_number=" .. quote(shell_esc(caller_id_number) or '') .. " ";
-	if #fax_forward_number > 0 then
-		cmd = cmd .. "fax_relay=true ";
-	else
-		cmd = cmd .. "fax_relay=false ";
-	end
-	if #fax_prefix > 0 then
-		cmd = cmd .. "fax_prefix=true ";
-	else
-		cmd = cmd .. "fax_prefix=false ";
-	end
-	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
-	os.execute(cmd);
-
 --add to fax logs
 	sql = "insert into v_fax_logs ";
 	sql = sql .. "(";
@@ -420,6 +398,29 @@
 			end
 		end
 	end
+
+--fax to email
+	cmd = quote(shell_esc(php_dir).."/"..shell_esc(php_bin)).." "..quote(shell_esc(document_root).."/secure/fax_to_email.php").." ";
+	cmd = cmd .. "email="..quote(shell_esc(fax_email)).." ";
+	cmd = cmd .. "extension="..quote(shell_esc(fax_extension)).." ";
+	cmd = cmd .. "name="..quote(shell_esc(fax_file)).." ";
+	cmd = cmd .. "messages=" .. quote("Result: "..shell_esc(fax_result_text)..", Sender: "..shell_esc(fax_remote_station_id)..", Pages:"..shell_esc(fax_document_total_pages)).." ";
+	cmd = cmd .. "domain="..quote(shell_esc(domain_name)).." ";
+	cmd = cmd .. "caller_id_name=" .. quote(shell_esc(caller_id_name) or '') .. " ";
+	cmd = cmd .. "caller_id_number=" .. quote(shell_esc(caller_id_number) or '') .. " ";
+	cmd = cmd .. "fax_file_uuid=" .. quote(shell_esc(uuid)) .. " ";
+	if #fax_forward_number > 0 then
+		cmd = cmd .. "fax_relay=true ";
+	else
+		cmd = cmd .. "fax_relay=false ";
+	end
+	if #fax_prefix > 0 then
+		cmd = cmd .. "fax_prefix=true ";
+	else
+		cmd = cmd .. "fax_prefix=false ";
+	end
+	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
+	os.execute(cmd);
 
 --add to the fax queue when the fax_forward_number is set
 	if (fax_forward_number ~= nil) then

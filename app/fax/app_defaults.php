@@ -19,6 +19,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Extension: \${fax_extension}<br>";
 		$array['email_templates'][$x]['template_body'] .= "Messages: \${fax_messages} <br>";
 		$array['email_templates'][$x]['template_body'] .= "\${fax_file_warning}<br>";
+		$array['email_templates'][$x]['template_body'] .= "\${fax_file_message}<br>";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = "html";
@@ -58,6 +59,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Extension: \${fax_extension}<br>";
 		$array['email_templates'][$x]['template_body'] .= "Messages: \${fax_messages} <br>";
 		$array['email_templates'][$x]['template_body'] .= "\${fax_file_warning}<br>";
+		$array['email_templates'][$x]['template_body'] .= "\${fax_file_message}<br>";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = "html";
@@ -139,6 +141,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Nebenstelle: \${fax_extension}<br>";
 		$array['email_templates'][$x]['template_body'] .= "Nachrichten: \${fax_messages} <br>";
 		$array['email_templates'][$x]['template_body'] .= "\${fax_file_warning}<br>";
+		$array['email_templates'][$x]['template_body'] .= "\${fax_file_message}<br>";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = "html";

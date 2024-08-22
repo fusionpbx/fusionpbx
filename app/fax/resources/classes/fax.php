@@ -42,6 +42,7 @@ if (!class_exists('fax')) {
 		public $box;
 		public $order_by;
 		public $order;
+		public $download;
 
 		/**
 		* declare private variables
@@ -668,11 +669,13 @@ if (!class_exists('fax')) {
 					$text = $language->get();
 
 				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: fax_files.php?order_by='.urlencode($this->order_by).'&order='.urlencode($this->order).'&id='.urlencode($this->fax_uuid).'&box='.urlencode($this->box));
-						exit;
+					if (empty($this->download) || $this->download == false) {
+						$token = new token;
+						if (!$token->validate($_SERVER['PHP_SELF'])) {
+							message::add($text['message-invalid_token'],'negative');
+							header('Location: fax_files.php?order_by='.urlencode($this->order_by).'&order='.urlencode($this->order).'&id='.urlencode($this->fax_uuid).'&box='.urlencode($this->box));
+							exit;
+						}
 					}
 
 				//toggle multiple records
