@@ -90,14 +90,14 @@
 		}
 		if (!empty($row['dashboard_background_color'])) {
 			$background_color = json_decode($row['dashboard_background_color'], true);
-			echo "#".$dashboard_name." .hud_content {\n";
+			echo "#".$dashboard_name." {\n";
 			echo "	background: ".$background_color[0].";\n";
 			echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
 			echo "}\n";
 		}
 		if (!empty($row['dashboard_background_color_hover'])) {
 			$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-			echo "#".$dashboard_name.":hover .hud_content {\n";
+			echo "#".$dashboard_name.":hover {\n";
 			echo "	background: ".$background_color_hover[0].";\n";
 			echo "	background-image: linear-gradient(to right, ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
 			echo "}\n";
@@ -118,10 +118,11 @@
 			echo "}\n";
 		}
 		if ($row['dashboard_path'] == "core/dashboard/resources/dashboard/icon.php") {
-			echo "#".$dashboard_name." div.hud_content,\n";
+			echo "#".$dashboard_name.",\n";
 			echo "#".$dashboard_name." span.hud_title,\n";
 			echo "#".$dashboard_name." span.hud_stat {\n";
 			echo "	transition: .4s;\n";
+			echo "	border-radius: 5px;\n";
 			echo "}\n";
 		}
 		switch ($row['dashboard_row_span']) {
@@ -158,8 +159,8 @@
 	echo "</style>\n";
 
 //include the dashboards
-	echo "<div class='hud_box'>\n";
-	echo "	<div class='hud_content' style='flex-direction: row; justify-content: center; align-content: start; width: 100%;' ".(empty($dashboard_details_state) || $dashboard_details_state != "disabled" ? "onclick=\"$('#hud_icon_details').slideToggle('fast'); toggle_grid_row_end('".trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_')."');\"" : null).">\n";
+	echo "<div class='hud_box' style='width: 100%; overflow: scroll;'>\n";
+	echo "	<div class='hud_content'>\n";
 
 	$x = 0;
 	foreach ($parent_widgets as $row) {
@@ -182,9 +183,9 @@
 		//	$dashboard_row_span += 3;
 		//}
 
-		echo "<div class='widget' style='width: 120px; margin: 13px;' id='".trim(preg_replace("/[^a-z]/", '_', strtolower($dashboard_name)),'_')."' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\" draggable='false'>\n";
+		echo "<div class='icon_widget' style='width: 120px; margin: 15px 15px 8px 15px;' id='".trim(preg_replace("/[^a-z]/", '_', strtolower($dashboard_name)),'_')."' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\" draggable='false'>\n";
 		echo "	<span class='hud_title'>".escape($dashboard_label)."</span>";
-		echo "	<span class='hud_stat' style='padding: 0;'><i class=\"fas ".$dashboard_icon."\" style='font-size: 24pt;'></i></span>\n";
+		echo "	<span class='hud_stat' style='padding: 0 0 7px 0;'><i class=\"fas ".$dashboard_icon."\" style='font-size: 24pt;'></i></span>\n";
 		echo "</div>\n";
 	}
 
