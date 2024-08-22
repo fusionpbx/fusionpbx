@@ -624,7 +624,7 @@
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".($text['label-email_fax_file'] ?? 'Fax File')."\n";
+		echo "	".$text['label-email_fax_file']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='fax_file' id='fax_file'>\n";
@@ -632,7 +632,7 @@
 		echo "		<option value='link' ".($fax_file == "link" ? "selected='selected'" : null).">".$text['option-download_link']."</option>\n";
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo ($text['description-email_fax_file'] ?? 'Select a fax file option.')."\n";
+		echo $text['description-email_fax_file']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
