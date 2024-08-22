@@ -751,7 +751,6 @@
 	echo "</tr>\n";
 
 	if (
-		$action == "add" ||
 		$dashboard_path == "voicemails/voicemails" ||
 		$dashboard_path == "xml_cdr/missed_calls" ||
 		$dashboard_path == "xml_cdr/recent_calls" ||
@@ -886,9 +885,9 @@
 		}
 	}
 	if (empty($dashboard_background_color) || (is_array($dashboard_background_color) && count($dashboard_background_color) < 2)) {
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='' onclick=\"document.getElementById('second_input').style.display = 'block';\">\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='' onclick=\"document.getElementById('background_color_gradient').style.display = 'block';\">\n";
 		if (empty($dashboard_background_color)) {
-			echo "	<input id='second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color[]'>\n";
+			echo "	<input id='background_color_gradient' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color[]'>\n";
 		}
 		echo "<br />\n";
 	}
@@ -908,9 +907,9 @@
 			}
 		}
 		if (empty($dashboard_background_color_hover) || (is_array($dashboard_background_color_hover) && count($dashboard_background_color_hover) < 2)) {
-			echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]' value='' onclick=\"document.getElementById('second_input').style.display = 'block';\">\n";
+			echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]' value='' onclick=\"document.getElementById('background_color_hover_gradient').style.display = 'block';\">\n";
 			if (empty($dashboard_background_color_hover)) {
-				echo "	<input id='second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]'>\n";
+				echo "	<input id='background_color_hover_gradient' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]'>\n";
 			}
 			echo "<br />\n";
 		}
@@ -930,9 +929,9 @@
 		}
 	}
 	if (empty($dashboard_detail_background_color) || (is_array($dashboard_detail_background_color) && count($dashboard_detail_background_color) < 2)) {
-		echo "	<input type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='' onclick=\"document.getElementById('detail_second_input').style.display = 'block';\">\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='' onclick=\"document.getElementById('detail_background_color_gradient').style.display = 'block';\">\n";
 		if (empty($dashboard_detail_background_color)) {
-			echo "	<input id='detail_second_input' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]'>\n";
+			echo "	<input id='detail_background_color_gradient' style='display: none;' type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]'>\n";
 		}
 		echo "<br />\n";
 	}
