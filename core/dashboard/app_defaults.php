@@ -74,7 +74,7 @@ if ($domains_processed == 1) {
 				if (!empty($row['dashboard_label_background_color'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color']; }
 				if (!empty($row['dashboard_label_background_color_hover'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color_hover']; }
 				if (!empty($row['dashboard_background_color'])) { $array['dashboard'][$x]['dashboard_background_color'] = $row['dashboard_background_color']; }
-				if (!empty($row['dashboard_background_color_hover'])) { $array['dashboard'][$x]['dashboard_background_color'] = $row['dashboard_background_color_hover']; }
+				if (!empty($row['dashboard_background_color_hover'])) { $array['dashboard'][$x]['dashboard_background_color_hover'] = $row['dashboard_background_color_hover']; }
 				if (!empty($row['dashboard_detail_background_color'])) { $array['dashboard'][$x]['dashboard_detail_background_color'] = $row['dashboard_detail_background_color']; }
 				if (!empty($row['dashboard_content'])) { $array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content']; }
 				if (!empty($row['dashboard_content_details'])) { $array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details']; }
@@ -118,9 +118,6 @@ if ($domains_processed == 1) {
 	//update dashboard icons to be prefixed with v6.x font awesome style class name (e.g. 'fa-solid ')
 		$queries[] = "update v_dashboard set dashboard_icon = concat('fa-solid ', dashboard_icon) where dashboard_icon is not null and dashboard_icon not like 'fa-solid fa-%' and dashboard_icon not like 'fa-regular fa-%' and dashboard_icon not like 'fa-brands fa-%' ";
 
-	//simplify the dashboard path
-		$queries[] = "update v_dashboard set dashboard_path =  regexp_replace(dashboard_path, 'app/|core/|resources/dashboard/|\.php', '', 'g') where dashboard_path like '%.php';";
-
 	//execute array of queries
 		foreach ($queries as $sql) {
 			$database = new database;
@@ -131,4 +128,3 @@ if ($domains_processed == 1) {
 }
 
 ?>
-
