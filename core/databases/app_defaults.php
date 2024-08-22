@@ -31,7 +31,7 @@ if (!empty($domains_processed) && $domains_processed == 1) {
 		$sql = "select * from v_databases ";
 		$sql .= "where database_driver is null ";
 		$result = $database->select($sql, null, 'all');
-		foreach ($result as &$row) {
+		foreach ($result as $row) {
 			$database_uuid = $row["database_uuid"];
 			$database_type = $row["database_type"];
 			$database_type_array = explode(":",  $database_type);

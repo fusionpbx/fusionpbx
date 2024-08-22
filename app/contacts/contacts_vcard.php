@@ -84,7 +84,7 @@ if (!empty($_GET)) {
 		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
 			$e = 1;
-			foreach ($result as &$row) {
+			foreach ($result as $row) {
 				$vcard->data['email'.$e] = $row["email_address"];
 				if ($e++ == 2) { break; } //limit to 2 rows
 			}
@@ -125,7 +125,7 @@ if (!empty($_GET)) {
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
-			foreach ($result as &$row) {
+			foreach ($result as $row) {
 				$phone_label = $row["phone_label"];
 				$phone_number = $row["phone_number"];
 				if ($phone_label == $text['option-work']) { $vcard_phone_type = 'work'; }
@@ -154,7 +154,7 @@ if (!empty($_GET)) {
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			if (!empty($result)) {
-				foreach ($result as &$row) {
+				foreach ($result as $row) {
 					$address_type = $row["address_type"];
 					$address_street = $row["address_street"];
 					$address_extended = $row["address_extended"];

@@ -366,7 +366,7 @@
 			echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 			echo "				<option value=''></option>";
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
-				foreach ($extensions as &$row) {
+				foreach ($extensions as $row) {
 					$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
 					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 				}
@@ -592,7 +592,7 @@
 				echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
 				echo "				<option value=''></option>";
 				if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
-					foreach ($call_center_queues as &$row) {
+					foreach ($call_center_queues as $row) {
 						$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
 						echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
 					}

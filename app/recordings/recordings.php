@@ -166,7 +166,7 @@
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	if (is_array($result) && @sizeof($result) != 0) {
-		foreach ($result as &$row) {
+		foreach ($result as $row) {
 			$array_recordings[$row['recording_uuid']] = $row['recording_filename'];
 			$array_base64_exists[$row['recording_uuid']] = ($row['recording_base64'] != '') ? true : false;
 			//if not base64, convert back to local files and remove base64 from db

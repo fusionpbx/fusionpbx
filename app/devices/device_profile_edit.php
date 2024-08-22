@@ -230,7 +230,7 @@
 		$parameters['device_profile_uuid'] = $device_profile_uuid;
 		$database = new database;
 		$result = $database->execute($sql, $parameters, 'all');
-		foreach ($result as &$row) {
+		foreach ($result as $row) {
 			$domain_uuid = $row["domain_uuid"];
 			$device_profile_name = $row["device_profile_name"];
 			$device_profile_keys = $row["device_profile_keys"] ?? null;

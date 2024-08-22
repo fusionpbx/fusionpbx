@@ -57,7 +57,7 @@ if ($domains_processed == 1) {
 		$sql .= "and k.device_key_vendor is null ";
 		$device_keys = $database->select($sql, null, 'all');
 		if (!empty($device_keys)) {
-			foreach ($device_keys as $index => &$row) {
+			foreach ($device_keys as $index => $row) {
 				$array['device_keys'][$index]['device_key_uuid'] = $row["device_key_uuid"];
 				$array['device_keys'][$index]['device_key_vendor'] = $row["device_vendor"];
 			}
@@ -87,7 +87,7 @@ if ($domains_processed == 1) {
 
 			//loop through the device_keys to build the data array
 			if (!empty($device_profile_keys)) {
-				foreach ($device_profile_keys as $index => &$row) {
+				foreach ($device_profile_keys as $index => $row) {
 					$array['device_profile_keys'][$index]['device_profile_key_uuid'] = $row["device_key_uuid"];
 					$array['device_profile_keys'][$index]['domain_uuid'] = $row["domain_uuid"];
 					$array['device_profile_keys'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
@@ -131,7 +131,7 @@ if ($domains_processed == 1) {
 
 			//loop through the device_keys to build the data array
 			if (!empty($device_profile_keys)) {
-				foreach ($device_profile_keys as $index => &$row) {
+				foreach ($device_profile_keys as $index => $row) {
 					$array['device_profile_settings'][$index]['device_profile_setting_uuid'] = $row["device_setting_uuid"];
 					$array['device_profile_settings'][$index]['domain_uuid'] = $row["domain_uuid"];
 					$array['device_profile_settings'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];

@@ -271,7 +271,7 @@
 				$database = new database;
 				$sub_result = $database->select($sql, $parameters, 'all');
 				if (!empty($sub_result)) {
-					foreach ($sub_result as &$sub_row) {
+					foreach ($sub_result as $sub_row) {
 						echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
 					}
 				}

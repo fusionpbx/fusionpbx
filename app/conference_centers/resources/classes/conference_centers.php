@@ -230,7 +230,7 @@ if (!class_exists('conference_centers')) {
 						$database = new database;
 						$conference_sessions = $database->select($sql, $parameters, 'all');
 						if (is_array($conference_sessions)) {
-							foreach ($conference_sessions as &$row) {
+							foreach ($conference_sessions as $row) {
 								$recording = $row['recording'];
 								break;
 							}

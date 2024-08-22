@@ -177,7 +177,7 @@
 						$parameters['src'] = $src;
 						$database = new database;
 						$result = $database->select($sql, $parameters, 'all');
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							$dest_cid_name = $row["outbound_caller_id_name"];
 							$dest_cid_number = $row["outbound_caller_id_number"];
 							break; //limit to 1 row

@@ -41,7 +41,7 @@
 			$messages[$field['voicemail_uuid']]['ext'] = $field['voicemail_id'];
 			$messages[$field['voicemail_uuid']]['total'] = 0;
 			$messages[$field['voicemail_uuid']]['new'] = 0;
-			foreach($field['messages'] as &$row) {
+			foreach ($field['messages'] as $row) {
 				if ($row['message_status'] == '') {
 					$messages[$field['voicemail_uuid']]['new']++;
 					$messages['new']++;

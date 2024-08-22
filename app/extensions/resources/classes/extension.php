@@ -216,7 +216,7 @@ if (!class_exists('extension')) {
 							$call_group = $row['call_group'] ?? '';
 							$call_group = str_replace(";", ",", $call_group);
 							$tmp_array = explode(",", $call_group);
-							foreach ($tmp_array as &$tmp_call_group) {
+							foreach ($tmp_array as $tmp_call_group) {
 								$tmp_call_group = trim($tmp_call_group);
 								if (!empty($tmp_call_group)) {
 									if (empty($call_group_array[$tmp_call_group])) {
@@ -508,7 +508,7 @@ if (!class_exists('extension')) {
 								$xml .= "					to keep searching for the user in the directory.\n";
 								$xml .= "					-->\n";
 								$extension_array = explode(",", $extension_list);
-								foreach ($extension_array as &$tmp_extension) {
+								foreach ($extension_array as $tmp_extension) {
 									$xml .= "					<user id=\"$tmp_extension\" type=\"pointer\"/>\n";
 								}
 								$xml .= "				</users>\n";

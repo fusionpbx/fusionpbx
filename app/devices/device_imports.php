@@ -366,7 +366,7 @@
 											//remove empty device keys
 											if (isset($row['device_keys'])) {
 												$y = 0;
-												foreach ($row['device_keys'] as &$sub_row) {
+												foreach ($row['device_keys'] as $sub_row) {
 													if (count($sub_row) == 2) {
 														unset($array['devices'][$x]['device_keys']);
 													}
@@ -377,7 +377,7 @@
 											//remove empty device lines
 											if (isset($row['device_lines'])) {
 												$y = 0;
-												foreach ($row['device_lines'] as &$sub_row) {
+												foreach ($row['device_lines'] as $sub_row) {
 													if (count($sub_row) == 2) {
 														unset($array['devices'][$x]['device_lines']);
 													}
@@ -413,7 +413,7 @@
 						//remove empty device keys
 						if (isset($row['device_keys'])) {
 							$y = 0;
-							foreach ($row['device_keys'] as &$sub_row) {
+							foreach ($row['device_keys'] as $sub_row) {
 								if (count($sub_row) == 2) {
 									unset($array['devices'][$x]['device_keys']);
 								}
@@ -424,7 +424,7 @@
 						//remove empty device lines
 						if (isset($row['device_lines'])) {
 							$y = 0;
-							foreach ($row['device_lines'] as &$sub_row) {
+							foreach ($row['device_lines'] as $sub_row) {
 								if (count($sub_row) == 2) {
 									unset($array['devices'][$x]['device_lines']);
 								}

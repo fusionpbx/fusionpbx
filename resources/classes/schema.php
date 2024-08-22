@@ -47,7 +47,7 @@ if (!class_exists('schema')) {
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
-				foreach ($config_list as &$config_path) {
+				foreach ($config_list as $config_path) {
 					try {
 						include($config_path);
 					}
@@ -137,7 +137,7 @@ if (!class_exists('schema')) {
 
 		//check if a column exists in sqlite
 			private function sqlite_column_exists($table_info, $column_name) {
-				foreach ($table_info as $key => &$row) {
+				foreach ($table_info as $key => $row) {
 					if ($row['name'] == $column_name) {
 						return true;
 					}
@@ -274,21 +274,21 @@ if (!class_exists('schema')) {
 		//database type
 			private function db_data_type($db_type, $table_info, $column_name) {
 				if ($db_type == "sqlite") {
-					foreach ($table_info as $key => &$row) {
+					foreach ($table_info as $key => $row) {
 						if ($row['name'] == $column_name) {
 							return $row['type'];
 						}
 					}
 				}
 				if ($db_type == "pgsql") {
-					foreach ($table_info as $key => &$row) {
+					foreach ($table_info as $key => $row) {
 						if ($row['column_name'] == $column_name) {
 							return $row['data_type'];
 						}
 					}
 				}
 				if ($db_type == "mysql") {
-					foreach ($table_info as $key => &$row) {
+					foreach ($table_info as $key => $row) {
 						if ($row['Field'] == $column_name) {
 							return $row['Type'];
 						}
@@ -298,7 +298,7 @@ if (!class_exists('schema')) {
 
 		//sqlite column exists
 			private function db_sqlite_column_exists($table_info, $column_name) {
-				foreach ($table_info as $key => &$row) {
+				foreach ($table_info as $key => $row) {
 					if ($row['name'] == $column_name) {
 						return true;
 					}
@@ -348,7 +348,7 @@ if (!class_exists('schema')) {
 		//database create table
 			public function db_create_table ($apps, $db_type, $table) {
 				if (empty($apps)) { return false; }
-				if (is_array($apps)) foreach ($apps as $x => &$app) {
+				if (is_array($apps)) foreach ($apps as $x => $app) {
 					if (!empty($app['db']) && is_array($app['db'])) foreach ($app['db'] as $y => $row) {
 						if (!empty($row['table']['name']) && is_array($row['table']['name'])) {
 							$table_name = $row['table']['name']['text'];
@@ -393,7 +393,7 @@ if (!class_exists('schema')) {
 		//database insert
 			private function db_insert_into ($apps, $db_type, $table) {
 				global $db_name;
-				foreach ($apps as $x => &$app) {
+				foreach ($apps as $x => $app) {
 					foreach ($app['db'] as $y => $row) {
 						if ($row['table']['name'] == $table) {
 							$sql = "INSERT INTO " . $row['table']['name'] . " (";
@@ -520,8 +520,8 @@ if (!class_exists('schema')) {
 
 				//update the app db array add exists true or false
 					$sql = '';
-					foreach ($this->apps as $x => &$app) {
-						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
+					foreach ($this->apps as $x => $app) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => $row) {
 							if (isset($row['table']['name'])) {
 								if (is_array($row['table']['name'])) {
 									$table_name = $row['table']['name']['text'];
@@ -582,8 +582,8 @@ if (!class_exists('schema')) {
 					$sql_update = '';
 
 				//add missing tables and fields
-					foreach ($this->apps as $x => &$app) {
-						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
+					foreach ($this->apps as $x => $app) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => $row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
 								if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
@@ -735,8 +735,8 @@ if (!class_exists('schema')) {
 						}
 					}
 				//rebuild and populate the table
-					foreach ($this->apps as $x => &$app) {
-						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
+					foreach ($this->apps as $x => $app) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => $row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
 							}
@@ -792,7 +792,7 @@ if (!class_exists('schema')) {
 							$response .= "<tr>\n";
 						//build the html while looping through the app db array
 							$sql = '';
-							foreach ($this->apps as &$app) {
+							foreach ($this->apps as $app) {
 								if (isset($app['db'])) foreach ($app['db'] as $row) {
 									if (is_array($row['table']['name'])) {
 										$table_name = $row['table']['name']['text'];

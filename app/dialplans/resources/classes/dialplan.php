@@ -336,7 +336,7 @@
 												$group = 0;
 												$order = 5;
 												if (isset($dialplan['condition'])) {
-													foreach ($dialplan['condition'] as &$row) {
+													foreach ($dialplan['condition'] as $row) {
 
 														$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
@@ -374,7 +374,7 @@
 															}
 															$order = $order + 5;
 															if (isset($row['action'])) {
-																foreach ($row['action'] as &$row2) {
+																foreach ($row['action'] as $row2) {
 																	$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
@@ -401,7 +401,7 @@
 																}
 															}
 															if (isset($row['anti-action'])) {
-																foreach ($row['anti-action'] as &$row2) {
+																foreach ($row['anti-action'] as $row2) {
 																	$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'anti-action';
@@ -518,7 +518,7 @@
 							unset($sql, $parameters);
 							$x = 0; $y = 0;
 							if (!empty($dialplans)) {
-								foreach ($dialplans as &$row) {
+								foreach ($dialplans as $row) {
 									//if the previous dialplan uuid has not been set then set it
 										if (!isset($previous_dialplan_uuid)) { $previous_dialplan_uuid = $row['dialplan_uuid']; }
 
@@ -1087,7 +1087,7 @@
 
 				//get the array of xml files and then process thm
 					$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
-					foreach ($xml_list as &$xml_file) {
+					foreach ($xml_list as $xml_file) {
 						//get and parse the xml
 							$xml_string = file_get_contents($xml_file);
 						//get the order number prefix from the file name

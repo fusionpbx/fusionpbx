@@ -43,7 +43,7 @@ unset($sql);
 function arr_to_map(&$arr){
 	if (!empty($arr)){
 		$map = Array();
-		foreach($arr as &$val){
+		foreach ($arr as $val){
 			$map[$val] = true;
 		}
 		return $map;
@@ -187,17 +187,17 @@ if (!empty($result) && @sizeof($result) != 0) {
 
 					//Debug print
 					print('attachments:' . "\n");
-					foreach($message['attachments'] as &$attachment){
+					foreach ($message['attachments'] as $attachment){
 						print(' - ' . $attachment['type'] . ' - ' . $attachment['name'] . ': ' . $attachment['size'] . ' disposition: ' . $attachment['disposition'] . "\n");
 					}
 					print('messages:' . "\n");
-					foreach($message['messages'] as &$msg){
+					foreach ($message['messages'] as $msg){
 						print(' - ' . $msg['type'] . ' - ' . $msg['size'] . "\n");
 						// print($msg['data']);
 						// print("\n--------------------------------------------------------\n");
 					}
 
-					foreach($message['messages'] as &$msg){
+					foreach ($message['messages'] as $msg){
 						if(($msg['size'] > 0)) {
 							$fax_message = $msg['data'];
 							break;
@@ -217,7 +217,7 @@ if (!empty($result) && @sizeof($result) != 0) {
 					$emailed_files = Array();
 					$attachments = $message['attachments'];
 					if (sizeof($attachments) > 0) {
-						foreach ($attachments as &$attachment) {
+						foreach ($attachments as $attachment) {
 							$fax_file_extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
 
 							//block unknown files

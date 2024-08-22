@@ -141,7 +141,7 @@
 						$database = new database;
 						$sub_result = $database->select($sub_sql, $parameters, 'all');
 						if (is_array($sub_result) && @sizeof($sub_result) != 0) {
-							foreach ($sub_result as &$sub_row) {
+							foreach ($sub_result as $sub_row) {
 								//$ivr_menu_uuid = $sub_row["ivr_menu_uuid"];
 								$ivr_menu_option_digits = $sub_row["ivr_menu_option_digits"];
 								$ivr_menu_option_action = $sub_row["ivr_menu_option_action"];

@@ -32,7 +32,7 @@
 			$number_translation = new number_translations;
 
 		//process the xml files
-			foreach ($xml_list as &$xml_file) {
+			foreach ($xml_list as $xml_file) {
 				//get and parse the xml
 					$number_translation->xml = file_get_contents($xml_file);
 					$number_translation->import();

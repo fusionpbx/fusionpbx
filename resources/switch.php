@@ -142,7 +142,7 @@ function save_gateway_xml() {
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
-			foreach ($result as &$row) {
+			foreach ($result as $row) {
 				if ($row['enabled'] != "false") {
 						//set the default profile as external
 							$profile = $row['profile'];
@@ -284,7 +284,7 @@ function save_var_xml() {
 		$prev_var_category = '';
 		$xml = '';
 		if (!empty($variables)) {
-			foreach ($variables as &$row) {
+			foreach ($variables as $row) {
 				if ($row['var_category'] != 'Provision') {
 					if ($prev_var_category != $row['var_category']) {
 						$xml .= "\n<!-- ".$row['var_category']." -->\n";
@@ -359,7 +359,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	if (!empty($result)) {
-		foreach ($result as &$row) {
+		foreach ($result as $row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
 			$outbound_routes[$dialplan_uuid][$dialplan_detail_uuid]["dialplan_detail_tag"] = $row["dialplan_detail_tag"];
@@ -371,9 +371,9 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	
 	if (!empty($outbound_routes)) {
 		$x = 0;
-		foreach ($outbound_routes as &$dialplan) {
+		foreach ($outbound_routes as $dialplan) {
 			$condition_match = [];
-			foreach ($dialplan as &$dialplan_details) {
+			foreach ($dialplan as $dialplan_details) {
 				if (!empty($dialplan_details['dialplan_detail_tag']) && $dialplan_details['dialplan_detail_tag'] == "condition") {
 					if ($dialplan_details['dialplan_detail_type'] == "destination_number") {
 							$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
@@ -404,7 +404,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 			}
 
 			if (!in_array('false', $condition_match)) {
-				foreach ($dialplan as &$dialplan_details) {
+				foreach ($dialplan as $dialplan_details) {
 					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
 					if (
 						!empty($dialplan_details['dialplan_detail_tag']) &&
@@ -433,7 +433,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
-//foreach ($bridge_array as &$bridge) {
+//foreach ($bridge_array as $bridge) {
 //	echo "bridge: ".$bridge."<br />";
 //}
 
@@ -561,7 +561,7 @@ if (!function_exists('save_call_center_xml')) {
 
 				//prepare Queue XML string
 					$x=0;
-					foreach ($call_center_queues as &$row) {
+					foreach ($call_center_queues as $row) {
 						$queue_name = $row["queue_name"];
 						$queue_extension = $row["queue_extension"];
 						$queue_strategy = $row["queue_strategy"];
@@ -631,7 +631,7 @@ if (!function_exists('save_call_center_xml')) {
 
 					$x=0;
 					if (!empty($result)) {
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							//get the values from the db and set as php variables
 								$agent_name = $row["agent_name"];
 								$agent_type = $row["agent_type"];
@@ -721,7 +721,7 @@ if (!function_exists('save_call_center_xml')) {
 
 					$x=0;
 					if (!empty($result)) {
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							$agent_name = $row["agent_name"];
 							$queue_name = $row["queue_name"];
 							$tier_level = $row["tier_level"];
@@ -913,7 +913,7 @@ if (!function_exists('save_sip_profile_xml')) {
 						$result_2 = $database->select($sql, $parameters, 'all');
 						if (!empty($result_2)) {
 							$sip_profile_settings = '';
-							foreach ($result_2 as &$row_2) {
+							foreach ($result_2 as $row_2) {
 								$sip_profile_settings .= "		<param name=\"".$row_2["sip_profile_setting_name"]."\" value=\"".$row_2["sip_profile_setting_value"]."\"/>\n";
 							}
 						}
@@ -991,7 +991,7 @@ if(!function_exists('path_join')) {
 		}
 
 		$prefix = null;
-		foreach($paths as &$path) {
+		foreach ($paths as $path) {
 			if($prefix === null && !empty($path)) {
 				if(substr($path, 0, 1) == '/') $prefix = '/';
 				else $prefix = '';

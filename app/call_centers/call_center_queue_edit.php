@@ -154,7 +154,7 @@
 			unset($sql, $parameters);
 
 			if (!empty($tiers)) {
-				foreach ($tiers as &$row) {
+				foreach ($tiers as $row) {
 					$call_center_agent_uuid = $row["call_center_agent_uuid"];
 					$call_center_queue_uuid = $row["call_center_queue_uuid"];
 					$queue_extension = $row["queue_extension"];
@@ -543,7 +543,7 @@
 		unset($sql, $parameters);
 
 		if (!empty($call_center_queues)) {
-			foreach ($call_center_queues as &$row) {
+			foreach ($call_center_queues as $row) {
 				$queue_name = $row["queue_name"];
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$database_queue_name = $row["queue_name"];
