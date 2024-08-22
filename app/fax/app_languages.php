@@ -5148,4 +5148,57 @@ $text['option-download_link']['zh-cn'] = "下载链接（需要登录）";
 $text['option-download_link']['ja-jp'] = "ダウンロードリンク（ログインが必要です）";
 $text['option-download_link']['ko-kr'] = "다운로드 링크 (로그인 필요)";
 
+$text['label-email_fax_file']['en-us'] = "Fax File";
+$text['label-email_fax_file']['en-gb'] = "Fax File";
+$text['label-email_fax_file']['ar-eg'] = "ملف الفاكس";
+$text['label-email_fax_file']['de-at'] = "Faxdatei";
+$text['label-email_fax_file']['de-ch'] = "Faxdatei";
+$text['label-email_fax_file']['de-de'] = "Faxdatei";
+$text['label-email_fax_file']['el-gr'] = "Αρχείο φαξ";
+$text['label-email_fax_file']['es-cl'] = "Archivo de fax";
+$text['label-email_fax_file']['es-mx'] = "Archivo de fax";
+$text['label-email_fax_file']['fr-ca'] = "Fichier de télécopie";
+$text['label-email_fax_file']['fr-fr'] = "Fichier de télécopie";
+$text['label-email_fax_file']['he-il'] = "קובץ פקס";
+$text['label-email_fax_file']['it-it'] = "File fax";
+$text['label-email_fax_file']['nl-nl'] = "Faxbestand";
+$text['label-email_fax_file']['pl-pl'] = "Plik faksowy";
+$text['label-email_fax_file']['pt-br'] = "Arquivo de fax";
+$text['label-email_fax_file']['pt-pt'] = "Arquivo de fax";
+$text['label-email_fax_file']['ro-ro'] = "Fișier fax";
+$text['label-email_fax_file']['ru-ru'] = "Факс Файл";
+$text['label-email_fax_file']['sv-se'] = "Faxfil";
+$text['label-email_fax_file']['uk-ua'] = "Файл факсу";
+$text['label-email_fax_file']['tr-tr'] = "Faks Dosyası";
+$text['label-email_fax_file']['zh-cn'] = "传真文件";
+$text['label-email_fax_file']['ja-jp'] = "ファックスファイル";
+$text['label-email_fax_file']['ko-kr'] = "팩스 파일";
+
+
+$text['description-email_fax_file']['en-us'] = "Select a fax file option.";
+$text['description-email_fax_file']['en-gb'] = "Select a fax file option.";
+$text['description-email_fax_file']['ar-eg'] = "حدد خيار ملف الفاكس.";
+$text['description-email_fax_file']['de-at'] = "Wählen Sie eine Faxdateioption.";
+$text['description-email_fax_file']['de-ch'] = "Wählen Sie eine Faxdateioption.";
+$text['description-email_fax_file']['de-de'] = "Wählen Sie eine Faxdateioption.";
+$text['description-email_fax_file']['el-gr'] = "Επιλέξτε μια επιλογή αρχείου φαξ.";
+$text['description-email_fax_file']['es-cl'] = "Seleccione una opción de archivo de fax.";
+$text['description-email_fax_file']['es-mx'] = "Seleccione una opción de archivo de fax.";
+$text['description-email_fax_file']['fr-ca'] = "Sélectionnez une option de fichier fax.";
+$text['description-email_fax_file']['fr-fr'] = "Sélectionnez une option de fichier fax.";
+$text['description-email_fax_file']['he-il'] = "בחר אפשרות של קובץ פקס.";
+$text['description-email_fax_file']['it-it'] = "Selezionare un'opzione per il file fax.";
+$text['description-email_fax_file']['nl-nl'] = "Selecteer een faxbestandoptie.";
+$text['description-email_fax_file']['pl-pl'] = "Wybierz opcję pliku faksu.";
+$text['description-email_fax_file']['pt-br'] = "Selecione uma opção de arquivo de fax.";
+$text['description-email_fax_file']['pt-pt'] = "Selecione uma opção de ficheiro de fax.";
+$text['description-email_fax_file']['ro-ro'] = "Selectați o opțiune de fișier fax.";
+$text['description-email_fax_file']['ru-ru'] = "Выберите вариант файла факса.";
+$text['description-email_fax_file']['sv-se'] = "Välj ett faxfilalternativ.";
+$text['description-email_fax_file']['uk-ua'] = "Виберіть параметр файлу факсу.";
+$text['description-email_fax_file']['tr-tr'] = "Bir faks dosyası seçeneği seçin.";
+$text['description-email_fax_file']['zh-cn'] = "选择传真文件选项。";
+$text['description-email_fax_file']['ja-jp'] = "FAX ファイル オプションを選択します。";
+$text['description-email_fax_file']['ko-kr'] = "팩스 파일 옵션을 선택하세요.";
+
 ?>
