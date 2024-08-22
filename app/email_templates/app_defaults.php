@@ -450,7 +450,7 @@
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'fax';
 		$array['email_templates'][$x]['template_subcategory'] = 'success_default';
-		$array['email_templates'][$x]['template_subject'] = 'Subject, Fax to: ${number_dialed} SENT';
+		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} SENT';
 		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "We are happy to report the fax was sent successfully. It has been attached for your records.\n";
