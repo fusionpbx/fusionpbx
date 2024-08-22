@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,18 +55,20 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 
+		//set the variables
 		$attachment = $_FILES['attachment'];
 		$attachment_primary = $_POST['attachment_primary'];
 		$attachment_description = $_POST['attachment_description'];
 
 		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: contacts.php');
-				exit;
-			}
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: contacts.php');
+			exit;
+		}
 
+		//get the attachment type
 		if (empty($attachment) || sizeof($attachment) == 0) {
 			$attachment_type = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
 		}
@@ -75,48 +77,82 @@
 		}
 
 		//unflag others as primary
-			$allowed_primary_attachment = false;
-			if ($attachment_primary && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png')) {
-				$sql = "update v_contact_attachments set attachment_primary = 0 ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and contact_uuid = :contact_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['contact_uuid'] = $contact_uuid;
-				$database = new database;
-				$database->execute($sql, $parameters ?? null);
-				unset($sql, $parameters);
+		$allowed_primary_attachment = false;
+		if ($attachment_primary && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png')) {
+			$sql = "update v_contact_attachments set attachment_primary = 0 ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and contact_uuid = :contact_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['contact_uuid'] = $contact_uuid;
+			$database = new database;
+			$database->execute($sql, $parameters ?? null);
+			unset($sql, $parameters);
 
-				$allowed_primary_attachment = true;
-			}
+			$allowed_primary_attachment = true;
+		}
 
-		//format array
-			$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
-			$array['contact_attachments'][0]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
-			$array['contact_attachments'][0]['domain_uuid'] = $_SESSION['domain_uuid'] ?? '';
-			$array['contact_attachments'][0]['contact_uuid'] = $contact_uuid;
-			$array['contact_attachments'][0]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
-			if ($attachment['error'] == '0' && in_array(strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION)), $allowed_extensions)) {
-				$array['contact_attachments'][0]['attachment_filename'] = $attachment['name'];
-				$array['contact_attachments'][0]['attachment_content'] = base64_encode(file_get_contents($attachment['tmp_name']));
+		//get the allowed extensions
+		$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
+
+		//get the attachment extension
+		$attachment_extension = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
+
+		//check the allowed extensions
+		if ($attachment['error'] == '0' && in_array($attachment_extension, $allowed_extensions)) {
+			//get the attachment content
+			$attachment_content = file_get_contents($attachment['tmp_name']);
+
+			//list of image extensions
+			$image_extensions = array('png','jpg','jpeg','gif','bmp', 'webp'); 
+
+			//read the image from the string then output the image without meta data
+			if (in_array($attachment_extension, $image_extensions)) {
+				//create the image object from the content string
+				$image = imagecreatefromstring($attachment_content);
+
+				//start output buffering to capture the image data
+				ob_start();
+
+				//output the image without the EXIF data
+				imagepng($image);
+
+				//get the image from the buffer
+				$attachment_content = ob_get_contents();
+
+				//end the buffering
+				ob_end_clean();
+
+				//free up the memory
+				imagedestroy($image);
 			}
-			$array['contact_attachments'][0]['attachment_description'] = $attachment_description;
-			if ($action == 'add') {
-				$array['contact_attachments'][0]['attachment_uploaded_date'] = 'now()';
-				$array['contact_attachments'][0]['attachment_uploaded_user_uuid'] = $_SESSION['user_uuid'];
-			}
+		}
+
+		//prepare the array
+		$array['contact_attachments'][0]['contact_attachment_uuid'] = $action == 'update' ? $contact_attachment_uuid : uuid();
+		$array['contact_attachments'][0]['domain_uuid'] = $_SESSION['domain_uuid'] ?? '';
+		$array['contact_attachments'][0]['contact_uuid'] = $contact_uuid;
+		$array['contact_attachments'][0]['attachment_primary'] = $allowed_primary_attachment ? 1 : 0;
+		if ($attachment['error'] == '0' && in_array(strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION)), $allowed_extensions)) {
+			$array['contact_attachments'][0]['attachment_filename'] = $attachment['name'];
+			$array['contact_attachments'][0]['attachment_content'] = base64_encode($attachment_content);
+		}
+		$array['contact_attachments'][0]['attachment_description'] = $attachment_description;
+		if ($action == 'add') {
+			$array['contact_attachments'][0]['attachment_uploaded_date'] = 'now()';
+			$array['contact_attachments'][0]['attachment_uploaded_user_uuid'] = $_SESSION['user_uuid'];
+		}
 
 		//save data
-			$database = new database;
-			$database->app_name = 'contacts';
-			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-			$database->save($array);
-			unset($array);
+		$database = new database;
+		$database->app_name = 'contacts';
+		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+		$database->save($array);
+		unset($array);
 
 		//redirect
-			message::add($text['message-'.($action == 'update' ? 'update' : 'uploaded')]);
-			header('Location: contact_edit.php?id='.$contact_uuid);
-			exit;
-
+		message::add($text['message-'.($action == 'update' ? 'update' : 'uploaded')]);
+		header('Location: contact_edit.php?id='.$contact_uuid);
+		exit;
 	}
 
 //get form data
