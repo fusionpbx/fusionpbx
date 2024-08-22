@@ -124,7 +124,7 @@
 
 				$group_list = '';
 				if (!empty($sub_result) && sizeof($sub_result) != 0) {
-					foreach ($sub_result as &$sub_row) {
+					foreach ($sub_result as $sub_row) {
 						$group_array[] = $sub_row["group_name"].((!empty($sub_row['group_domain_uuid'])) ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
 					}
 					$group_list = !empty($group_array) ? implode(', ', $group_array) : '';
@@ -306,7 +306,7 @@
 				unset($sql, $group_list);
 
 				if (!empty($sub_result) && sizeof($sub_result) != 0) {
-					foreach ($sub_result as &$sub_row) {
+					foreach ($sub_result as $sub_row) {
 						$group_list[] = $sub_row["group_name"].((!empty($sub_row['group_domain_uuid'])) ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
 					}
 					$group_list = implode(', ', $group_list);

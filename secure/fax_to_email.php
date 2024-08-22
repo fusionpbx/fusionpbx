@@ -70,7 +70,7 @@ if (!function_exists('path_join')) {
 		}
 
 		$prefix = null;
-		foreach($paths as &$path) {
+		foreach ($paths as $path) {
 			if ($prefix === null && !empty($path)) {
 				if (substr($path, 0, 1) == '/') $prefix = '/';
 				else $prefix = '';

@@ -236,7 +236,7 @@
 			$database_contacts = $this->database->select($sql, $parameters, 'all');
 			if (is_array($database_contacts)) {
 				$x = 0;
-				foreach ($database_contacts as &$row) {
+				foreach ($database_contacts as $row) {
 					$uuid = $row['contact_uuid'];
 					$phone_label = strtolower($row['phone_label'] ?? '');
 					$contact_category = strtolower($row['contact_category'] ?? '');
@@ -1269,7 +1269,7 @@
 
 			//process each device
 				if (is_array($result)) {
-					foreach ($result as &$row) {
+					foreach ($result as $row) {
 						//get the values from the database and set as variables
 							$domain_uuid = $row["domain_uuid"];
 							$device_uuid = $row["device_uuid"];
@@ -1311,7 +1311,7 @@
 
 						//loop through the provision templates
 							if (is_array($dir_array)) {
-								foreach ($dir_array as &$template_path) {
+								foreach ($dir_array as $template_path) {
 									if (is_dir($template_path)) continue;
 									if (!file_exists($template_path)) continue;
 

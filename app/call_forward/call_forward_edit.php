@@ -468,7 +468,7 @@
 			$result = $database->select($sql, $parameters, 'all');
 
 			unset($destinations);
-			foreach ($result as $x => &$row) {
+			foreach ($result as $x => $row) {
 				$destinations[$x]['uuid'] = $row["follow_me_destination_uuid"];
 				$destinations[$x]['destination'] = $row["follow_me_destination"];
 				$destinations[$x]['delay'] = $row["follow_me_delay"];
@@ -510,7 +510,7 @@
 		echo "<script type=\"text/javascript\">\n";
 		echo "\$(function() {\n";
 		echo "	var extensions = [\n";
-		foreach ($extensions as &$row) {
+		foreach ($extensions as $row) {
 			if (empty($number_alias)) {
 				echo "		\"".escape($row["extension"])."\",\n";
 			}

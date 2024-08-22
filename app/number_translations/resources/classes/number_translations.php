@@ -108,7 +108,7 @@ if (!class_exists('number_translations')) {
 					//loop through the condition array
 						$order = 5;
 						if (isset($number_translation['rule'])) {
-							foreach ($number_translation['rule'] as &$row) {
+							foreach ($number_translation['rule'] as $row) {
 								if (array_key_exists('@attributes', $row)) {
 									$row = $row['@attributes'];
 								}

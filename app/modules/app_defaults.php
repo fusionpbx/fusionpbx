@@ -40,7 +40,7 @@
 			$sql .= "where module_order is null ";
 			$modules = $database->select($sql, null, 'all');
 			if (is_array($modules) && @sizeof($modules) != 0) {
-				foreach ($modules as $index => &$row) {
+				foreach ($modules as $index => $row) {
 					//get the module details
 						$mod = $module->info($row['module_name']);
 					//update the module order

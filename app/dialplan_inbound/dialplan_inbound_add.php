@@ -684,7 +684,7 @@
 		if (is_array($result) && @sizeof($result) != 0) {
 			echo "	<select name='destination_uuid' id='destination_uuid' class='formfld' >\n";
 			echo "	<option></option>\n";
-			foreach ($result as &$row) {
+			foreach ($result as $row) {
 				if (empty($row["dialplan_uuid"])) {
 					echo "		<option value='".escape($row["destination_uuid"])."' style=\"font-weight:bold;\">".escape($row["destination_number"])." ".escape($row["destination_description"])."</option>\n";
 				}

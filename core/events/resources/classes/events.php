@@ -118,7 +118,7 @@ class events {
 	 * @return boolean $value
 	 */
 	public function check_required($category) {
-		foreach ($this->required['headers'] as &$header) {
+		foreach ($this->required['headers'] as $header) {
 			if ($category == $header) {
 				return true;
 			}
@@ -131,7 +131,7 @@ class events {
 	 */
 	public function send() {
 		//check for required headers are present return false if any are missing
-			foreach ($this->headers as &$header) {
+			foreach ($this->headers as $header) {
 				if (!$this->check_required($header)) {
 					return false;
 				}

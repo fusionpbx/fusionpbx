@@ -248,7 +248,7 @@
 
 			//add the voicemail messages to the array
 				if (is_array($voicemails)) {
-					foreach ($voicemails as &$row) {
+					foreach ($voicemails as $row) {
 						//get the voicemail messages
 						$row['messages'] = $this->voicemail_messages($row['voicemail_id']);
 					}
@@ -310,7 +310,7 @@
 
 			//update the array with additional information
 				if (is_array($result)) {
-					foreach($result as &$row) {
+					foreach ($result as $row) {
 						//set the greeting directory
 						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {

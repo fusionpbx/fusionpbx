@@ -242,7 +242,7 @@
 
 						$time_zone_found = false;
 						if (!empty($result)) {
-							foreach ($result as &$row) {
+							foreach ($result as $row) {
 								//get the dialplan_uuid
 									$dialplan_uuid = $row["dialplan_uuid"];
 

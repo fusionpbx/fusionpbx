@@ -1474,7 +1474,7 @@
 			if (!empty($destinations)) {
 				echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
 				echo "	<option value=''></option>\n";
-				foreach ($destinations as &$row) {
+				foreach ($destinations as $row) {
 					if(!empty($row["destination_caller_id_name"])){
 						if (!empty($outbound_caller_id_name) && $row["destination_caller_id_name"] == $outbound_caller_id_name) {
 							echo "		<option value='".escape($row["destination_caller_id_name"])."' selected='selected'>".escape($row["destination_caller_id_name"])."</option>\n";
@@ -1511,7 +1511,7 @@
 			if (!empty($destinations)) {
 				echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
 				echo "	<option value=''></option>\n";
-				foreach ($destinations as &$row) {
+				foreach ($destinations as $row) {
 					$tmp = $row["destination_caller_id_number"];
 					if(empty($tmp)){
 						$tmp = $row["destination_number"];
@@ -1552,7 +1552,7 @@
 			if (!empty($emergency_destinations)) {
 				echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'>\n";
 				echo "		<option value=''></option>\n";
-				foreach ($emergency_destinations as &$row) {
+				foreach ($emergency_destinations as $row) {
 					$tmp = $row["destination_caller_id_name"];
 					if(empty($tmp)){
 						$tmp = $row["destination_description"];
@@ -1598,7 +1598,7 @@
 				if (permission_exists('emergency_caller_id_select_empty')) {
 					echo "		<option value=''></option>\n";
 				}
-				foreach ($emergency_destinations as &$row) {
+				foreach ($emergency_destinations as $row) {
 					$tmp = $row["destination_caller_id_number"];
 					if(empty($tmp)){
 						$tmp = $row["destination_number"];

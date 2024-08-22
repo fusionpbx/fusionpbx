@@ -203,7 +203,7 @@
 				$vendor_function_groups = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 				unset($group_list);
-				foreach ($vendor_function_groups as &$sub_row) {
+				foreach ($vendor_function_groups as $sub_row) {
 					$group_list[] = escape($sub_row["group_name"]).(($sub_row['group_domain_uuid'] != '') ? "@".escape($_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name']) : null);
 				}
 				$group_list = isset($group_list) ? implode(', ', $group_list) : '';

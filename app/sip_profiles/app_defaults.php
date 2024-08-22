@@ -49,7 +49,7 @@
 					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				}
 				$xml_files = glob($sip_profile_dir);
-				foreach ($xml_files as $x => &$xml_file) {
+				foreach ($xml_files as $x => $xml_file) {
 					//load the sip profile xml and save it into an array
 					$sip_profile_xml = file_get_contents($xml_file);
 					$xml = simplexml_load_string($sip_profile_xml);
@@ -165,7 +165,7 @@
 					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				}
 				$xml_files = glob($sip_profile_dir);
-				foreach ($xml_files as $x => &$xml_file) {
+				foreach ($xml_files as $x => $xml_file) {
 					//load the sip profile xml and save it into an array
 						$sip_profile_xml = file_get_contents($xml_file);
 						$xml = simplexml_load_string($sip_profile_xml);

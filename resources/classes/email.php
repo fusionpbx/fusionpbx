@@ -142,7 +142,7 @@ if (!class_exists('email')) {
 
 				//get the attachments and add to the email
 				$x = 0;
-				foreach ($decoded[0]["Parts"] as &$parts_array) {
+				foreach ($decoded[0]["Parts"] as $parts_array) {
 					//image/tiff;name="testfax.tif"
 					//text/plain; charset=ISO-8859-1; format=flowed
 					$content_type = $parts_array["Parts"][0]["Headers"]["content-type:"];

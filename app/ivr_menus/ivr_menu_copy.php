@@ -98,7 +98,7 @@
 
 		//get the the ivr menu options
 			$y = 0;
-			foreach ($ivr_menu_options as &$row) {
+			foreach ($ivr_menu_options as $row) {
 				//update the uuids
 					$row['ivr_menu_uuid'] = $ivr_menu_uuid;
 					$row['ivr_menu_option_uuid'] = uuid();

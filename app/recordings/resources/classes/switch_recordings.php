@@ -73,7 +73,7 @@ if (!class_exists('switch_recordings')) {
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			if (!empty($result)) {
-				foreach ($result as &$row) {
+				foreach ($result as $row) {
 					$recordings[$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']."/".$row['recording_filename']] = $row['recording_filename'];
 				}
 			}

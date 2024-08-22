@@ -96,7 +96,7 @@
 			unset($sql, $parameters);
 
 			if (is_array($result) && sizeof($result) != 0) {
-				foreach ($result as $x => &$row) {
+				foreach ($result as $x => $row) {
 					//define group permissions values
 						$domain_uuid = $row["domain_uuid"];
 						$permission_name = $row["permission_name"];

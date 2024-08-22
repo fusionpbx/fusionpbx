@@ -406,7 +406,7 @@
 		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
-			foreach ($result as &$row) {
+			foreach ($result as $row) {
 				if ($row["menu_name"] == 'default') {
 					echo "<option selected value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
 				}

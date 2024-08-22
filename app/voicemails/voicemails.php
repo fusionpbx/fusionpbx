@@ -172,7 +172,7 @@
 		$voicemails_count_tmp = $database->select($sql, $parameters, 'all');
 
 		$voicemails_count = array();
-		foreach ($voicemails_count_tmp as &$row) {
+		foreach ($voicemails_count_tmp as $row) {
 			$voicemails_count[$row['voicemail_uuid']] = $row['voicemail_count'];
 		}
 		unset($sql, $parameters, $voicemails_count_tmp);
@@ -188,7 +188,7 @@
 		$voicemail_greetings_count_tmp = $database->select($sql, $parameters, 'all');
 
 		$voicemail_greetings_count = array();
-		foreach ($voicemail_greetings_count_tmp as &$row) {
+		foreach ($voicemail_greetings_count_tmp as $row) {
 			$voicemail_greetings_count[$row['voicemail_id']] = $row['greeting_count'];
 		}
 		unset($sql, $parameters, $voicemail_greetings_count_tmp);

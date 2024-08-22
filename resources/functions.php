@@ -845,7 +845,7 @@
 		if (is_numeric(trim($phone_number ?? '', ' +'))) {
 			if (isset($_SESSION["format"]["phone"])) {
 				$phone_number = trim($phone_number, ' +');
-				foreach ($_SESSION["format"]["phone"] as &$format) {
+				foreach ($_SESSION["format"]["phone"] as $format) {
 					$format_count = substr_count($format, 'x');
 					$format_count = $format_count + substr_count($format, 'R');
 					$format_count = $format_count + substr_count($format, 'r');

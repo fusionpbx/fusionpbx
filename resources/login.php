@@ -299,7 +299,7 @@
 				echo "<select name='domain_name' class='txt login' style='".$placeholder_color." width: 200px; text-align: center; text-align-last: center; margin-bottom: 8px;' onclick=\"this.style.color='".$click_change_color."';\" onchange=\"this.style.color='".$click_change_color."';\">\n";
 				echo "	<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
 				sort($_SESSION['login']['domain_name']);
-				foreach ($_SESSION['login']['domain_name'] as &$row) {
+				foreach ($_SESSION['login']['domain_name'] as $row) {
 					echo "	<option value='".escape($row)."'>".escape($row)."</option>\n";
 				}
 				echo "</select><br />\n";

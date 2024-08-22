@@ -1768,7 +1768,7 @@
 			echo "	<select name='fax_uuid' id='fax_uuid' class='formfld' style='".$select_style."'>\n";
 			echo "	<option value=''></option>\n";
 			if (!empty($result)) {
-				foreach ($result as &$row) {
+				foreach ($result as $row) {
 					if ($row["fax_uuid"] == $fax_uuid) {
 						echo "		<option value='".escape($row["fax_uuid"])."' selected='selected'>".escape($row["fax_extension"])." ".escape($row["fax_name"])."</option>\n";
 					}
@@ -1796,7 +1796,7 @@
 		echo "	<select name='provider_uuid' id='provider_uuid' class='formfld' style='".$select_style."'>\n";
 		echo "	<option value=''></option>\n";
 		if (!empty($providers)) {
-			foreach ($providers as &$row) {
+			foreach ($providers as $row) {
 				if ($row["provider_uuid"] == $provider_uuid) {
 					echo "		<option value='".escape($row["provider_uuid"])."' selected='selected'>".escape($row["provider_name"])."</option>\n";
 				}

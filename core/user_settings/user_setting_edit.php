@@ -227,7 +227,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 					$time_zone_found = false;
 					if (is_array($result) && sizeof($result) != 0) {
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							//get the dialplan_uuid
 								$dialplan_uuid = $row["dialplan_uuid"];
 

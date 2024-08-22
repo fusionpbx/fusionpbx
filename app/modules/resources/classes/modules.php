@@ -674,7 +674,7 @@ if (!class_exists('modules')) {
 				//set the default
 					$result = false;
 				//look for the module
-					foreach ($this->modules as &$row) {
+					foreach ($this->modules as $row) {
 						if ($row['module_name'] == $name) {
 							$result = true;
 							break;

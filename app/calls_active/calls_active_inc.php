@@ -63,7 +63,7 @@
 //build a new array with domain_name
 	$rows = array();
 	if (isset($results["rows"])) {
-		foreach ($results["rows"] as &$row) {
+		foreach ($results["rows"] as $row) {
 			//get the domain
 				if (!empty($row['context']) && $row['context'] != "public" && $row['context'] != "default") {
 					if (substr_count($row['context'], '@') > 0) {
@@ -186,7 +186,7 @@
 
 			if (is_array($rows)) {
 				$x = 0;
-				foreach ($rows as &$row) {
+				foreach ($rows as $row) {
 
 					//set the php variables
 						foreach ($row as $key => $value) {

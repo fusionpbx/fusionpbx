@@ -194,7 +194,7 @@ if (!class_exists('destinations')) {
 					//get the array from the app_config.php files
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						try {
 							include($config_path);
 						}
@@ -204,8 +204,8 @@ if (!class_exists('destinations')) {
 						$x++;
 					}
 					$i = 0;
-					foreach ($apps as $x => &$app) {
-						if (isset($app['destinations'])) foreach ($app['destinations'] as &$row) {
+					foreach ($apps as $x => $app) {
+						if (isset($app['destinations'])) foreach ($app['destinations'] as $row) {
 							if (permission_exists($this->singular($row["name"])."_destinations")) {
 								$this->destinations[] = $row;
 							}
@@ -569,7 +569,7 @@ if (!class_exists('destinations')) {
 				//get the array from the app_config.php files
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x = 0;
-				foreach ($config_list as &$config_path) {
+				foreach ($config_list as $config_path) {
 					try {
 						include($config_path);
 					}
@@ -579,9 +579,9 @@ if (!class_exists('destinations')) {
 					$x++;
 				}
 				$i = 0;
-				foreach ($apps as $x => &$app) {
+				foreach ($apps as $x => $app) {
 					if (isset($app['destinations'])) {
-						foreach ($app['destinations'] as &$row) {
+						foreach ($app['destinations'] as $row) {
 							$this->destinations[] = $row;
 						}
 					}
@@ -779,7 +779,7 @@ if (!class_exists('destinations')) {
 				//get the array from the app_config.php files
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x = 0;
-				foreach ($config_list as &$config_path) {
+				foreach ($config_list as $config_path) {
 					try {
 						include($config_path);
 					}
@@ -789,9 +789,9 @@ if (!class_exists('destinations')) {
 					$x++;
 				}
 				$i = 0;
-				foreach ($apps as $x => &$app) {
+				foreach ($apps as $x => $app) {
 					if (isset($app['destinations'])) {
-						foreach ($app['destinations'] as &$row) {
+						foreach ($app['destinations'] as $row) {
 							$this->destinations[] = $row;
 						}
 					}

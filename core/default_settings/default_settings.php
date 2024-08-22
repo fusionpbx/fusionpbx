@@ -470,7 +470,7 @@
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$parameters['menu_uuid'] = $row['default_setting_value'];
 				$sub_result = $database->select($sql, $parameters ?? null, 'all');
-				foreach ($sub_result as &$sub_row) {
+				foreach ($sub_result as $sub_row) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
 				unset($sql, $sub_result, $sub_row);
