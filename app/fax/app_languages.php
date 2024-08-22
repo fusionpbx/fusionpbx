@@ -5174,7 +5174,6 @@ $text['label-email_fax_file']['zh-cn'] = "传真文件";
 $text['label-email_fax_file']['ja-jp'] = "ファックスファイル";
 $text['label-email_fax_file']['ko-kr'] = "팩스 파일";
 
-
 $text['description-email_fax_file']['en-us'] = "Select a fax file option.";
 $text['description-email_fax_file']['en-gb'] = "Select a fax file option.";
 $text['description-email_fax_file']['ar-eg'] = "حدد خيار ملف الفاكس.";
@@ -5200,5 +5199,57 @@ $text['description-email_fax_file']['tr-tr'] = "Bir faks dosyası seçeneği se�
 $text['description-email_fax_file']['zh-cn'] = "选择传真文件选项。";
 $text['description-email_fax_file']['ja-jp'] = "FAX ファイル オプションを選択します。";
 $text['description-email_fax_file']['ko-kr'] = "팩스 파일 옵션을 선택하세요.";
+
+$text['label-fax_attached']['en-us'] = "Fax Attached";
+$text['label-fax_attached']['en-gb'] = "Fax Attached";
+$text['label-fax_attached']['ar-eg'] = "الفاكس المرفق";
+$text['label-fax_attached']['de-at'] = "Fax angehängt";
+$text['label-fax_attached']['de-ch'] = "Fax angehängt";
+$text['label-fax_attached']['de-de'] = "Fax angehängt";
+$text['label-fax_attached']['el-gr'] = "Fax angehängt";
+$text['label-fax_attached']['es-cl'] = "Fax adjunto";
+$text['label-fax_attached']['es-mx'] = "Fax adjunto";
+$text['label-fax_attached']['fr-ca'] = "Fax ci-joint";
+$text['label-fax_attached']['fr-fr'] = "Fax ci-joint";
+$text['label-fax_attached']['he-il'] = "מצורף פקס";
+$text['label-fax_attached']['it-it'] = "Fax allegato";
+$text['label-fax_attached']['nl-nl'] = "Fax bijgevoegd";
+$text['label-fax_attached']['pl-pl'] = "Faks dołączony";
+$text['label-fax_attached']['pt-br'] = "Fax anexado";
+$text['label-fax_attached']['pt-pt'] = "Fax anexado";
+$text['label-fax_attached']['ro-ro'] = "Fax atasat";
+$text['label-fax_attached']['ru-ru'] = "Факс прилагается";
+$text['label-fax_attached']['sv-se'] = "Fax bifogat";
+$text['label-fax_attached']['uk-ua'] = "Факс додається";
+$text['label-fax_attached']['tr-tr'] = "Faks Ekli";
+$text['label-fax_attached']['zh-cn'] = "附有传真";
+$text['label-fax_attached']['ja-jp'] = "FAX添付";
+$text['label-fax_attached']['ko-kr'] = "팩스 첨부";
+
+$text['label-fax_download']['en-us'] = "Download Fax";
+$text['label-fax_download']['en-gb'] = "Download Fax";
+$text['label-fax_download']['ar-eg'] = "تنزيل الفاكس";
+$text['label-fax_download']['de-at'] = "Fax herunterladen";
+$text['label-fax_download']['de-ch'] = "Fax herunterladen";
+$text['label-fax_download']['de-de'] = "Fax herunterladen";
+$text['label-fax_download']['el-gr'] = "Λήψη φαξ";
+$text['label-fax_download']['es-cl'] = "Descargar Fax";
+$text['label-fax_download']['es-mx'] = "Descargar Fax";
+$text['label-fax_download']['fr-ca'] = "Télécharger le fax";
+$text['label-fax_download']['fr-fr'] = "Télécharger le fax";
+$text['label-fax_download']['he-il'] = "הורד פקס";
+$text['label-fax_download']['it-it'] = "Scarica Fax";
+$text['label-fax_download']['nl-nl'] = "Fax downloaden";
+$text['label-fax_download']['pl-pl'] = "Pobierz faks";
+$text['label-fax_download']['pt-br'] = "Baixar Fax";
+$text['label-fax_download']['pt-pt'] = "Baixar fax";
+$text['label-fax_download']['ro-ro'] = "Descărcați Fax";
+$text['label-fax_download']['ru-ru'] = "Скачать факс";
+$text['label-fax_download']['sv-se'] = "Ladda ner fax";
+$text['label-fax_download']['uk-ua'] = "Завантажити факс";
+$text['label-fax_download']['tr-tr'] = "Faks İndir";
+$text['label-fax_download']['zh-cn'] = "下载传真";
+$text['label-fax_download']['ja-jp'] = "ファックスをダウンロード";
+$text['label-fax_download']['ko-kr'] = "팩스 다운로드";
 
 ?>

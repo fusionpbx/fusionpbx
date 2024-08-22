@@ -334,6 +334,13 @@ if (!function_exists('fax_split_dtmf')) {
 //now that we have the domain_name and uuid, create a settings object for the domain
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
+//get the language code
+	$language_code = $settings->get('domain', 'language', 'en-us');
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get($language_code, 'app/fax');
+
 //prepare smtp server settings
 	$email_from_address = $settings->get('fax','smtp_from', $settings->get('email', 'smtp_from', ''));
 	$email_from_name = $settings->get('fax', 'smtp_from_name', $settings->get('email', 'smtp_from_name', $email_from_address));
@@ -441,9 +448,6 @@ if (!function_exists('fax_split_dtmf')) {
 //send the email
 	if (!empty($fax_email) && file_exists($fax_file)) {
 
-		//get the language code
-		$language_code = $settings->get('domain', 'language', 'en-us');
-
 		//get the template subcategory
 		if (!empty($fax_relay) && $fax_relay == 'true') {
 			$template_subcategory = 'relay';
@@ -489,10 +493,10 @@ if (!function_exists('fax_split_dtmf')) {
 			$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
 			$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
 			if ($fax_email_file == 'link') {
-				$email_body = str_replace('${fax_file_message}', "<a href='https://".$domain_name.PROJECT_PATH.'/app/fax/fax_files.php?id='.$fax_uuid.'&fax_file_uuid='.$fax_file_uuid.'&a=download_link&type=fax_inbox&box=inbox&ext='.$fax_extension.'&filename='.urlencode($fax_file_name).(!empty($pdf_file) && file_exists($pdf_file) ? '.pdf' : '.tif')."'>".($text['label-fax_download'] ?? 'Download Fax')."</a>", $email_body);
+				$email_body = str_replace('${fax_file_message}', "<a href='https://".$domain_name.PROJECT_PATH.'/app/fax/fax_files.php?id='.$fax_uuid.'&fax_file_uuid='.$fax_file_uuid.'&a=download_link&type=fax_inbox&box=inbox&ext='.$fax_extension.'&filename='.urlencode($fax_file_name).(!empty($pdf_file) && file_exists($pdf_file) ? '.pdf' : '.tif')."'>".$text['label-fax_download']."</a>", $email_body);
 			}
 			else {
-				$email_body = str_replace('${fax_file_message}', ($text['label-fax_attached'] ?? 'Fax Attached'), $email_body);
+				$email_body = str_replace('${fax_file_message}', $text['label-fax_attached'], $email_body);
 			}
 
 			//debug info
