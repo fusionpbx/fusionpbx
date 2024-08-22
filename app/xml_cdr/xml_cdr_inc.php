@@ -284,6 +284,7 @@
 	$sql .= "c.read_codec, \n";
 	$sql .= "c.write_codec, \n";
 	$sql .= "c.cc_side, \n";
+	$sql .= "c.cc_agent_type, \n";
 	//$sql .= "(c.xml is not null or c.json is not null) as raw_data_exists, \n";
 	//$sql .= "c.json, \n";
 	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {

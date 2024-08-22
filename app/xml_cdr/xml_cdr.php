@@ -752,7 +752,18 @@
 				file_exists($theme_image_path."icon_cdr_local_voicemail.png") &&
 				file_exists($theme_image_path."icon_cdr_local_cancelled.png") &&
 				file_exists($theme_image_path."icon_cdr_local_busy.png") &&
-				file_exists($theme_image_path."icon_cdr_local_failed.png")
+				file_exists($theme_image_path."icon_cdr_local_failed.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_answered.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_answered_b.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_no_answer.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_voicemail.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_voicemail_b.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_missed.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_cancelled.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_cancelled_b.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_busy.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_failed.png") &&
+				file_exists($theme_image_path."icon_cdr_callback_failed_b.png")
 				) ? true : false;
 
 		//simplify the variables
@@ -860,13 +871,13 @@
 						$content .= "<td class='middle'>\n";
 						if ($theme_cdr_images_exist) {
 							if (!empty($row['direction'])) {
-								$image_name = "icon_cdr_" . $row['direction'] . "_" . $status;
+								$image_name = "icon_cdr_" . ($row['cc_agent_type'] == 'callback' ? 'callback' : $row['direction']) . "_" . $status;
 								if ($row['leg'] == 'b') {
 									$image_name .= '_b';
 								}
 								$image_name .= ".png";
 								if (file_exists($theme_image_path.$image_name)) {
-									$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+									$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.($row['cc_agent_type'] == 'callback' ? 'callback' : $row['direction'])].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 								}
 								else { $content .= "&nbsp;"; }
 							}
