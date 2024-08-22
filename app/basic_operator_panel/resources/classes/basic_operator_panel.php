@@ -77,7 +77,7 @@ if (!class_exists('basic_operator_panel')) {
 
 			//store extension status by user uuid
 				if (isset($extensions)) {
-					foreach($extensions as &$row) {
+					foreach ($extensions as $row) {
 						if ($row['user_uuid'] != '') {
 							$ext_user_status[$row['user_uuid']] = $row['user_status'];
 							unset($row['user_status']);
@@ -97,7 +97,7 @@ if (!class_exists('basic_operator_panel')) {
 			//build the response
 				$x = 0;
 				if (isset($extensions)) {
-					foreach($extensions as &$row) {
+					foreach ($extensions as $row) {
 						$user = $row['extension'];
 						if (!empty($row['number_alias'])) {
 							$user = $row['number_alias'];
@@ -143,7 +143,7 @@ if (!class_exists('basic_operator_panel')) {
 						//add the active call details
 							$found = false;
 							if (isset($json_array['rows'])) {
-								foreach($json_array['rows'] as &$field) {
+								foreach ($json_array['rows'] as $field) {
 									$presence_id = $field['presence_id'];
 									$presence = explode("@", $presence_id);
 									$presence_id = $presence[0];

@@ -41,7 +41,7 @@ if ($domains_processed == 1) {
 		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (!empty($result)) {
-			foreach ($result as $x => &$row) {
+			foreach ($result as $x => $row) {
 				$voicemail_greeting_uuid = $row['voicemail_greeting_uuid'];
 				$greeting_id = preg_replace('{\D}', '', $row['greeting_filename']);
 				//build update array
@@ -75,7 +75,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$result = $database->select($sql, null, 'all');
 				if (!empty($result)) {
-					foreach ($result as $x => &$row) {
+					foreach ($result as $x => $row) {
 						$voicemail_greeting_uuid = $row['voicemail_greeting_uuid'];
 						$greeting_domain_uuid = $row['domain_uuid'];
 						$voicemail_id = $row['voicemail_id'];
@@ -117,7 +117,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$result = $database->select($sql, null, 'all');
 				if (is_array($result) && @sizeof($result) != 0) {
-					foreach ($result as $x => &$row) {
+					foreach ($result as $x => $row) {
 						//set variables
 							$voicemail_greeting_uuid = $row['voicemail_greeting_uuid'];
 							$greeting_domain_uuid = $row['domain_uuid'];

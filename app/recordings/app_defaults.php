@@ -43,7 +43,7 @@
 					$sql .= "or recording_base64 = '' ";
 					$result = $database->select($sql, null, 'all');
 					if (is_array($result) && @sizeof($result) != 0) {
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							//set the variables
 								$recording_uuid = $row['recording_uuid'];
 								$recording_domain_uuid = $row['domain_uuid'];
@@ -84,7 +84,7 @@
 					$sql .= "where recording_base64 is not null ";
 					$result = $database->select($sql, null, 'all');
 					if (!empty($result)) {
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							//set the variables
 								$recording_uuid = $row['recording_uuid'];
 								$recording_domain_uuid = $row['domain_uuid'];

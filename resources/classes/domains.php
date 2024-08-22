@@ -144,13 +144,13 @@ if (!class_exists('domains')) {
 										//get the $apps array from the installed apps from the core and mod directories
 											$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 											$x=0;
-											if (isset($config_list)) foreach ($config_list as &$config_path) {
+											if (isset($config_list)) foreach ($config_list as $config_path) {
 												include($config_path);
 												$x++;
 											}
 
 										//delete the domain data from all tables in the database
-											if (isset($apps)) foreach ($apps as &$app) {
+											if (isset($apps)) foreach ($apps as $app) {
 												if (isset($app['db'])) foreach ($app['db'] as $row) {
 													if (is_array($row['table']['name'])) {
 														$table_name = $row['table']['name']['text'];
@@ -623,7 +623,7 @@ if (!class_exists('domains')) {
 				$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
 				unset($config_list_1,$config_list_2);
 				$x=0;
-				foreach ($config_list as &$config_path) {
+				foreach ($config_list as $config_path) {
 					$app_path = dirname($config_path);
 					$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 					include($config_path);
@@ -650,7 +650,7 @@ if (!class_exists('domains')) {
 
 					//get the list of installed apps from the core and mod directories and run the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
-						foreach ($default_list as &$default_path) {
+						foreach ($default_list as $default_path) {
 							include($default_path);
 						}
 

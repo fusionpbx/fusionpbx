@@ -893,7 +893,7 @@ if (!$included) {
 
 	//build the contact labels
 		if (is_array($contacts) && @sizeof($contacts) != 0) {
-			foreach ($contacts as &$row) {
+			foreach ($contacts as $row) {
 				if ($row['contact_organization'] != '') {
 					$contact_option_label = $row['contact_organization'];
 				}

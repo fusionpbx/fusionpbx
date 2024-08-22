@@ -645,14 +645,14 @@
 					$tmp = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if ($this->type == "pgsql" || $this->type == "sqlite" || $this->type == "mssql") {
 						if (is_array($tmp)) {
-							foreach ($tmp as &$row) {
+							foreach ($tmp as $row) {
 								$result[]['name'] = $row['name'];
 							}
 						}
 					}
 					if ($this->type == "mysql") {
 						if (is_array($tmp)) {
-							foreach ($tmp as &$row) {
+							foreach ($tmp as $row) {
 								$table_array = array_values($row);
 								$result[]['name'] = $table_array[0];
 							}
@@ -2815,7 +2815,7 @@
 
 							//get the domain_uuid
 							$domain_uuid = '';
-							foreach($old_array as &$data_array) {
+							foreach ($old_array as $data_array) {
 								foreach ($data_array as $row) {
 									if (!empty($row['domain_uuid'])) {
 										$domain_uuid = $row['domain_uuid'];
@@ -2968,7 +2968,7 @@
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 					$x = 0;
 					if (is_array($config_list)) {
-						foreach ($config_list as &$config_path) {
+						foreach ($config_list as $config_path) {
 							include($config_path);
 							$x++;
 						}
@@ -3011,7 +3011,7 @@
 				//search through all fields to see if domain_uuid exists
 					foreach (self::$apps as $x => &$app) {
 						if (is_array($app['db'])) {
-							foreach ($app['db'] as $y => &$row) {
+							foreach ($app['db'] as $y => $row) {
 								if (is_array($row['table']['name'])) {
 									$table_name = $row['table']['name']['text'];
 								}
@@ -3065,15 +3065,15 @@
 						}
 					}
 					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						include($config_path);
 						$x++;
 					}
 
 				//search through all fields to find relations
 					if (!empty($apps) && is_array($apps)) {
-						foreach ($apps as $x => &$app) {
-							foreach ($app['db'] as $y => &$row) {
+						foreach ($apps as $x => $app) {
+							foreach ($app['db'] as $y => $row) {
 								foreach ($row['fields'] as $z => $field) {
 									if (!empty($field['deprecated']) && $field['deprecated'] != "true") {
 										if (!empty($field['key']['type']) &&  $field['key']['type'] == "foreign") {
