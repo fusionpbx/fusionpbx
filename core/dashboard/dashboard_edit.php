@@ -837,8 +837,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
-		echo "<tr class='type_icon type_label' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
+	if ($action == "add" || $dashboard_path == "dashboard/icon") {
+		echo "<tr class='type_icon type_label' ".($dashboard_path != 'dashboard/icon' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_label_background_color_hover']."\n";
 		echo "</td>\n";
@@ -861,8 +861,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+	if ($action == "add" || $dashboard_path == "dashboard/icon") {
+		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_number_text_color_hover']."\n";
 		echo "</td>\n";
@@ -895,8 +895,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == "add" || $dashboard_path == "core/dashboard/resources/dashboard/icon.php") {
-		echo "<tr class='type_icon' ".($dashboard_path != 'core/dashboard/resources/dashboard/icon.php' ? "style='display: none;'" : null).">\n";
+	if ($action == "add" || $dashboard_path == "dashboard/icon") {
+		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_background_color_hover']."\n";
 		echo "</td>\n";

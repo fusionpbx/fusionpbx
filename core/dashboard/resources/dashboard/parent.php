@@ -117,7 +117,7 @@
 			echo "	align-content: center;\n";
 			echo "}\n";
 		}
-		if ($row['dashboard_path'] == "core/dashboard/resources/dashboard/icon.php") {
+		if ($row['dashboard_path'] == "dashboard/icon") {
 			echo "#".$dashboard_name.",\n";
 			echo "#".$dashboard_name." span.hud_title,\n";
 			echo "#".$dashboard_name." span.hud_stat {\n";
@@ -197,3 +197,4 @@
 	echo "</div>\n";
 
 ?>
+
