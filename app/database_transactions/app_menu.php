@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Transactions";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "עסקאות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Transazioni";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ტრანზაქციები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Transacties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Transakcje";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Transações";
