@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Programmation de campagnes d'appels vers des extensions, IVR, salles de conferences ou tout autre numéro.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "დაგეგმეთ მრავალჯერადი ზარების განხორციელება შიდა ნომერთან, IVR მენიუ, საკონფერებციო ოთახი, ან ნებისმერი სხვა ნომერი";
 		$apps[$x]['description']['nl-nl'] = "Methode om direct meerdere parallele oproepen naar toestellen, IVR menu, Conferentie, of een ander nummer te maken.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Programação para imediatamente realizar várias chamadas para uma extensão, um menu IVR, Sala de Conferência ou qualquer outro número.";

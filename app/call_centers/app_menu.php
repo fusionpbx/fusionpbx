@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre d'appel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מוקדים טלפוניים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato Agenti";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ქოლცენტრი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Telefooncentrales";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centra telefoniczne ";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Centros de chamada";
@@ -45,6 +46,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "État de l'agent";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מצב הסוכן";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato dell'agente";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "აგენტის სტატუსი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Agent status";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Status agenta";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do agente";

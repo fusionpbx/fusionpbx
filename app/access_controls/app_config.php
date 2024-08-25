@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gérer les listes de contrôle d'accès";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "წვდომის კონტროლის სიების მართვა";
 		$apps[$x]['description']['nl-nl'] = "Beheer toegangs controle lijsten";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
