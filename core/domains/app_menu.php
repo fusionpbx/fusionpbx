@@ -12,6 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "domaines";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "דומיינים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Domini";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დომენები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Domains";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Domeny";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Domínios";
