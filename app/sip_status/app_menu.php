@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Statut SIP";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "SIP סטטוס";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato SIP";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "SIP-ის სტატუსი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "SIP Status";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Status SIP";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do SIP";

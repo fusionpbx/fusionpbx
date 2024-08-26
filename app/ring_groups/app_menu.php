@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Groupes de sonnerie";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "קבוצות חיוג";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gruppi di Squillo";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ზარის ჯგუფები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bel groepen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Grupy odbiorców rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Grupos de chamada";
