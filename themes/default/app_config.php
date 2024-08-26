@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Thème par Défaut";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['ka-ge'] = "";
+		$apps[$x]['description']['ka-ge'] = "ნაგულისხმევი თემა";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
