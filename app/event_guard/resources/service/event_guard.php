@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2024 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -87,6 +87,14 @@
 		echo $firewall_name." command not found\n";
 		exit;
 	}
+
+//add pf tables into your pf.conf file
+	//if ($firewall_name == 'pf') {
+	//	table <sip-auth-ip> persist
+	//	table <sip-auth-fail> persist
+	//	block in quick from <sip-auth-ip>
+	//	block in quick from <sip-auth-fail>
+	//}
 
 //add the iptables chains
 	if ($firewall_name == 'iptables') {
@@ -321,8 +329,8 @@
 
 		//run the block command for pf
 		if ($firewall_name == 'pf') {
-			//example: pfctl -t sip-auth-ip -T add 127.0.0.5/32
-			$command = $firewall_path.'/pfctl -t '.$filter.' -T add '.$ip_address.'/32';
+			//example: pfctl -t sip-auth-ip -T add 127.0.0.5
+			$command = $firewall_path.'/pfctl -t '.$filter.' -T add '.$ip_address;
 			$result = shell($command);
 		}
 
@@ -380,8 +388,8 @@
 
 		//unblock the address
 		if ($firewall_name == 'pf') {
-			//example: pfctl -t sip-auth-ip -T delete 127.0.0.5/32
-			$command = $firewall_path.'/pfctl -t '.$filter.' -T delete '.$ip_address.'/32';
+			//example: pfctl -t sip-auth-ip -T delete 127.0.0.5
+			$command = $firewall_path.'/pfctl -t '.$filter.' -T delete '.$ip_address;
 			$result = shell($command);
 		}
 
@@ -406,7 +414,7 @@
 			//check to see if the address is blocked
 			$command = $firewall_path.'/./iptables -L -n --line-numbers | grep '.$ip_address;
 			$result = shell($command);
-			if (strlen($result) > 3) {
+			if (!empty($result) && strlen($result) > 3) {
 				return true;
 			}
 		}
@@ -414,7 +422,7 @@
 			//check to see if the address is blocked
 			$command = $firewall_path.'/pfctl -t ".$filter." -Ts | grep '.$ip_address;
 			$result = shell($command);
-			if (strlen($result) > 3) {
+			if (!empty($result) && strlen($result) > 3) {
 				return true;
 			}
 		}
@@ -602,7 +610,7 @@
 		$allowed = false;
 
 		//use the ip address to get the authorized nodes
-		if ($user_log_count > 0) {
+		if (!empty($user_log_count) && $user_log_count > 0) {
 			$allowed = true;
 		}
 
@@ -643,6 +651,23 @@
 
 		//return
 		return $allowed;
+	}
+
+//check if the iptables chain exists
+	function pf_table_exists($table) {
+		//define the global variables
+		global $firewall_path, $firewall_name;
+
+		//build the command to check if the pf table exists
+		$command = $firewall_path."/./pfctl -t ".$table." -T show | grep error";
+		//if ($debug) { echo $command."\n"; }
+		$response = shell($command);
+		if (!empty($response)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 //add IP table chains
@@ -691,3 +716,4 @@
 	}
 
 ?>
+
