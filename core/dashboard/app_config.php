@@ -172,6 +172,16 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the detail background color.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_background_gradient_style';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select a background gradient style.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_background_gradient_angle';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select a background gradient angle.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_column_span';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
