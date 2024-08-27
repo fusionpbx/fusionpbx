@@ -44,11 +44,11 @@
 	}
 
 //set the variables
-	if (isset($_GET['hostname'])) {
+	if (!empty($_GET['hostname'])) {
 		$hostname = urldecode($_GET['hostname']);
 	}
 	$debug = false;
-	if (isset($_GET['debug'])) {
+	if (!empty($_GET['debug'])) {
 		if (is_numeric($_GET['debug'])) {
 			$debug_level = $_GET['debug'];
 		}
@@ -56,7 +56,7 @@
 	}
 
 //get the hostname
-	if (!isset($hostname)) {
+	if (empty($hostname)) {
 		$hostname = gethostname();
 	}
 
@@ -67,7 +67,7 @@
 	if ($php_os == 'freebsd') {
 		$firewall_name = 'pf';
 		if (file_exists('/sbin/pfctl')) {
-			$firewall_path = '/sbin/pfctl';
+			$firewall_path = '/sbin';
 		}
 	}
 	if ($php_os == 'linux') {
@@ -716,4 +716,3 @@
 	}
 
 ?>
-
