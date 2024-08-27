@@ -96,6 +96,8 @@
 	$sql .= "dashboard_background_color, ";
 	$sql .= "dashboard_background_color_hover, ";
 	$sql .= "dashboard_detail_background_color, ";
+	$sql .= "dashboard_background_gradient_style, ";
+	$sql .= "dashboard_background_gradient_angle, ";
 	$sql .= "dashboard_column_span, ";
 	$sql .= "dashboard_row_span, ";
 	$sql .= "dashboard_details_state, ";
@@ -284,21 +286,36 @@ foreach ($dashboard as $row) {
 		$background_color = json_decode($row['dashboard_background_color'], true);
 		echo "#".$dashboard_name." .hud_content {\n";
 		echo "	background: ".$background_color[0].";\n";
-		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
+		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
+			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
+		}
+		else { //simple
+			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[0]." 0%, ".$background_color[1]." 100%);\n";
+		}
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_background_color_hover'])) {
 		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
 		echo "#".$dashboard_name.":hover .hud_content {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
-		echo "	background-image: linear-gradient(to right, ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
+		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
+			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
+		}
+		else { //simple
+			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[0]." 0%, ".$background_color_hover[1]." 100%);\n";
+		}
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_detail_background_color'])) {
 		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
 		echo "#".$dashboard_name." .hud_details {\n";
 		echo "	background: ".$detail_background_color[0].";\n";
-		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
+		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
+			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
+		}
+		else { //simple
+			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$detail_background_color[0]." 0%, ".$detail_background_color[1]." 100%);\n";
+		}
 		echo "}\n";
 	}
 	if ($row['dashboard_label_enabled'] == 'false') {
