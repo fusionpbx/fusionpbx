@@ -158,6 +158,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "mduration";
 			$this->fields[] = "billsec";
 			$this->fields[] = "billmsec";
+			$this->fields[] = "hold_accum_seconds";
 			$this->fields[] = "bridge_uuid";
 			$this->fields[] = "read_codec";
 			$this->fields[] = "read_rate";
@@ -642,6 +643,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key][0]['mduration'] = urldecode($xml->variables->billmsec);
 						$this->array[$key][0]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key][0]['billmsec'] = urldecode($xml->variables->billmsec);
+						$this->array[$key][0]['hold_accum_seconds'] = urldecode($xml->variables->hold_accum_seconds);
 
 					//codecs
 						$this->array[$key][0]['read_codec'] = urldecode($xml->variables->read_codec);
@@ -2191,3 +2193,4 @@ if (!class_exists('xml_cdr')) {
 }
 
 ?>
+
