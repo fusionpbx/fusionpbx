@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil en AJAX pour voir et gérer toutes les conférences actives.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "AJAX ხელსაწყო კონფერენციის დარბაზში ყველა აქტიური მონაწილის სანახავად და სამართავად.";
 		$apps[$x]['description']['nl-nl'] = "AJAX gereedschap om in een gespreksruimte de aktieve gebruikers te bekijken en beheren";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

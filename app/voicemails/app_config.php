@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gérer les boîtes vocales";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მართეთ ხმოვანი ფოსტის ყუთები";
 		$apps[$x]['description']['nl-nl'] = "Beheer antwoordapparaten";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

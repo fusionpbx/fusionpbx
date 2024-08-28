@@ -13,6 +13,7 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['ka-ge'] = '';
 		$apps[$x]['description']['fr'] = '';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';

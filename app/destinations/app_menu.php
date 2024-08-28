@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Destinations";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "יעד";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Destinazioni";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დანიშნულების პუნქტები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bestemmingen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Destynacje";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Destinos";
@@ -48,6 +49,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Résumé des destinations";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "סיכום יעד";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Riepilogo della destinazione";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "დანიშნულების პუნქტის შეჯამება";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Podsumowanie miejsca docelowego";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Bestemmingssamenvatting";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Resumo do destino";

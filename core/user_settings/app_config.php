@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "L'usager peut modifier la configuration de son compte";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მომხმარებლის პარამეტრების შეცვლა მომხმარებელს შეუძლია.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Configurações da conta podem ser alteradas pelo usuário.";

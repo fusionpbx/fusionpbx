@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil pour appeler plusieurs extensions.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "ხელსაწყო ერთზე მეტ ნომერზე დასარეკად.";
 		$apps[$x]['description']['nl-nl'] = "Een gereedschap om meerdere toestellen te bellen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

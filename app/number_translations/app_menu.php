@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Traductions de nombres";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "תרגום מספר";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Traduzione numero";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ნომრების გარდაქმნა";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Nummer Vertaling";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Tłumaczenie liczbowe";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Tradução numérica";

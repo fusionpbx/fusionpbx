@@ -21,6 +21,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gestion d'un domaine ou plusieurs dans le cas d'un système multi-parties.";
 		$apps[$x]['description']['he-il'] = "הגדרות שהוקצו לדומיין מסוים.";
 		$apps[$x]['description']['it-it'] = "Impostazioni assegnate a un determinato dominio.";
+		$apps[$x]['description']['ka-ge'] = "მითითებულ დომენზე მინიჭებული პარამეტრები.";
 		$apps[$x]['description']['nl-nl'] = "Instellingen toegewezen aan een bepaald domein.";
 		$apps[$x]['description']['pl-pl'] = "Ustawienia przypisane do konkretnej domeny.";
 		$apps[$x]['description']['pt-br'] = "Configurações atribuídas a um domínio específico.";

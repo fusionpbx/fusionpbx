@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Appels en cours";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שיחות פעילות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Chiamate Attive";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "აქტიური ზარები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve gesprekken";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywne połączenia";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Chamadas ativas";

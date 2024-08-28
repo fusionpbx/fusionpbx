@@ -12,6 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Mise à jour";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שדרוג";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Aggiorna";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "განახლება";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Upgrade";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktualizacja";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Atualização";

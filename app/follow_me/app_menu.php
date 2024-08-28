@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Follow Me";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "עקוב אחריי";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Seguimi";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "გამომყევი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Volg me";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Chodź za mną";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Siga-me";

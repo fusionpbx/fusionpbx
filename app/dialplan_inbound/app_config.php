@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les routes publiques sont utilisés pour diriger les appels entrants en fonction d'une ou plusieures conditions et contextes.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "საჯარო დარეკვის გეგმა შემომავალი ზარების ერთი ან მეტი პირობის ან კონტექსტის მიხედვით დანიშნულების წერტილამდე გადასამისამართებლად გამოიყენება.";
 		$apps[$x]['description']['nl-nl'] = "Het openbare belplan wordt gebruikt om de inkomende oproepen naar de juiste bestemming te sturen gebaseerd op een of meer voorwaarden en context";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "O dialplan público é usado para encaminhar chamadas recebidas para destinos com base em uma ou mais condições e contexto.";

@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Historiques Appels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "קרא רשומות מפורטות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Dettaglio Chiamate";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ზარის დეტალები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gespreks data (CDR)";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Wykaz rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Detalhes das gravações de voz";

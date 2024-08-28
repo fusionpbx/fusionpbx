@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Serveur Fax";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שרת פקסים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Fax Server";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ფაქსის სერვერი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Fax Server";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Serwer faksowy";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Servidor de Fax";

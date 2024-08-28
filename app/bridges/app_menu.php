@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Ponts";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "גשרים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Ponti";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ხიდები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bridges";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Mostkowania";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "pontes";

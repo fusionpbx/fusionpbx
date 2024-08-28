@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მართეთ პარამეტრები SIP პროფილებისთვის.";
 		$apps[$x]['description']['nl-nl'] = "Beheer instellingen voor de SIP profielen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

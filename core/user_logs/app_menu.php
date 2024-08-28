@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Connexions utilisateur";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "יומני משתמשים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Log utente";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მომხმარებლების ჟურნალი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gebruiker logs";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dzienniki użytkowników";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Logs de usuário";

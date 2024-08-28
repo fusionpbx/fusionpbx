@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Modèles de courriel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "תבניות אימייל";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Modelli di posta elettronica";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ელფოსტის ნიმუშები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "E-mailsjablonen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Szablony Email";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Modelos de e-mail";

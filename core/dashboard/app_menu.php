@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Tableau de bord de l'utilisateur";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "לוּחַ מַחווָנִים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Pannello di Controllo";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მომხმარებლის პანელი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Dashboard";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Panel użytkowników";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Painel de Controle";

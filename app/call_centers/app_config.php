@@ -21,6 +21,7 @@
 		$apps[$x]['description']['fr-fr'] = "Files d'attente d'appels entrants distribu%uFFFDs aux agents disponibles.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "რიგები შემომავალი ზარების სამართავად და ამ ზარების ხელმისაწვდომ აგენტებთან გადასამისამართებლად.";
 		$apps[$x]['description']['nl-nl'] = "Wachtrijen voor beheer van inkomede gesprekken en routering naar beschikbare agenten.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "As filas servem para gerenciar as chamadas que entram e encaminhar as mesmas para os agentes disponíveis.";

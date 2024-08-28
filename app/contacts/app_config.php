@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Place pour stocker les information des contacts, personnes ou organizations.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "ადგილი კონტაქტის ინფორმაციის დასამახსოვრებლად პიროვნებებისა და ორგანიზაციებისთვის.";
 		$apps[$x]['description']['nl-nl'] = "Kontacten";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

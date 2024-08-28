@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Event Guard";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "משמר אירועים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Guardia di evento";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მოვლენების დამცველი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Evenementenbewaker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Strażnik wydarzeń";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Guarda de Eventos";

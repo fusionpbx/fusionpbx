@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "ზარის კონტროლი ციფრების ქმედებებზე მიმაგრების საშუალებას გაძლევთ. ისინი შეგიძლიათ გამოიყენოთ დადუმებისთვის, დადუმების მოხსნისთვის ან სხვა ქმედებებსთვის კონფერენც-ზარის მიმდინარეობისას.";
 		$apps[$x]['description']['nl-nl'] = "Conferentie besturing maakt het mogelijk om functies aan cijfers toe te wijzen zodat een verbinding op stil of spreken gezet kan worden. of andere acties tijden een conferentie zitting.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

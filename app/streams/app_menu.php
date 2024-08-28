@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Ruisseaux";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "זרמים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Flussi";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ნაკადები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Stromen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Strumienie";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Fluxos";

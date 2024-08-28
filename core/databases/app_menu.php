@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "BDD";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מאגרי מידע";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Banche dati";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მონაცემთა ბაზები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Databanken";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Bazy danych";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Banco de dados";

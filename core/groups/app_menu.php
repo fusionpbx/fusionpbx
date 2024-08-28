@@ -13,6 +13,7 @@ $y=0;
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion des groupes";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מנהל קבוצה";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "'Gestão de Grupos";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ჯგუფების მმართველი";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menedżer grup";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gerente de grupo";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciar grupos";

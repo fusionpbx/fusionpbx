@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gestion des guides vocaux principalement utilisés dans les RVI";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მართეთ ჩანაწერები. ძირითადად გამოიყენება IVR მენიუებისთვის.";
 		$apps[$x]['description']['nl-nl'] = "Beheer opnamen met name gebruikt in een IVR.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

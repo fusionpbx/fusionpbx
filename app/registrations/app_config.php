@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Afficher les enregistrements des équipements.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "აჩვენებს რეგისტრაციებს ბოლოწერტილებიდან.";
 		$apps[$x]['description']['nl-nl'] = "Toont registraties van endpunten.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

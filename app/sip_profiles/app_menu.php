@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Profiles SIP";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "פרופילים SIP";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Profili SIP";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "SIP პროფილები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "SIP Profielen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Profile SIP";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Perfis SIP";

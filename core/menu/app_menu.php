@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion des Menus";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מנהל תפריט";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gestione dei Menu";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მენიუს მართვა";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Menu Manager";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menedżer menu";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciador de Menus";

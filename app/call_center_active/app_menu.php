@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre d'Appel Actif";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכז קריאה פעיל";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Call Center Attivi";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "აქტიური ქოლცენტრები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve Callcenter";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywność w Call Center ";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Call Center ativos";

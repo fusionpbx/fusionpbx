@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Numéros PIN";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מספרים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Numeri PIN";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "PIN-კოდები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "PIN codes";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Numer PIN";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Números de PIN";

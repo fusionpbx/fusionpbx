@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Conférences en cours";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "כנסים פעילים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Conferenze attive";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "აქტიური კონფერენციები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve conferenties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywne rozmowy konferencyjne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Conferência ativa";
