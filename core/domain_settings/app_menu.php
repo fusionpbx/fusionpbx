@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Paramètres du Domaine";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "הגדרות דומיין";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Impostazioni del dominio";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დომენის პარამეტრები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Domein instellingen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia Domen";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações do Dominio";

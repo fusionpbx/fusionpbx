@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Ajouter, Editer, Supprimer et Chercher des Utilisateurs";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "დაამატეთ, ჩაასწორეთ, წაშალეთ ან მოძებნეთ მომხმარებლები.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Adicionar, editar, apagar e pesquisar usuários.";

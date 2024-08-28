@@ -19,6 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Mise à jour du Schàma de la base de donnàes";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "განაახლეთ ან აღადგნეთ სხვადასხვა სისტემური პარამეტრები.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Atualizar";

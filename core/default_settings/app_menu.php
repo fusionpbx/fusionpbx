@@ -12,6 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Confs par Défaut";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "הגדרות ברירת מחדל";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Parametri di Default";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ნაგულისხმევი პარამეტრები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Standaard instellingen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia domyślne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações Padrão";

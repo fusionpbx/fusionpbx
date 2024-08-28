@@ -21,6 +21,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil pour bloquer des numéros d'appelant.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "ხელსაწყო შემომავალი ნომრების დასაბლოკად";
 		$apps[$x]['description']['nl-nl'] = "Gereedschap om inkommende nummers te blokkeren.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números que entram.";

@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Modules";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מודולים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Moduli";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მოდულები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Modulen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Moduły";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Módulos";

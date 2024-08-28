@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "აღწერეთ ალტერნატიული შემომავალი ზარის დამუშავება შიდა ნომრებისთვის.";
 		$apps[$x]['description']['nl-nl'] = "Definieer alternatieve afhandeling voor toestellen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

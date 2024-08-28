@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Journaux d'Urgence";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "יומן חירום";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Registri di Emergenza";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ავარიული სიტუაციის ჟურნალი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Logboeken voor Noodgevallen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dzienniki Alarmowe";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Registros de Emergência";

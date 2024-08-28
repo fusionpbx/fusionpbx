@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Equipements pour provisioning.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მოწყობილობები სამუშაოდ მოსამზადებლად.";
 		$apps[$x]['description']['nl-nl'] = "Voorzieningen voor toestellen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Provisionamento de telefones IP.";

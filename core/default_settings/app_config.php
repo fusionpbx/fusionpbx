@@ -21,6 +21,7 @@
 		$apps[$x]['description']['fr-fr'] = "Configurations par défaut applicable à tous les domaines";
 		$apps[$x]['description']['he-il'] = "הגדרות ברירת המחדל החלות על כל הדומיינים.";
 		$apps[$x]['description']['it-it'] = "Impostazioni predefinite che si applicano a tutti i domini.";
+		$apps[$x]['description']['ka-ge'] = "ნაგულისხმევი პარამეტრები, რომლებიც ყველა დომენზე გამოიყენება.";
 		$apps[$x]['description']['nl-nl'] = "Standaardinstellingen die van toepassing zijn op alle domeinen.";
 		$apps[$x]['description']['pl-pl'] = "Domyślne ustawienia dotyczące wszystkich domen.";
 		$apps[$x]['description']['pt-br'] = "Configurações Padrão aplicáveis à todos os domínios";
