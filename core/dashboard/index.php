@@ -481,7 +481,7 @@ function toggle_grid_row_end_all() {
 		if (!first_toggle && state === 'expanded') {
 			return;
 		}
-		
+
 		if (state === 'expanded') {
 			div.style.gridRowEnd = 'span ' + (current_row_end_number - 3);
 			div.dataset.state = 'contracted';
@@ -525,7 +525,7 @@ function toggle_grid_row_end_all() {
 		//define the regex patterns
 		$uuid_pattern = '/[^-A-Fa-f0-9]/';
 		$number_pattern = '/[^-A-Za-z0-9()*#]/';
-		$text_pattern = '/[^a-zA-Z0-9 _\-\/.#]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.#\n]/';
 
 		//sanitize the data
 		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
