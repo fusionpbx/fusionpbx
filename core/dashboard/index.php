@@ -536,9 +536,11 @@ function toggle_grid_row_end_all() {
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
 		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
 		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
-		$dashboard_content = trim(preg_replace($text_pattern, '', $dashboard_content));
+		$dashboard_content = preg_replace($text_pattern, '', $dashboard_content);
+		$dashboard_content = str_replace("\n", '<br />', $dashboard_content);
 		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
-		$dashboard_content_details = trim(preg_replace($text_pattern, '', $dashboard_content_details));
+		$dashboard_content_details = preg_replace($text_pattern, '', $dashboard_content_details);
+		$dashboard_content_details = str_replace("\n", '<br />', $dashboard_content_details);
 		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
 		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
 		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
@@ -660,3 +662,4 @@ function toggle_grid_row_end_all() {
 	require_once "resources/footer.php";
 
 ?>
+
