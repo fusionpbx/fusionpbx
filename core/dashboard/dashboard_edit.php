@@ -111,6 +111,43 @@
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
 		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
 		$dashboard_description = $_POST["dashboard_description"] ?? '';
+
+		//define the regex patterns
+		$uuid_pattern = '/[^-A-Fa-f0-9]/';
+		$number_pattern = '/[^-A-Za-z0-9()*#]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.#\n]/';
+
+		//sanitize the data
+		$dashboard_name = trim(preg_replace('/[^a-zA-Z0-9 _\-\/.#]/', '', $dashboard_name));
+		$dashboard_path = preg_replace($text_pattern, '', strtolower($dashboard_path));
+		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
+		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
+		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
+		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
+		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
+		$dashboard_content = trim(preg_replace($text_pattern, '', $dashboard_content));
+		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
+		$dashboard_content_details = trim(preg_replace($text_pattern, '', $dashboard_content_details));
+		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
+		$dashboard_label_enabled = preg_replace($text_pattern, '', $dashboard_label_enabled);
+		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
+		$dashboard_label_text_color_hover = preg_replace($text_pattern, '', $dashboard_chart_type);
+		$dashboard_label_background_color = preg_replace($text_pattern, '', $dashboard_label_background_color);
+		$dashboard_label_background_color_hover = preg_replace($text_pattern, '', $dashboard_label_background_color_hover);
+		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
+		$dashboard_number_text_color_hover = preg_replace($text_pattern, '', $dashboard_number_text_color_hover);
+		$dashboard_background_color = preg_replace($text_pattern, '', $dashboard_background_color);
+		$dashboard_background_color_hover = preg_replace($text_pattern, '', $dashboard_background_color_hover);
+		$dashboard_detail_background_color = preg_replace($text_pattern, '', $dashboard_detail_background_color);
+		$dashboard_background_gradient_style = preg_replace($text_pattern, '', $dashboard_background_gradient_style);
+		$dashboard_background_gradient_angle = preg_replace($text_pattern, '', $dashboard_background_gradient_angle);
+		$dashboard_column_span = preg_replace($number_pattern, '', $dashboard_column_span);
+		$dashboard_row_span = preg_replace($number_pattern, '', $dashboard_row_span);
+		$dashboard_details_state = preg_replace($text_pattern, '', $dashboard_details_state);
+		$dashboard_parent_uuid = preg_replace($uuid_pattern, '', $dashboard_parent_uuid);
+		$dashboard_order = preg_replace($number_pattern, '', $dashboard_order);
+		$dashboard_enabled = preg_replace($text_pattern, '', $dashboard_enabled);
+		$dashboard_description = preg_replace($text_pattern, '', $dashboard_description);
 	}
 
 //delete the group from the sub table
@@ -266,7 +303,7 @@
 			$y = 0;
 			if (is_array($dashboard_groups)) {
 				foreach ($dashboard_groups as $row) {
-					if (isset($row['group_uuid'])) {
+					if (isset($row['group_uuid']) && is_uuid($row['group_uuid'])) {
 						$array['dashboard'][0]['dashboard_groups'][$y]['dashboard_group_uuid'] = uuid();
 						$array['dashboard'][0]['dashboard_groups'][$y]['group_uuid'] = $row["group_uuid"];
 						$y++;
@@ -1148,4 +1185,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
