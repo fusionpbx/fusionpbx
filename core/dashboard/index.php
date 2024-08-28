@@ -227,33 +227,33 @@
 <style>
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
 }
 
 .widget {
-  /*background-color: #eee;*/
-  cursor: pointer;
+	/*background-color: #eee;*/
+	cursor: pointer;
 }
 
 .widgets {
-  max-width: 100%;
-  margin: 0 auto;
-  display: grid;
-  grid-gap: 1rem;
+	max-width: 100%;
+	margin: 0 auto;
+	display: grid;
+	grid-gap: 1rem;
 }
 
 div.hud_content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: start;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: start;
 }
 
 div.hud_chart {
-  height: 150px;
-  padding-top: 7px;
+	height: 150px;
+	padding-top: 7px;
 }
 
 /* dashboard settings */
@@ -369,8 +369,8 @@ foreach ($dashboard as $row) {
 
 /* Screen smaller than 575px? 1 columns */
 @media (max-width: 575px) {
-  .widgets { grid-template-columns: repeat(1, minmax(100px, 1fr)); }
-  .col-num { grid-column: span 1; }
+	.widgets { grid-template-columns: repeat(1, minmax(100px, 1fr)); }
+	.col-num { grid-column: span 1; }
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
@@ -391,8 +391,8 @@ foreach ($dashboard as $row) {
 
 /* Screen larger than 575px? 2 columns */
 @media (min-width: 575px) {
-  .widgets { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
-  .col-num { grid-column: span 2; }
+	.widgets { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
+	.col-num { grid-column: span 2; }
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
@@ -418,8 +418,8 @@ foreach ($dashboard as $row) {
 
 /* Screen larger than 1300px? 3 columns */
 @media (min-width: 1300px) {
-  .widgets { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
-  .col-num { grid-column: span 2; }
+	.widgets { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
+	.col-num { grid-column: span 2; }
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
@@ -434,14 +434,14 @@ foreach ($dashboard as $row) {
 
 /* Screen larger than 1500px? 4 columns */
 @media (min-width: 1500px) {
-  .widgets { grid-template-columns: repeat(4, minmax(100px, 1fr)); }
-  .col-num { grid-column: span 2; }
+	.widgets { grid-template-columns: repeat(4, minmax(100px, 1fr)); }
+	.col-num { grid-column: span 2; }
 }
 
 /* Screen larger than 2000px? 5 columns */
 @media (min-width: 2000px) {
-  .widgets { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
-  .col-num { grid-column: span 2; }
+	.widgets { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
+	.col-num { grid-column: span 2; }
 }
 </style>
 
@@ -465,33 +465,33 @@ function toggle_grid_row_end(dashboard_name) {
 let first_toggle = false;
 
 function toggle_grid_row_end_all() {
-    let widgets = document.querySelectorAll('div.widget');
+	let widgets = document.querySelectorAll('div.widget');
 
-    widgets.forEach(div => {
-        let state = div.getAttribute('data-state');
-        let current_row_end = div.style.gridRowEnd;
-        let current_row_end_number = current_row_end.startsWith('span ') ? Number(current_row_end.replace('span ', '')) : 0;
+	widgets.forEach(div => {
+		let state = div.getAttribute('data-state');
+		let current_row_end = div.style.gridRowEnd;
+		let current_row_end_number = current_row_end.startsWith('span ') ? Number(current_row_end.replace('span ', '')) : 0;
 
 		// Skip if widget details state is disabled
-        if (state === 'disabled') {
-            return;
-        }
+		if (state === 'disabled') {
+			return;
+		}
 
 		// On the first call, skip expanded widgets
-        if (!first_toggle && state === 'expanded') {
-            return;
-        }
+		if (!first_toggle && state === 'expanded') {
+			return;
+		}
+		
+		if (state === 'expanded') {
+			div.style.gridRowEnd = 'span ' + (current_row_end_number - 3);
+			div.dataset.state = 'contracted';
+		} else {
+			div.style.gridRowEnd = 'span ' + (current_row_end_number + 3);
+			div.dataset.state = 'expanded';
+		}
+	});
 
-        if (state === 'expanded') {
-            div.style.gridRowEnd = 'span ' + (current_row_end_number - 3);
-            div.dataset.state = 'contracted';
-        } else {
-            div.style.gridRowEnd = 'span ' + (current_row_end_number + 3);
-            div.dataset.state = 'expanded';
-        }
-    });
-
-    first_toggle = true;
+	first_toggle = true;
 }
 
 </script>
@@ -502,8 +502,9 @@ function toggle_grid_row_end_all() {
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach ($dashboard as $row) {
-		$dashboard_uuid = $row['dashboard_uuid'];
-		$dashboard_name = $row['dashboard_name'];
+		//set the variables
+		$dashboard_uuid = $row['dashboard_uuid'] ?? '';
+		$dashboard_name = $row['dashboard_name'] ?? '';
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url = $row['dashboard_url'] ?? '';
 		$dashboard_target = $row['dashboard_target'] ?? '';
@@ -521,18 +522,38 @@ function toggle_grid_row_end_all() {
 			$dashboard_row_span += 3;
 		}
 
-		echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".trim(preg_replace("/[^a-z]/", '_', strtolower($dashboard_name)),'_')."' draggable='false'>\n";
-		$dashboard_path_array = explode('/', $row['dashboard_path']);
-		$path_array = glob(dirname(__DIR__, 2).'/*/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php');
-		include $path_array[0];
-		//$file_name = dirname(__DIR__, 2).'/app/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php';
-		//if (file_exists(dirname(__DIR__, 2).'/core/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php')) {
-		//	include dirname(__DIR__, 2).'/core/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php';
-		//}
-		//elseif (file_exists(dirname(__DIR__, 2).'/app/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php')) {
-		//	include dirname(__DIR__, 2).'/app/'.$dashboard_path_array[0].'/resources/dashboard/'.$dashboard_path_array[1].'.php';
-		//}
+		//define the regex patterns
+		$uuid_pattern = '/[^-A-Fa-f0-9]/';
+		$number_pattern = '/[^-A-Za-z0-9()*#]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.#]/';
 
+		//sanitize the data
+		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
+		$dashboard_name = trim(preg_replace($text_pattern, '', $dashboard_name));
+		$dashboard_name_id = trim(preg_replace("/[^a-z_]/", '_', strtolower($dashboard_name)),'_');
+		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
+		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
+		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
+		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
+		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
+		$dashboard_content = trim(preg_replace($text_pattern, '', $dashboard_content));
+		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
+		$dashboard_content_details = trim(preg_replace($text_pattern, '', $dashboard_content_details));
+		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
+		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
+		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
+		$dashboard_details_state = preg_replace($text_pattern, '', $dashboard_details_state);
+		$dashboard_row_span = preg_replace($number_pattern, '', $dashboard_row_span);
+		$dashboard_path = preg_replace($text_pattern, '', strtolower($row['dashboard_path']));
+
+		//find the application and widget
+		$dashboard_path_array = explode('/', $dashboard_path);
+		$application_name = $dashboard_path_array[0];
+		$widget_name = $dashboard_path_array[1];
+		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
+
+		echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
+		include $path_array[0];
 		echo "</div>\n";
 
 		$x++;
@@ -639,4 +660,3 @@ function toggle_grid_row_end_all() {
 	require_once "resources/footer.php";
 
 ?>
-
