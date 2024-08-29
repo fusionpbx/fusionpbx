@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -133,7 +136,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
 						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
 						$dialplan_uuid = $database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
@@ -146,7 +148,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 						$sql .= "and dialplan_detail_data like 'timezone=%' ";
 						$parameters['domain_uuid'] = $domain_uuid;
 						$parameters['dialplan_uuid'] = $dialplan_uuid;
-						$database = new database;
 						$dialplan_detail_uuid = $database->select($sql, $parameters, 'column');
 						if (is_uuid($dialplan_detail_uuid)) {
 							$detail_action = "update";
@@ -175,7 +176,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 							$array['dialplan_details'][0]['dialplan_detail_group'] = 0;
 						}
 						if (is_array($array) && sizeof($array) != 0) {
-							$database = new database;
 							$database->app_name = 'user_settings';
 							$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 							$database->save($array);
@@ -208,7 +208,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$array['user_settings'][0]['user_setting_enabled'] = $user_setting_enabled;
 					$array['user_settings'][0]['user_setting_description'] = $user_setting_description;
 
-					$database = new database;
 					$database->app_name = 'user_settings';
 					$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 					$database->save($array);
@@ -221,7 +220,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-					$database = new database;
 					$result = $database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 
@@ -237,7 +235,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 								$sql .= "and domain_uuid = :domain_uuid ";
 								$parameters['dialplan_uuid'] = $dialplan_uuid;
 								$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-								$database = new database;
 								$sub_result = $database->select($sql, $parameters, 'all');
 								if (is_array($sub_result) && sizeof($sub_result) != 0) {
 									foreach ($sub_result as $sub_row) {
@@ -272,7 +269,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 									$p = new permissions;
 									$p->add('dialplan_detail_add', 'temp');
 
-									$database = new database;
 									$database->app_name = 'user_settings';
 									$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 									$database->save($array);
@@ -291,7 +287,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 									$p = new permissions;
 									$p->add('dialplan_detail_edit', 'temp');
 
-									$database = new database;
 									$database->app_name = 'user_settings';
 									$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 									$database->save($array);
@@ -324,7 +319,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "and user_uuid = :user_uuid ";
 		$parameters['user_setting_uuid'] = $user_setting_uuid;
 		$parameters['user_uuid'] = $user_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
 			$user_setting_category = $row["user_setting_category"];
@@ -443,7 +437,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "		<option value=''></option>\n";
 		$sql = "select * from v_menus ";
 		$sql .= "order by menu_language, menu_name asc ";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as $row) {
