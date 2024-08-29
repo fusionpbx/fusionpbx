@@ -13,7 +13,7 @@ $y=0;
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Queues Actives";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "תורים פעילים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Code Attive";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "აქტიური რიგები";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "აქტიური რიგები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve wachtrijen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywne kolejki";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Filas ativas";
@@ -36,3 +36,4 @@ $y=0;
 	$y++;
 
 ?>
+
