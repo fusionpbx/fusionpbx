@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -282,14 +285,12 @@
 
 		//get the groups
 			$sql = "select * from v_groups where domain_uuid is null ";
-			$database = new database;
 			$groups = $database->select($sql, null, 'all');
 			unset($sql);
 
 		//get the users
 			$sql = "select * from v_users where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$users = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
@@ -383,7 +384,6 @@
 							//process a chunk of the array
 								if ($row_id === 1000) {
 									//save to the data
-										$database = new database;
 										$database->app_name = 'contacts';
 										$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 										$database->save($array);
@@ -407,7 +407,6 @@
 
 				//save to the data
 					if (!empty($array)) {
-						$database = new database;
 						$database->app_name = 'contacts';
 						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
