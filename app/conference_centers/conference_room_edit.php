@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -95,7 +98,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by conference_center_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$conference_centers = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -104,7 +106,6 @@
 	$sql .= "from v_conference_profiles ";
 	$sql .= "where profile_enabled = 'true' ";
 	$sql .= "and profile_name <> 'sla' ";
-	$database = new database;
 	$conference_profiles = $database->select($sql, null, 'all');
 	unset ($sql);
 
@@ -122,7 +123,6 @@
 		$parameters['conference_room_uuid'] = $conference_room_uuid;
 		
 		$parameters['pin'] = $pin;
-		$database = new database;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		if ($num_rows == 0) {
 			return $pin;
@@ -156,7 +156,6 @@
 		$parameters['conference_center_uuid'] = $conference_center_uuid;
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$pin_length = $row['conference_center_pin_length'];
@@ -186,7 +185,6 @@
 				$p = new permissions;
 				$p->add('conference_room_user_delete', 'temp');
 
-				$database = new database;
 				$database->app_name = 'conference_centers';
 				$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 				$database->delete($array);
@@ -232,7 +230,6 @@
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['moderator_pin'] = $moderator_pin;
 					$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
-					$database = new database;
 					$num_rows = $database->select($sql, $parameters, 'column');
 					if ($num_rows > 0) {
 						$msg .= $text['message-unique_moderator_pin']."<br />\n";
@@ -342,7 +339,6 @@
 						$array['conference_rooms'][0]['enabled'] = $enabled;
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database = new database;
 						$database->app_name = 'conference_centers';
 						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
@@ -359,7 +355,6 @@
 							$p = new permissions;
 							$p->add('conference_room_user_add', 'temp');
 
-							$database = new database;
 							$database->app_name = 'conference_centers';
 							$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 							$database->save($array);
@@ -422,7 +417,6 @@
 						}
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database = new database;
 						$database->app_name = 'conference_centers';
 						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
@@ -443,7 +437,6 @@
 					$p = new permissions;
 					$p->add('conference_room_user_add', 'temp');
 
-					$database = new database;
 					$database->app_name = 'conference_centers';
 					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 					$database->save($array);
@@ -469,7 +462,6 @@
 			$sql .= "and conference_room_uuid = :conference_room_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['conference_room_uuid'] = $conference_room_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters ?? null, 'row');
 			if (!empty($row)) {
 				$conference_center_uuid = $row["conference_center_uuid"];
@@ -507,7 +499,6 @@
 	$sql .= "order by u.username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['conference_room_uuid'] = $conference_room_uuid ?? '';
-	$database = new database;
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
@@ -525,7 +516,6 @@
 	}
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
