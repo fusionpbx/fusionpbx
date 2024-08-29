@@ -37,10 +37,12 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -56,7 +58,6 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$contact_type = $row["contact_type"];
@@ -80,7 +81,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -103,7 +103,6 @@
 	$sql .= "order by u.username asc ";
 	$parameters['contact_uuid'] = $contact_uuid;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$contact_users_assigned = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -118,7 +117,6 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid;
 	$parameters['group_uuid'] = $_SESSION["user_uuid"];
-	$database = new database;
 	$contact_groups_assigned = $database->select($sql, $parameters, 'all');
 	if (!empty($contact_groups_assigned)) {
 		foreach ($contact_groups_assigned as $field) {
@@ -135,7 +133,6 @@
 	}
 	$sql .= "order by group_name asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$contact_groups_available = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $contact_groups);
 
@@ -249,7 +246,6 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$time_start = $database->select($sql, $parameters ?? null, 'column');
 		$btn_style = $time_start ? 'color: #fff; background-color: #3693df; background-image: none;' : null;
 		unset($sql, $parameters);

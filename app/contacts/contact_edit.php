@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2024
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -33,6 +33,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -247,20 +250,17 @@
 					switch ($_POST['action']) {
 						case 'copy':
 							if (permission_exists('contact_add')) {
-								$obj = new database;
-								$obj->copy($array);
+								$database->copy($array);
 							}
 							break;
 						case 'delete':
 							if (permission_exists('contact_delete')) {
-								$obj = new database;
-								$obj->delete($array);
+								$database->delete($array);
 							}
 							break;
 						case 'toggle':
 							if (permission_exists('contact_update')) {
-								$obj = new database;
-								$obj->toggle($array);
+								$database->toggle($array);
 							}
 							break;
 					}
@@ -341,7 +341,6 @@
 				$sql .= "and user_uuid = :user_uuid ";
 				$parameters['contact_uuid'] = $contact_uuid;
 				$parameters['user_uuid'] = $contact_user_uuid;
-				$database = new database;
 				$users = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 
@@ -555,7 +554,6 @@
 
 				//view_array($array);
 
-				$database = new database;
 				$database->app_name = 'contacts';
 				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->save($array);
@@ -592,7 +590,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (!empty($row)) {
 			$contact_organization = $row["contact_organization"];
@@ -632,7 +629,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -657,7 +653,6 @@
 		$sql .= "order by u.username asc ";
 		$parameters['contact_uuid'] = $contact_uuid;
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$contact_users_assigned = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -674,7 +669,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$parameters['group_uuid'] = $_SESSION["user_uuid"];
-		$database = new database;
 		$contact_groups_assigned = $database->select($sql, $parameters, 'all');
 		if (!empty($contact_groups_assigned)) {
 			foreach ($contact_groups_assigned as $field) {
@@ -692,7 +686,6 @@
 	}
 	$sql .= "order by group_name asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$contact_groups_available = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $contact_groups);
 
@@ -703,7 +696,6 @@
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$contact_phones = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -740,7 +732,6 @@
 		$sql .= "order by address_street asc";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$contact_addresses = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -778,7 +769,6 @@
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$contact_emails = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -808,7 +798,6 @@
 		$sql .= "order by url_address asc";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$contact_urls = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -838,7 +827,6 @@
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid ?? null;
-		$database = new database;
 		$contact_relations = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -865,7 +853,6 @@
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$contact_settings = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -898,7 +885,6 @@
 		$sql .= "order by attachment_primary desc, attachment_filename asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$contact_attachments = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -910,7 +896,6 @@
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$contact_times = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -935,7 +920,6 @@
 	$sql .= "order by last_mod_date desc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? null;
-	$database = new database;
 	$contact_notes = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -1100,7 +1084,6 @@
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 			$parameters['contact_uuid'] = $contact_uuid;
-			$database = new database;
 			$time_start = $database->select($sql, $parameters, 'column');
 			$btn_style = $time_start ? 'color: #fff; background-color: #3693df; background-image: none;' : null;
 			unset($sql, $parameters);
@@ -2301,7 +2284,6 @@ if (permission_exists('contact_relation_view')) {
 			$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['contact_uuid'] = $row['contact_uuid'];
-			$database = new database;
 			$contacts = $database->select($sql, $parameters, 'all');
 			if (!empty($contacts) && is_uuid($row['relation_contact_uuid'])) {
 				foreach($contacts as $field) {
