@@ -24,7 +24,7 @@ $text['title-user_setting-edit']['uk-ua'] = "Налаштування корис
 $text['title-user_setting-edit']['zh-cn'] = "用户设置";
 $text['title-user_setting-edit']['ja-jp'] = "ユーザー設定";
 $text['title-user_setting-edit']['ko-kr'] = "사용자 설정";
-$text['title-user_setting-edit']['en-us'] = "მომხმარებლის პარამეტრები";
+$text['title-user_setting-edit']['en-us'] = "მომხმარებლის პარამეტრი";
 
 $text['title-user_setting-add']['en-us'] = "User Setting Add";
 $text['title-user_setting-add']['en-gb'] = "User Setting Add";
@@ -50,7 +50,7 @@ $text['title-user_setting-add']['uk-ua'] = "Налаштування корис�
 $text['title-user_setting-add']['zh-cn'] = "用户设置添加";
 $text['title-user_setting-add']['ja-jp'] = "ユーザー設定追加";
 $text['title-user_setting-add']['ko-kr'] = "사용자 설정 추가";
-$text['title-user_setting-add']['ka-ge'] = "მომხმარებლის პარამეტრების დამატება";
+$text['title-user_setting-add']['ka-ge'] = "მომხმარებლის პარამეტრის დამატება";
 
 $text['title-user_dashboard']['en-us'] = "Dashboard";
 $text['title-user_dashboard']['en-gb'] = "Dashboard";
@@ -80,7 +80,7 @@ $text['title-user_dashboard']['ka-ge'] = "ხელსაწყოების �
 
 $text['title']['en-us'] = "Account Settings";
 $text['title']['en-gb'] = "Account Settings";
-$text['title']['ka-ge'] = "პროფილის პარამეტრი";
+$text['title']['ka-ge'] = "პროფილის პარამეტრებიი";
 $text['title']['ar-eg'] = "إعدادات الحساب";
 $text['title']['de-at'] = "Kontoeinstellungen";
 $text['title']['de-ch'] = "Kontoeinstellungen";
@@ -206,7 +206,7 @@ $text['table-extension']['uk-ua'] = "Розширення (Extention)";
 $text['table-extension']['zh-cn'] = "延期";
 $text['table-extension']['ja-jp'] = "エクステンション";
 $text['table-extension']['ko-kr'] = "확대";
-$text['table-extension']['ka-ge'] = "გაფართოება(Extention)";
+$text['table-extension']['ka-ge'] = "გაფართოება";
 
 $text['table-description']['en-us'] = "Description";
 $text['table-description']['en-gb'] = "Description";
@@ -258,7 +258,7 @@ $text['message-reset_link_sent']['uk-ua'] = "Посилання на скида�
 $text['message-reset_link_sent']['zh-cn'] = "密码重置链接已发送";
 $text['message-reset_link_sent']['ja-jp'] = "送信されたパスワードリセットリンク";
 $text['message-reset_link_sent']['ko-kr'] = "비밀번호 재설정 링크가 보냈습니다";
-$text['message-reset_link_sent']['ka-ge'] = "პაროლის განახლების ბმული გამოგზავნილია";
+$text['message-reset_link_sent']['ka-ge'] = "პაროლის ჩამოყრის ბმული გამოგზავნილია";
 
 $text['message-password_reset']['en-us'] = "Password Reset";
 $text['message-password_reset']['en-gb'] = "Password Reset";
@@ -284,7 +284,7 @@ $text['message-password_reset']['uk-ua'] = "Скинути пароль";
 $text['message-password_reset']['zh-cn'] = "重设密码";
 $text['message-password_reset']['ja-jp'] = "パスワードリセット";
 $text['message-password_reset']['ko-kr'] = "비밀번호 재설정";
-$text['message-password_reset']['ka-ge'] = "პაროლი განახლებულია";
+$text['message-password_reset']['ka-ge'] = "პაროლის ჩამოყრა";
 
 $text['message-password_requirements']['en-us'] = "Password Requirements";
 $text['message-password_requirements']['en-gb'] = "Password Requirements";
@@ -310,7 +310,7 @@ $text['message-password_requirements']['uk-ua'] = "вимоги до парол�
 $text['message-password_requirements']['zh-cn'] = "密码要求";
 $text['message-password_requirements']['ja-jp'] = "パスワード要件";
 $text['message-password_requirements']['ko-kr'] = "비밀번호 요구 사항";
-$text['message-password_requirements']['ka-ge'] = "პაროლის შეცვლის მოთხოვნები";
+$text['message-password_requirements']['ka-ge'] = "პაროლის მოთხოვნები";
 
 $text['message-password_mismatch']['en-us'] = "Password Mismatch";
 $text['message-password_mismatch']['en-gb'] = "Password Mismatch";
@@ -336,7 +336,7 @@ $text['message-password_mismatch']['uk-ua'] = "Паролі не співпад�
 $text['message-password_mismatch']['zh-cn'] = "密码不匹配";
 $text['message-password_mismatch']['ja-jp'] = "パスワード";
 $text['message-password_mismatch']['ko-kr'] = "암호 불일치";
-$text['message-password_mismatch']['ka-ge'] = "პაროლები ერთმანეთს არ ემთხვევა";
+$text['message-password_mismatch']['ka-ge'] = "პაროლები არ ემთხვევა";
 
 $text['message-password_blank']['en-us'] = "Invalid Password";
 $text['message-password_blank']['en-gb'] = "Invalid Password";
@@ -414,7 +414,7 @@ $text['message-invalid_email']['uk-ua'] = "Некоректна адреса E-M
 $text['message-invalid_email']['zh-cn'] = "无效的邮件地址";
 $text['message-invalid_email']['ja-jp'] = "無効なメールアドレス";
 $text['message-invalid_email']['ko-kr'] = "잘못된 이메일 주소";
-$text['message-invalid_email']['ka-ge'] = "არასწორი ელ-ფოსტა";
+$text['message-invalid_email']['ka-ge'] = "არასწორი ელფოსტის მისამართი";
 
 $text['message-email_assigned_mutliple_users']['en-us'] = "Email Address Assigned to Multiple Users";
 $text['message-email_assigned_mutliple_users']['en-gb'] = "Email Address Assigned to Multiple Users";
@@ -441,7 +441,7 @@ $text['message-email_assigned_mutliple_users']['tr-tr'] = "Kopya Algılandı";
 $text['message-email_assigned_mutliple_users']['zh-cn'] = "分配给多个用户的电子邮件地址";
 $text['message-email_assigned_mutliple_users']['ja-jp'] = "メールアドレス 複数のユーザに割り当てられたメールアドレス";
 $text['message-email_assigned_mutliple_users']['ko-kr'] = "이메일 주소 다중 사용자에 할당";
-$text['message-email_assigned_mutliple_users']['ka-ge'] = "ელ-ფოსტა ეკუთვნის რამდენიმე მომხმარებელს";
+$text['message-email_assigned_mutliple_users']['ka-ge'] = "ელფოსტის მისამართი მინიჭებულია რამდენიმე მომხმარებელზე";
 
 $text['login-message_dismiss']['en-us'] = "Dismiss";
 $text['login-message_dismiss']['en-gb'] = "Dismiss";
@@ -467,7 +467,7 @@ $text['login-message_dismiss']['uk-ua'] = "Звільнити";
 $text['login-message_dismiss']['zh-cn'] = "解雇";
 $text['login-message_dismiss']['ja-jp'] = "解散";
 $text['login-message_dismiss']['ko-kr'] = "해고하다";
-$text['login-message_dismiss']['ka-ge'] = "გაუქმება";
+$text['login-message_dismiss']['ka-ge'] = "მოცილება";
 
 $text['login-message_attention']['en-us'] = "Attention!";
 $text['login-message_attention']['en-gb'] = "Attention!";
@@ -600,7 +600,7 @@ $text['label-welcome']['uk-ua'] = "Ласкаво просимо:";
 $text['label-welcome']['zh-cn'] = "欢迎:";
 $text['label-welcome']['ja-jp'] = "歓迎:";
 $text['label-welcome']['ko-kr'] = "환영:";
-$text['label-welcome']['ka-ge'] = "კეთილი იყოს თქვენი მობრძანება:";
+$text['label-welcome']['ka-ge'] = "მოგესალმებით:";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['en-gb'] = "Voicemail";
@@ -652,7 +652,7 @@ $text['label-view_all']['uk-ua'] = "Показати всі";
 $text['label-view_all']['zh-cn'] = "查看全部";
 $text['label-view_all']['ja-jp'] = "すべてを表示します";
 $text['label-view_all']['ko-kr'] = "모두 보기";
-$text['label-view_all']['ka-ge'] = "ყველაფრის ნახვა";
+$text['label-view_all']['ka-ge'] = "ყველას ნახვა";
 
 $text['label-value']['en-us'] = "Value";
 $text['label-value']['en-gb'] = "Value";
@@ -782,7 +782,7 @@ $text['label-used']['uk-ua'] = "Використаний";
 $text['label-used']['zh-cn'] = "用过的";
 $text['label-used']['ja-jp'] = "使用済み";
 $text['label-used']['ko-kr'] = "사용된";
-$text['label-used']['ka-ge'] = "გამოყენებული";
+$text['label-used']['ka-ge'] = "გამოყენებულია";
 
 $text['label-uppercase_letters']['en-us'] = "Uppercase Letters";
 $text['label-uppercase_letters']['en-gb'] = "Uppercase Letters";
@@ -834,7 +834,7 @@ $text['label-total_extensions']['uk-ua'] = "всього розширень";
 $text['label-total_extensions']['zh-cn'] = "总扩展";
 $text['label-total_extensions']['ja-jp'] = "総延長";
 $text['label-total_extensions']['ko-kr'] = "총 확장";
-$text['label-total_extensions']['ka-ge'] = "საერთო შიდა ნომრები(Extensions)";
+$text['label-total_extensions']['ka-ge'] = "სულ შიდა ნომრები(Extensions)";
 
 $text['label-total_destinations']['en-us'] = "Total Destinations";
 $text['label-total_destinations']['en-gb'] = "Total Destinations";
@@ -860,7 +860,7 @@ $text['label-total_destinations']['uk-ua'] = "всього Напрями";
 $text['label-total_destinations']['zh-cn'] = "总目的地";
 $text['label-total_destinations']['ja-jp'] = "総目的地";
 $text['label-total_destinations']['ko-kr'] = "총 목적지";
-$text['label-total_destinations']['ka-ge'] = "საერთო მიმართულებები";
+$text['label-total_destinations']['ka-ge'] = "სულ მიმართულებები";
 
 
 $text['label-total']['en-us'] = "Total";
@@ -913,7 +913,7 @@ $text['label-time']['uk-ua'] = "Часовий пояс";
 $text['label-time']['zh-cn'] = "时间区";
 $text['label-time']['ja-jp'] = "タイムゾーン";
 $text['label-time']['ko-kr'] = "시간 영역";
-$text['label-time']['ka-ge'] = "სასაათო სარტყელი";
+$text['label-time']['ka-ge'] = "დროის სარტყელი";
 
 $text['label-system_uptime']['en-us'] = "OS Uptime";
 $text['label-system_uptime']['en-gb'] = "OS Uptime";
@@ -1045,7 +1045,7 @@ $text['label-switch']['uk-ua'] = "Перемикач";
 $text['label-switch']['zh-cn'] = "转变";
 $text['label-switch']['ja-jp'] = "スイッチ";
 $text['label-switch']['ko-kr'] = "스위치";
-$text['label-switch']['ka-ge'] = "გამომრთველი";
+$text['label-switch']['ka-ge'] = "კომუტატორი";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['en-gb'] = "Status";
@@ -1149,7 +1149,7 @@ $text['label-reset_password']['uk-ua'] = "Скинути пароль";
 $text['label-reset_password']['zh-cn'] = "重设密码";
 $text['label-reset_password']['ja-jp'] = "パスワードを再設定する";
 $text['label-reset_password']['ko-kr'] = "암호를 재설정";
-$text['label-reset_password']['ka-ge'] = "პაროლის განახლება";
+$text['label-reset_password']['ka-ge'] = "პაროლის ჩამოყრა";
 
 $text['label-repeat_password']['en-us'] = "Repeat Password";
 $text['label-repeat_password']['en-gb'] = "Repeat Password";
@@ -1253,7 +1253,7 @@ $text['label-processor_usage']['uk-ua'] = "Використання процес
 $text['label-processor_usage']['zh-cn'] = "CPU 使用率";
 $text['label-processor_usage']['ja-jp'] = "CPU 使用率";
 $text['label-processor_usage']['ko-kr'] = "CPU 사용";
-$text['label-processor_usage']['ka-ge'] = "პროცესორის(CPU) გამოყენება";
+$text['label-processor_usage']['ka-ge'] = "პროცესორის დატვირთვა";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['en-gb'] = "Password";
@@ -1306,7 +1306,7 @@ $text['label-outbound']['uk-ua'] = "Зняття";
 $text['label-outbound']['zh-cn'] = "出站";
 $text['label-outbound']['ja-jp'] = "アウトバウンド";
 $text['label-outbound']['ko-kr'] = "배 밖으로";
-$text['label-outbound']['ka-ge'] = "გამავალი ზარი";
+$text['label-outbound']['ka-ge'] = "გამავალი";
 
 $text['label-numbers']['en-us'] = "Numbers";
 $text['label-numbers']['en-gb'] = "Numbers";
@@ -1567,7 +1567,7 @@ $text['label-memory_available']['uk-ua'] = "Доступна пам'ять";
 $text['label-memory_available']['zh-cn'] = "有效内存";
 $text['label-memory_available']['ja-jp'] = "使用可能なメモリ";
 $text['label-memory_available']['ko-kr'] = "사용 가능한 메모리";
-$text['label-memory_available']['ka-ge'] = "თავისუფალი მეხსიერება";
+$text['label-memory_available']['ka-ge'] = "ხელმისაწვდომი მეხსიერება";
 
 $text['label-lowercase_letters']['en-us'] = "Lowercase Letters";
 $text['label-lowercase_letters']['en-gb'] = "Lowercase Letters";
@@ -1645,7 +1645,7 @@ $text['label-last_24_hours']['uk-ua'] = "Останні 24 годин";
 $text['label-last_24_hours']['zh-cn'] = "最近 24 小时";
 $text['label-last_24_hours']['ja-jp'] = "過去 24 時間";
 $text['label-last_24_hours']['ko-kr'] = "지난 24 시간";
-$text['label-last_24_hours']['ka-ge'] = "ბოლო 24 საათი";
+$text['label-last_24_hours']['ka-ge'] = "ბოლო 24 საათში";
 
 $text['label-ivr_menus']['en-us'] = "IVR Menus";
 $text['label-ivr_menus']['en-gb'] = "IVR Menus";
@@ -1697,7 +1697,7 @@ $text['label-inbound']['uk-ua'] = "Вихідний";
 $text['label-inbound']['zh-cn'] = "入站";
 $text['label-inbound']['ja-jp'] = "インバウンド";
 $text['label-inbound']['ko-kr'] = "인바운드";
-$text['label-inbound']['ka-ge'] = "შემომავალი ზარები";
+$text['label-inbound']['ka-ge'] = "შემომავალი";
 
 $text['label-item']['en-us'] = "Item";
 $text['label-item']['en-gb'] = "Item";
@@ -1749,7 +1749,7 @@ $text['label-gateways']['uk-ua'] = "Шлюзи";
 $text['label-gateways']['zh-cn'] = "网关";
 $text['label-gateways']['ja-jp'] = "ゲートウェイ";
 $text['label-gateways']['ko-kr'] = "게이트웨이";
-$text['label-gateways']['ka-ge'] = "მარშრუტიზატორები(Gateways)";
+$text['label-gateways']['ka-ge'] = "კვანძები(Gateways)";
 
 $text['label-followme']['en-us'] = "Follow Me";
 $text['label-followme']['en-gb'] = "Follow Me";
@@ -1801,7 +1801,7 @@ $text['label-feature']['uk-ua'] = "особливість";
 $text['label-feature']['zh-cn'] = "特征";
 $text['label-feature']['ja-jp'] = "特徴";
 $text['label-feature']['ko-kr'] = "특징";
-$text['label-feature']['ka-ge'] = "ფუნქციონალი";
+$text['label-feature']['ka-ge'] = "ფუნქცია";
 
 $text['label-failed']['en-us'] = "Failed";
 $text['label-failed']['en-gb'] = "Failed";
@@ -1827,7 +1827,7 @@ $text['label-failed']['uk-ua'] = "Неприємний";
 $text['label-failed']['zh-cn'] = "失败的";
 $text['label-failed']['ja-jp'] = "失敗した";
 $text['label-failed']['ko-kr'] = "실패한";
-$text['label-failed']['ka-ge'] = "ვერ მოხერხდა";
+$text['label-failed']['ka-ge'] = "ჩავარდა";
 
 $text['label-extensions']['en-us'] = "Extensions";
 $text['label-extensions']['en-gb'] = "Extensions";
@@ -1905,7 +1905,7 @@ $text['label-email_address']['uk-ua'] = "Адреси E-Mail";
 $text['label-email_address']['zh-cn'] = "电子邮件地址";
 $text['label-email_address']['ja-jp'] = "電子メールアドレス";
 $text['label-email_address']['ko-kr'] = "이메일 주소";
-$text['label-email_address']['ka-ge'] = "ელ-ფოსტის მისამართი";
+$text['label-email_address']['ka-ge'] = "ელფოსტის მისამართი";
 
 $text['label-domains']['en-us'] = "Domains";
 $text['label-domains']['en-gb'] = "Domains";
@@ -2222,7 +2222,7 @@ $text['label-cid_number']['zh-cn'] = "数字";
 $text['label-cid_number']['ja-jp'] = "番号";
 $text['label-cid_number']['ko-kr'] = "숫자";
 $text['label-cid_number']['ko-kr'] = "숫자";
-$text['label-cid_number']['ka-ge'] = "რიცხვი";
+$text['label-cid_number']['ka-ge'] = "ნომერი";
 
 $text['label-cid_name']['en-us'] = "Name";
 $text['label-cid_name']['en-gb'] = "Name";
@@ -2331,7 +2331,7 @@ $text['label-cancelled']['zh-cn'] = "取消";
 $text['label-cancelled']['ja-jp'] = "キャンセル";
 $text['label-cancelled']['ko-kr'] = "취소 된";
 $text['label-cancelled']['ko-kr'] = "취소 된";
-$text['label-cancelled']['ka-ge'] = "გაუქმებული/შეწყვეტილი";
+$text['label-cancelled']['ka-ge'] = "გაუქმებულია";
 
 $text['label-cancel']['en-us'] = "Cancel";
 $text['label-cancel']['en-gb'] = "Cancel";
@@ -2358,7 +2358,7 @@ $text['label-cancel']['zh-cn'] = "取消";
 $text['label-cancel']['ja-jp'] = "キャンセル";
 $text['label-cancel']['ko-kr'] = "취소";
 $text['label-cancel']['ko-kr'] = "취소";
-$text['label-cancel']['ka-ge'] = "გაუქმებული/შეწყვეტილი";
+$text['label-cancel']['ka-ge'] = "გაუქმება";
 
 $text['label-callforward']['en-us'] = "Call Forward";
 $text['label-callforward']['en-gb'] = "Call Forward";
@@ -2412,7 +2412,7 @@ $text['label-call_center_queues']['zh-cn'] = "呼叫中心队列";
 $text['label-call_center_queues']['ja-jp'] = "コールセンターキュー";
 $text['label-call_center_queues']['ko-kr'] = "콜센터 대기열";
 $text['label-call_center_queues']['ko-kr'] = "콜센터 대기열";
-$text['label-call_center_queues']['ka-ge'] = "ქოლ-ცენტრი რიგები";
+$text['label-call_center_queues']['ka-ge'] = "ქოლცენტრის რიგები";
 
 $text['label-answered']['en-us'] = "Answered";
 $text['label-answered']['en-gb'] = "Answered";
@@ -2519,7 +2519,7 @@ $text['label-active_extensions']['zh-cn'] = "主动扩展";
 $text['label-active_extensions']['ja-jp'] = "アクティブな拡張機能";
 $text['label-active_extensions']['ko-kr'] = "활성 확장";
 $text['label-active_extensions']['ko-kr'] = "활성 확장";
-$text['label-active_extensions']['ka-ge'] = "აქტიური გაფართოებები(Extensions)";
+$text['label-active_extensions']['ka-ge'] = "აქტიური გაფართოებები";
 
 $text['label-active_domains']['en-us'] = "Active Domains";
 $text['label-active_domains']['en-gb'] = "Active Domains";
@@ -2594,7 +2594,7 @@ $text['label-single']['zh-cn'] = "单身的";
 $text['label-single']['ja-jp'] = "独身";
 $text['label-single']['ko-kr'] = "하나의";
 $text['label-single']['ko-kr'] = "하나의";
-$text['label-single']['ka-ge'] = "ცალი (Single)";
+$text['label-single']['ka-ge'] = "ერთი";
 
 $text['label-multiple']['en-us'] = "Multiple";
 $text['label-multiple']['en-gb'] = "Multiple";
@@ -2618,7 +2618,7 @@ $text['label-multiple']['zh-cn'] = "多种的";
 $text['label-multiple']['ja-jp'] = "多数";
 $text['label-multiple']['ko-kr'] = "다수의";
 $text['label-multiple']['ko-kr'] = "다수의";
-$text['label-multiple']['ka-ge'] = "მრავალი";
+$text['label-multiple']['ka-ge'] = "ერთზე მეტი";
 
 $text['header-user_dashboard']['en-us'] = "Dashboard";
 $text['header-user_dashboard']['en-gb'] = "Dashboard";
@@ -2672,7 +2672,7 @@ $text['header-user_setting-edit']['zh-cn'] = "用户设置";
 $text['header-user_setting-edit']['ja-jp'] = "ユーザー設定";
 $text['header-user_setting-edit']['ko-kr'] = "사용자 설정";
 $text['header-user_setting-edit']['ko-kr'] = "사용자 설정";
-$text['header-user_setting-edit']['ka-ge'] = "მომხმარებლის პარამეტრები";
+$text['header-user_setting-edit']['ka-ge'] = "მომხმარებლის პარამეტრი";
 
 
 $text['header-user_setting-add']['en-us'] = "User Setting Add";
@@ -2836,7 +2836,7 @@ $text['description']['uk-ua'] = "Редагування інформації о�
 $text['description']['zh-cn'] = "编辑帐户信息。";
 $text['description']['ja-jp'] = "アカウント情報の編集";
 $text['description']['ko-kr'] = "계정 정보 편집.";
-$text['description']['ka-ge'] = "მომხმარებლის ანგარიშის მონაცემების ცვლილება";
+$text['description']['ka-ge'] = "მომხმარებლის ანგარიშის მონაცემების ცვლილება.";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['en-gb'] = "Update Complete";
@@ -2940,7 +2940,7 @@ $text['check-loggedout-status']['uk-ua'] = "Вийшов";
 $text['check-loggedout-status']['zh-cn'] = "登出";
 $text['check-loggedout-status']['ja-jp'] = "ログアウトしました";
 $text['check-loggedout-status']['ko-kr'] = "로그 아웃";
-$text['check-loggedout-status']['ka-ge'] = "თქვენ გამოხვედით ანგარიშიდან";
+$text['check-loggedout-status']['ka-ge'] = "თქვენ გახვედით ანგარიშიდან";
 
 $text['check-do-not-disturb-status']['en-us'] = "Do Not Disturb";
 $text['check-do-not-disturb-status']['en-gb'] = "Do Not Disturb";
@@ -3070,7 +3070,7 @@ $text['description-user_setting-edit']['uk-ua'] = "Редагувати нала
 $text['description-user_setting-edit']['zh-cn'] = "为此用户编辑设置。";
 $text['description-user_setting-edit']['ja-jp'] = "このユーザーの設定を編集します。";
 $text['description-user_setting-edit']['ko-kr'] = "이 사용자의 설정을 편집합니다.";
-$text['description-user_setting-edit']['ka-ge'] = "შეცვალეთ პარამეტრები ამ მომხმარებლისთვის";
+$text['description-user_setting-edit']['ka-ge'] = "პარამეტრის ჩასწორება ამ მომხმარებლისთვის.";
 
 
 $text['description-user_setting-add']['en-us'] = "Add a setting for this user.";
