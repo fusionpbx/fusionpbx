@@ -5447,13 +5447,13 @@ $text['label-disposition_code']['fr-ca'] = "Code de disposition";
 $text['label-disposition_code']['fr-fr'] = "Code de disposition";
 $text['label-disposition_code']['he-il'] = "קוד דיספוזיציה";
 $text['label-disposition_code']['it-it'] = "Codice di smaltimento";
-$text['label-disposition_code']['ka-ge'] = "";
+$text['label-disposition_code']['ka-ge'] = "ოფსეტური კოდი";
 $text['label-disposition_code']['nl-nl'] = "Eindstatus";
 $text['label-disposition_code']['pl-pl'] = "Kodeks Dyspozycji";
 $text['label-disposition_code']['pt-br'] = "Código de Dispositivo";
 $text['label-disposition_code']['pt-pt'] = "Código de Disposição";
 $text['label-disposition_code']['ro-ro'] = "Cod Dispozitiv";
-$text['label-disposition_code']['ru-ru'] = "ოფსეტური კოდი";
+$text['label-disposition_code']['ru-ru'] = "Код смещения";
 $text['label-disposition_code']['sv-se'] = "Dispositionskod";
 $text['label-disposition_code']['uk-ua'] = "Код відправлення";
 $text['label-disposition_code']['zh-cn'] = "处置代码";
@@ -7364,3 +7364,4 @@ $text['label-required']['ja-jp'] = "必要";
 $text['label-required']['ko-kr'] = "필수의";
 
 ?>
+
