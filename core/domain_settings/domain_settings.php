@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -101,14 +104,12 @@
 	$sql = "select domain_name from v_domains ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$domain_name = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$sql = "select count(domain_setting_uuid) from v_domain_settings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //get the list
@@ -123,7 +124,6 @@
 		$sql .= order_by($order_by, $order);
 	}
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$domain_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -291,7 +291,6 @@
 				$sql = "select * from v_menus ";
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$parameters['menu_uuid'] = $row['domain_setting_value'];
-				$database = new database;
 				$sub_result = $database->select($sql, $parameters, 'all');
 				if (!empty($sub_result)) {
 					foreach ($sub_result as $sub_row) {

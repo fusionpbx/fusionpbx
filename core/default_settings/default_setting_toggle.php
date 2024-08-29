@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -53,7 +56,6 @@
 				//get current status
 					$sql = "select default_setting_enabled from v_default_settings where default_setting_uuid = :default_setting_uuid ";
 					$parameters['default_setting_uuid'] = $default_setting_uuid;
-					$database = new database;
 					$default_setting_enabled = $database->select($sql, $parameters, 'column');
 					$new_status = ($default_setting_enabled == 'true') ? 'false' : 'true';
 					unset($sql, $parameters);
@@ -61,7 +63,6 @@
 				//set new status
 					$array['default_settings'][0]['default_setting_uuid'] = $default_setting_uuid;
 					$array['default_settings'][0]['default_setting_enabled'] = $new_status;
-					$database = new database;
 					$database->app_name = 'default_settings';
 					$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 					$database->save($array);

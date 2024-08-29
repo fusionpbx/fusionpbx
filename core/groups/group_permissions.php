@@ -42,12 +42,14 @@
 		$group_uuid = $_GET['group_uuid'];
 	}
 
+//connect to the database
+	$database = new database;
+
 //get the group_name
 	if (isset($group_uuid) && is_uuid($group_uuid)) {
 		$sql = "select group_name from v_groups ";
 		$sql .= "where group_uuid = :group_uuid ";
 		$parameters['group_uuid'] = $group_uuid;
-		$database = new database;
 		$group_name = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 	}
@@ -85,7 +87,6 @@
 					$sql .= "and (".implode(' or ', $sql_where_or).") ";
 				}
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');
 				if (is_array($result) && @sizeof($result) != 0) {
 					foreach ($result as $row) {
@@ -125,7 +126,6 @@
 	$sql .= "	order by p.application_name, p.permission_name asc "; 
 	$parameters['group_name'] = $group_name;
 	$parameters['group_uuid'] = $group_uuid;
-	$database = new database;
 	$group_permissions = $database->select($sql, $parameters, 'all');
 
 //process the user data and save it to the database
@@ -241,7 +241,6 @@
 
 		//save the save array
 			if (!empty($array['save']) && is_array($array['save']) && @sizeof($array['save']) != 0) {
-				$database = new database;
 				$database->app_name = 'groups';
 				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 				$database->save($array['save']);
@@ -251,7 +250,6 @@
 		//delete the delete array
 			if (!empty($array['delete']) && is_array($array['delete']) && @sizeof($array['delete']) != 0) {
 				if (permission_exists('group_permission_delete')) {
-					$database = new database;
 					$database->app_name = 'groups';
 					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 					$database->delete($array['delete']);

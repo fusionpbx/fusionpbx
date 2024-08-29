@@ -43,6 +43,9 @@
 		return;
 	}
 
+//connect to the database
+	$database = new database;
+
 //get the http values and set them as variables
 	$domain_uuid = $_POST["domain_uuid"];
 	$group_uuid = $_POST["group_uuid"];
@@ -68,7 +71,6 @@
 		$p = new permissions;
 		$p->add('user_group_add', 'temp');
 
-		$database = new database;
 		$database->app_name = 'groups';
 		$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 		$database->save($array);

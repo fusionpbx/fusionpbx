@@ -29,6 +29,9 @@
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
+//connect to the database
+	$database = new database;
+
 //redirect admin to app instead
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all') && !is_cli()) {
 		header("Location: ".PROJECT_PATH."/app/domains/domains.php");
@@ -47,7 +50,6 @@
 			//get the domain details
 				$sql = "select * from v_domains ";
 				$sql .= "order by domain_name asc ";
-				$database = new database;
 				$domains = $database->select($sql, null, 'all');
 				if (!empty($domains)) {
 					foreach($domains as $row) {
@@ -153,7 +155,6 @@
 	if (!empty($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -172,7 +173,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'domain_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$domains = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

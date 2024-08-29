@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -135,7 +138,6 @@
 							$sql .= "where domain_uuid = :domain_uuid ";
 							$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
 							$parameters['domain_uuid'] = $domain_uuid;
-							$database = new database;
 							$dialplan_uuid = $database->select($sql, $parameters, 'column');
 							unset($sql, $parameters);
 
@@ -148,7 +150,6 @@
 							$sql .= "and dialplan_detail_data like 'timezone=%' ";
 							$parameters['domain_uuid'] = $domain_uuid;
 							$parameters['dialplan_uuid'] = $dialplan_uuid;
-							$database = new database;
 							$dialplan_detail_uuid = $database->select($sql, $parameters, 'column');
 							$detail_action = is_uuid($dialplan_detail_uuid) ? 'update' : 'add';
 							unset($sql, $parameters);
@@ -174,7 +175,6 @@
 							}
 
 							if (!empty($array)) {
-								$database = new database;
 								$database->app_name = 'domain_settings';
 								$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 								$database->save($array);
@@ -188,7 +188,6 @@
 							$sql = "select domain_name from v_domains ";
 							$sql .= "where domain_uuid = :domain_uuid ";
 							$parameters['domain_uuid'] = $domain_uuid;
-							$database = new database;
 							$domain_name = $database->select($sql, $parameters, 'column');
 							unset($sql, $parameters);
 
@@ -223,7 +222,6 @@
 						$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
 						$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
 						$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
-						$database = new database;
 						$database->app_name = 'domain_settings';
 						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 						$database->save($array);
@@ -236,7 +234,6 @@
 						$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
 						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-						$database = new database;
 						$result = $database->select($sql, $parameters, 'all');
 						unset($sql, $parameters);
 
@@ -252,7 +249,6 @@
 									$sql .= "and domain_uuid = :domain_uuid ";
 									$parameters['dialplan_uuid'] = $dialplan_uuid;
 									$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-									$database = new database;
 									$sub_result = $database->select($sql, $parameters, 'all');
 									if (!empty($sub_result)) {
 										foreach ($sub_result as $field) {
@@ -299,7 +295,6 @@
 
 								//execute
 									if (!empty($array)) {
-										$database = new database;
 										$database->app_name = 'domain_settings';
 										$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 										$database->save($array);
@@ -333,7 +328,6 @@
 		$sql .= "and domain_setting_uuid = :domain_setting_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['domain_setting_uuid'] = $domain_setting_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$domain_setting_category = $row["domain_setting_category"];
@@ -469,7 +463,6 @@
 		echo "		<option value=''></option>\n";
 		$sql = "select * from v_menus ";
 		$sql .= "order by menu_language, menu_name asc ";
-		$database = new database;
 		$sub_result = $database->select($sql, null, 'all');
 		if (!empty($sub_result)) {
 			foreach ($sub_result as $sub_row) {
