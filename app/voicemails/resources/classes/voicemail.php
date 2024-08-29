@@ -243,14 +243,17 @@
 		}
 
 		public function messages() {
+
 			//get the voicemails
 				$voicemails = $this->voicemails();
 
 			//add the voicemail messages to the array
 				if (is_array($voicemails)) {
+					$i = 0;
 					foreach ($voicemails as $row) {
 						//get the voicemail messages
-						$row['messages'] = $this->voicemail_messages($row['voicemail_id']);
+						$voicemails[$i]['messages'] = $this->voicemail_messages($row['voicemail_id']);
+						$i++;
 					}
 				}
 
@@ -310,24 +313,27 @@
 
 			//update the array with additional information
 				if (is_array($result)) {
+					$i = 0;
 					foreach ($result as $row) {
 						//set the greeting directory
 						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
-							$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
+							$result[$i]['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
 						}
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.mp3')) {
-							$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.mp3';
+							$result[$i]['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.mp3';
 						}
-						$row['file_size'] = filesize($row['file_path'] ?? '');
-						$row['file_size_label'] = byte_convert($row['file_size'] ?? '');
-						$row['file_ext'] = substr($row['file_path'] ?? '', -3);
+						$result[$i]['file_size'] = filesize($row['file_path'] ?? '');
+						$result[$i]['file_size_label'] = byte_convert($row['file_size'] ?? 0);
+						$result[$i]['file_ext'] = substr($row['file_path'] ?? '', -3);
 
 						$message_minutes = floor($row['message_length'] / 60);
 						$message_seconds = $row['message_length'] % 60;
+
 						//use International System of Units (SI) - Source: https://en.wikipedia.org/wiki/International_System_of_Units
-						$row['message_length_label'] = ($message_minutes > 0 ? $message_minutes.' min' : null).($message_seconds > 0 ? ' '.$message_seconds.' s' : null);
-						$row['created_date'] = date("j M Y g:i a",$row['created_epoch']);
+						$result[$i]['message_length_label'] = ($message_minutes > 0 ? $message_minutes.' min' : null).($message_seconds > 0 ? ' '.$message_seconds.' s' : null);
+						$result[$i]['created_date'] = date("j M Y g:i a",$row['created_epoch']);
+						$i;
 					}
 				}
 				else {
