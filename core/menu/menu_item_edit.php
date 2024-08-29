@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,6 +40,9 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//connect to the database
+	$database = new database;
 
 //define the variables
 	$menu_uuid = null;
@@ -71,7 +74,6 @@
 	if ($action == "delete" && permission_exists("menu_delete") && is_uuid($menu_item_group_uuid)) {
 		//delete the group from the users
 		$array['menu_item_groups'][0]['menu_item_group_uuid'] = $menu_item_group_uuid;
-		$database = new database;
 		$database->app_name = 'menu';
 		$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 		$database->delete($array);
@@ -148,7 +150,6 @@
 				$sql = "select menu_language from v_menus ";
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$parameters['menu_uuid'] = $menu_uuid;
-				$database = new database;
 				$menu_language = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
@@ -160,7 +161,6 @@
 					$sql .= "order by menu_item_order desc ";
 					$sql .= "limit 1 ";
 					$parameters['menu_uuid'] = $menu_uuid;
-					$database = new database;
 					$highest_menu_item_order = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 				}
@@ -185,7 +185,6 @@
 					}
 					$array['menu_items'][0]['menu_item_add_user'] = $_SESSION["username"];
 					$array['menu_items'][0]['menu_item_add_date'] = 'now()';
-					$database = new database;
 					$database->app_name = 'menu';
 					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
@@ -211,7 +210,6 @@
 					}
 					$array['menu_items'][0]['menu_item_add_user'] = $_SESSION["username"];
 					$array['menu_items'][0]['menu_item_add_date'] = 'now()';
-					$database = new database;
 					$database->app_name = 'menu';
 					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
@@ -224,7 +222,6 @@
 				$sql .= "where menu_item_parent_uuid = :menu_item_parent_uuid ";
 				$parameters['menu_item_parent_uuid'] = $menu_item_uuid;
 				$parameters['menu_item_protected'] = $menu_item_protected;
-				$database = new database;
 				$database->execute($sql, $parameters);
 				unset($parameters);
 
@@ -241,7 +238,6 @@
 							$array['menu_item_groups'][0]['menu_item_uuid'] = $menu_item_uuid;
 							$array['menu_item_groups'][0]['group_name'] = $group_name;
 							$array['menu_item_groups'][0]['group_uuid'] = $group_uuid;
-							$database = new database;
 							$database->app_name = 'menu';
 							$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 							$database->save($array);
@@ -256,7 +252,6 @@
 					$sql .= "and menu_language = :menu_language ";
 					$parameters['menu_item_uuid'] = $menu_item_uuid;
 					$parameters['menu_language'] = $menu_language;
-					$database = new database;
 					$num_rows = $database->select($sql, $parameters, 'column');
 					if ($num_rows == 0) {
 						$array['menu_languages'][0]['menu_language_uuid'] = uuid();
@@ -264,7 +259,6 @@
 						$array['menu_languages'][0]['menu_item_uuid'] = $menu_item_uuid;
 						$array['menu_languages'][0]['menu_language'] = $menu_language;
 						$array['menu_languages'][0]['menu_item_title'] = $menu_item_title;
-						$database = new database;
 						$database->app_name = 'menu';
 						$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 						$database->save($array);
@@ -280,7 +274,6 @@
 						$parameters['menu_uuid'] = $menu_uuid;
 						$parameters['menu_item_uuid'] = $menu_item_uuid;
 						$parameters['menu_language'] = $menu_language;
-						$database = new database;
 						$database->execute($sql, $parameters);
 					}
 					unset($sql, $parameters, $num_rows);
@@ -314,7 +307,6 @@
 		$sql .= "and menu_item_uuid = :menu_item_uuid ";
 		$parameters['menu_uuid'] = $menu_uuid;
 		$parameters['menu_item_uuid'] = $menu_item_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
 			$menu_item_title = $row["menu_item_title"];
@@ -341,7 +333,6 @@
 	$sql .= "and menu_item_parent_uuid is null ";
 	$sql .= "order by menu_item_order asc ";
 	$parameters['menu_uuid'] = $menu_uuid;
-	$database = new database;
 	$menu_item_parents = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -360,7 +351,6 @@
 	$sql .= "	g.group_name asc ";
 	$parameters['menu_uuid'] = $menu_uuid;
 	$parameters['menu_item_uuid'] = $menu_item_uuid;
-	$database = new database;
 	$menu_item_groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -383,7 +373,6 @@
 		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
-	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $sql_where, $parameters);
