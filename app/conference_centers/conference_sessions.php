@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -84,7 +87,6 @@
 	$sql .= "and meeting_uuid = :meeting_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'] ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -105,7 +107,6 @@
 	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'] ?? '';
-	$database = new database;
 	$conference_sessions = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

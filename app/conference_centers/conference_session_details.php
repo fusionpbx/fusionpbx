@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -60,7 +63,6 @@
 	$sql .= "and conference_session_uuid = :conference_session_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['conference_session_uuid'] = $_SESSION['meeting']['session_uuid'] ?? '';
-	$database = new database;
 	$row = $database->select($sql, $parameters ?? null, 'row');
 	if (!empty($row)) {
 		$meeting_uuid = $row["meeting_uuid"];
