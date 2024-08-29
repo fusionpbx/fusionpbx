@@ -31,13 +31,65 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if ($permission['xml_cdr_view']) {
+	if (permission_exists('xml_cdr_view')) {
 		//access granted
 	}
 	else {
 		echo "access denied";
 		exit;
 	}
+
+//set permissions
+	$permission = array();
+	$permission['xml_cdr_view'] = permission_exists('xml_cdr_view');
+	$permission['xml_cdr_search_extension'] = permission_exists('xml_cdr_search_extension');
+	$permission['xml_cdr_delete'] = permission_exists('xml_cdr_delete');
+	$permission['xml_cdr_domain'] = permission_exists('xml_cdr_domain');
+	$permission['xml_cdr_search_call_center_queues'] = permission_exists('xml_cdr_search_call_center_queues');
+	$permission['xml_cdr_statistics'] = permission_exists('xml_cdr_statistics');
+	$permission['xml_cdr_archive'] = permission_exists('xml_cdr_archive');
+	$permission['xml_cdr_all'] = permission_exists('xml_cdr_all');
+	$permission['xml_cdr_export'] = permission_exists('xml_cdr_export');
+	$permission['xml_cdr_export_csv'] = permission_exists('xml_cdr_export_csv');
+	$permission['xml_cdr_export_pdf'] = permission_exists('xml_cdr_export_pdf');
+	$permission['xml_cdr_search'] = permission_exists('xml_cdr_search');
+	$permission['xml_cdr_search_direction'] = permission_exists('xml_cdr_search_direction');
+	$permission['xml_cdr_b_leg'] = permission_exists('xml_cdr_b_leg');
+	$permission['xml_cdr_search_status'] = permission_exists('xml_cdr_search_status');
+	$permission['xml_cdr_search_caller_id'] = permission_exists('xml_cdr_search_caller_id');
+	$permission['xml_cdr_search_start_range'] = permission_exists('xml_cdr_search_start_range');
+	$permission['xml_cdr_search_duration'] = permission_exists('xml_cdr_search_duration');
+	$permission['xml_cdr_search_caller_destination'] = permission_exists('xml_cdr_search_caller_destination');
+	$permission['xml_cdr_search_destination'] = permission_exists('xml_cdr_search_destination');
+	$permission['xml_cdr_codecs'] = permission_exists('xml_cdr_codecs');
+	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
+	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
+	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
+	$permission['xml_cdr_search_order'] = permission_exists('xml_cdr_search_order');
+	$permission['xml_cdr_extension'] = permission_exists('xml_cdr_extension');
+	$permission['xml_cdr_caller_id_name'] = permission_exists('xml_cdr_caller_id_name');
+	$permission['xml_cdr_caller_id_number'] = permission_exists('xml_cdr_caller_id_number');
+	$permission['xml_cdr_caller_destination'] = permission_exists('xml_cdr_caller_destination');
+	$permission['xml_cdr_destination'] = permission_exists('xml_cdr_destination');
+	$permission['xml_cdr_start'] = permission_exists('xml_cdr_start');
+	$permission['xml_cdr_tta'] = permission_exists('xml_cdr_tta');
+	$permission['xml_cdr_duration'] = permission_exists('xml_cdr_duration');
+	$permission['xml_cdr_pdd'] = permission_exists('xml_cdr_pdd');
+	$permission['xml_cdr_mos'] = permission_exists('xml_cdr_mos');
+	$permission['xml_cdr_hangup_cause'] = permission_exists('xml_cdr_hangup_cause');
+	$permission['xml_cdr_custom_fields'] = permission_exists('xml_cdr_custom_fields');
+	$permission['xml_cdr_search_advanced'] = permission_exists('xml_cdr_search_advanced');
+	$permission['xml_cdr_direction'] = permission_exists('xml_cdr_direction');
+	$permission['xml_cdr_recording'] = permission_exists('xml_cdr_recording');
+	$permission['xml_cdr_recording_play'] = permission_exists('xml_cdr_recording_play');
+	$permission['xml_cdr_recording_download'] = permission_exists('xml_cdr_recording_download');
+	$permission['xml_cdr_account_code'] = permission_exists('xml_cdr_account_code');
+	$permission['xml_cdr_status'] = permission_exists('xml_cdr_status');
+	$permission['xml_cdr_details'] = permission_exists('xml_cdr_details');
+	$permission['xml_cdr_lose_race'] = permission_exists('xml_cdr_lose_race');
+	$permission['xml_cdr_cc_agent_leg'] = permission_exists('xml_cdr_cc_agent_leg');
+	$permission['xml_cdr_cc_side'] = permission_exists('xml_cdr_cc_side');
+	$permission['xml_cdr_call_center_queues'] = permission_exists('xml_cdr_call_center_queues');
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
