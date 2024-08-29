@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -90,14 +93,12 @@
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //get the list
 	$sql = str_replace('count(menu_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'menu_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
-	$database = new database;
 	$menus = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 

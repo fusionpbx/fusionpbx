@@ -37,6 +37,9 @@
 		return;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -54,7 +57,6 @@ if (count($_GET)>0) {
 	$sql .= "order by menu_item_order desc ";
 	$sql .= "limit 1 offset 0";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$highestmenu_item_order = $database->select($sql, $parameters, 'column');
 
 	if ($menu_item_order != $highestmenu_item_order) {
@@ -68,7 +70,6 @@ if (count($_GET)>0) {
 			$sql .= "and menu_item_order = :menu_item_order ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['menu_item_order'] = $menu_item_order + 1;
-			$database = new database;
 			$database->app_name = 'menu';
 			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$database->execute($sql, $parameters);
@@ -81,7 +82,6 @@ if (count($_GET)>0) {
 			$sql .= "and menu_item_id = :menu_item_id ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['menu_item_id'] = $menu_item_id;
-			$database = new database;
 			$database->app_name = 'menu';
 			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$database->execute($sql, $parameters);

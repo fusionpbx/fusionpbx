@@ -43,6 +43,9 @@
 		return;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -77,7 +80,6 @@
 	$sql = "select domain_uuid, group_name from v_groups ";
 	$sql .= "where group_uuid = :group_uuid ";
 	$parameters['group_uuid'] = $group_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$domain_uuid = $row["domain_uuid"];
@@ -91,7 +93,6 @@
 		$sql .= "domain_uuid = :domain_uuid ";
 		$sql .= "order by username ";
 		$parameters['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : $_SESSION['domain_uuid'];
-		$database = new database;
 		$users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -112,7 +113,6 @@
 	$sql .= "and ug.group_uuid = :group_uuid ";
 	$sql .= "order by d.domain_name asc, u.username asc ";
 	$parameters['group_uuid'] = $group_uuid;
-	$database = new database;
 	$user_groups = $database->select($sql, $parameters, 'all');
 	$num_rows = is_array($user_groups) && @sizeof($user_groups) != 0 ? sizeof($user_groups) : 0;
 	unset($sql, $parameters);

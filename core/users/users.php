@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -53,7 +56,6 @@
 	$sql = "select * from view_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters = null;
-	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$row = $database->select($sql, $parameters, 'row');
 	if (isset($row['contact_organization'])) {
@@ -138,7 +140,6 @@
 	$sql .= "	or group_level is null ";
 	$sql .= ") ";
 	$parameters['group_level'] = $_SESSION['user']['group_level'];
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -179,7 +180,6 @@
 	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$sql .= order_by($order_by, $order, 'username', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
