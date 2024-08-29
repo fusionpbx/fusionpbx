@@ -2429,7 +2429,7 @@ $text['description-from_row']['zh-cn'] = "开始从该行导入数据。";
 $text['description-from_row']['ja-jp'] = "この行からデータのインポートを開始します。";
 $text['description-from_row']['ko-kr'] = "이 행에서 데이터 가져오기를 시작합니다.";
 
-text['label-toggle_line_numbers']['en-us'] = "Toggle Line Numbers";
+$text['label-toggle_line_numbers']['en-us'] = "Toggle Line Numbers";
 $text['label-toggle_line_numbers']['en-gb'] = "Toggle Line Numbers";
 $text['label-toggle_line_numbers']['ar-eg'] = "تبديل أرقام الخط";
 $text['label-toggle_line_numbers']['de-at'] = "Schalten Sie die Zeilennummern um";
