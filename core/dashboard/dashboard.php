@@ -219,7 +219,7 @@
 		$sql .= ")\n";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$sql .= order_by($order_by, $order, 'dashboard_order', 'asc');
+	$sql .= order_by($order_by, $order, 'dashboard_order, dashboard_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
 	$database = new database;
 	$dashboard = $database->select($sql, $parameters ?? null, 'all');

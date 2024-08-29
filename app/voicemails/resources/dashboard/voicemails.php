@@ -36,7 +36,7 @@
 //sum total and new
 	$messages['total'] = 0;
 	$messages['new'] = 0;
-	if (sizeof($voicemails) > 0) {
+	if (!empty($voicemails) && sizeof($voicemails) > 0) {
 		foreach($voicemails as $field) {
 			$messages[$field['voicemail_uuid']]['ext'] = $field['voicemail_id'];
 			$messages[$field['voicemail_uuid']]['total'] = 0;
@@ -107,7 +107,7 @@
 
 	if ($dashboard_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
-		if (sizeof($voicemails) > 0) {
+		if (!empty($voicemails) && sizeof($voicemails) > 0) {
 			echo "<table class='tr_hover' cellpadding='2' cellspacing='0' border='0' width='100%'>";
 			echo "<tr>";
 			echo "	<th class='hud_heading' width='50%'>".$text['label-voicemail']."</th>";

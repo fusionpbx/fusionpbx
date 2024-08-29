@@ -102,6 +102,8 @@
 		$dashboard_background_color = $_POST["dashboard_background_color"] ?? '';
 		$dashboard_background_color_hover = $_POST["dashboard_background_color_hover"] ?? '';
 		$dashboard_detail_background_color = $_POST["dashboard_detail_background_color"] ?? '';
+		$dashboard_background_gradient_style = $_POST["dashboard_background_gradient_style"] ?? 'mirror';
+		$dashboard_background_gradient_angle = $_POST["dashboard_background_gradient_angle"] ?? '90';
 		$dashboard_column_span = $_POST["dashboard_column_span"] ?? '';
 		$dashboard_row_span = $_POST["dashboard_row_span"] ?? '';
 		$dashboard_details_state = $_POST["dashboard_details_state"] ?? '';
@@ -109,6 +111,43 @@
 		$dashboard_order = $_POST["dashboard_order"] ?? '';
 		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
 		$dashboard_description = $_POST["dashboard_description"] ?? '';
+
+		//define the regex patterns
+		$uuid_pattern = '/[^-A-Fa-f0-9]/';
+		$number_pattern = '/[^-A-Za-z0-9()*#]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.#\n]/';
+
+		//sanitize the data
+		$dashboard_name = trim(preg_replace('/[^a-zA-Z0-9 _\-\/.#]/', '', $dashboard_name));
+		$dashboard_path = preg_replace($text_pattern, '', strtolower($dashboard_path));
+		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
+		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
+		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
+		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
+		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
+		$dashboard_content = trim(preg_replace($text_pattern, '', $dashboard_content));
+		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
+		$dashboard_content_details = trim(preg_replace($text_pattern, '', $dashboard_content_details));
+		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
+		$dashboard_label_enabled = preg_replace($text_pattern, '', $dashboard_label_enabled);
+		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
+		$dashboard_label_text_color_hover = preg_replace($text_pattern, '', $dashboard_chart_type);
+		$dashboard_label_background_color = preg_replace($text_pattern, '', $dashboard_label_background_color);
+		$dashboard_label_background_color_hover = preg_replace($text_pattern, '', $dashboard_label_background_color_hover);
+		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
+		$dashboard_number_text_color_hover = preg_replace($text_pattern, '', $dashboard_number_text_color_hover);
+		$dashboard_background_color = preg_replace($text_pattern, '', $dashboard_background_color);
+		$dashboard_background_color_hover = preg_replace($text_pattern, '', $dashboard_background_color_hover);
+		$dashboard_detail_background_color = preg_replace($text_pattern, '', $dashboard_detail_background_color);
+		$dashboard_background_gradient_style = preg_replace($text_pattern, '', $dashboard_background_gradient_style);
+		$dashboard_background_gradient_angle = preg_replace($text_pattern, '', $dashboard_background_gradient_angle);
+		$dashboard_column_span = preg_replace($number_pattern, '', $dashboard_column_span);
+		$dashboard_row_span = preg_replace($number_pattern, '', $dashboard_row_span);
+		$dashboard_details_state = preg_replace($text_pattern, '', $dashboard_details_state);
+		$dashboard_parent_uuid = preg_replace($uuid_pattern, '', $dashboard_parent_uuid);
+		$dashboard_order = preg_replace($number_pattern, '', $dashboard_order);
+		$dashboard_enabled = preg_replace($text_pattern, '', $dashboard_enabled);
+		$dashboard_description = preg_replace($text_pattern, '', $dashboard_description);
 	}
 
 //delete the group from the sub table
@@ -252,6 +291,8 @@
 			$array['dashboard'][0]['dashboard_background_color'] = $dashboard_background_color;
 			$array['dashboard'][0]['dashboard_background_color_hover'] = $dashboard_background_color_hover;
 			$array['dashboard'][0]['dashboard_detail_background_color'] = $dashboard_detail_background_color;
+			$array['dashboard'][0]['dashboard_background_gradient_style'] = $dashboard_background_gradient_style;
+			$array['dashboard'][0]['dashboard_background_gradient_angle'] = $dashboard_background_gradient_angle;
 			$array['dashboard'][0]['dashboard_column_span'] = $dashboard_column_span;
 			$array['dashboard'][0]['dashboard_row_span'] = $dashboard_row_span;
 			$array['dashboard'][0]['dashboard_details_state'] = $dashboard_details_state;
@@ -262,7 +303,7 @@
 			$y = 0;
 			if (is_array($dashboard_groups)) {
 				foreach ($dashboard_groups as $row) {
-					if (isset($row['group_uuid'])) {
+					if (isset($row['group_uuid']) && is_uuid($row['group_uuid'])) {
 						$array['dashboard'][0]['dashboard_groups'][$y]['dashboard_group_uuid'] = uuid();
 						$array['dashboard'][0]['dashboard_groups'][$y]['group_uuid'] = $row["group_uuid"];
 						$y++;
@@ -315,6 +356,8 @@
 		$sql .= " dashboard_background_color, ";
 		$sql .= " dashboard_background_color_hover, ";
 		$sql .= " dashboard_detail_background_color, ";
+		$sql .= " dashboard_background_gradient_style, ";
+		$sql .= " dashboard_background_gradient_angle, ";
 		$sql .= " dashboard_column_span, ";
 		$sql .= " dashboard_row_span, ";
 		$sql .= " dashboard_details_state, ";
@@ -348,6 +391,8 @@
 			$dashboard_background_color = $row["dashboard_background_color"];
 			$dashboard_background_color_hover = $row["dashboard_background_color_hover"];
 			$dashboard_detail_background_color = $row["dashboard_detail_background_color"];
+			$dashboard_background_gradient_style = $row["dashboard_background_gradient_style"];
+			$dashboard_background_gradient_angle = $row["dashboard_background_gradient_angle"];
 			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_row_span = $row["dashboard_row_span"];
 			$dashboard_details_state = $row["dashboard_details_state"];
@@ -880,8 +925,17 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (!empty($dashboard_background_color) && is_array($dashboard_background_color)) {
-		foreach($dashboard_background_color as $background_color) {
-			echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color[]' value='".escape($background_color)."'><br />\n";
+		foreach ($dashboard_background_color as $c => $background_color) {
+			echo "	<input type='text' class='formfld colorpicker' id='dashboard_background_color_".$c."' name='dashboard_background_color[]' value='".escape($background_color)."'>\n";
+			if ($c < sizeof($dashboard_background_color) - 1) { echo "<br />\n"; }
+		}
+		//swap button
+		if (!empty($dashboard_background_color) && is_array($dashboard_background_color) && sizeof($dashboard_background_color) > 1) {
+			echo "	<input type='hidden' id='dashboard_background_color_temp'>\n";
+			echo button::create(['type'=>'button','title'=>$text['button-swap'],'icon'=>'fa-solid fa-arrow-right-arrow-left fa-rotate-90','style'=>"z-index: 0; position: absolute; display: inline-block; margin: -14px 0 0 7px;",'onclick'=>"document.getElementById('dashboard_background_color_temp').value = document.getElementById('dashboard_background_color_0').value; document.getElementById('dashboard_background_color_0').value = document.getElementById('dashboard_background_color_1').value; document.getElementById('dashboard_background_color_1').value = document.getElementById('dashboard_background_color_temp').value; this.blur();"])."<br>\n";
+		}
+		else {
+			echo "<br />\n";
 		}
 	}
 	if (empty($dashboard_background_color) || (is_array($dashboard_background_color) && count($dashboard_background_color) < 2)) {
@@ -902,8 +956,17 @@
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		if (!empty($dashboard_background_color_hover) && is_array($dashboard_background_color_hover)) {
-			foreach($dashboard_background_color_hover as $background_color) {
-				echo "	<input type='text' class='formfld colorpicker' name='dashboard_background_color_hover[]' value='".escape($background_color)."'><br />\n";
+			foreach ($dashboard_background_color_hover as $c => $background_color) {
+				echo "	<input type='text' class='formfld colorpicker' id='dashboard_background_color_hover_".$c."' name='dashboard_background_color_hover[]' value='".escape($background_color)."'>\n";
+				if ($c < sizeof($dashboard_background_color_hover) - 1) { echo "<br />\n"; }
+			}
+			//swap button
+			if (!empty($dashboard_background_color_hover) && is_array($dashboard_background_color_hover) && sizeof($dashboard_background_color_hover) > 1) {
+				echo "	<input type='hidden' id='dashboard_background_color_hover_temp'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-swap'],'icon'=>'fa-solid fa-arrow-right-arrow-left fa-rotate-90','style'=>"z-index: 0; position: absolute; display: inline-block; margin: -14px 0 0 7px;",'onclick'=>"document.getElementById('dashboard_background_color_hover_temp').value = document.getElementById('dashboard_background_color_hover_0').value; document.getElementById('dashboard_background_color_hover_0').value = document.getElementById('dashboard_background_color_hover_1').value; document.getElementById('dashboard_background_color_hover_1').value = document.getElementById('dashboard_background_color_hover_temp').value; this.blur();"])."<br>\n";
+			}
+			else {
+				echo "<br />\n";
 			}
 		}
 		if (empty($dashboard_background_color_hover) || (is_array($dashboard_background_color_hover) && count($dashboard_background_color_hover) < 2)) {
@@ -924,8 +987,17 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (!empty($dashboard_detail_background_color) && is_array($dashboard_detail_background_color)) {
-		foreach($dashboard_detail_background_color as $detail_background_color) {
-			echo "	<input type='text' class='formfld colorpicker' name='dashboard_detail_background_color[]' value='".escape($detail_background_color)."'><br />\n";
+		foreach ($dashboard_detail_background_color as $c => $detail_background_color) {
+			echo "	<input type='text' class='formfld colorpicker' id='dashboard_detail_background_color_".$c."' name='dashboard_detail_background_color[]' value='".escape($detail_background_color)."'>\n";
+			if ($c < sizeof($dashboard_detail_background_color) - 1) { echo "<br />\n"; }
+		}
+		//swap button
+		if (!empty($dashboard_detail_background_color) && is_array($dashboard_detail_background_color) && sizeof($dashboard_detail_background_color) > 1) {
+			echo "	<input type='hidden' id='dashboard_detail_background_color_temp'>\n";
+			echo button::create(['type'=>'button','title'=>$text['button-swap'],'icon'=>'fa-solid fa-arrow-right-arrow-left fa-rotate-90','style'=>"z-index: 0; position: absolute; display: inline-block; margin: -14px 0 0 7px;",'onclick'=>"document.getElementById('dashboard_detail_background_color_temp').value = document.getElementById('dashboard_detail_background_color_0').value; document.getElementById('dashboard_detail_background_color_0').value = document.getElementById('dashboard_detail_background_color_1').value; document.getElementById('dashboard_detail_background_color_1').value = document.getElementById('dashboard_detail_background_color_temp').value; this.blur();"])."<br>\n";
+		}
+		else {
+			echo "<br />\n";
 		}
 	}
 	if (empty($dashboard_detail_background_color) || (is_array($dashboard_detail_background_color) && count($dashboard_detail_background_color) < 2)) {
@@ -936,6 +1008,37 @@
 		echo "<br />\n";
 	}
 	echo $text['description-dashboard_detail_background_color']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr class='type_label'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_background_gradient_style']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable'>\n";
+	echo "	<select name='dashboard_background_gradient_style' class='formfld'>\n";
+	echo "		<option value='mirror'>".$text['option-dashboard_background_gradient_style_option_mirror']."</option>\n";
+	echo "		<option value='simple' ".($dashboard_background_gradient_style == 'simple' ? "selected='selected'" : null).">".$text['option-dashboard_background_gradient_style_option_simple']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_background_gradient_style']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr class='type_label'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo $text['label-dashboard_background_gradient_angle']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable'>\n";
+	echo "	<div style='overflow: auto;'>\n";
+	echo "		<select name='dashboard_background_gradient_angle' class='formfld' style='float: left;' onchange=\"document.getElementById('angle').style.transform = 'rotate(' + ($(this).val() - 90) + 'deg)';\">\n";
+	for ($a = 0; $a <= 180; $a += 5) {
+		echo "		<option value='".($a + 90)."' ".($dashboard_background_gradient_angle == ($a + 90) ? "selected='selected'" : null).">".$a."&deg;</option>\n";
+	}
+	echo "		</select>\n";
+	echo "		<span id='angle' style='display: inline-block; font-size: 15px; margin-left: 15px; margin-top: 3px; transform: rotate(".(isset($dashboard_background_gradient_angle) ? ($dashboard_background_gradient_angle - 90) : 0)."deg);'>&horbar;</span>\n";
+	echo "	</div>\n";
+	echo $text['description-dashboard_background_gradient_angle']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1082,4 +1185,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

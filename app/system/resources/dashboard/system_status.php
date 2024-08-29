@@ -26,7 +26,7 @@
 
 	//disk usage
 	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-		$tmp = shell_exec("df /home 2>&1");
+		$tmp = shell_exec("df / 2>&1");
 		$tmp = explode("\n", $tmp);
 		$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 		$tmp = explode(' ', $tmp);
@@ -231,4 +231,5 @@
 		echo "<span class='hud_expander' onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 	echo "</div>\n";
+
 ?>
