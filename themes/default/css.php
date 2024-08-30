@@ -2553,9 +2553,9 @@ else { //default: white
 	.widget {
 		<?php
 		if (!empty($dashboard_shadow_color)) {
-			echo "-webkit-box-shadow: 0 0 5px ".$dashboard_shadow_color.";\n";
-			echo "-moz-box-shadow: 0 0 5px ".$dashboard_shadow_color.";\n";
-			echo "box-shadow: 0 0 5px ".$dashboard_shadow_color.";\n";
+			echo "-webkit-box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
+			echo "-moz-box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
+			echo "box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
 		}
 		?>
 		}
