@@ -880,6 +880,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the bottom border (dividing line) color (and opacity) of table data rows.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b60d97bf-fed3-4484-b5ba-18c46b1a58a7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_shadow_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#888";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the shadow color (and opacity) of the Dashboard blocks.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3b46602c-c736-43ec-a4b5-c733110dbe57";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_border_color";
