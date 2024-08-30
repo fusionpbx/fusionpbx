@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['ka-ge'] = "მართეთ ხმოვანი ფოსტის მისალმებები შიდა ნომრებისთვის.";
+		$apps[$x]['description']['ka-ge'] = "მართეთ ხმოვანი ფოსტის მისალმებები გაფართოებებისთვის.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

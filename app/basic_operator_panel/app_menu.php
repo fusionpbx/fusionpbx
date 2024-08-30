@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Panneau Operateur";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "לוח מפעיל";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Pannello Operatore";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ოპერატორის პანელი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bedienings paneel";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Panel operatora";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Painel do operador";
