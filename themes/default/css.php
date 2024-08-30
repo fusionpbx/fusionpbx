@@ -237,6 +237,7 @@ $dashboard_detail_heading_text_size = $_SESSION['theme']['dashboard_detail_headi
 $dashboard_detail_background_color_edge = $_SESSION['theme']['dashboard_detail_background_color_edge']['text'] ?? '#edf1f7';
 $dashboard_detail_background_color_center = $_SESSION['theme']['dashboard_detail_background_color_center']['text'] ?? '#f9fbfe';
 $dashboard_detail_row_text_size = $_SESSION['theme']['dashboard_detail_row_text_size']['text'] ?? '11px';
+$dashboard_shadow_color = $_SESSION['theme']['dashboard_shadow_color']['text'] ?? '';
 $dashboard_footer_background_color = $_SESSION['theme']['dashboard_footer_background_color']['text'] ?? '#e5e9f0';
 $dashboard_footer_background_color_hover = $_SESSION['theme']['dashboard_footer_background_color_hover']['text'] ?? color_adjust($dashboard_footer_background_color, 0.02);
 $dashboard_footer_dots_color = $_SESSION['theme']['dashboard_footer_dots_color']['text'] ?? '#a4aebf';
@@ -2547,6 +2548,16 @@ else { //default: white
 		border-radius: 3px;
 		padding: 20px;
 		margin-bottom: 15px;
+		}
+
+	.widget {
+		<?php
+		if (!empty($dashboard_shadow_color)) {
+			echo "-webkit-box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
+			echo "-moz-box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
+			echo "box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
+		}
+		?>
 		}
 
 	/* hud boxes */
