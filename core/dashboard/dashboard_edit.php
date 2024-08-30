@@ -115,7 +115,7 @@
 		//define the regex patterns
 		$uuid_pattern = '/[^-A-Fa-f0-9]/';
 		$number_pattern = '/[^-A-Za-z0-9()*#]/';
-		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?\=#\n]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?Allow ? and = for the text pattern:\=#\n]/';
 
 		//sanitize the data
 		$dashboard_name = trim(preg_replace('/[^a-zA-Z0-9 _\-\/.#]/', '', $dashboard_name));

@@ -525,7 +525,7 @@ function toggle_grid_row_end_all() {
 		//define the regex patterns
 		$uuid_pattern = '/[^-A-Fa-f0-9]/';
 		$number_pattern = '/[^-A-Za-z0-9()*#]/';
-		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?\=#\n]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?:\=#\n]/';
 
 		//sanitize the data
 		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
