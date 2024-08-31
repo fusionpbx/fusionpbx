@@ -349,7 +349,7 @@ $text['message-authentication_failed']['tr-tr'] = "Authentication Failed";
 $text['message-authentication_failed']['zh-cn'] = "Authentication Failed";
 $text['message-authentication_failed']['ja-jp'] = "Authentication Failed";
 $text['message-authentication_failed']['ko-kr'] = "Authentication Failed";
-$text['message-authentication_failed']['ka-ge'] = "ავთენტიკაცია ჩავარდა";
+$text['message-authentication_failed']['ka-ge'] = "აუტენტიფიკაცია ჩავარდა";
 
 $text['message-invalid_token']['en-us'] = "Invalid Token";
 $text['message-invalid_token']['en-gb'] = "Invalid Token";
@@ -457,7 +457,7 @@ $text['message-duplicate']['tr-tr'] = "Kopya Algılandı";
 $text['message-duplicate']['zh-cn'] = "重复检测";
 $text['message-duplicate']['ja-jp'] = "重複が検出されました";
 $text['message-duplicate']['ko-kr'] = "중복 감지됨";
-$text['message-duplicate']['ka-ge'] = "აღმოჩენილია გამეორება";
+$text['message-duplicate']['ka-ge'] = "აღმოჩენილია დუბლიკატი";
 
 $text['message-unsupported_file_type']['en-us'] = "Unsupported File Type";
 $text['message-unsupported_file_type']['en-gb'] = "Unsupported File Type";
@@ -1244,7 +1244,7 @@ $text['button-add']['ja-jp'] = "追加";
 $text['button-add']['ko-kr'] = "추가하다";
 
 $text['button-reload']['en-us'] = "Reload";
-$text['button-reload']['ka-ge'] = "გადატვირთვა(Reload)";
+$text['button-reload']['ka-ge'] = "გადატვირთვა";
 $text['button-reload']['en-gb'] = "Reload";
 $text['button-reload']['ar-eg'] = "إعادة تحميل";
 $text['button-reload']['de-at'] = "Neu Laden";
@@ -1298,7 +1298,7 @@ $text['button-paste']['ja-jp'] = "ペースト";
 $text['button-paste']['ko-kr'] = "반죽";
 
 $text['button-export']['en-us'] = "Export";
-$text['button-export']['ka-ge'] = "გატანა";
+$text['button-export']['ka-ge'] = "ექსპორტი";
 $text['button-export']['en-gb'] = "Export";
 $text['button-export']['ar-eg'] = "يصدّر";
 $text['button-export']['de-at'] = "Exportieren";
@@ -1758,7 +1758,7 @@ $text['button-download_csv']['ja-jp'] = "CSVをダウンロード";
 $text['button-download_csv']['ko-kr'] = "CSV 다운로드";
 
 $text['button-import']['en-us'] = "Import";
-$text['button-import']['ka-ge'] = "შემოტანა";
+$text['button-import']['ka-ge'] = "იმპორტი";
 $text['button-import']['en-gb'] = "Import";
 $text['button-import']['ar-eg'] = "يستورد";
 $text['button-import']['de-at'] = "Importieren";
@@ -2213,7 +2213,7 @@ $text['label-summary']['ja-jp'] = "まとめ";
 $text['label-summary']['ko-kr'] = "요약";
 
 $text['label-import']['en-us'] = "Import";
-$text['label-import']['ka-ge'] = "შემოტანა";
+$text['label-import']['ka-ge'] = "იმპორტი";
 $text['label-import']['en-gb'] = "Import";
 $text['label-import']['ar-eg'] = "يستورد";
 $text['label-import']['de-at'] = "Importieren";
@@ -2402,7 +2402,6 @@ $text['label-from_row']['ja-jp'] = "行から";
 $text['label-from_row']['ko-kr'] = "행에서";
 
 $text['description-from_row']['en-us'] = "Start importing the data from this row.";
-$text['description-from_row']['ka-ge'] = "მონაცემების შემოტანის დაწყება ამ რიგიდან";
 $text['description-from_row']['en-gb'] = "Start importing the data from this row.";
 $text['description-from_row']['ar-eg'] = "ابدأ في استيراد البيانات من هذا الصف.";
 $text['description-from_row']['de-at'] = "Starten Sie den Import der Daten aus dieser Zeile.";
@@ -2415,7 +2414,7 @@ $text['description-from_row']['fr-ca'] = "Commencer à importer les données de 
 $text['description-from_row']['fr-fr'] = "Commencer à importer les données de cette ligne";
 $text['description-from_row']['he-il'] = "התחל לייבא את הנתונים משורה זו.";
 $text['description-from_row']['it-it'] = "Inizia a importare i dati da questa riga.";
-$text['description-from_row']['ka-ge'] = "";
+$text['description-from_row']['ka-ge'] = "მონაცემების შემოტანის დაწყება ამ რიგიდან";
 $text['description-from_row']['nl-nl'] = "Begin met het importeren van de gegevens uit deze rij.";
 $text['description-from_row']['pl-pl'] = "Rozpocznij importowanie danych z tego wiersza.";
 $text['description-from_row']['pt-br'] = "Inicia a importação de dados a partir desta linha.";
@@ -2566,7 +2565,7 @@ $text['label-go_to_line']['ko-kr'] = "라인으로 이동";
 
 
 $text['description-import_data']['en-us'] = "Copy and paste the comma delimitted data into the text area to begin the import.";
-$text['description-import_data']['ka-ge'] = "შემოტანის დასაწყებად დააკოპირეთ და ჩასვით მძიმით გამოყოფილი მონაცემები ტექსტურ ალაგში.";
+$text['description-import_data']['ka-ge'] = "იმპორტის დასაწყებად დააკოპირეთ და ჩასვით მძიმით გამოყოფილი მონაცემები ტექსტურ ალაგში.";
 $text['description-import_data']['en-gb'] = "Copy and paste the comma delimitted data into the text area to begin the import.";
 $text['description-import_data']['ar-eg'] = "انسخ والصق البيانات المحددة بفاصلة في منطقة النص لبدء الاستيراد.";
 $text['description-import_data']['de-at'] = "Kopieren Sie die komma-getrennten Daten in den Textbereich um den Import zu starten.";
@@ -2647,7 +2646,7 @@ $text['description-import_enclosure']['ja-jp'] = "テキストの囲み（二重
 $text['description-import_enclosure']['ko-kr'] = "텍스트 둘러싸기를 선택합니다(큰따옴표 또는 없음).";
 
 $text['header-export']['en-us'] = "Export";
-$text['header-export']['ka-ge'] = "გატანა";
+$text['header-export']['ka-ge'] = "ექსპორტი";
 $text['header-export']['en-gb'] = "Export";
 $text['header-export']['ar-eg'] = "يصدّر";
 $text['header-export']['de-at'] = "Exportieren";
@@ -4698,7 +4697,7 @@ $text['option-false']['ja-jp'] = "間違い";
 $text['option-false']['ko-kr'] = "거짓";
 
 $text['label-label']['en-us'] = "Label";
-$text['label-label']['ka-ge'] = "ჭდე(Label)";
+$text['label-label']['ka-ge'] = "ჭდე";
 $text['label-label']['en-gb'] = "Label";
 $text['label-label']['ar-eg'] = "ملصق";
 $text['label-label']['de-at'] = "Kennzeichnung";
@@ -5643,7 +5642,7 @@ $text['label-size']['ja-jp'] = "サイズ";
 $text['label-size']['ko-kr'] = "크기";
 
 $text['label-path']['en-us'] = "Project Path";
-$text['label-path']['ka-ge'] = "პროექტის ბილიკი(Path)";
+$text['label-path']['ka-ge'] = "პროექტის ბილიკი";
 $text['label-path']['en-gb'] = "Project Path";
 $text['label-path']['ar-eg'] = "مسار المشروع";
 $text['label-path']['de-at'] = "Projektpfad";
@@ -5938,7 +5937,7 @@ $text['button-cdr']['ja-jp'] = "通話詳細記録";
 $text['button-cdr']['ko-kr'] = "통화 내역 기록";
 
 $text['button-settings']['en-us'] = "Settings";
-$text['button-settings']['ka-ge'] = "მორგება";
+$text['button-settings']['ka-ge'] = "პარამეტრები";
 $text['button-settings']['en-gb'] = "Settings";
 $text['button-settings']['ar-eg'] = "Global";
 $text['button-settings']['de-at'] = "Einstellungen";
@@ -6395,7 +6394,7 @@ $text['option-hidden']['ja-jp'] = "隠れた";
 $text['option-hidden']['ko-kr'] = "숨겨진";
 
 $text['option-hover']['en-us'] = "Hover";
-$text['option-hover']['ka-ge'] = "თაგუნას კურსორის მიტანისას";
+$text['option-hover']['ka-ge'] = "ფერის შეცვლა თაგუნას კურსორის მიტანისას";
 $text['option-hover']['en-gb'] = "Hover";
 $text['option-hover']['ar-eg'] = "يحوم";
 $text['option-hover']['de-at'] = "Schweben";
@@ -6671,7 +6670,7 @@ $text['button-transcribe']['fr-ca'] = "transcrire";
 $text['button-transcribe']['fr-fr'] = "transcrire";
 $text['button-transcribe']['he-il'] = "לְתַעֲתֵק";
 $text['button-transcribe']['it-it'] = "trascrivere";
-$text['button-transcribe']['ka-ge'] = "ტრანსკრიბირება";
+$text['button-transcribe']['ka-ge'] = "ტრანსკრიფცია";
 $text['button-transcribe']['nl-nl'] = "overschrijven";
 $text['button-transcribe']['pl-pl'] = "rozpisać";
 $text['button-transcribe']['pt-br'] = "transcrever";

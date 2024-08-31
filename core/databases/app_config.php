@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
 		$apps[$x]['description']['he-il'] = "מידע חיבור למסד נתונים מאוחסן.";
 		$apps[$x]['description']['it-it'] = "Informazioni di connessione al database memorizzate.";
-		$apps[$x]['description']['ka-ge'] = "დამახსოვრებული მონაცემთა ბაზასთან წვდომის ინფორმაცია.";
+		$apps[$x]['description']['ka-ge'] = "დამახსოვრებულ მონაცემთა ბაზასთან წვდომის ინფორმაცია.";
 		$apps[$x]['description']['nl-nl'] = "Opgeslagen databaseverbindingsinformatie.";
 		$apps[$x]['description']['pl-pl'] = "Przechowywane informacje o połączeniu z bazą danych.";
 		$apps[$x]['description']['pt-br'] = "Banco de Dados";

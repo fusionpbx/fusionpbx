@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Affiche les appels actifs et les agents en queue sur le centre d'appel.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['ka-ge'] = "აჩვენებს აქტიურ არებს და აგენებს ქოლცენტრის რიგში";
+		$apps[$x]['description']['ka-ge'] = "აჩვენებს აქტიურ ზარებს და აყენებს ქოლცენტრის რიგში";
 		$apps[$x]['description']['nl-nl'] = "Laat actieve oproepen en agenten in het Call-Center wachtrij zien";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Mostra as chamadas ativas, e os agentes na fila do Call Center.";

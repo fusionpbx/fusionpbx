@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "cinématiques d'Appel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "התקשר זרימות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Deviatori di Chiamata";
-	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ზარების გადართვა";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ზარების მიმდინარეობა";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Oproep besturing";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Przepływ rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Fluxo de chamadas";

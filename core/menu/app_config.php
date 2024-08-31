@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Le menu peut être personnalisé ici";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['ka-ge'] = "მენიუს ჩასწორება ამ ხელსაწყოთი შეგიძლიათ.";
+		$apps[$x]['description']['ka-ge'] = "ამ ხელსაწყოთი შეგიძლიათ მენიუს ჩასწორება.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Os menus podem ser personalizados com esta ferramenta.";

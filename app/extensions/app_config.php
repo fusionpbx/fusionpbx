@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Utilisé pour configurer des extentions SIP";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['ka-ge'] = "გამოიყენება SIP გაფართოებები მოსარგებად";
+		$apps[$x]['description']['ka-ge'] = "გამოიყენება SIP გაფართოებების მოსარგებად";
 		$apps[$x]['description']['nl-nl'] = "Configuratie voor SIP toestellen";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Utilizado para gereciar os ramais SIP";
