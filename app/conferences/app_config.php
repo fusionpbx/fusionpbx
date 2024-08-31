@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les conferences servent à configurer des salles avec un nom, une description et un code pin facultatif";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['ka-ge'] = "კონფერენციები გამოიყენება კონფერენციების ოთახის მოსარგებლად სახელით, აღწერით და არასავალდებულო PIN-კოდით.";
+		$apps[$x]['description']['ka-ge'] = "კონფერენციები გამოიყენება სახელით, აღწერით და არასავალდებულო PIN-კოდით კონფერენციების ოთახის მოსარგებად.";
 		$apps[$x]['description']['nl-nl'] = "Conferenties worden gebruikt om gespreksruimtes op te zetten met een naam omschrijving en optionele PIN code.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['ka-ge'] = "კვანძები სხვა ხმოვალ ქსელებთან წვდომის საშუალებას გაძლევთ. ესენი შეიძლება, ხმოვანი პროვაიდერები ან სხვა სისტემები იყოს, რომლებსაც SIP რეგისტრაცია სჭირდებათ.";
+		$apps[$x]['description']['ka-ge'] = "კარიბჭეები სხვა ხმოვან ქსელებთან წვდომის საშუალებას გაძლევთ. ესენი შეიძლება, ხმოვანი პროვაიდერები ან სხვა სისტემები იყოს, რომლებსაც SIP რეგისტრაცია სჭირდებათ.";
 		$apps[$x]['description']['nl-nl'] = "Gateways voorzien in toegang tot andere telefonie netwerken. Dit kunne de VOIP-providers zijn, of andere systemen die een SIP registratie behoeven.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Troncos garantem acesso à outras redes de voz. Podem ser provedores VoIP ou outros sistemas que requerem registro SIP.";

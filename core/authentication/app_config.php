@@ -21,7 +21,7 @@
 		$apps[$x]['description']['fr-fr'] = "Fournit un cadre d'authentification avec des plugins pour vérifier si un utilisateur est autorisé à se connecter.";
 		$apps[$x]['description']['he-il'] = "מספק מסגרת אימות עם תוספים כדי לבדוק אם משתמש מורשה להתחבר.";
 		$apps[$x]['description']['it-it'] = "Fornisce un framework di autenticazione con plug-in per verificare se un utente è autorizzato ad accedere.";
-		$apps[$x]['description']['ka-ge'] = "მოგაწვდით ავთენტიკაციის პლატფორმას დამატებებით, რომ შეამოწმოთ, შეუძლია მომხმარებელს შესვლა, თუ არა.";
+		$apps[$x]['description']['ka-ge'] = "მოგაწვდით აუტენტიფიკაციის პლატფორმას დამატებებით, რომ შეამოწმოთ, შეუძლია მომხმარებელს შესვლა, თუ არა.";
 		$apps[$x]['description']['nl-nl'] = "Biedt een authenticatiekader met plug-ins om te controleren of een gebruiker geautoriseerd is om in te loggen.";
 		$apps[$x]['description']['pl-pl'] = "Zapewnia strukturę uwierzytelniania z wtyczkami do sprawdzania, czy użytkownik jest upoważniony do logowania.";
 		$apps[$x]['description']['pt-br'] = "Fornece uma estrutura de autenticação com plug-ins para verificar se um usuário está autorizado a fazer login.";

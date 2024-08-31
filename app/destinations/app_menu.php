@@ -49,7 +49,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Résumé des destinations";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "סיכום יעד";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Riepilogo della destinazione";
-	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დანიშნულების პუნქტის შეჯამება";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დანიშნულების პუნქტების შეჯამება";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Podsumowanie miejsca docelowego";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Bestemmingssamenvatting";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Resumo do destino";
