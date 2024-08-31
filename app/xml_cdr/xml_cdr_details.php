@@ -163,6 +163,11 @@
 	}
 	$call_flow_summary = $xml_cdr->call_flow_summary($call_flow_array);
 
+    // print '<pre>';
+    // print_r($call_flow_array);
+    // print '</pre>';
+    // return;
+
 //debug information
 	if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
 		$i = 0;
