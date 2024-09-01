@@ -1182,64 +1182,70 @@
 		</video>
 	{/if}
 
+	{*//image background *}
+	<div id='background-image'></div>
+
+	{*//color background *}
+	<div id='background-color'></div>
+
 	{*//message container *}
-		<div id='message_container'></div>
+	<div id='message_container'></div>
 
 	{*//domain selector *}
-		{if $authenticated && $domain_selector_enabled}
+	{if $authenticated && $domain_selector_enabled}
 
-			<div id='domains_container'>
-				<input type='hidden' id='domains_visible' value='0'>
-				<div id='domains_block'>
-					<div id='domains_header'>
-						<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
-						<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span id='domain_count' style='font-size: 80%;'></span></a>
-						<br><br>
-						<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
-					</div>
-					<div id='domains_list'></div>
+		<div id='domains_container'>
+			<input type='hidden' id='domains_visible' value='0'>
+			<div id='domains_block'>
+				<div id='domains_header'>
+					<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
+					<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span id='domain_count' style='font-size: 80%;'></span></a>
+					<br><br>
+					<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
 				</div>
+				<div id='domains_list'></div>
 			</div>
-
-		{/if}
-
-	{*//qr code container for contacts *}
-		<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>
-			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>
-				<span id='qr_code' onclick="$('#qr_code_container').fadeOut(400);"></span>
-			</td></tr></table>
 		</div>
 
+	{/if}
+
+	{*//qr code container for contacts *}
+	<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>
+		<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>
+			<span id='qr_code' onclick="$('#qr_code_container').fadeOut(400);"></span>
+		</td></tr></table>
+	</div>
+
 	{*//login page *}
-		{if !empty($login_page)}
-			<div id='default_login'>
-				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
-				{$document_body}
-			</div>
-			<div id='footer_login'>
-				<span class='footer'>{$settings.theme.footer}</span>
-			</div>
+	{if !empty($login_page)}
+		<div id='default_login'>
+			<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
+			{$document_body}
+		</div>
+		<div id='footer_login'>
+			<span class='footer'>{$settings.theme.footer}</span>
+		</div>
 
 	{*//other pages *}
-		{else}
-			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
-				{$container_open}
-				{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
-				{$menu}
-				{if $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}<br />{/if}
-				{if $settings.theme.menu_style == 'side'}<input type='hidden' id='menu_side_state_current' value='{if $menu_side_state == 'hidden'}expanded{else}{$menu_side_state}{/if}'>{/if}
-			{else} {*//default: fixed *}
-				{$menu}
-				{$container_open}
-			{/if}
-			<div id='main_content'>
-				{$document_body}
-			</div>
-			<div id='footer'>
-				<span class='footer'>{$settings.theme.footer}</span>
-			</div>
-			{$container_close}
+	{else}
+		{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
+			{$container_open}
+			{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
+			{$menu}
+			{if $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}<br />{/if}
+			{if $settings.theme.menu_style == 'side'}<input type='hidden' id='menu_side_state_current' value='{if $menu_side_state == 'hidden'}expanded{else}{$menu_side_state}{/if}'>{/if}
+		{else} {*//default: fixed *}
+			{$menu}
+			{$container_open}
 		{/if}
+		<div id='main_content'>
+			{$document_body}
+		</div>
+		<div id='footer'>
+			<span class='footer'>{$settings.theme.footer}</span>
+		</div>
+		{$container_close}
+	{/if}
 
 </body>
 </html>
