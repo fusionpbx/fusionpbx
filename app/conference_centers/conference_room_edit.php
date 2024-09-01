@@ -114,14 +114,19 @@
 
 //define fucntion get_conference_pin - used to find a unique pin number
 	function get_conference_pin($length, $conference_room_uuid) {
+		//set the variable as global
+		global $database;
+
+		//get the pin number
 		$pin = generate_password($length,1);
+
+		//return an available pin number
 		$sql = "select count(*) from v_conference_rooms ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and conference_room_uuid <> :conference_room_uuid ";
 		$sql .= "and (moderator_pin = :pin or participant_pin = :pin) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_room_uuid'] = $conference_room_uuid;
-		
 		$parameters['pin'] = $pin;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		if ($num_rows == 0) {
@@ -133,18 +138,19 @@
 		unset($sql, $parameters);
 	}
 
-//record announcment
+//record the announcement
 	if (!empty($record) && $record == "true") {
 		//prepare the values
-			$default_language = 'en';
-			$default_dialect = 'us';
-			$default_voice = 'callie';
-			$switch_cmd = "conference ".$conference_room_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+		$default_language = 'en';
+		$default_dialect = 'us';
+		$default_voice = 'callie';
+		$switch_cmd = "conference ".$conference_room_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+
 		//connect to event socket
-			$esl = event_socket::create();
-			if ($esl->is_connected()) {
-				$switch_result = event_socket::api($switch_cmd);
-			}
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$switch_result = event_socket::api($switch_cmd);
+		}
 	}
 
 //generate the pin number length
