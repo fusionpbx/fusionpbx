@@ -242,6 +242,8 @@ $dashboard_footer_background_color = $_SESSION['theme']['dashboard_footer_backgr
 $dashboard_footer_background_color_hover = $_SESSION['theme']['dashboard_footer_background_color_hover']['text'] ?? color_adjust($dashboard_footer_background_color, 0.02);
 $dashboard_footer_dots_color = $_SESSION['theme']['dashboard_footer_dots_color']['text'] ?? '#a4aebf';
 $dashboard_footer_dots_color_hover = $_SESSION['theme']['dashboard_footer_dots_color_hover']['text'] ?? $dashboard_footer_dots_color;
+$subcontent_shadow_color = $_SESSION['theme']['subcontent_shadow_color']['text'] ?? $dashboard_shadow_color;
+$subcontent_background_color = $_SESSION['theme']['subcontent_background_color']['text'] ?? '';
 $action_bar_border_top = $_SESSION['theme']['action_bar_border_top']['text'] ?? 0;
 $action_bar_border_right = $_SESSION['theme']['action_bar_border_right']['text'] ?? 0;
 $action_bar_border_bottom = $_SESSION['theme']['action_bar_border_bottom']['text'] ?? 0;
@@ -312,36 +314,42 @@ if (!empty($_SESSION['theme'])) {
 //determine which background image/color settings to use (login or standard)
 $background_images_enabled = false;
 if (!empty($_SESSION['username'])) {
-	//logged in - use standard background images/colors
+	//logged in - use standard background images
 	if (!empty($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['background_image'];
 	}
-	else {
-		$background_colors[0] = $_SESSION['theme']['background_color'][0] ?? null;
-		$background_colors[1] = $_SESSION['theme']['background_color'][1] ?? null;
+
+	//logged in - use standard background colors
+	if (!empty($_SESSION['theme']['background_image_enabled']) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+		$background_colors[0] = $_SESSION['theme']['background_color'][0];
+		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
+	elseif (!empty($_SESSION['theme']['background_image_enabled']) && !empty($_SESSION['theme']['background_color'][0])) {
+		$background_colors[0] = $_SESSION['theme']['background_color'][0];
+	}
+
 }
 else {
-	//not logged in - try using login background images/colors
+	//not logged in - try using login background images
 	if (isset($_SESSION['theme']['login_background_image_enabled']['boolean']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['login_background_image'];
 	}
-	else if (!empty($_SESSION['theme']['login_background_color'][0]) || !empty($_SESSION['theme']['login_background_color'][1])) {
-		$background_colors[0] = $_SESSION['theme']['login_background_color'][0] ?? null;
-		$background_colors[1] = $_SESSION['theme']['login_background_color'][1] ?? null;
+
+	//otherwise, use standard background images
+	if (!empty($_SESSION['theme']['background_image_enabled']['boolean']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+		$background_images_enabled = true;
+		$background_images = $_SESSION['theme']['background_image'];
 	}
-	else {
-		//otherwise, use standard background images/colors
-		if (!empty($_SESSION['theme']['background_image_enabled']['boolean']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
-			$background_images_enabled = true;
-			$background_images = $_SESSION['theme']['background_image'];
-		}
-		else {
-			$background_colors[0] = $_SESSION['theme']['background_color'][0] ?? null;
-			$background_colors[1] = $_SESSION['theme']['background_color'][1] ?? null;
-		}
+
+	//use standard background colors
+	if (!empty($_SESSION['theme']['background_color']) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+		$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
+		$background_colors[1] = $_SESSION['theme']['login_background_color'][1];
+	}
+	elseif (!empty($_SESSION['theme']['background_image_enabled']) && !empty($_SESSION['theme']['background_color'][0])) {
+		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
 
@@ -417,8 +425,7 @@ if ($background_images_enabled) {
 }
 
 //check for background color
-else if (!empty($background_colors[0]) || !empty($background_colors[1])) { //background color 1 or 2 is enabled
-
+if (!empty($background_colors[0]) || !empty($background_colors[1])) { //background color 1 or 2 is enabled
 	if (!empty($background_colors[0]) && empty($background_colors[1])) { // use color 1
 		$background_color = "background: ".$background_colors[0].";";
 	}
@@ -427,22 +434,25 @@ else if (!empty($background_colors[0]) || !empty($background_colors[1])) { //bac
 	}
 	else if (!empty($background_colors[0]) && !empty($background_colors[1]) && isset($_SESSION['theme']['background_radial_gradient']['text'])) { // radial gradient
 		$background_color = "background: ".$background_colors[0].";\n";
-		$background_color .= "background: -ms-radial-gradient(center, circle, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
-		$background_color .= "background: radial-gradient(circle at center, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		$background_color .= "		background: -ms-radial-gradient(center, circle, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		$background_color .= "		background: radial-gradient(circle at center, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
 	}
 	else if (!empty($background_colors[0]) && !empty($background_colors[1])) { // vertical gradient
 		$background_color = "background: ".$background_colors[0].";\n";
-		$background_color .= "background: -ms-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
-		$background_color .= "background: -moz-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
-		$background_color .= "background: -o-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
-		$background_color .= "background: -webkit-gradient(linear, left top, left bottom, color-stop(0, ".$background_colors[0]."), color-stop(1, ".$background_colors[1]."));\n";
-		$background_color .= "background: -webkit-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
-		$background_color .= "background: linear-gradient(to bottom, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		$background_color .= "		background: -ms-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		$background_color .= "		background: -moz-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		$background_color .= "		background: -o-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		$background_color .= "		background: -webkit-gradient(linear, left top, left bottom, color-stop(0, ".$background_colors[0]."), color-stop(1, ".$background_colors[1]."));\n";
+		$background_color .= "		background: -webkit-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		$background_color .= "		background: linear-gradient(to bottom, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
 	}
 }
 else { //default: white
-	$background_color = "background: #ffffff;\n";
+	$background_color = "";
 }
+
+
+
 ?>
 
 	html {
@@ -462,22 +472,6 @@ else { //default: white
 		bottom: 0;
 		left: 0;
 		text-align: center;
-		<?php
-		if (!empty($_SESSION['background_image'])) {
-			echo "background-image: url('".$_SESSION['background_image']."');\n";
-			echo "background-size: 100% 100%;\n";
-			echo "background-position: top;\n";
-		}
-		else {
-			echo $background_color;
-		}
-		?>
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-		webkit-background-size:cover;
-		-moz-background-size:cover;
-		-o-background-size:cover;
-		background-size:cover;
 		}
 
 	#background-video {
@@ -489,7 +483,53 @@ else { //default: white
 		right: 0;
 		top: 0;
 		bottom: 0;
-		z-index: -2;
+		z-index: -7;
+		}
+
+	#background-image {
+		width: 100vw;
+		height: 100vh;
+		object-fit: cover;
+		position: fixed;
+		<?php
+		if (!empty($_SESSION['background_image'])) {
+			echo "background-image: url('".$_SESSION['background_image']."');\n";
+			echo "		background-size: 100% 100%;\n";
+			echo "		background-position: top;\n";
+		}
+		?>
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		webkit-background-size:cover;
+		-moz-background-size:cover;
+		-o-background-size:cover;
+		background-size:cover;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: -5;
+		}
+
+	#background-color {
+		width: 100vw;
+		height: 100vh;
+		object-fit: cover;
+		position: fixed;
+		<?php
+		if (!empty($background_color)) {
+			echo $background_color;
+		}
+		if (isset($_SESSION['theme']['background_filter']['text'])) {
+			echo "		backdrop-filter: ".$_SESSION['theme']['background_filter']['text'].";\n";
+			echo "		-webkit-backdrop-filter: ".$_SESSION['theme']['background_filter']['text'].";\n";
+		}
+		?>
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: -3;
 		}
 
 	pre {
@@ -2537,6 +2577,28 @@ else { //default: white
 		border: 1px solid #5d5f5a;
 		}
 
+/* SUBCONTENT **********************************************************************/
+	div.subcontent {
+		/*border: 1px solid #bae0ba;*/
+		<?php
+		if (!empty($subcontent_background_color)) {
+			echo "background-color: " .$subcontent_background_color.";\n";
+		}
+		?>
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		padding: 20px;
+		margin-bottom: 15px;
+		<?php
+		if (!empty($subcontent_shadow_color)) {
+			echo "-webkit-box-shadow: 0 px 7px ".$subcontent_shadow_color.";\n";
+			echo "-moz-box-shadow: 0 2px 7px ".$subcontent_shadow_color.";\n";
+			echo "box-shadow: 0 2px 7px ".$subcontent_shadow_color.";\n";
+		}
+		?>
+		}
+
 /* DASHBOARD **********************************************************************/
 
 	/* login message */
@@ -2550,12 +2612,12 @@ else { //default: white
 		margin-bottom: 15px;
 		}
 
-	.widget {
+	div.widget {
 		<?php
 		if (!empty($dashboard_shadow_color)) {
-			echo "-webkit-box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
-			echo "-moz-box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
-			echo "box-shadow: 0 3px 5px ".$dashboard_shadow_color.";\n";
+			echo "-webkit-box-shadow: 0 px 7px ".$dashboard_shadow_color.";\n";
+			echo "-moz-box-shadow: 0 2px 7px ".$dashboard_shadow_color.";\n";
+			echo "box-shadow: 0 2px 7px ".$dashboard_shadow_color.";\n";
 		}
 		?>
 		}
