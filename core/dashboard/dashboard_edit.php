@@ -131,7 +131,7 @@
 		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
 		$dashboard_label_enabled = preg_replace($text_pattern, '', $dashboard_label_enabled);
 		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
-		$dashboard_label_text_color_hover = preg_replace($text_pattern, '', $dashboard_chart_type);
+		$dashboard_label_text_color_hover = preg_replace($text_pattern, '', $dashboard_label_text_color_hover);
 		$dashboard_label_background_color = preg_replace($text_pattern, '', $dashboard_label_background_color);
 		$dashboard_label_background_color_hover = preg_replace($text_pattern, '', $dashboard_label_background_color_hover);
 		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
@@ -346,7 +346,7 @@
 		$sql .= " dashboard_content_text_align, ";
 		$sql .= " dashboard_content_details, ";
 		$sql .= " dashboard_chart_type, ";
-		$sql .= " dashboard_label_enabled, ";
+		$sql .= " cast(dashboard_label_enabled as text), ";
 		$sql .= " dashboard_label_text_color, ";
 		$sql .= " dashboard_label_text_color_hover, ";
 		$sql .= " dashboard_label_background_color, ";
@@ -832,14 +832,14 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dashboard_label_enabled' name='dashboard_label_enabled' value='true' ".($dashboard_label_enabled == 'true' ? "checked='checked'" : null)." onclick=\"$('.type_label').toggle();\">\n";
+		echo "		<input type='checkbox' id='dashboard_label_enabled' name='dashboard_label_enabled' value='true' ".(empty($dashboard_label_enabled) || $dashboard_label_enabled == 'true' ? "checked='checked'" : null)." onclick=\"$('.type_label').toggle();\">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='dashboard_label_enabled' name='dashboard_label_enabled' onchange=\"$('.type_label').toggle();\">\n";
 		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($dashboard_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='true' ".(empty($dashboard_label_enabled) || $dashboard_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
@@ -847,7 +847,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr class='type_label' ".($dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
+	echo "<tr class='type_label' ".($dashboard_label_enabled == 'false' ? "style='display: none;'" : null).">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_label_text_color']."\n";
 	echo "</td>\n";
@@ -859,7 +859,7 @@
 	echo "</tr>\n";
 
 	if ($action == "add" || $dashboard_path == "dashboard/icon") {
-		echo "<tr class='type_icon type_label' ".($dashboard_path != 'dashboard/icon' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon type_label' ".($dashboard_path != 'dashboard/icon' || $dashboard_label_enabled == 'false' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_label_text_color_hover']."\n";
 		echo "</td>\n";
@@ -871,7 +871,7 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr class='type_label' ".($dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
+	echo "<tr class='type_label' ".($dashboard_label_enabled == 'false' ? "style='display: none;'" : null).">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_label_background_color']."\n";
 	echo "</td>\n";
@@ -883,7 +883,7 @@
 	echo "</tr>\n";
 
 	if ($action == "add" || $dashboard_path == "dashboard/icon") {
-		echo "<tr class='type_icon type_label' ".($dashboard_path != 'dashboard/icon' || $dashboard_label_enabled != 'true' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon type_label' ".($dashboard_path != 'dashboard/icon' || $dashboard_label_enabled == 'false' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_label_background_color_hover']."\n";
 		echo "</td>\n";
@@ -1011,7 +1011,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr class='type_label'>\n";
+	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_background_gradient_style']."\n";
 	echo "</td>\n";
@@ -1025,7 +1025,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr class='type_label'>\n";
+	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo $text['label-dashboard_background_gradient_angle']."\n";
 	echo "</td>\n";
