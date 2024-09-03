@@ -84,6 +84,9 @@
 //get the session path
 	$session_path = session_save_path();
 
+//get the server hostname
+	$hostname = gethostname();
+
 //get order and order by
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
@@ -146,7 +149,8 @@
 
 //get the list
 	$sql = "select ";
-	$sql .= "user_log_uuid, ";
+	$sql .= "u.user_log_uuid, ";
+	$sql .= "u.hostname, ";
 	$sql .= "u.domain_uuid, ";
 	$sql .= "d.domain_name, ";
 	$sql .= "to_char(timezone(:time_zone, timestamp), 'DD Mon YYYY') as date_formatted, ";
@@ -240,6 +244,7 @@
 	}
 	echo "<th class='left'>".$text['label-date']."</th>\n";
 	echo "<th class='left hide-md-dn'>".$text['label-time']."</th>\n";
+	echo "<th class='shrink hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th class='right'>".$text['label-status']."</th>\n";
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
 	echo th_order_by('type', $text['label-type'], $order_by, $order);
@@ -267,6 +272,7 @@
 			}
 			echo "	<td>".escape($row['date_formatted'])."</td>\n";
 			echo "	<td class='left hide-md-dn'>".escape($row['time_formatted'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td><div class='list-status-".$session_status."'></div></td>\n";
 			echo "	<td>".escape($row['username'])."</td>\n";
 			echo "	<td>".escape($row['type'])."</td>\n";

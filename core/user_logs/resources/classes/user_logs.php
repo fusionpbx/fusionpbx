@@ -70,6 +70,7 @@ if (!class_exists('user_logs')) {
 				$array['user_logs'][0]["domain_uuid"] = $result['domain_uuid'];
 				$array['user_logs'][0]["user_uuid"] = $result['user_uuid'];
 				$array['user_logs'][0]["username"] = $result['username'];
+				$array['user_logs'][0]["hostname"] = gethostname();
 				$array['user_logs'][0]["type"] = 'login';
 				$array['user_logs'][0]["remote_address"] = $_SERVER['REMOTE_ADDR'];
 				$array['user_logs'][0]["user_agent"] = $_SERVER['HTTP_USER_AGENT'];

@@ -40,6 +40,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'hostname';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'timestamp';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
