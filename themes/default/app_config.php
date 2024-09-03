@@ -56,6 +56,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a value 0-100 for a radial gradient.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b981742f-837c-4c58-ba2a-ca1ba6591f9f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_color_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable use of background color.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d79fb881-8a1c-4082-9ef9-5ff359186e30";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_color";
