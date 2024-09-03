@@ -321,14 +321,13 @@ if (!empty($_SESSION['username'])) {
 	}
 
 	//logged in - use standard background colors
-	if (!empty($_SESSION['theme']['background_image_enabled']) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	if (isset($_SESSION['theme']['background_color_enabled']['boolean']) && !empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_image_enabled']) && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (isset($_SESSION['theme']['background_color_enabled']['boolean']) && !empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
-
 }
 else {
 	//not logged in - try using login background images
@@ -344,11 +343,18 @@ else {
 	}
 
 	//use standard background colors
-	if (!empty($_SESSION['theme']['background_color']) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	if (!empty($_SESSION['theme']['login_background_color']) && !empty($_SESSION['theme']['login_background_color'][0]) && !empty($_SESSION['theme']['login_background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['login_background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_image_enabled']) && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (!empty($_SESSION['theme']['login_background_color']) && !empty($_SESSION['theme']['login_background_color'][0])) {
+		$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
+	}
+	elseif ($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+		$background_colors[0] = $_SESSION['theme']['background_color'][0];
+		$background_colors[1] = $_SESSION['theme']['background_color'][1];
+	}
+	elseif $_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
@@ -3229,22 +3235,6 @@ else { //default: white
 	.list-row > .no-wrap {
 		white-space: nowrap;
 		}
-
-	.list-status-active {
-		width: 10px;
-		height: 10px;
-		background-color: green;
-		border-radius: 50%;
-		display: inline-block;
-	}
-
-	.list-status-inactive {
-		width: 10px;
-		height: 10px;
-		background-color: #ccc;
-		border-radius: 50%;
-		display: inline-block;
-	}
 
 /* EDIT ********************************************************************************/
 
