@@ -321,11 +321,11 @@ if (!empty($_SESSION['username'])) {
 	}
 
 	//logged in - use standard background colors
-	if (isset($_SESSION['theme']['background_color_enabled']['boolean']) && !empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	if (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (isset($_SESSION['theme']['background_color_enabled']['boolean']) && !empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
@@ -350,11 +350,11 @@ else {
 	elseif (!empty($_SESSION['theme']['login_background_color']) && !empty($_SESSION['theme']['login_background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
 	}
-	elseif ($_SESSION['theme']['background_color_enabled'] && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif ($_SESSION['theme']['background_color_enabled'] && $_SESSION['theme']['background_color_enabled'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
