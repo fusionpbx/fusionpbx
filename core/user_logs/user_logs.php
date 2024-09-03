@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2024
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -80,6 +80,9 @@
 		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
+
+//get the session path
+	$session_path = session_save_path();
 
 //get order and order by
 	$order_by = $_GET["order_by"] ?? null;
@@ -153,7 +156,8 @@
 	$sql .= "type, ";
 	$sql .= "result, ";
 	$sql .= "remote_address, ";
-	$sql .= "user_agent ";
+	$sql .= "user_agent, ";
+	$sql .= "session_id ";
 	$sql .= "from v_user_logs as u, v_domains as d ";
 	if (permission_exists('user_log_all') && $show == 'all') {
 		$sql .= "where true ";
@@ -236,6 +240,7 @@
 	}
 	echo "<th class='left'>".$text['label-date']."</th>\n";
 	echo "<th class='left hide-md-dn'>".$text['label-time']."</th>\n";
+	echo "<th class='right'>".$text['label-status']."</th>\n";
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
 	echo th_order_by('type', $text['label-type'], $order_by, $order);
 	echo th_order_by('result', $text['label-result'], $order_by, $order);
@@ -246,6 +251,10 @@
 	if (!empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
 		$x = 0;
 		foreach ($user_logs as $row) {
+			//check the session status
+			$session_file = 'sess_'.$row['session_id'];
+			$session_status = (!empty($row['session_id']) && file_exists($session_path.'/'.$session_file)) ? 'active' : 'inactive';
+
 			echo "<tr class='list-row'>\n";
 			if (permission_exists('user_log_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -258,6 +267,7 @@
 			}
 			echo "	<td>".escape($row['date_formatted'])."</td>\n";
 			echo "	<td class='left hide-md-dn'>".escape($row['time_formatted'])."</td>\n";
+			echo "	<td><div class='list-status-".$session_status."'></div></td>\n";
 			echo "	<td>".escape($row['username'])."</td>\n";
 			echo "	<td>".escape($row['type'])."</td>\n";
 			echo "	<td>".escape($row['result'])."</td>\n";
