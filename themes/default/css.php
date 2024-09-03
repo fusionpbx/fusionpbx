@@ -3230,6 +3230,22 @@ else { //default: white
 		white-space: nowrap;
 		}
 
+	.list-status-active {
+		width: 10px;
+		height: 10px;
+		background-color: green;
+		border-radius: 50%;
+		display: inline-block;
+	}
+
+	.list-status-inactive {
+		width: 10px;
+		height: 10px;
+		background-color: #ccc;
+		border-radius: 50%;
+		display: inline-block;
+	}
+
 /* EDIT ********************************************************************************/
 
 	td.edit_delete_checkbox_all {
