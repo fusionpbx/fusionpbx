@@ -1488,4 +1488,30 @@ $text['button-toggle']['zh-cn'] = "切换";
 $text['button-toggle']['ja-jp'] = "トグル";
 $text['button-toggle']['ko-kr'] = "비녀장";
 
+$text['label-custom']['en-us'] = "Custom";
+$text['label-custom']['en-gb'] = "Custom";
+$text['label-custom']['ar-eg'] = "العرف";
+$text['label-custom']['de-at'] = "Zoll";
+$text['label-custom']['de-ch'] = "Zoll";
+$text['label-custom']['de-de'] = "Zoll";
+$text['label-custom']['el-gr'] = "Εθιμο";
+$text['label-custom']['es-cl'] = "Aduanas";
+$text['label-custom']['es-mx'] = "Aduanas";
+$text['label-custom']['fr-ca'] = "Custom";
+$text['label-custom']['fr-fr'] = "Custom";
+$text['label-custom']['he-il'] = "מותאם אישית";
+$text['label-custom']['it-it'] = "Personale";
+$text['label-custom']['ka-ge'] = "მორგებული(Custom)";
+$text['label-custom']['nl-nl'] = "Aangepast";
+$text['label-custom']['pl-pl'] = "Własne";
+$text['label-custom']['pt-br'] = "Personalizado";
+$text['label-custom']['pt-pt'] = "Personalizado";
+$text['label-custom']['ro-ro'] = "Personalizat";
+$text['label-custom']['ru-ru'] = "Пользователь";
+$text['label-custom']['sv-se'] = "Anpassad";
+$text['label-custom']['uk-ua'] = "Користування";
+$text['label-custom']['zh-cn'] = "风俗";
+$text['label-custom']['ja-jp'] = "カスタム";
+$text['label-custom']['ko-kr'] = "관습";
+
 ?>

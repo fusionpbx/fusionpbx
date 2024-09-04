@@ -206,7 +206,7 @@
 		$categories = [];
 
 		//add custom to the list of categories
-		$categories['custom']['formatted'] = 'Custom';
+		$categories['custom']['formatted'] = $text['label-custom'];
 		$categories['custom']['count'] = null;
 		
 		//add the other catefories to the array
@@ -334,8 +334,9 @@
 		foreach ($categories as $category_name => $category) {
 			$selected = (!empty($_GET['default_setting_category']) && $_GET['default_setting_category'] == $category_name) ? " selected='selected'" : null;
 			echo "		<option value='".escape($category_name)."' $selected>".escape($category['formatted']).($category['count'] ? " (".$category['count'].")" : null)."</option>\n";
+			if ($category['formatted'] == $text['label-custom']) { echo "<option disabled='disabled'></option>\n"; }
 		}
-		echo "			<option disabled='disabled'>\n";
+		echo "			<option disabled='disabled'></option>\n";
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		echo "		</select>";
 	}
