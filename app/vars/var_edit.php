@@ -206,6 +206,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -338,10 +339,13 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "</table>\n";
+	echo "</div>\n";
+
+
 	//if variable is a code then show the codec info
 	if ($var_name == "global_codec_prefs" || $var_name == "outbound_codec_prefs") {
-		echo "<tr>\n";
-		echo "<td align='left' colspan='2'>\n";
+		echo "<div class='card'>\n";
 		echo "<br />\n";
 		echo "<b>".$text['label-codec_information']."</b><br><br>\n";
 		echo "Module must be compiled and loaded. &nbsp; &nbsp; codecname[@8000h|16000h|32000h[@XXi]]<br />\n";
@@ -407,11 +411,8 @@
 		echo "	</td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
-		echo "</td>";
-		echo "</tr>";
+		echo "</div>\n";
 	}
-
-	echo "</table>";
 	echo "<br><br>";
 
 	if ($action == "update") {

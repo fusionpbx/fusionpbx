@@ -659,6 +659,7 @@
 	}
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 
 	echo "<tr>\n";
@@ -706,6 +707,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>";
 	echo "<br /><br />";
 
 	if ($action == "update") {

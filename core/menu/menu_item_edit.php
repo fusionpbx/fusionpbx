@@ -396,6 +396,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 
 	echo "	<tr>";
@@ -563,6 +564,7 @@
 	echo "	</tr>";
 
 	echo "</table>";
+	echo "</div>";
 	echo "<br><br>";
 
 	if (permission_exists('menu_add') || permission_exists('menu_edit')) {
