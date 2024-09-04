@@ -104,6 +104,7 @@
 	echo $text['description-active_call_center']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo th_order_by('queue_name', $text['label-queue_name'], $order_by, $order);
@@ -150,6 +151,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 

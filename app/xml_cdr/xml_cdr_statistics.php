@@ -156,11 +156,12 @@
 	echo $text['label-call-statistics-description']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	?>
 	<script src='/resources/chartjs/chart.min.js'></script>
 	<script src='/resources/chartjs/chartjs-adapter-date-fns.bundle.min.js'></script>
 
-	<div align='center' style="justify-content: center;">
+	<div align='center' style="justify-content: center; margin-bottom: 25px;">
 		<div style="max-width: 100%; width: 800px; height: 280px;">
 			<canvas id="cdr_stats_chart" style="width: 100%; height: 100%;"></canvas>
 		</div>
@@ -334,6 +335,7 @@
 		$i++;
 	}
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br><br>";
 
 //include the footer

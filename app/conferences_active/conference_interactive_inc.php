@@ -150,6 +150,7 @@
 		echo "<strong>".$text['label-members'].": ".escape($member_count ?? '')."</strong>\n";
 		echo "<br /><br />\n";
 
+		echo "<div class='card'>\n";
 		echo "<table class='list'>\n";
 		echo "<tr class='list-header'>\n";
 		echo "<th width='1px'>&nbsp;</th>\n";
@@ -273,6 +274,7 @@
 			}
 		}
 		echo "</table>\n";
+		echo "</div>\n";
 		echo "<br /><br />";
 	}
 
