@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,6 +71,15 @@
 	$action = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $action);
 	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
 	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+
+//determine whether to non-default (custom) settings only
+	if (!empty($default_setting_category) && $default_setting_category == 'custom') {
+		$custom_settings = true;
+		$default_setting_category = null;
+	}
+	else {
+		$custom_settings = false;
+	}
 
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
@@ -208,9 +217,19 @@
 			$categories[$default_setting_category]['formatted'] = $category;
 			$categories[$default_setting_category]['count'] = $quantity;
 		}
+
+		//add custom to the list of categories
+		$categories['custom']['formatted'] = 'Custom';
+		$categories['custom']['count'] = null;
+
+		//sort the categories
 		ksort($categories);
+
+		//unset variables
 		unset($default_setting_categories, $default_setting_category, $category);
 	}
+
+
 
 //get the list of installed apps from the core and mod directories
 	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -372,7 +391,11 @@
 			}
 
 			if (!empty($field)) {
-				if ($row['default_setting_value'] !== $field['default_setting_value']) {
+				if ($row['default_setting_value'] === $field['default_setting_value']) {
+					$setting_bold = 'font-weight:bold;';
+					if ($custom_settings) { continue; }
+				}
+				else {
 					$setting_bold = 'font-weight:bold;';
 				}
 				if (!empty($field['default_setting_value'])) {
@@ -380,6 +403,7 @@
 				}
 				else {
 					$default_value = 'Default: null';
+					if ($custom_settings) { continue; }
 				}
 				if ($row['default_setting_enabled'] != $field['default_setting_enabled']) {
 					$default_enabled = $field['default_setting_enabled'];
