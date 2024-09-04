@@ -45,20 +45,29 @@
 
 //regenerate sessions to avoid session id attacks such as session fixation
 	if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
+		//set the last activity time
 		$_SESSION['session']['last_activity'] = time();
+
+		//if session created is not set then set the time
 		if (!isset($_SESSION['session']['created'])) {
 			$_SESSION['session']['created'] = time();
-		} elseif (time() - $_SESSION['session']['created'] > 28800) {
-			//session started more than 8 hours ago
-			session_regenerate_id(true);    // rotate the session id
-			$_SESSION['session']['created'] = time();  // update creation time
+		} 
+
+		//check the elapsed time if exceeds limit then rotate the session
+		if (time() - $_SESSION['session']['created'] > 900) {
 
 			//build the user log array
-			$log_array['domain_uuid'] = $_SESSION['domain_uuid'];
-			$log_array['domain_name'] = $_SESSION['domain_name'];
-			$log_array['username'] = $_SESSION['username'];
-			$log_array['user_uuid'] = $_SESSION['user_uuid'];
+			$log_array['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+			$log_array['domain_name'] = $_SESSION['user']['domain_name'];
+			$log_array['username'] = $_SESSION['user']['username'];
+			$log_array['user_uuid'] = $_SESSION['user']['user_uuid'];
 			$log_array['authorized'] = true;
+
+			//session started more than 15 minutes
+			session_regenerate_id(true);
+
+			// update creation time
+			$_SESSION['session']['created'] = time();
 
 			//add the result to the user logs
 			user_logs::add($log_array);
