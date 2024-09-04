@@ -200,7 +200,7 @@
 					if ($_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
 						$menu_side_toggle = $_SESSION['theme']['menu_side_toggle']['text'] == 'hover' ? " onmouseenter=\"clearTimeout(menu_side_contract_timer); if ($('#menu_side_container').width() < 100) { menu_side_expand_start(); }\" onmouseleave=\"clearTimeout(menu_side_expand_timer); if ($('#menu_side_container').width() > 100 && $('#menu_side_state_current').val() != 'expanded') { menu_side_contract_start(); }\"" : null;
 					}
-					$container_open = "<div id='menu_side_container' ".($_SESSION['theme']['menu_side_state']['text'] == 'hidden' ? "style='display: none;'" : "class='hide-xs'").$menu_side_toggle." >\n";
+					$container_open = "<div id='menu_side_container' style='width: ".(in_array($_SESSION['theme']['menu_side_state']['text'], ['expanded','hidden']) ? ($_SESSION['theme']['menu_side_width_expanded']['text'] ?? 225) : ($_SESSION['theme']['menu_side_width_contracted']['text'] ?? 60))."px; ".($_SESSION['theme']['menu_side_state']['text'] == 'hidden' ? "display: none;'" : "' class='hide-xs'").$menu_side_toggle." >\n";
 					$menu = new menu;
 					$menu->text = $text;
 					$menu_html = $menu->menu_vertical($_SESSION['menu']['array']);
