@@ -308,7 +308,9 @@
 	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 	echo "<input type='hidden' name='view' value=\"".escape($view)."\">\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-	echo "<table class='list' style='margin-bottom: 25px;'>\n";
+
+	echo "<div class='card'>\n";
+	echo "<table class='list'>\n";
 	if (is_array($group_permissions) && @sizeof($group_permissions) != 0) {
 		$x = 0;
 		foreach ($group_permissions as $row) {
@@ -388,6 +390,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "</form>\n";
 
 //include the footer

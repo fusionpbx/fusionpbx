@@ -162,6 +162,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	function write_header($modifier) {
 		global $text, $modules, $list_row_edit_button;
@@ -271,6 +272,7 @@
 	unset($modules);
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

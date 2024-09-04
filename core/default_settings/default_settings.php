@@ -432,12 +432,13 @@
 			if ($previous_default_setting_category != $row['default_setting_category']) {
 				if (!empty($previous_default_setting_category)) {
 					echo "</table>\n";
-					echo "<br />\n";
+					echo "</div>\n";
 					echo "</div>\n";
 				}
 				echo "<div class='category' id='category_".$default_setting_category."'>\n";
 				echo "<b>".escape($label_default_setting_category)."</b><br>\n";
 
+				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				if ($permission['default_setting_add'] || $permission['default_setting_edit'] || $permission['default_setting_delete']) {
@@ -613,6 +614,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "</div>\n";
 

@@ -178,6 +178,7 @@
 	echo $text['description-menu']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -214,7 +215,8 @@
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "<br><br>";
+	echo "</div>";
+	echo "<br>";
 
 	if ($action == "update") {
 		echo "<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";

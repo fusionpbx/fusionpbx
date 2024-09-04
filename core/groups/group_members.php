@@ -181,6 +181,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('group_member_delete')) {
@@ -214,6 +215,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>";
 	echo "</form>";
