@@ -46,7 +46,7 @@ class authentication {
 	 * Called when the object is created
 	 */
 	public function __construct() {
-		$this->database = new database();
+		$this->database = database::new();
 	}
 
 	/**
@@ -177,20 +177,8 @@ class authentication {
 // 			}
 // 			$result["authorized"] = $authorized;
 
-		//add the result to the user logs
-			user_logs::add($result);
-
 		//user is authorized - get user settings, check user cidr
 			if ($authorized) {
-
-				//regenerate the session on login
-					session_regenerate_id(true);
-
-				//set a session variable to indicate authorized is set to true
-					$_SESSION['authorized'] = true;
-
-				//add the username to the session //username seesion could be set soone when check_auth uses an authorized session variable instead
-					$_SESSION['username'] = $result["username"];
 
 				//get the user settings
 					$sql = "select * from v_user_settings ";
@@ -221,6 +209,11 @@ class authentication {
 							}
 						}
 						if (!$found) {
+
+							//log the failed attempt
+							$login_result = $_SESSION['authentication']['plugin'];
+							user_logs::add($_SESSION['authentication']['plugin'][$plugin_classname]);
+
 							//destroy session
 							session_unset();
 							session_destroy();
@@ -263,8 +256,6 @@ class authentication {
 
 				//get the groups assigned to the user
 					$group = new groups($this->database, $result["domain_uuid"], $result["user_uuid"]);
-					$groups = $group->get_groups();
-					$group_level = $group->group_level;
 					$group->session();
 
 				//get the permissions assigned to the user through the assigned groups
@@ -370,7 +361,20 @@ class authentication {
 						date_default_timezone_set($_SESSION["time_zone"]["user"]);
 					}
 
+				//regenerate the session on login
+					session_regenerate_id(true);
+
+				//set a session variable to indicate authorized is set to true
+					$_SESSION['authorized'] = true;
+
+				//add the username to the session - username session could be set so check_auth uses an authorized session variable instead
+					$_SESSION['username'] = $result["username"];
+
 			} //authorized true
+
+		//log the attempt
+			$plugin_classname = substr($class_name, 7);
+			user_logs::add($_SESSION['authentication']['plugin'][$plugin_classname]);
 
 		//return the result
 			return $result ?? false;
