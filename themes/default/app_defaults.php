@@ -107,7 +107,7 @@
 			foreach (['default','domain','user'] as $type) {
 				$queries[] = "update v_".$type."_settings set ".$type."_setting_value = replace(".$type."_setting_value, 'fas ', 'fa-solid ') where ".$type."_setting_category = 'theme' and ".$type."_setting_subcategory like 'button_icon_%' ";
 				$queries[] = "update v_".$type."_settings set ".$type."_setting_value = concat('fa-solid fa-', ".$type."_setting_value) where ".$type."_setting_category = 'theme' and ".$type."_setting_subcategory like 'body_header_icon_%' and ".$type."_setting_value not like 'fa-solid fa-%' and ".$type."_setting_value not like 'fa-regular fa-%' and ".$type."_setting_value not like 'fa-brands fa-%' ";
-				$queries[] = "update v_".$type."_settings set ".$type."_setting_value = concat('fa-solid fa-', ".$type."_setting_value) where ".$type."_setting_category = 'theme' and ".$type."_setting_subcategory like 'menu_side_item_main_sub_icon_%' and ".$type."_setting_value not like 'fa-solid fa-%' and ".$type."_setting_value not like 'fa-regular fa-%' and ".$type."_setting_value not like 'fa-brands fa-%' ";
+				$queries[] = "update v_".$type."_settings set ".$type."_setting_value = concat('fa-solid fa-', ".$type."_setting_value) where ".$type."_setting_category = 'theme' and ".$type."_setting_subcategory like 'menu_side_item_main_sub_icon_%' and ".$type."_setting_name = 'text' and ".$type."_setting_value not like 'fa-solid fa-%' and ".$type."_setting_value not like 'fa-regular fa-%' and ".$type."_setting_value not like 'fa-brands fa-%' ";
 			}
 			unset($type);
 
