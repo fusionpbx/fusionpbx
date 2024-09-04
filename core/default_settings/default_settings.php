@@ -202,6 +202,14 @@
 
 //get the list of categories
 	if (!empty($default_setting_categories)) {
+		//show the array
+		$categories = [];
+
+		//add custom to the list of categories
+		$categories['custom']['formatted'] = 'Custom';
+		$categories['custom']['count'] = null;
+		
+		//add the other catefories to the array
 		foreach ($default_setting_categories as $default_setting_category => $quantity) {
 			$category = strtolower($default_setting_category);
 			switch ($category) {
@@ -217,13 +225,6 @@
 			$categories[$default_setting_category]['formatted'] = $category;
 			$categories[$default_setting_category]['count'] = $quantity;
 		}
-
-		//add custom to the list of categories
-		$categories['custom']['formatted'] = 'Custom';
-		$categories['custom']['count'] = null;
-
-		//sort the categories
-		ksort($categories);
 
 		//unset variables
 		unset($default_setting_categories, $default_setting_category, $category);
