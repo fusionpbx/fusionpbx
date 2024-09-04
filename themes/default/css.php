@@ -2618,7 +2618,7 @@ else { //default: white
 		margin-bottom: 15px;
 		}
 
-	div.widget {
+	div.widget div.hud_box:first-of-type {
 		<?php
 		if (!empty($dashboard_shadow_color)) {
 			echo "-webkit-box-shadow: 0 px 7px ".$dashboard_shadow_color.";\n";
