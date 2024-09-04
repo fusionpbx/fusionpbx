@@ -1570,7 +1570,9 @@
 	}
 	echo "	<option value='inbound' ".($selected[0] ?? null).">".$text['option-inbound']."</option>\n";
 	echo "	<option value='outbound' ".($selected[1] ?? null).">".$text['option-outbound']."</option>\n";
-	echo "	<option value='local' ".($selected[2] ?? null).">".$text['option-local']."</option>\n";
+	if (permission_exists('destination_local')) {
+		echo "	<option value='local' ".($selected[2] ?? null).">".$text['option-local']."</option>\n";
+	}
 	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";
