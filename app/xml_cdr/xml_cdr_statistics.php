@@ -156,6 +156,7 @@
 	echo $text['label-call-statistics-description']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	?>
 	<script src='/resources/chartjs/chart.min.js'></script>
 	<script src='/resources/chartjs/chartjs-adapter-date-fns.bundle.min.js'></script>
@@ -271,8 +272,10 @@
 	</script>
 
 	<?php
+	echo "</div>\n";
 
 //show the results
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th>".$text['label-hours']."</th>\n";
@@ -334,6 +337,7 @@
 		$i++;
 	}
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br><br>";
 
 //include the footer
