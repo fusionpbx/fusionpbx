@@ -183,6 +183,7 @@ if ($emergency_logs) {
 echo $text['title_description-emergency_logs']."\n";
 echo "<br /><br />\n";
 
+echo "<div class='card'>\n";
 echo "<table class='list'>\n";
 echo "<tr class='list-header'>\n";
 if (!empty($show) && $show == 'all' && permission_exists('emergency_logs_view_all')) {
@@ -212,6 +213,7 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 }
 
 echo "</table>\n";
+echo "</div>\n";
 echo "<br />\n";
 echo "<div align='center'>".$paging_controls."</div>\n";
 echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

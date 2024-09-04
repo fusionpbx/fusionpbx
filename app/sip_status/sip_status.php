@@ -131,6 +131,8 @@
 		echo "<br />\n";
 
 		echo "<div id='sofia_status' style='margin-top: 20px; margin-bottom: 40px;'>";
+
+		echo "<div class='card'>\n";
 		echo "<table class='list'>\n";
 		echo "<tr class='list-header'>\n";
 		echo "	<th>".$text['label-name']."</th>\n";
@@ -217,6 +219,7 @@
 
 		echo "</table>\n";
 		echo "</div>\n";
+		echo "</div>\n";
 		unset($gateways, $xml, $xml_gateways);
 	}
 
@@ -258,6 +261,8 @@
 			echo "</div>\n";
 
 			echo "<div id='".escape($sip_profile_name)."' style='display: none; margin-bottom: 30px;'>";
+
+			echo "<div class='card'>\n";
 			echo "<table width='100%' cellspacing='0' cellpadding='5'>\n";
 			echo "<tr><th colspan='2' style='font-size: 1px; padding: 0;'>&nbsp;</th></tr>\n";
 
@@ -302,6 +307,7 @@
 			}
 			echo "</table>\n";
 			echo "</div>";
+			echo "</div>";
 			unset($xml);
 		}
 	}
@@ -311,9 +317,11 @@
 		$response = event_socket::api("status");
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
-		echo "<pre>";
+		echo "<div class='card'>\n";
+		echo "<pre style='margin-bottom: 0;'>";
 		echo trim(escape($response));
 		echo "</pre>\n";
+		echo "</div>";
 		echo "</div>";
 	}
 

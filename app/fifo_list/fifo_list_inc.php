@@ -77,6 +77,7 @@
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
+		echo "<div class='card'>\n";
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th>".$text['label-name']."</th>\n";
@@ -129,6 +130,7 @@
 			$c = $c ? 0 : 1;
 		}
 		echo "</table>\n";
+		echo "</div>\n";
 	}
 
 ?>

@@ -129,7 +129,8 @@
 	if (permission_exists('xml_cdr_search')) {
 		echo "<form name='frm' id='frm' method='get'>\n";
 
-		echo "<div class='form_grid' style='padding-bottom: 35px;'>\n";
+		echo "<div class='card' style='margin-bottom: 30px;'>\n";
+		echo "<div class='form_grid'>\n";
 
 		echo "	<div class='form_set'>\n";
 		echo "		<div class='label'>\n";
@@ -180,6 +181,7 @@
 		echo "	</div>\n";
 
 		echo "</div>\n";
+		echo "</div>\n";
 
 		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('xml_cdr_extension_summary_all')) {
 			echo "<input type='hidden' name='show' value='all'>";
@@ -189,6 +191,7 @@
 	}
 
 //show the results
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "	<tr class='list-header'>\n";
 	if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
@@ -237,6 +240,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 
 //show the footer

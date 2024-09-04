@@ -160,6 +160,7 @@
 			echo "<form id='form_list' method='post' action='calls_exec.php'>\n";
 			echo "<input type='hidden' id='action' name='action' value=''>\n";
 
+			echo "<div class='card'>\n";
 			echo "<table class='list'>\n";
 			echo "<tr class='list-header'>\n";
 			if (permission_exists('call_active_hangup')) {
@@ -262,6 +263,7 @@
 			}
 
 			echo "</table>\n";
+			echo "</div>\n";
 
 			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 

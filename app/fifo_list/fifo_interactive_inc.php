@@ -98,6 +98,7 @@
 			echo "</div>\n";
 
 		//show the content
+			echo "<div class='card'>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			/*
 			echo "<tr>\n";
@@ -196,6 +197,7 @@
 				}
 			}
 			echo "</table>\n";
+			echo "</div>\n";
 
 			//Current logged members
 			//set the alternating row styles
@@ -209,6 +211,7 @@
 			echo "<br><br>Logged in agents<br><br>\n";
 
 		//show the content
+			echo "<div class='card'>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
 			echo "<th>".$text['label-username']."</th>\n";
@@ -235,6 +238,7 @@
 				}
 			}
 			echo "</table>\n";
+			echo "</div>\n";
 		}
 
 ?>
