@@ -392,11 +392,12 @@
 			}
 
 			if (!empty($field)) {
-				if ($row['default_setting_value'] === $field['default_setting_value']) {
+				//check for custom settings filter
+				if ($custom_settings) {
 					$setting_bold = 'font-weight:bold;';
-					if ($custom_settings) { continue; }
+					continue;
 				}
-				else {
+				if ($row['default_setting_value'] !== $field['default_setting_value']) {
 					$setting_bold = 'font-weight:bold;';
 				}
 				if (!empty($field['default_setting_value'])) {
@@ -404,7 +405,6 @@
 				}
 				else {
 					$default_value = 'Default: null';
-					if ($custom_settings) { continue; }
 				}
 				if ($row['default_setting_enabled'] != $field['default_setting_enabled']) {
 					$default_enabled = $field['default_setting_enabled'];
