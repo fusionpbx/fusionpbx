@@ -242,8 +242,8 @@ $dashboard_footer_background_color = $_SESSION['theme']['dashboard_footer_backgr
 $dashboard_footer_background_color_hover = $_SESSION['theme']['dashboard_footer_background_color_hover']['text'] ?? color_adjust($dashboard_footer_background_color, 0.02);
 $dashboard_footer_dots_color = $_SESSION['theme']['dashboard_footer_dots_color']['text'] ?? '#a4aebf';
 $dashboard_footer_dots_color_hover = $_SESSION['theme']['dashboard_footer_dots_color_hover']['text'] ?? $dashboard_footer_dots_color;
-$subcontent_shadow_color = $_SESSION['theme']['subcontent_shadow_color']['text'] ?? $dashboard_shadow_color;
-$subcontent_background_color = $_SESSION['theme']['subcontent_background_color']['text'] ?? '';
+$card_shadow_color = $_SESSION['theme']['card_shadow_color']['text'] ?? '';
+$card_background_color = $_SESSION['theme']['card_background_color']['text'] ?? '';
 $action_bar_border_top = $_SESSION['theme']['action_bar_border_top']['text'] ?? 0;
 $action_bar_border_right = $_SESSION['theme']['action_bar_border_right']['text'] ?? 0;
 $action_bar_border_bottom = $_SESSION['theme']['action_bar_border_bottom']['text'] ?? 0;
@@ -2583,12 +2583,13 @@ else { //default: white
 		border: 1px solid #5d5f5a;
 		}
 
-/* SUBCONTENT **********************************************************************/
-	div.subcontent {
+/* CARD **********************************************************************/
+
+	div.card {
 		/*border: 1px solid #bae0ba;*/
 		<?php
-		if (!empty($subcontent_background_color)) {
-			echo "background-color: " .$subcontent_background_color.";\n";
+		if (!empty($card_background_color)) {
+			echo "background-color: " .$card_background_color.";\n";
 		}
 		?>
 		-webkit-border-radius: 3px;
@@ -2597,10 +2598,10 @@ else { //default: white
 		padding: 20px;
 		margin-bottom: 15px;
 		<?php
-		if (!empty($subcontent_shadow_color)) {
-			echo "-webkit-box-shadow: 0 px 7px ".$subcontent_shadow_color.";\n";
-			echo "-moz-box-shadow: 0 2px 7px ".$subcontent_shadow_color.";\n";
-			echo "box-shadow: 0 2px 7px ".$subcontent_shadow_color.";\n";
+		if (!empty($card_shadow_color)) {
+			echo "-webkit-box-shadow: 0 px 7px ".$card_shadow_color.";\n";
+			echo "-moz-box-shadow: 0 2px 7px ".$card_shadow_color.";\n";
+			echo "box-shadow: 0 2px 7px ".$card_shadow_color.";\n";
 		}
 		?>
 		}
