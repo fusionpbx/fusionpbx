@@ -368,7 +368,7 @@ class authentication {
 					$_SESSION['authorized'] = true;
 
 				//add the username to the session - username session could be set so check_auth uses an authorized session variable instead
-					$_SESSION['username'] = $result["username"];
+					$_SESSION['username'] = $_SESSION['user']["username"];
 
 			} //authorized true
 
