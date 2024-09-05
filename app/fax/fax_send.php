@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -991,7 +991,8 @@ if (!$included) {
 		if ($domain_enabled == false) {
 		echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
 		}
-		
+
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 
 		echo "<tr>\n";
@@ -1152,6 +1153,7 @@ if (!$included) {
 		}
 
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 
 		echo "<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
@@ -1190,3 +1192,4 @@ function showgrid($pdf) {
 	}
 }
 */
+?>
