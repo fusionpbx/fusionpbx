@@ -143,6 +143,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td style='background-color: #1c1c1c; padding: 8px; text-align: left;'>";
@@ -212,6 +213,7 @@
 	echo "		</td>";
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "</div>\n";
 
 //include the footer
 	require_once "resources/footer.php";
