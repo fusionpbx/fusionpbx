@@ -242,8 +242,13 @@ $dashboard_footer_background_color = $_SESSION['theme']['dashboard_footer_backgr
 $dashboard_footer_background_color_hover = $_SESSION['theme']['dashboard_footer_background_color_hover']['text'] ?? color_adjust($dashboard_footer_background_color, 0.02);
 $dashboard_footer_dots_color = $_SESSION['theme']['dashboard_footer_dots_color']['text'] ?? '#a4aebf';
 $dashboard_footer_dots_color_hover = $_SESSION['theme']['dashboard_footer_dots_color_hover']['text'] ?? $dashboard_footer_dots_color;
-$card_shadow_color = $_SESSION['theme']['card_shadow_color']['text'] ?? '';
-$card_background_color = $_SESSION['theme']['card_background_color']['text'] ?? '';
+$card_padding = $_SESSION['theme']['card_padding']['text'] ?? '0';
+$card_shadow_color = $_SESSION['theme']['card_shadow_color']['text'] ?? null;
+$card_shadow_size = $_SESSION['theme']['card_shadow_size']['text'] ?? null;
+$card_background_color = $_SESSION['theme']['card_background_color']['text'] ?? null;
+$card_border_color = $_SESSION['theme']['card_border_color']['text'] ?? null;
+$card_border_size = $_SESSION['theme']['card_border_size']['text'] ?? null;
+$card_border_radius = $_SESSION['theme']['card_border_radius']['text'] ?? '0';
 $action_bar_border_top = $_SESSION['theme']['action_bar_border_top']['text'] ?? 0;
 $action_bar_border_right = $_SESSION['theme']['action_bar_border_right']['text'] ?? 0;
 $action_bar_border_bottom = $_SESSION['theme']['action_bar_border_bottom']['text'] ?? 0;
@@ -2586,22 +2591,40 @@ else { //default: white
 /* CARD **********************************************************************/
 
 	div.card {
-		/*border: 1px solid #bae0ba;*/
-		<?php
-		if (!empty($card_background_color)) {
-			echo "background-color: " .$card_background_color.";\n";
-		}
-		?>
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
-		padding: 20px;
 		margin-bottom: 15px;
 		<?php
-		if (!empty($card_shadow_color)) {
-			echo "-webkit-box-shadow: 0 px 7px ".$card_shadow_color.";\n";
-			echo "-moz-box-shadow: 0 2px 7px ".$card_shadow_color.";\n";
-			echo "box-shadow: 0 2px 7px ".$card_shadow_color.";\n";
+		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
+			if (isset($card_border_size) && !empty($card_border_color)) {
+				echo "border: ".$card_border_size." solid ".$card_border_color.";\n";
+			}
+			else {
+				echo "border: none !important;\n";
+			}
+			if (isset($card_border_radius) || (isset($card_border_size) || !empty($card_border_color))) {
+				echo "-webkit-border-radius: ".($card_border_radius ?? '0')." !important;\n";
+				echo "-moz-border-radius: ".($card_border_radius ?? '0')." !important;\n";
+				echo "border-radius: ".($card_border_radius ?? '0')." !important;\n";
+			}
+			echo "padding: ".$card_padding.";\n";
+			if (!empty($card_background_color)) {
+				echo "background-color: " .$card_background_color.";\n";
+			}
+			if (!empty($card_shadow_color)) {
+				echo "-webkit-box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+				echo "-moz-box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+				echo "box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+			}
+		}
+		else {
+			echo "border: 0;\n";
+			echo "-webkit-border-radius: 0 !important;\n";
+			echo "-moz-border-radius: 0 !important;\n";
+			echo "border-radius: 0 !important;\n";
+			echo "padding: 0;\n";
+			echo "background-color: none;\n";
+			echo "-webkit-box-shadow: none;\n";
+			echo "-moz-box-shadow: none;\n";
+			echo "box-shadow: none;\n";
 		}
 		?>
 		}
