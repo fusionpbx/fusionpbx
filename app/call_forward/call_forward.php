@@ -270,6 +270,7 @@
 		echo "<input type='hidden' name='search' value=\"" . escape($search) . "\">\n";
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (!$is_included) {
@@ -407,6 +408,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 
 	if (!$is_included) {
 		echo "<br />\n";
