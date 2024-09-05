@@ -49,7 +49,7 @@ class plugin_email {
 	 */
 	function email() {
 
-			//pre-process some settings
+		//pre-process some settings
 			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
 			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
 			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
@@ -59,16 +59,11 @@ class plugin_email {
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
 			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
-			//set a default template
-			$_SESSION['domain']['template']['name'] = 'default';
-			$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-			$_SESSION['theme']['menu_brand_type']['text'] = 'image';
-
-			//get the domain
+		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
 
-			//use the session username
+		//use the session username
 			if (isset($_SESSION['username'])) {
 				$_POST['username'] = $_SESSION['username'];
 				$_REQUEST['username'] = $_SESSION['username'];
@@ -310,11 +305,6 @@ class plugin_email {
 				//$email_error = $email->email_error;
 				//echo $email_response."<br />\n";
 				//echo $email_error."<br />\n";
-
-				//set a default template
-				$_SESSION['domain']['template']['name'] = 'default';
-				$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-				$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
