@@ -523,7 +523,7 @@
 							$templates['Flyingvoice FIP16'] = 'flyingvoice/fip16';
 							$templates['Flyingvoice FIP16PLUS'] = 'flyingvoice/fip16plus';
 
-							foreach ($templates as $key=>$value){
+							foreach ($templates as $key=>$value) {
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
 									$device_template = $value;
 									break;
@@ -955,59 +955,64 @@
 						exit;
 					}
 
-				//set the variables key and values
-					$x = 1;
-					$variables['domain_name'] = $domain_name;
-					$variables['user_id'] = $lines[$x]['user_id'];
-					$variables['auth_id'] = $lines[$x]['auth_id'];
-					$variables['extension'] = $lines[$x]['extension'] ?? '';
-					//$variables['password'] = $lines[$x]['password'];
-					$variables['register_expires'] = $lines[$x]['register_expires'];
-					$variables['sip_transport'] = $lines[$x]['sip_transport'];
-					$variables['sip_port'] = $lines[$x]['sip_port'];
-					$variables['server_address'] = $lines[$x]['server_address'];
-					$variables['outbound_proxy'] = $lines[$x]['outbound_proxy_primary'];
-					$variables['outbound_proxy_primary'] = $lines[$x]['outbound_proxy_primary'];
-					$variables['outbound_proxy_secondary'] = $lines[$x]['outbound_proxy_secondary'];
-					$variables['display_name'] = $lines[$x]['display_name'];
-					$variables['location'] = $device_location;
-					$variables['description'] = $device_description;
+				//list of variable names
+					$variable_names = [];
+					$variable_names[] = 'domain_name';
+					$variable_names[] = 'user_id';
+					$variable_names[] = 'auth_id';
+					$variable_names[] = 'extension';
+					$variable_names[] = 'register_expires';
+					$variable_names[] = 'sip_transport';
+					$variable_names[] = 'sip_port';
+					$variable_names[] = 'server_address';
+					$variable_names[] = 'outbound_proxy';
+					$variable_names[] = 'outbound_proxy_primary';
+					$variable_names[] = 'outbound_proxy_secondary';
+					$variable_names[] = 'display_name';
+					$variable_names[] = 'location';
+					$variable_names[] = 'description';
+
+				//add location and description to the lines array
+					foreach($lines as $id => $row) {
+						$lines[$id]['location'] = $device_location;
+						$lines[$id]['description'] = $device_description;
+					}
 
 				//update the device keys by replacing variables with their values
-					foreach($variables as $name => $value) {
-						if (!empty($device_keys) && is_array($device_keys)) {
-							foreach($device_keys as $k => $field) {
-								if (!empty($field['device_key_uuid'])) {
-										if (isset($field['device_key_value'])) {
-											$device_keys[$k]['device_key_value'] = str_replace("\${".$name."}", $value, $field['device_key_value']);
+					if (!empty($device_keys['line']) && is_array($device_keys)) {
+						$types = array("line", "memory", "expansion", "programmable");
+						foreach ($types as $type) {
+							if (!empty($device_keys[$type]) && is_array($device_keys[$type])) {
+								foreach($device_keys[$type] as $row) {
+									//get the variables
+									$device_key_line = $row['device_key_line'];	
+									$device_key_id = $row['device_key_id'];
+									$device_key_value = $row['device_key_value'];
+									$device_key_extension = $row['device_key_extension'];
+									$device_key_label = $row['device_key_label'];
+									$device_key_icon = $row['device_key_icon'];
+
+									//replace the variables
+									foreach($variable_names as $name) {
+										if (!empty($row['device_key_value'])) {
+											$device_key_value = str_replace("\${".$name."}", $lines[$device_key_line][$name], $device_key_value);
 										}
-										if (isset($field['device_key_extension'])) {
-											$device_keys[$k]['device_key_extension'] = str_replace("\${".$name."}", $value, $field['device_key_extension']);
+										if (!empty($row['device_key_extension'])) {
+											$device_key_extension = str_replace("\${".$name."}", $lines[$device_key_line][$name], $device_key_extension);
 										}
-										if (isset($field['device_key_label'])) {
-											$device_keys[$k]['device_key_label'] = str_replace("\${".$name."}", $value, $field['device_key_label']);
+										if (!empty($row['device_key_label'])) {
+											$device_key_label = str_replace("\${".$name."}", $lines[$device_key_line][$name], $device_key_label);
 										}
-										if (isset($field['device_key_icon'])) {
-											$device_keys[$k]['device_key_icon'] = str_replace("\${".$name."}", $value, $field['device_key_icon']);
-										}
-								}
-								else {
-									if (is_array($field)) {
-										foreach($field as $key => $row) {
-											if (isset($row['device_key_value'])) {
-												$device_keys[$k][$key]['device_key_value'] = str_replace("\${".$name."}", $value, $row['device_key_value']);
-											}
-											if (isset($row['device_key_extension'])) {
-												$device_keys[$k][$key]['device_key_extension'] = str_replace("\${".$name."}", $value, $row['device_key_extension']);
-											}
-											if (isset($row['device_key_label'])) {
-												$device_keys[$k][$key]['device_key_label'] = str_replace("\${".$name."}", $value, $row['device_key_label']);
-											}
-											if (isset($row['device_key_icon'])) {
-												$device_keys[$k][$key]['device_key_icon'] = str_replace("\${".$name."}", $value, $row['device_key_icon']);
-											}
+										if (!empty($row['device_key_icon'])) {
+											$device_key_icon = str_replace("\${".$name."}", $lines[$device_key_line][$name], $device_key_icon);
 										}
 									}
+
+									//update the device kyes array
+									$device_keys[$type][$device_key_id]['device_key_value'] = $device_key_value;
+									$device_keys[$type][$device_key_id]['device_key_extension'] = $device_key_extension;
+									$device_keys[$type][$device_key_id]['device_key_label'] = $device_key_label;
+									$device_keys[$type][$device_key_id]['device_key_icon'] = $device_key_icon;
 								}
 							}
 						}
