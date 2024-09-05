@@ -448,45 +448,44 @@ if (is_array($activity)) {
 
 		//build the list of extensions
 		$block = "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(empty($ext_state) || ($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
-		$block .= "<div class='card'>\n";
-		$block .= "	<table class='".$css_class."'>\n";
-		$block .= "		<tr>\n";
-		$block .= "			<td class='op_ext_icon'>\n";
-		$block .= "				<span name='".escape($extension)."'>\n"; // DRAG FROM
-		$block .= "					<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">\n";
-		$block .= "				</span>\n";
-		$block .= "			</td>\n";
-		$block .= "			<td class='op_ext_info ".$css_class."'>\n";
+		$block .= "<table class='".$css_class."'>\n";
+		$block .= "	<tr>\n";
+		$block .= "		<td class='op_ext_icon'>\n";
+		$block .= "			<span name='".escape($extension)."'>\n"; // DRAG FROM
+		$block .= 				"<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">\n";
+		$block .= 			"</span>\n";
+		$block .= "		</td>\n";
+		$block .= "		<td class='op_ext_info ".$css_class."'>\n";
 		if ($dir_icon ?? '') {
-			$block .= "				<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">\n";
+			$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">\n";
 		}
 		$block .= "			<span class='op_user_info'>\n";
 		if ($ext['effective_caller_id_name'] != '' && escape($ext['effective_caller_id_name']) != $extension) {
-			$block .= "				<strong class='strong'>".escape($ext['effective_caller_id_name'])."</strong> (".escape($extension).")\n";
+			$block .= "			<strong class='strong'>".escape($ext['effective_caller_id_name'])."</strong> (".escape($extension).")\n";
 		}
 		else {
-			$block .= "				<strong class='strong'>".escape($extension)."</strong>\n";
+			$block .= "			<strong class='strong'>".escape($extension)."</strong>\n";
 		}
 		$block .= "			</span><br>\n";
 		if ($ext_state ?? '') {
-			$block .= "			<span class='op_caller_info'>\n";
-			$block .= "				<table align='right'><tr><td style='text-align: right;'>\n";
-			$block .= "					<span class='op_call_info'>".escape($ext['call_length'])."</span><br>\n";
-			$block .= "					<span class='call_control'>\n";
+			$block .= "		<span class='op_caller_info'>\n";
+			$block .= "			<table align='right'><tr><td style='text-align: right;'>\n";
+			$block .= "				<span class='op_call_info'>".escape($ext['call_length'])."</span><br>\n";
+			$block .= "				<span class='call_control'>\n";
 			//record
 			if (permission_exists('operator_panel_record') && $ext_state == 'active') {
 				$call_identifier_record = $ext['call_uuid'];
 				$rec_file = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
 				if (file_exists($rec_file)) {
-					$block .=			"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">\n";
+					$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">\n";
 				}
 				else {
-					$block .= 			"<img src='resources/images/record.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title=\"".$text['label-record']."\" onclick=\"record_call('".$call_identifier_record."');\" ".$onhover_pause_refresh.">\n";
+					$block .= 		"<img src='resources/images/record.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title=\"".$text['label-record']."\" onclick=\"record_call('".$call_identifier_record."');\" ".$onhover_pause_refresh.">\n";
 				}
 			}
 			//eavesdrop
 			if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && sizeof($_SESSION['user']['extensions']) > 0 && !in_array($extension, $_SESSION['user']['extensions'])) {
-				$block .= 				"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".escape($ext['destination'])."','".escape($call_identifier)."');\" ".$onhover_pause_refresh.">\n";
+				$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".escape($ext['destination'])."','".escape($call_identifier)."');\" ".$onhover_pause_refresh.">\n";
 			}
 			//hangup
 			if (permission_exists('operator_panel_hangup') || in_array($extension, $_SESSION['user']['extensions'])) {
@@ -499,39 +498,38 @@ if (is_array($activity)) {
 				else {
 					$call_identifier_hangup_uuid = $call_identifier;
 				}
-				$block .= 				"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-hangup']."' onclick=\"hangup_call('".escape($call_identifier_hangup_uuid)."');\" ".$onhover_pause_refresh.">\n";
+				$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-hangup']."' onclick=\"hangup_call('".escape($call_identifier_hangup_uuid)."');\" ".$onhover_pause_refresh.">\n";
 			}
-			$block .=					"</span>\n";
+			$block .=				"</span>\n";
 			//transfer
 			if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
-				$block .=				"<img id='destination_control_".escape($extension)."_transfer' class='destination_control' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".escape($extension)."', 'transfer');\" ".$onhover_pause_refresh.">\n";
+				$block .= 			"<img id='destination_control_".escape($extension)."_transfer' class='destination_control' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".escape($extension)."', 'transfer');\" ".$onhover_pause_refresh.">\n";
 			}
-			$block .= "				</td></tr></table>\n";
+			$block .= "			</td></tr></table>\n";
 			if (permission_exists('operator_panel_call_details')) {
-				$block .= "				<span id='op_caller_details_".escape($extension)."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>\n";
+				$block .= "			<span id='op_caller_details_".escape($extension)."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>\n";
 			}
-			$block .= "			</span>\n";
+			$block .= "		</span>\n";
 			//transfer
 			if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
 				$call_identifier_transfer = $ext['variable_bridge_uuid'];
-				$block .= "			<form id='frm_destination_".escape($extension)."_transfer' onsubmit=\"go_destination('".escape($extension)."', document.getElementById('destination_".escape($extension)."_transfer').value, 'transfer', '".escape($call_identifier_transfer)."'); return false;\">\n";
-				$block .= "				<input type='text' class='formfld' id='destination_".escape($extension)."_transfer' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 3px; text-align: center; display: none;' onblur=\"toggle_destination('".escape($extension)."', 'transfer');\">\n";
-				$block .= "			</form>\n";
+				$block .= "		<form id='frm_destination_".escape($extension)."_transfer' onsubmit=\"go_destination('".escape($extension)."', document.getElementById('destination_".escape($extension)."_transfer').value, 'transfer', '".escape($call_identifier_transfer)."'); return false;\">\n";
+				$block .= "			<input type='text' class='formfld' id='destination_".escape($extension)."_transfer' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 3px; text-align: center; display: none;' onblur=\"toggle_destination('".escape($extension)."', 'transfer');\">\n";
+				$block .= "		</form>\n";
 			}
 		}
 		else {
 			//call
 			if (in_array($extension, $_SESSION['user']['extensions'])) {
-				$block .= "			<img id='destination_control_".escape($extension)."_call' class='destination_control' src='resources/images/keypad_call.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; margin-right: 1px; cursor: pointer;' align='right' onclick=\"toggle_destination('".escape($extension)."', 'call');\" ".$onhover_pause_refresh.">\n";
-				$block .= "			<form id='frm_destination_".escape($extension)."_call' onsubmit=\"go_destination('".escape($extension)."', document.getElementById('destination_".escape($extension)."_call').value, 'call'); return false;\">\n";
-				$block .= "				<input type='text' class='formfld' id='destination_".escape($extension)."_call' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".escape($extension)."', 'call');\">\n";
-				$block .= "			</form>\n";
+				$block .= "		<img id='destination_control_".escape($extension)."_call' class='destination_control' src='resources/images/keypad_call.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; margin-right: 1px; cursor: pointer;' align='right' onclick=\"toggle_destination('".escape($extension)."', 'call');\" ".$onhover_pause_refresh.">\n";
+				$block .= "		<form id='frm_destination_".escape($extension)."_call' onsubmit=\"go_destination('".escape($extension)."', document.getElementById('destination_".escape($extension)."_call').value, 'call'); return false;\">\n";
+				$block .= "			<input type='text' class='formfld' id='destination_".escape($extension)."_call' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".escape($extension)."', 'call');\">\n";
+				$block .= "		</form>\n";
 			}
 		}
-		$block .= "			</td>\n";
-		$block .= "		</tr>\n";
-		$block .= "	</table>\n";
-		$block .= "</div>\n";
+		$block .= "		</td>\n";
+		$block .= "	</tr>\n";
+		$block .= "</table>\n";
 
 		if (if_group("superadmin") && isset($_GET['debug'])) {
 			$block .= "<span style='font-size: 10px;'>\n";
@@ -578,7 +576,6 @@ if (sizeof($user_extensions) > 0) {
 
 			//build the list of park extensions
 			$valet_block .= "<div id='".escape($extension)."' class='".$css_class."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'>\n"; // DRAG TO
-			$valet_block .= "<div class='card'>\n";
 			$valet_block .= "<table class='".$css_class."'>\n";
 			$valet_block .= "	<tr>\n";
 			$valet_block .= "		<td class='op_ext_icon'>\n";
@@ -632,7 +629,6 @@ if (sizeof($user_extensions) > 0) {
 			$valet_block .= "		</td>\n";
 			$valet_block .= "	</tr>\n";
 			$valet_block .= "</table>\n";
-			$valet_block .= "</div>\n";
 
 			if (if_group("superadmin") && isset($_GET['debug'])) {
 				$valet_block .= "<span style='font-size: 10px;'>\n";
@@ -678,11 +674,11 @@ if (sizeof($grouped_extensions) > 0) {
 //show the other extensions
 if (sizeof($other_extensions) > 0) {
 	//echo "<div class=\"heading\"><strong>".$text['label-other_extensions']."</strong></div>\n";
-	echo "<div class='card'><table width='100%'><tr><td>\n";
+	echo "<table width='100%'><tr><td>\n";
 	foreach ($other_extensions as $ext_block) {
 		echo $ext_block;
 	}
-	echo "</td></tr></table></div>\n";
+	echo "</td></tr></table>\n";
 }
 
 //no extensions found
