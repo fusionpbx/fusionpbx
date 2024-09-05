@@ -139,56 +139,58 @@
 	if (permission_exists('xml_cdr_search')) {
 		echo "<form name='frm' id='frm' method='get'>\n";
 
-		echo "<div class='form_grid' style='padding-bottom: 35px;'>\n";
+		echo "<div class='card'>\n";
+		echo "	<div class='form_grid' style='padding-bottom: 35px;'>\n";
 
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='label'>\n";
-		echo "			".$text['label-preset']."\n";
+		echo "		<div class='form_set'>\n";
+		echo "			<div class='label'>\n";
+		echo "				".$text['label-preset']."\n";
+		echo "			</div>\n";
+		echo "			<div class='field'>\n";
+		echo "				<select class='formfld' name='quick_select' id='quick_select' onchange=\"if (this.selectedIndex != 0) { document.getElementById('start_stamp_begin').value = ''; document.getElementById('start_stamp_end').value = ''; document.getElementById('frm').submit(); }\">\n";
+		echo "					<option value=''></option>\n";
+		echo "					<option value='1' ".($quick_select == 1 ? "selected='selected'" : null).">".$text['option-last_seven_days']."</option>\n";
+		echo "					<option value='2' ".($quick_select == 2 ? "selected='selected'" : null).">".$text['option-last_hour']."</option>\n";
+		echo "					<option value='3' ".($quick_select == 3 ? "selected='selected'" : null).">".$text['option-today']."</option>\n";
+		echo "					<option value='4' ".($quick_select == 4 ? "selected='selected'" : null).">".$text['option-yesterday']."</option>\n";
+		echo "					<option value='5' ".($quick_select == 5 ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
+		echo "					<option value='6' ".($quick_select == 6 ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
+		echo "					<option value='7' ".($quick_select == 7 ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
+		echo "				</select>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div class='field'>\n";
-		echo "			<select class='formfld' name='quick_select' id='quick_select' onchange=\"if (this.selectedIndex != 0) { document.getElementById('start_stamp_begin').value = ''; document.getElementById('start_stamp_end').value = ''; document.getElementById('frm').submit(); }\">\n";
-		echo "				<option value=''></option>\n";
-		echo "				<option value='1' ".($quick_select == 1 ? "selected='selected'" : null).">".$text['option-last_seven_days']."</option>\n";
-		echo "				<option value='2' ".($quick_select == 2 ? "selected='selected'" : null).">".$text['option-last_hour']."</option>\n";
-		echo "				<option value='3' ".($quick_select == 3 ? "selected='selected'" : null).">".$text['option-today']."</option>\n";
-		echo "				<option value='4' ".($quick_select == 4 ? "selected='selected'" : null).">".$text['option-yesterday']."</option>\n";
-		echo "				<option value='5' ".($quick_select == 5 ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
-		echo "				<option value='6' ".($quick_select == 6 ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
-		echo "				<option value='7' ".($quick_select == 7 ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
-		echo "			</select>\n";
-		echo "		</div>\n";
-		echo "	</div>\n";
 
-		//echo "	<div class='form_set'>\n";
-		//echo "		<div class='label'>\n";
-		//echo "			".$text['label-include_internal']."\n";
+		//echo "		<div class='form_set'>\n";
+		//echo "			<div class='label'>\n";
+		//echo "				".$text['label-include_internal']."\n";
+		//echo "			</div>\n";
+		//echo "			<div class='field'>\n";
+		//echo "				<select class='formfld' name='include_internal' id='include_internal'>\n";
+		//echo "					<option value='0'>".$text['option-false']."</option>\n";
+		//echo "					<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
+		//echo "				</select>\n";
+		//echo "			</div>\n";
 		//echo "		</div>\n";
-		//echo "		<div class='field'>\n";
-		//echo "			<select class='formfld' name='include_internal' id='include_internal'>\n";
-		//echo "				<option value='0'>".$text['option-false']."</option>\n";
-		//echo "				<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
-		//echo "			</select>\n";
-		//echo "		</div>\n";
-		//echo "	</div>\n";
 
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='label'>\n";
-		echo "			".$text['label-start_date_time']."\n";
+		echo "		<div class='form_set'>\n";
+		echo "			<div class='label'>\n";
+		echo "				".$text['label-start_date_time']."\n";
+		echo "			</div>\n";
+		echo "			<div class='field'>\n";
+		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
+
+		echo "		<div class='form_set'>\n";
+		echo "			<div class='label'>\n";
+		echo "				".$text['label-end_date_time']."\n";
+		echo "			</div>\n";
+		echo "			<div class='field'>\n";
+		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
+
 		echo "	</div>\n";
-
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='label'>\n";
-		echo "			".$text['label-end_date_time']."\n";
-		echo "		</div>\n";
-		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
-		echo "		</div>\n";
-		echo "	</div>\n";
-
 		echo "</div>\n";
 
 		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('destination_summary_all')) {
@@ -199,21 +201,22 @@
 	}
 
 //show the results
-	echo "<table class='list'>\n";
-	echo "	<tr class='list-header'>\n";
+	echo "<div class='card'>\n";
+	echo "	<table class='list'>\n";
+	echo "		<tr class='list-header'>\n";
 	if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('destination_summary_all')) {
-		echo "		<th>".$text['label-domain']."</th>\n";
+		echo "			<th>".$text['label-domain']."</th>\n";
 	}
-	echo "		<th>".$text['label-destination_number']."</th>\n";
+	echo "			<th>".$text['label-destination_number']."</th>\n";
 	if (permission_exists('number_alias')) {
-		echo "		<th>".$text['label-number_alias']."</th>\n";
+		echo "			<th>".$text['label-number_alias']."</th>\n";
 	}
-	echo "		<th class='center'>".$text['label-answered']."</th>\n";
-	echo "		<th class='center'>".$text['label-unique_callers']."</th>\n";
-	echo "		<th class='center'>".$text['label-total_calls']."</th>\n";
-	echo "		<th class='center'>".$text['label-duration']."</th>\n";
-	echo "		<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
-	echo "	</tr>\n";
+	echo "			<th class='center'>".$text['label-answered']."</th>\n";
+	echo "			<th class='center'>".$text['label-unique_callers']."</th>\n";
+	echo "			<th class='center'>".$text['label-total_calls']."</th>\n";
+	echo "			<th class='center'>".$text['label-duration']."</th>\n";
+	echo "			<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
+	echo "		</tr>\n";
 
 	if (!empty($summary) && is_array($summary)) {
 		foreach ($summary as $key => $row) {
@@ -236,6 +239,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 
 //show the footer
