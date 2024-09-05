@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -823,7 +823,7 @@
 					case 'hour': //hours of day
 						<?php
 						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
-						
+
 							for ($h = 0; $h <= 23; $h++) {
 								echo "sel_start.options[sel_start.options.length] = new Option(".$h.", ".$h.");\n";
 								echo "sel_stop.options[sel_stop.options.length] = new Option(".$h.", ".$h.");\n";
@@ -978,6 +978,7 @@ echo "</div>\n";
 echo $text['description-time_conditions']."\n";
 echo "<br /><br />\n";
 
+echo "<div class='card'>\n";
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 echo "<tr>\n";
@@ -1062,7 +1063,7 @@ if ($action == 'update') {
 
 							//adjust time one minute earlier to account for freeswitch one minute early on start condition behavior.
 							$cond_val_start = $cond_val_start - 1;
-							
+
 							$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
 							if ($cond_val_stop != '') {
 								$cond_val_stop = number_pad(floor($cond_val_stop / 60),2).":".number_pad(fmod($cond_val_stop, 60),2);
@@ -1333,6 +1334,7 @@ if ($action == 'update') {
 	echo "</tr>\n";
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br /><br />\n";
 
 	if ($action == "update") {

@@ -396,6 +396,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	}
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -590,6 +591,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	if ($action == "update") {

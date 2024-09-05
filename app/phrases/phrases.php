@@ -43,7 +43,7 @@
 	$sql_search = '';
 
 //add additional variables
-	$show = $_GET['show'] ?? ''; 
+	$show = $_GET['show'] ?? '';
 
 //get posted data
 	if (!empty($_POST['phrases'])) {
@@ -188,6 +188,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('phrase_add') || permission_exists('phrase_edit') || permission_exists('phrase_delete')) {
@@ -260,6 +261,7 @@
 	unset($phrases);
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 

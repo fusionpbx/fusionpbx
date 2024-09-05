@@ -406,6 +406,7 @@
 
 //show the call summary - vertical
 	if ($_SESSION['cdr']['summary_style']['text'] == 'vertical') {
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th width='30%'>".$text['label-name']."</th>\n";
@@ -421,11 +422,13 @@
 			}
 		}
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
 
 //show the call summary - horizontal
 	if ($_SESSION['cdr']['summary_style']['text'] == 'horizontal') {
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<th>".$text['label-direction']."</th>\n";
 		//echo "<th>Language</th>\n";
@@ -478,6 +481,7 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$status])."</td>\n";
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
 
@@ -488,6 +492,7 @@
 	echo "	<td></td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<th>".$text['label-application']."</th>\n";
@@ -517,11 +522,13 @@
 		$i++;
 	}
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br /><br />\n";
 
 //transcription, if enabled
 	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
 		echo "<b>".$text['label-transcription']."</b><br>\n";
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<th>".$text['label-text']."</th>\n";
@@ -530,6 +537,7 @@
 		echo "	<td valign='top' class='".$row_style[0]."'>".escape($record_transcription)."</td>\n";
 		echo "</tr>\n";
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
 
@@ -547,6 +555,7 @@
 					echo "	<td>&nbsp;</td>\n";
 					echo "</tr>\n";
 					echo "</table>\n";
+					echo "<div class='card'>\n";
 					echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "<tr>\n";
 					echo "	<th width='30%'>".$text['label-name']."</th>\n";
@@ -589,6 +598,7 @@
 						$c = $c ? 0 : 1;
 					}
 					echo "</table>\n";
+					echo "</div>\n";
 					echo "<br /><br />\n";
 				}
 			}
@@ -606,6 +616,7 @@
 		echo "<td></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th width='30%'>".$text['label-name']."</th>\n";
@@ -624,6 +635,7 @@
 			}
 		}
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
 
@@ -638,6 +650,7 @@
 		echo "<td></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th width='30%'>".$text['label-name']."</th>\n";
@@ -688,6 +701,7 @@
 			}
 		}
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
 
@@ -703,6 +717,7 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th width='30%'>".$text['label-name']."</th>\n";
@@ -731,6 +746,7 @@
 			}
 		}
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
 

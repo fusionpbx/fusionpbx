@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -195,7 +195,7 @@
 				$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 				$database->delete($array);
 				unset($array);
-				
+
 				$p->delete('conference_room_user_delete', 'temp');
 		}
 
@@ -587,6 +587,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -971,6 +972,7 @@
 	echo "</tr>\n";
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br><br>\n";
 
 	if ($action == "update") {

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2023
+	Copyright (C) 2008-2024
 	All Rights Reserved.
 
 	Contributor(s):
@@ -118,7 +118,8 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-	
+
+	echo "<div class='card'>\n";
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' style='vertical-align: top;'>\n";
@@ -341,6 +342,7 @@
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 	
 	echo "</form>";
