@@ -139,25 +139,24 @@
 	if (permission_exists('xml_cdr_search')) {
 		echo "<form name='frm' id='frm' method='get'>\n";
 
-		echo "<div class='card'>\n";
-		echo "	<div class='form_grid' style='padding-bottom: 35px;'>\n";
+		echo "<div class='card' style='margin-bottom: 30px;'>\n";
+		echo "<div class='form_grid'>\n";
 
-		echo "		<div class='form_set'>\n";
-		echo "			<div class='label'>\n";
-		echo "				".$text['label-preset']."\n";
-		echo "			</div>\n";
-		echo "			<div class='field'>\n";
-		echo "				<select class='formfld' name='quick_select' id='quick_select' onchange=\"if (this.selectedIndex != 0) { document.getElementById('start_stamp_begin').value = ''; document.getElementById('start_stamp_end').value = ''; document.getElementById('frm').submit(); }\">\n";
-		echo "					<option value=''></option>\n";
-		echo "					<option value='1' ".($quick_select == 1 ? "selected='selected'" : null).">".$text['option-last_seven_days']."</option>\n";
-		echo "					<option value='2' ".($quick_select == 2 ? "selected='selected'" : null).">".$text['option-last_hour']."</option>\n";
-		echo "					<option value='3' ".($quick_select == 3 ? "selected='selected'" : null).">".$text['option-today']."</option>\n";
-		echo "					<option value='4' ".($quick_select == 4 ? "selected='selected'" : null).">".$text['option-yesterday']."</option>\n";
-		echo "					<option value='5' ".($quick_select == 5 ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
-		echo "					<option value='6' ".($quick_select == 6 ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
-		echo "					<option value='7' ".($quick_select == 7 ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
-		echo "				</select>\n";
-		echo "			</div>\n";
+		echo "	<div class='form_set'>\n";
+		echo "		<div class='label'>\n";
+		echo "			".$text['label-preset']."\n";
+		echo "		</div>\n";
+		echo "		<div class='field'>\n";
+		echo "			<select class='formfld' name='quick_select' id='quick_select' onchange=\"if (this.selectedIndex != 0) { document.getElementById('start_stamp_begin').value = ''; document.getElementById('start_stamp_end').value = ''; document.getElementById('frm').submit(); }\">\n";
+		echo "				<option value=''></option>\n";
+		echo "				<option value='1' ".($quick_select == 1 ? "selected='selected'" : null).">".$text['option-last_seven_days']."</option>\n";
+		echo "				<option value='2' ".($quick_select == 2 ? "selected='selected'" : null).">".$text['option-last_hour']."</option>\n";
+		echo "				<option value='3' ".($quick_select == 3 ? "selected='selected'" : null).">".$text['option-today']."</option>\n";
+		echo "				<option value='4' ".($quick_select == 4 ? "selected='selected'" : null).">".$text['option-yesterday']."</option>\n";
+		echo "				<option value='5' ".($quick_select == 5 ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
+		echo "				<option value='6' ".($quick_select == 6 ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
+		echo "				<option value='7' ".($quick_select == 7 ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
+		echo "			</select>\n";
 		echo "		</div>\n";
 
 		//echo "		<div class='form_set'>\n";
@@ -192,6 +191,7 @@
 
 		echo "	</div>\n";
 		echo "</div>\n";
+		echo "</div>\n";
 
 		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('destination_summary_all')) {
 			echo "<input type='hidden' name='show' value='all'>";
@@ -202,8 +202,8 @@
 
 //show the results
 	echo "<div class='card'>\n";
-	echo "	<table class='list'>\n";
-	echo "		<tr class='list-header'>\n";
+	echo "<table class='list'>\n";
+	echo "	<tr class='list-header'>\n";
 	if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('destination_summary_all')) {
 		echo "			<th>".$text['label-domain']."</th>\n";
 	}

@@ -154,6 +154,7 @@
 				}
 
 			//list the agents
+				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				echo "<th>".$text['label-name']."</th>\n";
@@ -270,6 +271,7 @@
 					} //foreach
 				} //if
 				echo "</table>\n\n";
+				echo "</div>\n";
 
 		//add vertical spacing
 			echo "<br /><br /><br />";
@@ -310,6 +312,7 @@
 				echo $text['description-queue']."\n";
 				echo "<br /><br />\n";
 
+			echo "<div class='card'>\n";
 			echo "<table class='list'>\n";
 			echo "<tr class='list-header'>\n";
 			echo "<th>".$text['label-time']."</th>\n";
@@ -382,6 +385,7 @@
 				}
 			}
 			echo "</table>\n";
+			echo "</div>\n";
 
 	}
 

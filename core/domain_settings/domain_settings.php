@@ -214,6 +214,7 @@
 	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	echo "<input type='hidden' name='domain_uuid_target' id='domain_uuid_target' value=''>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	if (!empty($domain_settings)) {
 		//define the variable
@@ -403,6 +404,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";

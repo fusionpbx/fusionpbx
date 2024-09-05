@@ -277,6 +277,7 @@
 	echo $text['description-upgrade'];
 	echo "<br /><br />";
 
+	echo "<div class='card'>\n";
 	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"$('#tr_applications').slideToggle('fast');\">\n";
@@ -440,12 +441,14 @@
 		echo "</table>\n";
 		$step++;
 	}
+	echo "</div>\n";
 
 	echo "</form>\n";
 
-	echo "<br /><br />";
+	echo "<br />";
 	if (!empty($_SESSION["response"]) && is_array($_SESSION["response"])) {
 		foreach($_SESSION["response"] as $part => $response){
+			echo "<div class='card'>\n";
 			echo "<b>".$text["label-results"]." - ".$text["label-{$part}"];
 			echo "</b><br /><br />";
 			$error_found = false;
@@ -484,7 +487,7 @@
 			else {
 				echo $response;
 			}
-			echo "<br /><br />";
+			echo "</div>\n";
 		}
 		unset($_SESSION["response"]);
 	}

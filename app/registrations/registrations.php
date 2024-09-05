@@ -169,6 +169,7 @@
 	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 	echo "<input type='hidden' name='profile' value='".escape($profile ?? '')."'>";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='checkbox'>\n";
@@ -252,6 +253,7 @@
 	unset($registrations);
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 

@@ -138,7 +138,8 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo "<table width='400'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<div class='card'>\n";
+	echo "<table width='400' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<td valign='top'>\n";
 	echo "	<table>\n";
@@ -205,8 +206,10 @@
 
 	echo "</tr>\n";
 	echo "</table>\n";
+	echo "</div>\n";
 
 	if (!empty($_REQUEST["debug"]) && $_REQUEST["debug"] == "true") {
+		echo "<div class='card'>\n";
 		echo "<table width='50%'  border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
@@ -235,6 +238,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>";
+		echo "</div>";
 	}
 
 //define the array _difference function
@@ -359,9 +363,10 @@
 				}
 			}
 		}
-		echo "<br />\n";
-		echo "<table width='100%'>\n";
 		if (!empty($array)) {
+			echo "<br />\n";
+			echo "<div class='card'>\n";
+			echo "<table width='100%'>\n";
 			$previous_schema = null;
 			foreach ($array as $row) {
 				if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
@@ -380,6 +385,7 @@
 				$previous_row = $row['row'];
 			}
 			echo "</table>\n";
+			echo "</div>\n";
 		}
 		/*
 		if (!empty($after)) {
@@ -417,15 +423,18 @@
 
 			//show the difference
 				echo "<br />\n";
+				echo "<div class='card'>\n";
 				echo "<table width='100%'>\n";
 				show_difference($array);
 				echo "</table>\n";
+				echo "</div>\n";
 		}
 	}
 
 //show the delete
 	if ($transaction_type == "delete") {
 		echo "<br /><br />\n";
+		echo "<div class='card'>\n";
 		echo "<table width='100%'>\n";
 		if (!empty($before)) {
 			foreach ($before as $table_name => $rows) {
@@ -444,8 +453,9 @@
 				}
 			}
 		}
+		echo "</table>\n";
+		echo "</div>\n";
 	}
-	echo "</table>\n";
 
 //add a few lines at the end
 	echo "<br /><br />\n";
