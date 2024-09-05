@@ -64,6 +64,7 @@
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";
 
+			echo "<div class='card'>\n";
 			echo "<table class='list'>\n";
 			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_setting_delete')) {
@@ -126,6 +127,7 @@
 			}
 
 			echo "</table>";
+			echo "</div>\n";
 			echo "<br />\n";
 
 	}
