@@ -70,11 +70,6 @@ class plugin_totp {
 		//request the username
 			if (!$this->username && !isset($_POST['authentication_code'])) {
 
-				//set a default template
-				$_SESSION['domain']['template']['name'] = 'default';
-				$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-				$_SESSION['theme']['menu_brand_type']['text'] = 'image';
-
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 				$domain_name = $domain_array[0];
@@ -176,11 +171,6 @@ class plugin_totp {
 				$_SESSION["username"] = $row['username'];
 				$_SESSION["user_email"] = $row['user_email'];
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
-
-				//set a default template
-				$_SESSION['domain']['template']['name'] = 'default';
-				$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-				$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);

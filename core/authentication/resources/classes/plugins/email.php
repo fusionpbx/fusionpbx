@@ -58,11 +58,6 @@ class plugin_email {
 			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
 
-			//set a default template
-			$_SESSION['domain']['template']['name'] = 'default';
-			$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-			$_SESSION['theme']['menu_brand_type']['text'] = 'image';
-
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
@@ -308,11 +303,6 @@ class plugin_email {
 				//$email_error = $email->email_error;
 				//echo $email_response."<br />\n";
 				//echo $email_error."<br />\n";
-
-				//set a default template
-				$_SESSION['domain']['template']['name'] = 'default';
-				$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-				$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
