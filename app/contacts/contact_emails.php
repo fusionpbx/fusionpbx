@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -60,6 +60,7 @@
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";
 
+			echo "<div class='card'>\n";
 			echo "<table class='list'>\n";
 			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_email_delete')) {
@@ -103,6 +104,7 @@
 			unset($contact_emails);
 
 			echo "</table>";
+			echo "</div>\n";
 			echo "<br />\n";
 
 	}
