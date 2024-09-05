@@ -1,5 +1,5 @@
 {* <?php *}
-
+//
 {*//set the doctype *}
 	{if $browser_name == 'Internet Explorer'}
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -119,7 +119,7 @@
 							{literal}
 							$('.menu_side_control_state').hide();
 							$('.menu_side_item_main_sub_icons').hide();
-							$('.sub_arrows').removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
+							$('.sub_arrows').removeClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 							$('#menu_side_container').animate({ width: '{/literal}{$settings.theme.menu_side_width_contracted}{literal}px' }, 180, function() {
 								menu_side_state_current = 'contracted';
 							});
@@ -210,8 +210,8 @@
 				}
 
 				function menu_side_item_toggle(item_id) {
-					$('#sub_arrow_'+item_id).toggleClass(['fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}','fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}']);
-					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
+					$('#sub_arrow_'+item_id).toggleClass(['{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}','{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}']);
+					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 					$('#sub_'+item_id).slideToggle(180, function() {
 						{/literal}
 						{if $settings.theme.menu_side_item_main_sub_close != 'manual'}
@@ -605,15 +605,15 @@
 							showClose: true,
 						},
 						icons: {
-							time: 'fas fa-clock',
-							date: 'fas fa-calendar-alt',
-							up: 'fas fa-arrow-up',
-							down: 'fas fa-arrow-down',
-							previous: 'fas fa-chevron-left',
-							next: 'fas fa-chevron-right',
-							today: 'fas fa-calendar-check',
-							clear: 'fas fa-trash',
-							close: 'fas fa-times',
+							time: 'fa-solid fa-clock',
+							date: 'fa-solid fa-calendar-days',
+							up: 'fa-solid fa-arrow-up',
+							down: 'fa-solid fa-arrow-down',
+							previous: 'fa-solid fa-chevron-left',
+							next: 'fa-solid fa-chevron-right',
+							today: 'fa-solid fa-calendar-check',
+							clear: 'fa-solid fa-trash',
+							close: 'fa-solid fa-xmark',
 						}
 					});
 				//define formatting of individual classes
