@@ -211,7 +211,7 @@ class authentication {
 						if (!$found) {
 
 							//log the failed attempt
-							$login_result = $_SESSION['authentication']['plugin'];
+							$plugin_classname = substr($class_name, 7);
 							user_logs::add($_SESSION['authentication']['plugin'][$plugin_classname]);
 
 							//destroy session
