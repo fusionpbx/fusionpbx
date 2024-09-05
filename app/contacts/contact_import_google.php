@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -313,6 +313,7 @@ $row_style["1"] = "row_style1";
 echo "<form name='frm_import' id='frm_import' method='post'>\n";
 echo "<input type='hidden' name='a' value='import'>\n";
 
+echo "<div class='card'>\n";
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 echo "<tr>\n";
@@ -549,6 +550,7 @@ foreach ($contacts as $contact['id'] => $contact) {
 	$c=($c)?0:1;
 }
 echo "</table>\n";
+echo "</div>\n";
 echo "<br>";
 
 echo "<div style='text-align: right;'><input type='submit' class='btn' id='btn_submit' value=\"".$text['button-import']."\"></div>";

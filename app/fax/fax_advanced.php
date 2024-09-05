@@ -498,119 +498,119 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>";
 		echo "		<td width='50%' valign='top'>";
+		echo "			<div class='card'>\n";
+		echo "				<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "				<tr>";
+		echo "				<td colspan='2'>";
+		echo "					<span style='font-weight: bold;'>".$text['label-email_account_connection']."</span><br><br>";
+		echo "				</td>";
+		echo "				</tr>\n";
 
-		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "			<tr>";
-		echo "			<td colspan='2'>";
-		echo "				<span style='font-weight: bold;'>".$text['label-email_account_connection']."</span><br><br>";
-		echo "			</td>";
-		echo "			</tr>\n";
+		echo "				<tr>\n";
+		echo "				<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "					".$text['label-email_connection_type']."\n";
+		echo "				</td>\n";
+		echo "				<td width='70%' class='vtable' align='left'>\n";
+		echo "					<select class='formfld' name='fax_email_connection_type'>\n";
+		echo "						<option value='imap'>IMAP</option>\n";
+		echo "						<option value='pop3' ".(!empty($fax_email_connection_type) && $fax_email_connection_type == 'pop3' ? "selected" : null).">POP3</option>\n";
+		echo "					</select>\n";
+		echo "				<br />\n";
+		echo "					".$text['description-email_connection_type']."\n";
+		echo "				</td>\n";
+		echo "				</tr>\n";
 
-		echo "			<tr>\n";
-		echo "			<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				".$text['label-email_connection_type']."\n";
-		echo "			</td>\n";
-		echo "			<td width='70%' class='vtable' align='left'>\n";
-		echo "				<select class='formfld' name='fax_email_connection_type'>\n";
-		echo "					<option value='imap'>IMAP</option>\n";
-		echo "					<option value='pop3' ".(!empty($fax_email_connection_type) && $fax_email_connection_type == 'pop3' ? "selected" : null).">POP3</option>\n";
-		echo "				</select>\n";
-		echo "			<br />\n";
-		echo "				".$text['description-email_connection_type']."\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
+		echo "				<tr>\n";
+		echo "				<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "					".$text['label-email_connection_server']."\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable' style='white-space: nowrap;' align='left'>\n";
+		echo "					<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"".escape($fax_email_connection_host ?? '')."\">&nbsp;<strong style='font-size: 15px;'>:</strong>&nbsp;";
+		echo "				<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value='".($fax_email_connection_port ?? '')."'>\n";
+		echo "				<br />\n";
+		echo "					".$text['description-email_connection_server']."\n";
+		echo "				</td>\n";
+		echo "				</tr>\n";
 
-		echo "			<tr>\n";
-		echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				".$text['label-email_connection_server']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' style='white-space: nowrap;' align='left'>\n";
-		echo "				<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"".escape($fax_email_connection_host ?? '')."\">&nbsp;<strong style='font-size: 15px;'>:</strong>&nbsp;";
-		echo 				"<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value='".($fax_email_connection_port ?? '')."'>\n";
-		echo "			<br />\n";
-		echo "				".$text['description-email_connection_server']."\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
+		echo "				<tr>\n";
+		echo "				<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "					".$text['label-email_connection_security']."\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable' align='left'>\n";
+		echo "					<select class='formfld' name='fax_email_connection_security'>\n";
+		echo "						<option value=''></option>\n";
+		echo "						<option value='ssl' ".(!empty($fax_email_connection_security) && $fax_email_connection_security == 'ssl' ? "selected" : null).">SSL</option>\n";
+		echo "						<option value='tls' ".(!empty($fax_email_connection_security) && $fax_email_connection_security == 'tls' ? "selected" : null).">TLS</option>\n";
+		echo "					</select>\n";
+		echo "				<br />\n";
+		echo "					".$text['description-email_connection_security']."\n";
+		echo "				</td>\n";
+		echo "				</tr>\n";
 
-		echo "			<tr>\n";
-		echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				".$text['label-email_connection_security']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<select class='formfld' name='fax_email_connection_security'>\n";
-		echo "					<option value=''></option>\n";
-		echo "					<option value='ssl' ".(!empty($fax_email_connection_security) && $fax_email_connection_security == 'ssl' ? "selected" : null).">SSL</option>\n";
-		echo "					<option value='tls' ".(!empty($fax_email_connection_security) && $fax_email_connection_security == 'tls' ? "selected" : null).">TLS</option>\n";
-		echo "				</select>\n";
-		echo "			<br />\n";
-		echo "				".$text['description-email_connection_security']."\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
+		echo "				<tr>\n";
+		echo "				<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "					".$text['label-email_connection_validate']."\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable' align='left'>\n";
+		echo "					<select class='formfld' name='fax_email_connection_validate'>\n";
+		echo "						<option value='true'>".$text['option-true']."</option>\n";
+		echo "						<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
+		echo "					</select>\n";
+		echo "				<br />\n";
+		echo "					".$text['description-email_connection_validate']."\n";
+		echo "				</td>\n";
+		echo "				</tr>\n";
 
-		echo "			<tr>\n";
-		echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				".$text['label-email_connection_validate']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<select class='formfld' name='fax_email_connection_validate'>\n";
-		echo "					<option value='true'>".$text['option-true']."</option>\n";
-		echo "					<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
-		echo "				</select>\n";
-		echo "			<br />\n";
-		echo "				".$text['description-email_connection_validate']."\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
+		echo "				<tr>\n";
+		echo "				<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "					".$text['label-email_connection_username']."\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable' align='left'>\n";
+		echo "					<input class='formfld' type='text' name='fax_email_connection_username' maxlength='255' value=\"".escape($fax_email_connection_username ?? '')."\">\n";
+		echo "				  <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+		echo "				<br />\n";
+		echo "					".$text['description-email_connection_username']."\n";
+		echo "				</td>\n";
+		echo "				</tr>\n";
 
-		echo "			<tr>\n";
-		echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				".$text['label-email_connection_username']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input class='formfld' type='text' name='fax_email_connection_username' maxlength='255' value=\"".escape($fax_email_connection_username ?? '')."\">\n";
-		echo "			  <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-		echo "			<br />\n";
-		echo "				".$text['description-email_connection_username']."\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
+		echo "				<tr>\n";
+		echo "				<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "					".$text['label-email_connection_password']."\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable' align='left'>\n";
+		echo "				  <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+		echo "					<input class='formfld' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($fax_email_connection_password ?? '')."\">\n";
+		echo "				<br />\n";
+		echo "					".$text['description-email_connection_password']."\n";
+		echo "				</td>\n";
+		echo "				</tr>\n";
 
-		echo "			<tr>\n";
-		echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				".$text['label-email_connection_password']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "			  <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-		echo "				<input class='formfld' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($fax_email_connection_password ?? '')."\">\n";
-		echo "			<br />\n";
-		echo "				".$text['description-email_connection_password']."\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
+		echo "				<tr>\n";
+		echo "				<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "					".$text['label-email_connection_mailbox']."\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable' align='left'>\n";
+		echo "					<input class='formfld' type='text' name='fax_email_connection_mailbox' maxlength='255' value=\"".escape($fax_email_connection_mailbox ?? '')."\">\n";
+		echo "				<br />\n";
+		echo "					".$text['description-email_connection_mailbox']."\n";
+		echo "				</td>\n";
+		echo "				</tr>\n";
 
-		echo "			<tr>\n";
-		echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				".$text['label-email_connection_mailbox']."\n";
-		echo "			</td>\n";
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input class='formfld' type='text' name='fax_email_connection_mailbox' maxlength='255' value=\"".escape($fax_email_connection_mailbox ?? '')."\">\n";
-		echo "			<br />\n";
-		echo "				".$text['description-email_connection_mailbox']."\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
-
-		echo "			</table>\n";
-
+		echo "				</table>\n";
+		echo "			</div>\n";
 		echo "		</td>";
 		echo "		<td style='white-space: nowrap;'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "		<td width='50%' valign='top'>";
 
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 		echo "<tr>";
 		echo "<td colspan='2'>";
 		echo "	<span style='font-weight: bold;'>".$text['label-email_remote_inbox']."</span><br><br>";
 		echo "</td>";
 		echo "</tr>\n";
-
 		echo "<tr>\n";
+
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-email_inbound_subject_tag']."\n";
 		echo "</td>\n";
@@ -620,7 +620,6 @@
 		echo "	".$text['description-email_inbound_subject_tag']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-
 		if (file_exists("fax_emails.php")) {
 			echo "<tr>";
 			echo "<td colspan='2'>";
@@ -671,6 +670,7 @@
 			echo "</tr>\n";
 		}
 		echo "</table>\n";
+		echo "</div>\n";
 
 		echo "		</td>\n";
 		echo "	</tr>\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -148,38 +148,38 @@
 		echo "				<option value='7' ".(($quick_select == 7) ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
 		echo "			</select>\n";
 		echo "		</div>\n";
-		echo "	</div>\n";
 
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='label'>\n";
-		echo "			".$text['label-include_internal']."\n";
+		echo "		<div class='form_set'>\n";
+		echo "			<div class='label'>\n";
+		echo "				".$text['label-include_internal']."\n";
+		echo "			</div>\n";
+		echo "			<div class='field'>\n";
+		echo "				<select class='formfld' name='include_internal' id='include_internal'>\n";
+		echo "					<option value='0'>".$text['option-false']."</option>\n";
+		echo "					<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
+		echo "				</select>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div class='field'>\n";
-		echo "			<select class='formfld' name='include_internal' id='include_internal'>\n";
-		echo "				<option value='0'>".$text['option-false']."</option>\n";
-		echo "				<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
-		echo "			</select>\n";
-		echo "		</div>\n";
-		echo "	</div>\n";
 
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='label'>\n";
-		echo "			".$text['label-start_date_time']."\n";
+		echo "		<div class='form_set'>\n";
+		echo "			<div class='label'>\n";
+		echo "				".$text['label-start_date_time']."\n";
+		echo "			</div>\n";
+		echo "			<div class='field'>\n";
+		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
-		echo "		</div>\n";
-		echo "	</div>\n";
 
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='label'>\n";
-		echo "			".$text['label-end_date_time']."\n";
+		echo "		<div class='form_set'>\n";
+		echo "			<div class='label'>\n";
+		echo "				".$text['label-end_date_time']."\n";
+		echo "			</div>\n";
+		echo "			<div class='field'>\n";
+		echo "				<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
-		echo "		</div>\n";
-		echo "	</div>\n";
 
+		echo "	</div>\n";
 		echo "</div>\n";
 		echo "</div>\n";
 

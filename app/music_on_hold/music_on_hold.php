@@ -533,22 +533,23 @@
 					}
 
 				//start the table
-					echo "<table class='list'>\n";
-					echo "	<tr class='list-header'>\n";
+					echo "<div class='card'>\n";
+					echo "	<table class='list'>\n";
+					echo "		<tr class='list-header'>\n";
 					if (permission_exists('music_on_hold_delete')) {
-						echo "	<th class='checkbox'>\n";
-						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : ''; checkbox_on_change(this);\">\n";
-						echo "		<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]'>\n";
-						echo "	</th>\n";
+						echo "		<th class='checkbox'>\n";
+						echo "			<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : ''; checkbox_on_change(this);\">\n";
+						echo "			<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]'>\n";
+						echo "		</th>\n";
 					}
 					if ($show == "all" && permission_exists('music_on_hold_all')) {
 						echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param ?? null, "class='shrink'");
 					}
-					echo "		<th class='pct-50'>".$stream_details."</th>\n";
-					echo "		<th class='center shrink'>".$text['label-tools']."</th>\n";
-					echo "		<th class='right hide-xs no-wrap pct-20'>".$text['label-file-size']."</th>\n";
-					echo "		<th class='right hide-sm-dn pct-30'>".$text['label-uploaded']."</th>\n";
-					echo "	</tr>";
+					echo "			<th class='pct-50'>".$stream_details."</th>\n";
+					echo "			<th class='center shrink'>".$text['label-tools']."</th>\n";
+					echo "			<th class='right hide-xs no-wrap pct-20'>".$text['label-file-size']."</th>\n";
+					echo "			<th class='right hide-sm-dn pct-30'>".$text['label-uploaded']."</th>\n";
+					echo "		</tr>";
 					unset($stream_icons, $icons);
 
 				//list the stream files
@@ -597,7 +598,8 @@
 						}
 					}
 
-					echo "</table>\n";
+					echo "	</table>\n";
+					echo "</div>\n";
 					echo "<br />\n";
 
 				//set the previous music_on_hold_name
