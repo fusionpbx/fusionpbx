@@ -132,9 +132,7 @@ else if (window.attachEvent) {
 	echo "<br /><br />\n";
 
 //show the content
-	echo "<div class='card'>\n";
-	echo "	<div id='ajax_response'></div>";
-	echo "</div>\n";
+	echo "<div id='ajax_response'></div>";
 	echo "<br><br>";
 
 //include the footer

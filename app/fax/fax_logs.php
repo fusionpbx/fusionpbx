@@ -122,7 +122,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-fax_logs']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-fax_logs']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'fax.php']);
 	if (permission_exists('fax_log_delete') && $fax_logs) {

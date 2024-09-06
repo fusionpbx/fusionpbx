@@ -151,7 +151,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-conferences']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-conferences']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('conference_active_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-view_active'],'icon'=>'comments','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/conferences_active/conferences_active.php']);

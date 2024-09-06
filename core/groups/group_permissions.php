@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -104,17 +104,17 @@
 	}
 
 //get the list
-	$sql = "select "; 
+	$sql = "select ";
 	$sql .= "	distinct p.permission_name, \n";
 	$sql .= "	p.application_name, \n";
-	$sql .= "	g.permission_protected, \n"; 
-	$sql .= "	g.group_permission_uuid, \n"; 
+	$sql .= "	g.permission_protected, \n";
+	$sql .= "	g.group_permission_uuid, \n";
 	$sql .= "	g.permission_assigned \n";
-	$sql .= "from v_permissions as p \n"; 
-	$sql .= "left join \n"; 
-	$sql .= "	v_group_permissions as g \n"; 
-	$sql .= "	on p.permission_name = g.permission_name \n"; 
-	$sql .= "	and group_name = :group_name \n"; 
+	$sql .= "from v_permissions as p \n";
+	$sql .= "left join \n";
+	$sql .= "	v_group_permissions as g \n";
+	$sql .= "	on p.permission_name = g.permission_name \n";
+	$sql .= "	and group_name = :group_name \n";
 	$sql .= " 	and g.group_uuid = :group_uuid \n";
 	$sql .= "where true \n";
 	if (!empty($search)) {
@@ -123,7 +123,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql .= "	order by p.application_name, p.permission_name asc "; 
+	$sql .= "	order by p.application_name, p.permission_name asc ";
 	$parameters['group_name'] = $group_name;
 	$parameters['group_uuid'] = $group_uuid;
 	$group_permissions = $database->select($sql, $parameters, 'all');
@@ -274,7 +274,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-group_permissions']." (".escape($group_name).")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-group_permissions']."</b><div class='count'>".escape($group_name)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-md-dn','link'=>'groups.php']);
 	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-md-dn','link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload'.($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null)]);

@@ -359,7 +359,7 @@
 		case "4b821450-926b-175a-af93-a03c441818b1": echo $text['header-time_conditions']; break;
 		default: echo $text['header-dialplan_manager'];
 	}
-	echo " (".$num_rows.")</b>";
+	echo "</b><div class='count'>".number_format($num_rows)."</div>";
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_add')) { $button_add_url = PROJECT_PATH."/app/dialplan_inbound/dialplan_inbound_add.php"; }

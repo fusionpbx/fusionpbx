@@ -223,7 +223,7 @@
 	}
 	else {
 		echo "<div class='action_bar' id='action_bar'>\n";
-		echo "	<div class='heading'><b>" . $text['header-call_forward'] . " (" . $num_rows . ")</b></div>\n";
+		echo "	<div class='heading'><b>" . $text['header-call_forward'] . "</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 		echo "	<div class='actions'>\n";
 
 		if (count($extensions) > 0) {

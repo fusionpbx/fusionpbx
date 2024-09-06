@@ -358,10 +358,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
 	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-		echo "<b>".escape($fax_name)." [".escape($fax_extension)."]: ".$text['header-inbox']." (".$num_rows.")</b>";
+		echo "<b>".escape($fax_name)." [".escape($fax_extension)."]: ".$text['header-inbox']."</b><div class='count'>".number_format($num_rows)."</div>";
 	}
 	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-		echo "<b>".escape($fax_name)." [".escape($fax_extension)."]: ".$text['header-sent_faxes']." (".$num_rows.")</b>";
+		echo "<b>".escape($fax_name)." [".escape($fax_extension)."]: ".$text['header-sent_faxes']."</b><div class='count'>".number_format($num_rows)."</div>";
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
