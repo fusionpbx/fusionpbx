@@ -124,7 +124,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-modules']." (".$module_count.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-modules']."</b><div class='count'>".number_format($module_count)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('module_edit') && $modules && $esl->is_connected()) {
 		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'onclick'=>"modal_open('modal-stop','btn_stop');"]);

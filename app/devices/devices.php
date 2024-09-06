@@ -312,7 +312,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-devices']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-devices']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if ($has_device_import) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'link'=>'device_imports.php']);
@@ -498,4 +498,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
