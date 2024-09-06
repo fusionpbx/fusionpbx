@@ -121,7 +121,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-registrations']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-registrations']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$reload) {
 		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.(!empty($qs) ? '?'.$qs['show'].$qs['search'].$qs['profile'] : null)]);
