@@ -1158,13 +1158,7 @@ if (!class_exists('menu')) {
 			if ($_SESSION['theme']['menu_side_state']['text'] != 'expanded' && $_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
 				$content_container_onclick = "onclick=\"clearTimeout(menu_side_contract_timer); if ($(window).width() >= 576) { menu_side_contract(); }\"";
 			}
-			//explicitly set content container width when side menu enabled
-			switch ($_SESSION['theme']['menu_side_state']['text']) {
-				case 'expanded': $content_container_width = $_SESSION['theme']['menu_side_width_expanded']['text'] ?? 225; break;
-				case 'hidden': $content_container_width = 0; break;
-				default: $content_container_width = $_SESSION['theme']['menu_side_width_contracted']['text'] ?? 60;
-			}
-			$html .= "<div id='content_container' style='width: calc(100% - ".$content_container_width."px);' ".$content_container_onclick.">\n";
+			$html .= "<div id='content_container' ".$content_container_onclick.">\n";
 			$html .= "	<div id='body_header'>\n";
 			//header: left
 				$html .= "<div class='float-left'>\n";
