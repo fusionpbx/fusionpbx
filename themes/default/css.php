@@ -2598,6 +2598,7 @@ else { //default: white
 /* CARD **********************************************************************/
 
 	div.card {
+		display: inline-block;
 		margin-bottom: 15px;
 		<?php
 		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
@@ -2634,6 +2635,7 @@ else { //default: white
 			echo "box-shadow: none;\n";
 		}
 		?>
+
 		}
 
 /* DASHBOARD **********************************************************************/
