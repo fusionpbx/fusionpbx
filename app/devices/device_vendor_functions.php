@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2023
+ Portions created by the Initial Developer are Copyright (C) 2016-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -162,6 +162,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit') || permission_exists('device_vendor_function_delete')) {
@@ -263,6 +264,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 
@@ -287,3 +289,4 @@
 	echo "</script>\n";
 
 ?>
+
