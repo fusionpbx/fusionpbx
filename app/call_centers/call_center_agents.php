@@ -138,7 +138,7 @@
 
 //show content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-call_center_agents']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-call_center_agents']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'call_center_queues.php','style'=>'margin-right: 15px;']);
 	if (permission_exists('call_center_imports')) {
