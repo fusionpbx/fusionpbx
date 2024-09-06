@@ -95,6 +95,13 @@ $domain_active_desc_text_color = $_SESSION['theme']['domain_active_desc_text_col
 $domain_inactive_desc_text_color = $_SESSION['theme']['domain_inactive_desc_text_color']['text'] ?? '#999';
 $heading_text_size = $_SESSION['theme']['heading_text_size']['text'] ?? '15px';
 $heading_text_font = $_SESSION['theme']['heading_text_font']['text'] ?? 'arial';
+$heading_count_padding = $_SESSION['theme']['heading_count_padding']['text'] ?? '2px 6px';
+$heading_count_text_font = $_SESSION['theme']['heading_count_text_font']['text'] ?? 'arial';
+$heading_count_text_size = $_SESSION['theme']['heading_count_text_size']['text'] ?? '12px';
+$heading_count_text_color = $_SESSION['theme']['heading_count_text_color']['text'] ?? '#ffffff';
+$heading_count_text_weight = $_SESSION['theme']['heading_count_text_weight']['text'] ?? '700';
+$heading_count_border_radius = $_SESSION['theme']['heading_count_border_radius']['text'] ?? '10px';
+$heading_count_background_color = $_SESSION['theme']['heading_count_background_color']['text'] ?? '#28a745';
 $login_body_top = $_SESSION['theme']['login_body_top']['text'] ?? '50%';
 $login_body_left = $_SESSION['theme']['login_body_left']['text'] ?? '50%';
 $login_body_padding = $_SESSION['theme']['login_body_padding']['text'] ?? '30px';
@@ -2985,7 +2992,7 @@ else { //default: white
 	div.form_set {
 		width: 100%;
 		display: grid;
-		grid_gap: 0;
+		grid-gap: 0;
 		grid-template-columns: 150px minmax(200px, 1fr);
 		}
 
@@ -3102,6 +3109,19 @@ else { //default: white
 
 	div.action_bar > div.heading {
 		float: left;
+		}
+
+	div.action_bar > div.heading > div.count {
+		display: inline-block;
+		margin-left: 10px;
+		font-family: <?=$heading_count_text_font?>;
+		font-size: <?=$heading_count_text_size?>;
+		line-height: calc(<?=$heading_count_text_size?> + 1px);
+		color: <?=$heading_count_text_color?>;
+		font-weight: <?=$heading_count_text_weight?>;
+		border-radius: <?=$heading_count_border_radius?>;
+		background-color: <?=$heading_count_background_color?>;
+		padding: <?=$heading_count_padding?>;
 		}
 
 	div.action_bar > div.actions {
