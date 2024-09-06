@@ -130,9 +130,12 @@ if (session:ready()) then
 	menu_selection = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:agent_status:#", "", "\\d+");
 	freeswitch.consoleLog("NOTICE", "menu_selection: "..menu_selection.."\n");
 	if (menu_selection == "1") then
-		--session:execute("set", "fifo_member_add_result=${fifo_member(add "..fifo_name.." {fifo_member_wait=nowait}user/"..user_name.." "..fifo_simo.." "..fifo_timeout.." "..fifo_lag.."} )"); --simo timeout lag
-		--fifo_member_add_result = session:getVariable("fifo_member_add_result");
-		--freeswitch.consoleLog("NOTICE", "fifo_member_add_result: "..fifo_member_add_result.."\n");
+		--login the agent into the queue
+		session:execute("set", "fifo_member_add_result=${fifo_member(add "..fifo_name.." {fifo_member_wait=nowait}user/"..user_name.." "..fifo_simo.." "..fifo_timeout.." "..fifo_lag.."} )"); --simo timeout lag
+		
+		--send the result to the log
+		fifo_member_add_result = session:getVariable("fifo_member_add_result");
+		freeswitch.consoleLog("NOTICE", "fifo_member_add_result: "..fifo_member_add_result.."\n");
 
 		--enable or disable follow me
 		sql = "update v_fifo_members ";
@@ -148,7 +151,8 @@ if (session:ready()) then
 		session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
 	end
 	if (menu_selection == "2") then
-		--session:execute("set", "fifo_member_del_result=${fifo_member(del "..fifo_name.." {fifo_member_wait=nowait}user/"..user_name.."} )");
+		--log the agent out of the queue
+		session:execute("set", "fifo_member_del_result=${fifo_member(del "..fifo_name.." {fifo_member_wait=nowait}user/"..user_name.."} )");
 
 		--enable or disable follow me
 		sql = "update v_fifo_members ";
