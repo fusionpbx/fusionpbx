@@ -1634,9 +1634,6 @@ if (permission_exists('contact_phone_view')) {
 		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-phone_numbers']."</b>\n";
-		if ($row['phone_primary'] == "1") {
-			echo "			<i class='fas fa-star fa-xs' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
-		}
 		if (permission_exists('contact_phone_delete')) {
 			echo "			<div class='checkbox' style='float: left; margin-top: 3px; margin-left: 8px;'>\n";
 			echo "				<input type='checkbox' name='contact_phones[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_phones' value='true' onclick=\"edit_delete_action('phones');\">\n";
@@ -1667,7 +1664,11 @@ if (permission_exists('contact_phone_view')) {
 
 		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div style='clear: both;'></div>\n";
+		echo "		<div style='clear: both;'>\n";
+		if ($row['phone_primary'] == "1") {
+			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
+		}
+		echo "		</div>\n";
 
 		echo "		<input type='hidden' name='contact_phones[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "		<input type='hidden' name='contact_phones[$x][contact_uuid]' value=\"".escape($row["contact_uuid"])."\">\n";
@@ -1843,9 +1844,6 @@ if (permission_exists('contact_address_view')) {
 		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-addresses']."</b>\n";
-		if ($row['address_primary'] == "1") {
-			echo "			<i class='fas fa-star fa-xs' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
-		}
 		if (permission_exists('contact_address_delete')) {
 			echo "			<div class='checkbox' style='float: left; margin-top: 3px; margin-left: 8px;'>\n";
 			echo "				<input type='checkbox' name='contact_addresses[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_addresses' value='true' onclick=\"edit_delete_action('addresses');\">\n";
@@ -1859,7 +1857,11 @@ if (permission_exists('contact_address_view')) {
 		echo " 				</a>\n";
 		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div style='clear: both;'></div>\n";
+		echo "		<div style='clear: both;'>\n";
+		if ($row['address_primary'] == "1") {
+			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
+		}
+		echo "		</div>\n";
 
 		echo "		<input type='hidden' name='contact_addresses[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "		<input type='hidden' name='contact_addresses[$x][contact_uuid]' value=\"".escape($row["contact_uuid"])."\">\n";
@@ -2093,9 +2095,6 @@ if (permission_exists('contact_email_view')) {
 		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-emails']."</b>\n";
-		if ($row['email_primary'] == "1") {
-			echo "			<i class='fas fa-star fa-xs' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
-		}
 		if (permission_exists('contact_email_delete')) {
 			echo "			<div class='checkbox' style='float: left; margin-top: 3px; margin-left: 8px;'>\n";
 			echo "				<input type='checkbox' name='contact_emails[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_emails' value='true' onclick=\"edit_delete_action('emails');\">\n";
@@ -2108,7 +2107,11 @@ if (permission_exists('contact_email_view')) {
 		echo "				</a>\n";
 		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div style='clear: both;'></div>\n";
+		echo "		<div style='clear: both;'>\n";
+		if ($row['email_primary'] == "1") {
+			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
+		}
+		echo "		</div>\n";
 
 		echo "		<input type='hidden' name='contact_emails[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "		<input type='hidden' name='contact_emails[$x][contact_uuid]' value=\"".escape($row["contact_uuid"])."\">\n";
@@ -2185,9 +2188,6 @@ if (permission_exists('contact_url_view')) {
 		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-contact_url']."</b>\n";
-		if ($row['url_primary'] == "1") {
-			echo "			<i class='fas fa-star fa-xs' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
-		}
 		if (permission_exists('contact_url_delete')) {
 			echo "			<div class='checkbox' style='float: left; margin-top: 3px; margin-left: 8px;'>\n";
 			echo "				<input type='checkbox' name='contact_urls[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_urls' value='true' onclick=\"edit_delete_action('urls');\">\n";
@@ -2200,7 +2200,11 @@ if (permission_exists('contact_url_view')) {
 		echo "				</a>\n";
 		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<div style='clear: both;'></div>\n";
+		echo "		<div style='clear: both;'>\n";
+		if ($row['url_primary'] == "1") {
+			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
+		}
+		echo "		</div>\n";
 		echo "			<input type='hidden' name='contact_urls[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "			<input type='hidden' name='contact_urls[$x][contact_uuid]' value=\"".escape($row["contact_uuid"])."\">\n";
 		echo "			<input type='hidden' name='contact_urls[$x][contact_url_uuid]' value=\"".escape($row["contact_url_uuid"])."\">\n";
@@ -2525,9 +2529,6 @@ if (permission_exists('contact_attachment_view')) {
 		echo "<div class='form_set card'>\n";
 		echo "	<div class='heading'>\n";
 		echo " 		<b style='float: left;'>".$text['label-attachments']."</b>\n";
-		if ($row['attachment_primary'] == "1") {
-			echo "		<i class='fas fa-star fa-xs' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
-		}
 		if (permission_exists('contact_attachment_delete')) {
 			echo "		<div class='checkbox' style='float: left; margin-top: 3px; margin-left: 8px;'>\n";
 			echo "			<input type='checkbox' name='contact_attachments[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_attachments' value='true' onclick=\"edit_delete_action('attachments');\">\n";
@@ -2538,7 +2539,11 @@ if (permission_exists('contact_attachment_view')) {
 			echo "		</div>\n";
 		}
 		echo "	</div>\n";
-		echo "	<div style='clear: both;'></div>\n";
+		echo "		<div style='clear: both;'>\n";
+		if ($row['attachment_primary'] == "1") {
+			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
+		}
+		echo "		</div>\n";
 
 		//styles and attachment layer
 		echo "<style>\n";
