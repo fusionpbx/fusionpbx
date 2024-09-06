@@ -1165,89 +1165,113 @@
 
 <style>
 * {
-  box-sizing: border-box;
-}
+	box-sizing: border-box;
+	}
 
 input[type=text], select, textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  resize: vertical;
-}
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	resize: vertical;
+	}
 
 label {
-  padding: 12px 12px 12px 0;
-  display: inline-block;
-}
+	padding: 12px 12px 12px 0;
+	display: inline-block;
+	}
 
 input[type=submit] {
-  background-color: #4CAF50;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 100px;
-  cursor: pointer;
-  float: right;
-}
+	background-color: #4CAF50;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 100px;
+	cursor: pointer;
+	float: right;
+	}
 
 input[type=submit]:hover {
-  background-color: #45a049;
-}
+	background-color: #45a049;
+	}
 
 option:first-child {
-  color: #ccc;
-}
+	color: #ccc;
+	}
 
 .container {
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
-}
+	border-radius: 5px;
+	background-color: #f2f2f2;
+	padding: 20px;
+	}
 
 .col-25 {
-  float: left;
-  width: 25%;
-  margin-top: 6px;
-}
+	float: left;
+	width: 25%;
+	margin-top: 6px;
+	}
 
 .col-75 {
-  float: left;
-  width: 75%;
-  margin-top: 6px;
-}
+	float: left;
+	width: 75%;
+	margin-top: 6px;
+	}
 
-/* Clear floats after the columns */
+/* clear floats after columns */
 .row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
+	content: "";
+	display: table;
+	clear: both;
+	}
 
-.form_set {
-  padding: 10px;
-}
-
-/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+/* xs */
 @media screen and (max-width: 600px) {
-  .col-25, .col-75, input[type=submit] {
-    width: 100%;
-    margin-top: 0;
-  }
-}
+	div.form_grid {
+		width: 100%;
+	}
+
+	div.form_set {
+		width: 100% !important;
+		padding: 20px;
+	}
+	}
+
+/* sm+ */
+@media screen and (min-width: 601px) {
+	div.form_grid {
+		width: calc(100% + 20px);
+		}
+
+	div.form_set {
+		width: calc(100% - 20px);
+		padding: 20px;
+		}
+	}
+
+div.card {
+	margin-bottom: 20px;
+	}
+
+/* xs - make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+	.col-25, .col-75, input[type=submit] {
+		width: 100%;
+		margin-top: 0;
+		}
+	}
 
 @media screen and (max-width: 941px) {
-  .empty_row {
-	display: none;
-  }
-}
+	.empty_row {
+		display: none;
+		}
+	}
 </style>
 
 <?php
 
 echo "<div class='form_grid'>\n";
 
-echo "	<div class='form_set'>\n";
+echo "	<div class='form_set card'>\n";
 echo "		<div class='heading'>\n";
 echo "			<b>".$text['label-name']."</b>\n";
 echo "		</div>\n";
@@ -1257,49 +1281,49 @@ echo "		<div class='label'>\n";
 echo "			".$text['label-contact_organization']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "				<input class='formfld' type='text' name='contact_organization' placeholder='' maxlength='255' value='".escape($contact_organization)."'>\n";
+echo "			<input class='formfld' type='text' name='contact_organization' placeholder='' maxlength='255' value='".escape($contact_organization)."'>\n";
 echo "		</div>\n";
 
 echo "		<div class='label'>\n";
 echo "			".$text['label-contact_name_prefix']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "				<input class='formfld' type='text' name='contact_name_prefix' placeholder='' maxlength='255' value='".escape($contact_name_prefix)."'>\n";
+echo "			<input class='formfld' type='text' name='contact_name_prefix' placeholder='' maxlength='255' value='".escape($contact_name_prefix)."'>\n";
 echo "		</div>\n";
 
 echo "		<div class='label'>\n";
 echo "			".$text['label-contact_name_given']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "				<input class='formfld' type='text' name='contact_name_given' placeholder='' maxlength='255' value='".escape($contact_name_given)."'>\n";
+echo "			<input class='formfld' type='text' name='contact_name_given' placeholder='' maxlength='255' value='".escape($contact_name_given)."'>\n";
 echo "		</div>\n";
 
 echo "		<div class='label'>\n";
 echo "			".$text['label-contact_name_middle']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "				<input class='formfld' type='text' name='contact_name_middle' placeholder='' maxlength='255' value='".escape($contact_name_middle)."'>\n";
+echo "			<input class='formfld' type='text' name='contact_name_middle' placeholder='' maxlength='255' value='".escape($contact_name_middle)."'>\n";
 echo "		</div>\n";
 
 echo "		<div class='label'>\n";
 echo "			".$text['label-contact_name_family']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "				<input class='formfld' type='text' name='contact_name_family' placeholder='' maxlength='255' value='".escape($contact_name_family)."'>\n";
+echo "			<input class='formfld' type='text' name='contact_name_family' placeholder='' maxlength='255' value='".escape($contact_name_family)."'>\n";
 echo "		</div>\n";
 
 echo "		<div class='label'>\n";
 echo "			".$text['label-contact_name_suffix']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "				<input class='formfld' type='text' name='contact_name_suffix' placeholder='' maxlength='255' value='".escape($contact_name_suffix)."'>\n";
+echo "			<input class='formfld' type='text' name='contact_name_suffix' placeholder='' maxlength='255' value='".escape($contact_name_suffix)."'>\n";
 echo "		</div>\n";
 
 echo "		<div class='label'>\n";
 echo "			".$text['label-contact_nickname']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "				<input class='formfld' type='text' name='contact_nickname' placeholder='' maxlength='255' value='".escape($contact_nickname)."'>\n";
+echo "			<input class='formfld' type='text' name='contact_nickname' placeholder='' maxlength='255' value='".escape($contact_nickname)."'>\n";
 echo "		</div>\n";
 
 echo "		<div class='label empty_row' style='grid-row: 10 / span 99;'>\n";
@@ -1308,10 +1332,9 @@ echo "		</div>\n";
 echo "		<div class='field empty_row' style='grid-row: 10 / span 99;'>\n";
 echo "			&nbsp;\n";
 echo "		</div>\n";
-
 echo "	</div>\n";
 
-echo "	<div class='form_set'>\n";
+echo "	<div class='form_set card'>\n";
 echo "		<div class='heading'>\n";
 echo "			<b>".$text['option-other']."</b>\n";
 echo "		</div>\n";
@@ -1461,7 +1484,7 @@ unset($contact_note);
 
 if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 	if (permission_exists('contact_user_view') || permission_exists('contact_group_view')) {
-		echo "	<div class='form_set'>\n";
+		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b>".$text['label-permissions']."</b>\n";
 		echo "		</div>\n";
@@ -1608,8 +1631,8 @@ if (permission_exists('contact_phone_view')) {
 
 	$x = 0;
 	foreach($contact_phones as $row) {
-		echo "	<div class='form_set'>\n";
-		echo "		<div class='heading' style='position: absolute;'>\n";
+		echo "	<div class='form_set card'>\n";
+		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-phone_numbers']."</b>\n";
 		if ($row['phone_primary'] == "1") {
 			echo "			<i class='fas fa-star fa-xs' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
@@ -1644,8 +1667,7 @@ if (permission_exists('contact_phone_view')) {
 
 		echo "			</div>\n";
 		echo "		</div>\n";
-		echo "		<br>\n";
-		echo "		<div style='clear: both; margin-bottom: 25px;'></div>\n";
+		echo "		<div style='clear: both;'></div>\n";
 
 		echo "		<input type='hidden' name='contact_phones[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "		<input type='hidden' name='contact_phones[$x][contact_uuid]' value=\"".escape($row["contact_uuid"])."\">\n";
@@ -1818,7 +1840,7 @@ if (permission_exists('contact_phone_view')) {
 if (permission_exists('contact_address_view')) {
 	$x = 0;
 	foreach($contact_addresses as $row) {
-		echo "	<div class='form_set'>\n";
+		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-addresses']."</b>\n";
 		if ($row['address_primary'] == "1") {
@@ -2068,7 +2090,7 @@ if (permission_exists('contact_address_view')) {
 if (permission_exists('contact_email_view')) {
 	$x = 0;
 	foreach($contact_emails as $row) {
-		echo "	<div class='form_set'>\n";
+		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-emails']."</b>\n";
 		if ($row['email_primary'] == "1") {
@@ -2160,7 +2182,7 @@ if (permission_exists('contact_email_view')) {
 if (permission_exists('contact_url_view')) {
 	$x = 0;
 	foreach($contact_urls as $row) {
-		echo "	<div class='form_set'>\n";
+		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-contact_url']."</b>\n";
 		if ($row['url_primary'] == "1") {
@@ -2299,7 +2321,7 @@ if (permission_exists('contact_relation_view')) {
 				}
 			}
 
-			echo "	<div class='form_set'>\n";
+			echo "	<div class='form_set card'>\n";
 			echo "		<div class='heading'>\n";
 			echo "			<b style='float: left;'>".$text['label-contact_relation_label']."</b>\n";
 			if (permission_exists('contact_relation_delete')) {
@@ -2378,7 +2400,7 @@ if (permission_exists('contact_relation_view')) {
 if (permission_exists('contact_setting_view')) {
 	$x = 0;
 	foreach($contact_settings as $row) {
-		echo "	<div class='form_set'>\n";
+		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
 		echo "			<b style='float: left;'>".$text['label-contact_settings']."</b>\n";
 		if (permission_exists('contact_setting_delete')) {
@@ -2500,7 +2522,7 @@ if (permission_exists('contact_attachment_view')) {
 	foreach($contact_attachments as $row) {
 		$attachment_type = strtolower(pathinfo($row['attachment_filename'], PATHINFO_EXTENSION));
 		$attachment_type_label = $attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png' ? $text['label-image'] : $text['label-file'];
-		echo "<div class='form_set'>\n";
+		echo "<div class='form_set card'>\n";
 		echo "	<div class='heading'>\n";
 		echo " 		<b style='float: left;'>".$text['label-attachments']."</b>\n";
 		if ($row['attachment_primary'] == "1") {
@@ -2608,7 +2630,7 @@ if (permission_exists('contact_attachment_view')) {
 if (permission_exists('contact_time_view')) {
 	$x = 0;
 	foreach ($contact_times as $row) {
-		echo "<div class='form_set'>\n";
+		echo "<div class='form_set card'>\n";
 		echo "	<div class='heading'>\n";
 		echo " 		<b style='float: left;'>".$text['header_contact_times']."</b>\n";
 		if (permission_exists('contact_time_delete')) {
@@ -2666,7 +2688,7 @@ if (permission_exists('contact_note_view')) {
 			$list_row_url = "contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid']);
 		}
 
-		echo "<div class='form_set'>\n";
+		echo "<div class='form_set card'>\n";
 		echo "	<div class='heading'>\n";
 		echo "		<b style='float: left;'>".$text['label-contact_notes']."</b>\n";
 		if (permission_exists('contact_note_delete')) {
