@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2019-2023 All Rights Reserved.
+	Copyright (C) 2019-2024 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -215,6 +215,7 @@
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 	echo "<input type='hidden' name='fields' value=\"".escape($fields)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('device_profile_add') || permission_exists('device_profile_edit') || permission_exists('device_profile_delete')) {
@@ -285,6 +286,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 

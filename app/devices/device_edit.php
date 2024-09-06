@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 */
@@ -509,7 +509,7 @@
 		$sql = "select * from v_devices ";
 		$sql .= "where device_uuid = :device_uuid ";
 		$parameters['device_uuid'] = $device_uuid;
-		
+
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$device_address = $row["device_address"];
@@ -540,7 +540,7 @@
 	if (empty($device_vendor)) {
 		//get the device vendor using the device address
 		$device_vendor = device::get_vendor($device_address ?? null);
-		
+
 		//if the vendor was not found using the device address use an alternative method
 		if (empty($device_vendor)) {
 			$template_array = explode("/", $device_template ?? '');
@@ -567,7 +567,7 @@
 	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by cast(line_number as int) asc ";
 	$parameters['device_uuid'] = $device_uuid ?? null;
-	
+
 	$device_lines = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -638,7 +638,7 @@
 	$sql .= "from v_device_vendors ";
 	$sql .= "where enabled = 'true' ";
 	$sql .= "order by name asc ";
-	
+
 	$device_vendors = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -885,7 +885,7 @@
 				//get the provision settings
 					$provision = new settings(["category" => "provision"]);
 					$acrobits_code = $provision->get('provision', 'acrobits_code');
-				
+
 				if (!empty($template) && isset($acrobits_code)) {
 					$template = str_replace('{$server_address}', $row['server_address'], $template);
 					$template = str_replace('{$user_id}', urlencode($row['user_id']), $template);
@@ -1101,6 +1101,7 @@
 	echo $text['description-device']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -2029,6 +2030,7 @@
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 	echo "</form>";
 
@@ -2052,3 +2054,4 @@
 	require_once "resources/footer.php";
 
 ?>
+
