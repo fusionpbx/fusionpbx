@@ -404,7 +404,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-recordings']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-recordings']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('recording_add') && $speech_enabled == 'true') {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'recording_edit.php']);
