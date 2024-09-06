@@ -117,7 +117,7 @@
 		$esl = event_socket::create();
 		if ($esl->is_connected()) {
 			$result = event_socket::api('show application');
-			
+
 			$show_applications = explode("\n\n", $result);
 			$raw_applications = explode("\n", $show_applications[0]);
 			unset($result);
@@ -590,6 +590,7 @@
 	echo $text['description-dialplan-edit']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='50%' style='vertical-align: top;'>\n";
@@ -1068,6 +1069,7 @@
 				unset($details);
 
 				echo "</table>";
+				echo "</div>\n";
 
 			} //end if results
 

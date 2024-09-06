@@ -372,6 +372,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	}
 	echo "<br /><br />\n";
 
+
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -785,18 +787,21 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br />";
 	echo "</form>";
 
 	echo "<script>\n";
-//hide/convert password fields then submit form
+	echo "	//hide/convert password fields then submit form\n";
 	echo "	function submit_form() {\n";
 	echo "		hide_password_fields();\n";
 	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
-//define lowercase class
+	echo "\n";
+	echo "	//define lowercase class\n";
 	echo "	$('.lowercase').on('blur',function(){ this.value = this.value.toLowerCase(); });";
-//show order if array
+	echo "\n";
+	echo "	//show order if array\n";
 	echo "	$('#user_setting_name').on('keyup',function(){ \n";
 	echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
 	echo "	});\n";

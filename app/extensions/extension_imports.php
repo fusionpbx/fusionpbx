@@ -164,6 +164,7 @@
 			echo $text['description-import']."\n";
 			echo "<br /><br />\n";
 
+			echo "<div class='card'>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 			//loop through user columns
@@ -202,6 +203,7 @@
 			}
 
 			echo "</table>\n";
+			echo "</div>\n";
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
@@ -365,7 +367,6 @@
 
 //show content
 	echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
-
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-extension_import']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -378,6 +379,7 @@
 	echo $text['description-import']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
@@ -448,6 +450,7 @@
 	echo "</tr>\n";
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	echo "<input name='type' type='hidden' value='csv'>\n";

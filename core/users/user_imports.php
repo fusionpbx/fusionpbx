@@ -125,7 +125,7 @@
 							$schema[$i]['fields'][] = $field_name;
 						}
 					}
-					$i++;	
+					$i++;
 				}
 			}
 			$schema[$i]['table'] = 'user_groups';
@@ -162,6 +162,7 @@
 			echo $text['description-import']."\n";
 			echo "<br /><br />\n";
 
+			echo "<div class='card'>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 			//loop through user columns
@@ -198,6 +199,7 @@
 			}
 
 			echo "</table>\n";
+			echo "</div>\n";
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
@@ -278,7 +280,7 @@
 
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -320,7 +322,7 @@
 														$array['user_groups'][$row_id]['user_uuid'] = $user_uuid;
 													}
 												}
-	
+
 												//remove superadmin if not the correct permission
 												if ($group_name == 'superadmin') {
 													if (!permission_exists('group_domain')) {
@@ -413,6 +415,8 @@
 	echo $text['description-import']."\n";
 	echo "<br /><br />\n";
 
+
+	echo "<div class='card'>\n";
 	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
@@ -492,8 +496,9 @@
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
-	echo "<br><br>";
+	echo "</div>\n";
 	echo "</form>";
+	echo "<br><br>";
 
 //include the footer
 	require_once "resources/footer.php";
