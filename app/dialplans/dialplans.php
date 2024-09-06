@@ -498,6 +498,7 @@
 	}
 	echo "\n<br /><br />\n";
 
+
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='app_uuid' name='app_uuid' value='".escape($app_uuid)."'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
@@ -506,6 +507,7 @@
 	echo "<input type='hidden' name='order_by' value=\"".escape($order_by)."\">\n";
 	echo "<input type='hidden' name='order' value=\"".escape($order)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (
@@ -634,6 +636,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 

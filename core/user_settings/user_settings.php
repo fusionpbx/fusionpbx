@@ -196,6 +196,7 @@
 	echo "<input type='hidden' name='action' id='action' value=''>\n";
 	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	if (!empty($user_settings)) {
 		$previous_user_setting_category = '';
@@ -374,6 +375,7 @@
 	unset($user_settings);
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

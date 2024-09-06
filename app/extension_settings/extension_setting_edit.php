@@ -159,8 +159,8 @@
 			$database->app_name = 'extension settings';
 			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$database->save($array);
-		
-		//clear the cache	
+
+		//clear the cache
 			$sql = "select extension, number_alias, user_context from v_extensions ";
 			$sql .= "where extension_uuid = :extension_uuid ";
 			$parameters['extension_uuid'] = $extension_uuid;
@@ -169,7 +169,7 @@
 			$cache = new cache;
 			$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
 			$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
-		
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -260,6 +260,7 @@
 		}
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	//echo "<tr>\n";
@@ -369,6 +370,7 @@
 	echo "</tr>\n";
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br /><br />\n";
 
 	echo "<input type='hidden' name='extension_uuid' value='".$extension_uuid."'>\n";
