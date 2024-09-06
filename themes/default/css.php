@@ -986,7 +986,19 @@ else { //default: white
 
 	@media (max-width: 575.98px) {
 		div#content_container {
-			width: 100%;
+			<?php
+			if ($_SESSION['theme']['menu_style']['text'] == 'side') {
+				switch ($_SESSION['theme']['menu_side_state']['text']) {
+					case 'expanded': $content_container_width = $_SESSION['theme']['menu_side_width_expanded']['text'] ?? 225; break;
+					case 'hidden': $content_container_width = 0; break;
+					default: $content_container_width = $_SESSION['theme']['menu_side_width_contracted']['text'] ?? 60;
+				}
+			}
+			else {
+				$content_container_width = 0;
+			}
+			?>
+			width: calc(100% - <?=$content_container_width?>);
 			}
 	}
 	@media (min-width: 576px) {
