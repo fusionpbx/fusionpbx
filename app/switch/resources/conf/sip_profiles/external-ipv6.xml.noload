@@ -60,8 +60,7 @@
 		<param name="apply-register-acl" value="providers" enabled="false"/>
 		<param name="dtmf-type" value="rfc2833"/>
 		<param name="auth-subscriptions" value="true"/>
-		<param name="inbound-late-negotiation" value="true"/>
-		<param name="inbound-zrtp-passthru" value="true"/> <!-- (also enables late negotiation) -->
+		<param name="inbound-late-negotiation" value="true" enabled="false"/>
 		<!--
 		DO NOT USE HOSTNAMES, ONLY IP ADDRESSES IN THESE SETTINGS!
 		-->
