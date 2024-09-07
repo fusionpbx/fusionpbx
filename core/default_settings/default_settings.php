@@ -392,22 +392,26 @@
 				$row['default_setting_enabled'] = 'false';
 			}
 
+			//set the font weight, default value and filter for non-custom settings
 			if (!empty($field)) {
 				//check for custom settings filter
-				if ($custom_settings) {
-					$setting_bold = 'font-weight:bold;';
-					continue;
-				}
 				if ($row['default_setting_value'] !== $field['default_setting_value']) {
 					$setting_bold = 'font-weight:bold;';
 				}
+				
+				//set the default value
 				if (!empty($field['default_setting_value'])) {
 					$default_value = 'Default: '.$field['default_setting_value'];
 				}
 				else {
 					$default_value = 'Default: null';
 				}
-				if ($row['default_setting_enabled'] != $field['default_setting_enabled']) {
+				
+				//check if default enabled
+				if ($row['default_setting_enabled'] == $field['default_setting_enabled']) {
+					if ($custom_settings) {	continue; }
+				}
+				else {
 					$default_enabled = $field['default_setting_enabled'];
 					$enabled_bold = true;
 				}
