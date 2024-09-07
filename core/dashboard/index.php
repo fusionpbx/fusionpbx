@@ -192,10 +192,10 @@
 	}
 
 //show the content
-	echo "<form id='dashboard' method='post' _onsubmit='setFormSubmitting()'>\n";
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo "		<form id='dashboard' method='post' _onsubmit='setFormSubmitting()'>\n";
 	if ($_SESSION['theme']['menu_style']['text'] != 'side') {
 		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
 	}
@@ -211,11 +211,11 @@
 		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'id'=>'btn_edit','name'=>'btn_edit','style'=>'margin-left: 15px;','onclick'=>"edit_mode('on');"]);
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard.php']);
 	}
+	echo "		<input type='hidden' id='widget_order' name='widget_order' value='' />\n";
+	echo "		</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-	echo "<input type='hidden' id='widget_order' name='widget_order' value='' />\n";
-	echo "</form>\n";
 
 //display login message
 	//if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
