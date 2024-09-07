@@ -60,11 +60,6 @@ class authentication {
 				$this->get_domain();
 			}
 
-//		//if the IP address is used for login but the IP address is not a valid domain stop immediately
-//			if (empty($this->domain_uuid)) {
-//				die();
-//			}
-
 		//create a settings object to pass to plugins
 			$settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
 
