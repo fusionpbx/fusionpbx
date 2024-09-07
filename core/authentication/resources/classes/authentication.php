@@ -60,6 +60,9 @@ class authentication {
 				$this->get_domain();
 			}
 
+		//create a settings object to pass to plugins
+			$settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
+
 		//start the session if its not started
 			if (session_status() === PHP_SESSION_NONE) {
 				session_start();
@@ -78,13 +81,13 @@ class authentication {
 		//use the authentication plugins
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 				//already processed the plugin move to the next plugin
-				if (!empty($_SESSION['authentication']['plugin']) && !empty($_SESSION['authentication']['plugin'][$name]) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
+				if (!empty($_SESSION['authentication']['plugin'][$name]['authorized']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 					continue;
 				}
 
 				//prepare variables
 				$class_name = "plugin_".$name;
-				$base = realpath(dirname(__FILE__)) . "/plugins";
+				$base = __DIR__ . "/plugins";
 				$plugin = $base."/".$name.".php";
 
 				//process the plugin
@@ -101,8 +104,13 @@ class authentication {
 						$object->username = $this->username;
 						$object->password = $this->password;
 					}
-					$array = $object->$name();
-
+					//database plugin requires the authentication object and settings
+					if ($name == 'database') {
+						$array = $object->$name($this, $settings);
+					} else {
+						//get the array from the plugin
+						$array = $object->$name();
+					}
 					//build a result array
 					if (!empty($array) && is_array($array)) {
 						$result['plugin'] = $array["plugin"];
@@ -452,7 +460,7 @@ class authentication {
 			}
 
 		//set the setting arrays
-			$obj = new domains();
+			$obj = new domains(['database' => $this->database]);
 			$obj->set();
 
 		//set the domain settings
