@@ -59,6 +59,7 @@ $menu_side_width_contracted = $_SESSION['theme']['menu_side_width_contracted']['
 $menu_main_icon_color = $_SESSION['theme']['menu_main_icon_color']['text'] ?? '#fd9c03';
 $menu_main_icon_color_hover = $_SESSION['theme']['menu_main_icon_color_hover']['text'] ?? '#fd9c03';
 $body_header_background_color = $_SESSION['theme']['body_header_background_color']['text'] ?? 'transparent';
+$body_header_shadow_color = $_SESSION['theme']['body_header_shadow_color']['text'] ?? '';
 $body_header_brand_text_color = $_SESSION['theme']['body_header_brand_text_color']['text'] ?? 'rgba(0,0,0,0.90)';
 $body_header_brand_text_color_hover = $_SESSION['theme']['body_header_brand_text_color_hover']['text'] ?? 'rgba(0,0,0,1.0)';
 $body_header_brand_text_size = $_SESSION['theme']['body_header_brand_text_size']['text'] ?? '16px';
@@ -1023,15 +1024,23 @@ else { //default: white
 
 	<?php if ($menu_style == 'side') { ?>
 		div#body_header {
+			position: relative;
+			z-index: 1;
 			padding: 10px 10px 15px 10px;
 			height: 50px;
-			background-color: <?=$body_header_background_color?>
+			background-color: <?=$body_header_background_color?>;
+			-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
 	<?php } else { ?>
 		div#body_header {
 			padding: 10px;
 			margin-top: 5px;
 			height: 40px;
+			-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
 	<?php } ?>
 
@@ -2610,6 +2619,7 @@ else { //default: white
 /* CARD **********************************************************************/
 
 	div.card {
+		overflow: auto;
 		margin-bottom: 15px;
 		<?php
 		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
