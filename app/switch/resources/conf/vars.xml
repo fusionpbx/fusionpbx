@@ -51,10 +51,6 @@
    <X-PRE-PROCESS cmd="set" data="default_language=en" category="Defaults" enabled="true" uuid="1b6312a0-10f4-4a35-9592-8f7f90b666f0"/>
    <X-PRE-PROCESS cmd="set" data="default_dialect=us" category="Defaults" enabled="true" uuid="3d5e6bd6-a862-4862-91d1-6fa363345cad"/>
    <X-PRE-PROCESS cmd="set" data="default_voice=callie" category="Defaults" enabled="true" uuid="5fa8a217-697c-4525-99f3-1349e1e4e437"/>
-   <X-PRE-PROCESS cmd="set" data="ajax_refresh_rate=3000" category="Defaults" enabled="true" uuid="8cc61a79-8bf2-406f-ac96-7c5fcc28108d"/>
-   <X-PRE-PROCESS cmd="set" data="ringback=$${us-ring}" category="Defaults" enabled="true" uuid="10aa29df-0f39-41a5-bbc9-57be50a0f64e"/>
-   <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${us-ring}" category="Defaults" enabled="true" uuid="82c2e923-3038-4da8-b721-85919792e50e"/>
-   <X-PRE-PROCESS cmd="set" data="sleep=0" category="Defaults" enabled="true" uuid="f421e9c9-bf85-4e37-abc1-80ad6471fc8c"/>
    <X-PRE-PROCESS cmd="set" data="record_ext=wav" category="Defaults" enabled="true" uuid="439e60dd-9385-43db-9b65-85fcc5db369a"/>
    <X-PRE-PROCESS cmd="set" data="default_country=US" category="Defaults" enabled="true" uuid="db10bba0-b637-434f-8065-40f34ae16a94"/>
    <X-PRE-PROCESS cmd="set" data="default_countrycode=1" category="Defaults" enabled="true" uuid="2b0e7950-171b-4710-a69b-29941151bb11"/>
