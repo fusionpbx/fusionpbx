@@ -848,7 +848,7 @@ else { //default: white
 	a.menu_brand_image {
 		display: inline-block;
 		text-align: center;
-		padding: 15px 20px;
+		padding: 6px 20px;
 		}
 
 	a.menu_brand_image:hover {
@@ -867,7 +867,7 @@ else { //default: white
 		border: none;
 		height: auto;
 		max-width: 145px;
-		max-height: 31px;
+		max-height: 35px;
 		margin-left: -7px;
 		}
 
