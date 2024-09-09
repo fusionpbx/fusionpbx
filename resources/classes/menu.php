@@ -1113,7 +1113,7 @@ if (!class_exists('menu')) {
 				switch ($_SESSION['theme']['menu_brand_type']['text']) {
 					case 'none':
 						$html .= "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)." height: 50px; min-width: ".($_SESSION['theme']['menu_side_width_contracted']['text'] ?? 60)."px; ".($_SESSION['theme']['menu_side_pin']['boolean'] == 'true' ? "max-width: calc(100% - 50px);" : null)."' title=\"".$this->text['theme-label-contract_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 8px;'></i></a>";
-						$html .= "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();' style='".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? "display: none;" : null)." height: 50px;' title=\"".$text['theme-label-expand_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 8px;'></i></a>";
+						$html .= "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();' style='".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' || $_SESSION['theme']['menu_side_state']['text'] == 'hidden' ? "display: none;" : null)." height: 50px;' title=\"".$text['theme-label-expand_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 8px;'></i></a>";
 						break;
 					case 'text':
 						$html .= "<a class='menu_brand_text' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." href='".PROJECT_PATH."/'>".escape($menu_brand_text)."</a>\n";
