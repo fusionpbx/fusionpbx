@@ -848,7 +848,7 @@ else { //default: white
 	a.menu_brand_image {
 		display: inline-block;
 		text-align: center;
-		padding: 6px 20px;
+		padding: 13px 20px;
 		}
 
 	a.menu_brand_image:hover {
@@ -900,7 +900,7 @@ else { //default: white
 		z-index: 99901;
 		top: 0;
 		padding: 0;
-		min-height: 61px;
+		min-height: 73px;
 		text-align: left;
 		<?php if ($menu_main_background_image) { ?>
 			background-image: url("<?=$menu_main_background_image?>");
@@ -1034,8 +1034,8 @@ else { //default: white
 		div#body_header {
 			position: relative;
 			z-index: 1;
-			padding: 10px 10px 15px 10px;
-			height: 50px;
+			padding: 17px 10px 13px 10px;
+			height: 60px;
 			background-color: <?=$body_header_background_color?>;
 			-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
