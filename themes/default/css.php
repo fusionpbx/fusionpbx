@@ -737,11 +737,23 @@ else { //default: white
 	ul.dropdown-menu li.nav-item > a.nav-link > span.fas,
 	ul.dropdown-menu li.nav-item > a.nav-link > span.fa-solid,
 	ul.dropdown-menu li.nav-item > a.nav-link > span.fa-brands,
-	ul.dropdown-menu li.nav-item > a.nav-link > span.fa-regular  {
+	ul.dropdown-menu li.nav-item > a.nav-link > span.fa-regular,
+	div.menu_side_sub > a.menu_side_item_sub > span.fas,
+	div.menu_side_sub > a.menu_side_item_sub > span.fa-solid,
+	div.menu_side_sub > a.menu_side_item_sub > span.fa-brands,
+	div.menu_side_sub > a.menu_side_item_sub > span.fa-regular {
 		display: inline-block;
 		font-size: 8pt;
 		margin: 0 0 0 8px;
 		opacity: 0.30;
+		}
+
+	div.menu_side_sub > a.menu_side_item_sub > span.fas,
+	div.menu_side_sub > a.menu_side_item_sub > span.fa-solid,
+	div.menu_side_sub > a.menu_side_item_sub > span.fa-brands,
+	div.menu_side_sub > a.menu_side_item_sub > span.fa-regular {
+		float: right;
+		margin: 4px -1px 0 0;
 		}
 
 	/* header domain/user name */

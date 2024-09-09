@@ -1150,9 +1150,18 @@ if (!class_exists('menu')) {
 							if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
 								$html .= "	<div id='sub_".$menu_item_main['menu_item_uuid']."' class='menu_side_sub' style='display: none;'>\n";
 								foreach ($menu_item_main['menu_items'] as $menu_index_sub => $menu_item_sub) {
+									$menu_sub_icon = null;
+									if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
+										if (!empty($menu_item_sub['menu_item_icon']) && substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
+											$menu_sub_icon = "<span class='".escape($menu_item_sub['menu_item_icon'])."'></span>";
+										}
+										else {
+											$menu_sub_icon = null;
+										}
+									}
 									$html .= "		<a class='menu_side_item_sub' ".($menu_item_sub['menu_item_category'] == 'external' ? "target='_blank'" : null)." href='".$menu_item_sub['menu_item_link']."'>";
 									$html .= 			"<span class='menu_side_item_title' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null).">".$menu_item_sub['menu_language_title']."</span>";
-									$html .= 		"</a>\n";
+									$html .= 		$menu_sub_icon."</a>\n";
 								}
 								$html .= "	</div>\n";
 							}
