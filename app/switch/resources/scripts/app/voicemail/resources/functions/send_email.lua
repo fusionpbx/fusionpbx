@@ -30,9 +30,8 @@
 
 --define a function to send email
 	function send_email(id, uuid)
-		local db = dbh or Database.new('system')
-		local settings = Settings.new(db, domain_name, domain_uuid)
-		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
+		local db = dbh or Database.new('system');
+		local settings = Settings.new(db, domain_name, domain_uuid);
 		local http_protocol = settings:get('domain', 'http_protocol', 'text') or "https";
 		local email_queue_enabled = "true";
 
@@ -185,7 +184,7 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcribe_enabled == 'true' and voicemail_transcription_enabled == 'true') then
+					if (voicemail_transcription_enabled == 'true') then
 						sql = sql .. "AND template_subcategory = 'transcription' "
 					else
 						sql = sql .. "AND template_subcategory = 'default' "

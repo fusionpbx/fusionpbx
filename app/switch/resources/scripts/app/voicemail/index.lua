@@ -567,7 +567,7 @@
 								if (storage_type == "base64") then
 									table.insert(sql, "message_base64, ");
 								end
-								if (transcribe_enabled == "true") and (voicemail_transcription_enabled == "true") then
+								if (voicemail_transcription_enabled == "true") then
 									table.insert(sql, "message_transcription, ");
 								end
 								table.insert(sql, "message_length ");
@@ -585,7 +585,7 @@
 								if (storage_type == "base64") then
 									table.insert(sql, ":message_base64, ");
 								end
-								if (transcribe_enabled == "true") and (voicemail_transcription_enabled == "true") then
+								if (voicemail_transcription_enabled == "true") then
 									table.insert(sql,  ":transcription, ");
 								end
 								table.insert(sql, ":message_length ");
