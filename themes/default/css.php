@@ -1054,7 +1054,7 @@ else { //default: white
 
 	div#body_header_brand_image {
 		display: inline-block;
-		margin-left: 10px;
+		margin-left: 8px;
 		}
 
 	div#body_header_brand_image > a:hover {

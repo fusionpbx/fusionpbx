@@ -1162,6 +1162,12 @@ if (!class_exists('menu')) {
 							}
 					}
 					$html .= "	<div style='height: 100px;'></div>\n";
+					// if ($_SESSION['theme']['menu_side_pin']['boolean'] == 'true') {
+					// 	$html .= "	<div style='position: absolute; bottom: 0;'>\n";
+					// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_expanded' onclick=\"menu_side_state_set('expanded');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='width: 50px; height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-pin_menu']."\"><i class='fa-solid fa-toggle-off fa-sm fa-fw'></i></a>\n";
+					// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_contracted' onclick=\"menu_side_state_set('contracted');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='width: 50px; height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-unpin_menu']."\"><i class='fa-solid fa-toggle-on fa-sm fa-fw'></i></a>\n";
+					// 	$html .= "	</div>\n";
+					// }
 				}
 			$html .= "</div>\n";
 			if ($_SESSION['theme']['menu_side_state']['text'] != 'expanded' && $_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
@@ -1171,7 +1177,8 @@ if (!class_exists('menu')) {
 			$html .= "	<div id='body_header'>\n";
 			//header: left
 				$html .= "<div class='float-left'>\n";
-				$html .= button::create(['type'=>'button','id'=>'menu_side_state_hidden_button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default '.($_SESSION['theme']['menu_side_state']['text'] != 'hidden' ? 'hide-sm-up ' : null).'float-left','onclick'=>'menu_side_expand();']);
+				// $html .= button::create(['type'=>'button','id'=>'menu_side_state_hidden_button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default '.($_SESSION['theme']['menu_side_state']['text'] != 'hidden' ? 'hide-sm-up ' : null).'float-left','onclick'=>'menu_side_expand();']);
+				$html .= "<a id='menu_side_state_hidden_button' class='".($_SESSION['theme']['menu_side_state']['text'] != 'hidden' ? 'hide-sm-up ' : null)."' href='show:menu' onclick=\"event.preventDefault(); menu_side_expand();\" title=\"".$this->text['theme-label-expand_menu']."\"><i class='fa-solid fa-bars fa-fw' style='margin: 7px 10px 5px 10px;'></i></a>";
 				$body_header_brand_text = !empty($_SESSION['theme']['body_header_brand_text']['text']) ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
 				if ($_SESSION['theme']['body_header_brand_type']['text'] == 'image' || $_SESSION['theme']['body_header_brand_type']['text'] == 'image_text') {
 					$body_header_brand_image = !empty($_SESSION['theme']['body_header_brand_image']['text']) ? $_SESSION['theme']['body_header_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
