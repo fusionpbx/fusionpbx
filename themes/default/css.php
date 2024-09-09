@@ -734,10 +734,10 @@ else { //default: white
 		}
 
 	/* sub menu item icon */
-	ul.dropdown-menu > li.nav-item > a.nav-link > span.fas,
-	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-solid,
-	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-brands,
-	ul.dropdown-menu > li.nav-item > a.nav-link > span.fa-regular {
+	ul.dropdown-menu li.nav-item > a.nav-link > span.fas,
+	ul.dropdown-menu li.nav-item > a.nav-link > span.fa-solid,
+	ul.dropdown-menu li.nav-item > a.nav-link > span.fa-brands,
+	ul.dropdown-menu li.nav-item > a.nav-link > span.fa-regular  {
 		display: inline-block;
 		font-size: 8pt;
 		margin: 0 0 0 8px;
