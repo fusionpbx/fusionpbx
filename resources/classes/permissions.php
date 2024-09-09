@@ -127,21 +127,12 @@ if (!class_exists('permissions')) {
 				return true;
 			}
 
-			//set default to false
-			$result = false;
-
 			//search for the permission
-			if (!empty($this->permissions) && !empty($permission_name)) {
-				foreach($this->permissions as $key => $value) {
-					if ($key == $permission_name) {
-						$result = true;
-						break;
-					}
-				}
+			if (!empty($permission_name)) {
+				return isset($this->permissions[$permission_name]);
 			}
 
-			//return the result
-			return $result;
+			return false;
 		}
 
 		/**
