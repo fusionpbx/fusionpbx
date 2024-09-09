@@ -224,55 +224,6 @@
 						{literal}
 					});
 				}
-
-				function menu_side_state_set(state) {
-					var user_setting_set_path = '{/literal}{$project_path}{literal}/core/user_settings/user_setting_set.php?category=theme&subcategory=menu_side_state&name=text&value='+state;
-					var xhr = new XMLHttpRequest();
-					xhr.open('GET', user_setting_set_path);
-					xhr.send(null);
-					xhr.onreadystatechange = function () {
-						var setting_modified;
-						if (xhr.readyState === 4) {
-							if (xhr.status === 200) {
-								setting_modified = xhr.responseText;
-								if (setting_modified == 'true') {
-									document.getElementById('menu_side_state_set_expanded').style.display = state == 'expanded' ? 'none' : 'block';
-									document.getElementById('menu_side_state_set_contracted').style.display = state == 'contracted' ? 'none' : 'block';
-									{/literal}
-									{if $menu_side_state == 'hidden'}
-										{literal}
-										document.getElementById('menu_side_state_hidden_button').style.display='none';
-										{/literal}
-									{/if}
-									{literal}
-									if (state == 'expanded') {
-										if ($(window).width() >= 576) {
-											$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_expanded}{literal} }, 250);
-										}
-										else {
-											$('#menu_side_container').animate({ width: $(window).width() }, 180);
-										}
-										document.getElementById('menu_side_state_current').value = 'expanded';
-										display_message("{/literal}{$text.theme_message_menu_expanded}{literal}", 'positive', 1000);
-									}
-									else {
-										menu_side_contract();
-										if ($(window).width() >= 576) {
-											$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_contracted}{literal} }, 250);
-										}
-										menu_side_state_current = 'contracted';
-										document.getElementById('menu_side_state_current').value = 'contracted';
-										display_message("{/literal}{$text.theme_message_menu_contracted}{literal}", 'positive', 1000);
-									}
-								}
-								else if (setting_modified == 'deleted') {
-									display_message("{/literal}{$text.theme_message_menu_reset}{literal}", 'positive', 1000);
-									document.location.reload();
-								}
-							}
-						}
-					}
-				}
 				{/literal}
 		{/if}
 
