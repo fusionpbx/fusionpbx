@@ -1101,13 +1101,13 @@ if (!class_exists('menu')) {
 			//menu brand image and/or text
 				$html .= "	<div id='menu_side_control_container'>\n";
 				$html .= "		<div class='menu_side_control_state' style='float: right; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."'>\n";
-				if ($_SESSION['theme']['menu_brand_type']['text'] != 'none' && ($_SESSION['theme']['menu_side_pin']['boolean'] == 'false' || $_SESSION['theme']['menu_side_pin']['boolean'] == '')) {
+				if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
 					$html .= "		<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."'><i class='fa-solid fa-bars fa-fw'></i></a>";
 				}
-				if ($_SESSION['theme']['menu_side_pin']['boolean'] == 'true') {
-					$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_expanded' onclick=\"menu_side_state_set('expanded');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-pin_menu']."\"><i class='fa-solid fa-toggle-off fa-sm fa-fw'></i></a>\n";
-					$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_contracted' onclick=\"menu_side_state_set('contracted');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-unpin_menu']."\"><i class='fa-solid fa-toggle-on fa-sm fa-fw'></i></a>\n";
-				}
+				// if ($_SESSION['theme']['menu_side_pin']['boolean'] == 'true') {
+				// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_expanded' onclick=\"menu_side_state_set('expanded');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-pin_menu']."\"><i class='fa-solid fa-toggle-off fa-sm fa-fw'></i></a>\n";
+				// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_contracted' onclick=\"menu_side_state_set('contracted');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-unpin_menu']."\"><i class='fa-solid fa-toggle-on fa-sm fa-fw'></i></a>\n";
+				// }
 				$html .= "		</div>\n";
 				$menu_brand_text = !empty($_SESSION['theme']['menu_brand_text']['text']) ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 				switch ($_SESSION['theme']['menu_brand_type']['text']) {
@@ -1162,12 +1162,6 @@ if (!class_exists('menu')) {
 							}
 					}
 					$html .= "	<div style='height: 100px;'></div>\n";
-					// if ($_SESSION['theme']['menu_side_pin']['boolean'] == 'true') {
-					// 	$html .= "	<div style='position: absolute; bottom: 0;'>\n";
-					// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_expanded' onclick=\"menu_side_state_set('expanded');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='width: 50px; height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-pin_menu']."\"><i class='fa-solid fa-toggle-off fa-sm fa-fw'></i></a>\n";
-					// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_contracted' onclick=\"menu_side_state_set('contracted');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='width: 50px; height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-unpin_menu']."\"><i class='fa-solid fa-toggle-on fa-sm fa-fw'></i></a>\n";
-					// 	$html .= "	</div>\n";
-					// }
 				}
 			$html .= "</div>\n";
 			if ($_SESSION['theme']['menu_side_state']['text'] != 'expanded' && $_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
