@@ -60,7 +60,7 @@ $menu_main_icon_color = $_SESSION['theme']['menu_main_icon_color']['text'] ?? '#
 $menu_main_icon_color_hover = $_SESSION['theme']['menu_main_icon_color_hover']['text'] ?? '#fd9c03';
 $body_header_background_color = $_SESSION['theme']['body_header_background_color']['text'] ?? 'transparent';
 $body_header_shadow_color = $_SESSION['theme']['body_header_shadow_color']['text'] ?? '';
-$body_header_brand_text_color = $_SESSION['theme']['body_header_brand_text_color']['text'] ?? 'rgba(0,0,0,0.90)';
+$body_header_brand_text_color = $_SESSION['theme']['body_header_brand_text_color']['text'] ?? 'rgba(0,0,0,0.9)';
 $body_header_brand_text_color_hover = $_SESSION['theme']['body_header_brand_text_color_hover']['text'] ?? 'rgba(0,0,0,1.0)';
 $body_header_brand_text_size = $_SESSION['theme']['body_header_brand_text_size']['text'] ?? '16px';
 $button_height = $_SESSION['theme']['button_height']['text'] ?? '28px';
@@ -867,20 +867,28 @@ else { //default: white
 		border: none;
 		height: auto;
 		max-width: 145px;
-		max-height: 35px;
+		max-height: 31px;
 		margin-left: -7px;
 		}
 
 	/* menu brand text */
-	a.menu_brand_text {
+	span.menu_brand_text {
 		display: inline-block;
-		padding: 10px 20px;
 		color: <?=$menu_brand_text_color?>;
 		font-weight: 600;
 		white-space: nowrap;
 		}
 
-	a.menu_brand_text:hover {
+	a.menu_brand_text {
+		display: inline-block;
+		padding: 15px 20px;
+		color: <?=$menu_brand_text_color?>;
+		font-weight: 600;
+		white-space: nowrap;
+		}
+
+	a.menu_brand_text:hover,
+	span.menu_brand_text:hover {
 		color: <?=$menu_brand_text_color_hover?>;
 		text-decoration: none;
 		}
@@ -892,7 +900,7 @@ else { //default: white
 		z-index: 99901;
 		top: 0;
 		padding: 0;
-		min-height: 75px;
+		min-height: 61px;
 		text-align: left;
 		<?php if ($menu_main_background_image) { ?>
 			background-image: url("<?=$menu_main_background_image?>");
