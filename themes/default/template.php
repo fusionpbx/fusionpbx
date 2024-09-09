@@ -132,7 +132,7 @@
 								{/literal}
 							{/if}
 							{literal}
-							$('.menu_side_contract').hide();
+							// $('.menu_side_contract').hide();
 							$('.menu_side_expand').show();
 							if ($(window).width() < 576) {
 								$('#menu_side_container').hide();
