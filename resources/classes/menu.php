@@ -1104,10 +1104,6 @@ if (!class_exists('menu')) {
 				if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
 					$html .= "		<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='height: 60px; padding: 19px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."'><i class='fa-solid fa-bars fa-fw'></i></a>";
 				}
-				// if ($_SESSION['theme']['menu_side_pin']['boolean'] == 'true') {
-				// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_expanded' onclick=\"menu_side_state_set('expanded');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-pin_menu']."\"><i class='fa-solid fa-toggle-off fa-sm fa-fw'></i></a>\n";
-				// 	$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_contracted' onclick=\"menu_side_state_set('contracted');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='height: 50px; padding: 15px 16px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-unpin_menu']."\"><i class='fa-solid fa-toggle-on fa-sm fa-fw'></i></a>\n";
-				// }
 				$html .= "		</div>\n";
 				$menu_brand_text = !empty($_SESSION['theme']['menu_brand_text']['text']) ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 				switch ($_SESSION['theme']['menu_brand_type']['text']) {
