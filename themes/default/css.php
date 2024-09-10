@@ -182,6 +182,8 @@ $table_heading_padding = $_SESSION['theme']['table_heading_padding']['text'] ?? 
 $table_row_text_color = $_SESSION['theme']['table_row_text_color']['text'] ?? '#000';
 $table_row_text_font = $_SESSION['theme']['table_row_text_font']['text'] ?? 'arial';
 $table_row_text_size = $_SESSION['theme']['table_row_text_size']['text'] ?? '12px';
+$table_row_text_link_color = $_SESSION['theme']['table_row_text_link_color']['text'] ?? $text_link_color;
+$table_row_text_link_color_hover = $_SESSION['theme']['table_row_text_link_color_hover']['text'] ?? $text_link_color_hover;
 $table_row_border_color = $_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5';
 $table_row_background_color_light = $_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff';
 $table_row_background_color_medium = $_SESSION['theme']['table_row_background_color_medium']['text'] ?? '#f0f2f6';
@@ -2211,7 +2213,7 @@ else { //default: white
 
 	table.tr_hover tr:hover td,
 	table.tr_hover tr:hover td a {
-		color: <?=$text_link_color_hover?>;
+		color: <?=$table_row_text_link_color_hover?>;
 		cursor: pointer;
 		}
 
@@ -3220,9 +3222,18 @@ else { //default: white
 		cursor: default;
 		}
 
+	.list tr td a,
+	.list tr td button.btn.btn-link {
+		color: <?=$table_row_text_link_color?>;
+		}
+
+	.list tr td button.btn.btn-link:hover {
+		color: <?=$table_row_text_link_color_hover?>;
+		}
+
 	.list tr:hover td:not(.no-link),
 	.list tr:hover td:not(.no-link) a {
-		color: <?=$text_link_color_hover?>;
+		color: <?=$table_row_text_link_color_hover?>;
 		cursor: pointer;
 		}
 
@@ -3241,11 +3252,11 @@ else { //default: white
 		}
 
 	.list-header > th > a.default-color {
-		color: <?=$text_link_color?>;
+		color: <?=$table_row_text_link_color?>;
 		}
 
 	.list-header > th > a.default-color:hover {
-		color: <?=$text_link_color_hover?>;
+		color: <?=$table_row_text_link_color_hover?>;
 		}
 
 	.list-row:nth-child(odd) > :not(.action-button) {
