@@ -804,7 +804,7 @@
 									//set defaults
 										if (empty($register_expires)) { $register_expires = "120"; }
 										if (empty($sip_transport)) { $sip_transport = "tcp"; }
-										if (empty($sip_port)) {
+										if (!isset($sip_port)) {
 											if ($line_number == "" || $line_number == "1") {
 												$sip_port = "5060";
 											}
