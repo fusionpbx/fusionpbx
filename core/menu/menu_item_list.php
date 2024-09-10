@@ -103,6 +103,7 @@
 				$menu_item_order = $row2['menu_item_order'];
 				$menu_item_title = $row2['menu_item_title'];
 				$menu_item_link = $row2['menu_item_link'];
+				$menu_item_icon = $row2['menu_item_icon'];
 
 				//get the groups that have been assigned to the menu
 				$sql = "select ";
@@ -147,6 +148,9 @@
 						break;
 				}
 
+				//format icon
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+
 				//display the content of the list
 				if (permission_exists('menu_item_edit')) {
 					$list_row_url = 'menu_item_edit.php?id='.urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_item_parent_uuid=".urlencode($row2['menu_item_parent_uuid']);
@@ -160,10 +164,10 @@
 				}
 				echo "<td class='no-wrap".($menu_item_category != 'internal' ? "no-link" : null)."' style='padding-left: ".($menu_item_level * 25)."px;'>\n";
 				if (permission_exists('menu_item_edit')) {
-					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>\n";
+					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>".$menu_item_icon."\n";
 				}
 				else {
-					echo "	".escape($menu_item_title);
+					echo "	".escape($menu_item_title).$menu_item_icon;
 				}
 				echo "</td>\n";
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
@@ -286,6 +290,7 @@
 				$menu_item_category = $row['menu_item_category'];
 				$menu_item_title = $row['menu_item_title'];
 				$menu_item_link = $row['menu_item_link'];
+				$menu_item_icon = $row['menu_item_icon'];
 				$menu_item_protected = $row['menu_item_protected'];
 
 			//get the groups that have been assigned to the menu
@@ -330,6 +335,9 @@
 						break;
 				}
 
+			//format icon
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+
 			//display the content of the list
 				if (permission_exists('menu_item_edit')) {
 					$list_row_url = 'menu_item_edit.php?id='.urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid);
@@ -343,10 +351,10 @@
 				}
 				echo "<td>\n";
 				if (permission_exists('menu_item_edit')) {
-					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>\n";
+					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>".$menu_item_icon."\n";
 				}
 				else {
-					echo "	".escape($menu_item_title);
+					echo "	".escape($menu_item_title).$menu_item_icon;
 				}
 				echo "</td>\n";
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
