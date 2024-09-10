@@ -56,7 +56,8 @@ class plugin_database {
 			$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
 			$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
 			$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
-			$theme_background_video = $settings->get('theme','background_video');
+			$background_videos = $settings->get('theme', 'background_video', null);
+			$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
 			$login_domain_name_visible = $settings->get('login', 'domain_name_visible');
 			$login_domain_name = $settings->get('login', 'domain_name');
 			$login_destination = $settings->get('login', 'destination');
@@ -100,7 +101,7 @@ class plugin_database {
 					$view->assign("project_path", PROJECT_PATH);
 					$view->assign("login_destination_url", $login_destination);
 					$view->assign("login_domain_name_visible", $login_domain_name_visible);
-					$view->assign("login_domain_names", $login_domain_name);
+					$view->assign("login_domain_names", $login_domain_name);			
 					$view->assign("favicon", $theme_favicon);
 					$view->assign("login_logo_width", $theme_login_logo_width);
 					$view->assign("login_logo_height", $theme_login_logo_height);
@@ -329,4 +330,3 @@ class plugin_database {
 }
 
 ?>
-
