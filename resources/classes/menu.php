@@ -1153,7 +1153,7 @@ if (!class_exists('menu')) {
 									$menu_sub_icon = null;
 									if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
 										if (!empty($menu_item_sub['menu_item_icon']) && substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
-											$menu_sub_icon = "<span class='".escape($menu_item_sub['menu_item_icon'])."'></span>";
+											$menu_sub_icon = "<span class='".escape($menu_item_sub['menu_item_icon']).(substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-' ? ' fa-fw' : null)."'></span>";
 										}
 										else {
 											$menu_sub_icon = null;

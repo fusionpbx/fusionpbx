@@ -757,7 +757,7 @@ else { //default: white
 	div.menu_side_sub > a.menu_side_item_sub > span.fa-brands,
 	div.menu_side_sub > a.menu_side_item_sub > span.fa-regular {
 		float: right;
-		margin: 4px -1px 0 0;
+		margin: 4px -3px 0 0;
 		}
 
 	/* header domain/user name */
