@@ -122,7 +122,11 @@ if (!empty($result) && @sizeof($result) != 0) {
 			continue; // try next account
 		}
 
-		//get emails
+		//send more log information
+		echo "   Connection: ".$fax_email_connection."\n";
+		echo "   Required Subject: [".$fax_email_outbound_subject_tag."]\n";
+
+		//get emails from imap
 		if ($emails = imap_search($connection, "SUBJECT \"[".$fax_email_outbound_subject_tag."]\"", SE_UID)) {
 
 			//get authorized sender(s)
@@ -133,7 +137,13 @@ if (!empty($result) && @sizeof($result) != 0) {
 				$authorized_senders[] = $fax_email_outbound_authorized_senders;
 			}
 
-			sort($emails); // oldest first
+			//sort the emails as oldest first
+			sort($emails); 
+			
+			//send information to the console
+			echo "   Number of Emails: ".count($emails)."\n";
+
+			//process each email
 			foreach ($emails as $email_id) {
 				//get email meta data
 				$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
@@ -157,7 +167,7 @@ if (!empty($result) && @sizeof($result) != 0) {
 				$sender_authorized = in_array($sender_email, $authorized_senders) || in_array($sender_domain, $authorized_senders) ? true : false;
 				if ($sender_authorized) {
 					//debug info
-					//echo "authorized\n";
+					echo "   Sender Authorized: ".$sender_email."\n";
 
 					//add multi-lingual support
 					$language = new text;
@@ -187,13 +197,13 @@ if (!empty($result) && @sizeof($result) != 0) {
 					$fax_message = '';
 
 					//Debug print
-					print('attachments:' . "\n");
+					print('   Attachments:' . "\n");
 					foreach ($message['attachments'] as $attachment){
-						print(' - ' . $attachment['type'] . ' - ' . $attachment['name'] . ': ' . $attachment['size'] . ' disposition: ' . $attachment['disposition'] . "\n");
+						print('   ' . $attachment['type'] . ' - ' . $attachment['name'] . ': ' . $attachment['size'] . ' disposition: ' . $attachment['disposition'] . "\n");
 					}
-					print('messages:' . "\n");
+					print('   Messages:' . "\n");
 					foreach ($message['messages'] as $msg){
-						print(' - ' . $msg['type'] . ' - ' . $msg['size'] . "\n");
+						print('   ' . $msg['type'] . ' - ' . $msg['size'] . "\n");
 						// print($msg['data']);
 						// print("\n--------------------------------------------------------\n");
 					}
@@ -219,39 +229,40 @@ if (!empty($result) && @sizeof($result) != 0) {
 					$attachments = $message['attachments'];
 					if (sizeof($attachments) > 0) {
 						foreach ($attachments as $attachment) {
+							//get the fax file extension
 							$fax_file_extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
 
 							//block unknown files
-								if ($fax_file_extension == '') {continue; }
+							if ($fax_file_extension == '') {continue; }
+
 							//block unauthorized files
-								if (!$fax_allowed_extension['.' . $fax_file_extension]) { continue; } 
+							if (!$fax_allowed_extension['.' . $fax_file_extension]) { continue; }
+
 							//support only attachments
-								//if($attachment['disposition'] != 'attachment'){ continue; } 
+							//if($attachment['disposition'] != 'attachment'){ continue; } 
 
 							//store attachment in local fax temp folder
-								$uuid_filename = uuid();
-								$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$uuid_filename."-".$attachment['name'];
-								file_put_contents($local_filepath, $attachment['data']);
+							$uuid_filename = uuid();
+							$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$uuid_filename."-".$attachment['name'];
+							file_put_contents($local_filepath, $attachment['data']);
 
 							//load files array with attachments
-								$emailed_files['error'][] = 0;
-								$emailed_files['size'][] = $attachment['size'];
-								$emailed_files['tmp_name'][] = $uuid_filename."-".$attachment['name'];
-								$emailed_files['name'][] = $uuid_filename."-".$attachment['name'];
+							$emailed_files['error'][] = 0;
+							$emailed_files['size'][] = $attachment['size'];
+							$emailed_files['tmp_name'][] = $uuid_filename."-".$attachment['name'];
+							$emailed_files['name'][] = $uuid_filename."-".$attachment['name'];
 						}
 					}
 
 					//Debug print
-					print('***********************' . "\n");
-					print('fax message:' . "\n");
-					print(' - length: ' . strlen($fax_message) . "\n");
+					print('   FAX Message:' . "\n");
+					print('   Message Length: ' . strlen($fax_message) . "\n");
 					if (isset($emailed_files['name'])) {
-						print('fax files [' . sizeof($emailed_files['name']) . ']:' . "\n");
+						print('   FAX Files [' . sizeof($emailed_files['name']) . ']:' . "\n");
 						for($i = 0; $i < sizeof($emailed_files['name']);++$i){
-							print(' - ' . $emailed_files['name'][$i] . ' - ' . $emailed_files['size'][$i] . "\n");
+							print('   ' . $emailed_files['name'][$i] . ' - ' . $emailed_files['size'][$i] . "\n");
 						}
 					}
-					print('***********************' . "\n");
 
 					//send fax
 					$cwd = getcwd();
@@ -278,6 +289,9 @@ if (!empty($result) && @sizeof($result) != 0) {
 
 		//close account connection
 		imap_close($connection);
+
+		//add a line feed
+		echo "\n";
 	}
 }
 
