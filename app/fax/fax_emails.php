@@ -32,8 +32,10 @@ require_once "resources/functions/parse_message.php";
 require_once "resources/classes/text.php";
 
 //get accounts to monitor
-$sql = "select * from v_fax ";
+$sql = "select d.domain_name, f.* ";
+$sql .= "from v_fax as f, v_domains as d ";
 $sql .= "where fax_email_connection_host <> '' ";
+$sql .= "and f.domain_uuid = d.domain_uuid ";
 $sql .= "and fax_email_connection_host is not null ";
 $sql .= "and fax_email_outbound_subject_tag is not null ";
 $database = new database;
@@ -54,9 +56,11 @@ function arr_to_map(&$arr){
 if (!empty($result) && @sizeof($result) != 0) {
 
 	foreach ($result as $row) {
+
 		//get fax server and account connection details
 		$fax_uuid = $row["fax_uuid"];
 		$domain_uuid = $row["domain_uuid"];
+		$domain_name = $row["domain_name"];
 		$fax_extension = $row["fax_extension"];
 		$fax_email = $row["fax_email"];
 		$fax_pin_number = $row["fax_pin_number"];
@@ -78,31 +82,28 @@ if (!empty($result) && @sizeof($result) != 0) {
 		//get event socket connection parameters
 		$setting = new settings(["domain_uuid" => $domain_uuid]);
 
-		$fax_cover_font_default =$setting->get('fax','cover_font');
+		//send the domain name to the command line output
+		if (!empty($fax_email_connection_host) && !empty($fax_email_connection_username)) {
+			echo "Domain Name: ".$domain_name."\n";
+		}
 
+		//get the cover font
+		$fax_cover_font_default =$setting->get('fax','cover_font');
+		$fax_cover_font = $setting->get('fax','cover_font');
+		if(empty($fax_cover_font)) {
+			$fax_cover_font = $fax_cover_font_default;
+		}
+		
+		//get the allowed file extensions
 		$fax_allowed_extension_default = arr_to_map($setting->get('fax','allowed_extension'));
 		if($fax_allowed_extension_default == false){
 			$tmp = array('.pdf', '.tiff', '.tif');
 			$fax_allowed_extension_default = arr_to_map($tmp);
 		}
-
-		$fax_cover_font = $setting->get('fax','cover_font');
-		if(empty($fax_cover_font)){
-			$fax_cover_font = $fax_cover_font_default;
-		}
-
 		$fax_allowed_extension = arr_to_map($setting->get('fax','allowed_extension'));
 		if($fax_allowed_extension == false) {
 			$fax_allowed_extension = $fax_allowed_extension_default;
 		}
-
-		//get domain name, set the domain_name variable
-		$sql = "select domain_name from v_domains where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		$domain_name = $row['domain_name'];
-		unset($sql, $parameters, $row);
 
 		//set needed variables
 		$fax_page_size = $setting->get('fax','page_size');
