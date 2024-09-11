@@ -290,12 +290,12 @@
 							$array['fax'][0]['fax_email_outbound_subject_tag'] = $fax_email_outbound_subject_tag;
 							$array['fax'][0]['fax_email_outbound_authorized_senders'] = $fax_email_outbound_authorized_senders;
 						}
-						if (permission_exists('fax_caller_id_name')) {
-							$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
-						}
-						if (permission_exists('fax_caller_id_number')) {
-							$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-						}
+//						if (permission_exists('fax_caller_id_name')) {
+//							$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
+//						}
+//						if (permission_exists('fax_caller_id_number')) {
+//							$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+//						}
 						if (permission_exists('fax_toll_allow')) {
 							$array['fax'][0]['fax_toll_allow'] = $fax_toll_allow;
 						}
