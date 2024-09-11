@@ -247,37 +247,12 @@
 						$dialplan_type = "add";
 				}
 
-				if ($action == "update" && permission_exists('fax_extension_edit')) {
-					//begin update array
-						$array['fax'][0]['fax_uuid'] = $fax_uuid;
-
-					//assign temp permission
-						$p = new permissions;
-						$p->add('fax_edit', 'temp');
-				}
 
 				if (is_array($array) && @sizeof($array) != 0) {
 					//add common columns to array
-						$array['fax'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-						/*
-						if (permission_exists('fax_extension')) {
-							$array['fax'][0]['fax_extension'] = $fax_extension;
-						}
-						if (permission_exists('fax_accountcode')) {
-							$array['fax'][0]['accountcode'] = $fax_accountcode;
-						}
-						if (permission_exists('fax_destination_number')) {
-							$array['fax'][0]['fax_destination_number'] = $fax_destination_number;
-						}
-						if (permission_exists('fax_prefix')) {
-							$array['fax'][0]['fax_prefix'] = $fax_prefix;
-						}
-						$array['fax'][0]['fax_name'] = $fax_name;
-						if (permission_exists('fax_email')) {
-							$array['fax'][0]['fax_email'] = $fax_email;
-						}
-						*/
 						if (function_exists("imap_open") && file_exists("fax_files_remote.php")) {
+							$array['fax'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+							$array['fax'][0]['fax_uuid'] = $fax_uuid;
 							$array['fax'][0]['fax_email_connection_type'] = $fax_email_connection_type;
 							$array['fax'][0]['fax_email_connection_host'] = $fax_email_connection_host;
 							$array['fax'][0]['fax_email_connection_port'] = $fax_email_connection_port;
@@ -290,38 +265,23 @@
 							$array['fax'][0]['fax_email_outbound_subject_tag'] = $fax_email_outbound_subject_tag;
 							$array['fax'][0]['fax_email_outbound_authorized_senders'] = $fax_email_outbound_authorized_senders;
 						}
-//						if (permission_exists('fax_caller_id_name')) {
-//							$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
-//						}
-//						if (permission_exists('fax_caller_id_number')) {
-//							$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-//						}
-						if (permission_exists('fax_toll_allow')) {
-							$array['fax'][0]['fax_toll_allow'] = $fax_toll_allow;
-						}
-						if (permission_exists('fax_forward_number')) {
-							if ($action == "add" && !empty($fax_forward_number)) {
-								$array['fax'][0]['fax_forward_number'] = $fax_forward_number;
-							}
-							if ($action == "update") {
-								$array['fax'][0]['fax_forward_number'] = !empty($fax_forward_number) ? $fax_forward_number : null;
-							}
-						}
-						if (permission_exists('fax_send_channels')) {
-							$array['fax'][0]['fax_send_channels'] = strlen($fax_send_channels) != 0 ? $fax_send_channels : null;
-						}
-						$array['fax'][0]['fax_description'] = $fax_description;
 
 					//execute
-						$database = new database;
-						$database->app_name = 'fax';
-						$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-						$database->save($array);
-						unset($array);
+						if (isset($array) && is_array($array)) {
+							//assign temp permission
+							$p = new permissions;
+							$p->add('fax_edit', 'temp');
 
-					//revoke temp permissions
-						$p->delete('fax_add', 'temp');
-						$p->delete('fax_edit', 'temp');
+							$database = new database;
+							$database->app_name = 'fax';
+							$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+							$database->save($array);
+							unset($array);
+
+							//revoke temp permissions
+							$p->delete('fax_add', 'temp');
+							$p->delete('fax_edit', 'temp');
+						}
 
 					//clear the destinations session array
 						if (isset($_SESSION['destinations']['array'])) {
