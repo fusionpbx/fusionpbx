@@ -3281,7 +3281,7 @@ else { //default: white
 		}
 
 	.list-row > td.description {
-		background: <?=$table_row_background_color_medium?> !important;
+		/*background: <?=$table_row_background_color_medium?> !important;*/
 		}
 
 	.list-header > .checkbox,
