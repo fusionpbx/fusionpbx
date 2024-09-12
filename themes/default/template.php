@@ -806,7 +806,7 @@
 	//handle action bar style on scroll
 		{literal}
 		window.addEventListener('scroll', function(){
-			action_bar_scroll('action_bar', 20);
+			action_bar_scroll('action_bar', {/literal}{if $settings.theme.menu_style == 'side'}60{else}20{/if}{literal});
 		}, false);
 		function action_bar_scroll(action_bar_id, scroll_position, function_sticky, function_inline) {
 			if (document.getElementById(action_bar_id)) {

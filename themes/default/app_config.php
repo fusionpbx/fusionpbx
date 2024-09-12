@@ -965,7 +965,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "table_row_background_color_dark";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#edeff2";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the darker background color (and opacity) of table data rows.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "117c0235-4387-43f4-8cd4-7ad4fec97820";
@@ -983,6 +983,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#fff";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the lighter background color (and opacity) of table data rows.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "08c65000-aca9-468d-881e-185963b7d5f4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "table_row_background_color_hover";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#e0e6ef";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the background color of table data rows on hover.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "efa1022d-2b88-4a5d-981e-a2540c64324e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";

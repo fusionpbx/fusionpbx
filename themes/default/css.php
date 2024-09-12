@@ -187,7 +187,8 @@ $table_row_text_link_color_hover = $_SESSION['theme']['table_row_text_link_color
 $table_row_border_color = $_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5';
 $table_row_background_color_light = $_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff';
 $table_row_background_color_medium = $_SESSION['theme']['table_row_background_color_medium']['text'] ?? '#f0f2f6';
-$table_row_background_color_dark = $_SESSION['theme']['table_row_background_color_dark']['text'] ?? '#e5e9f0';
+$table_row_background_color_dark = $_SESSION['theme']['table_row_background_color_dark']['text'] ?? '#edeff2';
+$table_row_background_color_hover = $_SESSION['theme']['table_row_background_color_hover']['text'] ?? null;
 $table_row_padding = $_SESSION['theme']['table_row_padding']['text'] ?? '4px 7px';
 $form_table_label_background_color = $_SESSION['theme']['form_table_label_background_color']['text'] ?? '#e5e9f0';
 $form_table_label_border_radius = $_SESSION['theme']['form_table_label_border_radius']['text'] ?? null;
@@ -2419,7 +2420,6 @@ else { //default: white
 	.message_text {
 		z-index: 99999;
 		margin: 0 auto;
-		padding: 15px;
 		text-align: center;
 		font-family: arial, san-serif;
 		font-size: 10pt;
@@ -2427,29 +2427,34 @@ else { //default: white
 		color: <?=$message_default_color?>;
 		background: <?-$message_default_background_color?>;
 		box-shadow: inset 0px 7px 8px -10px <?=$message_default_color?>;
-		border-bottom: solid 1px <?=$message_default_color?>;
 		opacity: 0;
+		<?php
+		if ($menu_style == 'side') {
+			echo "padding: 20px;\n";
+			echo "min-height: 60px;\n";
+		}
+		else {
+			echo "padding: 15px;\n";
+		}
+		?>
 		}
 
 	.message_mood_positive {
 		color: <?=$message_positive_color?>;
 		background: <?=$message_positive_background_color?>;
 		box-shadow: inset 0px 7px 8px -10px <?=$message_positive_color?>;
-		border-bottom: solid 1px <?=$message_positive_color?>;
 		}
 
 	.message_mood_negative {
 		color: <?=$message_negative_color?>;
 		background: <?=$message_negative_background_color?>;
 		box-shadow: inset 0px 7px 8px -10px <?=$message_negative_color?>;
-		border-bottom: solid 1px <?=$message_negative_color?>;
 		}
 
 	.message_mood_alert {
 		color: <?=$message_alert_color?>;
 		background: <?=$message_alert_background_color?>;
 		box-shadow: inset 0px 7px 8px -10px <?=$message_alert_color?>;
-		border-bottom: solid 1px <?=$message_alert_color?>;
 		}
 
 /* OPERATOR PANEL ****************************************************************/
@@ -3115,21 +3120,19 @@ else { //default: white
 /* LIST ACTION BAR *************************************************************/
 
 	div.action_bar {
-		position: -webkit-sticky;
-		position: sticky;
 		z-index: 5;
 		<?php
 		switch ($menu_style) {
 			case 'side':
 				$action_bar_top = '0';
 				break;
+			case 'fixed':
+				$action_bar_top = '49px';
+				break;
 			case 'inline':
 			case 'static':
 				$action_bar_top = '-1px';
 				break;
-			case 'fixed':
-			default:
-				$action_bar_top = '49px';
 		}
 		?>
 		top: <?php echo $action_bar_top; ?>;
@@ -3141,28 +3144,62 @@ else { //default: white
 		border-radius: <?=$action_bar_border_radius?>;
 		background: <?=$action_bar_background?>;
 		box-shadow: <?=$action_bar_shadow?>;
-		padding: 10px;
-		margin: -10px -10px 10px -10px;
+		<?php
+		switch ($menu_style) {
+			case 'side':
+				echo "position: -webkit-sticky;\n";
+				echo "position: sticky;\n";
+				echo "padding: 15px 20px 15px 20px;\n";
+				echo "margin: -10px -20px 10px -20px;\n";
+				echo "min-height: 60px;\n";
+				break;
+			case 'fixed';
+				echo "position: -webkit-sticky;\n";
+				echo "position: sticky;\n";
+				echo "padding: 10px 30px 10px 30px;\n";
+				echo "margin: -10px -30px 10px -30px;\n";
+				break;
+			case 'static':
+			case 'inline':
+				echo "padding: 15px 20px 15px 20px;\n";
+				echo "margin: -10px -20px 10px -20px;\n";
+				break;
+		}
+		?>
 		-webkit-transition: all .2s ease;
 		-moz-transition: all .2s ease;
 		transition: all .2s ease;
 		}
 
-	div.action_bar.scroll {
-		border-top: <?=$action_bar_border_top_scroll?>;
-		border-right: <?=$action_bar_border_right_scroll?>;
-		border-bottom: <?=$action_bar_border_bottom_scroll?>;
-		border-left: <?=$action_bar_border_left_scroll?>;
-		border-radius: <?=$action_bar_border_radius_scroll?>;
-		background: <?=$action_bar_background_scroll?>;
-		box-shadow: <?=$action_bar_shadow_scroll?>;
-		}
+	<?php
+	if ($menu_style == 'side' || $menu_style == 'fixed') {
+		?>
+		div.action_bar.scroll {
+			border-top: <?=$action_bar_border_top_scroll?>;
+			border-right: <?=$action_bar_border_right_scroll?>;
+			border-bottom: <?=$action_bar_border_bottom_scroll?>;
+			border-left: <?=$action_bar_border_left_scroll?>;
+			border-radius: <?=$action_bar_border_radius_scroll?>;
+			background: <?=$action_bar_background_scroll?>;
+			box-shadow: <?=$action_bar_shadow_scroll?>;
+			}
+		<?php
+	}
+	?>
 
 	div.action_bar.sub {
 		position: static;
 		}
 
 	div.action_bar > div.heading {
+		<?php
+		if ($menu_style == 'side') {
+			echo "padding-top: 2px;\n";
+		}
+		else if ($menu_style == 'fixed') {
+			echo "padding-top: 4px;\n";
+		}
+		?>
 		float: left;
 		}
 
@@ -3275,6 +3312,14 @@ else { //default: white
 		text-align: left;
 		vertical-align: middle;
 		}
+
+	<?php if (!empty($table_row_background_color_hover)) { ?>
+		.list-row:hover > td,
+		.list-row:nth-child(odd):hover > :not(.action-button),
+		.list-row:nth-child(even):hover > :not(.action-button) {
+			background: <?=$table_row_background_color_hover?>;
+			}
+	<?php } ?>
 
 	.list-row > :not(.checkbox) {
 		padding: <?=$table_row_padding?>;
