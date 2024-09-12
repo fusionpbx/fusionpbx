@@ -775,7 +775,8 @@
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
-	echo "<br><br>";
+	echo "</div>\n";
+	echo "<br>";
 
 	//dialplan details
 	if ($action == "update") {
@@ -797,6 +798,7 @@
 		//display the results
 			if (is_array($details) && @sizeof($details) != 0) {
 
+				echo "<div class='card'>\n";
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0' style='margin: -2px; border-spacing: 2px;'>\n";
 
 				$x = 0;
