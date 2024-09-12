@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -725,6 +725,9 @@
 		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>$button_margin,'link'=>PROJECT_PATH.'/app/user_permissions/user_permissions.php?id='.urlencode($user_uuid)]);
 		unset($button_margin);
 	}
+	if (permission_exists('user_setting_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_settings'],'id'=>'btn_settings','style'=>'','link'=>PROJECT_PATH.'/core/user_settings/user_settings.php?id='.urlencode($user_uuid)]);
+	}
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -1221,14 +1224,8 @@
 
 	echo "</form>";
 
-	if (permission_exists("user_edit") && permission_exists('user_setting_view') && $action == 'edit') {
-		require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/user_settings/user_settings.php";
-		echo "<br><br>";
-	}
-
-	echo "<script>\n";
-
 //hide password fields before submit
+	echo "<script>\n";
 	echo "	function submit_form() {\n";
 	echo "		hide_password_fields();\n";
 	echo "		$('form#frm').submit();\n";
