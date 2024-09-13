@@ -8,7 +8,7 @@ local settings = Settings.new(db, domain_name, domain_uuid)
 local email_queue_enabled = "true";
 
 if (email_queue_enabled == 'true') then
-	function send_mail(headers, email_from, email_address, email_message, email_file)
+	function send_mail(headers, email_from, email_address, email_message, email_file, email_base64)
 
 		--include json library
 		local json
@@ -16,12 +16,19 @@ if (email_queue_enabled == 'true') then
 			json = require "resources.functions.lunajson"
 		end
 
+		--get the headers
 		local domain_uuid = headers["X-FusionPBX-Domain-UUID"];
 		local domain_name = headers["X-FusionPBX-Domain-Name"];
 		local email_type = headers["X-FusionPBX-Email-Type"] or 'info';
 		local call_uuid = headers["X-FusionPBX-Call-UUID"];
 		local local_after_email = headers["X-FusionPBX-local_after_email"] or '';
 
+		--set default file type
+		if (storage_type == nil) then
+			storage_type = 'file';
+		end
+
+		--set the email_uuid to the call uuid
 		if (call_uuid ~= nil) then
 			email_uuid = call_uuid;
 		else
@@ -29,20 +36,22 @@ if (email_queue_enabled == 'true') then
 			email_uuid = api:executeString("create_uuid");
 		end
 
+		--set email action after
 		if (local_after_email == 'false') then
 			email_action_after = 'delete';
 		else
 			email_action_after = '';
 		end
 
+		--create the datbase and settings object
 		local db = dbh or Database.new('system');
 		local settings = Settings.new(db, domain_name, domain_uuid);
 
+		--set the email settings
 		if (email_from == nil or email_from == "") then
 			email_from = settings:get('email', 'smtp_from', 'text');
 			from_name = settings:get('email', 'smtp_from_name', 'text');
 		end
-
 		if (email_from == nil or email_from == "") then
 			email_from = address;
 		elseif (from_name ~= nil and from_name ~= "") then
@@ -52,10 +61,12 @@ if (email_queue_enabled == 'true') then
 		local email_body = email_message[2] or '';
 		local email_status = 'waiting';
 
+		--get a email queue uuid and hostname
 		api = freeswitch.API();
 		local email_queue_uuid = api:executeString("create_uuid");
 		local hostname = api:executeString("hostname");
 
+		--insert the message into the email queue
 		local sql = "insert into v_email_queue ( ";
 		sql = sql .. "	email_queue_uuid, ";
 		sql = sql .. "	domain_uuid, ";
@@ -99,10 +110,14 @@ if (email_queue_enabled == 'true') then
 		db:query(sql, params);
 
 		if (email_file) then
+			--email settings
 			email_attachment_type = string.sub(email_file, -3);
 			email_attachment_path = email_file;
-			email_attachment_name = '';
-			email_attachment_base64 = '';
+
+			-- if no value then set to an empty string
+			if (email_base64 == nil) then
+				email_base64 = '';
+			end
 
 			--set the mime type
 			if (email_attachment_type == 'jpg' or email_attachment_type == 'peg') then --jpeg
@@ -170,7 +185,7 @@ if (email_queue_enabled == 'true') then
 				email_attachment_type = email_attachment_type;
 				email_attachment_path = email_attachment_path;
 				email_attachment_name = email_attachment_name;
-				email_attachment_base64 = email_attachment_base64;
+				email_attachment_base64 = email_base64;
 			}
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[send_email] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -256,7 +271,7 @@ else
 
 			local subject = message[1]
 			local body = message[2] or ''
-			
+
 			--debug info
 			--freeswitch.consoleLog("notice", "[voicemail] from: " .. from .. "\n");
 			--freeswitch.consoleLog("notice", "[voicemail] subject: " .. subject .. "\n");
