@@ -1,3 +1,4 @@
+--
 --	Part of FusionPBX
 --	Copyright (C) 2013 - 2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
@@ -123,7 +124,7 @@
 					end
 
 				--get voicemail message details
-					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, * 
+					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, *
 						FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
 						AND voicemail_message_uuid = :uuid]]
@@ -149,6 +150,9 @@
 
 								--save the recordings to the file system
 									if (string.len(row["message_base64"]) > 32) then
+										--save the value to a variable
+											voicemail_base64 = row["message_base64"];
+
 										--include the file io
 											local file = require "resources.functions.file"
 
@@ -322,20 +326,20 @@
 
 				--send the email with, or without, including the intro
 					if (file_exists(combined)) then
-						send_mail(headers,
-							smtp_from,
-							voicemail_mail_to,
-							{subject, body},
-							(voicemail_file == "attach") and combined
-						);
+						voicemail_path = combined
 					else
-						send_mail(headers,
-							smtp_from,
-							voicemail_mail_to,
-							{subject, body},
-							(voicemail_file == "attach") and file
-						);
+						voicemail_path = file
 					end
+
+				--send the email
+					send_mail(headers,
+						smtp_from,
+						voicemail_mail_to,
+						{subject, body},
+						(voicemail_file == "attach") and voicemail_path,
+						voicemail_base64
+					);
+
 			end
 
 		--whether to keep the voicemail message and details local after email
