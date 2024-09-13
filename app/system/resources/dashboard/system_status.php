@@ -38,7 +38,7 @@
 
 			//add half doughnut chart
 			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-			echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</a></span>\n";
+			echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_status']."</a></span>\n";
 
 			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 				?>
@@ -97,6 +97,20 @@
 			if ($dashboard_chart_type == "number") {
 				echo "	<span class='hud_stat'>".round($percent_disk_usage)."%</span>";
 			}
+			if ($dashboard_chart_type == "progress_bar") {
+				echo "	<span class='hud_title' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 41px;'>".$text['label-disk_usage']."</span>\n";
+				echo "	<div class='progress_container' style='width: 80%; height: 15px; border-radius: 4px; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
+				echo "		<div class='progress_bar' style='width: ".$percent_disk_usage."%; height: 15px; border-radius: 4px; font-size: x-small; color: ".$row['dashboard_number_text_color']."; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_main_color') ?? '#03c04a').";'>".round($percent_disk_usage)."%</div>\n";
+				echo "	</div>\n";
+			}
+			/*
+			if ($dashboard_chart_type == "progress_bar") {
+				echo "	<span class='hud_title' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 41px;'>".$text['label-cpu_usage']."</span>\n";
+				echo "	<div class='progress_container' style='width: 80%; height: 15px; border-radius: 4px; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
+				echo "		<div class='progress_bar' style='width: ".$percent_cpu."%; height: 15px; border-radius: 4px; font-size: x-small; color: ".$row['dashboard_number_text_color']."; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color') ?? '#03c04a').";'>".round($percent_cpu)."%</div>\n";
+				echo "	</div>\n";
+			}
+			*/
 			echo "	</div>\n";
 		}
 	}
