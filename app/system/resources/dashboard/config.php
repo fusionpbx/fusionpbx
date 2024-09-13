@@ -9,11 +9,11 @@ $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'System information like Disk usage.';
 $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '5e1998c1-d3be-42f0-80ac-659e2e7934cb';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'c388de65-85ad-4662-bbc3-a65fe9ddc319';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'ab48bcca-5cb1-40f0-b36f-ba1ad510ba5a';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 $x++;
 
-$array['dashboard'][$x]['dashboard_uuid'] = 'beade936-846b-4f02-986c-a2de6fa762c2';
+$array['dashboard'][$x]['dashboard_uuid'] = 'c9b1f67a-d78a-4299-a16e-594a4b7cd246';
 $array['dashboard'][$x]['dashboard_name'] = 'System Disk Usage';
 $array['dashboard'][$x]['dashboard_path'] = 'system/system_disk_usage';
 $array['dashboard'][$x]['dashboard_order'] = '100';
