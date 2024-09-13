@@ -802,6 +802,7 @@
 		$dashboard_path == "xml_cdr/recent_calls" ||
 		$dashboard_path == "system/system_status" ||
 		$dashboard_path == "system/system_cpu_status" ||
+		$dashboard_path == "system/system_disk_usage" ||
 		$dashboard_path == "system/system_counts" ||
 		$dashboard_path == "switch/switch_status" ||
 		$dashboard_path == "domain_limits/domain_limits" ||
@@ -818,6 +819,9 @@
 		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
 		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
 		echo "		<option value='number' ".(!empty($dashboard_chart_type) && $dashboard_chart_type == "number" ? "selected='selected'" : null).">".$text['label-number']."</option>\n";
+		if ($dashboard_path == "system/system_status") {
+			echo "		<option value='progress_bar' ".(!empty($dashboard_chart_type) && $dashboard_chart_type == "progress_bar" ? "selected='selected'" : null).">".$text['label-progress_bar']."</option>\n";
+		}
 		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-dashboard_chart_type']."\n";
