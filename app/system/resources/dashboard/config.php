@@ -1,15 +1,17 @@
 <?php
 
 $x++;
-$array['dashboard'][$x]['dashboard_uuid'] = 'ab48bcca-5cb1-40f0-b36f-ba1ad510ba5a';
+$array['dashboard'][$x]['dashboard_uuid'] = 'c388de65-85ad-4662-bbc3-a65fe9ddc319';
 $array['dashboard'][$x]['dashboard_name'] = 'System Status';
 $array['dashboard'][$x]['dashboard_path'] = 'system/system_status';
 $array['dashboard'][$x]['dashboard_order'] = '90';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
+$array['dashboard'][$x]['dashboard_chart_type'] = 'progress_bar';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '#fff';
 $array['dashboard'][$x]['dashboard_description'] = 'System information like Disk usage.';
 $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '5e1998c1-d3be-42f0-80ac-659e2e7934cb';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'ab48bcca-5cb1-40f0-b36f-ba1ad510ba5a';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'c388de65-85ad-4662-bbc3-a65fe9ddc319';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 $x++;
 
