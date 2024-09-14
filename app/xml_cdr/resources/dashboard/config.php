@@ -4,7 +4,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = '6ad0e056-bf3d-465a-956d-bd77d513ab36';
 $array['dashboard'][$x]['dashboard_name'] = 'Missed Calls';
 $array['dashboard'][$x]['dashboard_path'] = 'xml_cdr/missed_calls';
-$array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-cirlce-xmark';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-circle-xmark';
 $array['dashboard'][$x]['dashboard_url'] = '';
 $array['dashboard'][$x]['dashboard_target'] = '';
 $array['dashboard'][$x]['dashboard_width'] = '';
