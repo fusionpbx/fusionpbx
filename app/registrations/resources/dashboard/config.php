@@ -3,7 +3,7 @@
 //registrations icon
 $array['dashboard'][$x]['dashboard_uuid'] = 'ce343ebe-3b54-4aad-b7e0-66de02171e78';
 $array['dashboard'][$x]['dashboard_name'] = 'Registrations';
-$array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon.php';
+$array['dashboard'][$x]['dashboard_path'] = 'registrations/registrations.php';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-list-check';
 $array['dashboard'][$x]['dashboard_url'] = '/app/registrations/registrations.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
