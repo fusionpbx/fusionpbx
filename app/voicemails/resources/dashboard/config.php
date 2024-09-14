@@ -4,7 +4,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = 'be2aaa22-d8f1-4d9b-b5f9-14a26da329cb';
 $array['dashboard'][$x]['dashboard_name'] = 'New Messages';
 $array['dashboard'][$x]['dashboard_path'] = 'voicemails/voicemails';
-$array['dashboard'][$x]['dashboard_icon'] = '';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-envelope';
 $array['dashboard'][$x]['dashboard_url'] = '';
 $array['dashboard'][$x]['dashboard_target'] = '';
 $array['dashboard'][$x]['dashboard_width'] = '';
