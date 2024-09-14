@@ -328,7 +328,6 @@
 								legend: {
 									display: true,
 									position: 'right',
-									reverse: true,
 									labels: {
 										usePointStyle: true,
 										pointStyle: 'rect',
