@@ -51,10 +51,9 @@
 	echo "<div class='hud_box'>\n";
 	echo "	<div class='hud_content' ".(empty($dashboard_details_state) || $dashboard_details_state != "disabled" ? "onclick=\"$('#hud_icon_details').slideToggle('fast'); toggle_grid_row_end('".trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_')."');\"" : null).">\n";
 	echo "		<span class='hud_title' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\">".escape($dashboard_label)."</span>";
-	echo "		<span class='hud_stat' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\"><i class=\"fas ".$dashboard_icon."\"></i></span>\n";
-	echo "		<div style='color: #000000; font-size: 12px; font-weight: unset; text-align: center; position: relative; bottom: 50px; right: -90px; padding: 10px 10px;'>\n";
-	echo "			<span class='' style=\"position: relative; \">Inactive: ".$inactive_registrations."</span>\n";
-	echo "			<span class='' style=\"position: relative; \">Active: ".$active_registrations."</span>\n";
+	echo "		<div style='position: relative; display: inline-block;'>\n";
+	echo "			<span class='hud_stat' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\"><i class=\"fas ".$dashboard_icon."\"></i></span>\n";
+	echo "			<span style=\"background-color: #5d5ce3; color: #ffffff; font-size: 12px; font-weight: bold; text-align: center; position: absolute; bottom: -7px; right: -25px; padding: 4px 8px; border-radius: 50%;\">".$active_registrations."/".($active_registrations + $inactive_registrations)."</span>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
 	if (empty($dashboard_details_state) || $dashboard_details_state != "disabled") {
