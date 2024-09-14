@@ -178,7 +178,7 @@
 	if ($dashboard_chart_type == "progress_bar") {
 		//cpu usage
 		if ($dashboard_row_span > 1) {
-			echo "	<span class='hud_title cpu_usage' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 9%;'>".$text['label-processor_usage']." $dashboard_row_span</span>\n";
+			echo "	<span class='hud_title cpu_usage' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 9%;'>".$text['label-processor_usage']."</span>\n";
 			echo "	<div class='progress_container' style='width: 80%; height: 15px; border-radius: 4px; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
 			echo "		<div class='progress_bar' style='width: ".$percent_cpu."%; height: 15px; border-radius: 4px; font-size: x-small; color: ".$row['dashboard_number_text_color']."; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color') ?? '#03c04a').";'>".round($percent_cpu)."%</div>\n";
 			echo "	</div>\n";
