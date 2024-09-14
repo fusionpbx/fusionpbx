@@ -3,7 +3,8 @@
 $array['dashboard'][$x]['dashboard_uuid'] = '3bac3209-2f51-47db-b5fe-a1a804f49da9';
 $array['dashboard'][$x]['dashboard_name'] = 'Caller ID';
 $array['dashboard'][$x]['dashboard_path'] = 'extensions/caller_id';
-$array['dashboard'][$x]['dashboard_order'] = '160';
+$array['dashboard'][$x]['dashboard_details_state'] = 'hidden';
+$array['dashboard'][$x]['dashboard_order'] = '200';
 $array['dashboard'][$x]['dashboard_enabled'] = 'false';
 $array['dashboard'][$x]['dashboard_description'] = '';
 $y = 0;
