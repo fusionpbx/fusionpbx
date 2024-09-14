@@ -560,7 +560,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 	//echo $text['title_description-dashboard']."\n";
-	echo "<br /><br />\n";
+	//echo "<br /><br />\n";
 
 	if (!empty($action) && $action == 'update') {
 		if (permission_exists('dashboard_add')) {
