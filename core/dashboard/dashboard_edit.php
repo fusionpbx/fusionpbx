@@ -805,6 +805,7 @@
 		$dashboard_path == "domain_limits/domain_limits" ||
 		$dashboard_path == "call_forward/call_forward" ||
 		$dashboard_path == "ring_groups/ring_group_forward" ||
+		$dashboard_path == "registrations/registrations" ||
 		$dashboard_path == "extensions/caller_id" ||
 		$dashboard_path == "maintenance/maintenance"
 		) {
