@@ -100,9 +100,22 @@
 		</script>
 		<?php
 	}
+
+	//dashboard number
 	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "number") {
 		echo "	<span class='hud_stat'>".$messages['new']."</span>";
 	}
+
+	//dashboard icon
+	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "icon") {
+		echo "<span class='hud_content'>\n";
+		echo "<div style='position: relative; display: inline-block;'>\n";
+		echo "		<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
+		echo "		<span class='' style=\"background-color: #03c04a; color: #ffffff; font-size: 12px; font-weight: bold; text-align: center; position: absolute; bottom: -5px; right: -15px; padding: 4px 8px; border-radius: 50%;\">".$messages['new']."</span>\n";
+		echo "	</div>\n";
+		echo "</span>";
+	}
+
 	echo "</div>\n";
 
 	if ($dashboard_details_state != 'disabled') {

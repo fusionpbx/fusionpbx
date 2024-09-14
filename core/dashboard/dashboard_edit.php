@@ -602,11 +602,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (
-		$action == "add" ||
-		$dashboard_path == "dashboard/icon"
-		) {
-		echo "	<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">";
+	if ($action == "add" || $dashboard_path == "dashboard/icon" || $dashboard_chart_type == "icon") {
+		echo "	<tr class='type_icon'>"; // ".(($dashboard_path != 'dashboard/icon' || $dashboard_chart_type == "icon") ? "style='display: none;'" : null)."
 		echo "		<td class='vncell'>".$text['label-icon']."</td>";
 		echo "		<td class='vtable' style='vertical-align: bottom;'>";
 		if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php')) {
@@ -818,6 +815,7 @@
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
 		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
+		echo "		<option value='icon' ".(!empty($dashboard_chart_type) && $dashboard_chart_type == "icon" ? "selected='selected'" : null).">".$text['label-icon']."</option>\n";
 		echo "		<option value='number' ".(!empty($dashboard_chart_type) && $dashboard_chart_type == "number" ? "selected='selected'" : null).">".$text['label-number']."</option>\n";
 		if ($dashboard_path == "system/system_status") {
 			echo "		<option value='progress_bar' ".(!empty($dashboard_chart_type) && $dashboard_chart_type == "progress_bar" ? "selected='selected'" : null).">".$text['label-progress_bar']."</option>\n";
