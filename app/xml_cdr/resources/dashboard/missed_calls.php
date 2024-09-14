@@ -149,7 +149,7 @@
 		echo "<span class='hud_content'>\n";
 		echo "<div style='position: relative; display: inline-block;'>\n";
 		echo "		<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
-		echo "		<span class='' style=\"background-color: #EA4C46; color: #ffffff; font-size: 12px; font-weight: bold; text-align: center; position: absolute; bottom: -5px; right: -15px; padding: 4px 8px; border-radius: 50%;\">".$num_rows."</span>\n";
+		echo "		<span style=\"background-color: #EA4C46; color: #ffffff; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 4px 8px; border-radius: 50%;\">".$num_rows."</span>\n";
 		echo "	</div>\n";
 		echo "</span>";
 	}
