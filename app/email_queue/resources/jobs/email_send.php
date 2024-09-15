@@ -199,7 +199,7 @@
 			$email_attachment_name = $field['email_attachment_name'];
 			$email_attachment_mime_type = $field['email_attachment_mime_type'];
 
-			if (!$email_attachment_mime_type) {
+			if (empty($email_attachment_mime_type)) {
 				switch ($email_attachment_type) {
 					case "wav":
 						$email_attachment_mime_type = "audio/x-wav";
@@ -236,11 +236,10 @@
 						//transcribe the voicemail recording
 						$transcribe->audio_path = $email_attachment_path;
 						$transcribe->audio_filename = $email_attachment_name;
+						$transcribe->audio_mime_type = $email_attachment_mime_type;
+						$transcribe->audio_string = (!empty($field['email_attachment_base64'])) ? base64_decode($field['email_attachment_base64']) : '';
 						$transcribe_message = $transcribe->transcribe();
 					}
-
-					echo "transcribe path: ".$email_attachment_path."\n";
-					echo "transcribe name: ".$email_attachment_name."\n";
 				}
 				else {
 					$transcribe_message = $email_transcription;
