@@ -254,7 +254,9 @@
 			}
 
 		//channel count
-			$esl = event_socket::create();
+			if ($esl == null) {
+				$esl = event_socket::create();
+			}
 			if ($esl->is_connected()) {
 				$tmp = event_socket::api('status');
 				$matches = Array();
@@ -264,18 +266,6 @@
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-channels']."</a></td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";
-				echo "</tr>\n";
-				$c = ($c) ? 0 : 1;
-			}
-
-		//registration count
-			if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
-				$registration = new registrations;
-				$registrations = $registration->count();
-				$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
-				echo "<tr ".$tr_link.">\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-registrations']."</a></td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$registrations."</td>\n";
 				echo "</tr>\n";
 				$c = ($c) ? 0 : 1;
 			}
