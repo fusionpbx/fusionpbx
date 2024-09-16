@@ -101,7 +101,7 @@
 	$sql = "select \n";
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
-	$sql .= "dashboard_icon,\n";
+	$sql .= "dashboard_icon, \n";
 	$sql .= "( \n";
 	$sql .= "	select \n";
 	$sql .= "	string_agg(g.group_name, ', ') \n";
@@ -190,7 +190,7 @@
 	}
 	echo th_order_by('dashboard_name', $text['label-dashboard_name'], $order_by, $order);
 	echo th_order_by('dashboard_groups', $text['label-dashboard_groups'], $order_by, $order);
-	//echo th_order_by('dashboard_icon', 'Icons', $order_by, $order);
+	echo th_order_by('dashboard_icon', $text['label-icons'], $order_by, $order);
 	echo th_order_by('dashboard_order', $text['label-dashboard_order'], $order_by, $order);
 	echo th_order_by('dashboard_enabled', $text['label-dashboard_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-dashboard_description']."</th>\n";
@@ -221,7 +221,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['dashboard_groups'])."</td>\n";
-			//echo "	<td>".escape($row['dashboard_icon'])."</td>\n";
+			echo "	<td>".escape($row['dashboard_icon'])."</td>\n";
 			echo "	<td>".escape($row['dashboard_order'])."</td>\n";
 			if (permission_exists('dashboard_edit')) {
 				echo "	<td class='no-link center'>\n";
