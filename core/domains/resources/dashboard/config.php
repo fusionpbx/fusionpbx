@@ -4,7 +4,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = 'c41e7619-e213-49fd-a82f-df8fb8c46ad0';
 $array['dashboard'][$x]['dashboard_name'] = 'Domains';
 $array['dashboard'][$x]['dashboard_path'] = 'domains/domains.php';
-$array['dashboard'][$x]['dashboard_icon'] = 'flag-solid';
+$array['dashboard'][$x]['dashboard_icon'] = 'fa-solid fa-earth-americas';
 $array['dashboard'][$x]['dashboard_url'] = '/core/domains/domains.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
