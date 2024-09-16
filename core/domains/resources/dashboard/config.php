@@ -35,9 +35,5 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'd66a5
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'c41e7619-e213-49fd-a82f-df8fb8c46ad0';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 $y++;
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'b7ee599e-83d1-40b4-adf3-1247b6f6e913';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'c41e7619-e213-49fd-a82f-df8fb8c46ad0';
-$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
-$y++;
 
 ?>
