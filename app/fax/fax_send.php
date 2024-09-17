@@ -797,6 +797,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$array['fax_queue'][0]['hostname'] = gethostname();
 				$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
 				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+				$array['fax_queue'][0]['fax_recipient'] = $fax_recipient;
 				$array['fax_queue'][0]['fax_number'] = $fax_number;
 				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
 				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;

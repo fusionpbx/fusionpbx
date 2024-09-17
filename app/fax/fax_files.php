@@ -273,7 +273,7 @@
 //get the list
 	$sql = "select domain_uuid, fax_file_uuid, fax_uuid, fax_mode, \n";
 	$sql .= "fax_destination, fax_file_type, fax_file_path, fax_caller_id_name, \n";
-	$sql .= "fax_caller_id_number, fax_epoch, fax_base64, fax_date, \n";
+	$sql .= "fax_caller_id_number, fax_recipient, fax_epoch, fax_base64, fax_date, \n";
 	$sql .= "to_char(timezone(:time_zone, fax_date), 'DD Mon YYYY') as fax_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, fax_date), '".$time_format."') as fax_time_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, read_date), 'YYYY-MM-DD') as read_date_formatted \n";
@@ -405,6 +405,9 @@
 	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
 	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
 	if ($_REQUEST['box'] == 'sent') {
+		if (permission_exists('fax_sent_recipient')) {
+			echo th_order_by('fax_recipient', $text['label-fax_recipient'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
+		}
 		echo th_order_by('fax_destination', $text['label-fax_destination'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$page);
 	}
 	if (permission_exists('fax_download_view')) {
@@ -527,6 +530,9 @@
 			echo "	<td style='".$bold."'>".escape($row['fax_caller_id_name'])."&nbsp;</td>\n";
 			echo "	<td style='".$bold."'>".escape(format_phone($row['fax_caller_id_number']))."&nbsp;</td>\n";
 			if ($_REQUEST['box'] == 'sent') {
+				if (permission_exists('fax_sent_recipient')) {
+					echo "	<td>".escape($row['fax_recipient'])."&nbsp;</td>\n";
+				}
 				echo "	<td>".escape(format_phone($row['fax_destination']))."&nbsp;</td>\n";
 			}
 			if (permission_exists('fax_download_view')) {

@@ -147,6 +147,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '1';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the Caller ID number.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_recipient';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '1';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the fax recipipent.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_number';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '1';

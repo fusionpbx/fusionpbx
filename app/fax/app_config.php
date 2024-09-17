@@ -93,6 +93,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "fax";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "fax_sent_recipient";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "fax";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "fax_sent_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -747,6 +752,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_mode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "rx / tx  - Rx means receive and Tx means transmit.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_recipient";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_destination";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
