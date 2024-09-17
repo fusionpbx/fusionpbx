@@ -162,7 +162,7 @@
 		document_root = '';
 	end
 	if (fax_recipient == nil) then
-		fax_recipient = 'not set in hangup_tx.lua';
+		fax_recipient = '';
 	end
 
 --set default values
