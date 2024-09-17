@@ -169,6 +169,7 @@
 		$fax_date = $row["fax_date"];
 		$fax_caller_id_name = $row["fax_caller_id_name"];
 		$fax_caller_id_number = $row["fax_caller_id_number"];
+		$fax_recipient = $row["fax_recipient"];
 		$fax_prefix = $row["fax_prefix"];
 		$fax_number = $row["fax_number"];
 		$fax_email_address = $row["fax_email_address"];
@@ -262,9 +263,9 @@
 			$common_variables .= "domain_name="                  . $domain_name . ",";
 			$common_variables .= "origination_caller_id_name='"  . escape_quote($fax_caller_id_name) . "',";
 			$common_variables .= "origination_caller_id_number=" . $fax_caller_id_number . ",";
-			$common_variables .= "fax_ident='"                    . escape_quote($fax_caller_id_number) . "',";
-			$common_variables .= "fax_header='"                   . escape_quote($fax_caller_id_name) . "',";
-			$common_variables .= "fax_file='"                     . escape_quote($fax_file) . "',";
+			$common_variables .= "fax_ident='"                   . escape_quote($fax_caller_id_number) . "',";
+			$common_variables .= "fax_header='"                  . escape_quote($fax_caller_id_name) . "',";
+			$common_variables .= "fax_file='"                    . escape_quote($fax_file) . "',";
 
 		//extract fax_dtmf from the fax number
 			fax_split_dtmf($fax_number, $fax_dtmf);
@@ -299,13 +300,14 @@
 		//build a list of fax variables
 			$dial_string = $common_variables;
 			$dial_string .= $fax_options.",";
-			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
-			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
-			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
-			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
+			$dial_string .= "origination_uuid="    . $origination_uuid . ",";
+			$dial_string .= "fax_uuid="            . $fax_uuid . ",";
+			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid . ",";
+			$dial_string .= "mailto_address='"     . $fax_email_address . "',";
 			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
-			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";
-			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
+			$dial_string .= "fax_retry_attempts="  . $fax_retry_count . ",";
+			$dial_string .= "fax_retry_limit="     . $retry_limit . ",";
+			$dial_string .= "fax_recipient='"      . escape_quote($fax_recipient) . "',";
 			//$dial_string .= "fax_retry_sleep=180,";
 			$dial_string .= "fax_verbose=true,";
 			//$dial_string .= "fax_use_ecm=off,";

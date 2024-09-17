@@ -139,6 +139,7 @@
 	fax_document_total_pages = env:getHeader("fax_document_total_pages");
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
 	fax_file = env:getHeader("fax_file");
+	fax_recipient = env:getHeader("fax_recipient");
 	fax_duration = env:getHeader("billsec");
 
 --prevent nil errors
@@ -159,6 +160,9 @@
 	end
 	if (document_root == nil) then
 		document_root = '';
+	end
+	if (fax_recipient == nil) then
+		fax_recipient = 'not set in hangup_tx.lua';
 	end
 
 --set default values
@@ -369,6 +373,7 @@
 	if (caller_id_number ~= nil) then
 		table.insert(sql, "fax_caller_id_number, ");
 	end
+	table.insert(sql, "fax_recipient, ");
 	table.insert(sql, "fax_destination, ");
 	table.insert(sql, "fax_date, ");
 	table.insert(sql, "fax_epoch, ");
@@ -390,6 +395,7 @@
 	if (caller_id_number ~= nil) then
 		table.insert(sql, ":caller_id_number, ");
 	end
+	table.insert(sql, ":fax_recipient, ");
 	table.insert(sql, ":fax_destination, ");
 	if (database["type"] == "sqlite") then
 		table.insert(sql, ":fax_date, ");
@@ -410,6 +416,7 @@
 		fax_file = fax_file;
 		caller_id_name = fax_caller_id_name;
 		caller_id_number = fax_caller_id_number;
+		fax_recipient = fax_recipient;
 		fax_destination = sip_to_user;
 		fax_base64 = fax_base64;
 		fax_date = os.date("%Y-%m-%d %X");
@@ -445,6 +452,7 @@
 	if (caller_id_number ~= nil) then
 		freeswitch.consoleLog("INFO","caller_id_number: " .. fax_caller_id_number .. "\n");
 	end
+	freeswitch.consoleLog("INFO","fax_recipient: " .. fax_recipient .. "\n");
 	freeswitch.consoleLog("INFO","fax_destination: " .. sip_to_user .. "\n");
 	freeswitch.consoleLog("INFO","fax_result_code: ".. fax_result_code .."\n");
 	--freeswitch.consoleLog("INFO","mailfrom_address: ".. from_address .."\n");
