@@ -372,8 +372,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_image_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable use of background images.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ab5e54fd-af8e-4fea-a4fe-14e2f67c5deb";
@@ -652,7 +652,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_style";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fixed";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "side";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the style of the main menu.";
 		$y++;
@@ -996,7 +996,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "table_row_background_color_hover";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#f0f2f6";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#edeff2";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the background color of table data rows on hover.";
 		$y++;
@@ -2148,9 +2148,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_state";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "expanded";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "contracted";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default state of the Side Menu: expanded (pinned) or contracted (unpinned).";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default state of the Side Menu: expanded, contracted or hidden.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8ee8012a-da8c-483a-996d-d81b30a8bbea";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -2164,7 +2164,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_toggle_body_width";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "shrink";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fixed";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the behavior of the body content when the Side Menu is expanded and contracted.";
 		$y++;
@@ -2180,7 +2180,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_toggle_hover_delay_contract";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1000";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "300";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the delay in milliseconds before the Side Menu contracts on mouse out (requires menu_side_toggle be set to 'Hover').";
 		$y++;
