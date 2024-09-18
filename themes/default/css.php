@@ -259,7 +259,7 @@ $card_shadow_size = $_SESSION['theme']['card_shadow_size']['text'] ?? null;
 $card_background_color = $_SESSION['theme']['card_background_color']['text'] ?? null;
 $card_border_color = $_SESSION['theme']['card_border_color']['text'] ?? null;
 $card_border_size = $_SESSION['theme']['card_border_size']['text'] ?? null;
-$card_border_radius = $_SESSION['theme']['card_border_radius']['text'] ?? '0';
+$card_border_radius = $_SESSION['theme']['card_border_radius']['text'] ?? '5px';
 $action_bar_border_top = $_SESSION['theme']['action_bar_border_top']['text'] ?? 0;
 $action_bar_border_right = $_SESSION['theme']['action_bar_border_right']['text'] ?? 0;
 $action_bar_border_bottom = $_SESSION['theme']['action_bar_border_bottom']['text'] ?? 0;
@@ -2666,9 +2666,9 @@ else { //default: white
 				echo "border: none !important;\n";
 			}
 			if (isset($card_border_radius) || (isset($card_border_size) || !empty($card_border_color))) {
-				echo "-webkit-border-radius: ".($card_border_radius ?? '0')." !important;\n";
-				echo "-moz-border-radius: ".($card_border_radius ?? '0')." !important;\n";
-				echo "border-radius: ".($card_border_radius ?? '0')." !important;\n";
+				echo "-webkit-border-radius: ".$card_border_radius." !important;\n";
+				echo "-moz-border-radius: ".$card_border_radius." !important;\n";
+				echo "border-radius: ".$card_border_radius." !important;\n";
 			}
 			echo "padding: ".$card_padding.";\n";
 			if (!empty($card_background_color)) {
