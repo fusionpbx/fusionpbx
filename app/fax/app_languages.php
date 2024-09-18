@@ -2592,6 +2592,9 @@ $text['label-email']['zh-cn'] = "电子邮件";
 $text['label-email']['ja-jp'] = "メールアドレス";
 $text['label-email']['ko-kr'] = "이메일";
 
+$text['label-email-confirmation']['en-us'] = "Confirmation Emails";
+$text['description-email-confirmation']['en-us'] = " List all emails that should receive notifications of successful or failed faxes";
+
 $text['label-destination-number']['en-us'] = "Destination Number";
 $text['label-destination-number']['en-gb'] = "Destination Number";
 $text['label-destination-number']['ar-eg'] = "رقم الوجهة";

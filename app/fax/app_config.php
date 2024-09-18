@@ -258,6 +258,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "fax";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "fax_email_confirmation";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "fax";
 
 	//default settings
 		$y=0;
@@ -541,6 +546,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_email_confirmation";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Delivery addresses for fax confirmations";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_file";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

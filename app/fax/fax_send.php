@@ -673,9 +673,27 @@ if (!function_exists('fax_split_dtmf')) {
 		$parameters['fax_uuid'] = $fax_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		$mail_to_address = $row["fax_email"];
+		//$mail_to_address = $row["fax_email"];
 		$fax_prefix = $row["fax_prefix"];
-		unset($sql, $parameters, $row);
+		unset($sql, $parameters);
+
+		$sql = "select user_email from v_users where user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $user_uuid;
+		$database = new database;
+		$user_settings = $database->select($sql, $parameters, 'row');
+
+		//Get a list of emails to send confirmation emails to
+		$mail_to_address = $user_settings["user_email"];
+		if(!empty($row["fax_email_confirmation"])) {
+			$tmp_emails = explode(',', $row["fax_email_confirmation"]);
+			foreach ($tmp_emails as $email) {
+				if(strpos($mail_to_address, $email) === false) {
+					$mail_to_address .= ','.$email;
+				}
+			}
+		}
+
+		unset($sql, $parameters, $row, $user_settings);
 
 		//for email to fax send email notification back to the email sender
 		if ($included) {
