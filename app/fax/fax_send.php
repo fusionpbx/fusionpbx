@@ -677,12 +677,13 @@ if (!function_exists('fax_split_dtmf')) {
 		$fax_prefix = $row["fax_prefix"];
 		unset($sql, $parameters);
 
+		//Get the currently logged in user's email
 		$sql = "select user_email from v_users where user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $user_uuid;
 		$database = new database;
 		$user_settings = $database->select($sql, $parameters, 'row');
 
-		//Get a list of emails to send confirmation emails to
+		//Get a list of emails to send confirmation emails to, including that of the fax sender
 		$mail_to_address = $user_settings["user_email"];
 		if(!empty($row["fax_email_confirmation"])) {
 			$tmp_emails = explode(',', $row["fax_email_confirmation"]);
