@@ -612,7 +612,7 @@
 	if (permission_exists('fax_email')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-email']."\n";
+		echo "	".$text['label-email_email-to-fax']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
