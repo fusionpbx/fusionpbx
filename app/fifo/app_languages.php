@@ -135,6 +135,33 @@ $text['description-fifo_name']['zh-cn'] = "队列将被分配的名称。";
 $text['description-fifo_name']['ja-jp'] = "キューに割り当てられる名前。";
 $text['description-fifo_name']['ko-kr'] = "대기열에 할당될 이름입니다.";
 
+$text['label-fifo']['en-us'] = "Queues";
+$text['label-fifo']['en-gb'] = "Queues";
+$text['label-fifo']['ar-eg'] = "الاستفسارات";
+$text['label-fifo']['de-at'] = "Warteschlangen";
+$text['label-fifo']['de-ch'] = "Warteschlangen";
+$text['label-fifo']['de-de'] = "Warteschlangen";
+$text['label-fifo']['el-gr'] = "Ουρές";
+$text['label-fifo']['es-cl'] = "Colas";
+$text['label-fifo']['es-mx'] = "Colas";
+$text['label-fifo']['fr-ca'] = "Files d'attente";
+$text['label-fifo']['fr-fr'] = "Files d'attente";
+$text['label-fifo']['he-il'] = "תורים";
+$text['label-fifo']['it-it'] = "Code";
+$text['label-fifo']['ka-ge'] = "რიგები";
+$text['label-fifo']['nl-nl'] = "Wachtrijen";
+$text['label-fifo']['pl-pl'] = "Kolejki";
+$text['label-fifo']['pt-br'] = "Filas";
+$text['label-fifo']['pt-pt'] = "Filas";
+$text['label-fifo']['ro-ro'] = "Cozi";
+$text['label-fifo']['ru-ru'] = "Очереди";
+$text['label-fifo']['sv-se'] = "Kö:er";
+$text['label-fifo']['uk-ua'] = "Клей";
+$text['label-fifo']['tr-tr'] = "Kuyruklar";
+$text['label-fifo']['zh-cn'] = "尾巴";
+$text['label-fifo']['ja-jp'] = "テイルス";
+$text['label-fifo']['ko-kr'] = "꼬리";
+
 $text['label-fifo_extension']['en-us'] = "Extension";
 $text['label-fifo_extension']['en-gb'] = "Extension";
 $text['label-fifo_extension']['ar-eg'] = "امتداد";
@@ -810,4 +837,3 @@ $text['label-member_enabled']['ja-jp'] = "有効";
 $text['label-member_enabled']['ko-kr'] = "활성화됨";
 
 ?>
-
