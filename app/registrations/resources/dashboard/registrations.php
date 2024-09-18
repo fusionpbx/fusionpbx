@@ -37,9 +37,12 @@
 
 //get the total enabled extensions
 	$sql = "select count(*) as count from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and enabled = 'true'; ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$sql .= "where enabled = 'true' ";
+	if (!permission_exists("registration_all")) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	$sql .= "and extension_type = 'default'; ";
 	$row = $database->select($sql, $parameters, 'row');
 	$enabled_extensions = $row['count'];
 	unset($sql, $row);
