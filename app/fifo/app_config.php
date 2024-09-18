@@ -30,6 +30,23 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
+	//destination details
+		$y=0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "fifo";
+		$apps[$x]['destinations'][$y]['name'] = "fifo";
+		$apps[$x]['destinations'][$y]['sql'] = "select fifo_uuid as uuid, fifo_name as name, fifo_extension as extension, fifo_enabled from v_fifo ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and fifo_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(fifo_extension) asc";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "uuid";
+		$apps[$x]['destinations'][$y]['field']['name'] = "name";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "extension";
+		//$apps[$x]['destinations'][$y]['field']['context'] = "context";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${extension} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${extension} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${extension} \${name}";
+		$y++;
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'fifo_view';
@@ -69,6 +86,10 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'fifo_member_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fifo_destinations';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 
 	//queues
