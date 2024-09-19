@@ -142,4 +142,3 @@ function parse_message_flatten(&$structure, &$result = array(), $prefix = '', $i
 	}
 	return $result;
 }
-
