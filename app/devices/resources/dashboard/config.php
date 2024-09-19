@@ -77,4 +77,3 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 $y++;
 
 ?>
-
