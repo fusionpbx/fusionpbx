@@ -307,7 +307,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo $text['description']." \n";
+	echo $text['description']." &nbsp; ".$text['description_search']."\n";
 	echo "<br /><br />\n";
 
 //basic search of call detail records
@@ -608,7 +608,7 @@
 		echo "</div>\n";
 
 		button::$collapse = false;
-		echo "<div style='float: right; padding-top: 15px; margin-left: 20px; white-space: nowrap;'>";
+		echo "<div style='display: flex; justify-content: flex-end; padding-top: 15px; margin-left: 20px; white-space: nowrap;'>";
 		if ($permission['xml_cdr_all'] && $_REQUEST['show'] == 'all') {
 			echo "<input type='hidden' name='show' value='all'>\n";
 		}
@@ -619,8 +619,7 @@
 		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_save','name'=>'submit']);
 		echo "</div>\n";
 		echo "</div>\n";
-		echo "<div style='font-size: 85%; padding-top: 12px; margin-bottom: 40px;'>".$text['description_search']."</div>\n";
-
+		echo "<br />\n";
 		echo "</form>";
 	}
 
