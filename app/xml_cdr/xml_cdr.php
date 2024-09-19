@@ -314,7 +314,7 @@
 	if ($permission['xml_cdr_search']) {
 		echo "<form name='frm' id='frm' method='get'>\n";
 
-		echo "<div class='card' style=''>\n";
+		echo "<div class='card'>\n";
 		echo "<div class='form_grid'>\n";
 
 		if ($permission['xml_cdr_search_direction']) {
