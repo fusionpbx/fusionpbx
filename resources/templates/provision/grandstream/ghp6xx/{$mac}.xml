@@ -1724,8 +1724,8 @@
 
 		<!-- # String -->
 		<!-- # Mandatory -->
-		{if isset($grandstream_timezone) }
-		<item name="dateTime.timezone">{$grandstream_timezone}</item>
+		{if isset($grandstream_time_zone) }
+		<item name="dateTime.timezone">{$grandstream_time_zone}</item>
 		{else}
 		<item name="dateTime.timezone">auto</item>
 		{/if}

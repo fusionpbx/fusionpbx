@@ -958,8 +958,8 @@
 		Wellington, New Zealand - NZST-12NZDT-13,M9.5.0/02:00:00,M3.5.0/03:00:00
 		Fiji - TZd-12
 		Nukualofa, Tonga - TZe-13 -->
-{if isset($grandstream_timezone) }
-		<item name="dateTime.timezone">{$grandstream_timezone}</item>
+{if isset($grandstream_time_zone) }
+		<item name="dateTime.timezone">{$grandstream_time_zone}</item>
 {elseif isset($grandstream_gxp_time_zone) }
 		<item name="dateTime.timezone">{$grandstream_gxp_time_zone}</item>
 {/if}
