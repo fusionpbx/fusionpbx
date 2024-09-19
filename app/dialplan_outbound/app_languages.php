@@ -1648,5 +1648,3 @@ $text['description-accountcode']['ja-jp'] = "アカウントコードを入力�
 $text['description-accountcode']['ko-kr'] = "계정코드를 입력하세요.";
 
 ?>
-
-
