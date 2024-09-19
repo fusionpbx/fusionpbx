@@ -7364,4 +7364,3 @@ $text['label-required']['ja-jp'] = "必要";
 $text['label-required']['ko-kr'] = "필수의";
 
 ?>
-
