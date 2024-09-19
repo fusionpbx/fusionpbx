@@ -142,7 +142,7 @@
 		<item name="account.{$row.line_number}.network.natTraversal">{$grandstream_nat_traversal}</item>
 		{else}
 		<item name="account.{$row.line_number}.network.natTraversal">Auto</item>
-		{/if}		
+		{/if}
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
@@ -1480,7 +1480,7 @@
 		<!-- ########################################################################################## -->
 		<!-- # Enable/Disable WiFi -->
 		<!-- # No - Off, OffAndHideMenuFromLCD, Yes - On. -->
-		<!-- Pvalue P7800 -->
+<?comment		<!-- Pvalue P7800 -->
 		<item name="network.wifi.enable">Off</item>
 
 		<!-- # Access Point 1 -->
@@ -3754,19 +3754,12 @@
 		<!-- # System Settings -->
 		<!-- # NTP Server -->
 		<!-- Pvalue P30 -->
-		{if isset($ntp_server_primary)}
-		<item name="dateTime.ntp.server.1">{$ntp_server_primary}</item>
-		{else}
 		<item name="dateTime.ntp.server.1">pool.ntp.org</item>
-		{/if}
 
 		<!-- # Secondary NTP Server -->
 		<!-- # String -->
-		{if isset($ntp_server_secondary)}
-		<item name="dateTime.ntp.server.2">{$ntp_server_secondary}</item>
-		{else}
-		<item name="dateTime.ntp.server.2">2.us.pool.ntp.org</item>
-		{/if}
+		<!-- Pvalue P8333 -->
+		<item name="dateTime.ntp.server.2"></item>
 
 		<!-- # NTP Update Interval -->
 		<!-- # String -->
@@ -4470,14 +4463,14 @@
 		<!-- # Virtual Multi-Purpose Keys (VPKs) -->
 		<!-- # Note: 1. Fixed VPKs can only be edited. Adding or deleting Fixed VPK is not allowed. -->
 		<!-- #       2. Even if a Dynamic VPK has mode set to None, it should be added in sequence. Skipping one will remove everything after that VPK.  -->
-		<!-- #       3. For GRP2650 --> 
-		<!-- #       4. For GRP2670/GRP2636 --> 
-		<!-- #       5. For GRP2624/34 --> 
-		<!-- #       6. For GRP2616  --> 
-		<!-- #       7. For GRP2615 --> 
-		<!-- #       8. For GRP2614 --> 
-		<!-- #       9. For GRP2613 --> 
-		<!-- #       10. For GRP2612 --> 
+		<!-- #       3. For GRP2650 -->
+		<!-- #       4. For GRP2670/GRP2636 -->
+		<!-- #       5. For GRP2624/34 -->
+		<!-- #       6. For GRP2616  -->
+		<!-- #       7. For GRP2615 -->
+		<!-- #       8. For GRP2614 -->
+		<!-- #       9. For GRP2613 -->
+		<!-- #       10. For GRP2612 -->
 		<!-- ###################################################################################### -->
 
 		<!-- # Key Mode for line VPK. -->
@@ -4535,8 +4528,8 @@
 
 		<!-- ###################################################################################### -->
 		<!-- ## Programmable Keys/Physical Multi-Purpose Keys
-		<!-- # Note: 1. For GRP2634 --> 
-		<!-- #       2. For GRP2614/GRP2616/GRP2636 --> 
+		<!-- # Note: 1. For GRP2634 -->
+		<!-- #       2. For GRP2614/GRP2616/GRP2636 -->
 		<!-- ###################################################################################### -->
 
 {foreach $keys['memory'] as $row}

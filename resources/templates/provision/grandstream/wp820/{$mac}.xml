@@ -2078,8 +2078,8 @@
 <!-- # GMT+13:00(Tonga)                                              TZe-13 -->
 
 <!-- # Time Zone -->
-{if isset($grandstream_timezone) }
-    <P64>{$grandstream_timezone}</P64>
+{if isset($grandstream_time_zone) }
+    <P64>{$grandstream_time_zone}</P64>
 {elseif isset($grandstream_gxp_time_zone) }
     <P64>{$grandstream_gxp_time_zone}</P64>
 {else}
