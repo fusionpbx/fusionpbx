@@ -861,7 +861,9 @@ log = require "resources.functions.log".ring_group
 						end
 
 					--determine confirm prompt
-						if (destination_prompt == nil) then
+						if (ring_group_call_screen_enabled ~= nil and ring_group_call_screen_enabled == 'true') then
+							group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+						elseif (destination_prompt == nil) then
 							group_confirm = "confirm=false,";
 						elseif (destination_prompt == "1") then
 							group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
