@@ -56,6 +56,11 @@ require "resources.functions.config";
 		--prepare the api
 			api = freeswitch.API();
 
+		--get the domain_name with a different variable if the domain_name is not set
+			if (not domain_name) then 
+				domain_name = session:getVariable("sip_invite_domain");
+			end
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
