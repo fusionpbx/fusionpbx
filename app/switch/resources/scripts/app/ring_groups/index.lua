@@ -629,11 +629,15 @@ log = require "resources.functions.log".ring_group
 			end);
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
 
-		--get the dialplan data and save it to a table
+		--run this if there are any external destinations
 			if (external == "true") then
-				dialplans = route_to_bridge.preload_dialplan(
-					dbh, domain_uuid, {hostname = hostname, context = context}
-				)
+				-- set ignore early media
+					session:execute("set", "ignore_early_media=true");
+
+				--get the dialplan data and save it to a table
+					--dialplans = route_to_bridge.preload_dialplan(
+					--	dbh, domain_uuid, {hostname = hostname, context = context}
+					--)
 			end
 
 		---add follow me destinations
