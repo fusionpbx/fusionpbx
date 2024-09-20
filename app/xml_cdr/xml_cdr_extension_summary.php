@@ -131,6 +131,7 @@
 
 		echo "<div class='card' style='margin-bottom: 30px;'>\n";
 		echo "<div class='form_grid'>\n";
+
 		echo "	<div class='form_set'>\n";
 
 		echo "		<div class='label'>\n";
@@ -159,6 +160,9 @@
 		echo "			</select>\n";
 		echo "		</div>\n";
 
+		echo "	</div>\n";
+		echo "	<div class='form_set'>\n";
+
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-start_date_time']."\n";
 		echo "		</div>\n";
@@ -174,6 +178,7 @@
 		echo "		</div>\n";
 
 		echo "	</div>\n";
+
 		echo "</div>\n";
 		echo "</div>\n";
 
