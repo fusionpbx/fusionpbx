@@ -32,6 +32,9 @@
 //registration count
 	if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 		$registration = new registrations;
+		if (permission_exists("registration_all")) {
+			$active_registrations = $registration->show = 'all';
+		}
 		$active_registrations = $registration->count();
 	}
 

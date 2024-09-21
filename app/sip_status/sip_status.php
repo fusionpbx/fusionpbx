@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,6 +42,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//create the database object
+	$database = database::new();
+
 //create event socket
 	$esl = event_socket::create();
 	if (!$esl->is_connected()) {
@@ -52,7 +55,6 @@
 	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name ";
 	$sql .= "from v_gateways as g left ";
 	$sql .= "outer join v_domains as d on d.domain_uuid = g.domain_uuid";
-	$database = new database;
 	$gateways = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -69,7 +71,6 @@
 		$parameters['sip_profile_hostname'] = $hostname;
 	}
 	$sql .= "order by sip_profile_name asc ";
-	$database = new database;
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
@@ -104,6 +105,7 @@
 
 //define registration object
 	$registration = new registrations;
+	$registration->show = 'all';
 
 //include the header
 	$document['title'] = $text['title-sip_status'];
