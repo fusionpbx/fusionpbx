@@ -80,13 +80,13 @@ if (!class_exists('registrations')) {
 							$xml_response = trim(event_socket::command($cmd));
 
 						//show an error message
-							if ($xml_response == "Invalid Profile!") { 
+							if ($xml_response == "Invalid Profile!") {
 								//add multi-lingual support
 								$language = new text;
 								$text = $language->get(null, '/app/registrations');
 
 								//show the error message
-								$xml_response = "<error_msg>".escape($text['label-message'])."</error_msg>"; 
+								$xml_response = "<error_msg>".escape($text['label-message'])."</error_msg>";
 							}
 
 						//santize the XML
