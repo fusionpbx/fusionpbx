@@ -459,8 +459,8 @@
 			}
 			else {
 				echo "	<select class='formfld' id='create_recording' name='create_recording'>\n";
-				echo "		<option value='true' ".($create_recording == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($create_recording == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "		<option value='true'>".$text['option-true']."</option>\n";
+				echo "		<option value='false' selected='selected'>".$text['option-false']."</option>\n";
 				echo "	</select>\n";
 			}
 			echo "<br />\n";
