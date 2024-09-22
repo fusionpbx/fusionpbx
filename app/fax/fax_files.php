@@ -518,7 +518,7 @@
 			}
 
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('fax_file_delete') || permission_exists['fax_file_edit']) {
+			if (permission_exists('fax_file_delete') || permission_exists('fax_file_edit')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='fax_files[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; } checkbox_on_change(this);\">\n";
 				echo "		<input type='hidden' name='fax_files[$x][uuid]' value='".escape($row['fax_file_uuid'])."' />\n";
