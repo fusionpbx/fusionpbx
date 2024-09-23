@@ -421,11 +421,11 @@ if (!class_exists('xml_cdr')) {
 							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
 						}
 
-					//if the call is outbound use the external caller ID
-						if (urldecode($call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_name)) {
+					//if the caller ID was updated then update the caller ID
+						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
-						if (urldecode($call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
+						if (isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						}
 
