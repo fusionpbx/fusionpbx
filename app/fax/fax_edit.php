@@ -120,6 +120,7 @@
 		$fax_prefix = $_POST["fax_prefix"];
 		$fax_email = implode(',',array_filter($_POST["fax_email"] ?? []));
 		$fax_file = $_POST["fax_file"];
+		$fax_email_confirmation = implode(',',array_filter($_POST["fax_email_confirmation"] ?? []));
 		$fax_email_connection_type = $_POST["fax_email_connection_type"];
 		$fax_email_connection_host = $_POST["fax_email_connection_host"];
 		$fax_email_connection_port = $_POST["fax_email_connection_port"];
@@ -264,6 +265,9 @@
 		//escape the commas with a backslash and remove the spaces
 			$fax_email = str_replace(" ", "", $fax_email);
 
+		//escape the commas with a backslash and remove the spaces
+			$fax_email_confirmation = str_replace(" ", "", $fax_email_confirmation);
+
 		//set the $php_bin
 			//if (file_exists(PHP_BINDIR."/php")) { $php_bin = 'php'; }
 			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
@@ -334,6 +338,9 @@
 						if (permission_exists('fax_email')) {
 							$array['fax'][0]['fax_email'] = $fax_email;
 							$array['fax'][0]['fax_file'] = $fax_file;
+						}
+						if (permission_exists('fax_email_confirmation')) {
+							$array['fax'][0]['fax_email_confirmation'] = $fax_email_confirmation;
 						}
 						if (permission_exists('fax_caller_id_name')) {
 							$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
@@ -429,6 +436,7 @@
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
 			$fax_file = $row["fax_file"];
+			$fax_email_confirmation = $row["fax_email_confirmation"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_toll_allow = $row["fax_toll_allow"];
@@ -477,6 +485,9 @@
 
 //build the fax_emails array
 	$fax_emails = explode(',', $fax_email ?? '');
+
+//build the fax_email_confirmations array
+	$fax_email_confirmations = explode(',', $fax_email_confirmation ?? '');
 
 //set the dialplan_uuid
 	if (empty($dialplan_uuid) || !is_uuid($dialplan_uuid)) {
@@ -601,7 +612,7 @@
 	if (permission_exists('fax_email')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-email']."\n";
+		echo "	".$text['label-email_email-to-fax']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
@@ -609,13 +620,13 @@
 		foreach ($fax_emails as $email) {
 			echo "<tr>\n";
 			echo "<td>\n";
-			echo "	<input class='formfld' type=\"text\" name=\"fax_email[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
+			echo "	<input class='formfld' type=\"email\" name=\"fax_email[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
 			echo "</td>\n";
 			$x++;
 		}
 		echo "<tr>\n";
 		echo "	<td>\n";
-		echo "		<input class='formfld' type=\"text\" name=\"fax_email[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
+		echo "		<input class='formfld' type=\"email\" name=\"fax_email[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
 		echo "	</td>\n";
 		echo "</table>\n";
 		echo "<br />\n";
@@ -634,6 +645,33 @@
 		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-email_fax_file']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('fax_email_confirmation')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email-confirmation']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
+		$x = 0;
+
+		foreach($fax_email_confirmations as $email) {
+			echo "<tr>\n";
+			echo "<td>\n";
+			echo "	<input class='formfld' type=\"email\" name=\"fax_email_confirmation[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
+			echo "</td>\n";
+			$x++;
+		}
+		echo "<tr>\n";
+		echo "	<td>\n";
+		echo "		<input class='formfld' type=\"email\" name=\"fax_email_confirmation[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
+		echo "	</td>\n";
+		echo "</table>\n";
+		echo "<br />\n";
+		echo "	".$text['description-email-confirmation']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
