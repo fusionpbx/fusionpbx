@@ -586,12 +586,12 @@
 	if (permission_exists('fax_destination_number')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-destination-number']."\n";
+		echo "	".$text['label-destination_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' value=\"".escape($fax_destination_number ?? '')."\">\n";
 		echo "<br />\n";
-		echo " ".$text['description-destination-number']."\n";
+		echo " ".$text['description-destination_number']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -612,7 +612,7 @@
 	if (permission_exists('fax_email')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-email_email-to-fax']."\n";
+		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
@@ -652,12 +652,11 @@
 	if (permission_exists('fax_email_confirmation')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-email-confirmation']."\n";
+		echo "	".$text['label-email_confirmation']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
-
 		foreach($fax_email_confirmations as $email) {
 			echo "<tr>\n";
 			echo "<td>\n";
@@ -671,7 +670,7 @@
 		echo "	</td>\n";
 		echo "</table>\n";
 		echo "<br />\n";
-		echo "	".$text['description-email-confirmation']."\n";
+		echo "	".$text['description-email_confirmation']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -679,12 +678,12 @@
 	if (permission_exists('fax_caller_id_name')) {
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-caller-id-name']."\n";
+		echo "	".$text['label-caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='40' value=\"".escape($fax_caller_id_name ?? '')."\">\n";
 		echo "<br />\n";
-		echo "".$text['description-caller-id-name']."\n";
+		echo "".$text['description-caller_id_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -692,12 +691,12 @@
 	if (permission_exists('fax_caller_id_number')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-caller-id-number']."\n";
+		echo "	".$text['label-caller_id_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='20' min='0' step='1' value=\"".escape($fax_caller_id_number ?? '')."\">\n";
 		echo "<br />\n";
-		echo "".$text['description-caller-id-number']."\n";
+		echo "".$text['description-caller_id_number']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
