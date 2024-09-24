@@ -1747,6 +1747,7 @@ else { //default: white
 	input[type=number].formfld,
 	input[type=url].formfld,
 	input[type=password].formfld,
+	input[type=email].formfld,
 	label.formfld {
 		font-family: <?=$input_text_font?>;
 		font-size: <?=$input_text_size?>;
@@ -1784,11 +1785,13 @@ else { //default: white
 	input[type=text].txt,
 	input[type=number].txt,
 	input[type=password].txt,
+	input[type=email].txt,
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
 	input[type=url].formfld,
-	input[type=password].formfld {
+	input[type=password].formfld,
+	input[type=email].formfld {
 		transition: width 0.25s;
 		-moz-transition: width 0.25s;
 		-webkit-transition: width 0.25s;
@@ -1811,12 +1814,14 @@ else { //default: white
 	input[type=text].txt:hover,
 	input[type=number].txt:hover,
 	input[type=password].txt:hover,
+	input[type=email].txt:hover,
 	label.txt:hover,
 	textarea.formfld:hover,
 	input[type=text].formfld:hover,
 	input[type=number].formfld:hover,
 	input[type=url].formfld:hover,
 	input[type=password].formfld:hover,
+	input[type=email].formfld:hover,
 	label.formfld:hover {
 		border-color: <?=$input_border_color_hover?>;
 		}
@@ -1825,12 +1830,14 @@ else { //default: white
 	input[type=text].txt:focus,
 	input[type=number].txt:focus,
 	input[type=password].txt:focus,
+	input[type=email].txt:focus,
 	label.txt:focus,
 	textarea.formfld:focus,
 	input[type=text].formfld:focus,
 	input[type=number].formfld:focus,
 	input[type=url].formfld:focus,
 	input[type=password].formfld:focus,
+	input[type=email].formfld:focus,
 	label.formfld:focus {
 		border-color: <?=$input_border_color_focus?>;
 		/* first clear */

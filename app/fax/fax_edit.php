@@ -615,20 +615,12 @@
 		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
 		foreach ($fax_emails as $email) {
-			echo "<tr>\n";
-			echo "<td>\n";
-			echo "	<input class='formfld' type=\"email\" name=\"fax_email[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
-			echo "</td>\n";
+			echo "	<input class='formfld' type='email' name='fax_email[".$x."]' maxlength='255' value=\"".escape($email)."\"><br>\n";
 			$x++;
 		}
-		echo "<tr>\n";
-		echo "	<td>\n";
-		echo "		<input class='formfld' type=\"email\" name=\"fax_email[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
-		echo "	</td>\n";
-		echo "</table>\n";
+		echo "	<input class='formfld' type='email' name='fax_email[".$x++."]' maxlength='255' value=''>\n";
 		echo "<br />\n";
 		echo "	".$text['description-email']."\n";
 		echo "</td>\n";
@@ -655,20 +647,12 @@
 		echo "	".$text['label-email_confirmation']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
-		foreach($fax_email_confirmations as $email) {
-			echo "<tr>\n";
-			echo "<td>\n";
-			echo "	<input class='formfld' type=\"email\" name=\"fax_email_confirmation[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
-			echo "</td>\n";
+		foreach ($fax_email_confirmations as $email) {
+			echo "	<input class='formfld' type='email' name='fax_email_confirmation[".$x."]' maxlength='255' value=\"".escape($email)."\"><br>\n";
 			$x++;
 		}
-		echo "<tr>\n";
-		echo "	<td>\n";
-		echo "		<input class='formfld' type=\"email\" name=\"fax_email_confirmation[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
-		echo "	</td>\n";
-		echo "</table>\n";
+		echo "	<input class='formfld' type='email' name='fax_email_confirmation[".$x++."]' maxlength='255' value=''>\n";
 		echo "<br />\n";
 		echo "	".$text['description-email_confirmation']."\n";
 		echo "</td>\n";
@@ -734,7 +718,7 @@
 			echo "		<td class='vtable'>";
 
 			if (!empty($fax_users) && is_array($fax_users) && @sizeof($fax_users) != 0) {
-				echo "		<table style='width: 50%; min-width: 200px; max-width: 450px;'>\n";
+				echo "		<table style='width: 50%; min-width: 150px; max-width: 450px;'>\n";
 				foreach ($fax_users as $field) {
 					echo "		<tr>\n";
 					echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
