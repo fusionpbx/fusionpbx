@@ -60,7 +60,6 @@
 			$sql .= "set default_setting_value = '#fafafa' ";
 			$sql .= "where default_setting_subcategory = 'message_default_color' ";
 			$sql .= "and default_setting_value = '#ccffcc' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 
@@ -68,7 +67,6 @@
 			$sql .= "set default_setting_value = '#666' ";
 			$sql .= "where default_setting_subcategory = 'message_default_background_color' ";
 			$sql .= "and default_setting_value = '#004200' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 
@@ -77,7 +75,6 @@
 			$sql .= "where default_setting_subcategory = 'menu_main_icons' ";
 			$sql .= "and default_setting_value = 'false' ";
 			$sql .= "and default_setting_enabled = 'false' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 
@@ -113,7 +110,6 @@
 
 		//execute array of queries
 			foreach ($queries as $sql) {
-				$database = new database;
 				$database->execute($sql);
 			}
 			unset($queries, $sql);

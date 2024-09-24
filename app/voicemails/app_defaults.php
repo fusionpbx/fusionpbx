@@ -32,7 +32,6 @@ if ($domains_processed == 1) {
 	$sql .= "from v_voicemails as v, v_domains as d \n";
 	$sql .= "where voicemail_enabled = 'true' \n";
 	$sql .= "and v.domain_uuid = d.domain_uuid \n";
-	$database = new database;
 	$voicemails = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
 	if (!empty($voicemails) && is_array($voicemails)) {
@@ -67,7 +66,6 @@ if ($domains_processed == 1) {
 			$sql .= "where default_setting_category = 'switch' ";
 			$sql .= "and default_setting_subcategory = 'languages' ";
 			$sql .= "and default_setting_name = 'dir' ";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 		}
@@ -111,19 +109,16 @@ if ($domains_processed == 1) {
 	$sql .= "where default_setting_category = 'switch' ";
 	$sql .= "and default_setting_subcategory = 'phrases' ";
 	$sql .= "and default_setting_name = 'dir' ";
-	$database = new database;
 	$database->execute($sql);
 	unset($sql);
 
 	//set default value of voicemail_recording_instructions to true
 	$sql = "update v_voicemails set voicemail_recording_instructions = 'true' where voicemail_recording_instructions is null";
-	$database = new database;
 	$database->execute($sql);
 	unset($sql);
 
 	//set default value of voicemail_recording_options to true
 	$sql = "update v_voicemails set voicemail_recording_options = 'true' where voicemail_recording_options is null";
-	$database = new database;
 	$database->execute($sql);
 	unset($sql);
 
