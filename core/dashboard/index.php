@@ -562,7 +562,9 @@ function toggle_grid_row_end_all() {
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
 
 		echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
-		include $path_array[0];
+		if (file_exists($path_array[0])) {
+			include $path_array[0];
+		}
 		echo "</div>\n";
 
 		$x++;
