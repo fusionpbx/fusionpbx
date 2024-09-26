@@ -199,15 +199,15 @@ if ( session:ready() ) then
 
 		--if recording filename was set then enable delay
 			if (recording_filename ~= nil) then
-					delay = "true";
+				delay = "true";
+				dtmf_entered = 1;
 
 				--get the recording length
-					recording_length = session:getVariable("recording_length");
-					if (recording_length == nil) then
-						--get the recording length using sox
-						recording_length = get_recording_length(recording_filename);
-					end
-					dtmf_entered = 1;
+				recording_length = session:getVariable("recording_length");
+				if (recording_length == nil) then
+					--get the recording length using sox
+					recording_length = get_recording_length(recording_filename);
+				end
 			end
 
 		--if announce delay is active and audio file is not provided then prompt for recording
