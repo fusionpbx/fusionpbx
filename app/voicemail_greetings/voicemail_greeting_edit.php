@@ -213,7 +213,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				$greeting_message = $transcribe->transcribe();
 			}
 
-			//if base64 is enabled base64 
+			//if base64 is enabled base64
 			if ($storage_type == 'base64' && file_exists($greeting_path.'/'.$greeting_filename)) {
 				$greeting_base64 = base64_encode(file_get_contents($greeting_path.'/'.$greeting_filename));
 			}
@@ -296,6 +296,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -427,6 +428,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br /><br />";
 
 	if ($action == 'update' && !empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid)) {
