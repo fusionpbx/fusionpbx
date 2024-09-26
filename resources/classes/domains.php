@@ -766,17 +766,15 @@ if (!class_exists('domains')) {
 				if (!empty($domains) && is_array($domains)) {
 					foreach($domains as $row) {
 						if (!isset($_SESSION['username'])) {
-								if (!empty($domains) && count($domains) == 1) {
-									$domain_uuid = $row["domain_uuid"];
-									$domain_name = $row['domain_name'];
-									$_SESSION["domain_uuid"] = $row["domain_uuid"];
-									$_SESSION["domain_name"] = $row['domain_name'];
+							if (!empty($domains) && count($domains) == 1) {
+								$domain_uuid = $row["domain_uuid"];
+								$domain_name = $row['domain_name'];
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row['domain_name'];
 							}
-							else {
-								if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
-										$_SESSION["domain_uuid"] = $row["domain_uuid"];
-										$_SESSION["domain_name"] = $row["domain_name"];
-								}
+							elseif ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row["domain_name"];
 							}
 						}
 						$_SESSION['domains'][$row['domain_uuid']] = $row;
