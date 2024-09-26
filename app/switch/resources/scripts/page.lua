@@ -64,6 +64,14 @@ local function each_number(value)
 	end
 end
 
+--create a function to determine length of a recording
+local function get_recording_length(file_name)
+	local handle = io.popen("sox --i -D " .. file_name);
+	local result = handle:read("*a");
+	handle:close();
+	return result;
+end
+
 --make sure the session is ready
 if ( session:ready() ) then
 	--answer the call
@@ -86,6 +94,7 @@ if ( session:ready() ) then
 		sip_from_user = session:getVariable("sip_from_user");
 		mute = session:getVariable("mute");
 		delay = session:getVariable("delay");
+		recording_filename = session:getVariable("recording_filename");
 
 	--if the call is transferred then return the call backe to the referred by user
 		referred_by = session:getVariable("sip_h_Referred-By");
@@ -188,11 +197,17 @@ if ( session:ready() ) then
 				flags = "flags{}";
 			end
 
-		--if announce delay is true then an option for a preset recording filename and length
-			if (delay == "true") then
-				recording_filename = session:getVariable("recording_filename");
-				recording_length = session:getVariable("recording_length");
+		--if recording filename was set then enable delay
+			if (recording_filename ~= nil) then
+				delay = "true";
 				dtmf_entered = 1;
+
+				--get the recording length
+				recording_length = session:getVariable("recording_length");
+				if (recording_length == nil) then
+					--get the recording length using sox
+					recording_length = get_recording_length(recording_filename);
+				end
 			end
 
 		--if announce delay is active and audio file is not provided then prompt for recording
