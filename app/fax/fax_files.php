@@ -323,13 +323,13 @@
 	echo "<style>\n";
 	echo "	div#pdf-container {\n";
 	echo "		z-index: -1;\n";
-	echo "		position: absolute;\n";
+	echo "		position: fixed;\n";
 	echo "		top: 0;\n";
 	echo "		left: 0;\n";
 	echo "		width: 100%;\n";
 	echo "		height: 100%;\n";
 	echo "		opacity: 0;\n";
-	echo "		transition: opacity 1s;\n";
+	echo "		transition: opacity .5s;\n";
 	echo "		padding: 20px;\n";
 	echo "	}\n";
 	echo "	div#pdf-div {\n";
