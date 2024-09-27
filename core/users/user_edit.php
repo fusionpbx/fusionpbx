@@ -1077,6 +1077,7 @@
 			echo button::create(['type'=>'button',
 				'label'=>$text['button-generate'],
 				'icon'=>'key',
+				'style'=>'margin-top: 1px; margin-bottom: 1px;',
 				'onclick'=>"document.getElementById('api_key').value = '".generate_password(32,3)."';
 					document.getElementById('frm').submit();"]);
 		}
@@ -1086,6 +1087,7 @@
 				'label'=>$text['button-view'],
 				'id'=>'button-api_key_view',
 				'icon'=>'key',
+				'style'=>'margin-top: 1px; margin-bottom: 1px;',
 				'onclick'=>"document.getElementById ('button-api_key_view').style.display = 'none';
 					document.getElementById('api_key').style.display = 'inline';
 					document.getElementById('button-api_key_hide').style.display = 'inline';
