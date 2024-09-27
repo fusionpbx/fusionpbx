@@ -109,6 +109,8 @@
 			if (in_array($attachment_extension, $image_extensions)) {
 				//create the image object from the content string
 				$image = imagecreatefromstring($attachment_content);
+				imagealphablending($image, FALSE);
+				imagesavealpha($image, TRUE);
 
 				//start output buffering to capture the image data
 				ob_start();

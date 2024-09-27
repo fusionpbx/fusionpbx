@@ -55,7 +55,7 @@
 			echo "<style>\n";
 			echo "	#contact_attachment_layer {\n";
 			echo "		z-index: 999999;\n";
-			echo "		position: absolute;\n";
+			echo "		position: fixed;\n";
 			echo "		left: 0px;\n";
 			echo "		top: 0px;\n";
 			echo "		right: 0px;\n";

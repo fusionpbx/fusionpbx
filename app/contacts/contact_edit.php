@@ -1052,6 +1052,23 @@
 	echo "	});";
 	echo "</script>";
 
+//styles and attachment viewing layer
+	if (permission_exists('contact_attachment_view') && !empty($contact_attachments) && is_array($contact_attachments)) {
+		echo "<style>\n";
+		echo "	#contact_attachment_layer {\n";
+		echo "		z-index: 999999;\n";
+		echo "		position: fixed;\n";
+		echo "		left: 0px;\n";
+		echo "		top: 0px;\n";
+		echo "		right: 0px;\n";
+		echo "		bottom: 0px;\n";
+		echo "		text-align: center;\n";
+		echo "		vertical-align: middle;\n";
+		echo "	}\n";
+		echo "</style>\n";
+		echo "<div id='contact_attachment_layer' style='display: none;'></div>\n";
+	}
+
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<input class='formfld' type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
@@ -2301,7 +2318,7 @@ if (permission_exists('contact_relation_view')) {
 
 		$x = 0;
 		foreach($contact_relations as $row) {
-			
+
 			//get contact details and contact_name
 			$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname ";
 			$sql .= "from v_contacts ";
@@ -2545,21 +2562,6 @@ if (permission_exists('contact_attachment_view')) {
 		}
 		echo "		</div>\n";
 
-		//styles and attachment layer
-		echo "<style>\n";
-		echo "	#contact_attachment_layer {\n";
-		echo "		z-index: 999999;\n";
-		echo "		position: absolute;\n";
-		echo "		left: 0px;\n";
-		echo "		top: 0px;\n";
-		echo "		right: 0px;\n";
-		echo "		bottom: 0px;\n";
-		echo "		text-align: center;\n";
-		echo "		vertical-align: middle;\n";
-		echo "	}\n";
-		echo "</style>\n";
-		echo "<div id='contact_attachment_layer' style='display: none;'></div>\n";
-
 		//script
 		echo "<script>\n";
 		echo "	function display_attachment(id) {\n";
@@ -2577,7 +2579,7 @@ if (permission_exists('contact_attachment_view')) {
 		//if ($action == 'update') {
 			echo "<input type='hidden' name='attachment_filename' value=\"".escape($row['attachment_filename'])."\">\n";
 			if ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png') {
-				echo "<img src='data:image/".$attachment_type.";base64,".escape($row['attachment_content'])."' style='border: none; max-width: 220px; max-height: 220px;' oncontextmenu=\"window.open('contact_attachment.php?id=".escape($row['contact_attachment_uuid'])."&action=download'); return false;\">";
+				echo "<img src='data:image/".$attachment_type.";base64,".escape($row['attachment_content'])."' style='border: none; cursor: pointer; width: 100%; height: auto;' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\">";
 			}
 			else {
 				echo "<a href='contact_attachment.php?id=".escape($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
