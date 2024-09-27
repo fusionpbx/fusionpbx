@@ -42,9 +42,10 @@
 		$sql .= "where contact_attachment_uuid = :contact_attachment_uuid ";
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
 		$attachment = $database->select($sql, $parameters ?? null, 'row');
+		// view_array($database->message);
 		unset($sql, $parameters);
 
 		$attachment_type = strtolower(pathinfo($attachment['attachment_filename'] ?? '', PATHINFO_EXTENSION));
