@@ -1192,13 +1192,39 @@ if (!class_exists('menu')) {
 			//header: right
 				$html .= "<div class='float-right' style='white-space: nowrap;'>";
 				//current user
+					$user_graphic = "<i class='".(!empty($_SESSION['theme']['body_header_icon_user']['text']) ? $_SESSION['theme']['body_header_icon_user']['text'] : 'fa-solid fa-user-circle')." fa-lg fa-fw' style='margin-right: 5px;'></i>";
+					//determine usage of icon or image
+					if ($_SESSION['theme']['body_header_user_image']['boolean'] == true && !empty($_SESSION['user']['contact_uuid']) && is_uuid($_SESSION['user']['contact_uuid'])) {
+						//load if not already in session
+						if (empty($_SESSION['user']['image'])) {
+							$sql = "select attachment_filename, attachment_content from v_contact_attachments where contact_uuid = :contact_uuid and attachment_primary = 1 and attachment_filename is not null and attachment_content is not null";
+							$parameters['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+							$contact_attachment = $this->database->select($sql, $parameters, 'row');
+							if (!empty($contact_attachment) && is_array($contact_attachment)) {
+								$contact_attachment_extension = pathinfo($contact_attachment['attachment_filename'], PATHINFO_EXTENSION);
+								if (in_array($contact_attachment_extension,['jpg','jpeg','png'])) {
+									$_SESSION['user']['image']['filename'] = $contact_attachment['attachment_filename'];
+									$_SESSION['user']['image']['base64'] = $contact_attachment['attachment_content'];
+									$_SESSION['user']['image']['mime'] = mime_content_type($contact_attachment['attachment_filename']);
+								}
+							}
+							unset($sql, $parameters);
+						}
+						if (!empty($_SESSION['user']['image'])) {
+							$user_graphic_size = str_replace(['px','%'], '', ($_SESSION['theme']['body_header_user_image_size']['numeric'] ?? 18));
+							$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: ".$user_graphic_size."px; height: ".$user_graphic_size."px; border-radius: 50%; margin-right: 7px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-4')."px; background-image: url('data:".$_SESSION['user']['image']['mime'].";base64,".$_SESSION['user']['image']['base64']."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
+						}
+					}
+					else {
+						$user_graphic_size = 18;
+					}
 					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
-					$html .= "	<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\"><i class='".(!empty($_SESSION['theme']['body_header_icon_user']['text']) ? $_SESSION['theme']['body_header_icon_user']['text'] : 'fa-solid fa-user-circle')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".$_SESSION['username']."</a>";
+					$html .= "	<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\">".($user_graphic ?? null).$_SESSION['username']."</a>";
 					$html .= "</span>\n";
 				//domain name/selector (sm+)
 					if (!empty($_SESSION['username']) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
-						$html .= "	<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='".(!empty($_SESSION['theme']['body_header_icon_domain']['text']) ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'fa-solid fa-earth-americas')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".escape($_SESSION['domain_name'])."</a>";
+						$html .= "	<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='".(!empty($_SESSION['theme']['body_header_icon_domain']['text']) ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'fa-solid fa-earth-americas')." fa-fw' style='vertical-align: middle; font-size: ".($user_graphic_size - 1)."px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-3')."px; margin-right: 3px; line-height: 40%;'></i>".escape($_SESSION['domain_name'])."</a>";
 						$html .= "</span>\n";
 					}
 				//logout icon
