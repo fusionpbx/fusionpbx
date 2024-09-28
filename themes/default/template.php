@@ -244,8 +244,7 @@
 		//domain selector controls
 			{if $domain_selector_enabled}
 				{literal}
-				$('.domain_selector_domain').on('click', function() { show_domains(); });
-				$('#header_domain_selector_domain').on('click', function() { show_domains(); });
+				$('#header_domain_selector_domain').on('click', function() { event.preventDefault(); show_domains(); });
 				$('#domains_hide').on('click', function() { hide_domains(); });
 
 				function show_domains() {
@@ -258,7 +257,6 @@
 						$('.navbar').css('margin-right',scrollbar_width); //adjust navbar margin to compensate
 						$('#domains_container').css('right',-scrollbar_width); //domain container right position to compensate
 					}
-					$(document).scrollTop(0);
 					$('#domains_container').show();
 					$('#domains_block').animate({marginRight: '+=300'}, 400, function() {
 						$('#domains_search').trigger('focus');
@@ -685,6 +683,19 @@
 						{literal}
 					}
 				});
+
+				//hide an open user menu in the body header on scroll
+				$(window).on('scroll', function() {
+					$('#body_header_user_menu').fadeOut(200);
+				});
+
+				//create function to mimic toggling fade and slide at the same time
+				(function($){
+					$.fn.toggleFadeSlide = function(speed = 200, easing, callback){
+						return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+					};
+				})(jQuery);
+
 				{/literal}
 			{/if}
 
