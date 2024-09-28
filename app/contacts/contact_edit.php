@@ -496,19 +496,17 @@
 			$y = 0;
 			if (!empty($contact_attachments)) {
 				foreach ($contact_attachments as $row) {
-					if (!empty($row['attachment_description'])) {
-						$array['contacts'][0]['contact_attachments'][$y]['contact_attachment_uuid'] = $row["contact_attachment_uuid"];
-						$array['contacts'][0]['contact_attachments'][$y]['domain_uuid'] = $row["domain_uuid"];
-						$array['contacts'][0]['contact_attachments'][$y]['contact_uuid'] = $row["contact_uuid"];
-						$array['contacts'][0]['contact_attachments'][$y]['attachment_primary'] = $row["attachment_primary"];
-						//$array['contacts'][0]['contact_attachments'][$y]['attachment_filename'] = $row["attachment_filename"];
-						//$array['contacts'][0]['contact_attachments'][$y]['attachment_content'] = $row["attachment_content"];
-						$array['contacts'][0]['contact_attachments'][$y]['attachment_description'] = $row["attachment_description"];
-						//$array['contacts'][0]['contact_attachments'][$y]['attachment_uploaded_date'] = $row["attachment_uploaded_date"];
-						//$array['contacts'][0]['contact_attachments'][$y]['attachment_uploaded_user_uuid'] = $row["attachment_uploaded_user_uuid"];
-						//$array['contacts'][0]['contact_attachments'][$y]['attachment_size'] = $row["attachment_size"];
-						$y++;
-					}
+					$array['contacts'][0]['contact_attachments'][$y]['contact_attachment_uuid'] = $row["contact_attachment_uuid"];
+					$array['contacts'][0]['contact_attachments'][$y]['domain_uuid'] = $row["domain_uuid"];
+					$array['contacts'][0]['contact_attachments'][$y]['contact_uuid'] = $row["contact_uuid"];
+					$array['contacts'][0]['contact_attachments'][$y]['attachment_primary'] = $row["attachment_primary"];
+					//$array['contacts'][0]['contact_attachments'][$y]['attachment_filename'] = $row["attachment_filename"];
+					//$array['contacts'][0]['contact_attachments'][$y]['attachment_content'] = $row["attachment_content"];
+					$array['contacts'][0]['contact_attachments'][$y]['attachment_description'] = $row["attachment_description"] ?? null;
+					//$array['contacts'][0]['contact_attachments'][$y]['attachment_uploaded_date'] = $row["attachment_uploaded_date"];
+					//$array['contacts'][0]['contact_attachments'][$y]['attachment_uploaded_user_uuid'] = $row["attachment_uploaded_user_uuid"];
+					//$array['contacts'][0]['contact_attachments'][$y]['attachment_size'] = $row["attachment_size"];
+					$y++;
 				}
 			}
 
@@ -2622,7 +2620,7 @@ if (permission_exists('contact_attachment_view')) {
 		echo "		</select>\n";
 		echo "	</div>\n";
 
-		echo "	<div class='label required'>\n";
+		echo "	<div class='label'>\n";
 		echo "		".$text['label-description']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";

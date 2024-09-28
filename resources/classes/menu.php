@@ -1098,6 +1098,10 @@ if (!class_exists('menu')) {
 		 */
 		public function menu_vertical($menu_array) {
 
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+
 			//menu brand image and/or text
 				$html .= "	<div id='menu_side_control_container'>\n";
 				$html .= "		<div class='menu_side_control_state' style='float: right; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."'>\n";
@@ -1173,6 +1177,43 @@ if (!class_exists('menu')) {
 				$content_container_onclick = "onclick=\"clearTimeout(menu_side_contract_timer); if ($(window).width() >= 576) { menu_side_contract(); }\"";
 			}
 			$html .= "<div id='content_container' ".$content_container_onclick.">\n";
+
+			//user menu on body header when side menu
+				//styles below are defined here to prevent caching (following a permission change, etc)
+				$html .= "<style>\n";
+				$html .= "div#body_header_user_menu {\n";
+				$html .= "	right: ".(permission_exists('domain_select') ? '170px' : '30px')." !important;\n";
+				$html .= "	}\n";
+				$html .= "@media (max-width: 575.98px) {\n";
+				$html .= "	div#body_header_user_menu {\n";
+				$html .= "		right: 10px !important;;\n";
+				$html .= "		}\n";
+				$html .= "	}\n";
+				$html .= "</style>\n";
+
+				$html .= "<div id='body_header_user_menu'>\n";
+				$html .= "	<div class='row m-0'>\n";
+				if (!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
+					$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
+				}
+				$html .= "		<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
+				if (!empty($_SESSION['user']['contact_name'])) {
+					$html .= "		<div style='line-height: 95%;'><strong>".$_SESSION['user']['contact_name']."</strong></div>\n";
+				}
+				if (!empty($_SESSION['user']['contact_organization'])) {
+					$html .= "		<div class='mt-2' style='font-size: 85%; line-height: 95%;'>".$_SESSION['user']['contact_organization']."</div>\n";
+				}
+				if (!empty($_SESSION['user']['extension'][0]['destination'])) {
+					$html .= "		<div class='mt-2' style='font-size: 90%;'><i class='fa-solid fa-phone' style='margin-right: 5px; color: #00b043;'></i><strong>".$_SESSION['user']['extension'][0]['destination']."</strong></div>\n";
+				}
+				$html .= "			<div class='pt-2 mt-3' style='border-top: 1px solid ".color_adjust($_SESSION['theme']['body_header_shadow_color']['text'], 0.05).";'>\n";
+				$html .= "				<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$text['title-account_settings']."</a><br>\n";
+				$html .= "				<a href='".PROJECT_PATH."/logout.php'>".$text['title-logout']."</a>\n";
+				$html .= "			</div>";
+				$html .= "		</div>";
+				$html .= "	</div>";
+				$html .= "</div>";
+
 			$html .= "	<div id='body_header'>\n";
 			//header: left
 				$html .= "<div class='float-left'>\n";
@@ -1192,39 +1233,22 @@ if (!class_exists('menu')) {
 			//header: right
 				$html .= "<div class='float-right' style='white-space: nowrap;'>";
 				//current user
+					//set (default) user graphic size and icon
+					$user_graphic_size = 18;
 					$user_graphic = "<i class='".(!empty($_SESSION['theme']['body_header_icon_user']['text']) ? $_SESSION['theme']['body_header_icon_user']['text'] : 'fa-solid fa-user-circle')." fa-lg fa-fw' style='margin-right: 5px;'></i>";
-					//determine usage of icon or image
-					if ($_SESSION['theme']['body_header_user_image']['boolean'] == true && !empty($_SESSION['user']['contact_uuid']) && is_uuid($_SESSION['user']['contact_uuid'])) {
-						//load if not already in session
-						if (empty($_SESSION['user']['image'])) {
-							$sql = "select attachment_filename, attachment_content from v_contact_attachments where contact_uuid = :contact_uuid and attachment_primary = 1 and attachment_filename is not null and attachment_content is not null";
-							$parameters['contact_uuid'] = $_SESSION['user']['contact_uuid'];
-							$contact_attachment = $this->database->select($sql, $parameters, 'row');
-							if (!empty($contact_attachment) && is_array($contact_attachment)) {
-								$contact_attachment_extension = pathinfo($contact_attachment['attachment_filename'], PATHINFO_EXTENSION);
-								if (in_array($contact_attachment_extension,['jpg','jpeg','png'])) {
-									$_SESSION['user']['image']['filename'] = $contact_attachment['attachment_filename'];
-									$_SESSION['user']['image']['base64'] = $contact_attachment['attachment_content'];
-									$_SESSION['user']['image']['mime'] = mime_content_type($contact_attachment['attachment_filename']);
-								}
-							}
-							unset($sql, $parameters);
-						}
-						if (!empty($_SESSION['user']['image'])) {
-							$user_graphic_size = str_replace(['px','%'], '', ($_SESSION['theme']['body_header_user_image_size']['numeric'] ?? 18));
-							$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: ".$user_graphic_size."px; height: ".$user_graphic_size."px; border-radius: 50%; margin-right: 7px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-4')."px; background-image: url('data:".$_SESSION['user']['image']['mime'].";base64,".$_SESSION['user']['image']['base64']."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
-						}
-					}
-					else {
-						$user_graphic_size = 18;
+					//overwrite user graphic with image from session, if exists
+					if ($_SESSION['theme']['body_header_user_image']['boolean'] == true && !empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
+						$user_graphic_size = str_replace(['px','%'], '', ($_SESSION['theme']['body_header_user_image_size']['numeric'] ?? 18));
+						// $user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: ".$user_graphic_size."px; height: ".$user_graphic_size."px; border-radius: 50%; margin-right: 7px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-4')."px; background-image: url('data:".$_SESSION['user']['contact_image']['mime'].";base64,".$_SESSION['user']['contact_image']['content']."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
+						$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: ".$user_graphic_size."px; height: ".$user_graphic_size."px; border-radius: 50%; margin-right: 7px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-4')."px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 					}
 					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
-					$html .= "	<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\">".($user_graphic ?? null).$_SESSION['username']."</a>";
+					$html .= "	<a href='show:usermenu' title=\"".$_SESSION['username']."\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span class='d-none d-sm-inline'>".escape($_SESSION['username'])."</span></a>";
 					$html .= "</span>\n";
 				//domain name/selector (sm+)
 					if (!empty($_SESSION['username']) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
-						$html .= "	<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='".(!empty($_SESSION['theme']['body_header_icon_domain']['text']) ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'fa-solid fa-earth-americas')." fa-fw' style='vertical-align: middle; font-size: ".($user_graphic_size - 1)."px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-3')."px; margin-right: 3px; line-height: 40%;'></i>".escape($_SESSION['domain_name'])."</a>";
+						$html .= "	<a href='show:domainselector' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='".(!empty($_SESSION['theme']['body_header_icon_domain']['text']) ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'fa-solid fa-earth-americas')." fa-fw' style='vertical-align: middle; font-size: ".($user_graphic_size - 1)."px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-3')."px; margin-right: 3px; line-height: 40%;'></i><span class='d-none d-sm-inline'>".escape($_SESSION['domain_name'])."</span></a>";
 						$html .= "</span>\n";
 					}
 				//logout icon

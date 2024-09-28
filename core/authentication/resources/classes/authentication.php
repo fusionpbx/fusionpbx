@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -78,6 +78,9 @@ class authentication {
 				$_SESSION['authentication']['methods'][] = 'database';
 			}
 
+		//check if contacts app exists
+			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/contacts/') ? true : false;
+
 		//use the authentication plugins
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 				//already processed the plugin move to the next plugin
@@ -118,6 +121,12 @@ class authentication {
 						$result['username'] = $array["username"];
 						$result['user_uuid'] = $array["user_uuid"];
 						$result['contact_uuid'] = $array["contact_uuid"];
+						if ($contacts_exists) {
+							$result["contact_organization"] = $array["contact_organization"];
+							$result["contact_name_given"] = $array["contact_name_given"];
+							$result["contact_name_family"] = $array["contact_name_family"];
+							$result["contact_image"] = $array["contact_image"];
+						}
 						$result['domain_uuid'] = $array["domain_uuid"];
 						$result['authorized'] = $array["authorized"];
 
@@ -256,6 +265,13 @@ class authentication {
 					$_SESSION["user"]["user_uuid"] = $result["user_uuid"];
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
+					if ($contacts_exists) {
+						$_SESSION["user"]["contact_organization"] = $result["contact_organization"] ?? null;
+						$_SESSION["user"]["contact_name"] = trim(($result["contact_name_given"] ?? '').' '.($result["contact_name_family"] ?? ''));
+						$_SESSION["user"]["contact_name_given"] = $result["contact_name_given"] ?? null;
+						$_SESSION["user"]["contact_name_family"] = $result["contact_name_family"] ?? null;
+						$_SESSION["user"]["contact_image"] = !empty($result["contact_image"]) && is_uuid($result["contact_image"]) ? $result["contact_image"] : null;
+					}
 
 				//empty the  permissions
 					if (isset($_SESSION['permissions'])) {
