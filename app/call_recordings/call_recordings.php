@@ -68,7 +68,7 @@
 				}
 				break;
 			case 'transcribe':
-				if (permission_exists('call_recording_download')) {
+				if (permission_exists('call_recording_transcribe')) {
 					$obj = new call_recordings;
 					$obj->transcribe($call_recordings);
 				}
@@ -194,12 +194,12 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b><div class='count'>".number_format($result_count)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('call_recording_download') && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($call_recordings)) {
+	if (permission_exists('call_recording_transcribe') && $transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('transcribe'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('call_recording_delete') && !empty($call_recordings)) {
@@ -314,7 +314,7 @@
 					if (permission_exists('call_recording_download')) {
 						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
 					}
-					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && $transcriptions_exists === true) {
+					if (permission_exists('call_recording_transcribe') && $transcribe_enabled == 'true' && !empty($transcribe_engine) && $transcriptions_exists === true) {
 						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','style'=>(empty($row['call_recording_transcription']) ? 'visibility:hidden;' : null),'onclick'=>"document.getElementById('transcription_".$row['call_recording_uuid']."').style.display = document.getElementById('transcription_".$row['call_recording_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
 					}
 				}
@@ -329,7 +329,7 @@
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
-			if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
+			if (permission_exists('call_recording_transcribe') && $transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
 				echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
 				echo "<tr id='transcription_".$row['call_recording_uuid']."' class='list-row' style='display: none;'>\n";
 				echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
