@@ -493,7 +493,7 @@ if (!function_exists('fax_split_dtmf')) {
 			if ($_REQUEST['submit'] != '' && $_REQUEST['submit'] != 'preview') {
 				$time_zone = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
 				$date = new DateTime('now', new DateTimeZone($time_zone) );
-				$pdf->Write(0.3, $date->format('d M Y'));
+				$pdf->Write(0.3, $date->format('d M Y @ h:i:s A'));
 			}
 			$pdf->SetXY($x + 2.0, $y + 1.95);
 			if ($fax_recipient != '') {
