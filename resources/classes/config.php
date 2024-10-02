@@ -36,7 +36,7 @@ final class config {
 	/**
 	 * Loads the framework configuration file
 	 */
-	public function __construct(?string $file = '') {
+	public function __construct(string $file = '') {
 
 		//initialize configuration array to be an empty array
 		$this->configuration = [];
@@ -305,7 +305,7 @@ final class config {
 	 * Ensures the configuration file is loaded only once
 	 * @return config
 	 */
-	public static function load(?string $file = ''): config {
+	public static function load(string $file = ''): config {
 		if (self::$config === null) {
 			self::$config = new config($file);
 		}
