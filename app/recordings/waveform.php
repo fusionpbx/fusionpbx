@@ -40,6 +40,9 @@
 		exit;
 	}
 
+//initialize the database connection
+	$database = database::new();
+
 //create the waveform file
 	if (is_uuid($_GET['id']) || !empty($_GET['data'])) {
 
@@ -54,7 +57,6 @@
 			$sql .= "and recording_uuid = :recording_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['recording_uuid'] = $_GET['id'];
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$recording_filename = $row['recording_filename'];

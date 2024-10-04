@@ -37,6 +37,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//initialize the database connection
+	$database = database::new();
+
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 	$speech_enabled = $settings->get('speech', 'enabled');
@@ -61,7 +64,6 @@
 					$sql .= "and recording_uuid = :recording_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['recording_uuid'] = $recording_uuid;
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$recording_filename = $row['recording_filename'];
@@ -163,7 +165,6 @@
 	$sql .= "from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	if (is_array($result) && @sizeof($result) != 0) {
 		foreach ($result as $row) {
@@ -182,7 +183,6 @@
 						$p = new permissions;
 						$p->add('recording_edit', 'temp');
 					//execute update
-						$database = new database;
 						$database->app_name = 'recordings';
 						$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 						$database->save($array);
@@ -220,7 +220,6 @@
 							$p = new permissions;
 							$p->add('recording_add', 'temp');
 						//execute insert
-							$database = new database;
 							$database->app_name = 'recordings';
 							$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 							$database->save($array);
@@ -242,7 +241,6 @@
 										$p = new permissions;
 										$p->add('recording_edit', 'temp');
 									//execute update
-										$database = new database;
 										$database->app_name = 'recordings';
 										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array);
@@ -308,7 +306,6 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -351,7 +348,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'recording_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -378,7 +374,6 @@
 					dd.dialplan_detail_data like 'pin_number=%' and
 					dd.dialplan_detail_enabled = 'true' ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$recording_password = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 		}
