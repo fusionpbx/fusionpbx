@@ -42,17 +42,28 @@
 	$language = new text;
 	$text = $language->get();
 
+//initialize database and settings
+	$database = database::new();
+	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
+
 //set the defaults
 	$ivr_menu_name = '';
 	$ivr_menu_extension = '';
 	$ivr_menu_cid_prefix = '';
 	$ivr_menu_description = '';
+	$ivr_menu_ringback = $settings->get('ivr_menu','default_ringback', 'local_stream://default');
 
 //initialize the destinations object
 	$destination = new destinations;
 
 //initialize the ringbacks object
 	$ringbacks = new ringbacks;
+
+//validate the ringback
+	if (!$ringbacks->valid($ivr_menu_ringback)) {
+		//set to default when it is not valid
+		$ivr_menu_ringback = '';
+	}
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"]) || !empty($_REQUEST["ivr_menu_uuid"]) &&  is_uuid($_REQUEST["ivr_menu_uuid"])) {
@@ -70,7 +81,6 @@
 	if (!empty($_SESSION['limit']['ivr_menus']['numeric'])) {
 		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$total_ivr_menus = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 
@@ -176,7 +186,6 @@
 				$sql = "select * from v_ivr_menus ";
 				$sql .= "where ivr_menu_uuid = :ivr_menu_uuid ";
 				$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (!empty($row)) {
 					if (!permission_exists('ivr_menu_domain')) {
@@ -401,7 +410,6 @@
 					}
 
 				//save to the data
-					$database = new database;
 					$database->app_name = 'ivr_menus';
 					$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 					$database->save($array);
@@ -441,7 +449,6 @@
 					$sql .="	) ";
 					$sql .="	select * from ivr_menus ";
 					$parameters['ivr_menu_parent_uuid'] = $ivr_menu_parent_uuid;
-					$database = new database;
 					$parent_uuids = $database->select($sql, $parameters, "all");
 					if (!empty($parent_uuids)) {
 						foreach ($parent_uuids as $x => $row) {
@@ -530,7 +537,6 @@
 	$sql .= "order by natural_sort(ivr_menu_option_digits::text) asc, ivr_menu_option_order asc; ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
-	$database = new database;
 	$ivr_menu_options = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -539,7 +545,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by v_ivr_menus asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$ivr_menus = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -566,7 +571,7 @@
 
 //set the defaults
 	if (empty($ivr_menu_timeout)) { $ivr_menu_timeout = '3000'; }
-	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = 'local_stream://default'; }
+	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = ''; }
 	if (empty($ivr_menu_invalid_sound)) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (empty($ivr_menu_confirm_key)) { $ivr_menu_confirm_key = '#'; }
 	if (empty($ivr_menu_tts_engine)) { $ivr_menu_tts_engine = 'flite'; }
