@@ -62,7 +62,7 @@
 //validate the ringback
 	if (!$ringbacks->valid($ivr_menu_ringback)) {
 		//set to default when it is not valid
-		$ivr_menu_ringback = 'local_stream://default';
+		$ivr_menu_ringback = '';
 	}
 
 //action add or update
@@ -571,7 +571,7 @@
 
 //set the defaults
 	if (empty($ivr_menu_timeout)) { $ivr_menu_timeout = '3000'; }
-	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = 'local_stream://default'; }
+	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = ''; }
 	if (empty($ivr_menu_invalid_sound)) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (empty($ivr_menu_confirm_key)) { $ivr_menu_confirm_key = '#'; }
 	if (empty($ivr_menu_tts_engine)) { $ivr_menu_tts_engine = 'flite'; }
