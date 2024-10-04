@@ -63,13 +63,17 @@ if (session:ready()) then
 	sounds_dir = session:getVariable("sounds_dir");
 end
 
---set default values
+--number of simultaneous calls for one extension with multiple registrations
 if (fifo_simo == nil) then
-	fifo_simo = '';
+	fifo_simo = '5';
 end
+
+--how long to ring the fifo member (agent)
 if (fifo_timeout == nil) then
-	fifo_timeout = '';
+	fifo_timeout = '20';
 end
+
+--wrap up time for the fifo member
 if (fifo_lag == nil) then
 	fifo_lag = '';
 end
@@ -122,7 +126,7 @@ dbh:query(sql, params, function(row)
 	fifo_member_uuid = row["fifo_member_uuid"];
 	member_contact = row["member_contact"];
 	member_call_timeout = row["member_call_timeout"];
-	member_wrap_up_time = row["member_wrap_up_time"];
+	fifo_lag = row["member_wrap_up_time"];
 end);
 
 --press 1 to login and 2 to logout
@@ -132,7 +136,7 @@ if (session:ready()) then
 	if (menu_selection == "1") then
 		--login the agent into the queue
 		session:execute("set", "fifo_member_add_result=${fifo_member(add "..fifo_name.." {fifo_member_wait=nowait}user/"..user_name.." "..fifo_simo.." "..fifo_timeout.." "..fifo_lag.."} )"); --simo timeout lag
-		
+
 		--send the result to the log
 		fifo_member_add_result = session:getVariable("fifo_member_add_result");
 		freeswitch.consoleLog("NOTICE", "fifo_member_add_result: "..fifo_member_add_result.."\n");
