@@ -41,6 +41,7 @@
 
 //connect to database
 	$database = database::new();
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 
 //add multi-lingual support
 	$language = new text;
@@ -58,6 +59,7 @@
 	$ring_group_forward_destination = '';
 	$ring_group_forward_toll_allow = '';
 	$ring_group_description = '';
+	$ring_group_ringback = $settings->get('ring_group', 'default_ringback', '');
 	$onkeyup = '';
 
 //initialize the destinations object
