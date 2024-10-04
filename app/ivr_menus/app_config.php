@@ -226,6 +226,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "500-599";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for IVRs";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dcf7821a-146b-48ce-a5a6-1b004d09e263";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "default_ringback";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "local_stream://default";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for IVRs";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${ivr_menu_context}";
