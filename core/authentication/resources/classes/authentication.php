@@ -386,7 +386,7 @@ class authentication {
 					}
 
 				//regenerate the session on login
-					session_regenerate_id(true);
+					//session_regenerate_id(true);
 
 				//set a session variable to indicate authorized is set to true
 					$_SESSION['authorized'] = true;
