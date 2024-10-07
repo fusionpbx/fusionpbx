@@ -193,7 +193,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6d5e14af-3c69-4bfa-96b0-e39fc9d2ffa4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_c620";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_c620_base";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "C620-base-0.4.1.3-0.img";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
