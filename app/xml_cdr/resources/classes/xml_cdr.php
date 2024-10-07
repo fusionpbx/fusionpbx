@@ -632,13 +632,13 @@ if (!class_exists('xml_cdr')) {
 					//time
 						$start_epoch = urldecode($xml->variables->start_epoch);
 						$this->array[$key][0]['start_epoch'] = $start_epoch;
-						$this->array[$key][0]['start_stamp'] = is_numeric($start_epoch) ? date('c', $start_epoch) : null;
+						$this->array[$key][0]['start_stamp'] = is_numeric((int)$start_epoch) ? date('c', $start_epoch) : null;
 						$answer_epoch = urldecode($xml->variables->answer_epoch);
 						$this->array[$key][0]['answer_epoch'] = $answer_epoch;
-						$this->array[$key][0]['answer_stamp'] = is_numeric($answer_epoch) ? date('c', $answer_epoch) : null;
+						$this->array[$key][0]['answer_stamp'] = is_numeric((int)$answer_epoch) ? date('c', $answer_epoch) : null;
 						$end_epoch = urldecode($xml->variables->end_epoch);
 						$this->array[$key][0]['end_epoch'] = $end_epoch;
-						$this->array[$key][0]['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
+						$this->array[$key][0]['end_stamp'] = is_numeric((int)$end_epoch) ? date('c', $end_epoch) : null;
 						$this->array[$key][0]['duration'] = urldecode($xml->variables->billsec);
 						$this->array[$key][0]['mduration'] = urldecode($xml->variables->billmsec);
 						$this->array[$key][0]['billsec'] = urldecode($xml->variables->billsec);
@@ -693,16 +693,16 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key][0]['cc_agent'] = urldecode($xml->variables->cc_agent);
 						$this->array[$key][0]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
 						$this->array[$key][0]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
-						if (!empty($xml->variables->cc_queue_joined_epoch) && is_numeric($xml->variables->cc_queue_joined_epoch)) {
+						if (!empty($xml->variables->cc_queue_joined_epoch) && is_numeric((int)$xml->variables->cc_queue_joined_epoch)) {
 							$this->array[$key][0]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
 						}
-						if (!empty($xml->variables->cc_queue_answered_epoch) && is_numeric($xml->variables->cc_queue_answered_epoch)) {
+						if (!empty($xml->variables->cc_queue_answered_epoch) && is_numeric((int)$xml->variables->cc_queue_answered_epoch)) {
 							$this->array[$key][0]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
 						}
-						if (!empty($xml->variables->cc_queue_terminated_epoch) && is_numeric($xml->variables->cc_queue_terminated_epoch)) {
+						if (!empty($xml->variables->cc_queue_terminated_epoch) && is_numeric((int)trim($xml->variables->cc_queue_terminated_epoch))) {
 							$this->array[$key][0]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
 						}
-						if (!empty($xml->variables->cc_queue_canceled_epoch) && is_numeric($xml->variables->cc_queue_canceled_epoch)) {
+						if (!empty($xml->variables->cc_queue_canceled_epoch) && is_numeric((int)$xml->variables->cc_queue_canceled_epoch)) {
 							$this->array[$key][0]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
 						}
 						$this->array[$key][0]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
@@ -1449,7 +1449,7 @@ if (!class_exists('xml_cdr')) {
 							}
 
 						//set the limit
-							if (isset($_SERVER["argv"][1]) && is_numeric($_SERVER["argv"][1])) {
+							if (isset($_SERVER["argv"][1]) && is_numeric((int)$_SERVER["argv"][1])) {
 								$limit = $_SERVER["argv"][1];
 							}
 							else {
@@ -1952,7 +1952,7 @@ if (!class_exists('xml_cdr')) {
 				else {
 					$range  = explode('-', $range);
 					$c_start = $range[0];
-					$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+					$c_end   = (isset($range[1]) && is_numeric((int)$range[1])) ? $range[1] : $size;
 				}
 				/* Check the range and make sure it's treated according to the specs.
 				* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
@@ -2115,7 +2115,7 @@ if (!class_exists('xml_cdr')) {
 				}
 
 				//ensure we have retention days
-				if (!empty($xml_cdr_retention_days) && is_numeric($xml_cdr_retention_days)) {
+				if (!empty($xml_cdr_retention_days) && is_numeric((int)$xml_cdr_retention_days)) {
 
 					//clear out old xml_cdr records
 					$sql = "delete from v_{$table} WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_retention_days} days'"
