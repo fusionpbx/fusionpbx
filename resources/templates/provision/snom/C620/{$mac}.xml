@@ -57,7 +57,7 @@
         <dhcp_option_priority_1>66</dhcp_option_priority_1>
         <dhcp_option_priority_2>159</dhcp_option_priority_2>
         <dhcp_option_priority_3>160</dhcp_option_priority_3>
-        <firmware_url>{$snom_firmware_url}{$snom_firmware_c620}</firmware_url>
+        <firmware_url>{$snom_firmware_url}{$snom_firmware_c620_base}</firmware_url>
         <fw_server_username></fw_server_username>
         <fw_server_access_password></fw_server_access_password>
         <resync_mode>config_and_firmware</resync_mode>
