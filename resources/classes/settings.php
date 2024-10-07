@@ -145,6 +145,28 @@ class settings {
 	}
 
 	/**
+	 * Returns the domain_uuid in this object used to load the settings
+	 * @return string Uuid of the domain used to load the object or an empty string
+	 */
+	public function get_domain_uuid(): string {
+		if (!empty($this->domain_uuid)) {
+			return $this->domain_uuid;
+		}
+		return "";
+	}
+
+	/**
+	 * Returns the user_uuid in this object used to load the settings
+	 * @return string Uuid of the user used to load the object or an empty string
+	 */
+	public function get_user_uuid(): string {
+		if (!empty($this->user_uuid)) {
+			return $this->user_uuid;
+		}
+		return "";
+	}
+
+	/**
 	 * set the default, domain, user, device or device profile settings
 	 * @param string $table_prefix prefix for the table.
 	 * @param string $uuid uuid of the setting if available. If set to an empty string then a new uuid will be created.
