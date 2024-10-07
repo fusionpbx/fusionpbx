@@ -244,10 +244,11 @@
 		//domain selector controls
 			{if $domain_selector_enabled}
 				{literal}
-				$('#header_domain_selector_domain').on('click', function() { event.preventDefault(); show_domains(); });
+				$('.header_domain_selector_domain').on('click', function() { event.preventDefault(); show_domains(); });
 				$('#domains_hide').on('click', function() { hide_domains(); });
 
 				function show_domains() {
+					$('#body_header_user_menu').fadeOut(200);
 					search_domains('domains_list');
 
 					$('#domains_visible').val(1);
@@ -683,21 +684,29 @@
 						{literal}
 					}
 				});
+				{/literal}
+			{/if}
 
-				//hide an open user menu in the body header on scroll
+		//side/fixed menu: hide an open user menu in the body header or menu on scroll
+			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'fixed' }
+				{literal}
 				$(window).on('scroll', function() {
 					$('#body_header_user_menu').fadeOut(200);
 				});
-
-				//create function to mimic toggling fade and slide at the same time
-				(function($){
-					$.fn.toggleFadeSlide = function(speed = 200, easing, callback){
-						return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
-					};
-				})(jQuery);
-
+				$('div#main_content').on('click', function() {
+					$('#body_header_user_menu').fadeOut(200);
+				});
 				{/literal}
 			{/if}
+
+		//create function to mimic toggling fade and slide at the same time
+			{literal}
+			(function($){
+				$.fn.toggleFadeSlide = function(speed = 200, easing, callback){
+					return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+				};
+			})(jQuery);
+			{/literal}
 
 	{literal}
 	}); //document ready end

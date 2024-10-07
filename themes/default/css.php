@@ -49,8 +49,8 @@ $menu_sub_text_color = $_SESSION['theme']['menu_sub_text_color']['text'] ?? '#ff
 $menu_sub_text_size = $_SESSION['theme']['menu_sub_text_size']['text'] ?? '10pt';
 $menu_sub_text_color_hover = $_SESSION['theme']['menu_sub_text_color_hover']['text'] ?? '#fd9c03';
 $menu_sub_background_color_hover = $_SESSION['theme']['menu_sub_background_color_hover']['text'] ?? '#141414';
-$header_user_color_hover = $_SESSION['theme']['header_user_color_hover']['text'] ?? '#1892e6';
-$header_domain_color_hover = $_SESSION['theme']['header_domain_color_hover']['text'] ?? '#1892e6';
+$header_user_color_hover = $_SESSION['theme']['header_user_color_hover']['text'] ?? null;
+$header_domain_color_hover = $_SESSION['theme']['header_domain_color_hover']['text'] ?? null;
 $logout_icon_color = $_SESSION['theme']['logout_icon_color']['text'] ?? 'rgba(255,255,255,0.8)';
 $logout_icon_color_hover = $_SESSION['theme']['logout_icon_color_hover']['text'] ?? 'rgba(255,255,255,1.0)';
 $menu_main_toggle_color = $_SESSION['theme']['menu_main_toggle_color']['text'] ?? 'rgba(255,255,255,0.8)';
@@ -653,7 +653,8 @@ else { //default: white
 		}
 
 	/* main menu item */
-	ul.navbar-nav > li.nav-item > a.nav-link {
+	ul.navbar-nav > li.nav-item > a.nav-link,
+	ul.navbar-nav.ml-auto > li.nav-item > a.nav-link {
 		font-family: <?=$menu_main_text_font?>;
 		font-size: <?=$menu_main_text_size?>;
 		color: <?=$menu_main_text_color?>;
@@ -768,17 +769,21 @@ else { //default: white
 		padding: 10px;
 		}
 
+	<?php if (!empty($header_user_color_hover)) { ?>
 	ul.navbar-nav > li.nav-item:hover > a.header_user,
 	ul.navbar-nav > li.nav-item:focus > a.header_user,
 	ul.navbar-nav > li.nav-item:active > a.header_user {
 		color: <?=$header_user_color_hover?>;
 		}
+	<?php } ?>
 
+	<?php if (!empty($header_domain_color_hover)) { ?>
 	ul.navbar-nav > li.nav-item:hover > a.header_domain,
 	ul.navbar-nav > li.nav-item:focus > a.header_domain,
 	ul.navbar-nav > li.nav-item:active > a.header_domain {
 		color: <?=$header_domain_color_hover?>;
 		}
+	<?php } ?>
 
 	/* logout icon */
 	a.logout_icon {
@@ -1045,7 +1050,7 @@ else { //default: white
 
 /* BODY/HEADER BAR *****************************************************************/
 
-	<?php if ($menu_style == 'side') { ?>
+	<?php if ($menu_style == 'side' || $menu_style == 'fixed') { ?>
 		div#body_header {
 			position: relative;
 			z-index: 1;

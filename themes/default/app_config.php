@@ -109,7 +109,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_user_color_hover";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#fd9c03";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text hover color (and opacity) for header user name.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b999bb99-2224-48f0-8a61-38c4f75c9869";
@@ -117,7 +117,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_domain_color_hover";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#fd9c03";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text hover color (and opacity) for header domain name.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4a92f422-934f-4ae9-b918-fa932cb1e089";
