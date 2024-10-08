@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+	<file>
+	    <contact>
+	        <directory>
+	            <overwrite>https://{if isset($http_auth_username)}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/{$mac}/directory.xml</overwrite>
+	        </directory>
+	    </contact>
+	</file>
+	<time_date>
+		<ntp_server>1</ntp_server>
+		<ntp_server_addr>{if isset($snom_ntp_server)}{$snom_ntp_server}{else}0.pool.ntp.org{/if}</ntp_server_addr>
+		<ntp_server_update_interval>1000</ntp_server_update_interval>
+	</time_date>
+    <call_settings>
+        <account>
+            {foreach $lines as $row}
+            <idx id="{$row.line_number}">
+                <block_anonymous_enable>0</block_anonymous_enable>
+                <outgoing_anonymous_enable>0</outgoing_anonymous_enable>
+                <dnd_enable>0</dnd_enable>
+                <call_fwd_always_enable>0</call_fwd_always_enable>
+                <call_fwd_always_target></call_fwd_always_target>
+                <call_fwd_busy_enable>0</call_fwd_busy_enable>
+                <call_fwd_busy_target></call_fwd_busy_target>
+                <cfna_enable>0</cfna_enable>
+                <cfna_target></cfna_target>
+                <cfna_delay>6</cfna_delay>
+            </idx>
+            {if $row@index eq 48}{break}{/if}
+            {/foreach}
+        </account>
+        <early_media_preferred>1</early_media_preferred>
+    </call_settings>
+	<profile>
+	    <admin>
+	        <access_password>{$admin_password}</access_password>
+	    </admin>
+	    <support>
+	        <access_password>{$admin_password}</access_password>
+	    </support>
+	    <user>
+	        <access_password>{$admin_password}</access_password>
+	    </user>
+	</profile>
+    <log>
+        <syslog_enable>0</syslog_enable>
+        <syslog_level>2</syslog_level>
+        <syslog_server_address></syslog_server_address>
+        <syslog_server_port>514</syslog_server_port>
+    </log>
+    <provisioning>
+        <bootup_check_enable>1</bootup_check_enable>
+        <crypto_enable>0</crypto_enable>
+        <crypto_passphrase></crypto_passphrase>
+        <dhcp_option_enable>1</dhcp_option_enable>
+        <dhcp_option_priority_1>66</dhcp_option_priority_1>
+        <dhcp_option_priority_2>159</dhcp_option_priority_2>
+        <dhcp_option_priority_3>160</dhcp_option_priority_3>
+        <firmware_url>{$snom_firmware_url}{$snom_firmware_c620_base}</firmware_url>
+        <handset_firmware_url>{$snom_firmware_url}{$snom_firmware_c620_speakerphone}</handset_firmware_url>
+        <fw_server_username></fw_server_username>
+        <fw_server_access_password></fw_server_access_password>
+        <resync_mode>config_and_firmware</resync_mode>
+        <resync_time>1440</resync_time>
+        <server_address>{if isset($snom_provision_url)}{$snom_provision_url}{else}https://{$domain_name}{$project_path}/app/provision/{/if}</server_address>
+        <server_username>{$http_auth_username}</server_username>
+        <server_access_password>{$http_auth_password}</server_access_password>
+        <check_trusted_certificate>0</check_trusted_certificate>
+        <remote_check_sync_enable>1</remote_check_sync_enable>
+        <pnp_enable>1</pnp_enable>
+        <pnp_response_timeout>10</pnp_response_timeout>
+    	<pwd_export_enable>1</pwd_export_enable>
+        <schedule_mode>interval</schedule_mode>
+        <weekdays></weekdays>
+        <weekdays_start_hr>0</weekdays_start_hr>
+        <weekdays_end_hr>0</weekdays_end_hr>
+    </provisioning>
+
+    <sip_account>
+        {foreach $lines as $row}
+        <idx id="{$row.line_number}">
+            <sip_account_enable>{if $row.enabled}1{else}0{/if}</sip_account_enable>
+            <label>{$row.display_name}</label>
+            <display_name>{$row.user_id}</display_name>
+            <user_id>{$row.user_id}</user_id>
+            <authentication_name>{$row.user_id}</authentication_name>
+            <authentication_access_password>{$row.password}</authentication_access_password>
+            <dial_plan>x+P</dial_plan>
+            <inter_digit_timeout>3</inter_digit_timeout>
+            <maximum_call_number>2</maximum_call_number>
+            <feature_sync_enable>0</feature_sync_enable>
+            <music_on_hold_enable>0</music_on_hold_enable>
+            <mwi_enable>1</mwi_enable>
+            <mwi_ignore_unsolicited>0</mwi_ignore_unsolicited>
+            <mwi_uri></mwi_uri>
+            <mwi_subscription_expires>3600</mwi_subscription_expires>
+            <voice_encryption_enable>0</voice_encryption_enable>
+            <primary_sip_server_port>{$row.sip_port}</primary_sip_server_port>
+            <primary_sip_server_address>{$row.server_address}</primary_sip_server_address>
+            <primary_outbound_proxy_server_port>1</primary_outbound_proxy_server_port>
+            <primary_outbound_proxy_server_address></primary_outbound_proxy_server_address>
+            <primary_registration_server_port>{$row.sip_port}</primary_registration_server_port>
+            <primary_registration_server_address>{$row.server_address}</primary_registration_server_address>
+            <primary_registration_expires>{$row.register_expires}</primary_registration_expires>
+            <access_code_retrieve_voicemail></access_code_retrieve_voicemail>
+            <access_code_dnd_on></access_code_dnd_on>
+            <access_code_dnd_off></access_code_dnd_off>
+            <access_code_cfa_on></access_code_cfa_on>
+            <access_code_cfa_off></access_code_cfa_off>
+            <access_code_cfna_on></access_code_cfna_on>
+            <access_code_cfna_off></access_code_cfna_off>
+            <access_code_cfb_on></access_code_cfb_on>
+            <access_code_cfb_off></access_code_cfb_off>
+            <access_code_anonymous_call_block_on></access_code_anonymous_call_block_on>
+            <access_code_anonymous_call_block_off></access_code_anonymous_call_block_off>
+            <access_code_outgoing_call_anonymous_on></access_code_outgoing_call_anonymous_on>
+            <access_code_outgoing_call_anonymous_off></access_code_outgoing_call_anonymous_off>
+            <nat_traversal_stun_enable>0</nat_traversal_stun_enable>
+            <nat_traversal_stun_server_port>3478</nat_traversal_stun_server_port>
+            <nat_traversal_stun_server_address></nat_traversal_stun_server_address>
+            <nat_traversal_stun_keep_alive_enable>1</nat_traversal_stun_keep_alive_enable>
+            <nat_traversal_stun_keep_alive_interval>30</nat_traversal_stun_keep_alive_interval>
+            <network_conference_enable>0</network_conference_enable>
+            <network_bridge_uri></network_bridge_uri>
+            <sip_session_timer_enable>0</sip_session_timer_enable>
+            <sip_session_timer_min>90</sip_session_timer_min>
+            <sip_session_timer_max>300</sip_session_timer_max>
+            <dtmf_transport_method>auto</dtmf_transport_method>
+            <codec_priority>
+                <idx id="1">g711u</idx>
+                <idx id="2">none</idx>
+                <idx id="3">none</idx>
+                <idx id="4">none</idx>
+                <idx id="5">none</idx>
+                <idx id="6">none</idx>
+                <idx id="7">none</idx>
+            </codec_priority>
+            <unregister_after_reboot_enable>0</unregister_after_reboot_enable>
+            <transport_mode>{$row.sip_transport}</transport_mode>
+            <backup_outbound_proxy_server_port>1</backup_outbound_proxy_server_port>
+            <backup_outbound_proxy_server_address></backup_outbound_proxy_server_address>
+            <registration_retry_time>10</registration_retry_time>
+            <local_sip_port>{$row.sip_port}</local_sip_port>
+            <dscp>46</dscp>
+            <sip_dscp>26</sip_dscp>
+            <check_trusted_certificate>1</check_trusted_certificate>
+            <g729_annexb_enable>0</g729_annexb_enable>
+            <preferred_ptime>20</preferred_ptime>
+            <cid_src_priority>
+                <idx id="1">pai</idx>
+                <idx id="2">rpid</idx>
+                <idx id="3">from</idx>
+            </cid_src_priority>
+            <keep_alive_enable>0</keep_alive_enable>
+            <keep_alive_interval>15</keep_alive_interval>
+            <keep_alive_ignore_failure>1</keep_alive_ignore_failure>
+            <dtmf_payload_type>101</dtmf_payload_type>
+            <ilbc_payload_type>98</ilbc_payload_type>
+            <call_restrict_dial_plan></call_restrict_dial_plan>
+            <call_rejection_response_code>486</call_rejection_response_code>
+            <use_register_route_header>1</use_register_route_header>
+            <reliable_provisional_response_option>0</reliable_provisional_response_option>
+        </idx>
+        {if $row@index eq 48}{break}{/if}
+        {/foreach}
+        <service_unavailable_handling_option>1</service_unavailable_handling_option>
+        <dns_query_option>1</dns_query_option>
+        <shared_local_sip_port_enable>0</shared_local_sip_port_enable>
+        <shared_local_sip_port>5060</shared_local_sip_port>
+        <sips_uri_enable>1</sips_uri_enable>
+        <dirty_host_ttl>0</dirty_host_ttl>
+        <mac_info_in_every_sip_message>0</mac_info_in_every_sip_message>
+        <pnp_local_sip_port>5170</pnp_local_sip_port>
+    </sip_account>
+    <web>
+        <http_port>80</http_port>
+        <https_port>443</https_port>
+        <server_enable>1</server_enable>
+        <https_enable>0</https_enable>
+    </web>
+</settings>
