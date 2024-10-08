@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AddressBook>
 <version>1</version>
-{$i=0}
-{foreach $contacts as $contact}
-{if $contact.contact_name_given != "" && $contact.contact_type == "contact"}
+{foreach $contacts  as $contact}
+{if $contact.contact_name_given != "" || $contact.contact_name_family != "" || $contact.contact_organization != ""}
 <Contact>
+{if $contact.contact_name_given == "" && $contact.contact_name_family == "" && $contact.contact_organization != ""}
+<FirstName>{$contact.contact_organization}</FirstName>
+{else}
 <FirstName>{$contact.contact_name_given}</FirstName>
 <LastName>{$contact.contact_name_family}</LastName>
-<Phone type="Work">
-<phonenumber>{$contact.contact_work}</phonenumber>
-</Phone>
-{if $contact.contact_home != "" }
-<Phone type="Home">
-<phonenumber>{$contact.contact_home}</phonenumber>
+{/if}
+{if $contact.category == "extensions"}
+<Phone type="Other">
+<phonenumber>{$contact.phone_extension}</phonenumber>
 </Phone>
 {/if}
-{if $contact.contact_cell != "" }
+{if $contact.phone_label == "work"}
+<Phone type="Work">
+<phonenumber>{$contact.phone_number}</phonenumber>
+</Phone>
+
+{elseif $contact.phone_label == "main"}
+<Phone type="Work">
+<phonenumber>{$contact.phone_number}</phonenumber>
+</Phone>
+
+{elseif $contact.phone_label == "home"}
+<Phone type="Home">
+<phonenumber>{$contact.phone_number}</phonenumber>
+</Phone>
+
+{elseif $contact.phone_label == "mobile"}
 <Phone type="Mobile">
-<phonenumber>{$contact.contact_cell}</phonenumber>
+<phonenumber>{$contact.phone_number}</phonenumber>
+</Phone>
+
+{else}
+<Phone type="Work">
+<phonenumber>{$contact.phone_number}</phonenumber>
 </Phone>
 {/if}
 </Contact>
