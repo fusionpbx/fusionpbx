@@ -53,6 +53,7 @@ class auto_loader {
 
 		//reset the current array
 		$this->classes = [];
+
 		//store the class name (key) and the path (value)
 		foreach ($search_path as $path) {
 			$this->classes[basename($path, '.php')] = $path;
