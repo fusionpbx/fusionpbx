@@ -121,7 +121,7 @@
 
 //class auto loader
 	if (!class_exists('auto_loader')) {
-		include "resources/classes/auto_loader.php";
+		require_once "resources/classes/auto_loader.php";
 		$autoload = new auto_loader();
 	}
 
