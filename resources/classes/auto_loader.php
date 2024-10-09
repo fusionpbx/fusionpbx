@@ -31,7 +31,8 @@ class auto_loader {
 	public function __construct($project_path = '') {
 		//classes must be loaded before this object is registered
 		$this->reload_classes($project_path);
-		//register this object to load any unkown classes
+
+		//register this object to load any unknown classes
 		spl_autoload_register(array($this, 'loader'));
 	}
 
