@@ -49,8 +49,8 @@ $menu_sub_text_color = $_SESSION['theme']['menu_sub_text_color']['text'] ?? '#ff
 $menu_sub_text_size = $_SESSION['theme']['menu_sub_text_size']['text'] ?? '10pt';
 $menu_sub_text_color_hover = $_SESSION['theme']['menu_sub_text_color_hover']['text'] ?? '#fd9c03';
 $menu_sub_background_color_hover = $_SESSION['theme']['menu_sub_background_color_hover']['text'] ?? '#141414';
-$header_user_color_hover = $_SESSION['theme']['header_user_color_hover']['text'] ?? '#1892e6';
-$header_domain_color_hover = $_SESSION['theme']['header_domain_color_hover']['text'] ?? '#1892e6';
+$header_user_color_hover = $_SESSION['theme']['header_user_color_hover']['text'] ?? null;
+$header_domain_color_hover = $_SESSION['theme']['header_domain_color_hover']['text'] ?? null;
 $logout_icon_color = $_SESSION['theme']['logout_icon_color']['text'] ?? 'rgba(255,255,255,0.8)';
 $logout_icon_color_hover = $_SESSION['theme']['logout_icon_color_hover']['text'] ?? 'rgba(255,255,255,1.0)';
 $menu_main_toggle_color = $_SESSION['theme']['menu_main_toggle_color']['text'] ?? 'rgba(255,255,255,0.8)';
@@ -653,7 +653,8 @@ else { //default: white
 		}
 
 	/* main menu item */
-	ul.navbar-nav > li.nav-item > a.nav-link {
+	ul.navbar-nav > li.nav-item > a.nav-link,
+	ul.navbar-nav.ml-auto > li.nav-item > a.nav-link {
 		font-family: <?=$menu_main_text_font?>;
 		font-size: <?=$menu_main_text_size?>;
 		color: <?=$menu_main_text_color?>;
@@ -768,17 +769,21 @@ else { //default: white
 		padding: 10px;
 		}
 
+	<?php if (!empty($header_user_color_hover)) { ?>
 	ul.navbar-nav > li.nav-item:hover > a.header_user,
 	ul.navbar-nav > li.nav-item:focus > a.header_user,
 	ul.navbar-nav > li.nav-item:active > a.header_user {
 		color: <?=$header_user_color_hover?>;
 		}
+	<?php } ?>
 
+	<?php if (!empty($header_domain_color_hover)) { ?>
 	ul.navbar-nav > li.nav-item:hover > a.header_domain,
 	ul.navbar-nav > li.nav-item:focus > a.header_domain,
 	ul.navbar-nav > li.nav-item:active > a.header_domain {
 		color: <?=$header_domain_color_hover?>;
 		}
+	<?php } ?>
 
 	/* logout icon */
 	a.logout_icon {
@@ -1045,7 +1050,7 @@ else { //default: white
 
 /* BODY/HEADER BAR *****************************************************************/
 
-	<?php if ($menu_style == 'side') { ?>
+	<?php if ($menu_style == 'side' || $menu_style == 'fixed') { ?>
 		div#body_header {
 			position: relative;
 			z-index: 1;
@@ -1063,6 +1068,37 @@ else { //default: white
 
 		div#body_header a:hover {
 			color: <?=$body_header_text_link_color_hover?>;
+			text-decoration: none;
+			}
+
+		div#body_header_user_menu {
+			z-index: 6;
+			display: none;
+			position: absolute;
+			top: 50px;
+			/* right: specified in /resources/classes/menu.php */
+			padding: 15px;
+			background-color: <?=$body_header_background_color?>;
+			border: 1px solid <?=color_adjust($body_header_shadow_color, 0.05)?>;
+			<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
+			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+			<?php unset($br); ?>
+			-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+			}
+
+		@media (max-width: 575.98px) {
+			div#body_header_user_menu {
+				width: calc(100% - 20px);
+				/* right: specified in /resources/classes/menu.php */
+				}
+			}
+
+		div#body_header_user_menu a {
+			font-size: 90%;
 			text-decoration: none;
 			}
 	<?php } else { ?>
@@ -1452,7 +1488,7 @@ else { //default: white
 
 	#domains_container {
 		z-index: 99990;
-		position: absolute;
+		position: fixed;
 		right: 0;
 		top: 0;
 		bottom: 0;
@@ -1747,6 +1783,7 @@ else { //default: white
 	input[type=number].formfld,
 	input[type=url].formfld,
 	input[type=password].formfld,
+	input[type=email].formfld,
 	label.formfld {
 		font-family: <?=$input_text_font?>;
 		font-size: <?=$input_text_size?>;
@@ -1784,11 +1821,13 @@ else { //default: white
 	input[type=text].txt,
 	input[type=number].txt,
 	input[type=password].txt,
+	input[type=email].txt,
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
 	input[type=url].formfld,
-	input[type=password].formfld {
+	input[type=password].formfld,
+	input[type=email].formfld {
 		transition: width 0.25s;
 		-moz-transition: width 0.25s;
 		-webkit-transition: width 0.25s;
@@ -1811,12 +1850,14 @@ else { //default: white
 	input[type=text].txt:hover,
 	input[type=number].txt:hover,
 	input[type=password].txt:hover,
+	input[type=email].txt:hover,
 	label.txt:hover,
 	textarea.formfld:hover,
 	input[type=text].formfld:hover,
 	input[type=number].formfld:hover,
 	input[type=url].formfld:hover,
 	input[type=password].formfld:hover,
+	input[type=email].formfld:hover,
 	label.formfld:hover {
 		border-color: <?=$input_border_color_hover?>;
 		}
@@ -1825,12 +1866,14 @@ else { //default: white
 	input[type=text].txt:focus,
 	input[type=number].txt:focus,
 	input[type=password].txt:focus,
+	input[type=email].txt:focus,
 	label.txt:focus,
 	textarea.formfld:focus,
 	input[type=text].formfld:focus,
 	input[type=number].formfld:focus,
 	input[type=url].formfld:focus,
 	input[type=password].formfld:focus,
+	input[type=email].formfld:focus,
 	label.formfld:focus {
 		border-color: <?=$input_border_color_focus?>;
 		/* first clear */
@@ -3389,7 +3432,7 @@ else { //default: white
 	.list-status-active {
 		width: 10px;
 		height: 10px;
-		background-color: green;
+		background-color: #03C04A;
 		border-radius: 50%;
 		display: inline-block;
 	}
@@ -3398,6 +3441,14 @@ else { //default: white
 		width: 10px;
 		height: 10px;
 		background-color: #ccc;
+		border-radius: 50%;
+		display: inline-block;
+	}
+
+	.list-status-failed {
+		width: 10px;
+		height: 10px;
+		background-color: #ea4c46;
 		border-radius: 50%;
 		display: inline-block;
 	}
@@ -3447,6 +3498,7 @@ else { //default: white
 	.pct-90 { width: 90%; }
 	.pct-95 { width: 95%; }
 	.pct-100 { width: 100%; }
+
 
 /* SIDE PADDING & MARGIN HELPERS **********************************************************************/
 

@@ -1,172 +1,357 @@
 <?php
 /*
- FusionPBX
- Version: MPL 1.1
+	FusionPBX
+	Version: MPL 1.1
 
- The contents of this file are subject to the Mozilla Public License Version
- 1.1 (the "License"); you may not use this file except in compliance with
- the License. You may obtain a copy of the License at
- http://www.mozilla.org/MPL/
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
 
- Software distributed under the License is distributed on an "AS IS" basis,
- WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- for the specific language governing rights and limitations under the
- License.
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
 
- The Original Code is FusionPBX
+	The Original Code is FusionPBX
 
- The Initial Developer of the Original Code is
- Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2020-2023
- the Initial Developer. All Rights Reserved.
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	the Initial Developer. All Rights Reserved.
 
- Contributor(s):
- Mark J Crane <markjcrane@fusionpbx.com>
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the databases class
-if (!class_exists('databases')) {
-	class databases {
+/**
+ * plugin_database
+ *
+ * @method plugin_database validates the authentication using information from the database
+ */
+class plugin_database {
 
-		/**
-		 * declare private variables
-		 */
-		private $app_name;
-		private $app_uuid;
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
+	/**
+	 * Define variables and their scope
+	 */
+	public $domain_name;
+	public $domain_uuid;
+	public $user_uuid;
+	public $contact_uuid;
+	public $contact_organization;
+	public $contact_name_given;
+	public $contact_name_family;
+	public $contact_image;
+	public $username;
+	public $password;
+	public $key;
+	public $debug;
+	public $user_email;
 
-		/**
-		 * called when the object is created
-		 */
-		public function __construct() {
+	/**
+	 * database checks the local database to authenticate the user or key
+	 * @return array [authorized] => true or false
+	 */
+	function database(authentication $auth, settings $settings) {
 
-			//assign private variables
-				$this->app_name = 'databases';
-				$this->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
-				$this->permission_prefix = 'database_';
-				$this->list_page = 'databases.php';
-				$this->table = 'databases';
-				$this->uuid_prefix = 'database_';
+		//pre-process some settings
+			$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH.'/themes/default/favicon.ico');
+			$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH.'/themes/default/images/logo_login.png');
+			$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
+			$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
+			$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
+			$background_videos = $settings->get('theme', 'background_video', null);
+			$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
+			$login_domain_name_visible = $settings->get('login', 'domain_name_visible');
+			$login_domain_name = $settings->get('login', 'domain_name');
+			$login_destination = $settings->get('login', 'destination');
+			$users_unique = $settings->get('users', 'unique', '');
 
-		}
+		//check if already authorized
+			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
+				return;
+			}
 
-		/**
-		 * delete records
-		 */
-		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
+		//show the authentication code view
+			if (empty($_REQUEST["username"]) && empty($_REQUEST["key"])) {
+
+				//get the domain
+					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+					$domain_name = $domain_array[0];
+
+				//create token
+					//$object = new token;
+					//$token = $object->create('login');
 
 				//add multi-lingual support
 					$language = new text;
-					$text = $language->get();
+					$text = $language->get(null, '/core/authentication');
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
+				//initialize a template object
+					$view = new template();
+					$view->engine = 'smarty';
+					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
+					$view->cache_dir = sys_get_temp_dir();
+					$view->init();
+
+				//add translations
+					$view->assign("login_title", $text['button-login']);
+					$view->assign("label_username", $text['label-username']);
+					$view->assign("label_password", $text['label-password']);
+					$view->assign("label_domain", $text['label-domain']);
+					$view->assign("button_login", $text['button-login']);
+
+				//assign default values to the template
+					$view->assign("project_path", PROJECT_PATH);
+					$view->assign("login_destination_url", $login_destination);
+					$view->assign("login_domain_name_visible", $login_domain_name_visible);
+					$view->assign("login_domain_names", $login_domain_name);
+					$view->assign("favicon", $theme_favicon);
+					$view->assign("login_logo_width", $theme_login_logo_width);
+					$view->assign("login_logo_height", $theme_login_logo_height);
+					$view->assign("login_logo_source", $theme_logo);
+					$view->assign("message_delay", $theme_message_delay);
+					$view->assign("background_video", $theme_background_video);
+					if (!empty($_SESSION['username'])) {
+						$view->assign("login_password_description", $text['label-password_description']);
+						$view->assign("username", $_SESSION['username']);
+						$view->assign("button_cancel", $text['button-cancel']);
 					}
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+				//messages
+					$view->assign('messages', message::html(true, '		'));
 
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-								}
-							}
+				//add the token name and hash to the view
+					//$view->assign("token_name", $token['name']);
+					//$view->assign("token_hash", $token['hash']);
 
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records);
-					}
+				//show the views
+					$content = $view->render('login.htm');
+					echo $content;
+					exit;
 			}
-		}
 
-		/**
-		 * copy records
-		 */
-		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'add')) {
+		//validate the token
+			//$token = new token;
+			//if (!$token->validate($_SERVER['PHP_SELF'])) {
+			//	message::add($text['message-invalid_token'],'negative');
+			//	header('Location: domains.php');
+			//	exit;
+			//}
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+		//add the authentication details
+			if (isset($_REQUEST["username"])) {
+				$this->username = $_REQUEST["username"];
+				$_SESSION['username'] = $this->username;
+			}
+			if (isset($_REQUEST["password"])) {
+				$this->password = $_REQUEST["password"];
+			}
+			if (isset($_REQUEST["key"])) {
+				$this->key = $_REQUEST["key"];
+			}
+			if (isset($_REQUEST["domain_name"])) {
+				$domain_name = $_REQUEST["domain_name"];
+				$this->domain_name = $_REQUEST["domain_name"];
+			}
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
+		//get the domain name
+			$auth->get_domain();
+			$this->username = $_SESSION['username'] ?? null;
+			//$this->domain_uuid = $_SESSION['domain_uuid'] ?? null;
+			//$this->domain_name = $_SESSION['domain_name'] ?? null;
+
+		//debug information
+			//echo "domain_uuid: ".$this->domain_uuid."<br />\n";
+			//view_array($this->domain_uuid, false);
+			//echo "domain_name: ".$this->domain_name."<br />\n";
+			//echo "username: ".$this->username."<br />\n";
+
+		//set the default status
+			$user_authorized = false;
+
+		//check if contacts app exists
+			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/contacts/') ? true : false;
+
+		//check the username and password if they don't match then redirect to the login
+			$sql = "select ";
+			$sql .= "	d.domain_name, ";
+			$sql .= "	u.user_uuid, ";
+			$sql .= "	u.contact_uuid, ";
+			$sql .= "	u.username, ";
+			$sql .= "	u.password, ";
+			$sql .= "	u.user_email, ";
+			$sql .= "	u.salt, ";
+			$sql .= "	u.api_key, ";
+			$sql .= "	u.domain_uuid ";
+			if ($contacts_exists) {
+				$sql .= ",";
+				$sql .= "c.contact_organization, ";
+				$sql .= "c.contact_name_given, ";
+				$sql .= "c.contact_name_family, ";
+				$sql .= "a.contact_attachment_uuid ";
+			}
+			$sql .= "from ";
+			$sql .= "	v_domains as d, ";
+			$sql .= "	v_users as u ";
+			if ($contacts_exists) {
+				$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid and u.contact_uuid is not null ";
+				$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = 1 and a.attachment_filename is not null and a.attachment_content is not null ";
+			}
+			$sql .= "where ";
+			$sql .= "	u.domain_uuid = d.domain_uuid ";
+			$sql .= "	and (";
+			$sql .= "		user_type = 'default' ";
+			$sql .= "		or user_type is null";
+			$sql .= "	) ";
+			if (isset($this->key) && strlen($this->key) > 30) {
+				$sql .= "and u.api_key = :api_key ";
+				$parameters['api_key'] = $this->key;
+			}
+			else {
+				$sql .= "and (\n";
+				$sql .= "	lower(u.username) = lower(:username)\n";
+				$sql .= "	or lower(u.user_email) = lower(:username)\n";
+				$sql .= ")\n";
+				$parameters['username'] = $this->username;
+			}
+			if ($users_unique === "global") {
+				//unique username - global (example: email address)
+			}
+			else {
+				//unique username - per domain
+				$sql .= "and u.domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+			}
+			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+			$row = $settings->database()->select($sql, $parameters, 'row');
+			if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+
+				//validate the password
+					$valid_password = false;
+					if (isset($this->key) && strlen($this->key) > 30 && $this->key === $row["api_key"]) {
+						$valid_password = true;
+					}
+					else if (substr($row["password"], 0, 1) === '$') {
+						if (isset($this->password) && !empty($this->password)) {
+							if (password_verify($this->password, $row["password"])) {
+								$valid_password = true;
+							}
+						}
+					}
+					else {
+						//deprecated - compare the password provided by the user with the one in the database
+						if (md5($row["salt"].$this->password) === $row["password"]) {
+							$row["password"] = crypt($this->password, '$1$'.$password_salt.'$');
+							$valid_password = true;
+						}
 					}
 
-				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+				//set the domain and user settings
+					if ($valid_password) {
+						//set the domain_uuid
+							$this->domain_uuid = $row["domain_uuid"];
+							$this->domain_name = $row["domain_name"];
 
-						//get checked records
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
+						//set the domain session variables
+							$_SESSION["domain_uuid"] = $this->domain_uuid;
+							$_SESSION["domain_name"] = $this->domain_name;
+
+						//set the domain setting
+							if ($users_unique === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
+								$domain = new domains();
+								$domain->set();
 							}
 
-						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters ?? null, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $x => $row) {
-
-										//copy data
-											$array[$this->table][$x] = $row;
-
-										//overwrite
-											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
-											$array[$this->table][$x]['database_description'] = trim($row['database_description'].' ('.$text['label-copy'].')');
-
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
+						//set the variables
+							$this->user_uuid = $row['user_uuid'];
+							$this->username = $row['username'];
+							$this->user_email = $row['user_email'];
+							$this->contact_uuid = $row['contact_uuid'];
+							if ($contacts_exists) {
+								$this->contact_organization = $row['contact_organization'];
+								$this->contact_name_given = $row['contact_name_given'];
+								$this->contact_name_family = $row['contact_name_family'];
+								$this->contact_image = $row['contact_attachment_uuid'];
 							}
 
-						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
+						//debug info
+							//echo "user_uuid ".$this->user_uuid."<br />\n";
+							//echo "username ".$this->username."<br />\n";
+							//echo "contact_uuid ".$this->contact_uuid."<br />\n";
 
-								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-copy']);
-
-							}
-							unset($records);
+						//set a few session variables
+							$_SESSION["user_uuid"] = $row['user_uuid'];
+							$_SESSION["username"] = $row['username'];
+							$_SESSION["user_email"] = $row['user_email'];
+							$_SESSION["contact_uuid"] = $row["contact_uuid"];
 					}
+
+				//check to to see if the the password hash needs to be updated
+					if ($valid_password) {
+						//set the password hash cost
+						$options = array('cost' => 10);
+
+						//check if a newer hashing algorithm is available or the cost has changed
+						if (password_needs_rehash($row["password"], PASSWORD_DEFAULT, $options)) {
+
+							//build user insert array
+								$array = [];
+								$array['users'][0]['user_uuid'] = $this->user_uuid;
+								$array['users'][0]['domain_uuid'] = $this->domain_uuid;
+								$array['users'][0]['user_email'] = $this->user_email;
+								$array['users'][0]['password'] = password_hash($this->password, PASSWORD_DEFAULT, $options);
+								$array['users'][0]['salt'] = null;
+
+							//build user group insert array
+								$array['user_groups'][0]['user_group_uuid'] = uuid();
+								$array['user_groups'][0]['domain_uuid'] = $this->domain_uuid;
+								$array['user_groups'][0]['group_name'] = 'user';
+								$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
+
+							//grant temporary permissions
+								$p = new permissions;
+								$p->add('user_edit', 'temp');
+
+							//execute insert
+								$settings->database()->app_name = 'authentication';
+								$settings->database()->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
+								$settings->database()->save($array);
+								unset($array);
+
+							//revoke temporary permissions
+								$p->delete('user_edit', 'temp');
+
+						}
+
+					}
+
+					//result array
+					if ($valid_password) {
+						$result["plugin"] = "database";
+						$result["domain_name"] = $this->domain_name;
+						$result["username"] = $this->username;
+						$result["user_uuid"] = $this->user_uuid;
+						$result["domain_uuid"] = $_SESSION['domain_uuid'];
+						$result["contact_uuid"] = $this->contact_uuid;
+						if ($contacts_exists) {
+							$result["contact_organization"] = $this->contact_organization;
+							$result["contact_name_given"] = $this->contact_name_given;
+							$result["contact_name_family"] = $this->contact_name_family;
+							$result["contact_image"] = $this->contact_image;
+						}
+						$result["user_email"] = $this->user_email;
+						$result["sql"] = $sql;
+						$result["authorized"] = $valid_password;
+					}
+
+					//return the results
+					return $result ?? false;
 
 			}
-		}
+
+
+		return;
 
 	}
 }
