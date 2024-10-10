@@ -76,7 +76,7 @@ if (!class_exists('user_logs')) {
 				$array['user_logs'][0]["user_agent"] = $_SERVER['HTTP_USER_AGENT'];
 				$array['user_logs'][0]["session_id"] = session_id();
 				$array['user_logs'][0]["type"] = 'login';
-				if ($result["authorized"] == "true") {
+				if ($result["authorized"]) {
 					$array['user_logs'][0]["result"] = 'success';
 				}
 				else {
