@@ -69,7 +69,7 @@ class plugin_database {
 
 		//check if already authorized
 			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
-				return $_SESSION['authentication']['plugin']['database'];
+				return;
 			}
 
 		//show the authentication code view
@@ -325,18 +325,6 @@ class plugin_database {
 						}
 
 					}
-					else {
-						//clear authentication session
-						if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods'])) {
-							unset($_SESSION['authentication']);
-						}
-
-						// clear username
-						if (!empty($_REQUEST["password"])) {
-							unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
-							unset($_SESSION['authentication']);
-						}
-					}
 
 					//result array
 					if ($valid_password) {
@@ -361,12 +349,7 @@ class plugin_database {
 					return $result ?? false;
 
 			}
-			else {
 
-				unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
-				unset($_SESSION['authentication']);
-
-			}
 
 		return;
 

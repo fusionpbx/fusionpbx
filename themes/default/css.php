@@ -3432,7 +3432,7 @@ else { //default: white
 	.list-status-active {
 		width: 10px;
 		height: 10px;
-		background-color: green;
+		background-color: #03C04A;
 		border-radius: 50%;
 		display: inline-block;
 	}
@@ -3441,6 +3441,14 @@ else { //default: white
 		width: 10px;
 		height: 10px;
 		background-color: #ccc;
+		border-radius: 50%;
+		display: inline-block;
+	}
+
+	.list-status-failed {
+		width: 10px;
+		height: 10px;
+		background-color: #ea4c46;
 		border-radius: 50%;
 		display: inline-block;
 	}
