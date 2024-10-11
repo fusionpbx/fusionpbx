@@ -1544,6 +1544,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a secondary background color of the login page, for a gradient effect.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c6867c6f-898e-4cae-9c51-f4e2edf58ce1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "login_background_image";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the login background image path.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a2acc3fc-509b-472d-a7f0-55dd8b99e1ff";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "login_background_image_enabled";
