@@ -230,28 +230,42 @@
 
 		//fax options, first attempt use the fax variables from settings
 			if ($fax_retry_count == 0) {
-				$fax_options = '';
-			}
-			if ($fax_retry_count == 1) {
+				//use default settings or domain settings (defaults to t38)
 				$fax_options = '';
 				foreach($setting->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
 				}
 			}
-			elseif ($fax_retry_count == 2) {
-				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true";
-			}
-			elseif ($fax_retry_count == 3) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
-			}
-			elseif ($fax_retry_count == 4) {
+			elseif ($fax_retry_count == 1) {
+				//send without t38 faster
 				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
+			elseif ($fax_retry_count == 2) {
+				//use t38 passthru
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,t38_passthru=true";
+			}
+			elseif ($fax_retry_count == 3) {
+				//send without t38 slower
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=true";
+			}
+			elseif ($fax_retry_count == 4) {
+				//send with t38 no error correction
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true";
+			}
 			elseif ($fax_retry_count == 5) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+				//send with t38 with error correction faster
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 6) {
-				$fax_options = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+				//send with t38 with error correction slower
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			}
+			else {
+				//try the user defineable method again
+				$fax_options = '';
+				foreach($setting->get('fax','variable') as $variable) {
+					$fax_options .= $variable.",";
+				}
 			}
 
 		//define the fax file
