@@ -485,6 +485,11 @@
 						caller_id = caller_id .. ",origination_caller_id_number="..caller_id_number;
 					end
 
+				--ensure accountcode exists
+					if (accountcode == nil) then
+						accountcode = '';
+					end
+
 				--set the destination dial string
 					-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal extensions, but not external calls. 
 					--destination_delay = destination_delay * 2;
