@@ -1892,7 +1892,7 @@ if (!class_exists('xml_cdr')) {
  			ob_clean();
 
  			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin" && $_GET['t'] != "record")  {
+			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
 				$this->range_download($record_file);
 			}
 
