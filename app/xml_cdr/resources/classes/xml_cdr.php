@@ -1892,7 +1892,7 @@ if (!class_exists('xml_cdr')) {
  			ob_clean();
 
  			//content-range
- 			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin" && $_GET['t'] != "record")  {
 				$this->range_download($record_file);
 			}
 
@@ -1952,7 +1952,7 @@ if (!class_exists('xml_cdr')) {
 				else {
 					$range  = explode('-', $range);
 					$c_start = $range[0];
-					$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+					$c_end   = (isset($range[1]) && is_numeric((int)$range[1])) ? $range[1] : $size;
 				}
 				/* Check the range and make sure it's treated according to the specs.
 				* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
