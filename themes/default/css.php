@@ -2006,6 +2006,7 @@ else { //default: white
 		-webkit-box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
 		-moz-box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
 		box-shadow: 0 0 3px 0px rgba(<?=hex_to_rgb($audio_player_indicator_color,',',true,0.8)?>);
+		pointer-events: none;
 		}
 
 	td.vtable.playback_progress_bar_background,
@@ -2020,8 +2021,8 @@ else { //default: white
 		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
 		<?php if ($audio_player_waveform_enabled === 'true') { ?>
-			padding-bottom: 3px;
-			background-size: 100% 100%;
+			padding-bottom: 0px;
+			background-size: 100% 100% !important;
 			background-repeat: no-repeat;
 			cursor: pointer;
 		<?php } ?>

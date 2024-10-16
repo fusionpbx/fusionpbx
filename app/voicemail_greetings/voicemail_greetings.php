@@ -432,7 +432,7 @@
 		foreach ($greetings as $row) {
 			//playback progress bar
 			if (permission_exists('voicemail_greeting_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_greeting_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'])."','".escape($voicemail_id).'|'.escape($row['voicemail_greeting_uuid'])."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['voicemail_greeting_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_greeting_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
+				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_greeting_uuid'])."' onclick=\"recording_seek(event,'".escape($row['voicemail_greeting_uuid'])."','".escape($voicemail_id).'|'.escape($row['voicemail_greeting_uuid'])."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['voicemail_greeting_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_greeting_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
 			if (permission_exists('voicemail_greeting_edit')) {
