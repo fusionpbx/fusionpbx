@@ -2064,7 +2064,7 @@ else { //default: white
 		overflow: hidden;
 		<?php if ($audio_player_waveform_enabled === 'true') { ?>
 			padding-bottom: 3px;
-			background-size: 100% 100%;
+			background-size: 100% 100% !important;
 			background-repeat: no-repeat;
 			cursor: pointer;
 		<?php } ?>
