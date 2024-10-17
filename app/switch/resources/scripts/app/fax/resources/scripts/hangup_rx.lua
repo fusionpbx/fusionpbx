@@ -63,6 +63,7 @@
 
 --escape shell arguments to prevent command injection
 	local function shell_esc(x)
+		if (x == nil) then return '' end
 		return (x:gsub('\\', '\\\\')
 			:gsub('\'', '\\\''))
 	end
