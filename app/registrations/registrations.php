@@ -187,7 +187,6 @@
 	echo "	<th class='hide-md-dn'>".$text['label-sip_profile_name']."</th>\n";
 	echo "	<td class='action-button'>&nbsp;</td>\n";
 	echo "</tr>\n";
-
 	if (is_array($registrations) && @sizeof($registrations) != 0) {
 		$x = 0;
 		foreach ($registrations as $row) {
@@ -226,7 +225,7 @@
 				echo "	</td>\n";
 				echo "	<td class=''>".$user."</td>\n";
 				echo "	<td class='' title=\"".escape($row['agent'])."\"><span class='cursor-help'>".escape($row['agent'])."</span></td>\n";
-				echo "	<td class='hide-md-dn'>".escape(explode('"',$row['contact'])[1])."</td>\n";
+				echo "	<td class='hide-md-dn' title='".escape($row['contact'])."'>".escape(explode('"',$row['contact'])[1])."</td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn'>".escape($row['network-port'])."</td>\n";
