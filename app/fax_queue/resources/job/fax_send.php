@@ -280,17 +280,19 @@
 			}
 
 		//check to see if the destination number is local
-			$sql = "select t.*, d.domain_name ";
-			$sql .= "from v_destinations as t, v_domains as d ";
-			$sql .= "where destination_number = :destination_number ";
-			$sql .= "and t.domain_uuid = d.domain_uuid ";
+			$sql = "select count(destination_uuid) ";
+			$sql .= "from v_destinations ";
+			$sql .= "where (";
+			$sql .= " destination_number = :destination_number ";
+			$sql .= " or concat(destination_prefix, destination_number) = :destination_number ";
+			$sql .= " or concat(destination_trunk_prefix, destination_number) = :destination_number ";
+			$sql .= " or concat(destination_area_code, destination_number) = :destination_number ";
+			$sql .= " or concat(destination_prefix, destination_area_code, destination_number) = :destination_number ";
+			$sql .= ")";
 			$parameters['destination_number'] = $fax_number;
 			$destination_count = $database->select($sql, $parameters, 'column');
 			if ($destination_count > 0) {
-				//$domain_uuid = $row['domain_uuid'];
-				//$domain_name = $row['domain_name'];
 				$route_array[] = 'loopback/'.$fax_number.'/public';
-				//$is_local = true;
 			}
 
 		//define the fax file
