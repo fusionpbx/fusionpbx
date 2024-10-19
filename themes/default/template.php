@@ -802,9 +802,9 @@
 			if (recording_progress) {
 				recording_progress.style.marginLeft = value + '%';
 			}
-			if (recording_audio != null && parseInt(recording_audio.duration) > 30) { //seconds
-				clearInterval(audio_clock);
-			}
+			// if (recording_audio != null && parseInt(recording_audio.duration) > 30) { //seconds
+			// 	clearInterval(audio_clock);
+			// }
 		}
 
 		function recording_fast_forward() {
@@ -831,6 +831,7 @@
 				}
 				recording_audio.currentTime = (event.offsetX / audio_player.offsetWidth) * recording_audio.duration;
 				update_progress(recording_id_playing);
+				document.getElementById('recording_button_' + player_id).focus();
 			}
 		}
 
