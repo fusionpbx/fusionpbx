@@ -213,18 +213,18 @@
 
 		echo "<div style='padding-bottom: 10px; text-align: right; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #fff;'>";
 		$user_file_size = '32768';
-		if (isset($_POST['submit'])) {
-			if (!is_numeric($_POST['size'])) {
-				//should generate log warning here...
-				$user_file_size = 512 * 1024;
-			}
-			else {
-				$user_file_size = $_POST['size'] * 1024;
-			}
-			if (!empty($_REQUEST['filter'])) {
-				$filter = $_REQUEST['filter'];
-			}
+		
+		if (!is_numeric($_POST['size'])) {
+			//should generate log warning here...
+			$user_file_size = 512 * 1024;
 		}
+		else {
+			$user_file_size = $_POST['size'] * 1024;
+		}
+		if (!empty($_REQUEST['filter'])) {
+			$filter = $_REQUEST['filter'];
+		}
+
 		//echo "Log File Size: " . $file_size . " bytes. <br />";
 		echo "	".$text['label-displaying']." ".number_format($user_file_size,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].".";
 		echo "</div>";
