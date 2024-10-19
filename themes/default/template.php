@@ -821,6 +821,19 @@
 			}
 		}
 
+		function recording_seek(event, player_id, data, audio_type) {
+			if (recording_audio) {
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					audio_player = document.getElementById('playback_progress_bar_background_' + player_id);
+				}
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					audio_player = document.getElementById('recording_progress_bar_' + player_id);
+				}
+				recording_audio.currentTime = (event.offsetX / audio_player.offsetWidth) * recording_audio.duration;
+				update_progress(recording_id_playing);
+			}
+		}
+
 		{/literal}
 
 	//handle action bar style on scroll
