@@ -47,6 +47,8 @@ if (!class_exists('xml_cdr')) {
 		private $username;
 		private $password;
 		private $json;
+		public $recording_uuid;
+		public $binary;
 
 		/**
 		 * user summary
@@ -1830,73 +1832,61 @@ if (!class_exists('xml_cdr')) {
 		/**
 		 * download the recordings
 		 */
-		public function download($uuid) {
-			if (!permission_exists('xml_cdr_view')) {
-				echo "permission denied";
-				return;
-			}
+		public function download() {
+			if (permission_exists('xml_cdr_view')) {
 
-			//get call recording from database
-			if (!is_uuid($uuid)) {
-				echo "invalid uuid";
-				return;
-			}
-
-			$sql = "select record_name, record_path from v_xml_cdr ";
-			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-			//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-			$parameters['xml_cdr_uuid'] = $uuid;
-			//$parameters['domain_uuid'] = $domain_uuid;
-			$row = $this->database->select($sql, $parameters, 'row');
-			if (!empty($row) && is_array($row)) {
-				$record_name = $row['record_name'];
-				$record_path = $row['record_path'];
-			} else {
-				echo "recording not found";
-				return;
-			}
-			unset ($sql, $parameters, $row);
-
-			//build full path
-			$record_file = $record_path.'/'.$record_name;
-
-			//download the file
-			if (!file_exists($record_file) || $record_file == '/') {
-				echo "recording not found";
-				return;
-			}
-
-			ob_clean();
-			$fd = fopen($record_file, "rb");
-			if ($_GET['t'] == "bin") {
-				header("Content-Type: application/force-download");
-				header("Content-Type: application/octet-stream");
-				header("Content-Type: application/download");
-				header("Content-Description: File Transfer");
-			}
-			else {
-				$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
-				switch ($file_ext) {
-					case "wav" : header("Content-Type: audio/x-wav"); break;
-					case "mp3" : header("Content-Type: audio/mpeg"); break;
-					case "ogg" : header("Content-Type: audio/ogg"); break;
+				//get call recording from database
+				if (is_uuid($this->recording_uuid)) {
+					$sql = "select record_name, record_path from v_xml_cdr ";
+					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+					$parameters['xml_cdr_uuid'] = $this->recording_uuid;
+					$row = $this->database->select($sql, $parameters, 'row');
+					if (!empty($row) && is_array($row)) {
+						$record_name = $row['record_name'];
+						$record_path = $row['record_path'];
+					}
+					unset ($sql, $parameters, $row);
 				}
-			}
-			$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
-			header('Content-Disposition: attachment; filename="'.$record_name.'"');
-			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-			if ($_GET['t'] == "bin") {
-				header("Content-Length: ".filesize($record_file));
-			}
- 			ob_clean();
 
- 			//content-range
-			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-				$this->range_download($record_file);
-			}
+				//build full path
+				$record_file = $record_path.'/'.$record_name;
 
- 			fpassthru($fd);
+				//download the file
+				if ($record_file != '/' && file_exists($record_file)) {
+					ob_clean();
+					$fd = fopen($record_file, "rb");
+					if ($this->binary) {
+						header("Content-Type: application/force-download");
+						header("Content-Type: application/octet-stream");
+						header("Content-Type: application/download");
+						header("Content-Description: File Transfer");
+					}
+					else {
+						$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
+						switch ($file_ext) {
+							case "wav" : header("Content-Type: audio/x-wav"); break;
+							case "mp3" : header("Content-Type: audio/mpeg"); break;
+							case "ogg" : header("Content-Type: audio/ogg"); break;
+						}
+					}
+					$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
+					header('Content-Disposition: attachment; filename="'.$record_name.'"');
+					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+					if ($this->binary) {
+						header("Content-Length: ".filesize($record_file));
+					}
+					ob_clean();
+
+					//content-range
+					if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
+						$this->range_download($record_file);
+					}
+
+					fpassthru($fd);
+				}
+
+			}
 
 		} //end download method
 
@@ -1922,7 +1912,7 @@ if (!class_exists('xml_cdr')) {
 			* (mediatype = mimetype)
 			* as well as a boundry header to indicate the various chunks of data.
 			*/
-			header("Accept-Ranges: 0-$length");
+			header("Accept-Ranges: 0-".$length);
 			// header('Accept-Ranges: bytes');
 			// multipart/byteranges
 			// http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
@@ -1944,15 +1934,15 @@ if (!class_exists('xml_cdr')) {
 				}
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
-				// And make sure to get the end byte if spesified
-				if ($range == '-') {
+				// And make sure to get the end byte if specified
+				if ($range[0] == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
 				}
 				else {
 					$range  = explode('-', $range);
 					$c_start = $range[0];
-					$c_end   = (isset($range[1]) && is_numeric((int)$range[1])) ? $range[1] : $size;
+					$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
 				}
 				/* Check the range and make sure it's treated according to the specs.
 				* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html

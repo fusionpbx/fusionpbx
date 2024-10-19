@@ -274,6 +274,7 @@ if (!class_exists('call_recordings')) {
 									case "ogg" : header("Content-Type: audio/ogg"); break;
 								}
 							}
+							$call_recording_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $call_recording_name);
 							header('Content-Disposition: attachment; filename="'.$call_recording_name.'"');
 							header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 							header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -415,7 +416,7 @@ if (!class_exists('call_recordings')) {
 				}
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
-				// And make sure to get the end byte if spesified
+				// And make sure to get the end byte if specified
 				if ($range[0] == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
