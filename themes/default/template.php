@@ -821,7 +821,7 @@
 			}
 		}
 
-		function recording_seek(event, player_id, data, audio_type) {
+		function recording_seek(event, player_id) {
 			if (recording_audio) {
 				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
 					audio_player = document.getElementById('playback_progress_bar_background_' + player_id);
