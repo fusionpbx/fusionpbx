@@ -242,11 +242,6 @@
 //get all provision settings
 	$provision = $settings->get('provision', null, []);
 
-//check for a valid match
-	if (empty($device_uuid) && $settings->get('provision', 'auto_insert_enabled', 'false') !== 'true') {
-		http_error(403);
-	}
-
 //check the cidr range
 	if (!empty($provision['cidr'])) {
 		$found = false;
