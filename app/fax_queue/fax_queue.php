@@ -324,7 +324,7 @@
 	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order);
 	echo th_order_by('fax_notify_date', $text['label-fax_notify_date'], $order_by, $order);
 	echo th_order_by('fax_retry_count', $text['label-fax_retry_count'], $order_by, $order);
-	if ($permission['fax_queue_edit'] && $settings->get('theme', 'list_row_edit_button', 'false') == 'true') {
+	if ($permission['fax_queue_edit'] && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -358,7 +358,7 @@
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_notify_date_formatted'])." ".escape($row['fax_notify_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_count'])."</td>\n";
-			if ($permission['fax_queue_edit'] && $settings->get('theme', 'list_row_edit_button', 'false') == 'true') {
+			if ($permission['fax_queue_edit'] && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon' => $settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
