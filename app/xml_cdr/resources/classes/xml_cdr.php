@@ -99,7 +99,7 @@ if (!class_exists('xml_cdr')) {
 		public function log($message) {
 
 			//save the log if enabled is true
-			if ($this->setting->get('log', 'enabled') == 'true') {
+			if ($this->setting->get('log', 'enabled', false)) {
 
 				//save the log to the php error log
 				if ($this->setting->get('log', 'type') == 'error_log') {
@@ -1001,7 +1001,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//save the call log to the database
-						if ($this->setting->get('cdr', 'call_log_enabled') == 'true' && !empty($this->setting->get('switch', 'log')) && $this->setting->get('cdr', 'storage') == "db") {
+						if ($this->setting->get('cdr', 'call_log_enabled', false) && !empty($this->setting->get('switch', 'log')) && $this->setting->get('cdr', 'storage') == "db") {
 							//get the log content
 							$log_content = '';
 							$handle = @fopen($this->setting->get('switch', 'log').'/freeswitch.log', "r");
@@ -1527,7 +1527,7 @@ if (!class_exists('xml_cdr')) {
 
 				//authentication for xml cdr http post
 					if (!defined('STDIN')) {
-						if ($this->setting->get('cdr', 'http_enabled') == "true") {
+						if ($this->setting->get('cdr', 'http_enabled')) {
 							//get the contents of xml_cdr.conf.xml
 								$conf_xml_string = file_get_contents($this->setting->get('switch', 'conf').'/autoload_configs/xml_cdr.conf.xml');
 
@@ -1571,7 +1571,7 @@ if (!class_exists('xml_cdr')) {
 
 				//check for the correct username and password
 					if (!defined('STDIN')) {
-						if ($this->setting->get('cdr', 'http_enabled') == "true") {
+						if ($this->setting->get('cdr', 'http_enabled', true)) {
 							if ($auth_array[0] == $_SERVER["PHP_AUTH_USER"] && $auth_array[1] == $_SERVER["PHP_AUTH_PW"]) {
 								//echo "access granted\n";
 								$this->username = $auth_array[0];
