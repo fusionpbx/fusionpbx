@@ -147,12 +147,12 @@
 			$device_address = substr($_SERVER['HTTP_USER_AGENT'],-14);
 			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 		}
-    
+
 		//Snom: $userAgent = "Mozilla/4.0 (compatible; snomD785-SIP 10.1.169.16 2010.12-00001-gd311851f1 (Feb 25 2019 - 14:19:43) 00041396D9B4 SXM:0 UXM:0 UXMC:0)"
 		if (substr($_SERVER['HTTP_USER_AGENT'],25,4) == "snom") {
 			$snom_ua = explode(" ", $_SERVER['HTTP_USER_AGENT']);
-		        $device_address = $snom_ua[10];
-		        $device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
+			$device_address = $snom_ua[10];
+			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
 		}
 
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
@@ -179,7 +179,7 @@
 	}
 
 //get http_domain_filter from global settings only (can't be used per domain)
-	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', 'true') == 'true' ? true : false;
+	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', true);
 
 //get the domain_uuid, domain_name, device_name and device_vendor
 	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
@@ -234,13 +234,18 @@
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //check if provisioning has been enabled
-	if ($settings->get('provision', 'enabled', 'false') !== "true") {
+	if (!$settings->get('provision', 'enabled', false)) {
 		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".escape($_REQUEST['mac']));
 		http_error('404');
 	}
 
 //get all provision settings
 	$provision = $settings->get('provision', null, []);
+
+//check for a valid match
+	if (empty($device_uuid) && $settings->get('provision', 'auto_insert_enabled', false)) {
+		http_error(403);
+	}
 
 //check the cidr range
 	if (!empty($provision['cidr'])) {
