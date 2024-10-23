@@ -230,16 +230,6 @@ if (!class_exists('email')) {
 		 */
 		public function send() {
 
-			//set the domain_uuid if not set
-			if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
-				$this->domain_uuid = $_SESSION['domain_uuid'];
-			}
-
-			//ensure the settings object matches the domain uuid requested in this object
-			if ($this->settings->get_domain_uuid() !== $this->domain_uuid) {
-				$this->settings = new settings(["database" => $this->database, "domain_uuid" => $this->domain_uuid]);
-			}
-
 			//set the send_method if not already set
 			if (!isset($this->method)) {
 				if ($setting->get('email_queue','enabled', true)) {
