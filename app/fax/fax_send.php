@@ -861,7 +861,7 @@ if (!$included) {
 		$sql .= "and cp.phone_type_fax = 1 ";
 		$sql .= "and cp.phone_number is not null ";
 		$sql .= "and cp.phone_number <> '' ";
-		if ($setting->get('contact','permissions') == "true") {
+		if ($setting->get('contact','permissions', false)) {
 			if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
 				//only show contacts assigned to current user's group(s) and those not assigned to any group
 				$sql .= "and (";
