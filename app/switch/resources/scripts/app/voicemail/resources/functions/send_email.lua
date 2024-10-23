@@ -314,10 +314,10 @@
 				--get the smtp from address and name
 					smtp_from = settings:get('voicemail', 'smtp_from', 'text');
 					smtp_from_name = settings:get('voicemail', 'smtp_from_name', 'text');
-					if (smtp_from and string.len(smtp_from) > 2) then
+					if (smtp_from == nil or smtp_from == '') then
 						smtp_from = settings:get('email', 'smtp_from', 'text');
 					end
-					if (smtp_from_name and string.len(smtp_from_name) > 0) then
+					if (smtp_from_name == nil or smtp_from_name == '') then
 						smtp_from_name = settings:get('email', 'smtp_from_name', 'text');
 					end
 					if (smtp_from_name and string.len(smtp_from_name) > 0 and smtp_from and string.len(smtp_from) > 2) then
