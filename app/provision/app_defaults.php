@@ -82,6 +82,14 @@ if ($domains_processed == 1) {
 	}
 	unset($sql);
 
+	//update default settings in category provision set enabled to use type boolean
+	$sql = "update v_default_settings ";
+	$sql .= "set default_setting_name = 'boolean' ";
+	$sql .= "where default_setting_category = 'provision' ";
+	$sql .= "and default_setting_subcategory = 'enabled' ";
+	$sql .= "and default_setting_name <> 'boolean' ";
+	$database->execute($sql);
+
 	//update default settings
 	$sql = "update v_default_settings set ";
 	$sql .= "default_setting_value = 'true', ";
