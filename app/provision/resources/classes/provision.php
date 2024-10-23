@@ -903,7 +903,7 @@
 							$sql .= "where domain_uuid = :domain_uuid ";
 							$sql .= "and enabled = 'true' ";
 							$sql .= "and directory_visible = 'true' ";
-							$sql .= "order by number_alias, extension asc ";
+							$sql .= "order by directory_first_name, effective_caller_id_name asc ";
 							$parameters['domain_uuid'] = $domain_uuid;
 							$extensions = $this->database->select($sql, $parameters, 'all');
 							if (is_array($extensions) && sizeof($extensions) != 0) {
