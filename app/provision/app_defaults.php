@@ -118,6 +118,23 @@ if ($domains_processed == 1) {
 	$sql .= "and domain_setting_name = 'text' ";
 	$database->execute($sql);
 
+	//update if the type is boolean with value of 0 or 1 use type text, or if type numeric use type text.
+	//explanation: the template default setting use string for the template values, boolean type only used with conditions
+	$sql = "update v_default_settings ";
+	$sql .= "set default_setting_name = 'text' ";
+	$sql .= "where ";
+	$sql .= "( ";
+	$sql .= " default_setting_category = 'provision' ";
+	$sql .= " and default_setting_value in ('0', '1') ";
+	$sql .= " and default_setting_name = 'boolean' ";
+	$sql .= ") ";
+	$sql .= "or ";
+	$sql .= "( ";
+	$sql .= "default_setting_category = 'provision' ";
+	$sql .= "and default_setting_name = 'numeric' ";
+	$sql .= ") ";
+	$database->execute($sql);
+
 }
 
 ?>
