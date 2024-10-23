@@ -891,10 +891,7 @@
 								$this->contact_append($contacts, $line, $domain_uuid, null, 'all');
 						}
 					}
-echo "device_uuid $device_uuid<br />\n";
-echo "domain_uuid $domain_uuid<br />\n";
-echo "contact_extensions ". $this->settings->get('provision','contact_extensions',false);
-//exit;
+
 				//get the extensions and add them to the contacts array
 					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && $this->settings->get('provision','contact_extensions',false)) {
 
@@ -909,7 +906,6 @@ echo "contact_extensions ". $this->settings->get('provision','contact_extensions
 							$sql .= "order by number_alias, extension asc ";
 							$parameters['domain_uuid'] = $domain_uuid;
 							$extensions = $this->database->select($sql, $parameters, 'all');
-view_array($extensions);
 							if (is_array($extensions) && sizeof($extensions) != 0) {
 								foreach ($extensions as $row) {
 									//get the contact_uuid
