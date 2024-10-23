@@ -339,7 +339,7 @@
 								//checks either device enabled
 									if ($row['device_enabled'] != 'true') {
 										syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempted but the device is not enabled for ".escape($device_address));
-										if ($this->settings->get('provision','debug', 'false') === 'true') {
+										if ($this->settings->get('provision','debug', false)) {
 											echo "<br/>device disabled<br/>";
 										}
 										else {
@@ -532,7 +532,7 @@
 							unset($templates);
 
 						//device address does not exist in the table so add it
-							if ($this->settings->get('provision','auto_insert_enabled','false') === "true") {
+							if ($this->settings->get('provision','auto_insert_enabled',false)) {
 
 								//get a new primary key
 								$device_uuid = uuid();
@@ -875,14 +875,14 @@
 
 				//get the list of contact directly assigned to the user
 					if (is_uuid($domain_uuid)) {
-						if ($this->settings->get('contact','permissions','false') === "true") {
+						if ($this->settings->get('contact','permissions',false)) {
 							//get the contacts assigned to the groups and add to the contacts array
-								if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_groups', 'false') === "true") {
+								if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_groups', false)) {
 									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'groups');
 								}
 
 							//get the contacts assigned to the user and add to the contacts array
-								if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_users', 'false') === "true") {
+								if (is_uuid($device_user_uuid) && $this->settings->get('contact','contact_users', false)) {
 									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'users');
 								}
 						}
@@ -891,9 +891,13 @@
 								$this->contact_append($contacts, $line, $domain_uuid, null, 'all');
 						}
 					}
-
+echo "device_uuid $device_uuid<br />\n";
+echo "domain_uuid $domain_uuid<br />\n";
+echo "contact_extensions ". $this->settings->get('provision','contact_extensions',false);
+//exit;
 				//get the extensions and add them to the contacts array
-					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && $this->settings->get('provision','contact_extensions','false') === "true") {
+					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && $this->settings->get('provision','contact_extensions',false)) {
+
 						//get contacts from the database
 							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
@@ -905,6 +909,7 @@
 							$sql .= "order by number_alias, extension asc ";
 							$parameters['domain_uuid'] = $domain_uuid;
 							$extensions = $this->database->select($sql, $parameters, 'all');
+view_array($extensions);
 							if (is_array($extensions) && sizeof($extensions) != 0) {
 								foreach ($extensions as $row) {
 									//get the contact_uuid
@@ -985,7 +990,7 @@
 							if (!empty($device_keys[$type]) && is_array($device_keys[$type])) {
 								foreach($device_keys[$type] as $row) {
 									//get the variables
-									$device_key_line = $row['device_key_line'];	
+									$device_key_line = $row['device_key_line'];
 									$device_key_id = $row['device_key_id'];
 									$device_key_value = $row['device_key_value'];
 									$device_key_extension = $row['device_key_extension'];
@@ -1212,7 +1217,7 @@
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
 							$this->http_error('404');
-							if ($this->settings->get('provision','debug','false') === 'true') {
+							if ($this->settings->get('provision','debug',false)) {
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";
 								echo "device_template: $device_template<br/>";
@@ -1226,7 +1231,7 @@
 					$file_contents = $view->render($file);
 
 				//log file for testing
-					if ($this->settings->get('provision','debug','false') === 'true') {
+					if ($this->settings->get('provision','debug',false)) {
 						$tmp_file = "/tmp/provisioning_log.txt";
 						$fh = fopen($tmp_file, 'w') or die("can't open file");
 						$tmp_string = $device_address."\n";
@@ -1235,6 +1240,7 @@
 					}
 
 					$this->file = $file;
+
 				//returned the rendered template
 					return $file_contents;
 
