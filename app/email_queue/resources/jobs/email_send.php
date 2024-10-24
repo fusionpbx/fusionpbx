@@ -148,7 +148,7 @@
 
 //get the email settings
 	$retry_limit = $settings->get('email_queue', 'retry_limit');
-	$transcribe_enabled = $settings->get('transcribe', 'enabled');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 	$save_response = $settings->get('email_queue', 'save_response');
 
 //set defaults
@@ -181,6 +181,9 @@
 		//$voicemail_description = $row["voicemail_description"];
 		//$voicemail_name_base64 = $row["voicemail_name_base64"];
 		//$voicemail_tutorial = $row["voicemail_tutorial"];
+		if (gettype($voicemail_transcription_enabled) === 'string') {
+			$voicemail_transcription_enabled = ($voicemail_transcription_enabled === 'true') ? true : false;
+		}
 	}
 	unset($parameters);
 
@@ -220,7 +223,7 @@
 				}
 			}
 
-			if (isset($transcribe_enabled) && $transcribe_enabled === 'true' && isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled === 'true') {
+			if ($transcribe_enabled && isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled) {
 				//debug message
 				echo "transcribe enabled: true\n";
 
@@ -569,4 +572,3 @@
 	//fwrite($esl, $content);
 	//fclose($esl);
 
-?>
