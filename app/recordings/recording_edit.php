@@ -55,13 +55,13 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('speech', 'enabled', 'false');
+	$speech_enabled = $settings->get('speech', 'enabled', false);
 	$speech_engine = $settings->get('speech', 'engine', '');
-	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 //add the speech object and get the voices and languages arrays
-	if ($speech_enabled == 'true' && !empty($speech_engine)) {
+	if ($speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
 		//$speech_models = $speech->get_models();
@@ -71,7 +71,7 @@
 	}
 
 //add the transcribe object and get the languages arrays
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine)) {
+	if ($transcribe_enabled && !empty($transcribe_engine)) {
 		$transcribe = new transcribe($settings);
 		//$transcribe_models = $transcribe->get_models();
 		//$translate_enabled = $transcribe->get_translate_enabled();
@@ -199,7 +199,7 @@
 
 				//determine whether to create the recording
 				$create_recording = false;
-				if ($speech_enabled == 'true' && !empty($recording_voice) && !empty($recording_message)) {
+				if ($speech_enabled && !empty($recording_voice) && !empty($recording_message)) {
 					if ($action == 'add') {
 						$create_recording = true;
 					}
@@ -232,7 +232,7 @@
 				}
 
 				//audio to text - get the transcription from the audio file
-				if ($transcribe_enabled == 'true' && empty($recording_message)) {
+				if ($transcribe_enabled && empty($recording_message)) {
 					$transcribe->audio_path = $recording_path;
 					$transcribe->audio_filename = $recording_filename;
 					$recording_message = $transcribe->transcribe();
@@ -243,7 +243,7 @@
 				$array['recordings'][0]['recording_uuid'] = $recording_uuid;
 				$array['recordings'][0]['recording_filename'] = $recording_filename;
 				$array['recordings'][0]['recording_name'] = $recording_name;
-				if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+				if ($speech_enabled || $transcribe_enabled) {
 					$array['recordings'][0]['recording_voice'] = $recording_voice;
 					$array['recordings'][0]['recording_message'] = $recording_message;
 				}
@@ -341,7 +341,7 @@
 		echo "</tr>\n";
 	}
 
-	if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+	if ($speech_enabled || $transcribe_enabled) {
 		//models
 		if (!empty($models)) {
 			echo "<tr>\n";
