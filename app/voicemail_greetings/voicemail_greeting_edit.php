@@ -43,9 +43,9 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('speech', 'enabled', 'false');
+	$speech_enabled = $settings->get('speech', 'enabled', false);
 	$speech_engine = $settings->get('speech', 'engine', '');
-	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 	$storage_type = $settings->get('voicemail', 'storage_type', '');
 
@@ -54,7 +54,7 @@
 	$language_enabled = false;
 
 //add the speech object and get the voices and languages arrays
-	if ($speech_enabled == 'true' && !empty($speech_engine)) {
+	if ($speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
 		//$speech_models = $speech->get_models();
@@ -64,7 +64,7 @@
 	}
 
 //add the transcribe object and get the languages arrays
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine)) {
+	if ($transcribe_enabled && !empty($transcribe_engine)) {
 		$transcribe = new transcribe($settings);
 		//$transcribe_models = $transcribe->get_models();
 		//$translate_enabled = $transcribe->get_translate_enabled();
@@ -184,7 +184,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			$greeting_filename = 'greeting_'.$greeting_id.'.'.$greeting_format;
 
 			//text to audio - make a new audio file from the message
-			if ($speech_enabled == 'true' && !empty($greeting_voice) && !empty($greeting_message)) {
+			if ($speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
 				$speech->audio_path = $greeting_path;
 				$speech->audio_filename = $greeting_filename;
 				$speech->audio_format = $greeting_format;
@@ -207,7 +207,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			}
 
 			//audio to text - get the transcription from the audio file
-			if ($transcribe_enabled == 'true' && empty($greeting_voice) && empty($greeting_message)) {
+			if ($transcribe_enabled && empty($greeting_voice) && empty($greeting_message)) {
 				$transcribe->audio_path = $greeting_path;
 				$transcribe->audio_filename = $greeting_filename;
 				$greeting_message = $transcribe->transcribe();
@@ -310,7 +310,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($speech_enabled == 'true' || $transcribe_enabled == 'true') {
+	if ($speech_enabled || $transcribe_enabled) {
 		//models
 		if (!empty($models) && is_array($models)) {
 			echo "<tr>\n";

@@ -43,8 +43,10 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+	$call_log_enabled = $settings->get('cdr', 'call_log_enabled', false);
+	$summary_style = $settings->get('cdr', 'summary_style', 'horizontal');
 
 //get the http values and set them to a variable
 	if (is_uuid($_REQUEST["id"])) {
@@ -88,7 +90,7 @@
 	if (
 		!empty($_GET['action']) &&
 		$_GET['action'] == 'transcribe' &&
-		$transcribe_enabled == 'true' &&
+		$transcribe_enabled &&
 		!empty($transcribe_engine) &&
 		empty($record_transcription) &&
 		!empty($record_path) &&
@@ -174,7 +176,7 @@
 	}
 
 //get the cdr log from the database
-	if ($_SESSION['cdr']['call_log_enabled']['boolean'] == 'true') {
+	if ($call_log_enabled) {
 		$sql = "select * from v_xml_cdr_logs ";
 		if (permission_exists('xml_cdr_all')) {
 			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
@@ -380,10 +382,10 @@
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
-	if ($_SESSION['cdr']['call_log_enabled']['boolean'] == 'true' && isset($log_content) && !empty($log_content)) {
+	if ($call_log_enabled && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$_SESSION['theme']['button_icon_search'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && empty($record_transcription)) {
+	if ($transcribe_enabled && !empty($transcribe_engine) && empty($record_transcription)) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
 	}
 	echo "</td>\n";
@@ -405,7 +407,7 @@
 	echo "</table>\n";
 
 //show the call summary - vertical
-	if ($_SESSION['cdr']['summary_style']['text'] == 'vertical') {
+	if ($summary_style == 'vertical') {
 		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -427,7 +429,7 @@
 	}
 
 //show the call summary - horizontal
-	if ($_SESSION['cdr']['summary_style']['text'] == 'horizontal') {
+	if ($summary_style == 'horizontal') {
 		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<th>".$text['label-direction']."</th>\n";
