@@ -152,11 +152,11 @@ if (!class_exists('call_recordings')) {
 
 				//add the settings object
 					$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-					$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+					$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 					$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 				//transcribe multiple recordings
-					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && is_array($records) && @sizeof($records) != 0) {
+					if ($transcribe_enabled && !empty($transcribe_engine) && is_array($records) && @sizeof($records) != 0) {
 						//add the transcribe object
 							$transcribe = new transcribe($settings);
 

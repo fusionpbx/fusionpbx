@@ -1028,12 +1028,12 @@
 
 			//add the settings object
 			$settings = new settings(["domain_uuid" => $this->domain_uuid, "user_uuid" => $this->user_uuid]);
-			$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+			$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 			$transcribe_engine = $settings->get('transcribe', 'engine', '');
 			$switch_voicemail = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
 
 			//transcribe multiple recordings
-			if ($transcribe_enabled == 'true' && !empty($transcribe_engine)) {
+			if ($transcribe_enabled && !empty($transcribe_engine)) {
 
 				//get voicemail message base64
 				$sql = "select message_base64 from v_voicemail_messages where voicemail_message_uuid = :voicemail_message_uuid ";
