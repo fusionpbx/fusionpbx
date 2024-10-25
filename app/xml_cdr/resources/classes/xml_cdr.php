@@ -520,6 +520,10 @@ if (!class_exists('xml_cdr')) {
 							//call center
 							$missed_call = 'true';
 						}
+                        if (!isset($xml->variables->bridge_uuid) || trim($xml->variables->bridge_uuid) === '') {
+                            // no bridge UUID (null or empty)
+                            $missed_call = 'true';
+                        }
 
 					//read the bridge statement variables
 						if (isset($xml->variables->last_app)) {
