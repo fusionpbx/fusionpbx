@@ -1,4 +1,4 @@
-<extension name="ring-group-forward" number="*75" context="${domain_name}" continue="false" app_uuid="738cba74-4fa1-4e85-9c50-1bbdbc25346c" enabled="true" order="500">
+<extension name="ring-group-forward" number="*75" context="${domain_name}" continue="false" app_uuid="738cba74-4fa1-4e85-9c50-1bbdbc25346c" enabled="true" order="495">
 	<condition field="destination_number" expression="^\*75$" break="on-true">
 		<action application="set" data="pin_number={v_pin_number}"/>
 		<action application="set" data="enabled=toggle"/>
