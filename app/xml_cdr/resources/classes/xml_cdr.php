@@ -520,7 +520,7 @@ if (!class_exists('xml_cdr')) {
 							//call center
 							$missed_call = 'true';
 						}
-                        if (!isset($xml->variables->bridge_uuid) || trim($xml->variables->bridge_uuid) === '') {
+                        if ((!isset($xml->variables->bridge_uuid) || trim($xml->variables->bridge_uuid) === '') &&  $xml->variables->billsec != 0) {
                             // no bridge UUID (null or empty)
                             $missed_call = 'true';
                         }
@@ -602,7 +602,7 @@ if (!class_exists('xml_cdr')) {
 							$status = 'no_answer';
 						}
 						if (!isset($status)  && $xml->variables->billsec == 0) {
-							$status = 'no_answer';
+							$status = 'failed';
 						}
 
 					//set the provider id
