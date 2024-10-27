@@ -221,7 +221,7 @@ class settings {
 				$name = $row['default_setting_name'];
 				$category = $row['default_setting_category'];
 				$subcategory = $row['default_setting_subcategory'];
-				if (!empty($row['default_setting_value'])) {
+				if (isset($row['default_setting_value']) && $row['default_setting_value'] !== '') {
 					if ($name == "boolean") {
 						if (gettype($row['default_setting_value']) === 'string') {
 							if ($row['default_setting_value'] === 'true') {
@@ -278,7 +278,7 @@ class settings {
 				$name = $row['domain_setting_name'];
 				$category = $row['domain_setting_category'];
 				$subcategory = $row['domain_setting_subcategory'];
-				if (!empty($row['domain_setting_value'])) {
+				if (isset($row['domain_setting_value']) && $row['domain_setting_value'] !== '') {
 					if ($name == "boolean") {
 						if (gettype($row['domain_setting_value']) === 'string') {
 							if ($row['domain_setting_value'] === 'true') {
@@ -328,7 +328,7 @@ class settings {
 					$name = $row['user_setting_name'];
 					$category = $row['user_setting_category'];
 					$subcategory = $row['user_setting_subcategory'];
-					if (!empty($row['user_setting_value'])) {
+					if (isset($row['user_setting_value']) && $row['user_setting_value'] !== '') {
 						if ($name == "boolean") {
 							if (gettype($row['user_setting_value']) === 'string') {
 								if ($row['user_setting_value'] === 'true') {
