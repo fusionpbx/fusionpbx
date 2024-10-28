@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//create the database connection
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -104,24 +107,6 @@
 	}
 	$parameters['time_zone'] = $time_zone;
 
-//get the count
-	//$sql = "select count(*) ";
-	//$sql .= "from view_call_recordings ";
-	//$sql .= "where true ";
-	//if ($_GET['show'] != "all" || !permission_exists('call_recording_all')) {
-	//	$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-	//	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	//}
-	//if (isset($search)) {
-	//	$sql .= "and (";
-	//	$sql .= "	lower(call_recording_name) like :search ";
-	//	$sql .= "	or lower(call_recording_path) like :search ";
-	//	$sql .= ") ";
-	//	$parameters['search'] = '%'.$search.'%';
-	//}
-	//$database = new database;
-	//$num_rows = $database->select($sql, $parameters, 'column');
-
 //prepare some of the paging values
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$page = $_GET['page'] ?? '';
@@ -138,7 +123,7 @@
 	//$sql .= "from v_call_recordings as r, v_domains as d ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('call_recording_all')) {
-		$sql .= "and (r.domain_uuid = :domain_uuid or r.domain_uuid is null) ";
+		$sql .= "and r.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= "and r.domain_uuid = d.domain_uuid ";
@@ -156,7 +141,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'r.call_recording_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$call_recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -167,9 +151,6 @@
 			if (!empty($row['call_recording_transcription'])) { $transcriptions_exists = true; }
 		}
 	}
-
-//count the results
-	$result_count = is_array($call_recordings) ? sizeof($call_recordings) : 0;
 
 //limit the number of results
 	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
@@ -194,7 +175,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b><div class='count'>".number_format($result_count)."</div></div>\n";
+	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('call_recording_download') && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
