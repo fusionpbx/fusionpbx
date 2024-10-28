@@ -517,6 +517,19 @@
 				$array['users'][$x]['username'] = $username;
 			}
 			if (permission_exists('user_password') && !empty($password) && $password == $password_confirm) {
+				//remove the session id files
+				$sql = "select session_id from v_user_logs ";
+				$sql .= "where user_uuid = :user_uuid ";
+				$sql .= "and timestamp > NOW() - INTERVAL '4 hours' ";
+				$parameters['user_uuid'] = $user_uuid;
+				$user_logs = $database->select($sql, $parameters, 'all');
+				foreach ($user_logs as $row) {
+					if (preg_match('/^[a-zA-Z0-9,-]+$/', $row['session_id']) && file_exists(session_save_path() . "/sess_" . $row['session_id'])) {
+						unlink(session_save_path() . "/sess_" . $row['session_id']);
+					}
+				}
+
+				//create a one way hash for the user password
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
 				$array['users'][$x]['salt'] = null;
 			}
@@ -1077,6 +1090,7 @@
 			echo button::create(['type'=>'button',
 				'label'=>$text['button-generate'],
 				'icon'=>'key',
+				'style'=>'margin-top: 1px; margin-bottom: 1px;',
 				'onclick'=>"document.getElementById('api_key').value = '".generate_password(32,3)."';
 					document.getElementById('frm').submit();"]);
 		}
@@ -1086,6 +1100,7 @@
 				'label'=>$text['button-view'],
 				'id'=>'button-api_key_view',
 				'icon'=>'key',
+				'style'=>'margin-top: 1px; margin-bottom: 1px;',
 				'onclick'=>"document.getElementById ('button-api_key_view').style.display = 'none';
 					document.getElementById('api_key').style.display = 'inline';
 					document.getElementById('button-api_key_hide').style.display = 'inline';
