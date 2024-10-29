@@ -24,6 +24,8 @@
  * SUCH DAMAGE.
  */
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 /**
  * email class
  *
@@ -425,8 +427,9 @@ if (!class_exists('email')) {
 
 				try {
 					//include the phpmailer classes
-					include_once("resources/phpmailer/class.phpmailer.php");
-					include_once("resources/phpmailer/class.smtp.php");
+					include_once("resources/phpmailer/src/PHPMailer.php");
+					include_once("resources/phpmailer/src/SMTP.php");
+					include_once("resources/phpmailer/src/Exception.php");
 
 					//use the email default settings
 					if (!empty($this->settings->get('email','smtp_hostname'))) {
@@ -524,7 +527,7 @@ if (!class_exists('email')) {
 					}
 
 					$this->from_address = ($this->from_address != '') ? $this->from_address : $smtp['from'];
-					$this->from_name = ($this->from_name != '') ? $this->from_name : $smtp['from_name'];
+					$this->from_name = ($this->from_name != '') ? $this->from_name : $smtp['from_name'] ?? $this->from_address;
 					$mail->SetFrom($this->from_address, $this->from_name);
 					$mail->AddReplyTo($this->from_address, $this->from_name);
 					$mail->Subject = $this->subject;
