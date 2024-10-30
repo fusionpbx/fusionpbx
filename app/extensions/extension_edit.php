@@ -1766,7 +1766,7 @@
 		echo "    ".$text['label-voicemail_mail_to']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to ?? '')."\">\n";
+		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='1024' value=\"".escape($voicemail_mail_to ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_mail_to']."\n";
 		echo "</td>\n";
