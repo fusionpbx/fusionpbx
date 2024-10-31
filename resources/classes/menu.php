@@ -1122,7 +1122,11 @@ if (!class_exists('menu')) {
 					if (!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
 						$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
 					}
-					$html .= "		<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
+					else {
+						$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px;\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
+					}
+					// $html .= "	<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
+					$html .= "		<div class='col-7 col-sm-6 pr-0' style='min-width: 130px; text-align: left;'>\n";
 					if (!empty($_SESSION['user']['contact_name'])) {
 						$html .= "		<div style='line-height: 95%;'><strong>".$_SESSION['user']['contact_name']."</strong></div>\n";
 					}
@@ -1253,7 +1257,11 @@ if (!class_exists('menu')) {
 				if (!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
 					$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
 				}
-				$html .= "		<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
+				else {
+					$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px;\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
+				}
+				// $html .= "	<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
+				$html .= "		<div class='col-7 col-sm-6 pr-0' style='min-width: 130px; text-align: left;'>\n";
 				if (!empty($_SESSION['user']['contact_name'])) {
 					$html .= "		<div style='line-height: 95%;'><strong>".$_SESSION['user']['contact_name']."</strong></div>\n";
 				}
