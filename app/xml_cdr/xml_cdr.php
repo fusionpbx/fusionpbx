@@ -92,7 +92,6 @@
 	$permission['xml_cdr_cc_agent_leg'] = permission_exists('xml_cdr_cc_agent_leg');
 	$permission['xml_cdr_cc_side'] = permission_exists('xml_cdr_cc_side');
 	$permission['xml_cdr_call_center_queues'] = permission_exists('xml_cdr_call_center_queues');
-	$permission['xml_cdr_ring_groups'] = permission_exists('xml_cdr_ring_groups');
 
 //add multi-lingual support
 	$language = new text;
