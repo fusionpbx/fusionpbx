@@ -264,7 +264,7 @@
 
 //http authentication - digest
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
-	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"] === "true") {
+	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"]) {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
 				//protect against missing data
@@ -336,7 +336,7 @@
 	}
 
 //http authentication - basic
-	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
+	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"]) {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 			header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 			header('HTTP/1.0 401 Authorization Required');
