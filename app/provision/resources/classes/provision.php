@@ -590,13 +590,17 @@
 							if (is_array($row) && sizeof($row) != 0) {
 								if ($row["device_enabled"] == "true") {
 									$device_label = $row["device_label"];
+
+									//if the device vendor match then use the alternate device template
+									if ($device_vendor == $row["device_vendor"]) {
+										$device_template = $row["device_template"];
+									}
+
 									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_firmware_version = $row["device_firmware_version"];
 									$device_user_uuid = $row["device_user_uuid"];
 									$device_location = strtolower($row["device_location"]);
-									//keep the original device_vendor
 									$device_enabled = $row["device_enabled"];
-									//keep the original device_template
 									$device_description = $row["device_description"];
 								}
 							}
