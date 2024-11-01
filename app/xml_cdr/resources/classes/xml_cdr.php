@@ -520,7 +520,7 @@ if (!class_exists('xml_cdr')) {
 							//call center
 							$missed_call = 'true';
 						}
-                        if ((!isset($xml->variables->bridge_uuid) || trim($xml->variables->bridge_uuid) === '') &&  $xml->variables->billsec != 0) {
+                        if ((!isset($xml->variables->bridge_uuid) || trim($xml->variables->bridge_uuid) === '') &&  $xml->variables->billsec != 0 && $xml->variables->last_app != 'rxfax') {
                             // no bridge UUID (null or empty)
                             $missed_call = 'true';
                         }
