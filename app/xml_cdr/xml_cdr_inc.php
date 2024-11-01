@@ -610,6 +610,11 @@
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid \n";
 		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 	}
+	//show specific ring groups
+	if (!empty($ring_group_uuid)) {
+		$sql .= "and ring_group_uuid = :ring_group_uuid \n";
+		$parameters['ring_group_uuid'] = $ring_group_uuid;
+	}
 	//end where
 	if (!empty($order_by)) {
 		$sql .= order_by($order_by, $order);
