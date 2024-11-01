@@ -47,6 +47,7 @@
 	$permission['xml_cdr_delete'] = permission_exists('xml_cdr_delete');
 	$permission['xml_cdr_domain'] = permission_exists('xml_cdr_domain');
 	$permission['xml_cdr_search_call_center_queues'] = permission_exists('xml_cdr_search_call_center_queues');
+	$permission['xml_cdr_search_ring_groups'] = permission_exists('xml_cdr_search_ring_groups');
 	$permission['xml_cdr_statistics'] = permission_exists('xml_cdr_statistics');
 	$permission['xml_cdr_archive'] = permission_exists('xml_cdr_archive');
 	$permission['xml_cdr_all'] = permission_exists('xml_cdr_all');
@@ -146,6 +147,16 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;
 		$extensions = $database->select($sql, $parameters, 'all');
+	}
+
+//get the ring groups
+	if ($permission['xml_cdr_search_ring_groups']) {
+		$sql = "select ring_group_uuid, ring_group_name, ring_group_extension from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "order by ring_group_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$ring_groups = $database->select($sql, $parameters, 'all');
 	}
 
 //get the call center queues
@@ -602,6 +613,26 @@
 				echo "		</div>\n";
 				echo "	</div>\n";
 				unset($sql, $parameters, $call_center_queues, $row, $selected);
+			}
+
+			if ($permission['xml_cdr_search_ring_groups']) {
+				echo "	<div class='form_set'>\n";
+				echo "		<div class='label'>\n";
+				echo "			".$text['label-ring_group']."\n";
+				echo "		</div>\n";
+				echo "		<div class='field'>\n";
+				echo "			<select class='formfld' name='ring_group_uuid' id='ring_group_uuid'>\n";
+				echo "				<option value=''></option>";
+				if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
+					foreach ($ring_groups as $row) {
+						$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
+						echo "		<option value='".escape($row['ring_group_uuid'])."' ".escape($selected).">".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
+					}
+				}
+				echo "			</select>\n";
+				echo "		</div>\n";
+				echo "	</div>\n";
+				unset($sql, $parameters, $ring_groups, $row, $selected);
 			}
 		}
 
