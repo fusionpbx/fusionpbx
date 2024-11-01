@@ -46,6 +46,7 @@
 	$permission['xml_cdr_delete'] = permission_exists('xml_cdr_delete');
 	$permission['xml_cdr_domain'] = permission_exists('xml_cdr_domain');
 	$permission['xml_cdr_search_call_center_queues'] = permission_exists('xml_cdr_search_call_center_queues');
+	$permission['xml_cdr_search_ring_groups'] = permission_exists('xml_cdr_search_ring_groups');
 	$permission['xml_cdr_statistics'] = permission_exists('xml_cdr_statistics');
 	$permission['xml_cdr_archive'] = permission_exists('xml_cdr_archive');
 	$permission['xml_cdr_all'] = permission_exists('xml_cdr_all');
@@ -90,6 +91,7 @@
 	$permission['xml_cdr_cc_agent_leg'] = permission_exists('xml_cdr_cc_agent_leg');
 	$permission['xml_cdr_cc_side'] = permission_exists('xml_cdr_cc_side');
 	$permission['xml_cdr_call_center_queues'] = permission_exists('xml_cdr_call_center_queues');
+	$permission['xml_cdr_ring_groups'] = permission_exists('xml_cdr_ring_groups');
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
@@ -140,6 +142,7 @@
 		$order = $_REQUEST["order"] ?? '';
 		$cc_side = $_REQUEST["cc_side"] ?? '';
 		$call_center_queue_uuid = $_REQUEST["call_center_queue_uuid"] ?? '';
+		$ring_group_uuid = $_REQUEST["ring_group_uuid"] ?? '';
 		if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
