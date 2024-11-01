@@ -614,6 +614,7 @@ if (!class_exists('xml_cdr')) {
 						$domain_uuid = urldecode($xml->variables->domain_uuid);
 
 					//misc
+						$this->array[$key][0]['ring_group_uuid'] = urldecode($xml->variables->ring_group_uuid);
 						$this->array[$key][0]['xml_cdr_uuid'] = $uuid;
 						$this->array[$key][0]['destination_number'] = $destination_number;
 						$this->array[$key][0]['sip_call_id'] = urldecode($xml->variables->sip_call_id);

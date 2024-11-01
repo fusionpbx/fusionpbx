@@ -337,6 +337,24 @@
 			unset($sql, $parameters, $call_center_queues, $row, $selected);
 		}
 
+		if (permission_exists('xml_cdr_search_ring_groups')) {
+			echo "	<tr>";
+			echo "		<td class='vncell'>".$text['label-ring_group']."</td>";
+			echo "		<td class='vtable'>";
+			echo "			<select class='formfld' name='ring_group_uuid' id='ring_group_uuid'>\n";
+			echo "				<option value=''></option>";
+			if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
+				foreach ($ring_groups as $row) {
+					$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
+					echo "		<option value='".escape($row['ring_group_uuid'])."' ".escape($selected).">".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
+				}
+			}
+			echo "			</select>\n";
+			echo "		</td>";
+			echo "	</tr>\n";
+			unset($sql, $parameters, $ring_groups, $row, $selected);
+		}
+
 		echo "</table>\n";
 	
 	echo "		</td>";

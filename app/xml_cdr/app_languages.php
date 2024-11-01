@@ -3992,4 +3992,31 @@ $text['label-text']['zh-cn'] = "文本";
 $text['label-text']['ja-jp'] = "文章";
 $text['label-text']['ko-kr'] = "텍스트";
 
+$text['label-ring_group']['en-us'] = "Ring Group";
+$text['label-ring_group']['en-gb'] = "Ring Group";
+$text['label-ring_group']['ar-eg'] = "فريق الاعتماد";
+$text['label-ring_group']['de-at'] = "Rufgruppen";
+$text['label-ring_group']['de-ch'] = "Rufgruppen";
+$text['label-ring_group']['de-de'] = "Rufgruppen";
+$text['label-ring_group']['el-gr'] = "Ομάδα δαχτυλιδιών";
+$text['label-ring_group']['es-cl'] = "Grupo de llamado";
+$text['label-ring_group']['es-mx'] = "Grupo de llamado";
+$text['label-ring_group']['fr-ca'] = "Groupes de Sonnerie";
+$text['label-ring_group']['fr-fr'] = "Groupes de Sonnerie";
+$text['label-ring_group']['he-il'] = "קבוצות חיוג";
+$text['label-ring_group']['it-it'] = "Gruppi di Squillo";
+$text['label-ring_group']['ka-ge'] = "ზარის ჯგუფი";
+$text['label-ring_group']['nl-nl'] = "Bel groepen";
+$text['label-ring_group']['pl-pl'] = "Grupy odbiorców rozmów";
+$text['label-ring_group']['pt-br'] = "Configurações da Conta";
+$text['label-ring_group']['pt-pt'] = "Grupos";
+$text['label-ring_group']['ro-ro'] = "Grup de apeluri";
+$text['label-ring_group']['ru-ru'] = "Группа вызовов";
+$text['label-ring_group']['sv-se'] = "Ringgrupper";
+$text['label-ring_group']['uk-ua'] = "Групи";
+$text['label-ring_group']['tr-tr'] = "Yüzük Grubu";
+$text['label-ring_group']['zh-cn'] = "环组";
+$text['label-ring_group']['ja-jp'] = "リンググループ";
+$text['label-ring_group']['ko-kr'] = "링 그룹";
+
 ?>
