@@ -329,7 +329,7 @@
 			}
 
 		//set the origination uuid
-			if (!is_uuid(origination_uuid)) { 
+			if (!is_uuid($origination_uuid)) { 
 				$origination_uuid = uuid();
 			}
 
