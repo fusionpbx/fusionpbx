@@ -264,7 +264,7 @@
 				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
 			}
 			else {
-				//try the user-definable method again
+				//try the user definable method again
 				$fax_options = '';
 				foreach($setting->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
@@ -327,6 +327,11 @@
 						$fax_status = 'failed';
 					}
 				}
+			}
+
+		//set the origination uuid
+			if (!is_uuid($origination_uuid)) { 
+				$origination_uuid = uuid();
 			}
 
 		//build a list of fax variables
