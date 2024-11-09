@@ -1134,6 +1134,9 @@ if (!class_exists('destinations')) {
 					$time_zone = date_default_timezone_get();
 				}
 
+			//set the time zone for php
+				date_default_timezone_set($time_zone);
+
 			//build the date range
 				if (!empty($this->start_stamp_begin) || !empty($this->start_stamp_end)) {
 					unset($this->quick_select);
@@ -1236,6 +1239,7 @@ if (!class_exists('destinations')) {
 				}
 				$sql .= " and direction = 'inbound' \n";
 				$sql .= " and caller_destination is not null \n";
+				$sql .= " leg = 'a' \n";
 				$sql .= $sql_date_range ?? '';
 				$sql .= ") as c \n";
 
