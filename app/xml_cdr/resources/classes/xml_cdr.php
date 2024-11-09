@@ -1131,6 +1131,9 @@ if (!class_exists('xml_cdr')) {
 				$time_zone = date_default_timezone_get();
 			}
 
+			//set the time zone for php
+			date_default_timezone_set($time_zone);
+
 			//get the destination select list
 			$destination = new destinations;
 			$destination_array = $destination->get('dialplan');
@@ -1627,6 +1630,9 @@ if (!class_exists('xml_cdr')) {
 					$time_zone = date_default_timezone_get();
 				}
 
+			//set the time zone for php
+				date_default_timezone_set($time_zone);
+
 			//build the date range
 				if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {
 					unset($this->quick_select);
@@ -1810,6 +1816,8 @@ if (!class_exists('xml_cdr')) {
 				else {
 					$sql .= " where true \n";
 				}
+				$sql .= "and leg = 'a' ";
+				$sql .= "and extension_uuid is not null ";
 				$sql .= $sql_date_range;
 				$sql .= ") as c \n";
 
