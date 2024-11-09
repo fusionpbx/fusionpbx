@@ -1128,6 +1128,9 @@ if (!class_exists('xml_cdr')) {
 				$time_zone = date_default_timezone_get();
 			}
 
+			//set the time zone for php
+			date_default_timezone_set($time_zone);
+
 			//get the destination select list
 			$destination = new destinations;
 			$destination_array = $destination->get('dialplan');
@@ -1624,6 +1627,9 @@ if (!class_exists('xml_cdr')) {
 					$time_zone = date_default_timezone_get();
 				}
 
+			//set the time zone for php
+				date_default_timezone_set($time_zone);
+
 			//build the date range
 				if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {
 					unset($this->quick_select);
@@ -1807,6 +1813,8 @@ if (!class_exists('xml_cdr')) {
 				else {
 					$sql .= " where true \n";
 				}
+				$sql .= "and leg = 'a' ";
+				$sql .= "and extension_uuid is not null ";
 				$sql .= $sql_date_range;
 				$sql .= ") as c \n";
 
@@ -1922,7 +1930,7 @@ if (!class_exists('xml_cdr')) {
 			* (mediatype = mimetype)
 			* as well as a boundry header to indicate the various chunks of data.
 			*/
-			header("Accept-Ranges: 0-$length");
+			header("Accept-Ranges: 0-".$length);
 			// header('Accept-Ranges: bytes');
 			// multipart/byteranges
 			// http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
@@ -1944,7 +1952,7 @@ if (!class_exists('xml_cdr')) {
 				}
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
-				// And make sure to get the end byte if spesified
+				// And make sure to get the end byte if specified
 				if ($range == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
@@ -1952,7 +1960,7 @@ if (!class_exists('xml_cdr')) {
 				else {
 					$range  = explode('-', $range);
 					$c_start = $range[0];
-					$c_end   = (isset($range[1]) && is_numeric((int)$range[1])) ? $range[1] : $size;
+					$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
 				}
 				/* Check the range and make sure it's treated according to the specs.
 				* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
