@@ -1676,6 +1676,9 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and status = 'answered' \n";
+			 	if (!$this->include_internal) {
+					$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
+				}
 				$sql .= ") \n";
 				$sql .= "as answered, \n";
 
@@ -1685,6 +1688,9 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and status = 'missed' \n";
 				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
+			 	if (!$this->include_internal) {
+					$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
+				}
 				$sql .= ") \n";
 				$sql .= "as missed, \n";
 
@@ -1692,7 +1698,10 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
-				$sql .= " and status = 'voicemail'\n";
+				$sql .= " and status = 'voicemail' \n";
+			 	if (!$this->include_internal) {
+					$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
+				}
 				$sql .= ") \n";
 				$sql .= "as voicemail, \n";
 
