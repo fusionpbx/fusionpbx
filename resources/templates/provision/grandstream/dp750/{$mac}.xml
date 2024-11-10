@@ -1034,7 +1034,6 @@
 
 <!-- Dial Plan  -->
 <!-- String Max Length: 1024 -->
-
 {if isset($grandstream_dial_plan) }
 <P4201>{$grandstream_dial_plan}</P4201>
 {else}
