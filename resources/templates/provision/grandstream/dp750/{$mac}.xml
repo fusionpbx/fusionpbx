@@ -3428,7 +3428,7 @@
 {/if}
 
 <!-- Phonebook Download Interval (in minutes) -->
-<!-- Valid value range is 5-720. Default is 0 for disabled-->
+<!-- Valid value range is 5-720. Default is 0 for disabled -->
 <!-- Number: 0, 5-720;  -->
 {if isset($grandstream_phonebook_download_interval)}
     <P332>{$grandstream_phonebook_download_interval}</P332>
