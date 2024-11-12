@@ -167,7 +167,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "direct_dial_digits_max";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "11";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "8";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
