@@ -4302,6 +4302,12 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
+	//bittel details
+		$y++;
+		$vendors[$y]['uuid'] = "a2eeb8e0-c30d-4f21-b3eb-7b2ac3b3e84d";
+		$vendors[$y]['name'] = "bittel";
+		$z=0;
+
 	//linphone details
 		$y++;
 		$vendors[$y]['uuid'] = "782bc1cc-149f-406f-b8e2-24a2bc484fad";
