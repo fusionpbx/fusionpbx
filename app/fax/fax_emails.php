@@ -266,8 +266,7 @@ if (!empty($result) && @sizeof($result) != 0) {
 
 					//send fax
 					$cwd = getcwd();
-					$included = true;
-					require("fax_send.php");
+					require "fax_send.php";
 					if($cwd){
 						chdir($cwd);
 					}
