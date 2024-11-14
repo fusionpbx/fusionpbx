@@ -271,7 +271,7 @@
 	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order, null, "class='center hide-md-dn'");
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order, null, "class='center hide-md-dn'");
 	if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
-		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_UU'], $order_by, $order);
+		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcription_enabled'], $order_by, $order);
 	}
 	if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
 		echo "<th>".$text['label-tools']."</th>\n";
