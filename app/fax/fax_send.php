@@ -28,14 +28,19 @@
 	Corey Moullas <cmoullas@emak.tech>
 */
 
-//set included to boolean
-	if (!isset($included)) { $included = false; }
-
 //check if windows
 	if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 
-//send email through browser
-if (!$included) {
+//executed via command line
+if (defined('STDIN')) {
+
+	//add multi-lingual support
+		$language = new text;
+		$text = $language->get($setting->get('domain','language','en-us'), 'app/fax');
+
+}
+//executed via browser
+else {
 
 	//includes files
 		require_once dirname(__DIR__, 2) . "/resources/require.php";
@@ -124,6 +129,7 @@ if (!$included) {
 		$fax_cover_font = $setting->get('fax','cover_font') ?? null;
 }
 
+//define function correct_path
 if (!function_exists('correct_path')) {
 	function correct_path($p) {
 		global $IS_WINDOWS;
@@ -206,7 +212,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 //send the fax
 	$continue = false;
-	if (!$included) {
+	if (!defined('STDIN')) {
 		if (!empty($_POST['action']) && $_POST['action'] == "send" && $domain_enabled == true) {
 			//get the values from the HTTP POST
 				$fax_numbers = $_POST['fax_numbers'];
@@ -300,10 +306,10 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//process uploaded or emailed files (if any)
 		$fax_page_count = 0;
-		$_files = (!$included) ? $_FILES['fax_files'] : $emailed_files;
+		$_files = (!defined('STDIN')) ? $_FILES['fax_files'] : $emailed_files;
 		unset($tif_files);
 		foreach ($_files['tmp_name'] as $index => $fax_tmp_name) {
-			$uploaded_file = (!$included) ? is_uploaded_file($fax_tmp_name) : true;
+			$uploaded_file = (!defined('STDIN')) ? is_uploaded_file($fax_tmp_name) : true;
 			if ( $uploaded_file && $_files['error'][$index] == 0 && $_files['size'][$index] > 0 ) {
 				//get the file extension
 				$fax_file_extension = strtolower(pathinfo($_files['name'][$index], PATHINFO_EXTENSION));
@@ -323,7 +329,7 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 				unset($attachment_file_name);
 
-				if (!$included) {
+				if (!defined('STDIN')) {
 					//check if directory exists
 					if (!is_dir($dir_fax_temp)) {
 						mkdir($dir_fax_temp, 0770);
@@ -490,9 +496,8 @@ if (!function_exists('fax_split_dtmf')) {
 			//field values
 			$pdf->SetFont($pdf_font, "", 12);
 			$pdf->SetXY($x + 2.0, $y + 1.65);
-			if ($_REQUEST['submit'] != '' && $_REQUEST['submit'] != 'preview') {
-				$time_zone = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
-				$date = new DateTime('now', new DateTimeZone($time_zone) );
+			if (defined('STDIN') || ($_REQUEST['submit'] != '' && $_REQUEST['submit'] != 'preview')) {
+				$date = new DateTime('now', new DateTimeZone( $setting->get('domain','time_zone', date_default_timezone_get() ) ));
 				$pdf->Write(0.3, $date->format('d M Y @ h:i:s A'));
 			}
 			$pdf->SetXY($x + 2.0, $y + 1.95);
@@ -624,7 +629,7 @@ if (!function_exists('fax_split_dtmf')) {
 				@unlink($tif_file);
 			}
 		}
-		elseif (!$included) {
+		elseif (!defined('STDIN')) {
 			//nothing to send, redirect the browser
 			message::add($text['message-invalid-fax'], 'negative', 4000);
 			header("Location: fax_send.php?id=".$fax_uuid);
@@ -678,12 +683,9 @@ if (!function_exists('fax_split_dtmf')) {
 		unset($sql, $parameters, $row);
 
 		//for email to fax send email notification back to the email sender
-		if ($included) {
+		if (defined('STDIN')) {
 			//use email-to-fax from address
 			$mail_to_address = $sender_email;
-		}
-		else {
-			//send fax through the browser
 		}
 
 		//move the generated tif (and pdf) files to the sent directory
@@ -826,7 +828,7 @@ if (!function_exists('fax_split_dtmf')) {
 		}
 
 		//redirect the browser
-		if (!$included && is_uuid($fax_uuid)) {
+		if (!defined('STDIN') && is_uuid($fax_uuid)) {
 			header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
 			//header("Location: fax_outbox.php?id=".$fax_uuid);
 			exit;
@@ -836,7 +838,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 
 //show content in the browser
-if (!$included) {
+if (!defined('STDIN')) {
 
 	//retrieve current user's assigned groups (uuids)
 		foreach ($_SESSION['groups'] as $group_data) {
