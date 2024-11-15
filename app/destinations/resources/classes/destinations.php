@@ -1239,7 +1239,7 @@ if (!class_exists('destinations')) {
 				}
 				$sql .= " and direction = 'inbound' \n";
 				$sql .= " and caller_destination is not null \n";
-				$sql .= " leg = 'a' \n";
+				$sql .= " and leg = 'a' \n";
 				$sql .= $sql_date_range ?? '';
 				$sql .= ") as c \n";
 
