@@ -43,6 +43,7 @@ if (!class_exists('xml_cdr')) {
 		public $domain_uuid;
 		public $call_details;
 		public $call_direction;
+		public $status;
 		public $billsec;
 		private $username;
 		private $password;
@@ -1141,8 +1142,18 @@ if (!class_exists('xml_cdr')) {
 			//add new rows when callee_id_number exists
 			$new_rows = 0;
 			foreach ($call_flow_array as $key => $row) {
+				//for outbound calls update the times if the bridged_time to remove the call setup plus the ring time
+				if ($this->call_direction === 'outbound') {
+						if (isset($row["times"]["bridged_time"]) and $row["times"]["bridged_time"] > 0) {
+							//change the end time for the current row
+							$call_flow_array[$key]["times"]["profile_created_time"] = $row["times"]["bridged_time"];
+						}
+				}
+
+				//add a new row to the call summary
 				if (!empty($row["caller_profile"]["destination_number"])
 					and !empty($row["caller_profile"]["callee_id_number"])
+					and $this->call_direction !== 'outbound'
 					and $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
 						//build the base of the new_row array
 						$new_row["caller_profile"]["destination_number"] = $row["caller_profile"]["callee_id_number"];
@@ -1195,6 +1206,7 @@ if (!class_exists('xml_cdr')) {
 			$x = 0; $skip_row = false;
 			if (!empty($call_flow_array)) {
 				foreach ($call_flow_array as $row) {
+
 					//skip this row
 					if ($skip_row) {
 						$skip_row = false;
@@ -1203,7 +1215,12 @@ if (!class_exists('xml_cdr')) {
 
 					//get the application array
 					if (!empty($destination_array) && !empty($row["caller_profile"]["destination_number"])) {
-						$app = $this->find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
+						if ($this->call_direction == 'outbound') {
+							$app = $this->find_app($destination_array, urldecode($row["caller_profile"]["username"]));
+						}
+						else {
+							$app = $this->find_app($destination_array, urldecode($row["caller_profile"]["destination_number"]));
+						}
 					}
 
 					//call centers
@@ -1233,11 +1250,11 @@ if (!class_exists('xml_cdr')) {
 
 					//extensions
 					if (!empty($app['application']) && $app['application'] == 'extensions') {
-						if ($this->billsec == 0) {
-							$app['status'] = 'missed';
+						if (!empty($row["times"]["profile_created_time"]) && !empty($row["times"]["profile_end_time"]) && (floor($row["times"]["profile_end_time"] / 1000000) - floor($row["times"]["profile_created_time"] / 1000000)) > 0) {
+							$app['status'] = 'answered';
 						}
 						else {
-							$app['status'] = 'answered';
+							$app['status'] = 'missed';
 						}
 					}
 
@@ -1248,10 +1265,23 @@ if (!class_exists('xml_cdr')) {
 
 					//outbound routes
 					if ($this->call_direction == 'outbound') {
-						if (empty($app['application'])) {
-							$app['application'] = 'dialplans';
+						$status = 'missed';
+						if (!empty($row["times"]["answered_time"])) {
+							$status = 'answered';
+						}
+
+						if (!empty($row["caller_profile"]["username"])) {
+							//add to the application array
+							$app['application'] = 'extensions';
+							$app['source'] = $row["caller_profile"]["username"];
+							$app['status'] = $status;
+							$app['name'] = '';
+							$app['label'] = 'extensions';
+						}
+						elseif (empty($app['application'])) {
+							$app['application'] = 'diaplans';
 							$app['uuid'] = '';
-							$app['status'] = '';
+							$app['status'] = $status;
 							$app['name'] = 'Outbound';
 							$app['label'] = 'Outbound';
 						}
@@ -1309,12 +1339,10 @@ if (!class_exists('xml_cdr')) {
 					}
 
 					//debug - add the callee_id_number to the end of the status
-					if (
-						isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true'
+					if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true'
 						&& !empty($row["caller_profile"]["destination_number"])
 						&& !empty($row["caller_profile"]["callee_id_number"])
-						&& $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]
-						) {
+						&& $row["caller_profile"]["destination_number"] !== $row["caller_profile"]["callee_id_number"]) {
 							$app['status'] .= ' ('.$row["caller_profile"]["callee_id_number"].')';
 					}
 
@@ -1331,32 +1359,57 @@ if (!class_exists('xml_cdr')) {
 					$text2 = $language2->get($this->setting->get('domain', 'language'), 'app/'.($app['application'] ?? ''));
 					$call_flow_summary[$x]["application_name"] = ($app['application'] ?? '');
 					$call_flow_summary[$x]["application_label"] = trim($text2['title-'.($app['application'] ?? '')] ?? '');
+					$call_flow_summary[$x]["call_direction"] = $this->call_direction;
+
 					$call_flow_summary[$x]["application_url"] = $application_url;
-					$call_flow_summary[$x]["destination_uuid"] = ($app["uuid"] ?? '');
-					$call_flow_summary[$x]["destination_name"] = ($app['name'] ?? '');
-					$call_flow_summary[$x]["destination_url"] = $destination_url;
+					if ($this->call_direction == 'outbound') {
+						$call_flow_summary[$x]["source_uuid"] = ($app['uuid'] ?? '');
+						$call_flow_summary[$x]["source_number"] = $app['source'];
+						$call_flow_summary[$x]["source_label"] = ($app['label'] ?? '');
+						$call_flow_summary[$x]["source_url"] = $destination_url;
+						$call_flow_summary[$x]["source_name"] = $app['description'] ?? '';
+						//$call_flow_summary[$x]["source_description"] = $app['description'] ?? '';
+						$call_flow_summary[$x]["destination_uuid"] = '';
+						$call_flow_summary[$x]["destination_number"] = '';
+						$call_flow_summary[$x]["destination_label"] = '';
+						$call_flow_summary[$x]["destination_url"] = '';
+						$call_flow_summary[$x]["destination_description"] = '';
+					}
+					else {
+						$call_flow_summary[$x]["source_uuid"] = '';
+						$call_flow_summary[$x]["source_number"] = '';
+						$call_flow_summary[$x]["source_label"] = '';
+						$call_flow_summary[$x]["source_url"] = '';
+						$call_flow_summary[$x]["destination_name"] = ($app['description'] ?? '');
+						$call_flow_summary[$x]["destination_uuid"] = ($app['uuid'] ?? '');
+						$call_flow_summary[$x]["destination_label"] = ($app['label'] ?? '');
+						$call_flow_summary[$x]["destination_url"] = $destination_url;
+						//$call_flow_summary[$x]["destination_description"] = $app['description'] ?? '';
+					}
 					$call_flow_summary[$x]["destination_number"] = $row["caller_profile"]["destination_number"];
-					$call_flow_summary[$x]["destination_label"] = ($app['label'] ?? '');
 					$call_flow_summary[$x]["destination_status"] = ($app['status'] ?? '');
 					$call_flow_summary[$x]["destination_description"] = $app['description'] ?? '';
 					//$call_flow_summary[$x]["application"] = $app;
 
 					//set the start and epoch
-					$profile_created_epoch = round($row['times']['profile_created_time'] / 1000000);
-					$profile_end_epoch = round($row['times']['profile_end_time'] / 1000000);
+					$profile_created_epoch = $row['times']['profile_created_time'] / 1000000;
+					$profile_end_epoch = $row['times']['profile_end_time'] / 1000000;
 
 					//add the call flow times
-					$call_flow_summary[$x]["start_epoch"] = $profile_created_epoch;
-					$call_flow_summary[$x]["end_epoch"] = $profile_end_epoch;
+					$call_flow_summary[$x]["start_epoch"] = round($profile_created_epoch);
+					$call_flow_summary[$x]["end_epoch"] = round($profile_end_epoch);
 					$call_flow_summary[$x]["start_stamp"] =  date("Y-m-d H:i:s", $profile_created_epoch);
 					$call_flow_summary[$x]["end_stamp"] =  date("Y-m-d H:i:s", $profile_end_epoch);
-					$call_flow_summary[$x]["duration_seconds"] =  $profile_end_epoch - $profile_created_epoch;
+					$call_flow_summary[$x]["duration_seconds"] =  round($profile_end_epoch - $profile_created_epoch);
 					$call_flow_summary[$x]["duration_formatted"] =  gmdate("G:i:s",(int) $call_flow_summary[$x]["duration_seconds"]);
 					unset($app);
 					$x++;
 				}
 			}
 			unset($x);
+
+			//set the last status to match the call detail record
+			$call_flow_summary[count($call_flow_summary)-1]['destination_status'] = $this->status;
 
 			//return the call flow summary array
 			return $call_flow_summary;
