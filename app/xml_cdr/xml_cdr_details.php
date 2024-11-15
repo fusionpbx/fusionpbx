@@ -37,12 +37,15 @@
 		exit;
 	}
 
+//connect to the database
+	$database = database::new();
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$settings = new settings(["database" => $database, "domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 	$call_log_enabled = $settings->get('cdr', 'call_log_enabled', false);
@@ -64,7 +67,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$parameters['xml_cdr_uuid'] = $uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 		$caller_id_name = trim($row["caller_id_name"] ?? '');
@@ -116,7 +118,6 @@
 					$p->add('xml_cdr_edit', 'temp');
 
 				//remove record_path, record_name and record_length
-					$database = new database;
 					$database->app_name = 'xml_cdr';
 					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 					$database->save($array, false);
@@ -147,7 +148,6 @@
 			$parameters['domain_uuid'] = $domain_uuid;
 		}
 		$parameters['xml_cdr_uuid'] = $uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 			$json_string = trim($row["json"] ?? '');
@@ -167,7 +167,6 @@
 			$parameters['domain_uuid'] = $domain_uuid;
 		}
 		$parameters['xml_cdr_uuid'] = $uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 			$call_flow = trim($row["call_flow"] ?? '');
@@ -187,7 +186,7 @@
 			$parameters['domain_uuid'] = $domain_uuid;
 		}
 		$parameters['xml_cdr_uuid'] = $uuid;
-		$database = new database;
+
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 			$log_content = $row["log_content"];
@@ -271,15 +270,18 @@
 //build the call flow summary array
 	$xml_cdr = new xml_cdr;
 	$xml_cdr->domain_uuid = $_SESSION['domain_uuid'];
-	$xml_cdr->call_direction = $call_direction;
-	$xml_cdr->billsec = $billsec;
+	$xml_cdr->call_direction = $call_direction; //used to determine when the call is outbound
+	$xml_cdr->status = $status; //used to determine when the call is outbound
 	if (empty($call_flow)) {
+		//get the call flow summary from the xml_cdr_json table
 		$xml_cdr->call_details = $array;
 		$call_flow_array = $xml_cdr->call_flow();
 	}
 	else {
+		//get the call flow summary from the xml_cdr_flow table
 		$call_flow_array = json_decode($call_flow, true);
 	}
+	//prepares the raw call flow data to be displayed
 	$call_flow_summary = $xml_cdr->call_flow_summary($call_flow_array);
 
 //debug information
@@ -293,7 +295,6 @@
 			}
 			$i++;
 		}
-		view_array($call_flow_array, false);
 	}
 
 //set the year, month and date
@@ -498,6 +499,9 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<th>".$text['label-application']."</th>\n";
+	if ($call_direction == 'outbound') {
+		echo "	<th>".$text['label-source']."</th>\n";
+	}
 	echo "	<th>".$text['label-destination']."</th>\n";
 	echo "	<th>".$text['label-name']."</th>\n";
 	echo "	<th>".$text['label-start']."</th>\n";
@@ -509,8 +513,15 @@
 	foreach ($call_flow_summary as $row) {
 		echo "<tr >\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_number"])."</a></td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_name"])."</a></td>\n";
+		if ($call_direction == 'outbound') {
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["destination_number"])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_name"])."</a></td>\n";
+		}
+		else {
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_number"])."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_name"])."</a></td>\n";
+		}
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";

@@ -40,6 +40,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = database::new();
+
 //set permissions
 	$permission = array();
 	$permission['xml_cdr_view'] = permission_exists('xml_cdr_view');
@@ -144,7 +147,6 @@
 		}
 		$sql .= "order by extension asc, number_alias asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$extensions = $database->select($sql, $parameters, 'all');
 	}
 
@@ -154,7 +156,6 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$call_center_queues = $database->select($sql, $parameters, 'all');
 	}
 
