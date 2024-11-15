@@ -403,6 +403,9 @@
 	table.insert(sql, ":domain_uuid");
 	table.insert(sql, ")");
 	sql = table.concat(sql, "\n");
+	if (sip_to_user == nil) then
+		sip_to_user = fax_destination_number;
+	end
 	local params = {
 		uuid = uuid;
 		domain_uuid = domain_uuid;
@@ -410,7 +413,7 @@
 		fax_file = fax_file;
 		caller_id_name = fax_caller_id_name;
 		caller_id_number = fax_caller_id_number;
-		fax_destination = fax_destination_number;
+		fax_destination = sip_to_user;
 		fax_base64 = fax_base64;
 		fax_date = os.date("%Y-%m-%d %X");
 		fax_time = os.time();
@@ -445,7 +448,7 @@
 	if (caller_id_number ~= nil) then
 		freeswitch.consoleLog("INFO","caller_id_number: " .. fax_caller_id_number .. "\n");
 	end
-	freeswitch.consoleLog("INFO","fax_destination: " .. fax_destination_number .. "\n");
+	freeswitch.consoleLog("INFO","fax_destination: " .. sip_to_user .. "\n");
 	freeswitch.consoleLog("INFO","fax_result_code: ".. fax_result_code .."\n");
 	--freeswitch.consoleLog("INFO","mailfrom_address: ".. from_address .."\n");
 	--freeswitch.consoleLog("INFO","mailto_address: ".. email_address .."\n");
