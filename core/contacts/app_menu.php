@@ -29,7 +29,7 @@
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['icon'] = "";
-	$apps[$x]['menu'][$y]['path'] = "/app/contacts/contacts.php";
+	$apps[$x]['menu'][$y]['path'] = "/core/contacts/contacts.php";
 	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
