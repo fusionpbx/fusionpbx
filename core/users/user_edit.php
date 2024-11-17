@@ -946,7 +946,7 @@
 		echo "<br />\n";
 		echo $text['description-contact']."\n";
 		if (!empty($contact_uuid)) {
-			echo "			<a href=\"".PROJECT_PATH."/app/contacts/contact_edit.php?id=".urlencode($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
+			echo "			<a href=\"".PROJECT_PATH."/core/contacts/contact_edit.php?id=".urlencode($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
 		}
 		echo "		</td>";
 		echo "	</tr>";
