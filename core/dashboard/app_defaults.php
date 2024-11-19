@@ -123,7 +123,6 @@ if ($domains_processed == 1) {
 
 	//execute array of queries
 		foreach ($queries as $sql) {
-			$database = new database;
 			$database->execute($sql);
 		}
 		unset($queries, $sql);
