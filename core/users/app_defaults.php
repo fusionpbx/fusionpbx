@@ -35,9 +35,7 @@ if ($domains_processed == 1) {
 
 		$sql = "CREATE VIEW view_users AS ( \n";
 		$sql .= "	select u.domain_uuid, u.user_uuid, d.domain_name, u.username, u.user_status, u.user_enabled, u.add_date, \n";
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/app/contacts/app_config.php")) {
-			$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given ||' '|| c.contact_name_family as contact_name, c.contact_name_given, c.contact_name_family, \n";
-		}
+		$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given ||' '|| c.contact_name_family as contact_name, c.contact_name_given, c.contact_name_family, \n";
 		$sql .= "	( \n";
 		$sql .= "		select \n";
 		$sql .= "		string_agg(g.group_name, ', ') \n";
@@ -67,15 +65,9 @@ if ($domains_processed == 1) {
 		$sql .= "		ORDER BY group_level DESC \n";
 		$sql .= "		LIMIT 1 \n";
 		$sql .= "	) AS group_level \n";
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/app/contacts/app_config.php")) {
-			$sql .= "	from v_contacts as c \n";
-			$sql .= "	right join v_users u on u.contact_uuid = c.contact_uuid \n";
-			$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
-		}
-		else {
-			$sql .= "	from v_users as u \n";
-			$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
-		}
+		$sql .= "	from v_contacts as c \n";
+		$sql .= "	right join v_users u on u.contact_uuid = c.contact_uuid \n";
+		$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
 		$sql .= "	where 1 = 1 \n";
 		$sql .= "	order by u.username asc \n";
 		$sql .= "); \n";
