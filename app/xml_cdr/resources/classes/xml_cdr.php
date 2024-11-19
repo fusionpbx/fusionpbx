@@ -484,10 +484,6 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//set missed calls
-						if (isset($xml->variables->missed_call)) {
-							//marked as missed
-							$missed_call = $xml->variables->missed_call;
-						}
 						if (isset($call_direction) && $call_direction == 'inbound'
 							&& isset($xml->variables->hangup_cause)
 							&& $xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
@@ -524,6 +520,10 @@ if (!class_exists('xml_cdr')) {
 						}
 						if (isset($xml->variables->voicemail_answer_stamp) && !empty($xml->variables->voicemail_answer_stamp)) {
 							//voicemail
+							$missed_call = 'true';
+						}
+						if (isset($xml->variables->missed_call) && $xml->variables->missed_call == 'true') {
+							//marked as missed
 							$missed_call = 'true';
 						}
 
@@ -579,9 +579,6 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->hangup_cause == 'NO_ANSWER') {
 							$status = 'no_answer';
 						}
-						if ($missed_call == 'true') {
-							$status = 'missed';
-						}
 						if (substr($destination_number, 0, 3) == '*99') {
 							$status = 'voicemail';
 						}
@@ -605,6 +602,9 @@ if (!class_exists('xml_cdr')) {
 						}
 						if (!isset($status)  && $xml->variables->billsec == 0) {
 							$status = 'no_answer';
+						}
+						if ($missed_call == 'true') {
+							$status = 'missed';
 						}
 
 					//set the key
