@@ -1338,4 +1338,3 @@ if (!class_exists('menu')) {
 
 	}
 }
-
