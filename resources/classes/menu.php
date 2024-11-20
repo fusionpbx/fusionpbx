@@ -1220,7 +1220,7 @@ if (!class_exists('menu')) {
 						//sub menu items
 							if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
 								$html .= "	<div id='sub_".$menu_item_main['menu_item_uuid']."' class='menu_side_sub' style='display: none;'>\n";
-								foreach ($menu_item_main['menu_items'] as $menu_index_sub => $menu_item_sub) {
+								foreach ($menu_item_main['menu_items'] as $menu_item_sub) {
 									$menu_sub_icon = null;
 									if ($this->settings->get('theme', 'menu_sub_icons', true) !== false) {
 										if (!empty($menu_item_sub['menu_item_icon']) && substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
