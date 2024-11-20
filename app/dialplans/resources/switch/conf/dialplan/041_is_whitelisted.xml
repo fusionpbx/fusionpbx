@@ -1,5 +1,5 @@
 <extension name="is_whitelisted" number="" context="global" continue="true" app_uuid="59a84f1f-6f7d-4a88-8e06-75427e3e6209" enabled="false" order="41">
-	<condition field="destination_number" expression="\+?1?(\d{10})$">
+	<condition field="destination_number" expression="^\+?1?(\d{10})$">
 		<action application="lua" data="is_whitelisted.lua $1"/>
 	</condition>
 	<condition field="destination_number" expression="^(\d{1,6})$">

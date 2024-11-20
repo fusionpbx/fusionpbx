@@ -42,6 +42,9 @@ function is_whitelisted(number)
         end
     end)
 
+    -- Close the database connection
+    dbh:release()
+
     return is_allowed
 end
 
