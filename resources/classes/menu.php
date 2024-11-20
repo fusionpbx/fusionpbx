@@ -1176,8 +1176,6 @@ if (!class_exists('menu')) {
 					}
 
 				return $html;
-				unset($html);
-
 		}
 
 		/**
