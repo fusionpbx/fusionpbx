@@ -96,6 +96,9 @@ if (!class_exists('menu')) {
 			} else {
 				$this->settings = $setting_array['settings'];
 			}
+
+			//add multi-lingual support
+			$this->text = (new text)->get();
 		}
 
 		/**
@@ -108,14 +111,10 @@ if (!class_exists('menu')) {
 
 			if (permission_exists($this->name.'_delete')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
 				//validate the token
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
+						message::add($this->text['message-invalid_token'],'negative');
 						header('Location: '.$this->location);
 						exit;
 					}
@@ -163,7 +162,7 @@ if (!class_exists('menu')) {
 									$p->delete('menu_language_delete', 'temp');
 
 								//set message
-									message::add($text['message-delete']);
+									message::add($this->text['message-delete']);
 							}
 							unset($records);
 					}
@@ -177,14 +176,10 @@ if (!class_exists('menu')) {
 
 			if (permission_exists($this->name.'_delete')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
 				//validate the token
 					$token = new token;
 					if (!$token->validate('/core/menu/menu_item_list.php')) {
-						message::add($text['message-invalid_token'],'negative');
+						message::add($this->text['message-invalid_token'],'negative');
 						header('Location: '.$this->location);
 						exit;
 					}
@@ -246,7 +241,7 @@ if (!class_exists('menu')) {
 									$p->delete('menu_item_group_delete', 'temp');
 
 								//set message
-									message::add($text['message-delete']);
+									message::add($this->text['message-delete']);
 							}
 							unset($records);
 					}
@@ -265,14 +260,10 @@ if (!class_exists('menu')) {
 
 			if (permission_exists($this->name.'_edit')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
 				//validate the token
 					$token = new token;
 					if (!$token->validate('/core/menu/menu_item_list.php')) {
-						message::add($text['message-invalid_token'],'negative');
+						message::add($this->text['message-invalid_token'],'negative');
 						header('Location: '.$this->location);
 						exit;
 					}
@@ -320,7 +311,7 @@ if (!class_exists('menu')) {
 									unset($array);
 
 								//set message
-									message::add($text['message-toggle']);
+									message::add($this->text['message-toggle']);
 							}
 							unset($records, $states);
 					}
@@ -936,10 +927,6 @@ if (!class_exists('menu')) {
 		 */
 		public function menu_horizontal($menu_array) {
 
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
 			//determine menu behavior
 				$menu_style = $this->settings->get('theme', 'menu_style', 'fixed');
 				switch ($menu_style) {
@@ -1145,7 +1132,7 @@ if (!class_exists('menu')) {
 						$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
 					}
 					else {
-						$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"".$text['label-primary-contact-attachment-image']."\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
+						$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"".$this->text['label-primary-contact-attachment-image']."\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
 					}
 					// $html .= "	<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
 					$html .= "		<div class='col-7 col-sm-6 pr-0' style='min-width: 130px; text-align: left;'>\n";
@@ -1159,8 +1146,8 @@ if (!class_exists('menu')) {
 						$html .= "		<div class='mt-2' style='font-size: 90%;'><i class='fa-solid fa-phone' style='margin-right: 5px; color: #00b043;'></i><strong>".$_SESSION['user']['extension'][0]['destination']."</strong></div>\n";
 					}
 					$html .= "			<div class='pt-2 mt-3' style='border-top: 1px solid ".color_adjust($this->settings->get('theme', 'body_header_shadow_color'), 0.05).";'>\n";
-					$html .= "				<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$text['title-account_settings']."</a><br>\n";
-					$html .= "				<a href='".PROJECT_PATH."/logout.php'>".$text['title-logout']."</a>\n";
+					$html .= "				<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$this->text['title-account_settings']."</a><br>\n";
+					$html .= "				<a href='".PROJECT_PATH."/logout.php'>".$this->text['title-logout']."</a>\n";
 					$html .= "			</div>";
 					$html .= "		</div>";
 					$html .= "	</div>";
@@ -1179,10 +1166,6 @@ if (!class_exists('menu')) {
 		 */
 		public function menu_vertical($menu_array) {
 
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
 			//menu brand image and/or text
 				$html = "	<div id='menu_side_control_container'>\n";
 				$html .= "		<div class='menu_side_control_state' style='float: right; ".($this->settings->get('theme', 'menu_side_state') != 'expanded' ? 'display: none' : null)."'>\n";
@@ -1194,7 +1177,7 @@ if (!class_exists('menu')) {
 				switch ($this->settings->get('theme', 'menu_brand_type')) {
 					case 'none':
 						$html .= "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='".($this->settings->get('theme', 'menu_side_state') != 'expanded' ? "display: none;" : null)." height: 60px; min-width: ".intval($this->settings->get('theme', 'menu_side_width_contracted', 60))."px;' title=\"".$this->text['theme-label-contract_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 11px;'></i></a>";
-						$html .= "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();' style='".($this->settings->get('theme', 'menu_side_state') == 'expanded' || $this->settings->get('theme', 'menu_side_state') == 'hidden' ? "display: none;" : null)." height: 60px;' title=\"".$text['theme-label-expand_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 11px;'></i></a>";
+						$html .= "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();' style='".($this->settings->get('theme', 'menu_side_state') == 'expanded' || $this->settings->get('theme', 'menu_side_state') == 'hidden' ? "display: none;" : null)." height: 60px;' title=\"".$this->text['theme-label-expand_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 11px;'></i></a>";
 						break;
 					case 'text':
 						$html .= "<a class='menu_brand_text' ".($this->settings->get('theme', 'menu_side_state') != 'expanded' ? "style='display: none;'" : null)." href='".PROJECT_PATH."/'>".escape($menu_brand_text)."</a>\n";
@@ -1278,7 +1261,7 @@ if (!class_exists('menu')) {
 					$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
 				}
 				else {
-					$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"".$text['label-primary-contact-attachment-image']."\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
+					$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"".$this->text['label-primary-contact-attachment-image']."\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
 				}
 				// $html .= "	<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
 				$html .= "		<div class='col-7 col-sm-6 pr-0' style='min-width: 130px; text-align: left;'>\n";
@@ -1292,8 +1275,8 @@ if (!class_exists('menu')) {
 					$html .= "		<div class='mt-2' style='font-size: 90%;'><i class='fa-solid fa-phone' style='margin-right: 5px; color: #00b043;'></i><strong>".$_SESSION['user']['extension'][0]['destination']."</strong></div>\n";
 				}
 				$html .= "			<div class='pt-2 mt-3' style='border-top: 1px solid ".color_adjust($this->settings->get('theme', 'body_header_shadow_color'), 0.05).";'>\n";
-				$html .= "				<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$text['title-account_settings']."</a><br>\n";
-				$html .= "				<a href='".PROJECT_PATH."/logout.php'>".$text['title-logout']."</a>\n";
+				$html .= "				<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$this->text['title-account_settings']."</a><br>\n";
+				$html .= "				<a href='".PROJECT_PATH."/logout.php'>".$this->text['title-logout']."</a>\n";
 				$html .= "			</div>";
 				$html .= "		</div>";
 				$html .= "	</div>";
