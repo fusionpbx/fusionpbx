@@ -41,12 +41,16 @@ if (!class_exists('permissions')) {
 		 */
 		public function __construct($database = null, $domain_uuid = null, $user_uuid = null) {
 
+			//intitialize as empty arrays
+			$this->groups = [];
+			$this->permissions = [];
+
 			//handle the database object
 			if (isset($database)) {
 				$this->database = $database;
 			}
 			else {
-				$this->database = new database;
+				$this->database = database::new();
 			}
 
 			//set the domain_uuid
@@ -75,7 +79,9 @@ if (!class_exists('permissions')) {
 				$this->groups = $groups->assigned();
 
 				//get the list of groups assigned to the user
-				$this->permissions = $this->assigned();
+				if (!empty($this->groups)) {
+					$this->permissions = $this->assigned();
+				}
 			}
 		}
 
@@ -143,6 +149,11 @@ if (!class_exists('permissions')) {
 			//define the array
 			$parameter_names = [];
 
+			//return empty array if there are no groups
+			if (empty($this->groups)) {
+				return [];
+			}
+
 			//prepare the parameters
 			$x = 0;
 			foreach ($this->groups as $field) {
@@ -156,13 +167,10 @@ if (!class_exists('permissions')) {
 			//get the permissions assigned to the user through the assigned groups
 			$sql = "select distinct(permission_name) from v_group_permissions ";
 			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-			if (is_array($parameter_names) && @sizeof($parameter_names) != 0) {
-				$sql .= "and group_name in (".implode(", ", $parameter_names).") \n";
-			}
+			$sql .= "and group_name in (".implode(", ", $parameter_names).") \n";
 			$sql .= "and permission_assigned = 'true' ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
-			$permissions = $database->select($sql, $parameters, 'all');
+			$permissions = $this->database->select($sql, $parameters, 'all');
 			unset($sql, $parameters, $result);
 			return $permissions;
 		}
@@ -191,5 +199,3 @@ if (!class_exists('permissions')) {
 		$p = new permissions;
 		$p->delete($permission);
 	*/
-
-?>
