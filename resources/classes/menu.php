@@ -1174,7 +1174,7 @@ if (!class_exists('menu')) {
 				}
 				$html .= "		</div>\n";
 				$menu_brand_text = escape($this->settings->get('theme', 'menu_brand_text', 'FusionPBX'));
-				switch ($this->settings->get('theme', 'menu_brand_type')) {
+				switch ($this->settings->get('theme', 'menu_brand_type', '')) {
 					case 'none':
 						$html .= "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='".($this->settings->get('theme', 'menu_side_state') != 'expanded' ? "display: none;" : null)." height: 60px; min-width: ".intval($this->settings->get('theme', 'menu_side_width_contracted', 60))."px;' title=\"".$this->text['theme-label-contract_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 11px;'></i></a>";
 						$html .= "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();' style='".($this->settings->get('theme', 'menu_side_state') == 'expanded' || $this->settings->get('theme', 'menu_side_state') == 'hidden' ? "display: none;" : null)." height: 60px;' title=\"".$this->text['theme-label-expand_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 11px;'></i></a>";
@@ -1195,8 +1195,8 @@ if (!class_exists('menu')) {
 						$menu_brand_image_contracted = $this->settings->get('theme', 'menu_side_brand_image_contracted', PROJECT_PATH.'/themes/default/images/logo_side_contracted.png');
 						$menu_brand_image_expanded = $this->settings->get('theme', 'menu_side_brand_image_expanded', PROJECT_PATH.'/themes/default/images/logo_side_expanded.png');
 						$html .= "<a class='menu_brand_image' href='".PROJECT_PATH."/'>";
-						$html .= 	"<img id='menu_brand_image_contracted' style='".($this->settings->get('theme', 'menu_side_state') == 'expanded' ? "display: none;" : null)."' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
-						$html .= 	"<img id='menu_brand_image_expanded' ".($this->settings->get('theme', 'menu_side_state') != 'expanded' ? "style='display: none;'" : null)." src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
+						$html .= 	"<img id='menu_brand_image_contracted' style='".($this->settings->get('theme', 'menu_side_state', 'contracted') == 'expanded' ? "display: none;" : '')."' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
+						$html .= 	"<img id='menu_brand_image_expanded' ".($this->settings->get('theme', 'menu_side_state', 'contracted') != 'expanded' ? "style='display: none;'" : '')." src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
 						$html .= "</a>\n";
 						break;
 				}
