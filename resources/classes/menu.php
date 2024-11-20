@@ -1203,7 +1203,7 @@ if (!class_exists('menu')) {
 				$html .= "	</div>\n";
 			//main menu items
 				if (!empty($menu_array)) {
-					foreach ($menu_array as $menu_index_main => $menu_item_main) {
+					foreach ($menu_array as $menu_item_main) {
 						$menu_target = ($menu_item_main['menu_item_category'] == 'external') ? '_blank' : '';
 						$html .= "	<a class='menu_side_item_main' ".(!empty($menu_item_main['menu_item_link']) ? "href='".$menu_item_main['menu_item_link']."' target='".$menu_target."'" : "onclick=\"menu_side_expand(); menu_side_item_toggle('".$menu_item_main['menu_item_uuid']."');\"")." title=\"".$menu_item_main['menu_language_title']."\">";
 						if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0 && $this->settings->get('theme', 'menu_side_item_main_sub_icons', true) === true) {
