@@ -805,7 +805,7 @@ if (!class_exists('menu')) {
 		private function menu_child_array($menu_item_level, $menu_item_uuid) {
 
 			//set the level
-				$menu_item_level = $menu_item_level + 1;
+				$menu_item_level++;
 
 			//if there are no groups then set the public group
 				if (!isset($_SESSION['groups'][0]['group_name'])) {
