@@ -57,11 +57,13 @@ if (!class_exists('menu')) {
 		private $settings;
 
 		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $user_uuid;
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $domain_uuid;
@@ -75,8 +77,8 @@ if (!class_exists('menu')) {
 			$this->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$this->location = 'menus.php';
 
-			$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
-			$this->user_uuid = $_SESSION['user_uuid'] ?? '';
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 			//open a database connection
 			if (empty($setting_array['database'])) {
@@ -914,11 +916,11 @@ if (!class_exists('menu')) {
 					//add the menu items
 						$this->restore();
 				}
-				unset($sql, $parameters, $result, $row);
 		}
 
 		/**
 		 * build the fixed, static or inline horizontal menu html
+		 * @param array $menu_array Associative array of menu items
 		 */
 		public function menu_horizontal($menu_array) {
 
@@ -1158,6 +1160,7 @@ if (!class_exists('menu')) {
 
 		/**
 		 * build the vertical side menu html
+		 * @param array $menu_array Associative array of menu items
 		 */
 		public function menu_vertical($menu_array) {
 			//set defaults
