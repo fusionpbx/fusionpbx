@@ -39,7 +39,6 @@ if (!class_exists('menu')) {
 		private $table;
 		private $toggle_field;
 		private $toggle_values;
-		private $description_field;
 		private $location;
 		public $menu_uuid;
 		public $menu_language;
