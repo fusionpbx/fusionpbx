@@ -510,6 +510,8 @@
 	echo "<tr>";
 	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
 	echo "<td class='vtable' align='left'>";
+	//style for dragging rows
+	echo "  <link rel=stylesheet href='resources/styles/phrase_edit.css' />";
 	//structure table
 	echo "	<table border='0' cellpadding='0' cellspacing='0' id='phrases_table'>\n";
 	//headings
@@ -568,8 +570,10 @@
 //	}
 //	unset($phrase_details, $field);
 //*/
-	echo "<tr id='recordings_row' draggable=true>\n";
-	echo "	<td style='border-bottom: none;' nowrap='nowrap'><div display: grid; place-items: center; height: 100px; border: 1px solid black;><span class='fa-solid fa-arrows-up-down'>&nbsp;</span></div></td>";
+
+	//draggable row
+	echo "<tr class='draggable-row' id='recordings_row' draggable=true>\n";
+	echo "	<td style='border-bottom: none;' nowrap='nowrap'><center><span class='fa-solid fa-arrows-up-down'></span></center></td>";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";

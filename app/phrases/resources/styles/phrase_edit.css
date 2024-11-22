@@ -1,0 +1,11 @@
+.draggable-row {
+    cursor: move;
+}
+
+.dragging {
+    opacity: 0.5;
+}
+
+.target-background {
+	background-color: #ffc107;
+}
