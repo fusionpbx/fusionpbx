@@ -584,11 +584,12 @@
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange='action_to_input();'" : null)."></select>";
+//	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange='action_to_input();'" : null)."></select>";
+	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange=''" : null)."></select>";
 	if (if_group("superadmin")) {
 		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
 	}
-	echo "		<script>load_action_options(0);</script>\n";
+	//echo "		<script>load_action_options(0);</script>\n";
 	echo "	</td>\n";
 /*
 //	echo "	<td class='vtable' style='border-bottom: none;'>\n";
