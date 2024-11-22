@@ -6,6 +6,14 @@ if (session:ready()) then
     -- extension_uuid = session:getVariable("extension_uuid");
 end
 
+if (session:ready()) then
+    freeswitch.consoleLog("INFO", "[is_whitelisted] Getting Caller ID info \n")
+    caller_id_number = session:getVariable("caller_id_number");
+    freeswitch.consoleLog("INFO", "[is_whitelisted] Caller ID is " .. caller_id_number .. " \n")
+
+    -- extension_uuid = session:getVariable("extension_uuid");
+end
+
 
 --connect to the database
 local Database = require "resources.functions.database";
@@ -50,13 +58,23 @@ end
 
 -- Check whitelist
 if is_whitelisted(number) then
-    freeswitch.consoleLog("INFO", "[is_whitelisted] Call to " .. number .. " is allowed. \n")
+    freeswitch.consoleLog("INFO", "[is_whitelisted] Call from " .. number .. " is allowed. \n")
     return "allowed"  -- Allow the call to proceed
 else
     freeswitch.consoleLog("NOTICE", "[is_whitelisted] " .. number .. " is not in the whitelist. Call is rejected \n")
     
     -- If session is active, hang up
     if session ~= nil and session:ready() then
+
+        -- Answer the call to ensure a CDR is generated
+        session:answer()
+
+        session:execute("playback", "silence_stream://1000")
+
+        session:streamFile("/usr/share/freeswitch/sounds/inbound_not_allowed.wav")
+
+        session:sleep(1000) -- Wait for 1 second (1000 milliseconds)
+
         session:hangup("CALL_REJECTED")  -- Hang up with the specified cause
     end
 
