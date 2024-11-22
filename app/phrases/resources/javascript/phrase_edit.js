@@ -53,22 +53,39 @@ function add_draggable_rows() {
 	tableBody.addEventListener('dragend', () => {
 		draggedRow.classList.remove('dragging');
 		draggedRow = null;
-		//updateOrder();
+		updateOrder();
 	});
 
 }
 
+// Function to update the 'name' attribute based on row numbers
+function updateOrder() {
+	const tableBody = document.getElementById('structure');
+	const rows = tableBody.querySelectorAll('tr');
+
+	//iterate over all rows to renumber them
+	rows.forEach((row, index) => {
+		//current row number (1-based index)
+		const row_number = index + 1;
+		//set 'name' attribute
+		row.setAttribute('name', 'recording_' + row_number);
+	});
+}
 
 // Add a new row to the table
 function add_row() {
 	const tbody = document.getElementById('structure');
 	const newRow = document.getElementById('recordings_row').cloneNode(true);
-	newRow.id = 'row_' + tbody.childElementCount
-	newRow.name = 'recordings_' + tbody.childElementCount;
 
+	//set id
+	newRow.id = 'row_' + tbody.childElementCount
+	//set 'name' attribute
+	newRow.setAttribute('name', 'recording_' + tbody.childElementCount);
+
+	//add the row to the table body
 	tbody.appendChild(newRow);
 
-	// Reinitialize draggable functionality
+	//reinitialize draggable functionality on the row
 	add_draggable_rows();
 }
 
