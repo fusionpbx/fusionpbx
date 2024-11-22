@@ -41,6 +41,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//ensure we have a database object
+	if (!($database instanceof database)) {
+		$database = database::new();
+	}
+
 //add the defaults
 	$phrase_name = '';
 	$phrase_language = '';
@@ -162,8 +167,6 @@
 					//execute insert
 						$p = new permissions;
 						$p->add('phrase_detail_add', 'temp');
-
-						$database = new database;
 						$database->app_name = 'phrases';
 						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
@@ -226,8 +229,6 @@
 					//execute update/insert
 						$p = new permissions;
 						$p->add('phrase_detail_add', 'temp');
-
-						$database = new database;
 						$database->app_name = 'phrases';
 						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
@@ -276,7 +277,6 @@
 		$sql .= "and phrase_uuid = :phrase_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$phrase_name = $row["phrase_name"];
@@ -298,17 +298,15 @@
 		$sql .= "order by phrase_detail_order asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$phrase_details = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
 
 //get the recording names from the database.
-	$sql = "select recording_name, recording_filename from v_recordings ";
+	$sql = "select recording_uuid, recording_name, recording_filename from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -321,8 +319,27 @@
 	if ($action == 'update') { $document['title'] = $text['title-edit_phrase']; }
 	require_once "resources/header.php";
 
+//javascript constants for use in the selection option group
+	echo "<script>\n";
+	echo "window.phrase_commands = " . json_encode(['Play', 'Pause', 'Execute'], true) . ";\n";
+	if ($recordings !== false) {
+		//recordings
+		echo "window.phrase_recordings = " . json_encode($recordings, true) . ";\n";
+	}
+
+	$file = new file;
+	$sound_files = $file->sounds();
+	if (!empty($sound_files)) {
+		//sounds
+		echo "window.phrase_sounds = " . json_encode($sound_files, true) . ";\n";
+	}
+	echo "</script>\n";
+
 //js to control action form input
-	echo "<script type='text/javascript'>\n";
+	echo "<script src='resources/javascript/phrase_edit.js'></script>\n";
+
+/* old section 
+	echo "		<script type='text/javascript'>\n";
 
 	echo "function load_action_options(selected_index) {\n";
 	echo "	var obj_action = document.getElementById('phrase_detail_data');\n";
@@ -361,8 +378,6 @@
 		}
 		unset($recordings, $row);
 	//sounds
-		$file = new file;
-		$sound_files = $file->sounds();
 		if (is_array($sound_files) && @sizeof($sound_files) != 0) {
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
@@ -440,7 +455,7 @@
 		echo "}\n";
 	}
 	echo "</script>\n";
-
+//*/
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
 
@@ -495,55 +510,66 @@
 	echo "<tr>";
 	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
 	echo "<td class='vtable' align='left'>";
-	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
+	//structure table
+	echo "	<table border='0' cellpadding='0' cellspacing='0' id='phrases_table'>\n";
+	//headings
+	echo "		<thead>\n";
 	echo "		<tr>\n";
-	echo "			<td class='vtable'><strong>".$text['label-function']."</strong></td>\n";
+	echo "			<td class='vtable'><strong>" . ($text['label-order'] ?? 'Order') . "</strong></td>\n";
 	echo "			<td class='vtable'><strong>".$text['label-action']."</strong></td>\n";
-	echo "			<td class='vtable' style='text-align: center;'><strong>".$text['label-order']."</strong></td>\n";
-	if (!empty($phrase_details)) {
-		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
-		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
-		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details');\"></span>\n";
-		echo "			</td>\n";
-	}
+	echo "			<td class='vtable'><strong>".($text['label-recording'] ?? 'Recording')."</strong></td>\n";
+/*
+//	echo "			<td class='vtable' style='text-align: center;'><strong>".$text['label-order']."</strong></td>\n";
+//	if (!empty($phrase_details)) {
+//		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
+//		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
+//		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details');\"></span>\n";
+//		echo "			</td>\n";
+//	}
+//*/
 	echo "		</tr>\n";
-	if (!empty($phrase_details)) {
-		foreach($phrase_details as $x => $field) {
-			//clean up output for display
-			if ($field['phrase_detail_function'] == 'play-file' && substr($field['phrase_detail_data'], 0, 21) == '${lua streamfile.lua ') {
-				$phrase_detail_function = $text['label-play'];
-				$phrase_detail_data = str_replace('${lua streamfile.lua ', '', $field['phrase_detail_data']);
-				$phrase_detail_data = str_replace('}', '', $phrase_detail_data);
-			}
-			else if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 6) == 'sleep(') {
-				$phrase_detail_function = $text['label-pause'];
-				$phrase_detail_data = str_replace('sleep(', '', $field['phrase_detail_data']);
-				$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
-				$phrase_detail_data = ($phrase_detail_data / 1000).'s'; // seconds
-			}
-			else if ($field['phrase_detail_function'] == 'play-file') {
-				$phrase_detail_function = $text['label-play'];
-				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
-			}
-			else {
-				$phrase_detail_function = $field['phrase_detail_function'];
-				$phrase_detail_data = $field['phrase_detail_data'];
-			}
-			echo "<tr>\n";
-			echo "	<td class='vtable'>".escape($phrase_detail_function)."&nbsp;</td>\n";
-			echo "	<td class='vtable'>".escape($phrase_detail_data)."&nbsp;</td>\n";
-			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
-			echo "	<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
-			if (is_uuid($field['phrase_detail_uuid'])) {
-				echo "		<input type='checkbox' name='phrase_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
-				echo "		<input type='hidden' name='phrase_details_delete[".$x."][uuid]' value='".escape($field['phrase_detail_uuid'])."' />\n";
-			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-		}
-	}
-	unset($phrase_details, $field);
-	echo "<tr>\n";
+	echo "		</thead>\n";
+	echo "<tbody id='structure'>\n";
+/*
+//	if (!empty($phrase_details)) {
+//		foreach($phrase_details as $x => $field) {
+//			//clean up output for display
+//			if ($field['phrase_detail_function'] == 'play-file' && substr($field['phrase_detail_data'], 0, 21) == '${lua streamfile.lua ') {
+//				$phrase_detail_function = $text['label-play'];
+//				$phrase_detail_data = str_replace('${lua streamfile.lua ', '', $field['phrase_detail_data']);
+//				$phrase_detail_data = str_replace('}', '', $phrase_detail_data);
+//			}
+//			else if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 6) == 'sleep(') {
+//				$phrase_detail_function = $text['label-pause'];
+//				$phrase_detail_data = str_replace('sleep(', '', $field['phrase_detail_data']);
+//				$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
+//				$phrase_detail_data = ($phrase_detail_data / 1000).'s'; // seconds
+//			}
+//			else if ($field['phrase_detail_function'] == 'play-file') {
+//				$phrase_detail_function = $text['label-play'];
+//				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
+//			}
+//			else {
+//				$phrase_detail_function = $field['phrase_detail_function'];
+//				$phrase_detail_data = $field['phrase_detail_data'];
+//			}
+//			echo "<tr>\n";
+//			echo "	<td class='vtable'>".escape($phrase_detail_function)."&nbsp;</td>\n";
+//			echo "	<td class='vtable'>".escape($phrase_detail_data)."&nbsp;</td>\n";
+//			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
+//			echo "	<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
+//			if (is_uuid($field['phrase_detail_uuid'])) {
+//				echo "		<input type='checkbox' name='phrase_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
+//				echo "		<input type='hidden' name='phrase_details_delete[".$x."][uuid]' value='".escape($field['phrase_detail_uuid'])."' />\n";
+//			}
+//			echo "	</td>\n";
+//			echo "</tr>\n";
+//		}
+//	}
+//	unset($phrase_details, $field);
+//*/
+	echo "<tr id='recordings_row' draggable=true>\n";
+	echo "	<td style='border-bottom: none;' nowrap='nowrap'><div display: grid; place-items: center; height: 100px; border: 1px solid black;><span class='fa-solid fa-arrows-up-down'>&nbsp;</span></div></td>";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
@@ -560,19 +586,28 @@
 	}
 	echo "		<script>load_action_options(0);</script>\n";
 	echo "	</td>\n";
-	echo "	<td class='vtable' style='border-bottom: none;'>\n";
-	echo "		<select name='phrase_detail_order' class='formfld'>\n";
-	for ($i = 0; $i <= 999; $i++) {
-		$i_padded = str_pad($i, 3, '0', STR_PAD_LEFT);
-		echo "		<option value='".escape($i_padded)."'>".escape($i_padded)."</option>\n";
-	}
-	echo "		</select>\n";
-	echo "	</td>\n";
-	echo "	<td>\n";
-	echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-	echo "	</td>\n";
-
+/*
+//	echo "	<td class='vtable' style='border-bottom: none;'>\n";
+//	echo "		<select name='phrase_detail_order' class='formfld'>\n";
+//	for ($i = 0; $i <= 999; $i++) {
+//		$i_padded = str_pad($i, 3, '0', STR_PAD_LEFT);
+//		echo "		<option value='".escape($i_padded)."'>".escape($i_padded)."</option>\n";
+//	}
+//	echo "		</select>\n";
+//	echo "	</td>\n";
+// */
 	echo "	</tr>\n";
+	echo "</tbody>";
+	echo "<tbody id='buttons'>";
+	echo "<tr>";
+	echo "<td>&nbsp;</td>";
+	echo "<td class='vtable' style='align=center;' colspan='2'><center>";
+	echo button::create(['type'=>'button','icon'=>$_SESSION['theme']['button_icon_add'], 'onclick' => 'add_row()']);
+	echo button::create(['type'=>'button','icon'=>'fa-solid fa-minus', 'onclick' => 'remove_row()']);
+	echo "</center></td>";
+	echo "<td>&nbsp;</td>";
+	echo "</tr>";
+	echo "</tbody>\n";
 	echo "</table>\n";
 
 	echo "	".$text['description-structure']."\n";
