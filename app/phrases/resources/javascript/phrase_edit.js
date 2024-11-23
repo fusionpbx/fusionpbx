@@ -93,11 +93,11 @@ function add_row() {
 	const select_recording = select_list[1];
 
 	//set the new id and name for action
-	select_action.id = 'phrase_detail_function[' + tbody.childElementCount - 1 + ']'
-	select_action.setAttribute('name', 'phrase_detail_function[' + tbody.childElementCount - 1 + ']');
+	select_action.id = 'phrase_detail_function[' + tbody.childElementCount + ']'
+	select_action.setAttribute('name', 'phrase_detail_function[' + tbody.childElementCount + ']');
 	//set the new id and name for recording
-	select_recording.id = 'phrase_detail_data[' + tbody.childElementCount - 1 + ']'
-	select_recording.setAttribute('name', 'phrase_detail_data[' + tbody.childElementCount - 1 + ']');
+	select_recording.id = 'phrase_detail_data[' + tbody.childElementCount + ']'
+	select_recording.setAttribute('name', 'phrase_detail_data[' + tbody.childElementCount + ']');
 
 
 	//add the row to the table body
