@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 	// Initialize the select options
-	const select = document.getElementById('phrase_detail_data');
+	const select = document.getElementById('phrase_detail_data[0]');
 	const grp_rec = document.createElement('optgroup');
 	const grp_snd = document.createElement('optgroup');
 
@@ -77,10 +77,28 @@ function add_row() {
 	const tbody = document.getElementById('structure');
 	const newRow = document.getElementById('recordings_row').cloneNode(true);
 
-	//set id
+	//reset id
 	newRow.id = 'row_' + tbody.childElementCount
-	//set 'name' attribute
+
+	//reset 'name' attribute
 	newRow.setAttribute('name', 'recording_' + tbody.childElementCount);
+
+	//get the select boxes
+	const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
+
+	//play, pause, execute select box
+	const select_action = select_list[0];
+
+	//recording select box
+	const select_recording = select_list[1];
+
+	//set the new id and name for action
+	select_action.id = 'phrase_detail_function[' + tbody.childElementCount - 1 + ']'
+	select_action.setAttribute('name', 'phrase_detail_function[' + tbody.childElementCount - 1 + ']');
+	//set the new id and name for recording
+	select_recording.id = 'phrase_detail_data[' + tbody.childElementCount - 1 + ']'
+	select_recording.setAttribute('name', 'phrase_detail_data[' + tbody.childElementCount - 1 + ']');
+
 
 	//add the row to the table body
 	tbody.appendChild(newRow);
@@ -95,4 +113,8 @@ function remove_row() {
 	if (tbody && tbody.rows.length > 1) {
 		tbody.lastElementChild.remove();
 	}
+}
+
+function create_new_name() {
+	
 }
