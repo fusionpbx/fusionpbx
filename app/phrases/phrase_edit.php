@@ -97,7 +97,7 @@
 
 //process the changes from the http post
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
-	
+
 		//get the uuid
 			if ($action == "update") {
 				$phrase_uuid = $_POST["phrase_uuid"];
@@ -506,7 +506,7 @@
 	echo "	".$text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
+	//structure row
 	echo "<tr>";
 	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
 	echo "<td class='vtable' align='left'>";
@@ -520,62 +520,14 @@
 	echo "			<td class='vtable'><strong>" . ($text['label-order'] ?? 'Order') . "</strong></td>\n";
 	echo "			<td class='vtable'><strong>".$text['label-action']."</strong></td>\n";
 	echo "			<td class='vtable'><strong>".($text['label-recording'] ?? 'Recording')."</strong></td>\n";
-/*
-//	echo "			<td class='vtable' style='text-align: center;'><strong>".$text['label-order']."</strong></td>\n";
-//	if (!empty($phrase_details)) {
-//		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
-//		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
-//		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details');\"></span>\n";
-//		echo "			</td>\n";
-//	}
-//*/
 	echo "		</tr>\n";
 	echo "		</thead>\n";
 	echo "<tbody id='structure'>\n";
-/*
-//	if (!empty($phrase_details)) {
-//		foreach($phrase_details as $x => $field) {
-//			//clean up output for display
-//			if ($field['phrase_detail_function'] == 'play-file' && substr($field['phrase_detail_data'], 0, 21) == '${lua streamfile.lua ') {
-//				$phrase_detail_function = $text['label-play'];
-//				$phrase_detail_data = str_replace('${lua streamfile.lua ', '', $field['phrase_detail_data']);
-//				$phrase_detail_data = str_replace('}', '', $phrase_detail_data);
-//			}
-//			else if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 6) == 'sleep(') {
-//				$phrase_detail_function = $text['label-pause'];
-//				$phrase_detail_data = str_replace('sleep(', '', $field['phrase_detail_data']);
-//				$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
-//				$phrase_detail_data = ($phrase_detail_data / 1000).'s'; // seconds
-//			}
-//			else if ($field['phrase_detail_function'] == 'play-file') {
-//				$phrase_detail_function = $text['label-play'];
-//				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
-//			}
-//			else {
-//				$phrase_detail_function = $field['phrase_detail_function'];
-//				$phrase_detail_data = $field['phrase_detail_data'];
-//			}
-//			echo "<tr>\n";
-//			echo "	<td class='vtable'>".escape($phrase_detail_function)."&nbsp;</td>\n";
-//			echo "	<td class='vtable'>".escape($phrase_detail_data)."&nbsp;</td>\n";
-//			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
-//			echo "	<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
-//			if (is_uuid($field['phrase_detail_uuid'])) {
-//				echo "		<input type='checkbox' name='phrase_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
-//				echo "		<input type='hidden' name='phrase_details_delete[".$x."][uuid]' value='".escape($field['phrase_detail_uuid'])."' />\n";
-//			}
-//			echo "	</td>\n";
-//			echo "</tr>\n";
-//		}
-//	}
-//	unset($phrase_details, $field);
-//*/
-
 	//draggable row
 	echo "<tr class='draggable-row' id='recordings_row' draggable=true>\n";
 	echo "	<td style='border-bottom: none;' nowrap='nowrap'><center><span class='fa-solid fa-arrows-up-down'></span></center></td>";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
+	echo "		<select name='phrase_detail_function[0]' id='phrase_detail_function[0]' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
 	if (if_group("superadmin")) {
@@ -584,23 +536,11 @@
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-//	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange='action_to_input();'" : null)."></select>";
-	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange=''" : null)."></select>";
+	echo "		<select name='phrase_detail_data[0]' id='phrase_detail_data[0]' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange=''" : null)."></select>";
 	if (if_group("superadmin")) {
-		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
+		echo "	<input id='phrase_detail_data_switch[0]' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
 	}
-	//echo "		<script>load_action_options(0);</script>\n";
 	echo "	</td>\n";
-/*
-//	echo "	<td class='vtable' style='border-bottom: none;'>\n";
-//	echo "		<select name='phrase_detail_order' class='formfld'>\n";
-//	for ($i = 0; $i <= 999; $i++) {
-//		$i_padded = str_pad($i, 3, '0', STR_PAD_LEFT);
-//		echo "		<option value='".escape($i_padded)."'>".escape($i_padded)."</option>\n";
-//	}
-//	echo "		</select>\n";
-//	echo "	</td>\n";
-// */
 	echo "	</tr>\n";
 	echo "</tbody>";
 	echo "<tbody id='buttons'>";
@@ -690,5 +630,3 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
-?>
