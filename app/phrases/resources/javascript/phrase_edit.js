@@ -49,25 +49,18 @@ function add_existing() {
 
 		//play, pause, execute select box
 		const select_action = select_list[0];
-		selectByText(select_action, 'Play');
+		select_by_text(select_action, 'Play');
 
 		//recording select box
 		const select_recording = select_list[1];
-		selectByText(select_recording, processFileName(window.phrase_details[i]['phrase_detail_data']));
+		select_by_text(select_recording, window.phrase_details[i]['phrase_detail_display_name']);
 
 		//add the row to the table body
 		tbody.appendChild(newRow);
 	}
 }
 
-function processFileName(filePath) {
-    let fileName = filePath
-        .replace(/^.*\/([^/]+)\.\w+$/, '$1') // Extract file name
-        .replace(/_/g, ' ');                 // Remove underscores
-    return fileName.charAt(0).toUpperCase() + fileName.slice(1); // Capitalize first letter
-}
-
-function selectByValue(selectElement, valueToFind) {
+function select_by_value(selectElement, valueToFind) {
     // Loop through the options of the select element
     for (let i = 0; i < selectElement.options.length; i++) {
         if (selectElement.options[i].value === valueToFind) {
@@ -78,7 +71,7 @@ function selectByValue(selectElement, valueToFind) {
     console.warn('Value not found in select options');
 }
 
-function selectByText(selectElement, textToFind) {
+function select_by_text(selectElement, textToFind) {
     for (let i = 0; i < selectElement.options.length; i++) {
         if (selectElement.options[i].text === textToFind) {
             selectElement.selectedIndex = i;
