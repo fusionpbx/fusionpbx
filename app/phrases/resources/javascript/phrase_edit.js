@@ -21,9 +21,73 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 	select.appendChild(grp_snd);
 
+	// add the existing data
+	add_existing();
+
+	// add empty row
+	add_row();
+
+	// update order
+	update_order();
+
 	// Initialize draggable rows
 	add_draggable_rows();
 });
+
+// Inserts all existing records before the empty one
+function add_existing() {
+	const tbody = document.getElementById('structure');
+
+	for (let i=0; i < window.phrase_details.length; i++) {
+		const newRow = document.getElementById('empty_row').cloneNode(true);
+
+		//un-hide the row
+		newRow.style.display = '';
+
+		//get the select boxes
+		const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
+
+		//play, pause, execute select box
+		const select_action = select_list[0];
+		selectByText(select_action, 'Play');
+
+		//recording select box
+		const select_recording = select_list[1];
+		selectByText(select_recording, processFileName(window.phrase_details[i]['phrase_detail_data']));
+
+		//add the row to the table body
+		tbody.appendChild(newRow);
+	}
+}
+
+function processFileName(filePath) {
+    let fileName = filePath
+        .replace(/^.*\/([^/]+)\.\w+$/, '$1') // Extract file name
+        .replace(/_/g, ' ');                 // Remove underscores
+    return fileName.charAt(0).toUpperCase() + fileName.slice(1); // Capitalize first letter
+}
+
+function selectByValue(selectElement, valueToFind) {
+    // Loop through the options of the select element
+    for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].value === valueToFind) {
+            selectElement.selectedIndex = i; // Set the selected index
+            return; // Exit the loop once found
+        }
+    }
+    console.warn('Value not found in select options');
+}
+
+function selectByText(selectElement, textToFind) {
+    for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].text === textToFind) {
+            selectElement.selectedIndex = i;
+            return;
+        }
+    }
+    console.warn('Text not found in select options');
+}
+
 
 // Add draggable functionality to rows
 function add_draggable_rows() {
@@ -53,52 +117,56 @@ function add_draggable_rows() {
 	tableBody.addEventListener('dragend', () => {
 		draggedRow.classList.remove('dragging');
 		draggedRow = null;
-		updateOrder();
+		update_order();
 	});
 
 }
 
 // Function to update the 'name' attribute based on row numbers
-function updateOrder() {
+function update_order() {
 	const tableBody = document.getElementById('structure');
 	const rows = tableBody.querySelectorAll('tr');
 
 	//iterate over all rows to renumber them
 	rows.forEach((row, index) => {
-		//current row number (1-based index)
-		const row_number = index + 1;
-		//set 'name' attribute
-		row.setAttribute('name', 'recording_' + row_number);
+		//set 'name' attribute and id
+		row.setAttribute('name', 'row_' + index);
+		row.id = 'row_' + index;
+
+		//get the select boxes
+		const select_list = row.querySelectorAll('td select'); //action and recording select dropdown boxes
+
+		//play, pause, execute select box
+		const select_action = select_list[0];
+
+		//recording select box
+		const select_recording = select_list[1];
+
+		//set the new id and name for action
+		select_action.id = 'phrase_detail_function[' + index + ']'
+		select_action.setAttribute('name', 'phrase_detail_function[' + index + ']');
+		//set the new id and name for recording
+		select_recording.id = 'phrase_detail_data[' + index + ']'
+		select_recording.setAttribute('name', 'phrase_detail_data[' + index + ']');
 	});
 }
 
 // Add a new row to the table
 function add_row() {
 	const tbody = document.getElementById('structure');
-	const newRow = document.getElementById('recordings_row').cloneNode(true);
+	const newRow = document.getElementById('empty_row').cloneNode(true);
+
+	// current index is the count subtract the hidden row
+	const index = tbody.childElementCount - 1;
+
+	//un-hide row
+	newRow.style.display = '';
 
 	//reset id
-	newRow.id = 'row_' + tbody.childElementCount
+	newRow.id = 'row_' + index;
 
 	//reset 'name' attribute
-	newRow.setAttribute('name', 'recording_' + tbody.childElementCount);
-
-	//get the select boxes
-	const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
-
-	//play, pause, execute select box
-	const select_action = select_list[0];
-
-	//recording select box
-	const select_recording = select_list[1];
-
-	//set the new id and name for action
-	select_action.id = 'phrase_detail_function[' + tbody.childElementCount + ']'
-	select_action.setAttribute('name', 'phrase_detail_function[' + tbody.childElementCount + ']');
-	//set the new id and name for recording
-	select_recording.id = 'phrase_detail_data[' + tbody.childElementCount + ']'
-	select_recording.setAttribute('name', 'phrase_detail_data[' + tbody.childElementCount + ']');
-
+	newRow.setAttribute('name', 'recording_' + index);
 
 	//add the row to the table body
 	tbody.appendChild(newRow);
@@ -113,8 +181,4 @@ function remove_row() {
 	if (tbody && tbody.rows.length > 1) {
 		tbody.lastElementChild.remove();
 	}
-}
-
-function create_new_name() {
-	
 }

@@ -37,6 +37,16 @@ else {
 	exit;
 }
 
+//set default domain
+if (empty($domain_uuid)) {
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+}
+
+//set default user
+if (empty($user_uuid)) {
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
+}
+
 //add multi-lingual support
 $language = new text;
 $text = $language->get();
@@ -44,6 +54,11 @@ $text = $language->get();
 //ensure we have a database object
 if (!($database instanceof database)) {
 	$database = database::new();
+}
+
+//ensure we have a settings object
+if (!($settings instanceof settings)) {
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 }
 
 //add the defaults
@@ -196,6 +211,7 @@ if (count($_POST) > 0) {
 			if ($action == "update" && permission_exists('phrase_edit')) {
 				$array = [];
 				if (!empty($_POST['phrase_detail_function'])) {
+					$recording_files = phrases::get_all_domain_recordings($settings);
 					for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
 						//build data array
 						$array['phrases'][$i]['domain_uuid'] = $domain_uuid;
@@ -213,6 +229,7 @@ if (count($_POST) > 0) {
 
 						if (!empty($_POST['phrase_detail_data'][$i])) {
 							$phrase_detail_uuid = uuid();
+							$recording_uuid = $_POST['phrase_detail_data'][$i];
 							$array['phrase_details'][$i]['phrase_detail_uuid'] = $phrase_detail_uuid;
 							$array['phrase_details'][$i]['phrase_uuid'] = $phrase_uuid;
 							$array['phrase_details'][$i]['domain_uuid'] = $domain_uuid;
@@ -220,7 +237,7 @@ if (count($_POST) > 0) {
 							$array['phrase_details'][$i]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
 							$array['phrase_details'][$i]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 							$array['phrase_details'][$i]['phrase_detail_function'] = $_POST['phrase_detail_function'][$i];
-							$array['phrase_details'][$i]['phrase_detail_data'] = $_POST['phrase_detail_data'][$i];
+							$array['phrase_details'][$i]['phrase_detail_data'] = $recording_files[$recording_uuid]; //path and filename of recording
 							$array['phrase_details'][$i]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
 							$array['phrase_details'][$i]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 							$array['phrase_details'][$i]['phrase_detail_group'] = $_POST['phrase_detail_group'];
@@ -233,7 +250,7 @@ if (count($_POST) > 0) {
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					if (count($array) > 0) {
-						$database->save($array);
+						//$database->save($array);
 					}
 				}
 
@@ -322,11 +339,31 @@ if (count($_POST) > 0) {
 //javascript constants for use in the selection option group
 	echo "<script>\n";
 	echo "window.phrase_commands = " . json_encode(['Play', 'Pause', 'Execute'], true) . ";\n";
+
+	//existing details
+	if (!empty($phrase_details)) {
+		//update the array to create the display name
+		foreach ($phrase_details as &$row) {
+			$file = basename($row['phrase_detail_data']);
+			$basename = substr($file, 0, strlen($file) - 4);
+//			$display_name = ucfirst(str_replace('_', ' ', $basename));
+			$display_name = basename(str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $row['phrase_detail_data']));
+			//remove the file ending
+			if (str_ends_with($display_name, '.wav') || str_ends_with($display_name, '.mp3') || str_ends_with($display_name, '.flac') || str_ends_with($display_name, '.mp4') || str_ends_with($display_name, '.gsm')) {
+				$display_name = substr($display_name, 0, strlen($display_name) - 4);
+			}
+			$row['phrase_detail_display_name'] = ucfirst($display_name);
+		}
+		echo "window.phrase_details = " . json_encode($phrase_details, true) . ";\n";
+	}
+
+	//recording files
 	if ($recordings !== false) {
 		//recordings
 		echo "window.phrase_recordings = " . json_encode($recordings, true) . ";\n";
 	}
 
+	//sound files
 	$file = new file;
 	$sound_files = $file->sounds();
 	if (!empty($sound_files)) {
@@ -524,7 +561,7 @@ if (count($_POST) > 0) {
 	echo "		</thead>\n";
 	echo "<tbody id='structure'>\n";
 	//draggable row
-	echo "<tr class='draggable-row' id='recordings_row' draggable=true>\n";
+	echo "<tr class='draggable-row' id='empty_row' draggable=true style='display: none;'>\n";
 	echo "	<td style='border-bottom: none;' nowrap='nowrap'><center><span class='fa-solid fa-arrows-up-down'></span></center></td>";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_function[0]' id='phrase_detail_function[0]' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
