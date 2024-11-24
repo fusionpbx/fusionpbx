@@ -478,7 +478,7 @@ if (!class_exists('phrases')) {
 			}
 			//get the result
 			$rows = $database->select($sql, $parameters);
-			//iterate over all rows returned to remap them to uuid as key and filename as value
+			//iterate over all rows returned to remap them to uuid => filename
 			if (!empty($rows)) {
 				//set the path and filename for each of the uuids
 				foreach($rows as $row) {
