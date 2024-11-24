@@ -430,7 +430,63 @@ if (!class_exists('phrases')) {
 			}
 		} //method
 
-	} //class
-}
+		/**
+		 * Returns a path and filename of the recording_uuid provided from the database.
+		 * If the recording is a base64 encoded file the file and path may be empty.
+		 * @param database $database Database object
+		 * @param string $recording_uuid Recording UUID
+		 * @return string recording path and filename or an empty string when not found or base64
+		 */
+		public static function get_recording_filename(database $database, string $recording_uuid): string {
+			$sql = "select recording_filename from v_recordings";
+			$sql .= " where recording_uuid = :recording_uuid";
+			$parameters = [];
+			$parameters['recording_uuid'] = $recording_uuid;
+			$result = $database->select($sql, $parameters, 'column');
+			if ($result !== false) {
+				return $result;
+			}
+			return "";
+		}
 
-?>
+		/**
+		 * Returns an associative array of recordings with the uuid as key and recording filename as value.
+		 * @param settings $settings Settings object
+		 * @param int $limit (Optional) Limit the number of results returned
+		 * @return array
+		 */
+		public static function get_all_domain_recordings(settings $settings, int $limit = 0): array {
+			//set defaults
+			$recordings = [];
+			$parameters = [];
+			//get the database object and current domain_uuid
+			$database = $settings->database();
+			//get the domain name
+			$domain_name = $database->select("SELECT domain_name from v_domains where domain_uuid = :domain_uuid", ['domain_uuid' => $database->domain_uuid], 'column');
+			//get the recording directory
+			$recordings_dir = $settings->get('switch', 'recordings', '/var/lib/freeswitch/recordings') . DIRECTORY_SEPARATOR . $domain_name;
+			//build initial sql
+			$sql = "SELECT recording_uuid, recording_filename FROM v_recordings";
+			//add domain_uuid to sql if needed
+			if (!empty($domain_name) && is_uuid($domain_name)) {
+				$sql .= " where domain_uuid = :domain_uuid";
+				$parameters['domain_uuid'] = $domain_name;
+			}
+			//add limit to sql if needed
+			if (!empty($limit)) {
+				$sql .= " limit $limit";
+			}
+			//get the result
+			$rows = $database->select($sql, $parameters);
+			//iterate over all rows returned to remap them to uuid as key and filename as value
+			if (!empty($rows)) {
+				//set the path and filename for each of the uuids
+				foreach($rows as $row) {
+					$recordings[$row['recording_uuid']] = $recordings_dir . DIRECTORY_SEPARATOR . $row['recording_filename'];
+				}
+			}
+			//return recordings or empty array
+			return $recordings;
+		}
+	}
+}
