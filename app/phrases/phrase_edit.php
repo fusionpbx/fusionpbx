@@ -346,13 +346,12 @@ if (count($_POST) > 0) {
 		foreach ($phrase_details as &$row) {
 			$file = basename($row['phrase_detail_data']);
 			$basename = substr($file, 0, strlen($file) - 4);
-//			$display_name = ucfirst(str_replace('_', ' ', $basename));
 			$display_name = basename(str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $row['phrase_detail_data']));
 			//remove the file ending
 			if (str_ends_with($display_name, '.wav') || str_ends_with($display_name, '.mp3') || str_ends_with($display_name, '.flac') || str_ends_with($display_name, '.mp4') || str_ends_with($display_name, '.gsm')) {
 				$display_name = substr($display_name, 0, strlen($display_name) - 4);
 			}
-			$row['phrase_detail_display_name'] = ucfirst($display_name);
+			$row['phrase_detail_display_name'] = ucfirst(str_replace('_', ' ', $basename));
 		}
 		echo "window.phrase_details = " . json_encode($phrase_details, true) . ";\n";
 	}
