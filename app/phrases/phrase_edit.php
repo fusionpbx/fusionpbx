@@ -558,8 +558,11 @@ if (count($_POST) > 0) {
 	echo "			<td class='vtable'><strong>".($text['label-recording'] ?? 'Recording')."</strong></td>\n";
 	echo "		</tr>\n";
 	echo "		</thead>\n";
+	//draggable rows are initially empty
 	echo "<tbody id='structure'>\n";
-	//draggable row
+	echo "</tbody>";
+	//cloning row and buttons created outside of 'structure' table body
+	echo "<tbody>";
 	echo "<tr class='draggable-row' id='empty_row' draggable=true style='display: none;'>\n";
 	echo "	<td style='border-bottom: none;' nowrap='nowrap'><center><span class='fa-solid fa-arrows-up-down'></span></center></td>";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
@@ -578,8 +581,6 @@ if (count($_POST) > 0) {
 	}
 	echo "	</td>\n";
 	echo "	</tr>\n";
-	echo "</tbody>";
-	echo "<tbody id='buttons'>";
 	echo "<tr>";
 	echo "<td>&nbsp;</td>";
 	echo "<td class='vtable' style='align=center;' colspan='2'><center>";
