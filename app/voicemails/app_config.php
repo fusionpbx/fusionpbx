@@ -346,6 +346,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "781a0a42-0ab6-11eb-adc1-0242ac120002";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "not_found_extension";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Voicemail Box Not Found Destination";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "77620475-258a-4988-bec5-f74f2603666e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "not_found_message";
