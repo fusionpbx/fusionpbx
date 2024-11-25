@@ -210,25 +210,43 @@ if (count($_POST) > 0) {
 			//update the phrase
 			if ($action == "update" && permission_exists('phrase_edit')) {
 				$array = [];
+				$drop_rows = [];
+				$drop_row_count = 0;
 				if (!empty($_POST['phrase_detail_function'])) {
 					$recording_files = phrases::get_all_domain_recordings($settings);
+					//update the phrase information
+					$array['phrases'][0]['domain_uuid'] = $domain_uuid;
+					$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
+					$array['phrases'][0]['phrase_name'] = $phrase_name;
+					$array['phrases'][0]['phrase_language'] = $phrase_language;
+					$array['phrases'][0]['phrase_enabled'] = $phrase_enabled;
+					$array['phrases'][0]['phrase_description'] = $phrase_description;
 					for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
-						//build data array
-						$array['phrases'][$i]['domain_uuid'] = $domain_uuid;
-						$array['phrases'][$i]['phrase_uuid'] = $phrase_uuid;
-						$array['phrases'][$i]['phrase_name'] = $phrase_name;
-						$array['phrases'][$i]['phrase_language'] = $phrase_language;
-						$array['phrases'][$i]['phrase_enabled'] = $phrase_enabled;
-						$array['phrases'][$i]['phrase_description'] = $phrase_description;
-						if ($_POST['phrase_detail_function'][$i] == 'execute' && substr($_POST['phrase_detail_data'][$i], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
-							header("Location: phrase_edit.php?id=".$phrase_uuid);
-							exit;
+						//check for valid uuids
+						if (!empty($_POST['phrase_detail_uuid'][$i]) && !is_uuid($_POST['phrase_detail_uuid'][$i])) {
+							continue;
 						}
-						$_POST['phrase_detail_tag'] = 'action'; // default, for now
-						$_POST['phrase_detail_group'] = "0"; // one group, for now
-
+						//check for the empty rows to delete
+						if (empty($_POST['phrase_detail_data'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
+							$drop_rows['phrase_details'][$drop_row_count++]['phrase_detail_uuid'] = $_POST['phrase_detail_uuid'][$i];
+							continue;
+						}
+						//only save rows with data
 						if (!empty($_POST['phrase_detail_data'][$i])) {
-							$phrase_detail_uuid = uuid();
+							//build data array
+							if ($_POST['phrase_detail_function'][$i] == 'execute' && substr($_POST['phrase_detail_data'][$i], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
+								header("Location: phrase_edit.php?id=".$phrase_uuid);
+								exit;
+							}
+							$_POST['phrase_detail_tag'] = 'action'; // default, for now
+							$_POST['phrase_detail_group'] = "0"; // one group, for now
+
+							//update existing records in the database
+							if (!empty($_POST['phrase_detail_uuid'][$i])) {
+								$phrase_detail_uuid = $_POST['phrase_detail_uuid'][$i];
+							} else {
+								$phrase_detail_uuid = uuid();
+							}
 							$recording_uuid = $_POST['phrase_detail_data'][$i];
 							$array['phrase_details'][$i]['phrase_detail_uuid'] = $phrase_detail_uuid;
 							$array['phrase_details'][$i]['phrase_uuid'] = $phrase_uuid;
@@ -247,14 +265,19 @@ if (count($_POST) > 0) {
 					//execute update/insert
 					$p = new permissions;
 					$p->add('phrase_detail_add', 'temp');
+					$p->add('phrase_detail_edit', 'temp');
+					$p->add('phrase_detail_delete', 'temp');
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					if (count($array) > 0) {
-						//$database->save($array);
+						$database->save($array);
 					}
+					if (count($drop_rows) > 0) {
+						$database->delete($drop_rows);
+					}
+					$p->delete('phrase_detail_add', 'temp');
 				}
 
-				$p->delete('phrase_detail_add', 'temp');
 
 				//remove checked phrase details
 				if (
@@ -354,12 +377,18 @@ if (count($_POST) > 0) {
 			$row['phrase_detail_display_name'] = ucfirst(str_replace('_', ' ', $basename));
 		}
 		echo "window.phrase_details = " . json_encode($phrase_details, true) . ";\n";
+	} else {
+		//send an empty array
+		echo "window.phrase_details = [];\n";
 	}
 
 	//recording files
 	if ($recordings !== false) {
 		//recordings
 		echo "window.phrase_recordings = " . json_encode($recordings, true) . ";\n";
+	} else {
+		//send an empty array
+		echo "window.phrase_recordings = [];\n";
 	}
 
 	//sound files
@@ -374,124 +403,6 @@ if (count($_POST) > 0) {
 //js to control action form input
 	echo "<script src='resources/javascript/phrase_edit.js'></script>\n";
 
-/* old section 
-	echo "		<script type='text/javascript'>\n";
-
-	echo "function load_action_options(selected_index) {\n";
-	echo "	var obj_action = document.getElementById('phrase_detail_data');\n";
-	echo "	if (selected_index == 0 || selected_index == 1) {\n";
-	echo "		if (obj_action.type == 'text') {\n";
-	echo "			action_to_select();\n";
-	echo "			var obj_action = document.getElementById('phrase_detail_data');\n";
-	echo "			obj_action.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
-	echo "		}\n";
-	echo "		else {\n";
-	echo "			clear_action_options();\n";
-	echo "		}\n";
-	echo "	}\n";
-	if (if_group("superadmin")) {
-		echo "	else {\n";
-		echo "		document.getElementById('phrase_detail_data_switch').style.display='none';\n";
-		echo "		obj_action.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
-		echo "	}\n";
-	}
-	echo "	if (selected_index == 0) {\n"; //play
-	echo "		obj_action.options[obj_action.options.length] = new Option('', '');\n"; //blank option
-	//recordings
-		$tmp_selected = false;
-		if (is_array($recordings) && @sizeof($recordings) != 0) {
-			echo "var opt_group = document.createElement('optgroup');\n";
-			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
-			foreach ($recordings as $row) {
-				if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
-				}
-				else {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
-				}
-			}
-			echo "obj_action.appendChild(opt_group);\n";
-		}
-		unset($recordings, $row);
-	//sounds
-		if (is_array($sound_files) && @sizeof($sound_files) != 0) {
-			echo "var opt_group = document.createElement('optgroup');\n";
-			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
-			foreach ($sound_files as $value) {
-				if (!empty($value)) {
-					echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
-				}
-			}
-			echo "obj_action.appendChild(opt_group);\n";
-		}
-		unset($sound_files, $row);
-	echo "	}\n";
-	echo "	else if (selected_index == 1) {\n"; //pause
-	echo "		obj_action.options[obj_action.options.length] = new Option('', '');\n"; //blank option
-	for ($s = 0.1; $s <= 5; $s = $s + 0.1) {
-		echo "	obj_action.options[obj_action.options.length] = new Option('".number_format($s, 1)."s', 'sleep(".($s * 1000).")');\n";
-	}
-	echo "	}\n";
-	if (if_group("superadmin")) {
-		echo "	else if (selected_index == 2) {\n"; //execute
-		echo "		action_to_input();\n";
-		echo "	}\n";
-	}
-	echo "}\n";
-
-	echo "function clear_action_options() {\n";
-	echo "	var len, groups, par;\n";
-	echo "	sel = document.getElementById('phrase_detail_data');\n";
-	echo "	groups = sel.getElementsByTagName('optgroup');\n";
-	echo "	len = groups.length;\n";
-	echo "	for (var i=len; i; i--) {\n";
-	echo "		sel.removeChild( groups[i-1] );\n";
-	echo "	}\n";
-	echo "	len = sel.options.length;\n";
-	echo "	for (var i=len; i; i--) {\n";
-	echo "		par = sel.options[i-1].parentNode;\n";
-	echo "		par.removeChild( sel.options[i-1] );\n";
-	echo "	}\n";
-	echo "}\n";
-
-	if (if_group("superadmin")) {
-		echo "function action_to_input() {\n";
-		echo "	obj = document.getElementById('phrase_detail_data');\n";
-		echo "	tb = document.createElement('INPUT');\n";
-		echo "	tb.type = 'text';\n";
-		echo "	tb.name = obj.name;\n";
-		echo "	tb.id = obj.id;\n";
-		echo "	tb.value = obj.options[obj.selectedIndex].value;\n";
-		echo "	tb.className = 'formfld';\n";
-		echo "	tb_width = (document.getElementById('phrase_detail_function').selectedIndex == 2) ? '300px' : '267px';\n";
-		echo "	tb.setAttribute('style', 'width: '+tb_width+'; min-width: '+tb_width+'; max-width: '+tb_width+';');\n";
-		echo "	obj.parentNode.insertBefore(tb, obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "	if (document.getElementById('phrase_detail_function').selectedIndex != 2) {\n";
-		echo "		tb.setAttribute('style', 'width: 263px; min-width: 263px; max-width: 263px;');\n";
-		echo "		document.getElementById('phrase_detail_data_switch').style.display='';\n";
-		echo "	}\n";
-		echo "	else {\n";
-		echo "		tb.focus();\n";
-		echo "	}\n";
-		echo "}\n";
-
-		echo "function action_to_select() {\n";
-		echo "	obj = document.getElementById('phrase_detail_data');\n";
-		echo "	sb = document.createElement('SELECT');\n";
-		echo "	sb.name = obj.name;\n";
-		echo "	sb.id = obj.id;\n";
-		echo "	sb.className = 'formfld';\n";
-		echo "	sb.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
-		echo "	sb.setAttribute('onchange', 'action_to_input();');\n";
-		echo "	obj.parentNode.insertBefore(sb, obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "	document.getElementById('phrase_detail_data_switch').style.display='none';\n";
-		echo "	clear_action_options();\n";
-		echo "}\n";
-	}
-	echo "</script>\n";
-//*/
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
 
@@ -566,7 +477,7 @@ if (count($_POST) > 0) {
 	echo "<tr class='draggable-row' id='empty_row' draggable=true style='display: none;'>\n";
 	echo "	<td style='border-bottom: none;' nowrap='nowrap'><center><span class='fa-solid fa-arrows-up-down'></span></center></td>";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_function[0]' id='phrase_detail_function[0]' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
+	echo "		<select class='formfld' name='phrase_detail_function_empty' id='phrase_detail_function_empty' tag=''>\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
 	if (if_group("superadmin")) {
@@ -575,10 +486,11 @@ if (count($_POST) > 0) {
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_data[0]' id='phrase_detail_data[0]' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange=''" : null)."></select>";
-	if (if_group("superadmin")) {
-		echo "	<input id='phrase_detail_data_switch[0]' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
-	}
+	echo "		<select  class='formfld' id='phrase_detail_data_empty' name='phrase_detail_data_empty' onchange='update_id(this)' style='width: 300px; min-width: 300px; max-width: 300px;' tag=''></select>";
+//	if (if_group("superadmin")) {
+//		echo "	<input id='phrase_detail_data_switch_empty' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function_empty').selectedIndex);\">\n";
+//	}
+	echo "  <input type=hidden name='hidden_empty' id='hidden_empty' value='uuid' tag='row'>";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "<tr>";

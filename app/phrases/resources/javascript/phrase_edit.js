@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 	// Initialize the select options
-	const select = document.getElementById('phrase_detail_data[0]');
+	const select = document.getElementById('phrase_detail_data_empty');
 	const grp_rec = document.createElement('optgroup');
 	const grp_snd = document.createElement('optgroup');
 
@@ -46,14 +46,20 @@ function add_existing() {
 
 		//get the select boxes
 		const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
-
 		//play, pause, execute select box
 		const select_action = select_list[0];
 		select_by_text(select_action, 'Play');
 
 		//recording select box
 		const select_recording = select_list[1];
+		select_recording.setAttribute('tag', window.phrase_details[i]['phrase_detail_uuid']);
 		select_by_text(select_recording, window.phrase_details[i]['phrase_detail_display_name']);
+
+		const input_fields = newRow.querySelectorAll('td input');
+		const uuid_field = input_fields[0];
+		uuid_field.setAttribute('id'  , 'phrase_detail_uuid[' + i +']');
+		uuid_field.setAttribute('name', 'phrase_detail_uuid[' + i +']');
+		uuid_field.value = window.phrase_details[i]['phrase_detail_uuid'];
 
 		//add the row to the table body
 		tbody.appendChild(newRow);
@@ -81,6 +87,10 @@ function select_by_text(selectElement, textToFind) {
     console.warn('Text not found in select options');
 }
 
+function update_id(element) {
+	index = element.index;
+	const hidden_input_field = document.getElementById('hidden_input_field[' + index +']');
+}
 
 // Add draggable functionality to rows
 function add_draggable_rows() {
