@@ -175,8 +175,8 @@
 						}
 					}
 
-				//if user doesn't have call block all then use the assigned extension_uuid
-					if (!permission_exists('call_block_all')) {
+				//if user doesn't have call block extension then use the assigned extension_uuid
+					if (!permission_exists('call_block_extension')) {
 						$extension_uuid = $_SESSION['user']['extension'][0]['extension_uuid'];
 					}
 
@@ -422,7 +422,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('call_block_all')) {
+	if (permission_exists('call_block_extension')) {
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-extension']."\n";
