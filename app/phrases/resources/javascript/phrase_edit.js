@@ -10,14 +10,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Add recordings
 	grp_rec.label = 'Recordings';
 	for (let i = 0; i < window.phrase_recordings.length; i++) {
-		grp_rec.appendChild(new Option('    ' + window.phrase_recordings[i].recording_name, window.phrase_recordings[i].recording_uuid));
+		grp_rec.appendChild(new Option(window.phrase_recordings[i].recording_name, window.phrase_recordings[i].recording_uuid));
 	}
 	select.appendChild(grp_rec);
 
 	// Add sounds
 	grp_snd.label = 'Sounds';
 	for (let i = 0; i < window.phrase_sounds.length; i++) {
-		grp_snd.appendChild(new Option('    ' + window.phrase_sounds[i], i));
+		grp_snd.appendChild(new Option(window.phrase_sounds[i], window.phrase_sounds[i]));
 	}
 	select.appendChild(grp_snd);
 
@@ -26,9 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// add empty row
 	add_row();
-
-	// update order
-	update_order();
 
 	// Initialize draggable rows
 	add_draggable_rows();
@@ -52,7 +49,6 @@ function add_existing() {
 
 		//recording select box
 		const select_recording = select_list[1];
-		select_recording.setAttribute('tag', window.phrase_details[i]['phrase_detail_uuid']);
 		select_by_text(select_recording, window.phrase_details[i]['phrase_detail_display_name']);
 
 		const input_fields = newRow.querySelectorAll('td input');
@@ -87,11 +83,6 @@ function select_by_text(selectElement, textToFind) {
     console.warn('Text not found in select options');
 }
 
-function update_id(element) {
-	index = element.index;
-	const hidden_input_field = document.getElementById('hidden_input_field[' + index +']');
-}
-
 // Add draggable functionality to rows
 function add_draggable_rows() {
 	const tableBody = document.getElementById('structure');
@@ -120,7 +111,6 @@ function add_draggable_rows() {
 	tableBody.addEventListener('dragend', () => {
 		draggedRow.classList.remove('dragging');
 		draggedRow = null;
-		update_order();
 	});
 
 }
@@ -152,6 +142,13 @@ function update_order() {
 		select_recording.id = 'phrase_detail_data[' + index + ']'
 		select_recording.setAttribute('name', 'phrase_detail_data[' + index + ']');
 	});
+}
+
+function submit_phrase() {
+	//ensure order is updated before submitting form
+	update_order();
+	//submit form
+	const form = document.getElementById('frm').submit();
 }
 
 // Add a new row to the table

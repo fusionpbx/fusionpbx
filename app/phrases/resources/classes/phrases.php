@@ -451,6 +451,7 @@ if (!class_exists('phrases')) {
 
 		/**
 		 * Returns an associative array of recordings with the uuid as key and recording filename as value.
+		 * When the recording is a base64 encoded recording, the filename returned is the filename only with no path.
 		 * @param settings $settings Settings object
 		 * @param int $limit (Optional) Limit the number of results returned
 		 * @return array
@@ -459,18 +460,19 @@ if (!class_exists('phrases')) {
 			//set defaults
 			$recordings = [];
 			$parameters = [];
-			//get the database object and current domain_uuid
+			//get the database object from the settings object
 			$database = $settings->database();
-			//get the domain name
-			$domain_name = $database->select("SELECT domain_name from v_domains where domain_uuid = :domain_uuid", ['domain_uuid' => $database->domain_uuid], 'column');
+			//get the domain name using the domain_uuid in the database object
+			$domain_uuid = $settings->domain_uuid();
+			$domain_name = $database->select("SELECT domain_name from v_domains where domain_uuid = :domain_uuid", ['domain_uuid' => $domain_uuid], 'column');
 			//get the recording directory
 			$recordings_dir = $settings->get('switch', 'recordings', '/var/lib/freeswitch/recordings') . DIRECTORY_SEPARATOR . $domain_name;
-			//build initial sql
-			$sql = "SELECT recording_uuid, recording_filename FROM v_recordings";
-			//add domain_uuid to sql if needed
-			if (!empty($domain_name) && is_uuid($domain_name)) {
+			//build initial sql that ignores the domain_uuid
+			$sql = "SELECT recording_uuid, recording_filename, recording_base64 IS NOT NULL AS has_base64_recording FROM v_recordings";
+			//add domain_uuid to sql when available
+			if (!empty($domain_name) && is_uuid($domain_uuid)) {
 				$sql .= " where domain_uuid = :domain_uuid";
-				$parameters['domain_uuid'] = $domain_name;
+				$parameters['domain_uuid'] = $domain_uuid;
 			}
 			//add limit to sql if needed
 			if (!empty($limit)) {
@@ -482,7 +484,11 @@ if (!class_exists('phrases')) {
 			if (!empty($rows)) {
 				//set the path and filename for each of the uuids
 				foreach($rows as $row) {
-					$recordings[$row['recording_uuid']] = $recordings_dir . DIRECTORY_SEPARATOR . $row['recording_filename'];
+					if ($row['has_base64_recording']) {
+						$recordings[$row['recording_uuid']] = '${lua streamfile.lua ' . basename($row['recording_filename']) .'}';
+					} else {
+						$recordings[$row['recording_uuid']] = $recordings_dir . DIRECTORY_SEPARATOR . $row['recording_filename'];
+					}
 				}
 			}
 			//return recordings or empty array

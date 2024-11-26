@@ -44,6 +44,13 @@ function build_data_array_from_post() {
 	$drop_rows = [];
 	$drop_row_count = 0;
 
+	//load sound files from the switch so we can validate selections
+	$sound_files = 	(new file)->sounds();
+
+	//recording_files are:
+	//  'recording_uuid' => 'recording.wav'
+	//       OR
+	//  'recording_uuid' => '${lua streamfile.lua ' . base64_data .'}'
 	$recording_files = phrases::get_all_domain_recordings($settings);
 	//update the phrase information
 	$array['phrases'][0]['domain_uuid'] = $domain_uuid;
@@ -53,10 +60,6 @@ function build_data_array_from_post() {
 	$array['phrases'][0]['phrase_enabled'] = $phrase_enabled;
 	$array['phrases'][0]['phrase_description'] = $phrase_description;
 	for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
-		//check for valid uuids
-		if (!empty($_POST['phrase_detail_uuid'][$i]) && !is_uuid($_POST['phrase_detail_uuid'][$i])) {
-			continue;
-		}
 		//check for the empty rows to delete
 		if (empty($_POST['phrase_detail_data'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
 			$drop_rows['phrase_details'][$drop_row_count++]['phrase_detail_uuid'] = $_POST['phrase_detail_uuid'][$i];
@@ -64,6 +67,21 @@ function build_data_array_from_post() {
 		}
 		//only save rows with data
 		if (!empty($_POST['phrase_detail_data'][$i])) {
+			$recording_uuid_or_file = $_POST['phrase_detail_data'][$i];
+			//check for valid recordings and files
+			if (is_uuid($recording_uuid_or_file)) {
+				//recording UUID
+				$file = $recording_files[$recording_uuid_or_file];
+			} else {
+				//not a recording so must be valid path inside the switch recording files
+				if (in_array($recording_uuid_or_file, $sound_files)) {
+					//valid switch audio file
+					$file = $recording_uuid_or_file;
+				} else {
+					//ignore an invalid audio file
+					continue;
+				}
+			}
 			//build data array
 			if ($_POST['phrase_detail_function'][$i] == 'execute' && substr($_POST['phrase_detail_data'][$i], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
 				header("Location: phrase_edit.php?id=".$phrase_uuid);
@@ -78,7 +96,6 @@ function build_data_array_from_post() {
 			} else {
 				$phrase_detail_uuid = uuid();
 			}
-			$recording_uuid = $_POST['phrase_detail_data'][$i];
 			$array['phrase_details'][$i]['phrase_detail_uuid'] = $phrase_detail_uuid;
 			$array['phrase_details'][$i]['phrase_uuid'] = $phrase_uuid;
 			$array['phrase_details'][$i]['domain_uuid'] = $domain_uuid;
@@ -86,7 +103,7 @@ function build_data_array_from_post() {
 			$array['phrase_details'][$i]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
 			$array['phrase_details'][$i]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 			$array['phrase_details'][$i]['phrase_detail_function'] = $_POST['phrase_detail_function'][$i];
-			$array['phrase_details'][$i]['phrase_detail_data'] = $recording_files[$recording_uuid]; //path and filename of recording
+			$array['phrase_details'][$i]['phrase_detail_data'] = $file; //path and filename of recording
 			$array['phrase_details'][$i]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
 			$array['phrase_details'][$i]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 			$array['phrase_details'][$i]['phrase_detail_group'] = $_POST['phrase_detail_group'];
@@ -227,22 +244,8 @@ if (count($_POST) > 0) {
 					}
 					if (!empty($_POST['phrase_detail_function'])) {
 						$array = build_data_array_from_post();
-						//execute update/insert
-						$p = new permissions;
-						$p->add('phrase_detail_add', 'temp');
-						$p->add('phrase_detail_edit', 'temp');
-						$p->add('phrase_detail_delete', 'temp');
-						$database->app_name = 'phrases';
-						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
-						if (count($array) > 0) {
-							$database->save($array);
-						}
-						if (count($drop_rows) > 0) {
-							$database->delete($drop_rows);
-						}
-						$p->delete('phrase_detail_add', 'temp');
 					}
-										//execute update/insert
+					//execute update/insert
 					$p = new permissions;
 					$p->add('phrase_detail_add', 'temp');
 					$p->add('phrase_detail_edit', 'temp');
@@ -250,10 +253,12 @@ if (count($_POST) > 0) {
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					if (count($array) > 0) {
-						//$database->save($array);
+						$database->save($array);
+						unset($array);
 					}
 					if (count($drop_rows) > 0) {
 						$database->delete($drop_rows);
+						unset($drop_rows);
 					}
 					$p->delete('phrase_detail_add', 'temp');
 					//clear the cache
@@ -387,7 +392,7 @@ if (count($_POST) > 0) {
 	if ($action == "update" && permission_exists('phrase_delete')) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'submit','onclick'=>'submit_phrase()','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -453,7 +458,7 @@ if (count($_POST) > 0) {
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select  class='formfld' id='phrase_detail_data_empty' name='phrase_detail_data_empty' onchange='update_id(this)' style='width: 300px; min-width: 300px; max-width: 300px;' tag=''></select>";
+	echo "		<select  class='formfld' id='phrase_detail_data_empty' name='phrase_detail_data_empty' style='width: 300px; min-width: 300px; max-width: 300px;' tag=''></select>";
 //	if (if_group("superadmin")) {
 //		echo "	<input id='phrase_detail_data_switch_empty' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function_empty').selectedIndex);\">\n";
 //	}
