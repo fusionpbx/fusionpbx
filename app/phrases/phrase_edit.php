@@ -37,9 +37,9 @@ else {
 	exit;
 }
 
-function build_data_array_from_post() {
-	global $settings, $domain_uuid, $phrase_uuid, $phrase_name, $phrase_language, $phrase_enabled, $phrase_description;
-	global $drop_rows;
+function build_data_array_from_post(settings $settings) {
+	global $domain_uuid, $drop_rows;
+	$phrase_uuid = $_POST['phrase_uuid'];
 	$array = [];
 	$drop_rows = [];
 	$drop_row_count = 0;
@@ -55,10 +55,10 @@ function build_data_array_from_post() {
 	//update the phrase information
 	$array['phrases'][0]['domain_uuid'] = $domain_uuid;
 	$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
-	$array['phrases'][0]['phrase_name'] = $phrase_name;
-	$array['phrases'][0]['phrase_language'] = $phrase_language;
-	$array['phrases'][0]['phrase_enabled'] = $phrase_enabled;
-	$array['phrases'][0]['phrase_description'] = $phrase_description;
+	$array['phrases'][0]['phrase_name'] = $_POST['phrase_name'];
+	$array['phrases'][0]['phrase_language'] = $_POST['phrase_language'];
+	$array['phrases'][0]['phrase_enabled'] = $_POST['phrase_enabled'];
+	$array['phrases'][0]['phrase_description'] = $_POST['phrase_description'];
 	for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
 		//check for the empty rows to delete
 		if (empty($_POST['phrase_detail_data'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
@@ -71,12 +71,12 @@ function build_data_array_from_post() {
 			//check for valid recordings and files
 			if (is_uuid($recording_uuid_or_file)) {
 				//recording UUID
-				$file = $recording_files[$recording_uuid_or_file];
+				$phrase_detail_data = $recording_files[$recording_uuid_or_file];
 			} else {
 				//not a recording so must be valid path inside the switch recording files
 				if (in_array($recording_uuid_or_file, $sound_files)) {
 					//valid switch audio file
-					$file = $recording_uuid_or_file;
+					$phrase_detail_data = $recording_uuid_or_file;
 				} else {
 					//ignore an invalid audio file
 					continue;
@@ -103,7 +103,7 @@ function build_data_array_from_post() {
 			$array['phrase_details'][$i]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
 			$array['phrase_details'][$i]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
 			$array['phrase_details'][$i]['phrase_detail_function'] = $_POST['phrase_detail_function'][$i];
-			$array['phrase_details'][$i]['phrase_detail_data'] = $file; //path and filename of recording
+			$array['phrase_details'][$i]['phrase_detail_data'] = $phrase_detail_data; //path and filename of recording
 			$array['phrase_details'][$i]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
 			$array['phrase_details'][$i]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
 			$array['phrase_details'][$i]['phrase_detail_group'] = $_POST['phrase_detail_group'];
@@ -243,7 +243,7 @@ if (count($_POST) > 0) {
 						$message = $text['message-update'];
 					}
 					if (!empty($_POST['phrase_detail_function'])) {
-						$array = build_data_array_from_post();
+						$array = build_data_array_from_post($settings);
 					}
 					//execute update/insert
 					$p = new permissions;
