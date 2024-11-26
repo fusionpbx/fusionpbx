@@ -95,6 +95,22 @@ class settings {
 	}
 
 	/**
+	 * Returns the domain_uuid that was used to load the settings
+	 * @return string domain_uuid or an empty string
+	 */
+	public function domain_uuid(): string {
+		return $this->domain_uuid;
+	}
+
+	/**
+	 * Returns the user_uuid that was used to load the settings
+	 * @return string user_uuid or an empty string
+	 */
+	public function user_uuid(): string {
+		return $this->user_uuid;
+	}
+
+	/**
 	 * Reloads the settings from the database
 	 */
 	public function reload() {
