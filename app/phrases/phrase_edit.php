@@ -37,6 +37,64 @@ else {
 	exit;
 }
 
+function build_data_array_from_post() {
+	global $settings, $domain_uuid, $phrase_uuid, $phrase_name, $phrase_language, $phrase_enabled, $phrase_description;
+	global $drop_rows;
+	$array = [];
+	$drop_rows = [];
+	$drop_row_count = 0;
+
+	$recording_files = phrases::get_all_domain_recordings($settings);
+	//update the phrase information
+	$array['phrases'][0]['domain_uuid'] = $domain_uuid;
+	$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
+	$array['phrases'][0]['phrase_name'] = $phrase_name;
+	$array['phrases'][0]['phrase_language'] = $phrase_language;
+	$array['phrases'][0]['phrase_enabled'] = $phrase_enabled;
+	$array['phrases'][0]['phrase_description'] = $phrase_description;
+	for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
+		//check for valid uuids
+		if (!empty($_POST['phrase_detail_uuid'][$i]) && !is_uuid($_POST['phrase_detail_uuid'][$i])) {
+			continue;
+		}
+		//check for the empty rows to delete
+		if (empty($_POST['phrase_detail_data'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
+			$drop_rows['phrase_details'][$drop_row_count++]['phrase_detail_uuid'] = $_POST['phrase_detail_uuid'][$i];
+			continue;
+		}
+		//only save rows with data
+		if (!empty($_POST['phrase_detail_data'][$i])) {
+			//build data array
+			if ($_POST['phrase_detail_function'][$i] == 'execute' && substr($_POST['phrase_detail_data'][$i], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
+				header("Location: phrase_edit.php?id=".$phrase_uuid);
+				exit;
+			}
+			$_POST['phrase_detail_tag'] = 'action'; // default, for now
+			$_POST['phrase_detail_group'] = "0"; // one group, for now
+
+			//update existing records in the database
+			if (!empty($_POST['phrase_detail_uuid'][$i])) {
+				$phrase_detail_uuid = $_POST['phrase_detail_uuid'][$i];
+			} else {
+				$phrase_detail_uuid = uuid();
+			}
+			$recording_uuid = $_POST['phrase_detail_data'][$i];
+			$array['phrase_details'][$i]['phrase_detail_uuid'] = $phrase_detail_uuid;
+			$array['phrase_details'][$i]['phrase_uuid'] = $phrase_uuid;
+			$array['phrase_details'][$i]['domain_uuid'] = $domain_uuid;
+			$array['phrase_details'][$i]['phrase_detail_order'] = $i;
+			$array['phrase_details'][$i]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
+			$array['phrase_details'][$i]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
+			$array['phrase_details'][$i]['phrase_detail_function'] = $_POST['phrase_detail_function'][$i];
+			$array['phrase_details'][$i]['phrase_detail_data'] = $recording_files[$recording_uuid]; //path and filename of recording
+			$array['phrase_details'][$i]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
+			$array['phrase_details'][$i]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
+			$array['phrase_details'][$i]['phrase_detail_group'] = $_POST['phrase_detail_group'];
+		}
+	}
+	return $array;
+}
+
 //set default domain
 if (empty($domain_uuid)) {
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
@@ -145,124 +203,46 @@ if (count($_POST) > 0) {
 
 		//add the phrase
 		if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('phrase_add')) {
-				//build data array
-				$phrase_uuid = uuid();
-				$array['phrases'][0]['domain_uuid'] = $domain_uuid;
-				$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
-				$array['phrases'][0]['phrase_name'] = $phrase_name;
-				$array['phrases'][0]['phrase_language'] = $phrase_language;
-				$array['phrases'][0]['phrase_enabled'] = $phrase_enabled;
-				$array['phrases'][0]['phrase_description'] = $phrase_description;
-
-				if ($_POST['phrase_detail_function'] != '') {
-					if ($_POST['phrase_detail_function'] == 'execute' && substr($_POST['phrase_detail_data'], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
-						header("Location: phrase_edit.php");
-						exit;
+			$message = '';
+			switch ($action) {
+				case 'add':
+					//redirect when they don't have permission to add a phrase
+					if (!permission_exists('phrase_add')) {
+						header('Location: phrases.php');
+						exit();
 					}
-					$_POST['phrase_detail_tag'] = 'action'; // default, for now
-					$_POST['phrase_detail_group'] = "0"; // one group, for now
-
-					if ($_POST['phrase_detail_data'] != '') {
-						$phrase_detail_uuid = uuid();
-						$array['phrase_details'][0]['phrase_detail_uuid'] = $phrase_detail_uuid;
-						$array['phrase_details'][0]['phrase_uuid'] = $phrase_uuid;
-						$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
-						$array['phrase_details'][0]['phrase_detail_order'] = $_POST['phrase_detail_order'];
-						$array['phrase_details'][0]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-						$array['phrase_details'][0]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
-						$array['phrase_details'][0]['phrase_detail_function'] = $_POST['phrase_detail_function'];
-						$array['phrase_details'][0]['phrase_detail_data'] = $_POST['phrase_detail_data'];
-						$array['phrase_details'][0]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
-						$array['phrase_details'][0]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
-						$array['phrase_details'][0]['phrase_detail_group'] = $_POST['phrase_detail_group'];
+					//set user feedback message to add
+					$message = $text['message-add'];
+					$phrase_uuid = uuid();
+					//do not break
+				case 'update':
+					//redirect when not adding and don't have permission to edit a phrase
+					if (empty($message)) {
+						if (!permission_exists('phrase_edit')) {
+							header('Location: phrases.php');
+							exit();
+						}
+						//set user feedback message to update
+						$message = $text['message-update'];
 					}
-				}
-
-				//execute insert
-				$p = new permissions;
-				$p->add('phrase_detail_add', 'temp');
-				$database->app_name = 'phrases';
-				$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
-				$database->save($array);
-				unset($array);
-
-				$p->delete('phrase_detail_add', 'temp');
-
-				//save the xml to the file system if the phrase directory is set
-				//save_phrases_xml();
-
-				//clear the cache
-				$cache = new cache;
-				$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
-
-				//clear the destinations session array
-				if (isset($_SESSION['destinations']['array'])) {
-					unset($_SESSION['destinations']['array']);
-				}
-
-				//send a redirect
-				message::add($text['message-add']);
-				header("Location: phrase_edit.php?id=".$phrase_uuid);
-				exit;
-			}
-
-			//update the phrase
-			if ($action == "update" && permission_exists('phrase_edit')) {
-				$array = [];
-				$drop_rows = [];
-				$drop_row_count = 0;
-				if (!empty($_POST['phrase_detail_function'])) {
-					$recording_files = phrases::get_all_domain_recordings($settings);
-					//update the phrase information
-					$array['phrases'][0]['domain_uuid'] = $domain_uuid;
-					$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
-					$array['phrases'][0]['phrase_name'] = $phrase_name;
-					$array['phrases'][0]['phrase_language'] = $phrase_language;
-					$array['phrases'][0]['phrase_enabled'] = $phrase_enabled;
-					$array['phrases'][0]['phrase_description'] = $phrase_description;
-					for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
-						//check for valid uuids
-						if (!empty($_POST['phrase_detail_uuid'][$i]) && !is_uuid($_POST['phrase_detail_uuid'][$i])) {
-							continue;
+					if (!empty($_POST['phrase_detail_function'])) {
+						$array = build_data_array_from_post();
+						//execute update/insert
+						$p = new permissions;
+						$p->add('phrase_detail_add', 'temp');
+						$p->add('phrase_detail_edit', 'temp');
+						$p->add('phrase_detail_delete', 'temp');
+						$database->app_name = 'phrases';
+						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+						if (count($array) > 0) {
+							$database->save($array);
 						}
-						//check for the empty rows to delete
-						if (empty($_POST['phrase_detail_data'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
-							$drop_rows['phrase_details'][$drop_row_count++]['phrase_detail_uuid'] = $_POST['phrase_detail_uuid'][$i];
-							continue;
+						if (count($drop_rows) > 0) {
+							$database->delete($drop_rows);
 						}
-						//only save rows with data
-						if (!empty($_POST['phrase_detail_data'][$i])) {
-							//build data array
-							if ($_POST['phrase_detail_function'][$i] == 'execute' && substr($_POST['phrase_detail_data'][$i], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
-								header("Location: phrase_edit.php?id=".$phrase_uuid);
-								exit;
-							}
-							$_POST['phrase_detail_tag'] = 'action'; // default, for now
-							$_POST['phrase_detail_group'] = "0"; // one group, for now
-
-							//update existing records in the database
-							if (!empty($_POST['phrase_detail_uuid'][$i])) {
-								$phrase_detail_uuid = $_POST['phrase_detail_uuid'][$i];
-							} else {
-								$phrase_detail_uuid = uuid();
-							}
-							$recording_uuid = $_POST['phrase_detail_data'][$i];
-							$array['phrase_details'][$i]['phrase_detail_uuid'] = $phrase_detail_uuid;
-							$array['phrase_details'][$i]['phrase_uuid'] = $phrase_uuid;
-							$array['phrase_details'][$i]['domain_uuid'] = $domain_uuid;
-							$array['phrase_details'][$i]['phrase_detail_order'] = $i;
-							$array['phrase_details'][$i]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
-							$array['phrase_details'][$i]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
-							$array['phrase_details'][$i]['phrase_detail_function'] = $_POST['phrase_detail_function'][$i];
-							$array['phrase_details'][$i]['phrase_detail_data'] = $recording_files[$recording_uuid]; //path and filename of recording
-							$array['phrase_details'][$i]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
-							$array['phrase_details'][$i]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
-							$array['phrase_details'][$i]['phrase_detail_group'] = $_POST['phrase_detail_group'];
-						}
+						$p->delete('phrase_detail_add', 'temp');
 					}
-
-					//execute update/insert
+										//execute update/insert
 					$p = new permissions;
 					$p->add('phrase_detail_add', 'temp');
 					$p->add('phrase_detail_edit', 'temp');
@@ -270,38 +250,25 @@ if (count($_POST) > 0) {
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					if (count($array) > 0) {
-						$database->save($array);
+						//$database->save($array);
 					}
 					if (count($drop_rows) > 0) {
 						$database->delete($drop_rows);
 					}
 					$p->delete('phrase_detail_add', 'temp');
-				}
+					//clear the cache
+					$cache = new cache;
+					$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
 
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
 
-				//remove checked phrase details
-				if (
-					is_array($phrase_details_delete)
-					&& @sizeof($phrase_details_delete) != 0
-					) {
-					$obj = new phrases;
-					$obj->phrase_uuid = $phrase_uuid;
-					$obj->delete_details($phrase_details_delete);
-				}
-
-				//clear the cache
-				$cache = new cache;
-				$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
-
-				//clear the destinations session array
-				if (isset($_SESSION['destinations']['array'])) {
-					unset($_SESSION['destinations']['array']);
-				}
-
-				//send a redirect
-				message::add($text['message-update']);
-				header("Location: phrase_edit.php?id=".$phrase_uuid);
-				exit;
+					//send a redirect
+					message::add($message);
+					header("Location: phrase_edit.php?id=".$phrase_uuid);
+					exit;
 			}
 		}
 	}
