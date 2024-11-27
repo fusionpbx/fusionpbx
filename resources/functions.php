@@ -323,8 +323,9 @@
 	if (!function_exists('permission_exists')) {
 
 		function permission_exists($permission_name) {
+			global $domain_uuid, $user_uuid;
 			$database = database::new();
-			$permission = new permissions($database);
+			$permission = permissions::new($database, $domain_uuid, $user_uuid);
 			return $permission->exists($permission_name);
 		}
 
