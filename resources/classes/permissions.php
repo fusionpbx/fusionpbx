@@ -35,6 +35,7 @@ if (!class_exists('permissions')) {
 		private $user_uuid;
 		private $groups;
 		private $permissions;
+		private static $permission;
 
 		/**
 		 * called when the object is created
@@ -192,6 +193,16 @@ if (!class_exists('permissions')) {
 					$_SESSION["user"]["permissions"][$permission_name] = true;
 				}
 			}
+		}
+
+		/**
+		 * Returns a new permission object
+		 */
+		public static function new($database, $domain_uuid, $user_uuid) {
+			if (self::$permission === null) {
+				self::$permission = new permissions($database, $domain_uuid, $user_uuid);
+			}
+			return self::$permission;
 		}
 
 	}
