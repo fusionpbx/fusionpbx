@@ -47,7 +47,11 @@ function parse_message_decode_text($connection, &$part, $message_number, $id, $o
 			}
 		}
 		if($charset){
-			$msg = mb_convert_encoding($msg, $to_charset, $charset);
+			if ($charset === 'windows-1256') {
+				$msg = iconv('windows-1256', 'utf-8', $msg);
+			} else {
+				$msg = mb_convert_encoding($msg, $to_charset, $charset);
+			}
 		}
 		$msg = trim($msg);
 	}
