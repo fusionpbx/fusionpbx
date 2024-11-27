@@ -25,7 +25,18 @@
 */
 
 //includes files
-    require_once __DIR__ . "/require.php";
+	require_once __DIR__ . "/require.php";
+
+//start the session
+	ini_set("session.cookie_httponly", true);
+	if (!isset($_SESSION)) { session_start(); }
+
+//set the domains session
+	if (!isset($_SESSION['domains'])) {
+		$domain = new domains();
+		$domain->session();
+		$domain->set();
+	}
 
 //if reloadxml then run the command
 	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
