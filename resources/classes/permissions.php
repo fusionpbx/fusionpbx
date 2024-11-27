@@ -187,9 +187,9 @@ if (!class_exists('permissions')) {
 		 */
 		public function session() {
 			if (!empty($this->permissions)) {
-				foreach ($this->permissions as $row) {
-					$_SESSION['permissions'][$row["permission_name"]] = true;
-					$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
+				foreach ($this->permissions as $permission_name => $row) {
+					$_SESSION['permissions'][$permission_name] = true;
+					$_SESSION["user"]["permissions"][$permission_name] = true;
 				}
 			}
 		}
