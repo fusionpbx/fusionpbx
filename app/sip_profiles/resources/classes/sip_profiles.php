@@ -116,7 +116,7 @@ if (!class_exists('sip_profiles')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('sip_profile_domain_delete', 'temp');
 									$p->add('sip_profile_setting_delete', 'temp');
 

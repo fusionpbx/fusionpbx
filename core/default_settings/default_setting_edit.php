@@ -159,7 +159,7 @@
 						unset($sql, $parameters);
 
 					//update the timezone
-						$p = new permissions;
+						$p = permissions::new();
 						if ($detail_action == "update") {
 							$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
 							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$default_setting_value;

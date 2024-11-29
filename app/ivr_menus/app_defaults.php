@@ -54,7 +54,7 @@ if ($domains_processed == 1) {
 		}
 		if (!empty($array)) {
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('ivr_menu_edit', 'temp');
 
 			$database->app_name = 'ivr_menus';

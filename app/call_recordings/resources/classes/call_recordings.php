@@ -110,7 +110,7 @@ if (!class_exists('call_recordings')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//add temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('xml_cdr_edit', 'temp');
 
 								//remove record_path, record_name and record_length
@@ -200,7 +200,7 @@ if (!class_exists('call_recordings')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//add temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('xml_cdr_edit', 'temp');
 
 								//remove record_path, record_name and record_length

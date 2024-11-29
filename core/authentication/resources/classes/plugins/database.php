@@ -310,7 +310,7 @@ class plugin_database {
 								$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('user_edit', 'temp');
 
 							//execute insert

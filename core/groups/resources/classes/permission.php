@@ -95,7 +95,7 @@
 						}
 						if (is_array($array) && @sizeof($array) != 0) {
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('group_permission_delete', 'temp');
 							//execute delete
 								$database = new database;
@@ -185,7 +185,7 @@
 
 					if (is_array($array) && @sizeof($array)) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('group_permission_add', 'temp');
 
 						//execute insert

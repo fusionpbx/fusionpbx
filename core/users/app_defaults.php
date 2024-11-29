@@ -151,7 +151,7 @@ if ($domains_processed == 1) {
 			$array['default_settings'][$x]['default_setting_subcategory'] = "password_special";
 
 			//add the temporary permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("default_setting_edit", 'temp');
 
 			//save to the data
@@ -200,7 +200,7 @@ if ($domains_processed == 1) {
 				$x++;
 
 				//add the temporary permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("email_template_add", 'temp');
 				$p->add("email_template_edit", 'temp');
 

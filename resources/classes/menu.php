@@ -142,7 +142,7 @@ if (!class_exists('menu')) {
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('menu_item_delete', 'temp');
 									$p->add('menu_item_group_delete', 'temp');
 									$p->add('menu_language_delete', 'temp');
@@ -223,7 +223,7 @@ if (!class_exists('menu')) {
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('menu_language_delete', 'temp');
 									$p->add('menu_item_group_delete', 'temp');
 
@@ -507,7 +507,7 @@ if (!class_exists('menu')) {
 					}
 					if (is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('menu_item_add', 'temp');
 							$p->add('menu_language_add', 'temp');
 						//execute insert
@@ -572,7 +572,7 @@ if (!class_exists('menu')) {
 
 					if (is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('menu_item_group_add', 'temp');
 						//execute insert
 							$this->database->app_name = 'menu';
@@ -901,7 +901,7 @@ if (!class_exists('menu')) {
 						$array['menus'][0]['menu_description'] = 'Default Menu';
 
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('menu_add', 'temp');
 
 					//execute insert

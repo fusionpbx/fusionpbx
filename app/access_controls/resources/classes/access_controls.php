@@ -69,7 +69,7 @@ if (!class_exists('access_controls')) {
 					if (is_array($array) && @sizeof($array) != 0) {
 
 						//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('access_control_node_delete', 'temp');
 
 						//execute delete
@@ -236,7 +236,7 @@ if (!class_exists('access_controls')) {
 					if (is_array($array) && @sizeof($array) != 0) {
 
 						//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('access_control_node_add', 'temp');
 
 						//save the array

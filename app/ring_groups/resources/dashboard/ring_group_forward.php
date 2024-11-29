@@ -83,7 +83,7 @@
 
 		if (is_array($array) && sizeof($array) != 0) {
 			//update ring group
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('ring_group_edit', 'temp');
 
 				$database->app_name = 'ring_groups';

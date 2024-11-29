@@ -44,7 +44,7 @@
 		//delete the device vendor function group
 			$array['device_vendor_function_groups'][0]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('device_vendor_function_group_delete', 'temp');
 
 			$database = new database;
@@ -183,7 +183,7 @@
 								$array['device_vendor_function_groups'][0]['group_name'] = $group_name;
 								$array['device_vendor_function_groups'][0]['group_uuid'] = $group_uuid;
 
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('device_vendor_function_group_add', 'temp');
 
 								$database = new database;

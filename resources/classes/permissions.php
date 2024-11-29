@@ -211,9 +211,9 @@ if (!class_exists('permissions')) {
 //examples
 	/*
 	//add the permission
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add($permission);
 	//delete the permission
-		$p = new permissions;
+		$p = permissions::new();
 		$p->delete($permission);
 	*/
