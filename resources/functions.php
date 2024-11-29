@@ -2520,5 +2520,3 @@ if (!function_exists('get_memory_details')) {
 		return false;
 	}
 }
-
-?>
