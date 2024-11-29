@@ -36,7 +36,7 @@ if ($domains_processed == 1) {
 	//			$array['notifications'][0]['notification_uuid'] = uuid();
 	//			$array['notifications'][0]['project_notifications'] = 'false';
 	//		//grant temporary permissions
-	//			$p = new permissions;
+	//			$p = permissions::new();
 	//			$p->add('notification_add', 'temp');
 	//		//execute insert
 	//			$database->app_name = 'notifications';

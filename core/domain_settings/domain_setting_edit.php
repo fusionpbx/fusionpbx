@@ -155,7 +155,7 @@
 							unset($sql, $parameters);
 
 						//update the timezone
-							$p = new permissions;
+							$p = permissions::new();
 							if ($detail_action == "update") {
 								$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
 								$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
@@ -280,7 +280,7 @@
 										$array['dialplan_details'][0]['dialplan_detail_group'] = $dialplan_detail_group;
 										$array['dialplan_details'][0]['dialplan_detail_order'] = '15';
 
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_detail_add', 'temp');
 									}
 
@@ -289,7 +289,7 @@
 										$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
 										$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
 
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_detail_edit', 'temp');
 									}
 

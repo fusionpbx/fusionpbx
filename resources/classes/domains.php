@@ -707,7 +707,7 @@ if (!class_exists('domains')) {
 			//add the missing default settings
 				if (isset($array) && is_array($array) && count($array) > 0) {
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('default_setting_add', 'temp');
 
 					//execute insert

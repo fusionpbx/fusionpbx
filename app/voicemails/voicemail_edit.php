@@ -199,7 +199,7 @@
 					$array['voicemails'][0]['voicemail_description'] = $voicemail_description;
 
 				//create permissions object
-					$p = new permissions;
+					$p = permissions::new();
 
 				//add voicemail options
 					if (permission_exists('voicemail_option_add') && sizeof($voicemail_options) > 0) {

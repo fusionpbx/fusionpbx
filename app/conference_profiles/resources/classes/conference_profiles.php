@@ -103,7 +103,7 @@ if (!class_exists('conference_profiles')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_profile_param_delete', 'temp');
 
 								//execute delete
@@ -410,7 +410,7 @@ if (!class_exists('conference_profiles')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_profile_param_add', 'temp');
 
 								//save the array

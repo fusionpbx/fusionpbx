@@ -91,7 +91,7 @@
 				$array['follow_me'][0]['follow_me_enabled'] = $this->follow_me_enabled;
 				$array['follow_me'][0]['follow_me_ignore_busy'] = $this->follow_me_ignore_busy;
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('follow_me_add', 'temp');
 			//execute insert
 				$database = new database;
@@ -115,7 +115,7 @@
 				$array['follow_me'][0]['follow_me_enabled'] = $this->follow_me_enabled;
 				$array['follow_me'][0]['follow_me_ignore_busy'] = $this->follow_me_ignore_busy;
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('follow_me_add', 'temp');
 			//execute update
 				$database = new database;
@@ -135,7 +135,7 @@
 			//delete related follow me destinations
 				$array['follow_me_destinations'][0]['follow_me_uuid'] = $this->follow_me_uuid;
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('follow_me_destination_delete', 'temp');
 				//execute delete
 					$database = new database;
@@ -210,7 +210,7 @@
 				}
 				if (is_array($array) && @sizeof($array) != 0) {
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('follow_me_destination_add', 'temp');
 					//execute insert
 						$database = new database;
@@ -234,7 +234,7 @@
 				$extension_uuid = $result[0]['extension_uuid'];
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("follow_me_edit", 'temp');
 				$p->add("extension_edit", 'temp');
 
@@ -389,7 +389,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('extension_edit', 'temp');
 									$p->add('follow_me_edit', 'temp');
 

@@ -103,7 +103,7 @@ if (!class_exists('conference_controls')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_control_detail_delete', 'temp');
 
 								//execute delete

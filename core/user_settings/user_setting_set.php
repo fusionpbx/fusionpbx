@@ -97,7 +97,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 						$array['user_settings'][0]['user_uuid'] = $_SESSION['user_uuid'];
 						$array['user_settings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('user_setting_delete', 'temp');
 					//execute
 						$database->app_name = 'user_settings';
@@ -132,7 +132,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 					$array['user_settings'][0]['user_setting_enabled'] = $user_setting_enabled;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('user_setting_add', 'temp');
 					$p->add('user_setting_edit', 'temp');
 

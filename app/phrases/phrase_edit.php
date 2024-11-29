@@ -160,7 +160,7 @@
 						}
 
 					//execute insert
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
 						$database = new database;
@@ -224,7 +224,7 @@
 						}
 
 					//execute update/insert
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
 						$database = new database;

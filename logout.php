@@ -89,7 +89,7 @@
 							$array['user_settings'][0]['user_setting_value'] = $referrer;
 							$array['user_settings'][0]['user_setting_enabled'] = 'true';
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('user_setting_add', 'temp');
 						//execute insert
 							$database = new database;

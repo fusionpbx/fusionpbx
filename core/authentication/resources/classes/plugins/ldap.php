@@ -178,7 +178,7 @@ class plugin_ldap {
 						$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
 
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('user_add', 'temp');
 						$p->add('user_group_add', 'temp');
 

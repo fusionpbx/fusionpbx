@@ -402,7 +402,7 @@
 		//update the destination dialplan_uuid
 			if (is_uuid($destination_uuid)) {
 
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('destination_edit', 'temp');
 
 				$array['destinations'][0]['destination_uuid'] = $destination_uuid;

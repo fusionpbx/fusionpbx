@@ -172,7 +172,7 @@
 								$array['users'][0]['user_status'] = $row['agent_status'];
 								$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('user_edit', 'temp');
 
 								$database = new database;

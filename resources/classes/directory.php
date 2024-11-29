@@ -179,7 +179,7 @@
 						$array['extensions'][0]['description'] = $description;
 
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('extension_add', 'temp');
 
 					//execute insert
@@ -282,7 +282,7 @@
 				$array['extensions'][0]['description'] = $description;
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('extension_edit', 'temp');
 
 			//execute insert
@@ -304,7 +304,7 @@
 					$array['extensions'][0]['extension_uuid'] = $extension_uuid;
 					$array['extensions'][0]['domain_uuid'] = $domain_uuid;
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_delete', 'temp');
 				//execute delete
 					$database = new database;

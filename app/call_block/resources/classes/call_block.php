@@ -435,7 +435,7 @@ if (!class_exists('call_block')) {
 									unset($rows, $parameters);
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array

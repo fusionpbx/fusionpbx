@@ -93,7 +93,7 @@ if ($domains_processed == 1) {
 							$array['music_on_hold'][0]['music_on_hold_chime_max'] = isset($chime_max) ? $chime_max : null;
 							$array['music_on_hold'][0]['music_on_hold_path'] = $stream_path;
 
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('music_on_hold_add', 'temp');
 
 							$database->app_name = 'app_name';

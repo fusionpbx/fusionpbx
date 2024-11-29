@@ -88,7 +88,7 @@
 			$array['user_groups'][0]['group_uuid'] = $group_uuid;
 			$array['user_groups'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('user_group_delete', 'temp');
 
 			$database->delete($array);
@@ -297,7 +297,7 @@
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'language';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('user_setting_delete', 'temp');
 
 					$database->delete($array_delete);
@@ -345,7 +345,7 @@
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'time_zone';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('user_setting_delete', 'temp');
 
 					$database->delete($array_delete);
@@ -394,7 +394,7 @@
 						$array_delete['user_settings'][0]['user_setting_subcategory'] = 'key';
 						$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('user_setting_delete', 'temp');
 
 						$database->delete($array_delete);
@@ -555,7 +555,7 @@
 			$x++;
 
 		//add the user_edit permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("user_setting_add", "temp");
 			$p->add("user_setting_edit", "temp");
 			$p->add("user_edit", "temp");

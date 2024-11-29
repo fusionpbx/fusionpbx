@@ -83,7 +83,7 @@ if ($domains_processed == 1) {
 					//save to the data
 					if (!empty($array)) {
 						//add temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('destination_edit', 'temp');
 		
 						//create the database object and save the data
@@ -109,7 +109,7 @@ if ($domains_processed == 1) {
 
 			if (!empty($array)) {
 				//add temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('destination_edit', 'temp');
 
 				//create the database object and save the data

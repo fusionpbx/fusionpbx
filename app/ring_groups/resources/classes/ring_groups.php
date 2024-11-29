@@ -125,7 +125,7 @@ if (!class_exists('ring_groups')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('ring_group_user_delete', 'temp');
 									$p->add('ring_group_destination_delete', 'temp');
 									$p->add('dialplan_delete', 'temp');
@@ -305,7 +305,7 @@ if (!class_exists('ring_groups')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
@@ -472,7 +472,7 @@ if (!class_exists('ring_groups')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('ring_group_user_add', 'temp');
 									$p->add('ring_group_destination_add', 'temp');
 									$p->add("dialplan_add", "temp");

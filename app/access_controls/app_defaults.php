@@ -74,7 +74,7 @@
 						$array['access_controls'][0]['access_control_name'] = $access_control_name;
 						$array['access_controls'][0]['access_control_default'] = $access_control_default;
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('access_control_add', 'temp');
 
 						$database->app_name = 'access_controls';
@@ -106,7 +106,7 @@
 								$array['access_control_nodes'][0]['node_cidr'] = $node_cidr;
 								$array['access_control_nodes'][0]['node_description'] = $node_description;
 
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('access_control_node_add', 'temp');
 
 								$database->app_name = 'access_controls';

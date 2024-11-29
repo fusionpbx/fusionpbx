@@ -335,7 +335,7 @@ if (!class_exists('email')) {
 				}
 
 				//add temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("email_queue_add", 'temp');
 				$p->add("email_queue_attachment_add", 'temp');
 

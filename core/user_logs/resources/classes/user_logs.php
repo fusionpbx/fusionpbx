@@ -84,7 +84,7 @@ if (!class_exists('user_logs')) {
 				}
 
 			//add the dialplan permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("user_log_add", 'temp');
 
 			//save to the data

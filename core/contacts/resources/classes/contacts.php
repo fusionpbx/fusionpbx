@@ -108,7 +108,7 @@ if (!class_exists('contacts')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temp permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$database = new database;
 									foreach ($this->tables as $table) {
 										$p->add(database::singular($table).'_delete', 'temp');

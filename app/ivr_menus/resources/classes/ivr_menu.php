@@ -139,7 +139,7 @@ if (!class_exists('ivr_menu')) {
 						if (!empty($array)) {
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('ivr_menu_option_delete', 'temp');
 								$p->add('dialplan_delete', 'temp');
 
@@ -312,7 +312,7 @@ if (!class_exists('ivr_menu')) {
 						if (!empty($array)) {
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('dialplan_edit', 'temp');
 
 							//save the array
@@ -459,7 +459,7 @@ if (!class_exists('ivr_menu')) {
 						if (!empty($array)) {
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('ivr_menu_option_add', 'temp');
 								$p->add('dialplan_add', 'temp');
 
@@ -471,7 +471,7 @@ if (!class_exists('ivr_menu')) {
 								unset($array);
 
 							//revoke temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->delete('ivr_menu_option_add', 'temp');
 								$p->delete('dialplan_add', 'temp');
 

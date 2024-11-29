@@ -428,7 +428,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
 
 			//add temporary permisison
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_queue_add', 'temp');
 
 			//save the data

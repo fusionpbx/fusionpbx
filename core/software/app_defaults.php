@@ -46,7 +46,7 @@ if ($domains_processed == 1) {
 	//save the data in the array
 		if (!empty($array)) {
 			//add the temporary permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("software_add", 'temp');
 			$p->add("software_edit", 'temp');
 

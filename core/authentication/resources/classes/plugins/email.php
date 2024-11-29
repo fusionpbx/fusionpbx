@@ -258,7 +258,7 @@ class plugin_email {
 					$hostname = gethostname();
 
 					//add the temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("email_queue_add", 'temp');
 					$p->add("email_queue_edit", 'temp');
 

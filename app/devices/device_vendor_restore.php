@@ -129,7 +129,7 @@
 			}
 
 		//assign temp permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('device_vendor_add', 'temp');
 			$p->add('device_vendor_function_add', 'temp');
 			$p->add('device_vendor_function_group_add', 'temp');

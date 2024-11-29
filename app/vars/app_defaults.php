@@ -95,7 +95,7 @@ if ($domains_processed == 1) {
 				}
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("var_add", "temp");
 				$p->add("var_edit", "temp");
 
@@ -194,7 +194,7 @@ if ($domains_processed == 1) {
 
 				if (!empty($array)) {
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add("var_add", "temp");
 
 					//execute inserts

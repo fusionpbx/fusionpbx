@@ -50,7 +50,7 @@
 					}
 				}
 				if (is_array($array) && @sizeof($array) != 0) {
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_edit', 'temp');
 
 					$database->app_name = 'extensions';
@@ -69,7 +69,7 @@
 			$sql .= "where default_setting_category = 'security' ";
 			$sql .= "and default_setting_subcategory like 'password_%' ";
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('default_setting_edit', 'temp');
 
 			$database->execute($sql);

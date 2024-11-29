@@ -153,7 +153,7 @@
 					$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_add', 'temp');
 			}
 			else if ($action == "update") {
@@ -161,7 +161,7 @@
 					$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_detail_delete', 'temp');
 
 				//execute delete
@@ -182,7 +182,7 @@
 					}
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_edit', 'temp');
 			}
 
@@ -481,7 +481,7 @@
 		//execute query
 			if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_detail_add', 'temp');
 					$p->add('dialplan_detail_edit', 'temp');
 

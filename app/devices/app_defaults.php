@@ -62,7 +62,7 @@ if ($domains_processed == 1) {
 				$array['device_keys'][$index]['device_key_vendor'] = $row["device_vendor"];
 			}
 			if (is_array($array) && @sizeof($array)) {
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_key_edit', 'temp');
 
 				$database->app_name = 'devices';
@@ -106,7 +106,7 @@ if ($domains_processed == 1) {
 
 			//save the array
 			if (!empty($array)) {
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_profile_key_add', 'temp');
 
 				$database->app_name = 'devices';
@@ -144,7 +144,7 @@ if ($domains_processed == 1) {
 
 			//save the array
 			if (!empty($array)) {
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_profile_setting_add', 'temp');
 
 				$database->app_name = 'devices';
@@ -225,7 +225,7 @@ if ($domains_processed == 1) {
 
 			//execute
 				if (!empty($array)) {
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('device_vendor_add', 'temp');
 					$p->add('device_vendor_function_add', 'temp');
 					$p->add('device_vendor_function_group_add', 'temp');

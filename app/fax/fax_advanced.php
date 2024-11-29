@@ -135,7 +135,7 @@
 				//execute
 					if (isset($array) && is_array($array)) {
 						//assign temp permission
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('fax_add', 'temp');
 						$p->add('fax_edit', 'temp');
 

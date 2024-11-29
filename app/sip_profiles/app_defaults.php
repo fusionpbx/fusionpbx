@@ -120,7 +120,7 @@
 				//execute inserts
 					if (!empty($array)) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('sip_profile_add', 'temp');
 							$p->add('sip_profile_domain_add', 'temp');
 							$p->add('sip_profile_setting_add', 'temp');
@@ -198,7 +198,7 @@
 				//execute inserts
 					if (!empty($array)) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('sip_profile_domain_add', 'temp');
 
 						//execute insert

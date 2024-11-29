@@ -107,7 +107,7 @@ if ($_POST['a'] == 'import') {
 					unset($duplicate_contact_uuid);
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('contact_delete', 'temp');
 
 				//delete duplicate contact

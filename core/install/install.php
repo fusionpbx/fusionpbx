@@ -205,7 +205,7 @@
 			//if the domain name does not exist then add the domain name
 			if (!$domain_exists) {
 				//add the domain permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("domain_add", "temp");
 
 				//prepare the array
@@ -271,7 +271,7 @@
 			unset($parameters);
 
 			//add the user permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("user_add", "temp");
 			$p->add("user_edit", "temp");
 			$p->add("user_group_add", "temp");

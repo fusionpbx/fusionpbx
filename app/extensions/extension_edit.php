@@ -261,7 +261,7 @@
 			$array['extension_users'][0]['user_uuid'] = $user_uuid;
 
 		//add temporary permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('extension_user_delete', 'temp');
 
 		//save the array
@@ -288,7 +288,7 @@
 				$array['device_lines'][0]['device_line_uuid'] = $device_line_uuid;
 
 			//add temporary permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_line_delete', 'temp');
 
 			//save the array

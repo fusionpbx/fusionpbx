@@ -170,7 +170,7 @@
 				$array['dialplan_details'][1]['dialplan_detail_data'] = 'WARNING [inbound routes] 404 not found \${sip_network_ip}';
 				$array['dialplan_details'][1]['dialplan_detail_order'] = '20';
 
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('dialplan_add', 'temp');
 				$p->add('dialplan_detail_add', 'temp');
 

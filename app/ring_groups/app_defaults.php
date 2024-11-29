@@ -49,7 +49,7 @@ if ($domains_processed == 1) {
 		}
 		if (is_array($array) && @sizeof($array) != 0) {
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('ring_group_edit', 'temp');
 			//execute update
 				$database->app_name = 'ring_groups';

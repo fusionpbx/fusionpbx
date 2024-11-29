@@ -83,7 +83,7 @@ if ($domains_processed == 1) {
 						$array['phrase_details'][$index]['phrase_detail_data'] = $phrase_detail_data;
 				}
 				if (is_array($array) && @sizeof($array) != 0) {
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
 					$database->app_name = 'phrases';
@@ -119,7 +119,7 @@ if ($domains_processed == 1) {
 						$array['phrase_details'][$index]['phrase_detail_data'] = $phrase_detail_data;
 				}
 				if (!empty($array)) {
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
 					$database->app_name = 'phrases';

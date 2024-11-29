@@ -45,7 +45,7 @@ if ($domains_processed == 1) {
 	//save the data to the database
 		if (!empty($array)) {
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('permission_add', 'temp');
 
 			//execute insert

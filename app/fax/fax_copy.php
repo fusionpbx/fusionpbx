@@ -107,7 +107,7 @@
 			$array['fax'][0]['fax_description'] = $fax_description;
 
 		//execute insert
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_add', 'temp');
 
 			$database = new database;

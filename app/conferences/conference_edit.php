@@ -91,7 +91,7 @@
 		$user_uuid = $_REQUEST["user_uuid"];
 		$conference_uuid = $_REQUEST["id"];
 
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('conference_user_delete', 'temp');
 
 		$array['conference_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -124,7 +124,7 @@
 			$array['conference_users'][0]['conference_uuid'] = $conference_uuid;
 			$array['conference_users'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('conference_user_add', 'temp');
 
 			$database = new database;
@@ -239,7 +239,7 @@
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_add', 'temp');
 					$p->add('dialplan_edit', 'temp');
 

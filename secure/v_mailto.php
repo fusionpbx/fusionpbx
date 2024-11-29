@@ -132,7 +132,7 @@
 					$array['email_logs'][0]['email'] = str_replace("'", "''", $msg);
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('email_log_add', 'temp');
 
 				//execute insert

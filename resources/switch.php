@@ -519,7 +519,7 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 		$array['dialplans'][0]['dialplan_enabled'] = $dialplan_enabled;
 		$array['dialplans'][0]['dialplan_description'] = $dialplan_description;
 	//grant temporary permissions
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('dialplan_add', 'temp');
 	//execute insert
 		$database = new database;
