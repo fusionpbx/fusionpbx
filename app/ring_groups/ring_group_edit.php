@@ -110,7 +110,7 @@
 			$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
 
 			//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('ring_group_user_delete', 'temp');
 
 			//execute delete
@@ -248,7 +248,7 @@
 		$array['ring_group_users'][0]['user_uuid'] = $user_uuid;
 
 		//grant temporary permissions
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('ring_group_user_add', 'temp');
 
 		//execute delete
@@ -486,7 +486,7 @@
 			$array["dialplans"][0]["app_uuid"] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
 
 		//add the dialplan permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("dialplan_add", "temp");
 			$p->add("dialplan_edit", "temp");
 

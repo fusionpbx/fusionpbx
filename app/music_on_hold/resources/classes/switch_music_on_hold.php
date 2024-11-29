@@ -301,7 +301,7 @@ if (!class_exists('switch_music_on_hold')) {
 				//view_array($array, false);
 
 			//save the data
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('music_on_hold_add', 'temp');
 
 				$database = new database;

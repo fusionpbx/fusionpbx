@@ -111,7 +111,7 @@
 					$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_add', 'temp');
 
 				//execute insert
@@ -144,7 +144,7 @@
 					$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_edit', 'temp');
 
 				//execute update
@@ -447,7 +447,7 @@
 								} //end foreach $xml_list
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('dialplan_add', 'temp');
 								$p->add('dialplan_edit', 'temp');
 								$p->add('dialplan_detail_add', 'temp');
@@ -1007,7 +1007,7 @@
 									$array['dialplans'][$x]['dialplan_uuid'] = $key;
 									$array['dialplans'][$x]['dialplan_xml'] = $value;
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('dialplan_edit', 'temp');
 								//execute update
 									$database = new database;
@@ -1160,7 +1160,7 @@
 								if (!empty($array)) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_delete', 'temp');
 										$p->add('dialplan_detail_delete', 'temp');
 
@@ -1264,7 +1264,7 @@
 								if (!empty($array)) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_detail_delete', 'temp');
 
 									//execute delete
@@ -1371,7 +1371,7 @@
 								if (!empty($array)) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_edit', 'temp');
 
 									//save the array
@@ -1525,7 +1525,7 @@
 								if (!empty($array)) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_detail_add', 'temp');
 
 									//save the array

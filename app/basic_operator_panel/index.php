@@ -65,7 +65,7 @@
 		//update the status
 			if (permission_exists("user_setting_edit")) {
 				//add the user_edit permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("user_edit", "temp");
 
 				//update the database user_status
@@ -153,7 +153,7 @@
 					}
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_edit', 'temp');
 
 				//execute update

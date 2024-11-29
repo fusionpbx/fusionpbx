@@ -95,7 +95,7 @@
 				$array['extensions'][0]['do_not_disturb'] = $this->enabled;
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('extension_edit', 'temp');
 
 			//execute update
@@ -226,7 +226,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('extension_edit', 'temp');
 
 								//save the array

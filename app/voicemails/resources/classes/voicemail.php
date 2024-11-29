@@ -421,7 +421,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('voicemail_delete', 'temp');
 									$p->add('voicemail_option_delete', 'temp');
 									$p->add('voicemail_message_delete', 'temp');
@@ -537,7 +537,7 @@
 						//delete the checked rows
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('voicemail_destination_delete', 'temp');
 
 								//execute delete
@@ -708,7 +708,7 @@
 				}
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('voicemail_message_delete', 'temp');
 
 			//execute delete
@@ -746,7 +746,7 @@
 				$array['voicemail_messages'][0]['message_status'] = $new_status;
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update
@@ -989,7 +989,7 @@
 			}
 
 			//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('email_queue_add', 'temp');
 			$p->add('email_queue_attachment_add', 'temp');
 
@@ -1094,7 +1094,7 @@
 				if (is_array($array) && @sizeof($array) != 0) {
 
 					//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('voicemail_message_edit', 'temp');
 
 					//execute update
@@ -1134,7 +1134,7 @@
 				$array['voicemail_messages'][0]['message_status'] = 'saved';
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update

@@ -248,7 +248,7 @@
 			}
 
 		//add the dialplan permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("extension_edit", "temp");
 
 		//save the data

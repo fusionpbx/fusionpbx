@@ -174,7 +174,7 @@
 			$array['fax_users'][0]['fax_uuid'] = $fax_uuid;
 			$array['fax_users'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_user_delete', 'temp');
 
 			$database = new database;
@@ -202,7 +202,7 @@
 			$array['fax_users'][0]['fax_uuid'] = $fax_uuid;
 			$array['fax_users'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_user_add', 'temp');
 
 			$database = new database;
@@ -299,7 +299,7 @@
 						$array['fax'][0]['dialplan_uuid'] = $dialplan_uuid;
 
 					//assign temp permission
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('fax_add', 'temp');
 
 					//set the dialplan action
@@ -311,7 +311,7 @@
 						$array['fax'][0]['fax_uuid'] = $fax_uuid;
 
 					//assign temp permission
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('fax_edit', 'temp');
 				}
 

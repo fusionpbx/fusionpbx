@@ -512,7 +512,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('device_setting_delete', 'temp');
 									$p->add('device_line_delete', 'temp');
 									$p->add('device_key_delete', 'temp');
@@ -722,7 +722,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('device_vendor_function_delete', 'temp');
 									$p->add('device_vendor_function_group_delete', 'temp');
 
@@ -784,7 +784,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('device_vendor_function_group_delete', 'temp');
 
 								//execute delete
@@ -845,7 +845,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('device_profile_key_delete', 'temp');
 									$p->add('device_profile_setting_delete', 'temp');
 
@@ -1370,7 +1370,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('device_profile_key_add', 'temp');
 									$p->add('device_profile_setting_add', 'temp');
 

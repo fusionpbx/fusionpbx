@@ -231,7 +231,7 @@ if (!class_exists('xml_cdr')) {
 				}
 
 				//add the temporary permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("xml_cdr_add", "temp");
 				$p->add("xml_cdr_json_add", "temp");
 				$p->add("xml_cdr_flow_add", "temp");
@@ -2124,7 +2124,7 @@ if (!class_exists('xml_cdr')) {
 			}
 
 			//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('call_recording_delete', 'temp');
 
 			//execute delete

@@ -548,7 +548,7 @@
 								$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
 
 								//add the dialplan permission
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add("device_add", "temp");
 								$p->add("device_edit", "temp");
 

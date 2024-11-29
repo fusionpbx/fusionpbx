@@ -388,7 +388,7 @@
 				$array['fax_queue'][0]['fax_response'] = $fax_response;
 
 				//add temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('fax_queue_edit', 'temp');
 
 				//save the data
@@ -603,7 +603,7 @@
 			$array['fax_queue'][0]['fax_notify_date'] = 'now()';
 
 		//add temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_queue_edit', 'temp');
 
 		//save the data

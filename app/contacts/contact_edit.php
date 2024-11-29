@@ -545,7 +545,7 @@
 		//save the data
 			if (!empty($array)) {
 				//add the permission object
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('contact_add', 'temp');
 				$p->add('contact_phone_add', 'temp');
 				$p->add('contact_address_add', 'temp');
