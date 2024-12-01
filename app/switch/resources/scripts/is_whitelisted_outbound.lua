@@ -1,7 +1,4 @@
-local destination_domain_code = argv[1]
-local destination_extension = argv[2]
-
-local number = destination_domain_code .. destination_extension
+local number = argv[1]
 
 --get the variables
 if (session:ready()) then
@@ -39,7 +36,6 @@ function is_whitelisted(number, domain_uuid)
             )
         AND domain_uuid = '%s'
     ]], number, number, domain_uuid)
-
     
     dbh:query(sql, function(row)
         if row["count"] == "1" then
@@ -54,73 +50,24 @@ function is_whitelisted(number, domain_uuid)
 end
 
 
--- Function to lookup domain UUID by domain code (first 4 digits)
-function lookup_domain_uuid_by_code(domain_code)
-
-    local domain_uuid = nil -- Initialize domain_uuid
-    local domain_name = nil -- Initialize domain_name
-
-    local sql = string.format([[
-        SELECT domain_uuid, domain_name 
-        FROM v_domains 
-        WHERE domain_name LIKE '%s.%%'
-    ]], domain_code) -- Query for domain_name starting with the domain_code
-
-    -- Execute the query and process the result
-    dbh:query(sql, function(row)
-        domain_uuid = row["domain_uuid"]
-        domain_name = row["domain_name"]
-        freeswitch.consoleLog("INFO", "[inter_tenant_dialing] Found domain: " .. domain_name .. " with UUID: " .. domain_uuid .. "\n")
-    end)
-
-    -- Close the database connection
-    dbh:release()
-
-    -- Check if the domain_uuid was found
-    if not domain_uuid then
-        freeswitch.consoleLog("ERROR", "[inter_tenant_dialing] Domain not found for code: " .. domain_code .. "\n")
-    end
-
-    return domain_uuid, domain_name
-end
-
-local destination_domain_uuid, destination_domain_name = lookup_domain_uuid_by_code(destination_domain_code) -- Fetch domain UUID and name
-
--- Create the combination for the destination domain check
-local caller_id = current_domain_code .. caller_id_number
-
--- Check whitelist in both current and destination domains
-local is_allowed_current_domain = is_whitelisted(number, domain_uuid)
-local is_allowed_destination_domain = destination_domain_uuid and is_whitelisted(caller_id, destination_domain_uuid)
+-- Check if the number is whitelisted
+local whitelisted = is_whitelisted(number, domain_uuid)
 
 -- Final decision based on both domains
-if is_allowed_current_domain and is_allowed_destination_domain then
+if whitelisted then
     freeswitch.consoleLog("INFO", "[is_whitelisted] Call to " .. number .. " is allowed. \n")
     return "allowed"  -- Allow the call to proceed
 else
-    -- Determine the reason for rejection
-    if not is_allowed_current_domain then
-        freeswitch.consoleLog("NOTICE", "[is_whitelisted] Call to " .. number .. " is not whitelisted in the current domain.\n")
-        
-        -- If session is active, play the rejection message for the current domain
-        if session ~= nil and session:ready() then
-            session:answer()
-            session:execute("playback", "silence_stream://1000")
-            session:streamFile("/usr/share/freeswitch/sounds/outbound_not_allowed.wav")
-            session:sleep(1000) -- Wait for 1 second
-            session:hangup("CALL_REJECTED")
-        end
-    elseif not is_allowed_destination_domain then
-        freeswitch.consoleLog("NOTICE", "[is_whitelisted] Call to " .. number .. " is not whitelisted in the destination domain.\n")
-        
-        -- If session is active, play the rejection message for the destination domain
-        if session ~= nil and session:ready() then
-            session:answer()
-            session:execute("playback", "silence_stream://1000")
-            session:streamFile("/usr/share/freeswitch/sounds/inbound_not_allowed.wav")
-            session:sleep(1000) -- Wait for 1 second
-            session:hangup("CALL_REJECTED")
-        end
+
+    freeswitch.consoleLog("NOTICE", "[is_whitelisted] Call to " .. number .. " is not whitelisted in the current domain.\n")
+    
+    -- If session is active, play the rejection message for the current domain
+    if session ~= nil and session:ready() then
+        session:answer()
+        session:execute("playback", "silence_stream://1000")
+        session:streamFile("/usr/share/freeswitch/sounds/outbound_not_allowed.wav")
+        session:sleep(1000) -- Wait for 1 second
+        session:hangup("CALL_REJECTED")
     end
 
     return "not_whitelisted"
