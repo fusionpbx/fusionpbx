@@ -723,7 +723,7 @@
 					$array['extension_users'][$x]['extension_uuid'] = $extension_uuid;
 					$array['extension_users'][$x]['user_uuid'] = $row["user_uuid"];
 					//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_user_add', 'temp');
 					//execute insert
 					$database = database::new();
@@ -772,7 +772,7 @@
 				$array['user_groups'][0]['user_uuid'] = $user_uuid;
 
 				//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('user_add', 'temp');
 				$p->add('user_group_add', 'temp');
 				//execute insert
@@ -2520,5 +2520,3 @@ if (!function_exists('get_memory_details')) {
 		return false;
 	}
 }
-
-?>

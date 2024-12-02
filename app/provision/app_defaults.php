@@ -43,7 +43,7 @@ if ($domains_processed == 1) {
 				$array['devices'][0]['device_uuid'] = $device_uuid;
 				$array['devices'][0]['device_address'] = $device_address;
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_add', 'temp');
 			//execute update
 				$database->app_name = 'provision';
@@ -67,7 +67,7 @@ if ($domains_processed == 1) {
 			$array['default_settings'][$x]['default_setting_enabled'] = 'true';
 
 		//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('default_setting_edit', 'temp');
 
 		//execute update

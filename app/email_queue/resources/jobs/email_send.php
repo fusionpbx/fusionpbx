@@ -443,7 +443,7 @@
 			$array['email_queue'][0]['email_status'] = 'sent';
 
 		//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('email_queue_add', 'temp');
 			$p->add('email_queue_update', 'temp');
 		//execute insert
@@ -474,7 +474,7 @@
 		$array['email_queue'][0]['email_status'] = 'failed';
 
 		//grant temporary permissions
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('email_queue_add', 'temp');
 
 		//execute insert
@@ -528,7 +528,7 @@
 					$array['email_logs'][0]['status'] = 'failed';
 					$array['email_logs'][0]['email'] = str_replace("'", "''", $msg);
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('email_log_add', 'temp');
 				//execute insert
 					$database->app_name = 'v_mailto';

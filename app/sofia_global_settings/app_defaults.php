@@ -69,7 +69,7 @@ if ($domains_processed == 1) {
 	//add settings that are not in the database
 		if (!empty($array)) {
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('sofia_global_setting_add', 'temp');
 
 			//execute insert

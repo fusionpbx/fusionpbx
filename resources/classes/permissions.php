@@ -198,7 +198,7 @@ if (!class_exists('permissions')) {
 		/**
 		 * Returns a new permission object
 		 */
-		public static function new($database, $domain_uuid, $user_uuid) {
+		public static function new($database = null, $domain_uuid = null, $user_uuid = null) {
 			if (self::$permission === null) {
 				self::$permission = new permissions($database, $domain_uuid, $user_uuid);
 			}
@@ -211,9 +211,9 @@ if (!class_exists('permissions')) {
 //examples
 	/*
 	//add the permission
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add($permission);
 	//delete the permission
-		$p = new permissions;
+		$p = permissions::new();
 		$p->delete($permission);
 	*/

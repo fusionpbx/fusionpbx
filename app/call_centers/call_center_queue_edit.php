@@ -178,7 +178,7 @@
 				$array['call_center_tiers'][0]['call_center_tier_uuid'] = $call_center_tier_uuid;
 				$array['call_center_tiers'][0]['domain_uuid'] = $domain_uuid;
 
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('call_center_tier_delete', 'temp');
 
 				$database = new database;
@@ -434,7 +434,7 @@
 			$array['dialplans'][0]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
 
 		//add the dialplan permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("dialplan_add", "temp");
 			$p->add("dialplan_edit", "temp");
 

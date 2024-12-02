@@ -229,7 +229,7 @@
 					$x++;
 				}
 				if (is_array($array)) {
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('event_guard_log_edit', 'temp');
 					$database->app_name = 'event guard';
 					$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
@@ -349,7 +349,7 @@
 		$array['event_guard_logs'][0]['extension'] = $event['to-user'].'@'.$event['to-host'];
 		$array['event_guard_logs'][0]['user_agent'] = $event['user-agent'];
 		$array['event_guard_logs'][0]['log_status'] = 'blocked';
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('event_guard_log_add', 'temp');
 		$database->app_name = 'event guard';
 		$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';

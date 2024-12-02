@@ -180,7 +180,7 @@
 						$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 						$array['recordings'][0]['recording_base64'] = null;
 					//set temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('recording_edit', 'temp');
 					//execute update
 						$database->app_name = 'recordings';
@@ -217,7 +217,7 @@
 								$array['recordings'][0]['recording_base64'] = $recording_base64;
 							}
 						//set temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('recording_add', 'temp');
 						//execute insert
 							$database->app_name = 'recordings';
@@ -238,7 +238,7 @@
 										$array['recordings'][0]['recording_uuid'] = $found_recording_uuid;
 										$array['recordings'][0]['recording_base64'] = $recording_base64;
 									//set temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//execute update
 										$database->app_name = 'recordings';

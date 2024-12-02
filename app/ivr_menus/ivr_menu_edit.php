@@ -401,7 +401,7 @@
 					$array['dialplans'][0]["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
 
 				//add the dialplan permission
-					$p = new permissions;
+					$p = permissions::new();
 					if ($action == "add") {
 						$p->add("dialplan_add", "temp");
 					}
