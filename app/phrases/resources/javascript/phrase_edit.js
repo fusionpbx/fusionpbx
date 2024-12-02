@@ -32,6 +32,44 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //
+// Switch to a text input box when 'Execute' is selected instead of dropdown
+//
+function add_switch_to_text_input(select_action) {
+	if (window.permission_execute) {
+		const row = select_action.parentNode.parentNode;
+		const row_index = document.getElementById('structure').rows.length;
+		//get the select boxes
+		const select_list = row.querySelectorAll('td select'); //action and recording select dropdown boxes
+		const select_data = select_list[1];
+
+		// Create a new text input to replace the select when execute is chosen
+		const textInput = document.createElement('input');
+		textInput.type = 'text';
+		textInput.className = 'formfld';
+		textInput.id = 'phrase_detail_data_input[' + row_index + ']';
+		textInput.name = 'phrase_detail_data_input[' + row_index + ']';
+		//match style
+		textInput.style.width = select_data.style.width;
+		textInput.style.height = select_data.style.height;
+		//set to hide
+		textInput.style.display = 'none';
+		select_data.parentNode.appendChild(textInput);
+
+		select_action.addEventListener('change', function () {
+			if (select_action.value === 'execute') {
+				//show text box
+				select_data.style.display = 'none';
+				textInput.style.display = 'block';
+			} else {
+				//hide text box
+				select_data.style.display = 'block';
+				textInput.style.display = 'none';
+			}
+		});
+	}
+}
+
+//
 // Inserts all existing records before the empty one
 //
 function add_existing() {
@@ -47,7 +85,8 @@ function add_existing() {
 		const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
 		//play, pause, execute select box
 		const select_action = select_list[0];
-		select_by_text(select_action, 'Play');
+		add_switch_to_text_input(select_action);
+		select_by_value(select_action, 'play-file');
 
 		//recording select box
 		const select_recording = select_list[1];
@@ -181,9 +220,18 @@ function add_row() {
 
 	//reset id
 	newRow.id = 'row_' + index;
-
 	//reset 'name' attribute
 	newRow.setAttribute('name', 'recording_' + index);
+
+	//get the select boxes
+	const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
+	//play, pause, execute select box
+	const select_action = select_list[0];
+	//recording select box
+	const select_recording = select_list[1];
+
+	//add switchable select box to text input box
+	add_switch_to_text_input(select_action);
 
 	//add the row to the table body
 	tbody.appendChild(newRow);

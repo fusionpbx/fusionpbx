@@ -342,9 +342,20 @@ if (count($_POST) > 0) {
 
 //javascript constants for use in the selection option group
 	echo "<script>\n";
+	echo "window.permission_execute = " . (permission_exists('phrase_execute') ? 'true' : 'false') . ";\n";
 	echo "window.phrase_label_sounds = '" . ($text['label-sounds'] ?? 'Sounds') . "';\n";
 	echo "window.phrase_label_recordings = '" . ($text['label-recordings'] ?? 'Recordings') . "';\n";
-	echo "window.phrase_commands = " . json_encode([$text['label-play'] ?? 'Play', $text['label-pause'] ?? 'Pause', $text['label-execute'] ?? 'Execute'], true) . ";\n";
+	//only include permissive actions
+	$phrase_commands = [];
+	if (permission_exists('phrase_play')) {
+		$phrase_commands[] = $text['label-play'] ?? 'Play';
+		$phrase_commands[] = $text['label-pause'] ?? 'Pause';
+	}
+
+	if (permission_exists('phrase_execute')) {
+		$phrase_commands[] = $text['label-execute'] ?? 'Execute';
+	}
+	echo "window.phrase_commands = " . json_encode($phrase_commands, true) . ";\n";
 
 	//existing details
 	if (!empty($phrase_details)) {
