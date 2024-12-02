@@ -49,7 +49,7 @@ function add_existing() {
 
 		//recording select box
 		const select_recording = select_list[1];
-		select_by_text(select_recording, window.phrase_details[i]['recording_name']);
+		select_by_text(select_recording, window.phrase_details[i]['display_name']);
 
 		const input_fields = newRow.querySelectorAll('td input');
 		const uuid_field = input_fields[0];

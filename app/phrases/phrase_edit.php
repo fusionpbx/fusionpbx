@@ -327,6 +327,10 @@ if (count($_POST) > 0) {
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get the switch sound files
+	$file = new file;
+	$sound_files = $file->sounds();
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -342,47 +346,55 @@ if (count($_POST) > 0) {
 
 	//existing details
 	if (!empty($phrase_details)) {
-		//update the array to include the recording name for display
+		//update the array to include the recording name for display in select box
 		foreach ($phrase_details as &$row) {
+			$row['display_name'] = '';
 			$file = basename($row['phrase_detail_data']);
-			//get the recording name based on the file matched
-			$name_index = false;
+			//get the display_name from recording name based on the file matched
 			foreach ($recordings as $key => $recordings_row) {
 				//match on filename first and then domain_uuid
 				if ($recordings_row['recording_filename'] === $file && $recordings_row['domain_uuid'] === $row['domain_uuid']) {
-					$name_index = $key;
+					$row['display_name'] = $recordings[$key]['recording_name'];
 					break;
 				}
 			}
-			if ($name_index !== false) {
-				$row['recording_name'] = $recordings[$name_index]['recording_name'];
+			//check if display_name was not found in the recording names
+			if (strlen($row['display_name']) === 0) {
+				//try finding display_name in the switch sound files
+				if (!empty($sound_files)) {
+					//use optimized php function with strict comparison
+					$i = array_search($row['phrase_detail_data'], $sound_files, true);
+					//if found in the switch sound files
+					if ($i !== false) {
+						//set the display_name to the switch sound file name
+						$row['display_name'] = $sound_files[$i];
+					}
+				}
 			}
 		}
+		//send the phrase details to the browser as a global scope json array object
 		echo "window.phrase_details = " . json_encode($phrase_details, true) . ";\n";
 	} else {
-		//send an empty array
+		//send an empty array to the browser as a global scope json array object
 		echo "window.phrase_details = [];\n";
 	}
 
 	//recording files
 	if ($recordings !== false) {
-		//recordings
+		//send recordings to the browser as a global scope json array object
 		echo "window.phrase_recordings = " . json_encode($recordings, true) . ";\n";
 	} else {
 		//send an empty array
 		echo "window.phrase_recordings = [];\n";
 	}
 
-	//sound files
-	$file = new file;
-	$sound_files = $file->sounds();
 	if (!empty($sound_files)) {
-		//sounds
+		//send sounds to the browser as a global scope json array object
 		echo "window.phrase_sounds = " . json_encode($sound_files, true) . ";\n";
 	}
 	echo "</script>\n";
 
-//js to control action form input
+//javascript to control action form input using drag and drop
 	echo "<script src='resources/javascript/phrase_edit.js'></script>\n";
 
 //show the content
