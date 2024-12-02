@@ -8,14 +8,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	select.appendChild(new Option('', ''));
 
 	// Add recordings
-	grp_rec.label = 'Recordings';
+	grp_rec.label = window.phrase_label_recordings;
 	for (let i = 0; i < window.phrase_recordings.length; i++) {
 		grp_rec.appendChild(new Option(window.phrase_recordings[i].recording_name, window.phrase_recordings[i].recording_uuid));
 	}
 	select.appendChild(grp_rec);
 
 	// Add sounds
-	grp_snd.label = 'Sounds';
+	grp_snd.label = window.phrase_label_sounds;
 	for (let i = 0; i < window.phrase_sounds.length; i++) {
 		grp_snd.appendChild(new Option(window.phrase_sounds[i], window.phrase_sounds[i]));
 	}
@@ -31,7 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	add_draggable_rows();
 });
 
+//
 // Inserts all existing records before the empty one
+//
 function add_existing() {
 	const tbody = document.getElementById('structure');
 
@@ -62,6 +64,9 @@ function add_existing() {
 	}
 }
 
+//
+// Set the selected index on a dropdown box based on the value (key)
+//
 function select_by_value(selectElement, valueToFind) {
     // Loop through the options of the select element
     for (let i = 0; i < selectElement.options.length; i++) {
@@ -73,6 +78,9 @@ function select_by_value(selectElement, valueToFind) {
     console.warn('Value not found in select options');
 }
 
+//
+// Set the selected index on a dropdown box based on the text
+//
 function select_by_text(selectElement, textToFind) {
     for (let i = 0; i < selectElement.options.length; i++) {
         if (selectElement.options[i].text === textToFind) {
@@ -83,7 +91,9 @@ function select_by_text(selectElement, textToFind) {
     console.warn('Text not found in select options');
 }
 
+//
 // Add draggable functionality to rows
+//
 function add_draggable_rows() {
 	const tableBody = document.getElementById('structure');
 	let draggedRow = null;
@@ -115,7 +125,9 @@ function add_draggable_rows() {
 
 }
 
+//
 // Function to update the 'name' attribute based on row numbers
+//
 function update_order() {
 	const tableBody = document.getElementById('structure');
 	const rows = tableBody.querySelectorAll('tr');
@@ -144,6 +156,9 @@ function update_order() {
 	});
 }
 
+//
+// Ensure the order is updated when submitting the form
+//
 function submit_phrase() {
 	//ensure order is updated before submitting form
 	update_order();
@@ -151,7 +166,9 @@ function submit_phrase() {
 	const form = document.getElementById('frm').submit();
 }
 
+//
 // Add a new row to the table
+//
 function add_row() {
 	const tbody = document.getElementById('structure');
 	const newRow = document.getElementById('empty_row').cloneNode(true);
@@ -175,7 +192,9 @@ function add_row() {
 	add_draggable_rows();
 }
 
+//
 // Remove the last row in the table
+//
 function remove_row() {
 	const tbody = document.getElementById('structure');
 	if (tbody && tbody.rows.length > 1) {

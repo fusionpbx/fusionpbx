@@ -342,7 +342,9 @@ if (count($_POST) > 0) {
 
 //javascript constants for use in the selection option group
 	echo "<script>\n";
-	echo "window.phrase_commands = " . json_encode(['Play', 'Pause', 'Execute'], true) . ";\n";
+	echo "window.phrase_label_sounds = '" . ($text['label-sounds'] ?? 'Sounds') . "';\n";
+	echo "window.phrase_label_recordings = '" . ($text['label-recordings'] ?? 'Recordings') . "';\n";
+	echo "window.phrase_commands = " . json_encode([$text['label-play'] ?? 'Play', $text['label-pause'] ?? 'Pause', $text['label-execute'] ?? 'Execute'], true) . ";\n";
 
 	//existing details
 	if (!empty($phrase_details)) {
