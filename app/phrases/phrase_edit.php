@@ -47,11 +47,6 @@ function build_data_array_from_post(settings $settings) {
 	//load sound files from the switch so we can validate selections
 	$sound_files = 	(new file)->sounds();
 
-	//recording_files are:
-	//  'recording_uuid' => 'recording.wav'
-	//       OR
-	//  'recording_uuid' => '${lua streamfile.lua ' . base64_data .'}'
-	$recording_files = phrases::get_all_domain_recordings($settings);
 	//update the phrase information
 	$array['phrases'][0]['domain_uuid'] = $domain_uuid;
 	$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
@@ -59,6 +54,16 @@ function build_data_array_from_post(settings $settings) {
 	$array['phrases'][0]['phrase_language'] = $_POST['phrase_language'];
 	$array['phrases'][0]['phrase_enabled'] = $_POST['phrase_enabled'];
 	$array['phrases'][0]['phrase_description'] = $_POST['phrase_description'];
+
+	//recording_files are:
+	//  'recording_uuid' => 'recording.wav'
+	//       OR
+	//  'recording_uuid' => '${lua streamfile.lua ' . base64_data .'}'
+	$recording_files = phrases::get_all_domain_recordings($settings);
+
+	//
+	// Create two arrays - one for rows to delete and one for new/updated rows
+	//
 	for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
 		//check for the empty rows to delete
 		if (empty($_POST['phrase_detail_data'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
@@ -246,7 +251,7 @@ if (count($_POST) > 0) {
 						$array = build_data_array_from_post($settings);
 					}
 					//execute update/insert
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('phrase_detail_add', 'temp');
 					$p->add('phrase_detail_edit', 'temp');
 					$p->add('phrase_detail_delete', 'temp');
@@ -315,7 +320,7 @@ if (count($_POST) > 0) {
 	}
 
 //get the recording names from the database.
-	$sql = "select recording_uuid, recording_name, recording_filename from v_recordings ";
+	$sql = "select recording_uuid, recording_name, recording_filename, domain_uuid from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -337,16 +342,21 @@ if (count($_POST) > 0) {
 
 	//existing details
 	if (!empty($phrase_details)) {
-		//update the array to create the display name
+		//update the array to include the recording name for display
 		foreach ($phrase_details as &$row) {
 			$file = basename($row['phrase_detail_data']);
-			$basename = substr($file, 0, strlen($file) - 4);
-			$display_name = basename(str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $row['phrase_detail_data']));
-			//remove the file ending
-			if (str_ends_with($display_name, '.wav') || str_ends_with($display_name, '.mp3') || str_ends_with($display_name, '.flac') || str_ends_with($display_name, '.mp4') || str_ends_with($display_name, '.gsm')) {
-				$display_name = substr($display_name, 0, strlen($display_name) - 4);
+			//get the recording name based on the file matched
+			$name_index = false;
+			foreach ($recordings as $key => $recordings_row) {
+				//match on filename first and then domain_uuid
+				if ($recordings_row['recording_filename'] === $file && $recordings_row['domain_uuid'] === $row['domain_uuid']) {
+					$name_index = $key;
+					break;
+				}
 			}
-			$row['phrase_detail_display_name'] = ucfirst(str_replace('_', ' ', $basename));
+			if ($name_index !== false) {
+				$row['recording_name'] = $recordings[$name_index]['recording_name'];
+			}
 		}
 		echo "window.phrase_details = " . json_encode($phrase_details, true) . ";\n";
 	} else {
