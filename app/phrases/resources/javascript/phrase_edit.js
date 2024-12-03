@@ -32,74 +32,36 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //
-// Switch to a text input box when 'Execute' is selected instead of dropdown
-//
-function add_switch_to_text_input(select_action) {
-	if (window.permission_execute) {
-		const row = select_action.parentNode.parentNode;
-		const row_index = document.getElementById('structure').rows.length;
-		//get the select boxes
-		const select_list = row.querySelectorAll('td select'); //action and recording select dropdown boxes
-		const select_data = select_list[1];
-
-		// Create a new text input to replace the select when execute is chosen
-		const textInput = document.createElement('input');
-		textInput.type = 'text';
-		textInput.className = 'formfld';
-		textInput.id = 'phrase_detail_data_input[' + row_index + ']';
-		textInput.name = 'phrase_detail_data_input[' + row_index + ']';
-		//match style
-		textInput.style.width = select_data.style.width;
-		textInput.style.height = select_data.style.height;
-		//set to hide
-		textInput.style.display = 'none';
-		select_data.parentNode.appendChild(textInput);
-
-		select_action.addEventListener('change', function () {
-			if (select_action.value === 'execute') {
-				//show text box
-				select_data.style.display = 'none';
-				textInput.style.display = 'block';
-			} else {
-				//hide text box
-				select_data.style.display = 'block';
-				textInput.style.display = 'none';
-			}
-		});
-	}
-}
-
-//
 // Inserts all existing records before the empty one
 //
 function add_existing() {
 	const tbody = document.getElementById('structure');
 
-	for (let i=0; i < window.phrase_details.length; i++) {
-		const newRow = document.getElementById('empty_row').cloneNode(true);
-
-		//un-hide the row
-		newRow.style.display = '';
-
-		//get the select boxes
-		const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
-		//play, pause, execute select box
-		const select_action = select_list[0];
-		add_switch_to_text_input(select_action);
-		select_by_value(select_action, 'play-file');
-
-		//recording select box
-		const select_recording = select_list[1];
-		select_by_text(select_recording, window.phrase_details[i]['display_name']);
-
-		const input_fields = newRow.querySelectorAll('td input');
-		const uuid_field = input_fields[0];
-		uuid_field.setAttribute('id'  , 'phrase_detail_uuid[' + i +']');
-		uuid_field.setAttribute('name', 'phrase_detail_uuid[' + i +']');
-		uuid_field.value = window.phrase_details[i]['phrase_detail_uuid'];
-
-		//add the row to the table body
-		tbody.appendChild(newRow);
+	for (let index=0; index < window.phrase_details.length; index++) {
+		add_row();
+		const select_action = document.getElementById('phrase_detail_function[' + index + ']');
+		select_by_value(select_action, window.phrase_details[index].phrase_detail_function);
+		const select_data = document.getElementById('phrase_detail_data[' + index + ']');
+		select_by_text(select_data, window.phrase_details[index]['display_name']);
+		const uuid_field = document.getElementById('phrase_detail_uuid[' +index+']');
+		uuid_field.value = window.phrase_details[index]['phrase_detail_uuid'];
+		const slider = document.getElementById('slider['+index+']');
+		const sleep = document.getElementById('sleep['+index+']');
+		const phrase_detail_text = document.getElementById('phrase_detail_text['+index+']');
+		//update the sleep data
+		if (window.phrase_details[index].phrase_detail_function === 'pause') {
+			sleep.value = window.phrase_details[index].phrase_detail_data;
+			slider.value = window.phrase_details[index].phrase_detail_data;
+		}
+		//update the execute text
+		if (window.phrase_details[index].phrase_detail_function === 'execute') {
+			phrase_detail_text.value = window.phrase_details[index].phrase_detail_data;
+		}
+		// Manually trigger the change event to select the proper display
+		if (window.phrase_details[index].phrase_detail_function !== 'play-file') {
+			const changeEvent = new Event('change', { bubbles: true });
+			select_action.dispatchEvent(changeEvent);
+		}
 	}
 }
 
@@ -107,27 +69,27 @@ function add_existing() {
 // Set the selected index on a dropdown box based on the value (key)
 //
 function select_by_value(selectElement, valueToFind) {
-    // Loop through the options of the select element
-    for (let i = 0; i < selectElement.options.length; i++) {
-        if (selectElement.options[i].value === valueToFind) {
-            selectElement.selectedIndex = i; // Set the selected index
-            return; // Exit the loop once found
-        }
-    }
-    console.warn('Value not found in select options');
+	// Loop through the options of the select element
+	for (let i = 0; i < selectElement.options.length; i++) {
+		if (selectElement.options[i].value === valueToFind) {
+			selectElement.selectedIndex = i; // Set the selected index
+			return; // Exit the loop once found
+		}
+	}
+	console.warn('Value not found in select options');
 }
 
 //
 // Set the selected index on a dropdown box based on the text
 //
 function select_by_text(selectElement, textToFind) {
-    for (let i = 0; i < selectElement.options.length; i++) {
-        if (selectElement.options[i].text === textToFind) {
-            selectElement.selectedIndex = i;
-            return;
-        }
-    }
-    console.warn('Text not found in select options');
+	for (let i = 0; i < selectElement.options.length; i++) {
+		if (selectElement.options[i].text === textToFind) {
+			selectElement.selectedIndex = i;
+			return;
+		}
+	}
+	console.warn('Text not found in select options');
 }
 
 //
@@ -137,29 +99,47 @@ function add_draggable_rows() {
 	const tableBody = document.getElementById('structure');
 	let draggedRow = null;
 
-	// Add drag-and-drop functionality
-	tableBody.addEventListener('dragstart', (e) => {
-		draggedRow = e.target;
-		e.target.classList.add('dragging');
-	});
+	// Add drag listeners only to the leftmost cell on the row
+	tableBody.querySelectorAll('tr').forEach(row => {
+		const dragHandleCell = row.cells[0]; // Assuming the first cell is the one left to the dropdown
 
-	tableBody.addEventListener('dragover', (e) => {
-		e.preventDefault();
-		const targetRow = e.target.closest('tr');
-		if (targetRow && targetRow !== draggedRow) {
-			const bounding = targetRow.getBoundingClientRect();
-			const offset = e.clientY - bounding.top;
-			if (offset > bounding.height / 2) {
-				targetRow.parentNode.insertBefore(draggedRow, targetRow.nextSibling);
-			} else {
-				targetRow.parentNode.insertBefore(draggedRow, targetRow);
+		if (!dragHandleCell) return;
+
+		// Enable dragging from this cell
+		dragHandleCell.setAttribute('draggable', 'true');
+
+		dragHandleCell.addEventListener('dragstart', (e) => {
+			draggedRow = row;
+			row.classList.add('dragging');
+		});
+
+		dragHandleCell.addEventListener('dragend', () => {
+			if (draggedRow) {
+				draggedRow.classList.remove('dragging');
+				draggedRow = null;
 			}
-		}
-	});
+		});
 
-	tableBody.addEventListener('dragend', () => {
-		draggedRow.classList.remove('dragging');
-		draggedRow = null;
+		dragHandleCell.addEventListener('dragover', (e) => {
+			e.preventDefault();
+			const targetRow = e.target.closest('tr');
+			if (targetRow && targetRow !== draggedRow) {
+				const bounding = targetRow.getBoundingClientRect();
+				const offset = e.clientY - bounding.top;
+				if (offset > bounding.height / 2) {
+					targetRow.parentNode.insertBefore(draggedRow, targetRow.nextSibling);
+				} else {
+					targetRow.parentNode.insertBefore(draggedRow, targetRow);
+				}
+			}
+		});
+		dragHandleCell.addEventListener('dragend', () => {
+			if (draggedRow) {
+				draggedRow.classList.remove('dragging');
+				draggedRow = null;
+				update_order();
+			}
+		});
 	});
 
 }
@@ -180,18 +160,47 @@ function update_order() {
 		//get the select boxes
 		const select_list = row.querySelectorAll('td select'); //action and recording select dropdown boxes
 
+		//get the input boxes
+		const input_boxes = row.querySelectorAll('td input');
+		console.log(input_boxes);
+		//uuid
+		const phrase_detail_uuid = input_boxes[0];
+		phrase_detail_uuid.removeAttribute('id');
+		phrase_detail_uuid.id = 'phrase_detail_uuid[' + index + ']';
+		phrase_detail_uuid.name = phrase_detail_uuid.id;
+		//execute action
+		const phrase_detail_text = input_boxes[1];
+		temp_value = phrase_detail_text.value;
+		console.log('phrase_detail_text', temp_value);
+		phrase_detail_text.removeAttribute('id');
+		phrase_detail_text.id = 'phrase_detail_text[' + index + ']';
+		phrase_detail_text.name = phrase_detail_text.id;
+		phrase_detail_text.value = temp_value;
+		//slider
+		const slider = input_boxes[2];
+		slider.removeAttribute('id');
+		slider.id = 'slider[' + index + ']';
+		slider.name = slider.id;
+		//sleep value
+		const sleep = input_boxes[3];
+		temp_value = sleep.value;
+		sleep.removeAttribute('id');
+		sleep.id = 'sleep[' + index + ']';
+		sleep.name = sleep.id;
+		sleep.value = temp_value;
+
 		//play, pause, execute select box
-		const select_action = select_list[0];
+		const select_function = select_list[0];
+		select_function.removeAttribute('id');
+		select_function.id   = 'phrase_detail_function[' + index + ']'
+		select_function.name = select_function.id;
 
 		//recording select box
-		const select_recording = select_list[1];
+		const select_data = select_list[1];
+		select_data.removeAttribute('id');
+		select_data.id = 'phrase_detail_data[' + index + ']'
+		select_data.name = select_data.id;
 
-		//set the new id and name for action
-		select_action.id = 'phrase_detail_function[' + index + ']'
-		select_action.setAttribute('name', 'phrase_detail_function[' + index + ']');
-		//set the new id and name for recording
-		select_recording.id = 'phrase_detail_data[' + index + ']'
-		select_recording.setAttribute('name', 'phrase_detail_data[' + index + ']');
 	});
 }
 
@@ -210,16 +219,18 @@ function submit_phrase() {
 //
 function add_row() {
 	const tbody = document.getElementById('structure');
-	const newRow = document.getElementById('empty_row').cloneNode(true);
 
 	// current index is the count subtract the hidden row
-	const index = tbody.childElementCount - 1;
+	const index = tbody.childElementCount;
+
+	const newRow = document.getElementById('empty_row').cloneNode(true);
+	//reset id
+	newRow.removeAttribute('id');
+	newRow.id = 'row_' + index;
 
 	//un-hide row
 	newRow.style.display = '';
 
-	//reset id
-	newRow.id = 'row_' + index;
 	//reset 'name' attribute
 	newRow.setAttribute('name', 'recording_' + index);
 
@@ -227,17 +238,82 @@ function add_row() {
 	const select_list = newRow.querySelectorAll('td select'); //action and recording select dropdown boxes
 	//play, pause, execute select box
 	const select_action = select_list[0];
+	select_action.removeAttribute('id');
+	select_action.id = 'phrase_detail_function[' + index + ']';
+	select_action.name = 'phrase_detail_function[' + index + ']';
 	//recording select box
-	const select_recording = select_list[1];
+	const select_data = select_list[1];
+	select_data.removeAttribute('id');
+	select_data.id = 'phrase_detail_data[' + index + ']';
+	select_data.name = 'phrase_detail_data[' + index + ']';
+	//uuid field
+	const uuid_field = newRow.querySelector('input[name="empty_uuid"]');
+	uuid_field.removeAttribute('id');
+	uuid_field.id = 'phrase_detail_uuid[' + index +']';
+	uuid_field.name = 'phrase_detail_uuid[' + index +']';
+	const phrase_detail_text = newRow.querySelector('input[name="empty_phrase_detail_text"]');
+	phrase_detail_text.removeAttribute('id');
+	phrase_detail_text.id = 'phrase_detail_text[' + index + ']';
+	phrase_detail_text.name = 'phrase_detail_text[' + index + ']';
+	//slider
+	const slider = newRow.querySelector('input[name="range"]');
+	slider.removeAttribute('id');
+	slider.id = 'slider[' + index + ']';
+	slider.name = 'slider[' + index + ']';
+	//sleep
+	const sleep = newRow.querySelector('input[name="sleep"]');
+	sleep.removeAttribute('id');
+	sleep.id = 'sleep[' + index + ']';
+	sleep.name = 'sleep[' + index + ']';
+	sleep.value = slider.value;
+
+	let changing = false;
+
+	slider.addEventListener('mousemove', function () {
+		changing = true;
+		sleep.value = slider.value;
+		changing = false;
+	});
+
+	sleep.addEventListener('keyup', function() {
+		if (!changing) {
+			if (sleep.value.length > 0)
+				slider.value = sleep.value;
+			else {
+				slider.value = 0;
+			}
+		}
+	})
 
 	//add switchable select box to text input box
-	add_switch_to_text_input(select_action);
+	select_action.addEventListener('change', function () {
+		if (select_action.value === 'execute') {
+			//show text box
+			select_data.style.display = 'none';
+			slider.style.display = 'none';
+			sleep.style.display = 'none';
+			phrase_detail_text.style.display = 'block';
+		} else if (select_action.value === 'pause') {
+			//show the range bar
+			select_data.style.display = 'none';
+			phrase_detail_text.style.display = 'none';
+			slider.style.display = 'block';
+			sleep.style.display = 'block';
+		} else {
+			//show drop down
+			phrase_detail_text.style.display = 'none';
+			slider.style.display = 'none';
+			sleep.style.display = 'none';
+			select_data.style.display = 'block';
+		}
+	});
 
 	//add the row to the table body
 	tbody.appendChild(newRow);
 
 	//reinitialize draggable functionality on the row
 	add_draggable_rows();
+	return index;
 }
 
 //

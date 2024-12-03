@@ -65,40 +65,68 @@ function build_data_array_from_post(settings $settings) {
 	// Create two arrays - one for rows to delete and one for new/updated rows
 	//
 	for ($i = 0; $i < count($_POST['phrase_detail_function']); $i++) {
-		//check for the empty rows to delete
-		if (empty($_POST['phrase_detail_data'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
+		//check for function to perform
+		$phrase_detail_function = $_POST['phrase_detail_function'][$i];
+		$phrase_detail_data = null;
+		$recording_uuid_or_file = '';
+		$phrase_detail_uuid = '';
+		//check for the empty rows to delete -- 0,false,null is valid
+		if (strlen($_POST['phrase_detail_data'][$i]) === 0
+				&& !empty($_POST['phrase_detail_uuid'][$i])
+				&& empty($_POST['slider'][$i])
+				&& empty($_POST['phrase_detail_text'][$i])) {
 			$drop_rows['phrase_details'][$drop_row_count++]['phrase_detail_uuid'] = $_POST['phrase_detail_uuid'][$i];
 			continue;
 		}
-		//only save rows with data
-		if (!empty($_POST['phrase_detail_data'][$i])) {
-			$recording_uuid_or_file = $_POST['phrase_detail_data'][$i];
-			//check for valid recordings and files
-			if (is_uuid($recording_uuid_or_file)) {
-				//recording UUID
-				$phrase_detail_data = $recording_files[$recording_uuid_or_file];
-			} else {
-				//not a recording so must be valid path inside the switch recording files
-				if (in_array($recording_uuid_or_file, $sound_files)) {
-					//valid switch audio file
-					$phrase_detail_data = $recording_uuid_or_file;
-				} else {
-					//ignore an invalid audio file
-					continue;
+		switch ($phrase_detail_function) {
+			case 'play-file':
+				//only save rows with data
+				if (!empty($_POST['phrase_detail_data'][$i])) {
+					$recording_uuid_or_file = $_POST['phrase_detail_data'][$i];
+					//check for valid recordings and files
+					if (is_uuid($recording_uuid_or_file)) {
+						//recording UUID
+						$phrase_detail_data = $recording_files[$recording_uuid_or_file];
+					} else {
+						//not a recording so must be valid path inside the switch recording files
+						if (in_array($recording_uuid_or_file, $sound_files)) {
+							//valid switch audio file
+							$phrase_detail_data = $recording_uuid_or_file;
+						} else {
+							//ignore an invalid audio file
+							continue(2);
+						}
+					}
+					//build data array
+					if ($_POST['phrase_detail_function'][$i] == 'execute' && substr($_POST['phrase_detail_data'][$i], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
+						header("Location: phrase_edit.php?id=".$phrase_uuid);
+						exit;
+					}
 				}
-			}
-			//build data array
-			if ($_POST['phrase_detail_function'][$i] == 'execute' && substr($_POST['phrase_detail_data'][$i], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
-				header("Location: phrase_edit.php?id=".$phrase_uuid);
-				exit;
-			}
-			$_POST['phrase_detail_tag'] = 'action'; // default, for now
-			$_POST['phrase_detail_group'] = "0"; // one group, for now
+				break;
+			case 'pause':
+				//check for value
+				$phrase_detail_data = $_POST['slider'][$i];
+				break;
+			case 'execute':
+				//check for the empty rows to delete
+				if (empty($_POST['phrase_detail_text'][$i]) && !empty($_POST['phrase_detail_uuid'][$i])) {
+					$drop_rows['phrase_details'][$drop_row_count++]['phrase_detail_uuid'] = $_POST['phrase_detail_uuid'][$i];
+					continue(2);
+				}
+				$phrase_detail_data = $_POST['phrase_detail_text'][$i];
+				break;
+		}
 
-			//update existing records in the database
+		$_POST['phrase_detail_tag'] = 'action'; // default, for now
+		$_POST['phrase_detail_group'] = "0"; // one group, for now
+
+		if ($phrase_detail_data !== null) {
 			if (!empty($_POST['phrase_detail_uuid'][$i])) {
+				//update existing records in the database
 				$phrase_detail_uuid = $_POST['phrase_detail_uuid'][$i];
 			} else {
+				//new record
 				$phrase_detail_uuid = uuid();
 			}
 			$array['phrase_details'][$i]['phrase_detail_uuid'] = $phrase_detail_uuid;
@@ -107,7 +135,7 @@ function build_data_array_from_post(settings $settings) {
 			$array['phrase_details'][$i]['phrase_detail_order'] = $i;
 			$array['phrase_details'][$i]['phrase_detail_tag'] = $_POST['phrase_detail_tag'];
 			$array['phrase_details'][$i]['phrase_detail_pattern'] = $_POST['phrase_detail_pattern'] ?? null;
-			$array['phrase_details'][$i]['phrase_detail_function'] = $_POST['phrase_detail_function'][$i];
+			$array['phrase_details'][$i]['phrase_detail_function'] = $phrase_detail_function;
 			$array['phrase_details'][$i]['phrase_detail_data'] = $phrase_detail_data; //path and filename of recording
 			$array['phrase_details'][$i]['phrase_detail_method'] = $_POST['phrase_detail_method'] ?? null;
 			$array['phrase_details'][$i]['phrase_detail_type'] = $_POST['phrase_detail_type'] ?? null;
@@ -481,12 +509,12 @@ if (count($_POST) > 0) {
 	echo "</tbody>";
 	//cloning row and buttons created outside of 'structure' table body
 	echo "<tbody>";
-	echo "<tr class='draggable-row' id='empty_row' draggable=true style='display: none;'>\n";
+	echo "<tr id='empty_row' style='display: none;'>\n";
 	echo "	<td style='border-bottom: none;' nowrap='nowrap'><center><span class='fa-solid fa-arrows-up-down'></span></center></td>";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 	echo "		<select class='formfld' name='phrase_detail_function_empty' id='phrase_detail_function_empty' tag=''>\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
-	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
+	echo "			<option value='pause'>".$text['label-pause']."</option>\n";
 	if (if_group("superadmin")) {
 		echo "			<option value='execute'>".$text['label-execute']."</option>\n";
 	}
@@ -497,9 +525,14 @@ if (count($_POST) > 0) {
 //	if (if_group("superadmin")) {
 //		echo "	<input id='phrase_detail_data_switch_empty' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function_empty').selectedIndex);\">\n";
 //	}
-	echo "  <input type=hidden name='hidden_empty' id='hidden_empty' value='uuid' tag='row'>";
+	echo "    <input type=hidden name='empty_uuid' value=''>";
+	echo "    <input class='formfld' type=text name='empty_phrase_detail_text' value='' style='width: 300px; min-width: 300px; max-width: 300px; display: none'>";
+	echo "    <span style='white-space: nowrap; display: flex; align-items: center; gap: 10px;'>";
+	echo "      <input class='form-control-range' type=range name='range' minrange='1' style='width: 250px; min-width: 250px; max-width: 250px; display: none'>";
+	echo "	    <input type='text' class='formfld' name='sleep' style='width: 40px; min-width: 40px; max-width: 40px; display: none'>";
+	echo "    </span>";
 	echo "	</td>\n";
-	echo "	</tr>\n";
+	echo "</tr>\n";
 	echo "<tr>";
 	echo "<td>&nbsp;</td>";
 	echo "<td class='vtable' style='align=center;' colspan='2'><center>";
