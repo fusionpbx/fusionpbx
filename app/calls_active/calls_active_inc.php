@@ -170,6 +170,7 @@
 			}
 			echo "	<th>".$text['label-profile']."</th>\n";
 			echo "	<th>".$text['label-created']."</th>\n";
+			echo "	<th>".$text['label-duration']."</th>\n";
 			if ($show == 'all') {
 				echo "	<th>".$text['label-domain']."</th>\n";
 			}
@@ -229,6 +230,24 @@
 						}
 						echo "	<td>".escape($sip_profile)."&nbsp;</td>\n";
 						echo "	<td>".escape($created)."&nbsp;</td>\n";
+						// Convert $created to a UNIX timestamp
+						$created_timestamp = strtotime($created);
+
+						// Get the current timestamp
+						$now = time();
+
+						// Calculate elapsed seconds
+						$elapsed_seconds = $now - $created_timestamp;
+
+						// Convert seconds to hours, minutes, and seconds
+						$hours = floor($elapsed_seconds / 3600);
+						$minutes = floor(($elapsed_seconds % 3600) / 60);
+						$seconds = $elapsed_seconds % 60;
+
+						// Format the elapsed time as HH:MM:SS
+						$elapsed_time = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+
+						echo "    <td>".escape($elapsed_time)."</td>\n";
 						if ($show == 'all') {
 							echo "	<td>".escape($domain_name)."&nbsp;</td>\n";
 						}
