@@ -7,8 +7,15 @@ local number = destination_domain_code .. destination_extension
 if (session:ready()) then
     domain_uuid = session:getVariable("domain_uuid");
     caller_id_number = session:getVariable("caller_id_number") -- Retrieve the caller ID
-    current_domain_code = session:getVariable("domain_name"):sub(1, 4) -- Extract the current domain code
-    -- extension_uuid = session:getVariable("extension_uuid");
+    local domain_name = session:getVariable("domain_name")
+    local dot_position = domain_name:find("%.") -- Find the position of the first dot
+    if dot_position then
+        current_domain_code = domain_name:sub(1, dot_position - 1) -- Extract everything before the dot
+    else
+        current_domain_code = domain_name -- Fallback in case there's no dot
+    end
+    freeswitch.consoleLog("INFO", "[inter_tenant_dialing] Current domain: " .. current_domain_code .. "\n")
+
 end
 
 

@@ -3,8 +3,8 @@ local number = argv[1]
 --get the variables
 if (session:ready()) then
     domain_uuid = session:getVariable("domain_uuid");
-    caller_id_number = session:getVariable("caller_id_number") -- Retrieve the caller ID
-    current_domain_code = session:getVariable("domain_name"):sub(1, 4) -- Extract the current domain code
+    -- caller_id_number = session:getVariable("caller_id_number") -- Retrieve the caller ID
+    -- current_domain_code = session:getVariable("domain_name"):sub(1, 4) -- Extract the current domain code
     -- extension_uuid = session:getVariable("extension_uuid");
 end
 

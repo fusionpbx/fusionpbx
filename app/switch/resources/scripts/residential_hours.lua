@@ -1,12 +1,22 @@
 -- Retrieve variables passed from the dial plan
+local local_wday = tonumber(session:getVariable("local_weekday"))  -- e.g., 1-7
+local local_hour = tonumber(session:getVariable("local_hour"))  -- e.g., 17
+local local_minute = tonumber(session:getVariable("local_minute"))  -- e.g., 30
 local wday = session:getVariable("weekday")  -- e.g., "1-7"
 local time_of_day = session:getVariable("time_of_day")  -- e.g., "17:00-22:00"
 
--- Get the current time and day
-local current_time = os.date("*t")
-local current_wday = current_time.wday  -- Current day of the week (1=Sunday, ...)
-local current_hour = current_time.hour
-local current_minute = current_time.min
+
+-- Log retrieved variables for debugging
+freeswitch.consoleLog("INFO", "[residential_hours] Retrieved variables - local_wday: " .. tostring(local_wday) .. ", local_hour: " .. tostring(local_hour) .. ", local_minute: " .. tostring(local_minute) .. ", wday: " .. tostring(wday) .. ", time_of_day: " .. tostring(time_of_day) .. ".\n")
+
+-- Validate required variables
+if not local_wday or not local_hour or not local_minute or not wday or not time_of_day then
+    freeswitch.consoleLog("ERROR", "[residential_hours] Missing required variables. Check dial plan.\n")
+    session:hangup("INVALID_ARGUMENT")
+    return
+end
+
+freeswitch.consoleLog("INFO", "[residential_hours] Current time - " .. local_hour .. ":" .. local_minute .. ".\n")
 
 -- Parse the wday and time_of_day variables
 local start_wday, end_wday = wday:match("(%d+)-(%d+)")
@@ -21,11 +31,11 @@ end_hour = tonumber(end_hour)
 end_minute = tonumber(end_minute)
 
 -- Check if the call is within the allowed day range
-local is_valid_day = current_wday >= start_wday and current_wday <= end_wday
+local is_valid_day = local_wday >= start_wday and local_wday <= end_wday
 
 -- Check if the call is within the allowed time range
-local is_valid_time = (current_hour > start_hour or (current_hour == start_hour and current_minute >= start_minute)) and
-                      (current_hour < end_hour or (current_hour == end_hour and current_minute <= end_minute))
+local is_valid_time = (local_hour > start_hour or (local_hour == start_hour and local_minute >= start_minute)) and
+                      (local_hour < end_hour or (local_hour == end_hour and local_minute <= end_minute))
 
 -- Route based on the conditions
 if is_valid_day and is_valid_time then
