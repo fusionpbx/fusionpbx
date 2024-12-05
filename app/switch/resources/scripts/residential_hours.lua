@@ -4,6 +4,12 @@ local local_hour = tonumber(session:getVariable("local_hour"))  -- e.g., 17
 local local_minute = tonumber(session:getVariable("local_minute"))  -- e.g., 30
 local wday = session:getVariable("weekday")  -- e.g., "1-7"
 local time_of_day = session:getVariable("time_of_day")  -- e.g., "17:00-22:00"
+local destination_number = session:getVariable("destination_number") 
+local domain_name = session:getVariable("domain_name") 
+freeswitch.consoleLog("INFO", "[residential_hours] Destination Number: " .. destination_number ..".\n")
+
+local user_exists = session:getVariable("user_exists") 
+freeswitch.consoleLog("INFO", "[residential_hours] User exists: " .. user_exists ..".\n")
 
 
 -- Log retrieved variables for debugging
@@ -42,16 +48,26 @@ if is_valid_day and is_valid_time then
   -- Within allowed time and day
   freeswitch.consoleLog("INFO", "[residential_hours] Within allowed hours.\n")
 else
-    -- Outside allowed time and day
     freeswitch.consoleLog("INFO", "[residential_hours] Outside allowed hours.\n")
-    -- Answer the call to ensure a CDR is generated
-    session:answer()
+    if user_exists == "true" then
+        -- Transfer call to the voicemail extension
+        freeswitch.consoleLog("INFO", "[residential_hours] Transferring call to voicemail extension.\n")
+        session:setVariable("record_append", "false")
+        session:setVariable("voicemail_action", "save")
+        session:setVariable("voicemail_id", destination_number)
+        session:setVariable("voicemail_profile", "default")
+        session:execute("lua", "app.lua voicemail")
+    else
+        -- If user does not exist, reject the call
+        -- Answer the call to ensure a CDR is generated
+        session:answer()
 
-    -- session:execute("playback", "silence_stream://1000")
+        session:execute("playback", "silence_stream://1000")
 
-    -- session:streamFile("/usr/share/freeswitch/sounds/inbound_not_allowed.wav")
+        -- session:streamFile("/usr/share/freeswitch/sounds/inbound_not_allowed.wav")
 
-    -- session:sleep(1000) -- Wait for 1 second (1000 milliseconds)
+        -- session:sleep(1000) -- Wait for 1 second (1000 milliseconds)
 
-    session:hangup("CALL_REJECTED")  -- Hang up with the specified cause
+        session:hangup("CALL_REJECTED")  -- Hang up with the specified cause
+    end
 end
