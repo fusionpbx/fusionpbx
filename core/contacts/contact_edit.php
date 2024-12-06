@@ -963,10 +963,10 @@
 			}
 		};
 		if (search) {
-			xhttp.open("GET", "/app/contacts/contact_json.php?search="+search, true);
+			xhttp.open("GET", "/core/contacts/contact_json.php?search="+search, true);
 		}
 		else {
-			xhttp.open("GET", "/app/contacts/contact_json.php", true);
+			xhttp.open("GET", "/core/contacts/contact_json.php", true);
 		}
 		xhttp.send();
 	}
