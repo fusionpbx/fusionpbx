@@ -79,7 +79,7 @@ class authentication {
 			}
 
 		//check if contacts app exists
-			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/contacts/') ? true : false;
+			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/contacts/') ? true : false;
 
 		//use the authentication plugins
 			foreach ($_SESSION['authentication']['methods'] as $name) {

@@ -1082,7 +1082,7 @@ if (!class_exists('menu')) {
 						$user_graphic = "<i class='".$this->settings->get('theme', 'body_header_icon_user', 'fa-solid fa-user-circle')."'></i>";
 						//overwrite user graphic with image from session, if exists
 						if ($this->settings->get('theme', 'body_header_user_image', true) == true && !empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
-							$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: 15px; height: 15px; border-radius: 50%; margin-top: -2px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
+							$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: 15px; height: 15px; border-radius: 50%; margin-top: -2px; background-image: url('".PROJECT_PATH."/core/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 						}
 						$html .= "		<li class='nav-item'>\n";
 						$html .= "			<a class='nav-link header_user d-block d-sm-none' href='show:usermenu' title=\"".$_SESSION['username']."\" style='border-top: 1px solid ".($this->settings->get('theme', 'menu_sub_background_color') ?? 'rgba(0,0,0,0.90)')."' data-toggle='collapse' data-target='#main_navbar' onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span style='margin-left: 7px;'>".escape($_SESSION['username'])."</span></a>";
@@ -1126,7 +1126,7 @@ if (!class_exists('menu')) {
 					$html .= "<div id='body_header_user_menu'>\n";
 					$html .= "	<div class='row m-0'>\n";
 					if (!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
-						$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
+						$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/core/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
 					}
 					else {
 						$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"".$this->text['label-primary-contact-attachment-image']."\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
@@ -1259,7 +1259,7 @@ if (!class_exists('menu')) {
 				$html .= "<div id='body_header_user_menu'>\n";
 				$html .= "	<div class='row m-0'>\n";
 				if (!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
-					$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
+					$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('".PROJECT_PATH."/core/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
 				}
 				else {
 					$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"".$this->text['label-primary-contact-attachment-image']."\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
@@ -1308,7 +1308,7 @@ if (!class_exists('menu')) {
 					//overwrite user graphic with image from session, if exists
 					if ($this->settings->get('theme', 'body_header_user_image', true) === true && !empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
 						$user_graphic_size = str_replace(['px','%'], '', intval($this->settings->get('theme', 'body_header_user_image_size', 18)));
-						$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: ".$user_graphic_size."px; height: ".$user_graphic_size."px; border-radius: 50%; margin-right: 7px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-4')."px; background-image: url('".PROJECT_PATH."/app/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
+						$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: ".$user_graphic_size."px; height: ".$user_graphic_size."px; border-radius: 50%; margin-right: 7px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-4')."px; background-image: url('".PROJECT_PATH."/core/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 					}
 					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
 					$html .= "	<a href='show:usermenu' title=\"".$_SESSION['username']."\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span class='d-none d-sm-inline'>".escape($_SESSION['username'])."</span></a>";
