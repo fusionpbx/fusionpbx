@@ -61,7 +61,7 @@ if ($_SESSION['contact_auth']['source'] == 'google') {
 	if (isset($_REQUEST['signout'])) {
 		unset($_SESSION['contact_auth']['token']);
 		message::add($text['message-google_signed_out']);
-		header("Location: https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=".(($_SERVER["HTTPS"] == "on") ? "https" : "http")."://".$_SERVER['HTTP_HOST'].PROJECT_PATH."/app/contacts/".$_SESSION['contact_auth']['referer']);
+		header("Location: https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=".(($_SERVER["HTTPS"] == "on") ? "https" : "http")."://".$_SERVER['HTTP_HOST'].PROJECT_PATH."/core/contacts/".$_SESSION['contact_auth']['referer']);
 		exit;
 	}
 
