@@ -468,8 +468,8 @@ $text['label-domain']['zh-cn'] = "领域";
 $text['label-domain']['ja-jp'] = "ドメイン";
 $text['label-domain']['ko-kr'] = "도메인";
 
-$text['label-destination']['en-us'] = "Dest";
-$text['label-destination']['en-gb'] = "Dest";
+$text['label-destination']['en-us'] = "Destination";
+$text['label-destination']['en-gb'] = "Destination";
 $text['label-destination']['ar-eg'] = "الوجهة";
 $text['label-destination']['de-at'] = "Ziel";
 $text['label-destination']['de-ch'] = "Ziel";
@@ -546,8 +546,8 @@ $text['label-codec']['zh-cn'] = "读/写编解码器";
 $text['label-codec']['ja-jp'] = "読み取り/書き込みコーデック";
 $text['label-codec']['ko-kr'] = "읽기/쓰기 코덱";
 
-$text['label-cid-number']['en-us'] = "CID Number";
-$text['label-cid-number']['en-gb'] = "CID Number";
+$text['label-cid-number']['en-us'] = "Caller Number";
+$text['label-cid-number']['en-gb'] = "Caller Number";
 $text['label-cid-number']['ar-eg'] = "رقم CID";
 $text['label-cid-number']['de-at'] = "Anrufer Nummer";
 $text['label-cid-number']['de-ch'] = "Anrufer Nummer";
@@ -572,8 +572,8 @@ $text['label-cid-number']['zh-cn'] = "来电号码";
 $text['label-cid-number']['ja-jp'] = "CID番号";
 $text['label-cid-number']['ko-kr'] = "CID 번호";
 
-$text['label-cid-name']['en-us'] = "CID Name";
-$text['label-cid-name']['en-gb'] = "CID Name";
+$text['label-cid-name']['en-us'] = "Caller Name";
+$text['label-cid-name']['en-gb'] = "Caller Name";
 $text['label-cid-name']['ar-eg'] = "اسم CID";
 $text['label-cid-name']['de-at'] = "Anrufer Name";
 $text['label-cid-name']['de-ch'] = "Anrufer Name";
