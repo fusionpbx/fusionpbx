@@ -130,6 +130,7 @@
 			$destination_type_text = $_POST["destination_type_text"] ?? null;
 			$destination_type_emergency = $_POST["destination_type_emergency"] ?? null;
 			$destination_carrier = $_POST["destination_carrier"] ?? null;
+			$destination_email = $_POST["destination_email"];
 
 		//sanitize the destination conditions
 			if (!empty($destination_conditions)) {
@@ -313,6 +314,9 @@
 				}
 				if (!permission_exists('destination_domain')) {
 					$domain_uuid = $row["domain_uuid"] ?? null;
+				}
+				if (!permission_exists('destination_email')) {
+					$destination_email = $row["destination_email"] ?? null;
 				}
 			}
 			unset($row);
@@ -1090,6 +1094,7 @@
 									$array['destinations'][$x]["destination_distinctive_ring"] = $destination_distinctive_ring;
 								}
 								$array['destinations'][$x]["destination_record"] = $destination_record;
+								$array['destinations'][$x]["destination_email"] = $destination_email;
 								if (!empty($destination_ringback) && $ringbacks->valid($destination_ringback)) {
 									$array['destinations'][$x]["destination_ringback"] = $destination_ringback;
 								}
@@ -1270,6 +1275,7 @@
 	$destination_order = $destination_order ?? '';
 	$destination_enabled = $destination_enabled ?? '';
 	$destination_description = $destination_description ?? '';
+	$destination_email = $destination_email ?? '';
 	$select_style = $select_style ?? '';
 
 //pre-populate the form
@@ -1316,6 +1322,7 @@
 				$destination_order = $row["destination_order"];
 				$destination_enabled = $row["destination_enabled"];
 				$destination_description = $row["destination_description"];
+				$destination_email = $row["destination_email"];
 			}
 			unset($sql, $parameters, $row);
 		}
@@ -1811,6 +1818,34 @@
 		echo "	</select>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-providers']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	//destination email
+	if (permission_exists('destination_email') && permission_exists('message_view')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_email']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='destination_email'>\n";
+		echo "	<option value=''></option>\n";
+		if (!empty($destination_email) && $destination_email == "true") {
+			echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['option-true']."</option>\n";
+		}
+		if (!empty($destination_email) && $destination_email == "false") {
+			echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['option-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-destination_email']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
