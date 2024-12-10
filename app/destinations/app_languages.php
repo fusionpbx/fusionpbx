@@ -1162,6 +1162,7 @@ $text['label-destination_conditions']['zh-cn'] = "状况";
 $text['label-destination_conditions']['ja-jp'] = "条件";
 $text['label-destination_conditions']['ko-kr'] = "정황";
 
+$text['label-destination_email']['en-us'] = "Email Notifications";
 $text['label-destination_email']['en-gb'] = "Email Notifications";
 $text['label-destination_email']['ar-eg'] = "إشعارات البريد الإلكتروني";
 $text['label-destination_email']['de-at'] = "E-Mail-Benachrichtigungen";
@@ -2378,6 +2379,7 @@ $text['description-usage']['zh-cn'] = "设置目的地的使用方式。";
 $text['description-usage']['ja-jp'] = "宛先の使用方法を設定します。";
 $text['description-usage']['ko-kr'] = "대상이 사용되는 방식을 설정합니다.";
 
+$text['description-destination_email']['en-us'] = "Choose whether to send SMS and MMS messages to User's email";
 $text['description-destination_email']['en-gb'] = "Choose whether to send SMS and MMS messages to User's email";
 $text['description-destination_email']['ar-eg'] = "اختر ما إذا كنت ترغب في إرسال رسائل SMS و MMS إلى بريد المستخدم الإلكتروني";
 $text['description-destination_email']['de-at'] = "Wählen Sie, ob SMS- und MMS-Nachrichten an die E-Mail des Benutzers gesendet werden sollen";
