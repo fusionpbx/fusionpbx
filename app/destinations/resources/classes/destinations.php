@@ -402,7 +402,7 @@ if (!class_exists('destinations')) {
 										}
 									}
 									//application: hangup
-									if (!empty($data['application'])) {
+									if (!empty($data['application']) && $data['application'] === 'hangup') {
 										$select_value = str_replace("transfer", $data['application'], $select_value);
 									}
 								}
