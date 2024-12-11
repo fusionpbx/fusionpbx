@@ -59,6 +59,7 @@
 	$dashboard_label_text_color = '';
 	$dashboard_label_background_color = '';
 	$dashboard_number_text_color = '';
+	$dashboard_number_background_color = '';
 	$dashboard_groups = [];
 	$dashboard_column_span = '';
 	$dashboard_row_span = '';
@@ -101,6 +102,7 @@
 		$dashboard_label_background_color_hover = $_POST["dashboard_label_background_color_hover"] ?? '';
 		$dashboard_number_text_color = $_POST["dashboard_number_text_color"] ?? '';
 		$dashboard_number_text_color_hover = $_POST["dashboard_number_text_color_hover"] ?? '';
+		$dashboard_number_background_color = $_POST["dashboard_number_background_color"] ?? '';
 		$dashboard_background_color = $_POST["dashboard_background_color"] ?? '';
 		$dashboard_background_color_hover = $_POST["dashboard_background_color_hover"] ?? '';
 		$dashboard_detail_background_color = $_POST["dashboard_detail_background_color"] ?? '';
@@ -139,6 +141,7 @@
 		$dashboard_label_background_color_hover = preg_replace($text_pattern, '', $dashboard_label_background_color_hover);
 		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
 		$dashboard_number_text_color_hover = preg_replace($text_pattern, '', $dashboard_number_text_color_hover);
+		$dashboard_number_background_color = preg_replace($text_pattern, '', $dashboard_number_background_color);
 		$dashboard_background_color = preg_replace($text_pattern, '', $dashboard_background_color);
 		$dashboard_background_color_hover = preg_replace($text_pattern, '', $dashboard_background_color_hover);
 		$dashboard_detail_background_color = preg_replace($text_pattern, '', $dashboard_detail_background_color);
@@ -292,6 +295,7 @@
 			$array['dashboard'][0]['dashboard_label_background_color_hover'] = $dashboard_label_background_color_hover;
 			$array['dashboard'][0]['dashboard_number_text_color'] = $dashboard_number_text_color;
 			$array['dashboard'][0]['dashboard_number_text_color_hover'] = $dashboard_number_text_color_hover;
+			$array['dashboard'][0]['dashboard_number_background_color'] = $dashboard_number_background_color;
 			$array['dashboard'][0]['dashboard_background_color'] = $dashboard_background_color;
 			$array['dashboard'][0]['dashboard_background_color_hover'] = $dashboard_background_color_hover;
 			$array['dashboard'][0]['dashboard_detail_background_color'] = $dashboard_detail_background_color;
@@ -358,6 +362,7 @@
 		$sql .= " dashboard_label_background_color_hover, ";
 		$sql .= " dashboard_number_text_color, ";
 		$sql .= " dashboard_number_text_color_hover, ";
+		$sql .= " dashboard_number_background_color, ";
 		$sql .= " dashboard_background_color, ";
 		$sql .= " dashboard_background_color_hover, ";
 		$sql .= " dashboard_detail_background_color, ";
@@ -394,6 +399,7 @@
 			$dashboard_label_background_color_hover = $row["dashboard_label_background_color_hover"];
 			$dashboard_number_text_color = $row["dashboard_number_text_color"];
 			$dashboard_number_text_color_hover = $row["dashboard_number_text_color_hover"];
+			$dashboard_number_background_color = $row["dashboard_number_background_color"];
 			$dashboard_background_color = $row["dashboard_background_color"];
 			$dashboard_background_color_hover = $row["dashboard_background_color_hover"];
 			$dashboard_detail_background_color = $row["dashboard_detail_background_color"];
@@ -929,6 +935,19 @@
 		echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_text_color_hover' value='".escape($dashboard_number_text_color_hover)."'>\n";
 		echo "<br />\n";
 		echo $text['description-dashboard_number_text_color_hover']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	
+	if ($dashboard_chart_type == "icon") {
+		echo "<tr class='type_icon'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_number_background_color']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_background_color' value='".escape($dashboard_number_background_color)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_number_background_color']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
