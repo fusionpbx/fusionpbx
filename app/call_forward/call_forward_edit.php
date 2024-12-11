@@ -534,7 +534,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //save the back button location using referer
-$back_destination = "window.location.href='" . ($_SESSION['call_forward_back'] ?? "/app/call_forward/call_forward.php") . "'";
+	$back_destination = "window.location.href='" . ($_SESSION['call_forward_back'] ?? "/app/call_forward/call_forward.php") . "'";
 
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
