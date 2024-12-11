@@ -351,13 +351,14 @@ foreach ($dashboard as $row) {
 			echo "#".$dashboard_name." .hud_content {\n";
 			echo "	height: 89.5px;\n";
 			echo "}\n";
-			echo "#".$dashboard_name." .hud_icon {\n";
-			echo "	line-height: 0;\n";
-			echo "	font-size: 30pt;\n";
-			echo "}\n";
 			echo "#".$dashboard_name." .hud_stat {\n";
 			echo "	line-height: 0;\n";
 			echo "	font-size: 30pt;\n";
+			echo "}\n";
+			echo "#".$dashboard_name." .hud_chart {\n";
+			echo "	height: 54px;\n";
+			echo "	width: 180px;\n";
+			echo "	padding-top: 0;\n";
 			echo "}\n";
 			echo "#".$dashboard_name." div.hud_content .fas {\n";
 			echo "	line-height: 0;\n";
