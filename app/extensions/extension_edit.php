@@ -1061,6 +1061,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//set the back button
+	$_SESSION['call_forward_back'] = $_SERVER['PHP_SELF']  . "?id=$extension_uuid";
+
 //begin the page content
 	require_once "resources/header.php";
 	if ($action == "update") {
