@@ -47,6 +47,7 @@
 	$dashboard_path = 'dashboard/icon';
  	//$dashboard_path = '';
 	$dashboard_icon = '';
+	$dashboard_icon_color = '';
 	$dashboard_url = '';
 	$dashboard_target = 'self';
 	$dashboard_width = '';
@@ -83,6 +84,7 @@
 		$dashboard_name = $_POST["dashboard_name"] ?? '';
 		$dashboard_path = $_POST["dashboard_path"] ?? '';
 		$dashboard_icon = $_POST["dashboard_icon"] ?? '';
+		$dashboard_icon_color = $_POST["dashboard_icon_color"] ?? '';
 		$dashboard_url = $_POST["dashboard_url"] ?? '';
 		$dashboard_target = $_POST["dashboard_target"] ?? 'self';
 		$dashboard_width = $_POST["dashboard_width"] ?? '';
@@ -121,6 +123,7 @@
 		$dashboard_name = trim(preg_replace('/[^a-zA-Z0-9 _\-\/.#]/', '', $dashboard_name));
 		$dashboard_path = preg_replace($text_pattern, '', strtolower($dashboard_path));
 		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
+		$dashboard_icon_color = preg_replace($text_pattern, '', $dashboard_icon_color);
 		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
 		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
@@ -273,6 +276,7 @@
 			$array['dashboard'][0]['dashboard_name'] = $dashboard_name;
 			$array['dashboard'][0]['dashboard_path'] = $dashboard_path;
 			$array['dashboard'][0]['dashboard_icon'] = $dashboard_icon;
+			$array['dashboard'][0]['dashboard_icon_color'] = $dashboard_icon_color;
 			$array['dashboard'][0]['dashboard_url'] = $dashboard_url;
 			$array['dashboard'][0]['dashboard_width'] = $dashboard_width;
 			$array['dashboard'][0]['dashboard_height'] = $dashboard_height;
@@ -338,6 +342,7 @@
 		$sql .= " dashboard_name, ";
 		$sql .= " dashboard_path, ";
 		$sql .= " dashboard_icon, ";
+		$sql .= " dashboard_icon_color, ";
 		$sql .= " dashboard_url, ";
 		$sql .= " dashboard_width, ";
 		$sql .= " dashboard_height, ";
@@ -373,6 +378,7 @@
 			$dashboard_name = $row["dashboard_name"];
 			$dashboard_path = $row["dashboard_path"];
 			$dashboard_icon = $row["dashboard_icon"];
+			$dashboard_icon_color = $row["dashboard_icon_color"];
 			$dashboard_url = $row["dashboard_url"];
 			$dashboard_width = $row["dashboard_width"];
 			$dashboard_height = $row["dashboard_height"];
@@ -650,8 +656,20 @@
 		else {
 			echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
 		}
+		echo			$text['description-dashboard_icon']."\n";
 		echo "		</td>";
 		echo "	</tr>";
+
+		echo "<tr class='type_icon'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_icon_color']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_icon_color' value='".escape($dashboard_icon_color)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_icon_color']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
 		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -704,10 +722,7 @@
 		echo "</tr>\n";
 	}
 
-	if (
-		$action == "add" ||
-		$dashboard_path == "dashboard/content"
-		) {
+	if ($action == "add" || $dashboard_path == "dashboard/content") {
 		echo "<tr class='type_content' ".($dashboard_path != 'dashboard/content' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-content']."\n";
@@ -734,11 +749,7 @@
 		echo "</tr>\n";
 	}
 
-	if (
-		$action == "add" ||
-		$dashboard_path == "dashboard/content" ||
-		$dashboard_path == "dashboard/icon"
-		) {
+	if ($action == "add" || $dashboard_path == "dashboard/content" || $dashboard_path == "dashboard/icon") {
 		echo "<tr class='type_icon type_content' ".($dashboard_path != 'dashboard/content' && $dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-details']."\n";
@@ -793,8 +804,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (
-		$dashboard_path == "voicemails/voicemails" ||
+	if ($dashboard_path == "voicemails/voicemails" ||
 		$dashboard_path == "xml_cdr/missed_calls" ||
 		$dashboard_path == "xml_cdr/recent_calls" ||
 		$dashboard_path == "system/system_status" ||
@@ -808,8 +818,7 @@
 		$dashboard_path == "registrations/registrations" ||
 		$dashboard_path == "domains/domains" ||
 		$dashboard_path == "extensions/caller_id" ||
-		$dashboard_path == "maintenance/maintenance"
-		) {
+		$dashboard_path == "maintenance/maintenance") {
 		echo "<tr class='type_chart' ".($action == "add" ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_chart_type']."\n";
@@ -900,18 +909,18 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo $text['label-dashboard_number_text_color']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_text_color' value='".escape($dashboard_number_text_color)."'>\n";
-	echo "<br />\n";
-	echo $text['description-dashboard_number_text_color']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if ($dashboard_path != "dashboard/icon") {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-dashboard_number_text_color']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<input type='text' class='formfld colorpicker' name='dashboard_number_text_color' value='".escape($dashboard_number_text_color)."'>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_number_text_color']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	if ($action == "add" || $dashboard_path == "dashboard/icon") {
 		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_number_text_color_hover']."\n";
