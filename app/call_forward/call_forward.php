@@ -209,6 +209,9 @@
 	}
 	require_once "resources/header.php";
 
+//set the back button
+	$_SESSION['call_forward_back'] = $_SERVER['PHP_SELF'];
+
 //show the content
 	if ($is_included) {
 		echo "<div class='action_bar sub'>\n";
