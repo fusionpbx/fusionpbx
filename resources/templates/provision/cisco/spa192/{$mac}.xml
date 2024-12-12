@@ -941,7 +941,7 @@
 </Software_DMZ>
 <Bonjour_Enable>1</Bonjour_Enable>
 <Reset_Button_Enable>1</Reset_Button_Enable>
-<Router_Mode>{$cisco_router_mode}</Router_Mode> <!--options: 0:Bridge, 1:NAT-->
+<Router_Mode>{$spa_router_mode}</Router_Mode> <!--options: 0:Bridge, 1:NAT-->
 <Monitor_WAN_Port_Only>0</Monitor_WAN_Port_Only>
 <VPN_Passthrough>
 <IPSec_Passthrough>1</IPSec_Passthrough>
