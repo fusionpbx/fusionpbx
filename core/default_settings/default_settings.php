@@ -530,7 +530,7 @@
 				echo "		[...]\n";
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') > 0 || substr_count($subcategory, '_secret') > 0) {
-				echo "		".str_repeat('*', strlen($row['default_setting_value'] ?? ''));
+				echo "		".str_repeat('*', 20);	//always use the same number of '*' so the length is not guessable
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
 				echo "		".$text['option-button_icons_'.$row['default_setting_value']]."\n";
