@@ -78,6 +78,7 @@
 	$sql .= "dashboard_name, ";
 	$sql .= "dashboard_path, ";
 	$sql .= "dashboard_icon, ";
+	$sql .= "dashboard_icon_color, ";
 	$sql .= "dashboard_url, ";
 	$sql .= "dashboard_target, ";
 	$sql .= "dashboard_width, ";
@@ -93,6 +94,7 @@
 	$sql .= "dashboard_label_background_color_hover, ";
 	$sql .= "dashboard_number_text_color, ";
 	$sql .= "dashboard_number_text_color_hover, ";
+	$sql .= "dashboard_number_background_color, ";
 	$sql .= "dashboard_background_color, ";
 	$sql .= "dashboard_background_color_hover, ";
 	$sql .= "dashboard_detail_background_color, ";
@@ -263,6 +265,11 @@ div.hud_chart {
 <?php
 foreach ($dashboard as $row) {
 	$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
+	if (!empty($row['dashboard_icon_color'])) {
+		echo "#".$dashboard_name." .hud_stat:has(i) {\n";
+		echo "	color: ".$row['dashboard_icon_color'].";\n";
+		echo "}\n";
+	}
 	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
 		echo "#".$dashboard_name." .hud_title {\n";
 		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }

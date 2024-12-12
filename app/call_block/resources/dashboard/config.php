@@ -5,6 +5,7 @@ $array['dashboard'][$x]['dashboard_uuid'] = 'e75f04ff-6d1b-4b39-af0f-e1d1860327c
 $array['dashboard'][$x]['dashboard_name'] = 'Call Block';
 $array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-ban';
+$array['dashboard'][$x]['dashboard_icon_color'] = '#EA4C46';
 $array['dashboard'][$x]['dashboard_url'] = '/app/call_block/call_block.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
@@ -17,9 +18,9 @@ $array['dashboard'][$x]['dashboard_heading_text_color'] = '';
 $array['dashboard'][$x]['dashboard_heading_text_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_heading_background_color'] = '';
 $array['dashboard'][$x]['dashboard_heading_background_color_hover'] = '';
-$array['dashboard'][$x]['dashboard_number_background_color'] = '';
-$array['dashboard'][$x]['dashboard_number_text_color'] = '#EA4C46';
+$array['dashboard'][$x]['dashboard_number_text_color'] = '';
 $array['dashboard'][$x]['dashboard_number_text_color_hover'] = '';
+$array['dashboard'][$x]['dashboard_number_background_color'] = '';
 $array['dashboard'][$x]['dashboard_background_color'] ='';
 $array['dashboard'][$x]['dashboard_background_color_hover'] = '';
 $array['dashboard'][$x]['dashboard_detail_background_color'] = '';
@@ -44,3 +45,4 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
 $y++;
 
 ?>
+
