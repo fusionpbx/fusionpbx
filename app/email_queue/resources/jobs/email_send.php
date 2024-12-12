@@ -49,12 +49,20 @@
 		//check to see if the process is running
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
-			if (posix_getsid($pid) === false) {
-				//process is not running
-				$exists = false;
+			if (function_exists('posix_getsid')) {
+				//check if the process is running
+				$pid = posix_getsid($pid);
+				if ($pid === null || $pid === 0) {
+					//process is not running
+					$exists = false;
+				}
+				else {
+					//process is running
+					$exists = true;
+				}
 			}
 			else {
-				//process is running
+				//file exists assume the pid is running
 				$exists = true;
 			}
 		}
@@ -571,4 +579,3 @@
 
 	//fwrite($esl, $content);
 	//fclose($esl);
-
