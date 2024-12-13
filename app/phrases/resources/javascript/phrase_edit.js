@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 	// Initialize the select options
 	const select = document.getElementById('phrase_detail_data_empty');
 	const grp_rec = document.createElement('optgroup');
@@ -9,17 +9,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Add recordings
 	grp_rec.label = window.phrase_label_recordings;
-	for (let i = 0; i < window.phrase_recordings.length; i++) {
-		grp_rec.appendChild(new Option(window.phrase_recordings[i].recording_name, window.phrase_recordings[i].recording_uuid));
+	try {
+		const phrase_recordings = await fetch_data({request: 'recordings', data: ''});
+		for (let i = 0; i < phrase_recordings.length; i++) {
+			grp_rec.appendChild(new Option(phrase_recordings[i].recording_name, phrase_recordings[i].recording_uuid));
+		}
+		select.appendChild(grp_rec);
+	} catch (error) {
+		console.error("Error fetching recordings:", error);
 	}
-	select.appendChild(grp_rec);
 
 	// Add sounds
 	grp_snd.label = window.phrase_label_sounds;
-	for (let i = 0; i < window.phrase_sounds.length; i++) {
-		grp_snd.appendChild(new Option(window.phrase_sounds[i], window.phrase_sounds[i]));
+	try {
+		const phrase_sounds = await fetch_data({request: 'sound_files', data: ''});
+		for (let i = 0; i < phrase_sounds.length; i++) {
+			grp_snd.appendChild(new Option(phrase_sounds[i], phrase_sounds[i]));
+		}
+		select.appendChild(grp_snd);
+	} catch (error) {
+		console.error("Error fetching recordings:", error);
 	}
-	select.appendChild(grp_snd);
 
 	// add the existing data
 	add_existing();
@@ -31,34 +41,65 @@ document.addEventListener("DOMContentLoaded", function () {
 	add_draggable_rows();
 });
 
+async function fetch_data(command) {
+    try {
+        const response = await fetch('phrase_responder.php', {
+            method: 'POST', // or 'GET' depending on your requirement
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(command) // If sending data with POST
+        });
+
+        const data = await response.json();
+
+        return data.message;
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 //
 // Inserts all existing records before the empty one
 //
-function add_existing() {
+async function add_existing() {
+	//get the body structure
 	const tbody = document.getElementById('structure');
-
-	for (let index=0; index < window.phrase_details.length; index++) {
+	//get the phrase id
+	const urlParams = new URLSearchParams(window.location.search);
+	const phrase_uuid = urlParams.get('id');
+	//fetch the phrase details from the database
+	const phrase_details = await fetch_data({request: 'phrase_details', data: phrase_uuid});
+	//display the phrase details
+	for (let index=0; index < phrase_details.length; index++) {
+		//add an empty row
 		add_row();
+		//get the action select box
 		const select_action = document.getElementById('phrase_detail_function[' + index + ']');
-		select_by_value(select_action, window.phrase_details[index].phrase_detail_function);
+		//set the chosen option
+		select_by_value(select_action, phrase_details[index].phrase_detail_function);
+		//get the data select box
 		const select_data = document.getElementById('phrase_detail_data[' + index + ']');
-		select_by_text(select_data, window.phrase_details[index]['display_name']);
+		//set the chosen option
+		select_by_text(select_data, phrase_details[index]['display_name']);
 		const uuid_field = document.getElementById('phrase_detail_uuid[' +index+']');
-		uuid_field.value = window.phrase_details[index]['phrase_detail_uuid'];
+		uuid_field.value = phrase_details[index]['phrase_detail_uuid'];
+		//set the slider value
 		const slider = document.getElementById('slider['+index+']');
 		const sleep = document.getElementById('sleep['+index+']');
 		const phrase_detail_text = document.getElementById('phrase_detail_text['+index+']');
 		//update the sleep data
-		if (window.phrase_details[index].phrase_detail_function === 'pause') {
-			sleep.value = window.phrase_details[index].phrase_detail_data;
-			slider.value = window.phrase_details[index].phrase_detail_data;
+		if (phrase_details[index].phrase_detail_function === 'pause') {
+			sleep.value = phrase_details[index].phrase_detail_data;
+			slider.value = phrase_details[index].phrase_detail_data;
 		}
 		//update the execute text
-		if (window.phrase_details[index].phrase_detail_function === 'execute') {
-			phrase_detail_text.value = window.phrase_details[index].phrase_detail_data;
+		if (phrase_details[index].phrase_detail_function === 'execute') {
+			phrase_detail_text.value = phrase_details[index].phrase_detail_data;
 		}
 		// Manually trigger the change event to select the proper display
-		if (window.phrase_details[index].phrase_detail_function !== 'play-file') {
+		if (phrase_details[index].phrase_detail_function !== 'play-file') {
 			const changeEvent = new Event('change', { bubbles: true });
 			select_action.dispatchEvent(changeEvent);
 		}

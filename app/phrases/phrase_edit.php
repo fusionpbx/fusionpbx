@@ -414,10 +414,10 @@ if (count($_POST) > 0) {
 			}
 		}
 		//send the phrase details to the browser as a global scope json array object
-		echo "window.phrase_details = " . json_encode($phrase_details, true) . ";\n";
+		//echo "window.phrase_details = " . json_encode($phrase_details, true) . ";\n";
 	} else {
 		//send an empty array to the browser as a global scope json array object
-		echo "window.phrase_details = [];\n";
+		//echo "window.phrase_details = [];\n";
 	}
 
 	//recording files
