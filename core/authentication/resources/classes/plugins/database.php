@@ -171,7 +171,7 @@ class plugin_database {
 			$user_authorized = false;
 
 		//check if contacts app exists
-			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/contacts/') ? true : false;
+			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/contacts/') ? true : false;
 
 		//check the username and password if they don't match then redirect to the login
 			$sql = "select ";
@@ -310,7 +310,7 @@ class plugin_database {
 								$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('user_edit', 'temp');
 
 							//execute insert

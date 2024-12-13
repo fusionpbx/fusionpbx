@@ -66,7 +66,9 @@ if ($domains_processed == 1) {
 				if (!empty($row['dashboard_label_text_color_hover'])) { $array['dashboard'][$x]['dashboard_label_text_color_hover'] = $row['dashboard_label_text_color_hover']; }
 				if (!empty($row['dashboard_number_text_color'])) { $array['dashboard'][$x]['dashboard_number_text_color'] = $row['dashboard_number_text_color']; }
 				if (!empty($row['dashboard_number_text_color_hover'])) { $array['dashboard'][$x]['dashboard_number_text_color_hover'] = $row['dashboard_number_text_color_hover']; }
+				if (!empty($row['dashboard_number_background_color'])) { $array['dashboard'][$x]['dashboard_number_background_color'] = $row['dashboard_number_background_color']; }
 				if (!empty($row['dashboard_icon'])) { $array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon']; }
+				if (!empty($row['dashboard_icon_color'])) { $array['dashboard'][$x]['dashboard_icon_color'] = $row['dashboard_icon_color']; }
 				if (!empty($row['dashboard_url'])) { $array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url']; }
 				if (!empty($row['dashboard_width'])) { $array['dashboard'][$x]['dashboard_width'] = $row['dashboard_width']; }
 				if (!empty($row['dashboard_height'])) { $array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height']; }
@@ -98,7 +100,7 @@ if ($domains_processed == 1) {
 		}
 
 	//add the temporary permissions
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('dashboard_add', 'temp');
 		$p->add('dashboard_group_add', 'temp');
 

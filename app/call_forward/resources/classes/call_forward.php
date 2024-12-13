@@ -89,7 +89,7 @@
 			}
 
 			//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('extension_add', 'temp');
 
 			//execute update
@@ -214,7 +214,7 @@
 				if (is_array($array) && @sizeof($array) != 0) {
 
 					//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_edit', 'temp');
 
 					//save the array

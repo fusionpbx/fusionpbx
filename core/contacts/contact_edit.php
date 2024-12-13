@@ -543,7 +543,7 @@
 		//save the data
 			if (!empty($array)) {
 				//add the permission object
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('contact_add', 'temp');
 				$p->add('contact_phone_add', 'temp');
 				$p->add('contact_address_add', 'temp');
@@ -963,10 +963,10 @@
 			}
 		};
 		if (search) {
-			xhttp.open("GET", "/app/contacts/contact_json.php?search="+search, true);
+			xhttp.open("GET", "/core/contacts/contact_json.php?search="+search, true);
 		}
 		else {
-			xhttp.open("GET", "/app/contacts/contact_json.php", true);
+			xhttp.open("GET", "/core/contacts/contact_json.php", true);
 		}
 		xhttp.send();
 	}

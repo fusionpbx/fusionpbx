@@ -228,7 +228,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_cid_source";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM, 6-Preference";
 		$y++;

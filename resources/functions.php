@@ -323,8 +323,9 @@
 	if (!function_exists('permission_exists')) {
 
 		function permission_exists($permission_name) {
+			global $domain_uuid, $user_uuid;
 			$database = database::new();
-			$permission = new permissions($database);
+			$permission = permissions::new($database, $domain_uuid, $user_uuid);
 			return $permission->exists($permission_name);
 		}
 
@@ -722,7 +723,7 @@
 					$array['extension_users'][$x]['extension_uuid'] = $extension_uuid;
 					$array['extension_users'][$x]['user_uuid'] = $row["user_uuid"];
 					//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_user_add', 'temp');
 					//execute insert
 					$database = database::new();
@@ -771,7 +772,7 @@
 				$array['user_groups'][0]['user_uuid'] = $user_uuid;
 
 				//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('user_add', 'temp');
 				$p->add('user_group_add', 'temp');
 				//execute insert
@@ -2519,5 +2520,3 @@ if (!function_exists('get_memory_details')) {
 		return false;
 	}
 }
-
-?>

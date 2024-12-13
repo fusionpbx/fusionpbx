@@ -110,7 +110,7 @@
 					$array['contacts'][0]['last_mod_date'] = 'now()';
 					$array['contacts'][0]['last_mod_user'] = $_SESSION['username'];
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('contact_edit', 'temp');
 
 					$database = new database;
@@ -241,10 +241,10 @@
 			}
 		};
 		if (search) {
-			xhttp.open("GET", "/app/contacts/contact_json.php?search="+search, true);
+			xhttp.open("GET", "/core/contacts/contact_json.php?search="+search, true);
 		}
 		else {
-			xhttp.open("GET", "/app/contacts/contact_json.php", true);
+			xhttp.open("GET", "/core/contacts/contact_json.php", true);
 		}
 		xhttp.send();
 	}

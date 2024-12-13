@@ -188,7 +188,7 @@ class settings {
 		$record[$table_name][0][$table_prefix.'_setting_description'] = $description;
 
 		//grant temporary permissions
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add($table_prefix.'_setting_add', 'temp');
 		$p->add($table_prefix.'_setting_edit', 'temp');
 

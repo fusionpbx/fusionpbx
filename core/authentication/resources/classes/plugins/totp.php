@@ -224,7 +224,7 @@ class plugin_totp {
 					$array['users'][$x]['user_totp_secret'] = $this->user_totp_secret;
 
 					//add the user_edit permission
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("user_edit", "temp");
 
 					//save the data
@@ -328,7 +328,7 @@ class plugin_totp {
 				unset($_POST['authentication_code']);
 
 				//check if contacts app exists
-				$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/contacts/') ? true : false;
+				$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/contacts/') ? true : false;
 
 				//get the user details
 				if ($auth_valid) {

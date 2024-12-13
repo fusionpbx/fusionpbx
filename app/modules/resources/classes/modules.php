@@ -743,7 +743,7 @@ if (!class_exists('modules')) {
 					}
 					if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('module_add', 'temp');
 						//execute insert
 							$database = new database;

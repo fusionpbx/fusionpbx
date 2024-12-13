@@ -259,7 +259,7 @@
 								}
 								if ($save) {
 									//add the temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('device_keys_add', 'temp');
 										$p->add('device_key_edit', 'temp');
 

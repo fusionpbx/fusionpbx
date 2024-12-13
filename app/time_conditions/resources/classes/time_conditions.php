@@ -100,7 +100,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_delete', 'temp');
 										$p->add('dialplan_detail_delete', 'temp');
 
@@ -193,7 +193,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_edit', 'temp');
 
 									//save the array
@@ -310,7 +310,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_add', 'temp');
 										$p->add('dialplan_detail_add', 'temp');
 

@@ -272,7 +272,7 @@
 						$array['music_on_hold'][0]['music_on_hold_chime_freq'] = null;
 						$array['music_on_hold'][0]['music_on_hold_chime_max'] = null;
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('music_on_hold_add', 'temp');
 
 						$database = new database;

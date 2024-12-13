@@ -313,8 +313,7 @@
 
 			//update the array with additional information
 				if (is_array($result)) {
-					$i = 0;
-					foreach ($result as $row) {
+					foreach ($result as $i => $row) {
 						//set the greeting directory
 						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
@@ -323,17 +322,16 @@
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.mp3')) {
 							$result[$i]['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.mp3';
 						}
-						$result[$i]['file_size'] = filesize($row['file_path'] ?? '');
-						$result[$i]['file_size_label'] = byte_convert($row['file_size'] ?? 0);
-						$result[$i]['file_ext'] = substr($row['file_path'] ?? '', -3);
+						$result[$i]['file_size'] = filesize($result[$i]['file_path'] ?? '');
+						$result[$i]['file_size_label'] = byte_convert($result[$i]['file_size'] ?? 0);
+						$result[$i]['file_ext'] = substr($result[$i]['file_path'] ?? '', -3);
 
 						$message_minutes = floor($row['message_length'] / 60);
 						$message_seconds = $row['message_length'] % 60;
 
 						//use International System of Units (SI) - Source: https://en.wikipedia.org/wiki/International_System_of_Units
-						$result[$i]['message_length_label'] = ($message_minutes > 0 ? $message_minutes.' min' : null).($message_seconds > 0 ? ' '.$message_seconds.' s' : null);
+						$result[$i]['message_length_label'] = ($message_minutes > 0 ? $message_minutes.' min' : '').($message_seconds > 0 ? ' '.$message_seconds.' s' : '');
 						$result[$i]['created_date'] = date("j M Y g:i a",$row['created_epoch']);
-						$i;
 					}
 				}
 				else {
@@ -421,7 +419,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('voicemail_delete', 'temp');
 									$p->add('voicemail_option_delete', 'temp');
 									$p->add('voicemail_message_delete', 'temp');
@@ -537,7 +535,7 @@
 						//delete the checked rows
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('voicemail_destination_delete', 'temp');
 
 								//execute delete
@@ -708,7 +706,7 @@
 				}
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('voicemail_message_delete', 'temp');
 
 			//execute delete
@@ -746,7 +744,7 @@
 				$array['voicemail_messages'][0]['message_status'] = $new_status;
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update
@@ -989,7 +987,7 @@
 			}
 
 			//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('email_queue_add', 'temp');
 			$p->add('email_queue_attachment_add', 'temp');
 
@@ -1094,7 +1092,7 @@
 				if (is_array($array) && @sizeof($array) != 0) {
 
 					//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('voicemail_message_edit', 'temp');
 
 					//execute update
@@ -1134,7 +1132,7 @@
 				$array['voicemail_messages'][0]['message_status'] = 'saved';
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update

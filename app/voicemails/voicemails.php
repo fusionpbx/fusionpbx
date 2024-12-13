@@ -45,6 +45,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//set up database object
+	$database = database::new();
+
+//get the settings
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
+
 //get the http post data
 	if (!empty($_POST['voicemails'])) {
 		$action = $_POST['action'];
@@ -119,18 +125,19 @@
 //prepare to page the results
 	$sql = "select count(voicemail_uuid) from v_voicemails ";
 	$sql .= "where true ";
+	$parameters = null;
 	if ($show != "all" || !permission_exists('voicemail_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!permission_exists('voicemail_domain')) {
-		if (is_array($voicemail_uuids) && @sizeof($voicemail_uuids) != 0) {
+		if (is_array($voicemail_uuids) && sizeof($voicemail_uuids) != 0) {
 			$sql .= "and (";
 			foreach ($voicemail_uuids as $x => $row) {
 				$sql_where_or[] = 'voicemail_uuid = :voicemail_uuid_'.$x;
 				$parameters['voicemail_uuid_'.$x] = $row['voicemail_uuid'];
 			}
-			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+			if (is_array($sql_where_or) && sizeof($sql_where_or) != 0) {
 				$sql .= implode(' or ', $sql_where_or);
 			}
 			$sql .= ")";
@@ -140,8 +147,7 @@
 		}
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -158,17 +164,19 @@
 	$sql = str_replace('count(voicemail_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$voicemails = $database->select($sql, $parameters ?? null, 'all');
+	$voicemails = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get vm count for each mailbox
 	if (permission_exists('voicemail_message_view')) {
-		$sql = "select voicemail_uuid, count(*) as voicemail_count ";
-		$sql .= "from v_voicemail_messages where domain_uuid = :domain_uuid";
-		$sql .= " group by voicemail_uuid";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
+		$parameters = null;
+		$sql = "select voicemail_uuid, count(voicemail_uuid) as voicemail_count ";
+		$sql .= "from v_voicemail_messages where true ";
+		if ($show !== 'all' || !permission_exists('voicemail_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$sql .= "group by voicemail_uuid";
 		$voicemails_count_tmp = $database->select($sql, $parameters, 'all');
 
 		$voicemails_count = array();
@@ -180,11 +188,14 @@
 
 //get vm greeting count for each mailbox
 	if (permission_exists('voicemail_greeting_view')) {
+		$parameters = null;
 		$sql = "select voicemail_id, count(greeting_id) as greeting_count ";
-		$sql .= "from v_voicemail_greetings where domain_uuid = :domain_uuid";
-		$sql .= " group by voicemail_id";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
+		$sql .= "from v_voicemail_greetings where true ";
+		if ($show !== 'all' || !permission_exists('voicemail_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$sql .= "group by voicemail_id";
 		$voicemail_greetings_count_tmp = $database->select($sql, $parameters, 'all');
 
 		$voicemail_greetings_count = array();
@@ -283,7 +294,7 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($voicemails) && @sizeof($voicemails) != 0) {
+	if (is_array($voicemails) && sizeof($voicemails) != 0) {
 		$x = 0;
 		foreach ($voicemails as $row) {
 			if (permission_exists('voicemail_edit')) {
@@ -362,4 +373,3 @@
 //include the footer
 	require_once "resources/footer.php";
 
-?>

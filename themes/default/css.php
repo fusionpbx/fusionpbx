@@ -3,7 +3,7 @@
 //includes files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 
-ob_start('ob_gzhandler');
+//ob_start('ob_gzhandler');
 header('Content-type: text/css; charset: UTF-8');
 header('Cache-Control: must-revalidate');
 header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
@@ -2339,7 +2339,7 @@ else { //default: white
 		vertical-align: middle;
 		color: <?=$form_table_field_text_color?>;
 		font-family: <?=$form_table_field_text_font?>;
-		font-size: <?$form_table_field_text_size?>;
+		font-size: <?=$form_table_field_text_size?>;
 		}
 
 	/* form: heading/row format */
@@ -2443,7 +2443,7 @@ else { //default: white
 		background: <?=$table_row_background_color_medium?>;
 		color: <?=$table_row_text_color?>;
 		font-family: <?=$table_row_text_font?>;
-		font-size: <?$table_row_text_size?>;
+		font-size: <?=$table_row_text_size?>;
 		text-align: left;
 		padding: 4px 7px;
 		}
@@ -2467,7 +2467,7 @@ else { //default: white
 		font-size: 10pt;
 		display: block;
 		color: <?=$message_default_color?>;
-		background: <?-$message_default_background_color?>;
+		background: <?=$message_default_background_color?>;
 		box-shadow: inset 0px 7px 8px -10px <?=$message_default_color?>;
 		opacity: 0;
 		<?php
@@ -2926,7 +2926,7 @@ else { //default: white
 	th.hud_heading {
 		text-align: left;
 		font-size: <?=$dashboard_detail_heading_text_size?>;
-		font-family: <?=$table_heading_text_font?>
+		font-family: <?=$table_heading_text_font?>;
 		color: <?=$table_heading_text_color?>;
 		padding-top: 3px;
 		<?php
