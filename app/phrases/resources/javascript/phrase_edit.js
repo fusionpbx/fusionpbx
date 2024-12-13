@@ -41,6 +41,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 	add_draggable_rows();
 });
 
+function remove_loading() {
+	//remove loading
+	const loading = document.getElementById('loading');
+	if (loading) {
+		loading.remove();
+	}
+}
+
 async function fetch_data(command) {
     try {
         const response = await fetch('phrase_responder.php', {
@@ -104,6 +112,8 @@ async function add_existing() {
 			select_action.dispatchEvent(changeEvent);
 		}
 	}
+
+	remove_loading();
 }
 
 //

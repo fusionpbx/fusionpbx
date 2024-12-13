@@ -507,6 +507,8 @@ if (count($_POST) > 0) {
 	//draggable rows are initially empty
 	echo "<tbody id='structure'>\n";
 	echo "</tbody>";
+	//show loading
+	echo "<tbody id='loading'><tr><td>&nbsp;</td><td><center>Loading...</center></td><td>&nbsp;</td></tr></tbody>\n";
 	//cloning row and buttons created outside of 'structure' table body
 	echo "<tbody>";
 	echo "<tr id='empty_row' style='display: none;'>\n";
