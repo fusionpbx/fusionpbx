@@ -213,7 +213,6 @@ function update_order() {
 
 		//get the input boxes
 		const input_boxes = row.querySelectorAll('td input');
-		console.log(input_boxes);
 		//uuid
 		const phrase_detail_uuid = input_boxes[0];
 		phrase_detail_uuid.removeAttribute('id');
@@ -222,7 +221,6 @@ function update_order() {
 		//execute action
 		const phrase_detail_text = input_boxes[1];
 		temp_value = phrase_detail_text.value;
-		console.log('phrase_detail_text', temp_value);
 		phrase_detail_text.removeAttribute('id');
 		phrase_detail_text.id = 'phrase_detail_text[' + index + ']';
 		phrase_detail_text.name = phrase_detail_text.id;
