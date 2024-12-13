@@ -538,8 +538,8 @@ if (count($_POST) > 0) {
 	echo "<tr>";
 	echo "<td>&nbsp;</td>";
 	echo "<td class='vtable' style='align=center;' colspan='2'><center>";
-	echo button::create(['type'=>'button','icon'=>$_SESSION['theme']['button_icon_add'], 'onclick' => 'add_row()']);
-	echo button::create(['type'=>'button','icon'=>'fa-solid fa-minus', 'onclick' => 'remove_row()']);
+	echo button::create(['type'=>'button','icon'=>$_SESSION['theme']['button_icon_add'], 'label' => $text['label-add'], 'onclick' => 'add_row()']);
+	echo button::create(['type'=>'button','icon'=>'fa-solid fa-minus', 'label' => $text['label-delete'], 'onclick' => 'remove_row()']);
 	echo "</center></td>";
 	echo "<td>&nbsp;</td>";
 	echo "</tr>";
