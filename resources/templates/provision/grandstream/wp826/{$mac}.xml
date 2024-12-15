@@ -6,7 +6,8 @@
 		{$row=$lines.$line}
 		<!-- Account Active -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.enable">{if filter_var($row.enabled, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
+		{if filter_var($row.enabled, FILTER_VALIDATE_BOOLEAN)}
+		<item name="account.{$line}.enable">Yes</item>
 
 		<!-- Account Name -->
 		<item name="account.{$line}.name">{$row.display_name}</item>
@@ -39,6 +40,9 @@
                 </item>
 		<!-- DialPlan -->
 		<item name="account.{$line}.call.dialplan">{$grandstream_dial_plan}</item>
+		{else}
+		<item name="account.{$line}.enable">No</item>
+		{/if} 
 		{/for}
 
 		<!-- Phone Settings - General Settings -->
