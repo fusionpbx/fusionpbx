@@ -145,7 +145,7 @@
 		<!-- Phonebook -->
 		<item name="phonebook.download">
 			{if isset($grandstream_config_server_path)}
-			<part name="mode">{if $grandstream_config_server_path=="0"}Disabled{elseif $grandstream_config_server_path=="1"}Enabled Use TFTP{elseif $grandstream_config_server_path=="2"}Enabled Use HTTP{elseif $grandstream_config_server_path=="1"}Enabled Use HTTPS{/if}</part>
+			<part name="mode">{if $grandstream_config_server_path=="0"}Disabled{elseif $grandstream_config_server_path=="1"}Enabled Use TFTP{elseif $grandstream_config_server_path=="2"}Enabled Use HTTP{elseif $grandstream_config_server_path=="3"}Enabled Use HTTPS{/if}</part>
 			{/if}
 			<part name="server">{$domain_name}{$project_path}/app/provision/pb/{$mac|replace:'-':''|lower}</part>
 			<part name="interval">{$grandstream_phonebook_download_interval}</part>
