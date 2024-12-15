@@ -123,13 +123,11 @@
 		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
 		{else}
 		<item name="provisioning.firmware.serverPath">{$domain_name}{$project_path}/app/provision/resources/firmware/</item>
-		{/if}
-		<!-- HTTP/HTTPS User Name -->
 		<item name="provisioning.firmware.username">{$http_auth_username}</item>
-		<!-- HTTP/HTTPS Password -->
 		<item name="provisioning.firmware.password">{$http_auth_password}</item>
+		{/if}
 		<!-- TFTP, HTTP, HTTPS -->
-		<item name="provisioning.config.protocol">HTTP</item>
+		<item name="provisioning.config.protocol">HTTPS</item>
 		<!-- Config Server Path -->
 		{if $grandstream_config_server_path=="none"}
 		<item name="provisioning.config.serverPath"></item>
@@ -137,20 +135,18 @@
 		<item name="provisioning.config.serverPath">{$grandstream_config_server_path}</item>
 		{else}
 		<item name="provisioning.config.serverPath">{$domain_name}{$project_path}/app/provision</item>
-		{/if}
-		<!-- HTTP/HTTPS User Name -->
 		<item name="provisioning.config.username">{$http_auth_username}</item>
-		<!-- HTTP/HTTPS Password -->
 		<item name="provisioning.config.password">{$http_auth_password}</item>
+		{/if}
 		<!-- Phonebook -->
 		<item name="phonebook.download">
-			{if isset($grandstream_config_server_path)}
-			<part name="mode">{if $grandstream_config_server_path=="0"}Disabled{elseif $grandstream_config_server_path=="1"}Enabled Use TFTP{elseif $grandstream_config_server_path=="2"}Enabled Use HTTP{elseif $grandstream_config_server_path=="3"}Enabled Use HTTPS{/if}</part>
+			{if isset($grandstream_phonebook_download)}
+			<part name="mode">{if $grandstream_phonebook_download=="0"}Disabled{elseif $grandstream_phonebook_download=="1"}Enabled Use TFTP{elseif $grandstream_phonebook_download=="2"}Enabled Use HTTP{elseif $grandstream_phonebook_download=="3"}Enabled Use HTTPS{/if}</part>
 			{/if}
 			<part name="server">{$domain_name}{$project_path}/app/provision/pb/{$mac|replace:'-':''|lower}</part>
 			<part name="interval">{$grandstream_phonebook_download_interval}</part>
-			<part name="username">{$grandstream_phonebook_username}</part>
-			<part name="password">{$grandstream_phonebook_password}</part>
+			<part name="username">{$http_auth_username}</part>
+			<part name="password">{$http_auth_password}</part>
 		</item>
 	</config>
 </gs_provision>
