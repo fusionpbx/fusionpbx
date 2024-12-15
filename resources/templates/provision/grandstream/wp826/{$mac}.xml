@@ -143,7 +143,7 @@
 			{if isset($grandstream_phonebook_download)}
 			<part name="mode">{if $grandstream_phonebook_download=="0"}Disabled{elseif $grandstream_phonebook_download=="1"}Enabled Use TFTP{elseif $grandstream_phonebook_download=="2"}Enabled Use HTTP{elseif $grandstream_phonebook_download=="3"}Enabled Use HTTPS{/if}</part>
 			{/if}
-			<part name="server">{$domain_name}{$project_path}/app/provision/pb/{$mac|replace:'-':''|lower}</part>
+			<part name="server">{$grandstream_phonebook_xml_server_path}{$mac}</part>
 			<part name="interval">{$grandstream_phonebook_download_interval}</part>
 			<part name="username">{$http_auth_username}</part>
 			<part name="password">{$http_auth_password}</part>
