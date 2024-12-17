@@ -27,8 +27,8 @@ $text['title-emergency_logs']['zh-cn'] = "紧急日志";
 $text['title-emergency_logs']['ja-jp'] = "緊急ログ";
 $text['title-emergency_logs']['ko-kr'] = "비상 기록";
 
-$text['title_description-emergency_logs']['en-us'] = "Track emergency calls includinng details of the time, date, and originating extension.";
-$text['title_description-emergency_logs']['en-gb'] = "Track emergency calls includinng details of the time, date, and originating extension.";
+$text['title_description-emergency_logs']['en-us'] = "Track emergency calls including details of the time, date, and originating extension.";
+$text['title_description-emergency_logs']['en-gb'] = "Track emergency calls including details of the time, date, and originating extension.";
 $text['title_description-emergency_logs']['ar-eg'] = "تتبع مكالمات الطوارئ بما في ذلك تفاصيل الوقت والتاريخ والامتداد الأصلي.";
 $text['title_description-emergency_logs']['de-at'] = "Verfolgen Sie Notrufe mit Angaben zu Uhrzeit, Datum und Nebenstelle des Anrufers.";
 $text['title_description-emergency_logs']['de-ch'] = "Verfolgen Sie Notrufe mit Angaben zu Uhrzeit, Datum und Nebenstelle des Anrufers.";
