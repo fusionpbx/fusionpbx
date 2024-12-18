@@ -543,6 +543,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_voicemails";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "voicemail_uuid";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_xml_cdr";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "xml_cdr_uuid";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "created_epoch";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Created epoch";
