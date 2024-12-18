@@ -59,7 +59,7 @@
 	echo "		<span class='hud_title' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\">".escape($dashboard_label)."</span>";
 	echo "		<div style='position: relative; display: inline-block;'>\n";
 	echo "			<span class='hud_stat' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\"><i class=\"fas ".$dashboard_icon."\"></i></span>\n";
-	echo "			<span style=\"background-color: #5d5ce3; color: #ffffff; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 22px; left: 25px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$active_registrations." / ".($active_registrations + $inactive_registrations)."</span>\n";
+	echo "			<span style=\"background-color: ".($row['dashboard_number_background_color'] ?? '#5d5ce3')."; color: ".($row['dashboard_number_text_color'] ?? '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 22px; left: 25px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$active_registrations." / ".($active_registrations + $inactive_registrations)."</span>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
 	if (empty($dashboard_details_state) || $dashboard_details_state != "disabled") {

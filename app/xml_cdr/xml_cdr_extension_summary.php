@@ -67,7 +67,7 @@
 
 		//set the headers
 			header('Content-type: application/octet-binary');
-			header('Content-Disposition: attachment; filename=user-summary.csv');
+			header('Content-Disposition: attachment; filename=extension-summary.csv');
 
 		//show the column names on the first line
 			$z = 0;
