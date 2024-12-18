@@ -1,3 +1,4 @@
+// use an async function so page works without delays
 document.addEventListener("DOMContentLoaded", async function () {
 	// Initialize the select options
 	const select = document.getElementById('phrase_detail_data_empty');
@@ -51,7 +52,7 @@ function remove_loading() {
 
 async function fetch_data(command) {
     try {
-        const response = await fetch('phrase_responder.php', {
+        const response = await fetch('resources/phrase_responder.php', {
             method: 'POST', // or 'GET' depending on your requirement
             headers: {
                 'Content-Type': 'application/json'
