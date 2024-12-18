@@ -517,14 +517,14 @@ if (count($_POST) > 0) {
 	echo "		<select class='formfld' name='phrase_detail_function_empty' id='phrase_detail_function_empty' tag=''>\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	echo "			<option value='pause'>".$text['label-pause']."</option>\n";
-	if (if_group("superadmin")) {
+	if (permission_exists('phrase_execute')) {
 		echo "			<option value='execute'>".$text['label-execute']."</option>\n";
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 	echo "		<select  class='formfld' id='phrase_detail_data_empty' name='phrase_detail_data_empty' style='width: 300px; min-width: 300px; max-width: 300px;' tag=''></select>";
-//	if (if_group("superadmin")) {
+//	if (permission_exists('phrase_execute')) {
 //		echo "	<input id='phrase_detail_data_switch_empty' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function_empty').selectedIndex);\">\n";
 //	}
 	echo "    <input type=hidden name='empty_uuid' value=''>";
