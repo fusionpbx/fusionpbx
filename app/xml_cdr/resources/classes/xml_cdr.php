@@ -240,6 +240,7 @@ if (!class_exists('xml_cdr')) {
 				//save the call details record to the database
 				$this->database->app_name = 'xml_cdr';
 				$this->database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+
 				//$this->database->domain_uuid = $domain_uuid;
 				$response = $this->database->save($this->array, false);
 				if ($response['code'] == '200') {
@@ -613,6 +614,10 @@ if (!class_exists('xml_cdr')) {
 					//get the domain values from the xml
 						$domain_name = urldecode($xml->variables->domain_name);
 						$domain_uuid = urldecode($xml->variables->domain_uuid);
+
+					//sanitize the caller ID
+						$caller_id_name = preg_replace('#[^a-zA-Z 0-9\-\.]#', '', $caller_id_name);
+						$caller_id_number = preg_replace('#[^0-9\-]#', '', $caller_id_number);
 
 					//misc
 						$this->array[$key][0]['xml_cdr_uuid'] = $uuid;
@@ -2263,5 +2268,3 @@ if (!class_exists('xml_cdr')) {
 
 	} //class
 }
-
-?>
