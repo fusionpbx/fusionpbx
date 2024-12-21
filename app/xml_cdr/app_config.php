@@ -214,7 +214,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_hangup_cause";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_details";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -231,7 +230,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_archive";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_statistics";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
