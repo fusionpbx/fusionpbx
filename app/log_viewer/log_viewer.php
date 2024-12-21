@@ -152,9 +152,9 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "<table width='100%' style='table-layout: fixed;' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td style='background-color: #1c1c1c; padding: 8px; text-align: left;'>";
+	echo "		<td style='background-color: #1c1c1c; padding: 8px; text-align: left; overflow-wrap: break-word;'>";
 
 	if (permission_exists('log_view')) {
 
