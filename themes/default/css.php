@@ -3259,7 +3259,9 @@ else { //default: white
 
 	div.action_bar > div.actions {
 		float: right;
-		white-space: nowrap;
+		white-space: normal;
+		overflow-wrap: break-word;
+		overflow: hidden;
 		}
 
 	div.action_bar > div.actions > div.unsaved {
