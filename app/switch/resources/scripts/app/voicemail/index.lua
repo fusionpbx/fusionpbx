@@ -459,9 +459,7 @@
 
 --leave a message
 	if (voicemail_action == "save") then
-		
-		local call_uuid = session:getVariable("call_uuid");
-	
+
 		--set the variables
 			if (session ~= nil and session:ready()) then
 				session:setVariable("missed_call", "true");
@@ -569,7 +567,6 @@
 								if (storage_type == "base64") then
 									table.insert(sql, "message_base64, ");
 								end
-								table.insert(sql, "call_uuid, ");
 								table.insert(sql, "message_length ");
 								--table.insert(sql, "message_status, ");
 								--table.insert(sql, "message_priority, ");
@@ -585,7 +582,6 @@
 								if (storage_type == "base64") then
 									table.insert(sql, ":message_base64, ");
 								end
-								table.insert(sql, ":call_uuid, ");
 								table.insert(sql, ":message_length ");
 								--table.insert(sql, ":message_status, ");
 								--table.insert(sql, ":message_priority ");
@@ -599,7 +595,6 @@
 									caller_id_name = caller_id_name;
 									caller_id_number = caller_id_number;
 									message_base64 = message_base64;
-									call_uuid = call_uuid;
 									message_length = message_length;
 									--message_status = message_status;
 									--message_priority = message_priority;
