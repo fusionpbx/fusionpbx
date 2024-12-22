@@ -92,7 +92,7 @@
 
 		//get the schema
 			$x = 0;
-			include "app/contacts/app_config.php";
+			include "core/contacts/app_config.php";
 			$i = 0;
 			foreach ($apps[0]['db'] as $table) {
 				//get the table name and parent name
@@ -149,7 +149,6 @@
 			}
 
 		//create token
-			$object = new token;
 			$token = $object->create($_SERVER['PHP_SELF']);
 
 		//include header
