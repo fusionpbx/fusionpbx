@@ -1179,7 +1179,7 @@
 
 		<!-- Country Code (for global version only) -->
 		<!-- "UNITEDARABEMIRATES","ALBANIA","ARMENIA","NETHERLANDSANTILLES","ARGENTINA","AUSTRALIA","ARUBA","AZERBAIJAN","BOSNIA","BARBADOS","BANGLADESH","BELGIUM","BULGARIA","BAHRAIN","BURUNDI","BENIN","BERMUDA","BRUNEI","BOLIVIA","BRAZIL","BAHAMAS","BOTSWANA","BELARUS","BELIZE","CANADA","CONGO","SWITZERLAND","CHILE","CHINA","COLOMBIA","COSTA","CYPRUS","CZECH","GERMANY","DENMARK","DOMINICAN","ALGERIA","ECUADOR","ESTONIA","EGYPT","SPAIN","ETHIOPIA","FINLAND","FIJI","FRANCE","GERNADA","GEORGIA","GHANA","GIBRALTAR","GREENLAND","GAMBIA","GUINEA","GUADELOUPE","GREECE","GUATEMALA","GUAM","GUYANA","HONGKONG","DONDURAS","CROATIA","HAITI","HUNGARY","INDONESIA","IRELAND","ISRAEL","INDIA","ICELAND","ITALY","JERSEY","JAMAICA","JORDAN","JAPAN","KENYA","KYRGYZSTAN","CAMBODIA","SOUTHKOREA","KUWAIT","CAYMAN","KAZAKHSTAN","LEBANON","LIECHTENSTEIN","SRILANKA","LIBERIA","LITHUANIA","LUXEMBOURG","LATVIA","MOROCOO","MONACO","MONTENEGRO","MACEDONIA","MALI","MONGOLIA","MACAU","MALT","MEXICO","MALAYSIA","NIGER","NIGERIA","NICARAGUA","NETHERLANDS","NEPAL","NEWZEALNAD","OMAN","PANAMA","PERU","PAPUA","PHILIPPINES","PAKISTAN","POLAND","PUERTORICO","PORTUGAL","PARAGUAY","QATAR","ROMANIA","SERBIA","RUSSIA","RWANDA","SAUDIARABIA","SWEDEN","SINGAPORE","SLOVAKIA","SLOVENIA","SIERRALEONE","TOGO","THAILAND","TURKMENISTAN","TUNISIA","TURKEY","TRINIDAD","TAIWAN","UKRAINE","UGANDA","UNITEDKINGDOM","UNITEDSTATES","URUGUAY","VENEZUELA","VERGINISLANDS","VIETNAM","YEMEN","SOUTHAFRICA","ZAMBIA","ZIMBABWE" -->
-		<item name="network.wifi.countryCode.public">UNITEDSTATES</item>
+		<item name="network.wifi.countrycode.public">UNITEDSTATES</item>
 
 
 		<!-- ############################################################################## -->
@@ -1335,7 +1335,7 @@
 			{/if}
 			{$row=$keys.line[$line]}
 			{$row.device_key_id = $row.device_key_id + 10}
-			<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$row.device_key_type]}</item>
+			<item name="pks.mpk.{$row.device_key_id}.keymode">{$key_types[$row.device_key_type]}</item>
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1352,7 +1352,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDS OpenDoor (27)-->
-		<!-- <item name="pks.mpk.12.keyMode">None</item> --> -->
+		<!-- <item name="pks.mpk.12.keymode">None</item> --> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1369,7 +1369,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.13.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.13.keymode">None</item> -->
 
 		<!-- # Account -->
 	    <!-- # Account1, Account2 -->
@@ -1386,7 +1386,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.14.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.14.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1403,7 +1403,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
         <!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.15.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.15.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1420,7 +1420,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.16.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.16.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1446,7 +1446,7 @@
 				{$keys.memory[$line] = ["device_key_id" => $line, "device_key_type" => "", "device_key_line" => "", "device_key_label" => "", "device_key_value" => ""]}
 			{/if}
 			{$row=$keys.memory[$line]}
-			<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$row.device_key_type]}</item>
+			<item name="pks.mpk.{$row.device_key_id}.keymode">{$key_types[$row.device_key_type]}</item>
 
 			<!-- # Account. Account1, Account2, Account3, Account4 -->
 			<item name="pks.mpk.{$row.device_key_id}.account">{if !empty($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
@@ -1459,7 +1459,7 @@
 			<item name="pks.mpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
 		{/for}
 
-		<!-- <item name="pks.mpk.1.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.1.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1476,7 +1476,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.2.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.2.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1493,7 +1493,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.3.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.3.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1510,7 +1510,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.4.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.4.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1527,7 +1527,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.5.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.5.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1544,7 +1544,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.6.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.6.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1561,7 +1561,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.7.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.7.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1578,7 +1578,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.8.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.8.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1595,7 +1595,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.9.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.9.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1612,7 +1612,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.10.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.10.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1650,11 +1650,11 @@
 		<!-- # NTP Update Interval -->
 		<!-- # String -->
 		<!-- # Number: 5 - 1440, Default is 1440  -->
-		<item name="dateTime.ntp.updateInterval">1440</item>
+		<item name="dateTime.ntp.updateinterval">1440</item>
 
 		<!-- # Allow DHCP Option 42 to override NTP server. Yes or No -->
 		<!-- # When set to Yes, it will override the configured NTP server -->
-		<item name="dateTime.override.dhcp.allowOption42">Yes</item>
+		<item name="dateTime.override.dhcp.allowoption42">Yes</item>
 		
 		<!-- # Time Zone -->
 
@@ -1732,9 +1732,9 @@
 		
 		<!-- # Allow DHCP Option 2 to Override Time Zone Setting. Yes or No -->
 		{if isset($grandstream_dhcp_time_zone) && $grandstream_dhcp_time_zone == 0}
-		<item name="dateTime.override.dhcp.allowOption2">No</item>
+		<item name="dateTime.override.dhcp.allowoption2">No</item>
 		{else}
-		<item name="dateTime.override.dhcp.allowOption2">Yes</item>
+		<item name="dateTime.override.dhcp.allowoption2">Yes</item>
 		{/if}
 
 		<!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
@@ -1764,25 +1764,25 @@
 			{if $grandstream_web_access_mode == 2}{$wam='Disabled'}{/if}
 			{if $grandstream_web_access_mode == 3}{$wam='Both'}{/if}
 		{/if}
-		<item name="security.webAccessMode">$wam}</item>
+		<item name="security.webaccessMode">$wam}</item>
 
 		<!-- # Web Access Control.  None, Whitelist, or Blacklist -->
-		<item name="security.webAccessControl">None</item>
+		<item name="security.webaccessControl">None</item>
 
 		<!-- # Web Session Timeout(in minutes) -->
 		<!-- # Number: 2 - 60. Default is 10 -->
-		<item name="security.webAccess.session.timeout">20</item>
+		<item name="security.webaccess.session.timeout">20</item>
 
 		<!-- # Validate Server Certificates. Yes or No -->
 		<item name="security.validate.serverCertificate">No</item>
 
 		<!-- # Web/Keypad/Restrict mode Lockout Duration (0-60 minutes). Default is 5 -->
 		<!-- # Number: 0-60 -->
-		<item name="security.webKeypadRestrictModeLockoutDuration">5</item>
+		<item name="security.webkeypadrestrictmodelockoutduration">5</item>
 
 		<!-- # Web Access Attempt Limit -->
 		<!-- # Number: 1 - 10. Default is 5 -->
-		<item name="security.webAccess.attemptLimit">10</item>
+		<item name="security.webaccess.attemptlimit">10</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Security Settings / User Info Management -->
@@ -1809,18 +1809,18 @@
 
 		<!-- Enable Basic Settings in IVR -->
 		<!-- Yes, No -->
-		<item name="ivr.basicSettings.enable">Yes</item>	
+		<item name="ivr.basicsettings.enable">Yes</item>	
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Security Settings / Client Certificate -->
 		<!-- ############################################################################## -->
 		<!-- Minimum TLS Version -->
 		<!-- TLS_1_0, TLS_1_1, TLS_1_2 -->
-		<item name="security.minimum.TLS.version">TLS_1_0</item>
+		<item name="security.minimum.tls.version">TLS_1_0</item>
 		
 		<!-- Maximum TLS Version -->
 		<!-- UNLIMITED, TLS_1_0, TLS_1_1, TLS_1_2 -->
-		<item name="security.maximum.TLS.version">UNLIMITED</item>
+		<item name="security.maximum.tls.version">UNLIMITED</item>
 
 		<!-- Enable/Disable Weak Cipher Suites -->
 		<!-- Number: 0 - 5. Default is 0 -->
@@ -1842,32 +1842,32 @@
 		<!-- ##  System Settings/Security Settings /Trusted CA Certificates   ## -->
 		<!-- ############################################################################## -->
 		<!-- Trusted CA Certificates 1 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.1"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.1"></item> -->
 
 		<!-- Trusted CA Certificates 2 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.2"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.2"></item> -->
 
 		<!-- Trusted CA Certificates 3 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.3"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.3"></item> -->
 
 		<!-- Trusted CA Certificates 4 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.4"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.4"></item> -->
 
 		<!-- Trusted CA Certificates 5 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.5"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.5"></item> -->
 
 		<!-- Trusted CA Certificates 6 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.6"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.6"></item> -->
 
 		<!-- # Load CA Certificates. Default Certificates, Custom Certificates, All Certificates-->
-		<!-- <item name="trustedCACertificates.load">Default Certificates</item> -->
+		<!-- <item name="trustedcacertificates.load">Default Certificates</item> -->
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Preferences /Display Control   ## -->
 		<!-- ############################################################################## -->
 		<!-- # New Message LED Indicator -->
 		<!-- blinking, off, solid -->
-		<item name="ledControl.mwi">blinking</item>
+		<item name="ledcontrol.mwi">blinking</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Preferences /Audio Control   ## -->
@@ -1890,11 +1890,11 @@
 
 		<!-- # Handset TX gain(dB)-->
 		<!-- 0(0), -6(1), 6(2),-5(3), -4(4), -3(5), -2(6), -1(7), 1(8), 2(9), 3(10), 4(11), 5(12). Default is 0 -->
-		<item name="audio.handset.txGain">0</item>
+		<item name="audio.handset.txgain">0</item>
 
 		<!-- # Enable HAC -->
 		<!-- Yes, No -->
-		<item name="audio.handset.enableHAC">No</item>
+		<item name="audio.handset.enablehac">No</item>
 
 		<!-- # Enable Bootup Tone -->
 		<!-- Yes, No -->
@@ -1905,11 +1905,11 @@
 		<!-- ############################################################################## -->
 		<!-- # LED Brightness : Active -->
 		<!-- # Number: 0 - 10. Default is 10 -->
-		<item name="ledControl.brightness.active">10</item>
+		<item name="ledcontrol.brightness.active">10</item>
 
 		<!-- # LED Brightness : Idle -->
 		<!-- # Number: 0 - 10. Default is 0 -->
-		<item name="ledControl.brightness.idle">0</item>
+		<item name="ledcontrol.brightness.idle">0</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Preferences /TR-069   ## -->
@@ -1929,10 +1929,10 @@
 
 		<!-- Periodic Inform Enable -->
 		<!-- Yes, No -->
-		<item name="tr069.periodicInform">Yes</item>
+		<item name="tr069.periodicinform">Yes</item>
 
 		<!-- Periodic Inform Interval (s) -->
-		<item name="tr069.periodicInformInterval">86400</item>
+		<item name="tr069.periodicinforminterval">86400</item>
 
 		<!-- Connection Request Username -->
 		<item name="tr069.connectionRequestUsername">{$mac|replace:'-':''|upper}</item>
@@ -2008,20 +2008,20 @@
 		<item name="provisioning.config.password">{$http_auth_password}</item>
 
 		<!-- # Always Authenticate Before Challenge. Yes or No -->
-		<item name="provisioning.alwaysAuthenticateBeforeChallenge">No</item>
+		<item name="provisioning.alwaysauthenticatebeforechallenge">No</item>
 
 		<!-- Config File Prefix -->
-		<item name="provisioning.config.filePrefix"></item>
+		<item name="provisioning.config.fileprefix"></item>
 		
 		<!-- Config File Postfix -->
-		<item name="provisioning.config.filePostfix"></item>
+		<item name="provisioning.config.filepostfix"></item>
 
 		<!-- Authenticate Conf File -->
 		<!-- Yes, No -->
 		<item name="provisioning.config.authenticateFile">No</item>
 
 		<!-- XML Config File Password -->
-		<item name="provisioning.config.filePassword"></item>
+		<item name="provisioning.config.filepassword"></item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Provision  ## -->
@@ -2036,7 +2036,7 @@
 		
 		<!-- Starting - Ending Hour of the Day (0-23) -->
 		<item name="provisioning.auto.hour">1</item>
-		<item name="provisioning.auto.endHour"></item>
+		<item name="provisioning.auto.endhour"></item>
 
 		<!-- Day of the Week -->
 		<!-- 0, 1 (default), 2, 3, 4, 5, 6 -->
@@ -2048,26 +2048,26 @@
 
 		<!-- # Firmware Upgrade and Provisioning -->
 		<!-- AlwaysCheck (default), CheckWhenChange, SkipCheck -->
-		<item name="provisioning.firmware.checkCondition">AlwaysCheck</item>
+		<item name="provisioning.firmware.checkcondition">AlwaysCheck</item>
 
 		<!-- # Allow DHCP Option 43 and Option 66 to override server. No, Yes, Prefer, fallback when failed. Default is No -->
 		<!-- # When set to Yes, it will override the configured provision path and method -->
 		<!-- Allow DHCP Option 43 and Option 66 to Override Server -->
 		<!-- No, Yes, Fallback-->
 		{if isset($grandstream_dhcp_option_override)}
-			{if $grandstream_dhcp_option_override == 0}<item name="provisioning.override.dhcp.allowCommonOptions">No</item>{/if}
-			{if $grandstream_dhcp_option_override == 1}<item name="provisioning.override.dhcp.allowCommonOptions">Yes</item>{/if}
-			{if $grandstream_dhcp_option_override == 2}<item name="provisioning.override.dhcp.allowCommonOptions">Fallback</item>{/if}
+			{if $grandstream_dhcp_option_override == 0}<item name="provisioning.override.dhcp.allowcommonoptions">No</item>{/if}
+			{if $grandstream_dhcp_option_override == 1}<item name="provisioning.override.dhcp.allowcommonoptions">Yes</item>{/if}
+			{if $grandstream_dhcp_option_override == 2}<item name="provisioning.override.dhcp.allowcommonoptions">Fallback</item>{/if}
 		{else}
-		<item name="provisioning.override.dhcp.allowCommonOptions">Yes</item>
+		<item name="provisioning.override.dhcp.allowcommonoptions">Yes</item>
 		{/if}
 
 		<!-- # Allow DHCP Option 120 to Override SIP Server -->
 		<!-- # No or Yes. -->
 		{if isset($grandstream_dhcp_option_override_sip_server) && $grandstream_dhcp_option_override_sip_server == 1}
-		<item name="sip.override.dhcp.allowOption120">Yes</item>
+		<item name="sip.override.dhcp.allowoption120">Yes</item>
 		{else}
-		<item name="sip.override.dhcp.allowOption120">No</item>
+		<item name="sip.override.dhcp.allowoption120">No</item>
 		{/if}
 
 		<!-- # Additional Override DHCP Option.  None, Option 150, Option 160.  -->
@@ -2080,19 +2080,19 @@
 		{/if}
 
 		<!-- # Download and Process ALL Available Config Files. No or Yes -->
-		<item name="provisioning.config.processAll.enable">No</item>
+		<item name="provisioning.config.processall.enable">No</item>
 				
 		<!-- # User Protection. No or Yes -->
-		<item name="provisioning.userProtect.enable">No</item>
+		<item name="provisioning.userprotect.enable">No</item>
 		
 		<!-- # 3CX Auto Provision. No or Yes. -->
-		<item name="provisioning.3cxAutoProvision">No</item>
+		<item name="provisioning.3cxautoprovision">No</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Advanced Settings  ## -->
 		<!-- ############################################################################## -->
 		<!-- # Validate Hostname in Certificate. No, Yes. -->
-		<item name="provisioning.validateHostnameInCertificate">No</item>
+		<item name="provisioning.validatehostnameincertificate">No</item>
 
 		<!-- # Enable SIP NOTIFY Authentication. No or Yes -->
 		<!-- Yes, No -->
@@ -2120,13 +2120,13 @@
 		<item name="maintain.syslog.level">{$sl}</item>
 
 		<!-- Syslog Keyword Filter -->
-		<item name="maintain.syslog.keywordFiltering"></item>
+		<item name="maintain.syslog.keywordfiltering"></item>
 
 		<!-- # Send SIP Log. No - Do not send SIP log in Syslog, Yes - Send SIP log in Syslog if configured and set to DEBUG level. -->
 		{if isset($grandstream_send_sip_log) && $grandstream_send_sip_log==1}
-		<item name="maintain.syslog.sendSipLog">Yes</item>
+		<item name="maintain.syslog.sendsiplog">Yes</item>
 		{else}
-		<item name="maintain.syslog.sendSipLog">No</item>
+		<item name="maintain.syslog.sendsiplog">No</item>
 		{/if}
 
 		<!-- ############################################################################## -->
@@ -2134,99 +2134,99 @@
 		<!-- ############################################################################## -->
 		<!-- # Setup Completed.  -->
 		<!-- # String -->
-		<item name="ons.actionUrl.setupCompleted"></item>
+		<item name="ons.actionurl.setupcompleted"></item>
 
 		<!-- # Registered. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.registered"></item>
+		<item name="ons.actionurl.registered"></item>
 
 		<!-- # Unregistered. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.unregistered"></item>
+		<item name="ons.actionurl.unregistered"></item>
 
 		<!-- # Register failed. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.registerFailed"></item>
+		<item name="ons.actionurl.registerfailed"></item>
 
 		<!-- # Idle to Busy. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.idleToBusy"></item>
+		<item name="ons.actionurl.idletobusy"></item>
 
 		<!-- # Busy to Idle. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.busyToIdle"></item>
+		<item name="ons.actionurl.busytoidle"></item>
 
 		<!-- # Auto Provision Completed. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.autopFinish"></item>
+		<item name="ons.actionurl.autopfinish"></item>
 
 		<!-- # IP Change. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.IPChanged"></item>
+		<item name="ons.actionurl.ipchanged"></item>
 
 		<!-- # Off Hook. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.offHook"></item>
+		<item name="ons.actionurl.offhook"></item>
 
 		<!-- # On Hook. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.onHook"></item>
+		<item name="ons.actionurl.onhook"></item>
 
 		<!-- # Incoming Call. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.incomingCall"></item>
+		<item name="ons.actionurl.incomingcall"></item>
 
 		<!-- # Outgoing Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.outgoingCall"></item>
+		<item name="ons.actionurl.outgoingcall"></item>
 
 		<!-- # Missed Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.missedCall"></item>
+		<item name="ons.actionurl.missedcall"></item>
 
 		<!-- # Established Call -->
 		<!-- # String  -->
-		<item name="ons.actionUrl.establishedCall"></item>
+		<item name="ons.actionurl.establishedcall"></item>
 
 		<!-- # Terminated Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.terminatedCall"></item>
+		<item name="ons.actionurl.terminatedcall"></item>
 
 		<!-- # Answered Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.answerNewInCall"></item>
+		<item name="ons.actionurl.answernewincall"></item>
 
 		<!-- # Blind Transfer -->
 		<!-- # String -->
-		<item name="ons.actionUrl.blindTransfer"></item>
+		<item name="ons.actionurl.blindtransfer"></item>
 
 		<!-- # Attended Transfer -->
 		<!-- # String -->
-		<item name="ons.actionUrl.attendedTransfer"></item>
+		<item name="ons.actionurl.attendedtransfer"></item>
 
 		<!-- # Transfer Completed -->
 		<!-- # String -->
-		<item name="ons.actionUrl.transferFinished"></item>
+		<item name="ons.actionurl.transferfinished"></item>
 
 		<!-- # Transfer failed -->
 		<!-- # String -->
-		<item name="ons.actionUrl.transferFailed"></item>
+		<item name="ons.actionurl.transferfailed"></item>
 
 		<!-- # Hold Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.holdCall"></item>
+		<item name="ons.actionurl.holdcall"></item>
 
 		<!-- # UnHold Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.unholdCall"></item>
+		<item name="ons.actionurl.unholdcall"></item>
 
 		<!-- # Mute Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.mute"></item>
+		<item name="ons.actionurl.mute"></item>
 
 		<!-- # Unmute Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.unMute"></item>
+		<item name="ons.actionurl.unmute"></item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Application/Hotel Service ## -->
@@ -2237,7 +2237,7 @@
 
 		<!-- # Hotel Address -->
 		<!-- # String -->
-		<item name="hotel.contactAddress"></item>
+		<item name="hotel.contactaddress"></item>
 
 		<!-- # Hotel Phone Number -->
 		<!-- # String -->
@@ -2261,7 +2261,7 @@
 		<item name="e911.held.protocol">HTTP</item>
 		
 		<!-- # HELD Protocol. 0, 30-1440 -->
-		<item name="e911.held.syncInterval">0</item>
+		<item name="e911.held.syncinterval">0</item>
 		
 		<!-- # Location Server -->
 		<!-- # String -->
