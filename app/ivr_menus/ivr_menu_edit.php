@@ -873,6 +873,16 @@
 						unset($selected);
 					}
 				}
+				else if ($key == 'phrases') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '';
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
 				else {
 					unset($selected);
 				}
@@ -940,6 +950,16 @@
 					if (!empty($instance_value) && $instance_value == $row["value"]) {
 						$selected = "selected='selected'";
 						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'phrases') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '';
 						$found = true;
 					}
 					else {
