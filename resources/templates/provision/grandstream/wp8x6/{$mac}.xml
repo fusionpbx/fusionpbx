@@ -334,7 +334,7 @@
 
 		<!-- Inbound DTMF Volume -->
 		<!-- Number: 0 - 32 -->
-		<item name="account.{$line}.dtmf.InAudioVolume"</item>
+		<item name="account.{$line}.dtmf.InAudioVolume"></item>
 
 		<!-- Enable Audio RED with FEC -->
 		<!-- Yes, No -->
