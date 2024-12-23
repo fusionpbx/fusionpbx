@@ -1161,10 +1161,10 @@
 		<item name="Action URI Support">Yes</item>
 
 		<!-- Action URI Allowed IP List  -->
-		<item name="remoteControl.allowList"></item>
+		<item name="remotecontrol.allowList"></item>
 
 		<!-- # CSTA Control. Yes or No -->
-		<item name="remoteControl.csta.enable">No</item>
+		<item name="remotecontrol.csta.enable">No</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Network Settings/Wi-Fi Settings -->
