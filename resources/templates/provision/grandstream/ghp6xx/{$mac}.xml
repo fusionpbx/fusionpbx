@@ -86,14 +86,14 @@
 			{if $grandstream_dns_mode == 2}{$dnsmode='NaptrOrSrv'}{/if}
 			{if $grandstream_dns_mode == 3}{$dnsmode='UseConfiguredIP'}{/if}
 		{/if}
-		<item name="account.{$line}.network.dnsMode">{$dnsmode}</item>
+		<item name="account.{$line}.network.dnsmode">{$dnsmode}</item>
 
 		<!-- NAT Traversal -->
 		<!-- No, STUN -->
 		{if isset($grandstream_nat_traversal) && $grandstream_nat_traversal == 1}
-			<item name="account.{$line}.network.natTraversal">STUN</item>		
+			<item name="account.{$line}.network.nattraversal">STUN</item>		
 		{else}
-			<item name="account.{$line}.network.natTraversal">No</item>		
+			<item name="account.{$line}.network.nattraversal">No</item>		
 		{/if}
 		
 
