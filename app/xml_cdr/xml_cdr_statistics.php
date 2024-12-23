@@ -329,7 +329,7 @@
 		}
 		echo "	<td>".escape($row['volume'])."&nbsp;</td>\n";
 		echo "	<td>".escape(round($row['minutes'] ?? 0, 2))."&nbsp;</td>\n";
-		echo "	<td>".escape(round($row['avg_min'] ?? 0, 2))."&nbsp;/&nbsp;".escape(round($row['cpm_ans'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['avg_min'] ?? 0, 2))."&nbsp;/&nbsp;".escape(round($row['cpm_answered'] ?? 0, 2))."&nbsp;</td>\n";
 		echo "	<td class='center'><a href=\"xml_cdr.php?call_result=missed&direction=".$direction."&start_epoch=".escape($row['start_epoch'] ?? '')."&stop_epoch=".escape($row['stop_epoch'] ?? '')."\">".escape($row['missed'] ?? '')."</a>&nbsp;</td>\n";
 		echo "	<td>".escape(round($row['asr'] ?? 0, 2))."&nbsp;</td>\n";
 		echo "	<td>".escape(round($row['aloc'] ?? 0, 2))."&nbsp;</td>\n";
