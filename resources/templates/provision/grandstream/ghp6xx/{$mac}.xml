@@ -739,7 +739,7 @@
 		
 		<!-- Delay Registration. Default is 0. -->
 		<!-- Number: 0 - 90 -->
-		<item name="sip.delayRegistration">0</item>
+		<item name="sip.delayregistration">0</item>
 		
 		<!-- Enable Outbound Notification. No or Yes. -->
 		<item name="ons.enable">Yes</item>
@@ -1008,7 +1008,7 @@
 		<item name="network.dhcp.hostname">phone-{$mac|replace:'-':''}</item>
 		
 		<!-- Vendor Class ID(Option 60) -->
-		<!-- <item name="network.dhcp.vendorID"></item> -->
+		<!-- <item name="network.dhcp.vendorid"></item> -->
 		
 		<!-- ########################################## -->
 		<!-- # Statically Configured -->
@@ -1630,31 +1630,31 @@
 		<!-- # Date and Time -->
 		<!-- # NTP Server -->
 		{if isset($ntp_server_primary)}
-		<item name="dateTime.ntp.server.1">{$ntp_server_primary}</item>
+		<item name="datetime.ntp.server.1">{$ntp_server_primary}</item>
 		{else}
-		<item name="dateTime.ntp.server.1">pool.ntp.org</item>
+		<item name="datetime.ntp.server.1">pool.ntp.org</item>
 		{/if}
 
 		<!-- # Secondary NTP Server -->
 		<!-- # String -->
 		{if isset($ntp_server_secondary)}
-		<item name="dateTime.ntp.server.2">{$ntp_server_secondary}</item>
+		<item name="datetime.ntp.server.2">{$ntp_server_secondary}</item>
 		{else}
-		<item name="dateTime.ntp.server.2"></item>
+		<item name="datetime.ntp.server.2"></item>
 		{/if}
 
 		<!-- # Enable Authenticated NTP -->
 		<!-- # Yes, No -->
-		<item name="dateTime.ntp.enableAuth">No</item>	
+		<item name="datetime.ntp.enableauth">No</item>	
 
 		<!-- # NTP Update Interval -->
 		<!-- # String -->
 		<!-- # Number: 5 - 1440, Default is 1440  -->
-		<item name="dateTime.ntp.updateinterval">1440</item>
+		<item name="datetime.ntp.updateinterval">1440</item>
 
 		<!-- # Allow DHCP Option 42 to override NTP server. Yes or No -->
 		<!-- # When set to Yes, it will override the configured NTP server -->
-		<item name="dateTime.override.dhcp.allowoption42">Yes</item>
+		<item name="datetime.override.dhcp.allowoption42">Yes</item>
 		
 		<!-- # Time Zone -->
 
@@ -1725,22 +1725,22 @@
 		<!-- # String -->
 		<!-- # Mandatory -->
 		{if isset($grandstream_time_zone) }
-		<item name="dateTime.timezone">{$grandstream_time_zone}</item>
+		<item name="datetime.timezone">{$grandstream_time_zone}</item>
 		{else}
-		<item name="dateTime.timezone">auto</item>
+		<item name="datetime.timezone">auto</item>
 		{/if}
 		
 		<!-- # Allow DHCP Option 2 to Override Time Zone Setting. Yes or No -->
 		{if isset($grandstream_dhcp_time_zone) && $grandstream_dhcp_time_zone == 0}
-		<item name="dateTime.override.dhcp.allowoption2">No</item>
+		<item name="datetime.override.dhcp.allowoption2">No</item>
 		{else}
-		<item name="dateTime.override.dhcp.allowoption2">Yes</item>
+		<item name="datetime.override.dhcp.allowoption2">Yes</item>
 		{/if}
 
 		<!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="dateTime.timezone.custom">MTZ+6MDT+5,M4.1.0,M11.1.0</item>
+		<item name="datetime.timezone.custom">MTZ+6MDT+5,M4.1.0,M11.1.0</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Security Settings /Web/SSH Access -->
@@ -1764,17 +1764,17 @@
 			{if $grandstream_web_access_mode == 2}{$wam='Disabled'}{/if}
 			{if $grandstream_web_access_mode == 3}{$wam='Both'}{/if}
 		{/if}
-		<item name="security.webaccessMode">$wam}</item>
+		<item name="security.webaccessmode">$wam}</item>
 
 		<!-- # Web Access Control.  None, Whitelist, or Blacklist -->
-		<item name="security.webaccessControl">None</item>
+		<item name="security.webaccesscontrol">None</item>
 
 		<!-- # Web Session Timeout(in minutes) -->
 		<!-- # Number: 2 - 60. Default is 10 -->
 		<item name="security.webaccess.session.timeout">20</item>
 
 		<!-- # Validate Server Certificates. Yes or No -->
-		<item name="security.validate.serverCertificate">No</item>
+		<item name="security.validate.servercertificate">No</item>
 
 		<!-- # Web/Keypad/Restrict mode Lockout Duration (0-60 minutes). Default is 5 -->
 		<!-- # Number: 0-60 -->
@@ -1935,23 +1935,23 @@
 		<item name="tr069.periodicinforminterval">86400</item>
 
 		<!-- Connection Request Username -->
-		<item name="tr069.connectionRequestUsername">{$mac|replace:'-':''|upper}</item>
+		<item name="tr069.connectionrequestusername">{$mac|replace:'-':''|upper}</item>
 
 		<!-- Connection Request Password -->
-		<item name="tr069.connectionRequestPassword">{$mac|replace:'-':''|upper}</item>
+		<item name="tr069.connectionrequestpassword">{$mac|replace:'-':''|upper}</item>
 
 		<!-- Connection Request Port -->
-		<item name="tr069.connectionRequestPort">7547</item>
+		<item name="tr069.connectionrequestport">7547</item>
 
 		<!-- CPE SSL Certificate -->
 		<item name="tr069.ssl.certificate"></item>
 
 		<!-- CPE SSL Private Key -->
-		<item name="tr069.ssl.privateKey"></item>
+		<item name="tr069.ssl.privatekey"></item>
 
 		<!-- Start TR-069 at Random Time -->
 		<!-- Yes, No -->
-		<item name="tr069.randomStart.enable">No</item>
+		<item name="tr069.randomstart.enable">No</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Firmware  ## -->
@@ -1966,11 +1966,11 @@
 		
 		<!-- Firmware Server Path -->
 		{if isset($grandstream_firmware_path) && isset($firmware_version)}
-		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>
+		<item name="provisioning.firmware.serverpath">{$grandstream_firmware_path}/{$firmware_version}</item>
 		{elseif isset($grandstream_firmware_path)}
-		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
+		<item name="provisioning.firmware.serverpath">{$grandstream_firmware_path}</item>
 		{else}
-		<item name="provisioning.firmware.serverPath">{$domain_name}{$project_path}/app/provision/resources/firmware/</item>
+		<item name="provisioning.firmware.serverpath">{$domain_name}{$project_path}/app/provision/resources/firmware/</item>
 		{/if}
 		
 		<!-- Firmware Server User Name -->
@@ -1980,10 +1980,10 @@
 		<item name="provisioning.firmware.password"></item>
 		
 		<!-- Firmware File Prefix -->
-		<item name="provisioning.firmware.filePrefix"></item>
+		<item name="provisioning.firmware.fileprefix"></item>
 		
 		<!-- Firmware File Postfix -->
-		<item name="provisioning.firmware.filePostfix"></item>
+		<item name="provisioning.firmware.filepostfix"></item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Config File  ## -->
@@ -1994,11 +1994,11 @@
 		
 		<!-- Config Server Path -->
 		{if $grandstream_config_server_path=="none"}
-		<item name="provisioning.config.serverPath"></item>
+		<item name="provisioning.config.serverpath"></item>
 		{elseif isset($grandstream_config_server_path)}
-		<item name="provisioning.config.serverPath">{$grandstream_config_server_path}</item>
+		<item name="provisioning.config.serverpath">{$grandstream_config_server_path}</item>
 		{elseif isset($domain_name)}
-		<item name="provisioning.config.serverPath">{$domain_name}{$project_path}/app/provision</item>
+		<item name="provisioning.config.serverpath">{$domain_name}{$project_path}/app/provision</item>
 		{/if}
 		
 		<!-- Config Server User Name -->
@@ -2018,7 +2018,7 @@
 
 		<!-- Authenticate Conf File -->
 		<!-- Yes, No -->
-		<item name="provisioning.config.authenticateFile">No</item>
+		<item name="provisioning.config.authenticatefile">No</item>
 
 		<!-- XML Config File Password -->
 		<item name="provisioning.config.filepassword"></item>
@@ -2044,7 +2044,7 @@
 		<item name="provisioning.auto.day">1</item>
 
 		<!-- # Randomized Automatic Upgrade. No or Yes -->
-		<item name="provisioning.auto.randomTime.enable">No</item>
+		<item name="provisioning.auto.randomtime.enable">No</item>
 
 		<!-- # Firmware Upgrade and Provisioning -->
 		<!-- AlwaysCheck (default), CheckWhenChange, SkipCheck -->
@@ -2072,11 +2072,11 @@
 
 		<!-- # Additional Override DHCP Option.  None, Option 150, Option 160.  -->
 		{if isset($grandstream_dhcp_option_additional_override)}
-			{if $grandstream_dhcp_option_additional_override == 0}<item name="provisioning.override.dhcp.allowCustomOption">None</item>{/if}
-			{if $grandstream_dhcp_option_additional_override == 1}<item name="provisioning.override.dhcp.allowCustomOption">Option 150</item>{/if}
-			{if $grandstream_dhcp_option_additional_override == 2}<item name="provisioning.override.dhcp.allowCustomOption">Option 160</item>{/if}
+			{if $grandstream_dhcp_option_additional_override == 0}<item name="provisioning.override.dhcp.allowcustomoption">None</item>{/if}
+			{if $grandstream_dhcp_option_additional_override == 1}<item name="provisioning.override.dhcp.allowcustomoption">Option 150</item>{/if}
+			{if $grandstream_dhcp_option_additional_override == 2}<item name="provisioning.override.dhcp.allowcustomoption">Option 160</item>{/if}
 		{else}
-		<item name="provisioning.override.dhcp.allowCustomOption"></item>
+		<item name="provisioning.override.dhcp.allowcustomoption"></item>
 		{/if}
 
 		<!-- # Download and Process ALL Available Config Files. No or Yes -->
@@ -2382,7 +2382,7 @@
 		<item name="e911.emergency">911</item>
 		
 		<!-- # Geolocation-Routing Header. Yes or No -->
-		<item name="e911.header.geolocationRouting">No</item>
+		<item name="e911.header.geolocationrouting">No</item>
 		
 		<!-- # Priority Header. Yes or No -->
 		<item name="e911.header.priority">No</item>
