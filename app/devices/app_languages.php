@@ -3198,6 +3198,10 @@ $text['label-device_location']['zh-cn'] = "地点";
 $text['label-device_location']['ja-jp'] = "位置";
 $text['label-device_location']['ko-kr'] = "위치";
 
+$text['label-device_emergency_cid']['en-us'] = 'Emergency Caller ID';
+
+$text['description-device_emergency_cid']['en-us'] = 'The Emergency Caller ID to send when calling from a hotdesk device';
+
 $text['label-device_key_vendor']['en-us'] = "Vendor";
 $text['label-device_key_vendor']['en-gb'] = "Vendor";
 $text['label-device_key_vendor']['ar-eg'] = "البائع";
