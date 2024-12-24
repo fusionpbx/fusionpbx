@@ -2208,7 +2208,7 @@
 		<!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="dateTime.timezone.custom">MTZ+6MDT+5,M4.1.0,M11.1.0</item>
+		<item name="dateTime.timezone.custom"></item>
 
 		<!-- # Date Display Format -->
 		<!-- # 0: yyyy-mm-dd      eg. 2011-10-31 -->
@@ -2216,11 +2216,11 @@
 		<!-- # 2: dd-mm-yyyy      eg. 31-10-2011 -->
 		<!-- # 3: dddd, MMMM dd   eg. Monday, October 31 -->
 		<!-- # 4: MMMM dd, dddd   eg. October 31, Monday -->
-		<item name="dateTime.format.date">yyyy-mm-dd</item>
+		<item name="dateTime.format.date"></item>
 
 		<!-- # Time Display Format. 12 Hour, 24 Hour -->
 		<!-- 12Hour, 24Hour -->
-		<item name="dateTime.format.time">12Hour</item>
+		<item name="dateTime.format.time"></item>
 
 		<!-- # Display Language. Default is Auto -->
 		<!-- # ar - Arabic, cz - Czech, de - Deutsh -->
@@ -2561,7 +2561,7 @@
 
 		<!-- # Enable TR-069 -->
 		<!-- Yes, No -->
-		<item name="tr069.enable"></item>
+		<item name="tr069.enable">{$grandstream_tr069_enable}</item>
 
 		<!-- ACS URL -->
 		<item name="tr069.url"></item>
