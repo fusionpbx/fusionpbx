@@ -2564,7 +2564,7 @@
 		<item name="tr069.enable">{$grandstream_tr069_enable}</item>
 
 		<!-- ACS URL -->
-		<item name="tr069.url"></item>
+		<item name="tr069.url">{$grandstream_tr069_url}</item>
 
 		<!-- TR-069 Username -->
 		<item name="tr069.username"></item>
@@ -2577,7 +2577,7 @@
 		<item name="tr069.periodicInform"></item>
 
 		<!-- Periodic Inform Interval (s) -->
-		<item name="tr069.periodicInformInterval"></item>
+		<item name="tr069.periodicInformInterval">{$grandstream_tr069_periodic_inform_enable}</item>
 
 		<!-- Connection Request Username -->
 		<item name="tr069.connectionRequestUsername"></item>
