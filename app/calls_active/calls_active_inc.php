@@ -37,6 +37,21 @@
 		exit;
 	}
 
+//get the session settings
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$domain_name = $_SESSION['domain_name'];
+	$user_uuid = $_SESSION['user_uuid'];
+	$gateways = $_SESSION['gateways'];
+	$user = $_SESSION['user'];
+
+//initialize the settings object
+	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
+
+//get the settings
+	$template_name = $settings->get('domain', 'template', 'default');
+	$theme_button_icon_back = $settings->get('theme', 'button_icon_back', '');
+	$theme_button_icon_all = $settings->get('theme', 'button_icon_all', '');
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -46,7 +61,7 @@
 	if ($show != "all") { $show = ''; }
 
 //include theme config for button images
-	include_once("themes/".$_SESSION['domain']['template']['name']."/config.php");
+	include_once("themes/".$template_name."/config.php");
 
 //set the command
 	$switch_cmd = 'show channels as json';
@@ -80,7 +95,7 @@
 				if (($show == 'all' && permission_exists('call_active_all'))) {
 					$rows[] = $row;
 				}
-				elseif ($row['domain_name'] == $_SESSION['domain_name']) {
+				elseif ($row['domain_name'] == $domain_name) {
 					$rows[] = $row;
 				}
 		}
@@ -131,20 +146,20 @@
 	echo "	<div class='heading'><b>".$text['title']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
-	if (permission_exists('call_active_eavesdrop') && !empty($_SESSION['user']['extensions'])) {
-		if (sizeof($_SESSION['user']['extensions']) > 1) {
-			echo "	<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
+	if (permission_exists('call_active_eavesdrop') && !empty($user['extensions'])) {
+		if (sizeof($user['extensions']) > 1) {
+			echo "	<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $user['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
 			echo "	<i class='fas fa-headphones' style='margin-left: 15px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'></i>\n";
 			echo "	<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
-			if (is_array($_SESSION['user']['extensions'])) {
-				foreach ($_SESSION['user']['extensions'] as $user_extension) {
+			if (is_array($user['extensions'])) {
+				foreach ($user['extensions'] as $user_extension) {
 					echo "	<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
 				}
 			}
 			echo "	</select>\n";
 		}
-		else if (sizeof($_SESSION['user']['extensions']) == 1) {
-			echo "	<input type='hidden' id='eavesdrop_dest' value=\"".escape($_SESSION['user']['extension'][0]['destination'])."\">\n";
+		else if (sizeof($user['extensions']) == 1) {
+			echo "	<input type='hidden' id='eavesdrop_dest' value=\"".escape($user['extension'][0]['destination'])."\">\n";
 		}
 	}
 	if (permission_exists('call_active_hangup') && $rows) {
@@ -152,10 +167,10 @@
 	}
 	if (permission_exists('call_active_all')) {
 		if ($show == "all") {
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'calls_active.php','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$theme_button_icon_back,'link'=>'calls_active.php','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'calls_active.php?show=all','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$theme_button_icon_all,'link'=>'calls_active.php?show=all','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
 		}
 	}
 	echo "	</div>\n";
@@ -224,20 +239,14 @@
 				$cid_num = str_replace("+", "", $cid_num);
 
 			//replace gateway uuid with name
-				if (is_array($_SESSION['gateways']) && sizeof($_SESSION['gateways']) > 0) {
-					foreach ($_SESSION['gateways'] as $gateway_uuid => $gateway_name) {
+				if (is_array($gateways) && sizeof($gateways) > 0) {
+					foreach ($gateways as $gateway_uuid => $gateway_name) {
 						$application_data = str_replace($gateway_uuid, $gateway_name, $application_data);
 					}
 				}
 
-			//convert $created to a UNIX timestamp
-				$created_timestamp = strtotime($created);
-
-			//get the current timestamp
-				$now = time();
-
 			//calculate elapsed seconds
-				$elapsed_seconds = $now - $created_timestamp;
+				$elapsed_seconds = time() - $created_epoch;
 
 			//convert seconds to hours, minutes, and seconds
 				$hours = floor($elapsed_seconds / 3600);
@@ -276,7 +285,7 @@
 				if (permission_exists('call_active_eavesdrop') || permission_exists('call_active_hangup')) {
 					echo "		<td class='button right' style='padding-right: 0;'>\n";
 					//eavesdrop
-					if (permission_exists('call_active_eavesdrop') && $callstate == 'ACTIVE' && !empty($_SESSION['user']['extensions']) && !in_array($cid_num, $_SESSION['user']['extensions'])) {
+					if (permission_exists('call_active_eavesdrop') && $callstate == 'ACTIVE' && !empty($user['extensions']) && !in_array($cid_num, $user['extensions'])) {
 						echo button::create(['type'=>'button','label'=>$text['label-eavesdrop'],'icon'=>'headphones','collapse'=>'hide-lg-dn','onclick'=>"if (confirm('".$text['confirm-eavesdrop']."')) { eavesdrop_call('".escape($cid_num)."','".escape($uuid)."'); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
 					}
 					//hangup
