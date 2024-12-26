@@ -230,14 +230,8 @@
 					}
 				}
 
-			//convert $created to a UNIX timestamp
-				$created_timestamp = strtotime($created);
-
-			//get the current timestamp
-				$now = time();
-
 			//calculate elapsed seconds
-				$elapsed_seconds = $now - $created_timestamp;
+				$elapsed_seconds = time() - $created_epoch;
 
 			//convert seconds to hours, minutes, and seconds
 				$hours = floor($elapsed_seconds / 3600);
