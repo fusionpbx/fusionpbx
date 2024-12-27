@@ -67,7 +67,7 @@
 		<!-- Account 1 Network Settings -->
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv, UseConfiguredIP -->
-		<item name="account.{$line}.network.dnsMode">ARecord</item>
+		<item name="account.{$line}.network.dnsMode">{$grandstream_dns_mode}</item>
 		
 		<!--Maximum Number of SIP Request Retries -->
 		<!-- Number: 1 - 10 -->
@@ -86,7 +86,7 @@
 
 		<!-- NAT Traversal -->
 		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
-		<item name="account.{$line}.network.natTraversal">Auto</item>
+		<item name="account.{$line}.network.natTraversal">{$grandstream_nat_traversal}</item>
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
@@ -373,7 +373,7 @@
 		<!-- RTP Settings -->
         <!-- SRTP Mode -->
 		<!-- Disabled, EnabledButNotForced, EnabledAndForced, Optional, FollowSIPTransport -->
-		<item name="account.{$line}.audio.srtpMode"></item>
+		<item name="account.{$line}.audio.srtpMode">{$grandstream_srtp}</item>
 
         <!-- SRTP Key Exchange -->
 		<!-- SDES, DTLS -->
@@ -820,7 +820,7 @@
 		<item name="sip.keepAliveInterval"></item>
 		
 		<!-- STUN Server -->
-		<item name="network.stunServer"></item>
+		<item name="network.stunServer">{$grandstream_stun_server}</item>
 		
 		<!-- # Use NAT IP. This will enable our SIP client to use this IP in the SIP/SDP message. Example 64.3.153.50 -->
 		<!-- # String: a-z, A-Z, 0-9, ".", ":" -->
@@ -1350,7 +1350,7 @@
 		<!-- ############################################################################## -->
 		<!-- Wi-Fi Function -->
 		<!-- Off,On,OffAndHideMenuFromLCD-->
-		<item name="network.wifi.enable">On</item>
+		<item name="network.wifi.enable">{$grandstream_wifi_enable}</item>
 
 		<!-- Wi-Fi Band -->
 		<!-- Auto,2.4GHz,5GHz-->
@@ -1369,7 +1369,7 @@
 		<!-- To update Wi-Fi 10 related options, update item name to "network.wifi.ssid.9..." -->
 
 		<!-- ESSID -->
-		<item name="network.wifi.ssid.0.essid"></item>
+			<item name="network.wifi.ssid.0.essid">{$grandstream_wifi_essid}</item>
 
 		<!-- Security Mode-->
 		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
@@ -1422,7 +1422,7 @@
 
  		<!-- IPv4 Mode-->
  		<!-- DHCP,StaticIP-->
-		<!-- <item name="network.wifi.ssid.0.ipv4.address_mode">DHCP</item>-->
+		<item name="network.wifi.ssid.0.ipv4.address_mode">{$grandstream_ip_address_mode}</item>
 
  		<!-- IPv6 Mode-->
  		<!-- DHCP,StaticIP-->
@@ -1634,12 +1634,12 @@
 		<!-- # Layer 3 QoS for SIP -->
 		<!-- # Number:0 - 63 -->
 		<!-- # Mandatory -->
-		<item name="network.qos.forSip"></item>
+		<item name="network.qos.forSip">{$grandstream_qos_sip}</item>
 		
 		<!-- # Layer 3 QoS for RTP -->
 		<!-- # Number:0 - 63 -->
 		<!-- # Mandatory -->
-		<item name="network.qos.forRtp"></item>
+	<item name="network.qos.forRtp">{$grandstream_qos_rtp}</item>
 		
 		<!-- # Maximum Transmission Unit(MTU). Default is 1500 -->
 		<!-- # Number: 576 - 1500 -->
@@ -2200,15 +2200,15 @@
 
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="dateTime.timezone"></item>
+		<item name="dateTime.timezone">{$grandstream_gxp_time_zone}</item>
 		
 		<!-- # Allow DHCP Option 2 to Override Time Zone Setting. Yes or No -->
-		<item name="dateTime.override.dhcp.allowOption2"></item>
+		<item name="dateTime.override.dhcp.allowOption2">{$grandstream_dhcp_time_zone}</item>
 
 		<!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="dateTime.timezone.custom"></item>
+		<item name="dateTime.timezone.custom">{$grandstream_gxp_time_zone}</item>
 
 		<!-- # Date Display Format -->
 		<!-- # 0: yyyy-mm-dd      eg. 2011-10-31 -->
@@ -2603,16 +2603,16 @@
 		<!-- ############################################################################## -->
 		<!-- Firmware Upgrade Mode -->
 		<!-- TFTP, HTTP, HTTPS -->
-		<item name="provisioning.firmware.protocol"></item>
+		<item name="provisioning.firmware.protocol">{$grandstream_firmware_upgrade_protocol}</item>
 		
 		<!-- Firmware Server Path -->
-		<item name="provisioning.firmware.serverPath"></item>
+		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
 		
 		<!-- Firmware Server User Name -->
-		<item name="provisioning.firmware.username"></item>
+		<item name="provisioning.firmware.username">{$http_auth_username}</item>
 		
 		<!-- Firmware Server Password -->
-		<item name="provisioning.firmware.password"></item>
+		<item name="provisioning.firmware.password">{$http_auth_password}</item>
 		
 		<!-- Firmware File Prefix -->
 		<item name="provisioning.firmware.filePrefix"></item>
@@ -2625,16 +2625,16 @@
 		<!-- ############################################################################## -->
 		<!-- Config Upgrade Via -->
 		<!-- TFTP, HTTP, HTTPS -->
-		<item name="provisioning.config.protocol"></item>
+		<item name="provisioning.config.protocol">{$grandstream_firmware_upgrade_protocol}</item>
 		
 		<!-- Config Server Path -->
-		<item name="provisioning.config.serverPath"></item>
+		<item name="provisioning.config.serverPath">{$grandstream_config_server_path}</item>
 		
 		<!-- Config Server User Name -->
-		<item name="provisioning.config.username"></item>
+		<item name="provisioning.config.username">{$http_auth_username}</item>
 		
 		<!-- Config Server Password -->
-		<item name="provisioning.config.password"></item>
+		<item name="provisioning.config.password">{$http_auth_password}</item>
 
 		<!-- # Always Authenticate Before Challenge. Yes or No -->
 		<item name="provisioning.alwaysAuthenticateBeforeChallenge"></item>
@@ -2657,20 +2657,20 @@
 		<!-- ############################################################################## -->
 		<!-- Automatic Upgrade -->
 		<!-- No - No (default), Check Every Day - YesUpgradeHourOfDay, Check Every Week - YesUpgradeDayOfWeek, Check at a Period Time - YesUpgradeMin -->
-		<item name="provisioning.auto.mode"></item>
+		<item name="provisioning.auto.mode">{$grandstream_automatic_provisioning}</item>
 		
 		<!-- Automatic Upgrade Check Interval (m) -->
 		<!-- Number: 60 - 5256000. Default value is 10080 -->
-		<item name="provisioning.auto.minute"></item>
+		<item name="provisioning.auto.minute">{$grandstream_automatic_provisioning_minutes}</item>
 		
 		<!-- Starting - Ending Hour of the Day (0-23) -->
-		<item name="provisioning.auto.hour"></item>
+		<item name="provisioning.auto.hour">{$grandstream_automatic_provisioning_hour}</item>
 		<item name="provisioning.auto.endHour"></item>
 
 		<!-- Day of the Week -->
 		<!-- 0, 1 (default), 2, 3, 4, 5, 6 -->
 		<!-- Multiple days example: 0/1/2/3/4 -->
-		<item name="provisioning.auto.day"></item>
+		<item name="provisioning.auto.day">{$grandstream_automatic_provisioning_day}</item>
 
 		<!-- # Randomized Automatic Upgrade. No or Yes -->
 		<item name="provisioning.auto.randomTime.enable"></item>
@@ -2686,14 +2686,14 @@
 		<!-- # When set to Yes, it will override the configured provision path and method -->
 		<!-- Allow DHCP Option 43 and Option 66 to Override Server -->
 		<!-- No, Yes, Fallback-->
-		<item name="provisioning.override.dhcp.allowCommonOptions"></item>
+		<item name="provisioning.override.dhcp.allowCommonOptions">{$grandstream_dhcp_option_override}</item>
 
 		<!-- # Allow DHCP Option 120 to Override SIP Server -->
 		<!-- # No or Yes. -->
-		<item name="sip.override.dhcp.allowOption120"></item>
+		<item name="sip.override.dhcp.allowOption120">{$grandstream_dhcp_option_override_sip_server}</item>
 
 		<!-- # Additional Override DHCP Option.  None, Option 150, Option 160.  -->
-		<item name="provisioning.override.dhcp.allowCustomOption"></item>
+		<item name="provisioning.override.dhcp.allowCustomOption">{$grandstream_dhcp_option_additional_override}</item>
 
 		<!-- # Download and Process ALL Available Config Files. No or Yes -->
 		<item name="provisioning.config.processAll.enable"></item>
@@ -2722,17 +2722,17 @@
 		<item name="maintain.syslog.protocol"></item>
 
 		<!-- Syslog Server -->
-		<item name="maintain.syslog.server"></item>
+		<item name="maintain.syslog.server">{$grandstream_syslog_server}</item>
 
 		<!-- Syslog Level -->
 		<!-- None, Debug, Info, Warning, Error -->
-		<item name="maintain.syslog.level"></item>
+		<item name="maintain.syslog.level">{$grandstream_syslog_level}</item>
 
 		<!-- Syslog Keyword Filter -->
 		<item name="maintain.syslog.keywordFiltering"></item>
 
 		<!-- # Send SIP Log. No - Do not send SIP log in Syslog, Yes - Send SIP log in Syslog if configured and set to DEBUG level. -->
-		<item name="maintain.syslog.sendSipLog"></item>
+		<item name="maintain.syslog.sendSipLog">{$grandstream_send_sip_log}</item>
 
 		<!-- # Maintain System Log Information after Factory Reset. Yes or No -->
 		<item name="maintain.syslog.persist.factoryreset"></item>		
