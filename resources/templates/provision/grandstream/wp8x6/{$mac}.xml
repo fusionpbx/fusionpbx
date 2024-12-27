@@ -2564,7 +2564,7 @@
 		<item name="tr069.enable">{$grandstream_tr069_enable}</item>
 
 		<!-- ACS URL -->
-		<item name="tr069.url">{$grandstream_tr069_url}</item>
+		<item name="tr069.url">{$grandstream_acs_url}</item>
 
 		<!-- TR-069 Username -->
 		<item name="tr069.username"></item>
