@@ -119,7 +119,7 @@ if (!class_exists('destinations')) {
 								$destination_prefix = $plus.$destination_prefix.'?';
 							}
 							else {
-								$destination_prefix = $plus.'(?:'.$destination_prefix.')?';
+								$destination_prefix = '(?:'.$plus.$destination_prefix.'|0)?';
 							}
 						}
 
