@@ -50,6 +50,7 @@
 	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
 
 //get the settings
+	$switch_recordings = $settings->get('switch', 'recordings');
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$speech_enabled = $settings->get('speech', 'enabled', false);
 	$recording_storage_type = $settings->get('recordings','storage_type');
