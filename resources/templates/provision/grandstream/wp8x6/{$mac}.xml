@@ -2,6 +2,8 @@
 <gs_provision version="1">
 	<config version="2">
 		<!-- Configuration Template for WP8x6 Firmware Version 1.0.1.44 -->
+		<!-- Template Sponsored By NS Innovations-->
+		<!-- support@nsinnovations.net-->
 		<!-- Instruction -->
 		<!-- The new type of config template gives better understanding than P-value numbers to match the setting name from web UI or device, by using names that are similar from web UI. -->
 		<!-- Example, <item name="account.12.sip.server.1.address">sipserver.net</item> -->
@@ -11,6 +13,7 @@
 		<!-- End of Instruction -->
 
 		<!-- Update since  -->
+		
 
 		<!-- Known issue / Notes:  -->
 
@@ -114,7 +117,7 @@
 		<!-- Account 1 Basic Settings -->		
 		<!-- SIP Registration -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.registration">Yes</item>
+		<item name="account.{$line}.sip.registration"></item>
 		
 		<!-- Unregister on Reboot -->
 		<!-- No, Yes, Instance -->
@@ -155,7 +158,7 @@
 
 		<!-- SUBSCRIBE for Registration -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.subscribe.forRegistration">no</item>
+		<item name="account.{$line}.sip.subscribe.forRegistration"></item>
 
         <!-- Use Privacy Header -->
 		<!-- Default, Yes, No -->
@@ -222,7 +225,7 @@
 
 		<!-- Support SIP Instance ID -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.sip.supportInstanceId">Yes</item>
+		<item name="account.{$line}.sip.supportInstanceId"></item>
 
 		<!-- SIP T1 Timeout -->
 		<!-- 0.5 sec - 0.5sec, 1 sec - 1sec, 2 sec - 2sec -->
@@ -234,7 +237,7 @@
 
 		<!-- Outbound Proxy Mode -->
 		<!-- InRoute, NotInRoute, AlwaysSentTo -->
-		<item name="account.{$line}.sip.outboundProxy.mode">InRoute</item>
+		<item name="account.{$line}.sip.outboundProxy.mode">{$outbound_proxy_primary}</item>
 
 		<!-- Enable 100rel -->
 		<!-- No, Yes -->
@@ -1369,14 +1372,14 @@
 		<!-- To update Wi-Fi 10 related options, update item name to "network.wifi.ssid.9..." -->
 
 		<!-- ESSID -->
-			<item name="network.wifi.ssid.0.essid">{$grandstream_wifi_essid}</item>
+		<item name="network.wifi.ssid.0.essid">{$grandstream_wifi_essid}</item>
 
 		<!-- Security Mode-->
 		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
 		<item name="network.wifi.ssid.0.key_management"></item>
 
 		<!-- Password -->
-		<item name="network.wifi.ssid.0.psk"></item>
+		<item name="network.wifi.ssid.0.psk">{$grandstream_wifi_password}</item>
 
 		<!-- EAP Method -->
 		<!--PEAP,TLS,TTLS,PWD-->
@@ -1490,17 +1493,17 @@
 		<!-- <item name="network.wifi.ssid.0.ipv4.preferred_dns.3"></item>-->
 		<!-- <item name="network.wifi.ssid.0.ipv4.preferred_dns.4"></item>-->
 
-			{if $grandstream_ipv_mode=='0'}
-		    <item name="network.internetProtocol">BothAndPreferIPv4</item>
-		    {elseif $grandstream_ipv_mode=='1'}
-		    <item name="network.internetProtocol">BothAndPreferIPv6</item>
-		    {elseif $grandstream_ipv_mode=='2'}
-		    <item name="network.internetProtocol">IPv4Only</item>
-		    {elseif $grandstream_ipv_mode=='3'}
-		    <item name="network.internetProtocol">IPv6Only</item>
-		    {else}
-		    <item name="network.internetProtocol">BothAndPreferIPv4</item>
-			{/if}
+		{if $grandstream_ipv_mode=='0'}
+		<item name="network.internetProtocol">BothAndPreferIPv4</item>
+		{elseif $grandstream_ipv_mode=='1'}
+		<item name="network.internetProtocol">BothAndPreferIPv6</item>
+		{elseif $grandstream_ipv_mode=='2'}
+		<item name="network.internetProtocol">IPv4Only</item>
+		{elseif $grandstream_ipv_mode=='3'}
+		<item name="network.internetProtocol">IPv6Only</item>
+		{else}
+		<item name="network.internetProtocol">BothAndPreferIPv4</item>
+		{/if}
 
 		<!-- ########################################## -->
 		<!-- # IPv6 Statically Configured -->
