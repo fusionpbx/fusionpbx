@@ -1486,6 +1486,15 @@ if (!class_exists('xml_cdr')) {
 			}
 		}
 
+		public function moved_to_failed($failed_file) {
+			$xml_cdr_dir = $this->setting->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
+			if (!file_exists($xml_cdr_dir.'/failed')) {
+				if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+					die('Failed to create '.$xml_cdr_dir.'/failed');
+				}
+			}
+			rename($xml_cdr_dir.'/'.$failed_file, $xml_cdr_dir.'/failed/'.$failed_file);
+		}
 
 		/**
 		 * get xml from the filesystem and save it to the database
