@@ -47,7 +47,7 @@
 	$domains =  $_SESSION['domains'];
 
 //initialize the settings object
-	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
+	$settings = new settings(["database" => $database, "domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
 
 //get the settings
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
@@ -67,6 +67,10 @@
 	$theme_button_icon_download = $settings->get('theme','button_icon_download');
 	$theme_button_icon_play = $settings->get('theme','button_icon_play');
 	$theme_button_icon_reset = $settings->get('theme','button_icon_reset');
+	$switch_recordings = $settings->get('switch', 'recordings', '/var/lib/freeswitch/recordings');
+
+//remove directory separator from the end of the path switch recordings path
+	$switch_recordings = rtrim($switch_recordings, DIRECTORY_SEPARATOR);
 
 //set additional variables
 	$action = $_REQUEST["action"] ?? '';
@@ -77,7 +81,7 @@
 	if ($action == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		if ($_GET['type'] == "rec") {
 			//set the path for the directory
-				$path = $switch_recordings."/".$domain_name;
+				$path = $switch_recordings.DIRECTORY_SEPARATOR.$domain_name;
 
 			//if from recordings, get recording details from db
 				$recording_uuid = $_GET['id']; //recordings
@@ -93,7 +97,7 @@
 						$recording_filename = $row['recording_filename'];
 						if ($recording_storage_type == 'base64') {
 							$recording_decoded = base64_decode($row['recording_base64']);
-							file_put_contents($path.'/'.$recording_filename, $recording_decoded);
+							file_put_contents($path.DIRECTORY_SEPARATOR.$recording_filename, $recording_decoded);
 						}
 					}
 					unset($sql, $parameters, $row, $recording_decoded);
@@ -102,11 +106,11 @@
 				}
 
 			// build full path
-				if (substr($recording_filename,0,1) == '/'){
+				if (substr($recording_filename,0,1) === DIRECTORY_SEPARATOR){
 					$full_recording_path = $path.$recording_filename;
 				}
 				else {
-					$full_recording_path = $path.'/'.$recording_filename;
+					$full_recording_path = $path.DIRECTORY_SEPARATOR.$recording_filename;
 				}
 
 			//send the headers and then the data stream
@@ -154,12 +158,12 @@
 			$recording_filename = str_replace("'", "", $recording_filename);
 
 		//make sure the destination directory exists
-			if (!is_dir($switch_recordings.'/'.$domain_name)) {
-				mkdir($switch_recordings.'/'.$domain_name, 0770, false);
+			if (!is_dir($switch_recordings.DIRECTORY_SEPARATOR.$domain_name)) {
+				mkdir($switch_recordings.DIRECTORY_SEPARATOR.$domain_name, 0770, false);
 			}
 
 		//move the uploaded files
-			$result = move_uploaded_file($_FILES['file']['tmp_name'], $switch_recordings.'/'.$domain_name.'/'.$recording_filename);
+			$result = move_uploaded_file($_FILES['file']['tmp_name'], $switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR.$recording_filename);
 
 		//clear the destinations session array
 			if (isset($_SESSION['destinations']['array'])) {
@@ -196,9 +200,9 @@
 			$array_base64_exists[$row['recording_uuid']] = ($row['recording_base64'] != '') ? true : false;
 			//if not base64, convert back to local files and remove base64 from db
 			if ($recording_storage_type != 'base64' && $row['recording_base64'] != '') {
-				if (!file_exists($switch_recordings.'/'.$domain_name.'/'.$row['recording_filename'])) {
+				if (!file_exists($switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR.$row['recording_filename'])) {
 					$recording_decoded = base64_decode($row['recording_base64']);
-					file_put_contents($switch_recordings.'/'.$domain_name.'/'.$row['recording_filename'], $recording_decoded);
+					file_put_contents($switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR.$row['recording_filename'], $recording_decoded);
 					//build array
 						$array['recordings'][0]['recording_uuid'] = $row['recording_uuid'];
 						$array['recordings'][0]['domain_uuid'] = $domain_uuid;
@@ -220,10 +224,10 @@
 	unset($sql, $parameters, $result, $row);
 
 //add recordings to the database
-	if (is_dir($switch_recordings.'/'.$domain_name.'/')) {
-		if ($dh = opendir($switch_recordings.'/'.$domain_name.'/')) {
+	if (is_dir($switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR)) {
+		if ($dh = opendir($switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR)) {
 			while (($recording_filename = readdir($dh)) !== false) {
-				if (filetype($switch_recordings."/".$domain_name."/".$recording_filename) == "file") {
+				if (filetype($switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR.$recording_filename) === "file") {
 
 					if (!is_array($array_recordings) || !in_array($recording_filename, $array_recordings)) {
 						//file not found in db, add it
@@ -237,7 +241,7 @@
 							$array['recordings'][0]['recording_name'] = $recording_name;
 							$array['recordings'][0]['recording_description'] = $recording_description;
 							if ($recording_storage_type == 'base64') {
-								$recording_base64 = base64_encode(file_get_contents($switch_recordings.'/'.$domain_name.'/'.$recording_filename));
+								$recording_base64 = base64_encode(file_get_contents($switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR.$recording_filename));
 								$array['recordings'][0]['recording_base64'] = $recording_base64;
 							}
 						//set temporary permissions
@@ -256,7 +260,7 @@
 							if ($recording_storage_type == 'base64') {
 								$found_recording_uuid = array_search($recording_filename, $array_recordings);
 								if (!$array_base64_exists[$found_recording_uuid]) {
-									$recording_base64 = base64_encode(file_get_contents($switch_recordings.'/'.$domain_name.'/'.$recording_filename));
+									$recording_base64 = base64_encode(file_get_contents($switch_recordings.DIRECTORY_SEPARATOR.$domain_name.DIRECTORY_SEPARATOR.$recording_filename));
 									//build array
 										$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 										$array['recordings'][0]['recording_uuid'] = $found_recording_uuid;
@@ -379,31 +383,26 @@
 	unset($sql, $parameters);
 
 //get current recordings password
-	if (permission_exists('recording_password')) {
-		if (!empty($recording_password)) {
-			$recording_password = $recording_password;
-		}
-		else {
-			$sql = "
-				select
-					split_part(dd.dialplan_detail_data,'=',2)
-				from
-					v_dialplans as d,
-					v_dialplan_details as dd
-				where
-					d.dialplan_uuid = dd.dialplan_uuid and
-					d.domain_uuid = :domain_uuid and
-					d.app_uuid = '430737df-5385-42d1-b933-22600d3fb79e' and
-					d.dialplan_name = 'recordings' and
-					d.dialplan_enabled = 'true' and
-					dd.dialplan_detail_tag = 'action' and
-					dd.dialplan_detail_type = 'set' and
-					dd.dialplan_detail_data like 'pin_number=%' and
-					dd.dialplan_detail_enabled = 'true' ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$recording_password = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
-		}
+	if (permission_exists('recording_password') && is_null($recording_password)) {
+		$sql = "
+			select
+				split_part(dd.dialplan_detail_data,'=',2)
+			from
+				v_dialplans as d,
+				v_dialplan_details as dd
+			where
+				d.dialplan_uuid = dd.dialplan_uuid and
+				d.domain_uuid = :domain_uuid and
+				d.app_uuid = '430737df-5385-42d1-b933-22600d3fb79e' and
+				d.dialplan_name = 'recordings' and
+				d.dialplan_enabled = 'true' and
+				dd.dialplan_detail_tag = 'action' and
+				dd.dialplan_detail_type = 'set' and
+				dd.dialplan_detail_data like 'pin_number=%' and
+				dd.dialplan_detail_enabled = 'true' ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$recording_password = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 	}
 
 //create token
@@ -583,7 +582,7 @@
 				echo "	<td class='center no-wrap'>".$file_size."</td>\n";
 			}
 			else {
-				$file_name = $switch_recordings.'/'.$domains[$row['domain_uuid']]['domain_name'].'/'.$row['recording_filename'];
+				$file_name = $switch_recordings.DIRECTORY_SEPARATOR.$domains[$row['domain_uuid']]['domain_name'].DIRECTORY_SEPARATOR.$row['recording_filename'];
 				if (file_exists($file_name)) {
 					$file_size = filesize($file_name);
 					$file_size = byte_convert($file_size);
