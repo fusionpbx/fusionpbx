@@ -78,14 +78,14 @@
 
 		<!-- DNS SRV Fail-over Mode -->
 		<!-- Default, SavedOneUntilDNSTTL, SavedOneUntilNoResponse, SavedWhenFailback -->
-		<item name="account.{$line}.network.dnsSRVFailoverMode">Default</item>
+		<item name="account.{$line}.network.dnsSRVFailoverMode"></item>
 
 		<!--Failback Timer (m) -->
 		<item name="account.{$line}.network.failbackTimer"></item>
 
 		<!-- Register Before DNS SRV Fail-over -->
 		<!-- Yes, No -->
-        <item name="account.{$line}.network.dnsSRVRegisterBeforeFailover">No</item>
+        <item name="account.{$line}.network.dnsSRVRegisterBeforeFailover"></item>
 
 		<!-- NAT Traversal -->
 		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
@@ -93,7 +93,7 @@
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.network.supportRport">Yes</item>	
+		<item name="account.{$line}.network.supportRport"></item>	
 		
 		<!-- Proxy-Require -->
 		<item name="account.{$line}.network.proxyRequire"></item>
@@ -162,11 +162,11 @@
 
         <!-- Use Privacy Header -->
 		<!-- Default, Yes, No -->
-		<item name="account.{$line}.sip.header.privacy">Default</item>
+		<item name="account.{$line}.sip.header.privacy"></item>
 		
 		<!-- Use P-Preferred-Identity Header -->
 		<!-- Default, Yes, No -->
-		<item name="account.{$line}.sip.header.ppi">Default</item>		
+		<item name="account.{$line}.sip.header.ppi"></item>		
 		
 		<!-- Use X-Grandstream-PBX Header -->
 		<!-- Yes, No -->
@@ -217,7 +217,7 @@
 		
 		<!-- SIP URI Scheme When Using TLS -->
 		<!-- sip, sips -->
-		<item name="account.{$line}.sip.uriSchemeWhenUsingTls">sips</item>
+		<item name="account.{$line}.sip.uriSchemeWhenUsingTls"></item>
 		
 		<!-- Use Actual Ephemeral Port in Contact with TCP/TLS -->
 		<!-- No, Yes -->
