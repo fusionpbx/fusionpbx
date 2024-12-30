@@ -639,6 +639,15 @@ if (!class_exists('xml_cdr')) {
 
 					//time
 						$start_epoch = urldecode($xml->variables->start_epoch);
+						//catch invalid cdr
+						if (empty($start_epoch)) {
+							//empty the array so it can't save
+							$this->array = null;
+							//move the file to failed location
+							$this->move_to_failed($this->file);
+							//stop processing
+							return;
+						}
 						$this->array[$key][0]['start_epoch'] = $start_epoch;
 						$this->array[$key][0]['start_stamp'] = is_numeric((int)$start_epoch) ? date('c', $start_epoch) : null;
 						$answer_epoch = urldecode($xml->variables->answer_epoch);
