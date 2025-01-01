@@ -141,7 +141,7 @@
 		$sql = "select * from v_email_queue ";
 		$sql .= "where (email_status = 'waiting' or email_status = 'trying') ";
 		$sql .= "and hostname = :hostname ";
-		$sql .= "order by domain_uuid asc ";
+		$sql .= "order by domain_uuid, email_date desc ";
 		$sql .= "limit :limit ";
 		$parameters['hostname'] = $hostname;
 		$parameters['limit'] = $email_queue_limit;
