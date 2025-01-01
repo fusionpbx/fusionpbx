@@ -638,16 +638,18 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key][0]['status'] = $status;
 
 					//time
-						$start_epoch = urldecode($xml->variables->start_epoch);
-						//catch invalid cdr
-						if (empty($start_epoch)) {
+						//catch invalid call detail records
+						if (empty($xml->variables->start_epoch)) {
 							//empty the array so it can't save
 							$this->array = null;
-							//move the file to failed location
+
+							//move the file to the failed location
 							$this->move_to_failed($this->file);
+
 							//stop processing
 							return;
 						}
+						$start_epoch = urldecode($xml->variables->start_epoch);
 						$this->array[$key][0]['start_epoch'] = $start_epoch;
 						$this->array[$key][0]['start_stamp'] = is_numeric((int)$start_epoch) ? date('c', $start_epoch) : null;
 						$answer_epoch = urldecode($xml->variables->answer_epoch);
