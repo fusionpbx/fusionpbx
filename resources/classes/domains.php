@@ -772,17 +772,54 @@ if (!class_exists('domains')) {
 								$_SESSION["domain_uuid"] = $row["domain_uuid"];
 								$_SESSION["domain_name"] = $row['domain_name'];
 							}
-							else {
-								if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
-									$_SESSION["domain_uuid"] = $row["domain_uuid"];
-									$_SESSION["domain_name"] = $row["domain_name"];
-								}
+							elseif ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row["domain_name"];
 							}
 						}
 						$_SESSION['domains'][$row['domain_uuid']] = $row;
 					}
 					unset($domains, $prep_statement);
 				}
+		}
+
+		/**
+		 * Returns an array of domain names with their domain UUID as the array key.
+		 * <p>If the v_domains table does not exist or there are no domains the array will be empty.</p>
+		 * <p><b>Examples:</b><br><br>
+		 * <code>
+		 * //Fetch a list of enabled domains<br>
+		 * $domains_array = domains::fetch($database);<br>
+		 *<br>
+		 * //Fetch a list of all domains regardless if they are enabled or not<br>
+		 * $domains_array = domains::fetch($database, true);<br>
+		 *<br>
+		 * //Fetch a list of only disabled domains<br>
+		 * $domains_array = domains::fetch($database, false, false);
+		 * </code>
+		 * </p>
+		 * @param database $database Database object.
+		 * @param bool $ignore_domain_enabled Omit the SQL where clause for domain_enabled column. Default is false.
+		 * @param bool $domain_status When <code>$ignore_domain_enabled</code> is false, include only the domain_enabled status of true (default) or false.
+		 * @return array Array of domains or an empty array.
+		 */
+		public static function fetch(database $database, bool $ignore_domain_enabled = false, bool $domain_status = true): array {
+			$domains = [];
+			$table_name = database::TABLE_PREFIX . 'domains';
+			if ($database->table_exists($table_name)) {
+				$status_string = $domain_status ? 'true' : 'false';
+				$sql = "select domain_uuid, domain_name from $table_name";
+				if (!$ignore_domain_enabled) {
+					$sql .= " where domain_enabled='$status_string'";
+				}
+				$result = $database->select($sql);
+				if (!empty($result)) {
+					foreach ($result as $row) {
+						$domains[$row['domain_uuid']] = $row['domain_name'];
+					}
+				}
+			}
+			return $domains;
 		}
 
 	}
