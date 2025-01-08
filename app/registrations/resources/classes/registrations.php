@@ -36,18 +36,47 @@ if (!class_exists('registrations')) {
 		private $permission_prefix;
 		private $list_page;
 		public $show;
+		private $domain_name;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
 
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct($setting_array = []) {
+
+			//open a database connection
+			if (empty($setting_array['database'])) {
+				$this->database = database::new();
+			}
+			else {
+				$this->database = $setting_array['database'];
+			}
+
+			//trap passing a PDO object instead of the required database object
+			if (!($this->database instanceof database)) {
+				//should never happen but will trap it here just-in-case
+				throw new \InvalidArgumentException("Database object passed in settings class constructor is not a valid database object");
+			}
 
 			//assign private variables
-				$this->app_name = 'registrations';
-				$this->app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
-				$this->permission_prefix = 'registration_';
-				$this->list_page = 'registrations.php';
-				$this->show = 'local';
+			$this->app_name = 'registrations';
+			$this->app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
+			$this->permission_prefix = 'registration_';
+			$this->list_page = 'registrations.php';
+			$this->show = 'local';
+
+			//get the domain_name
+			if (empty($setting_array['domain_name'])) {
+				$this->domain_name = $_SESSION['domain_name'];
+			}
+			else {
+				$this->domain_name = $setting_array['domain_name'];
+			}
 
 		}
 
@@ -70,8 +99,7 @@ if (!class_exists('registrations')) {
 					$parameters['sip_profile_name'] = $profile;
 				}
 				$sql .= "and sip_profile_enabled = 'true' ";
-				$database = new database;
-				$sip_profiles = $database->select($sql, $parameters ?? null, 'all');
+				$sip_profiles = $this->database->select($sql, $parameters ?? null, 'all');
 				if (!empty($sip_profiles) && @sizeof($sip_profiles) != 0) {
 					foreach ($sip_profiles as $field) {
 
@@ -180,8 +208,8 @@ if (!class_exists('registrations')) {
 
 									//remove unrelated domains
 										if (!permission_exists('registration_all') || $this->show != 'all') {
-											if ($registrations[$id]['sip-auth-realm'] == $_SESSION['domain_name']) {}
-											else if ($user_array[1] == $_SESSION['domain_name']) {}
+											if ($registrations[$id]['sip-auth-realm'] == $this->domain_name) {}
+											else if ($user_array[1] == $this->domain_name) {}
 											else {
 												unset($registrations[$id]);
 											}
@@ -269,8 +297,7 @@ if (!class_exists('registrations')) {
 
 						//retrieve sip profiles list
 							$sql = "select sip_profile_name as name from v_sip_profiles ";
-							$database = new database;
-							$sip_profiles = $database->select($sql, null, 'all');
+							$sip_profiles = $this->database->select($sql, null, 'all');
 							unset($sql);
 
 						//create the event socket connection
