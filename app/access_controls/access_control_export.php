@@ -46,8 +46,7 @@
 	$text = $language->get();
 
 //define available columns
-	$available_columns[] = 'access_control_node_uuid';
-	$available_columns[] = 'access_control_uuid';
+	$available_columns[] = 'node_type';
 	$available_columns[] = 'node_cidr';
 	$available_columns[] = 'node_description';
 	$available_columns[] = 'insert_date';
