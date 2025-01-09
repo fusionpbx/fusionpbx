@@ -1552,8 +1552,23 @@ if (!class_exists('xml_cdr')) {
 								$import = true;
 							}
 
+						//move the files that are too large or zero file size to the failed directory
+							if ($import && (filesize($xml_cdr_dir.'/'.$file) >= 3000000 || filesize($xml_cdr_dir.'/'.$file) == 0)) {
+								//echo "WARNING: File too large or zero file size. Moving $file to failed\n";
+								if (!empty($xml_cdr_dir)) {
+									if (!file_exists($xml_cdr_dir.'/failed')) {
+										if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+											die('Failed to create '.$xml_cdr_dir.'/failed');
+										}
+									}
+									if (rename($xml_cdr_dir.'/'.$file, $xml_cdr_dir.'/failed/'.$file)) {
+										//echo "Moved $file successfully\n";
+									}
+								}
+							}
+
 						//import the call detail files are less than 3 mb - 3 million bytes
-							if ($import && filesize($xml_cdr_dir.'/'.$file) <= 3000000) {
+							if ($import) {
 								//get the xml cdr string
 									$call_details = file_get_contents($xml_cdr_dir.'/'.$file);
 
@@ -1570,18 +1585,6 @@ if (!class_exists('xml_cdr')) {
 
 								//increment the value
 									$x++;
-							}
-
-						//move the files that are too large to the failed directory
-							if ($import && filesize($xml_cdr_dir.'/'.$file) >= 3000000) {
-								if (!empty($xml_cdr_dir)) {
-									if (!file_exists($xml_cdr_dir.'/failed')) {
-										if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
-											die('Failed to create '.$xml_cdr_dir.'/failed');
-										}
-									}
-									rename($xml_cdr_dir.'/'.$file, $xml_cdr_dir.'/failed/'.$file);
-								}
 							}
 
 						//if limit exceeded exit the loop
