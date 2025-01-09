@@ -55,7 +55,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "access_control_node_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 
 	//cache details
 		$apps[$x]['cache']['key'] = "configuration.acl.conf";
@@ -73,7 +72,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "access_control_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';		
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "access_control_default";
