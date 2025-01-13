@@ -537,7 +537,6 @@
 //get device lines
 	$sql = "select * ";
 	$sql .= "from v_domains ";
-	$sql .= "where domain_enabled = true ";
 	$sql .= "order by domain_name asc ";
 	$domains = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
