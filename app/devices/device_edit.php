@@ -1316,7 +1316,7 @@
 
 				if (permission_exists('device_line_server_address_primary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					if (!empty($settings->get('provision', 'server_address_primary', ''))) {
+					if (!empty($settings->get('provision', 'server_address_primary', '')) && is_array($settings->get('provision', 'server_address_primary', ''))) {
 						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][server_address_primary]'>\n";
 						echo "					<option value=''></option>\n";
 						foreach($settings->get('provision', 'server_address_primary', '') as $field) {
@@ -1332,7 +1332,7 @@
 
 				if (permission_exists('device_line_server_address_secondary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					if (!empty($settings->get('provision', 'server_address_secondary', ''))) {
+					if (!empty($settings->get('provision', 'server_address_secondary', '')) && is_array($settings->get('provision', 'server_address_secondary', ''))) {
 						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][server_address_secondary]'>\n";
 						echo "					<option value=''></option>\n";
 						foreach($settings->get('provision', 'server_address_secondary', '') as $field) {
