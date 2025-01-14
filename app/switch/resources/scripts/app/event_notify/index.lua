@@ -185,6 +185,16 @@
 		end
 	end
 
+--obihai
+if (vendor == "obihai") then
+    if (command == "reboot") then
+        event:addHeader('event-string', 'Reboot');
+    end
+    if (command == "check_sync") then
+        event:addHeader('event-string', 'Resync');
+    end
+end
+
 --send the event
 	event:fire();
 
