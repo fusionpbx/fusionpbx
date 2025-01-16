@@ -117,7 +117,6 @@
 		$sql_search .= " 	or lower(voicemail_enabled) like :search ";
 		$sql_search .= " 	or lower(voicemail_description) like :search ";
 		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
 	}
 
 //prepare to page the results
@@ -144,7 +143,10 @@
 			$sql .= "and voicemail_uuid is null ";
 		}
 	}
-	$sql .= $sql_search ?? '';
+	if (!empty($sql_search)) {
+		$sql .= $sql_search;
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
