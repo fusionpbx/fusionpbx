@@ -290,7 +290,9 @@
 			$sql .= ")";
 			$parameters['destination_number'] = $fax_number;
 			$destination_count = $database->select($sql, $parameters, 'column');
+			$local_destination = false;
 			if ($destination_count > 0) {
+				$local_destination = true;
 				$route_array[] = 'loopback/'.$fax_number.'/public';
 			}
 
@@ -305,6 +307,12 @@
 			$common_variables .= "fax_ident='"                   . escape_quote($fax_caller_id_number) . "',";
 			$common_variables .= "fax_header='"                  . escape_quote($fax_caller_id_name) . "',";
 			$common_variables .= "fax_file='"                    . escape_quote($fax_file) . "',";
+
+		//add the fax destination number variables
+			if ($local_destination) {
+				$common_variables .= "sip_to_user=".$fax_number.",";
+				$common_variables .= "sip_req_user=".$fax_number.",";
+			}
 
 		//prepare the fax command
 			if (empty($route_array)) {
