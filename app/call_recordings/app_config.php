@@ -45,4 +45,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to retain the maintenance logs in the database.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e329db05-2967-422a-a71f-d0175b083828";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "record_extension";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mp3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recording file format options: wav, mp3";
+
 ?>
