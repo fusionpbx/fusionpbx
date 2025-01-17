@@ -445,6 +445,7 @@ if (!class_exists('menu')) {
 
 								//item exists in the database
 									if ($menu_item_exists) {
+										$parent_menu_item_protected = 'false';
 										//get parent_menu_item_protected
 										foreach ($menu_items as $item) {
 											if ($item['uuid'] == $menu['parent_uuid']) {
