@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gs_provision version="1">
+	<config version="2">
+		<!-- Account General Settings -->
+		{for $line=1 to 3}
+		{$row=$lines.$line}
+		<!-- Account Active -->
+		<!-- Yes, No -->
+		{if filter_var($row.enabled, FILTER_VALIDATE_BOOLEAN)}
+		<item name="account.{$line}.enable">Yes</item>
+
+		<!-- Account Name -->
+		<item name="account.{$line}.name">{$row.display_name}</item>
+
+		<!-- SIP Server -->
+		<item name="account.{$line}.sip.server.1.address">{$row.server_address}</item>
+
+		<!-- SIP User ID -->
+		<item name="account.{$line}.sip.userid">{$row.user_id}</item>
+
+		<!-- SIP Authentication ID -->
+		<item name="account.{$line}.sip.subscriber.userId">{$row.auth_id}</item>
+
+		<!-- SIP Authentication Password -->
+		<item name="account.{$line}.sip.subscriber.password">{$row.password}</item>
+		<!-- Display Name -->
+		<item name="account.{$line}.sip.subscriber.name">{$row.display_name}</item>
+		<!-- Voice Mail Access Number -->
+		<item name="account.{$line}.sip.voicemail.number">{$voicemail_number}</item>
+		<!-- Preferred Vocoder -->
+		<item name="account.{$line}.codec.choice">
+			<part name="1">PCMU</part>
+			<part name="2">PCMA</part>
+			<part name="3">G.722</part>
+			<part name="4">OPUS</part>
+			<part name="5">OPUS</part>
+			<part name="6">OPUS</part>
+			<part name="7">OPUS</part>
+			<part name="8">OPUS</part>
+                </item>
+		<!-- DialPlan -->
+		<item name="account.{$line}.call.dialplan">{$grandstream_dial_plan}</item>
+		{else}
+		<item name="account.{$line}.enable">No</item>
+		{/if} 
+		{/for}
+
+		<!-- Phone Settings - General Settings -->
+		<!-- Ethernet Settings -->
+		<!-- Preferred Internet Protocol -->
+		<!-- BothAndPreferIPv4, BothAndPreferIPv6, IPv4Only, IPv6Only -->
+		{if $grandstream_ipv_mode=='0'}
+		<item name="network.internetProtocol">BothAndPreferIPv4</item>
+		{elseif $grandstream_ipv_mode=='1'}
+		<item name="network.internetProtocol">BothAndPreferIPv6</item>
+		{elseif $grandstream_ipv_mode=='2'}
+		<item name="network.internetProtocol">IPv4Only</item>
+		{elseif $grandstream_ipv_mode=='3'}
+		<item name="network.internetProtocol">IPv6Only</item>
+		{else}
+		<item name="network.internetProtocol">BothAndPreferIPv4</item>
+		{/if} 
+		<!-- Wi-Fi Settings -->
+		<!-- Wi-Fi Function -->
+		{if isset($grandstream_wifi_enable)}
+		<!-- No, Yes -->
+		<item name="wifi.enable">{if filter_var($grandstream_wifi_enable, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
+		<!-- ESSID -->
+		{if isset($grandstream_wifi_essid)}
+		<item name="wifi.essidname">{$grandstream_wifi_essid}</item>
+		<!-- Password -->
+		<item name="wifi.essidpassword">{$grandstream_wifi_password}</item>
+		<!-- Security Mode for Hidden SSID -->
+		<!-- None, WEP, WPA/WPA2_PSK, 802.1X_EAP -->
+		<item name="wifi.hiddenessid.securitymode">{$grandstream_wifi_hidden_security}</item>
+		{/if}
+		<!-- Layer 2 QoS 802.1p Priority Value (Wi-Fi) -->
+		<item name="wifi.layer2qos.priority">0</item>
+		{/if}
+		<!-- System Settings -->
+		<!-- Assign NTP Server Address -->
+		{if isset($ntp_server_primary)}
+		<item name="dateTime.ntp.server.1">{$ntp_server_primary}</item>
+		{else}
+		<item name="dateTime.ntp.server.1">pool.ntp.org</item>
+		{/if}
+
+		<!-- # Secondary NTP Server -->
+		<!-- # String -->
+		{if isset($ntp_server_secondary)}
+		<item name="dateTime.ntp.server.2">{$ntp_server_secondary}</item>
+		{else}
+		<item name="dateTime.ntp.server.2">2.us.pool.ntp.org</item>
+		{/if}
+		<!-- Time Zone -->
+		{if isset($grandstream_time_zone) }
+		<item name="dateTime.timezone">{$grandstream_time_zone}</item>
+		{elseif isset($grandstream_gxp_time_zone) }
+		<item name="dateTime.timezone">{$grandstream_gxp_time_zone}</item>
+		{/if}
+		<!-- Admin Password -->
+		{if isset($admin_password)}
+		<item name="users.admin.password">{$admin_password}</item>
+		{/if}
+		<!-- User Password -->
+		{if isset($device_password)}
+		<item name="users.user.password">{$device_password}</item>
+		{/if}
+		<!-- System Settings - TR069 -->
+		<item name="tr069">
+			<part name="connectionRequestUsername">{$mac|replace:'-':''|upper}</part>
+			<part name="url">https://acsguestb.gdms.cloud</part>
+		</item>
+		<!-- Firmware Upgrade Mode -->
+		<!-- TFTP, HTTP, HTTPS -->
+	    	{if isset($grandstream_firmware_upgrade_protocol) }
+    			{if $grandstream_firmware_upgrade_protocol=="0"}<item name="provisioning.firmware.protocol">TFTP</item>{/if}
+	    		{if $grandstream_firmware_upgrade_protocol=="1"}<item name="provisioning.firmware.protocol">HTTP</item>{/if}
+    			{if $grandstream_firmware_upgrade_protocol=="2"}<item name="provisioning.firmware.protocol">HTTPS</item>{/if}
+    		{else}
+	    	<item name="provisioning.firmware.protocol">HTTP</item>
+    		{/if}
+	    	<!-- Firmware Server Path -->
+		{if isset($grandstream_firmware_path) && isset($firmware_version)}
+		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>
+		{elseif isset($grandstream_firmware_path)}
+		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
+		{else}
+		<item name="provisioning.firmware.serverPath">{$domain_name}{$project_path}/app/provision/resources/firmware/</item>
+		<item name="provisioning.firmware.username">{$http_auth_username}</item>
+		<item name="provisioning.firmware.password">{$http_auth_password}</item>
+		{/if}
+		<!-- TFTP, HTTP, HTTPS -->
+		<item name="provisioning.config.protocol">HTTPS</item>
+		<!-- Config Server Path -->
+		{if $grandstream_config_server_path=="none"}
+		<item name="provisioning.config.serverPath"></item>
+		{elseif isset($grandstream_config_server_path)}
+		<item name="provisioning.config.serverPath">{$grandstream_config_server_path}</item>
+		{else}
+		<item name="provisioning.config.serverPath">{$domain_name}{$project_path}/app/provision</item>
+		<item name="provisioning.config.username">{$http_auth_username}</item>
+		<item name="provisioning.config.password">{$http_auth_password}</item>
+		{/if}
+		<!-- Phonebook -->
+		<item name="phonebook.download">
+			{if isset($grandstream_phonebook_download)}
+			<part name="mode">{if $grandstream_phonebook_download=="0"}Disabled{elseif $grandstream_phonebook_download=="1"}Enabled Use TFTP{elseif $grandstream_phonebook_download=="2"}Enabled Use HTTP{elseif $grandstream_phonebook_download=="3"}Enabled Use HTTPS{/if}</part>
+			{/if}
+			<part name="server">{$grandstream_phonebook_xml_server_path}{$mac}</part>
+			<part name="interval">{$grandstream_phonebook_download_interval}</part>
+			<part name="username">{$http_auth_username}</part>
+			<part name="password">{$http_auth_password}</part>
+		</item>
+	</config>
+</gs_provision>
