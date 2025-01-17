@@ -40,6 +40,18 @@
 	<condition field="${from_user_record}" expression="^local$" break="never">
 		<action application="set" data="record_session=true" inline="true"/>
 	</condition>
+	<condition field="${record_session}" expression="^true$"/>
+	<condition field="${call_direction}" expression="^inbound" break="never">
+		<action application="set" data="record_stereo_swap=true" inline="true"/>
+	</condition>
+	<condition field="${record_session}" expression="^true$"/>
+	<condition field="${call_direction}" expression="^outbound$" break="never">
+		<action application="set" data="record_stereo=true" inline="true"/>
+	</condition>
+	<condition field="${record_session}" expression="^true$"/>
+	<condition field="${call_direction}" expression="^local$" break="never">
+		<action application="set" data="record_stereo=true" inline="true"/>
+	</condition>
 	<condition field="${record_session}" expression="^true$">
 		<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true" enabled="true"/>
 		<action application="set" data="record_name=${uuid}.${record_ext}" inline="true" enabled="true"/>
@@ -50,9 +62,8 @@
 		<action application="bind_digit_action" data="local,*6,api:uuid_record,${uuid} unmask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self" enabled="true"/>
 		<action application="set" data="record_append=true" inline="true" enabled="true"/>
 		<action application="set" data="record_in_progress=true" inline="true" enabled="true"/>
-		<action application="set" data="api_on_answer=uuid_record ${uuid} start ${record_path}/${record_name}" inline="false" enabled="false"/>
-		<action application="set" data="RECORD_ANSWER_REQ=true" enabled="true"/>
-		<action application="record_session" data="${record_path}/${record_name}" enabled="true"/>
+		<action application="set" data="api_on_answer=uuid_record ${uuid} start ${record_path}/${record_name}" inline="false" enabled="true"/>
+		<action application="set" data="record_answer_req=true" enabled="true"/>
+		<action application="record_session" data="${record_path}/${record_name}" enabled="false"/>
 	</condition>
 </extension>
-
