@@ -162,4 +162,31 @@ $text['description-totp']['zh-cn'] = "载有认证申请或密码管理员的编
 $text['description-totp']['ja-jp'] = "認証アプリケーションまたはパスワードマネージャでコードをスキャンします。 ログイン時にトークンを生成します。";
 $text['description-totp']['ko-kr'] = "인증 신청서 또는 비밀번호 관리자로 코드를 스캔합니다. 그런 다음 로그인 토큰을 생성합니다.";
 
+$text['button-forgot_password']['en-us'] = "Forgot Password?";
+$text['button-forgot_password']['en-gb'] = "Forgot Password?";
+$text['button-forgot_password']['ar-eg'] = "هل نسيت كلمة المرور؟";
+$text['button-forgot_password']['de-at'] = "Passwort vergessen?";
+$text['button-forgot_password']['de-ch'] = "Passwort vergessen?";
+$text['button-forgot_password']['de-de'] = "Passwort vergessen?";
+$text['button-forgot_password']['el-gr'] = "Ξεχάσατε τον κωδικό σας;";
+$text['button-forgot_password']['es-cl'] = "¿Olvidó su contraseña?";
+$text['button-forgot_password']['es-mx'] = "¿Olvidó su contraseña?";
+$text['button-forgot_password']['fr-ca'] = "Mot de passe oublié ?";
+$text['button-forgot_password']['fr-fr'] = "Mot de passe oublié ?";
+$text['button-forgot_password']['he-il'] = "שכחת את הסיסמה שלך؟";
+$text['button-forgot_password']['it-it'] = "Password dimenticata?";
+$text['button-forgot_password']['ka-ge'] = "დაგიფარგებათ პაროლი?";
+$text['button-forgot_password']['nl-nl'] = "Wachtwoord vergeten?";
+$text['button-forgot_password']['pl-pl'] = "Zapomniałeś hasła?";
+$text['button-forgot_password']['pt-br'] = "Esqueceu a senha?";
+$text['button-forgot_password']['pt-pt'] = "Esqueceu a password?";
+$text['button-forgot_password']['ro-ro'] = "Ați uitat parola?";
+$text['button-forgot_password']['ru-ru'] = "Забыли пароль?";
+$text['button-forgot_password']['sv-se'] = "Glömt lösenordet?";
+$text['button-forgot_password']['uk-ua'] = "Забули пароль?";
+$text['button-forgot_password']['tr-tr'] = "Parolanızı mı unuttunuz?";
+$text['button-forgot_password']['zh-cn'] = "忘记密码？";
+$text['button-forgot_password']['ja-jp'] = "パスワードを忘れた？";
+$text['button-forgot_password']['ko-kr'] = "비밀번호를 잊으셨나요?";
+
 ?>
