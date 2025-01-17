@@ -28,8 +28,10 @@
 	require_once __DIR__ . "/require.php";
 
 //start the session
-	ini_set("session.cookie_httponly", true);
-	if (!isset($_SESSION)) { session_start(); }
+	if (!isset($_SESSION)) {
+		ini_set("session.cookie_httponly", true);
+		session_start();
+	}
 
 //set the domains session
 	if (!isset($_SESSION['domains'])) {
