@@ -160,14 +160,10 @@ $language = new text;
 $text = $language->get();
 
 //ensure we have a database object
-if (!($database instanceof database)) {
-	$database = database::new();
-}
+$database = database::new();
 
 //ensure we have a settings object
-if (!($settings instanceof settings)) {
-	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
-}
+$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //add the defaults
 $phrase_name = '';
