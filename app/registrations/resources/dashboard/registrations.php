@@ -12,10 +12,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], dirname($dashboard_url));
 
 //get the dashboard label
-	$dashboard_label = $text['title-'.$dashboard_key];
-	if (empty($dashboard_label)) {
-		$dashboard_label = $dashboard_name;
-	}
+	$dashboard_label = $text['title-'.$dashboard_key] ?? $dashboard_name;
 
 //prepare variables
 	$dashboard_target = ($dashboard_target == 'new') ? '_blank' : '_self';
@@ -25,9 +22,7 @@
 	}
 
 //channel count
-	if ($esl == null) {
-		$esl = event_socket::create();
-	}
+	$esl = event_socket::create();
 
 //registration count
 	if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
@@ -41,6 +36,7 @@
 //get the total enabled extensions
 	$sql = "select count(*) as count from v_extensions ";
 	$sql .= "where enabled = 'true' ";
+	$parameters = null;
 	if (!permission_exists("registration_all")) {
 		$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
