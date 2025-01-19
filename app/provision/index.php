@@ -214,6 +214,11 @@
 			$parameters['domain_name'] = $domain_name;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
+
+			// if the session domain doesn't match the host domain, don't allow provisioning to continue
+			if ($_SESSION['domain_uuid'] != $domain_uuid) {
+				http_error('404');
+			}
 	}
 
 //send a request to a remote server to validate the MAC address and secret
