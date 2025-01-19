@@ -430,7 +430,69 @@ if (!class_exists('phrases')) {
 			}
 		} //method
 
-	} //class
-}
+		/**
+		 * Returns a path and filename of the recording_uuid provided from the database.
+		 * If the recording is a base64 encoded file the file and path may be empty.
+		 * @param database $database Database object
+		 * @param string $recording_uuid Recording UUID
+		 * @return string recording path and filename or an empty string when not found or base64
+		 */
+		public static function get_recording_filename(database $database, string $recording_uuid): string {
+			$sql = "select recording_filename from v_recordings";
+			$sql .= " where recording_uuid = :recording_uuid";
+			$parameters = [];
+			$parameters['recording_uuid'] = $recording_uuid;
+			$result = $database->select($sql, $parameters, 'column');
+			if ($result !== false) {
+				return $result;
+			}
+			return "";
+		}
 
-?>
+		/**
+		 * Returns an associative array of recordings with the uuid as key and recording filename as value.
+		 * When the recording is a base64 encoded recording, the filename returned is the filename only with no path.
+		 * @param settings $settings Settings object
+		 * @param int $limit (Optional) Limit the number of results returned
+		 * @return array
+		 */
+		public static function get_all_domain_recordings(settings $settings, int $limit = 0): array {
+			//set defaults
+			$recordings = [];
+			$parameters = [];
+			//get the database object from the settings object
+			$database = $settings->database();
+			//get the domain name using the domain_uuid in the database object
+			$domain_uuid = $settings->domain_uuid();
+			$domain_name = $database->select("SELECT domain_name from v_domains where domain_uuid = :domain_uuid", ['domain_uuid' => $domain_uuid], 'column');
+			//get the recording directory
+			$recordings_dir = $settings->get('switch', 'recordings', '/var/lib/freeswitch/recordings') . DIRECTORY_SEPARATOR . $domain_name;
+			//build initial sql that ignores the domain_uuid
+			$sql = "SELECT recording_uuid, recording_filename, recording_base64 IS NOT NULL AS has_base64_recording FROM v_recordings";
+			//add domain_uuid to sql when available
+			if (!empty($domain_name) && is_uuid($domain_uuid)) {
+				$sql .= " where domain_uuid = :domain_uuid";
+				$parameters['domain_uuid'] = $domain_uuid;
+			}
+			//add limit to sql if needed
+			if (!empty($limit)) {
+				$sql .= " limit $limit";
+			}
+			//get the result
+			$rows = $database->select($sql, $parameters);
+			//iterate over all rows returned to remap them to uuid => filename
+			if (!empty($rows)) {
+				//set the path and filename for each of the uuids
+				foreach($rows as $row) {
+					if ($row['has_base64_recording']) {
+						$recordings[$row['recording_uuid']] = '${lua streamfile.lua ' . basename($row['recording_filename']) .'}';
+					} else {
+						$recordings[$row['recording_uuid']] = $recordings_dir . DIRECTORY_SEPARATOR . $row['recording_filename'];
+					}
+				}
+			}
+			//return recordings or empty array
+			return $recordings;
+		}
+	}
+}
