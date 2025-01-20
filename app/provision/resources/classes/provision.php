@@ -803,19 +803,11 @@
 										$line_number = $row['line_number'];
 										$register_expires = $row['register_expires'];
 										$sip_transport = strtolower($row['sip_transport']);
-										$sip_port = $row['sip_port'];
+										$sip_port = $row['sip_port'] ?? '';
 
 									//set defaults
 										if (empty($register_expires)) { $register_expires = "120"; }
 										if (empty($sip_transport)) { $sip_transport = "tcp"; }
-										if (!isset($sip_port)) {
-											if ($line_number == "" || $line_number == "1") {
-												$sip_port = "5060";
-											}
-											else {
-												$sip_port = "506".($line_number + 1);
-											}
-										}
 
 									//convert seconds to minutes for grandstream
 										if ($device_vendor == 'grandstream') {
