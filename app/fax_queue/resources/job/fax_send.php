@@ -258,6 +258,7 @@
 			$common_variables = '';
 			$common_variables = "accountcode='"                  . $fax_accountcode         . "',";
 			$common_variables .= "sip_h_accountcode='"          . $fax_accountcode         . "',";
+            $common_variables .= "call_direction='outbound',";
 			$common_variables .= "domain_uuid="                  . $domain_uuid             . ",";
 			$common_variables .= "domain_name="                  . $domain_name             . ",";
 			$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
