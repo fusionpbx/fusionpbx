@@ -246,6 +246,13 @@
 					end
 				end
 
+				use_deletion_queue = 'false';
+				if (settings['voicemail']['use_deletion_queue'] ~= nil) then
+					if (settings['voicemail']['use_deletion_queue']['boolean'] ~= nil) then
+						use_deletion_queue = settings['voicemail']['use_deletion_queue']['boolean'];
+					end
+				end
+
 			end
 
 			if (settings['voicemail']) then
