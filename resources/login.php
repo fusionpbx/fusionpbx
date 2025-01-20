@@ -412,7 +412,7 @@
 		echo "		<h5>".$text['label-password_reset']."</h5>\n";
 		echo "		<form name='reset' id='frm' method='post'>\n";
 		echo "			<input type='hidden' name='action' value='reset'>\n";
-		echo "			<input type='password' style='display: none;' id='password' name='password_auto' value='password'>\n";
+		//echo "			<input type='password' style='display: none;' id='password' name='password_auto' value='password'>\n";
 		//echo "			<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
 		echo "			<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 4px;' name='password_new' id='password' autocomplete='off' placeholder=\"".$text['label-new_password']."\" onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
 		echo "			<div id='pwstrength_progress' class='pwstrength_progress pwstrength_progress_password_reset'></div>";
@@ -424,7 +424,7 @@
 		echo "	</div>\n";
 
 		echo "	<script>\n";
-		echo "		$('#password').trigger('focus');\n";
+		//echo "		$('#password').trigger('focus');\n";
 		// convert password fields to text
 		echo "		function submit_form() {\n";
 		echo "			hide_password_fields();\n";
