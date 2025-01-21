@@ -520,9 +520,17 @@ if (!class_exists('xml_cdr')) {
 							//call center
 							$missed_call = 'true';
 						}
-                        if ((!isset($xml->variables->bridge_uuid) || trim($xml->variables->bridge_uuid) === '') &&  $xml->variables->billsec != 0 && $xml->variables->last_app != 'rxfax') {
-                            // no bridge UUID (null or empty)
+                        // Ring group call that was cancelled during ringing
+                        if (isset($xml->variables->originate_disposition) && $xml->variables->originate_disposition == 'ORIGINATOR_CANCEL' && 
+                            isset($xml->variables->DIALSTATUS) && $xml->variables->DIALSTATUS == 'CANCEL' &&
+                            isset($xml->variables->missed_call) && $xml->variables->missed_call == 'true' 
+                        ) {
                             $missed_call = 'true';
+                        }
+						if ((isset($xml->variables->fax_success) && trim($xml->variables->fax_success) > 0) && 
+							(isset($xml->variables->fax_document_total_pages) && trim($xml->variables->fax_document_total_pages) > 0)	) {
+                            // assume fax is successful
+                            $missed_call = 'false';
                         }
 
 					//read the bridge statement variables
