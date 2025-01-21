@@ -6,7 +6,14 @@ local wday = session:getVariable("weekday")  -- e.g., "1-7"
 local time_of_day = session:getVariable("time_of_day")  -- e.g., "17:00-22:00"
 local destination_number = session:getVariable("destination_number") 
 local domain_name = session:getVariable("domain_name") 
+local call_direction = session:getVariable("call_direction")
 freeswitch.consoleLog("INFO", "[residential_hours] Destination Number: " .. destination_number ..".\n")
+
+-- Check if the call is outbound and the destination number is either 911 or 933
+if call_direction == "outbound" and (destination_number == "911" or destination_number == "933") then
+    freeswitch.consoleLog("INFO", "[residential_hours] Outbound call to emergency number are always allowed. Exiting script.\n")
+    return
+end
 
 local user_exists = session:getVariable("user_exists") 
 freeswitch.consoleLog("INFO", "[residential_hours] User exists: " .. user_exists ..".\n")
