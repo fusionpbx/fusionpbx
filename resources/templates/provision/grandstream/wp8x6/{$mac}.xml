@@ -1716,7 +1716,7 @@
 		<!-- ############################################################################## -->
 		<!-- Enable Bluetooth -->
 		<!-- On, Off-->
-		<item name="bluetooth.enable"></item>
+		<!-- <item name="bluetooth.enable"></item> -->
 
 		<!-- Device Name -->
 		<!-- <item name="bluetooth.deviceName"></item> -->
