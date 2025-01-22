@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
+
 //includes files
 	require_once __DIR__ . "/resources/require.php";
 

@@ -614,6 +614,10 @@ if (!class_exists('xml_cdr')) {
 						$domain_name = urldecode($xml->variables->domain_name);
 						$domain_uuid = urldecode($xml->variables->domain_uuid);
 
+					//sanitize the caller ID
+						$caller_id_name = preg_replace('#[^a-zA-Z 0-9\-\.]#', '', $caller_id_name);
+						$caller_id_number = preg_replace('#[^0-9\-]#', '', $caller_id_number);
+
 					//misc
 						$this->array[$key][0]['ring_group_uuid'] = urldecode($xml->variables->ring_group_uuid);
 						$this->array[$key][0]['xml_cdr_uuid'] = $uuid;
@@ -634,6 +638,17 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key][0]['status'] = $status;
 
 					//time
+						//catch invalid call detail records
+						if (empty($xml->variables->start_epoch)) {
+							//empty the array so it can't save
+							$this->array = null;
+
+							//move the file to the failed location
+							$this->move_to_failed($this->file);
+
+							//stop processing
+							return;
+						}
 						$start_epoch = urldecode($xml->variables->start_epoch);
 						$this->array[$key][0]['start_epoch'] = $start_epoch;
 						$this->array[$key][0]['start_stamp'] = is_numeric((int)$start_epoch) ? date('c', $start_epoch) : null;
@@ -1482,6 +1497,15 @@ if (!class_exists('xml_cdr')) {
 			}
 		}
 
+		public function moved_to_failed($failed_file) {
+			$xml_cdr_dir = $this->setting->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
+			if (!file_exists($xml_cdr_dir.'/failed')) {
+				if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+					die('Failed to create '.$xml_cdr_dir.'/failed');
+				}
+			}
+			rename($xml_cdr_dir.'/'.$failed_file, $xml_cdr_dir.'/failed/'.$failed_file);
+		}
 
 		/**
 		 * get xml from the filesystem and save it to the database
@@ -1528,8 +1552,23 @@ if (!class_exists('xml_cdr')) {
 								$import = true;
 							}
 
+						//move the files that are too large or zero file size to the failed directory
+							if ($import && (filesize($xml_cdr_dir.'/'.$file) >= 3000000 || filesize($xml_cdr_dir.'/'.$file) == 0)) {
+								//echo "WARNING: File too large or zero file size. Moving $file to failed\n";
+								if (!empty($xml_cdr_dir)) {
+									if (!file_exists($xml_cdr_dir.'/failed')) {
+										if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+											die('Failed to create '.$xml_cdr_dir.'/failed');
+										}
+									}
+									if (rename($xml_cdr_dir.'/'.$file, $xml_cdr_dir.'/failed/'.$file)) {
+										//echo "Moved $file successfully\n";
+									}
+								}
+							}
+
 						//import the call detail files are less than 3 mb - 3 million bytes
-							if ($import && filesize($xml_cdr_dir.'/'.$file) <= 3000000) {
+							if ($import) {
 								//get the xml cdr string
 									$call_details = file_get_contents($xml_cdr_dir.'/'.$file);
 
@@ -1546,18 +1585,6 @@ if (!class_exists('xml_cdr')) {
 
 								//increment the value
 									$x++;
-							}
-
-						//move the files that are too large to the failed directory
-							if ($import && filesize($xml_cdr_dir.'/'.$file) >= 3000000) {
-								if (!empty($xml_cdr_dir)) {
-									if (!file_exists($xml_cdr_dir.'/failed')) {
-										if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
-											die('Failed to create '.$xml_cdr_dir.'/failed');
-										}
-									}
-									rename($xml_cdr_dir.'/'.$file, $xml_cdr_dir.'/failed/'.$file);
-								}
 							}
 
 						//if limit exceeded exit the loop
@@ -1729,7 +1756,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and status = 'answered' \n";
-			 	if (!$this->include_internal) {
+				if (!$this->include_internal) {
 					$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
 				}
 				$sql .= ") \n";
@@ -1741,7 +1768,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and status = 'missed' \n";
 				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
-			 	if (!$this->include_internal) {
+				if (!$this->include_internal) {
 					$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
 				}
 				$sql .= ") \n";
@@ -1752,7 +1779,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and status = 'voicemail' \n";
-			 	if (!$this->include_internal) {
+				if (!$this->include_internal) {
 					$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
 				}
 				$sql .= ") \n";
@@ -2252,5 +2279,3 @@ if (!class_exists('xml_cdr')) {
 
 	} //class
 }
-
-?>
