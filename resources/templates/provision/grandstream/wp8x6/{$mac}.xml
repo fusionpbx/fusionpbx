@@ -16,6 +16,10 @@
 		
 
 		<!-- Known issue / Notes:  -->
+		<!-- Phones provisioned on this template will need to be disabled on the FusionPBX server after provisioning. If they are not disabled, they will reboot multiple times.-->
+		<!-- Items declared on this page with no assigned value will automactly revert to the phones default settings, instead of retaining existing user settings on the phone. -->
+
+
 
 		<!-- ############################################################################## -->
 		<!-- ##  Account 1/ General Settings-->
@@ -88,8 +92,8 @@
         <item name="account.{$line}.network.dnsSRVRegisterBeforeFailover"></item>
 
 		<!-- NAT Traversal -->
-		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
-		<item name="account.{$line}.network.natTraversal">{$grandstream_nat_traversal}</item>
+		<!-- No, STUN, KeepAlive, UPnP, Auto,  -->
+		<item name="account.{$line}.network.natTraversal"></item>
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
@@ -125,7 +129,7 @@
 		
 		<!-- Register Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
-		<item name="account.{$line}.sip.registerExpiration">{$row.register_expires}</item>
+		<item name="account.{$line}.sip.registerExpiration">{$line_register_expires}</item>
 		
 		<!-- SUBSCRIBE Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
@@ -413,7 +417,7 @@
 		<item name="account.{$line}.audio.report.collector.address"></item>			
 		
 		<!-- VQ RTCP-XR Collector Port -->
-		<item name="account.{$line}.audio.report.collector.port"></item>	
+		<item name="account.{$line}.audio.report.collector.port">{$row.sip_port}</item>	
 
         <!-- Symmetric RTP -->
 		<!-- No, Yes -->
@@ -560,9 +564,9 @@
 		<!-- Ringtone -->
 		<!-- Account Ringtone -->
 		<!-- 0 - system, 1 - ring1, 2 - ring2, 3 - ring3, 4 - ring4, 5 - ring5, 6 - ring6, 7 - ring7, 8 - ring8, 9 - ring9, 10 - Doorbell, 11 - silent -->
-		{if isset($grandstream_account_ring_tone_1)}
-        <item name="account.{$line}.ring.ringtone">{$grandstream_account_ring_tone_1}</item>
-        {/if}
+		
+        <!-- <item name="account.{$line}.ring.ringtone">{if isset($incoming_ringtone)}{$incoming_ringtone}{/if}</item> -->
+        
 
 		<!-- Ignore Alert-Info header -->
 		<!-- Yes, No -->
@@ -669,6 +673,7 @@
 		{if isset($grandstream_distinctive_ringtone_10)}
 		<item name="account.{$line}.ring.match.10.ringtone">{$grandstream_distinctive_ringtone_10}</item>
 		{/if}
+		
 
 		<!-- ############################################################################## -->
 		<!-- ##  Account 1/ Advanced Features-->
@@ -820,10 +825,10 @@
 		
 		<!-- Keep-Alive Interval (s) -->
 		<!-- Number: 10 - 160 -->
-		<item name="sip.keepAliveInterval"></item>
+		<item name="sip.keepAliveInterval">20</item>
 		
 		<!-- STUN Server -->
-		<item name="network.stunServer">{$grandstream_stun_server}</item>
+		<item name="network.stunServer"></item>
 		
 		<!-- # Use NAT IP. This will enable our SIP client to use this IP in the SIP/SDP message. Example 64.3.153.50 -->
 		<!-- # String: a-z, A-Z, 0-9, ".", ":" -->
@@ -854,7 +859,7 @@
 		<item name="callFeatures.lastCallForwardAll"></item>
 
 		<!-- # Show SIP Error Response. Yes or No -->
-		<item name="sip.showError">Yes</item>
+		<item name="sip.showError"></item>
 
 		<!-- # Do not Escape '#' as 23% in SIP URL. -->
 		<!-- # Invert_Yes_No, Yes - No, No - Yes -->
@@ -1003,7 +1008,7 @@
 		<!-- ##  Settings/Call Settings/Others-->
 		<!-- ############################################################################## -->	
 		<!-- Enable Transfer. Yes or No -->
-		<item name="call.transfer.enable">Yes</item>
+		<item name="call.transfer.enable"></item>
 
 		<!-- # Hold Call Before Completing Transfer. Yes or No -->
 		<item name="call.transfer.holdCall.enable"></item>
@@ -1348,17 +1353,19 @@
 		<!-- # Yes, No -->
 		<item name="call.multicast.enableTone"></item>
 
+		{/for}
+
 		<!-- ############################################################################## -->
 		<!-- ## Network Settings/Wi-Fi Settings                     ## -->
 		<!-- ############################################################################## -->
 		<!-- Wi-Fi Function -->
 		<!-- Off,On,OffAndHideMenuFromLCD-->
-		<item name="network.wifi.enable">{$grandstream_wifi_enable}</item>
-
+		<item name="network.wifi.enable">On</item> -->
+		
 		<!-- Wi-Fi Band -->
 		<!-- Auto,2.4GHz,5GHz-->
 		<item name="network.wifi.band">Auto</item>
-		{/for}
+		
 		<!-- Country Code (for global version only) -->
 		<!-- UNITEDARABEMIRATES,ALBANIA,ARMENIA,NETHERLANDSANTILLES,ARGENTINA,AUSTRALIA,ARUBA,AZERBAIJAN,BOSNIA,BARBADOS,BANGLADESH,BELGIUM,BULGARIA,BAHRAIN,BURUNDI,BENIN,BERMUDA,BRUNEI,BOLIVIA,BRAZIL,BAHAMAS,BOTSWANA,BELARUS,BELIZE,CANADA,CONGO,SWITZERLAND,CHILE,CHINA,COLOMBIA,COSTA,CYPRUS,CZECH,GERMANY,DENMARK,DOMINICAN,ALGERIA,ECUADOR,ESTONIA,EGYPT,SPAIN,ETHIOPIA,FINLAND,FIJI,FRANCE,GERNADA,GEORGIA,GHANA,GIBRALTAR,GREENLAND,GAMBIA,GUINEA,GUADELOUPE,GREECE,GUATEMALA,GUAM,GUYANA,HONGKONG,DONDURAS,CROATIA,HAITI,HUNGARY,INDONESIA,IRELAND,ISRAEL,INDIA,ICELAND,ITALY,JERSEY,JAMAICA,JORDAN,JAPAN,KENYA,KYRGYZSTAN,CAMBODIA,SOUTHKOREA,KUWAIT,CAYMAN,KAZAKHSTAN,LEBANON,LIECHTENSTEIN,SRILANKA,LIBERIA,LITHUANIA,LUXEMBOURG,LATVIA,MOROCOO,MONACO,MONTENEGRO,MACEDONIA,MALI,MONGOLIA,MACAU,MALT,MEXICO,MALAYSIA,NIGER,NIGERIA,NICARAGUA,NETHERLANDS,NEPAL,NEWZEALNAD,OMAN,PANAMA,PERU,PAPUA,PHILIPPINES,PAKISTAN,POLAND,PUERTORICO,PORTUGAL,PARAGUAY,QATAR,ROMANIA,SERBIA,RUSSIA,RWANDA,SAUDIARABIA,SWEDEN,SINGAPORE,SLOVAKIA,SLOVENIA,SIERRALEONE,TOGO,THAILAND,TURKMENISTAN,TUNISIA,TURKEY,TRINIDAD,TAIWAN,UKRAINE,UGANDA,UNITEDKINGDOM,UNITEDSTATES,URUGUAY,VENEZUELA,VERGINISLANDS,VIETNAM,YEMEN,SOUTHAFRICA,ZAMBIA,ZIMBABWE-->
 		<!-- Default is UNITEDSTATES -->
@@ -1370,13 +1377,18 @@
 		<!-- To update Wi-Fi 2 related options, update item name to "network.wifi.ssid.1..." -->
 		<!-- To update Wi-Fi 3 related options, update item name to "network.wifi.ssid.2..." -->
 		<!-- To update Wi-Fi 10 related options, update item name to "network.wifi.ssid.9..." -->
-
+		
+		<!-- # Enable/Disable WiFi -->
+		<!-- No, Yes -->
+		<!-- <item name="network.wifi.enable">{$grandstream_wifi_enable}</item> -->
+	
+		<!--Wifi 1-->
 		<!-- ESSID -->
 		<item name="network.wifi.ssid.0.essid">{$grandstream_wifi_essid}</item>
 
 		<!-- Security Mode-->
 		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
-		<item name="network.wifi.ssid.0.key_management"></item>
+		<item name="network.wifi.ssid.0.key_management">WPA-PSK</item>
 
 		<!-- Password -->
 		<item name="network.wifi.ssid.0.psk">{$grandstream_wifi_password}</item>
@@ -1385,12 +1397,156 @@
 		<!--PEAP,TLS,TTLS,PWD-->
 		<item name="network.wifi.ssid.0.eap_method">PWD</item>
 
+
+		<!-- Wifi 2 -->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.1.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.1.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.1.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.1.eap_method">PWD</item> -->
+
+		
+		<!--Wifi 3-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.2.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.2.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.2.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.2.eap_method">PWD</item> -->
+
+		
+		<!--Wifi 4-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.3.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.3.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.3.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.3.eap_method">PWD</item> -->
+
+
+		<!--Wifi 5-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.4.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.4.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.4.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.4.eap_method">PWD</item> -->
+
+
+		<!--Wifi 6-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.5.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.5.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.5.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.5.eap_method">PWD</item> -->
+
+
+		<!--Wifi 7-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.6.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.6.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.6.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.6.eap_method">PWD</item> -->
+
+
+		<!--Wifi 8-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.7.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.7.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.7.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.7.eap_method">PWD</item> -->
+
+
+		<!--Wifi 9-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.8.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.8.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.8.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.8.eap_method">PWD</item> -->
+
+
+		<!--Wifi 10-->
+		<!-- ESSID -->
+		<!-- <item name="network.wifi.ssid.9.essid"></item> -->
+
+		<!-- Security Mode-->
+		<!-- None,WEP,WPA_PSK,WPA_EAP,Auto,WPA3_SAE_LEGACY,WPA3_EAP_LEGACY-->
+		<!-- <item name="network.wifi.ssid.9.key_management"></item> -->
+
+		<!-- Password -->
+		<!-- <item name="network.wifi.ssid.9.psk"></item> -->
+
+		<!-- EAP Method -->
+		<!--PEAP,TLS,TTLS,PWD-->
+		<!-- <item name="network.wifi.ssid.9.eap_method">PWD</item> -->
+
 		<!-- Phase 2 Authentication -->
 		<!--NONE,PAP,MSCHAP,MSCHAPV2,GTC-->
-		<item name="network.wifi.ssid.0.eap.peap.phase2.auth_type">None</item>
+		<!-- <item name="network.wifi.ssid.0.eap.peap.phase2.auth_type">None</item> -->
 
 		<!-- CA Certificate -->
-		<item name="network.wifi.ssid.0.eap.peap.phase1.ca"></item>
+		<!-- <item name="network.wifi.ssid.0.eap.peap.phase1.ca"></item> -->
 
 		<!-- Anonymous Identity -->
 		<!-- <item name="network.wifi.ssid.0.eap.pea.phase1.anon_identity"></item>-->
@@ -1425,7 +1581,7 @@
 
  		<!-- IPv4 Mode-->
  		<!-- DHCP,StaticIP-->
-		<item name="network.wifi.ssid.0.ipv4.address_mode">{$grandstream_ip_address_mode}</item>
+		<!-- <item name="network.wifi.ssid.0.ipv4.address_mode"></item> -->
 
  		<!-- IPv6 Mode-->
  		<!-- DHCP,StaticIP-->
@@ -1493,7 +1649,7 @@
 		<!-- <item name="network.wifi.ssid.0.ipv4.preferred_dns.3"></item>-->
 		<!-- <item name="network.wifi.ssid.0.ipv4.preferred_dns.4"></item>-->
 
-		{if $grandstream_ipv_mode=='0'}
+		<!-- {if $grandstream_ipv_mode=='0'}
 		<item name="network.internetProtocol">BothAndPreferIPv4</item>
 		{elseif $grandstream_ipv_mode=='1'}
 		<item name="network.internetProtocol">BothAndPreferIPv6</item>
@@ -1503,7 +1659,7 @@
 		<item name="network.internetProtocol">IPv6Only</item>
 		{else}
 		<item name="network.internetProtocol">BothAndPreferIPv4</item>
-		{/if}
+		{/if} -->
 
 		<!-- ########################################## -->
 		<!-- # IPv6 Statically Configured -->
@@ -1534,10 +1690,10 @@
 		<!-- ## Network Settings/Wi-Fi Settings/Advanced Settings                        ## -->
 		<!-- ############################################################################## -->
 		<!-- Host name (Option 12) -->
-		<item name="network.dhcp.hostName"></item>
+		<!-- <item name="network.dhcp.hostName"></item> -->
 
 		<!-- Vendor Class ID (Option 60) -->
-		<item name="network.dhcp.vendorID"></item>
+		<!-- <item name="network.dhcp.vendorID"></item> -->
 
 		<!-- Wi-Fi Signal Warning -->
 		<!-- poor,disabled,fair,good -->
@@ -1563,10 +1719,10 @@
 		<item name="bluetooth.enable"></item>
 
 		<!-- Device Name -->
-		<item name="bluetooth.deviceName"></item>
+		<!-- <item name="bluetooth.deviceName"></item> -->
 
 		<!-- ############################################################################## -->
-		<!-- ## Network Settings/OpenVPN Settings                     ## -->
+		<!-- ## Network Settings/Open Settings                     ## -->
 		<!-- ############################################################################## -->
 		<!-- OpenVPN Settings -->
 		<!-- Enable OpenVPN -->
@@ -1637,12 +1793,12 @@
 		<!-- # Layer 3 QoS for SIP -->
 		<!-- # Number:0 - 63 -->
 		<!-- # Mandatory -->
-		<item name="network.qos.forSip">{$grandstream_qos_sip}</item>
+		<item name="network.qos.forSip"></item>
 		
 		<!-- # Layer 3 QoS for RTP -->
 		<!-- # Number:0 - 63 -->
 		<!-- # Mandatory -->
-	<item name="network.qos.forRtp">{$grandstream_qos_rtp}</item>
+	<item name="network.qos.forRtp"></item>
 		
 		<!-- # Maximum Transmission Unit(MTU). Default is 1500 -->
 		<!-- # Number: 576 - 1500 -->
@@ -1757,7 +1913,7 @@
 		<!-- ############################################################################## -->
 		<!-- # Custom Idle Screen Softkey Layout-->
 		<!-- Yes, No -->
-		<item name="softkey.idleLayout.enable"></item>
+		<!-- <item name="softkey.idleLayout.enable"></item> -->
 
 
 		<!-- ###################################################################################### -->
@@ -1765,51 +1921,51 @@
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
 		<!-- # SpeedDial (0), SpeedDialViaActiveAccount (4), VoiceMail (6)-->
-		<item name="pks.softkey.1.keyMode"></item>
+		<!-- <item name="pks.softkey.1.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.softkey.1.account"></item>
+		<!-- <item name="pks.softkey.1.account"></item> -->
 
 		<!-- # Label -->
-		<item name="pks.softkey.1.description"></item>
+		<!-- <item name="pks.softkey.1.description"></item> -->
 
 		<!-- # Value (User ID) -->
-		<item name="pks.softkey.1.value"></item>
+		<!-- <item name="pks.softkey.1.value"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Custom Softkey 2-->
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
 		<!-- # SpeedDial (0), SpeedDialViaActiveAccount (4), VoiceMail (6)-->
-		<item name="pks.softkey.2.keyMode"></item>
+		<!-- <item name="pks.softkey.2.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.softkey.2.account"></item>
+		<!-- <item name="pks.softkey.2.account"></item> -->
 
 		<!-- # Label -->
-		<item name="pks.softkey.2.description"></item>
+		<!-- <item name="pks.softkey.2.description"></item> -->
 
 		<!-- # Value (User ID) -->
-		<item name="pks.softkey.2.value"></item>
+		<!-- <item name="pks.softkey.2.value"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Custom Softkey 3-->
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
 		<!-- # SpeedDial (0), SpeedDialViaActiveAccount (4), VoiceMail (6)-->
-		<item name="pks.softkey.3.keyMode"></item>
+		<!-- <item name="pks.softkey.3.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.softkey.3.account"></item>
+		<!-- <item name="pks.softkey.3.account"></item> -->
 
 		<!-- # Label -->
-		<item name="pks.softkey.3.description"></item>
+		<!-- <item name="pks.softkey.3.description"></item> -->
 
 		<!-- # Value (User ID) -->
-		<item name="pks.softkey.3.value"></item>
+		<!-- <item name="pks.softkey.3.value"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Custom Idle Screen Softkey Layout -->
@@ -1824,46 +1980,46 @@
 		<!-- ############################################################################## -->
 		<!-- # Custom Call Screen Softkey Layout-->
 		<!-- Yes, No -->
-		<item name="softkeys.layout.enable"></item>
+		<!-- <item name="softkeys.layout.enable"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Custom Softkey 1-->
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
 		<!-- # SpeedDial (0), SpeedDialViaActiveAccount (4), VoiceMail (6)-->
-		<item name="pks.scSoftkey.1.mode"></item>
+		<!-- <item name="pks.scSoftkey.1.mode"></item> -->
 
 		<!-- # Label -->
-		<item name="pks.scSoftkey.1.description"></item>
+		<!-- <item name="pks.scSoftkey.1.description"></item> -->
 
 		<!-- # Value (User ID) -->
-		<item name="pks.scSoftkey.1.value"></item>
+		<!-- <item name="pks.scSoftkey.1.value"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Custom Softkey 2-->
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
 		<!-- # SpeedDial (0), SpeedDialViaActiveAccount (4), VoiceMail (6)-->
-		<item name="pks.scSoftkey.2.mode"></item>
+		<!-- <item name="pks.scSoftkey.2.mode"></item> -->
 
 		<!-- # Label -->
-		<item name="pks.scSoftkey.2.description"></item>
+		<!-- <item name="pks.scSoftkey.2.description"></item> -->
 
 		<!-- # Value (User ID) -->
-		<item name="pks.scSoftkey.2.value"></item>
+		<!-- <item name="pks.scSoftkey.2.value"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Custom Softkey 3-->
 		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
 		<!-- # SpeedDial (0), SpeedDialViaActiveAccount (4), VoiceMail (6)-->
-		<item name="pks.scSoftkey.3.mode"></item>
+		<!-- <item name="pks.scSoftkey.3.mode"></item> -->
 
 		<!-- # Label -->
-		<item name="pks.scSoftkey.3.description"></item>
+		<!-- <item name="pks.scSoftkey.3.description"></item> -->
 
 		<!-- # Value (User ID) -->
-		<item name="pks.scSoftkey.3.value"></item>
+		<!-- <item name="pks.scSoftkey.3.value"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Custom Call Screen Softkey Layout -->
@@ -1916,17 +2072,17 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.0.keyMode"></item>
+		<!-- <item name="pks.num.0.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3-->
-		<item name="pks.num.0.account">Account{$line}</item>
+		<!-- <item name="pks.num.0.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.0.value"></item>
+		<!-- <item name="pks.num.0.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.0.description"></item>
+		<!-- <item name="pks.num.0.description"></item> -->
 		
 
 		<!-- ######################################################################################  -->
@@ -1934,119 +2090,119 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.2.keyMode"></item>
+		<!-- <item name="pks.num.2.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.2.account">Account{$line}</item>
+		<!-- <item name="pks.num.2.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.2.value"></item>
+		<!-- <item name="pks.num.2.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.2.description"></item>
+		<!-- <item name="pks.num.2.description"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Number key 3  -->
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.3.keyMode"></item>
+		<!-- <item name="pks.num.3.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.3.account">Account{$line}</item>
+		<!-- <item name="pks.num.3.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.3.value"></item>
+		<!-- <item name="pks.num.3.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.3.description"></item>
+		<!-- <item name="pks.num.3.description"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Number key 4 -->
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.4.keyMode"></item>
+		<!-- <item name="pks.num.4.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.4.account">Account{$line}</item>
+		<!-- <item name="pks.num.4.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.4.value"></item>
+		<!-- <item name="pks.num.4.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.4.description"></item>
+		<!-- <item name="pks.num.4.description"></item> -->
 
 		<!-- ###################################################################################### -->
 		<!-- # Number key 5  -->
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.5.keyMode"></item>
+		<!-- <item name="pks.num.5.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.5.account">Account{$line}</item>
+		<!-- <item name="pks.num.5.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.5.value"></item>
+		<!-- <item name="pks.num.5.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.5.description"></item>
+		<!-- <item name="pks.num.5.description"></item> -->
 		
 		<!-- ######################################################################################  -->
 		<!-- # Number key 6  -->
 		<!-- ######################################################################################  -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.6.keyMode"></item>
+		<!-- <item name="pks.num.6.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.6.account">Account{$line}</item>
+		<!-- <item name="pks.num.6.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.6.value"></item>
+		<!-- <item name="pks.num.6.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.6.description"></item>
+		<!-- <item name="pks.num.6.description"></item> -->
 
 		<!-- ######################################################################################  -->
 		<!-- # Number key 7  -->
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.7.keyMode"></item>
+		<!-- <item name="pks.num.7.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.7.account">Account{$line}</item>
+		<!-- <item name="pks.num.7.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.7.value"></item>
+		<!-- <item name="pks.num.7.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.7.description"></item>
+		<!-- <item name="pks.num.7.description"></item> -->
 
 		<!-- ######################################################################################  -->
 		<!-- # Number key 8  -->
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.8.keyMode"></item>
+		<!-- <item name="pks.num.8.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.8.account">Account{$line}</item>
+		<!-- <item name="pks.num.8.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.8.value"></item>
+		<!-- <item name="pks.num.8.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.8.description"></item>
+		<!-- <item name="pks.num.8.description"></item> -->
 
 
 		<!-- ###################################################################################### -->
@@ -2054,17 +2210,17 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # -1==None,0==Speed Dial,4==Speed Dial Via Active Account,5==Dial DTMF,6==Voicemail,7==Call Return,11==LDAP Search,15==Call Log,19==INFO,20==Message,22==DND,23==Redial,27==GDS Opendoor,29==Provision,34==HTTP Command,37==Send Message-->
-		<item name="pks.num.9.keyMode"></item>
+		<!-- <item name="pks.num.9.keyMode"></item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2, Account3 -->
-		<item name="pks.num.9.account">Account{$line}</item>
+		<!-- <item name="pks.num.9.account"></item> -->
 
 		<!-- MPK Value -->
-		<item name="pks.num.9.value"></item>
+		<!-- <item name="pks.num.9.value"></item> -->
 
 		<!-- MPK Label -->
-		<item name="pks.num.9.description"></item>
+		<!-- <item name="pks.num.9.description"></item> -->
 
 		<!-- ############################################################################## -->
 		<!-- ##  Programmable Keys /Navigate Keys -->
@@ -2072,21 +2228,21 @@
         <!-- # Mode -->
 		<!-- # none,settings,account.default.next,info,messages.IM,notification.missed,callhistory.missed,callhistory.outgoing,callhistory.incoming,contacts.bs.callhistory,contacts.broadsoft,contacts,contacts.local,contacts.LDAP,contacts.remote,contacts.remote1,contacts.remote2,contacts.remote3,contacts.remote4,contacts.remote5,contacts.online,bluetooth,account.settings-->
 
-		<item name="navigation.up.short"></item>
+		<!-- <item name="navigation.up.short"></item> -->
 
-		<item name="navigation.up.long"></item>
+		<!-- <item name="navigation.up.long"></item> -->
 
-		<item name="navigation.down.short"></item>
+		<!-- <item name="navigation.down.short"></item> -->
 
-		<item name="navigation.down.long"></item>
+		<!-- <item name="navigation.down.long"></item> -->
 
-		<item name="navigation.left.short"></item>
+		<!-- <item name="navigation.left.short"></item> -->
 
-		<item name="navigation.left.long"></item>
+		<!-- <item name="navigation.left.long"></item> -->
 
-		<item name="navigation.right.short"></item>
+		<!-- <item name="navigation.right.short"></item> -->
 
-		<item name="navigation.right.long"></item>
+		<!-- <item name="navigation.right.long"></item> -->
 
 		<!-- ############################################################################## -->
 		<!-- ##  Programmable Keys /Side Keys -->
@@ -2133,7 +2289,7 @@
 
 		<!-- # Allow DHCP Option 42 to override NTP server. Yes or No -->
 		<!-- # When set to Yes, it will override the configured NTP server -->
-		<item name="dateTime.override.dhcp.allowOption42"></item>
+		<item name="dateTime.override.dhcp.allowOption42">0</item>
 		
 		<!-- # Time Zone -->
 
@@ -2206,7 +2362,7 @@
 		<item name="dateTime.timezone">{$grandstream_gxp_time_zone}</item>
 		
 		<!-- # Allow DHCP Option 2 to Override Time Zone Setting. Yes or No -->
-		<item name="dateTime.override.dhcp.allowOption2">{$grandstream_dhcp_time_zone}</item>
+		<item name="dateTime.override.dhcp.allowOption2">0</item>
 
 		<!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
 		<!-- # String -->
@@ -2219,11 +2375,11 @@
 		<!-- # 2: dd-mm-yyyy      eg. 31-10-2011 -->
 		<!-- # 3: dddd, MMMM dd   eg. Monday, October 31 -->
 		<!-- # 4: MMMM dd, dddd   eg. October 31, Monday -->
-		<item name="dateTime.format.date"></item>
+		<item name="dateTime.format.date">{$grandstream_date_display}</item>
 
 		<!-- # Time Display Format. 12 Hour, 24 Hour -->
 		<!-- 12Hour, 24Hour -->
-		<item name="dateTime.format.time"></item>
+		<item name="dateTime.format.time">{$time_format}</item>
 
 		<!-- # Display Language. Default is Auto -->
 		<!-- # ar - Arabic, cz - Czech, de - Deutsh -->
@@ -2316,7 +2472,7 @@
 
 		<!-- # Admin Password -->
 		<!-- # String: a-z, A-Z, 0-9 -->
-		<!--<item name="users.admin.password"></item>-->
+		<item name="users.admin.password">{$admin_password}</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Security Settings / Client Certificate -->
@@ -2327,7 +2483,7 @@
 		
 		<!-- Maximum TLS Version -->
 		<!-- UNLIMITED, TLS_1_0, TLS_1_1, TLS_1_2, TLS_1_3 -->
-		<item name="security.maximum.TLS.version">UNLIMITED</item>
+		<item name="security.maximum.TLS.version"></item>
 
 		<!-- Enable LEGACY_SERVER_CONNECT-->
 		<!-- Yes, No -->
@@ -2347,7 +2503,7 @@
 		<item name="security.password"></item>
 
 		<!-- Custom Certificate -->
-		<item name="security.customcertificate"></item>
+		<!-- <item name="security.customcertificate"></item> -->
 
 		<!-- CA Signature Algorithm -->
 		<!-- md5WithRSAEncryption, ecdsa-with-SHA384 -->
@@ -2389,7 +2545,7 @@
 
 		<!-- # Lock Screen Password -->
 		<!-- # String -->
-		<item name="keys.lock.password"></item>
+		<!-- <item name="keys.lock.password"></item> -->
 		
 		<!-- # Emergency -->
 		<!-- # String -->
@@ -2401,16 +2557,16 @@
 
 		<!-- # Incoming Call Ring -->
 		<!-- Yes, No-->
-		<item name="ring.incomingCall.enable"></item>
+		<!-- <item name="ring.incomingCall.enable"></item> -->
 
 		<!-- # Notification Ring -->
 		<!-- Yes, No-->
-		<item name="ring.notification.enable"></item>
+		<!-- <item name="ring.notification.enable"></item> -->
 
 		<!-- # Message Ringtone. -->
 		<!-- # Number: 12 - 20. 12==Beep 1,13==Beep 2,14==Beep 3,15==Beep 4,16==Beep 5,17==Beep 6,18==Beep 7,19==Beep 8,20==Beep 9 -->
 		<!-- # Default is 15 -->
-		<item name="message.ringtone"></item>
+		<!-- <item name="message.ringtone"></item> -->
 
 
 		<!-- # Speaker Volume -->
@@ -2419,19 +2575,19 @@
 
 		<!-- # Receiver Volume -->
 		<!-- # Number:  1 - 8. Default is 6 -->
-		<item name="audio.volume.handset"></item>
+		<!-- <item name="audio.volume.handset"></item> -->
 
 
 		<!-- # Ringtone and Notification Volume-->
 		<!-- # Number:  0 - 10. Default is 8 -->
-		<item name="audio.volume.ring"></item>
+		<!-- <item name="audio.volume.ring"></item> -->
 
 		<!-- # Lock Speaker Volume. No, Ring, Talk, Both -->
-		<item name="audio.volume.lock"></item>
+		<!-- <item name="audio.volume.lock"></item> -->
 
 		<!-- # Call Tone Volume -->
 		<!-- # Number: -15 - 15. Default is 0 -->
-		<item name="audio.volume.tone"></item>
+		<!-- <item name="audio.volume.tone"></item> -->
 
 		<!-- # Enable Charging Tone -->
 		<!-- Yes, No-->
@@ -2467,7 +2623,7 @@
 
 		<!-- # Enable Receiver Sidetone-->
 		<!-- 15-Yes, 0-No -->
-		<item name="audio.handset.sidetone.volume"></item>
+		<!-- <item name="audio.handset.sidetone.volume"></item> -->
 
 		<!-- # Enable HAC -->
 		<!-- Yes, No -->
@@ -2577,10 +2733,10 @@
 
 		<!-- Periodic Inform Enable -->
 		<!-- Yes, No -->
-		<item name="tr069.periodicInform"></item>
+		<item name="tr069.periodicInform">{$grandstream_tr069_periodic_inform_enable}</item>
 
 		<!-- Periodic Inform Interval (s) -->
-		<item name="tr069.periodicInformInterval">{$grandstream_tr069_periodic_inform_enable}</item>
+		<item name="tr069.periodicInformInterval">300</item>
 
 		<!-- Connection Request Username -->
 		<item name="tr069.connectionRequestUsername"></item>
@@ -2604,18 +2760,18 @@
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Firmware  ## -->
 		<!-- ############################################################################## -->
-		<!-- Firmware Upgrade Mode -->
+		<!--  Upgrade Mode -->
 		<!-- TFTP, HTTP, HTTPS -->
-		<item name="provisioning.firmware.protocol">{$grandstream_firmware_upgrade_protocol}</item>
-		
+		<item name="provisioning.firmware.protocol">1</item>
+
 		<!-- Firmware Server Path -->
 		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
-		
+	
 		<!-- Firmware Server User Name -->
-		<item name="provisioning.firmware.username">{$http_auth_username}</item>
+		<item name="provisioning.firmware.username"></item>
 		
 		<!-- Firmware Server Password -->
-		<item name="provisioning.firmware.password">{$http_auth_password}</item>
+		<item name="provisioning.firmware.password"></item>
 		
 		<!-- Firmware File Prefix -->
 		<item name="provisioning.firmware.filePrefix"></item>
@@ -2628,9 +2784,10 @@
 		<!-- ############################################################################## -->
 		<!-- Config Upgrade Via -->
 		<!-- TFTP, HTTP, HTTPS -->
-		<item name="provisioning.config.protocol">{$grandstream_firmware_upgrade_protocol}</item>
+		<item name="provisioning.config.protocol">2</item>
 		
 		<!-- Config Server Path -->
+		
 		<item name="provisioning.config.serverPath">{$grandstream_config_server_path}</item>
 		
 		<!-- Config Server User Name -->
@@ -2650,7 +2807,7 @@
 
 		<!-- Authenticate Conf File -->
 		<!-- Yes, No -->
-		<item name="provisioning.config.authenticateFile"></item>
+		<item name="provisioning.config.authenticateFile">0</item>
 
 		<!-- XML Config File Password -->
 		<item name="provisioning.config.filePassword"></item>
@@ -2664,16 +2821,16 @@
 		
 		<!-- Automatic Upgrade Check Interval (m) -->
 		<!-- Number: 60 - 5256000. Default value is 10080 -->
-		<item name="provisioning.auto.minute">{$grandstream_automatic_provisioning_minutes}</item>
+		<item name="provisioning.auto.minute"></item>
 		
 		<!-- Starting - Ending Hour of the Day (0-23) -->
-		<item name="provisioning.auto.hour">{$grandstream_automatic_provisioning_hour}</item>
+		<item name="provisioning.auto.hour"></item>
 		<item name="provisioning.auto.endHour"></item>
 
 		<!-- Day of the Week -->
 		<!-- 0, 1 (default), 2, 3, 4, 5, 6 -->
 		<!-- Multiple days example: 0/1/2/3/4 -->
-		<item name="provisioning.auto.day">{$grandstream_automatic_provisioning_day}</item>
+		<item name="provisioning.auto.day"></item>
 
 		<!-- # Randomized Automatic Upgrade. No or Yes -->
 		<item name="provisioning.auto.randomTime.enable"></item>
@@ -2689,14 +2846,14 @@
 		<!-- # When set to Yes, it will override the configured provision path and method -->
 		<!-- Allow DHCP Option 43 and Option 66 to Override Server -->
 		<!-- No, Yes, Fallback-->
-		<item name="provisioning.override.dhcp.allowCommonOptions">{$grandstream_dhcp_option_override}</item>
+		<item name="provisioning.override.dhcp.allowCommonOptions">0</item>
 
 		<!-- # Allow DHCP Option 120 to Override SIP Server -->
 		<!-- # No or Yes. -->
-		<item name="sip.override.dhcp.allowOption120">{$grandstream_dhcp_option_override_sip_server}</item>
+		<item name="sip.override.dhcp.allowOption120">0</item>
 
 		<!-- # Additional Override DHCP Option.  None, Option 150, Option 160.  -->
-		<item name="provisioning.override.dhcp.allowCustomOption">{$grandstream_dhcp_option_additional_override}</item>
+		<item name="provisioning.override.dhcp.allowCustomOption">0</item>
 
 		<!-- # Download and Process ALL Available Config Files. No or Yes -->
 		<item name="provisioning.config.processAll.enable"></item>
@@ -2704,7 +2861,7 @@
 		<!-- # User Protection. No or Yes -->
 		<item name="provisioning.userProtect.enable"></item>
 		
-		<!-- # Auto Provision. No or Yes. -->
+		<!-- # vision. No or Yes. -->
 		<item name="provisioning.3cxAutoProvision"></item>
 
 		<!-- ############################################################################## -->
@@ -2725,17 +2882,17 @@
 		<item name="maintain.syslog.protocol"></item>
 
 		<!-- Syslog Server -->
-		<item name="maintain.syslog.server">{$grandstream_syslog_server}</item>
+		<item name="maintain.syslog.server"></item>
 
 		<!-- Syslog Level -->
 		<!-- None, Debug, Info, Warning, Error -->
-		<item name="maintain.syslog.level">{$grandstream_syslog_level}</item>
+		<item name="maintain.syslog.level"></item>
 
 		<!-- Syslog Keyword Filter -->
 		<item name="maintain.syslog.keywordFiltering"></item>
 
 		<!-- # Send SIP Log. No - Do not send SIP log in Syslog, Yes - Send SIP log in Syslog if configured and set to DEBUG level. -->
-		<item name="maintain.syslog.sendSipLog">{$grandstream_send_sip_log}</item>
+		<item name="maintain.syslog.sendSipLog"></item>
 
 		<!-- # Maintain System Log Information after Factory Reset. Yes or No -->
 		<item name="maintain.syslog.persist.factoryreset"></item>		
@@ -3037,7 +3194,7 @@
 		
 		<!-- # LDAP Version. Protocol version for the phone when send the bind requests -->
 		<!-- # version2, version3. Default is version3 -->
-		<item name="ldap.version">version3</item>
+		<item name="ldap.version"></item>
 
 		<!-- Server Address -->
 		<item name="ldap.server"></item>
@@ -3294,7 +3451,7 @@
 
 		<!-- Account -->
 		<!-- Account1, Account2, Account3 -->
-		<item name="accountSharing.account">Account{$line}</item>
+		<item name="accountSharing.account"></item>
 
 		<!-- # Account Name-->
 		<!-- # String -->
