@@ -545,7 +545,10 @@
 							$this->db->sqliteCreateFunction('strright', 'php_right', 2);
 					}
 					else {
-						echo "not found";
+						$error_message = "file not found";
+						$message['message'] = $error_message;
+						$this->message = $message;
+						return false;
 					}
 				}
 
@@ -606,7 +609,13 @@
 							$this->db = new PDO("odbc:".$this->db_name, $this->username, $this->password);
 						}
 						catch (PDOException $e) {
-							echo 'Connection failed: ' . $e->getMessage();
+							$message['message'] = $e->getMessage();
+							$message['code'] = $e->getCode();
+							$message['line'] = $e->getLine();
+							$message['file'] = $e->getFile();
+							$message['trace'] = $e->getTraceAsString();
+							$message['debug'] = debug_backtrace();
+							$this->message = $message;
 						}
 				}
 			}
@@ -730,12 +739,13 @@
 
 				//if unable to connect to the database
 				if (!$this->db) {
-					$backtrace = debug_backtrace();
-					echo "Connection Failed<br />\n";
-					echo "line number ".__line__."<br />\n";
-					echo "<pre>";
-					print_r($backtrace);
-					echo "</pre>";
+					$message['message'] = $e->getMessage();
+					$message['code'] = $e->getCode();
+					$message['line'] = $e->getLine();
+					$message['file'] = $e->getFile();
+					$message['trace'] = $e->getTraceAsString();
+					$message['debug'] = debug_backtrace();
+					$this->message = $message;
 					return false;
 				}
 
@@ -973,13 +983,12 @@
 						}
 					}
 					catch(PDOException $e) {
-						$message["type"] = 'error';
-						$message["code"] = $e->getCode();
-						$message["message"] = $e->getMessage();
-						$message["sql"] = $sql;
-						if (!empty($parameters)) {
-							$message["parameters"] = $parameters;
-						}
+						$message['message'] = $e->getMessage();
+						$message['code'] = $e->getCode();
+						$message['line'] = $e->getLine();
+						$message['file'] = $e->getFile();
+						$message['trace'] = $e->getTraceAsString();
+						$message['debug'] = debug_backtrace();
 						$this->message = $message;
 						return false;
 					}
@@ -1055,20 +1064,18 @@
 
 				//prepare the sql and parameters and then run the query
 					try {
-						//$this->sql = $sql;
 						//$this->db->exec($sql);
 						$prep_statement = $this->db->prepare($sql);
 						$prep_statement->execute($params);
 					}
 					catch(PDOException $e) {
-						echo "<b>Error:</b><br />\n";
-						echo "<table>\n";
-						echo "<tr>\n";
-						echo "<td>\n";
-						echo $e->getMessage();
-						echo "</td>\n";
-						echo "</tr>\n";
-						echo "</table>\n";
+						$message['message'] = $e->getMessage();
+						$message['code'] = $e->getCode();
+						$message['line'] = $e->getLine();
+						$message['file'] = $e->getFile();
+						$message['trace'] = $e->getTraceAsString();
+						$message['debug'] = debug_backtrace();
+						$this->message = $message;
 					}
 					unset($sql, $prep_statement, $this->fields);
 			}
@@ -1369,8 +1376,7 @@
 
 									$this->message = $message;
 									$m++;
-									unset($sql);
-									unset($statement);
+									unset($sql, $statement);
 								}
 								catch(PDOException $e) {
 									$retval = false;
@@ -1570,8 +1576,10 @@
 
 				//unable to connect to the database
 					if (!$this->db) {
-						echo "Connection Failed<br />\n";
-						echo "line number ".__line__."<br />\n";
+						$error_message = "Connection Failed<br />\n";
+						$error_message .= "line number ".__line__."<br />\n";
+						$message['message'] = $error_message;
+						$this->message = $message;
 						return false;
 					}
 
@@ -1615,14 +1623,12 @@
 						}
 					}
 					catch(PDOException $e) {
-						$message["message"] = "Bad Request";
-						$message["code"] = "400";
-						$message["error"]["message"] = $e->getMessage();
-						$message["sql"] = $sql;
-
-						if (is_array($parameters)) {
-							$message["parameters"] = $parameters;
-						}
+						$message['message'] = $e->getMessage();
+						$message['code'] = $e->getCode();
+						$message['line'] = $e->getLine();
+						$message['file'] = $e->getFile();
+						$message['trace'] = $e->getTraceAsString();
+						$message['debug'] = debug_backtrace();
 						$this->message = $message;
 						return false;
 					}
@@ -2197,9 +2203,11 @@
 												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 											}
 											catch(PDOException $e) {
-												echo $sql."<br />\n";
-												echo 'Caught exception: '.  $e->getMessage()."<br /><br />\n";
-												echo $sql. "<br /><br />\n";
+												$message["type"] = 'error';
+												$message["code"] = $e->getCode();
+												$message["message"] = $e->getMessage();
+												$message["sql"] = $sql;
+												$this->message = $message;
 												return false;
 											}
 
@@ -2523,9 +2531,13 @@
 																unset($prep_statement);
 															}
 															catch(PDOException $e) {
-																echo $sql."<br />\n";
-																echo 'Caught exception: '.  $e->getMessage()."<br /><br />\n";
-																echo $sql. "<br /><br />\n";
+																$message['message'] = $e->getMessage();
+																$message['code'] = $e->getCode();
+																$message['line'] = $e->getLine();
+																$message['file'] = $e->getFile();
+																$message['trace'] = $e->getTraceAsString();
+																$message['debug'] = debug_backtrace();
+																$this->message = $message;
 																return false;
 															}
 
@@ -2907,7 +2919,13 @@
 							unset($sql);
 						}
 						catch(PDOException $e) {
-							echo $e->getMessage();
+							$message['message'] = $e->getMessage();
+							$message['code'] = $e->getCode();
+							$message['line'] = $e->getLine();
+							$message['file'] = $e->getFile();
+							$message['trace'] = $e->getTraceAsString();
+							$message['debug'] = debug_backtrace();
+							$this->message = $message;
 							return false;
 						}
 					}
