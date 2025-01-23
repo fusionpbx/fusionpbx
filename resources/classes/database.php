@@ -736,7 +736,7 @@
 					echo "<pre>";
 					print_r($backtrace);
 					echo "</pre>";
-					exit;
+					return false;
 				}
 
 				//query table store to see if the table exists
@@ -1572,7 +1572,7 @@
 					if (!$this->db) {
 						echo "Connection Failed<br />\n";
 						echo "line number ".__line__."<br />\n";
-						exit;
+						return false;
 					}
 
 				//set the error mode
@@ -2200,7 +2200,7 @@
 												echo $sql."<br />\n";
 												echo 'Caught exception: '.  $e->getMessage()."<br /><br />\n";
 												echo $sql. "<br /><br />\n";
-												exit;
+												return false;
 											}
 
 										//set the action
@@ -2526,7 +2526,7 @@
 																echo $sql."<br />\n";
 																echo 'Caught exception: '.  $e->getMessage()."<br /><br />\n";
 																echo $sql. "<br /><br />\n";
-																exit;
+																return false;
 															}
 
 														}
@@ -2908,7 +2908,7 @@
 						}
 						catch(PDOException $e) {
 							echo $e->getMessage();
-							exit;
+							return false;
 						}
 					}
 					return $this->message;
