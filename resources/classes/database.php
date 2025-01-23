@@ -576,8 +576,14 @@
 							}
 					}
 					catch (PDOException $error) {
-						print "error: " . $error->getMessage() . "<br/>";
-						die();
+						$message['message'] = $e->getMessage();
+						$message['code'] = $e->getCode();
+						$message['line'] = $e->getLine();
+						$message['file'] = $e->getFile();
+						$message['trace'] = $e->getTraceAsString();
+						$message['debug'] = debug_backtrace();
+						$this->message = $message;
+						return false;
 					}
 				}
 
@@ -598,8 +604,14 @@
 						}
 					}
 					catch (PDOException $error) {
-						print "error: " . $error->getMessage() . "<br/>";
-						die();
+						$message['message'] = $e->getMessage();
+						$message['code'] = $e->getCode();
+						$message['line'] = $e->getLine();
+						$message['file'] = $e->getFile();
+						$message['trace'] = $e->getTraceAsString();
+						$message['debug'] = debug_backtrace();
+						$this->message = $message;
+						return false;
 					}
 				}
 
@@ -616,8 +628,12 @@
 							$message['trace'] = $e->getTraceAsString();
 							$message['debug'] = debug_backtrace();
 							$this->message = $message;
+							return false;
 						}
 				}
+
+				//connected to the database
+				return true;
 			}
 
 			/**
