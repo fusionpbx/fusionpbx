@@ -575,7 +575,7 @@
 								}
 							}
 					}
-					catch (PDOException $error) {
+					catch (PDOException $e) {
 						$message['message'] = $e->getMessage();
 						$message['code'] = $e->getCode();
 						$message['line'] = $e->getLine();
@@ -603,7 +603,7 @@
 							$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->username password=$this->password");
 						}
 					}
-					catch (PDOException $error) {
+					catch (PDOException $e) {
 						$message['message'] = $e->getMessage();
 						$message['code'] = $e->getCode();
 						$message['line'] = $e->getLine();
@@ -755,11 +755,11 @@
 
 				//if unable to connect to the database
 				if (!$this->db) {
-					$message['message'] = $e->getMessage();
-					$message['code'] = $e->getCode();
-					$message['line'] = $e->getLine();
-					$message['file'] = $e->getFile();
-					$message['trace'] = $e->getTraceAsString();
+					$message['message'] = 'Unable to connect to database';
+					$message['code'] = '500';
+					$message['line'] = __LINE__;
+					$message['file'] = __FILE__;
+					$message['trace'] = '';
 					$message['debug'] = debug_backtrace();
 					$this->message = $message;
 					return false;
@@ -2949,6 +2949,34 @@
 			} //save method
 
 			/**
+			 * Ensure the database is still connected and active.
+			 * <p>NOTE:<br>
+			 * There is no method in PDO that can reliably detect if the connection is active. Therefor, a lightweight
+			 * query is executed using the statement <code>select 1</code>.</p>
+			 * @return bool True if the database is connected. False otherwise.
+			 */
+			public function is_connected(): bool {
+				try {
+					$stmt = $this->db->query('SELECT 1');
+					return $stmt !== false;
+				} catch (PDOException $ex) {
+					//database is not connected
+					return false;
+				} catch (Exception $e) {
+					//some other error has occurred so record it
+					$message['message'] = $e->getMessage();
+					$message['code'] = $e->getCode();
+					$message['line'] = $e->getLine();
+					$message['file'] = $e->getFile();
+					$message['trace'] = $e->getTraceAsString();
+					$message['debug'] = debug_backtrace();
+					$this->message = $message;
+					return false;
+				}
+				return true;
+			}
+
+			/**
 			 * Converts a plural English word to singular.
 			 * @param string $word English word
 			 * @return string Singular version of English word
@@ -3171,7 +3199,9 @@
 		public static function new(array $params = []) {
 			if (self::$database === null) {
 				self::$database = new database($params);
-				self::$database->connect();
+				if (!self::$database->is_connected()) {
+					self::$database->connect();
+				}
 			}
 			return self::$database;
 		}
