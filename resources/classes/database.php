@@ -2948,7 +2948,7 @@
 					return $this->message;
 			} //save method
 
-			/**
+						/**
 			 * Ensure the database is still connected and active.
 			 * <p>NOTE:<br>
 			 * There is no method in PDO that can reliably detect if the connection is active. Therefor, a lightweight
@@ -2957,7 +2957,8 @@
 			 */
 			public function is_connected(): bool {
 				try {
-					$stmt = $this->db->query('SELECT 1');
+					$stmt = false;
+					if ($this->db !== null) $stmt = $this->db->query('SELECT 1');
 					return $stmt !== false;
 				} catch (PDOException $ex) {
 					//database is not connected
