@@ -210,7 +210,7 @@
 
 		//get the domain_uuid
 			$sql = "select domain_uuid from v_domains ";
-			$sql .= "where domain_name = :domain_name ";
+			$sql .= "where lower(domain_name) = lower(:domain_name) ";
 			$parameters['domain_name'] = $domain_name;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
