@@ -33,6 +33,9 @@
 		session_start();
 	}
 
+//connect to the database if not initialized
+	$database = database::new();
+
 //set the domains session
 	if (!isset($_SESSION['domains'])) {
 		$domain = new domains();
@@ -79,11 +82,6 @@
 	}
 	else {
 		$content = '';
-	}
-
-//connect to the database if not initialized
-	if (!($database instanceof database)) {
-		$database = new database();
 	}
 
 //get the parent id
