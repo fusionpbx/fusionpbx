@@ -39,7 +39,7 @@
 	}
 
 //initialize the database object
-	$database = new database;
+	$database = database::new();
 
 //add multi-lingual support
 	$language = new text;
@@ -658,9 +658,9 @@
 													$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["password"] = $password;
 													$array["devices"][$j]["device_lines"][0]["line_number"] = is_numeric($line_numbers[$d]) ? $line_numbers[$d] : '1';
-													$array["devices"][$j]["device_lines"][0]["sip_port"] = $_SESSION['provision']['line_sip_port']['numeric'];
+													$array["devices"][$j]["device_lines"][0]["sip_port"] = $_SESSION['provision']['line_sip_port']['text'];
 													$array["devices"][$j]["device_lines"][0]["sip_transport"] = $_SESSION['provision']['line_sip_transport']['text'];
-													$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['numeric'];
+													$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['text'];
 													$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
 												}
 
