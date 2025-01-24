@@ -38,6 +38,11 @@
 					session:execute("sleep", "1000");
 				end
 
+			--remove deleted messages in queue
+				if (use_deletion_queue == "true") then
+					remove_deleted_messages(voicemail_id);
+				end
+
 			--new voicemail count
 				if (session:ready()) then
 					local sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages

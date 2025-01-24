@@ -253,6 +253,15 @@
 					end
 				end
 
+				deletion_queue_retention_hours = "24";
+				if (settings['voicemail'] ~= nil) then
+					if (settings['voicemail']['deletion_queue_retention_hours'] ~= nil) then
+						if (settings['voicemail']['deletion_queue_retention_hours']['numeric'] ~= nil) then
+							deletion_queue_retention_hours = settings['voicemail']['deletion_queue_retention_hours']['numeric'];
+						end
+					end
+				end
+
 			end
 
 			if (settings['voicemail']) then
@@ -370,6 +379,7 @@
 	require "app.voicemail.resources.functions.mwi_notify";
 	require "app.voicemail.resources.functions.blf_notify";
 	require "app.voicemail.resources.functions.tutorial";
+	require "app.voicemail.resources.functions.remove_deleted_messages";
 
 --send a message waiting event
 	if (voicemail_action == "mwi") then
