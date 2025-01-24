@@ -9,9 +9,15 @@ local domain_name = session:getVariable("domain_name")
 local call_direction = session:getVariable("call_direction")
 freeswitch.consoleLog("INFO", "[residential_hours] Destination Number: " .. destination_number ..".\n")
 
+-- Check if the call is local and the destination number is *97
+if call_direction == "local" and destination_number == "*97" then
+    freeswitch.consoleLog("INFO", "[residential_hours] Local call to *97 (voicemail) is always allowed. Exiting script.\n")
+    return
+end
+
 -- Check if the call is outbound and the destination number is either 911 or 933
 if call_direction == "outbound" and (destination_number == "911" or destination_number == "933") then
-    freeswitch.consoleLog("INFO", "[residential_hours] Outbound call to emergency number are always allowed. Exiting script.\n")
+    freeswitch.consoleLog("INFO", "[residential_hours] Outbound call to emergency number is always allowed. Exiting script.\n")
     return
 end
 
