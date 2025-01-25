@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Josh "JD" Byrnes <jd@byrnes.au>
 */
 
 /**
@@ -93,84 +94,53 @@ if (!class_exists('destinations')) {
 		* @var string $array destination_prefix, destination_trunk_prefix, destination_area_code, destination_number
 		*/
 		public function to_regex($array) {
+			// Strange case: destination_number starts with a '+' char and there's no destination_trunk_prefix or destination_area_code (added for backwards compatibility - 02/01/2025)
+			if (isset($array['destination_number']) && substr($array['destination_number'], 0, 1) == '+' && (!isset($array['destination_trunk_prefix']) || !isset($array['destination_area_code']))) {
+				return $this->replaceSpecialDigits('^\+('.substr($array['destination_number'], 1).')$');
+			}
 
-				if (isset($array['destination_prefix']) && isset($array['destination_trunk_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
-					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
-					$destination_regex .= "^".$array['destination_trunk_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
-					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
-					$destination_regex .= "^".$array['destination_number']."\$)";
-				}
-				elseif (isset($array['destination_prefix']) && isset($array['destination_trunk_prefix']) && isset($array['destination_number'])) {
-					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_number']."\$|";
-					$destination_regex .= "^".$array['destination_trunk_prefix'].$array['destination_number']."\$|";
-					$destination_regex .= "^".$array['destination_number']."\$)";
-				}
-				elseif (isset($array['destination_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
-					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
-					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
-					$destination_regex .= "^".$array['destination_number']."\$)";
-				}
-				elseif ((isset($array['destination_prefix']) && isset($array['destination_number'])) || isset($array['destination_number'])) {
+			$regex = ['^(']; // Start of regex, start of capture group
 
-					//set the variables
-						$destination_prefix = $array['destination_prefix'] ?? null;
-						$destination_number = $array['destination_number'] ?? null;
-						$destination_regex = $array['destination_number'] ?? null;
+			$prefixes = [];
+			if (isset($array['destination_prefix']) && strlen($array['destination_prefix']) > 0) {
+				$prefixes[] = '\+?'.str_replace('+', '', $array['destination_prefix']); // Prepend optional '+' to the destination_prefix (after removing any existing '+')
+			}
+			if (isset($array['destination_trunk_prefix']) && strlen($array['destination_trunk_prefix']) > 0) {
+				$prefixes[] = $array['destination_trunk_prefix'];
+			}
+			if (count($prefixes) > 0) {
+				$regex[] = '(?:'.join('|', $prefixes).')?'; // Add optional prefix to regex, if one (or more) exists
+			}
 
-					//escape the plus
-						if (substr($destination_number, 0, 1) == "+") {
-							$destination_regex = "^\\+(".substr($destination_number, 1).")$";
-						}
+			if (isset($array['destination_area_code']) && strlen($array['destination_area_code']) > 0) {
+				$regex[] = '(?:'.$array['destination_area_code'].')?'; // Add optional area code to regex, if it exists
+			}
 
-					//add prefix
-						if (!empty($destination_prefix)) {
-							$destination_prefix = str_replace("+", "", $destination_prefix);
-							$plus = '\+?';
-							if (strlen($destination_prefix) == 1) {
-								$destination_prefix = $plus.$destination_prefix.'?';
-							}
-							else {
-								$destination_prefix = $plus.'(?:'.$destination_prefix.')?';
-							}
-						}
+			if (isset($array['destination_number']) && strlen($array['destination_number']) > 0) {
+				$regex[] = $array['destination_number']; // Add phone number to regex
+			}
+			else {
+				$regex[] = '.+'; // If empty, match any number
+			}
 
-					//convert N,X,Z syntax to regex
-						$destination_regex = str_ireplace("N", "[2-9]", $destination_regex);
-						$destination_regex = str_ireplace("X", "[0-9]", $destination_regex);
-						$destination_regex = str_ireplace("Z", "[1-9]", $destination_regex);
+			$regex[] = ')$'; // End of capture group, end of regex
 
-					//add ^ to the start of the string if missing
-						if (substr($destination_regex, 0, 1) != "^") {
-							$destination_regex = "^".$destination_regex;
-						}
-
-					//add $ to the end of the string if missing
-						if (substr($destination_regex, -1) != "$") {
-							$destination_regex = $destination_regex."$";
-						}
-
-					//add the round brackets
-						if (!strstr($destination_regex, '(')) {
-							if (strstr($destination_regex, '^')) {
-								$destination_regex = str_replace("^", "^".$destination_prefix."(", $destination_regex);
-							}
-							else {
-								$destination_regex = '^('.$destination_regex;
-							}
-							if (strstr($destination_regex, '$')) {
-								$destination_regex = str_replace("$", ")$", $destination_regex);
-							}
-							else {
-								$destination_regex = $destination_regex.')$';
-							}
-						}
-
-				}
-
-				return $destination_regex;
-
+			return $this->replaceSpecialDigits(join($regex));
 		}
 
+		/**
+		* Replace special characters with regex equivalents
+		* @param string $string
+		* @return string
+		*/
+		public function replaceSpecialDigits($string) {
+			$replacements = [
+				'N' => '[2-9]',
+				'X' => '[0-9]',
+				'Z' => '[1-9]',
+			];
+			return str_replace(array_keys($replacements), array_values($replacements), $string);
+		}
 
 		/**
 		* Build the destination select list
