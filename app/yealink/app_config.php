@@ -1729,7 +1729,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Saving Enabled. Options: 0-Disabled, 1-Enabled";	
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Power Saving Enabled. Options: 0-Disabled, 1-Enabled";	
 		$y++;
 
 ?>
