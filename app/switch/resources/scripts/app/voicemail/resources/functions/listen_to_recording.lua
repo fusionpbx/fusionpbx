@@ -233,7 +233,11 @@
 		--post listen options
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:3:5:7:8:9:0", "", "^[\\d\\*#]$");
+					if (use_deletion_queue == "true" and message_status == "deleted") then
+						dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:deleted:1:2:3:5:7:8:9:0", "", "^[\\d\\*#]$");
+					else
+						dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:3:5:7:8:9:0", "", "^[\\d\\*#]$");
+					end
 				end
 			end
 
@@ -264,7 +268,12 @@
 					message_saved(voicemail_id, uuid);
 					return_call(caller_id_number);
 				elseif (dtmf_digits == "7") then
-					delete_recording(voicemail_id, uuid);
+					if (use_deletion_queue == "true" and message_status ~= "deleted") then
+						message_saved(voicemail_id, uuid, "deleted");
+						session:execute("playback", "phrase:voicemail_ack:deleted");
+					else
+						delete_recording(voicemail_id, uuid);
+					end
 					message_waiting(voicemail_id, domain_uuid);
 					--fix for extensions that start with 0 (Ex: 0712)
 						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
