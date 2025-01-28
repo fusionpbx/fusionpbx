@@ -26,7 +26,7 @@
 --delete all deleted messages for a single mailbox
     function remove_deleted_messages(voicemail_id)
         --get the voicemail_uuid
-		    local sql = [[SELECT * FROM v_voicemails
+            local sql = [[SELECT * FROM v_voicemails
                 WHERE domain_uuid = :domain_uuid
                 AND voicemail_id = :voicemail_id]];
             local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
