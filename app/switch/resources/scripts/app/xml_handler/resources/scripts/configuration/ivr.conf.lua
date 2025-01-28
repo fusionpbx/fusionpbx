@@ -242,10 +242,8 @@
 
 				--exit sound
 					if (not ivr_menu_exit_sound_is_base64 and not file_exists(ivr_menu_exit_sound)) then
-						if (file_exists(recordings_dir.."/"..ivr_menu_exit_sound)) then
-							if (ivr_menu_exit_sound ~= nil and ivr_menu_exit_sound ~= "") then
-								ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
-							end
+						if (file_exists(recordings_dir.."/"..domain_name.. "/"..ivr_menu_exit_sound)) then
+							ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
 						elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_exit_sound)) then
 							ivr_menu_exit_sound = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_exit_sound;
 						end
@@ -288,6 +286,8 @@
 							ivr_menu_option_param = xml.sanitize(ivr_menu_option_param);
 							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{accountcode}", "${accountcode}");
 							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{uuid}", "${uuid}");
+                            ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{caller_id_name}", "${caller_id_name}");
+							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{caller_id_number}", "${caller_id_number}");
 
 							xml:append([[					<entry action="]] .. xml.sanitize(ivr_menu_option_action) .. [[" digits="]] .. ivr_menu_option_digits .. [[" param="]] .. ivr_menu_option_param .. [[" description="]] .. xml.sanitize(ivr_menu_option_description) .. [["/>]]);
 							if (tonumber(ivr_menu_option_digits) and #ivr_menu_option_digits >= tonumber(direct_dial_digits_min)) then
