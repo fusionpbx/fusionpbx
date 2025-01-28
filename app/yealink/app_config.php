@@ -288,7 +288,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T33G screen";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9ddc080dd-0157-4eea-90b7-ca288a938d43";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ab97779a-8d32-4ab4-a88f-4ea1433d00ba";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46s_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
