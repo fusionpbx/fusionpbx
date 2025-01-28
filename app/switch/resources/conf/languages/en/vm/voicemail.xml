@@ -65,6 +65,31 @@
         <action function="say" data="$7" method="pronounced" type="name_spelled"/>
       </match>
     </input>
+    <input pattern="^deleted:([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):(.*)$">
+      <match>
+        <action function="play-file" data="voicemail/vm-listen_to_recording.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-undelete_message.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$2" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-message_envelope.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$3" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-return_call.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$4" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-delete_recording.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$5" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-to_forward.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$6" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$7" method="pronounced" type="name_spelled"/>
+      </match>
+    </input>
   </macro>
 
   <!-- copied from vm/voicemail_ivr.xml, as not functioning there -->
@@ -91,6 +116,17 @@
       <match>
         <!-- To listen to saved messages -->
         <action function="play-file" data="voicemail/vm-listen_saved.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="execute" data="sleep(100)"/>
+      </match>
+    </input>
+    <input pattern="^deleted:([0-9#*])$">
+      <match>
+        <!-- Deleted messages -->
+        <action function="say" data="4" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-deleted.wav"/>
+        <action function="play-file" data="voicemail/vm-messages_alt.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$1" method="pronounced" type="name_spelled"/>
         <action function="execute" data="sleep(100)"/>

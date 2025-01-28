@@ -38,7 +38,7 @@
 			--session:flushDigits();
 		--set the message number
 			message_number = 0;
-		--message_status new,saved
+		--message_status new,any
 			if (session:ready()) then
 				if (voicemail_id ~= nil) then
 					--get the voicemail_id
@@ -58,8 +58,8 @@
 						AND voicemail_uuid = :voicemail_uuid ]]
 					if (message_status == "new") then
 						sql = sql .. [[AND (message_status is null or message_status = '') ]];
-					elseif (message_status == "saved") then
-						sql = sql .. [[AND message_status = 'saved' ]];
+					else
+						sql = sql .. "AND message_status = '" .. message_status .. "' ";
 					end
 					sql = sql .. [[ORDER BY created_epoch ]]..message_order;
 					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};

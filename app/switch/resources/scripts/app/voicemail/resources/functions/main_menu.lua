@@ -38,6 +38,11 @@
 					session:execute("sleep", "1000");
 				end
 
+			--remove deleted messages in queue
+				if (use_deletion_queue == "true") then
+					remove_deleted_messages(voicemail_id);
+				end
+
 			--new voicemail count
 				if (session:ready()) then
 					local sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
@@ -70,6 +75,24 @@
 						dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_saved_message_count:" .. saved_messages .. ":saved", "", "\\d+");
 					end
 				end
+			--deleted messages
+				if (session:ready()) then
+					deleted_messages = 0;
+					if (string.len(dtmf_digits) == 0 and use_deletion_queue == "true") then
+						sql = [[SELECT count(*) as deleted_messages FROM v_voicemail_messages
+							WHERE domain_uuid = :domain_uuid
+							AND voicemail_uuid = :voicemail_uuid
+							AND message_status = 'deleted' ]];
+						local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+						end
+						dbh:query(sql, params, function(row)
+							deleted_messages = row["deleted_messages"];
+						end);
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_deleted_message_count:" .. deleted_messages .. ":deleted", "", "\\d+");
+					end
+				end
 
 			--to listen to new message
 				if (session:ready() and new_messages ~= '0') then
@@ -81,6 +104,12 @@
 				if (session:ready() and saved_messages ~= '0') then
 					if (string.len(dtmf_digits) == 0) then
 						dtmf_digits = session:playAndGetDigits(0, 1, 1, 100, "#", "phrase:voicemail_main_menu:saved:2", "", "\\d+");
+					end
+				end
+			--deleted messages
+				if (session:ready() and deleted_messages ~= '0') then
+					if (string.len(dtmf_digits) == 0) then
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 100, "#", "phrase:voicemail_main_menu:deleted:3", "", "\\d+");
 					end
 				end
 			--for advanced options
@@ -101,6 +130,8 @@
 						menu_messages("new");
 					elseif (dtmf_digits == "2") then
 						menu_messages("saved");
+					elseif (dtmf_digits == "3" and use_deletion_queue == "true") then
+						menu_messages("deleted");
 					elseif (dtmf_digits == "5") then
 						timeouts = 0;
 						advanced();
