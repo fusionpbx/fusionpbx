@@ -128,7 +128,7 @@ function show_upgrade_menu() {
 	}
 }
 
-function do_filesystem_permissions(text $text, settings $settings) {
+function do_filesystem_permissions($text, settings $settings) {
 
 	echo ($text['label-header1'] ?? "Root account or sudo account must be used for this option") . "\n";
 	echo ($text['label-header2'] ?? "This option is used for resetting the permissions on the filesystem after executing commands using the root user account") . "\n";
