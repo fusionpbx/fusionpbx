@@ -124,6 +124,7 @@
 			$device_password = $_POST["device_password"];
 			$device_vendor = $_POST["device_vendor"];
 			$device_location = $_POST["device_location"];
+			$device_serial_number = $_POST["device_serial_number"];
 			$device_uuid_alternate = $_POST["device_uuid_alternate"] ?? null;
 			$device_model = $_POST["device_model"] ?? null;
 			$device_firmware_version = $_POST["device_firmware_version"] ?? null;
@@ -268,6 +269,9 @@
 					}
 					if (permission_exists('device_location')) {
 						$array['devices'][0]['device_location'] = $device_location;
+					}
+					if (permission_exists('device_serial_number')) {
+						$array['devices'][0]['device_serial_number'] = $device_serial_number;
 					}
 					if (permission_exists('device_alternate')) {
 						$array['devices'][0]['device_uuid_alternate'] = is_uuid($device_uuid_alternate) ? $device_uuid_alternate : null;
@@ -521,6 +525,7 @@
 			$device_password = $row["device_password"];
 			$device_vendor = $row["device_vendor"];
 			$device_location = $row["device_location"];
+			$device_serial_number = $row["device_serial_number"];
 			$device_uuid_alternate = $row["device_uuid_alternate"];
 			$device_model = $row["device_model"];
 			$device_firmware_version = $row["device_firmware_version"];
@@ -1911,6 +1916,19 @@
 		echo "	<input class='formfld' type='text' name='device_location' maxlength='255' value=\"".escape($device_location ?? '')."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_location']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('device_serial_number')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-device_serial_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='device_serial_number' maxlength='255' value=\"".escape($device_serial_number ?? '')."\"/>\n";
+		echo "<br />\n";
+		echo $text['description-device_serial_number']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
