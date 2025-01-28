@@ -163,9 +163,9 @@
 							$sql .= "from v_contact_phones ";
 							$sql .= "where phone_speed_dial = :phone_speed_dial ";
 							$sql .= "and domain_uuid = :domain_uuid ";
-							if ($action == "update") {
-								$sql .= "and contact_uuid <> :contact_uuid ";
-								$parameters['contact_uuid'] = $contact_uuid;
+							if ($action == "update" && is_uuid($contact_phone_uuid)) {
+								$sql .= "and contact_phone_uuid <> :contact_phone_uuid ";
+								$parameters['contact_phone_uuid'] = $contact_phone_uuid;
 							}
 							$parameters['phone_speed_dial'] = $phone_speed_dial;
 							$parameters['domain_uuid'] = $domain_uuid;
