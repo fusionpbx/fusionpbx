@@ -297,7 +297,6 @@
 
 				//driver and type point to the same value
 				$this->driver = $config->get('database.0.type', 'pgsql');
-				$this->driver = $config->get('database.0.type', 'pgsql');
 				$this->type = $config->get('database.0.type', 'pgsql');
 				$this->host = $config->get('database.0.host', '127.0.0.1');
 				$this->port = $config->get('database.0.port', '5432');
@@ -785,6 +784,89 @@
 				else {
 					return false; //table doesn't exist
 				}
+			}
+
+			/**
+			 * Checks if the column exists in the database.
+			 * <p><b>Note:</b><br>
+			 * Tables and Column names must be sanitized. Otherwise, a warning will be
+			 * emitted and false will be returned.</p>
+			 * @param type $table_name Sanitized name of the table to search for.
+			 * @param type $column_name Sanitized name of the column to search for.
+			 * @return boolean Returns <i>true</i> if the column exists and <i>false</i> if it does not.
+			 * @depends connect()
+			 */
+			public function column_exists ($table_name, $column_name) {
+				//sanitize the table name
+				if (self::sanitize($table_name) != $table_name) {
+					trigger_error('Table Name must be sanitized', E_USER_WARNING);
+					return false;
+				}
+
+				//sanitize the column name
+				if (self::sanitize($column_name) != $column_name) {
+					trigger_error('Column Name must be sanitized', E_USER_WARNING);
+					return false;
+				}
+
+				//connect to the database if needed
+				if (!$this->db) {
+					$this->connect();
+				}
+
+				//if unable to connect to the database
+				if (!$this->db) {
+					$backtrace = debug_backtrace();
+					echo "Connection Failed<br />\n";
+					echo "line number ".__line__."<br />\n";
+					echo "<pre>";
+					print_r($backtrace);
+					echo "</pre>";
+					return false;
+				}
+
+				//check the sqlite database to see if the column exists
+				//if ($this->db_type == "sqlite") {
+				//	$table_info = $this->table_info($table_name);
+				//	if ($this->sqlite_column_exists($table_info, $column_name)) {
+				//		return true;
+				//	}
+				//	else {
+				//		return false;
+				//	}
+				//}
+
+				//check the postgresql database to see if the column exists
+				if ($this->type == "pgsql") {
+					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
+				}
+
+				//check the mysql database to see if the column exists
+				if ($this->type == "mysql") {
+					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
+					$sql = "show columns from $table_name where field = '$column_name' ";
+				}
+
+				//return the results from the sql query
+				if (empty($sql)) {
+					return false;
+				}
+				else {
+					$prep_statement = $this->db->prepare($sql);
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (!$result) {
+						return false;
+					}
+					if (count($result) > 0) {
+						return true;
+					}
+					else {
+						return false;
+					}
+					unset ($prep_statement);
+				}
+
 			}
 
 			/**
