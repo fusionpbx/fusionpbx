@@ -408,7 +408,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Instead of deleteing voicemails right away when pressing 7; queue them for deletion";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Instead of deleting voicemails right away when pressing 7; queue them for deletion";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b06cc9df-379e-4b45-8bda-d2d431506317";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
