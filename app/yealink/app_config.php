@@ -272,7 +272,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for Yealink Super Search XML configuration file";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c704e81-cbb4-4cb3-ab1c-427755008714c";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c704e81-cbb4-4cb3-ab1c-427755008714";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t33g_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
