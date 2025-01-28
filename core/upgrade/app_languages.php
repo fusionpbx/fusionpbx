@@ -1323,8 +1323,8 @@ $text['label-header1']['zh-cn'] = '此选项必须使用 root 帐户或 sudo 帐
 $text['label-header1']['ja-jp'] = 'このオプションにはルートアカウントまたはsudoアカウントを使用する必要があります';
 $text['label-header1']['ko-kr'] = '이 옵션에는 루트 계정 또는 sudo 계정을 사용해야 합니다.';
 
-$text['label-header2']['en-us'] = 'This option is used for resetting the permissions on the filesystem after executing commands using the root user account';
-$text['label-header2']['en-gb'] = 'This option is used for resetting the permissions on the filesystem after executing commands using the root user account';
+$text['label-header2']['en-us'] = 'This option is used for resetting the permissions on the file system after executing commands using the root user account';
+$text['label-header2']['en-gb'] = 'This option is used for resetting the permissions on the file system after executing commands using the root user account';
 $text['label-header2']['ar-eg'] = 'يستخدم هذا الخيار لإعادة تعيين الأذونات على نظام الملفات بعد تنفيذ الأوامر باستخدام حساب المستخدم الجذر';
 $text['label-header2']['de-at'] = 'Diese Option wird zum Zurücksetzen der Berechtigungen für das Dateisystem verwendet, nachdem Befehle mit dem Root-Benutzerkonto ausgeführt wurden.';
 $text['label-header2']['de-ch'] = 'Diese Option wird zum Zurücksetzen der Berechtigungen für das Dateisystem verwendet, nachdem Befehle mit dem Root-Benutzerkonto ausgeführt wurden.';
