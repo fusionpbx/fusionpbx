@@ -155,6 +155,32 @@
 						unset($sql, $parameters);
 					}
 
+				//if speed dial number already exists, empty before save
+					if (!empty($phone_speed_dial)) {
+						$phone_speed_dial_exists = false;
+						if (is_numeric($phone_speed_dial)) {
+							$sql = "select count(contact_phone_uuid) ";
+							$sql .= "from v_contact_phones ";
+							$sql .= "where phone_speed_dial = :phone_speed_dial ";
+							$sql .= "and domain_uuid = :domain_uuid ";
+							if ($action == "update") {
+								$sql .= "and contact_uuid <> :contact_uuid ";
+								$parameters['contact_uuid'] = $contact_uuid;
+							}
+							$parameters['phone_speed_dial'] = $phone_speed_dial;
+							$parameters['domain_uuid'] = $domain_uuid;
+							$database = new database;
+							if (!empty($database->execute($sql, $parameters, 'column'))) {
+								$phone_speed_dial_exists = true;
+							}
+							unset($sql, $parameters);
+						}
+						if (!is_numeric($phone_speed_dial) || $phone_speed_dial_exists) {
+							message::add($text['message-speed_dial_exists'],'negative');
+							unset($phone_speed_dial);
+						}
+					}
+
 				//add the phone
 					if ($action == "add" && permission_exists('contact_phone_add')) {
 						$contact_phone_uuid = uuid();
