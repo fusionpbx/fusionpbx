@@ -110,7 +110,7 @@ function show_upgrade_menu() {
 				do_upgrade_permissions();
 				break;
 			case 6:
-				do_filesystem_permissions($settings);
+				do_filesystem_permissions($text, $settings);
 				break;
 			case 7:
 				do_upgrade_code();
