@@ -33,7 +33,8 @@ defined('STDIN') or die('Unauthorized');
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //create a database connection using default config
-$database = new database();
+$config = config::load();
+$database = database::new(['config' => $config]);
 
 //load global defaults
 $settings = new settings(['database' => $database]);
@@ -58,7 +59,7 @@ $display_type = 'text';
 show_upgrade_menu();
 
 function show_upgrade_menu() {
-	global $text, $software_name;
+	global $text, $software_name, $settings;
 	//error_reporting(E_ALL);
 	$line = str_repeat('-', strlen($text['title-cli_upgrade']) + 2);
 	while (true) {
@@ -76,7 +77,8 @@ function show_upgrade_menu() {
 		echo "3) {$text['label-upgrade_apps']} - {$text['description-upgrade_apps']}\n";
 		echo "4) {$text['label-upgrade_menu']} - {$text['description-upgrade_menu']}\n";
 		echo "5) {$text['label-upgrade_permissions']} - {$text['description-upgrade_permissions']}\n";
-		echo "6) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
+		echo "6) {$text['label-update_filesystem_permissions']} - {$text['description-update_filesystem_permissions']}\n";
+		echo "7) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
 		echo "0) Exit\n";
 		echo "\n";
 		echo "Choice: ";
@@ -108,11 +110,15 @@ function show_upgrade_menu() {
 				do_upgrade_permissions();
 				break;
 			case 6:
+				do_filesystem_permissions($text, $settings);
+				break;
+			case 7:
 				do_upgrade_code();
 				do_upgrade_schema();
 				do_upgrade_domains();
 				do_upgrade_menu();
 				do_upgrade_permissions();
+				do_filesystem_permissions($text, $settings);
 				break;
 			case 8:
 				break;
@@ -120,6 +126,58 @@ function show_upgrade_menu() {
 				exit();
 		}
 	}
+}
+
+function do_filesystem_permissions($text, settings $settings) {
+
+	echo ($text['label-header1'] ?? "Root account or sudo account must be used for this option") . "\n";
+	echo ($text['label-header2'] ?? "This option is used for resetting the permissions on the filesystem after executing commands using the root user account") . "\n";
+	if (is_root_user()) {
+		$directories = [];
+		//get the fusionpbx folder
+		$project_root = dirname(__DIR__, 2);
+		//adjust the project root
+		$directories[] = $project_root;
+		//adjust the /etc/freeswitch
+		$directories[] = $settings->get('switch', 'conf', null);
+		$directories[] = $settings->get('switch', 'call_center', null); //normally in conf but can be different
+		$directories[] = $settings->get('switch', 'dialplan', null); //normally in conf but can be different
+		$directories[] = $settings->get('switch', 'directory', null); //normally in conf but can be different
+		$directories[] = $settings->get('switch', 'languages', null); //normally in conf but can be different
+		$directories[] = $settings->get('switch', 'sip_profiles', null); //normally in conf but can be different
+		//adjust the /usr/share/freeswitch/{scripts,sounds}
+		$directories[] = $settings->get('switch', 'scripts', null);
+		$directories[] = $settings->get('switch', 'sounds', null);
+		//adjust the /var/lib/freeswitch/{db,recordings,storage,voicemail}
+		$directories[] = $settings->get('switch', 'db', null);
+		$directories[] = $settings->get('switch', 'recordings', null);
+		$directories[] = $settings->get('switch', 'storage', null);
+		$directories[] = $settings->get('switch', 'voicemail', null); //normally included in storage but can be different
+		//only set the xml_cdr directory permissions
+		$log_directory = $settings->get('switch', 'log', null);
+		if ($log_directory !== null) {
+			$directories[] = $log_directory . '/xml_cdr';
+		}
+		//execute chown command for each directory
+		foreach ($directories as $dir) {
+			if ($dir !== null) {
+				//notify user
+				echo "chown -R www-data:www-data $dir\n";
+				//execute
+				exec("chown -R www-data:www-data $dir");
+			}
+		}
+	} else {
+		echo ($text['label-not_running_as_root'] ?? "Not root user - operation skipped")."\n";
+	}
+}
+
+function is_root_user(): bool {
+	return posix_getuid() === 0;
+}
+
+function current_user(): ?string {
+	return posix_getpwuid(posix_getuid())['name'] ?? null;
 }
 
 //show the upgrade type
@@ -334,8 +392,8 @@ function load_config_php() {
 	$conf .= "xml_handler.reg_as_number_alias = false\n";
 	$conf .= "xml_handler.number_as_presence_id = true\n";
 	$conf .= "\n";
-	$conf .= "#error reporting hide show all errors except notices and warnings\n";
-	$conf .= "error.reporting = 'E_ALL ^ E_NOTICE ^ E_WARNING'\n";
+	$conf .= "#error reporting hide all errors\n";
+	$conf .= "error.reporting = user\n";
 
 	//write the config file
 	$file_handle = fopen($config_file, "w");
