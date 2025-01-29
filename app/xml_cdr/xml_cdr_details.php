@@ -263,12 +263,13 @@
 	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"] ?? '');
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		date_default_timezone_set($_SESSION['domain']['time_zone']['name']);
-	}
+	date_default_timezone_set($settings->get('domain', 'time_zone', 'GMT'));
+
+//create the destinations object
+	$destinations = new destinations();
 
 //build the call flow summary array
-	$xml_cdr = new xml_cdr;
+	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations]);
 	$xml_cdr->domain_uuid = $_SESSION['domain_uuid'];
 	$xml_cdr->call_direction = $call_direction; //used to determine when the call is outbound
 	$xml_cdr->status = $status; //used to determine when the call is outbound
@@ -496,37 +497,33 @@
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<div class='card'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<th>".$text['label-application']."</th>\n";
-	if ($call_direction == 'outbound') {
-		echo "	<th>".$text['label-source']."</th>\n";
+	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<th>".$text['label-application']."</th>\n";
+	if ($call_direction == 'local' || $call_direction == 'outbound') {
+		echo "		<th>".$text['label-source']."</th>\n";
 	}
-	echo "	<th>".$text['label-destination']."</th>\n";
-	echo "	<th>".$text['label-name']."</th>\n";
-	echo "	<th>".$text['label-start']."</th>\n";
-	echo "	<th>".$text['label-end']."</th>\n";
-	echo "	<th>".$text['label-duration']."</th>\n";
-	echo "	<th>".$text['label-status']."</th>\n";
-	echo "</tr>\n";
+	echo "		<th>".$text['label-destination']."</th>\n";
+	echo "		<th>".$text['label-name']."</th>\n";
+	echo "		<th>".$text['label-start']."</th>\n";
+	echo "		<th>".$text['label-end']."</th>\n";
+	echo "		<th>".$text['label-duration']."</th>\n";
+	echo "		<th>".$text['label-status']."</th>\n";
+	echo "	</tr>\n";
 	$i = 1;
 	foreach ($call_flow_summary as $row) {
-		echo "<tr >\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
-		if ($call_direction == 'outbound') {
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["destination_number"])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_name"])."</a></td>\n";
+		echo "	<tr >\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
+		if ($call_direction == 'local' || $call_direction == 'outbound') {
+			echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";
 		}
-		else {
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_number"])."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_name"])."</a></td>\n";
-		}
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]] ?? '')."</td>\n";
-		echo "</tr>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_number"])."</a></td>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_label"])."</a></td>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$row["destination_status"]] ?? '')."</td>\n";
+		echo "	</tr>\n";
 
 		//alternate $c
 		$c = $c ? 0 : 1;
@@ -534,7 +531,7 @@
 		//increment the row count
 		$i++;
 	}
-	echo "</table>";
+	echo "	</table>";
 	echo "</div>\n";
 	echo "<br /><br />\n";
 
@@ -542,14 +539,14 @@
 	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
 		echo "<b>".$text['label-transcription']."</b><br>\n";
 		echo "<div class='card'>\n";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "	<th>".$text['label-text']."</th>\n";
-		echo "</tr>\n";
-		echo "<tr >\n";
-		echo "	<td valign='top' class='".$row_style[0]."'>".escape($record_transcription)."</td>\n";
-		echo "</tr>\n";
-		echo "</table>";
+		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "	<tr>\n";
+		echo "		<th>".$text['label-text']."</th>\n";
+		echo "	</tr>\n";
+		echo "	<tr >\n";
+		echo "		<td valign='top' class='".$row_style[0]."'>".escape($record_transcription)."</td>\n";
+		echo "	</tr>\n";
+		echo "	</table>";
 		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
