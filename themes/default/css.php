@@ -3061,10 +3061,41 @@ else { //default: white
 		}
 
 	div.grid > div.box.contact-details {
-		padding: 15px;
-		border: 1px solid <?=$table_row_border_color?>;
-		border-radius: 5px;
-		background: <?=$table_row_background_color_dark?>;
+		<?php
+		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
+			if (isset($card_border_size) && !empty($card_border_color)) {
+				echo "border: ".$card_border_size." solid ".$card_border_color.";\n";
+			}
+			else {
+				echo "border: none !important;\n";
+			}
+			if (isset($card_border_radius) || (isset($card_border_size) || !empty($card_border_color))) {
+				echo "-webkit-border-radius: ".$card_border_radius." !important;\n";
+				echo "-moz-border-radius: ".$card_border_radius." !important;\n";
+				echo "border-radius: ".$card_border_radius." !important;\n";
+			}
+			echo "padding: ".$card_padding.";\n";
+			if (!empty($card_background_color)) {
+				echo "background-color: " .$card_background_color.";\n";
+			}
+			if (!empty($card_shadow_color)) {
+				echo "-webkit-box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+				echo "-moz-box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+				echo "box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+			}
+		}
+		else {
+			echo "border: 0;\n";
+			echo "-webkit-border-radius: 0 !important;\n";
+			echo "-moz-border-radius: 0 !important;\n";
+			echo "border-radius: 0 !important;\n";
+			echo "padding: 0;\n";
+			echo "background-color: none;\n";
+			echo "-webkit-box-shadow: none;\n";
+			echo "-moz-box-shadow: none;\n";
+			echo "box-shadow: none;\n";
+		}
+		?>
 		}
 
 	div.grid.contact-details {
