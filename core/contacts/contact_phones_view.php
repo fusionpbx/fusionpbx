@@ -104,11 +104,11 @@
 				if ($row['phone_type_video']) { $phone_types[] = "<i class='fas fa-video fa-fw' style='margin-right: 3px;' title=\"".$text['label-video']."\"></i>"; }
 				if ($row['phone_type_text']) { $phone_types[] = "<i class='fas fa-sms fa-fw' style='margin-right: 3px;' title=\"".$text['label-text']."\"></i>"; }
 				if (!empty($phone_types)) {
-					echo "	".implode(" ", $phone_types)."\n";
+					echo "	".implode(" ", $phone_types);
 				}
 				unset($phone_types);
 				if (!empty($row['phone_speed_dial'])) {
-					echo "<i class='fas fa-bolt fa-fw' style='margin-left: 8px; margin-right: 2px;' title=\"".$text['label-phone_speed_dial']."\"></i>".$speed_dial_prefix."<strong>".$row['phone_speed_dial']."</strong>";
+					echo "<nobr><i class='fas fa-bolt fa-fw' title=\"".$text['label-phone_speed_dial']."\"></i>".$speed_dial_prefix."<strong>".$row['phone_speed_dial']."</strong></nobr>";
 				}
 				echo "</div>\n";
 				$x++;
