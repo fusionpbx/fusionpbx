@@ -118,6 +118,17 @@
         <action function="execute" data="sleep(100)"/>
       </match>
     </input>
+    <input pattern="^deleted:([0-9#*])$">
+      <match>
+        <!-- Deleted messages -->
+        <action function="say" data="4" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-deleted.wav"/>
+        <action function="play-file" data="voicemail/vm-messages_alt.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="execute" data="sleep(100)"/>
+      </match>
+    </input>
     <input pattern="^advanced:([0-9#*])$">
       <match>
         <!-- For advanced options -->
