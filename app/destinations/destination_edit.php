@@ -72,7 +72,7 @@
 	}
 
 //get the call recording extension
-	$record_extension = $settings->get('call_recordings', 'record_extension', 'wav');
+	$record_extension = $settings->get('call_recordings', 'record_extension', 'mp3');
 
 //get total destination count from the database, check limit, if defined
 	if (!permission_exists('destination_domain')) {
