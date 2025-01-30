@@ -11,11 +11,16 @@
 
 //include files
 	include "resources/classes/permissions.php";
+	include_once "resources/phpmailer/class.phpmailer.php";
+	include_once "resources/phpmailer/class.smtp.php";
 
 //increase limits
 	set_time_limit(0);
 	//ini_set('max_execution_time',1800); //30 minutes
 	ini_set('memory_limit', '512M');
+
+//connect to the database
+	$database = database::new();
 
 //save the arguments to variables
 	$script_name = $argv[0];
@@ -76,7 +81,7 @@
 
 //prevent the process running more than once
 	if ($pid_exists) {
-		//echo "Cannot lock pid file {$pid_file}\n";
+		echo "Cannot lock pid file {$pid_file}\n";
 		exit;
 	}
 
@@ -125,15 +130,10 @@
 		}
 	}
 
-//includes
-	include_once "resources/phpmailer/class.phpmailer.php";
-	include_once "resources/phpmailer/class.smtp.php";
-
 //get the email details to send
 	$sql = "select * from v_email_queue ";
 	$sql .= "where email_queue_uuid = :email_queue_uuid ";
 	$parameters['email_queue_uuid'] = $email_queue_uuid;
-	$database = new database();
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$domain_uuid = $row["domain_uuid"];
