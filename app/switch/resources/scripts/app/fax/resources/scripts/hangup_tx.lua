@@ -23,7 +23,7 @@
 --		Mark J. Crane
 
 --set the debug options
-	debug["sql"] = true;
+debug["sql"] = true;
 
 --create the api object
 	api = freeswitch.API();
@@ -116,7 +116,9 @@
 	--variable_fax_transfer_rate: 14400
 
 --set channel variables to lua variables
-	uuid = env:getHeader("uuid");
+
+	uuid = api:execute("create_uuid"); --JA
+-- JA	uuid = env:getHeader("uuid");
 	fax_uuid = env:getHeader("fax_uuid");
 	fax_queue_uuid = env:getHeader("fax_queue_uuid");
 	fax_success = env:getHeader("fax_success");
@@ -132,8 +134,30 @@
 	fax_bad_rows = env:getHeader("fax_bad_rows");
 	fax_transfer_rate = env:getHeader("fax_transfer_rate");
 	sip_to_user = env:getHeader("sip_to_user");
+--	origination_uuid = uuid;
+
+	if (fax_caller_id_number == nil) then
+		fax_caller_id_number = env:getHeader("Caller-Caller-ID-Number");
+	end
+
+--JA
+if sip_to_user == nil then
+  sip_to_user = ""
+end
+
 	bridge_hangup_cause = env:getHeader("bridge_hangup_cause");
 	fax_result_code = env:getHeader("fax_result_code");
+
+	if fax_result_code == nil then
+		fax_result_code = "13";
+		fax_success = "0";
+		hangup_cause_q850 ="6";
+
+		fax_result_text = "Remote 503";
+		fax_status = 'trying';
+	
+	end
+
 	fax_remote_station_id = env:getHeader("fax_remote_station_id");
 	fax_document_transferred_pages = env:getHeader("fax_document_transferred_pages");
 	fax_document_total_pages = env:getHeader("fax_document_total_pages");
@@ -169,6 +193,7 @@
 		fax_success = "0";
 		fax_result_text = "USER_BUSY";
 	end
+
 	if (not fax_result_text) then
 		fax_result_text = "FS_NOT_SET";
 	end
@@ -311,6 +336,7 @@
 	end
 	sql = sql .. ":fax_time ";
 	sql = sql .. ")";
+
 	local params = {
 		uuid = uuid;
 		domain_uuid = domain_uuid;
@@ -338,12 +364,13 @@
 	end
 	dbh:query(sql, params);
 
---update the email queue status
+--update the fax queue status
 	sql = "update v_fax_queue ";
 	sql = sql .. "set fax_status = :fax_status, fax_log_uuid = :fax_log_uuid ";
 	sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
-	local params = {fax_queue_uuid = fax_queue_uuid, fax_status = fax_status, fax_log_uuid = uuid}
+	local params = {fax_queue_uuid = fax_queue_uuid, fax_status = fax_status, fax_log_uuid = uuid};
 	dbh:query(sql, params);
+
 
 --prepare base64
 	if (storage_type == "base64") then
@@ -354,69 +381,73 @@
 			fax_base64 = assert(file.read_base64(fax_file));
 	end
 
+
 --add the fax files
-	local sql = {}
-	table.insert(sql, "insert into v_fax_files ");
-	table.insert(sql, "(");
-	table.insert(sql, "fax_file_uuid, ");
-	table.insert(sql, "fax_uuid, ");
-	table.insert(sql, "fax_mode, ");
-	table.insert(sql, "fax_file_type, ");
-	table.insert(sql, "fax_file_path, ");
-	if (caller_id_name ~= nil) then
-		table.insert(sql, "fax_caller_id_name, ");
-	end
-	if (caller_id_number ~= nil) then
-		table.insert(sql, "fax_caller_id_number, ");
-	end
-	table.insert(sql, "fax_destination, ");
-	table.insert(sql, "fax_date, ");
-	table.insert(sql, "fax_epoch, ");
-	if (storage_type == "base64") then
-		table.insert(sql, "fax_base64, ");
-	end
-	table.insert(sql, "domain_uuid");
-	table.insert(sql, ") ");
-	table.insert(sql, "values ");
-	table.insert(sql, "(");
-	table.insert(sql, ":uuid, ");
-	table.insert(sql, ":fax_uuid, ");
-	table.insert(sql, "'tx', ");
-	table.insert(sql, "'tif', ");
-	table.insert(sql, ":fax_file, ");
-	if (caller_id_name ~= nil) then
-		table.insert(sql, ":caller_id_name, ");
-	end
-	if (caller_id_number ~= nil) then
-		table.insert(sql, ":caller_id_number, ");
-	end
-	table.insert(sql, ":fax_destination, ");
-	if (database["type"] == "sqlite") then
-		table.insert(sql, ":fax_date, ");
-	else
-		table.insert(sql, "now(), ");
-	end
-	table.insert(sql, ":fax_time, ");
-	if (storage_type == "base64") then
-		table.insert(sql, ":fax_base64, ");
-	end
-	table.insert(sql, ":domain_uuid");
-	table.insert(sql, ")");
-	sql = table.concat(sql, "\n");
-	local params = {
-		uuid = uuid;
-		domain_uuid = domain_uuid;
-		fax_uuid = fax_uuid;
-		fax_file = fax_file;
-		caller_id_name = fax_caller_id_name;
-		caller_id_number = fax_caller_id_number;
-		fax_destination = sip_to_user;
-		fax_base64 = fax_base64;
-		fax_date = os.date("%Y-%m-%d %X");
-		fax_time = os.time();
-	};
+local sql = {}
+table.insert(sql, "insert into v_fax_files ");
+table.insert(sql, "(");
+table.insert(sql, "fax_file_uuid, ");
+table.insert(sql, "fax_uuid, ");
+table.insert(sql, "fax_mode, ");
+table.insert(sql, "fax_file_type, ");
+table.insert(sql, "fax_file_path, ");
+if (caller_id_name ~= nil) then
+	table.insert(sql, "fax_caller_id_name, ");
+end
+if (caller_id_number ~= nil) then
+	table.insert(sql, "fax_caller_id_number, ");
+end
+table.insert(sql, "fax_destination, ");
+table.insert(sql, "fax_date, ");
+table.insert(sql, "fax_epoch, ");
+if (storage_type == "base64") then
+	table.insert(sql, "fax_base64, ");
+end
+table.insert(sql, "domain_uuid");
+table.insert(sql, ") ");
+table.insert(sql, "values ");
+table.insert(sql, "(");
+table.insert(sql, ":uuid, ");
+table.insert(sql, ":fax_uuid, ");
+table.insert(sql, "'tx', ");
+table.insert(sql, "'tif', ");
+table.insert(sql, ":fax_file, ");
+if (caller_id_name ~= nil) then
+	table.insert(sql, ":caller_id_name, ");
+end
+if (caller_id_number ~= nil) then
+	table.insert(sql, ":caller_id_number, ");
+end
+table.insert(sql, ":fax_destination, ");
+if (database["type"] == "sqlite") then
+	table.insert(sql, ":fax_date, ");
+else
+	table.insert(sql, "now(), ");
+end
+table.insert(sql, ":fax_time, ");
+if (storage_type == "base64") then
+	table.insert(sql, ":fax_base64, ");
+end
+table.insert(sql, ":domain_uuid");
+table.insert(sql, ")");
+sql = table.concat(sql, "\n");
+local params = {
+	uuid = uuid;
+	domain_uuid = domain_uuid;
+	fax_uuid = fax_uuid;
+	fax_file = fax_file;
+	caller_id_name = fax_caller_id_name;
+	caller_id_number = fax_caller_id_number;
+	fax_destination = sip_to_user;
+	fax_base64 = fax_base64;
+	fax_date = os.date("%Y-%m-%d %X");
+	fax_time = os.time();
+};
+
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+
+
 	end
 	if (storage_type == "base64") then
 		local dbh = Database.new('system', 'base64');
@@ -427,26 +458,49 @@
 	end
 
 --send the selected variables to the console
+--JA Heavily modified
 	if (fax_success ~= nil) then
 		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
 	end
+	if (domain_uuid ~= nil) then
 	freeswitch.consoleLog("INFO","domain_uuid: '" .. domain_uuid .. "'\n");
+	end
+	if (domain_name ~= nil) then
 	freeswitch.consoleLog("INFO","domain_name: '" .. domain_name .. "'\n");
+	end
+	if (fax_uuid ~= nil) then
 	freeswitch.consoleLog("INFO","fax_uuid: '" .. fax_uuid .. "'\n");
+	end
+	if (fax_extension ~= nil) then
 	freeswitch.consoleLog("INFO","fax_extension: '" .. fax_extension .. "'\n");
+	end
+	if (fax_result_text ~= nil) then
 	freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
+	end
+	if (fax_file ~= nil) then
 	freeswitch.consoleLog("INFO","fax_file: '" .. fax_file .. "'\n");
+	end
+	if (uuid ~= nil) then
 	freeswitch.consoleLog("INFO","uuid: '" .. uuid .. "'\n");
+	end
 	--freeswitch.consoleLog("INFO","fax_ecm_used: '" .. fax_ecm_used .. "'\n");
+	if (fax_uri ~= nil) then
 	freeswitch.consoleLog("INFO","fax_uri: '" .. fax_uri.. "'\n");
-	if (caller_id_name ~= nil) then
+	end
+	if (fax_caller_id_name ~= nil) then
 		freeswitch.consoleLog("INFO","caller_id_name: " .. fax_caller_id_name .. "\n");
 	end
-	if (caller_id_number ~= nil) then
+	if (fax_caller_id_number ~= nil) then
 		freeswitch.consoleLog("INFO","caller_id_number: " .. fax_caller_id_number .. "\n");
 	end
+	if (fax_destination ~= nil) then
 	freeswitch.consoleLog("INFO","fax_destination: " .. sip_to_user .. "\n");
-	freeswitch.consoleLog("INFO","fax_result_code: ".. fax_result_code .."\n");
+	end
+	if fax_result_code ~= nil then 
+		freeswitch.consoleLog("INFO","fax_result_code: ".. fax_result_code .."\n");
+	end
 	--freeswitch.consoleLog("INFO","mailfrom_address: ".. from_address .."\n");
 	--freeswitch.consoleLog("INFO","mailto_address: ".. email_address .."\n");
+	if hangup_cause_q850 ~= nil then 
 	freeswitch.consoleLog("INFO","hangup_cause_q850: '" .. hangup_cause_q850 .. "'\n");
+	end
