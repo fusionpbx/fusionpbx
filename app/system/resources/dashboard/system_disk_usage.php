@@ -37,16 +37,16 @@
 		if (!empty($percent_disk_usage)) {
 
 			//add half doughnut chart
-			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_disk_usage_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 			echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</a></span>\n";
 
 			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 				?>
-				<div class='hud_chart' style='width: 175px;'><canvas id='system_status_chart'></canvas></div>
+				<div class='hud_chart' style='width: 175px;'><canvas id='system_disk_usage_chart'></canvas></div>
 
 				<script>
-					const system_status_chart = new Chart(
-						document.getElementById('system_status_chart').getContext('2d'),
+					const system_disk_usage_chart = new Chart(
+						document.getElementById('system_disk_usage_chart').getContext('2d'),
 						{
 							type: 'doughnut',
 							data: {
@@ -102,7 +102,7 @@
 	}
 
 	if ($dashboard_details_state != 'disabled') {
-		echo "<div class='hud_details hud_box' id='hud_system_status_details'>";
+		echo "<div class='hud_details hud_box' id='hud_system_disk_usage_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
@@ -228,7 +228,7 @@
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_system_disk_usage_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 	echo "</div>\n";
 
