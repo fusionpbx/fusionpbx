@@ -42,6 +42,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//connect to the database
+	$database = database::new();
+
 //define defaults
 	$action = '';
 	$search = '';
@@ -112,7 +115,6 @@
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
@@ -147,7 +149,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$ivr_menus = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
