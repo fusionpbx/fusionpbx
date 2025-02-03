@@ -1546,7 +1546,7 @@ if (!class_exists('xml_cdr')) {
 			}
 		}
 
-		public function moved_to_failed($failed_file) {
+		public function move_to_failed($failed_file) {
 			$xml_cdr_dir = $this->settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
 			if (!file_exists($xml_cdr_dir.'/failed')) {
 				if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
