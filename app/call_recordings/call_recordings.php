@@ -253,9 +253,6 @@
 	if (is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		$x = 0;
 		foreach ($call_recordings as $row) {
-			//add padding to the call recording length
-			$call_recording_length_padding = (!empty($row['call_recording_length'])) ? str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT) : '';
-
 			//playback progress bar
 			if (permission_exists('call_recording_play')) {
 				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;' onclick=\"recording_seek(event,'".escape($row['call_recording_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['call_recording_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
@@ -301,7 +298,7 @@
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td class='right overflow hide-sm-dn shrink'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape($call_recording_length_padding)."</td>\n";
+			echo "	<td class='right overflow hide-sm-dn shrink'>".escape(gmdate("G:i:s", $row['call_recording_length']))."</td>\n";
 			echo "	<td class='overflow center no-wrap'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
 			echo "	<td class='left hide-sm-dn shrink'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
 			if (permission_exists('xml_cdr_details')) {
