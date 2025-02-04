@@ -74,10 +74,10 @@ class auto_loader {
 			return true;
 		}
 
-		//send to syslog
+		//send to syslog when debugging
 		if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
 			openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-			syslog(LOG_WARNING, "[php][autoloader] class not found name: ".$class_name);
+			syslog(LOG_WARNING, "[php][auto_loader] class not found name: ".$class_name);
 			closelog();
 		}
 
@@ -85,5 +85,3 @@ class auto_loader {
 		return false;
 	}
 }
-
-?>
