@@ -56,7 +56,7 @@
 						$_SESSION['domains'][$row['domain_uuid']] = $row;
 					}
 				}
-				unset($sql, $result);
+				unset($sql, $domains);
 
 			//update the domain session variables
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
