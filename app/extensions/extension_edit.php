@@ -226,7 +226,7 @@
 				$sql .= "where domain_uuid = :domain_uuid ";
 				if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
 					$sql .= "and device_user_uuid = :user_uuid ";
-					$parameters['user_uuid'] = $_SESSION['user_uuid'];
+					$parameters['user_uuid'] = $user_uuid;
 				}
 				$sql .= "order by device_address asc ";
 				$parameters['domain_uuid'] = $domain_uuid;
