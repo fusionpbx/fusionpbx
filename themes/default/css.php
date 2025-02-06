@@ -165,7 +165,7 @@ $login_input_shadow_outer_color_focus = $_SESSION['theme']['login_input_shadow_o
 $login_input_shadow_outer_color_focus = $login_input_shadow_outer_color_focus != 'none' ? '0 0 5px '.$login_input_shadow_outer_color_focus : 'none';
 $login_input_border_radius = $_SESSION['theme']['login_input_border_radius']['text'] ?? $input_border_radius;
 $login_input_border_color_hover = $_SESSION['theme']['login_input_border_color_hover']['text'] ?? $input_border_color_hover;
-$login_input_border_color_hover_focus = $_SESSION['theme']['login_input_border_color_hover_focus']['text'] ?? $input_border_color_hover_focus;
+$login_input_border_color_focus = $_SESSION['theme']['login_input_border_color_focus']['text'] ?? $input_border_color_focus;
 $login_input_text_placeholder_color = $_SESSION['theme']['login_input_text_placeholder_color']['text'] ?? $input_text_placeholder_color;
 $pwstrength_background_color = $_SESSION['theme']['input_background_color']['text'] ?? 'rgb(245, 245, 245)';
 $input_toggle_style = $_SESSION['theme']['input_toggle_style']['text'] ?? 'switch_round';
@@ -1900,7 +1900,7 @@ else { //default: white
 		resize: both;
 		}
 
-	input.login {
+	input.txt.login {
 		font-family: <?=$login_input_text_font?>;
 		font-size: <?=$login_input_text_size?>;
 		color: <?=$login_input_text_color?>;
@@ -1932,12 +1932,12 @@ else { //default: white
 		<?php unset($br); ?>
 		}
 
-	input.login:hover {
+	input.txt.login:hover {
 		border-color: <?=$login_input_border_color_hover?>;
 		}
 
-	input.login:focus {
-		border-color: <?=$login_input_border_color_hover_focus?>;
+	input.txt.login:focus {
+		border-color: <?=$login_input_border_color_focus?>;
 		/* first clear */
 			-webkit-box-shadow: none;
 			-moz-box-shadow: none;
@@ -1958,11 +1958,11 @@ else { //default: white
 		}
 
 	/* style placeholder text (for browsers that support the attribute) - note: can't stack, each must be seperate */
-	input.login::-webkit-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* chrome/opera/safari */
-	input.login::-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 19+ */
-	input.login:-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 18- */
-	input.login:-ms-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ie 10+ */
-	input.login::placeholder { color: <?=$login_input_text_placeholder_color?>; } /* official standard */
+	input.txt.login::-webkit-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* chrome/opera/safari */
+	input.txt.login::-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 19+ */
+	input.txt.login:-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 18- */
+	input.txt.login:-ms-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ie 10+ */
+	input.txt.login::placeholder { color: <?=$login_input_text_placeholder_color?>; } /* official standard */
 
 	input[type=password].formfld_highlight_bad,
 	input[type=password].formfld_highlight_bad:hover,
