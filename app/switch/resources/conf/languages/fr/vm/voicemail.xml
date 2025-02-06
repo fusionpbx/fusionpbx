@@ -37,7 +37,7 @@
       </match>
     </input>
   </macro>
-  
+
   <!-- similar to voicemail_listen_file_check in vm/sounds.xml, but maintains previous order -->
   <macro name="voicemail_listen_file_options">
     <input pattern="^([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):(.*)$">
@@ -48,6 +48,9 @@
         <action function="play-file" data="voicemail/vm-save_recording.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$2" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-message_envelope.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$3" method="pronounced" type="name_spelled"/>
         <action function="play-file" data="voicemail/vm-return_call.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$4" method="pronounced" type="name_spelled"/>
