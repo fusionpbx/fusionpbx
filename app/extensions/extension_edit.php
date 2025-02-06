@@ -101,7 +101,7 @@
 //get total extension count from the database, check limit, if defined
 	if ($action == 'add') {
 		if ($limit_extensions > 0) {
-			$sql = "select count(*) ";
+			$sql = "select count(extension_uuid) ";
 			$sql .= "from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
