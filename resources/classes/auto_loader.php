@@ -60,7 +60,7 @@ class auto_loader {
 		}
 	}
 
-	public function loader($class_name) : bool {
+	private function loader($class_name) : bool {
 
 		//sanitize the class name
 		$class_name = preg_replace('[^a-zA-Z0-9_]', '', $class_name);
