@@ -2027,10 +2027,7 @@ else { //default: white
 		resize: both;
 		}
 
-<<<<<<< Updated upstream
-=======
 	input.txt.login,
->>>>>>> Stashed changes
 	input.txt.login {
 		font-family: <?=$login_input_text_font?>;
 		font-size: <?=$login_input_text_size?>;
@@ -2074,14 +2071,6 @@ else { //default: white
 		<?php } ?>
 		}
 
-<<<<<<< Updated upstream
-	input.txt.login:hover {
-		border-color: <?=$login_input_border_color_hover?>;
-		}
-
-	input.txt.login:focus {
-		border-color: <?=$login_input_border_color_focus?>;
-=======
 	input.txt.login:hover,
 	input.txt.login:hover {
 		border: none !important;
@@ -2105,7 +2094,6 @@ else { //default: white
 		border-width: <?=$login_input_border_size?> !important;
 		border-style: <?=$login_input_border_style?> !important;
 		border-color: <?=$login_input_border_color_focus?> !important;
->>>>>>> Stashed changes
 		/* first clear */
 			-webkit-box-shadow: none;
 			-moz-box-shadow: none;
