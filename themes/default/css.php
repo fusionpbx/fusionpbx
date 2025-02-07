@@ -195,20 +195,7 @@ $login_input_shadow_inner_color_focus = $_SESSION['theme']['login_input_shadow_i
 $login_input_shadow_inner_color_focus = $login_input_shadow_inner_color_focus != 'none' ? '0 0 3px '.$login_input_shadow_inner_color_focus.' inset' : 'none';
 $login_input_shadow_outer_color_focus = $_SESSION['theme']['login_input_shadow_outer_color_focus']['text'] ?? $input_shadow_outer_color_focus;
 $login_input_shadow_outer_color_focus = $login_input_shadow_outer_color_focus != 'none' ? '0 0 5px '.$login_input_shadow_outer_color_focus : 'none';
-<<<<<<< Updated upstream
-$login_input_border_radius = $_SESSION['theme']['login_input_border_radius']['text'] ?? $input_border_radius;
-$login_input_border_color_hover = $_SESSION['theme']['login_input_border_color_hover']['text'] ?? $input_border_color_hover;
-$login_input_border_color_focus = $_SESSION['theme']['login_input_border_color_focus']['text'] ?? $input_border_color_focus;
-$login_input_text_placeholder_color = $_SESSION['theme']['login_input_text_placeholder_color']['text'] ?? $input_text_placeholder_color;
 $pwstrength_background_color = $_SESSION['theme']['input_background_color']['text'] ?? 'rgb(245, 245, 245)';
-$input_toggle_style = $_SESSION['theme']['input_toggle_style']['text'] ?? 'switch_round';
-$input_toggle_switch_background_color_true = $_SESSION['theme']['input_toggle_switch_background_color_true']['text'] ?? '#2e82d0';
-$input_toggle_switch_background_color_false = $_SESSION['theme']['input_toggle_switch_background_color_false']['text'] ?? $input_border_color;
-$input_toggle_switch_handle_symbol = $_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] ?? 'false';
-$input_toggle_switch_handle_color = $_SESSION['theme']['input_toggle_switch_handle_color']['text'] ?? '#ffffff';
-=======
-$pwstrength_background_color = $_SESSION['theme']['input_background_color']['text'] ?? 'rgb(245, 245, 245)';
->>>>>>> Stashed changes
 $table_heading_text_color = $_SESSION['theme']['table_heading_text_color']['text'] ?? '#3164ad';
 $table_heading_text_size = $_SESSION['theme']['table_heading_text_size']['text'] ?? '12px';
 $table_heading_text_font = $_SESSION['theme']['table_heading_text_font']['text'] ?? 'arial';
