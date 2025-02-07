@@ -26,14 +26,34 @@
 
 class auto_loader {
 
+	const FILE = 'autoloader_cache.php';
+
 	private $classes;
 
 	public function __construct($project_path = '') {
 		//classes must be loaded before this object is registered
-		$this->reload_classes($project_path);
-
+		if (!$this->load_cache()) {
+			$this->reload_classes($project_path);
+		}
 		//register this object to load any unknown classes
 		spl_autoload_register(array($this, 'loader'));
+	}
+
+	public function load_cache(string $file = ''): bool {
+		$this->classes = [];
+		//use a standard file
+		if (empty($file)) {
+			$file = sys_get_temp_dir() . '/'. self::FILE;
+		}
+		//use PHP engine to parse it
+		if (file_exists($file)) {
+			$this->classes = include $file;
+		}
+		//assign to an array
+		if (!empty($this->classes)) {
+			return true;
+		}
+		return false;
 	}
 
 	public function reload_classes($project_path = '') {
@@ -58,6 +78,29 @@ class auto_loader {
 		foreach ($search_path as $path) {
 			$this->classes[basename($path, '.php')] = $path;
 		}
+	}
+
+	public function update_cache(string $file = ''): bool {
+		//ensure we have somewhere to put the file
+		if (empty($file)) {
+			$file = sys_get_temp_dir() . '/' . self::FILE;
+		}
+
+		//export the classes array using PHP engine
+		$data = var_export($this->classes, true);
+
+		//put the array in a form that it can be loaded directly to an array
+		$result = file_put_contents($file, "<?php\n return " . $data . ";\n");
+		if ($result === false) {
+			//send to syslog when debugging
+			if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
+				openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+				syslog(LOG_WARNING, "[php][auto_loader] Writing to cache file failed");
+				closelog();
+			}
+			return false;
+		}
+		return true;
 	}
 
 	private function loader($class_name) : bool {
