@@ -39,6 +39,33 @@ class auto_loader {
 		spl_autoload_register(array($this, 'loader'));
 	}
 
+	public function update_cache(string $file = ''): bool {
+		//ensure we have somewhere to put the file
+		if (empty($file)) {
+			$file = sys_get_temp_dir() . '/' . self::FILE;
+		}
+
+		//guard against writing an empty file
+		if (!empty($this->classes)) {
+			//export the classes array using PHP engine
+			$data = var_export($this->classes, true);
+
+			//put the array in a form that it can be loaded directly to an array
+			$result = file_put_contents($file, "<?php\n return " . $data . ";\n");
+			if ($result !== false) {
+				return true;
+			}
+			$error_array = error_get_last();
+			//send to syslog when debugging
+			if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
+				openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+				syslog(LOG_WARNING, "[php][auto_loader] " . $error_array['message']);
+				closelog();
+			}
+		}
+		return false;
+	}
+
 	public function load_cache(string $file = ''): bool {
 		$this->classes = [];
 		//use a standard file
@@ -78,29 +105,6 @@ class auto_loader {
 		foreach ($search_path as $path) {
 			$this->classes[basename($path, '.php')] = $path;
 		}
-	}
-
-	public function update_cache(string $file = ''): bool {
-		//ensure we have somewhere to put the file
-		if (empty($file)) {
-			$file = sys_get_temp_dir() . '/' . self::FILE;
-		}
-
-		//export the classes array using PHP engine
-		$data = var_export($this->classes, true);
-
-		//put the array in a form that it can be loaded directly to an array
-		$result = file_put_contents($file, "<?php\n return " . $data . ";\n");
-		if ($result === false) {
-			//send to syslog when debugging
-			if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
-				openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-				syslog(LOG_WARNING, "[php][auto_loader] Writing to cache file failed");
-				closelog();
-			}
-			return false;
-		}
-		return true;
 	}
 
 	private function loader($class_name) : bool {
