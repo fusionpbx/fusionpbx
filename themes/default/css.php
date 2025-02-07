@@ -2027,7 +2027,6 @@ else { //default: white
 		resize: both;
 		}
 
-	input.txt.login,
 	input.txt.login {
 		font-family: <?=$login_input_text_font?>;
 		font-size: <?=$login_input_text_size?>;
@@ -2071,7 +2070,6 @@ else { //default: white
 		<?php } ?>
 		}
 
-	input.txt.login:hover,
 	input.txt.login:hover {
 		border: none !important;
 		border-width: <?=$login_input_border_size?> !important;
@@ -2088,7 +2086,6 @@ else { //default: white
 		<?php } ?>
 		}
 
-	input.txt.login:focus,
 	input.txt.login:focus {
 		border: none !important;
 		border-width: <?=$login_input_border_size?> !important;
@@ -2113,7 +2110,6 @@ else { //default: white
 			?>
 		}
 
-	input.txt.login:focus-visible,
 	input.txt.login:focus-visible {
 		outline: none !important;
 		<?php if (!empty($login_input_outline_size_focus)) { ?>
@@ -2127,7 +2123,6 @@ else { //default: white
 		<?php } ?>
 		}
 
-	input.txt.login:hover:focus,
 	input.txt.login:hover:focus {
 		border: none !important;
 		border-width: <?=$login_input_border_size?> !important;
@@ -2135,7 +2130,6 @@ else { //default: white
 		border-color: <?=$login_input_border_color_hover_focus?> !important;
 		}
 
-	input.txt.login:hover:focus-visible,
 	input.txt.login:hover:focus-visible {
 		outline: none !important;
 		<?php if (!empty($login_input_outline_size_hover_focus)) { ?>
