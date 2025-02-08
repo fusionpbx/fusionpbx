@@ -7,9 +7,8 @@ use Illuminate\Support\Str;
 
 trait HasUniqueIdentifier{
 
-    public static function boot()
+    public static function bootHasUniqueIdentifier()
     {
-        parent::boot();
         static::creating(function (Model $model) {
             $model->setKeyType('uuid'); // Original 'string'
             $model->setIncrementing(false);
