@@ -9,13 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasUniqueIdentifier;
 
-use DB;
-
-class Group extends Model
+class Contact extends Model
 {
 	use HasFactory, HasUniqueIdentifier;
-	protected $table = 'v_groups';
-	protected $primaryKey = 'group_uuid';
+	protected $table = 'v_contacts';
+	protected $primaryKey = 'contact_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,27 +25,28 @@ class Group extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'group_name',
-		'group_protected',
-		'group_level',
-		'group_description',
+		'contact_parent_uuid',
+		'contact_type',
+		'contact_organization',
+		'contact_name_prefix',
+        'contact_name_given',
+        'contact_name_middle',
+        'contact_name_family',
+        'contact_name_suffix',
+        'contact_nickname',
+        'contact_title',
+        'contact_role',
+        'contact_category',
+        'contact_url',
+        'contact_time_zone',
+        'contact_note',
 	];
 
-	public function users(): BelongsToMany {
-		return $this->belongsToMany(User::class, 'v_user_groups', 'group_uuid', 'user_uuid');
-//		$this->belongsToMany(User::class)->using(UserGroup::class);
+    public function users(): HasMany {
+		return $this->hasMany(User::class, 'contact_uuid', 'contact_uuid');
 	}
 
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
-	}
-
-	public function permissions(): BelongsToMany {
-		return $this->belongsToMany(Permission::class, 'v_group_permissions', 'group_uuid', 'permission_name');
-	}
-
-	public static function findGlobals() {
-		$groups = DB::table('v_groups')->select('*')->whereNull('domain_uuid')->get();
-		return $groups;
 	}
 }

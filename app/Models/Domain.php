@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HasUniqueIdentifier;
 
 class Domain extends Model
 {
-	use HasFactory, HasUuids;
+	use HasFactory, HasUniqueIdentifier;
 	protected $table = 'v_domains';
 	protected $primaryKey = 'domain_uuid';
 	public $incrementing = false;
@@ -17,6 +17,10 @@ class Domain extends Model
 	const CREATED_AT = 'insert_date';
 	const UPDATED_AT = 'update_date';
 
+	public function extensions(): HasMany {
+		return $this->hasMany(Extension::class, 'domain_uuid', 'domain_uuid');
+	}
+	
 	public function users(): HasMany {
 		return $this->hasMany(User::class, 'domain_uuid', 'domain_uuid');
 	}
@@ -32,4 +36,7 @@ class Domain extends Model
 	public function grouppermissions(): HasMany {
 		return $this->hasMany(GroupPermission::class, 'domain_uuid', 'domain_uuid');
 	}
-}
+
+	public function domainsettings(): HasMany {
+		return $this->hasMany(DomainSetting::class, 'domain_uuid', 'domain_uuid');
+	}}
