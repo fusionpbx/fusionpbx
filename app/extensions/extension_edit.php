@@ -401,6 +401,19 @@
 								//extension exists
 							}
 							else {
+								//password permission not assigned get the password from the database
+									if ($action == "update" && !permission_exists('extension_password')) {
+										$sql = "select password from v_extensions ";
+										$sql .= "where extension_uuid = :extension_uuid ";
+										$sql .= "and domain_uuid = :domain_uuid ";
+										$parameters['domain_uuid'] = $domain_uuid;
+										$parameters['extension_uuid'] = $extension_uuid;
+										$row = $database->select($sql, $parameters, 'row');
+										if (is_array($row) && @sizeof($row) != 0) {
+											$password = $row["password"];
+										}
+										unset($sql, $parameters, $row);
+									}
 
 								//get the password length and strength
 									$password_length = $_SESSION["extension"]["password_length"]["numeric"];
