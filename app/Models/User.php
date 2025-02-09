@@ -70,4 +70,9 @@ class User extends Authenticatable
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
+
+	public function usersettings(): HasMany {
+		return $this->hasMany(UserSetting::class, 'user_setting_uuid', 'user_setting_uuid');
+	}
+
 }
