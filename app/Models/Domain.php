@@ -88,5 +88,16 @@ class Domain extends Model
 		return $this->hasMany(Billing::class, 'domain_uuid', 'domain_uuid');
 	}
 
+	public function billingauthorizedpaymentsources(): HasMany {
+		return $this->hasMany(BillingAuthorizedPaymentSource::class, 'domain_uuid', 'domain_uuid');
+	}
+	
+	public function billingdeals(): HasMany {
+		return $this->hasMany(BillingDeal::class, 'domain_uuid', 'domain_uuid');
+	}
+	
+	public function billinginvoices(): HasMany {
+		return $this->hasMany(BillingInvoice::class, 'domain_uuid', 'domain_uuid');
+	}
 
 }

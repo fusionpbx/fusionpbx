@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class Billing extends Model
+class BillingDeal extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_billings';
-	protected $primaryKey = 'billing_uuid';
+	protected $table = 'v_billing_deals';
+	protected $primaryKey = 'billing_deal_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,28 +27,13 @@ class Billing extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'parent_billing_uuid',
-		'type',
-		'type_value',
-		'credit_type',
-		'credit',
-		'billing_cycle',
+		'direction',
+		'digits',
+		'minutes',
+		'rate',
 		'currency',
-		'pay_days',
-		'contact_uuid_from',
-		'contact_uuid_to',
-		'billing_notes',
-		'lcr_profile',
-		'balance',
-		'old_balance',
-		'billing_creation_date',
-		'referred_by_uuid',
-		'referred_depth',
-		'whmcs_user_id',
-		'force_postpaid_full_payment',
-		'max_rate',
-		'auto_topup_minimum_balance',
-		'auto_topup_charge',
+		'billing_deal_notes',
+		'label'
 	];
 
     /**
@@ -71,15 +56,4 @@ class Billing extends Model
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function billingauthorizedpaymentsources(): HasMany {
-		return $this->hasMany(Billing::class, 'billing_uuid', 'billing_uuid');
-	}
-	
-	public function billingfixedcharges(): HasMany {
-		return $this->hasMany(BillingFixedCharge::class, 'billing_uuid', 'billing_uuid');
-	}
-
-	public function billinginvoices(): HasMany {
-		return $this->hasMany(BillingInvoice::class, 'billing_uuid', 'billing_uuid');
-	}
 }
