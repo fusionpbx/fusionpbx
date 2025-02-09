@@ -63,4 +63,8 @@ class Lcr extends Model
 	protected $casts = [
 	];
 
+	public function carrier(): BelongsTo {
+		return $this->belongsTo(Carrier::class, 'carrier_uuid', 'carrier_uuid');
+	}
+
 }
