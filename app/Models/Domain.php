@@ -53,4 +53,8 @@ class Domain extends Model
 		return $this->hasMany(Voicemail::class, 'domain_uuid', 'domain_uuid');
 	}
 
+	public function voicemailgreetins(): HasMany {
+		return $this->hasMany(VoicemailGreeting::class, 'domain_uuid', 'domain_uuid');
+	}
+
 }
