@@ -67,4 +67,8 @@ class Voicemail extends Model
 	public function voicemailmessages(): HasMany {
 		return $this->hasMany(VoicemailMessage::class, 'voicemail_uuid', 'voicemail_uuid');
 	}
+
+	public function voicemailoptionss(): HasMany {
+		return $this->hasMany(VoicemailOption::class, 'voicemail_uuid', 'voicemail_uuid');
+	}
 }
