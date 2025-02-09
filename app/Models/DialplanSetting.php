@@ -59,7 +59,7 @@ class DialplanSetting extends Model
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
 
-  public function dialplan(): BelongsTo {
+  	public function dialplan(): BelongsTo {
 		return $this->belongsTo(Dialplan::class, 'dialplan_uuid', 'dialplan_uuid');
 	}
 }
