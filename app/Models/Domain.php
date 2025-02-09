@@ -83,5 +83,10 @@ class Domain extends Model
 	public function musiconhold(): HasMany {
 		return $this->hasMany(MusicOnHold::class, 'domain_uuid', 'domain_uuid');
 	}
+	
+	public function billings(): HasMany {
+		return $this->hasMany(Billing::class, 'domain_uuid', 'domain_uuid');
+	}
+
 
 }
