@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\HasUniqueIdentifier;
+
+class Dialplan extends Model
+{
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	protected $table = 'v_dialplans';
+	protected $primaryKey = 'dialplan_uuid';
+	public $incrementing = false;
+	protected $keyType = 'string';	// TODO, check if UUID is valid
+	const CREATED_AT = 'insert_date';
+	const UPDATED_AT = 'update_date';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+	protected $fillable = [
+    'domain_uuid',
+    'app_uuid',
+    'hostname',
+    'dialplan_context',
+    'dialplan_name',
+    'dialplan_number',
+    'dialplan_destination',
+    'dialplan_continue',
+    'dialplan_xml',
+    'dialplan_order',
+    'dialplan_enabled',
+    'dialplan_description',
+	];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+	protected $hidden = [
+	];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+	protected $casts = [
+	];
+
+	public function domain(): BelongsTo {
+		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	}
+}
