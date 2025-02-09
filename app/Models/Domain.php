@@ -61,4 +61,8 @@ class Domain extends Model
 		return $this->hasMany(XmlCdr::class, 'domain_uuid', 'domain_uuid');
 	}
 
+	public function musiconhold(): HasMany {
+		return $this->hasMany(MusicOnHold::class, 'domain_uuid', 'domain_uuid');
+	}
+
 }
