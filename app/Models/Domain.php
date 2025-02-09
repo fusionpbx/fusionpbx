@@ -28,6 +28,14 @@ class Domain extends Model
 	    'domain_description',
 	];
 
+	public function parent(): BelongsTo {
+		return $this->belongsTo(Domain::class, 'domain_parent_uuid', 'domain_uuid');
+	}
+	
+	public function children(): HasMany {
+		return $this->hasMany(Domain::class, 'domain_parent_uuid', 'domain_uuid');
+	}
+
 	public function extensions(): HasMany {
 		return $this->hasMany(Extension::class, 'domain_uuid', 'domain_uuid');
 	}
