@@ -120,4 +120,8 @@ class XmlCdr extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
+
+	public function extension(): BelongsTo {
+		return $this->belongsTo(Extension::class, 'extension_uuid', 'extension_uuid');
+	}
 }
