@@ -16,6 +16,17 @@ class Domain extends Model
 	protected $keyType='string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
 	const UPDATED_AT = 'update_date';
+ /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+	protected $fillable = [
+	    'domain_parent_uuid',
+	    'domain_name',
+	    'domain_enabled',
+	    'domain_description',
+	];
 
 	public function extensions(): HasMany {
 		return $this->hasMany(Extension::class, 'domain_uuid', 'domain_uuid');
