@@ -49,4 +49,8 @@ class Domain extends Model
 		return $this->hasMany(Gateway::class, 'domain_uuid', 'domain_uuid');
 	}
 
+	public function voicemails(): HasMany {
+		return $this->hasMany(Voicemail::class, 'domain_uuid', 'domain_uuid');
+	}
+
 }
