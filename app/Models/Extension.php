@@ -105,4 +105,8 @@ class Extension extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
+
+	public function xmlcdr(): HasMany {
+		return $this->hasMany(XmlCdr::class, 'extension_uuid', 'extension_uuid');
+	}
 }
