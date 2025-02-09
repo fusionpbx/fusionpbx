@@ -57,4 +57,8 @@ class Domain extends Model
 		return $this->hasMany(VoicemailGreeting::class, 'domain_uuid', 'domain_uuid');
 	}
 
+	public function xmlcdr(): HasMany {
+		return $this->hasMany(XmlCdr::class, 'domain_uuid', 'domain_uuid');
+	}
+
 }
