@@ -49,4 +49,8 @@ class SofiaGlobalSetting extends Model
 	protected $casts = [
 	];
 
+	public function lcr(): HasMany {
+		return $this->hasMany(Lcr::class, 'carrier_uuid', 'carrier_uuid');
+	}
+
 }
