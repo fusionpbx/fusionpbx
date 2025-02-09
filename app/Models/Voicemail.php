@@ -27,14 +27,6 @@ class Voicemail extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-	];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-	protected $hidden = [
     'voicemail_id',
     'voicemail_password',
     'greeting_id',
@@ -49,6 +41,15 @@ class Voicemail extends Model
     'voicemail_description',
     'voicemail_name_base64',
     'voicemail_tutorial',
+	];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+	protected $hidden = [
+	    'voicemail_password',
 	];
 
     /**
