@@ -63,4 +63,8 @@ class Voicemail extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
+	
+	public function voicemailmessages(): HasMany {
+		return $this->hasMany(VoicemailMessage::class, 'voicemail_uuid', 'voicemail_uuid');
+	}
 }
