@@ -45,4 +45,8 @@ class Domain extends Model
 		return $this->hasMany(Dialplan::class, 'domain_uuid', 'domain_uuid');
 	}
 
+	public function gateways(): HasMany {
+		return $this->hasMany(Gateway::class, 'domain_uuid', 'domain_uuid');
+	}
+
 }
