@@ -39,4 +39,10 @@ class Domain extends Model
 
 	public function domainsettings(): HasMany {
 		return $this->hasMany(DomainSetting::class, 'domain_uuid', 'domain_uuid');
-	}}
+	}
+
+	public function dialplans(): HasMany {
+		return $this->hasMany(Dialplan::class, 'domain_uuid', 'domain_uuid');
+	}
+
+}
