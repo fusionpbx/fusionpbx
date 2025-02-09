@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class User extends Authenticatable
+class Extension extends Authenticatable
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
 	protected $table = 'v_extensions';
