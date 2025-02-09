@@ -60,4 +60,8 @@ class Dialplan extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
+
+	public function dialplandetails(): HasMany {
+		return $this->hasMany(DialplanDetail::class, 'dialplan_uuid', 'dialplan_uuid');
+	}
 }
