@@ -48,4 +48,8 @@ class UserSetting extends Model
 	protected $casts = [
 	];
 
+	public function user(): BelongsTo {
+		return $this->belongsTo(User::class, 'user_uuid', 'user_uuid');
+	}
+
 }
