@@ -87,8 +87,6 @@ class Extension extends Model
      * @var array<int, string>
      */
 	protected $hidden = [
-		'password',
-		'remember_token',
 	];
 
     /**
@@ -97,8 +95,6 @@ class Extension extends Model
      * @var array<string, string>
      */
 	protected $casts = [
-		'email_verified_at' => 'datetime',
-		'password' => 'hashed',
 	];
 
 	public function groups(): BelongsToMany {
