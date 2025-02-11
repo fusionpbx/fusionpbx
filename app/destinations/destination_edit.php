@@ -462,7 +462,6 @@
 								}
 
 							//authorized specific dialplan_detail_type that are safe, sanitize all other values
-								$dialplan_detail_type = $settings->get('dialplan', 'destination', '');
 								switch ($dialplan_detail_type) {
 								case 'destination_number':
 									break;
