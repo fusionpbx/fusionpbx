@@ -645,8 +645,8 @@ if (!class_exists('xml_cdr')) {
 						$domain_uuid = urldecode($xml->variables->domain_uuid);
 
 					//sanitize the caller ID
-						$caller_id_name = preg_replace('#[^a-zA-Z 0-9\-\.]#', '', $caller_id_name);
-						$caller_id_number = preg_replace('#[^0-9\-]#', '', $caller_id_number);
+						$caller_id_name = preg_replace('#[^a-zA-Z 0-9\-\.\#\*]#', '', $caller_id_name);
+						$caller_id_number = preg_replace('#[^0-9\-\#\*]#', '', $caller_id_number);
 
 					//misc
 						$this->array[$key][0]['ring_group_uuid'] = urldecode($xml->variables->ring_group_uuid);
