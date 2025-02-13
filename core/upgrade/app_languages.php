@@ -1808,5 +1808,3 @@ $text['label-updated_cache']['tr-tr'] = 'Güncellenen önbellek';
 $text['label-updated_cache']['zh-cn'] = '更新缓存';
 $text['label-updated_cache']['ja-jp'] = 'キャッシュを更新しました';
 $text['label-updated_cache']['ko-kr'] = '캐시 업데이트됨';
-
-?>
