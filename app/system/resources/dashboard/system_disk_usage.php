@@ -20,9 +20,9 @@
 //system status
 	echo "<div class='hud_box'>\n";
 
-	$c = false;
-	$row_style[true] = "row_style0";
-	$row_style[false] = "row_style1";
+	$c = 0;
+	$row_style['0'] = "row_style0";
+	$row_style['1'] = "row_style1";
 
 	//disk usage
 	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
