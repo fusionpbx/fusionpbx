@@ -233,7 +233,7 @@
 					$p->add('event_guard_log_edit', 'temp');
 					$database->app_name = 'event guard';
 					$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-					$database->save($array);
+					$database->save($array, false);
 					//$message = $database->message;
 					$p->delete('event_guard_log_edit', 'temp');
 					unset($array);
@@ -353,7 +353,7 @@
 		$p->add('event_guard_log_add', 'temp');
 		$database->app_name = 'event guard';
 		$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-		$database->save($array);
+		$database->save($array, false);
 		$p->delete('event_guard_log_add', 'temp');
 
 		//send debug information to the console
