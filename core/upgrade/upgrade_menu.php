@@ -58,6 +58,11 @@ $display_type = 'text';
 //run
 show_upgrade_menu();
 
+/**
+ * Show upgrade menu
+ * @global type $text
+ * @global type $software_name
+ */
 function show_upgrade_menu() {
 	global $text, $software_name, $settings;
 	//error_reporting(E_ALL);
@@ -72,13 +77,14 @@ function show_upgrade_menu() {
 		echo "1) {$text['label-upgrade_source']} - {$text['description-update_all_source_files']}\n";
 		echo "  1a) " . $software_name . " - Update Main Software Only \n";
 		echo "  1b) {$text['label-update_external_repositories']} - {$text['description-repositories']}\n";
-		echo "2) {$text['label-schema']} - {$text['description-upgrade_schema']}\n";
-		echo "  2b) {$text['label-upgrade_data_types']} - {$text['description-upgrade_data_types']}\n";
-		echo "3) {$text['label-upgrade_apps']} - {$text['description-upgrade_apps']}\n";
-		echo "4) {$text['label-upgrade_menu']} - {$text['description-upgrade_menu']}\n";
-		echo "5) {$text['label-upgrade_permissions']} - {$text['description-upgrade_permissions']}\n";
-		echo "6) {$text['label-update_filesystem_permissions']} - {$text['description-update_filesystem_permissions']}\n";
-		echo "7) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
+		echo "2) {$text['label-update_auto_loader']} - {$text['description-update_auto_loader']}\n";
+		echo "3) {$text['label-schema']} - {$text['description-upgrade_schema']}\n";
+		echo "  3b) {$text['label-upgrade_data_types']} - {$text['description-upgrade_data_types']}\n";
+		echo "4) {$text['label-upgrade_apps']} - {$text['description-upgrade_apps']}\n";
+		echo "5) {$text['label-upgrade_menu']} - {$text['description-upgrade_menu']}\n";
+		echo "6) {$text['label-upgrade_permissions']} - {$text['description-upgrade_permissions']}\n";
+		echo "7) {$text['label-update_filesystem_permissions']} - {$text['description-update_filesystem_permissions']}\n";
+		echo "8) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
 		echo "0) Exit\n";
 		echo "\n";
 		echo "Choice: ";
@@ -95,32 +101,36 @@ function show_upgrade_menu() {
 				do_upgrade_code_submodules();
 				break;
 			case 2:
-				do_upgrade_schema();
-				break;
-			case '2b':
-				do_upgrade_schema(true);
+				do_upgrade_auto_loader();
 				break;
 			case 3:
-				do_upgrade_domains();
+				do_upgrade_schema();
+				break;
+			case '3b':
+				do_upgrade_schema(true);
 				break;
 			case 4:
-				do_upgrade_menu();
+				do_upgrade_domains();
 				break;
 			case 5:
-				do_upgrade_permissions();
+				do_upgrade_menu();
 				break;
 			case 6:
-				do_filesystem_permissions($text, $settings);
+				do_upgrade_permissions();
 				break;
 			case 7:
-				do_upgrade_code();
-				do_upgrade_schema();
-				do_upgrade_domains();
-				do_upgrade_menu();
-				do_upgrade_permissions();
 				do_filesystem_permissions($text, $settings);
 				break;
 			case 8:
+				do_upgrade_code();
+				do_upgrade_auto_loader();
+				do_upgrade_schema();
+				do_upgrade_domains();
+				do_upgrade_menu();
+				do_upgrade_permissions();
+				do_filesystem_permissions($text, $settings);
+				break;
+			case 9:
 				break;
 			case 0:
 				exit();
@@ -128,6 +138,23 @@ function show_upgrade_menu() {
 	}
 }
 
+/**
+ * Rebuild the cache file
+ * @global type $text
+ */
+function do_upgrade_auto_loader() {
+	global $text;
+	$loader = new auto_loader();
+	$loader->reload_classes();
+	echo "{$text['label-reloaded_classes']}\n";
+	if ($loader->update_cache()) {
+		echo "{$text['label-updated_cache']}\n";
+	}
+}
+
+/**
+ * Show the software version
+ */
 function do_filesystem_permissions($text, settings $settings) {
 
 	echo ($text['label-header1'] ?? "Root account or sudo account must be used for this option") . "\n";
@@ -185,6 +212,10 @@ function show_software_version() {
 	echo software::version() . "\n";
 }
 
+/**
+ * Upgrade the source folder
+ * @return type
+ */
 function do_upgrade_code() {
 	//assume failed
 	$result = ['result' => false, 'message' => 'Failed'];
@@ -199,6 +230,10 @@ function do_upgrade_code() {
 	return;
 }
 
+/**
+ * Upgrade any of the git submodules
+ * @global type $text
+ */
 function do_upgrade_code_submodules() {
 	global $text;
 	$updateable_repos = git_find_repos(dirname(__DIR__, 2)."/app");
@@ -223,7 +258,9 @@ function do_upgrade_code_submodules() {
 	}
 }
 
-//run all app_defaults.php files
+/**
+ * Execute all app_defaults.php files
+ */
 function do_upgrade_domains() {
 	require_once dirname(__DIR__, 2) . "/resources/classes/config.php";
 	require_once dirname(__DIR__, 2) . "/resources/classes/domains.php";
@@ -232,7 +269,9 @@ function do_upgrade_domains() {
 	$domain->upgrade();
 }
 
-//upgrade schema and/or data_types
+/**
+ * Upgrade schema and/or data_types
+ */
 function do_upgrade_schema(bool $data_types = false) {
 	//get the database schema put it into an array then compare and update the database as needed.
 	require_once dirname(__DIR__, 2) . "/resources/classes/schema.php";
@@ -241,7 +280,9 @@ function do_upgrade_schema(bool $data_types = false) {
 	echo $obj->schema('text');
 }
 
-//restore the default menu
+/**
+ * Restore the default menu
+ */
 function do_upgrade_menu() {
 	global $included, $sel_menu, $menu_uuid, $menu_language;
 	//get the menu uuid and language
@@ -273,7 +314,9 @@ function do_upgrade_menu() {
 	}
 }
 
-//restore the default permissions
+/**
+ * Restore the default permissions
+ */
 function do_upgrade_permissions() {
 	global $included;
 	//default the permissions
@@ -285,7 +328,9 @@ function do_upgrade_permissions() {
 	echo $text['message-upgrade_permissions'] . "\n";
 }
 
-//default upgrade schema and app defaults
+/**
+ * Default upgrade schema and app defaults
+ */
 function do_upgrade_defaults() {
 	//add multi-lingual support
 	$language = new text;
@@ -309,6 +354,10 @@ function do_upgrade_defaults() {
 	echo "\n";
 }
 
+/**
+ * Load the old config.php file
+ * @return type
+ */
 function load_config_php() {
 	//if the config file doesn't exist and the config.php does exist use it to write a new config file
 	//include the config.php
