@@ -21,8 +21,8 @@
 	echo "<div class='hud_box'>\n";
 
 	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	$row_style['0'] = "row_style0";
+	$row_style['1'] = "row_style1";
 
 	//disk usage
 	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
@@ -37,16 +37,16 @@
 		if (!empty($percent_disk_usage)) {
 
 			//add half doughnut chart
-			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_disk_usage_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 			echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-disk_usage']."</a></span>\n";
 
 			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 				?>
-				<div class='hud_chart' style='width: 175px;'><canvas id='system_status_chart'></canvas></div>
+				<div class='hud_chart' style='width: 175px;'><canvas id='system_disk_usage_chart'></canvas></div>
 
 				<script>
-					const system_status_chart = new Chart(
-						document.getElementById('system_status_chart').getContext('2d'),
+					const system_disk_usage_chart = new Chart(
+						document.getElementById('system_disk_usage_chart').getContext('2d'),
 						{
 							type: 'doughnut',
 							data: {
@@ -102,133 +102,60 @@
 	}
 
 	if ($dashboard_details_state != 'disabled') {
-		echo "<div class='hud_details hud_box' id='hud_system_status_details'>";
+		echo "<div class='hud_details hud_box' id='hud_system_disk_usage_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
-		echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
-		echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
+		echo "  <th class='hud_heading' width='50%'>".($text['label-mount_point'] ?? 'Mount Point')."</th>\n";
+		echo "  <th class='hud_heading' style='text-align: center;'>".($text['label-size'] ?? 'Size')."</th>\n";
+		echo "  <th class='hud_heading' style='text-align: center;'>".($text['label-used'] ?? 'Used')."</th>\n";
+		echo "  <th class='hud_heading' style='text-align: right;'>".($text['label-available'] ?? 'Available')."</th>\n";
 		echo "</tr>\n";
 
-		//pbx version
-			echo "<tr class='tr_link_void'>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software::version()."</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-
-		//os uptime
-			if (stristr(PHP_OS, 'Linux')) {
-				$prefix = 'up ';
-				$linux_uptime = shell_exec('uptime  -p');
-				$uptime = substr($linux_uptime, strlen($prefix));
-				if (!empty($uptime)) {
-					echo "<tr class='tr_link_void'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_uptime']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$uptime."</td>\n";
-					echo "</tr>\n";
-					$c = ($c) ? 0 : 1;
-				}
-			}
-
-		//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
-			if (stristr(PHP_OS, 'Linux')) {
-				$free = shell_exec("/usr/bin/which free");
-				$awk = shell_exec("/usr/bin/which awk");
-				$percent_memory = round((float)shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
-				if (!empty($percent_memory)) {
-					echo "<tr class='tr_link_void'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_memory."%</td>\n";
-					echo "</tr>\n";
-					$c = ($c) ? 0 : 1;
-				}
-			}
-
-		//memory available
-			if (stristr(PHP_OS, 'Linux')) {
-				$result = trim(shell_exec('free -hw | grep \'Mem:\' | cut -d\' \' -f 55-64'));
-				if (!empty($result)) {
-					echo "<tr class='tr_link_void'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_available']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$result."</td>\n";
-					echo "</tr>\n";
-					$c = ($c) ? 0 : 1;
-				}
-			}
-
 		//disk usage
-			if (stristr(PHP_OS, 'Linux')) {
-				//calculated above
-				if (!empty($percent_disk_usage)) {
-					echo "<tr class='tr_link_void'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_disk_usage."%</td>\n";
-					echo "</tr>\n";
-					$c = ($c) ? 0 : 1;
-				}
-			}
-
-		//db connections
-			switch ($db_type) {
-				case 'pgsql':
-					$sql = "select count(*) from pg_stat_activity";
-					break;
-				case 'mysql':
-					$sql = "show status where `variable_name` = 'Threads_connected'";
-					break;
-				default:
-					unset($sql);
-					if (!empty($db_path) && !empty($dbfilename)) {
-						$tmp =  shell_exec("lsof ".realpath($db_path).'/'.$dbfilename);
-						$tmp = explode("\n", $tmp);
-						$connections = sizeof($tmp) - 1;
+			if (permission_exists('system_view_hdd')) {
+				$system_information = [];
+				if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
+					$shell_result = shell_exec('df -hP');
+					if (!empty($shell_result)) {
+						$lines = explode("\n",$shell_result);
+						//name the columns
+						$column_names = preg_split("/[\s,]+/", $lines[0]);
+						$col_file_system = array_search('Filesystem', $column_names, true); //usually 0
+						$col_size = array_search('Size', $column_names, true);              //usually 1
+						$col_used = array_search('Used', $column_names, true);              //usually 2
+						$col_available = array_search('Avail', $column_names, true);        //usually 3
+						$col_mount_point = array_search('Mounted', $column_names, true);    //usually 5 but can be 4
+						//skip heading line by starting at 1
+						for ($i = 1; $i < count($lines); $i++) {
+							$line = $lines[$i];
+							$columns = preg_split("/[\s,]+/", $line);
+							$system_information['os']['disk'][$i-1]['file_system'] = $columns[$col_file_system];
+							$system_information['os']['disk'][$i-1][   'size'    ] = $columns[   $col_size    ];
+							$system_information['os']['disk'][$i-1][   'used'    ] = $columns[   $col_used    ];
+							$system_information['os']['disk'][$i-1][ 'available' ] = $columns[ $col_available ];
+							$system_information['os']['disk'][$i-1]['mount_point'] = $columns[$col_mount_point];
+						}
 					}
-			}
-			if (!empty($sql)) {
-				if (!isset($database)) { $database = new database; }
-				$connections = $database->select($sql, null, 'column');
-				unset($sql);
-			}
-			if (!empty($connections)) {
-				echo "<tr class='tr_link_void'>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-database_connections']."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$connections."</td>\n";
-				echo "</tr>\n";
-				$c = ($c) ? 0 : 1;
-			}
+					foreach ($system_information['os']['disk'] as $disk) {
+						echo "<tr class='tr_link_void'>\n";
+						echo "  <td valign='top' class='".$row_style[$c]." hud_text' style='text-align: left;'>".$disk['mount_point']."</td>\n";
+						echo "  <td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$disk[   'size'    ]."</td>\n";
+						echo "  <td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$disk[   'used'    ]."</td>\n";
+						echo "  <td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$disk[ 'available' ]."</td>\n";
+						echo "</tr>\n";
+						$c = ($c) ? 0 : 1;
+					}
+				}
+				else if (stristr(PHP_OS, 'WIN')) {
 
-		//channel count
-			$esl = event_socket::create();
-			if ($esl->is_connected()) {
-				$tmp = event_socket::api('status');
-				$matches = Array();
-				preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
-				$channels = !empty($matches[1]) ? $matches[1] : 0;
-				$tr_link = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
-				echo "<tr ".$tr_link.">\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-channels']."</a></td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";
-				echo "</tr>\n";
-				$c = ($c) ? 0 : 1;
-			}
-
-		//registration count
-			if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
-				$registration = new registrations;
-				$registrations = $registration->count();
-				$tr_link = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
-				echo "<tr ".$tr_link.">\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-registrations']."</a></td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$registrations."</td>\n";
-				echo "</tr>\n";
-				$c = ($c) ? 0 : 1;
+				}
 			}
 
 		echo "</table>\n";
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_system_disk_usage_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 	echo "</div>\n";
 
