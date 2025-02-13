@@ -105,6 +105,9 @@ class auto_loader {
 		foreach ($search_path as $path) {
 			$this->classes[basename($path, '.php')] = $path;
 		}
+
+		//update the cache after loading classes array
+		$this->update_cache();
 	}
 
 	private function loader($class_name) : bool {
