@@ -433,7 +433,7 @@ if (!function_exists('fax_split_dtmf')) {
 				if (in_array($logo_fileext, ['gif','jpg','jpeg','png','bmp'])) {
 					if (file_exists($logo_dirname.'/'.$logo_filename)) {
 						$logo = $logo_dirname.'/'.$logo_filename;
-						$display_logo = true;	
+						$display_logo = true;
 					}
 					else {
 						$raw = file_get_contents($logo);
@@ -568,7 +568,13 @@ if (!function_exists('fax_split_dtmf')) {
 				unset($yn);
 			}
 			else {
-				$pdf->Rect($x + 0.5, $y + 3.4, 7.5, 6.25, 'D');
+				//determine cover message box height, and difference, to adjust footer position accordingly
+				$cover_message_height = $setting->get('fax','cover_message_height');
+				$cover_message_height = (float) ($cover_message_height ?? 6.15);
+				$height_difference = 6.15 - $cover_message_height;
+
+				// draw message box
+				$pdf->Rect($x + 0.5, $y + 3.4, 7.5, $cover_message_height, 'D');
 				$y = $pdf->GetY();
 			}
 
@@ -577,7 +583,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$pdf->SetAutoPageBreak(true, 0.6);
 				$pdf->SetTopMargin(0.6);
 				$pdf->SetFont("helvetica", "", 8);
-				$pdf->SetXY($x + 0.5, $y + 0.6);
+				$pdf->SetXY($x + 0.5, $y + 0.6 - (float) ($height_difference ?? 0));
 				$pdf->MultiCell(7.5, 0.75, $fax_footer, 0, 'C', false);
 			}
 			$pdf->SetAutoPageBreak(false);
@@ -669,7 +675,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			exit;
 		}
-		
+
 		//prepare variables send the fax
 		$mail_from_address = (!empty($setting->get('fax','smtp_from'))) ? $setting->get('fax','smtp_from') : $setting->get('email','smtp_from');
 
@@ -940,7 +946,7 @@ if (!defined('STDIN')) {
 			}
 			if (is_array($contact_labels)) {
 				//sort by name(s)
-				asort($contact_labels, SORT_NATURAL); 
+				asort($contact_labels, SORT_NATURAL);
 			}
 		}
 
@@ -1015,7 +1021,7 @@ if (!defined('STDIN')) {
 		echo "</div>\n";
 		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
-		
+
 		if ($domain_enabled == false) {
 		echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
 		}
@@ -1160,7 +1166,7 @@ if (!defined('STDIN')) {
 			echo "		".$text['label-fax-message']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<textarea type='text' name='fax_message' class='formfld' ".$required." style='width: 65%; height: 175px;'></textarea>\n";
+			echo "	<textarea type='text' name='fax_message' class='formfld' ".$required." style='width: 65%; height: 175px;'>".$setting->get('fax','cover_message')."</textarea>\n";
 			echo "<br />\n";
 			echo "	".$text['description-fax-message']."\n";
 			echo "</td>\n";
