@@ -143,7 +143,7 @@
 						echo "  <td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$disk[   'used'    ]."</td>\n";
 						echo "  <td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$disk[ 'available' ]."</td>\n";
 						echo "</tr>\n";
-						$c = !$c;
+						$c = ($c) ? 0 : 1;
 					}
 				}
 				else if (stristr(PHP_OS, 'WIN')) {
