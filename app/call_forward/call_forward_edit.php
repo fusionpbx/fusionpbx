@@ -248,7 +248,7 @@
 			}
 
 		//add the dialplan permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("extension_edit", "temp");
 
 		//save the data
@@ -533,13 +533,16 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//save the back button location using referer
+	$back_destination = "window.location.href='" . ($_SESSION['call_forward_back'] ?? "/app/call_forward/call_forward.php") . "'";
+
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_forward']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','onclick'=>'history.back();']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','onclick'=>$back_destination]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

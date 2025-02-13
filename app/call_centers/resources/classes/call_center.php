@@ -78,7 +78,7 @@
 							$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
 
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('dialplan_delete', 'temp');
 							$p->add('dialplan_detail_delete', 'temp');
 
@@ -216,7 +216,7 @@
 					$array["dialplans"][0] = $dialplan;
 
 				//add temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("dialplan_add", 'temp');
 					$p->add("dialplan_detail_add", 'temp');
 					$p->add("dialplan_edit", 'temp');
@@ -242,7 +242,7 @@
 					$array['call_center_queues'][0]['dialplan_uuid'] = $this->dialplan_uuid;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('call_center_queue_edit', 'temp');
 
 				//execute update
@@ -349,7 +349,7 @@
 										}
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('call_center_tier_delete', 'temp');
 										$p->add('dialplan_delete', 'temp');
 										$p->add('dialplan_detail_delete', 'temp');
@@ -446,7 +446,7 @@
 										}
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('call_center_tier_delete', 'temp');
 
 									//execute delete
@@ -578,7 +578,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('call_center_tier_add', 'temp');
 										$p->add('dialplan_add', 'temp');
 

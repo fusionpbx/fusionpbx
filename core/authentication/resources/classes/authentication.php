@@ -79,7 +79,7 @@ class authentication {
 			}
 
 		//check if contacts app exists
-			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/contacts/') ? true : false;
+			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/contacts/') ? true : false;
 
 		//use the authentication plugins
 			foreach ($_SESSION['authentication']['methods'] as $name) {
@@ -386,7 +386,7 @@ class authentication {
 					}
 
 				//regenerate the session on login
-					session_regenerate_id(true);
+					//session_regenerate_id(true);
 
 				//set a session variable to indicate authorized is set to true
 					$_SESSION['authorized'] = true;

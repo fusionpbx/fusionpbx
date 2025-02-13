@@ -188,7 +188,7 @@ class settings {
 		$record[$table_name][0][$table_prefix.'_setting_description'] = $description;
 
 		//grant temporary permissions
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add($table_prefix.'_setting_add', 'temp');
 		$p->add($table_prefix.'_setting_edit', 'temp');
 
@@ -221,19 +221,21 @@ class settings {
 				$name = $row['default_setting_name'];
 				$category = $row['default_setting_category'];
 				$subcategory = $row['default_setting_subcategory'];
-				if (empty($subcategory)) {
-					if ($name == "array") {
-						if (!isset($this->settings[$category]) || !is_array($this->settings[$category])) {
-							$this->settings[$category] = array();
+				if (isset($row['default_setting_value']) && $row['default_setting_value'] !== '') {
+					if ($name == "boolean") {
+						if (gettype($row['default_setting_value']) === 'string') {
+							if ($row['default_setting_value'] === 'true') {
+								$this->settings[$category][$subcategory] = true;
+							}
+							else {
+								$this->settings[$category][$subcategory] = false;
+							}
 						}
-						$this->settings[$category][] = $row['default_setting_value'];
+						elseif (gettype($row['default_setting_value']) === 'boolean') {
+							$this->settings[$category][$subcategory] = $row['default_setting_value'];
+						}
 					}
-					else {
-						$this->settings[$category] = $row['default_setting_value'];
-					}
-				}
-				else {
-					if ($name == "array") {
+					elseif ($name == "array") {
 						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
 							$this->settings[$category][$subcategory] = array();
 						}
@@ -276,18 +278,20 @@ class settings {
 				$name = $row['domain_setting_name'];
 				$category = $row['domain_setting_category'];
 				$subcategory = $row['domain_setting_subcategory'];
-				if (empty($subcategory)) {
-					if ($name == "array") {
-						if (!isset($this->settings[$category]) || !is_array($this->settings[$category])) {
-							$this->settings[$category] = array();
+				if (isset($row['domain_setting_value']) && $row['domain_setting_value'] !== '') {
+					if ($name == "boolean") {
+						if (gettype($row['domain_setting_value']) === 'string') {
+							if ($row['domain_setting_value'] === 'true') {
+								$this->settings[$category][$subcategory] = true;
+							}
+							else {
+								$this->settings[$category][$subcategory] = false;
+							}
 						}
-						$this->settings[$category][] = $row['domain_setting_value'];
+						elseif (gettype($row['domain_setting_value']) === 'boolean') {
+							$this->settings[$category][$subcategory] = $row['domain_setting_value'];
+						}
 					}
-					else {
-						$this->settings[$category] = $row['domain_setting_value'];
-					}
-				}
-				else {
 					if ($name == "array") {
 						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
 							$this->settings[$category][$subcategory] = array();
@@ -298,6 +302,7 @@ class settings {
 						$this->settings[$category][$subcategory] = $row['domain_setting_value'];
 					}
 				}
+
 			}
 		}
 		unset($result, $row);
@@ -323,23 +328,27 @@ class settings {
 					$name = $row['user_setting_name'];
 					$category = $row['user_setting_category'];
 					$subcategory = $row['user_setting_subcategory'];
-					if (!empty($row['user_setting_value'])) {
-						if (empty($subcategory)) {
-							if ($name == "array") {
-								$this->settings[$category][] = $row['user_setting_value'];
+					if (isset($row['user_setting_value']) && $row['user_setting_value'] !== '') {
+						if ($name == "boolean") {
+							if (gettype($row['user_setting_value']) === 'string') {
+								if ($row['user_setting_value'] === 'true') {
+									$this->settings[$category][$subcategory] = true;
+								}
+								else {
+									$this->settings[$category][$subcategory] = false;
+								}
 							}
-							else {
-								$this->settings[$category] = $row['user_setting_value'];
-							}
-						}
-						else {
-							if ($name == "array") {
-								$this->settings[$category][$subcategory][] = $row['user_setting_value'];
-							}
-							else {
+							elseif (gettype($row['user_setting_value']) === 'boolean') {
 								$this->settings[$category][$subcategory] = $row['user_setting_value'];
 							}
 						}
+						elseif ($name == "array") {
+							$this->settings[$category][$subcategory][] = $row['user_setting_value'];
+						}
+						else {
+							$this->settings[$category][$subcategory] = $row['user_setting_value'];
+						}
+
 					}
 				}
 			}
@@ -398,5 +407,3 @@ class settings {
 		}
 	}
 }
-
-?>

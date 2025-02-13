@@ -87,7 +87,7 @@
 	$order = $_GET["order"] ?? '';
 
 //download music on hold file
-	if (!empty($_GET['action']) 
+	if (!empty($_GET['action'])
 		&& $_GET['action'] == "download"
 		&& is_uuid($_GET['id'])
 		&& !empty($streams)) {
@@ -272,7 +272,7 @@
 						$array['music_on_hold'][0]['music_on_hold_chime_freq'] = null;
 						$array['music_on_hold'][0]['music_on_hold_chime_max'] = null;
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('music_on_hold_add', 'temp');
 
 						$database = new database;
@@ -566,7 +566,7 @@
 								case "ogg" : $stream_file_type = "audio/ogg"; break;
 							}
 							//playback progress bar
-								echo "<tr class='list-row' id='recording_progress_bar_".$row_uuid."' style='display: none;' onclick=\"recording_play('".escape($row_uuid)."','".urlencode($stream_file)."')\"><td id='playback_progress_bar_background_".escape($row_uuid)."' class='playback_progress_bar_background' colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
+								echo "<tr class='list-row' id='recording_progress_bar_".$row_uuid."' style='display: none;' onclick=\"recording_seek(event,'".escape($row_uuid)."')\"><td id='playback_progress_bar_background_".escape($row_uuid)."' class='playback_progress_bar_background' colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
 								echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 							$list_row_link = "javascript:recording_play('".$row_uuid."','".urlencode($stream_file)."');";
 							echo "<tr class='list-row' href=\"".$list_row_link."\">\n";

@@ -38,6 +38,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//create the database connection
+	$database = database::new();
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -93,20 +96,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('access_control_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('access_control_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('access_control_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -229,7 +229,6 @@
 
 		//save the data
 			if (is_array($array)) {
-				$database = new database;
 				$database->app_name = 'access controls';
 				$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 				$database->save($array);
@@ -266,7 +265,7 @@
 		$sql = "select * from v_access_controls ";
 		$sql .= "where access_control_uuid = :access_control_uuid ";
 		$parameters['access_control_uuid'] = $access_control_uuid;
-		$database = new database;
+
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && count($row) > 0) {
 			$access_control_name = $row["access_control_name"];
@@ -282,7 +281,6 @@
 		$sql .= "where access_control_uuid = :access_control_uuid ";
 		$sql .= "order by node_cidr asc";
 		$parameters['access_control_uuid'] = $access_control_uuid;
-		$database = new database;
 		$access_control_nodes = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -325,6 +323,9 @@
 	if ($action == 'update') {
 		if (permission_exists('access_control_node_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 3px;','link'=>'access_control_import.php?id='.escape($access_control_uuid)]);
+		}
+		if (permission_exists('access_control_node_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>'margin-right: 3px;','link'=>'access_control_export.php?id='.escape($access_control_uuid)]);
 		}
 		if (permission_exists('access_control_node_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);

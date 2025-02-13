@@ -44,8 +44,6 @@
 
 			//update the domain session variables
 				$domain_uuid = $_GET["domain_uuid"];
-				$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
-				$_SESSION['domain_uuid'] = $domain_uuid;
 
 			//get the domain details
 				$sql = "select * from v_domains ";
@@ -56,9 +54,16 @@
 						$_SESSION['domains'][$row['domain_uuid']] = $row;
 					}
 				}
-				unset($sql, $result);
+				unset($sql, $domains);
 
+			//validate the domain change
+				if (empty($_SESSION['domains'][$domain_uuid])) {
+					die("invalid domain");
+				}
+			
 			//update the domain session variables
+				$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
+				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 				$_SESSION["context"] = $_SESSION["domain_name"];

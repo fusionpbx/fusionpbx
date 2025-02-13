@@ -6,7 +6,7 @@
 		<meta http-equiv='X-UA-Compatible' content='IE=edge' />
 		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 		<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php' />
-		<link rel='icon' href='{$favicon}'>
+		<link rel='icon' href='{$favicon}' />
 		<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/jquery/jquery.min.js.php'></script>
 		<script language='JavaScript' type='text/javascript'>
 
@@ -79,7 +79,7 @@
 							<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder="{$label_username}" /><br />
 						{/if}
 						<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder="{$label_password}" /><br />
-						{if !empty($login_domain_name_visible) && $login_domain_name_visible == 'true'}
+						{if !empty($login_domain_name_visible) && $login_domain_name_visible}
 							{if empty($login_domain_names)}
 								<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='domain_name' id='domain_name' placeholder="{$label_domain}" /><br />
 							{else}
@@ -93,9 +93,15 @@
 					</div>
 					<div>
 						<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_login}' />
+						<!--
 						{if !empty($username)}
 							<br /><br />
 							<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
+						{/if}
+						-->
+						<br />
+						{if !empty($login_password_reset_enabled) && $login_password_reset_enabled}
+						<a class='login_link' class='btn' href='{$project_path}/resources/login.php?action=request'>{$button_forgot_password}</a>
 						{/if}
 					</div>
 				</form>
@@ -104,4 +110,3 @@
 		<script>document.getElementsByName('username')[0].focus();</script>
 	</body>
 </html>
-

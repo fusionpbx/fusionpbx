@@ -94,7 +94,7 @@
 		//add the missing email templates
 		if (!empty($array['email_templates'])) {
 			//add the temporary permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("email_template_add", 'temp');
 			$p->add("email_template_edit", 'temp');
 

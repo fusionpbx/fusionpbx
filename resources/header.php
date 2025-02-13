@@ -25,7 +25,23 @@
 */
 
 //includes files
-    require_once __DIR__ . "/require.php";
+	require_once __DIR__ . "/require.php";
+
+//start the session
+	if (!isset($_SESSION)) {
+		ini_set("session.cookie_httponly", true);
+		session_start();
+	}
+
+//connect to the database if not initialized
+	$database = database::new();
+
+//set the domains session
+	if (!isset($_SESSION['domains'])) {
+		$domain = new domains();
+		$domain->session();
+		$domain->set();
+	}
 
 //if reloadxml then run the command
 	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
@@ -66,11 +82,6 @@
 	}
 	else {
 		$content = '';
-	}
-
-//connect to the database if not initialized
-	if (!($database instanceof database)) {
-		$database = new database();
 	}
 
 //get the parent id

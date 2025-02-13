@@ -188,7 +188,7 @@
 				$array['conference_room_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
 			//un-assigne the users from the conference room
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('conference_room_user_delete', 'temp');
 
 				$database->app_name = 'conference_centers';
@@ -358,7 +358,7 @@
 							$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
 							$array['conference_room_users'][0]['user_uuid'] = $_SESSION["user_uuid"];
 
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('conference_room_user_add', 'temp');
 
 							$database->app_name = 'conference_centers';
@@ -440,7 +440,7 @@
 					$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
 					$array['conference_room_users'][0]['user_uuid'] = $user_uuid;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('conference_room_user_add', 'temp');
 
 					$database->app_name = 'conference_centers';

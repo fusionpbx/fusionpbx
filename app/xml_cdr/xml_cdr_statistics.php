@@ -281,11 +281,11 @@
 	echo "	<th>".$text['label-hours']."</th>\n";
 	echo "	<th>".$text['label-date']."</th>\n";
 	echo "	<th class='no-wrap'>".$text['label-time']."</th>\n";
-	echo "	<th>Volume</th>\n";
+	echo "	<th title='".$text['description-volume']."'>".$text['label-volume']."</th>\n";
 	echo "	<th>".$text['label-minutes']."</th>\n";
-	echo "	<th>".$text['label-calls-per-minute']."</th>\n";
+	echo "	<th title='".$text['description-calls-per-minute']."'>".$text['label-calls-per-minute']."</th>\n";
 	echo "	<th class='center'>".$text['label-missed']."</th>\n";
-	echo "	<th>ASR</th>\n";
+	echo "	<th title='".$text['description-asr']."'>".$text['label-asr']."</th>\n";
 	echo "	<th title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "</tr>\n";
 
@@ -329,7 +329,7 @@
 		}
 		echo "	<td>".escape($row['volume'])."&nbsp;</td>\n";
 		echo "	<td>".escape(round($row['minutes'] ?? 0, 2))."&nbsp;</td>\n";
-		echo "	<td>".escape(round($row['avg_min'] ?? 0, 2))."&nbsp;/&nbsp;".escape(round($row['cpm_ans'] ?? 0, 2))."&nbsp;</td>\n";
+		echo "	<td>".escape(round($row['avg_min'] ?? 0, 2))."&nbsp;/&nbsp;".escape(round($row['cpm_answered'] ?? 0, 2))."&nbsp;</td>\n";
 		echo "	<td class='center'><a href=\"xml_cdr.php?call_result=missed&direction=".$direction."&start_epoch=".escape($row['start_epoch'] ?? '')."&stop_epoch=".escape($row['stop_epoch'] ?? '')."\">".escape($row['missed'] ?? '')."</a>&nbsp;</td>\n";
 		echo "	<td>".escape(round($row['asr'] ?? 0, 2))."&nbsp;</td>\n";
 		echo "	<td>".escape(round($row['aloc'] ?? 0, 2))."&nbsp;</td>\n";

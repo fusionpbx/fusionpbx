@@ -547,7 +547,7 @@
 <!-- Ring Timeout. (10-300, default is 60 seconds) -->
 <!-- Number: 10 to 300 -->
 <!-- Mandatory  -->
-<P185>60</P185>
+<P185>{$grandstream_ring_timeout}</P185>
 
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
@@ -1034,7 +1034,11 @@
 
 <!-- Dial Plan  -->
 <!-- String Max Length: 1024 -->
-<P4201>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P4201>
+{if isset($grandstream_dial_plan) }
+<P4201>{$grandstream_dial_plan}</P4201>
+{else}
+<P4201>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4201>
+{/if}
 <!-- <P4201>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ | \p\a\r\k\+x+ }</P4201> -->
 
 <!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
@@ -1563,7 +1567,12 @@
 
 <!-- Dial Plan  -->
 <!-- String Max Length: 1024 -->
-<P4202>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P4202>
+
+{if isset($grandstream_dial_plan) }
+<P4202>{$grandstream_dial_plan}</P4202>
+{else}
+<P4202>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4202>
+{/if}
 <!-- <P4202>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ | \p\a\r\k\+x+ }</P4202> -->
 
 <!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
@@ -2093,7 +2102,11 @@
 
 <!-- Dial Plan  -->
 <!-- String Max Length: 1024 -->
-<P4203>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P4203>
+{if isset($grandstream_dial_plan) }
+<P4203>{$grandstream_dial_plan}</P4203>
+{else}
+<P4203>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4203>
+{/if}
 <!-- <P4203>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ | \+x+ | \p\a\r\k\+*x+ | \p\a\r\k\+x+ }</P4203> -->
 
 <!-- Use #as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
@@ -2169,7 +2182,7 @@
 
 <!-- Base Station Name. Sets the display name of this base station -->
 <!-- String -->
-<P27001>DP750</P27001>
+<P27001>DP750-{$mac}</P27001>
 
 <!-- Admin PIN Code. Sets the admin PIN code for authentication, default is 0000. -->
 <!-- Number: 4 digit number -->
@@ -2218,6 +2231,53 @@
 <P4212></P4212>
 <P4213></P4213>
 <P4214></P4214>
+
+
+###################################################################################
+## Maintenance / Automatic Reboot
+###################################################################################
+# Automatic Reboot Type
+# 0 - Automatic reboot is disabled, 1 - Device will reboot daily, 2 - Device will reboot every week on the set day, 3 - Device will reboot every month on the set day
+# Number: 0, 1, 2, 3
+# Mandatory = 1
+# Default Value: 0
+
+{if isset($grandstream_automatic_reboot) }
+<P21929>{$grandstream_automatic_reboot}</P21929>
+{/if}
+
+# Yes, reboot every week on
+# Number: 0 - 6
+# Mandatory = 1
+# Default Value: 0
+{if isset($grandstream_automatic_reboot_weekday) }
+<P21931>{$grandstream_automatic_reboot_weekday}</P21931>
+{/if}
+
+# Yes, reboot every month on day
+# Number: 1 - 31
+# Mandatory = 1
+# Default Value: 1
+{if isset($grandstream_automatic_reboot_monthday) }
+<P28118>{$grandstream_automatic_reboot_monthday}</P28118>
+{/if}
+
+# Hour of reboot time
+# Number: 0 - 23
+# Mandatory = 1
+# Default Value: 0
+{if isset($grandstream_automatic_reboot_hour) }
+<P21930>{$grandstream_automatic_reboot_hour}</P21930>
+{/if}
+
+# Minute of reboot time
+# Number: 0 - 59
+# Mandatory = 1
+# Default Value: 0
+{if isset($grandstream_automatic_reboot_minute) }
+<P43100>{$grandstream_automatic_reboot_minute}</P43100>
+{/if}
+
 
 <!-- ################################ -->
 <!-- #  DECT/SIP Account Settings  ## -->
@@ -2785,11 +2845,11 @@
 <!-- Use STUN to detect network connectivity. 0 - No, 1 - Yes.  -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P474>0</P474>
+{if $grandstream_nat_traversal == 1}<P474>1</P474>{else}<P474>0</P474>{/if}
 
 <!-- STUN server -->
 <!-- String: serveraddress  -->
-<P76>stun.ipvideotalk.com</P76>
+<P76>{$grandstream_stun_server}</P76>
 
 <!-- Number of STUN Response Misses Allowed -->
 <!-- Number: 3 to 15 -->
@@ -2844,7 +2904,7 @@
 <!-- Disable Direct IP Call. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P277>0</P277>
+<P277>{$grandstream_accept_sip_from_proxy_only}</P277>
 
 <!-- ################## -->
 <!-- #  Maintenance  ## -->
@@ -3016,7 +3076,7 @@
 <!-- 3CX Auto Provision. 0 - No, 1 - Yes. Default is 1 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1414>1</P1414>
+<P1414>0</P1414>
 
 <!-- Automatic Provisioning.  -->
 <!-- 0 - No,  -->
@@ -3026,20 +3086,28 @@
 <!-- Default is No. -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P194>0</P194>
+
+{if isset($grandstream_automatic_provisioning)}
+{if $grandstream_automatic_provisioning == 1}
+<P194>3</P194>
+{elseif $grandstream_automatic_provisioning == 2}
+<P194>1</P194>
+{elseif $grandstream_automatic_provisioning == 3}
+<P194>2</P194>
+{/if}
 
 <!-- Automatic Provisioning. Check for new config file every () minutes. Default is 7 days. -->
 <!-- Number: 60-86400 -->
 <!-- Mandatory -->
-<P193>10080</P193>
+<P193>{$grandstream_automatic_provisioning_minutes}</P193>
 
 <!-- Automatic Provisioning. Hour of the Day (0-23). Defines the hour of the day to check the HTTP/TFTP server for configuration file changes. Default is 1.  -->
 <!-- Number: 0 - 23 -->
-<P285>1</P285>
+<P285>{$grandstream_automatic_provisioning_hour}</P285>
 
 <!-- Automatic Provisioning. Day of the Week (0-6). Defines the day of the week to check HTTP/TFTP server for configuration file changes. Default is 1. -->
 <!-- Number: 0-6 -->
-<P286>1</P286>
+<P286>{$grandstream_automatic_provisioning_day}</P286>
 
 <!-- Authenticate Conf File. 0 - No, 1 - Yes. Default is No -->
 <!-- Number: 0, 1 -->
@@ -3364,8 +3432,6 @@
 <!-- Number: 0, 5-720;  -->
 {if isset($grandstream_phonebook_download_interval)}
     <P332>{$grandstream_phonebook_download_interval}</P332>
-{else}
-    <P332>0</P332>
 {/if}
 
 <!-- Remove Manually-edited entries on Download. 0 - No, 1 - Yes. Default is 1 -->

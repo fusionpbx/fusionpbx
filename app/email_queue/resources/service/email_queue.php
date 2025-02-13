@@ -51,7 +51,7 @@
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
 			if (function_exists('posix_getsid')) {
-				if (posix_getsid($pid) === false) { 
+				if (posix_getsid($pid) === false) {
 					//process is not running
 					$exists = false;
 				}
@@ -95,12 +95,12 @@
 	}
 
 //make sure the /var/run/fusionpbx directory exists
-    if (!file_exists('/var/run/fusionpbx')) {
-        $result = mkdir('/var/run/fusionpbx', 0777, true);
-        if (!$result) {
-            die('Failed to create /var/run/fusionpbx');
-        }
-    }
+	if (!file_exists('/var/run/fusionpbx')) {
+		$result = mkdir('/var/run/fusionpbx', 0777, true);
+		if (!$result) {
+			die('Failed to create /var/run/fusionpbx');
+		}
+	}
 
 //create the process id file if the process doesn't exist
 	if (!$pid_exists) {
@@ -141,7 +141,7 @@
 		$sql = "select * from v_email_queue ";
 		$sql .= "where (email_status = 'waiting' or email_status = 'trying') ";
 		$sql .= "and hostname = :hostname ";
-		$sql .= "order by domain_uuid asc ";
+		$sql .= "order by domain_uuid, email_date desc ";
 		$sql .= "limit :limit ";
 		$parameters['hostname'] = $hostname;
 		$parameters['limit'] = $email_queue_limit;
@@ -152,7 +152,7 @@
 		//process the messages
 		if (is_array($email_queue) && @sizeof($email_queue) != 0) {
 			foreach($email_queue as $row) {
-				$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
+				$command = PHP_BINARY." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
 				$command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$hostname."'";
 				if (isset($debug)) {
 					//run process inline to see debug info
@@ -162,7 +162,7 @@
 				}
 				else {
 					//starts process rapidly doesn't wait for previous process to finish (used for production)
-					$handle = popen($command." > /dev/null &", 'r'); 
+					$handle = popen($command." > /dev/null &", 'r');
 					echo "'$handle'; " . gettype($handle) . "\n";
 					$read = fread($handle, 2096);
 					echo $read;

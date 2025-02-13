@@ -88,7 +88,7 @@
 			$array['user_groups'][0]['group_uuid'] = $group_uuid;
 			$array['user_groups'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('user_group_delete', 'temp');
 
 			$database->delete($array);
@@ -297,7 +297,7 @@
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'language';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('user_setting_delete', 'temp');
 
 					$database->delete($array_delete);
@@ -345,7 +345,7 @@
 					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'time_zone';
 					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('user_setting_delete', 'temp');
 
 					$database->delete($array_delete);
@@ -394,7 +394,7 @@
 						$array_delete['user_settings'][0]['user_setting_subcategory'] = 'key';
 						$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('user_setting_delete', 'temp');
 
 						$database->delete($array_delete);
@@ -517,6 +517,19 @@
 				$array['users'][$x]['username'] = $username;
 			}
 			if (permission_exists('user_password') && !empty($password) && $password == $password_confirm) {
+				//remove the session id files
+				$sql = "select session_id from v_user_logs ";
+				$sql .= "where user_uuid = :user_uuid ";
+				$sql .= "and timestamp > NOW() - INTERVAL '4 hours' ";
+				$parameters['user_uuid'] = $user_uuid;
+				$user_logs = $database->select($sql, $parameters, 'all');
+				foreach ($user_logs as $row) {
+					if (preg_match('/^[a-zA-Z0-9,-]+$/', $row['session_id']) && file_exists(session_save_path() . "/sess_" . $row['session_id'])) {
+						unlink(session_save_path() . "/sess_" . $row['session_id']);
+					}
+				}
+
+				//create a one way hash for the user password
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
 				$array['users'][$x]['salt'] = null;
 			}
@@ -542,7 +555,7 @@
 			$x++;
 
 		//add the user_edit permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("user_setting_add", "temp");
 			$p->add("user_setting_edit", "temp");
 			$p->add("user_edit", "temp");
@@ -933,7 +946,7 @@
 		echo "<br />\n";
 		echo $text['description-contact']."\n";
 		if (!empty($contact_uuid)) {
-			echo "			<a href=\"".PROJECT_PATH."/app/contacts/contact_edit.php?id=".urlencode($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
+			echo "			<a href=\"".PROJECT_PATH."/core/contacts/contact_edit.php?id=".urlencode($contact_uuid)."\">".$text['description-contact_view']."</a>\n";
 		}
 		echo "		</td>";
 		echo "	</tr>";

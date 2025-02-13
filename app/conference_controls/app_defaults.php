@@ -65,7 +65,7 @@
 						$array['conference_controls'][0]['control_name'] = $control_name;
 						$array['conference_controls'][0]['control_enabled'] = 'true';
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('conference_control_add', 'temp');
 
 						$database->app_name = 'conference_controls';
@@ -96,7 +96,7 @@
 								}
 								$array['conference_control_details'][0]['control_enabled'] = $control_enabled;
 
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('conference_control_detail_add', 'temp');
 
 								$database->app_name = 'conference_controls';

@@ -409,6 +409,9 @@
 	table.insert(sql, ":domain_uuid");
 	table.insert(sql, ")");
 	sql = table.concat(sql, "\n");
+	if (sip_to_user == nil) then
+		sip_to_user = fax_destination_number;
+	end
 	local params = {
 		uuid = uuid;
 		domain_uuid = domain_uuid;

@@ -110,7 +110,7 @@ if (!class_exists('call_recordings')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//add temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('xml_cdr_edit', 'temp');
 
 								//remove record_path, record_name and record_length
@@ -152,11 +152,11 @@ if (!class_exists('call_recordings')) {
 
 				//add the settings object
 					$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-					$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+					$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 					$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 				//transcribe multiple recordings
-					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && is_array($records) && @sizeof($records) != 0) {
+					if ($transcribe_enabled && !empty($transcribe_engine) && is_array($records) && @sizeof($records) != 0) {
 						//add the transcribe object
 							$transcribe = new transcribe($settings);
 
@@ -200,7 +200,7 @@ if (!class_exists('call_recordings')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//add temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('xml_cdr_edit', 'temp');
 
 								//remove record_path, record_name and record_length
@@ -274,6 +274,7 @@ if (!class_exists('call_recordings')) {
 									case "ogg" : header("Content-Type: audio/ogg"); break;
 								}
 							}
+							$call_recording_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $call_recording_name);
 							header('Content-Disposition: attachment; filename="'.$call_recording_name.'"');
 							header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 							header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -415,7 +416,7 @@ if (!class_exists('call_recordings')) {
 				}
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
-				// And make sure to get the end byte if spesified
+				// And make sure to get the end byte if specified
 				if ($range[0] == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);

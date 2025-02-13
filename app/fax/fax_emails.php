@@ -38,7 +38,7 @@ $sql .= "where fax_email_connection_host <> '' ";
 $sql .= "and f.domain_uuid = d.domain_uuid ";
 $sql .= "and fax_email_connection_host is not null ";
 $sql .= "and fax_email_outbound_subject_tag is not null ";
-$database = new database;
+$database = database::new();
 $result = $database->select($sql, null, 'all');
 unset($sql);
 
@@ -80,7 +80,7 @@ if (!empty($result) && @sizeof($result) != 0) {
 		$fax_toll_allow = $row["fax_toll_allow"];
 
 		//get event socket connection parameters
-		$setting = new settings(["domain_uuid" => $domain_uuid]);
+		$setting = new settings(["database" => $database, "domain_uuid" => $domain_uuid]);
 
 		//send the domain name to the command line output
 		if (!empty($fax_email_connection_host) && !empty($fax_email_connection_username)) {
@@ -266,8 +266,7 @@ if (!empty($result) && @sizeof($result) != 0) {
 
 					//send fax
 					$cwd = getcwd();
-					$included = true;
-					require("fax_send.php");
+					require "fax_send.php";
 					if($cwd){
 						chdir($cwd);
 					}

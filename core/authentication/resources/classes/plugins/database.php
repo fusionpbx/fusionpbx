@@ -67,9 +67,15 @@ class plugin_database {
 			$login_destination = $settings->get('login', 'destination');
 			$users_unique = $settings->get('users', 'unique', '');
 
+		//determine whether to show the forgot password for resetting the password
+			$login_password_reset_enabled = false;
+			if (!empty($settings->get('login', 'password_reset_key'))) {
+				$login_password_reset_enabled = true;
+			}
+
 		//check if already authorized
 			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
-				return $_SESSION['authentication']['plugin']['database'];
+				return;
 			}
 
 		//show the authentication code view
@@ -106,16 +112,18 @@ class plugin_database {
 					$view->assign("login_destination_url", $login_destination);
 					$view->assign("login_domain_name_visible", $login_domain_name_visible);
 					$view->assign("login_domain_names", $login_domain_name);
+					$view->assign("login_password_reset_enabled", $login_password_reset_enabled);
 					$view->assign("favicon", $theme_favicon);
 					$view->assign("login_logo_width", $theme_login_logo_width);
 					$view->assign("login_logo_height", $theme_login_logo_height);
 					$view->assign("login_logo_source", $theme_logo);
 					$view->assign("message_delay", $theme_message_delay);
 					$view->assign("background_video", $theme_background_video);
+					$view->assign("login_password_description", $text['label-password_description']);
+					$view->assign("button_cancel", $text['button-cancel']);
+					$view->assign("button_forgot_password", $text['button-forgot_password']);
 					if (!empty($_SESSION['username'])) {
-						$view->assign("login_password_description", $text['label-password_description']);
 						$view->assign("username", $_SESSION['username']);
-						$view->assign("button_cancel", $text['button-cancel']);
 					}
 
 				//messages
@@ -171,7 +179,7 @@ class plugin_database {
 			$user_authorized = false;
 
 		//check if contacts app exists
-			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/contacts/') ? true : false;
+			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/contacts/') ? true : false;
 
 		//check the username and password if they don't match then redirect to the login
 			$sql = "select ";
@@ -310,7 +318,7 @@ class plugin_database {
 								$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('user_edit', 'temp');
 
 							//execute insert
@@ -324,18 +332,6 @@ class plugin_database {
 
 						}
 
-					}
-					else {
-						//clear authentication session
-						if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods'])) {
-							unset($_SESSION['authentication']);
-						}
-
-						// clear username
-						if (!empty($_REQUEST["password"])) {
-							unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
-							unset($_SESSION['authentication']);
-						}
 					}
 
 					//result array
@@ -361,12 +357,7 @@ class plugin_database {
 					return $result ?? false;
 
 			}
-			else {
 
-				unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
-				unset($_SESSION['authentication']);
-
-			}
 
 		return;
 

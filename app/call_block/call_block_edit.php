@@ -166,7 +166,7 @@
 								$array['dialplans'][$index]['dialplan_enabled'] = 'true';
 							}
 
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('dialplan_edit', 'temp');
 
 							$database->save($array);
