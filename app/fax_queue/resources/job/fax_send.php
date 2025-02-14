@@ -223,6 +223,23 @@
 //sending the fax
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
+		//get the provider_prefix from the domain_variables dialplan
+			$sql = "select dialplan_detail_data from v_dialplan_details ";
+			$sql .= "where dialplan_uuid in ( ";
+			$sql .= "	select dialplan_uuid from v_dialplans ";
+			$sql .= "	where dialplan_name = 'domain-variables' ";
+			$sql .= "	and domain_uuid = :domain_uuid ";
+			$sql .= ")	";
+			$sql .= "and dialplan_detail_data like 'provider_prefix%' ";
+			$sql .= "and dialplan_detail_enabled = 'true' ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			$dialplan_detail_data = $row["dialplan_detail_data"];
+			unset($sql, $parameters, $row);
+			if (!empty($dialplan_detail_data)) {
+				$provider_prefix = explode('=', $dialplan_detail_data)[1];
+			}
+
 		//create event socket handle
 			$esl = event_socket::create();
 			if (!$esl->is_connected()) {
@@ -318,9 +335,13 @@
 				$common_variables .= "sip_req_user=".$fax_number.",";
 			}
 
+
 		//prepare the fax command
+			$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
+			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
+
 			if (empty($route_array)) {
-				$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
+				//send the internal call to the registered extension
 				if (count($route_array) == 0) {
 					//check for valid extension
 					$sql = "select count(extension_uuid) ";
@@ -332,18 +353,36 @@
 					$extension_count = $database->select($sql, $parameters, 'column');
 					if ($extension_count > 0) {
 						//send the internal call to the registered extension
-						$route_array[] = "user/".$fax_number."@".$domain_name;
+						$fax_uri = "user/".$fax_number."@".$domain_name;
 					}
 					else {
+						$fax_uri = '';
 						$fax_status = 'failed';
 					}
 				}
 			}
+			else {
+				foreach($route_array as $key => $bridge) {
+					//add the bridge to the fax_uri, after first iteration add the delimiter
+					if ($key == 0) {
+						$fax_uri = $bridge;
+					}
+					else {
+						$fax_uri .= '|'.$bridge;
+					}
+
+					//add the provider_prefix
+					if (!empty($provider_prefix)) {
+						$fax_uri = preg_replace('/\${provider_prefix}/', $provider_prefix, $fax_uri);
+					}
+
+					//remove switch ${variables} from the bridge statement
+					$fax_uri = preg_replace('/\${[^}]+}/', '', $fax_uri);
+				}
+			}
 
 		//set the origination uuid
-			if (!is_uuid($origination_uuid)) { 
-				$origination_uuid = uuid();
-			}
+			$origination_uuid = uuid();
 
 		//build a list of fax variables
 			$dial_string = $common_variables;
@@ -364,21 +403,18 @@
 		//connect to event socket and send the command
 			if ($fax_status != 'failed' && file_exists($fax_file)) {
 				//send the fax and try another route if the fax fails
-				foreach($route_array as $route) {
-					$fax_command  = "originate {" . $dial_string . ",fax_uri=".$route."}" . $route." &txfax('".$fax_file."')";
-					$fax_response = event_socket::api($fax_command);
-					$response = str_replace("\n", "", $fax_response);
-					$response = trim(str_replace("+OK", "", $response));
-					if (is_uuid($response)) {
-						//originate command accepted
-						$uuid = $response;
-						echo "uuid: ".$uuid."\n";
-						break;
-					}
-					else {
-						//originate command failed (-ERR INVALID_GATEWAY or other errors)
-						echo "response: ".$response."\n";
-					}
+				$fax_command  = "originate {" . $dial_string . ",fax_uri=".$fax_uri."}" . $fax_uri." &txfax('".$fax_file."')";
+				$fax_response = event_socket::api($fax_command);
+				$response = str_replace("\n", "", $fax_response);
+				$response = trim(str_replace("+OK", "", $response));
+				if (is_uuid($response)) {
+					//originate command accepted
+					$uuid = $response;
+					echo "uuid: ".$uuid."\n";
+				}
+				else {
+					//originate command failed (-ERR INVALID_GATEWAY or other errors)
+					echo "response: ".$response."\n";
 				}
 
 				//set the fax file name without the extension
