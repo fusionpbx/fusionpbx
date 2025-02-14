@@ -79,6 +79,7 @@
                 if (debug["info"]) then
                     freeswitch.consoleLog("notice", "[voicemail][deleted] message: " .. uuid .. "\n");
                 end
+                message_number = message_number + 1;
             end
 
         
