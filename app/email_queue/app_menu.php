@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Email Queue";
 	$apps[$x]['menu'][$y]['title']['he-il'] = 'תור דוא"ל';
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Coda di posta elettronica";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ელფოსტის რიგი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Email Wachtrij";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Kolejka e-maili";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Enquete de Email";

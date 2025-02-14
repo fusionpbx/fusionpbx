@@ -216,7 +216,7 @@ class event_socket {
 		}
 
 		$cmd_array = explode("\n", $cmd);
-		foreach ($cmd_array as &$value) {
+		foreach ($cmd_array as $value) {
 			fputs($this->fp, $value."\n");
 		}
 		fputs($this->fp, "\n"); //second line feed to end the headers

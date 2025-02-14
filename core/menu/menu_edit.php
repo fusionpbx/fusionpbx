@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -98,7 +101,6 @@
 					$array['menus'][0]['menu_name'] = $menu_name;
 					$array['menus'][0]['menu_language'] = $menu_language;
 					$array['menus'][0]['menu_description'] = $menu_description;
-					$database = new database;
 					$database->app_name = 'menu';
 					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
@@ -116,7 +118,6 @@
 					$array['menus'][0]['menu_name'] = $menu_name;
 					$array['menus'][0]['menu_language'] = $menu_language;
 					$array['menus'][0]['menu_description'] = $menu_description;
-					$database = new database;
 					$database->app_name = 'menu';
 					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
@@ -136,7 +137,6 @@
 		$sql = "select * from v_menus ";
 		$sql .= "where menu_uuid = :menu_uuid ";
 		$parameters['menu_uuid'] = $menu_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$menu_uuid = $row["menu_uuid"];
@@ -178,6 +178,7 @@
 	echo $text['description-menu']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -214,7 +215,8 @@
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "<br><br>";
+	echo "</div>";
+	echo "<br>";
 
 	if ($action == "update") {
 		echo "<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";

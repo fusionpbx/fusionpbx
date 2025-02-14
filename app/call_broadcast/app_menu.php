@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Campagne d'Appels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שידור שיחה";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Chiamate Multiple";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ზარების მაუწყებლობა";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Omroep";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Rozsyłanie rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Chamada em broadcast";

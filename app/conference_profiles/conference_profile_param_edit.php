@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -70,12 +70,12 @@
 
 //process the http post if it exists
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
-	
+
 		//get the uuid
 			if ($action == "update") {
 				$conference_profile_param_uuid = $_POST["conference_profile_param_uuid"];
 			}
-	
+
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -102,7 +102,7 @@
 				require_once "resources/footer.php";
 				return;
 			}
-	
+
 		//add or update the database
 			if (empty($_POST["persistformvar"])) {
 
@@ -116,7 +116,7 @@
 					$array['conference_profile_params'][0]['conference_profile_param_uuid'] = uuid();
 					message::add($text['message-add']);
 				}
-	
+
 				if ($action == "update" && permission_exists('conference_profile_param_edit')) {
 					$array['conference_profile_params'][0]['conference_profile_param_uuid'] = $conference_profile_param_uuid;
 					message::add($text['message-update']);
@@ -176,6 +176,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -234,6 +235,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br /><br />";
 
 	echo "<input type='hidden' name='conference_profile_uuid' value='".escape($conference_profile_uuid)."'>\n";

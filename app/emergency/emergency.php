@@ -152,7 +152,7 @@ require_once "resources/header.php";
 
 //show the content
 echo "<div class='action_bar' id='action_bar'>\n";
-echo "	<div class='heading'><b>".$text['title-emergency_logs']." (".$num_rows.")</b></div>\n";
+echo "	<div class='heading'><b>".$text['title-emergency_logs']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 echo "	<div class='actions'>\n";
 if ($emergency_logs) {
 	echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
@@ -183,6 +183,7 @@ if ($emergency_logs) {
 echo $text['title_description-emergency_logs']."\n";
 echo "<br /><br />\n";
 
+echo "<div class='card'>\n";
 echo "<table class='list'>\n";
 echo "<tr class='list-header'>\n";
 if (!empty($show) && $show == 'all' && permission_exists('emergency_logs_view_all')) {
@@ -212,6 +213,7 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 }
 
 echo "</table>\n";
+echo "</div>\n";
 echo "<br />\n";
 echo "<div align='center'>".$paging_controls."</div>\n";
 echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

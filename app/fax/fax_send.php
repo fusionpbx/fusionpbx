@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,14 +28,19 @@
 	Corey Moullas <cmoullas@emak.tech>
 */
 
-//set included to boolean
-	if (!isset($included)) { $included = false; }
-
 //check if windows
 	if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 
-//send email through browser
-if (!$included) {
+//executed via command line
+if (defined('STDIN')) {
+
+	//add multi-lingual support
+		$language = new text;
+		$text = $language->get($setting->get('domain','language','en-us'), 'app/fax');
+
+}
+//executed via browser
+else {
 
 	//includes files
 		require_once dirname(__DIR__, 2) . "/resources/require.php";
@@ -124,6 +129,7 @@ if (!$included) {
 		$fax_cover_font = $setting->get('fax','cover_font') ?? null;
 }
 
+//define function correct_path
 if (!function_exists('correct_path')) {
 	function correct_path($p) {
 		global $IS_WINDOWS;
@@ -206,7 +212,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 //send the fax
 	$continue = false;
-	if (!$included) {
+	if (!defined('STDIN')) {
 		if (!empty($_POST['action']) && $_POST['action'] == "send" && $domain_enabled == true) {
 			//get the values from the HTTP POST
 				$fax_numbers = $_POST['fax_numbers'];
@@ -300,10 +306,10 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//process uploaded or emailed files (if any)
 		$fax_page_count = 0;
-		$_files = (!$included) ? $_FILES['fax_files'] : $emailed_files;
+		$_files = (!defined('STDIN')) ? $_FILES['fax_files'] : $emailed_files;
 		unset($tif_files);
 		foreach ($_files['tmp_name'] as $index => $fax_tmp_name) {
-			$uploaded_file = (!$included) ? is_uploaded_file($fax_tmp_name) : true;
+			$uploaded_file = (!defined('STDIN')) ? is_uploaded_file($fax_tmp_name) : true;
 			if ( $uploaded_file && $_files['error'][$index] == 0 && $_files['size'][$index] > 0 ) {
 				//get the file extension
 				$fax_file_extension = strtolower(pathinfo($_files['name'][$index], PATHINFO_EXTENSION));
@@ -323,7 +329,7 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 				unset($attachment_file_name);
 
-				if (!$included) {
+				if (!defined('STDIN')) {
 					//check if directory exists
 					if (!is_dir($dir_fax_temp)) {
 						mkdir($dir_fax_temp, 0770);
@@ -427,7 +433,7 @@ if (!function_exists('fax_split_dtmf')) {
 				if (in_array($logo_fileext, ['gif','jpg','jpeg','png','bmp'])) {
 					if (file_exists($logo_dirname.'/'.$logo_filename)) {
 						$logo = $logo_dirname.'/'.$logo_filename;
-						$display_logo = true;	
+						$display_logo = true;
 					}
 					else {
 						$raw = file_get_contents($logo);
@@ -490,10 +496,9 @@ if (!function_exists('fax_split_dtmf')) {
 			//field values
 			$pdf->SetFont($pdf_font, "", 12);
 			$pdf->SetXY($x + 2.0, $y + 1.65);
-			if ($_REQUEST['submit'] != '' && $_REQUEST['submit'] != 'preview') {
-				$time_zone = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
-				$date = new DateTime('now', new DateTimeZone($time_zone) );
-				$pdf->Write(0.3, $date->format('d M Y'));
+			if (defined('STDIN') || ($_REQUEST['submit'] != '' && $_REQUEST['submit'] != 'preview')) {
+				$date = new DateTime('now', new DateTimeZone( $setting->get('domain','time_zone', date_default_timezone_get() ) ));
+				$pdf->Write(0.3, $date->format('d M Y @ h:i:s A'));
 			}
 			$pdf->SetXY($x + 2.0, $y + 1.95);
 			if ($fax_recipient != '') {
@@ -563,7 +568,13 @@ if (!function_exists('fax_split_dtmf')) {
 				unset($yn);
 			}
 			else {
-				$pdf->Rect($x + 0.5, $y + 3.4, 7.5, 6.25, 'D');
+				//determine cover message box height, and difference, to adjust footer position accordingly
+				$cover_message_height = $setting->get('fax','cover_message_height');
+				$cover_message_height = (float) ($cover_message_height ?? 6.15);
+				$height_difference = 6.15 - $cover_message_height;
+
+				// draw message box
+				$pdf->Rect($x + 0.5, $y + 3.4, 7.5, $cover_message_height, 'D');
 				$y = $pdf->GetY();
 			}
 
@@ -572,7 +583,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$pdf->SetAutoPageBreak(true, 0.6);
 				$pdf->SetTopMargin(0.6);
 				$pdf->SetFont("helvetica", "", 8);
-				$pdf->SetXY($x + 0.5, $y + 0.6);
+				$pdf->SetXY($x + 0.5, $y + 0.6 - (float) ($height_difference ?? 0));
 				$pdf->MultiCell(7.5, 0.75, $fax_footer, 0, 'C', false);
 			}
 			$pdf->SetAutoPageBreak(false);
@@ -624,7 +635,7 @@ if (!function_exists('fax_split_dtmf')) {
 				@unlink($tif_file);
 			}
 		}
-		elseif (!$included) {
+		elseif (!defined('STDIN')) {
 			//nothing to send, redirect the browser
 			message::add($text['message-invalid-fax'], 'negative', 4000);
 			header("Location: fax_send.php?id=".$fax_uuid);
@@ -664,7 +675,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			exit;
 		}
-		
+
 		//prepare variables send the fax
 		$mail_from_address = (!empty($setting->get('fax','smtp_from'))) ? $setting->get('fax','smtp_from') : $setting->get('email','smtp_from');
 
@@ -673,17 +684,39 @@ if (!function_exists('fax_split_dtmf')) {
 		$parameters['fax_uuid'] = $fax_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		$mail_to_address = $row["fax_email"];
+		//$mail_to_address = $row["fax_email"];
 		$fax_prefix = $row["fax_prefix"];
-		unset($sql, $parameters, $row);
+		unset($sql, $parameters);
+
+		//Get the currently logged in user's email
+		if(isset($_SESSION["user_email"])) {
+			$mail_to_address = $_SESSION["user_email"];
+		} else {
+			$sql = "select user_email from v_users where user_uuid = :user_uuid ";
+			$parameters['user_uuid'] = $user_uuid;
+			$database = new database;
+			$user_settings = $database->select($sql, $parameters, 'row');
+
+			$mail_to_address = $user_settings["user_email"];
+			unset($sql, $parameters, $user_settings);
+		}
+
+		//Get a list of emails to send confirmation emails to, including that of the fax sender
+		if(!empty($row["fax_email_confirmation"])) {
+			$tmp_emails = explode(',', $row["fax_email_confirmation"]);
+			foreach ($tmp_emails as $email) {
+				if(strpos($mail_to_address, $email) === false) {
+					$mail_to_address .= ','.$email;
+				}
+			}
+		}
+
+		unset($row);
 
 		//for email to fax send email notification back to the email sender
-		if ($included) {
+		if (defined('STDIN')) {
 			//use email-to-fax from address
 			$mail_to_address = $sender_email;
-		}
-		else {
-			//send fax through the browser
 		}
 
 		//move the generated tif (and pdf) files to the sent directory
@@ -797,6 +830,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$array['fax_queue'][0]['hostname'] = gethostname();
 				$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
 				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+				$array['fax_queue'][0]['fax_recipient'] = $fax_recipient;
 				$array['fax_queue'][0]['fax_number'] = $fax_number;
 				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
 				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
@@ -808,7 +842,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
 
 				//add temporary permisison
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('fax_queue_add', 'temp');
 
 				//save the data
@@ -826,7 +860,7 @@ if (!function_exists('fax_split_dtmf')) {
 		}
 
 		//redirect the browser
-		if (!$included && is_uuid($fax_uuid)) {
+		if (!defined('STDIN') && is_uuid($fax_uuid)) {
 			header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
 			//header("Location: fax_outbox.php?id=".$fax_uuid);
 			exit;
@@ -836,7 +870,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 
 //show content in the browser
-if (!$included) {
+if (!defined('STDIN')) {
 
 	//retrieve current user's assigned groups (uuids)
 		foreach ($_SESSION['groups'] as $group_data) {
@@ -861,7 +895,7 @@ if (!$included) {
 		$sql .= "and cp.phone_type_fax = 1 ";
 		$sql .= "and cp.phone_number is not null ";
 		$sql .= "and cp.phone_number <> '' ";
-		if ($setting->get('contact','permissions') == "true") {
+		if ($setting->get('contact','permissions', false)) {
 			if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
 				//only show contacts assigned to current user's group(s) and those not assigned to any group
 				$sql .= "and (";
@@ -893,7 +927,7 @@ if (!$included) {
 
 	//build the contact labels
 		if (is_array($contacts) && @sizeof($contacts) != 0) {
-			foreach ($contacts as &$row) {
+			foreach ($contacts as $row) {
 				if ($row['contact_organization'] != '') {
 					$contact_option_label = $row['contact_organization'];
 				}
@@ -912,7 +946,7 @@ if (!$included) {
 			}
 			if (is_array($contact_labels)) {
 				//sort by name(s)
-				asort($contact_labels, SORT_NATURAL); 
+				asort($contact_labels, SORT_NATURAL);
 			}
 		}
 
@@ -987,11 +1021,12 @@ if (!$included) {
 		echo "</div>\n";
 		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
-		
+
 		if ($domain_enabled == false) {
 		echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
 		}
-		
+
+		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 
 		echo "<tr>\n";
@@ -1131,7 +1166,7 @@ if (!$included) {
 			echo "		".$text['label-fax-message']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<textarea type='text' name='fax_message' class='formfld' ".$required." style='width: 65%; height: 175px;'></textarea>\n";
+			echo "	<textarea type='text' name='fax_message' class='formfld' ".$required." style='width: 65%; height: 175px;'>".$setting->get('fax','cover_message')."</textarea>\n";
 			echo "<br />\n";
 			echo "	".$text['description-fax-message']."\n";
 			echo "</td>\n";
@@ -1152,6 +1187,7 @@ if (!$included) {
 		}
 
 		echo "</table>";
+		echo "</div>\n";
 		echo "<br /><br />\n";
 
 		echo "<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
@@ -1190,3 +1226,4 @@ function showgrid($pdf) {
 	}
 }
 */
+?>

@@ -160,7 +160,7 @@
 						}
 
 					//execute insert
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
 						$database = new database;
@@ -224,7 +224,7 @@
 						}
 
 					//execute update/insert
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
 						$database = new database;
@@ -349,7 +349,7 @@
 		if (is_array($recordings) && @sizeof($recordings) != 0) {
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
-			foreach ($recordings as &$row) {
+			foreach ($recordings as $row) {
 				if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
@@ -467,6 +467,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -637,6 +638,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	if ($action == "update") {

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -172,7 +172,7 @@
 								$array['users'][0]['user_status'] = $row['agent_status'];
 								$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('user_edit', 'temp');
 
 								$database = new database;
@@ -228,7 +228,7 @@
 										}
 									}
 								}
-								
+
 							}
 							//echo $command."\n";
 
@@ -348,6 +348,7 @@
 
 	echo "<form id='form_list' method='post'>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='pct-20'>".$text['label-agent']."</th>\n";
@@ -436,6 +437,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";

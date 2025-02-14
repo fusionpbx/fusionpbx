@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Renvoi d'appel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "העבר שיחה";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Inoltro";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ზარის გადამისამართება";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Oproep doorsturen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Przekierowanie";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Encaminhamento de chamadas";

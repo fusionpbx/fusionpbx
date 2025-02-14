@@ -43,7 +43,7 @@
 					$sql .= "or recording_base64 = '' ";
 					$result = $database->select($sql, null, 'all');
 					if (is_array($result) && @sizeof($result) != 0) {
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							//set the variables
 								$recording_uuid = $row['recording_uuid'];
 								$recording_domain_uuid = $row['domain_uuid'];
@@ -60,7 +60,7 @@
 										$array['recordings'][0]['domain_uuid'] = $recording_domain_uuid;
 										$array['recordings'][0]['recording_base64'] = $recording_base64;
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//update recording record with base64
 										$database->app_name = 'recordings';
@@ -84,7 +84,7 @@
 					$sql .= "where recording_base64 is not null ";
 					$result = $database->select($sql, null, 'all');
 					if (!empty($result)) {
-						foreach ($result as &$row) {
+						foreach ($result as $row) {
 							//set the variables
 								$recording_uuid = $row['recording_uuid'];
 								$recording_domain_uuid = $row['domain_uuid'];
@@ -109,7 +109,7 @@
 								$array['recordings'][0]['recording_base64'] = null;
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('recording_edit', 'temp');
 
 							//update recording record

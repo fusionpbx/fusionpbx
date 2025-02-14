@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019-2021
+	Portions created by the Initial Developer are Copyright (C) 2019-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -63,17 +63,20 @@ if (!class_exists('user_logs')) {
 		 * add user_logs
 		 */
 		public static function add($result) {
-				$array = [];
+
 			//prepare the array
+				$array = [];
 				$array['user_logs'][0]["timestamp"] = 'now()';
 				$array['user_logs'][0]["domain_uuid"] = $result['domain_uuid'];
 				$array['user_logs'][0]["user_uuid"] = $result['user_uuid'];
 				$array['user_logs'][0]["username"] = $result['username'];
+				$array['user_logs'][0]["hostname"] = gethostname();
 				$array['user_logs'][0]["type"] = 'login';
 				$array['user_logs'][0]["remote_address"] = $_SERVER['REMOTE_ADDR'];
 				$array['user_logs'][0]["user_agent"] = $_SERVER['HTTP_USER_AGENT'];
+				$array['user_logs'][0]["session_id"] = session_id();
 				$array['user_logs'][0]["type"] = 'login';
-				if ($result["authorized"] == "true") {
+				if ($result["authorized"]) {
 					$array['user_logs'][0]["result"] = 'success';
 				}
 				else {
@@ -81,7 +84,7 @@ if (!class_exists('user_logs')) {
 				}
 
 			//add the dialplan permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("user_log_add", 'temp');
 
 			//save to the data

@@ -40,6 +40,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = database::new();
+
 //set permissions
 	$permission = array();
 	$permission['xml_cdr_view'] = permission_exists('xml_cdr_view');
@@ -47,6 +50,7 @@
 	$permission['xml_cdr_delete'] = permission_exists('xml_cdr_delete');
 	$permission['xml_cdr_domain'] = permission_exists('xml_cdr_domain');
 	$permission['xml_cdr_search_call_center_queues'] = permission_exists('xml_cdr_search_call_center_queues');
+	$permission['xml_cdr_search_ring_groups'] = permission_exists('xml_cdr_search_ring_groups');
 	$permission['xml_cdr_statistics'] = permission_exists('xml_cdr_statistics');
 	$permission['xml_cdr_archive'] = permission_exists('xml_cdr_archive');
 	$permission['xml_cdr_all'] = permission_exists('xml_cdr_all');
@@ -144,8 +148,16 @@
 		}
 		$sql .= "order by extension asc, number_alias asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$extensions = $database->select($sql, $parameters, 'all');
+	}
+
+//get the ring groups
+	if ($permission['xml_cdr_search_ring_groups']) {
+		$sql = "select ring_group_uuid, ring_group_name, ring_group_extension from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "order by ring_group_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$ring_groups = $database->select($sql, $parameters, 'all');
 	}
 
 //get the call center queues
@@ -154,7 +166,6 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$call_center_queues = $database->select($sql, $parameters, 'all');
 	}
 
@@ -307,13 +318,14 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo $text['description']." \n";
+	echo $text['description']." &nbsp; ".$text['description_search']."\n";
 	echo "<br /><br />\n";
 
 //basic search of call detail records
 	if ($permission['xml_cdr_search']) {
 		echo "<form name='frm' id='frm' method='get'>\n";
 
+		echo "<div class='card'>\n";
 		echo "<div class='form_grid'>\n";
 
 		if ($permission['xml_cdr_search_direction']) {
@@ -366,7 +378,7 @@
 			echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 			echo "				<option value=''></option>";
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
-				foreach ($extensions as &$row) {
+				foreach ($extensions as $row) {
 					$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
 					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 				}
@@ -592,7 +604,7 @@
 				echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
 				echo "				<option value=''></option>";
 				if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
-					foreach ($call_center_queues as &$row) {
+					foreach ($call_center_queues as $row) {
 						$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
 						echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
 					}
@@ -602,12 +614,32 @@
 				echo "	</div>\n";
 				unset($sql, $parameters, $call_center_queues, $row, $selected);
 			}
+
+			if ($permission['xml_cdr_search_ring_groups']) {
+				echo "	<div class='form_set'>\n";
+				echo "		<div class='label'>\n";
+				echo "			".$text['label-ring_group']."\n";
+				echo "		</div>\n";
+				echo "		<div class='field'>\n";
+				echo "			<select class='formfld' name='ring_group_uuid' id='ring_group_uuid'>\n";
+				echo "				<option value=''></option>";
+				if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
+					foreach ($ring_groups as $row) {
+						$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
+						echo "		<option value='".escape($row['ring_group_uuid'])."' ".escape($selected).">".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
+					}
+				}
+				echo "			</select>\n";
+				echo "		</div>\n";
+				echo "	</div>\n";
+				unset($sql, $parameters, $ring_groups, $row, $selected);
+			}
 		}
 
 		echo "</div>\n";
 
 		button::$collapse = false;
-		echo "<div style='float: right; padding-top: 15px; margin-left: 20px; white-space: nowrap;'>";
+		echo "<div style='display: flex; justify-content: flex-end; padding-top: 15px; margin-left: 20px; white-space: nowrap;'>";
 		if ($permission['xml_cdr_all'] && $_REQUEST['show'] == 'all') {
 			echo "<input type='hidden' name='show' value='all'>\n";
 		}
@@ -617,8 +649,8 @@
 		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','link'=>($archive_request ? 'xml_cdr_archive.php' : 'xml_cdr.php')]);
 		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_save','name'=>'submit']);
 		echo "</div>\n";
-		echo "<div style='font-size: 85%; padding-top: 12px; margin-bottom: 40px;'>".$text['description_search']."</div>\n";
-
+		echo "</div>\n";
+		echo "<br />\n";
 		echo "</form>";
 	}
 
@@ -630,6 +662,7 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	$col_count = 0;
@@ -841,7 +874,7 @@
 
 				//recording playback
 					if ($permission['xml_cdr_recording_play']) {
-						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;' onclick=\"recording_play('".escape($row['xml_cdr_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['xml_cdr_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
+						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;' onclick=\"recording_seek(event,'".escape($row['xml_cdr_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['xml_cdr_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
 						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					}
 					if ($permission['xml_cdr_details']) {
@@ -930,7 +963,7 @@
 						if (!empty($record_path) || !empty($record_name)) {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if ($permission['xml_cdr_recording_play']) {
-								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
+								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."\" type='".escape($record_type)."'></audio>";
 								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
 							}
 							if ($permission['xml_cdr_recording_download']) {
@@ -1013,6 +1046,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

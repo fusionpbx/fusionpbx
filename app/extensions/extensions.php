@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -141,7 +141,7 @@
 	$sql .= "( ";
 	$sql .= "	select device_uuid ";
 	$sql .= "	from v_device_lines ";
-	$sql .= "	where extension_uuid = e.extension_uuid ";
+	$sql .= "	where domain_uuid = e.domain_uuid ";
 	$sql .= "	and user_id = e.extension ";
 	$sql .= "	limit 1 ";
 	$sql .= ") AS device_uuid, ";
@@ -221,7 +221,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-extensions']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-extensions']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('extension_import') && (!isset($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'extension_imports.php']);
@@ -294,6 +294,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('extension_enabled') || permission_exists('extension_delete')) {
@@ -304,6 +305,9 @@
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('extension_all')) {
 		echo "<th>".$text['label-domain']."</th>\n";
 		//echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+	}
+	if (permission_exists('extension_registered')) {
+		echo "<th>&nbsp;</th>\n";
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('effective_caller_id_name', $text['label-effective_cid_name'], $order_by, $order, null, "class='hide-xs'");
@@ -325,9 +329,6 @@
 	if (permission_exists("extension_user_context")) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	}
-	if (permission_exists('extension_registered')) {
-		echo "<th>".$text['label-is_registered']."</th>\n";
- 	}
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('extension_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -350,6 +351,37 @@
 			}
 			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('extension_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			}
+			if (permission_exists('extension_registered')) {
+				$icon_registered_color = $_SESSION['extension']['icon_registered_color']['text'] ?? '#12d600';
+				$icon_unregistered_color = $_SESSION['extension']['icon_unregistered_color']['text'] ?? '#e21b1b';
+
+				$extension_number = $row['extension'].'@'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				$extension_number_alias = $row['number_alias'];
+				if (!empty($extension_number_alias)) {
+					$extension_number_alias .= '@'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				$found_count = 0;
+				if (is_array($registrations)) {
+					foreach ($registrations as $array) {
+						if ($extension_number == $array['user'] || ($extension_number_alias != '' && $extension_number_alias == $array['user'])) {
+							$found_count++;
+						}
+					}
+				}
+				if ($found_count > 0) {
+					echo "	<td class='middle button center' style='text-align: center; cursor: help;' title=\"".($found_count > 1 ? $found_count.' '.$text['label-registrations'] : $text['label-registered'])."\">";
+					if ($found_count > 1) {
+						echo "<div style='display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ".$icon_registered_color."; border: 1px solid ".color_adjust($icon_registered_color, -0.07)."; margin-top: 4px;'></div>\n";
+					}
+					echo "		<div style='display: inline-block; width: 8px; height: 8px; line-height: 8px; border-radius: 50%; background-color: ".$icon_registered_color."; border: 1px solid ".color_adjust($icon_registered_color, -0.07)."; margin-top: 4px; ".($found_count > 1 ? 'margin-left: -7px;' : null)."'></div>\n";
+				}
+				else {
+					echo "	<td class='middle button center' style='text-align: center; cursor: help;' title=\"".$text['label-unregistered']."\">";
+					echo 		"<div style='display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ".$icon_unregistered_color."; border: 1px solid ".color_adjust($icon_unregistered_color, -0.15)."; margin-top: 4px;'></div>\n";
+				}
+				unset($extension_number, $extension_number_alias, $found_count, $array);
+				echo "</td>\n";
 			}
 			echo "	<td>";
 			if (permission_exists('extension_edit')) {
@@ -379,30 +411,6 @@
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
 			}
-			if (permission_exists('extension_registered')) {
-				echo "	<td>";
-				$extension_number = $row['extension'].'@'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'];
-				$extension_number_alias = $row['number_alias'];
-				if (!empty($extension_number_alias)) {
-					$extension_number_alias .= '@'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'];
-				}
-				$found_count = 0;
-				if (is_array($registrations)) {
-					foreach ($registrations as $array) {
-						if ($extension_number == $array['user'] || ($extension_number_alias != '' && $extension_number_alias == $array['user'])) {
-							$found_count++;
-						}
-					}
-				}
-				if ($found_count > 0) {
-					echo $text['label-true']." (".$found_count.")";
-				}
-				else {
-					echo $text['label-false'];
-				}
-				unset($extension_number, $extension_number_alias, $found_count, $array);
-				echo "&nbsp;</td>\n";
-			}
 			if (permission_exists('extension_enabled')) {
 				echo "	<td class='no-link center'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
@@ -424,6 +432,8 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
+
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 

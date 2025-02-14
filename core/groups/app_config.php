@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gérer les groupes d'utilisateurs et des autorisations.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მართეთ მომხმარებლის ჯგუფები და წვდომები.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Gerenciar grupos de usuários e permissões.";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,6 +71,15 @@
 	$action = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $action);
 	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
 	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+
+//determine whether to non-default (custom) settings only
+	if (!empty($default_setting_category) && $default_setting_category == 'custom') {
+		$custom_settings = true;
+		$default_setting_category = null;
+	}
+	else {
+		$custom_settings = false;
+	}
 
 //set from session variables
 	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
@@ -193,6 +202,14 @@
 
 //get the list of categories
 	if (!empty($default_setting_categories)) {
+		//show the array
+		$categories = [];
+
+		//add custom to the list of categories
+		$categories['custom']['formatted'] = $text['label-custom'];
+		$categories['custom']['count'] = null;
+		
+		//add the other catefories to the array
 		foreach ($default_setting_categories as $default_setting_category => $quantity) {
 			$category = strtolower($default_setting_category);
 			switch ($category) {
@@ -208,9 +225,12 @@
 			$categories[$default_setting_category]['formatted'] = $category;
 			$categories[$default_setting_category]['count'] = $quantity;
 		}
-		ksort($categories);
+
+		//unset variables
 		unset($default_setting_categories, $default_setting_category, $category);
 	}
+
+
 
 //get the list of installed apps from the core and mod directories
 	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -279,7 +299,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-default_settings']." (".number_format($num_rows).")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-default_settings']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['label-domain'],'icon'=>$_SESSION['theme']['button_icon_domain'],'style'=>'','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.$domain_uuid]);
 	echo button::create(['label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.(!empty($search) ? '?search='.urlencode($search) : null),'style'=>'margin-right: 15px;']);
@@ -314,8 +334,9 @@
 		foreach ($categories as $category_name => $category) {
 			$selected = (!empty($_GET['default_setting_category']) && $_GET['default_setting_category'] == $category_name) ? " selected='selected'" : null;
 			echo "		<option value='".escape($category_name)."' $selected>".escape($category['formatted']).($category['count'] ? " (".$category['count'].")" : null)."</option>\n";
+			if ($category['formatted'] == $text['label-custom']) { echo "<option disabled='disabled'></option>\n"; }
 		}
-		echo "			<option disabled='disabled'>\n";
+		echo "			<option disabled='disabled'></option>\n";
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		echo "		</select>";
 	}
@@ -371,17 +392,26 @@
 				$row['default_setting_enabled'] = 'false';
 			}
 
+			//set the font weight, default value and filter for non-custom settings
 			if (!empty($field)) {
+				//check for custom settings filter
 				if ($row['default_setting_value'] !== $field['default_setting_value']) {
 					$setting_bold = 'font-weight:bold;';
 				}
+				
+				//set the default value
 				if (!empty($field['default_setting_value'])) {
 					$default_value = 'Default: '.$field['default_setting_value'];
 				}
 				else {
 					$default_value = 'Default: null';
 				}
-				if ($row['default_setting_enabled'] != $field['default_setting_enabled']) {
+				
+				//check if default enabled
+				if ($row['default_setting_enabled'] == $field['default_setting_enabled']) {
+					if ($custom_settings) {	continue; }
+				}
+				else {
 					$default_enabled = $field['default_setting_enabled'];
 					$enabled_bold = true;
 				}
@@ -406,12 +436,13 @@
 			if ($previous_default_setting_category != $row['default_setting_category']) {
 				if (!empty($previous_default_setting_category)) {
 					echo "</table>\n";
-					echo "<br />\n";
+					echo "</div>\n";
 					echo "</div>\n";
 				}
 				echo "<div class='category' id='category_".$default_setting_category."'>\n";
 				echo "<b>".escape($label_default_setting_category)."</b><br>\n";
 
+				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				if ($permission['default_setting_add'] || $permission['default_setting_edit'] || $permission['default_setting_delete']) {
@@ -470,7 +501,7 @@
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$parameters['menu_uuid'] = $row['default_setting_value'];
 				$sub_result = $database->select($sql, $parameters ?? null, 'all');
-				foreach ($sub_result as &$sub_row) {
+				foreach ($sub_result as $sub_row) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
 				unset($sql, $sub_result, $sub_row);
@@ -499,7 +530,7 @@
 				echo "		[...]\n";
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') > 0 || substr_count($subcategory, '_secret') > 0) {
-				echo "		".str_repeat('*', strlen($row['default_setting_value'] ?? ''));
+				echo "		".str_repeat('*', 10);	//use the same number of characters to mask the password length
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
 				echo "		".$text['option-button_icons_'.$row['default_setting_value']]."\n";
@@ -587,6 +618,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "</div>\n";
 

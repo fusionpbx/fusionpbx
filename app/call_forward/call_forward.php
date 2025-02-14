@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Portions created by the Initial Developer are Copyright (C) 2008-2023
+	  Portions created by the Initial Developer are Copyright (C) 2008-2024
 	  the Initial Developer. All Rights Reserved.
 
 	  Contributor(s):
@@ -209,6 +209,9 @@
 	}
 	require_once "resources/header.php";
 
+//set the back button
+	$_SESSION['call_forward_back'] = $_SERVER['PHP_SELF'];
+
 //show the content
 	if ($is_included) {
 		echo "<div class='action_bar sub'>\n";
@@ -223,7 +226,7 @@
 	}
 	else {
 		echo "<div class='action_bar' id='action_bar'>\n";
-		echo "	<div class='heading'><b>" . $text['header-call_forward'] . " (" . $num_rows . ")</b></div>\n";
+		echo "	<div class='heading'><b>" . $text['header-call_forward'] . "</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 		echo "	<div class='actions'>\n";
 
 		if (count($extensions) > 0) {
@@ -270,6 +273,7 @@
 		echo "<input type='hidden' name='search' value=\"" . escape($search) . "\">\n";
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (!$is_included) {
@@ -407,6 +411,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 
 	if (!$is_included) {
 		echo "<br />\n";

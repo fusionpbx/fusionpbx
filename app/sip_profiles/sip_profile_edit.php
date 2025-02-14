@@ -206,7 +206,7 @@
 			}
 
 		//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('sip_profile_domain_add', 'temp');
 			$p->add('sip_profile_setting_add', 'temp');
 
@@ -448,6 +448,7 @@
 		}
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -659,6 +660,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>";
 	echo "<br /><br />";
 
 	if ($action == "update") {

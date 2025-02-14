@@ -119,7 +119,7 @@
 							{literal}
 							$('.menu_side_control_state').hide();
 							$('.menu_side_item_main_sub_icons').hide();
-							$('.sub_arrows').removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
+							$('.sub_arrows').removeClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 							$('#menu_side_container').animate({ width: '{/literal}{$settings.theme.menu_side_width_contracted}{literal}px' }, 180, function() {
 								menu_side_state_current = 'contracted';
 							});
@@ -210,8 +210,8 @@
 				}
 
 				function menu_side_item_toggle(item_id) {
-					$('#sub_arrow_'+item_id).toggleClass(['fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}','fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}']);
-					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
+					$('#sub_arrow_'+item_id).toggleClass(['{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}','{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}']);
+					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 					$('#sub_'+item_id).slideToggle(180, function() {
 						{/literal}
 						{if $settings.theme.menu_side_item_main_sub_close != 'manual'}
@@ -223,55 +223,6 @@
 						{/if}
 						{literal}
 					});
-				}
-
-				function menu_side_state_set(state) {
-					var user_setting_set_path = '{/literal}{$project_path}{literal}/core/user_settings/user_setting_set.php?category=theme&subcategory=menu_side_state&name=text&value='+state;
-					var xhr = new XMLHttpRequest();
-					xhr.open('GET', user_setting_set_path);
-					xhr.send(null);
-					xhr.onreadystatechange = function () {
-						var setting_modified;
-						if (xhr.readyState === 4) {
-							if (xhr.status === 200) {
-								setting_modified = xhr.responseText;
-								if (setting_modified == 'true') {
-									document.getElementById('menu_side_state_set_expanded').style.display = state == 'expanded' ? 'none' : 'block';
-									document.getElementById('menu_side_state_set_contracted').style.display = state == 'contracted' ? 'none' : 'block';
-									{/literal}
-									{if $menu_side_state == 'hidden'}
-										{literal}
-										document.getElementById('menu_side_state_hidden_button').style.display='none';
-										{/literal}
-									{/if}
-									{literal}
-									if (state == 'expanded') {
-										if ($(window).width() >= 576) {
-											$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_expanded}{literal} }, 250);
-										}
-										else {
-											$('#menu_side_container').animate({ width: $(window).width() }, 180);
-										}
-										document.getElementById('menu_side_state_current').value = 'expanded';
-										display_message("{/literal}{$text.theme_message_menu_expanded}{literal}", 'positive', 1000);
-									}
-									else {
-										menu_side_contract();
-										if ($(window).width() >= 576) {
-											$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_contracted}{literal} }, 250);
-										}
-										menu_side_state_current = 'contracted';
-										document.getElementById('menu_side_state_current').value = 'contracted';
-										display_message("{/literal}{$text.theme_message_menu_contracted}{literal}", 'positive', 1000);
-									}
-								}
-								else if (setting_modified == 'deleted') {
-									display_message("{/literal}{$text.theme_message_menu_reset}{literal}", 'positive', 1000);
-									document.location.reload();
-								}
-							}
-						}
-					}
 				}
 				{/literal}
 		{/if}
@@ -293,11 +244,11 @@
 		//domain selector controls
 			{if $domain_selector_enabled}
 				{literal}
-				$('.domain_selector_domain').on('click', function() { show_domains(); });
-				$('#header_domain_selector_domain').on('click', function() { show_domains(); });
+				$('.header_domain_selector_domain').on('click', function() { event.preventDefault(); show_domains(); });
 				$('#domains_hide').on('click', function() { hide_domains(); });
 
 				function show_domains() {
+					$('#body_header_user_menu').fadeOut(200);
 					search_domains('domains_list');
 
 					$('#domains_visible').val(1);
@@ -307,7 +258,6 @@
 						$('.navbar').css('margin-right',scrollbar_width); //adjust navbar margin to compensate
 						$('#domains_container').css('right',-scrollbar_width); //domain container right position to compensate
 					}
-					$(document).scrollTop(0);
 					$('#domains_container').show();
 					$('#domains_block').animate({marginRight: '+=300'}, 400, function() {
 						$('#domains_search').trigger('focus');
@@ -605,15 +555,15 @@
 							showClose: true,
 						},
 						icons: {
-							time: 'fas fa-clock',
-							date: 'fas fa-calendar-alt',
-							up: 'fas fa-arrow-up',
-							down: 'fas fa-arrow-down',
-							previous: 'fas fa-chevron-left',
-							next: 'fas fa-chevron-right',
-							today: 'fas fa-calendar-check',
-							clear: 'fas fa-trash',
-							close: 'fas fa-times',
+							time: 'fa-solid fa-clock',
+							date: 'fa-solid fa-calendar-days',
+							up: 'fa-solid fa-arrow-up',
+							down: 'fa-solid fa-arrow-down',
+							previous: 'fa-solid fa-chevron-left',
+							next: 'fa-solid fa-chevron-right',
+							today: 'fa-solid fa-calendar-check',
+							clear: 'fa-solid fa-trash',
+							close: 'fa-solid fa-xmark',
 						}
 					});
 				//define formatting of individual classes
@@ -737,6 +687,27 @@
 				{/literal}
 			{/if}
 
+		//side/fixed menu: hide an open user menu in the body header or menu on scroll
+			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'fixed' }
+				{literal}
+				$(window).on('scroll', function() {
+					$('#body_header_user_menu').fadeOut(200);
+				});
+				$('div#main_content').on('click', function() {
+					$('#body_header_user_menu').fadeOut(200);
+				});
+				{/literal}
+			{/if}
+
+		//create function to mimic toggling fade and slide at the same time
+			{literal}
+			(function($){
+				$.fn.toggleFadeSlide = function(speed = 200, easing, callback){
+					return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+				};
+			})(jQuery);
+			{/literal}
+
 	{literal}
 	}); //document ready end
 	{/literal}
@@ -831,9 +802,9 @@
 			if (recording_progress) {
 				recording_progress.style.marginLeft = value + '%';
 			}
-			if (recording_audio != null && parseInt(recording_audio.duration) > 30) { //seconds
-				clearInterval(audio_clock);
-			}
+			// if (recording_audio != null && parseInt(recording_audio.duration) > 30) { //seconds
+			// 	clearInterval(audio_clock);
+			// }
 		}
 
 		function recording_fast_forward() {
@@ -850,12 +821,26 @@
 			}
 		}
 
+		function recording_seek(event, player_id) {
+			if (recording_audio) {
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					audio_player = document.getElementById('playback_progress_bar_background_' + player_id);
+				}
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					audio_player = document.getElementById('recording_progress_bar_' + player_id);
+				}
+				recording_audio.currentTime = (event.offsetX / audio_player.offsetWidth) * recording_audio.duration;
+				update_progress(recording_id_playing);
+				document.getElementById('recording_button_' + player_id).focus();
+			}
+		}
+
 		{/literal}
 
 	//handle action bar style on scroll
 		{literal}
 		window.addEventListener('scroll', function(){
-			action_bar_scroll('action_bar', 20);
+			action_bar_scroll('action_bar', {/literal}{if $settings.theme.menu_style == 'side'}60{else}20{/if}{literal});
 		}, false);
 		function action_bar_scroll(action_bar_id, scroll_position, function_sticky, function_inline) {
 			if (document.getElementById(action_bar_id)) {
@@ -1176,70 +1161,76 @@
 <body>
 
 	{*//video background *}
-	{if !empty($settings.theme.background_video)}
+	{if !empty({$background_video})}
 		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
-			<source src="{$settings.theme.background_video}" type="video/mp4">
+			<source src="{$background_video}" type="video/mp4">
 		</video>
 	{/if}
 
+	{*//image background *}
+	<div id='background-image'></div>
+
+	{*//color background *}
+	<div id='background-color'></div>
+
 	{*//message container *}
-		<div id='message_container'></div>
+	<div id='message_container'></div>
 
 	{*//domain selector *}
-		{if $authenticated && $domain_selector_enabled}
+	{if $authenticated && $domain_selector_enabled}
 
-			<div id='domains_container'>
-				<input type='hidden' id='domains_visible' value='0'>
-				<div id='domains_block'>
-					<div id='domains_header'>
-						<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
-						<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span id='domain_count' style='font-size: 80%;'></span></a>
-						<br><br>
-						<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
-					</div>
-					<div id='domains_list'></div>
+		<div id='domains_container'>
+			<input type='hidden' id='domains_visible' value='0'>
+			<div id='domains_block'>
+				<div id='domains_header'>
+					<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
+					<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span id='domain_count' style='font-size: 80%;'></span></a>
+					<br><br>
+					<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
 				</div>
+				<div id='domains_list'></div>
 			</div>
-
-		{/if}
-
-	{*//qr code container for contacts *}
-		<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>
-			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>
-				<span id='qr_code' onclick="$('#qr_code_container').fadeOut(400);"></span>
-			</td></tr></table>
 		</div>
 
+	{/if}
+
+	{*//qr code container for contacts *}
+	<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>
+		<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>
+			<span id='qr_code' onclick="$('#qr_code_container').fadeOut(400);"></span>
+		</td></tr></table>
+	</div>
+
 	{*//login page *}
-		{if !empty($login_page)}
-			<div id='default_login'>
-				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
-				{$document_body}
-			</div>
-			<div id='footer_login'>
-				<span class='footer'>{$settings.theme.footer}</span>
-			</div>
+	{if !empty($login_page)}
+		<div id='default_login'>
+			<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
+			{$document_body}
+		</div>
+		<div id='footer_login'>
+			<span class='footer'>{$settings.theme.footer}</span>
+		</div>
 
 	{*//other pages *}
-		{else}
-			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
-				{$container_open}
-				{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
-				{$menu}
-				{if $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}<br />{/if}
-				{if $settings.theme.menu_style == 'side'}<input type='hidden' id='menu_side_state_current' value='{if $menu_side_state == 'hidden'}expanded{else}{$menu_side_state}{/if}'>{/if}
-			{else} {*//default: fixed *}
-				{$menu}
-				{$container_open}
-			{/if}
-			<div id='main_content'>
-				{$document_body}
-			</div>
-			<div id='footer'>
-				<span class='footer'>{$settings.theme.footer}</span>
-			</div>
-			{$container_close}
+	{else}
+		{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
+			{$container_open}
+			{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
+			{$menu}
+			{if $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}<br />{/if}
+			{if $settings.theme.menu_style == 'side'}<input type='hidden' id='menu_side_state_current' value='{if $menu_side_state == 'hidden'}expanded{else}{$menu_side_state}{/if}'>{/if}
+		{else} {*//default: fixed *}
+			{$menu}
+			{$container_open}
 		{/if}
+		<div id='main_content'>
+			{$document_body}
+		</div>
+		<div id='footer'>
+			<span class='footer'>{$settings.theme.footer}</span>
+		</div>
+		{$container_close}
+	{/if}
 
 </body>
 </html>

@@ -61,27 +61,25 @@ if ($domains_processed == 1) {
 				$array['dashboard'][$x]['dashboard_order'] = $row['dashboard_order'];
 				$array['dashboard'][$x]['dashboard_enabled'] = $row['dashboard_enabled'];
 				$array['dashboard'][$x]['dashboard_description'] = $row['dashboard_description'];
-				if (!empty($row['dashboard_heading_text_color'])) { $array['dashboard'][$x]['dashboard_heading_text_color'] = $row['dashboard_heading_text_color']; }
-				if (!empty($row['dashboard_heading_text_color_hover'])) { $array['dashboard'][$x]['dashboard_heading_text_color_hover'] = $row['dashboard_heading_text_color_hover']; }
+				$array['dashboard'][$x]['dashboard_label_enabled'] = $row['dashboard_label_enabled'] ?? 'true';
+				if (!empty($row['dashboard_label_text_color'])) { $array['dashboard'][$x]['dashboard_label_text_color'] = $row['dashboard_label_text_color']; }
+				if (!empty($row['dashboard_label_text_color_hover'])) { $array['dashboard'][$x]['dashboard_label_text_color_hover'] = $row['dashboard_label_text_color_hover']; }
 				if (!empty($row['dashboard_number_text_color'])) { $array['dashboard'][$x]['dashboard_number_text_color'] = $row['dashboard_number_text_color']; }
 				if (!empty($row['dashboard_number_text_color_hover'])) { $array['dashboard'][$x]['dashboard_number_text_color_hover'] = $row['dashboard_number_text_color_hover']; }
+				if (!empty($row['dashboard_number_background_color'])) { $array['dashboard'][$x]['dashboard_number_background_color'] = $row['dashboard_number_background_color']; }
 				if (!empty($row['dashboard_icon'])) { $array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon']; }
+				if (!empty($row['dashboard_icon_color'])) { $array['dashboard'][$x]['dashboard_icon_color'] = $row['dashboard_icon_color']; }
 				if (!empty($row['dashboard_url'])) { $array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url']; }
 				if (!empty($row['dashboard_width'])) { $array['dashboard'][$x]['dashboard_width'] = $row['dashboard_width']; }
 				if (!empty($row['dashboard_height'])) { $array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height']; }
 				if (!empty($row['dashboard_target'])) { $array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target']; }
-				if (!empty($row['dashboard_heading_background_color'])) { $array['dashboard'][$x]['dashboard_heading_background_color'] = $row['dashboard_heading_background_color']; }
-				if (!empty($row['dashboard_heading_background_color_hover'])) { $array['dashboard'][$x]['dashboard_heading_background_color'] = $row['dashboard_heading_background_color_hover']; }
+				if (!empty($row['dashboard_label_background_color'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color']; }
+				if (!empty($row['dashboard_label_background_color_hover'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color_hover']; }
 				if (!empty($row['dashboard_background_color'])) { $array['dashboard'][$x]['dashboard_background_color'] = $row['dashboard_background_color']; }
-				if (!empty($row['dashboard_background_color_hover'])) { $array['dashboard'][$x]['dashboard_background_color'] = $row['dashboard_background_color_hover']; }
+				if (!empty($row['dashboard_background_color_hover'])) { $array['dashboard'][$x]['dashboard_background_color_hover'] = $row['dashboard_background_color_hover']; }
 				if (!empty($row['dashboard_detail_background_color'])) { $array['dashboard'][$x]['dashboard_detail_background_color'] = $row['dashboard_detail_background_color']; }
 				if (!empty($row['dashboard_content'])) { $array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content']; }
 				if (!empty($row['dashboard_content_details'])) { $array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details']; }
-				if (in_array($row['dashboard_path'], ['app/voicemails/resources/dashboard/voicemails.php', 'app/xml_cdr/resources/dashboard/missed_calls.php', 'app/xml_cdr/resources/dashboard/recent_calls.php'])) {
-					if (!isset($row['dashboard_chart_type'])) { $array['dashboard'][$x]['dashboard_chart_type'] = "number"; }
-					if (!isset($row['dashboard_row_span'])) { $array['dashboard'][$x]['dashboard_row_span'] = 1; }
-					if (!isset($row['dashboard_details_state'])) { $array['dashboard'][$x]['dashboard_details_state'] = "hidden"; }
-				}
 				$y = 0;
 				if (!empty($row['dashboard_groups'])) {
 					foreach ($row['dashboard_groups'] as $row) {
@@ -102,7 +100,7 @@ if ($domains_processed == 1) {
 		}
 
 	//add the temporary permissions
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('dashboard_add', 'temp');
 		$p->add('dashboard_group_add', 'temp');
 
@@ -122,9 +120,11 @@ if ($domains_processed == 1) {
 	//update dashboard icons to be prefixed with v6.x font awesome style class name (e.g. 'fa-solid ')
 		$queries[] = "update v_dashboard set dashboard_icon = concat('fa-solid ', dashboard_icon) where dashboard_icon is not null and dashboard_icon not like 'fa-solid fa-%' and dashboard_icon not like 'fa-regular fa-%' and dashboard_icon not like 'fa-brands fa-%' ";
 
+	//simplify the dashboard path
+		$queries[] = "update v_dashboard set dashboard_path =  regexp_replace(dashboard_path, 'app/|core/|resources/dashboard/|\.php', '', 'g') where dashboard_path like '%.php';";
+
 	//execute array of queries
 		foreach ($queries as $sql) {
-			$database = new database;
 			$database->execute($sql);
 		}
 		unset($queries, $sql);

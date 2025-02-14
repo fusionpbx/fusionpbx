@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Profils des conférences";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "פרופילים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Profili Conferenza";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "კონფერენციის პროფილები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie profielen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Profile Konferencji";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Perfis de conferência";

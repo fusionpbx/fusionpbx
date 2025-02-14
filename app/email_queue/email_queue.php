@@ -65,7 +65,7 @@
 		foreach ($email_queue as $row) {
 			//email class queue uuid
 			$array[$x]['checked'] = $row['checked'] ?? null;
-			$array[$x]['uuid'] = $row['email_queue_uuid']; 
+			$array[$x]['uuid'] = $row['email_queue_uuid'];
 
 			// database class uuid
 			//$array['email_queue'][$x]['checked'] = $row['checked'];
@@ -161,7 +161,7 @@
 	$sql = "select ";
 	$sql .= "email_date, ";
 	$sql .= "to_char(timezone(:time_zone, email_date), 'DD Mon YYYY') as email_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, email_date), 'HH12:MI:SS am') as email_time_formatted, \n";	
+	$sql .= "to_char(timezone(:time_zone, email_date), 'HH12:MI:SS am') as email_time_formatted, \n";
 	$sql .= "email_queue_uuid, ";
 	$sql .= "hostname, ";
 	$sql .= "email_from, ";
@@ -245,7 +245,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-email_queue']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-email_queue']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	//if (permission_exists('email_queue_add')) {
 	//	echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'email_queue_edit.php']);
@@ -307,6 +307,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('email_queue_add') || permission_exists('email_queue_edit') || permission_exists('email_queue_delete')) {
@@ -380,11 +381,11 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
-
 
 //test script
 	echo "<script>\n";

@@ -1,3 +1,4 @@
+--
 --	Part of FusionPBX
 --	Copyright (C) 2013 - 2024 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
@@ -30,9 +31,8 @@
 
 --define a function to send email
 	function send_email(id, uuid)
-		local db = dbh or Database.new('system')
-		local settings = Settings.new(db, domain_name, domain_uuid)
-		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
+		local db = dbh or Database.new('system');
+		local settings = Settings.new(db, domain_name, domain_uuid);
 		local http_protocol = settings:get('domain', 'http_protocol', 'text') or "https";
 		local email_queue_enabled = "true";
 
@@ -124,7 +124,7 @@
 					end
 
 				--get voicemail message details
-					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, * 
+					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, *
 						FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
 						AND voicemail_message_uuid = :uuid]]
@@ -150,6 +150,9 @@
 
 								--save the recordings to the file system
 									if (string.len(row["message_base64"]) > 32) then
+										--save the value to a variable
+											voicemail_base64 = row["message_base64"];
+
 										--include the file io
 											local file = require "resources.functions.file"
 
@@ -185,7 +188,7 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcribe_enabled == 'true' and voicemail_transcription_enabled == 'true') then
+					if (voicemail_transcription_enabled == 'true') then
 						sql = sql .. "AND template_subcategory = 'transcription' "
 					else
 						sql = sql .. "AND template_subcategory = 'default' "
@@ -311,10 +314,10 @@
 				--get the smtp from address and name
 					smtp_from = settings:get('voicemail', 'smtp_from', 'text');
 					smtp_from_name = settings:get('voicemail', 'smtp_from_name', 'text');
-					if (smtp_from and string.len(smtp_from) > 2) then
+					if (smtp_from == nil or smtp_from == '') then
 						smtp_from = settings:get('email', 'smtp_from', 'text');
 					end
-					if (smtp_from_name and string.len(smtp_from_name) > 0) then
+					if (smtp_from_name == nil or smtp_from_name == '') then
 						smtp_from_name = settings:get('email', 'smtp_from_name', 'text');
 					end
 					if (smtp_from_name and string.len(smtp_from_name) > 0 and smtp_from and string.len(smtp_from) > 2) then
@@ -323,20 +326,20 @@
 
 				--send the email with, or without, including the intro
 					if (file_exists(combined)) then
-						send_mail(headers,
-							smtp_from,
-							voicemail_mail_to,
-							{subject, body},
-							(voicemail_file == "attach") and combined
-						);
+						voicemail_path = combined
 					else
-						send_mail(headers,
-							smtp_from,
-							voicemail_mail_to,
-							{subject, body},
-							(voicemail_file == "attach") and file
-						);
+						voicemail_path = file
 					end
+
+				--send the email
+					send_mail(headers,
+						smtp_from,
+						voicemail_mail_to,
+						{subject, body},
+						(voicemail_file == "attach") and voicemail_path,
+						voicemail_base64
+					);
+
 			end
 
 		--whether to keep the voicemail message and details local after email

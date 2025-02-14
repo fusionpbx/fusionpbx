@@ -258,6 +258,7 @@
 	echo $text['description-dialplan-edit']."\n";
 	echo "<br />\n";
 
+	echo "<div class='card'>\n";
 	echo "	<textarea name='dialplan_xml' id='dialplan_xml' style='display: none;'>".$dialplan_xml."</textarea>";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
 	echo "		<tr>\n";
@@ -329,12 +330,14 @@
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
-	echo "	<div id='editor'></div>\n";
-	echo "	<br />\n";
 
-	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid ?? null)."'>\n";
-	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? null)."'>\n";
-	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "	<div id='editor'></div>\n";
+	echo "</div>\n";
+	echo "<br />\n";
+
+	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid ?? null)."'>\n";
+	echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? null)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>\n";
 

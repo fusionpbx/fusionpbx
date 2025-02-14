@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,17 +42,28 @@
 	$language = new text;
 	$text = $language->get();
 
+//initialize database and settings
+	$database = database::new();
+	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
+
 //set the defaults
 	$ivr_menu_name = '';
 	$ivr_menu_extension = '';
 	$ivr_menu_cid_prefix = '';
 	$ivr_menu_description = '';
+	$ivr_menu_ringback = $settings->get('ivr_menu','default_ringback', 'local_stream://default');
 
 //initialize the destinations object
 	$destination = new destinations;
 
 //initialize the ringbacks object
 	$ringbacks = new ringbacks;
+
+//validate the ringback
+	if (!$ringbacks->valid($ivr_menu_ringback)) {
+		//set to default when it is not valid
+		$ivr_menu_ringback = '';
+	}
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"]) || !empty($_REQUEST["ivr_menu_uuid"]) &&  is_uuid($_REQUEST["ivr_menu_uuid"])) {
@@ -70,7 +81,6 @@
 	if (!empty($_SESSION['limit']['ivr_menus']['numeric'])) {
 		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$total_ivr_menus = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 
@@ -176,7 +186,6 @@
 				$sql = "select * from v_ivr_menus ";
 				$sql .= "where ivr_menu_uuid = :ivr_menu_uuid ";
 				$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (!empty($row)) {
 					if (!permission_exists('ivr_menu_domain')) {
@@ -392,7 +401,7 @@
 					$array['dialplans'][0]["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
 
 				//add the dialplan permission
-					$p = new permissions;
+					$p = permissions::new();
 					if ($action == "add") {
 						$p->add("dialplan_add", "temp");
 					}
@@ -401,7 +410,6 @@
 					}
 
 				//save to the data
-					$database = new database;
 					$database->app_name = 'ivr_menus';
 					$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 					$database->save($array);
@@ -441,7 +449,6 @@
 					$sql .="	) ";
 					$sql .="	select * from ivr_menus ";
 					$parameters['ivr_menu_parent_uuid'] = $ivr_menu_parent_uuid;
-					$database = new database;
 					$parent_uuids = $database->select($sql, $parameters, "all");
 					if (!empty($parent_uuids)) {
 						foreach ($parent_uuids as $x => $row) {
@@ -473,7 +480,7 @@
 		$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 		$ivr_menus = $ivr->find();
 		if (!empty($ivr_menus)) {
-			foreach ($ivr_menus as &$row) {
+			foreach ($ivr_menus as $row) {
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$ivr_menu_name = $row["ivr_menu_name"];
 				$ivr_menu_extension = $row["ivr_menu_extension"];
@@ -530,7 +537,6 @@
 	$sql .= "order by natural_sort(ivr_menu_option_digits::text) asc, ivr_menu_option_order asc; ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
-	$database = new database;
 	$ivr_menu_options = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -539,7 +545,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by v_ivr_menus asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$ivr_menus = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -566,7 +571,7 @@
 
 //set the defaults
 	if (empty($ivr_menu_timeout)) { $ivr_menu_timeout = '3000'; }
-	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = 'local_stream://default'; }
+	if (empty($ivr_menu_ringback)) { $ivr_menu_ringback = ''; }
 	if (empty($ivr_menu_invalid_sound)) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (empty($ivr_menu_confirm_key)) { $ivr_menu_confirm_key = '#'; }
 	if (empty($ivr_menu_tts_engine)) { $ivr_menu_tts_engine = 'flite'; }
@@ -753,6 +758,7 @@
 	echo $text['description-ivr_menu']."\n";
 	echo "<br><br>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -832,7 +838,7 @@
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_seek(event,'".$instance_id."');\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -861,6 +867,16 @@
 					if (!empty($instance_value) && $instance_value == $row["value"]) {
 						$selected = "selected='selected'";
 						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'phrases') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '';
 						$found = true;
 					}
 					else {
@@ -905,7 +921,7 @@
 	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-'.$instance_label]."\n";
 	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_seek(event,'".$instance_id."');\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -934,6 +950,16 @@
 					if (!empty($instance_value) && $instance_value == $row["value"]) {
 						$selected = "selected='selected'";
 						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'phrases') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '';
 						$found = true;
 					}
 					else {
@@ -1215,7 +1241,7 @@
 		echo "<td width='30%' class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-'.$instance_label]."\n";
 		echo "</td>\n";
-		echo "<td width='70%'class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+		echo "<td width='70%'class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_seek(event,'".$instance_id."');\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -1288,7 +1314,7 @@
 		echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-'.$instance_label]."\n";
 		echo "</td>\n";
-		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_seek(event,'".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -1539,6 +1565,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	if (is_uuid($ivr_menu_uuid)) {

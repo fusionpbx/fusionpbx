@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,6 +26,12 @@
 
 //includes files
 	require_once __DIR__ . "/require.php";
+
+//database and settings
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
+	$database = database::new();
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //set variables if not set
 	//if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
@@ -152,9 +158,15 @@
 				$settings_array['theme']['menu_style'] = !empty($settings_array['theme']['menu_style']) ? $settings_array['theme']['menu_style'] : 'fixed';
 				$settings_array['theme']['menu_position'] = isset($settings_array['theme']['menu_position']) ? $settings_array['theme']['menu_position'] : 'top';
 				$settings_array['theme']['footer'] = isset($settings_array['theme']['footer']) ? $settings_array['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
-
+				$settings_array['theme']['menu_side_item_main_sub_icon_contract'] = !empty($settings_array['theme']['menu_side_item_main_sub_icon_contract']) ? explode(' ', $settings_array['theme']['menu_side_item_main_sub_icon_contract'])[1] : null;
+				$settings_array['theme']['menu_side_item_main_sub_icon_expand'] = !empty($settings_array['theme']['menu_side_item_main_sub_icon_expand']) ? explode(' ', $settings_array['theme']['menu_side_item_main_sub_icon_expand'])[1] : null;
+				$settings_array['theme']['menu_brand_type'] = $settings->get('theme', 'menu_brand_type', '');
 			//assign the setings
 				$view->assign('settings', $settings_array);
+		}
+	//background video
+		if (!empty($_SESSION['theme']['background_video']) && is_array($_SESSION['theme']['background_video'])) {
+			$view->assign('background_video', $_SESSION['theme']['background_video'][0]);
 		}
 	//document title
 		if (isset($_SESSION['theme']['title']['text']) && $_SESSION['theme']['title']['text'] != '') {
@@ -200,7 +212,7 @@
 					if ($_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
 						$menu_side_toggle = $_SESSION['theme']['menu_side_toggle']['text'] == 'hover' ? " onmouseenter=\"clearTimeout(menu_side_contract_timer); if ($('#menu_side_container').width() < 100) { menu_side_expand_start(); }\" onmouseleave=\"clearTimeout(menu_side_expand_timer); if ($('#menu_side_container').width() > 100 && $('#menu_side_state_current').val() != 'expanded') { menu_side_contract_start(); }\"" : null;
 					}
-					$container_open = "<div id='menu_side_container' ".($_SESSION['theme']['menu_side_state']['text'] == 'hidden' ? "style='display: none;'" : "class='hide-xs'").$menu_side_toggle." >\n";
+					$container_open = "<div id='menu_side_container' style='width: ".(in_array($_SESSION['theme']['menu_side_state']['text'], ['expanded','hidden']) ? ($_SESSION['theme']['menu_side_width_expanded']['text'] ?? 225) : ($_SESSION['theme']['menu_side_width_contracted']['text'] ?? 60))."px; ".($_SESSION['theme']['menu_side_state']['text'] == 'hidden' ? "display: none;'" : "' class='hide-xs'").$menu_side_toggle." >\n";
 					$menu = new menu;
 					$menu->text = $text;
 					$menu_html = $menu->menu_vertical($_SESSION['menu']['array']);

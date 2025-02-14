@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,6 +37,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -95,7 +98,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by conference_center_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$conference_centers = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -104,7 +106,6 @@
 	$sql .= "from v_conference_profiles ";
 	$sql .= "where profile_enabled = 'true' ";
 	$sql .= "and profile_name <> 'sla' ";
-	$database = new database;
 	$conference_profiles = $database->select($sql, null, 'all');
 	unset ($sql);
 
@@ -113,16 +114,20 @@
 
 //define fucntion get_conference_pin - used to find a unique pin number
 	function get_conference_pin($length, $conference_room_uuid) {
+		//set the variable as global
+		global $database;
+
+		//get the pin number
 		$pin = generate_password($length,1);
+
+		//return an available pin number
 		$sql = "select count(*) from v_conference_rooms ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and conference_room_uuid <> :conference_room_uuid ";
 		$sql .= "and (moderator_pin = :pin or participant_pin = :pin) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_room_uuid'] = $conference_room_uuid;
-		
 		$parameters['pin'] = $pin;
-		$database = new database;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		if ($num_rows == 0) {
 			return $pin;
@@ -133,18 +138,19 @@
 		unset($sql, $parameters);
 	}
 
-//record announcment
+//record the announcement
 	if (!empty($record) && $record == "true") {
 		//prepare the values
-			$default_language = 'en';
-			$default_dialect = 'us';
-			$default_voice = 'callie';
-			$switch_cmd = "conference ".$conference_room_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+		$default_language = 'en';
+		$default_dialect = 'us';
+		$default_voice = 'callie';
+		$switch_cmd = "conference ".$conference_room_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+
 		//connect to event socket
-			$esl = event_socket::create();
-			if ($esl->is_connected()) {
-				$switch_result = event_socket::api($switch_cmd);
-			}
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$switch_result = event_socket::api($switch_cmd);
+		}
 	}
 
 //generate the pin number length
@@ -156,7 +162,6 @@
 		$parameters['conference_center_uuid'] = $conference_center_uuid;
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$pin_length = $row['conference_center_pin_length'];
@@ -183,15 +188,14 @@
 				$array['conference_room_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
 			//un-assigne the users from the conference room
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('conference_room_user_delete', 'temp');
 
-				$database = new database;
 				$database->app_name = 'conference_centers';
 				$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 				$database->delete($array);
 				unset($array);
-				
+
 				$p->delete('conference_room_user_delete', 'temp');
 		}
 
@@ -232,7 +236,6 @@
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['moderator_pin'] = $moderator_pin;
 					$parameters['conference_room_uuid'] = $conference_room_uuid ?? null;
-					$database = new database;
 					$num_rows = $database->select($sql, $parameters, 'column');
 					if ($num_rows > 0) {
 						$msg .= $text['message-unique_moderator_pin']."<br />\n";
@@ -342,7 +345,6 @@
 						$array['conference_rooms'][0]['enabled'] = $enabled;
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database = new database;
 						$database->app_name = 'conference_centers';
 						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
@@ -356,10 +358,9 @@
 							$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
 							$array['conference_room_users'][0]['user_uuid'] = $_SESSION["user_uuid"];
 
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('conference_room_user_add', 'temp');
 
-							$database = new database;
 							$database->app_name = 'conference_centers';
 							$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 							$database->save($array);
@@ -422,7 +423,6 @@
 						}
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database = new database;
 						$database->app_name = 'conference_centers';
 						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
@@ -440,10 +440,9 @@
 					$array['conference_room_users'][0]['conference_room_uuid'] = $conference_room_uuid;
 					$array['conference_room_users'][0]['user_uuid'] = $user_uuid;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('conference_room_user_add', 'temp');
 
-					$database = new database;
 					$database->app_name = 'conference_centers';
 					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 					$database->save($array);
@@ -469,7 +468,6 @@
 			$sql .= "and conference_room_uuid = :conference_room_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['conference_room_uuid'] = $conference_room_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters ?? null, 'row');
 			if (!empty($row)) {
 				$conference_center_uuid = $row["conference_center_uuid"];
@@ -507,7 +505,6 @@
 	$sql .= "order by u.username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['conference_room_uuid'] = $conference_room_uuid ?? '';
-	$database = new database;
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
@@ -525,7 +522,6 @@
 	}
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -591,6 +587,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -975,6 +972,7 @@
 	echo "</tr>\n";
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br><br>\n";
 
 	if ($action == "update") {

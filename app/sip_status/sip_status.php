@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,6 +42,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//create the database object
+	$database = database::new();
+
 //create event socket
 	$esl = event_socket::create();
 	if (!$esl->is_connected()) {
@@ -52,7 +55,6 @@
 	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name ";
 	$sql .= "from v_gateways as g left ";
 	$sql .= "outer join v_domains as d on d.domain_uuid = g.domain_uuid";
-	$database = new database;
 	$gateways = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -69,7 +71,6 @@
 		$parameters['sip_profile_hostname'] = $hostname;
 	}
 	$sql .= "order by sip_profile_name asc ";
-	$database = new database;
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
@@ -104,6 +105,7 @@
 
 //define registration object
 	$registration = new registrations;
+	$registration->show = 'all';
 
 //include the header
 	$document['title'] = $text['title-sip_status'];
@@ -131,6 +133,8 @@
 		echo "<br />\n";
 
 		echo "<div id='sofia_status' style='margin-top: 20px; margin-bottom: 40px;'>";
+
+		echo "<div class='card'>\n";
 		echo "<table class='list'>\n";
 		echo "<tr class='list-header'>\n";
 		echo "	<th>".$text['label-name']."</th>\n";
@@ -217,6 +221,7 @@
 
 		echo "</table>\n";
 		echo "</div>\n";
+		echo "</div>\n";
 		unset($gateways, $xml, $xml_gateways);
 	}
 
@@ -258,6 +263,8 @@
 			echo "</div>\n";
 
 			echo "<div id='".escape($sip_profile_name)."' style='display: none; margin-bottom: 30px;'>";
+
+			echo "<div class='card'>\n";
 			echo "<table width='100%' cellspacing='0' cellpadding='5'>\n";
 			echo "<tr><th colspan='2' style='font-size: 1px; padding: 0;'>&nbsp;</th></tr>\n";
 
@@ -302,6 +309,7 @@
 			}
 			echo "</table>\n";
 			echo "</div>";
+			echo "</div>";
 			unset($xml);
 		}
 	}
@@ -311,9 +319,11 @@
 		$response = event_socket::api("status");
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
-		echo "<pre>";
+		echo "<div class='card'>\n";
+		echo "<pre style='margin-bottom: 0;'>";
 		echo trim(escape($response));
 		echo "</pre>\n";
+		echo "</div>";
 		echo "</div>";
 	}
 

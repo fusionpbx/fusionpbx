@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2023
+ Portions created by the Initial Developer are Copyright (C) 2016-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -136,7 +136,7 @@
 	echo "<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['title-device_vendor_functions']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['title-device_vendor_functions']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'device_vendors.php']);
 	if (permission_exists('device_vendor_function_add')) {
@@ -162,6 +162,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit') || permission_exists('device_vendor_function_delete')) {
@@ -203,7 +204,7 @@
 				$vendor_function_groups = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 				unset($group_list);
-				foreach ($vendor_function_groups as &$sub_row) {
+				foreach ($vendor_function_groups as $sub_row) {
 					$group_list[] = escape($sub_row["group_name"]).(($sub_row['group_domain_uuid'] != '') ? "@".escape($_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name']) : null);
 				}
 				$group_list = isset($group_list) ? implode(', ', $group_list) : '';
@@ -263,6 +264,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 

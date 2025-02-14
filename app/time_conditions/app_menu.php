@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Conditions Temporelles";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "תנאי זמן";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Condizioni Temporali";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დროის პირობები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Tijdcondities";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Warunki czasowe";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Condições temporarias";

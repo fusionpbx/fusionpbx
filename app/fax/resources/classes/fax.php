@@ -42,6 +42,7 @@ if (!class_exists('fax')) {
 		public $box;
 		public $order_by;
 		public $order;
+		public $download;
 
 		/**
 		* declare private variables
@@ -98,7 +99,7 @@ if (!class_exists('fax')) {
 						$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
 
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('dialplan_detail_delete', 'temp');
 
 					//execute delete
@@ -165,7 +166,7 @@ if (!class_exists('fax')) {
 				$array['dialplans'][] = $dialplan;
 
 			//add the dialplan permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("dialplan_add", 'temp');
 				$p->add("dialplan_detail_add", 'temp');
 				$p->add("dialplan_edit", 'temp');
@@ -311,7 +312,7 @@ if (!class_exists('fax')) {
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('fax_delete', 'temp');
 									$p->add('fax_user_delete', 'temp');
 									$p->add('fax_file_delete', 'temp');
@@ -624,7 +625,7 @@ if (!class_exists('fax')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('fax_add', 'temp');
 									$p->add('dialplan_add', 'temp');
 
@@ -668,11 +669,13 @@ if (!class_exists('fax')) {
 					$text = $language->get();
 
 				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: fax_files.php?order_by='.urlencode($this->order_by).'&order='.urlencode($this->order).'&id='.urlencode($this->fax_uuid).'&box='.urlencode($this->box));
-						exit;
+					if (empty($this->download) || $this->download == false) {
+						$token = new token;
+						if (!$token->validate($_SERVER['PHP_SELF'])) {
+							message::add($text['message-invalid_token'],'negative');
+							header('Location: fax_files.php?order_by='.urlencode($this->order_by).'&order='.urlencode($this->order).'&id='.urlencode($this->fax_uuid).'&box='.urlencode($this->box));
+							exit;
+						}
 					}
 
 				//toggle multiple records

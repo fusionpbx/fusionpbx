@@ -418,6 +418,12 @@
 		if ($p >= 55) {
 			$pdf->AddPage('L', array($page_width, $page_height));
 		}
+
+		//clear the output buffer
+		if (ob_get_level()) {
+		    ob_end_clean();
+		}
+
 		//output remaining data
 		$data_body_chunk = $data_start.$data_head;
 		foreach ($data_body as $data_body_row) {

@@ -71,27 +71,27 @@
 		$condition_field_2 = $_POST["condition_field_2"] ?? null;
 		$condition_expression_2 = $_POST["condition_expression_2"] ?? null;
 		$destination_uuid = $_POST["destination_uuid"];
-	
+
 	 	$action_1 = $_POST["action_1"];
 		//$action_1 = "transfer:1001 XML default";
 		$action_1_array = explode(":", $action_1);
 		$action_application_1 = array_shift($action_1_array);
 		$action_data_1 = join(':', $action_1_array);
-	
+
 	 	$action_2 = $_POST["action_2"] ?? '';
 		//$action_2 = "transfer:1001 XML default";
 		$action_2_array = explode(":", $action_2);
 		$action_application_2 = array_shift($action_2_array);
 		$action_data_2 = join(':', $action_2_array);
-	
+
 		//$action_application_1 = $_POST["action_application_1"];
 		//$action_data_1 = $_POST["action_data_1"];
 		//$action_application_2 = $_POST["action_application_2"];
 		//$action_data_2 = $_POST["action_data_2"];
-	
+
 		$destination_carrier = '';
 		$destination_accountcode = '';
-	
+
 		//use the destination_uuid to set the condition_expression_1
 		if (is_uuid($destination_uuid)) {
 			$sql = "select * from v_destinations ";
@@ -110,7 +110,7 @@
 			}
 			unset($sql, $parameters, $row);
 		}
-	
+
 		if (permission_exists("inbound_route_advanced") && $action == "advanced") {
 			//allow users with group advanced control, not always superadmin. You may change this in group permissions
 		}
@@ -402,7 +402,7 @@
 		//update the destination dialplan_uuid
 			if (is_uuid($destination_uuid)) {
 
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('destination_edit', 'temp');
 
 				$array['destinations'][0]['destination_uuid'] = $destination_uuid;
@@ -503,6 +503,7 @@
 	echo $text['description-dialplan-inbound-add']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -684,7 +685,7 @@
 		if (is_array($result) && @sizeof($result) != 0) {
 			echo "	<select name='destination_uuid' id='destination_uuid' class='formfld' >\n";
 			echo "	<option></option>\n";
-			foreach ($result as &$row) {
+			foreach ($result as $row) {
 				if (empty($row["dialplan_uuid"])) {
 					echo "		<option value='".escape($row["destination_uuid"])."' style=\"font-weight:bold;\">".escape($row["destination_number"])." ".escape($row["destination_description"])."</option>\n";
 				}
@@ -807,6 +808,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	if ($action == "update" && permission_exists("inbound_route_edit")) {

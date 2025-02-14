@@ -46,11 +46,13 @@
 		$search =  strtolower($_GET["search"]);
 	}
 
+//connect to the database
+	$database = new database;
+
 //check to see if contact details are in the view
 	$sql = "select * from view_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters = null;
-	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$row = $database->select($sql, $parameters, 'row');
 	if (isset($row['contact_organization'])) {
@@ -93,7 +95,6 @@
 	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$sql .= order_by($order_by, $order, 'username', 'asc');
 	$sql .= "limit 300\n";
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

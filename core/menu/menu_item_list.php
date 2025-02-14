@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -103,6 +103,7 @@
 				$menu_item_order = $row2['menu_item_order'];
 				$menu_item_title = $row2['menu_item_title'];
 				$menu_item_link = $row2['menu_item_link'];
+				$menu_item_icon = $row2['menu_item_icon'];
 
 				//get the groups that have been assigned to the menu
 				$sql = "select ";
@@ -124,7 +125,7 @@
 
 				$group_list = '';
 				if (!empty($sub_result) && sizeof($sub_result) != 0) {
-					foreach ($sub_result as &$sub_row) {
+					foreach ($sub_result as $sub_row) {
 						$group_array[] = $sub_row["group_name"].((!empty($sub_row['group_domain_uuid'])) ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
 					}
 					$group_list = !empty($group_array) ? implode(', ', $group_array) : '';
@@ -147,6 +148,9 @@
 						break;
 				}
 
+				//format icon
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+
 				//display the content of the list
 				if (permission_exists('menu_item_edit')) {
 					$list_row_url = 'menu_item_edit.php?id='.urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_item_parent_uuid=".urlencode($row2['menu_item_parent_uuid']);
@@ -160,10 +164,10 @@
 				}
 				echo "<td class='no-wrap".($menu_item_category != 'internal' ? "no-link" : null)."' style='padding-left: ".($menu_item_level * 25)."px;'>\n";
 				if (permission_exists('menu_item_edit')) {
-					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>\n";
+					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>".$menu_item_icon."\n";
 				}
 				else {
-					echo "	".escape($menu_item_title);
+					echo "	".escape($menu_item_title).$menu_item_icon;
 				}
 				echo "</td>\n";
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
@@ -259,6 +263,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "	<tr class='list-header'>";
 	if (permission_exists('menu_item_edit') || permission_exists('menu_item_delete')) {
@@ -285,6 +290,7 @@
 				$menu_item_category = $row['menu_item_category'];
 				$menu_item_title = $row['menu_item_title'];
 				$menu_item_link = $row['menu_item_link'];
+				$menu_item_icon = $row['menu_item_icon'];
 				$menu_item_protected = $row['menu_item_protected'];
 
 			//get the groups that have been assigned to the menu
@@ -306,7 +312,7 @@
 				unset($sql, $group_list);
 
 				if (!empty($sub_result) && sizeof($sub_result) != 0) {
-					foreach ($sub_result as &$sub_row) {
+					foreach ($sub_result as $sub_row) {
 						$group_list[] = $sub_row["group_name"].((!empty($sub_row['group_domain_uuid'])) ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
 					}
 					$group_list = implode(', ', $group_list);
@@ -329,6 +335,9 @@
 						break;
 				}
 
+			//format icon
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+
 			//display the content of the list
 				if (permission_exists('menu_item_edit')) {
 					$list_row_url = 'menu_item_edit.php?id='.urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid);
@@ -342,10 +351,10 @@
 				}
 				echo "<td>\n";
 				if (permission_exists('menu_item_edit')) {
-					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>\n";
+					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($menu_item_title)."</a>".$menu_item_icon."\n";
 				}
 				else {
-					echo "	".escape($menu_item_title);
+					echo "	".escape($menu_item_title).$menu_item_icon;
 				}
 				echo "</td>\n";
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
@@ -402,6 +411,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
@@ -423,7 +433,7 @@
 	echo "	}\n";
 
 //update number of menu items
-	echo "	document.getElementById('num_rows').innerHTML = '".(!empty($x) ?: 0)."';\n";
+	echo "	document.getElementById('num_rows').innerHTML = '".(!empty($x) ? $x : 0)."';\n";
 
 	echo "</script>\n";
 

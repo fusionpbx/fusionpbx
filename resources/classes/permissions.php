@@ -35,18 +35,23 @@ if (!class_exists('permissions')) {
 		private $user_uuid;
 		private $groups;
 		private $permissions;
+		private static $permission;
 
 		/**
 		 * called when the object is created
 		 */
 		public function __construct($database = null, $domain_uuid = null, $user_uuid = null) {
 
+			//intitialize as empty arrays
+			$this->groups = [];
+			$this->permissions = [];
+
 			//handle the database object
 			if (isset($database)) {
 				$this->database = $database;
 			}
 			else {
-				$this->database = new database;
+				$this->database = database::new();
 			}
 
 			//set the domain_uuid
@@ -75,7 +80,9 @@ if (!class_exists('permissions')) {
 				$this->groups = $groups->assigned();
 
 				//get the list of groups assigned to the user
-				$this->permissions = $this->assigned();
+				if (!empty($this->groups)) {
+					$this->assigned();
+				}
 			}
 		}
 
@@ -93,7 +100,7 @@ if (!class_exists('permissions')) {
 		public function add($permission, $type) {
 			//add the permission if it is not in array
 			if (!$this->exists($permission)) {
-				$_SESSION["permissions"][$permission] = $type;
+				$this->permissions[$permission] = $type;
 			}
 		}
 
@@ -102,15 +109,15 @@ if (!class_exists('permissions')) {
 		 * @var string $permission
 		 */
 		public function delete($permission, $type) {
-			if ($this->exists($permission) && !empty($_SESSION["permissions"][$permission])) {
+			if ($this->exists($permission) && !empty($this->permissions[$permission])) {
 				if ($type === "temp") {
-					if ($_SESSION["permissions"][$permission] === "temp") {
-						unset($_SESSION["permissions"][$permission]);
+					if ($this->permissions[$permission] === "temp") {
+						unset($this->permissions[$permission]);
 					}
 				}
 				else {
-					if ($_SESSION["permissions"][$permission] !== "temp") {
-						unset($_SESSION["permissions"][$permission]);
+					if ($this->permissions[$permission] !== "temp") {
+						unset($this->permissions[$permission]);
 					}
 				}
 			}
@@ -127,30 +134,27 @@ if (!class_exists('permissions')) {
 				return true;
 			}
 
-			//set default to false
-			$result = false;
-
 			//search for the permission
-			if (!empty($this->permissions) && !empty($permission_name)) {
-				foreach($this->permissions as $key => $value) {
-					if ($key == $permission_name) {
-						$result = true;
-						break;
-					}
-				}
+			if (!empty($permission_name)) {
+				return isset($this->permissions[$permission_name]);
 			}
 
-			//return the result
-			return $result;
+			return false;
 		}
 
 		/**
 		 * get the assigned permissions
 		 * @var array $groups
 		 */
-		public function assigned() {
+		private function assigned() {
 			//define the array
+			$permissions = [];
 			$parameter_names = [];
+
+			//return empty array if there are no groups
+			if (empty($this->groups)) {
+				return [];
+			}
 
 			//prepare the parameters
 			$x = 0;
@@ -165,15 +169,18 @@ if (!class_exists('permissions')) {
 			//get the permissions assigned to the user through the assigned groups
 			$sql = "select distinct(permission_name) from v_group_permissions ";
 			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-			if (is_array($parameter_names) && @sizeof($parameter_names) != 0) {
-				$sql .= "and group_name in (".implode(", ", $parameter_names).") \n";
-			}
+			$sql .= "and group_name in (".implode(", ", $parameter_names).") \n";
 			$sql .= "and permission_assigned = 'true' ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
-			$permissions = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters, $result);
-			return $permissions;
+			$group_permissions = $this->database->select($sql, $parameters, 'all');
+
+			//format the permission array
+			foreach ($group_permissions as $row) {
+				$permissions[$row['permission_name']] = 1;
+			}
+
+			//save permissions to this object
+			$this->permissions = $permissions;
 		}
 
 		/**
@@ -181,11 +188,21 @@ if (!class_exists('permissions')) {
 		 */
 		public function session() {
 			if (!empty($this->permissions)) {
-				foreach ($this->permissions as $row) {
-					$_SESSION['permissions'][$row["permission_name"]] = true;
-					$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
+				foreach ($this->permissions as $permission_name => $row) {
+					$_SESSION['permissions'][$permission_name] = true;
+					$_SESSION["user"]["permissions"][$permission_name] = true;
 				}
 			}
+		}
+
+		/**
+		 * Returns a new permission object
+		 */
+		public static function new($database = null, $domain_uuid = null, $user_uuid = null) {
+			if (self::$permission === null) {
+				self::$permission = new permissions($database, $domain_uuid, $user_uuid);
+			}
+			return self::$permission;
 		}
 
 	}
@@ -194,11 +211,9 @@ if (!class_exists('permissions')) {
 //examples
 	/*
 	//add the permission
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add($permission);
 	//delete the permission
-		$p = new permissions;
+		$p = permissions::new();
 		$p->delete($permission);
 	*/
-
-?>

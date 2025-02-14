@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,6 +37,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -84,7 +87,6 @@
 	$sql .= "and meeting_uuid = :meeting_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'] ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -95,7 +97,6 @@
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-	
 
 //get the list
 	$sql = "select * from v_conference_sessions ";
@@ -105,7 +106,6 @@
 	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'] ?? '';
-	$database = new database;
 	$conference_sessions = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -134,7 +134,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-conference_sessions']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_sessions']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'conference_rooms.php']);
 	if (permission_exists('conference_session_delete') && $conference_sessions) {
@@ -158,6 +158,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='meeting_uuid' value=\"".escape($meeting_uuid)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_session_delete')) {
@@ -244,6 +245,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

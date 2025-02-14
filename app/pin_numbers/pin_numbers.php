@@ -126,7 +126,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-pin_numbers']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-pin_numbers']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>'margin-right: 15px;','link'=>'pin_download.php']);
 	if (permission_exists('pin_number_add')) {

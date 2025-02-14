@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -36,6 +36,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -161,12 +164,11 @@
 			$array['dialplans'][0]["app_uuid"] = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 
 		//add the dialplan permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("dialplan_add", "temp");
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database = new database;
 			$database->app_name = "conference_centers";
 			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 			$database->save($array);
@@ -216,7 +218,6 @@
 		$sql .= "and conference_center_uuid = :conference_center_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_center_uuid'] = $conference_center_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (!empty($row)) {
 			$conference_center_uuid = $row["conference_center_uuid"];
@@ -338,6 +339,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -479,6 +481,7 @@
 	echo "</td>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br /><br />";
 
 	if ($action == "update") {

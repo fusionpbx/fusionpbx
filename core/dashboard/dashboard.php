@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021-2023
+	Portions created by the Initial Developer are Copyright (C) 2021-2024
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -83,103 +83,6 @@
 		$search = strtolower($_GET["search"]);
 	}
 
-
-//action add or update
-// 	if (isset($_REQUEST["export"])) {
-// 		$export = $_REQUEST["export"];
-// 	}
-//
-//expore settings
-// 	if (isset($export) && $export == 'true') {
-//
-// 		//get the dashboard
-// 			$sql = "select ";
-// 			$sql .= "dashboard_uuid, ";
-// 			$sql .= "dashboard_name, ";
-// 			$sql .= "dashboard_path, ";
-// 			$sql .= "dashboard_order, ";
-// 			$sql .= "cast(dashboard_enabled as text), ";
-// 			$sql .= "dashboard_description ";
-// 			$sql .= "from v_dashboard ";
-// 			$database = new database;
-// 			$dashboard_widgets = $database->select($sql, $parameters, 'all');
-// 			unset($sql, $parameters);
-//
-// 		//prepare the array
-// 			if (is_array($dashboard_widgets)) {
-// 				$x = 0;
-// 				$y = 0;
-// 				foreach ($dashboard_widgets as $row) {
-// 					//add to the array
-// 					$array['dashboard'][$x]['dashboard_uuid'] = $row["dashboard_uuid"];
-// 					$array['dashboard'][$x]['dashboard_name'] = $row["dashboard_name"];
-// 					$array['dashboard'][$x]['dashboard_path'] = $row["dashboard_path"];
-// 					$array['dashboard'][$x]['dashboard_order'] = $row["dashboard_order"];
-// 					$array['dashboard'][$x]['dashboard_enabled'] = $row["dashboard_enabled"] ?? 'false';
-// 					$array['dashboard'][$x]['dashboard_description'] = $row["dashboard_description"];
-//
-// 					//get the dashboard groups
-// 					$sql = "select ";
-// 					$sql .= "dashboard_group_uuid, ";
-// 					$sql .= "dashboard_uuid, ";
-// 					$sql .= "group_uuid, ";
-// 					$sql .= "(select group_name from v_groups where v_dashboard_groups.group_uuid = group_uuid) as group_name ";
-// 					$sql .= "from v_dashboard_groups ";
-// 					$sql .= "where dashboard_uuid = :dashboard_uuid ";
-// 					$parameters['dashboard_uuid'] = $row["dashboard_uuid"];
-// 					$database = new database;
-// 					$dashboard_groups = $database->select($sql, $parameters, 'all');
-// 					unset($sql, $parameters);
-// 					if (is_array($dashboard_groups)) {
-// 						$y = 0;
-// 						foreach ($dashboard_groups as $row) {
-// 							$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = $row["dashboard_group_uuid"];
-// 							$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = $row["dashboard_uuid"];
-// 							//$array['dashboard'][$x]['dashboard_groups'][$y]['group_uuid'] = $row["group_uuid"];
-// 							$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = $row["group_name"];
-// 							$y++;
-// 						}
-// 					}
-//
-// 					$x++;
-// 				}
-// 			}
-//
-// 		//write the code
-// 			echo "<textarea style=\"width: 100%; max-width: 100%; height: 100%; max-height: 100%;\">\n";
-// 			if (is_array($array['dashboard'])) {
-// 				echo "\n\n\n";
-// 				//echo "\$x = 0;\n";
-// 				foreach ($array['dashboard'] as $row) {
-// 					foreach ($row as $key => $value) {
-// 						if (is_array($value)) {
-// 							echo "\$y = 0;\n";
-// 							$count = count($value);
-// 							$i = 1;
-// 							foreach ($value as $row) {
-// 								foreach ($row as $key => $value) {
-// 									echo "\$array['dashboard'][\$x]['dashboard_groups'][\$y]['{$key}'] = '{$value}';\n";
-// 								}
-// 								if ($i < $count) {
-// 									echo "\$y++;\n";
-// 								}
-// 								else {
-// 									echo "\n\n---------------------------\n\n\n";
-// 								}
-// 								$i++;
-// 							}
-// 						}
-// 						else {
-// 							echo "\$array['dashboard'][\$x]['{$key}'] = '{$value}';\n";
-// 						}
-// 					}
-// 				}
-// 			}
-//
-// 			echo "</textarea>\n";
-// 			exit;
-// 	}
-
 //get the count
 	$sql = "select count(dashboard_uuid) ";
 	$sql .= "from v_dashboard ";
@@ -197,7 +100,8 @@
 //get the list
 	$sql = "select \n";
 	$sql .= "dashboard_uuid, \n";
-	$sql .= "dashboard_name,\n";
+	$sql .= "dashboard_name, \n";
+	$sql .= "dashboard_icon, \n";
 	$sql .= "( \n";
 	$sql .= "	select \n";
 	$sql .= "	string_agg(g.group_name, ', ') \n";
@@ -219,7 +123,7 @@
 		$sql .= ")\n";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$sql .= order_by($order_by, $order, 'dashboard_order', 'asc');
+	$sql .= order_by($order_by, $order, 'dashboard_order, dashboard_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
 	$database = new database;
 	$dashboard = $database->select($sql, $parameters ?? null, 'all');
@@ -235,7 +139,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-dashboard']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-dashboard']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','name'=>'btn_back','style'=>'margin-right: 15px;','link'=>'index.php']);
 	if (permission_exists('dashboard_add')) {
@@ -272,11 +176,11 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('dashboard_add') || permission_exists('dashboard_edit') || permission_exists('dashboard_delete')) {
@@ -286,6 +190,7 @@
 	}
 	echo th_order_by('dashboard_name', $text['label-dashboard_name'], $order_by, $order);
 	echo th_order_by('dashboard_groups', $text['label-dashboard_groups'], $order_by, $order);
+	echo th_order_by('dashboard_icon', $text['label-icons'], $order_by, $order);
 	echo th_order_by('dashboard_order', $text['label-dashboard_order'], $order_by, $order);
 	echo th_order_by('dashboard_enabled', $text['label-dashboard_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-dashboard_description']."</th>\n";
@@ -316,6 +221,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['dashboard_groups'])."</td>\n";
+			echo "	<td>".escape($row['dashboard_icon'])."</td>\n";
 			echo "	<td>".escape($row['dashboard_order'])."</td>\n";
 			if (permission_exists('dashboard_edit')) {
 				echo "	<td class='no-link center'>\n";
@@ -340,6 +246,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

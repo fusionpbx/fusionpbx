@@ -33,7 +33,7 @@
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						include($config_path);
 						$x++;
 					}
@@ -95,7 +95,7 @@
 						}
 						if (is_array($array) && @sizeof($array) != 0) {
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('group_permission_delete', 'temp');
 							//execute delete
 								$database = new database;
@@ -130,7 +130,7 @@
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						include($config_path);
 						$x++;
 					}
@@ -185,7 +185,7 @@
 
 					if (is_array($array) && @sizeof($array)) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('group_permission_add', 'temp');
 
 						//execute insert

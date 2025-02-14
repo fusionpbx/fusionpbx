@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -218,6 +218,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -370,7 +371,7 @@
 		$recordings = $database->select($sql, $parameters, 'all');
 		if (is_array($recordings) && @sizeof($recordings) != 0) {
 			echo "<optgroup label='Recordings'>\n";
-			foreach ($recordings as &$row) {
+			foreach ($recordings as $row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
 				if ($music_on_hold_chime_list == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($music_on_hold_chime_list)) {
@@ -396,7 +397,7 @@
 		$result = $database->select($sql, $parameters, 'all');
 		if (is_array($result) && @sizeof($result) != 0) {
 			echo "<optgroup label='Phrases'>\n";
-			foreach ($result as &$row) {
+			foreach ($result as $row) {
 				if ($music_on_hold_chime_list == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
 					echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
@@ -497,6 +498,7 @@
 	}
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br /><br />";
 
 	if ($action == "update") {

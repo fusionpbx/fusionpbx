@@ -6,7 +6,7 @@ CREATE TABLE agents (
    name character varying(255),
    instance_id character varying(255),
    type character varying(255),
-   contact character varying(255),
+   contact character varying(1024),
    status character varying(255),
    state character varying(255),
    max_no_answer integer DEFAULT 0 NOT NULL,

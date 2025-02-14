@@ -9,7 +9,7 @@ if ($domains_processed == 1) {
 	//get the $apps array from the installed apps from the core and mod directories
 		$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 		$x = 0;
-		foreach ($config_list as &$config_path) {
+		foreach ($config_list as $config_path) {
 			include($config_path);
 			$x++;
 		}
@@ -45,7 +45,7 @@ if ($domains_processed == 1) {
 	//save the data to the database
 		if (!empty($array)) {
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('permission_add', 'temp');
 
 			//execute insert

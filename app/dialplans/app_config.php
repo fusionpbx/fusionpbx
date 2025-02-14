@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels selon des conditions et contextes.  Vous pouvez en utiliser pour diriger les appels vers les passerelles, IVR, numéross exterieurs ou tout autre destination.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "დარეკვის გეგმა გამოიყენება ზარის კონტექსტისა და პირობების მიხედვით მარშრუტიზაციისთვის. შეგიძლიათ გამოიყენოთ ზარების გეგმა, რომ ზარები გადაუშვათ კვანძებზე, ავტომდივნებზე, გარე ნომრებზე და სკრიპტებზე.";
 		$apps[$x]['description']['nl-nl'] = "Het kiesplan wordt gebruikt om oproep bestemmingen die aan de voorwaarden en context voldoet te kiezen. het kiespaln kan worden gebruikt om oproepen naar gateways, antwoordapparaten, externe nummers, scripts of enig andere bestemming te kiezen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

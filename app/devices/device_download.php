@@ -73,7 +73,7 @@
 		}
 
 		//find and remove the "|2" that denotes a duplicate header
-		foreach ($headers as &$header) {
+		foreach ($headers as $header) {
 			$pos = strpos($header, '|');
 			if ($pos !== false) {
 				$header = substr($header, 0, $pos);

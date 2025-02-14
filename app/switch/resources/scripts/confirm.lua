@@ -16,14 +16,14 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2015
+--	Copyright (C) 2010-2024
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
 --include config.lua
-	require "resources.functions.config";
+require "resources.functions.config";
 
 --set variables
 	digit_timeout = "5000";
@@ -40,7 +40,7 @@
 			--session:sleep(1000);
 
 		--get the variables
-			uuid = session:getVariable("uuid");
+			call_uuid = session:getVariable("call_uuid");
 			domain_name = session:getVariable("domain_name");
 			context = session:getVariable("context");
 			sounds_dir = session:getVariable("sounds_dir");
@@ -56,6 +56,11 @@
 		--prepare the api
 			api = freeswitch.API();
 
+		--get the domain_name with a different variable if the domain_name is not set
+			if (not domain_name) then 
+				domain_name = session:getVariable("sip_invite_domain");
+			end
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -64,10 +69,30 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--create the settings object
+			--local Settings = require "resources.functions.lazy_settings";
+			--local settings = Settings.new(dbh, domain_name, domain_uuid);
+
+		--get the recordings dir
+			--recordings_dir = settings:get('switch', 'recordings', 'dir');
+
+		--set the default record extension
+			if (record_ext == nil) then
+				record_ext = 'wav';
+			end
+
+		--prepare the recording path
+			record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+			record_path = record_path:gsub("\\", "/");
+
 		--if the screen file is found then set confirm to true
 			if (domain_name ~= nil) then
 				if (file_exists(temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext)) then
 					call_screen_file = temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
+					confirm = "true";
+				end
+				if (file_exists(record_path.."/call_screen."..call_uuid .."."..record_ext)) then
+					call_screen_file = record_path.."/call_screen."..call_uuid .."."..record_ext;
 					confirm = "true";
 				end
 			end

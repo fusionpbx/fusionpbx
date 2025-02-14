@@ -83,7 +83,7 @@
 
 		if (is_array($array) && sizeof($array) != 0) {
 			//update ring group
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('ring_group_edit', 'temp');
 
 				$database->app_name = 'ring_groups';
@@ -196,12 +196,12 @@
 		echo "						labels: {\n";
 		echo "							usePointStyle: true,\n";
 		echo "							pointStyle: 'rect',\n";
-		echo "							color: '".$dashboard_heading_text_color."'\n";
+		echo "							color: '".$dashboard_label_text_color."'\n";
 		echo "						}\n";
 		echo "					},\n";
 		echo "					title: {\n";
 		echo "						text: '".$text['header-ring-group-forward']."',\n";
-		echo "						color: '".$dashboard_heading_text_color."'\n";
+		echo "						color: '".$dashboard_label_text_color."'\n";
 		echo "					}\n";
 		echo "				}\n";
 		echo "			},\n";

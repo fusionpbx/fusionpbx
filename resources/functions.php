@@ -149,12 +149,11 @@
 		function uuid() {
 			$uuid = null;
 			if (PHP_OS === 'FreeBSD') {
-				$uuid = trim(shell_exec("uuid -v 4"));
+				$uuid = trim(shell_exec("uuidgen"));
 				if (is_uuid($uuid)) {
 					return $uuid;
 				} else {
-					echo "Please install the following package.\n";
-					echo "pkg install ossp-uuid\n";
+					echo "Please install uuidgen.\n";
 					exit;
 				}
 			}
@@ -167,7 +166,7 @@
 					if (is_uuid($uuid)) {
 						return $uuid;
 					} else {
-						echo "Please install the uuidgen.\n";
+						echo "Please install uuidgen.\n";
 						exit;
 					}
 				}
@@ -323,9 +322,10 @@
 	//check if the permission exists
 	if (!function_exists('permission_exists')) {
 
-		function permission_exists($permission_name, $operator = 'or') {
+		function permission_exists($permission_name) {
+			global $domain_uuid, $user_uuid;
 			$database = database::new();
-			$permission = new permissions($database);
+			$permission = permissions::new($database, $domain_uuid, $user_uuid);
 			return $permission->exists($permission_name);
 		}
 
@@ -723,7 +723,7 @@
 					$array['extension_users'][$x]['extension_uuid'] = $extension_uuid;
 					$array['extension_users'][$x]['user_uuid'] = $row["user_uuid"];
 					//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_user_add', 'temp');
 					//execute insert
 					$database = database::new();
@@ -772,7 +772,7 @@
 				$array['user_groups'][0]['user_uuid'] = $user_uuid;
 
 				//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('user_add', 'temp');
 				$p->add('user_group_add', 'temp');
 				//execute insert
@@ -845,7 +845,7 @@
 		if (is_numeric(trim($phone_number ?? '', ' +'))) {
 			if (isset($_SESSION["format"]["phone"])) {
 				$phone_number = trim($phone_number, ' +');
-				foreach ($_SESSION["format"]["phone"] as &$format) {
+				foreach ($_SESSION["format"]["phone"] as $format) {
 					$format_count = substr_count($format, 'x');
 					$format_count = $format_count + substr_count($format, 'R');
 					$format_count = $format_count + substr_count($format, 'r');
@@ -1045,19 +1045,23 @@
 
 //check password strength against requirements (if any)
 	function check_password_strength($password, $text, $type = 'default') {
+
+		//initialize the settigns object
+		$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid']]);
+
 		if (!empty($password)) {
 			if ($type == 'default') {
-				$req['length'] = $_SESSION['extension']['password_length']['numeric'];
-				$req['number'] = ($_SESSION['extension']['password_number']['boolean'] == 'true') ? true : false;
-				$req['lowercase'] = ($_SESSION['extension']['password_lowercase']['boolean'] == 'true') ? true : false;
-				$req['uppercase'] = ($_SESSION['extension']['password_uppercase']['boolean'] == 'true') ? true : false;
-				$req['special'] = ($_SESSION['extension']['password_special']['boolean'] == 'true') ? true : false;
+				$req['length'] = $settings->get('extension', 'password_length', '10');
+				$req['number'] = $settings->get('extension', 'password_number', true);
+				$req['lowercase'] = $settings->get('extension', 'password_lowercase', true);
+				$req['uppercase'] = $settings->get('extension', 'password_uppercase', false);
+				$req['special'] = $settings->get('extension', 'password_special', false);
 			} elseif ($type == 'user') {
-				$req['length'] = $_SESSION['user']['password_length']['numeric'];
-				$req['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
-				$req['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
-				$req['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
-				$req['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
+				$req['length'] = $settings->get('users', 'password_length', '10');
+				$req['number'] = $settings->get('users', 'password_number', true);
+				$req['lowercase'] = $settings->get('users', 'password_lowercase', true);
+				$req['uppercase'] = $settings->get('users', 'password_uppercase', false);
+				$req['special'] = $settings->get('users', 'password_special', false);
 			}
 			if (is_numeric($req['length']) && $req['length'] != 0 && !preg_match_all('$\S*(?=\S{' . $req['length'] . ',})\S*$', $password)) { // length
 				$msg_errors[] = $req['length'] . '+ ' . $text['label-characters'];
@@ -2468,4 +2472,55 @@ if (!function_exists('url_get_contents')) {
 	}
 }
 
-?>
+//get system memory details
+if (!function_exists('get_memory_details')) {
+	function get_memory_details() {
+		if (PHP_OS == 'Linux') {
+			$meminfo = file_get_contents("/proc/meminfo");
+			$data = [];
+
+			foreach (explode("\n", $meminfo) as $line) {
+				if (preg_match('/^(\w+):\s+(\d+)\skB$/', $line, $matches)) {
+					$data[$matches[1]] = $matches[2];
+				}
+			}
+
+			if (isset($data['MemTotal']) && isset($data['MemAvailable'])) {
+				$array['total_memory'] = $data['MemTotal'];
+				$array['available_memory'] = $data['MemAvailable'];
+				$array['used_memory'] = $array['total_memory'] - $array['available_memory'];
+
+				$array['memory_usage'] = ($array['used_memory'] / $array['total_memory']) * 100;
+				$array['memory_percent'] = round($array['memory_usage'], 2);
+				return $array;
+			}
+		}
+
+		if (PHP_OS == 'FreeBSD') {
+			//define the output array
+			$output = [];
+
+			// get the memory information using sysctl
+			exec('sysctl -n hw.physmem hw.pagesize vm.stats.vm.v_free_count vm.stats.vm.v_inactive_count vm.stats.vm.v_cache_count vm.stats.vm.v_wire_count', $output);
+
+			if (count($output) === 6) {
+				list($array['total_memory'], $page_size, $free_pages, $inactive_pages, $cache_pages, $wired_pages) = $output;
+
+				// total memory in bytes
+				$array['total_memory'] = (int)$array['total_memory'];
+
+				// pages to bytes conversion
+				$array['available_memory'] = ($free_pages + $inactive_pages + $cache_pages) * (int)$page_size;
+				$array['used_memory'] = $array['total_memory'] - $array['available_memory'];
+
+				// calculate memory usage percentage
+				$array['memory_usage'] = ($array['used_memory'] / $array['total_memory']) * 100;
+
+				$array['memory_percent'] = round($array['memory_usage'], 2) . '%';
+				return $array;
+			}
+		}
+
+		return false;
+	}
+}

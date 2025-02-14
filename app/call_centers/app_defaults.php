@@ -45,7 +45,7 @@ if ($domains_processed == 1) {
 		$sql .= "and (t.call_center_queue_uuid is null or t.call_center_agent_uuid is null) ";
 		$tiers = $database->select($sql, null, 'all');
 		if (!empty($tiers)) {
-			foreach ($tiers as $index => &$row) {
+			foreach ($tiers as $index => $row) {
 				if ($row['call_center_queue_uuid'] == null && $row['queue_uuid'] != null) {
 					$array['call_center_tiers'][$index]['call_center_queue_uuid'] = $row['queue_uuid'];
 				}
@@ -58,7 +58,7 @@ if ($domains_processed == 1) {
 			}
 
 			if (!empty($array)) {
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('call_center_tier_edit', 'temp');
 
 				$database->app_name = 'call_centers';
@@ -168,7 +168,7 @@ if ($domains_processed == 1) {
 		//save the array to the database
 		if (!empty($array)) {
 			//add the dialplan permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("dialplan_add", "temp");
 				$p->add("dialplan_edit", "temp");
 

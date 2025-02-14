@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Renvoi d'appel, Follow Me et ne pas deranger.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "ზარის გადამისამართება, მომყევი და არ შემაწუხო.";
 		$apps[$x]['description']['nl-nl'] = "Oproep doorsturen, Volg mij en Niet storen";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Desvio de chamadas, Siga-me e Não perturbe (DND).";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,6 +38,10 @@ class plugin_database {
 	public $domain_uuid;
 	public $user_uuid;
 	public $contact_uuid;
+	public $contact_organization;
+	public $contact_name_given;
+	public $contact_name_family;
+	public $contact_image;
 	public $username;
 	public $password;
 	public $key;
@@ -48,26 +52,30 @@ class plugin_database {
 	 * database checks the local database to authenticate the user or key
 	 * @return array [authorized] => true or false
 	 */
-	function database() {
+	function database(authentication $auth, settings $settings) {
 
 		//pre-process some settings
-			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
-			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
-			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
-			$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
-			$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
-			$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
-			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
-			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
+			$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH.'/themes/default/favicon.ico');
+			$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH.'/themes/default/images/logo_login.png');
+			$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
+			$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
+			$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
+			$background_videos = $settings->get('theme', 'background_video', null);
+			$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
+			$login_domain_name_visible = $settings->get('login', 'domain_name_visible');
+			$login_domain_name = $settings->get('login', 'domain_name');
+			$login_destination = $settings->get('login', 'destination');
+			$users_unique = $settings->get('users', 'unique', '');
 
-		//already authorized
+		//determine whether to show the forgot password for resetting the password
+			$login_password_reset_enabled = false;
+			if (!empty($settings->get('login', 'password_reset_key'))) {
+				$login_password_reset_enabled = true;
+			}
+
+		//check if already authorized
 			if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
 				return;
-			}
-			else {
-				if (isset($_SESSION['authentication']['plugin']['database']) && !$_SESSION['authentication']['plugin']['database']["authorized"]) {
-					//authorized false
-				}
 			}
 
 		//show the authentication code view
@@ -96,22 +104,26 @@ class plugin_database {
 					$view->assign("login_title", $text['button-login']);
 					$view->assign("label_username", $text['label-username']);
 					$view->assign("label_password", $text['label-password']);
+					$view->assign("label_domain", $text['label-domain']);
 					$view->assign("button_login", $text['button-login']);
 
 				//assign default values to the template
 					$view->assign("project_path", PROJECT_PATH);
-					$view->assign("login_destination_url", $settings['login']['destination']);
-					$view->assign("favicon", $settings['theme']['favicon']);
-					$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
-					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
-					$view->assign("login_logo_source", $settings['theme']['logo']);
-					$view->assign("message_delay", $settings['theme']['message_delay']);
-					$view->assign("background_video", $settings['theme']['background_video']);
- 					//if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && $_SESSION['authentication']['plugin']['database']['authorized'] == 1 && !empty($_SESSION['username'])) {
+					$view->assign("login_destination_url", $login_destination);
+					$view->assign("login_domain_name_visible", $login_domain_name_visible);
+					$view->assign("login_domain_names", $login_domain_name);
+					$view->assign("login_password_reset_enabled", $login_password_reset_enabled);
+					$view->assign("favicon", $theme_favicon);
+					$view->assign("login_logo_width", $theme_login_logo_width);
+					$view->assign("login_logo_height", $theme_login_logo_height);
+					$view->assign("login_logo_source", $theme_logo);
+					$view->assign("message_delay", $theme_message_delay);
+					$view->assign("background_video", $theme_background_video);
+					$view->assign("login_password_description", $text['label-password_description']);
+					$view->assign("button_cancel", $text['button-cancel']);
+					$view->assign("button_forgot_password", $text['button-forgot_password']);
 					if (!empty($_SESSION['username'])) {
-						$view->assign("login_password_description", $text['label-password_description']);
 						$view->assign("username", $_SESSION['username']);
-						$view->assign("button_cancel", $text['button-cancel']);
 					}
 
 				//messages
@@ -143,34 +155,63 @@ class plugin_database {
 			if (isset($_REQUEST["password"])) {
 				$this->password = $_REQUEST["password"];
 			}
-			if (isset($_SESSION['username'])) {
-				$this->username = $_SESSION['username'];
-			}
 			if (isset($_REQUEST["key"])) {
 				$this->key = $_REQUEST["key"];
 			}
+			if (isset($_REQUEST["domain_name"])) {
+				$domain_name = $_REQUEST["domain_name"];
+				$this->domain_name = $_REQUEST["domain_name"];
+			}
 
 		//get the domain name
-			$auth = new authentication;
 			$auth->get_domain();
-			$this->domain_uuid = $_SESSION['domain_uuid'] ?? null;
-			$this->domain_name = $_SESSION['domain_name'] ?? null;
 			$this->username = $_SESSION['username'] ?? null;
+			//$this->domain_uuid = $_SESSION['domain_uuid'] ?? null;
+			//$this->domain_name = $_SESSION['domain_name'] ?? null;
 
 		//debug information
 			//echo "domain_uuid: ".$this->domain_uuid."<br />\n";
+			//view_array($this->domain_uuid, false);
 			//echo "domain_name: ".$this->domain_name."<br />\n";
 			//echo "username: ".$this->username."<br />\n";
 
 		//set the default status
 			$user_authorized = false;
 
+		//check if contacts app exists
+			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/contacts/') ? true : false;
+
 		//check the username and password if they don't match then redirect to the login
-			$sql = "select u.user_uuid, u.contact_uuid, u.username, u.password, ";
-			$sql .= "u.user_email, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
-			$sql .= "from v_users as u, v_domains as d ";
-			$sql .= "where u.domain_uuid = d.domain_uuid ";
-			$sql .= "and (user_type = 'default' or user_type is null) ";
+			$sql = "select ";
+			$sql .= "	d.domain_name, ";
+			$sql .= "	u.user_uuid, ";
+			$sql .= "	u.contact_uuid, ";
+			$sql .= "	u.username, ";
+			$sql .= "	u.password, ";
+			$sql .= "	u.user_email, ";
+			$sql .= "	u.salt, ";
+			$sql .= "	u.api_key, ";
+			$sql .= "	u.domain_uuid ";
+			if ($contacts_exists) {
+				$sql .= ",";
+				$sql .= "c.contact_organization, ";
+				$sql .= "c.contact_name_given, ";
+				$sql .= "c.contact_name_family, ";
+				$sql .= "a.contact_attachment_uuid ";
+			}
+			$sql .= "from ";
+			$sql .= "	v_domains as d, ";
+			$sql .= "	v_users as u ";
+			if ($contacts_exists) {
+				$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid and u.contact_uuid is not null ";
+				$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = 1 and a.attachment_filename is not null and a.attachment_content is not null ";
+			}
+			$sql .= "where ";
+			$sql .= "	u.domain_uuid = d.domain_uuid ";
+			$sql .= "	and (";
+			$sql .= "		user_type = 'default' ";
+			$sql .= "		or user_type is null";
+			$sql .= "	) ";
 			if (isset($this->key) && strlen($this->key) > 30) {
 				$sql .= "and u.api_key = :api_key ";
 				$parameters['api_key'] = $this->key;
@@ -182,7 +223,7 @@ class plugin_database {
 				$sql .= ")\n";
 				$parameters['username'] = $this->username;
 			}
-			if ($settings['users']['unique'] === "global") {
+			if ($users_unique === "global") {
 				//unique username - global (example: email address)
 			}
 			else {
@@ -191,8 +232,7 @@ class plugin_database {
 				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
-			$database = new database;
-			$row = $database->select($sql, $parameters, 'row');
+			$row = $settings->database()->select($sql, $parameters, 'row');
 			if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 
 				//validate the password
@@ -226,7 +266,7 @@ class plugin_database {
 							$_SESSION["domain_name"] = $this->domain_name;
 
 						//set the domain setting
-							if ($settings['users']['unique'] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
+							if ($users_unique === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
 								$domain = new domains();
 								$domain->set();
 							}
@@ -236,6 +276,12 @@ class plugin_database {
 							$this->username = $row['username'];
 							$this->user_email = $row['user_email'];
 							$this->contact_uuid = $row['contact_uuid'];
+							if ($contacts_exists) {
+								$this->contact_organization = $row['contact_organization'];
+								$this->contact_name_given = $row['contact_name_given'];
+								$this->contact_name_family = $row['contact_name_family'];
+								$this->contact_image = $row['contact_attachment_uuid'];
+							}
 
 						//debug info
 							//echo "user_uuid ".$this->user_uuid."<br />\n";
@@ -258,6 +304,7 @@ class plugin_database {
 						if (password_needs_rehash($row["password"], PASSWORD_DEFAULT, $options)) {
 
 							//build user insert array
+								$array = [];
 								$array['users'][0]['user_uuid'] = $this->user_uuid;
 								$array['users'][0]['domain_uuid'] = $this->domain_uuid;
 								$array['users'][0]['user_email'] = $this->user_email;
@@ -271,14 +318,13 @@ class plugin_database {
 								$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
 
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('user_edit', 'temp');
 
 							//execute insert
-								$database = new database;
-								$database->app_name = 'authentication';
-								$database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
-								$database->save($array);
+								$settings->database()->app_name = 'authentication';
+								$settings->database()->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
+								$settings->database()->save($array);
 								unset($array);
 
 							//revoke temporary permissions
@@ -286,18 +332,6 @@ class plugin_database {
 
 						}
 
-					}
-					else {
-						//clear authentication session
-						if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods']) || sizeof($_SESSION['authentication']['methods']) == 0) {
-							unset($_SESSION['authentication']);
-						}
-
-						// clear username
-						if (!empty($_REQUEST["password"])) {
-							unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
-							unset($_SESSION['authentication']);
-						}
 					}
 
 					//result array
@@ -308,6 +342,12 @@ class plugin_database {
 						$result["user_uuid"] = $this->user_uuid;
 						$result["domain_uuid"] = $_SESSION['domain_uuid'];
 						$result["contact_uuid"] = $this->contact_uuid;
+						if ($contacts_exists) {
+							$result["contact_organization"] = $this->contact_organization;
+							$result["contact_name_given"] = $this->contact_name_given;
+							$result["contact_name_family"] = $this->contact_name_family;
+							$result["contact_image"] = $this->contact_image;
+						}
 						$result["user_email"] = $this->user_email;
 						$result["sql"] = $sql;
 						$result["authorized"] = $valid_password;
@@ -317,12 +357,7 @@ class plugin_database {
 					return $result ?? false;
 
 			}
-			else {
 
-				unset($_SESSION['username'], $_REQUEST['username'], $_POST['username']);
-				unset($_SESSION['authentication']);
-
-			}
 
 		return;
 

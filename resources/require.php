@@ -121,7 +121,7 @@
 
 //class auto loader
 	if (!class_exists('auto_loader')) {
-		include "resources/classes/auto_loader.php";
+		require_once "resources/classes/auto_loader.php";
 		$autoload = new auto_loader();
 	}
 
@@ -131,7 +131,6 @@
 	}
 	require_once "resources/functions.php";
 	if (is_array($conf) && count($conf) > 0) {
-		require_once "resources/pdo.php";
 		if (!defined('STDIN')) {
 			require_once "resources/cidr.php";
 		}

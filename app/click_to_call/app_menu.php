@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Cliquez pour Appeller";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "לחצו על Call";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Clicca e Chiama";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "რეკვა წკაპით";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Klik voor oproep";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Click to Call";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Clique para ligar";

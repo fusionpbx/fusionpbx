@@ -159,7 +159,7 @@
 
 				//add or update the device keys
 					if (is_array($_POST['device_keys'])) {
-						foreach ($_POST['device_keys'] as &$row) {
+						foreach ($_POST['device_keys'] as $row) {
 
 							//validate the data
 								$save = true;
@@ -187,7 +187,7 @@
 							//process the profile keys
 								if (!empty($row["device_profile_uuid"])) {
 									//get the profile key settings from the array
-										foreach ($device_profile_keys as &$field) {
+										foreach ($device_profile_keys as $field) {
 											if ($device_key_uuid == $field["device_key_uuid"]) {
 												$database = $field;
 												break;
@@ -259,7 +259,7 @@
 								}
 								if ($save) {
 									//add the temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('device_keys_add', 'temp');
 										$p->add('device_key_edit', 'temp');
 

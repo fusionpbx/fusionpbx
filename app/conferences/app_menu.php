@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Conférences";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "ועידת";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Conferenze";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "კონფერენციები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferenties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Konferencja";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Conferências";

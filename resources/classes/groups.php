@@ -141,7 +141,7 @@ if (!class_exists('groups')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('group_permission_delete', 'temp');
 
 								//execute delete
@@ -193,7 +193,7 @@ if (!class_exists('groups')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('user_group_delete', 'temp');
 
 								//execute delete
@@ -437,7 +437,7 @@ if (!class_exists('groups')) {
 					$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 
 					//add the temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("group_add", "temp");
 					$p->add("group_edit", "temp");
 
@@ -459,7 +459,7 @@ if (!class_exists('groups')) {
 					//build the apps array
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						include($config_path);
 						$x++;
 					}
@@ -482,7 +482,7 @@ if (!class_exists('groups')) {
 					unset($group_uuids);
 
 					//add the temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("group_permission_add", "temp");
 					$p->add("group_permission_edit", "temp");
 

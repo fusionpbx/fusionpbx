@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,6 +37,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -104,7 +107,6 @@
 		$sql .= ") \n";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
@@ -120,7 +122,6 @@
 	$sql = str_replace('count(*)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'group_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$groups = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
@@ -134,7 +135,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-groups']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-groups']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-users'],'icon'=>$_SESSION['theme']['button_icon_users'],'onclick'=>"window.location='../users/users.php'"]);
 	echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$_SESSION['theme']['button_icon_sync'],'style'=>'margin-right: 15px;','link'=>'permissions_default.php']);
@@ -187,6 +188,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('group_add') || permission_exists('group_edit') || permission_exists('group_delete')) {
@@ -256,6 +258,7 @@ echo "	<td>".escape($row['domain_name'])."</td>\n";
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

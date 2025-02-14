@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -122,7 +125,7 @@
 							$schema[$i]['fields'][] = $field_name;
 						}
 					}
-					$i++;	
+					$i++;
 				}
 			}
 			$schema[$i]['table'] = 'user_groups';
@@ -159,6 +162,7 @@
 			echo $text['description-import']."\n";
 			echo "<br /><br />\n";
 
+			echo "<div class='card'>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 			//loop through user columns
@@ -195,6 +199,7 @@
 			}
 
 			echo "</table>\n";
+			echo "</div>\n";
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
@@ -253,7 +258,6 @@
 
 		//get the groups
 			$sql = "select * from v_groups where domain_uuid is null ";
-			$database = new database;
 			$groups = $database->select($sql, null, 'all');
 			unset($sql);
 
@@ -276,7 +280,7 @@
 
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -318,7 +322,7 @@
 														$array['user_groups'][$row_id]['user_uuid'] = $user_uuid;
 													}
 												}
-	
+
 												//remove superadmin if not the correct permission
 												if ($group_name == 'superadmin') {
 													if (!permission_exists('group_domain')) {
@@ -349,7 +353,6 @@
 								if ($row_id === 1000) {
 
 									//save to the data
-										$database = new database;
 										$database->app_name = 'users';
 										$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 										$database->save($array);
@@ -376,7 +379,6 @@
 
 				//save to the data
 					if (!empty($array)) {
-						$database = new database;
 						$database->app_name = 'users';
 						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
@@ -413,6 +415,8 @@
 	echo $text['description-import']."\n";
 	echo "<br /><br />\n";
 
+
+	echo "<div class='card'>\n";
 	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
@@ -492,8 +496,9 @@
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
-	echo "<br><br>";
+	echo "</div>\n";
 	echo "</form>";
+	echo "<br><br>";
 
 //include the footer
 	require_once "resources/footer.php";

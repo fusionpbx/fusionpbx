@@ -230,7 +230,7 @@ if (!class_exists('conference_centers')) {
 						$database = new database;
 						$conference_sessions = $database->select($sql, $parameters, 'all');
 						if (is_array($conference_sessions)) {
-							foreach ($conference_sessions as &$row) {
+							foreach ($conference_sessions as $row) {
 								$recording = $row['recording'];
 								break;
 							}
@@ -349,7 +349,7 @@ if (!class_exists('conference_centers')) {
 							if (!empty($array)) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('dialplan_detail_delete', 'temp');
 									$p->add('dialplan_delete', 'temp');
 
@@ -425,7 +425,7 @@ if (!class_exists('conference_centers')) {
 							if (!empty($array)) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_room_user_delete', 'temp');
 									$p->add('conference_room_delete', 'temp');
 
@@ -489,7 +489,7 @@ if (!class_exists('conference_centers')) {
 							if (!empty($array)) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_session_detail_delete', 'temp');
 									$p->add('conference_user_delete', 'temp');
 
@@ -578,7 +578,7 @@ if (!class_exists('conference_centers')) {
 							if (!empty($array)) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add("dialplan_edit", "temp");
 
 								//save the array

@@ -176,11 +176,11 @@
 				//set the file name
 				$file_name = 'greeting_'.$i.'.'.$file_ext;
 
-				//set the greeting id	
+				//set the greeting id
 				if (!file_exists($greeting_dir.'/'.$file_name)) {
 					//set the greeting id
 					$greeting_id = $i;
-					
+
 					//end the loop
 					break;
 				}
@@ -223,7 +223,7 @@
 			if (is_array($array) && @sizeof($array) != 0) {
 
 				//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('voicemail_greeting_add', 'temp');
 				$p->add('voicemail_greeting_edit', 'temp');
 
@@ -349,7 +349,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
 	$margin_left = false;
@@ -392,6 +392,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' id='voicemail_id' name='voicemail_id' value='".escape($voicemail_id)."'>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	$col_count = 0;
@@ -422,6 +423,7 @@
 		$col_count++;
 	}
 	echo th_order_by('greeting_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'", "id=".urlencode($voicemail_id));
+	$col_count++;
 	if (permission_exists('voicemail_greeting_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -432,7 +434,7 @@
 		foreach ($greetings as $row) {
 			//playback progress bar
 			if (permission_exists('voicemail_greeting_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_greeting_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'])."','".escape($voicemail_id).'|'.escape($row['voicemail_greeting_uuid'])."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['voicemail_greeting_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_greeting_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
+				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_greeting_uuid'])."' onclick=\"recording_seek(event,'".escape($row['voicemail_greeting_uuid'])."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['voicemail_greeting_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_greeting_uuid'])."'></span></td></tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
 			if (permission_exists('voicemail_greeting_edit')) {
@@ -503,6 +505,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";

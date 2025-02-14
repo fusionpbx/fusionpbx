@@ -121,7 +121,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-registrations']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-registrations']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$reload) {
 		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.(!empty($qs) ? '?'.$qs['show'].$qs['search'].$qs['profile'] : null)]);
@@ -169,6 +169,7 @@
 	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 	echo "<input type='hidden' name='profile' value='".escape($profile ?? '')."'>";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='checkbox'>\n";
@@ -186,7 +187,6 @@
 	echo "	<th class='hide-md-dn'>".$text['label-sip_profile_name']."</th>\n";
 	echo "	<td class='action-button'>&nbsp;</td>\n";
 	echo "</tr>\n";
-
 	if (is_array($registrations) && @sizeof($registrations) != 0) {
 		$x = 0;
 		foreach ($registrations as $row) {
@@ -225,7 +225,7 @@
 				echo "	</td>\n";
 				echo "	<td class=''>".$user."</td>\n";
 				echo "	<td class='' title=\"".escape($row['agent'])."\"><span class='cursor-help'>".escape($row['agent'])."</span></td>\n";
-				echo "	<td class='hide-md-dn'>".escape(explode('"',$row['contact'])[1])."</td>\n";
+				echo "	<td class='hide-md-dn' title='".escape($row['contact'])."'>".escape(explode('"',$row['contact'])[1])."</td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn'>".escape($row['network-port'])."</td>\n";
@@ -252,6 +252,7 @@
 	unset($registrations);
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 

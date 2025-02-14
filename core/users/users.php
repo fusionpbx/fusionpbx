@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,6 +38,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -53,7 +56,6 @@
 	$sql = "select * from view_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters = null;
-	$database = new database;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$row = $database->select($sql, $parameters, 'row');
 	if (isset($row['contact_organization'])) {
@@ -138,7 +140,6 @@
 	$sql .= "	or group_level is null ";
 	$sql .= ") ";
 	$parameters['group_level'] = $_SESSION['user']['group_level'];
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -179,7 +180,6 @@
 	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$sql .= order_by($order_by, $order, 'username', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -193,7 +193,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-users']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-users']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('user_add')) {
 		if (!isset($id)) {
@@ -247,6 +247,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('user_add') || permission_exists('user_edit') || permission_exists('user_delete')) {
@@ -326,6 +327,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

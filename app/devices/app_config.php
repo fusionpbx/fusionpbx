@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Equipements pour provisioning.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მოწყობილობები სამუშაოდ მოსამზადებლად(for provisioning).";
 		$apps[$x]['description']['nl-nl'] = "Voorzieningen voor toestellen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Provisionamento de telefones IP.";
@@ -222,6 +223,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "device_location";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_serial_number";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_model";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -457,6 +461,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_location";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_serial_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -4300,6 +4309,12 @@
 		$vendors[$y]['functions'][$z]['description'] = "BLF/DTMF";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+
+	//bittel details
+		$y++;
+		$vendors[$y]['uuid'] = "a2eeb8e0-c30d-4f21-b3eb-7b2ac3b3e84d";
+		$vendors[$y]['name'] = "bittel";
+		$z=0;
 
 	//linphone details
 		$y++;

@@ -108,7 +108,7 @@ if (!class_exists('number_translations')) {
 					//loop through the condition array
 						$order = 5;
 						if (isset($number_translation['rule'])) {
-							foreach ($number_translation['rule'] as &$row) {
+							foreach ($number_translation['rule'] as $row) {
 								if (array_key_exists('@attributes', $row)) {
 									$row = $row['@attributes'];
 								}
@@ -119,7 +119,7 @@ if (!class_exists('number_translations')) {
 							}
 						}
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('number_translation_add', 'temp');
 						$p->add('number_translation_detail_add', 'temp');
 					//execute insert
@@ -176,7 +176,7 @@ if (!class_exists('number_translations')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('number_translation_detail_delete', 'temp');
 
 								//execute delete
@@ -390,7 +390,7 @@ if (!class_exists('number_translations')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('number_translation_detail_add', 'temp');
 
 								//save the array

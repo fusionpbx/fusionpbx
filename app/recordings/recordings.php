@@ -37,9 +37,36 @@
 	$language = new text;
 	$text = $language->get();
 
-//add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('speech', 'enabled');
+//initialize the database connection
+	$database = database::new();
+
+//get the session settings
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$domain_name = $_SESSION['domain_name'];
+	$user_uuid = $_SESSION['user_uuid'];
+	$domains =  $_SESSION['domains'];
+
+//initialize the settings object
+	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
+
+//get the settings
+	$switch_recordings = $settings->get('switch', 'recordings');
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	$speech_enabled = $settings->get('speech', 'enabled', false);
+	$recording_storage_type = $settings->get('recordings','storage_type');
+	$recording_password = $settings->get('recordings','recording_password');
+	$domain_paging = $settings->get('domain','paging', 100);
+	$theme_button_icon_edit = $settings->get('theme','button_icon_edit');
+	$theme_button_icon_add = $settings->get('theme','button_icon_add');
+	$theme_button_icon_upload = $settings->get('theme','button_icon_upload');
+	$theme_button_icon_cancel = $settings->get('theme','button_icon_cancel');
+	$theme_button_icon_delete = $settings->get('theme','button_icon_delete');
+	$theme_button_icon_all = $settings->get('theme','button_icon_all');
+	$theme_button_icon_search = $settings->get('theme','button_icon_search');
+	$theme_list_row_edit_button = $settings->get('theme','list_row_edit_button');
+	$theme_button_icon_download = $settings->get('theme','button_icon_download');
+	$theme_button_icon_play = $settings->get('theme','button_icon_play');
+	$theme_button_icon_reset = $settings->get('theme','button_icon_reset');
 
 //set additional variables
 	$action = $_REQUEST["action"] ?? '';
@@ -50,7 +77,7 @@
 	if ($action == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		if ($_GET['type'] == "rec") {
 			//set the path for the directory
-				$path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
+				$path = $switch_recordings."/".$domain_name;
 
 			//if from recordings, get recording details from db
 				$recording_uuid = $_GET['id']; //recordings
@@ -61,11 +88,10 @@
 					$sql .= "and recording_uuid = :recording_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['recording_uuid'] = $recording_uuid;
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$recording_filename = $row['recording_filename'];
-						if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64' && !empty($row['recording_base64'])) {
+						if ($recording_storage_type == 'base64') {
 							$recording_decoded = base64_decode($row['recording_base64']);
 							file_put_contents($path.'/'.$recording_filename, $recording_decoded);
 						}
@@ -128,12 +154,12 @@
 			$recording_filename = str_replace("'", "", $recording_filename);
 
 		//make sure the destination directory exists
-			if (!is_dir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'])) {
-				mkdir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'], 0770, false);
+			if (!is_dir($switch_recordings.'/'.$domain_name)) {
+				mkdir($switch_recordings.'/'.$domain_name, 0770, false);
 			}
 
 		//move the uploaded files
-			$result = move_uploaded_file($_FILES['file']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
+			$result = move_uploaded_file($_FILES['file']['tmp_name'], $switch_recordings.'/'.$domain_name.'/'.$recording_filename);
 
 		//clear the destinations session array
 			if (isset($_SESSION['destinations']['array'])) {
@@ -163,26 +189,24 @@
 	$sql .= "from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	if (is_array($result) && @sizeof($result) != 0) {
-		foreach ($result as &$row) {
+		foreach ($result as $row) {
 			$array_recordings[$row['recording_uuid']] = $row['recording_filename'];
 			$array_base64_exists[$row['recording_uuid']] = ($row['recording_base64'] != '') ? true : false;
 			//if not base64, convert back to local files and remove base64 from db
-			if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] != 'base64' && $row['recording_base64'] != '') {
-				if (!file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'])) {
+			if ($recording_storage_type != 'base64' && $row['recording_base64'] != '') {
+				if (!file_exists($switch_recordings.'/'.$domain_name.'/'.$row['recording_filename'])) {
 					$recording_decoded = base64_decode($row['recording_base64']);
-					file_put_contents($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'], $recording_decoded);
+					file_put_contents($switch_recordings.'/'.$domain_name.'/'.$row['recording_filename'], $recording_decoded);
 					//build array
 						$array['recordings'][0]['recording_uuid'] = $row['recording_uuid'];
 						$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 						$array['recordings'][0]['recording_base64'] = null;
 					//set temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('recording_edit', 'temp');
 					//execute update
-						$database = new database;
 						$database->app_name = 'recordings';
 						$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 						$database->save($array);
@@ -196,10 +220,10 @@
 	unset($sql, $parameters, $result, $row);
 
 //add recordings to the database
-	if (is_dir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/')) {
-		if ($dh = opendir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/')) {
+	if (is_dir($switch_recordings.'/'.$domain_name.'/')) {
+		if ($dh = opendir($switch_recordings.'/'.$domain_name.'/')) {
 			while (($recording_filename = readdir($dh)) !== false) {
-				if (filetype($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename) == "file") {
+				if (filetype($switch_recordings."/".$domain_name."/".$recording_filename) == "file") {
 
 					if (!is_array($array_recordings) || !in_array($recording_filename, $array_recordings)) {
 						//file not found in db, add it
@@ -212,15 +236,14 @@
 							$array['recordings'][0]['recording_filename'] = $recording_filename;
 							$array['recordings'][0]['recording_name'] = $recording_name;
 							$array['recordings'][0]['recording_description'] = $recording_description;
-							if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-								$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename));
+							if ($recording_storage_type == 'base64') {
+								$recording_base64 = base64_encode(file_get_contents($switch_recordings.'/'.$domain_name.'/'.$recording_filename));
 								$array['recordings'][0]['recording_base64'] = $recording_base64;
 							}
 						//set temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('recording_add', 'temp');
 						//execute insert
-							$database = new database;
 							$database->app_name = 'recordings';
 							$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 							$database->save($array);
@@ -230,19 +253,18 @@
 					}
 					else {
 						//file found in db, check if base64 present
-							if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
+							if ($recording_storage_type == 'base64') {
 								$found_recording_uuid = array_search($recording_filename, $array_recordings);
 								if (!$array_base64_exists[$found_recording_uuid]) {
-									$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename));
+									$recording_base64 = base64_encode(file_get_contents($switch_recordings.'/'.$domain_name.'/'.$recording_filename));
 									//build array
 										$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 										$array['recordings'][0]['recording_uuid'] = $found_recording_uuid;
 										$array['recordings'][0]['recording_base64'] = $recording_base64;
 									//set temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//execute update
-										$database = new database;
 										$database->app_name = 'recordings';
 										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array);
@@ -298,7 +320,7 @@
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!empty($search)) {
 		$sql .= "and (";
@@ -308,11 +330,10 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = ($domain_paging != '') ? $domain_paging : 50;
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('recording_all')) {
 		$param .= "&show=all";
@@ -324,7 +345,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the file size
-	if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
+	if ($recording_storage_type == 'base64') {
 		switch ($db_type) {
 			case 'pgsql': $sql_file_size = "length(decode(recording_base64,'base64')) as recording_size, "; break;
 			case 'mysql': $sql_file_size = "length(from_base64(recording_base64)) as recording_size, "; break;
@@ -334,12 +355,14 @@
 //get the recordings from the database
 	$sql = "select recording_uuid, domain_uuid, ";
 	if (!empty($sql_file_size)) { $sql .= $sql_file_size; }
+	$sql .= "to_char(timezone(:time_zone, update_date), 'DD Mon YYYY') as date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, update_date), '".$sql_time_format."') as time_formatted, \n";
 	$sql .= "recording_name, recording_filename, recording_description ";
 	$sql .= "from v_recordings ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!empty($search)) {
 		$sql .= "and (";
@@ -351,14 +374,14 @@
 	}
 	$sql .= order_by($order_by, $order, 'recording_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
+	$parameters['time_zone'] = $time_zone;
 	$recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get current recordings password
 	if (permission_exists('recording_password')) {
-		if (isset($_SESSION['recordings']['recording_password']['numeric'])) {
-			$recording_password = $_SESSION['recordings']['recording_password']['numeric'];
+		if (!empty($recording_password)) {
+			$recording_password = $recording_password;
 		}
 		else {
 			$sql = "
@@ -377,8 +400,7 @@
 					dd.dialplan_detail_type = 'set' and
 					dd.dialplan_detail_data like 'pin_number=%' and
 					dd.dialplan_detail_enabled = 'true' ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
+			$parameters['domain_uuid'] = $domain_uuid;
 			$recording_password = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 		}
@@ -404,10 +426,10 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-recordings']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-recordings']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('recording_add') && $speech_enabled == 'true') {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'recording_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$theme_button_icon_add,'id'=>'btn_add','link'=>'recording_edit.php']);
 	}
 	if (permission_exists('recording_upload')) {
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
@@ -415,17 +437,17 @@
 		echo 	"<input name='type' type='hidden' value='rec'>\n";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-		echo button::create(['type'=>'button','label'=>$text['button-upload'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_upload','onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); document.getElementById('ulfile').click(); });"]);
+		echo button::create(['type'=>'button','label'=>$text['button-upload'],'icon'=>$theme_button_icon_add,'id'=>'btn_upload','onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); document.getElementById('ulfile').click(); });"]);
 		echo 	"<span id='form_upload' style='display: none;'>";
-		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_upload').fadeIn(250) });"]);
+		echo button::create(['label'=>$text['button-cancel'],'icon'=>$theme_button_icon_cancel,'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_upload').fadeIn(250) });"]);
 		echo 		"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
 		echo 		"<input type='file' id='ulfile' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
-		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$_SESSION['theme']['button_icon_upload']]);
+		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$theme_button_icon_upload]);
 		echo 	"</span>\n";
 		echo 	"</form>";
 	}
 	if (permission_exists('recording_delete') && $recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$theme_button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('recording_all')) {
@@ -433,12 +455,12 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$theme_button_icon_all,'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'recordings.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$theme_button_icon_search,'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$theme_button_icon_reset,'type'=>'button','id'=>'btn_reset','link'=>'recordings.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
@@ -463,6 +485,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	$col_count = 0;
@@ -477,7 +500,7 @@
 	}
 	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
 	$col_count++;
-	if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] != 'base64') {
+	if ($recording_storage_type != 'base64') {
 		echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order, null, "class='hide-md-dn'");
 		$col_count++;
 	}
@@ -485,14 +508,15 @@
 		echo "<th class='center shrink'>".$text['label-tools']."</th>\n";
 		$col_count++;
 	}
-	echo "<th class='center'>".(!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64' ? $text['label-size'] : $text['label-file_size'])."</th>\n";
+	echo "<th class='center'>".($recording_storage_type == 'base64' ? $text['label-size'] : $text['label-file_size'])."</th>\n";
 	$col_count++;
 
 	echo "<th class='center hide-md-dn'>".$text['label-date']."</th>\n";
 	$col_count++;
 
 	echo th_order_by('recording_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'");
-	if (permission_exists('recording_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	$col_count++;
+	if (permission_exists('recording_edit') && $theme_list_row_edit_button == true) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -502,7 +526,7 @@
 		foreach ($recordings as $row) {
 			//playback progress bar
 			if (permission_exists('recording_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['recording_uuid'])."' onclick=\"recording_play('".escape($row['voicemail_greeting_uuid'] ?? '')."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['recording_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
+				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['recording_uuid'])."' onclick=\"recording_seek(event,'".escape($row['recording_uuid'] ?? '')."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['recording_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td></tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
 			if (permission_exists('recording_edit')) {
@@ -516,8 +540,8 @@
 				echo "	</td>\n";
 			}
 			if ($show == "all" && permission_exists('recording_all')) {
-				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
-					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				if (!empty($domains[$row['domain_uuid']]['domain_name'])) {
+					$domain = $domains[$row['domain_uuid']]['domain_name'];
 				}
 				else {
 					$domain = $text['label-global'];
@@ -532,7 +556,7 @@
 				echo escape($row['recording_name']);
 			}
 			echo "	</td>\n";
-			if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] != 'base64') {
+			if ($recording_storage_type != 'base64') {
 				echo "	<td class='hide-md-dn'>".str_replace('_', '_&#8203;', escape($row['recording_filename']))."</td>\n";
 			}
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
@@ -547,19 +571,19 @@
 						case "ogg" : $recording_type = "audio/ogg"; break;
 					}
 					echo "<audio id='recording_audio_".escape($row['recording_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['recording_uuid'])."')\" onended=\"recording_reset('".escape($row['recording_uuid'])."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?action=download&type=rec&id=".urlencode($row['recording_uuid'])."\" type='".$recording_type."'></audio>";
-					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['recording_uuid']),'onclick'=>"recording_play('".escape($row['recording_uuid'])."')"]);
+					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$theme_button_icon_play,'id'=>'recording_button_'.escape($row['recording_uuid']),'onclick'=>"recording_play('".escape($row['recording_uuid'])."')"]);
 				}
 				if (permission_exists('recording_download')) {
-					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"recordings.php?action=download&type=rec&t=bin&id=".urlencode($row['recording_uuid'])]);
+					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$theme_button_icon_download,'link'=>"recordings.php?action=download&type=rec&t=bin&id=".urlencode($row['recording_uuid'])]);
 				}
 				echo "	</td>\n";
 			}
-			if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
+			if ($recording_storage_type == 'base64') {
 				$file_size = byte_convert($row['recording_size']);
 				echo "	<td class='center no-wrap'>".$file_size."</td>\n";
 			}
 			else {
-				$file_name = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'].'/'.$row['recording_filename'];
+				$file_name = $switch_recordings.'/'.$domains[$row['domain_uuid']]['domain_name'].'/'.$row['recording_filename'];
 				if (file_exists($file_name)) {
 					$file_size = filesize($file_name);
 					$file_size = byte_convert($file_size);
@@ -569,21 +593,21 @@
 					unset($file_size, $file_date);
 				}
 				echo "	<td class='center no-wrap'>".($file_size ?? '')."</td>\n";
-				echo "	<td class='center hide-md-dn'>".($file_date ?? '')."</td>\n";
 			}
+			echo "	<td class='center hide-md-dn'>".($row['date_formatted'] ?? '')." ".($row['time_formatted'] ?? '')."</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['recording_description'])."&nbsp;</td>\n";
-			if (permission_exists('recording_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('recording_edit') && $theme_list_row_edit_button == true) {
 				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$theme_button_icon_edit,'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
 			$x++;
 		}
-		unset($recordings);
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 

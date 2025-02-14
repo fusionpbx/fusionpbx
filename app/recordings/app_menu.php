@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Guides vocaux";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "הקלטות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Registrazioni Audio";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ჩანაწერები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Opnamen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Nagrywanie rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gravações";

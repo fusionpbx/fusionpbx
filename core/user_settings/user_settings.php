@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -36,6 +36,23 @@
 	else {
 		echo "access denied";
 		exit;
+	}
+
+//connect to the database
+	$database = new database;
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//action add or update
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
+		$action = "update";
+		$user_uuid = $_REQUEST["id"];
+		$id = $_REQUEST["id"];
+	}
+	else {
+		$action = "add";
 	}
 
 //get the http post data
@@ -85,7 +102,6 @@
 		//update setting
 			$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuids[0];
 			$array['user_settings'][0]['user_setting_enabled'] = $enabled;
-			$database = new database;
 			$database->app_name = 'user_settings';
 			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 			$database->save($array);
@@ -122,7 +138,6 @@
 	$sql .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
 	$sql .= ") ";
 	$parameters['user_uuid'] = $user_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql);
 
@@ -145,8 +160,8 @@
 	$sql .= "from v_user_settings ";
 	$sql .= "where user_uuid = :user_uuid ";
 	$sql .= "and not ( ";
-	$sql .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
-	$sql .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
+	$sql .= " (user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
+	$sql .= " or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
 	$sql .= ") ";
 	if (!empty($order_by)) {
 		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
@@ -156,7 +171,6 @@
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['user_uuid'] = $user_uuid;
-	$database = new database;
 	$user_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $sql_where, $parameters);
 
@@ -164,10 +178,17 @@
 	$object = new token;
 	$token = $object->create('/core/user_settings/user_settings.php');
 
+//include the header
+	$document['title'] = $text['title-user_settings'];
+	require_once "resources/header.php";
+
 //show the content
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['header-user_settings']."</b></div>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['title-user_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('user_add') || permission_exists('user_edit')) {
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.$user_uuid]);
+	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$button_icon_back,'style'=>'margin-right: 15px; display: none;','link'=>'users.php']);
 	if (permission_exists('user_setting_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$button_icon_add,'id'=>'btn_add','link'=>PROJECT_PATH.'/core/user_settings/user_setting_edit.php?user_uuid='.urlencode($_GET['id'])]);
@@ -189,14 +210,14 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo $text['header_description-user_settings']."\n";
+	echo $text['title_description-user_settings']."\n";
 	echo "<br /><br />\n";
 
 	echo "<form id='form_list' method='post' action='/core/user_settings/user_settings.php'>\n";
 	echo "<input type='hidden' name='action' id='action' value=''>\n";
 	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>\n";
 
-	echo "<table class='list'>\n";
+
 	if (!empty($user_settings)) {
 		$previous_user_setting_category = '';
 		$x = 0;
@@ -216,13 +237,16 @@
 			}
 
 			if ($previous_user_setting_category != $row['user_setting_category']) {
-				if ($previous_user_setting_category != '') {
-					echo "</table>\n";
 
-					echo "<br>\n";
+				if (!empty($previous_user_setting_category)) {
+					echo "</table>\n";
+					echo "</div>\n";
+					echo "</div>\n";
 				}
+				echo "<div class='category' id='category_".$user_setting_category."'>\n";
 				echo "<b>".escape($label_user_setting_category)."</b><br>\n";
 
+				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				if (permission_exists('user_setting_add') || permission_exists('user_setting_edit') || permission_exists('user_setting_delete')) {
@@ -268,10 +292,9 @@
 				$sql = "select * from v_menus ";
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$parameters['menu_uuid'] = $row['user_setting_value'];
-				$database = new database;
 				$sub_result = $database->select($sql, $parameters, 'all');
 				if (!empty($sub_result)) {
-					foreach ($sub_result as &$sub_row) {
+					foreach ($sub_result as $sub_row) {
 						echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
 					}
 				}
@@ -375,7 +398,11 @@
 	unset($user_settings);
 
 	echo "</table>\n";
+	echo "</div>\n";
+	echo "</div>\n";
 	echo "<br />\n";
+
+
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
@@ -396,5 +423,8 @@
 	echo "	}\n";
 
 	echo "</script>\n";
+
+//include the footer
+	require_once "resources/footer.php";
 
 ?>

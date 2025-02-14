@@ -87,7 +87,7 @@
 	$order = $_GET["order"] ?? '';
 
 //download music on hold file
-	if (!empty($_GET['action']) 
+	if (!empty($_GET['action'])
 		&& $_GET['action'] == "download"
 		&& is_uuid($_GET['id'])
 		&& !empty($streams)) {
@@ -272,7 +272,7 @@
 						$array['music_on_hold'][0]['music_on_hold_chime_freq'] = null;
 						$array['music_on_hold'][0]['music_on_hold_chime_max'] = null;
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('music_on_hold_add', 'temp');
 
 						$database = new database;
@@ -533,22 +533,23 @@
 					}
 
 				//start the table
-					echo "<table class='list'>\n";
-					echo "	<tr class='list-header'>\n";
+					echo "<div class='card'>\n";
+					echo "	<table class='list'>\n";
+					echo "		<tr class='list-header'>\n";
 					if (permission_exists('music_on_hold_delete')) {
-						echo "	<th class='checkbox'>\n";
-						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : ''; checkbox_on_change(this);\">\n";
-						echo "		<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]'>\n";
-						echo "	</th>\n";
+						echo "		<th class='checkbox'>\n";
+						echo "			<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : ''; checkbox_on_change(this);\">\n";
+						echo "			<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]'>\n";
+						echo "		</th>\n";
 					}
 					if ($show == "all" && permission_exists('music_on_hold_all')) {
 						echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param ?? null, "class='shrink'");
 					}
-					echo "		<th class='pct-50'>".$stream_details."</th>\n";
-					echo "		<th class='center shrink'>".$text['label-tools']."</th>\n";
-					echo "		<th class='right hide-xs no-wrap pct-20'>".$text['label-file-size']."</th>\n";
-					echo "		<th class='right hide-sm-dn pct-30'>".$text['label-uploaded']."</th>\n";
-					echo "	</tr>";
+					echo "			<th class='pct-50'>".$stream_details."</th>\n";
+					echo "			<th class='center shrink'>".$text['label-tools']."</th>\n";
+					echo "			<th class='right hide-xs no-wrap pct-20'>".$text['label-file-size']."</th>\n";
+					echo "			<th class='right hide-sm-dn pct-30'>".$text['label-uploaded']."</th>\n";
+					echo "		</tr>";
 					unset($stream_icons, $icons);
 
 				//list the stream files
@@ -565,7 +566,7 @@
 								case "ogg" : $stream_file_type = "audio/ogg"; break;
 							}
 							//playback progress bar
-								echo "<tr class='list-row' id='recording_progress_bar_".$row_uuid."' style='display: none;' onclick=\"recording_play('".escape($row_uuid)."','".urlencode($stream_file)."')\"><td id='playback_progress_bar_background_".escape($row_uuid)."' class='playback_progress_bar_background' colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
+								echo "<tr class='list-row' id='recording_progress_bar_".$row_uuid."' style='display: none;' onclick=\"recording_seek(event,'".escape($row_uuid)."')\"><td id='playback_progress_bar_background_".escape($row_uuid)."' class='playback_progress_bar_background' colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
 								echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 							$list_row_link = "javascript:recording_play('".$row_uuid."','".urlencode($stream_file)."');";
 							echo "<tr class='list-row' href=\"".$list_row_link."\">\n";
@@ -597,7 +598,8 @@
 						}
 					}
 
-					echo "</table>\n";
+					echo "	</table>\n";
+					echo "</div>\n";
 					echo "<br />\n";
 
 				//set the previous music_on_hold_name

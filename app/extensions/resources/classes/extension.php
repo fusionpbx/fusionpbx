@@ -153,7 +153,7 @@ if (!class_exists('extension')) {
 					//build update array
 						$array['voicemails'][0]['voicemail_uuid'] = $voicemail_uuid;
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('voicemail_edit', 'temp');
 				}
 				else {
@@ -161,7 +161,7 @@ if (!class_exists('extension')) {
 						$array['voicemails'][0]['voicemail_uuid'] = uuid();
 						$array['voicemails'][0]['domain_uuid'] = $this->domain_uuid;
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('voicemail_add', 'temp');
 				}
 				if (is_array($array) && @sizeof($array) != 0) {
@@ -216,7 +216,7 @@ if (!class_exists('extension')) {
 							$call_group = $row['call_group'] ?? '';
 							$call_group = str_replace(";", ",", $call_group);
 							$tmp_array = explode(",", $call_group);
-							foreach ($tmp_array as &$tmp_call_group) {
+							foreach ($tmp_array as $tmp_call_group) {
 								$tmp_call_group = trim($tmp_call_group);
 								if (!empty($tmp_call_group)) {
 									if (empty($call_group_array[$tmp_call_group])) {
@@ -508,7 +508,7 @@ if (!class_exists('extension')) {
 								$xml .= "					to keep searching for the user in the directory.\n";
 								$xml .= "					-->\n";
 								$extension_array = explode(",", $extension_list);
-								foreach ($extension_array as &$tmp_extension) {
+								foreach ($extension_array as $tmp_extension) {
 									$xml .= "					<user id=\"$tmp_extension\" type=\"pointer\"/>\n";
 								}
 								$xml .= "				</users>\n";
@@ -639,7 +639,7 @@ if (!class_exists('extension')) {
 									}
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('extension_user_delete', 'temp');
 									$p->add('follow_me_delete', 'temp');
 									$p->add('follow_me_destination_delete', 'temp');
@@ -743,7 +743,7 @@ if (!class_exists('extension')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('extension_edit', 'temp');
 
 								//save the array
@@ -798,4 +798,3 @@ if (!class_exists('extension')) {
 }
 
 ?>
-

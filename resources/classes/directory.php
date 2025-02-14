@@ -179,7 +179,7 @@
 						$array['extensions'][0]['description'] = $description;
 
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('extension_add', 'temp');
 
 					//execute insert
@@ -282,7 +282,7 @@
 				$array['extensions'][0]['description'] = $description;
 
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('extension_edit', 'temp');
 
 			//execute insert
@@ -304,7 +304,7 @@
 					$array['extensions'][0]['extension_uuid'] = $extension_uuid;
 					$array['extensions'][0]['domain_uuid'] = $domain_uuid;
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('extension_delete', 'temp');
 				//execute delete
 					$database = new database;
@@ -501,7 +501,7 @@
 					$call_group = $row['call_group'];
 					$call_group = str_replace(";", ",", $call_group);
 					$tmp_array = explode(",", $call_group);
-					foreach ($tmp_array as &$tmp_call_group) {
+					foreach ($tmp_array as $tmp_call_group) {
 						if (!empty($tmp_call_group)) {
 							if (empty($call_group_array[$tmp_call_group])) {
 								$call_group_array[$tmp_call_group] = $row['extension'];
@@ -603,7 +603,7 @@
 							$xml .= "					to keep searching for the user in the directory.\n";
 							$xml .= "					-->\n";
 							$extension_array = explode(",", $extension_list);
-							foreach ($extension_array as &$tmp_extension) {
+							foreach ($extension_array as $tmp_extension) {
 								$xml .= "					<user id=\"$tmp_extension\" type=\"pointer\"/>\n";
 							}
 							$xml .= "				</users>\n";

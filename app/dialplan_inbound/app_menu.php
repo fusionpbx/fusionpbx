@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Routes Entrantes";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "נתיבים Inbound";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Rotte di Ingresso";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "შემომავლების მარშრუტიზაცია";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Inkomende routes";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Trasy przychodzące";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Rotas de Entrada";

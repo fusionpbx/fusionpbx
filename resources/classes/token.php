@@ -86,6 +86,7 @@ class token {
 					$token_name = $token['name'];
 					if (isset($_REQUEST[$token_name])) {
 						$value = $_REQUEST[$token_name];
+						break;
 					}
 				}
 			}

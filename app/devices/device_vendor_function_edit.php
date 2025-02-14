@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -44,7 +44,7 @@
 		//delete the device vendor function group
 			$array['device_vendor_function_groups'][0]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('device_vendor_function_group_delete', 'temp');
 
 			$database = new database;
@@ -183,7 +183,7 @@
 								$array['device_vendor_function_groups'][0]['group_name'] = $group_name;
 								$array['device_vendor_function_groups'][0]['group_uuid'] = $group_uuid;
 
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('device_vendor_function_group_add', 'temp');
 
 								$database = new database;
@@ -287,6 +287,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -394,6 +395,7 @@
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</div>\n";
 	echo "</form>";
 	echo "<br /><br />";
 

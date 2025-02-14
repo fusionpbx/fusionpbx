@@ -1,5 +1,7 @@
 <extension name="global-variables" number="" context="global" continue="true" app_uuid="d49ee3bd-5085-4619-a2f9-2b62c8c461c5" global="true" order="18">
 	<condition>
 		<action application="set" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
+		<action application="set" data="ringback=$${us-ring}" inline="true" enabled="false"/>
+		<action application="set" data="transfer_ringback=$${us-ring}" inline="true" enabled="false"/>
 	</condition>
 </extension>

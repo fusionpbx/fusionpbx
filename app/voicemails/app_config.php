@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gérer les boîtes vocales";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "მართეთ ხმოვანი ფოსტის ყუთები";
 		$apps[$x]['description']['nl-nl'] = "Beheer antwoordapparaten";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
@@ -385,14 +386,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5d9a1f93-e163-4c05-a975-bd1e5a045660";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "transcribe_enabled";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transcription enabled default false.";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "275cf580-7b72-45e4-9af5-b8eed9a45ec0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "database_retention_days";
@@ -408,6 +401,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days maintenance application will retain files.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "79d05433-a7ab-4641-ae5d-6eb7810eb560";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "use_deletion_queue";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Instead of deleting voicemails right away when pressing 7; queue them for deletion";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b06cc9df-379e-4b45-8bda-d2d431506317";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "deletion_queue_retention_hours";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "24";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of hours the voicemail deletion queue will retain deleted voicemails";
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_voicemails";

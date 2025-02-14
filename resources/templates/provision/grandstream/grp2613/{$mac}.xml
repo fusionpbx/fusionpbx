@@ -37,9 +37,9 @@
 		<!-- SIP Server -->
 		<!-- Pvalue P47 -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 
 		<!-- Secondary SIP Server -->
@@ -65,9 +65,9 @@
 		<!-- BLF Server -->
 		<!-- Pvalue P2375 -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 
 		<!-- SIP User ID -->
@@ -142,7 +142,7 @@
 		<item name="account.{$row.line_number}.network.natTraversal">{$grandstream_nat_traversal}</item>
 		{else}
 		<item name="account.{$row.line_number}.network.natTraversal">Auto</item>
-		{/if}		
+		{/if}
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
@@ -3762,6 +3762,7 @@
 
 		<!-- # Secondary NTP Server -->
 		<!-- # String -->
+		<!-- Pvalue P8333 -->
 		{if isset($ntp_server_secondary)}
 		<item name="dateTime.ntp.server.2">{$ntp_server_secondary}</item>
 		{else}
@@ -4470,14 +4471,14 @@
 		<!-- # Virtual Multi-Purpose Keys (VPKs) -->
 		<!-- # Note: 1. Fixed VPKs can only be edited. Adding or deleting Fixed VPK is not allowed. -->
 		<!-- #       2. Even if a Dynamic VPK has mode set to None, it should be added in sequence. Skipping one will remove everything after that VPK.  -->
-		<!-- #       3. For GRP2650 --> 
-		<!-- #       4. For GRP2670/GRP2636 --> 
-		<!-- #       5. For GRP2624/34 --> 
-		<!-- #       6. For GRP2616  --> 
-		<!-- #       7. For GRP2615 --> 
-		<!-- #       8. For GRP2614 --> 
-		<!-- #       9. For GRP2613 --> 
-		<!-- #       10. For GRP2612 --> 
+		<!-- #       3. For GRP2650 -->
+		<!-- #       4. For GRP2670/GRP2636 -->
+		<!-- #       5. For GRP2624/34 -->
+		<!-- #       6. For GRP2616  -->
+		<!-- #       7. For GRP2615 -->
+		<!-- #       8. For GRP2614 -->
+		<!-- #       9. For GRP2613 -->
+		<!-- #       10. For GRP2612 -->
 		<!-- ###################################################################################### -->
 
 		<!-- # Key Mode for line VPK. -->
@@ -4535,8 +4536,8 @@
 
 		<!-- ###################################################################################### -->
 		<!-- ## Programmable Keys/Physical Multi-Purpose Keys
-		<!-- # Note: 1. For GRP2634 --> 
-		<!-- #       2. For GRP2614/GRP2616/GRP2636 --> 
+		<!-- # Note: 1. For GRP2634 -->
+		<!-- #       2. For GRP2614/GRP2616/GRP2636 -->
 		<!-- ###################################################################################### -->
 
 {foreach $keys['memory'] as $row}

@@ -674,7 +674,7 @@ if (!class_exists('modules')) {
 				//set the default
 					$result = false;
 				//look for the module
-					foreach ($this->modules as &$row) {
+					foreach ($this->modules as $row) {
 						if ($row['module_name'] == $name) {
 							$result = true;
 							break;
@@ -743,7 +743,7 @@ if (!class_exists('modules')) {
 					}
 					if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('module_add', 'temp');
 						//execute insert
 							$database = new database;

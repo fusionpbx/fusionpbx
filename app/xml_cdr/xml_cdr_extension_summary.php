@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -67,7 +67,7 @@
 
 		//set the headers
 			header('Content-type: application/octet-binary');
-			header('Content-Disposition: attachment; filename=user-summary.csv');
+			header('Content-Disposition: attachment; filename=extension-summary.csv');
 
 		//show the column names on the first line
 			$z = 0;
@@ -129,9 +129,11 @@
 	if (permission_exists('xml_cdr_search')) {
 		echo "<form name='frm' id='frm' method='get'>\n";
 
-		echo "<div class='form_grid' style='padding-bottom: 35px;'>\n";
+		echo "<div class='card' style='margin-bottom: 30px;'>\n";
+		echo "<div class='form_grid'>\n";
 
 		echo "	<div class='form_set'>\n";
+
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-preset']."\n";
 		echo "		</div>\n";
@@ -147,9 +149,7 @@
 		echo "				<option value='7' ".(($quick_select == 7) ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
 		echo "			</select>\n";
 		echo "		</div>\n";
-		echo "	</div>\n";
 
-		echo "	<div class='form_set'>\n";
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-include_internal']."\n";
 		echo "		</div>\n";
@@ -159,26 +159,27 @@
 		echo "				<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
 		echo "			</select>\n";
 		echo "		</div>\n";
-		echo "	</div>\n";
 
+		echo "	</div>\n";
 		echo "	<div class='form_set'>\n";
+
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-start_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
 		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
 		echo "		</div>\n";
-		echo "	</div>\n";
 
-		echo "	<div class='form_set'>\n";
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-end_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
 		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
 		echo "		</div>\n";
+
 		echo "	</div>\n";
 
+		echo "</div>\n";
 		echo "</div>\n";
 
 		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('xml_cdr_extension_summary_all')) {
@@ -189,6 +190,7 @@
 	}
 
 //show the results
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "	<tr class='list-header'>\n";
 	if (!empty($_GET['show']) && $_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
@@ -237,6 +239,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 
 //show the footer

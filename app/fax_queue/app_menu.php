@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "FAX Queue";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "תור פקס";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Coda FAX";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ფაქსის რიგი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Fax wachtrij";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Kolejka faksów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Fila de FAX";

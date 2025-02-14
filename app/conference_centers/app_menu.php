@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזי כנסים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "კონფერენც-ცენტრი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie centra";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Centro de Conferência";
@@ -44,6 +45,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מרכזי כנסים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "კონფერენც-ცენტრები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie centra";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Centro de Conferência";

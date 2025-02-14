@@ -37,6 +37,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //get posted data
 	if (!empty($_POST['search'])) {
 		$search = $_POST['search'];
@@ -72,7 +75,6 @@
 			$parameters['search'] = '%'.$search.'%';
 		}
 		$sql .= "order by domain_name asc ";
-		$database = new database;
 		$domains = $database->select($sql, $parameters ?? null, 'all');
 		unset($sql, $parameters);
 	}

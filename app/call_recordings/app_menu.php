@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Enregistrements d'appels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "הקלטות שיחות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Registrazioni delle chiamate";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ზარის ჩანაწერები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gespreksopnamen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Nagrania Rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gravações de chamadas";

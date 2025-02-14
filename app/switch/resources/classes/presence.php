@@ -100,7 +100,7 @@ if (!class_exists('presence')) {
 			echo "active: false\n";	
 		}
 	//show active the presence
-		$presence = new permissions;
+		$presence = new presence;
 		$array = $presence->show();
 	*/
 

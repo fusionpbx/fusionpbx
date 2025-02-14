@@ -13,6 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion des Menus";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מנהל תפריט";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gestione dei Menu";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მენიუს მართვა";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Menu Manager";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menedżer menu";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciador de Menus";
@@ -44,6 +45,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Maison";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "בית";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Home";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "მთავარი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Thuis";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Główne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Principal";
@@ -79,6 +81,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Comptes";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "חשבונות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Credenziali";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ანგარიშები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Accounts";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Konta";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Contas";
@@ -110,6 +113,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Applications";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "יישומים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Applicazioni";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "აპლიკაციები";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Applicaties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aplikacje";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Aplicações";
@@ -145,6 +149,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Etat";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "סטטוס";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "სტატუსი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Status";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Status ";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado";
@@ -177,6 +182,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Avancé";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מתקדם";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Avanzato";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დამატებითი";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Vertaling:";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zaawansowane";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Avançado";
@@ -208,6 +214,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Connexion";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "כניסה";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Login";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "შესვლა";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Login";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Logina";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Entrar";
@@ -239,6 +246,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Déconnexion";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "להתנתק";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Logout";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "გასვლა";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Uitloggen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Wyloguj";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Sair";

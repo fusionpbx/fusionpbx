@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -49,7 +49,7 @@ class plugin_email {
 	 */
 	function email() {
 
-			//pre-process some settings
+		//pre-process some settings
 			$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
 			$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
 			$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
@@ -59,16 +59,11 @@ class plugin_email {
 			$settings['theme']['message_delay'] = isset($_SESSION['theme']['message_delay']) ? 1000 * (float) $_SESSION['theme']['message_delay'] : 3000;
 			$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
 
-			//set a default template
-			$_SESSION['domain']['template']['name'] = 'default';
-			$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-			$_SESSION['theme']['menu_brand_type']['text'] = 'image';
-
-			//get the domain
+		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
 
-			//use the session username
+		//use the session username
 			if (isset($_SESSION['username'])) {
 				$_POST['username'] = $_SESSION['username'];
 				$_REQUEST['username'] = $_SESSION['username'];
@@ -263,7 +258,7 @@ class plugin_email {
 					$hostname = gethostname();
 
 					//add the temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("email_queue_add", 'temp');
 					$p->add("email_queue_edit", 'temp');
 
@@ -310,11 +305,6 @@ class plugin_email {
 				//$email_error = $email->email_error;
 				//echo $email_response."<br />\n";
 				//echo $email_error."<br />\n";
-
-				//set a default template
-				$_SESSION['domain']['template']['name'] = 'default';
-				$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-				$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
 				//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -413,14 +403,35 @@ class plugin_email {
 				//clear posted authentication code
 				unset($_POST['authentication_code']);
 
+				//check if contacts app exists
+				$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/contacts/') ? true : false;
+
 				//get the user details
 				if ($auth_valid) {
 					//get user data from the database
-					$sql = "select user_uuid, username, user_email, contact_uuid from v_users ";
-					$sql .= "where user_uuid = :user_uuid ";
+					$sql = "select ";
+					$sql .= "	u.user_uuid, ";
+					$sql .= "	u.username, ";
+					$sql .= "	u.user_email, ";
+					$sql .= "	u.contact_uuid ";
+					if ($contacts_exists) {
+						$sql .= ",";
+						$sql .= "c.contact_organization, ";
+						$sql .= "c.contact_name_given, ";
+						$sql .= "c.contact_name_family, ";
+						$sql .= "a.contact_attachment_uuid ";
+					}
+					$sql .= "from ";
+					$sql .= "	v_users as u ";
+					if ($contacts_exists) {
+						$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid and u.contact_uuid is not null ";
+						$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = 1 and a.attachment_filename is not null and a.attachment_content is not null ";
+					}
+					$sql .= "where ";
+					$sql .= "	u.user_uuid = :user_uuid ";
 					if ($settings['users']['unique'] != "global") {
 						//unique username per domain (not globally unique across system - example: email address)
-						$sql .= "and domain_uuid = :domain_uuid ";
+						$sql .= "and u.domain_uuid = :domain_uuid ";
 						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 					}
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
@@ -482,7 +493,13 @@ class plugin_email {
 				$result["username"] = $_SESSION["username"];
 				$result["user_uuid"] = $_SESSION["user_uuid"];
 				$result["domain_uuid"] = $_SESSION["domain_uuid"];
-				$result["contact_uuid"] = $_SESSION["contact_uuid"];
+				if ($contacts_exists) {
+					$result["contact_uuid"] = $_SESSION["contact_uuid"];
+					$result["contact_organization"] = $row["contact_organization"];
+					$result["contact_name_given"] = $row["contact_name_given"];
+					$result["contact_name_family"] = $row["contact_name_family"];
+					$result["contact_image"] = $row["contact_attachment_uuid"];
+				}
 				$result["authorized"] = $auth_valid ? true : false;
 
 				//add the failed login to user logs

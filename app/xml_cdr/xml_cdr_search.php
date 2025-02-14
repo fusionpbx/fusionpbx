@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2023
+	Copyright (C) 2008-2024
 	All Rights Reserved.
 
 	Contributor(s):
@@ -118,7 +118,8 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-	
+
+	echo "<div class='card'>\n";
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' style='vertical-align: top;'>\n";
@@ -172,7 +173,7 @@
 		echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
 		echo "				<option value=''></option>";
 		if (is_array($extensions) && @sizeof($extensions) != 0) {
-			foreach ($extensions as &$row) {
+			foreach ($extensions as $row) {
 				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
 				echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
 			}
@@ -325,7 +326,7 @@
 			echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
 			echo "				<option value=''></option>";
 			if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
-				foreach ($call_center_queues as &$row) {
+				foreach ($call_center_queues as $row) {
 					$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
 					echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
 				}
@@ -336,11 +337,30 @@
 			unset($sql, $parameters, $call_center_queues, $row, $selected);
 		}
 
+		if (permission_exists('xml_cdr_search_ring_groups')) {
+			echo "	<tr>";
+			echo "		<td class='vncell'>".$text['label-ring_group']."</td>";
+			echo "		<td class='vtable'>";
+			echo "			<select class='formfld' name='ring_group_uuid' id='ring_group_uuid'>\n";
+			echo "				<option value=''></option>";
+			if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
+				foreach ($ring_groups as $row) {
+					$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
+					echo "		<option value='".escape($row['ring_group_uuid'])."' ".escape($selected).">".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
+				}
+			}
+			echo "			</select>\n";
+			echo "		</td>";
+			echo "	</tr>\n";
+			unset($sql, $parameters, $ring_groups, $row, $selected);
+		}
+
 		echo "</table>\n";
 	
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 	
 	echo "</form>";

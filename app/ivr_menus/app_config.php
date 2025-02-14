@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Le menu SVI joue un enregistrement ou une phrase prédéfinie permettant à l'appelant de faire un choix. Ce choix l'amenant sur une destination spécifique. Cette destination peut être une extension, une messagerie vocale, un IVR, un groupement, un FAX ...";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "IVR მენიუ უკრავს ჩანაწერს ან წინასწარ აღწერილ ფრაზას, რომელიც წარმოუდგენს აბონენტს შესაძლო ვარიანტებს. თითოეულ არჩევანს შესაბამისი დანიშნულების პუნქტი გააჩნია. დანიშნულება შეიძლება იყოს გაფართოება, ხმოვანი ფოსტა, IVR მენიუ, ფაქსის ნომრები და ა.შ.";
 		$apps[$x]['description']['nl-nl'] = "Het IVR menu speelt een vooraf opgenomen tekst af die de beller opties om uit te kiezen ggeft. Elke optie krijgt een specifieke bestemming. De bestemming kan een toestel, antwoorapparaat, IVR menu, belgroep etc. zijn.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
@@ -166,7 +167,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "direct_dial_digits_max";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "11";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "8";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -224,6 +225,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "500-599";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for IVRs";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dcf7821a-146b-48ce-a5a6-1b004d09e263";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "default_ringback";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "local_stream://default";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for IVRs";
 
 	//cache details

@@ -89,7 +89,7 @@
 					$array_temp = $array;
 
 				//add the dialplan permission
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("extension_edit", "temp");
 
 				//save to the data
@@ -215,7 +215,7 @@
 				echo "						labels: {\n";
 				echo "							usePointStyle: true,\n";
 				echo "							pointStyle: 'rect',\n";
-				echo "							color: '".$dashboard_heading_text_color."'\n";
+				echo "							color: '".$dashboard_label_text_color."'\n";
 				echo "						}\n";
 				echo "					}\n";
 				echo "				}\n";
@@ -278,7 +278,7 @@
 							if (count($destinations) > 0) {
 								echo "<select class='formfld' name='extensions[".$x."][outbound_caller_id]' id='outbound_caller_id_number_".$x."' style='width: 100%; min-width: 150px;'>\n";
 								echo "	<option value=''></option>\n";
-								foreach ($destinations as &$field) {
+								foreach ($destinations as $field) {
 									if (!empty($field['destination_caller_id_number'])) {
 										echo "<option value='".escape($field['destination_caller_id_name'])."@".escape($field['destination_caller_id_number'])."' ".($row['outbound_caller_id_number'] == $field['destination_caller_id_number'] ? "selected='selected'" : null).">".escape($field['destination_caller_id_name'])." ".escape($field['destination_caller_id_number'])."</option>\n";
 									}

@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "Instrada le chiamate basandosi su giorno e ora.";
+		$apps[$x]['description']['ka-ge'] = "პირდაპირი ზარები დღის დროზე დაყრდნობით.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

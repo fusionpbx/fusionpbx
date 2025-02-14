@@ -14,6 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Voir les Logs";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "הצופה יומן";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Log Viewer";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "ჟურნალის დათვალიერება";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bekijk logs";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Podgląd logów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Visualizar Log";

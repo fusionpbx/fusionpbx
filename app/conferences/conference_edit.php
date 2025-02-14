@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,7 +91,7 @@
 		$user_uuid = $_REQUEST["user_uuid"];
 		$conference_uuid = $_REQUEST["id"];
 
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('conference_user_delete', 'temp');
 
 		$array['conference_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -124,7 +124,7 @@
 			$array['conference_users'][0]['conference_uuid'] = $conference_uuid;
 			$array['conference_users'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('conference_user_add', 'temp');
 
 			$database = new database;
@@ -239,7 +239,7 @@
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_add', 'temp');
 					$p->add('dialplan_edit', 'temp');
 
@@ -387,6 +387,7 @@
 	echo $text['description']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -584,6 +585,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	if ($action == "update") {

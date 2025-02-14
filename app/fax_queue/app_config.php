@@ -76,6 +76,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to retain the fax queue logs in the database for the maintenance app.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5506cf35-e19d-4f02-ab9d-43fd0f8460f7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "prefer_local";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Determine whether fax calls should attempt to stay local or route to the provider.";
 		//$y++;
 		//$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "afd729d9-cf69-4793-a140-21093814d314";
 		//$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
@@ -146,6 +154,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '1';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the Caller ID number.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_recipient';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '1';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the fax recipipent.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_number';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';

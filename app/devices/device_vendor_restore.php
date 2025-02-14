@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -129,7 +129,7 @@
 			}
 
 		//assign temp permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('device_vendor_add', 'temp');
 			$p->add('device_vendor_function_add', 'temp');
 			$p->add('device_vendor_function_group_add', 'temp');
