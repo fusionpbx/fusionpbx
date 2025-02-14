@@ -279,24 +279,24 @@
 			}
 
 		//check to see if the destination number is local
-		$local_destination = false;
-		if ($setting->get('fax_queue','prefer_local', false)) {
-			$sql = "select count(destination_uuid) ";
-			$sql .= "from v_destinations ";
-			$sql .= "where (";
-			$sql .= " destination_number = :destination_number ";
-			$sql .= " or concat(destination_prefix, destination_number) = :destination_number ";
-			$sql .= " or concat(destination_trunk_prefix, destination_number) = :destination_number ";
-			$sql .= " or concat(destination_area_code, destination_number) = :destination_number ";
-			$sql .= " or concat(destination_prefix, destination_area_code, destination_number) = :destination_number ";
-			$sql .= ") ";
-			$parameters['destination_number'] = $fax_number;
-			$destination_count = $database->select($sql, $parameters, 'column');
-			if ($destination_count > 0) {
-				$local_destination = true;
-				$route_array[] = 'loopback/'.$fax_number.'/public';
+			$local_destination = false;
+			if ($setting->get('fax_queue','prefer_local', false)) {
+				$sql = "select count(destination_uuid) ";
+				$sql .= "from v_destinations ";
+				$sql .= "where (";
+				$sql .= " destination_number = :destination_number ";
+				$sql .= " or concat(destination_prefix, destination_number) = :destination_number ";
+				$sql .= " or concat(destination_trunk_prefix, destination_number) = :destination_number ";
+				$sql .= " or concat(destination_area_code, destination_number) = :destination_number ";
+				$sql .= " or concat(destination_prefix, destination_area_code, destination_number) = :destination_number ";
+				$sql .= ") ";
+				$parameters['destination_number'] = $fax_number;
+				$destination_count = $database->select($sql, $parameters, 'column');
+				if ($destination_count > 0) {
+					$local_destination = true;
+					$route_array[] = 'loopback/'.$fax_number.'/public';
+				}
 			}
-		}
 
 		//define the fax file
 			$common_variables = '';

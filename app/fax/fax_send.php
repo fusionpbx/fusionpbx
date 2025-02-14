@@ -735,6 +735,8 @@ if (!function_exists('fax_split_dtmf')) {
 		if (!empty($provider_prefix)) {
 			$common_variables .= "provider_prefix='".$provider_prefix."',";
 		}
+		$common_variables .= "hangup_after_bridge=true,";
+		$common_variables .= "continue_on_fail=true,";
 
 		if (!empty($fax_numbers)) {
 			foreach ($fax_numbers as $fax_number) {
