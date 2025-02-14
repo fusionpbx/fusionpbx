@@ -309,6 +309,8 @@
 			$common_variables .= "fax_ident='"                   . escape_quote($fax_caller_id_number) . "',";
 			$common_variables .= "fax_header='"                  . escape_quote($fax_caller_id_name) . "',";
 			$common_variables .= "fax_file='"                    . escape_quote($fax_file) . "',";
+			$common_variables .= "hangup_after_bridge=true,";
+			$common_variables .= "continue_on_fail=true,";
 
 		//add the fax destination number variables
 			if ($local_destination) {
