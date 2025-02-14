@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class BillingDeal extends Model
+class Bridge extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_billing_deals';
-	protected $primaryKey = 'billing_deal_uuid';
+	protected $table = 'v_bridges';
+	protected $primaryKey = 'bridge_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,13 +27,11 @@ class BillingDeal extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'direction',
-		'digits',
-		'minutes',
-		'rate',
-		'currency',
-		'billing_deal_notes',
-		'label'
+        'domain_uuid',
+        'bridge_name',
+        'bridge_destination',
+        'bridge_enabled',
+        'bridge_description',
 	];
 
     /**
@@ -54,11 +52,6 @@ class BillingDeal extends Model
 
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
-	}
-
-	public function billingprofiles(): BelongsToMany {
-		return $this->belongsToMany(Billing::class, 'v_billing_profile_deals', 'billing_deal_uuid', 'billing_uuid');
-//		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
 
 }

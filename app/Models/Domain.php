@@ -100,4 +100,15 @@ class Domain extends Model
 		return $this->hasMany(BillingInvoice::class, 'domain_uuid', 'domain_uuid');
 	}
 
+	public function bridges(): HasMany {
+		return $this->hasMany(Bridge::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function callblocks(): HasMany {
+		return $this->hasMany(CallBlock::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function callbroadcasts(): HasMany {
+		return $this->hasMany(CallBroadcast::class, 'domain_uuid', 'domain_uuid');
+	}
 }

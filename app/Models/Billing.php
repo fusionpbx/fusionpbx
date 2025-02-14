@@ -82,4 +82,9 @@ class Billing extends Model
 	public function billinginvoices(): HasMany {
 		return $this->hasMany(BillingInvoice::class, 'billing_uuid', 'billing_uuid');
 	}
+
+	public function deals(): BelongsToMany {
+		return $this->belongsToMany(BillingDeal::class, 'v_billing_profile_deals', 'billing_uuid', 'billing_deal_uuid');
+//		$this->belongsToMany(User::class)->using(UserGroup::class);
+	}
 }
