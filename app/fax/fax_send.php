@@ -752,7 +752,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$fax_file = $dir_fax_sent."/".$fax_instance_uuid.".tif";
 		$common_variables = "fax_queue_uuid=".$fax_queue_uuid.",";
 		$common_variables .= "fax_uuid="   . $fax_uuid . ",";
-		//$common_variables .= "accountcode='".$fax_accountcode."',";
+		$common_variables .= "accountcode='".$fax_accountcode."',";
 		$common_variables .= "sip_h_accountcode='".$fax_accountcode."',";
 		$common_variables .= "domain_uuid=".$domain_uuid.",";
 		$common_variables .= "domain_name=".$domain_name.",";
@@ -766,6 +766,8 @@ if (!function_exists('fax_split_dtmf')) {
 		if (!empty($provider_prefix)) {
 			$common_variables .= "provider_prefix='".$provider_prefix."',";
 		}
+		$common_variables .= "hangup_after_bridge=true,";
+		$common_variables .= "continue_on_fail=true,";
 
 		if (!empty($fax_numbers)) {
 			foreach ($fax_numbers as $fax_number) {
