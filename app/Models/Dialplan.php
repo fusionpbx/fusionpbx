@@ -27,18 +27,18 @@ class Dialplan extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-    'domain_uuid',
-    'app_uuid',
-    'hostname',
-    'dialplan_context',
-    'dialplan_name',
-    'dialplan_number',
-    'dialplan_destination',
-    'dialplan_continue',
-    'dialplan_xml',
-    'dialplan_order',
-    'dialplan_enabled',
-    'dialplan_description',
+        'domain_uuid',
+        'app_uuid',
+        'hostname',
+        'dialplan_context',
+        'dialplan_name',
+        'dialplan_number',
+        'dialplan_destination',
+        'dialplan_continue',
+        'dialplan_xml',
+        'dialplan_order',
+        'dialplan_enabled',
+        'dialplan_description',
 	];
 
     /**
