@@ -77,14 +77,13 @@ function show_upgrade_menu() {
 		echo "1) {$text['label-upgrade_source']} - {$text['description-update_all_source_files']}\n";
 		echo "  1a) " . $software_name . " - Update Main Software Only \n";
 		echo "  1b) {$text['label-update_external_repositories']} - {$text['description-repositories']}\n";
-		echo "2) {$text['label-update_auto_loader']} - {$text['description-update_auto_loader']}\n";
-		echo "3) {$text['label-schema']} - {$text['description-upgrade_schema']}\n";
-		echo "  3b) {$text['label-upgrade_data_types']} - {$text['description-upgrade_data_types']}\n";
-		echo "4) {$text['label-upgrade_apps']} - {$text['description-upgrade_apps']}\n";
-		echo "5) {$text['label-upgrade_menu']} - {$text['description-upgrade_menu']}\n";
-		echo "6) {$text['label-upgrade_permissions']} - {$text['description-upgrade_permissions']}\n";
-		echo "7) {$text['label-update_filesystem_permissions']} - {$text['description-update_filesystem_permissions']}\n";
-		echo "8) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
+		echo "2) {$text['label-schema']} - {$text['description-upgrade_schema']}\n";
+		echo "  2b) {$text['label-upgrade_data_types']} - {$text['description-upgrade_data_types']}\n";
+		echo "3) {$text['label-upgrade_apps']} - {$text['description-upgrade_apps']}\n";
+		echo "4) {$text['label-upgrade_menu']} - {$text['description-upgrade_menu']}\n";
+		echo "5) {$text['label-upgrade_permissions']} - {$text['description-upgrade_permissions']}\n";
+		echo "6) {$text['label-update_filesystem_permissions']} - {$text['description-update_filesystem_permissions']}\n";
+		echo "7) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
 		echo "0) Exit\n";
 		echo "\n";
 		echo "Choice: ";
@@ -93,35 +92,39 @@ function show_upgrade_menu() {
 			case 1:
 				do_upgrade_code();
 				do_upgrade_code_submodules();
+				do_upgrade_auto_loader();
 				break;
 			case '1a':
 				do_upgrade_code();
+				do_upgrade_auto_loader();
 				break;
 			case '1b':
 				do_upgrade_code_submodules();
-				break;
-			case 2:
 				do_upgrade_auto_loader();
 				break;
-			case 3:
+			case 2:
 				do_upgrade_schema();
 				break;
-			case '3b':
+			case '2b':
 				do_upgrade_schema(true);
 				break;
-			case 4:
+			case 3:
+				do_upgrade_auto_loader();
 				do_upgrade_domains();
 				break;
-			case 5:
+			case 4:
+				do_upgrade_auto_loader();
 				do_upgrade_menu();
 				break;
-			case 6:
+			case 5:
+				do_upgrade_auto_loader();
 				do_upgrade_permissions();
 				break;
-			case 7:
+			case 6:
+				do_upgrade_auto_loader();
 				do_filesystem_permissions($text, $settings);
 				break;
-			case 8:
+			case 7:
 				do_upgrade_code();
 				do_upgrade_auto_loader();
 				do_upgrade_schema();
@@ -133,6 +136,7 @@ function show_upgrade_menu() {
 			case 9:
 				break;
 			case 0:
+			case 'q':
 				exit();
 		}
 	}
@@ -144,16 +148,21 @@ function show_upgrade_menu() {
  */
 function do_upgrade_auto_loader() {
 	global $text;
+	//remove temp file
+	unlink(sys_get_temp_dir() . '/' . auto_loader::FILE);
+	//create a new instance of the autoloader
 	$loader = new auto_loader();
+	//reload the classes
 	$loader->reload_classes();
 	echo "{$text['label-reloaded_classes']}\n";
+	//re-create cache file
 	if ($loader->update_cache()) {
 		echo "{$text['label-updated_cache']}\n";
 	}
 }
 
 /**
- * Show the software version
+ * Update file system permissions
  */
 function do_filesystem_permissions($text, settings $settings) {
 
@@ -185,6 +194,8 @@ function do_filesystem_permissions($text, settings $settings) {
 		if ($log_directory !== null) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
+		//update the auto_loader cache permissions file
+		$directories[] = sys_get_temp_dir() . '/' . auto_loader::FILE;
 		//execute chown command for each directory
 		foreach ($directories as $dir) {
 			if ($dir !== null) {

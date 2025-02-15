@@ -43,12 +43,12 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//connect to the database
+	$database = database::new();
 
 //set a default message_timeout
 	$message_timeout = 4*1000;
@@ -76,7 +76,7 @@
 //process the http post
 	if (!empty($_POST) && @sizeof($_POST) > 0) {
 
-		//get the action options: source, schema, app_defaults, menu_defaults, permisisons
+		//get the action options: source, schema, app_defaults, menu_defaults, permissions
 		$action = $_POST['action'] ?? null;
 
 		//run source update
@@ -91,6 +91,12 @@
 			}
 			else {
 				message::add($text['message-upgrade_source_failed'], 'negative', $message_timeout);
+			}
+
+			global $autoload;
+			if ($autoload !== null && $autoload instanceof auto_loader) {
+				$autoload->reload_classes();
+				$autoload->update_cache();
 			}
 		}
 
@@ -116,6 +122,13 @@
 			if ($apps_updated != 0) { message::add($text['message-optional_apps_upgrade_source'], null, $message_timeout); }
 			if ($apps_failed != 0) { message::add($text['message-optional_apps_upgrade_source_failed'], 'negative', $message_timeout); }
 
+			//update the auto_loader cache just-in-case the source files have updated
+			global $autoload;
+			if ($autoload !== null && $autoload instanceof auto_loader) {
+				$autoload->reload_classes();
+				$autoload->update_cache();
+			}
+
 		}
 
 		//load an array of the database schema and compare it with the active database
@@ -131,7 +144,13 @@
 
 		//process the apps defaults
 		if (!empty($action["app_defaults"]) && permission_exists("upgrade_apps")) {
-			require_once "resources/classes/domains.php";
+			//update the auto_loader cache just-in-case the source files have updated
+			global $autoload;
+			if ($autoload !== null && $autoload instanceof auto_loader) {
+				$autoload->reload_classes();
+				$autoload->update_cache();
+			}
+
 			$domain = new domains;
 			$domain->upgrade();
 			message::add($text['message-upgrade_apps'], null, $message_timeout);
@@ -139,6 +158,11 @@
 
 		//restore defaults of the selected menu
 		if (!empty($action["menu_defaults"]) && permission_exists("menu_restore")) {
+			global $autoload;
+			if ($autoload !== null && $autoload instanceof auto_loader) {
+				$autoload->reload_classes();
+				$autoload->update_cache();
+			}
 			$sel_menu = explode('|', check_str($_POST["sel_menu"]));
 			$menu_uuid = $sel_menu[0];
 			$menu_language = $sel_menu[1];
@@ -151,6 +175,11 @@
 
 		//restore default permissions
 		if (!empty($action["permission_defaults"]) && permission_exists("group_edit")) {
+			global $autoload;
+			if ($autoload !== null && $autoload instanceof auto_loader) {
+				$autoload->reload_classes();
+				$autoload->update_cache();
+			}
 			$included = true;
 			require_once("core/groups/permissions_default.php");
 			$text = $language->get(null, '/core/upgrade');
