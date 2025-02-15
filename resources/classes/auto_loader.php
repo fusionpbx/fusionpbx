@@ -33,7 +33,10 @@ class auto_loader {
 	public function __construct($project_path = '') {
 		//classes must be loaded before this object is registered
 		if (!$this->load_cache()) {
+			//cache miss so load them
 			$this->reload_classes($project_path);
+			//update the cache after loading classes array
+			$this->update_cache();
 		}
 		//register this object to load any unknown classes
 		spl_autoload_register(array($this, 'loader'));
@@ -106,8 +109,6 @@ class auto_loader {
 			$this->classes[basename($path, '.php')] = $path;
 		}
 
-		//update the cache after loading classes array
-		$this->update_cache();
 	}
 
 	private function loader($class_name) : bool {
