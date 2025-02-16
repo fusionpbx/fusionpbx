@@ -323,12 +323,12 @@ if (!class_exists('xml_cdr')) {
 
 					//failed to load the XML, move the XML file to the failed directory
 					if (!empty($xml_cdr_dir)) {
-						if (!file_exists($xml_cdr_dir.'/failed')) {
-							if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+						if (!file_exists($xml_cdr_dir.'/failed/invalid_xml')) {
+							if (!mkdir($xml_cdr_dir.'/failed/invalid_xml', 0660, true)) {
 								die('Failed to create '.$xml_cdr_dir.'/failed');
 							}
 						}
-						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
+						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/invalid_xml/'.$this->file);
 					}
 
 					//return without saving the invalid xml
