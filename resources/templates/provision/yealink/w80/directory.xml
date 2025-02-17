@@ -1,0 +1,91 @@
+<YealinkIPPhoneDirectory>
+{foreach $contacts as $row}
+{if $smarty.get.contacts == "users" && $row.category == "users"}
+<DirectoryEntry>
+{if $row.contact_organization && $row.contact_name_given && $row.contact_name_family}
+	<Name>{$row.contact_organization}, {$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_organization && $row.contact_name_given == "" && $row.contact_name_family == ""}
+	<Name>{$row.contact_organization}</Name>
+{elseif $row.contact_name_given && $row.contact_name_family && $row.contact_organization == ""}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_name_given && $row.contact_name_family}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_name_given}
+	<Name>{$row.contact_name_given}</Name>
+{elseif $row.contact_name_family}
+	<Name>{$row.contact_name_family}</Name>
+{/if}
+{foreach $row.numbers as $number}
+{if $number.phone_number}
+	<Telephone>{$number.phone_number}</Telephone>
+{else}
+	<Telephone>{$number.phone_extension}</Telephone>
+{/if}
+{/foreach}
+</DirectoryEntry>
+{elseif $smarty.get.contacts == "groups" && $row.category == "groups"}
+<DirectoryEntry>
+{if $row.contact_organization && $row.contact_name_given && $row.contact_name_family}
+	<Name>{$row.contact_organization}, {$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_organization && $row.contact_name_given == "" && $row.contact_name_family == ""}
+	<Name>{$row.contact_organization}</Name>
+{elseif $row.contact_name_given && $row.contact_name_family && $row.contact_organization == ""}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_name_given && $row.contact_name_family}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_name_given}
+	<Name>{$row.contact_name_given}</Name>
+{elseif $row.contact_name_family}
+	<Name>{$row.contact_name_family}</Name>
+{/if}
+{foreach $row.numbers as $number}
+{if $number.phone_number}
+	<Telephone>{$number.phone_number}</Telephone>
+{else}
+	<Telephone>{$number.phone_extension}</Telephone>
+{/if}
+{/foreach}
+</DirectoryEntry>
+{elseif $smarty.get.contacts == "extensions" && $row.category == "extensions"}
+<DirectoryEntry>
+{if $row.contact_name_given}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{else}
+	<Name>{$row.effective_caller_id_name}</Name>
+{/if}
+{if $row.phone_number}
+	<Telephone>{$row.phone_number}</Telephone>
+{else}
+	<Telephone>{$row.phone_extension}</Telephone>
+{/if}
+</DirectoryEntry>
+{elseif $smarty.get.contacts == "all"}
+<DirectoryEntry>
+{if $row.contact_organization && $row.contact_name_given && $row.contact_name_family}
+	<Name>{$row.contact_organization}, {$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_organization && $row.contact_name_given == "" && $row.contact_name_family == ""}
+	<Name>{$row.contact_organization}</Name>
+{elseif $row.contact_name_given && $row.contact_name_family && $row.contact_organization == ""}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_name_given && $row.contact_name_family}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{elseif $row.contact_name_given}
+	<Name>{$row.contact_name_given}</Name>
+{elseif $row.contact_name_family}
+	<Name>{$row.contact_name_family}</Name>
+{/if}
+{if isset($row.numbers)}
+{foreach $row.numbers as $number}
+{if $number.phone_number}
+	<Telephone>{$number.phone_number}</Telephone>
+{else}
+	<Telephone>{$number.phone_extension}</Telephone>
+{/if}
+{/foreach}
+{else}
+	<Telephone>{$row.phone_extension}</Telephone>
+{/if}
+</DirectoryEntry>
+{/if}
+{/foreach}
+</YealinkIPPhoneDirectory>
