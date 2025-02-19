@@ -101,17 +101,6 @@
 	$total_devices = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
-//get the domains if user has permission for show all
-	$domains = [];
-	if ($has_device_domain_all) {
-		$rows = $database->select("select domain_uuid, domain_name from v_domains where domain_enabled = 'true'");
-		if (!empty($rows)) {
-			foreach ($rows as $row) {
-				$domains[$row['domain_uuid']] = $row['domain_name'];
-			}
-		}
-	}
-
 //get the devices profiles
 	$sql = "select * from v_device_profiles ";
 	$sql .= "where true ";
@@ -196,7 +185,11 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select d.*, d2.device_label as alternate_label, ";
+	$sql = "select ";
+	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
+		$sql .= "d3.domain_name, ";
+	}
+	$sql .="d.*, d2.device_label as alternate_label, ";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'DD Mon YYYY') as provisioned_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'HH12:MI:SS am') as provisioned_time_formatted \n";
 	$sql .= "from v_devices as d, v_devices as d2 ";
@@ -426,7 +419,7 @@
 				echo "	</td>\n";
 			}
 			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-				echo "	<td>".escape($domains[$row['domain_uuid']])."</td>\n";
+				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class='no-wrap'>";
 			echo permission_exists('device_edit') ? "<a href='".$list_row_url."'>".escape(format_device_address($row['device_address']))."</a>" : escape(format_device_address($row['device_address']));

@@ -216,7 +216,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "record_name";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${sip_from_user}-\${sip_to_user}-\${strftime(%Y)}\${strftime(%b)}\${strftime(%d)}.\${record_ext}";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${sip_from_user}-\${sip_to_user}-\${strftime(%Y)}\${strftime(%b)}\${strftime(%d)}-\${uuid}.\${record_ext}";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Custom name for call recording. Options: \${record_ext}, \${sip_from_user}, \${sip_to_user}, \${caller_id_number}, \${uuid}";
 		$y++;

@@ -177,6 +177,11 @@
 		exit();
 	}
 
+//always update the auto_loader cache just-in-case the source files have updated
+	$auto_loader = new auto_loader();
+	$auto_loader->reload_classes();
+	$auto_loader->update_cache();
+
 //get the version of the software
 	if ($upgrade_type == 'version') {
 		echo software::version()."\n";

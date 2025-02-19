@@ -62,7 +62,7 @@
 			//set the email address
 				$email = $_REQUEST['email'];
 
-			//see if email existsesources/login.php?action=request
+			//see if email exists
 				$sql = "select ";
 				$sql .= "user_uuid, ";
 				$sql .= "username, ";
