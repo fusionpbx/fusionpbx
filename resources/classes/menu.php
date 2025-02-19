@@ -445,6 +445,7 @@ if (!class_exists('menu')) {
 
 								//item exists in the database
 									if ($menu_item_exists) {
+										$parent_menu_item_protected = 'false';
 										//get parent_menu_item_protected
 										foreach ($menu_items as $item) {
 											if ($item['uuid'] == $menu['parent_uuid']) {
@@ -1048,7 +1049,7 @@ if (!class_exists('menu')) {
 										$menu_sub_icon = null;
 									}
 								}
-								$html .= "						<li class='nav-item'><a class='nav-link' href='".$mod_a_2."' ".$mod_a_3.">".($this->settings->get('theme', 'menu_sub_icons', true) != false ? "<span class='fa-solid fa-minus d-inline-block d-sm-none float-left' style='margin: 4px 10px 0 25px;'></span>" : '').escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
+								$html .= "						<li class='nav-item'><a class='nav-link' href='".$mod_a_2."' ".$mod_a_3." onclick='event.stopPropagation();'>".($this->settings->get('theme', 'menu_sub_icons', true) != false ? "<span class='fa-solid fa-minus d-inline-block d-sm-none float-left' style='margin: 4px 10px 0 25px;'></span>" : '').escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
 								if ($columns > 1 && $column_current == 1 && ($index_sub+1) > (ceil(@sizeof($menu_parent['menu_items'])/2)-1)) {
 									$html .= "								</ul>\n";
 									$html .= "							</div>\n";
@@ -1237,6 +1238,7 @@ if (!class_exists('menu')) {
 					$html .= "	<div style='height: 100px;'></div>\n";
 				}
 			$html .= "</div>\n";
+			$content_container_onclick = "";
 			if ($menu_side_state != 'expanded') {
 				$content_container_onclick = "onclick=\"clearTimeout(menu_side_contract_timer); if ($(window).width() >= 576) { menu_side_contract(); }\"";
 			}

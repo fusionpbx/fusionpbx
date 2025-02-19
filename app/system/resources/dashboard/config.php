@@ -46,8 +46,8 @@ $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '41befc82-c65a-499e-9e29-513a3dd7974a';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'beade936-846b-4f02-986c-a2de6fa762c2';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
-$x++;
 
+$x++;
 $array['dashboard'][$x]['dashboard_uuid'] = 'bb76f7fc-669f-41dd-a636-6ddaee5deae1';
 $array['dashboard'][$x]['dashboard_name'] = 'System Counts';
 $array['dashboard'][$x]['dashboard_path'] = 'system/system_counts';
@@ -60,6 +60,21 @@ $array['dashboard'][$x]['dashboard_description'] = 'A list of showing the count 
 $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'a772d2a8-7c1f-4453-b77b-2e15b510a78d';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'bb76f7fc-669f-41dd-a636-6ddaee5deae1';
+$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
+
+$x++;
+$array['dashboard'][$x]['dashboard_uuid'] = '2a0a6742-bd2d-449a-88ac-b3ed255c9f8e';
+$array['dashboard'][$x]['dashboard_name'] = 'System Services';
+$array['dashboard'][$x]['dashboard_path'] = 'system/system_services';
+$array['dashboard'][$x]['dashboard_column_span'] = '1';
+$array['dashboard'][$x]['dashboard_row_span'] = '2';
+$array['dashboard'][$x]['dashboard_details_state'] = 'hidden';
+$array['dashboard'][$x]['dashboard_order'] = '110';
+$array['dashboard'][$x]['dashboard_enabled'] = 'false';
+$array['dashboard'][$x]['dashboard_description'] = 'A list of showing the count of active and inactive services';
+$y = 0;
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '719d8a56-00b2-437e-83c0-a9e5005a53c5';
+$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = '4bd3e11d-f4cd-4e37-8e7b-445e1e4aa7d5';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
 //$y++;
 //$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '127382ae-0dd1-45eb-869c-56a708220de5';

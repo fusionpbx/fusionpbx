@@ -77,86 +77,90 @@ if ($domains_processed == 1) {
 		unset($sql, $device_keys);
 
 	//set the device profile keys
-		$sql = "select count(*) from v_device_profile_keys ";
-		$num_rows = $database->select($sql, null, 'column');
-		if ($num_rows == 0) {
-			//get the device profile keys from device_keys table
-			$sql = "select * from v_device_keys ";
-			$sql .= "where device_profile_uuid is not null ";
-			$device_profile_keys = $database->select($sql, null, 'all');
+		if ($database->column_exists('v_device_keys', 'device_profile_uuid')) {
+			$sql = "select count(*) from v_device_profile_keys ";
+			$num_rows = $database->select($sql, null, 'column');
+			if ($num_rows == 0) {
+				//get the device profile keys from device_keys table
+				$sql = "select * from v_device_keys ";
+				$sql .= "where device_profile_uuid is not null ";
+				$device_profile_keys = $database->select($sql, null, 'all');
 
-			//loop through the device_keys to build the data array
-			if (!empty($device_profile_keys)) {
-				foreach ($device_profile_keys as $index => $row) {
-					$array['device_profile_keys'][$index]['device_profile_key_uuid'] = $row["device_key_uuid"];
-					$array['device_profile_keys'][$index]['domain_uuid'] = $row["domain_uuid"];
-					$array['device_profile_keys'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
-					$array['device_profile_keys'][$index]['profile_key_id'] = $row["device_key_id"];
-					$array['device_profile_keys'][$index]['profile_key_category'] = $row["device_key_category"];
-					$array['device_profile_keys'][$index]['profile_key_vendor'] = $row["device_key_vendor"];
-					$array['device_profile_keys'][$index]['profile_key_type'] = $row["device_key_type"];
-					$array['device_profile_keys'][$index]['profile_key_line'] = $row["device_key_line"];
-					$array['device_profile_keys'][$index]['profile_key_value'] = $row["device_key_value"];
-					$array['device_profile_keys'][$index]['profile_key_extension'] = $row["device_key_extension"];
-					$array['device_profile_keys'][$index]['profile_key_protected'] = $row["device_key_protected"];
-					$array['device_profile_keys'][$index]['profile_key_label'] = $row["device_key_label"];
-					$array['device_profile_keys'][$index]['profile_key_icon'] = $row["device_key_icon"];
+				//loop through the device_keys to build the data array
+				if (!empty($device_profile_keys)) {
+					foreach ($device_profile_keys as $index => $row) {
+						$array['device_profile_keys'][$index]['device_profile_key_uuid'] = $row["device_key_uuid"];
+						$array['device_profile_keys'][$index]['domain_uuid'] = $row["domain_uuid"];
+						$array['device_profile_keys'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
+						$array['device_profile_keys'][$index]['profile_key_id'] = $row["device_key_id"];
+						$array['device_profile_keys'][$index]['profile_key_category'] = $row["device_key_category"];
+						$array['device_profile_keys'][$index]['profile_key_vendor'] = $row["device_key_vendor"];
+						$array['device_profile_keys'][$index]['profile_key_type'] = $row["device_key_type"];
+						$array['device_profile_keys'][$index]['profile_key_line'] = $row["device_key_line"];
+						$array['device_profile_keys'][$index]['profile_key_value'] = $row["device_key_value"];
+						$array['device_profile_keys'][$index]['profile_key_extension'] = $row["device_key_extension"];
+						$array['device_profile_keys'][$index]['profile_key_protected'] = $row["device_key_protected"];
+						$array['device_profile_keys'][$index]['profile_key_label'] = $row["device_key_label"];
+						$array['device_profile_keys'][$index]['profile_key_icon'] = $row["device_key_icon"];
+					}
+				}
+
+				//save the array
+				if (!empty($array)) {
+					$p = permissions::new();
+					$p->add('device_profile_key_add', 'temp');
+
+					$database->app_name = 'devices';
+					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+					$database->save($array);
+					$response = $database->message;
+					unset($array);
+
+					$p->delete('device_profile_key_add', 'temp');
 				}
 			}
-
-			//save the array
-			if (!empty($array)) {
-				$p = permissions::new();
-				$p->add('device_profile_key_add', 'temp');
-
-				$database->app_name = 'devices';
-				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-				$database->save($array);
-				$response = $database->message;
-				unset($array);
-
-				$p->delete('device_profile_key_add', 'temp');
-			}
+			unset($sql, $device_profile_keys);
 		}
-		unset($sql, $device_profile_keys);
 
 	//set the device profile settings
-		$sql = "select count(*) from v_device_profile_settings ";
-		$num_rows = $database->select($sql, null, 'column');
-		if ($num_rows == 0) {
-			//get the device profile keys from device_keys table
-			$sql = "select * from v_device_settings ";
-			$sql .= "where device_profile_uuid is not null ";
-			$device_profile_keys = $database->select($sql, null, 'all');
+		if ($database->column_exists('v_device_settings', 'device_profile_uuid')) {
+			$sql = "select count(*) from v_device_profile_settings ";
+			$num_rows = $database->select($sql, null, 'column');
+			if ($num_rows == 0) {
+				//get the device profile keys from device_keys table
+				$sql = "select * from v_device_settings ";
+				$sql .= "where device_profile_uuid is not null ";
+				$device_profile_keys = $database->select($sql, null, 'all');
 
-			//loop through the device_keys to build the data array
-			if (!empty($device_profile_keys)) {
-				foreach ($device_profile_keys as $index => $row) {
-					$array['device_profile_settings'][$index]['device_profile_setting_uuid'] = $row["device_setting_uuid"];
-					$array['device_profile_settings'][$index]['domain_uuid'] = $row["domain_uuid"];
-					$array['device_profile_settings'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
-					$array['device_profile_settings'][$index]['profile_setting_name'] = $row["device_setting_subcategory"];
-					$array['device_profile_settings'][$index]['profile_setting_value'] = $row["device_setting_value"];
-					$array['device_profile_settings'][$index]['profile_setting_enabled'] = $row["device_setting_enabled"];
-					$array['device_profile_settings'][$index]['profile_setting_description'] = $row["device_setting_description"];
+				//loop through the device_keys to build the data array
+				if (!empty($device_profile_keys)) {
+					foreach ($device_profile_keys as $index => $row) {
+						$array['device_profile_settings'][$index]['device_profile_setting_uuid'] = $row["device_setting_uuid"];
+						$array['device_profile_settings'][$index]['domain_uuid'] = $row["domain_uuid"];
+						$array['device_profile_settings'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
+						$array['device_profile_settings'][$index]['profile_setting_name'] = $row["device_setting_subcategory"];
+						$array['device_profile_settings'][$index]['profile_setting_value'] = $row["device_setting_value"];
+						$array['device_profile_settings'][$index]['profile_setting_enabled'] = $row["device_setting_enabled"];
+						$array['device_profile_settings'][$index]['profile_setting_description'] = $row["device_setting_description"];
+					}
+				}
+
+				//save the array
+				if (!empty($array)) {
+					$p = permissions::new();
+					$p->add('device_profile_setting_add', 'temp');
+
+					$database->app_name = 'devices';
+					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+					$database->save($array);
+					$response = $database->message;
+					unset($array);
+
+					$p->delete('device_profile_setting_add', 'temp');
 				}
 			}
-
-			//save the array
-			if (!empty($array)) {
-				$p = permissions::new();
-				$p->add('device_profile_setting_add', 'temp');
-
-				$database->app_name = 'devices';
-				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-				$database->save($array);
-				$response = $database->message;
-				unset($array);
-
-				$p->delete('device_profile_setting_add', 'temp');
-			}
+			unset($sql, $device_profile_keys);
 		}
-		unset($sql, $device_profile_keys);
 
 	//add device vendor functions to the database
 		$sql = "select count(*) from v_device_vendors; ";
@@ -247,6 +251,7 @@ if ($domains_processed == 1) {
 		$sql = "update v_device_lines set label = display_name where label is null;\n";
 		$database->execute($sql);
 		unset($sql);
+
 }
 
 ?>

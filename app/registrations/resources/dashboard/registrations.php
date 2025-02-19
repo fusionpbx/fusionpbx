@@ -12,10 +12,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], dirname($dashboard_url));
 
 //get the dashboard label
-	$dashboard_label = $text['title-'.$dashboard_key];
-	if (empty($dashboard_label)) {
-		$dashboard_label = $dashboard_name;
-	}
+	$dashboard_label = $text['title-'.$dashboard_key] ?? $dashboard_name;
 
 //prepare variables
 	$dashboard_target = ($dashboard_target == 'new') ? '_blank' : '_self';
@@ -25,9 +22,7 @@
 	}
 
 //channel count
-	if ($esl == null) {
-		$esl = event_socket::create();
-	}
+	$esl = event_socket::create();
 
 //registration count
 	if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
@@ -41,6 +36,7 @@
 //get the total enabled extensions
 	$sql = "select count(*) as count from v_extensions ";
 	$sql .= "where enabled = 'true' ";
+	$parameters = null;
 	if (!permission_exists("registration_all")) {
 		$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -59,7 +55,7 @@
 	echo "		<span class='hud_title' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\">".escape($dashboard_label)."</span>";
 	echo "		<div style='position: relative; display: inline-block;'>\n";
 	echo "			<span class='hud_stat' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\"><i class=\"fas ".$dashboard_icon."\"></i></span>\n";
-	echo "			<span style=\"background-color: ".($row['dashboard_number_background_color'] ?? '#5d5ce3')."; color: ".($row['dashboard_number_text_color'] ?? '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 22px; left: 25px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$active_registrations." / ".($active_registrations + $inactive_registrations)."</span>\n";
+	echo "			<span style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#5d5ce3')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 22px; left: 25px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$active_registrations." / ".($active_registrations + $inactive_registrations)."</span>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
 	if (empty($dashboard_details_state) || $dashboard_details_state != "disabled") {

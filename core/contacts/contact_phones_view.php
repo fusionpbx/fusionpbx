@@ -51,6 +51,29 @@
 //show if exists
 	if (!empty($contact_phones)) {
 
+		//detect speed dial prefix from dialplan
+			$sql = "select dialplan_detail_data from v_dialplan_details ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and dialplan_uuid = ( ";
+			$sql .= "	select dialplan_uuid from v_dialplan_details ";
+			$sql .= "	where domain_uuid = :domain_uuid ";
+			$sql .= "	and dialplan_detail_data like 'app.lua speed_dial%' ";
+			$sql .= "	and (dialplan_detail_enabled = true or dialplan_detail_enabled is null) ";
+			$sql .= "	limit 1 ";
+			$sql .= ") ";
+			$sql .= "and dialplan_detail_tag = 'condition' ";
+			$sql .= "and dialplan_detail_type = 'destination_number' ";
+			$sql .= "and dialplan_detail_data like '^\\\\%' ";
+			$sql .= "and (dialplan_detail_enabled = true or dialplan_detail_enabled is null) ";
+			$sql .= "limit 1";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$speed_dial_condition = $database->select($sql, $parameters, 'column');
+			if (!empty($speed_dial_condition)) {
+				$speed_dial_prefix = str_replace('(.*)', '', trim($speed_dial_condition,'^\$')); // default: ^\*0(.*)$
+			}
+			unset($sql, $speed_dial_condition);
+
 		//javascript function: send_cmd
 			echo "<script type='text/javascript'>\n";
 			echo "function send_cmd(url) {\n";
@@ -81,9 +104,12 @@
 				if ($row['phone_type_video']) { $phone_types[] = "<i class='fas fa-video fa-fw' style='margin-right: 3px;' title=\"".$text['label-video']."\"></i>"; }
 				if ($row['phone_type_text']) { $phone_types[] = "<i class='fas fa-sms fa-fw' style='margin-right: 3px;' title=\"".$text['label-text']."\"></i>"; }
 				if (!empty($phone_types)) {
-					echo "	".implode(" ", $phone_types)."\n";
+					echo "	".implode(" ", $phone_types);
 				}
 				unset($phone_types);
+				if (!empty($row['phone_speed_dial'])) {
+					echo "<nobr><i class='fas fa-bolt fa-fw' title=\"".$text['label-phone_speed_dial']."\"></i>".$speed_dial_prefix."<strong>".$row['phone_speed_dial']."</strong></nobr>";
+				}
 				echo "</div>\n";
 				$x++;
 			}
