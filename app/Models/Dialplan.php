@@ -64,4 +64,9 @@ class Dialplan extends Model
 	public function dialplandetails(): HasMany {
 		return $this->hasMany(DialplanDetail::class, 'dialplan_uuid', 'dialplan_uuid');
 	}
+
+	public function callcenterqueue(): BelongsTo {
+		return $this->belongsTo(CallCenterQueue::class, 'dialplan_uuid', 'dialplan_uuid');
+	}
+
 }

@@ -75,4 +75,7 @@ class User extends Authenticatable
 		return $this->hasMany(UserSetting::class, 'user_setting_uuid', 'user_setting_uuid');
 	}
 
+	public function callcenteragent(): BelongsTo {
+		return $this->belongsTo(CallCenterAgent::class, 'user_uuid', 'user_uuid');
+	}
 }

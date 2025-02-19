@@ -84,8 +84,8 @@ class Domain extends Model
 		return $this->hasMany(MusicOnHold::class, 'domain_uuid', 'domain_uuid');
 	}
 	
-	public function billings(): HasMany {
-		return $this->hasMany(Billing::class, 'domain_uuid', 'domain_uuid');
+	public function billingprofiless(): HasMany {
+		return $this->hasMany(BillingProfile::class, 'domain_uuid', 'domain_uuid');
 	}
 
 	public function billingauthorizedpaymentsources(): HasMany {
@@ -110,5 +110,13 @@ class Domain extends Model
 
 	public function callbroadcasts(): HasMany {
 		return $this->hasMany(CallBroadcast::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function callcenterqueues(): HasMany {
+		return $this->hasMany(CallCenterQueue::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function callcenteragent(): HasMany {
+		return $this->hasMany(CallCenterAgent::class, 'domain_uuid', 'domain_uuid');
 	}
 }

@@ -9,13 +9,14 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Traits\HasUniqueIdentifier;
 
-class BillingAuthorizedPaymentSource extends Model
+class CallCenterAgent extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_billing_authorized_payment_sources';
-	protected $primaryKey = 'billing_authorized_payment_source_uuid';
+	protected $table = 'v_call_center_queues';
+	protected $primaryKey = 'call_center_queue_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,9 +28,22 @@ class BillingAuthorizedPaymentSource extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'billing_authorized_payment_source_plugin_used',
-		'billing_authorized_payment_source_token',
-		'verified'
+        'domain_uuid',
+        'user_uuid',
+        'agent_name',
+        'agent_type',
+        'agent_call_timeout',
+        'agent_id',
+        'agent_password',
+        'agent_contact',
+        'agent_status',
+        'agent_logout',
+        'agent_max_no_answer',
+        'agent_wrap_up_time',
+        'agent_reject_delay_time',
+        'agent_busy_delay_time',
+        'agent_no_answer_delay_time',
+        'agent_record',
 	];
 
     /**
@@ -51,8 +65,8 @@ class BillingAuthorizedPaymentSource extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
-	
-	public function billing(): BelongsTo {
-		return $this->belongsTo(BillingProfile::class, 'billing_uuid', 'billing_uuid');
+
+	public function user(): HasOne {
+		return $this->HasOne(User::class, 'user_uuid', 'user_uuid');
 	}
 }

@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasUniqueIdentifier;
 
-class BillingAuthorizedPaymentSource extends Model
+class SofiaGlobalSetting extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_billing_authorized_payment_sources';
-	protected $primaryKey = 'billing_authorized_payment_source_uuid';
+	protected $table = 'v_carriers';
+	protected $primaryKey = 'carrier_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,9 +23,14 @@ class BillingAuthorizedPaymentSource extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'billing_authorized_payment_source_plugin_used',
-		'billing_authorized_payment_source_token',
-		'verified'
+    'carrier_name',
+    'enabled',
+    'carrier_channels',
+    'priority',
+    'fax_enabled',
+    'short_call_friendly',
+    'cancellation_ratio'
+    'lcr_tags',
 	];
 
     /**
@@ -48,11 +49,8 @@ class BillingAuthorizedPaymentSource extends Model
 	protected $casts = [
 	];
 
-	public function domain(): BelongsTo {
-		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	public function lcr(): HasMany {
+		return $this->hasMany(Lcr::class, 'carrier_uuid', 'carrier_uuid');
 	}
-	
-	public function billing(): BelongsTo {
-		return $this->belongsTo(BillingProfile::class, 'billing_uuid', 'billing_uuid');
-	}
+
 }

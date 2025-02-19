@@ -57,6 +57,6 @@ class BillingInvoice extends Model
 	}
 	
 	public function billing(): BelongsTo {
-		return $this->belongsTo(Billing::class, 'billing_uuid', 'billing_uuid');
+		return $this->belongsTo(BillingProfile::class, 'billing_uuid', 'billing_uuid');
 	}
 }
