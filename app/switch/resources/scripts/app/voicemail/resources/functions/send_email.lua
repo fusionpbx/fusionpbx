@@ -124,7 +124,8 @@
 					end
 
 				--get voicemail message details
-					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, *
+					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date,
+						to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY') as subject_date, *
 						FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
 						AND voicemail_message_uuid = :uuid]]
@@ -140,6 +141,7 @@
 							caller_id_number = row["caller_id_number"];
 							message_date = row["message_date"];
 							message_length = row["message_length"];
+							subject_date = row["subject_date"];
 							--message_status = row["message_status"];
 							--message_priority = row["message_priority"];
 						--get the recordings from the database
@@ -250,6 +252,7 @@
 						subject = subject:gsub("${caller_id_name}", caller_id_name);
 						subject = subject:gsub("${caller_id_number}", caller_id_number);
 						subject = subject:gsub("${message_date}", message_date);
+						subject = subject:gsub("${subject_date}", subject_date);
 						subject = subject:gsub("${message_duration}", message_length_formatted);
 						subject = subject:gsub("${account}", voicemail_name_formatted);
 						subject = subject:gsub("${voicemail_id}", id);
@@ -268,6 +271,7 @@
 						body = body:gsub("${caller_id_name}", caller_id_name);
 						body = body:gsub("${caller_id_number}", caller_id_number);
 						body = body:gsub("${message_date}", message_date);
+						body = body:gsub("${subject_date}", subject_date);
 						if (transcription ~= nil) then
 							transcription = transcription:gsub("%%", "*");
 							body = body:gsub("${message_text}", transcription);
