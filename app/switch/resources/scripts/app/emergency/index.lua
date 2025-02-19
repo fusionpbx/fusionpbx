@@ -192,9 +192,10 @@ end);
 --set event
 if (tonumber(destination_number) == 933) then
 	event = '933 Emergency Address Validation Service';
-else if (tonumber(destination_number) == 911) then
+elseif (tonumber(destination_number) == 922) then
+	event = '922 Emergency Address Validation Service';
+elseif (tonumber(destination_number) == 911) then
 	event = '911 Emergency Call';
-	end
 end
 
 --connect to the database
@@ -261,4 +262,3 @@ end
 
 dbh:query(sql, params);
 dbh:release();
-
