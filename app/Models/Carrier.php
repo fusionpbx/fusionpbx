@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasUniqueIdentifier;
 
-class SofiaGlobalSetting extends Model
+class Carrier extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
 	protected $table = 'v_carriers';
@@ -23,14 +23,14 @@ class SofiaGlobalSetting extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-    'carrier_name',
-    'enabled',
-    'carrier_channels',
-    'priority',
-    'fax_enabled',
-    'short_call_friendly',
-    'cancellation_ratio'
-    'lcr_tags',
+        'carrier_name',
+        'enabled',
+        'carrier_channels',
+        'priority',
+        'fax_enabled',
+        'short_call_friendly',
+        'cancellation_ratio',
+        'lcr_tags',
 	];
 
     /**
@@ -53,4 +53,8 @@ class SofiaGlobalSetting extends Model
 		return $this->hasMany(Lcr::class, 'carrier_uuid', 'carrier_uuid');
 	}
 
+    public function gateways(): BelongsToMany {
+		return $this->belongsToMany(Gateway::class, 'v_carrier_gateways', 'carrier_uuid', 'gateway_uuid');
+//		$this->belongsToMany(Group::class)->using(UserGroup::class);
+	}
 }

@@ -27,16 +27,17 @@ class VoicemailGreeting extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-    'created_epoch',
-    'read_epoch',
-    'caller_id_name',
-    'caller_id_number',
-    'message_length',
-    'message_status',
-    'message_priority',
-    'message_intro_base64',
-    'message_base64',
-    'message_transcription',
+        'domain_uuid',
+        'created_epoch',
+        'read_epoch',
+        'caller_id_name',
+        'caller_id_number',
+        'message_length',
+        'message_status',
+        'message_priority',
+        'message_intro_base64',
+        'message_base64',
+        'message_transcription',
 	];
 
     /**

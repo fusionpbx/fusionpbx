@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class VoicemailOption extends Model
+class ContactRelation extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_voicemail_options';
-	protected $primaryKey = 'voicemail_option_uuid';
+	protected $table = 'v_contact_relations';
+	protected $primaryKey = 'contact_relation_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -28,11 +28,9 @@ class VoicemailOption extends Model
      */
 	protected $fillable = [
         'domain_uuid',
-        'voicemail_option_digits',
-        'voicemail_option_action',
-        'voicemail_option_param',
-        'voicemail_option_order',
-        'voicemail_option_description',
+        'contact_uuid',
+        'relation_label',
+        'relation_contact_uuid',
 	];
 
     /**
@@ -51,12 +49,7 @@ class VoicemailOption extends Model
 	protected $casts = [
 	];
 
-	public function domain(): BelongsTo {
-		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	public function contact(): BelongsTo {
+		return $this->belongsTo(Contact::class, 'contact_uuid', 'contact_uuid');
 	}
-
-	public function voicemail(): BelongsTo {
-		return $this->belongsTo(Voicemail::class, 'voicemail_uuid', 'voicemail_uuid');
-	}
-
 }

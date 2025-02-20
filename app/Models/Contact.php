@@ -49,4 +49,52 @@ class Contact extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
+
+	public function addresses(): HasMany {
+		return $this->hasMany(ContactAddress::class, 'contact_address_uuid', 'contact_address_uuid');
+	}
+
+	public function attachments(): HasMany {
+		return $this->hasMany(ContactAttachment::class, 'contact_attachment_uuid', 'contact_attachment_uuid');
+	}
+
+	public function emails(): HasMany {
+		return $this->hasMany(ContactEmail::class, 'contact_email_uuid', 'contact_email_uuid');
+	}
+
+	public function groups(): BelongsToMany {
+		return $this->belongsToMany(Group::class, 'v_contact_groups', 'contact_uuid', 'group_uuid');
+//		$this->belongsToMany(Group::class)->using(UserGroup::class);
+	}
+
+	public function notes(): HasMany {
+		return $this->hasMany(ContactNote::class, 'contact_note_uuid', 'contact_note_uuid');
+	}
+
+	public function phones(): HasMany {
+		return $this->hasMany(ContactPhone::class, 'contact_phone_uuid', 'contact_phone_uuid');
+	}
+
+	// TODO: Review
+	public function relations(): HasMany {
+		return $this->hasMany(ContactRelation::class, 'contact_relation_uuid', 'contact_relation_uuid');
+	}
+
+	public function settings(): HasMany {
+		return $this->hasMany(ContactSetting::class, 'contact_setting_uuid', 'contact_setting_uuid');
+	}
+
+	// TODO: Check if User::class needs this method as well
+	public function times(): HasMany {
+		return $this->hasMany(ContactTimes::class, 'contact_setting_uuid', 'contact_setting_uuid');
+	}
+
+	public function urls(): HasMany {
+		return $this->hasMany(ContactUrl::class, 'contact_url_uuid', 'contact_url_uuid');
+	}
+
+	public function contactusers(): BelongsToMany {
+		return $this->belongsToMany(User::class, 'v_contact_users', 'contact_uuid', 'user_uuid');
+//		$this->belongsToMany(Group::class)->using(UserGroup::class);
+	}
 }

@@ -97,8 +97,8 @@ class Extension extends Model
 	protected $casts = [
 	];
 
-	public function groups(): BelongsToMany {
-		return $this->belongsToMany(Group::class, 'v_extension_users', 'extension_uuid', 'user_uuid');
+	public function users(): BelongsToMany {
+		return $this->belongsToMany(User::class, 'v_extension_users', 'extension_uuid', 'user_uuid');
 //		$this->belongsToMany(Group::class)->using(UserGroup::class);
 	}
 

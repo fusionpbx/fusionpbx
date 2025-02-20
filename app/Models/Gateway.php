@@ -27,39 +27,39 @@ class Gateway extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-    'domain_uuid',
-    'gateway',
-    'username',
-    'password',
-    'distinct_to',
-    'auth_username',
-    'realm',
-    'from_user',
-    'from_domain',
-    'proxy',
-    'register_proxy',
-    'outbound_proxy',
-    'expire_seconds',
-    'register',
-    'register_transport',
-    'contact_params',
-    'retry_seconds',
-    'extension',
-    'ping',
-    'ping_min',
-    'ping_max',
-    'contact_in_ping',
-    'caller_id_in_from',
-    'supress_cng',
-    'sip_cid_type',
-    'codec_prefs',
-    'channels',
-    'extension_in_contact',
-    'context',
-    'profile',
-    'hostname',
-    'enabled',
-    'description',
+        'domain_uuid',
+        'gateway',
+        'username',
+        'password',
+        'distinct_to',
+        'auth_username',
+        'realm',
+        'from_user',
+        'from_domain',
+        'proxy',
+        'register_proxy',
+        'outbound_proxy',
+        'expire_seconds',
+        'register',
+        'register_transport',
+        'contact_params',
+        'retry_seconds',
+        'extension',
+        'ping',
+        'ping_min',
+        'ping_max',
+        'contact_in_ping',
+        'caller_id_in_from',
+        'supress_cng',
+        'sip_cid_type',
+        'codec_prefs',
+        'channels',
+        'extension_in_contact',
+        'context',
+        'profile',
+        'hostname',
+        'enabled',
+        'description',
 	];
 
     /**
@@ -81,4 +81,9 @@ class Gateway extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
+	public function carriers(): BelongsToMany {
+		return $this->belongsToMany(Carrier::class, 'v_carrier_gateways', 'gateway_uuid', 'carrier_uuid');
+//		$this->belongsToMany(Group::class)->using(UserGroup::class);
+	}
+
 }

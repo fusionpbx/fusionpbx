@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class VoicemailOption extends Model
+class FolowMeDestination extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_voicemail_options';
-	protected $primaryKey = 'voicemail_option_uuid';
+	protected $table = 'v_follow_me_destinations';
+	protected $primaryKey = 'follow_me_destination_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -28,11 +28,12 @@ class VoicemailOption extends Model
      */
 	protected $fillable = [
         'domain_uuid',
-        'voicemail_option_digits',
-        'voicemail_option_action',
-        'voicemail_option_param',
-        'voicemail_option_order',
-        'voicemail_option_description',
+        'follow_me_uuid',
+        'follow_me_destination',
+        'follow_me_delay',
+        'follow_me_timeout',
+        'follow_me_prompt',
+        'follow_me_order',
 	];
 
     /**
@@ -51,12 +52,7 @@ class VoicemailOption extends Model
 	protected $casts = [
 	];
 
-	public function domain(): BelongsTo {
-		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	public function followme(): BelongsTo {
+		return $this->belongsTo(FollowMe::class, 'follow_me_uuid', 'follow_me_uuid');
 	}
-
-	public function voicemail(): BelongsTo {
-		return $this->belongsTo(Voicemail::class, 'voicemail_uuid', 'voicemail_uuid');
-	}
-
 }

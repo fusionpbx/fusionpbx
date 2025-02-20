@@ -15,8 +15,8 @@ use App\Traits\HasUniqueIdentifier;
 class CallCenterAgent extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_call_center_queues';
-	protected $primaryKey = 'call_center_queue_uuid';
+	protected $table = 'v_call_center_agents';
+	protected $primaryKey = 'call_center_agent_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -68,5 +68,10 @@ class CallCenterAgent extends Model
 
 	public function user(): HasOne {
 		return $this->HasOne(User::class, 'user_uuid', 'user_uuid');
+	}
+
+	public function callcenterqueues(): BelongsToMany {
+		return $this->belongsToMany(CallCenterQueue::class, 'v_call_center_tiers', 'call_center_agent_uuid', 'call_center_queue_uuid');
+//		$this->belongsToMany(Group::class)->using(UserGroup::class);
 	}
 }

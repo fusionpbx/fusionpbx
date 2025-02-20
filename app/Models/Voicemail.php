@@ -27,20 +27,21 @@ class Voicemail extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-    'voicemail_id',
-    'voicemail_password',
-    'greeting_id',
-    'voicemail_alternate_greet_id',
-    'voicemail_mail_to',
-    'voicemail_sms_to',
-    'voicemail_transcription_enabled',
-    'voicemail_attach_file',
-    'voicemail_file',
-    'voicemail_local_after_email',
-    'voicemail_enabled',
-    'voicemail_description',
-    'voicemail_name_base64',
-    'voicemail_tutorial',
+        'domain_uuid',
+        'voicemail_id',
+        'voicemail_password',
+        'greeting_id',
+        'voicemail_alternate_greet_id',
+        'voicemail_mail_to',
+        'voicemail_sms_to',
+        'voicemail_transcription_enabled',
+        'voicemail_attach_file',
+        'voicemail_file',
+        'voicemail_local_after_email',
+        'voicemail_enabled',
+        'voicemail_description',
+        'voicemail_name_base64',
+        'voicemail_tutorial',
 	];
 
     /**

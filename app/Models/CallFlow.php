@@ -12,11 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Traits\HasUniqueIdentifier;
 
-class CallCenterQueue extends Model
+class CallFlow extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_call_center_queues';
-	protected $primaryKey = 'call_center_queue_uuid';
+	protected $table = 'v_call_flows';
+	protected $primaryKey = 'call_flow_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';

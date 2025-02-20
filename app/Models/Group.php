@@ -38,6 +38,11 @@ class Group extends Model
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
 
+	public function contacts(): BelongsToMany {
+		return $this->belongsToMany(Contact::class, 'v_contact_groups', 'group_uuid', 'contact_uuid');
+//		$this->belongsToMany(User::class)->using(UserGroup::class);
+	}
+
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}

@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasUniqueIdentifier;
 
-class Var extends Model
+class Country extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_vars';
-	protected $primaryKey = 'var_uuid';
+	protected $table = 'v_countries';
+	protected $primaryKey = 'country_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -23,14 +23,11 @@ class Var extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-        'var_category',
-        'var_name',
-        'var_value',
-        'var_command',
-        'var_hostname',
-        'var_enabled',
-        'var_order',
-        'var_description',
+        'country',
+        'iso_a2',
+        'iso_a3',
+        'num',
+        'country_code',
 	];
 
     /**

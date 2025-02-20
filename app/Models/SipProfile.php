@@ -51,4 +51,5 @@ class SipProfile extends Model
 
 	public function sipprofilesettings(): HasMany {
 		return $this->hasMany(SipProfileSetting::class, 'sip_profile_uuid', 'sip_profile_uuid');
-	}}
+	}
+}

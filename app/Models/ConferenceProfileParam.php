@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class VoicemailOption extends Model
+class ConferenceProfileParam extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_voicemail_options';
-	protected $primaryKey = 'voicemail_option_uuid';
+	protected $table = 'v_conference_control_details';
+	protected $primaryKey = 'conference_control_detail_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,12 +27,11 @@ class VoicemailOption extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-        'domain_uuid',
-        'voicemail_option_digits',
-        'voicemail_option_action',
-        'voicemail_option_param',
-        'voicemail_option_order',
-        'voicemail_option_description',
+        'conference_profile_uuid',
+        'profile_param_name',
+        'profile_param_value',
+        'profile_param_enabled',
+        'profile_param_description',
 	];
 
     /**
@@ -51,12 +50,8 @@ class VoicemailOption extends Model
 	protected $casts = [
 	];
 
-	public function domain(): BelongsTo {
-		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
-	}
-
-	public function voicemail(): BelongsTo {
-		return $this->belongsTo(Voicemail::class, 'voicemail_uuid', 'voicemail_uuid');
+	public function conferenceprofile(): BelongsTo {
+		return $this->belongsTo(ConferenceProfile::class, 'conference_profile_uuid', 'conference_profile_uuid');
 	}
 
 }

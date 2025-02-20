@@ -62,6 +62,10 @@ class User extends Authenticatable
 		return $this->hasMany(Contact::class, 'contact_uuid', 'contact_uuid');
 	}
 
+	public function extensions(): BelongsToMany {
+		return $this->hasMany(Extension::class, 'v_extension_users', 'user_uuid', 'extension_uuid');
+	}
+
 	public function groups(): BelongsToMany {
 		return $this->belongsToMany(Group::class, 'v_user_groups', 'user_uuid', 'group_uuid');
 //		$this->belongsToMany(Group::class)->using(UserGroup::class);
@@ -78,4 +82,13 @@ class User extends Authenticatable
 	public function callcenteragent(): BelongsTo {
 		return $this->belongsTo(CallCenterAgent::class, 'user_uuid', 'user_uuid');
 	}
+
+	public function conferencerooms(): BelongsToMany {
+		return $this->hasMany(ConferenceRoom::class, 'v_conference_room_users', 'user_uuid', 'conference_room_uuid');
+	}
+
+	public function conferences(): BelongsToMany {
+		return $this->hasMany(Conferences::class, 'v_conference_users', 'user_uuid', 'conference_uuid');
+	}
+
 }

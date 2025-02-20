@@ -119,4 +119,20 @@ class Domain extends Model
 	public function callcenteragent(): HasMany {
 		return $this->hasMany(CallCenterAgent::class, 'domain_uuid', 'domain_uuid');
 	}
+
+	public function callflows(): HasMany {
+		return $this->hasMany(CallFlow::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function conferencecenters(): HasMany {
+		return $this->hasMany(ConferenceCenter::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function conferencerooms(): HasMany {
+		return $this->hasMany(ConferenceRoom::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function recordings(): HasMany {
+		return $this->hasMany(Recording::class, 'domain_uuid', 'domain_uuid');
+	}
 }

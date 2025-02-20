@@ -69,4 +69,15 @@ class Dialplan extends Model
 		return $this->belongsTo(CallCenterQueue::class, 'dialplan_uuid', 'dialplan_uuid');
 	}
 
+	public function callflow(): BelongsTo {
+		return $this->belongsTo(CallFlow::class, 'dialplan_uuid', 'dialplan_uuid');
+	}
+
+    public function conferencecenter(): BelongsTo {
+		return $this->belongsTo(ConferenceCenter::class, 'dialplan_uuid', 'dialplan_uuid');
+	}
+
+    public function ringgroup(): BelongsTo {
+		return $this->belongsTo(RingGroup::class, 'dialplan_uuid', 'dialplan_uuid');
+	}
 }
