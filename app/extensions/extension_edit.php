@@ -39,7 +39,7 @@
 	}
 
 //initialize the database object
-	$database = new database;
+	$database = database::new();
 
 //add multi-lingual support
 	$language = new text;
@@ -261,7 +261,7 @@
 			$array['extension_users'][0]['user_uuid'] = $user_uuid;
 
 		//add temporary permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('extension_user_delete', 'temp');
 
 		//save the array
@@ -288,7 +288,7 @@
 				$array['device_lines'][0]['device_line_uuid'] = $device_line_uuid;
 
 			//add temporary permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_line_delete', 'temp');
 
 			//save the array
@@ -401,6 +401,19 @@
 								//extension exists
 							}
 							else {
+								//password permission not assigned get the password from the database
+									if ($action == "update" && !permission_exists('extension_password')) {
+										$sql = "select password from v_extensions ";
+										$sql .= "where extension_uuid = :extension_uuid ";
+										$sql .= "and domain_uuid = :domain_uuid ";
+										$parameters['domain_uuid'] = $domain_uuid;
+										$parameters['extension_uuid'] = $extension_uuid;
+										$row = $database->select($sql, $parameters, 'row');
+										if (is_array($row) && @sizeof($row) != 0) {
+											$password = $row["password"];
+										}
+										unset($sql, $parameters, $row);
+									}
 
 								//get the password length and strength
 									$password_length = $_SESSION["extension"]["password_length"]["numeric"];
@@ -658,9 +671,9 @@
 													$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["password"] = $password;
 													$array["devices"][$j]["device_lines"][0]["line_number"] = is_numeric($line_numbers[$d]) ? $line_numbers[$d] : '1';
-													$array["devices"][$j]["device_lines"][0]["sip_port"] = $_SESSION['provision']['line_sip_port']['numeric'];
+													$array["devices"][$j]["device_lines"][0]["sip_port"] = $_SESSION['provision']['line_sip_port']['text'];
 													$array["devices"][$j]["device_lines"][0]["sip_transport"] = $_SESSION['provision']['line_sip_transport']['text'];
-													$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['numeric'];
+													$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['text'];
 													$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
 												}
 
@@ -1766,7 +1779,7 @@
 		echo "    ".$text['label-voicemail_mail_to']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to ?? '')."\">\n";
+		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='1024' value=\"".escape($voicemail_mail_to ?? '')."\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_mail_to']."\n";
 		echo "</td>\n";

@@ -815,7 +815,7 @@
 			}
 
 		//add the dialplan permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("dialplan_add", "temp");
 			$p->add("dialplan_detail_add", "temp");
 

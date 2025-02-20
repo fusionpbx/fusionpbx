@@ -402,7 +402,7 @@ if (!class_exists('destinations')) {
 										}
 									}
 									//application: hangup
-									if (!empty($data['application'])) {
+									if (!empty($data['application']) && $data['application'] === 'hangup') {
 										$select_value = str_replace("transfer", $data['application'], $select_value);
 									}
 								}
@@ -1081,7 +1081,7 @@ if (!class_exists('destinations')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('dialplan_delete', 'temp');
 									$p->add('dialplan_detail_delete', 'temp');
 
@@ -1133,6 +1133,9 @@ if (!class_exists('destinations')) {
 				else {
 					$time_zone = date_default_timezone_get();
 				}
+
+			//set the time zone for php
+				date_default_timezone_set($time_zone);
 
 			//build the date range
 				if (!empty($this->start_stamp_begin) || !empty($this->start_stamp_end)) {
@@ -1236,6 +1239,7 @@ if (!class_exists('destinations')) {
 				}
 				$sql .= " and direction = 'inbound' \n";
 				$sql .= " and caller_destination is not null \n";
+				$sql .= " and leg = 'a' \n";
 				$sql .= $sql_date_range ?? '';
 				$sql .= ") as c \n";
 

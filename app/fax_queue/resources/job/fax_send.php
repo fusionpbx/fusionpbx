@@ -61,6 +61,9 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //shutdown call back function
 	function shutdown() {
 		//when the fax status is still sending
@@ -156,7 +159,6 @@
 	$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
 	$sql .= "and q.domain_uuid = d.domain_uuid and f.fax_uuid = q.fax_uuid";
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
@@ -221,6 +223,23 @@
 //sending the fax
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
+		//get the provider_prefix from the domain_variables dialplan
+			$sql = "select dialplan_detail_data from v_dialplan_details ";
+			$sql .= "where dialplan_uuid in ( ";
+			$sql .= "	select dialplan_uuid from v_dialplans ";
+			$sql .= "	where dialplan_name = 'domain-variables' ";
+			$sql .= "	and domain_uuid = :domain_uuid ";
+			$sql .= ")	";
+			$sql .= "and dialplan_detail_data like 'provider_prefix%' ";
+			$sql .= "and dialplan_detail_enabled = 'true' ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			$dialplan_detail_data = $row["dialplan_detail_data"];
+			unset($sql, $parameters, $row);
+			if (!empty($dialplan_detail_data)) {
+				$provider_prefix = explode('=', $dialplan_detail_data)[1];
+			}
+
 		//create event socket handle
 			$esl = event_socket::create();
 			if (!$esl->is_connected()) {
@@ -230,28 +249,70 @@
 
 		//fax options, first attempt use the fax variables from settings
 			if ($fax_retry_count == 0) {
-				$fax_options = '';
-			}
-			if ($fax_retry_count == 1) {
+				//use default settings or domain settings (defaults to t38)
 				$fax_options = '';
 				foreach($setting->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
 				}
 			}
-			elseif ($fax_retry_count == 2) {
-				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true";
-			}
-			elseif ($fax_retry_count == 3) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
-			}
-			elseif ($fax_retry_count == 4) {
+			elseif ($fax_retry_count == 1) {
+				//send without t38 faster
 				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
+			elseif ($fax_retry_count == 2) {
+				//use t38 passthru
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,t38_passthru=true";
+			}
+			elseif ($fax_retry_count == 3) {
+				//send without t38 slower
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=true";
+			}
+			elseif ($fax_retry_count == 4) {
+				//send with t38 no error correction
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true";
+			}
 			elseif ($fax_retry_count == 5) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+				//send with t38 with error correction faster
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 6) {
-				$fax_options = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+				//send with t38 with error correction slower
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			}
+			else {
+				//try the user definable method again
+				$fax_options = '';
+				foreach($setting->get('fax','variable') as $variable) {
+					$fax_options .= $variable.",";
+				}
+			}
+
+		//extract fax_dtmf from the fax number
+			fax_split_dtmf($fax_number, $fax_dtmf);
+
+		//get the fax toll allow
+			if (!empty($fax_toll_allow)) {
+				$channel_variables["toll_allow"] = $fax_toll_allow;
+			}
+
+		//check to see if the destination number is local
+			$local_destination = false;
+			if ($setting->get('fax_queue','prefer_local', false)) {
+				$sql = "select count(destination_uuid) ";
+				$sql .= "from v_destinations ";
+				$sql .= "where (";
+				$sql .= " destination_number = :destination_number ";
+				$sql .= " or concat(destination_prefix, destination_number) = :destination_number ";
+				$sql .= " or concat(destination_trunk_prefix, destination_number) = :destination_number ";
+				$sql .= " or concat(destination_area_code, destination_number) = :destination_number ";
+				$sql .= " or concat(destination_prefix, destination_area_code, destination_number) = :destination_number ";
+				$sql .= ") ";
+				$parameters['destination_number'] = $fax_number;
+				$destination_count = $database->select($sql, $parameters, 'column');
+				if ($destination_count > 0) {
+					$local_destination = true;
+					$route_array[] = 'loopback/'.$fax_number.'/public';
+				}
 			}
 
 		//define the fax file
@@ -262,34 +323,61 @@
 			$common_variables .= "domain_name="                  . $domain_name . ",";
 			$common_variables .= "origination_caller_id_name='"  . escape_quote($fax_caller_id_name) . "',";
 			$common_variables .= "origination_caller_id_number=" . $fax_caller_id_number . ",";
-			$common_variables .= "fax_ident='"                    . escape_quote($fax_caller_id_number) . "',";
-			$common_variables .= "fax_header='"                   . escape_quote($fax_caller_id_name) . "',";
-			$common_variables .= "fax_file='"                     . escape_quote($fax_file) . "',";
+			$common_variables .= "fax_ident='"                   . escape_quote($fax_caller_id_number) . "',";
+			$common_variables .= "fax_header='"                  . escape_quote($fax_caller_id_name) . "',";
+			$common_variables .= "fax_file='"                    . escape_quote($fax_file) . "',";
+			$common_variables .= "hangup_after_bridge=true,";
+			$common_variables .= "continue_on_fail=true,";
 
-		//extract fax_dtmf from the fax number
-			fax_split_dtmf($fax_number, $fax_dtmf);
+		//add the fax destination number variables
+			if ($local_destination) {
+				$common_variables .= "sip_to_user=".$fax_number.",";
+				$common_variables .= "sip_req_user=".$fax_number.",";
+			}
+
 
 		//prepare the fax command
-			if (!empty($fax_toll_allow)) {
-				$channel_variables["toll_allow"] = $fax_toll_allow;
-			}
+			$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
 			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
-			if (count($route_array) == 0) {
-				//check for valid extension
-				$sql = "select count(extension_uuid) ";
-				$sql .= "from v_extensions ";
-				$sql .= "where extension = :fax_number ";
-				$sql .= "and domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['fax_number'] = $fax_number;
-				$database = new database;
-				$extension_count = $database->select($sql, $parameters, 'column');
-				if ($extension_count > 0) {
-					//send the internal call to the registered extension
-					$route_array[] = "user/".$fax_number."@".$domain_name;
+
+			if (empty($route_array)) {
+				//send the internal call to the registered extension
+				if (count($route_array) == 0) {
+					//check for valid extension
+					$sql = "select count(extension_uuid) ";
+					$sql .= "from v_extensions ";
+					$sql .= "where extension = :fax_number ";
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['fax_number'] = $fax_number;
+					$extension_count = $database->select($sql, $parameters, 'column');
+					if ($extension_count > 0) {
+						//send the internal call to the registered extension
+						$fax_uri = "user/".$fax_number."@".$domain_name;
+					}
+					else {
+						$fax_uri = '';
+						$fax_status = 'failed';
+					}
 				}
-				else {
-					$fax_status = 'failed';
+			}
+			else {
+				foreach($route_array as $key => $bridge) {
+					//add the bridge to the fax_uri, after first iteration add the delimiter
+					if ($key == 0) {
+						$fax_uri = $bridge;
+					}
+					else {
+						$fax_uri .= '|'.$bridge;
+					}
+
+					//add the provider_prefix
+					if (!empty($provider_prefix)) {
+						$fax_uri = preg_replace('/\${provider_prefix}/', $provider_prefix, $fax_uri);
+					}
+
+					//remove switch ${variables} from the bridge statement
+					$fax_uri = preg_replace('/\${[^}]+}/', '', $fax_uri);
 				}
 			}
 
@@ -299,13 +387,13 @@
 		//build a list of fax variables
 			$dial_string = $common_variables;
 			$dial_string .= $fax_options.",";
-			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
-			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
-			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
-			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
+			$dial_string .= "origination_uuid="    . $origination_uuid . ",";
+			$dial_string .= "fax_uuid="            . $fax_uuid . ",";
+			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid . ",";
+			$dial_string .= "mailto_address='"     . $fax_email_address . "',";
 			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
-			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";
-			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
+			$dial_string .= "fax_retry_attempts="  . $fax_retry_count . ",";
+			$dial_string .= "fax_retry_limit="     . $retry_limit . ",";
 			//$dial_string .= "fax_retry_sleep=180,";
 			$dial_string .= "fax_verbose=true,";
 			//$dial_string .= "fax_use_ecm=off,";
@@ -315,21 +403,18 @@
 		//connect to event socket and send the command
 			if ($fax_status != 'failed' && file_exists($fax_file)) {
 				//send the fax and try another route if the fax fails
-				foreach($route_array as $route) {
-					$fax_command  = "originate {" . $dial_string . ",fax_uri=".$route."}" . $route." &txfax('".$fax_file."')";
-					$fax_response = event_socket::api($fax_command);
-					$response = str_replace("\n", "", $fax_response);
-					$response = trim(str_replace("+OK", "", $response));
-					if (is_uuid($response)) {
-						//originate command accepted
-						$uuid = $response;
-						echo "uuid: ".$uuid."\n";
-						break;
-					}
-					else {
-						//originate command failed (-ERR INVALID_GATEWAY or other errors)
-						echo "response: ".$response."\n";
-					}
+				$fax_command  = "originate {" . $dial_string . ",fax_uri=".$fax_uri."}" . $fax_uri." &txfax('".$fax_file."')";
+				$fax_response = event_socket::api($fax_command);
+				$response = str_replace("\n", "", $fax_response);
+				$response = trim(str_replace("+OK", "", $response));
+				if (is_uuid($response)) {
+					//originate command accepted
+					$uuid = $response;
+					echo "uuid: ".$uuid."\n";
+				}
+				else {
+					//originate command failed (-ERR INVALID_GATEWAY or other errors)
+					echo "response: ".$response."\n";
 				}
 
 				//set the fax file name without the extension
@@ -351,11 +436,10 @@
 				$array['fax_queue'][0]['fax_response'] = $fax_response;
 
 				//add temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('fax_queue_edit', 'temp');
 
 				//save the data
-				$database = new database;
 				$database->app_name = 'fax queue';
 				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 				$database->save($array, false);
@@ -399,7 +483,6 @@
 					$parameters['template_language'] = $language_code;
 					$parameters['template_category'] = 'fax';
 					$parameters['template_type'] = 'html';
-					$database = new database;
 					$fax_templates = $database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 				}
@@ -451,7 +534,6 @@
 					$sql .= "from v_fax_logs ";
 					$sql .= "where fax_log_uuid = :fax_log_uuid ";
 					$parameters['fax_log_uuid'] = $fax_log_uuid;
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row)) {
 						$fax_success = $row['fax_success'];
@@ -569,11 +651,10 @@
 			$array['fax_queue'][0]['fax_notify_date'] = 'now()';
 
 		//add temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_queue_edit', 'temp');
 
 		//save the data
-			$database = new database;
 			$database->app_name = 'fax queue';
 			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 			$database->save($array, false);

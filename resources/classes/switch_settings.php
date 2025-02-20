@@ -248,7 +248,7 @@ if (!class_exists('switch_settings')) {
 					}
 					if (is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('default_setting_add', 'temp');
 
 						//execute insert

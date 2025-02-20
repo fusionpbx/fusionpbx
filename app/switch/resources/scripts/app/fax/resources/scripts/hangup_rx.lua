@@ -22,9 +22,6 @@
 --	Contributor(s):
 --		Mark J. Crane
 
---set the debug options
-	debug["sql"] = true;
-
 --create the api object
 	api = freeswitch.API();
 
@@ -37,6 +34,9 @@
 --connect to the database
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
+
+--set the debug options
+	debug["sql"] = false;
 
 --include json library
 	local json
@@ -63,6 +63,7 @@
 
 --escape shell arguments to prevent command injection
 	local function shell_esc(x)
+		if (x == nil) then return '' end
 		return (x:gsub('\\', '\\\\')
 			:gsub('\'', '\\\''))
 	end
@@ -143,10 +144,12 @@
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
 	fax_file = env:getHeader("fax_file");
 
---prevent nil errors
-	if (fax_file == nil) then
+--update the fax file if fax_filename is set
+	if (env:getHeader("fax_filename") ~= nil) then
 		fax_file = env:getHeader("fax_filename");
 	end
+
+--prevent nil errors
 	if (fax_uri == nil) then
 		fax_uri = "";
 	end

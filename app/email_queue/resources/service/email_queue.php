@@ -141,7 +141,7 @@
 		$sql = "select * from v_email_queue ";
 		$sql .= "where (email_status = 'waiting' or email_status = 'trying') ";
 		$sql .= "and hostname = :hostname ";
-		$sql .= "order by domain_uuid asc ";
+		$sql .= "order by domain_uuid, email_date desc ";
 		$sql .= "limit :limit ";
 		$parameters['hostname'] = $hostname;
 		$parameters['limit'] = $email_queue_limit;
@@ -152,7 +152,7 @@
 		//process the messages
 		if (is_array($email_queue) && @sizeof($email_queue) != 0) {
 			foreach($email_queue as $row) {
-				$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
+				$command = PHP_BINARY." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
 				$command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$hostname."'";
 				if (isset($debug)) {
 					//run process inline to see debug info

@@ -89,6 +89,7 @@
 
 		//set the variables from the HTTP values
 			$voicemail_id = $_POST["voicemail_id"];
+			$voicemail_id_previous = $_POST["voicemail_id_previous"];
 			$voicemail_password = $_POST["voicemail_password"];
 			$greeting_id = $_POST["greeting_id"];
 			$voicemail_options = $_POST["voicemail_options"];
@@ -199,7 +200,7 @@
 					$array['voicemails'][0]['voicemail_description'] = $voicemail_description;
 
 				//create permissions object
-					$p = new permissions;
+					$p = permissions::new();
 
 				//add voicemail options
 					if (permission_exists('voicemail_option_add') && sizeof($voicemail_options) > 0) {
@@ -261,9 +262,21 @@
 					$p->delete('voicemail_option_add', 'temp');
 					$p->delete('voicemail_destination_add', 'temp');
 
-				//make sure the voicemail directory exists
+				//create or rename voicemail directory as needed
 					if (is_numeric($voicemail_id)) {
-						if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
+						// old and new voicemail ids differ, old directory exists and new doesn't, rename directory
+						if (
+							!empty($voicemail_id_previous) && is_numeric($voicemail_id_previous) && $voicemail_id_previous != $voicemail_id &&
+							file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id_previous) &&
+							!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)
+							) {
+							rename(
+								$_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id_previous, // previous
+								$_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id // new
+								);
+						}
+						// new directory doesn't exist, create
+						else if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
 							mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770);
 						}
 					}
@@ -561,6 +574,7 @@
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='voicemail_id' maxlength='255' autocomplete='new-password' value='".escape($voicemail_id)."'>\n";
 	echo "	<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+	echo "	<input type='hidden' name='voicemail_id_previous' value='".escape($voicemail_id)."'>\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_id']."\n";
 	echo "</td>\n";

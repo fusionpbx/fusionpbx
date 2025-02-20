@@ -259,7 +259,12 @@
 		foreach ($user_logs as $row) {
 			//check the session status
 			$session_file = 'sess_'.$row['session_id'];
-			$session_status = (!empty($row['session_id']) && file_exists($session_path.'/'.$session_file)) ? 'active' : 'inactive';
+			if (!empty($row['result']) && $row['result'] == 'success') {
+				$session_status = (!empty($row['session_id']) && file_exists($session_path.'/'.$session_file)) ? 'active' : 'inactive';
+			}
+			elseif (!empty($row['result']) && $row['result'] == 'failure') {
+				$session_status = 'failed';
+			}
 
 			echo "<tr class='list-row'>\n";
 			if (permission_exists('user_log_delete')) {

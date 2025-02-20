@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -128,36 +128,47 @@
 
 		//if not authorized
 			if (empty($_SESSION['authorized']) || !$_SESSION['authorized']) {
-
 				//log the failed auth attempt to the system to the syslog server
-					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$result["username"]);
-					closelog();
+				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$result["username"]);
+				closelog();
 
 				//redirect the user to the login page
-					$target_path = !empty($_REQUEST["path"]) ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
-					message::add($text['message-authentication_failed'], 'negative');
-					header("Location: ".PROJECT_PATH."/?path=".urlencode($target_path));
-					exit;
+				$target_path = !empty($_REQUEST["path"]) ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
+				message::add($text['message-authentication_failed'], 'negative');
+				header("Location: ".PROJECT_PATH."/?path=".urlencode($target_path));
+				exit;
 			}
 
 		//if logged in, redirect to login destination
 			if (!isset($_REQUEST["key"])) {
+
+				//create database object
+				$database = database::new();
+
+				//connect to the settings object
+				$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+
+				//redirect the user
 				if (isset($_SESSION['redirect_path'])) {
 					$redirect_path = $_SESSION['redirect_path'];
 					unset($_SESSION['redirect_path']);
+
 					// prevent open redirect attacks. redirect url shouldn't contain a hostname
 					$parsed_url = parse_url($redirect_path);
 					if ($parsed_url['host']) {
 						die("Was someone trying to hack you?");
 					}
 					header("Location: ".$redirect_path);
+					exit;
 				}
-				elseif (isset($_SESSION['login']['destination']['text'])) {
-					header("Location: ".$_SESSION['login']['destination']['text']);
+				elseif (!empty($settings->get('login', 'destination', ''))) {
+					header("Location: ".$settings->get('login', 'destination', ''));
+					exit;
 				}
 				elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
 					header("Location: ".PROJECT_PATH."/core/dashboard/");
+					exit;
 				}
 				else {
 					require_once "resources/header.php";

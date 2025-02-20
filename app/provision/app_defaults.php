@@ -43,7 +43,7 @@ if ($domains_processed == 1) {
 				$array['devices'][0]['device_uuid'] = $device_uuid;
 				$array['devices'][0]['device_address'] = $device_address;
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_add', 'temp');
 			//execute update
 				$database->app_name = 'provision';
@@ -67,7 +67,7 @@ if ($domains_processed == 1) {
 			$array['default_settings'][$x]['default_setting_enabled'] = 'true';
 
 		//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('default_setting_edit', 'temp');
 
 		//execute update
@@ -81,6 +81,14 @@ if ($domains_processed == 1) {
 			unset($p);
 	}
 	unset($sql);
+
+	//update default settings in category provision set enabled to use type boolean
+	$sql = "update v_default_settings ";
+	$sql .= "set default_setting_name = 'boolean' ";
+	$sql .= "where default_setting_category = 'provision' ";
+	$sql .= "and default_setting_subcategory = 'enabled' ";
+	$sql .= "and default_setting_name <> 'boolean' ";
+	$database->execute($sql);
 
 	//update default settings
 	$sql = "update v_default_settings set ";
@@ -108,6 +116,23 @@ if ($domains_processed == 1) {
 	$sql .= "where domain_setting_category = 'provision' ";
 	$sql .= "and domain_setting_subcategory = 'http_auth_password' ";
 	$sql .= "and domain_setting_name = 'text' ";
+	$database->execute($sql);
+
+	//update if the type is boolean with value of 0 or 1 use type text, or if type numeric use type text.
+	//explanation: the template default setting use string for the template values, boolean type only used with conditions
+	$sql = "update v_default_settings ";
+	$sql .= "set default_setting_name = 'text' ";
+	$sql .= "where ";
+	$sql .= "( ";
+	$sql .= " default_setting_category = 'provision' ";
+	$sql .= " and default_setting_value in ('0', '1') ";
+	$sql .= " and default_setting_name = 'boolean' ";
+	$sql .= ") ";
+	$sql .= "or ";
+	$sql .= "( ";
+	$sql .= "default_setting_category = 'provision' ";
+	$sql .= "and default_setting_name = 'numeric' ";
+	$sql .= ") ";
 	$database->execute($sql);
 
 }

@@ -58,7 +58,7 @@ if ($domains_processed == 1) {
 			}
 
 			if (!empty($array)) {
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('call_center_tier_edit', 'temp');
 
 				$database->app_name = 'call_centers';
@@ -168,7 +168,7 @@ if ($domains_processed == 1) {
 		//save the array to the database
 		if (!empty($array)) {
 			//add the dialplan permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("dialplan_add", "temp");
 				$p->add("dialplan_edit", "temp");
 

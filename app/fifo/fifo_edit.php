@@ -242,7 +242,7 @@
 			}
 
 		//add the dialplan permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("dialplan_add", "temp");
 			$p->add("dialplan_edit", "temp");
 
@@ -396,14 +396,11 @@
 	echo "	<div class='heading'><b>".$text['title-fifo']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'fifo.php']);
-// 	if ($action == 'update') {
-// 		if (permission_exists('fifo_member_add')) {
-// 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-// 		}
-// 		if (permission_exists('fifo_member_delete')) {
-// 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-// 		}
-// 	}
+ 	if ($action == 'update') {
+ 		if (permission_exists('fifo_member_delete')) {
+ 			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'display: none; margin-right: 15px;']);
+ 		}
+ 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$button_icon_save,'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -482,7 +479,7 @@
 	echo "			<th class='vtablereq'>".$text['label-member_enabled']."</th>\n";
 	if (is_array($fifo_members) && @sizeof($fifo_members) > 1 && permission_exists('fifo_member_delete')) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
-		echo "				<span id='delete_label_details'>".$text['label-action']."</span>\n";
+		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
 		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details'); checkbox_on_change(this);\"></span>\n";
 		echo "			</td>\n";
 	}
@@ -497,9 +494,9 @@
 			if (empty($row["member_wrap_up_time"])) { $row["member_wrap_up_time"] = '10'; }
 
 			echo "			<tr>\n";
-			echo "			<input type='hidden' name='fifo_members[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
-			echo "			<input type='hidden' name='fifo_members[$x][fifo_uuid]' value=\"".escape($row["fifo_uuid"])."\">\n";
-			echo "			<input type='hidden' name='fifo_members[$x][fifo_member_uuid]' value=\"".escape($row["fifo_member_uuid"])."\">\n";
+			echo "				<input type='hidden' name='fifo_members[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
+			echo "				<input type='hidden' name='fifo_members[$x][fifo_uuid]' value=\"".escape($row["fifo_uuid"])."\">\n";
+			echo "				<input type='hidden' name='fifo_members[$x][fifo_member_uuid]' value=\"".escape($row["fifo_member_uuid"])."\">\n";
 			echo "				<td class='formfld'>\n";
 			echo "					$member_contact\n";
 			echo "			</td>\n";

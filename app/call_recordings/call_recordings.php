@@ -38,13 +38,16 @@
 		exit;
 	}
 
+//create the database connection
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$transcribe_enabled = $settings->get('transcribe', 'enabled', 'false');
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 //set additional variables
@@ -68,7 +71,7 @@
 				}
 				break;
 			case 'transcribe':
-				if (permission_exists('call_recording_download')) {
+				if (permission_exists('call_recording_transcribe')) {
 					$obj = new call_recordings;
 					$obj->transcribe($call_recordings);
 				}
@@ -104,24 +107,6 @@
 	}
 	$parameters['time_zone'] = $time_zone;
 
-//get the count
-	//$sql = "select count(*) ";
-	//$sql .= "from view_call_recordings ";
-	//$sql .= "where true ";
-	//if ($_GET['show'] != "all" || !permission_exists('call_recording_all')) {
-	//	$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-	//	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	//}
-	//if (isset($search)) {
-	//	$sql .= "and (";
-	//	$sql .= "	lower(call_recording_name) like :search ";
-	//	$sql .= "	or lower(call_recording_path) like :search ";
-	//	$sql .= ") ";
-	//	$parameters['search'] = '%'.$search.'%';
-	//}
-	//$database = new database;
-	//$num_rows = $database->select($sql, $parameters, 'column');
-
 //prepare some of the paging values
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$page = $_GET['page'] ?? '';
@@ -138,7 +123,7 @@
 	//$sql .= "from v_call_recordings as r, v_domains as d ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('call_recording_all')) {
-		$sql .= "and (r.domain_uuid = :domain_uuid or r.domain_uuid is null) ";
+		$sql .= "and r.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= "and r.domain_uuid = d.domain_uuid ";
@@ -156,20 +141,16 @@
 	}
 	$sql .= order_by($order_by, $order, 'r.call_recording_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$call_recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //detect if any transcriptions available
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($call_recordings) && is_array($call_recordings)) {
+	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($call_recordings) && is_array($call_recordings)) {
 		$transcriptions_exists = false;
 		foreach ($call_recordings as $row) {
 			if (!empty($row['call_recording_transcription'])) { $transcriptions_exists = true; }
 		}
 	}
-
-//count the results
-	$result_count = is_array($call_recordings) ? sizeof($call_recordings) : 0;
 
 //limit the number of results
 	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
@@ -199,7 +180,7 @@
 	if (permission_exists('call_recording_download') && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($call_recordings)) {
+	if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('transcribe'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('call_recording_delete') && !empty($call_recordings)) {
@@ -272,12 +253,9 @@
 	if (is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		$x = 0;
 		foreach ($call_recordings as $row) {
-			//add padding to the call recording length
-			$call_recording_length_padding = (!empty($row['call_recording_length'])) ? str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT) : '';
-
 			//playback progress bar
 			if (permission_exists('call_recording_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;' onclick=\"recording_play('".escape($row['call_recording_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['call_recording_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
+				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;' onclick=\"recording_seek(event,'".escape($row['call_recording_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['call_recording_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
 			if (permission_exists('call_recording_play')) {
@@ -314,13 +292,13 @@
 					if (permission_exists('call_recording_download')) {
 						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
 					}
-					if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && $transcriptions_exists === true) {
+					if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && $transcriptions_exists === true) {
 						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','style'=>(empty($row['call_recording_transcription']) ? 'visibility:hidden;' : null),'onclick'=>"document.getElementById('transcription_".$row['call_recording_uuid']."').style.display = document.getElementById('transcription_".$row['call_recording_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
 					}
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td class='right overflow hide-sm-dn shrink'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape($call_recording_length_padding)."</td>\n";
+			echo "	<td class='right overflow hide-sm-dn shrink'>".escape(gmdate("G:i:s", $row['call_recording_length']))."</td>\n";
 			echo "	<td class='overflow center no-wrap'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
 			echo "	<td class='left hide-sm-dn shrink'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
 			if (permission_exists('xml_cdr_details')) {
@@ -329,7 +307,7 @@
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
-			if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
+			if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
 				echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
 				echo "<tr id='transcription_".$row['call_recording_uuid']."' class='list-row' style='display: none;'>\n";
 				echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
