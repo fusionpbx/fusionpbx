@@ -157,6 +157,7 @@
 		$sql .= "and (";
 		$sql .= "lower(destination_type) like :search ";
 		$sql .= "or lower(destination_number) like :search ";
+		$sql .= "or lower(destination_cid_name_prefix) like :search ";
 		$sql .= "or lower(destination_context) like :search ";
 		$sql .= "or lower(destination_accountcode) like :search ";
 		if (permission_exists('outbound_caller_id_select')) {
@@ -201,6 +202,7 @@
 	$sql .= " d.destination_area_code, ";
 	$sql .= " d.destination_number, ";
 	$sql .= " d.destination_actions, ";
+	$sql .= " d.destination_cid_name_prefix, ";
 	$sql .= " d.destination_context, ";
 	$sql .= " d.destination_caller_id_name, ";
 	$sql .= " d.destination_caller_id_number, ";
@@ -221,6 +223,7 @@
 		$sql .= "and (";
 		$sql .= " lower(destination_type) like :search ";
 		$sql .= " or lower(destination_number) like :search ";
+		$sql .= " or lower(destination_cid_name_prefix) like :search ";
 		$sql .= " or lower(destination_context) like :search ";
 		$sql .= " or lower(destination_accountcode) like :search ";
 		if (permission_exists('outbound_caller_id_select')) {
@@ -350,6 +353,9 @@
 	if (!$show == "all") {
 		echo  "<th>". $text['label-destination_actions']."</th>";
 	}
+	if (permission_exists('destination_cid_name_prefix')) {
+	    echo th_order_by('destination_cid_name_prefix', $text['label-destination_cid_name_prefix'], $order_by, $order, $param);
+	}
 	if (permission_exists("destination_context")) {
 		echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
 	}
@@ -411,6 +417,9 @@
 
 			if (!$show == "all") {
 				echo "	<td class='overflow' style='min-width: 125px;'>".$row['actions']."&nbsp;</td>\n";
+			}
+			if (permission_exists("destination_cid_name_prefix")) {
+				echo "	<td>".escape($row['destination_cid_name_prefix'])."&nbsp;</td>\n";
 			}
 			if (permission_exists("destination_context")) {
 				echo "	<td>".escape($row['destination_context'])."&nbsp;</td>\n";
