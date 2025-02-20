@@ -125,6 +125,41 @@ class auto_loader {
 			return true;
 		}
 
+		//cache miss
+		if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
+			openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			syslog(LOG_WARNING, "[php][auto_loader] class not found in cache: ".$class_name);
+			closelog();
+		}
+
+		//set project path using magic dir constant
+		$project_path = dirname(__DIR__, 2);
+
+		//build the search path array
+		$search_path[] = glob($project_path . "/resources/classes/".$class_name.".php");
+		$search_path[] = glob($project_path . "/resources/interfaces/".$class_name.".php");
+		$search_path[] = glob($project_path . "/resources/traits/".$class_name.".php");
+		$search_path[] = glob($project_path . "/*/*/resources/classes/".$class_name.".php");
+		$search_path[] = glob($project_path . "/*/*/resources/interfaces/".$class_name.".php");
+		$search_path[] = glob($project_path . "/*/*/resources/traits/".$class_name.".php");
+
+		//find the path
+		$path = self::autoload_search($search_path);
+		if (!empty($path)) {
+
+			//include the class or interface
+			include $path;
+
+			//make sure to reload the cache after we found a new class
+			$this->reload_classes();
+
+			//update the cache with new classes
+			$this->update_cache();
+
+			//return boolean
+			return true;
+		}
+
 		//send to syslog when debugging
 		if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
 			openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
@@ -134,5 +169,21 @@ class auto_loader {
 
 		//return boolean
 		return false;
+	}
+
+	public static function autoload_search($array) : string {
+		foreach($array as $path) {
+			if (is_array($path) && count($path) != 0) {
+				foreach($path as $sub_path) {
+					if (!empty($sub_path) && file_exists($sub_path)) {
+						return $sub_path;
+					}
+				}
+			}
+			elseif (!empty($path) && file_exists($path)) {
+				return $path;
+			}
+		}
+		return '';
 	}
 }
