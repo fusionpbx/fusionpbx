@@ -195,8 +195,12 @@
 		$x = 0;
 		foreach($transactions as $row) {
 			if (empty($row['domain_name'])) { $row['domain_name'] = $text['label-global']; }
+			$list_row_url = '';
 			if (permission_exists('database_transaction_edit')) {
 				$list_row_url = "database_transaction_edit.php?id=".urlencode($row['database_transaction_uuid']).(!empty($page) ? "&page=".urlencode($page) : null).(!empty($search) ? "&search=".urlencode($search) : null);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td>".escape($row['domain_name'])."&nbsp;</td>\n";
@@ -225,3 +229,4 @@
 	require_once "resources/footer.php";
 
 ?>
+
