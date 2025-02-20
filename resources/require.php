@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -33,7 +33,7 @@
 	}
 	elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
 		$config_file =  getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
-	}	
+	}
 	elseif (file_exists(__DIR__ . '/config.php')) {
 		//set a custom config_file variable after the config.php has been validated
 		$file_content = trim(file_get_contents(__DIR__ . '/config.php'));
@@ -142,6 +142,46 @@
 //change language on the fly - for translate tool (if available)
 	if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
+	}
+
+//change the domain
+	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
+
+		//connect to the database
+			$database = database::new();
+
+		//include domains
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all')) {
+				include_once "app/domains/domains.php";
+			}
+
+		//update the domain session variables
+			$domain_uuid = $_GET["domain_uuid"];
+			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
+			$_SESSION['domain_uuid'] = $domain_uuid;
+
+		//get the domain details
+			$sql = "select * from v_domains ";
+			$sql .= "order by domain_name asc ";
+			$domains = $database->select($sql, null, 'all');
+			if (!empty($domains)) {
+				foreach($domains as $row) {
+					$_SESSION['domains'][$row['domain_uuid']] = $row;
+				}
+			}
+			unset($sql, $domains);
+
+		//update the domain session variables
+			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
+			$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
+			$_SESSION["context"] = $_SESSION["domain_name"];
+
+		//clear the extension array so that it is regenerated for the selected domain
+			unset($_SESSION['extension_array']);
+
+		//set the setting arrays
+			$domain = new domains();
+			$domain->set();
 	}
 
 ?>
