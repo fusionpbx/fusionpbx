@@ -77,8 +77,12 @@
 			if (!empty($contact_extensions)) {
 				$x = 0;
 				foreach ($contact_extensions as $row) {
+					$list_row_url = '';
 					if (permission_exists('extension_edit')) {
 						$list_row_url = PROJECT_PATH.'/app/extensions/extension_edit.php?id='.urlencode($row['extension_uuid']);
+						if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+							$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+						}
 					}
 					echo "<tr class='list-row' href='".$list_row_url."' ".($row['url_primary'] ? "style='font-weight: bold;'" : null).">\n";
 					echo "	<td>";
@@ -109,3 +113,4 @@
 	}
 
 ?>
+

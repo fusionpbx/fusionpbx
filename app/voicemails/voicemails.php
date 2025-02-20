@@ -297,8 +297,12 @@
 	if (is_array($voicemails) && sizeof($voicemails) != 0) {
 		$x = 0;
 		foreach ($voicemails as $row) {
+			$list_row_url = '';
 			if (permission_exists('voicemail_edit')) {
 				$list_row_url = "voicemail_edit.php?id=".urlencode($row['voicemail_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('voicemail_edit') || permission_exists('voicemail_delete')) {
@@ -372,4 +376,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 

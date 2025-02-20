@@ -375,8 +375,12 @@
 		foreach ($destinations as $row) {
 
 			//create the row link
+			$list_row_url = '';
 			if (permission_exists('destination_edit')) {
 				$list_row_url = "destination_edit.php?id=".urlencode($row['destination_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 
 			//show the data
@@ -459,3 +463,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

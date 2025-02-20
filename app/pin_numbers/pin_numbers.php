@@ -189,8 +189,12 @@
 	if (is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
 		$x = 0;
 		foreach ($pin_numbers as $row) {
+			$list_row_url = '';
 			if (permission_exists('pin_number_edit')) {
 				$list_row_url = "pin_number_edit.php?id=".urlencode($row['pin_number_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('pin_number_add') || permission_exists('pin_number_edit') || permission_exists('pin_number_delete')) {
@@ -241,3 +245,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

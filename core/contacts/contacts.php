@@ -396,6 +396,9 @@
 		$x = 0;
 		foreach($contacts as $row) {
 			$list_row_url = "contact_view.php?id=".urlencode($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"]);
+			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('contact_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -469,3 +472,5 @@
 	require_once "resources/footer.php";
 
 ?>
+
+

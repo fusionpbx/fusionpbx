@@ -79,8 +79,12 @@
 			if (!empty($contact_emails)) {
 				$x = 0;
 				foreach ($contact_emails as $row) {
+					$list_row_url = '';
 					if (permission_exists('contact_email_edit')) {
 						$list_row_url = "contact_email_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_email_uuid']);
+						if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+							$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+						}
 					}
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('contact_email_delete')) {
@@ -110,3 +114,4 @@
 	}
 
 ?>
+

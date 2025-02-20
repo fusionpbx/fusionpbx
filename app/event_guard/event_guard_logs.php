@@ -244,8 +244,12 @@
 	if (is_array($event_guard_logs) && @sizeof($event_guard_logs) != 0) {
 		$x = 0;
 		foreach ($event_guard_logs as $row) {
+			$list_row_url = '';
 			if (permission_exists('event_guard_log_edit')) {
 				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row'>\n";
 			if (permission_exists('event_guard_log_add') || permission_exists('event_guard_log_edit') || permission_exists('event_guard_log_delete')) {
