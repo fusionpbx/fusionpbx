@@ -243,8 +243,12 @@
 	if (!empty($call_flows)) {
 		$x = 0;
 		foreach ($call_flows as $row) {
+			$list_row_url = '';
 			if (permission_exists('call_flow_edit')) {
 				$list_row_url = "call_flow_edit.php?id=".urlencode($row['call_flow_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('call_flow_add') || permission_exists('call_flow_edit') || permission_exists('call_flow_delete')) {
@@ -311,3 +315,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

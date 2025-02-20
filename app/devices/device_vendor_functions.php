@@ -211,8 +211,12 @@
 				unset ($vendor_function_groups);
 
 			//show the row of data
+				$list_row_url = '';
 				if (permission_exists('device_vendor_function_edit')) {
 					$list_row_url = "device_vendor_function_edit.php?device_vendor_uuid=".urlencode($row['device_vendor_uuid'])."&id=".urlencode($row['device_vendor_function_uuid']);
+					if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+						$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+					}
 				}
 				echo "<tr class='list-row' href='".$list_row_url."'>\n";
 				if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit') || permission_exists('device_vendor_function_delete')) {
@@ -289,3 +293,4 @@
 	echo "</script>\n";
 
 ?>
+
