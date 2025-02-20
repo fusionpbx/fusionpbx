@@ -55,8 +55,7 @@
 	$speech_enabled = $settings->get('speech', 'enabled', false);
 	$recording_storage_type = $settings->get('recordings','storage_type');
 	$recording_password = $settings->get('recordings','recording_password');
-	$domain_paging = $settings->get('domain','paging');
-	$domain_paging = $settings->get('domain','paging', );
+	$domain_paging = $settings->get('domain','paging', 100);
 	$theme_button_icon_edit = $settings->get('theme','button_icon_edit');
 	$theme_button_icon_add = $settings->get('theme','button_icon_add');
 	$theme_button_icon_upload = $settings->get('theme','button_icon_upload');

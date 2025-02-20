@@ -281,11 +281,11 @@
 	echo "	<th>".$text['label-hours']."</th>\n";
 	echo "	<th>".$text['label-date']."</th>\n";
 	echo "	<th class='no-wrap'>".$text['label-time']."</th>\n";
-	echo "	<th>Volume</th>\n";
+	echo "	<th title='".$text['description-volume']."'>".$text['label-volume']."</th>\n";
 	echo "	<th>".$text['label-minutes']."</th>\n";
-	echo "	<th>".$text['label-calls-per-minute']."</th>\n";
+	echo "	<th title='".$text['description-calls-per-minute']."'>".$text['label-calls-per-minute']."</th>\n";
 	echo "	<th class='center'>".$text['label-missed']."</th>\n";
-	echo "	<th>ASR</th>\n";
+	echo "	<th title='".$text['description-asr']."'>".$text['label-asr']."</th>\n";
 	echo "	<th title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "</tr>\n";
 

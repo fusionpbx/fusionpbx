@@ -272,7 +272,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for Yealink Super Search XML configuration file";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c704e81-cbb4-4cb3-ab1c-427755008714c";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c704e81-cbb4-4cb3-ab1c-427755008714";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t33g_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -288,7 +288,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T33G screen";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9ddc080dd-0157-4eea-90b7-ca288a938d43";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ab97779a-8d32-4ab4-a88f-4ea1433d00ba";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46s_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -1420,7 +1420,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_voice_vad";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = On, 0 = Off (default)";
 		$y++;
@@ -1729,7 +1729,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Saving Enabled. Options: 0-Disabled, 1-Enabled";	
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Power Saving Enabled. Options: 0-Disabled, 1-Enabled";	
 		$y++;
 
 ?>
