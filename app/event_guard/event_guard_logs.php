@@ -41,6 +41,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//create database object
+	$database = database::new();
+
 //get the http post data
 	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
 		$action = $_POST['action'];
@@ -52,6 +55,12 @@
 	if (!empty($action) && !empty($event_guard_logs) && is_array($event_guard_logs) && @sizeof($event_guard_logs) != 0) {
 
 		switch ($action) {
+			case 'sweep':
+				if (permission_exists('event_guard_log_delete')) {
+					$event_guard = new event_guard();
+					$event_guard->sweep($database);
+				}
+				break;
 			case 'copy':
 				if (permission_exists('event_guard_log_add')) {
 					$obj = new event_guard;
@@ -105,7 +114,6 @@
 		$sql .= "and filter = :filter ";
 		$parameters['filter'] = $_GET["filter"];
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -157,7 +165,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$event_guard_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -173,6 +180,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-event_guard_logs']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('event_guard_log_delete')) {
+		echo button::create(['type'=>'button','label'=>$text['button-sweep'] ?? 'sweep','icon'=>$_SESSION['theme']['button_icon_sweep'] ?? 'fa-solid fa-broom','id'=>'btn_sweep','name'=>'btn_sweep','onclick'=>"modal_open('modal-sweep','btn_sweep');"]);
+	}
 	if (permission_exists('event_guard_log_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'event_guard_log_edit.php']);
 	}

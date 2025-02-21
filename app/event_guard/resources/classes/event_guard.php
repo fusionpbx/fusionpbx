@@ -45,18 +45,23 @@ if (!class_exists('event_guard')) {
 		private $toggle_values;
 		private $location;
 
+		private $database;
+		private $config;
+
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct($params = []) {
 			//assign the variables
-				$this->app_name = 'event_guard';
-				$this->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-				$this->name = 'event_guard_log';
-				$this->table = 'event_guard_logs';
-				$this->toggle_field = '';
-				$this->toggle_values = ['block','pending'];
-				$this->location = 'event_guard_logs.php';
+			$this->app_name = 'event_guard';
+			$this->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
+			$this->name = 'event_guard_log';
+			$this->table = 'event_guard_logs';
+			$this->toggle_field = '';
+			$this->toggle_values = ['block','pending'];
+			$this->location = 'event_guard_logs.php';
+			$this->config = config::load();
+			$this->database = database::new(['config' => $config]);
 		}
 
 		/**
@@ -94,10 +99,9 @@ if (!class_exists('event_guard')) {
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -144,10 +148,9 @@ if (!class_exists('event_guard')) {
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//initialize the settings object
@@ -197,8 +200,7 @@ if (!class_exists('event_guard')) {
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -221,10 +223,9 @@ if (!class_exists('event_guard')) {
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -267,8 +268,7 @@ if (!class_exists('event_guard')) {
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where event_guard_log_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
@@ -288,10 +288,9 @@ if (!class_exists('event_guard')) {
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -302,7 +301,42 @@ if (!class_exists('event_guard')) {
 			}
 		}
 
+		/**
+		 * Removes all duplicate IPs from the logs leaving the most recent entries. If there are many IPs then this could be a heavy operation.
+		 * @return null
+		 */
+		public function sweep() {
+			$driver = $this->config->get('database.0.driver');
+			$prefix = database::TABLE_PREFIX;
+			if ($driver === 'pgsql') {
+				$sql = "DELETE FROM {$prefix}event_guard_logs";
+				$sql .= " WHERE event_guard_log_uuid IN (";
+				$sql .= "	SELECT event_guard_log_uuid FROM (";
+				$sql .= "		SELECT event_guard_log_uuid,";
+				$sql .= "			   ROW_NUMBER() OVER (PARTITION BY ip_address ORDER BY insert_date DESC) AS row_num";
+				$sql .= "		FROM {$prefix}event_guard_logs";
+				$sql .= "	) subquery";
+				$sql .= "	WHERE row_num > 1";
+				$sql .= ");";
+			}
+			if ($driver === 'mysql') {
+				$sql .= "DELETE t FROM {$prefix}event_guard_logs t";
+				$sql .= "	JOIN (";
+				$sql .= "		SELECT event_guard_log_uuid";
+				$sql .= "		FROM (";
+				$sql .= "			SELECT event_guard_log_uuid,";
+				$sql .= "				   ROW_NUMBER() OVER (PARTITION BY ip_address ORDER BY insert_date DESC) AS row_num";
+				$sql .= "			FROM {$prefix}event_guard_logs";
+				$sql .= "		) subquery";
+				$sql .= "		WHERE row_num > 1";
+				$sql .= "	) to_delete";
+				$sql .= "	ON t.event_guard_log_uuid = to_delete.event_guard_log_uuid";
+			}
+			if (!empty($sql)) {
+				$this->database->execute($sql);
+			}
+			return;
+		}
+
 	}
 }
-
-?>
