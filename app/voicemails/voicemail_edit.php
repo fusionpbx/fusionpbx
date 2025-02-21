@@ -177,7 +177,7 @@
 					if (permission_exists('voicemail_file')) {
 						$array['voicemails'][0]['voicemail_file'] = $voicemail_file;
 					}
-					if (permission_exists('voicemail_local_after_email') && !empty($voicemail_mail_to)) {
+					if (permission_exists('voicemail_local_after_email')) {
 						$array['voicemails'][0]['voicemail_local_after_email'] = $voicemail_local_after_email ?? 'false';
 					}
 					$array['voicemails'][0]['voicemail_enabled'] = $voicemail_enabled;
@@ -874,10 +874,7 @@
 		echo "</tr>\n";
 	}
 
-	if (
-		permission_exists('voicemail_file') &&
-		permission_exists('voicemail_local_after_email')
-		) {
+	if (permission_exists('voicemail_file') && permission_exists('voicemail_local_after_email')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_local_after_email']."\n";
