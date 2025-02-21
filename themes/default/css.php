@@ -3854,6 +3854,52 @@ else { //default: white
 		text-align: left;
 		}
 
+/* UPGRADE - SOURCE CODE PREVIEW ************************************************/
+
+	#source_preview_layer {
+		z-index: 999999;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		text-align: center;
+		vertical-align: middle;
+		}
+
+	#source_preview_container {
+		display: block;
+		overflow: auto;
+		background-color: <?=$modal_background_color?>;
+		padding: 25px 25px;
+		margin: auto 10%;
+		text-align: left;
+		box-shadow: <?=$modal_shadow?>;
+		border-radius: <?=$modal_corner_radius?>;
+		color: <?=$modal_message_color?>;
+		}
+
+	#source_preview_container div.title {
+		display: block;
+		font-weight: bold;
+		font-size: 120%;
+		font-family: <?=$modal_title_font?>;
+		color: <?=$modal_title_color?>;
+		text-align: <?=$modal_title_alignment?>;
+		margin: <?=$modal_title_margin?>;
+		}
+
+	#source_preview_container div.file_paths {
+		width: 100%;
+		max-height: 250px;
+		overflow: auto;
+		border: 1px solid <?=$table_row_border_color?>;
+		padding: 12px 15px;
+		background-color: <?=$table_row_background_color_light?>;
+		font-family: monospace; font-size: 85%;
+		color: green;
+		}
+
 /* ACE EDITOR *******************************************************************/
 
 	div#editor {
