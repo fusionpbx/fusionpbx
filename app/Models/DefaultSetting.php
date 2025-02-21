@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasUniqueIdentifier;
 
-class VoicemailGreeting extends Model
+class DefaultSetting extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_voicemail_greetings';
-	protected $primaryKey = 'voicemail_greeting_uuid';
+	protected $table = 'v_default_settings';
+	protected $primaryKey = 'default_setting_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,12 +23,14 @@ class VoicemailGreeting extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-        'voicemail_id',     // TODO: check if this the foreign key
-        'greeting_id',
-        'greeting_name',
-        'greeting_filename',
-        'greeting_description',
-        'greeting_base64',
+        'app_uuid',
+        'default_setting_category',
+        'default_setting_subcategory',
+        'default_setting_name',
+        'default_setting_value',
+        'default_setting_order',
+        'default_setting_enabled',
+        'default_setting_description',
 	];
 
     /**
@@ -51,7 +49,4 @@ class VoicemailGreeting extends Model
 	protected $casts = [
 	];
 
-	public function domain(): BelongsTo {
-		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
-	}
 }

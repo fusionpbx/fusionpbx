@@ -54,7 +54,7 @@ class Carrier extends Model
 	}
 
     public function gateways(): BelongsToMany {
-		return $this->belongsToMany(Gateway::class, 'v_carrier_gateways', 'carrier_uuid', 'gateway_uuid');
+		return $this->belongsToMany(Gateway::class, 'v_carrier_gateways', 'carrier_uuid', 'gateway_uuid')->withTimestamps();
 //		$this->belongsToMany(Group::class)->using(UserGroup::class);
 	}
 }

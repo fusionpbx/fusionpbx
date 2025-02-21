@@ -94,7 +94,7 @@ class Contact extends Model
 	}
 
 	public function contactusers(): BelongsToMany {
-		return $this->belongsToMany(User::class, 'v_contact_users', 'contact_uuid', 'user_uuid');
+		return $this->belongsToMany(User::class, 'v_contact_users', 'contact_uuid', 'user_uuid')->withTimestamps();
 //		$this->belongsToMany(Group::class)->using(UserGroup::class);
 	}
 }

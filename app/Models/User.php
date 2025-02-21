@@ -63,11 +63,11 @@ class User extends Authenticatable
 	}
 
 	public function extensions(): BelongsToMany {
-		return $this->hasMany(Extension::class, 'v_extension_users', 'user_uuid', 'extension_uuid');
+		return $this->belongsToMany(Extension::class, 'v_extension_users', 'user_uuid', 'extension_uuid')->withTimestamps();
 	}
 
 	public function groups(): BelongsToMany {
-		return $this->belongsToMany(Group::class, 'v_user_groups', 'user_uuid', 'group_uuid');
+		return $this->belongsToMany(Group::class, 'v_user_groups', 'user_uuid', 'group_uuid')->withTimestamps();
 //		$this->belongsToMany(Group::class)->using(UserGroup::class);
 	}
 
@@ -84,11 +84,15 @@ class User extends Authenticatable
 	}
 
 	public function conferencerooms(): BelongsToMany {
-		return $this->hasMany(ConferenceRoom::class, 'v_conference_room_users', 'user_uuid', 'conference_room_uuid');
+		return $this->belongsToMany(ConferenceRoom::class, 'v_conference_room_users', 'user_uuid', 'conference_room_uuid')->withTimestamps();
 	}
 
 	public function conferences(): BelongsToMany {
-		return $this->hasMany(Conferences::class, 'v_conference_users', 'user_uuid', 'conference_uuid');
+		return $this->belongsToMany(Conferences::class, 'v_conference_users', 'user_uuid', 'conference_uuid')->withTimestamps();
+	}
+
+	public function faxes(): BelongsToMany {
+		return $this->belongsToMany(Fax::class, 'v_fax_users', 'user_uuid', 'fax_uuid')->withTimestamps();
 	}
 
 }

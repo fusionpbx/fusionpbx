@@ -80,4 +80,8 @@ class Dialplan extends Model
     public function ringgroup(): BelongsTo {
 		return $this->belongsTo(RingGroup::class, 'dialplan_uuid', 'dialplan_uuid');
 	}
+
+	 public function fax(): BelongsTo {
+		return $this->belongsTo(Fax::class, 'fax_uuid', 'fax_uuid');
+	}
 }

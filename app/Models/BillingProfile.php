@@ -84,7 +84,7 @@ class BillingProfile extends Model
 	}
 
 	public function deals(): BelongsToMany {
-		return $this->belongsToMany(BillingDeal::class, 'v_billing_profile_deals', 'billing_uuid', 'billing_deal_uuid');
+		return $this->belongsToMany(BillingDeal::class, 'v_billing_profile_deals', 'billing_uuid', 'billing_deal_uuid')->withTimestamps();
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
 }

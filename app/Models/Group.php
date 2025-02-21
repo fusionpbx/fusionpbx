@@ -34,12 +34,12 @@ class Group extends Model
 	];
 
 	public function users(): BelongsToMany {
-		return $this->belongsToMany(User::class, 'v_user_groups', 'group_uuid', 'user_uuid');
+		return $this->belongsToMany(User::class, 'v_user_groups', 'group_uuid', 'user_uuid')->withTimestamps();
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
 
 	public function contacts(): BelongsToMany {
-		return $this->belongsToMany(Contact::class, 'v_contact_groups', 'group_uuid', 'contact_uuid');
+		return $this->belongsToMany(Contact::class, 'v_contact_groups', 'group_uuid', 'contact_uuid')->withTimestamps();
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
 

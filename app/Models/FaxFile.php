@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class VoicemailGreeting extends Model
+class FaxFile extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_voicemail_greetings';
-	protected $primaryKey = 'voicemail_greeting_uuid';
+	protected $table = 'v_fax_files';
+	protected $primaryKey = 'fax_file_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -27,12 +27,17 @@ class VoicemailGreeting extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-        'voicemail_id',     // TODO: check if this the foreign key
-        'greeting_id',
-        'greeting_name',
-        'greeting_filename',
-        'greeting_description',
-        'greeting_base64',
+        'domain_uuid',
+        'fax_uuid',
+        'fax_mode',
+        'fax_destination',
+        'fax_file_type',
+        'fax_file_path',
+        'fax_caller_id_name',
+        'fax_caller_id_number',
+        'fax_date',
+        'fax_epoch',
+        'fax_base64',
 	];
 
     /**
@@ -53,5 +58,9 @@ class VoicemailGreeting extends Model
 
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function fax(): BelongsTo {
+		return $this->belongsTo(Fax::class, 'fax_uuid', 'fax_uuid');
 	}
 }

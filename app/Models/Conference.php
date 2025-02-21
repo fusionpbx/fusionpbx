@@ -63,7 +63,7 @@ class Conference extends Model
 	}
 
 	public function users(): BelongsToMany {
-		return $this->belongsToMany(User::class, 'v_conference_users', 'conference_uuid', 'user_uuid');
+		return $this->belongsToMany(User::class, 'v_conference_users', 'conference_uuid', 'user_uuid')->withTimestamps();
 //		$this->belongsToMany(Group::class)->using(UserGroup::class);
 	}
 }

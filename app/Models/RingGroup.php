@@ -55,7 +55,7 @@ class RingGroup extends Model
 	];
 
 	public function users(): BelongsToMany {
-		return $this->belongsToMany(User::class, 'v_ring_group_users', 'ring_group_uuid', 'user_uuid');
+		return $this->belongsToMany(User::class, 'v_ring_group_users', 'ring_group_uuid', 'user_uuid')->withTimestamps();
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
 
@@ -68,6 +68,6 @@ class RingGroup extends Model
 	}
 
 	public function dialplan(): HasOne {
-		return $this->HasOne(DialplanDetail::class, 'dialplan_uuid', 'dialplan_uuid');
+		return $this->HasOne(Dialplan::class, 'dialplan_uuid', 'dialplan_uuid');
 	}
 }
