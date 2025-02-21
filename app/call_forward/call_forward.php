@@ -241,7 +241,7 @@
 			}
 		}
 		if ($show !== 'all' && permission_exists('call_forward_all')) {
-			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $_SESSION['theme']['button_icon_all'], 'link' => '?show=all' . $param]);
+			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $_SESSION['theme']['button_icon_all'], 'link' => '?show=all' . (!empty($params) ? '&'.implode('&', $params) : null)]);
 		}
 		echo "<form id='form_search' class='inline' method='get'>\n";
 		if ($show == 'all' && permission_exists('call_forward_all')) {
@@ -427,4 +427,3 @@
 		require_once "resources/footer.php";
 	}
 ?>
-
