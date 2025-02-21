@@ -232,6 +232,19 @@
 							}
 							//echo $command."\n";
 
+						//set the call center agent state
+							$command = '';
+							if (!isset($row['queue_name'])) {
+								if (in_array($agent_status, array('Available', 'Available (On Demand)'))) {
+									$agent_state = 'Waiting';
+								} else {
+									$agent_state = 'Idle';
+								}
+								$command = "api callcenter_config agent set state ".$row['agent_uuid']." '".$agent_state."'";
+								$response = event_socket_request($fp, $command);
+							}
+							//echo $command."\n";
+
 						//get the queue_id
 							if (isset($row['queue_uuid']) && is_uuid($row['queue_uuid'])) {
 								if (!empty($call_center_queues)) {
