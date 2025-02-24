@@ -1574,7 +1574,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 			}
 			if (permission_exists('contact_user_add')) {
 				echo "		<div class='vtable' style='border-bottom: none;'>\n";
-				echo "			<select name='contact_user_uuid' class='formfld' style='width: auto;'>\n";
+				echo "			<select name='contact_user_uuid' class='formfld' style='width: 112px;'>\n";
 				echo "				<option value=''></option>\n";
 				foreach ($users as $field) {
 					if (!empty($contact_users_assigned) && in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
@@ -1632,7 +1632,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 			if (permission_exists('contact_group_add')) {
 				if (!empty($contact_groups_available)) {
 					echo "	<div class='vtable' style='border-bottom: none;'>\n";
-					echo "		<select name='contact_group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+					echo "		<select name='contact_group_uuid' class='formfld' style='width: 112px;'>\n";
 					echo "			<option value=''></option>\n";
 					foreach ($contact_groups_available as $field) {
 						if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show superadmin group to superadmins
@@ -1788,10 +1788,10 @@ if (permission_exists('contact_phone_view')) {
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-phone_type']."\n";
 		echo "		</div>\n";
-		echo "		<div class='field no-wrap'>\n";
-		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_voice]' id='phone_type_voice' value='1' ".(($row['phone_type_voice']) ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
-		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_fax]' id='phone_type_fax' value='1' ".(($row['phone_type_fax']) ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
-		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_video]' id='phone_type_video' value='1' ".(($row['phone_type_video']) ? "checked='checked'" : null)."> ".$text['label-video']."</label>&nbsp;\n";
+		echo "		<div class='field no-wrap' style='display: flex; flex-wrap: wrap; gap: 3px;'>\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_voice]' id='phone_type_voice' value='1' ".(($row['phone_type_voice']) ? "checked='checked'" : null)."> ".$text['label-voice']."</label>\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_fax]' id='phone_type_fax' value='1' ".(($row['phone_type_fax']) ? "checked='checked'" : null)."> ".$text['label-fax']."</label>\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_video]' id='phone_type_video' value='1' ".(($row['phone_type_video']) ? "checked='checked'" : null)."> ".$text['label-video']."</label>\n";
 		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_text]' id='phone_type_text' value='1' ".(($row['phone_type_text']) ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
 		echo "			<br />\n";
 		//echo 			$text['description-phone_type']."\n";
