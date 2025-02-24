@@ -1,9 +1,5 @@
 <?php
 
-
-namespace App\Telegram\Commands;
-
-
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
