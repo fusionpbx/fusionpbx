@@ -3095,6 +3095,7 @@
 {elseif $grandstream_automatic_provisioning == 3}
 <P194>2</P194>
 {/if}
+{/if}
 
 <!-- Automatic Provisioning. Check for new config file every () minutes. Default is 7 days. -->
 <!-- Number: 60-86400 -->
