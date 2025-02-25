@@ -135,4 +135,8 @@ class Domain extends Model
 	public function recordings(): HasMany {
 		return $this->hasMany(Recording::class, 'domain_uuid', 'domain_uuid');
 	}
+
+	public function devices(): HasMany {
+		return $this->hasMany(Device::class, 'domain_uuid', 'domain_uuid');
+	}
 }

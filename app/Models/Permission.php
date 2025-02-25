@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasUniqueIdentifier;
 
-use Permission extends Model
+class Permission extends Model
 {
 	use HasFactory, HasUniqueIdentifier;
 	protected $table = 'v_permissions';

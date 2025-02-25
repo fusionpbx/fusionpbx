@@ -95,4 +95,7 @@ class User extends Authenticatable
 		return $this->belongsToMany(Fax::class, 'v_fax_users', 'user_uuid', 'fax_uuid')->withTimestamps();
 	}
 
+	public function devices(): HasMany {
+		return $this->hasMany(Device::class, 'user_uuid', 'device_user_uuid');
+	}
 }

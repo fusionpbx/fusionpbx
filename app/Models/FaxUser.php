@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class Faxuser extends Pivot
+class FaxUser extends Pivot
 {
 	use HasFactory, HasUniqueIdentifier;
 	protected $table = 'v_fax_users';
