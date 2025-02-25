@@ -8,6 +8,7 @@
         "php": "^8.2",
         "elvanto/litemoji": "^4.3",
         "laravel/framework": "^12.0",
+        "laravel/sanctum": "*",
         "laravel/tinker": "^2.10.1",
         "okayinc/stateless-session": "^0.0.10"
     },
@@ -18,8 +19,7 @@
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
-    },
+        "phpunit/phpunit": "^11.5.3"    },
     "autoload": {
         "psr-4": {
             "App\\": "app/",
