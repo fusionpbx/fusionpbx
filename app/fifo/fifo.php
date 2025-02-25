@@ -145,8 +145,8 @@
 	$sql .= "fifo_uuid, ";
 	$sql .= "fifo_name, ";
 	$sql .= "fifo_extension, ";
-	$sql .= "fifo_agent_queue, ";
 	$sql .= "fifo_agent_status, ";
+	$sql .= "fifo_agent_queue, ";
 	$sql .= "fifo_music, ";
 	$sql .= "u.domain_uuid, ";
 	$sql .= "d.domain_name, ";
@@ -249,8 +249,8 @@
 	}
 	echo th_order_by('fifo_name', $text['label-fifo_name'], $order_by, $order);
 	echo th_order_by('fifo_extension', $text['label-fifo_extension'], $order_by, $order);
-	echo th_order_by('fifo_agent_queue', $text['label-fifo_agent_queue'], $order_by, $order);
 	echo th_order_by('fifo_agent_status', $text['label-fifo_agent_status'], $order_by, $order);
+	echo th_order_by('fifo_agent_queue', $text['label-fifo_agent_queue'], $order_by, $order);
 	echo th_order_by('fifo_order', $text['label-fifo_order'], $order_by, $order);
 	echo th_order_by('fifo_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-fifo_description']."</th>\n";
@@ -287,8 +287,8 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['fifo_extension'])."</td>\n";
-			echo "	<td>".escape($row['fifo_agent_queue'])."</td>\n";
 			echo "	<td>".escape($row['fifo_agent_status'])."</td>\n";
+			echo "	<td>".escape($row['fifo_agent_queue'])."</td>\n";
 			echo "	<td>".escape($row['fifo_order'])."</td>\n";
 			if (permission_exists('fifo_edit')) {
 				echo "	<td class='no-link center'>\n";
@@ -323,4 +323,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
