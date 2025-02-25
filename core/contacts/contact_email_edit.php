@@ -239,6 +239,7 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 	}
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -311,6 +312,7 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid ?? '')."'>\n";
