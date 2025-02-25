@@ -12,7 +12,7 @@
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
-        "okayinc/stateless-session": "^0.0.10",
+        "okayinc/stateless-session": "^0.0.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
