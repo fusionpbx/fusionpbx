@@ -224,7 +224,7 @@ class settings {
 	private function default_settings() {
 
 		//set the key for global defaults
-		$key = 'settings_default_' . $this->category;
+		$key = 'settings_global_' . $this->category;
 
 		//if the apcu extension is loaded get the already parsed array
 		if ($this->apcu_enabled && apcu_exists($key)) {
@@ -456,7 +456,7 @@ class settings {
 
 	/**
 	 * Clears the settings cache
-	 * @param string $type Empty clears all settings. Values can be default, domain, or user.
+	 * @param string $type Empty clears all settings. Values can be global, domain, or user.
 	 */
 	public static function clear_cache(string $type = '') {
 		if (function_exists('apcu_enabled') && apcu_enabled()) {
@@ -466,7 +466,7 @@ class settings {
 				default:
 					$type = "";
 					break;
-				case 'default':
+				case 'global':
 				case 'domain':
 				case 'user':
 					$type .= "_";
