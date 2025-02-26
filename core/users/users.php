@@ -113,7 +113,7 @@
 		$sql_search .= "	or lower(group_names) like :search ";
 		$sql_search .= "	or lower(contact_organization) like :search ";
 		$sql_search .= "	or lower(contact_name) like :search ";
-		//$sql_search .= "	or lower(user_status) like :search ";
+		$sql_search .= "	or lower(contact_note) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -154,7 +154,7 @@
 //get the list
 	$sql = "select domain_name, domain_uuid, user_uuid, username, group_names, ";
 	if ($show_contact_fields) {
-		$sql .= "contact_organization,contact_name, ";
+		$sql .= "contact_organization,contact_name,contact_note, ";
 	}
 	$sql .= "cast(user_enabled as text) ";
 	$sql .= "from view_users ";
@@ -267,6 +267,7 @@
 	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
 	//echo th_order_by('user_status', $text['label-user_status'], $order_by, $order);
 	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order);
+	echo th_order_by('contact_note', $text['label-contact_note'], $order_by, $order, null, "class='center'", $param);
 	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'", $param);
 	if (permission_exists('user_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -310,6 +311,7 @@
 			//echo "	<td>".escape($row['contact_name_family'])."</td>\n";
 			//echo "	<td>".escape($row['user_status'])."</td>\n";
 			//echo "	<td>".escape($row['add_date'])."</td>\n";
+			echo "	<td>".escape($row['contact_note'])."</td>\n";
 			if (permission_exists('user_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['user_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
@@ -341,4 +343,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
