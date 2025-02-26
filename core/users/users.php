@@ -52,21 +52,7 @@
 		$users = $_POST['users'] ?? '';
 	}
 
-//check to see if contact details are in the view
-	$sql = "select * from view_users ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$parameters = null;
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$row = $database->select($sql, $parameters, 'row');
-	if (isset($row['contact_organization'])) {
-		$show_contact_fields = true;
-	}
-	else {
-		$show_contact_fields = false;
-	}
-	unset($parameters);
-
-//process the http post data by action
+S//process the http post data by action
 	if (!empty($action) && is_array($users) && @sizeof($users) != 0) {
 		switch ($action) {
 			case 'copy':
@@ -153,9 +139,7 @@
 
 //get the list
 	$sql = "select domain_name, domain_uuid, user_uuid, username, group_names, ";
-	if ($show_contact_fields) {
-		$sql .= "contact_organization,contact_name,contact_note, ";
-	}
+	$sql .= "contact_organization,contact_name,contact_note, ";
 	$sql .= "cast(user_enabled as text) ";
 	$sql .= "from view_users ";
 	if ($show == "all" && permission_exists('user_all')) {
@@ -260,10 +244,8 @@
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
 	echo th_order_by('group_names', $text['label-groups'], $order_by, $order, null, null, $param);
-	if ($show_contact_fields) {
-		echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $param);
-		echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $param);
-	}
+	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $param);
+	echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $param);
 	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
 	//echo th_order_by('user_status', $text['label-user_status'], $order_by, $order);
 	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order);
@@ -273,7 +255,6 @@
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
-
 	if (is_array($users) && @sizeof($users) != 0) {
 		$x = 0;
 		foreach ($users as $row) {
@@ -303,10 +284,8 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['group_names'])."</td>\n";
-			if ($show_contact_fields) {
-				echo "	<td>".escape($row['contact_organization'])."</td>\n";
-				echo "	<td>".escape($row['contact_name'])."</td>\n";
-			}
+			echo "	<td>".escape($row['contact_organization'])."</td>\n";
+			echo "	<td>".escape($row['contact_name'])."</td>\n";
 			//echo "	<td>".escape($row['contact_name_given'])."</td>\n";
 			//echo "	<td>".escape($row['contact_name_family'])."</td>\n";
 			//echo "	<td>".escape($row['user_status'])."</td>\n";
