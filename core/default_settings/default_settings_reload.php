@@ -46,7 +46,7 @@ $search = $_REQUEST['search'] ?? '';
 $domain_uuid = $_GET['id'] ?? null;
 
 //reload default settings
-require "resources/classes/domains.php";
+settings::clear_cache();
 $domain = new domains();
 $domain->set();
 

@@ -298,6 +298,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					}
 				}
 
+			//clear the user settings cache
+				settings::clear_cache('user');
+
 			//redirect the browser
 				if ($action == "update") {
 					message::add($text['message-update']);
