@@ -280,12 +280,10 @@
 							message_waiting(voicemail_id_copy, domain_uuid);
 						end
 				elseif (dtmf_digits == "8") then
-					forward_to_extension(voicemail_id, uuid);
-					dtmf_digits = '';
+					forward_menu(voicemail_id, uuid);
 				elseif (dtmf_digits == "9") then
-					send_email(voicemail_id, uuid);
 					dtmf_digits = '';
-					session:execute("playback", "phrase:voicemail_ack:emailed");
+					session:execute("playback", "phrase:voicemail_ack:marked_new");
 				elseif (dtmf_digits == "*") then
 					timeouts = 0;
 					return main_menu();
