@@ -11,6 +11,8 @@
 		<param name="sip-trace" value="no"/>
 		<param name="context" value="public"/>
 		<param name="rfc2833-pt" value="101"/>
+		<!-- RFC 5626 : Send reg-id and sip.instance -->
+		<param name="enable-rfc-5626" value="true" enabled="false"/>
 		<!-- port to bind to for sip traffic -->
 		<param name="sip-port" value="5060"/>
 		<param name="dialplan" value="XML"/>
