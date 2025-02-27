@@ -257,8 +257,12 @@
 	if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
 		$x = 0;
 		foreach ($ring_groups as $row) {
+			$list_row_url = '';
 			if (permission_exists('ring_group_edit')) {
 				$list_row_url = "ring_group_edit.php?id=".urlencode($row['ring_group_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('ring_group_add') || permission_exists('ring_group_edit') || permission_exists('ring_group_delete')) {
@@ -315,3 +319,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

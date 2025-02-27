@@ -126,7 +126,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select b.bridge_uuid, d.domain_name, b.bridge_name, b.bridge_destination, bridge_enabled, bridge_description ";
+	$sql = "select d.domain_uuid, b.bridge_uuid, d.domain_name, b.bridge_name, b.bridge_destination, bridge_enabled, bridge_description ";
 	$sql .= "from v_bridges as b, v_domains as d ";
 	$sql .= "where b.domain_uuid = d.domain_uuid ";
 	if (!empty($show) && $show == "all" && permission_exists('bridge_all')) {
@@ -234,8 +234,12 @@
 	if (!empty($bridges)) {
 		$x = 0;
 		foreach ($bridges as $row) {
+			$list_row_url = '';
 			if (permission_exists('bridge_edit')) {
 				$list_row_url = "bridge_edit.php?id=".urlencode($row['bridge_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('bridge_add') || permission_exists('bridge_edit') || permission_exists('bridge_delete')) {

@@ -337,8 +337,12 @@
 	if (is_array($email_queue) && @sizeof($email_queue) != 0) {
 		$x = 0;
 		foreach ($email_queue as $row) {
+			$list_row_url = '';
 			if (permission_exists('email_queue_edit')) {
 				$list_row_url = "email_queue_edit.php?id=".urlencode($row['email_queue_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('email_queue_add') || permission_exists('email_queue_edit') || permission_exists('email_queue_delete')) {

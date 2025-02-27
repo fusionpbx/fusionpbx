@@ -339,6 +339,9 @@ if (!class_exists('xml_cdr')) {
 			//remove invalid numeric xml tags
 				$xml_string = preg_replace('/<\/?\d+>/', '', $xml_string);
 
+			//replace xml tag name <set api_hangup_hook> with <api_hangup_hook>
+				$xml_string = preg_replace('/(<\/?)(set )([^>]*>)/', '$1$3', $xml_string);
+
 			//disable xml entities
 				if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
 
@@ -352,12 +355,12 @@ if (!class_exists('xml_cdr')) {
 
 					//failed to load the XML, move the XML file to the failed directory
 					if (!empty($xml_cdr_dir)) {
-						if (!file_exists($xml_cdr_dir.'/failed')) {
-							if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
+						if (!file_exists($xml_cdr_dir.'/failed/invalid_xml')) {
+							if (!mkdir($xml_cdr_dir.'/failed/invalid_xml', 0660, true)) {
 								die('Failed to create '.$xml_cdr_dir.'/failed');
 							}
 						}
-						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
+						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/invalid_xml/'.$this->file);
 					}
 
 					//return without saving the invalid xml
@@ -645,8 +648,8 @@ if (!class_exists('xml_cdr')) {
 						$domain_uuid = urldecode($xml->variables->domain_uuid);
 
 					//sanitize the caller ID
-						$caller_id_name = preg_replace('#[^a-zA-Z 0-9\-\.]#', '', $caller_id_name);
-						$caller_id_number = preg_replace('#[^0-9\-]#', '', $caller_id_number);
+						$caller_id_name = preg_replace('#[^a-zA-Z0-9\-.\#*@ ]#', '', $caller_id_name);
+						$caller_id_number = preg_replace('#[^0-9\-\#\*]#', '', $caller_id_number);
 
 					//misc
 						$this->array[$key][0]['ring_group_uuid'] = urldecode($xml->variables->ring_group_uuid);
@@ -1692,7 +1695,7 @@ if (!class_exists('xml_cdr')) {
 
 				//if http enabled is set to false then deny access
 					if (!defined('STDIN')) {
-						if ($this->settings->get('cdr', 'http_enabled') == "false") {
+						if ($this->settings->get('cdr', 'http_enabled') == false) {
 							openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 							syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR'].'] XML CDR import default setting http_enabled is not enabled. Line: '.__line__);
 							closelog();
