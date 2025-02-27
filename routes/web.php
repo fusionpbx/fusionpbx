@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Middleware\Authenticate;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use app\Http\Middleware\Authenticate;
-use app\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
