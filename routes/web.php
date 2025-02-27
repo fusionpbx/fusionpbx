@@ -14,8 +14,7 @@ use app\Http\Middleware\Authenticate;
 |
 */
 
-
-Route::middleware('Authenticate')->group(function () {
+Route::group(['middleware' => 'Authenticate'], function () {
 	Route::get('/', function () {
 	    return view('welcome');
 	});
