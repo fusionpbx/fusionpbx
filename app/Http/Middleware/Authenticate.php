@@ -16,6 +16,7 @@ class Authenticate extends Middleware
     public function handle($request, Closure $next, ...$guards): Response
     {
         $authenticated = $request->session()->get('authenticated', false);
+        \Log::debug('$authenticated: '.print_r($authenticated, true));
 
         if ($authenticated !== false){
             route('login');
