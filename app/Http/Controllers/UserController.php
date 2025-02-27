@@ -14,6 +14,11 @@ class UserController extends Controller
 	private $username = null;
 	private $domainname = null;
 	private $user_uuid = null;
+
+    public function login(){
+        return view('auth.login');
+    }
+
 	public function Autheticate(string $username, string $domainname, string $password): bool{
 		$result = false;
 
