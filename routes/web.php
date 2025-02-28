@@ -19,6 +19,12 @@ Route::middleware('auth')->group(function () {
 	Route::get('/', function () {
 	    return view('welcome');
 	});
+
+    Route::post('/domains/switch', [DomainController::class, 'switch'])->name('switchDomain');
+    Route::get('/domains/switch', function () {
+        return redirect('/dashboard');
+    });
+    Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('switchDomainFusionPBX');
 });
 
 

@@ -15,10 +15,10 @@ class Authenticate extends Middleware
 
     public function handle($request, Closure $next, ...$guards): Response
     {
-        $authenticated = $request->session()->get('authenticated', false);
+        $authenticated = $request->session()->get('authenticated', 0);
         \Log::debug('$authenticated: '.print_r($authenticated, true));
 
-        if ($authenticated !== false){
+        if (!$authenticated){
             route('login');
         }
         else
