@@ -4560,7 +4560,7 @@
 
 		<!-- MPK Value -->
 		<!-- Pvalue P303 -->
-		<item name="pks.mpk.{$row.device_key_id}.value"></item>
+		<item name="pks.mpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
 
 {/foreach}
 
