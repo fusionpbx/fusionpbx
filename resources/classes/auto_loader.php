@@ -55,7 +55,7 @@ class auto_loader {
 
 	public function update_cache(string $file = ''): bool {
 		//guard against writing an empty file
-		if (!empty($this->classes)) {
+		if (empty($this->classes)) {
 			return false;
 		}
 
