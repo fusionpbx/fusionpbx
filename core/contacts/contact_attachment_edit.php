@@ -70,15 +70,15 @@
 
 		//get the attachment type
 		if (empty($attachment) || sizeof($attachment) == 0) {
-			$attachment_type = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
+			$attachment_extension = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
 		}
 		else {
-			$attachment_type = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
+			$attachment_extension = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
 		}
 
 		//unflag others as primary
 		$allowed_primary_attachment = false;
-		if ($attachment_primary && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png')) {
+		if ($attachment_primary && ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png')) {
 			$sql = "update v_contact_attachments set attachment_primary = 0 ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and contact_uuid = :contact_uuid ";
@@ -94,29 +94,41 @@
 		//get the allowed extensions
 		$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
 
-		//get the attachment extension
-		$attachment_extension = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
-
 		//check the allowed extensions
 		if ($attachment['error'] == '0' && in_array($attachment_extension, $allowed_extensions)) {
 			//get the attachment content
 			$attachment_content = file_get_contents($attachment['tmp_name']);
 
-			//list of image extensions
-			$image_extensions = array('png','jpg','jpeg','gif','bmp', 'webp');
-
 			//read the image from the string then output the image without meta data
-			if (in_array($attachment_extension, $image_extensions)) {
+			if (in_array($attachment_extension, ['png','jpg','jpeg','gif','bmp', 'webp'])) {
 				//create the image object from the content string
 				$image = imagecreatefromstring($attachment_content);
-				imagealphablending($image, FALSE);
-				imagesavealpha($image, TRUE);
 
 				//start output buffering to capture the image data
 				ob_start();
 
 				//output the image without the EXIF data
-				imagepng($image);
+				switch ($attachment_extension) {
+					case 'png':
+						imagealphablending($image, FALSE);
+						imagesavealpha($image, TRUE);
+						imagepng($image);
+						break;
+					case 'jpg':
+					case 'jpeg':
+						imagejpeg($image);
+						break;
+					case 'gif':
+						imagesavealpha($image, TRUE);
+						imagegif($image);
+						break;
+					case 'bmp':
+						imagebmp($image);
+						break;
+					case 'webp':
+						imagewebp($image);
+						break;
+				}
 
 				//get the image from the buffer
 				$attachment_content = ob_get_contents();
@@ -215,11 +227,11 @@
 	echo "	".$text['label-attachment']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	$attachment_type = strtolower(pathinfo($attachment_filename ?? '', PATHINFO_EXTENSION));
+	$attachment_extension = strtolower(pathinfo($attachment_filename ?? '', PATHINFO_EXTENSION));
 	if ($action == 'update') {
 		echo "<input type='hidden' name='attachment_filename' value=\"".escape($attachment_filename)."\">\n";
-		if ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png') {
-			echo "<img src='data:image/".$attachment_type.";base64,".$attachment_content."' style='border: none; width: auto; max-height: 400px;' oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\">";
+		if ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png') {
+			echo "<img src='data:image/".$attachment_extension.";base64,".$attachment_content."' style='border: none; width: auto; max-height: 400px;' oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\">";
 		}
 		else {
 			echo "<a href='contact_attachment.php?id=".$contact_attachment_uuid."&action=download' style='font-size: 120%;'>".$attachment_filename."</a>";
@@ -233,7 +245,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == 'update' && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png')) {
+	if ($action == 'update' && ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-attachment_filename']."\n";
