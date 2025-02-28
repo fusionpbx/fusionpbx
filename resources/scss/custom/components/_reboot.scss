@@ -1,0 +1,44 @@
+//
+// reboot.scss
+//
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { 
+    margin-top: $headings-margin-bottom;
+}
+
+// Fix event bubbling on iOS devices
+@supports (-webkit-overflow-scrolling: touch) {
+    body {
+        cursor: pointer;
+    }
+}
+
+body {
+    overflow-x: hidden;
+}
+
+button,
+a {
+    outline: none !important;
+}
+
+// Forms
+
+label {
+    font-weight: $font-weight-semibold;
+}
+
+// Address
+address.address-lg {
+    line-height: 24px;
+}
+
+b,
+strong {
+    font-weight: $font-weight-bold;
+}

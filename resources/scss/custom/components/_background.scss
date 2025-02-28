@@ -1,0 +1,6 @@
+// Background lighten
+@each $state in map-keys($theme-colors) {
+    .bg-#{$state}-lighten {
+        background-color: var(--#{$prefix}#{$state}-bg-subtle) !important;
+    }
+}

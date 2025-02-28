@@ -1,0 +1,90 @@
+//
+// frappe-gantt.scss
+//
+
+.gantt {
+    .bar-progress {
+        fill: var(--#{$prefix}primary);
+    }
+
+    .bar-wrapper:hover {
+        .bar-progress {
+            fill: lighten($primary, 5%);
+        }
+    }
+
+    .bar,
+    .bar-wrapper:hover .bar {
+        fill: var(--#{$prefix}light);
+    }
+
+    .bar-label,
+    .bar-label.big {
+        fill: var(--#{$prefix}tertiary-color);
+    }
+
+    .grid-header {
+        fill: $table-hover-bg;
+        stroke: $table-hover-bg;
+    }
+
+    .grid-row {
+        fill: transparent;
+
+        &:nth-child(even) {
+            fill: $table-hover-bg;
+        }
+    }
+
+    .lower-text,
+    .upper-text {
+        fill: var(--#{$prefix}body-color);
+    }
+
+    .row-line {
+        stroke: $table-border-color;
+    }
+
+    .today-highlight {
+        fill: var(--#{$prefix}gray-200);
+    }
+}
+
+.gantt-container {
+    &::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+
+    &::-webkit-scrollbar:vertical {
+        width: 5px;
+        margin-right: 5px;
+    }
+
+    &::-webkit-scrollbar:horizontal {
+        height: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(var(--#{$prefix}dark-rgb), 0.2);
+        border-radius: 10px;
+        margin-right: 5px;
+        border: none;
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
+    .popup-wrapper {
+        background: transparent;
+
+        .pointer {
+            display: none;
+        }
+    }
+}

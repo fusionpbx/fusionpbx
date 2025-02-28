@@ -1,0 +1,54 @@
+//
+// _badges.scss
+//
+
+// Lighten badge (soft)
+
+@each $state in map-keys($theme-colors) {
+    .badge-#{$state}-lighten {
+        --#{$prefix}badge-color: var(--#{$prefix}#{$state});
+        background-color: var(--#{$prefix}#{$state}-bg-subtle);
+
+        &[href] {
+            color: var(--#{$prefix}#{$state});
+            text-decoration: none;
+            background-color: var(--#{$prefix}#{$state}-bg-subtle);
+
+            &:is(:hover,:focus) {
+                color: var(--#{$prefix}#{$state});
+                text-decoration: none;
+                background-color: var(--#{$prefix}#{$state}-bg-subtle);
+            }
+        }
+    }
+}
+
+// Outline badge
+@each $state in map-keys($theme-colors) {
+    .badge-outline-#{$state} {
+        --#{$prefix}badge-color: var(--#{$prefix}#{$state});
+        border: 1px solid var(--#{$prefix}#{$state});
+        background-color: transparent;
+
+        &[href] {
+            color: var(--#{$prefix}#{$state});
+            text-decoration: none;
+            background-color: var(--#{$prefix}#{$state}-bg-subtle);
+
+            &:is(:hover,:focus) {
+                color: var(--#{$prefix}#{$state});
+                text-decoration: none;
+                background-color: var(--#{$prefix}#{$state}-bg-subtle);
+            }
+        }
+    }
+}
+
+.badge {
+    vertical-align: middle;
+
+    &.badge-lg {
+        padding: $badge-padding-y * 2 $badge-padding-x * 2.5;
+        font-size: $badge-font-size + 0.1em;
+    }
+}

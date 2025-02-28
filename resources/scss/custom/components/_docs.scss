@@ -1,0 +1,149 @@
+//
+// docs.scss
+//
+
+.hljs {
+    display: block;
+    padding: 0 1em;
+    color: var(--#{$prefix}body-color);
+    max-height: 420px;
+    margin: -10px 0 -30px;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+    color: var(--#{$prefix}body-color);
+    font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+    color: $teal;
+}
+
+.hljs-string,
+.hljs-doctag {
+    color: $danger;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+    color: $danger;
+    font-weight: bold;
+}
+
+.hljs-subst {
+    font-weight: normal;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+    color: var(--#{$prefix}primary);
+    font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+    color: $success;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+    color: $pink;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+    color: $info;
+}
+
+.hljs-meta {
+    color: var(--#{$prefix}gray-800);
+    font-weight: bold;
+}
+
+.hljs-deletion {
+    background: #fdd;
+}
+
+.hljs-addition {
+    background: #dfd;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
+
+.hljs-comment {
+    color: var(--#{$prefix}gray-400);
+}
+
+// Scrollbar
+.tab-pane.code {
+    border: 1px solid var(--#{$prefix}border-color);
+    border-radius: 0.25rem;
+    position: relative;
+
+    pre {
+        &::-webkit-scrollbar {
+            -webkit-appearance: none;
+        }
+
+        &::-webkit-scrollbar:vertical {
+            width: 5px;
+            margin-right: 5px;
+        }
+
+        &::-webkit-scrollbar:horizontal {
+            height: 5px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(var(--#{$prefix}dark-rgb), 0.2);
+            border-radius: 10px;
+            margin-right: 5px;
+            border: none;
+        }
+
+        &::-webkit-scrollbar-track {
+            border-radius: 10px;
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-corner {
+            background-color: transparent;
+        }
+    }
+
+    .btn-copy-clipboard {
+        position: absolute;
+        right: 8px;
+        top: 10px;
+        background-color: $card-bg;
+        border: 1px solid $success;
+        color: $success;
+        padding: 0.28rem 0.8rem;
+        font-size: 0.875rem;
+        border-radius: 0.15rem;
+        font-weight: 400;
+        line-height: 1.5;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: $success;
+            color: $white;
+        }
+    }
+}

@@ -1,0 +1,52 @@
+// 
+// root.scss
+//
+
+@mixin color-mode($mode: light, $root: false) {
+    @if $color-mode-type =="media-query" {
+        @if $root ==true {
+            @media (prefers-color-scheme: $mode) {
+                :root {
+                    @content;
+                }
+            }
+        }
+
+        @else {
+            @media (prefers-color-scheme: $mode) {
+                @content;
+            }
+        }
+    }
+
+    @else {
+        [data-bs-theme="#{$mode}"] {
+            @content;
+        }
+    }
+}
+
+//theme-light
+:root,
+[data-bs-theme="light"] {
+    --#{$prefix}input-bg:                       #{$white};
+    --#{$prefix}border-color-custom:            #{$gray-100};
+}
+
+//theme dark
+@if $enable-dark-mode {
+    @include color-mode(dark, true) {
+        --#{$prefix}light:                          #464f5b;
+        --#{$prefix}light-rgb:                      #{to-rgb(#464f5b)};
+        --#{$prefix}dark:                           #f1f1f1;
+        --#{$prefix}dark-rgb:                       #{to-rgb(#f1f1f1)};
+
+        --#{$prefix}secondary:                      #{#6c757d};
+        --#{$prefix}secondary-rgb:                  #{to-rgb(#6c757d)};
+
+        --#{$prefix}box-shadow:                     #{0px 0px 35px 0px rgba(49, 57, 66, 0.5)};
+
+        --#{$prefix}input-bg:                       #404954;
+        --#{$prefix}border-color-custom:            #404954;
+    }
+}

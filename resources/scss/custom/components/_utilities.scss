@@ -1,0 +1,8 @@
+// Utilities
+$utilities: (
+    "font-size-custom": (
+        property: font-size,
+        class: font,
+        values: $font-size-custom
+    )
+);

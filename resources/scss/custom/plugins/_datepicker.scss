@@ -1,0 +1,129 @@
+//
+// Datepicker
+//
+.datepicker {
+    padding: 10px !important;
+    td,
+    th {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 13px;
+        line-height: 28px;
+    }
+
+    table {
+        tr {
+            td {
+                &.active.active,
+                &.active.disabled,
+                &.active.disabled.active,
+                &.active.disabled.disabled,
+                &.active.disabled:active,
+                &.active.disabled:hover,
+                &.active.disabled:hover.active,
+                &.active.disabled:hover.disabled,
+                &.active.disabled:hover:active,
+                &.active.disabled:hover:hover,
+                .active.disabled:hover[disabled],
+                .active.disabled[disabled],
+                .active:active,
+                .active:hover,
+                .active:hover.active,
+                .active:hover.disabled,
+                .active:hover:active,
+                .active:hover:hover,
+                .active:hover[disabled],
+                .active[disabled],
+                span.active.active,
+                span.active.disabled,
+                span.active.disabled.active,
+                span.active.disabled.disabled,
+                span.active.disabled:active,
+                span.active.disabled:hover,
+                span.active.disabled:hover.active,
+                span.active.disabled:hover.disabled,
+                span.active.disabled:hover:active,
+                span.active.disabled:hover:hover,
+                span.active.disabled:hover[disabled],
+                span.active.disabled[disabled],
+                span.active:active,
+                span.active:hover,
+                span.active:hover.active,
+                span.active:hover.disabled,
+                span.active:hover:active,
+                span.active:hover:hover,
+                span.active:hover[disabled],
+                span.active[disabled],
+                &.today,
+                &.today.disabled,
+                &.today.disabled:hover,
+                &.today:hover {
+                    background-color: $primary !important;
+                    background-image: none !important;
+                    color: $white;
+                }
+
+                &.day.focused,
+                &.day:hover,
+                span.focused,
+                span:hover {
+                    background: var(--#{$prefix}tertiary-bg);
+                }
+
+                &.new,
+                &.old,
+                span.new,
+                span.old {
+                    color: var(--#{$prefix}tertiary-color);
+                    opacity: 0.4;
+                }
+            }
+        }
+    }
+
+    .datepicker-switch:hover,
+    .next:hover,
+    .prev:hover,
+    tfoot tr th:hover {
+        background: var(--#{$prefix}gray-200);
+    }
+    .datepicker-switch {
+        &:hover {
+            background: none;
+        }
+    }
+}
+
+.datepicker-dropdown {
+    &:after {
+        border-bottom: 6px solid $dropdown-bg;
+    }
+    &:before {
+        border-bottom-color: $dropdown-border-color;
+    }
+    &.datepicker-orient-top {
+        &:before {
+            border-top: 7px solid $dropdown-border-color;
+        }
+        &:after {
+            border-top: 6px solid $dropdown-bg;
+        }
+    }
+}
+.daterangepicker {
+    z-index: 1000;
+}
+
+[dir="rtl"] .daterangepicker {
+    &.opensright {
+        &:after {
+            right: 10px;
+            left: auto;
+        }
+        &:before {
+            right: 9px;
+            left: auto;
+        }
+    }
+}

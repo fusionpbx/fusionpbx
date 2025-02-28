@@ -1,0 +1,44 @@
+//
+// jstree.scss
+//
+
+.jstree-default {
+    padding: 2px 6px;
+    height: auto;
+    .jstree-clicked,
+    .jstree-hovered {
+        background: var(--#{$prefix}tertiary-bg);
+        box-shadow: none;
+    }
+    .jstree-anchor,
+    .jstree-icon,
+    .jstree-icon:empty {
+        line-height: 20px;
+    }
+
+    .jstree-node,
+    .jstree-icon {
+        background-image: url('/public/images/treeview.png');
+    }
+
+    .jstree-last {
+        background: transparent;
+    }
+
+    .jstree-themeicon-custom {
+        background-color: transparent;
+        background-image: none;
+        background-position: 0 0;
+    }
+
+    .jstree-disabled {
+        color: $list-group-disabled-color;
+    }
+}
+
+.jstree-wholerow {
+    &.jstree-wholerow-clicked,
+    &.jstree-wholerow-hovered {
+        background: var(--#{$prefix}tertiary-bg);
+    }
+}

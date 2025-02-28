@@ -1,0 +1,32 @@
+//
+// maps.scss
+//
+
+//Google Maps
+
+.gmaps,
+.gmaps-panaroma {
+    height: 300px;
+    background: var(--#{$prefix}tertiary-bg);
+    border-radius: 3px;
+}
+
+// Vector Map
+
+.jvectormap-label {
+    border: none;
+    background: var(--#{$prefix}tertiary-bg);
+    color: var(--#{$prefix}tertiary-color);
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    padding: 5px 8px;
+}
+
+// zoomin & zoomout btn color
+.jvectormap-container {
+    .jvectormap-zoomin,
+    .jvectormap-zoomout {
+        background-color: var(--#{$prefix}tertiary-bg);
+        color: var(--#{$prefix}tertiary-color);
+    }
+}

@@ -1,0 +1,126 @@
+//
+// authentication.scss
+//
+
+.auth-brand {
+    margin-bottom: 2rem;
+
+    .logo-dark {
+        display: block;
+    }
+
+    .logo-light {
+        display: none;
+    }
+}
+
+html[data-theme="dark"] {
+
+    .auth-brand {
+
+        .logo-dark {
+            display: none;
+        }
+
+        .logo-light {
+            display: block;
+        }
+    }
+}
+
+// authentication pages background
+body.authentication-bg {
+    .account-pages {
+        align-items: center;
+        display: flex;
+        min-height: 100vh;
+    }
+}
+
+.authentication-bg.enlarged,
+.auth-fluid-pages.enlarged,
+body.auth-fluid-pages[data-sidenav-size="condensed"] {
+    min-height: 100px;
+}
+
+// Logout page
+.logout-icon {
+    width: 140px;
+}
+
+// Authentication fluid
+.auth-fluid {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: row;
+    align-items: stretch;
+    background: url("/public/images/bg-auth.jpg") center;
+    background-size: cover;
+
+    .auth-fluid-form-box {
+        max-width: 480px;
+        border-radius: 0;
+        z-index: 2;
+        padding: 3rem;
+        background-color: $card-bg;
+        position: relative;
+        width: 100%;
+    }
+
+    .auth-fluid-right,
+    .auth-fluid-left {
+        padding: 6rem 3rem;
+        flex: 1;
+        position: relative;
+        color: $white;
+        background-color: rgba($black, 0.3);
+    }
+}
+
+
+
+.auth-user-testimonial {
+    position: absolute;
+    margin: 0 auto;
+    padding: 0 1.75rem;
+    bottom: 3rem;
+    left: 0;
+    right: 0;
+
+    p.lead {
+        font-size: 1.125rem;
+        margin: 0 auto 20px auto;
+        max-width: 700px;
+    }
+}
+
+
+@include media-breakpoint-down(lg) {
+    .auth-fluid {
+        display: block;
+
+        .auth-fluid-form-box {
+            max-width: 100%;
+            min-height: 100vh;
+        }
+
+        .auth-fluid-right {
+            display: none;
+        }
+    }
+}
+
+// Dark mode
+html[data-theme="dark"] {
+    .auth-brand {
+        .logo-light {
+            display: block;
+        }
+
+        .logo-dark {
+            display: none;
+        }
+    }
+}

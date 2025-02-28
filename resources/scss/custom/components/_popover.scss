@@ -1,0 +1,20 @@
+//
+// popover.scss
+//
+
+.popover-header {
+    margin-top: 0;
+}
+
+
+@each $color,
+$value in $theme-colors {
+    .#{$color}-popover {
+        --#{$prefix}popover-max-width: 200px !important;
+        --#{$prefix}popover-border-color: var(--#{$prefix}#{$color}) !important;
+        --#{$prefix}popover-header-bg: var(--#{$prefix}#{$color}) !important;
+        --#{$prefix}popover-header-color: var(--#{$prefix}white) !important;
+        --#{$prefix}popover-body-padding-x: 1rem !important;
+        --#{$prefix}popover-body-padding-y: .5rem !important;
+    }
+}

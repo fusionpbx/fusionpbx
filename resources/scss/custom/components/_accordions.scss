@@ -1,0 +1,55 @@
+//
+// accordions.scss
+//
+
+.accordion-header {
+    margin: 0;
+}
+
+.accordion {
+    >.card {
+        >.card-header {
+            border-radius: 0;
+            margin-bottom: -1px;
+        }
+    }
+}
+
+.accordion-button {
+    font-weight: $font-weight-medium;
+}
+
+.custom-accordion {
+    .card {
+        box-shadow: none;
+    }
+
+    .card-header {
+        background-color: var(--#{$prefix}tertiary-bg);
+    }
+
+    .accordion-arrow {
+        font-size: 1.2rem;
+        position: absolute;
+        right: 0;
+    }
+
+    a {
+        &.collapsed {
+            i.accordion-arrow {
+                &:before {
+                    content: "\F0142";
+                }
+            }
+        }
+    }
+}
+
+.custom-accordion-title {
+    position: relative;
+    color: var(--#{$prefix}secondary-color);
+
+    &:hover {
+        color: var(--#{$prefix}tertiary-color);
+    }
+}

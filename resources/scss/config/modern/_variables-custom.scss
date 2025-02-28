@@ -1,0 +1,59 @@
+//
+// custom-variables.scss
+//
+
+// 
+
+$logo-lg-height:                    var(--#{$prefix}logo-lg-height);
+$logo-sm-height:                    var(--#{$prefix}logo-sm-height);
+
+
+// Left Sidebar
+$leftbar-width:                     var(--#{$prefix}leftbar-width);
+$leftbar-width-md:                  var(--#{$prefix}leftbar-width-md);
+$leftbar-width-sm:                  var(--#{$prefix}leftbar-width-sm);
+$leftbar-condensed-height:          var(--#{$prefix}leftbar-condensed-height);
+
+$menu-item-icon-size:               var(--#{$prefix}menu-item-icon-size);
+$menu-item-font-size:               var(--#{$prefix}menu-item-font-size);
+$menu-item-padding-x:               var(--#{$prefix}menu-item-padding-x);
+$menu-item-padding-y:               var(--#{$prefix}menu-item-padding-y);
+
+// Menu
+$menu-bg:                                 var(--#{$prefix}menu-bg);  // bg-leftbar rename to menu-bg
+$menu-item-color:                         var(--#{$prefix}menu-item-color);
+$menu-item-hover-color:                   var(--#{$prefix}menu-item-hover-color);
+$menu-item-active-color:                  var(--#{$prefix}menu-item-active-color);
+
+// Topbar
+$topbar-height:                     var(--#{$prefix}topbar-height);
+$topbar-bg:                         var(--#{$prefix}topbar-bg);
+$topbar-item-color:                 var(--#{$prefix}topbar-item-color);
+$topbar-item-hover-color:           var(--#{$prefix}topbar-item-hover-color);
+$topbar-search-bg:                  var(--#{$prefix}topbar-search-bg);
+$topbar-user-bg:                    var(--#{$prefix}topbar-user-bg);
+$topbar-user-border:                var(--#{$prefix}topbar-user-border);
+
+// Footer
+$footer-height:                     var(--#{$prefix}footer-height);
+
+
+// Background left-sidebar
+$menu-condensed-link-bg:            var(--#{$prefix}menu-condensed-link-bg);
+
+// Boxed Layout
+$boxed-layout-width:                1300px;
+$boxed-layout-bg:                   var(--#{$prefix}tertiary-bg);
+
+// Helpbox
+$help-box-bg:                       var(--#{$prefix}help-box-bg);
+
+// Dropdown Large
+$dropdown-lg-width:               320px;
+
+// Chat widget
+$chat-primary-user-bg:            var(--#{$prefix}chat-primary-user-bg);
+$chat-secondary-user-bg:          var(--#{$prefix}chat-secondary-user-bg);
+
+// Hero
+$hero-bg:                         linear-gradient(to bottom,#6379c3,#546ee5);

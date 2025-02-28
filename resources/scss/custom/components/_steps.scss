@@ -1,0 +1,119 @@
+//
+// horizontal-steps.scss
+//
+
+// Horizontal steps
+.horizontal-steps {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 0.2em;
+        background-color: var(--#{$prefix}border-color);
+    }
+
+    .process-line {
+        display: block;
+        position: absolute;
+        width: 50%;
+        height: 0.2em;
+        background-color: var(--#{$prefix}primary);
+    }
+
+    .horizontal-steps-content {
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        .step-item {
+            display: block;
+            position: relative;
+            bottom: calc(100% + 1em);
+            height: 8px;
+            width: 8px;
+            margin: 0 2em;
+            box-sizing: content-box;
+            color: var(--#{$prefix}primary);
+            background-color: currentColor;
+            border: 0.25em solid var(--#{$prefix}body-bg);
+            border-radius: 50%;
+            z-index: 5;
+
+            &:first-child {
+                margin-left: 0;
+            }
+
+            &:last-child {
+                margin-right: 0;
+                color: $success;
+            }
+
+            span {
+                position: absolute;
+                top: calc(100% + 1em);
+                left: 50%;
+                transform: translateX(-50%);
+                white-space: nowrap;
+                color: var(--#{$prefix}gray-500);
+            }
+
+            &.current {
+                &:before {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: 48%;
+                    left: 48%;
+                    padding: 1em;
+                    background-color: currentColor;
+                    border-radius: 50%;
+                    opacity: 0;
+                    z-index: -1;
+                    animation-name: animation-steps-current;
+                    animation-duration: 2s;
+                    animation-iteration-count: infinite;
+                    animation-timing-function: ease-out;
+                }
+
+                span {
+                    color: var(--#{$prefix}primary) !important;
+                }
+            }
+        }
+    }
+}
+
+@keyframes animation-steps-current {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .horizontal-steps {
+        .horizontal-steps-content {
+            .step-item {
+                span {
+                    white-space: inherit;
+                }
+            }
+        }
+    }
+}

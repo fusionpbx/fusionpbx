@@ -1,0 +1,18 @@
+//
+// social.scss
+//
+
+.social-list-item {
+    height: 2rem;
+    width: 2rem;
+    line-height: calc(2rem - 2px);
+    display: block;
+    border: 2px solid var(--#{$prefix}gray-500);
+    border-radius: 50%;
+    color: var(--#{$prefix}gray-500);
+
+    &:hover {
+        color: var(--#{$prefix}gray-600);
+        border-color: var(--#{$prefix}gray-600);
+    }
+}
