@@ -52,7 +52,7 @@
 		$users = $_POST['users'] ?? '';
 	}
 
-S//process the http post data by action
+//process the http post data by action
 	if (!empty($action) && is_array($users) && @sizeof($users) != 0) {
 		switch ($action) {
 			case 'copy':
