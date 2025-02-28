@@ -26,6 +26,7 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //add multi-lingual support
 	$language = new text;
