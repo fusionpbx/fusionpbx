@@ -445,7 +445,7 @@ if (!class_exists('email')) {
 					$smtp['password'] 	= $this->settings->get('email','smtp_password');
 					$smtp['from'] 		= $this->settings->get('voicemail','smtp_from') ?? $this->settings->get('email','smtp_from');
 					$smtp['from_name'] 	= $this->settings->get('voicemail','smtp_from_name') ?? $this->settings->get('email','smtp_from_name');
-					$smtp['validate_certificate'] = $this->settings->get('email','smtp_validate_certificate');
+					$smtp['validate_certificate'] = $this->settings->get('email','smtp_validate_certificate', true);
 					$smtp['crypto_method'] = $this->settings->get('email','smtp_crypto_method') ?? null;
 
 					//override the domain-specific smtp server settings, if any
@@ -506,7 +506,7 @@ if (!class_exists('email')) {
 						$mail->SMTPSecure = $smtp['secure'];
 					}
 
-					if ($smtp_secure && isset($smtp['validate_certificate']) && $smtp['validate_certificate'] == "false") {
+					if ($smtp_secure && isset($smtp['validate_certificate']) && !$smtp['validate_certificate']) {
 						//bypass certificate check e.g. for self-signed certificates
 						$smtp_options['ssl']['verify_peer'] = false;
 						$smtp_options['ssl']['verify_peer_name'] = false;
@@ -638,5 +638,3 @@ $email->attachments = $email_attachments;
 $response = $mail->error;
 $sent = $email->send();
 */
-
-?>
