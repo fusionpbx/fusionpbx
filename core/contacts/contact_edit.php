@@ -2719,8 +2719,9 @@ if (permission_exists('contact_note_view')) {
 	$x = 0;
 	foreach($contact_notes as $row) {
 		$contact_note = $row['contact_note'];
-		$contact_note = escape($contact_note);
-		$contact_note = str_replace("\n","<br />",$contact_note);
+		if (!empty($contact_note)) {
+			$contact_note = htmlspecialcars($contact_note, ENT_QUOTES, 'UTF-8');
+		}
 		if (permission_exists('contact_note_add')) {
 			$list_row_url = "contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid']);
 		}
