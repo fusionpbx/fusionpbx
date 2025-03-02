@@ -162,4 +162,31 @@ $text['label-emergency_event']['zh-cn'] = "事件";
 $text['label-emergency_event']['ja-jp'] = "イベント";
 $text['label-emergency_event']['ko-kr'] = "이벤트";
 
+$text['label-emergency_call_status']['en-us'] = "Call Status";
+$text['label-emergency_call_status']['en-gb'] = "Call Status";
+$text['label-emergency_call_status']['ar-eg'] = "";
+$text['label-emergency_call_status']['de-at'] = "";
+$text['label-emergency_call_status']['de-ch'] = "";
+$text['label-emergency_call_status']['de-de'] = "";
+$text['label-emergency_call_status']['el-gr'] = "";
+$text['label-emergency_call_status']['es-cl'] = "";
+$text['label-emergency_call_status']['es-mx'] = "";
+$text['label-emergency_call_status']['fr-ca'] = "";
+$text['label-emergency_call_status']['fr-fr'] = "";
+$text['label-emergency_call_status']['he-il'] = "";
+$text['label-emergency_call_status']['it-it'] = "";
+$text['label-emergency_call_status']['ka-ge'] = "";
+$text['label-emergency_call_status']['nl-nl'] = "";
+$text['label-emergency_call_status']['pl-pl'] = "";
+$text['label-emergency_call_status']['pt-br'] = "";
+$text['label-emergency_call_status']['pt-pt'] = "";
+$text['label-emergency_call_status']['ro-ro'] = "";
+$text['label-emergency_call_status']['ru-ru'] = "";
+$text['label-emergency_call_status']['sv-se'] = "";
+$text['label-emergency_call_status']['uk-ua'] = "";
+$text['label-emergency_call_status']['tr-tr'] = "";
+$text['label-emergency_call_status']['zh-cn'] = "";
+$text['label-emergency_call_status']['ja-jp'] = "";
+$text['label-emergency_call_status']['ko-kr'] = "";
+
 ?>

@@ -115,31 +115,35 @@ else {
 }
 
 //get the list
-$sql = "select emergency_log_uuid, ";
-$sql .= "domain_uuid, ";
-$sql .= "extension, ";
-$sql .= "event,  ";
-$sql .= "to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, ";
-$sql .= "to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, ";
-$sql .= "insert_date ";
-$sql .= "from v_emergency_logs ";
+$sql = "select e.emergency_log_uuid, ";
+$sql .= "e.domain_uuid, ";
+$sql .= "e.extension, ";
+$sql .= "e.event, ";
+$sql .= "to_char(timezone(:time_zone, e.insert_date), 'DD Mon YYYY') as date_formatted, ";
+$sql .= "to_char(timezone(:time_zone, e.insert_date), 'HH12:MI:SS am') as time_formatted, ";
+$sql .= "e.insert_date, ";
+$sql .= "c.status as status ";
+$sql .= "from v_emergency_logs e ";
+$sql .= "left join v_xml_cdr c ";
+$sql .= "on e.emergency_log_uuid = c.xml_cdr_uuid ";
 if ($show == 'all') {
 	$sql .= "where true ";
 }
 else {
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where e.domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 }
 if (!empty($search)) {
 	$sql .= "and ( ";
-	$sql .= "	lower(event) like :search ";
+	$sql .= "	lower(e.event) like :search ";
 	$sql .= ") ";
 	$parameters['search'] = '%'.$search.'%';
 }
-$sql .= "order by insert_date desc ";
+$sql .= "order by e.insert_date desc ";
 $sql .= limit_offset($rows_per_page, $offset);
 $parameters['time_zone'] = $time_zone;
 $emergency_logs = $database->select($sql, $parameters ?? null, 'all');
+
 unset($sql, $parameters);
 
 //create token
@@ -193,6 +197,7 @@ echo "<th class='left'>".$text['label-emergency_date']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_extension']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_event']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_call_status']."</th>\n";
 echo "</tr>\n";
 
 if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
@@ -206,6 +211,7 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 		echo "	<td>".escape($row['time_formatted'])."</td>\n";
 		echo "	<td>".escape($row['extension'])."</td>\n";
 		echo "	<td>".escape($row['event'])."</td>\n";
+		echo "	<td>".escape($row['status'])."</td>\n";
 		echo "</tr>\n";
 		$x++;
 	}
