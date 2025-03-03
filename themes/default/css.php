@@ -772,7 +772,6 @@ else { //default: white
 		display: inline-block;
 		font-size: 8pt;
 		margin: 0 0 0 8px;
-		opacity: 0.30;
 		}
 
 	div.menu_side_sub > a.menu_side_item_sub > span.fas,
