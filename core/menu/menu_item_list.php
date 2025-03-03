@@ -104,6 +104,7 @@
 				$menu_item_title = $row2['menu_item_title'];
 				$menu_item_link = $row2['menu_item_link'];
 				$menu_item_icon = $row2['menu_item_icon'];
+				$menu_item_icon_color = $row2['menu_item_icon_color'];
 
 				//get the groups that have been assigned to the menu
 				$sql = "select ";
@@ -149,7 +150,7 @@
 				}
 
 				//format icon
-				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".$menu_item_icon_color.";" : "opacity: 0.4;")."'></i>" : null;
 
 				//display the content of the list
 				if (permission_exists('menu_item_edit')) {
@@ -291,6 +292,7 @@
 				$menu_item_title = $row['menu_item_title'];
 				$menu_item_link = $row['menu_item_link'];
 				$menu_item_icon = $row['menu_item_icon'];
+				$menu_item_icon_color = $row['menu_item_icon_color'];
 				$menu_item_protected = $row['menu_item_protected'];
 
 			//get the groups that have been assigned to the menu
@@ -336,7 +338,7 @@
 				}
 
 			//format icon
-				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".$menu_item_icon_color.";" : "opacity: 0.4;")."'></i>" : null;
 
 			//display the content of the list
 				if (permission_exists('menu_item_edit')) {
