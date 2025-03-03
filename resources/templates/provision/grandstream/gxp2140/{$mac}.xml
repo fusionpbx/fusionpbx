@@ -909,7 +909,6 @@
 		<!-- # Mandatory -->
 		<item name="network.port.eth.1.vlan.enable">{if $grandstream_lan_port_vlan == '0'}No{else}Yes{/if}</item>
 
-
 		<!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
 		<!-- Layer 2 QoS 802.1Q/VLAN Tag (Ethernet) -->
 		<!-- Number: 0 - 4095 -->
@@ -2132,8 +2131,12 @@
 		<item name="call.transfer.attended.mode">Dynamic</item>
 
 		<!-- # Transfer Mode via VPK/MPK. -->
-		<!-- BlindTransfer, AttendedTransfer,  NewCall -->
+		<!-- BlindTransfer, AttendedTransfer, NewCall -->
+		{if isset($grandstream_transfer_mode_via_vpk)}
+		<item name="call.transfer.modeViaVpk">{$grandstream_transfer_mode_via_vpk}</item>
+		{else}
 		<item name="call.transfer.modeViaVpk">BlindTransfer</item>
+		{/if}
 
 		<!-- # Show On Hold Duration. Yes or No -->
 		<item name="call.hold.showHoldDuration.enable">Yes</item>
