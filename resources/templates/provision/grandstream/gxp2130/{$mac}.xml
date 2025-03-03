@@ -180,6 +180,7 @@
 
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, Tls Or Tcp -->
+		<!-- Variable Value: {$row.sip_transport} -->
 		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
 		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
 		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
@@ -912,6 +913,7 @@
 		<!-- # Enable Manual VLAN Configuration. Yes or No. -->
 		<!-- # Mandatory -->
 		<item name="network.port.eth.1.vlan.enable">{if $grandstream_lan_port_vlan == '0'}No{else}Yes{/if}</item>
+
 
 		<!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
 		<!-- Layer 2 QoS 802.1Q/VLAN Tag (Ethernet) -->

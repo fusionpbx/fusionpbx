@@ -38,7 +38,11 @@
 		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 		<!-- Secondary SIP Server -->
+		{if isset($row.server_address_secondary)}
 		<item name="account.{$row.line_number}.sip.server.2.address">{$row.server_address_secondary}:{$row.sip_port}</item>
+		{else}
+		<item name="account.{$row.line_number}.sip.server.2.address"/>
+		{/if}
 
 		<!-- Outbound Proxy -->
 		{if $row.sip_transport != 'dns srv' && isset($row.outbound_proxy_primary)}
@@ -176,10 +180,11 @@
 
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, Tls Or Tcp -->
-		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
-		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
+		<!-- Variable Value: {$row.sip_transport} -->
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">2</item>{/if}
 
 		<!-- SIP Listening Mode -->
 		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
