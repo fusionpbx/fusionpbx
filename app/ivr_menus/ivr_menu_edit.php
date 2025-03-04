@@ -349,7 +349,7 @@
 					$dialplan_xml = "<extension name=\"".xml::sanitize($ivr_menu_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($ivr_menu_extension)."\$\">\n";
 					$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
-					if ($_SESSION['ivr_menu']['answer']['boolean'] == 'true') {
+					if (filter_var($_SESSION['ivr_menu']['answer']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 						$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";

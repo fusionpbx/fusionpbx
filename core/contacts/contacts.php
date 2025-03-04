@@ -46,7 +46,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get posted data
 	if (!empty($_POST['contacts'])) {
@@ -387,7 +387,7 @@
 	echo th_order_by('contact_title', $text['label-contact_title'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo th_order_by('contact_role', $text['label-contact_role'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo "<th class='shrink hide-sm-dn'>&nbsp;</th>\n";
-	if ($list_row_edit_button == 'true') {
+	if ($list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -439,7 +439,7 @@
 				echo "&nbsp;";
 			}
 			echo "	</td>\n";
-			if ($list_row_edit_button == 'true') {
+			if ($list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 				echo "	</td>\n";
