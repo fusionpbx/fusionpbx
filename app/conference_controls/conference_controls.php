@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the http post data
 	if (!empty($_POST['conference_controls'])) {
@@ -179,7 +179,7 @@
 	echo th_order_by('control_name', $text['label-control_name'], $order_by, $order);
 	echo th_order_by('control_enabled', $text['label-control_enabled'], $order_by, $order, null, "class='center shrink'");
 	echo "	<th class='hide-sm-dn'>".$text['label-control_description']."</th>\n";
-	if (permission_exists('conference_control_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('conference_control_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -215,7 +215,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['control_description'])."</td>\n";
-			if (permission_exists('conference_control_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('conference_control_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

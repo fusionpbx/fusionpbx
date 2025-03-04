@@ -181,9 +181,9 @@
 // load editor preferences/defaults
 	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
 	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = isset($_SESSION["editor"]["invisibles"]["boolean"]) && $_SESSION["editor"]["invisibles"]["boolean"] != '' ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
-	$setting_indenting = isset($_SESSION["editor"]["indent_guides"]["boolean"]) && $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
-	$setting_numbering = isset($_SESSION["editor"]["line_numbers"]["boolean"]) && $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	$setting_invisibles = filter_var($_SESSION["editor"]["invisibles"]["boolean"] ?? false, FILTER_VALIDATE_BOOL);
+	$setting_indenting = filter_var($_SESSION["editor"]["indent_guides"]["boolean"] ?? false, FILTER_VALIDATE_BOOL);
+	$setting_numbering = filter_var($_SESSION["editor"]["line_numbers"]["boolean"] ?? true, FILTER_VALIDATE_BOOL);
 
 //create token
 	$object = new token;

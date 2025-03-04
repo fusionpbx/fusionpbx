@@ -119,7 +119,7 @@
 	$order = $_GET["order"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false';
 	$button_icon_back = !empty($_SESSION['theme']['button_icon_back']) ? $_SESSION['theme']['button_icon_back'] : '';
 	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
 	$button_icon_copy = !empty($_SESSION['theme']['button_icon_copy']) ? $_SESSION['theme']['button_icon_copy'] : '';
@@ -259,7 +259,7 @@
 				echo "<th class='pct-30'>".$text['label-value']."</th>";
 				echo "<th class='center'>".$text['label-enabled']."</th>";
 				echo "<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>";
-				if (permission_exists('user_setting_edit') && $list_row_edit_button == 'true') {
+				if (permission_exists('user_setting_edit') && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -383,7 +383,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['user_setting_description'])."\">".escape($row['user_setting_description'])."&nbsp;</td>\n";
-			if (permission_exists('user_setting_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('user_setting_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$button_icon_edit,'link'=>$list_row_url]);
 				echo "	</td>\n";

@@ -41,7 +41,7 @@
 
 //check for login return preference
 	if (!empty($_SESSION["user_uuid"])) {
-		if (isset($_SESSION['login']['destination_last']) && ($_SESSION['login']['destination_last']['boolean'] == 'true')) {
+		if (isset($_SESSION['login']['destination_last']) && filter_var($_SESSION['login']['destination_last']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 			if ($_SERVER['HTTP_REFERER'] != '') {
 				//convert to relative path
 					$referrer = substr($_SERVER['HTTP_REFERER'], strpos($_SERVER['HTTP_REFERER'], $_SERVER["HTTP_HOST"]) + strlen($_SERVER["HTTP_HOST"]));

@@ -89,7 +89,7 @@
 	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //add the search string
 	if (!empty($search)) {
@@ -251,7 +251,7 @@
 	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order);
 	echo th_order_by('contact_note', $text['label-contact_note'], $order_by, $order, null, "class='center'", $param);
 	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'", $param);
-	if (permission_exists('user_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('user_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -300,7 +300,7 @@
 				echo $text['label-'.$row['user_enabled']];
 			}
 			echo "	</td>\n";
-			if (permission_exists('user_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('user_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

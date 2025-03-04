@@ -88,7 +88,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the count
 	$sql = "select count(*) from view_groups \n";
@@ -204,7 +204,7 @@
 	echo th_order_by('group_level', $text['label-group_level'], $order_by, $order, null, "class='center'");
 	echo th_order_by('group_protected', $text['label-group_protected'], $order_by, $order, null, "class='center'");
 	echo "	<th class='pct-30 hide-sm-dn'>".$text['label-group_description']."</th>\n";
-	if (permission_exists('group_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('group_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -246,7 +246,7 @@ echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['group_description'])."</td>\n";
-			if (permission_exists('group_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('group_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

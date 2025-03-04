@@ -45,7 +45,7 @@
 	$text = $language->get();
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //set variables from the http values
 	$order_by = $_GET["order_by"] ?? '' ? $_GET["order_by"] : 'start_epoch';
@@ -152,7 +152,7 @@
 	echo "<th>".$text['label-time']."</th>\n";
 	echo th_order_by('start_epoch', $text['label-start'], $order_by, $order);
 	echo th_order_by('end_epoch', $text['label-end'], $order_by, $order);
-	if (permission_exists('conference_session_details') && $list_row_edit_button == 'true') {
+	if (permission_exists('conference_session_details') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -191,7 +191,7 @@
 			echo "	<td>".$time_difference."&nbsp;</td>\n";
 			echo "	<td>".$start_date."&nbsp;</td>\n";
 			echo "	<td>".$end_date."&nbsp;</td>\n";
-			if (permission_exists('conference_session_details') && $list_row_edit_button == 'true') {
+			if (permission_exists('conference_session_details') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 				echo "	</td>\n";

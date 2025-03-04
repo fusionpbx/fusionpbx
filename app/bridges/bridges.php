@@ -47,7 +47,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the http post data
 	if (!empty($_POST['bridges'])) {
@@ -226,7 +226,7 @@
 	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
 	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-bridge_description']."</th>\n";
-	if (permission_exists('bridge_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
+	if (permission_exists('bridge_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -270,7 +270,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['bridge_description'])."</td>\n";
-			if (permission_exists('bridge_edit') && !empty($list_row_edit_button) && $list_row_edit_button == 'true') {
+			if (permission_exists('bridge_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

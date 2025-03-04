@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the http post data
 	if (!empty($_POST['conference_control_details'])) {
@@ -163,7 +163,7 @@
 	echo th_order_by('control_action', $text['label-control_action'], $order_by, $order, null, null, $param);
 	echo th_order_by('control_data', $text['label-control_data'], $order_by, $order, null, "class='pct-50 hide-xs'", $param);
 	echo th_order_by('control_enabled', $text['label-control_enabled'], $order_by, $order, null, "class='center'", $param);
-	if (permission_exists('conference_control_detail_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('conference_control_detail_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -200,7 +200,7 @@
 				echo $text['label-'.$row['control_enabled']];
 			}
 			echo "	</td>\n";
-			if (permission_exists('conference_control_detail_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('conference_control_detail_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

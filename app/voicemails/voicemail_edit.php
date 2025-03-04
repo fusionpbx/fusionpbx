@@ -152,8 +152,8 @@
 					if ($action == "add" && permission_exists('voicemail_add')) {
 						$voicemail_uuid = uuid();
 						//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
-						if (!permission_exists('voicemail_transcription_enabled') && isset($_SESSION['voicemail']['transcription_enabled_default']['boolean'])) {
-							$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?? 'false';
+						if (!permission_exists('voicemail_transcription_enabled')) {
+							$voicemail_transcription_enabled = filter_var($_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 						}
 					}
 
@@ -353,7 +353,7 @@
 	}
 	else {
 		$voicemail_file = $_SESSION['voicemail']['voicemail_file']['text'];
-		$voicemail_local_after_email = $_SESSION['voicemail']['keep_local']['boolean'];
+		$voicemail_local_after_email = filter_var($_SESSION['voicemail']['keep_local']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 	}
 
 //remove the spaces
@@ -364,7 +364,7 @@
 //set the defaults
 	if (empty($voicemail_local_after_email)) { $voicemail_local_after_email = 'true'; }
 	if (empty($voicemail_enabled)) { $voicemail_enabled = 'true'; }
-	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = filter_var($_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?? false, FILTER_VALIDATE_BOOL); }
 	if (empty($voicemail_tutorial)) { $voicemail_tutorial = 'false'; }
 	if (empty($voicemail_recording_instructions)) { $voicemail_recording_instructions = 'true'; }
 	if (empty($voicemail_recording_options)) { $voicemail_recording_options = 'true'; }
@@ -469,8 +469,8 @@
 	require_once "resources/header.php";
 
 //password complexity
-	$password_complexity = $_SESSION['voicemail']['password_complexity']['boolean'] ?? '';
-	if ($password_complexity == "true") {
+	$password_complexity = filter_var($_SESSION['voicemail']['password_complexity']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	if ($password_complexity) {
 		echo "<script>\n";
 		$req['length'] = $_SESSION['voicemail']['password_min_length']['numeric'];
 		echo "	function check_password_strength(pwd) {\n";
@@ -536,7 +536,7 @@
 	if ($action == "update" && (permission_exists('voicemail_delete') || permission_exists('voicemail_option_delete'))) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>($password_complexity == "true" ? "if (check_password_strength(document.getElementById('password').value)) { submit_form(); } else { this.blur(); return false; }" : 'submit_form();')]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>($password_complexity ? "if (check_password_strength(document.getElementById('password').value)) { submit_form(); } else { this.blur(); return false; }" : 'submit_form();')]);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -833,7 +833,7 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
+	if (permission_exists('voicemail_transcription_enabled') && filter_var($_SESSION['transcribe']['enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_transcription_enabled']."\n";

@@ -234,13 +234,13 @@
 				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
 				echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['sip_profile_name'])."</td>\n";
 				echo "	<td class='action-button'>\n";
-				if (!empty($_SESSION['registrations']['list_row_button_unregister']['boolean']) && $_SESSION['registrations']['list_row_button_unregister']['boolean'] == 'true') {
+				if (filter_var($_SESSION['registrations']['list_row_button_unregister']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);
 				}
-				if (!empty($_SESSION['registrations']['list_row_button_provision']['boolean']) && $_SESSION['registrations']['list_row_button_provision']['boolean'] == 'true') {
+				if (filter_var($_SESSION['registrations']['list_row_button_provision']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-provision'],'icon'=>'fax fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('provision'); list_form_submit('form_list')"]);
 				}
-				if (!empty($_SESSION['registrations']['list_row_button_reboot']['boolean']) && $_SESSION['registrations']['list_row_button_reboot']['boolean'] == 'true') {
+				if (filter_var($_SESSION['registrations']['list_row_button_reboot']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-reboot'],'icon'=>'power-off fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('reboot'); list_form_submit('form_list')"]);
 				}
 				echo 	"</td>\n";
