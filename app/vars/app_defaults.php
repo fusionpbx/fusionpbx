@@ -50,7 +50,7 @@ if ($domains_processed == 1) {
 		$num_rows = $database->select($sql, null, 'column');
 		unset($sql);
 
-		if ($num_rows == 0) {
+		if ($num_rows <= 2) {
 			//get the xml
 				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/vars.xml')) {
 					$xml_file = '/usr/share/examples/fusionpbx/resources/templates/conf/vars.xml';
@@ -63,6 +63,9 @@ if ($domains_processed == 1) {
 				}
 				elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/vars.xml')) {
 					$xml_file = '/var/www/fusionpbx/app/switch/resources/conf/vars.xml';
+				}
+                elseif (file_exists('/var/www/fspbx/public/app/switch/resources/conf/vars.xml')) {
+					$xml_file = '/var/www/fspbx/public/app/switch/resources/conf/vars.xml';
 				}
 				else {
 					$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/switch/resources/conf/vars.xml';
