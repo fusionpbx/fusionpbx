@@ -166,8 +166,8 @@ class settings {
 	 * @param string $uuid uuid of the setting if available. If set to an empty string then a new uuid will be created.
 	 * @param string $category Category of the setting.
 	 * @param string $subcategory Subcategory of the setting.
-	 * @param string $type Type of the setting (array, numeric, text, etc)
 	 * @param string $value (optional) Value to set. Default is empty string.
+	 * @param string $type Type of the setting (array, numeric, text, etc)
 	 * @param bool $enabled (optional) True or False. Default is True.
 	 * @param string $description (optional) Description. Default is empty string.
 	 */
@@ -248,17 +248,7 @@ class settings {
 				$subcategory = $row['default_setting_subcategory'];
 				if (isset($row['default_setting_value']) && $row['default_setting_value'] !== '') {
 					if ($name == "boolean") {
-						if (gettype($row['default_setting_value']) === 'string') {
-							if ($row['default_setting_value'] === 'true') {
-								$this->settings[$category][$subcategory] = true;
-							}
-							else {
-								$this->settings[$category][$subcategory] = false;
-							}
-						}
-						elseif (gettype($row['default_setting_value']) === 'boolean') {
-							$this->settings[$category][$subcategory] = $row['default_setting_value'];
-						}
+						$this->settings[$category][$subcategory] = filter_var($row['default_setting_value'], FILTER_VALIDATE_BOOLEAN);
 					}
 					elseif ($name == "array") {
 						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
@@ -318,17 +308,7 @@ class settings {
 				$subcategory = $row['domain_setting_subcategory'];
 				if (isset($row['domain_setting_value']) && $row['domain_setting_value'] !== '') {
 					if ($name == "boolean") {
-						if (gettype($row['domain_setting_value']) === 'string') {
-							if ($row['domain_setting_value'] === 'true') {
-								$this->settings[$category][$subcategory] = true;
-							}
-							else {
-								$this->settings[$category][$subcategory] = false;
-							}
-						}
-						elseif (gettype($row['domain_setting_value']) === 'boolean') {
-							$this->settings[$category][$subcategory] = $row['domain_setting_value'];
-						}
+						$this->settings[$category][$subcategory] = filter_var($row['domain_setting_value'], FILTER_VALIDATE_BOOLEAN);
 					}
 					if ($name == "array") {
 						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
@@ -377,17 +357,7 @@ class settings {
 					$subcategory = $row['user_setting_subcategory'];
 					if (isset($row['user_setting_value']) && $row['user_setting_value'] !== '') {
 						if ($name == "boolean") {
-							if (gettype($row['user_setting_value']) === 'string') {
-								if ($row['user_setting_value'] === 'true') {
-									$this->settings[$category][$subcategory] = true;
-								}
-								else {
-									$this->settings[$category][$subcategory] = false;
-								}
-							}
-							elseif (gettype($row['user_setting_value']) === 'boolean') {
-								$this->settings[$category][$subcategory] = $row['user_setting_value'];
-							}
+							$this->settings[$category][$subcategory] = filter_var($row['user_setting_value'], FILTER_VALIDATE_BOOLEAN);
 						}
 						elseif ($name == "array") {
 							$this->settings[$category][$subcategory][] = $row['user_setting_value'];

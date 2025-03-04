@@ -146,7 +146,7 @@ $input_shadow_outer_color_focus = isset($_SESSION['theme']['input_shadow_outer_c
 $input_toggle_style = $_SESSION['theme']['input_toggle_style']['text'] ?? 'switch_round';
 $input_toggle_switch_background_color_true = $_SESSION['theme']['input_toggle_switch_background_color_true']['text'] ?? '#2e82d0';
 $input_toggle_switch_background_color_false = $_SESSION['theme']['input_toggle_switch_background_color_false']['text'] ?? $input_border_color;
-$input_toggle_switch_handle_symbol = $_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] ?? 'false';
+$input_toggle_switch_handle_symbol = filter_var($_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 $input_toggle_switch_handle_color = $_SESSION['theme']['input_toggle_switch_handle_color']['text'] ?? '#ffffff';
 $login_body_top = $_SESSION['theme']['login_body_top']['text'] ?? '50%';
 $login_body_left = $_SESSION['theme']['login_body_left']['text'] ?? '50%';
@@ -317,7 +317,7 @@ $modal_message_color = $_SESSION['theme']['modal_message_color']['text'] ?? '#44
 $modal_message_alignment = $_SESSION['theme']['modal_message_alignment']['text'] ?? 'left';
 $modal_message_margin = $_SESSION['theme']['modal_message_margin']['text'] ?? '0 0 20px 0';
 $audio_player_indicator_color = $_SESSION['theme']['audio_player_indicator_color']['text'] ?? '#b90004';
-$audio_player_waveform_enabled = $_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? 'false';
+$audio_player_waveform_enabled = filter_var($_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL);
 $audio_player_waveform_height = $_SESSION['theme']['audio_player_waveform_height']['text'] ?? '70px';
 $custom_css_code = $_SESSION['theme']['custom_css_code']['text'] ?? null;
 
@@ -354,29 +354,29 @@ if (!empty($_SESSION['theme'])) {
 $background_images_enabled = false;
 if (!empty($_SESSION['username'])) {
 	//logged in - use standard background images
-	if (!empty($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+	if (filter_var($_SESSION['theme']['background_image_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['background_image'];
 	}
 
 	//logged in - use standard background colors
-	if (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	if (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
 else {
 	//not logged in - try using login background images
-	if (isset($_SESSION['theme']['login_background_image_enabled']['boolean']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
+	if (filter_var($_SESSION['theme']['login_background_image_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['login_background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['login_background_image'];
 	}
 
 	//otherwise, use standard background images
-	if (!empty($_SESSION['theme']['background_image_enabled']['boolean']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+	if (filter_var($_SESSION['theme']['background_image_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['background_image'];
 	}
@@ -389,11 +389,11 @@ else {
 	elseif (!empty($_SESSION['theme']['login_background_color']) && !empty($_SESSION['theme']['login_background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }

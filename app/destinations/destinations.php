@@ -141,7 +141,7 @@
 	$order = $_GET["order"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //prepare to page the results
 	$sql = "select count(*) from v_destinations ";
@@ -365,7 +365,7 @@
 	}
 	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, $param);
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, $param, "class='hide-sm-dn'");
-	if (permission_exists('destination_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('destination_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -434,9 +434,9 @@
 			}
 			echo "	<td>".escape($text['label-'.$row['destination_enabled']])."&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['destination_description'])."&nbsp;</td>\n";
-			if (permission_exists('destination_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('destination_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$list_row_edit_button,'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";

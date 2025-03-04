@@ -633,7 +633,7 @@
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
-	if ($archive_request && $_SESSION['cdr']['archive_database']['boolean'] == 'true') {
+	if ($archive_request && filter_var($_SESSION['cdr']['archive_database']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
 		$database->host = $_SESSION['cdr']['archive_database_host']['text'];
 		$database->type = $_SESSION['cdr']['archive_database_type']['text'];

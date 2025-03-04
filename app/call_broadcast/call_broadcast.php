@@ -47,7 +47,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get posted data
 	if (!empty($_POST['call_broadcasts'])) {
@@ -219,7 +219,7 @@
 	echo th_order_by('broadcast_concurrent_limit', $text['label-concurrent-limit'], $order_by, $order);
 	echo th_order_by('broadcast_start_time', $text['label-start_time'], $order_by, $order);
 	echo th_order_by('broadcast_description', $text['label-description'], $order_by, $order);
-	if (permission_exists('call_broadcast_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('call_broadcast_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -266,7 +266,7 @@
 			}
 			echo "	<td>".escape($broadcast_start_time ?? '')."</td>\n";
 			echo "	<td class='description overflow hide-xs'>".escape($row['broadcast_description'])."</td>\n";
-			if (permission_exists('call_broadcast_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('call_broadcast_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
