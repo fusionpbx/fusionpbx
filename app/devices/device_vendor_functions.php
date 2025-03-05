@@ -176,7 +176,7 @@
 	echo "<th class='hide-sm-dn'>".$text['label-groups']."</th>\n";
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('device_vendor_function_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('device_vendor_function_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -211,8 +211,12 @@
 				unset ($vendor_function_groups);
 
 			//show the row of data
+				$list_row_url = '';
 				if (permission_exists('device_vendor_function_edit')) {
 					$list_row_url = "device_vendor_function_edit.php?device_vendor_uuid=".urlencode($row['device_vendor_uuid'])."&id=".urlencode($row['device_vendor_function_uuid']);
+					if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+						$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+					}
 				}
 				echo "<tr class='list-row' href='".$list_row_url."'>\n";
 				if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit') || permission_exists('device_vendor_function_delete')) {
@@ -252,7 +256,7 @@
 				}
 				echo "	</td>\n";
 				echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."</td>\n";
-				if (permission_exists('device_vendor_function_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				if (permission_exists('device_vendor_function_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 					echo "	<td class='action-button'>\n";
 					echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 					echo "	</td>\n";
@@ -289,3 +293,4 @@
 	echo "</script>\n";
 
 ?>
+

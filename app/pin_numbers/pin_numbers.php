@@ -181,7 +181,7 @@
 	echo th_order_by('accountcode', $text['label-accountcode'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('pin_number_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('pin_number_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -189,8 +189,12 @@
 	if (is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
 		$x = 0;
 		foreach ($pin_numbers as $row) {
+			$list_row_url = '';
 			if (permission_exists('pin_number_edit')) {
 				$list_row_url = "pin_number_edit.php?id=".urlencode($row['pin_number_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('pin_number_add') || permission_exists('pin_number_edit') || permission_exists('pin_number_delete')) {
@@ -218,7 +222,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."&nbsp;</td>\n";
-			if (permission_exists('pin_number_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('pin_number_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -241,3 +245,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

@@ -334,7 +334,7 @@
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "</extension>\n";
 
 									//dialplan details
-										if ($_SESSION['destinations']['dialplan_details']['boolean'] == "true") {
+										if (filter_var($_SESSION['destinations']['dialplan_details']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 
 											//check the destination number
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;

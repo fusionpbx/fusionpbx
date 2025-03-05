@@ -2138,7 +2138,11 @@
 
 		<!-- # Transfer Mode via VPK/MPK. -->
 		<!-- BlindTransfer, AttendedTransfer,  NewCall -->
+		{if isset($grandstream_transfer_mode_via_vpk)}
+		<item name="call.transfer.modeViaVpk">{$grandstream_transfer_mode_via_vpk}</item>
+		{else}
 		<item name="call.transfer.modeViaVpk">BlindTransfer</item>
+		{/if}
 
 		<!-- # Show On Hold Duration. Yes or No -->
 		<item name="call.hold.showHoldDuration.enable">Yes</item>

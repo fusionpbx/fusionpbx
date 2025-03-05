@@ -76,7 +76,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get order and order by
 	if (isset($_GET["order_by"])) {
@@ -180,7 +180,7 @@
 	echo th_order_by('sip_profile_hostname', $text['label-sip_profile_hostname'], $order_by, $order);
 	echo th_order_by('sip_profile_enabled', $text['label-sip_profile_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('sip_profile_description', $text['label-sip_profile_description'], $order_by, $order, null, "class='hide-sm-dn pct-70'");
-	if (permission_exists('sip_profile_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('sip_profile_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -188,8 +188,12 @@
 	if (!empty($sip_profiles) && @sizeof($sip_profiles) != 0) {
 		$x = 0;
 		foreach ($sip_profiles as $row) {
+			$list_row_url = '';
 			if (permission_exists('sip_profile_edit')) {
 				$list_row_url = "sip_profile_edit.php?id=".urlencode($row['sip_profile_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('sip_profile_add') || permission_exists('sip_profile_edit') || permission_exists('sip_profile_delete')) {
@@ -217,7 +221,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['sip_profile_description'])."&nbsp;</td>\n";
-			if (permission_exists('sip_profile_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('sip_profile_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -239,3 +243,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

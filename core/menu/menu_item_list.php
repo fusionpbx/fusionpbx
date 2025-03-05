@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -73,7 +73,7 @@
 	$order = $_GET["order"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //set the initial value
 	$tmp_menu_item_order = 0;
@@ -104,6 +104,7 @@
 				$menu_item_title = $row2['menu_item_title'];
 				$menu_item_link = $row2['menu_item_link'];
 				$menu_item_icon = $row2['menu_item_icon'];
+				$menu_item_icon_color = $row2['menu_item_icon_color'];
 
 				//get the groups that have been assigned to the menu
 				$sql = "select ";
@@ -149,7 +150,7 @@
 				}
 
 				//format icon
-				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".$menu_item_icon_color.";" : "opacity: 0.4;")."'></i>" : null;
 
 				//display the content of the list
 				if (permission_exists('menu_item_edit')) {
@@ -191,7 +192,7 @@
 				//}
 				//echo "</td>";
 
-				if (permission_exists('menu_item_edit') && $list_row_edit_button == 'true') {
+				if (permission_exists('menu_item_edit') && $list_row_edit_button) {
 					echo "	<td class='action-button'>\n";
 					echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 					echo "	</td>\n";
@@ -240,7 +241,7 @@
 	echo "<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['header-menu_items']." (<span id='num_rows'></span>)</b></div>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['header-menu_items']."</b><div class='count'><span id='num_rows'></span></div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'menu.php']);
 	if (permission_exists('menu_item_add')) {
@@ -277,7 +278,7 @@
 	echo "		<th class='no-wrap center shrink'>".$text['label-category']."</th>";
 	echo "		<th class='no-wrap center shrink'>".$text['label-protected']."</th>";
 	echo "		<th class='no-wrap center shrink'>".$text['label-menu_order']."</th>";
-	if (permission_exists('menu_item_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('menu_item_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -291,6 +292,7 @@
 				$menu_item_title = $row['menu_item_title'];
 				$menu_item_link = $row['menu_item_link'];
 				$menu_item_icon = $row['menu_item_icon'];
+				$menu_item_icon_color = $row['menu_item_icon_color'];
 				$menu_item_protected = $row['menu_item_protected'];
 
 			//get the groups that have been assigned to the menu
@@ -336,7 +338,7 @@
 				}
 
 			//format icon
-				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; opacity: 0.4;'></i>" : null;
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".$menu_item_icon_color.";" : "opacity: 0.4;")."'></i>" : null;
 
 			//display the content of the list
 				if (permission_exists('menu_item_edit')) {
@@ -378,7 +380,7 @@
 				//}
 				//echo "</td>";
 
-				if (permission_exists('menu_item_edit') && $list_row_edit_button == 'true') {
+				if (permission_exists('menu_item_edit') && $list_row_edit_button) {
 					echo "<td class='action-button'>\n";
 					echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 					echo "</td>\n";

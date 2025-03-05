@@ -141,7 +141,7 @@
 	$order = $_GET["order"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //prepare to page the results
 	$sql = "select count(*) from v_destinations ";
@@ -157,6 +157,7 @@
 		$sql .= "and (";
 		$sql .= "lower(destination_type) like :search ";
 		$sql .= "or lower(destination_number) like :search ";
+		$sql .= "or lower(destination_cid_name_prefix) like :search ";
 		$sql .= "or lower(destination_context) like :search ";
 		$sql .= "or lower(destination_accountcode) like :search ";
 		if (permission_exists('outbound_caller_id_select')) {
@@ -201,6 +202,7 @@
 	$sql .= " d.destination_area_code, ";
 	$sql .= " d.destination_number, ";
 	$sql .= " d.destination_actions, ";
+	$sql .= " d.destination_cid_name_prefix, ";
 	$sql .= " d.destination_context, ";
 	$sql .= " d.destination_caller_id_name, ";
 	$sql .= " d.destination_caller_id_number, ";
@@ -221,6 +223,7 @@
 		$sql .= "and (";
 		$sql .= " lower(destination_type) like :search ";
 		$sql .= " or lower(destination_number) like :search ";
+		$sql .= " or lower(destination_cid_name_prefix) like :search ";
 		$sql .= " or lower(destination_context) like :search ";
 		$sql .= " or lower(destination_accountcode) like :search ";
 		if (permission_exists('outbound_caller_id_select')) {
@@ -350,6 +353,9 @@
 	if (!$show == "all") {
 		echo  "<th>". $text['label-destination_actions']."</th>";
 	}
+	if (permission_exists('destination_cid_name_prefix')) {
+	    echo th_order_by('destination_cid_name_prefix', $text['label-destination_cid_name_prefix'], $order_by, $order, $param);
+	}
 	if (permission_exists("destination_context")) {
 		echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
 	}
@@ -359,7 +365,7 @@
 	}
 	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, $param);
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, $param, "class='hide-sm-dn'");
-	if (permission_exists('destination_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('destination_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -369,8 +375,12 @@
 		foreach ($destinations as $row) {
 
 			//create the row link
+			$list_row_url = '';
 			if (permission_exists('destination_edit')) {
 				$list_row_url = "destination_edit.php?id=".urlencode($row['destination_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 
 			//show the data
@@ -412,6 +422,9 @@
 			if (!$show == "all") {
 				echo "	<td class='overflow' style='min-width: 125px;'>".$row['actions']."&nbsp;</td>\n";
 			}
+			if (permission_exists("destination_cid_name_prefix")) {
+				echo "	<td>".escape($row['destination_cid_name_prefix'])."&nbsp;</td>\n";
+			}
 			if (permission_exists("destination_context")) {
 				echo "	<td>".escape($row['destination_context'])."&nbsp;</td>\n";
 			}
@@ -421,9 +434,9 @@
 			}
 			echo "	<td>".escape($text['label-'.$row['destination_enabled']])."&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['destination_description'])."&nbsp;</td>\n";
-			if (permission_exists('destination_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('destination_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$list_row_edit_button,'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
@@ -450,3 +463,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

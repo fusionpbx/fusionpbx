@@ -189,8 +189,8 @@ echo "<tr class='list-header'>\n";
 if (!empty($show) && $show == 'all' && permission_exists('emergency_logs_view_all')) {
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 }
-echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_date']."</th>\n";
+echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_extension']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_event']."</th>\n";
 echo "</tr>\n";
@@ -202,8 +202,8 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 		if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('emergency_logs_view_all')) {
 			echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 		}
-		echo "	<td>".escape($row['time_formatted'])."</td>\n";
 		echo "	<td>".escape($row['date_formatted'])."</td>\n";
+		echo "	<td>".escape($row['time_formatted'])."</td>\n";
 		echo "	<td>".escape($row['extension'])."</td>\n";
 		echo "	<td>".escape($row['event'])."</td>\n";
 		echo "</tr>\n";

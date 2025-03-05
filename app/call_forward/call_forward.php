@@ -241,7 +241,7 @@
 			}
 		}
 		if ($show !== 'all' && permission_exists('call_forward_all')) {
-			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $_SESSION['theme']['button_icon_all'], 'link' => '?show=all' . $param]);
+			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $_SESSION['theme']['button_icon_all'], 'link' => '?show=all' . (!empty($params) ? '&'.implode('&', $params) : null)]);
 		}
 		echo "<form id='form_search' class='inline' method='get'>\n";
 		if ($show == 'all' && permission_exists('call_forward_all')) {
@@ -296,8 +296,8 @@
 		echo "	<th>" . $text['label-dnd'] . "</th>\n";
 	}
 	echo "	<th class='" . ($is_included ? 'hide-md-dn' : 'hide-sm-dn') . "'>" . $text['label-description'] . "</th>\n";
-	$list_row_edit_button = $_SESSION['theme']['list_row_edit_button']['boolean'] ?? 'false';
-	if ( $list_row_edit_button === 'true') {
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	if ($list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -306,6 +306,9 @@
 		$x = 0;
 		foreach ($extensions as $row) {
 			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=" . $row['extension_uuid'] . "&return_url=" . urlencode($_SERVER['REQUEST_URI']);
+			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+			}
 			echo "<tr class='list-row' href='" . $list_row_url . "'>\n";
 			if (!$is_included && $extensions) {
 				echo "	<td class='checkbox'>\n";
@@ -399,7 +402,7 @@
 				echo "	</td>\n";
 			}
 			echo "	<td class='description overflow " . ($is_included ? 'hide-md-dn' : 'hide-sm-dn') . "'>" . escape($row['description']) . "&nbsp;</td>\n";
-			if ($list_row_edit_button === 'true') {
+			if ($list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type' => 'button', 'title' => $text['button-edit'], 'icon' => $_SESSION['theme']['button_icon_edit'], 'link' => $list_row_url]);
 				echo "	</td>\n";

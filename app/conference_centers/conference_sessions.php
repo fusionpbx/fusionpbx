@@ -46,7 +46,7 @@
 	$text = $language->get();
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the http post data
 	if (!empty($_POST['conference_sessions'])) {
@@ -172,7 +172,7 @@
 	echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 	//echo th_order_by('recording', $text['label-recording'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>\n";
-	if ($list_row_edit_button == 'true') {
+	if ($list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -232,7 +232,7 @@
 					echo "</table>\n";
 				}
 				echo "	</td>\n";
-				if ($list_row_edit_button == 'true') {
+				if ($list_row_edit_button) {
 					echo "	<td class='action-button'>\n";
 					echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 					echo "	</td>\n";

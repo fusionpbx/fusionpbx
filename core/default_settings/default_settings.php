@@ -82,7 +82,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //build the query string
 	$query_string = '';
@@ -458,7 +458,7 @@
 				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
 				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
-				if ($permission['default_setting_edit'] && $list_row_edit_button == 'true') {
+				if ($permission['default_setting_edit'] && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -603,7 +603,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['default_setting_description'])."\">".escape($row['default_setting_description'])."</td>\n";
-			if ($permission['default_setting_edit'] && $list_row_edit_button == 'true') {
+			if ($permission['default_setting_edit'] && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

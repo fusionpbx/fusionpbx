@@ -45,7 +45,7 @@
 	ob_end_clean(); //clean the buffer
 
 //clear the template
-	//if (isset($_SESSION['theme']['cache']['boolean']) && $_SESSION['theme']['cache']['boolean'] == "false") {
+	//if (!filter_var($_SESSION['theme']['cache']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 	//	$_SESSION["template_content"] = '';
 	//}
 
@@ -285,7 +285,7 @@
 		if (
 			$authenticated &&
 			file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/app/session_timer/session_timer.php') &&
-			$_SESSION['security']['session_timer_enabled']['boolean'] == 'true'
+			filter_var($_SESSION['security']['session_timer_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL)
 			) {
 			include_once PROJECT_PATH.'app/session_timer/session_timer.php';
 			$view->assign('session_timer', $session_timer);

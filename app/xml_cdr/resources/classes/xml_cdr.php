@@ -369,7 +369,7 @@ if (!class_exists('xml_cdr')) {
 
 			//skip call detail records for calls blocked by call block
 				if (isset($xml->variables->call_block) && !empty($this->settings->get('call_block', 'save_call_detail_record'))) {
-					if ($xml->variables->call_block == 'true' && $this->settings->get('call_block', 'save_call_detail_record') == 'false') {
+					if ($xml->variables->call_block == 'true' && $this->settings->get('call_block', 'save_call_detail_record', false) !== true) {
 						//delete the xml cdr file
 						if (!empty($this->settings->get('switch', 'log'))) {
 							$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
@@ -612,12 +612,6 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->hangup_cause == 'NO_ANSWER') {
 							$status = 'no_answer';
 						}
-						if (substr($destination_number, 0, 3) == '*99') {
-							$status = 'voicemail';
-						}
-						if (isset($xml->variables->voicemail_message_seconds) && $xml->variables->voicemail_message_seconds > 0) {
-							$status = 'voicemail';
-						}
 						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
 							$status = 'cancelled';
 						}
@@ -633,11 +627,17 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->cc_side == 'agent' && $xml->variables->billsec == 0) {
 							$status = 'no_answer';
 						}
-						if (!isset($status)  && $xml->variables->billsec == 0) {
+						if (!isset($status) && $xml->variables->billsec == 0) {
 							$status = 'no_answer';
 						}
 						if ($missed_call == 'true') {
 							$status = 'missed';
+						}
+						if (substr($destination_number, 0, 3) == '*99') {
+							$status = 'voicemail';
+						}
+						if (!empty($xml->variables->voicemail_message_seconds)) {
+							$status = 'voicemail';
 						}
 
 					//set the key
@@ -1695,7 +1695,7 @@ if (!class_exists('xml_cdr')) {
 
 				//if http enabled is set to false then deny access
 					if (!defined('STDIN')) {
-						if ($this->settings->get('cdr', 'http_enabled') == "false") {
+						if ($this->settings->get('cdr', 'http_enabled') == false) {
 							openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 							syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR'].'] XML CDR import default setting http_enabled is not enabled. Line: '.__line__);
 							closelog();

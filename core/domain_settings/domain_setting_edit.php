@@ -307,6 +307,9 @@
 						}
 					}
 
+				//clear domain apcu cache due to changes
+					settings::clear_cache('domain');
+
 				//redirect the browser
 					if ($action == "update") {
 						message::add($text['message-update']);

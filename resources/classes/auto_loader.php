@@ -27,10 +27,21 @@
 class auto_loader {
 
 	const FILE = 'autoloader_cache.php';
+	const CACHE_KEY = 'autoloader_classes';
 
 	private $classes;
 
+	/**
+	 * Tracks the APCu extension for caching to RAM drive across requests
+	 * @var bool
+	 */
+	private $apcu_enabled;
+
 	public function __construct($project_path = '') {
+
+		//set if we can use RAM cache
+		$this->apcu_enabled = function_exists('apcu_enabled') && apcu_enabled();
+
 		//classes must be loaded before this object is registered
 		if (!$this->load_cache()) {
 			//cache miss so load them
@@ -43,34 +54,49 @@ class auto_loader {
 	}
 
 	public function update_cache(string $file = ''): bool {
+		//guard against writing an empty file
+		if (empty($this->classes)) {
+			return false;
+		}
+
+		//update RAM cache when available
+		if ($this->apcu_enabled) {
+			apcu_store(self::CACHE_KEY, $this->classes);
+		}
+
 		//ensure we have somewhere to put the file
 		if (empty($file)) {
 			$file = sys_get_temp_dir() . '/' . self::FILE;
 		}
 
-		//guard against writing an empty file
-		if (!empty($this->classes)) {
-			//export the classes array using PHP engine
-			$data = var_export($this->classes, true);
+		//export the classes array using PHP engine
+		$data = var_export($this->classes, true);
 
-			//put the array in a form that it can be loaded directly to an array
-			$result = file_put_contents($file, "<?php\n return " . $data . ";\n");
-			if ($result !== false) {
-				return true;
-			}
-			$error_array = error_get_last();
-			//send to syslog when debugging
-			if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
-				openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-				syslog(LOG_WARNING, "[php][auto_loader] " . $error_array['message']);
-				closelog();
-			}
+		//put the array in a form that it can be loaded directly to an array
+		$result = file_put_contents($file, "<?php\n return " . $data . ";\n");
+		if ($result !== false) {
+			return true;
 		}
+		$error_array = error_get_last();
+		//send to syslog when debugging
+		if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
+			openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			syslog(LOG_WARNING, "[php][auto_loader] " . $error_array['message']);
+			closelog();
+		}
+
 		return false;
 	}
 
 	public function load_cache(string $file = ''): bool {
 		$this->classes = [];
+
+		//use apcu when available
+		if ($this->apcu_enabled && apcu_exists(self::CACHE_KEY)) {
+			$this->classes = apcu_fetch(self::CACHE_KEY, $success);
+			if ($success) return true;
+		}
+
 		//use a standard file
 		if (empty($file)) {
 			$file = sys_get_temp_dir() . '/'. self::FILE;
@@ -81,6 +107,10 @@ class auto_loader {
 		}
 		//assign to an array
 		if (!empty($this->classes)) {
+			//cache edge case of first time using apcu cache
+			if ($this->apcu_enabled) {
+				apcu_store(self::CACHE_KEY, $this->classes);
+			}
 			return true;
 		}
 		return false;
@@ -125,6 +155,46 @@ class auto_loader {
 			return true;
 		}
 
+		//Smarty has it's own autoloader so reject the request
+		if ($class_name === 'Smarty_Autoloader') {
+			return false;
+		}
+
+		//cache miss
+		if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
+			openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			syslog(LOG_WARNING, "[php][auto_loader] class not found in cache: ".$class_name);
+			closelog();
+		}
+
+		//set project path using magic dir constant
+		$project_path = dirname(__DIR__, 2);
+
+		//build the search path array
+		$search_path[] = glob($project_path . "/resources/classes/".$class_name.".php");
+		$search_path[] = glob($project_path . "/resources/interfaces/".$class_name.".php");
+		$search_path[] = glob($project_path . "/resources/traits/".$class_name.".php");
+		$search_path[] = glob($project_path . "/*/*/resources/classes/".$class_name.".php");
+		$search_path[] = glob($project_path . "/*/*/resources/interfaces/".$class_name.".php");
+		$search_path[] = glob($project_path . "/*/*/resources/traits/".$class_name.".php");
+
+		//find the path
+		$path = self::autoload_search($search_path);
+		if (!empty($path)) {
+
+			//include the class or interface
+			include $path;
+
+			//make sure to reload the cache after we found a new class
+			$this->reload_classes();
+
+			//update the cache with new classes
+			$this->update_cache();
+
+			//return boolean
+			return true;
+		}
+
 		//send to syslog when debugging
 		if (!empty($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
 			openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
@@ -134,5 +204,27 @@ class auto_loader {
 
 		//return boolean
 		return false;
+	}
+
+	public static function autoload_search($array) : string {
+		foreach($array as $path) {
+			if (is_array($path) && count($path) != 0) {
+				foreach($path as $sub_path) {
+					if (!empty($sub_path) && file_exists($sub_path)) {
+						return $sub_path;
+					}
+				}
+			}
+			elseif (!empty($path) && file_exists($path)) {
+				return $path;
+			}
+		}
+		return '';
+	}
+
+	public static function clear_cache() {
+		if (function_exists('apcu_enabled') && apcu_enabled()) {
+			apcu_delete(self::CACHE_KEY);
+		}
 	}
 }
