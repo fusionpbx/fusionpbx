@@ -3396,7 +3396,7 @@ else { //default: white
 		}
 		?>
 		top: <?php echo $action_bar_top; ?>;
-		text-align: right;
+		text-align: left;
 		border-top: <?=$action_bar_border_top?>;
 		border-right: <?=$action_bar_border_right?>;
 		border-bottom: <?=$action_bar_border_bottom?>;
