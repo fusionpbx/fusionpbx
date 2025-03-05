@@ -25,6 +25,8 @@ class GroupPermission extends Pivot
      * @var array<int, string>
      */
 	protected $fillable = [
+        'domain_uuid',
+        'group_uuid',
 		'permission_name',
 		'permission_protected',
 		'permission_assigned',

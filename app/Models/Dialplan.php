@@ -84,4 +84,8 @@ class Dialplan extends Model
 	 public function fax(): BelongsTo {
 		return $this->belongsTo(Fax::class, 'fax_uuid', 'fax_uuid');
 	}
+
+	 public function ivr_menu(): BelongsTo {
+		return $this->belongsTo(IVRMenu::class, 'ivr_menu_uuid', 'ivr_menu_uuid');
+	}
 }

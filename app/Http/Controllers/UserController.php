@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use DB;
 use Auth;
+use App\Http\Controllers\DefaultSettingController;
+use App\Http\Controllers\DomainSettingController;
+use App\Http\Controllers\UserSettingController;
+
 
 class UserController extends Controller
 {
@@ -50,4 +54,19 @@ class UserController extends Controller
 		Auth::loginUsingId($user_uuid, true);
 		return Auth::check();
 	}
+
+    public function default_setting(string $category, string $subcategory, ?string $name = null){
+        $uds = new UserSettingController;
+        $setting = $uds->get($category, $subcategory, $name);
+        if (!isset($setting)){                  // TODO: Verify if it is easier to use DomainController instead
+            $dds = new DomainSettingController;
+            $setting = $dds->get($category, $subcategory, $name);
+            if (!isset($setting)){
+                $ds = new DefaultSettingController;
+                $setting = $ds->get($category, $subcategory, $name);
+            }
+        }
+
+        return $ds ?? null;
+    }
 }

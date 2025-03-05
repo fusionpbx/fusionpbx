@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Domain;
+use App\Http\Controllers\DefaultSettingController;
+use App\Http\Controllers\DomainSettingController;
 
 class DomainController extends Controller
 {
@@ -38,5 +40,16 @@ class DomainController extends Controller
             $url = getFusionPBXPreviousURL(url()->previous());
             return redirect($url);
         }
+    }
+
+    public function default_setting(string $category, string $subcategory, ?string $name = null){
+        $dds = new DomainSettingController;
+        $setting = $dds->get($category, $subcategory, $name);
+        if (!isset($setting)){
+            $ds = new DefaultSettingController;
+            $setting = $ds->get($category, $subcategory, $name);
+        }
+
+        return $ds ?? null;
     }
 }

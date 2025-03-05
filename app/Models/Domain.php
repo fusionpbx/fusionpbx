@@ -31,7 +31,7 @@ class Domain extends Model
 	public function parent(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_parent_uuid', 'domain_uuid');
 	}
-	
+
 	public function children(): HasMany {
 		return $this->hasMany(Domain::class, 'domain_parent_uuid', 'domain_uuid');
 	}
@@ -39,7 +39,7 @@ class Domain extends Model
 	public function extensions(): HasMany {
 		return $this->hasMany(Extension::class, 'domain_uuid', 'domain_uuid');
 	}
-	
+
 	public function users(): HasMany {
 		return $this->hasMany(User::class, 'domain_uuid', 'domain_uuid');
 	}
@@ -83,7 +83,7 @@ class Domain extends Model
 	public function musiconhold(): HasMany {
 		return $this->hasMany(MusicOnHold::class, 'domain_uuid', 'domain_uuid');
 	}
-	
+
 	public function billingprofiless(): HasMany {
 		return $this->hasMany(BillingProfile::class, 'domain_uuid', 'domain_uuid');
 	}
@@ -91,11 +91,11 @@ class Domain extends Model
 	public function billingauthorizedpaymentsources(): HasMany {
 		return $this->hasMany(BillingAuthorizedPaymentSource::class, 'domain_uuid', 'domain_uuid');
 	}
-	
+
 	public function billingdeals(): HasMany {
 		return $this->hasMany(BillingDeal::class, 'domain_uuid', 'domain_uuid');
 	}
-	
+
 	public function billinginvoices(): HasMany {
 		return $this->hasMany(BillingInvoice::class, 'domain_uuid', 'domain_uuid');
 	}
@@ -138,5 +138,9 @@ class Domain extends Model
 
 	public function devices(): HasMany {
 		return $this->hasMany(Device::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function ivr_menus(): HasMany {
+		return $this->hasMany(IVRMenu::class, 'domain_uuid', 'domain_uuid');
 	}
 }
