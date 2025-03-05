@@ -2217,7 +2217,7 @@ else { //default: white
 
 	span.playback_progress_bar {
 		background-color: <?=$audio_player_indicator_color?>;
-		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+		<?php if ($audio_player_waveform_enabled) { ?>
 			width: 2px;
 			height: <?=$audio_player_waveform_height?>;
 			margin-bottom: 0;
@@ -2249,7 +2249,7 @@ else { //default: white
 		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
-		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+		<?php if ($audio_player_waveform_enabled) { ?>
 			padding-bottom: 0px;
 			background-size: 100% 100% !important;
 			background-repeat: no-repeat;
