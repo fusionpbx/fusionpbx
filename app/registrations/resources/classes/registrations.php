@@ -24,8 +24,6 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the registrations class
-if (!class_exists('registrations')) {
 	class registrations {
 
 		/**
@@ -45,6 +43,12 @@ if (!class_exists('registrations')) {
 		private $database;
 
 		/**
+		 * Set in the constructor. Must be an event_socket object and cannot be null.
+		 * @var event_socket Event Socket Connection Object
+		 */
+		private $event_socket;
+
+		/**
 		 * called when the object is created
 		 */
 		public function __construct($setting_array = []) {
@@ -60,7 +64,20 @@ if (!class_exists('registrations')) {
 			//trap passing a PDO object instead of the required database object
 			if (!($this->database instanceof database)) {
 				//should never happen but will trap it here just-in-case
-				throw new \InvalidArgumentException("Database object passed in settings class constructor is not a valid database object");
+				throw new \InvalidArgumentException("Database object passed in the constructor is not a valid database object");
+			}
+
+			if (!empty($setting_array['event_socket'])) {
+				$this->event_socket = $setting_array['event_socket'];
+			}
+			else {
+				$this->event_socket = event_socket::create();
+			}
+
+			//trap passing an invalid connection object for communicating to the switch
+			if (!($this->event_socket instanceof event_socket)) {
+				//should never happen but will trap it here just-in-case
+				throw new \InvalidArgumentException('Event socket object passed in the constructor is not a valid event_socket object');
 			}
 
 			//assign private variables
@@ -89,7 +106,20 @@ if (!class_exists('registrations')) {
 				$id = 0;
 
 			//create the event socket connection
-				$esl = event_socket::create();
+				$esl = $this->event_socket;
+
+			//make sure the event socket is connected
+				if (!$esl->is_connected()) {
+					$esl->connect();
+
+					//check again and throw an error if it can't connect
+						if (!$esl->is_connected()) {
+							message::add($text['error-event-socket'], 'negative', 5000);
+							return null;
+						}
+				}
+
+
 
 			//get the default settings
 				$sql = "select sip_profile_name from v_sip_profiles ";
@@ -100,12 +130,18 @@ if (!class_exists('registrations')) {
 				}
 				$sql .= "and sip_profile_enabled = 'true' ";
 				$sip_profiles = $this->database->select($sql, $parameters ?? null, 'all');
-				if (!empty($sip_profiles) && @sizeof($sip_profiles) != 0) {
-					foreach ($sip_profiles as $field) {
+
+				if (!empty($sip_profiles)) {
+
+					//use a while loop to ensure the event socket stays connected while communicating
+					$count = count($sip_profiles);
+					$i = 0;
+					while ($esl->is_connected() && $i++ < $count) {
+						$field = $sip_profiles[$i];
 
 						//get sofia status profile information including registrations
 							$cmd = "api sofia xmlstatus profile '".$field['sip_profile_name']."' reg";
-							$xml_response = trim(event_socket::command($cmd));
+							$xml_response = trim($esl->request($cmd));
 
 						//show an error message
 							if ($xml_response == "Invalid Profile!") {
@@ -301,7 +337,7 @@ if (!class_exists('registrations')) {
 							unset($sql);
 
 						//create the event socket connection
-							$esl = event_socket::create();
+							$esl = $this->event_socket;
 
 						//loop through registrations
 							if ($esl->is_connected()) {
@@ -365,10 +401,9 @@ if (!class_exists('registrations')) {
 
 										//send the api command
 											if (!empty($command) && $esl->is_connected()) {
-												$response_api[$registration['user']]['command'] = event_socket::api($command);
-												$response_api[$registration['user']]['log'] = event_socket::api("log notice $command");
+												$response_api[$registration['user']]['command'] = $esl->request('api ' . $command);
+												$response_api[$registration['user']]['log'] = $esl->request("log notice $command");
 											}
-
 									}
 								}
 
@@ -394,6 +429,3 @@ if (!class_exists('registrations')) {
 		} //method
 
 	} //class
-}
-
-?>
