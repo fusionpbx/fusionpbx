@@ -136,6 +136,27 @@
 				}
 			}
 
+		//validate the data
+			$fifo_extension = preg_replace('#[^a-zA-Z0-9.\-\*]#', '', $fifo_extension ?? '');
+			$fifo_order = preg_replace('#[^0-9]#', '', $fifo_order ?? '');
+			$fifo_exit_key = preg_replace('#[^0-9]#', '', $fifo_exit_key ?? '');
+			$fifo_timeout_seconds = preg_replace('#[^0-9]#', '', $fifo_timeout_seconds ?? '');
+			$fifo_agent_status = preg_replace('#[^a-zA-Z0-9.\-\*]#', '', $fifo_agent_status ?? '');
+			$fifo_agent_queue = preg_replace('#[^a-zA-Z0-9.\-\*]#', '', $fifo_agent_queue ?? '');
+			if (!empty($fifo_uuid) && !is_uuid($fifo_uuid)) { throw new Exception("invalid uuid"); }
+			if (!empty($dialplan_uuid) && !is_uuid($dialplan_uuid)) { throw new Exception("invalid uuid"); }
+
+			if (is_array($fifo_members)) {
+				$i = 0;
+				foreach ($fifo_members as $row) {
+					$fifo_members[$i]['member_contact'] = preg_replace('#[^a-zA-Z0-9/@.\-\*]#', '', $row["member_contact"] ?? '');
+					$fifo_members[$i]['member_call_timeout'] = preg_replace('#[^0-9]#', '', $row["member_call_timeout"] ?? '20');
+					$fifo_members[$i]['member_wrap_up_time'] = preg_replace('#[^0-9]#', '', $row["member_wrap_up_time"] ?? '10');
+					$fifo_members[$i]['member_enabled'] = $row["member_enabled"] ?? 'false';
+					$i++;
+				}
+			}
+			
 		//check for all required data
 			$msg = '';
 			if (strlen($fifo_name) == 0) { $msg .= $text['message-required']." ".$text['label-fifo_name']."<br>\n"; }
@@ -192,21 +213,20 @@
 			$array['fifo'][0]['fifo_timeout_seconds'] = $fifo_timeout_seconds;
 			$array['fifo'][0]['fifo_exit_key'] = $fifo_exit_key;
 			$array['fifo'][0]['fifo_exit_action'] = $fifo_exit_action;
-			$array['fifo'][0]['fifo_exit_key'] = $fifo_exit_key;
 			$array['fifo'][0]['fifo_music'] = $fifo_music;
 			$array['fifo'][0]['fifo_order'] = $fifo_order;
 			$array['fifo'][0]['fifo_enabled'] = $fifo_enabled;
 			$array['fifo'][0]['fifo_description'] = $fifo_description;
-			$y = 0;
 			if (is_array($fifo_members)) {
+				$y = 0;
 				foreach ($fifo_members as $row) {
 					if (!empty($row['member_contact']) && strlen($row['member_contact']) > 0) {
 						$array['fifo'][0]['fifo_members'][$y]['fifo_member_uuid'] = $row["fifo_member_uuid"];
 						$array['fifo'][0]['fifo_members'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['fifo'][0]['fifo_members'][$y]['member_contact'] = $row["member_contact"];
-						$array['fifo'][0]['fifo_members'][$y]['member_call_timeout'] = $row["member_call_timeout"];
+						$array['fifo'][0]['fifo_members'][$y]['member_call_timeout'] = $row["member_call_timeout"] ?? '20';
 						//$array['fifo'][0]['fifo_members'][$y]['member_simultaneous'] = $row["member_simultaneous"];
-						$array['fifo'][0]['fifo_members'][$y]['member_wrap_up_time'] = $row["member_wrap_up_time"];
+						$array['fifo'][0]['fifo_members'][$y]['member_wrap_up_time'] = $row["member_wrap_up_time"] ?? '10';
 						$array['fifo'][0]['fifo_members'][$y]['member_enabled'] = $row["member_enabled"] ?? 'false';
 						$y++;
 					}
@@ -216,6 +236,11 @@
 		//send commands for agent login or agent logout
 			if (is_array($fifo_members)) {
 				foreach ($fifo_members as $row) {
+					//empty row skip iteration
+					if (empty($row["member_contact"])) {
+						continue;
+					}
+
 					//build the command to add or remove the agent from the FIFO queue
 					if ($row["member_enabled"] == 'true') {
 						$command = "fifo_member add ".$fifo_extension."@".$_SESSION['domain_name']." {fifo_member_wait=nowait}".$row["member_contact"]." 5 ".$row['member_call_timeout']." ".$row['member_wrap_up_time'];
@@ -223,8 +248,9 @@
 					else {
 						$command = "fifo_member del ".$fifo_extension."@".$_SESSION['domain_name']." {fifo_member_wait=nowait}".$row["member_contact"];
 					}
+
 					if ($event_socket->is_connected()) {
-						$response = event_socket::api($command);
+						$response = $event_socket->command('api '.$command);
 					}
 				}
 			}
