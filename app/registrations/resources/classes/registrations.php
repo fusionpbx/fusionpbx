@@ -106,15 +106,15 @@
 				$id = 0;
 
 			//create the event socket connection
-				$esl = $this->event_socket;
+				$event_socket = $this->event_socket;
 
 			//make sure the event socket is connected
-				if (!$esl->is_connected()) {
+				if (!$event_socket->is_connected()) {
 					//connect to event socket
-					$esl->connect();
+					$event_socket->connect();
 
 					//check again and throw an error if it can't connect
-						if (!$esl->is_connected()) {
+						if (!$event_socket->is_connected()) {
 							message::add($text['error-event-socket'], 'negative', 5000);
 							return null;
 						}
@@ -137,12 +137,12 @@
 					//use a while loop to ensure the event socket stays connected while communicating
 					$count = count($sip_profiles);
 					$i = 0;
-					while ($esl->is_connected() && $i++ < $count) {
+					while ($event_socket->is_connected() && $i++ < $count) {
 						$field = $sip_profiles[$i];
 
 						//get sofia status profile information including registrations
 							$cmd = "api sofia xmlstatus profile '".$field['sip_profile_name']."' reg";
-							$xml_response = trim($esl->request($cmd));
+							$xml_response = trim($event_socket->request($cmd));
 
 						//show an error message
 							if ($xml_response == "Invalid Profile!") {
@@ -338,10 +338,10 @@
 							unset($sql);
 
 						//create the event socket connection
-							$esl = $this->event_socket;
+							$event_socket = $this->event_socket;
 
 						//loop through registrations
-							if ($esl->is_connected()) {
+							if ($event_socket->is_connected()) {
 								//check if registrations exist
 								if (is_array($registrations)) {
 									foreach ($registrations as $registration) {
@@ -401,9 +401,9 @@
 											}
 
 										//send the api command
-											if (!empty($command) && $esl->is_connected()) {
-												$response_api[$registration['user']]['command'] = $esl->request('api ' . $command);
-												$response_api[$registration['user']]['log'] = $esl->request("log notice $command");
+											if (!empty($command) && $event_socket->is_connected()) {
+												$response_api[$registration['user']]['command'] = $event_socket->request('api ' . $command);
+												$response_api[$registration['user']]['log'] = $event_socket->request("log notice $command");
 											}
 									}
 								}
