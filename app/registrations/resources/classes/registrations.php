@@ -63,7 +63,7 @@
 
 			//trap passing a PDO object instead of the required database object
 			if (!($this->database instanceof database)) {
-				//should never happen but will trap it here just-in-case
+				//should never happen but will trap it here just in case
 				throw new \InvalidArgumentException("Database object passed in the constructor is not a valid database object");
 			}
 
@@ -76,7 +76,7 @@
 
 			//trap passing an invalid connection object for communicating to the switch
 			if (!($this->event_socket instanceof event_socket)) {
-				//should never happen but will trap it here just-in-case
+				//should never happen but will trap it here just in case
 				throw new \InvalidArgumentException('Event socket object passed in the constructor is not a valid event_socket object');
 			}
 
@@ -110,6 +110,7 @@
 
 			//make sure the event socket is connected
 				if (!$esl->is_connected()) {
+					//connect to event socket
 					$esl->connect();
 
 					//check again and throw an error if it can't connect
@@ -153,7 +154,7 @@
 								$xml_response = "<error_msg>".escape($text['label-message'])."</error_msg>";
 							}
 
-						//santize the XML
+						//sanitize the XML
 							if (function_exists('iconv')) { $xml_response = iconv("utf-8", "utf-8//IGNORE", $xml_response); }
 							$xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $xml_response);
 							$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
