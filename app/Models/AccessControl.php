@@ -47,4 +47,5 @@ class AccessControl extends Model
     public function accesscontrolnodes(): HasMany {
 		return $this->hasMany(AccessControlNodes::class, 'access_control_uuid', 'access_control_uuid');
 	}
+}
 
