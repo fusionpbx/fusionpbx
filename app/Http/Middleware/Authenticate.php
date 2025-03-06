@@ -21,7 +21,7 @@ class Authenticate extends Middleware
         if (!$authenticated){
             route('login');
         }
-        else
-            return $next($request);
+
+        return $next($request);
     }
 }
