@@ -101,7 +101,7 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('description', 'Call Center' );
                 $xml->startElement('settings');
                 $dsn_callcenter = Variable::whereIn('var_name', ['dsn','dsn_callcenter'])
-                    ->orderByDesc(var_name)
+                    ->orderByDesc('var_name')
                     ->first();
                 if ($dsn_callcenter->count() == 1){
                     $xml->startElement('param');
