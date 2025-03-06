@@ -38,4 +38,4 @@ Route::middleware('guest')->group(function () {
 Route::post('/curl/xml_handler/configuration', function (Request $request){
     $xml = ModXMLCURLController::configuration($request);
     return response($xml, 200)->header('Content-Type','text/xml');
-});
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
