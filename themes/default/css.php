@@ -810,8 +810,13 @@ else { //default: white
 
 	/* logout icon */
 	a.logout_icon {
+		<?php if ($menu_style == 'fixed') { ?>
+			position: absolute;
+		<?php } else { ?>
+			display: block;
+		<?php } ?>
 		color: <?=$logout_icon_color?>;
-		padding: 14px 10px;
+		padding: 14px 10px 11px 10px;
 		}
 
 	a.logout_icon:hover,
