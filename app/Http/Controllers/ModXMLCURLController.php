@@ -113,7 +113,7 @@ class ModXMLCURLController extends Controller
 
 
                 $xml->startElement('queues');
-                $callcenter_queues = CallCenterQueue::join('v_domains', 'v_call_center_queues.dommain_uuid', '=', 'v_domains.domain_uuid')->get();
+                $callcenter_queues = CallCenterQueue::join('v_domains', 'domain_uuid', '=', 'v_domains.domain_uuid')->get();
                 foreach ($callcenter_queues as $callcenter_queue){
                     $callcenter_queue->queue_name = str_replace(' ','-',$callcenter_queue->queue_name);
                     $xml->startElement('queue');
