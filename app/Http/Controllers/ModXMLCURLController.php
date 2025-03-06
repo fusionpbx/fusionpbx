@@ -80,7 +80,7 @@ class ModXMLCURLController extends Controller
                     $xml->writeAttribute('name', $access_control->access_control_name);
                     $xml->writeAttribute('default', $access_control->access_control_default );
 
-                    $access_control_nodes = AccessControlNode::where('acccess_control_uuid', $access_control->access_control_uuid)
+                    $access_control_nodes = AccessControlNode::where('access_control_uuid', $access_control->access_control_uuid)
                         ->whereRaw('length(node_cidr) > 0')
                         ->get();
                     foreach ($access_control_nodes as $access_control_node){
