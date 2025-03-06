@@ -59,8 +59,8 @@ class ModXMLCURLController extends Controller
         $answer = ''; $notfound = false;
         $xml = new XMLWriter();
         $xml->openMemory();
-        $xml->setIdent(true);
-        $xml->setIdentString('  ');
+        $xml->setIndent(true);
+        $xml->setIndentString('  ');
         $xml->startDocument( '1.0', 'UTF-8', 'no' );
         $xml->startElement( 'document' );
         $xml->writeAttribute('type', 'freeswitch/xml');
