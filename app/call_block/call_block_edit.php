@@ -674,6 +674,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			echo modal::create(['id'=>'modal-block','type'=>'general','message'=>$text['confirm-block'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_block','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_form_submit('form_list');"])]);
 		}
 
+		echo "<div class='card'>\n";
+
 		foreach (['inbound','outbound'] as $direction) {
 			echo "<table class='list' id='list_".$direction."' ".($direction == 'outbound' ? "style='display: none;'" : null).">\n";
 			echo "<tr class='list-header'>\n";
@@ -753,6 +755,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			}
 			echo "</table>\n";
 		}
+
+		echo "</div>\n";
 
 		echo "<br />\n";
 		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
