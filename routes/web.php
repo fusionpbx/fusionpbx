@@ -3,6 +3,7 @@
 use App\Http\Middleware\Authenticate;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [UserController::class, 'authenticate'])->name('login');
 });
 
+
+Route::post('/curl/xml_handler/configuration', function (Request $request){
+    $xml = ModXMLCURLController::configuration($request);
+    return response($xml, 200)->header('Content-Type','text/xml');
+});
