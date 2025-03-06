@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Middleware\Authenticate;
+
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ModXMLCURLController;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
