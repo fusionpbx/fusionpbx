@@ -293,11 +293,11 @@ class ModXMLCURLController extends Controller
                     $agent_contact = str_replace('{caller_destination}','${caller_destination}', $agent_contact);
 
                     $xml->startElement('agent');
-                    $xml->writeAttribute('name'); $xml->text($callcenter_agent->call_center_agent_uuid); $xml->endAttribute();
-                    $xml->writeAttribute('label'); $xml->text($callcenter_agent->call_center_agent_name.'@'.$callcenter_agent->domain_name); $xml->endAttribute();
-                    $xml->writeAttribute('type'); $xml->text($callcenter_agent->call_center_agent_type); $xml->endAttribute();
-                    $xml->writeAttribute('contact'); $xml->text($agent_contact); $xml->endAttribute();
-                    $xml->writeAttribute('status'); $xml->text($callcenter_agent->agent_status); $xml->endAttribute();
+                    $xml->startAttribute('name'); $xml->text($callcenter_agent->call_center_agent_uuid); $xml->endAttribute();
+                    $xml->startAttribute('label'); $xml->text($callcenter_agent->call_center_agent_name.'@'.$callcenter_agent->domain_name); $xml->endAttribute();
+                    $xml->startAttribute('type'); $xml->text($callcenter_agent->call_center_agent_type); $xml->endAttribute();
+                    $xml->startAttribute('contact'); $xml->text($agent_contact); $xml->endAttribute();
+                    $xml->startAttribute('status'); $xml->text($callcenter_agent->agent_status); $xml->endAttribute();
 
                     if (isset($callcenter_agent->agent_no_answer_delay_time)){
                         $xml->startAttribute('no-answer-delay'); $xml->text($callcenter_agent->agent_no_answer_delay_time); $xml->endAttribute();
@@ -331,11 +331,11 @@ class ModXMLCURLController extends Controller
 
                 foreach ($callcenter_tiers as $callcenter_tier){
                     $xml->startElement('tier');
-                    $xml->writeAttribute('agent'); $xml->text($callcenter_tier->call_center_agent_uuid); $xml->endAttribute();
-                    $xml->writeAttribute('queue'); $xml->text($callcenter_tier->queue_extension.'@'.$callcenter_tier->domain_name); $xml->endAttribute();
-                    $xml->writeAttribute('domain_name'); $xml->text($callcenter_tier->domain_name); $xml->endAttribute();
-                    $xml->writeAttribute('level'); $xml->text($callcenter_tier->tier_level); $xml->endAttribute();
-                    $xml->writeAttribute('position'); $xml->text($callcenter_tier->tier_position); $xml->endAttribute();
+                    $xml->startAttribute('agent'); $xml->text($callcenter_tier->call_center_agent_uuid); $xml->endAttribute();
+                    $xml->startAttribute('queue'); $xml->text($callcenter_tier->queue_extension.'@'.$callcenter_tier->domain_name); $xml->endAttribute();
+                    $xml->startAttribute('domain_name'); $xml->text($callcenter_tier->domain_name); $xml->endAttribute();
+                    $xml->startAttribute('level'); $xml->text($callcenter_tier->tier_level); $xml->endAttribute();
+                    $xml->startAttribute('position'); $xml->text($callcenter_tier->tier_position); $xml->endAttribute();
                     $xml->endElement(); // tier
                 }
                 $xml->endElement(); // tiers
