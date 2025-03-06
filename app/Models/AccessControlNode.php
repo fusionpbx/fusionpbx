@@ -27,9 +27,10 @@ class AccessControlNode extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'node_type',
-		'node_cidr',
-		'node_description'
+        'acccess_control_uuid',
+        'node_type',
+        'node_cidr',
+        'node_description',
 	];
 
     /**
