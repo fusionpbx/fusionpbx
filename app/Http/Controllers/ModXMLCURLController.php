@@ -257,11 +257,11 @@ class ModXMLCURLController extends Controller
                     if(($pos = strpos($callcenter_agent->agent_contact, '}')) === false){
                         if (strstr($callcenter_agent->agent_contact, 'sofia/gateway') === false){
                             // add the call_timeout
-                            $agent_contact = "{call_timeout=".$callcengetr_agent->agent_call_timeout.",domain_name=".$callcengetr_agent->domain_name.",domain_uuid=".$callcengetr_agent->domain_uuid.",extension_uuid=".$callcengetr_agent->extension_uuid.",sip_h_caller_destination=${caller_destination}".$record."}".$callcengetr_agent->agent_contact;
+                            $agent_contact = "{call_timeout=".$callcenter_agent->agent_call_timeout.",domain_name=".$callcenter_agent->domain_name.",domain_uuid=".$callcenter_agent->domain_uuid.",extension_uuid=".$callcenter_agent->extension_uuid.",sip_h_caller_destination=${caller_destination}".$record."}".$callcenter_agent->agent_contact;
                         }
                         else{
                             // add the call_timeout and confirm
-                            $agent_contact = "{".$confirm.",call_timeout=".$callcengetr_agent->agent_call_timeout.",domain_name=".$callcengetr_agent->domain_name.",domain_uuid=".$callcengetr_agent->domain_uuid.",sip_h_caller_destination=${caller_destination}}".$callcengetr_agent->agent_contact;
+                            $agent_contact = "{".$confirm.",call_timeout=".$callcenter_agent->agent_call_timeout.",domain_name=".$callcenter_agent->domain_name.",domain_uuid=".$callcenter_agent->domain_uuid.",sip_h_caller_destination=${caller_destination}}".$callcenter_agent->agent_contact;
                         }
                     }
                     else{
