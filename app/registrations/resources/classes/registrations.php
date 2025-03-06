@@ -137,8 +137,8 @@
 					//use a while loop to ensure the event socket stays connected while communicating
 					$count = count($sip_profiles);
 					$i = 0;
-					while ($event_socket->is_connected() && $i++ < $count) {
-						$field = $sip_profiles[$i];
+					while ($event_socket->is_connected() && $i < $count) {
+						$field = $sip_profiles[$i++];
 
 						//get sofia status profile information including registrations
 							$cmd = "api sofia xmlstatus profile '".$field['sip_profile_name']."' reg";
