@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUniqueIdentifier;
+use App\Traits\GetTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Recording extends Model
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_recordings';
 	protected $primaryKey = 'recording_uuid';
 	public $incrementing = false;

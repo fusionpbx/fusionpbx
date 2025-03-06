@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUniqueIdentifier;
+use App\Traits\GetTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class MusicOnHold extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_music_on_hold';
 	protected $primaryKey = 'music_on_hold_uuid';
 	public $incrementing = false;

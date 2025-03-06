@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUniqueIdentifier;
+use App\Traits\GetTableName;
 use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Group extends Model
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_groups';
 	protected $primaryKey = 'group_uuid';
 	public $incrementing = false;

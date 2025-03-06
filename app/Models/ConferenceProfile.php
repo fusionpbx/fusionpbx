@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUniqueIdentifier;
+use App\Traits\GetTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class ConferenceProfile extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_conference_profiles';
 	protected $primaryKey = 'conference_profile_uuid';
 	public $incrementing = false;

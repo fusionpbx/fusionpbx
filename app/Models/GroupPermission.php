@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUniqueIdentifier;
+use App\Traits\GetTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class GroupPermission extends Pivot
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_group_permissions';
 	protected $primaryKey = 'group_permission_uuid';
 	public $incrementing = false;
