@@ -236,13 +236,13 @@ class ModXMLCURLController extends Controller
                     case 'pgsql':
                         $callcenter_agents = DB::table(CallCenterAgent::getTableName())
                                             ->select(DB::raw('SPLIT_PART(SPLIT_PART(a.agent_contact, "/", 2), "@", 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SPLIT_PART(SPLIT_PART('.CallCenterAgent::getTableName().'.agent_contact, "/", 2), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
-                                            ->join('v_domains','domain_uuid','v_domains.dommain_uuid')
+                                            ->join('v_domains',CallCenterAgent::getTableName().'.domain_uuid','v_domains.domain_uuid')
                                             ->get();
                         break;
                     default:
                         $callcenter_agents = DB::table(CallCenterAgent::getTableName())
                                             ->select(DB::raw('SUBSTRING_INDEX(SUBSTRING_INDEX(agent_contact,"/", -1), "@", 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SUBSTRING_INDEX(SUBSTRING_INDEX('.CallCenterAgent::getTableName().'.agent_contact, "/", -1), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
-                                            ->join('v_domains','domain_uuid','v_domains.dommain_uuid')
+                                            ->join('v_domains',CallCenterAgent::getTableName().'.domain_uuid','v_domains.domain_uuid')
                                             ->get();
                         break;
                 }
