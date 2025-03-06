@@ -14,10 +14,17 @@ use App\Models\ConferenceControl;
 use App\Models\ConferenceControlDetail;
 use App\Models\ConferenceProfile;
 use App\Models\ConferenceProfileParam;
+use App\Models\Gateway;
 use App\Models\IVRMenu;
 use App\Models\IVRMenuOption;
 use App\Models\MusicOnHold;
+use App\Models\NumberTranslation;
+use App\Models\NumberTranslationDetail;
 use App\Models\Recording;
+use App\Models\SipProfile;
+use App\Models\SipProfileDomain;
+use App\Models\SipProfileSetting;
+use App\Models\SofiaGlobalSetting;
 use App\Models\Variable;
 
 use Illuminate\Http\Request;
@@ -226,30 +233,29 @@ class ModXMLCURLController extends Controller
                 switch(env('DB_CONNECTION', 'mysql')){
                     case 'pgsql':
                         $callcenter_agents = DB::table(CallCenterAgent::getTableName())
-                                            ->select(DB::raw('SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SPLIT_PART(SPLIT_PART('.CallCenterAgent::getTableName().'.agent_contact, '/', 2), '@', 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
+                                            ->select(DB::raw('SPLIT_PART(SPLIT_PART(a.agent_contact, "/", 2), "@", 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SPLIT_PART(SPLIT_PART('.CallCenterAgent::getTableName().'.agent_contact, "/", 2), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
                                             ->join('v_domains','domain_uuid','v_domains.dommain_uuid')
                                             ->get();
                         break;
                     default:
                         $callcenter_agents = DB::table(CallCenterAgent::getTableName())
-                                            ->select(DB::raw('SUBSTRING_INDEX(SUBSTRING_INDEX(agent_contact,'/', -1), '@', 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SUBSTRING_INDEX(SUBSTRING_INDEX('.CallCenterAgent::getTableName().'.agent_contact, '/', -1), '@', 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
+                                            ->select(DB::raw('SUBSTRING_INDEX(SUBSTRING_INDEX(agent_contact,"/", -1), "@", 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SUBSTRING_INDEX(SUBSTRING_INDEX('.CallCenterAgent::getTableName().'.agent_contact, "/", -1), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
                                             ->join('v_domains','domain_uuid','v_domains.dommain_uuid')
                                             ->get();
                         break;
                 }
 
-                }
                 foreach ($callcenter_agents as $callcenter_agent){
-                    $confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..$callcengetr_agent->agent_call_timeout;
+                    $confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$callcengetr_agent->agent_call_timeout;
                     if ($callcenter_agent->agent_record == "true"){
-                        $record = sprintf(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", $recordings_dir, $callcenter_agent->domain_name);
+                        $record = sprintf(",execute_on_pre_bridge='record_session %s/%s/archive/\${strftime(%%Y)}/\${strftime(%%b)}/\${strftime(%%d)}/\${uuid}.\${record_ext}'", $recordings_dir, $callcenter_agent->domain_name);
                     }
 
                     //TODO: Find a better way to do this
                     if(($pos = strpos($callcenter_agent->agent_contact, '}')) === false){
                         if (strstr($callcenter_agent->agent_contact, 'sofia/gateway') === false){
                             // add the call_timeout
-                            $agent_contact = "{call_timeout=".$callcengetr_agent->agent_call_timeout.",domain_name=".$callcengetr_agent->domain_name.",domain_uuid=".$callcengetr_agent->domain_uuid..",extension_uuid=".$callcengetr_agent->extension_uuid..",sip_h_caller_destination=${caller_destination}".$record."}".$callcengetr_agent->agent_contact;
+                            $agent_contact = "{call_timeout=".$callcengetr_agent->agent_call_timeout.",domain_name=".$callcengetr_agent->domain_name.",domain_uuid=".$callcengetr_agent->domain_uuid.",extension_uuid=".$callcengetr_agent->extension_uuid.",sip_h_caller_destination=${caller_destination}".$record."}".$callcengetr_agent->agent_contact;
                         }
                         else{
                             // add the call_timeout and confirm
@@ -261,7 +267,7 @@ class ModXMLCURLController extends Controller
                             if (strstr($callcenter_agent->agent_contact, 'call_timeout') === false){
                                 $first = substr($callcenter_agent->agent_contact, 0, $pos);
                                 $last = substr($callcenter_agent->agent_contact, $pos);
-                                $agent_contact = $first.',domain_name='.$callcenter_agent->domain_name.',domain_uuid=',$callcenter_agent->domain_uuid.',sip_h_caller_destination=${caller_destination},call_timeout='.$callcenter_agent->agent_call_timeout.$last;
+                                $agent_contact = $first.',domain_name='.$callcenter_agent->domain_name.',domain_uuid='.$callcenter_agent->domain_uuid.',sip_h_caller_destination=${caller_destination},call_timeout='.$callcenter_agent->agent_call_timeout.$last;
                             }
                             else{
                                 $first = substr($callcenter_agent->agent_contact, 0, $pos);
@@ -274,11 +280,11 @@ class ModXMLCURLController extends Controller
                             $last = substr($callcenter_agent->agent_contact, $pos);
                             if (strstr($callcenter_agent->agent_contact, 'call_timeout') === false){
                                 // add call_timeout and confirm
-                                $agent_contact = $first.','.$confirm..',sip_h_caller_destination=${caller_destination},domain_name='.$callcenter_agent->domain_name.',domain_uuid='.$callcenter_agent->domain_uuid.',sip_h_caller_destination=${caller_destination},call_timeout='.$callcenter_agent->agent_call_timeout.$last;
+                                $agent_contact = $first.','.$confirm.',sip_h_caller_destination=${caller_destination},domain_name='.$callcenter_agent->domain_name.',domain_uuid='.$callcenter_agent->domain_uuid.',sip_h_caller_destination=${caller_destination},call_timeout='.$callcenter_agent->agent_call_timeout.$last;
                             }
                             else{
                                 // add confirm
-                                $agent_contact = $first..',domain_name='.$callcenter_agent->domain_name.',domain_uuid='.$callcenter_agent->domain_uuid.',sip_h_caller_destination=${caller_destination},'.$confirm.$last;
+                                $agent_contact = $first.',domain_name='.$callcenter_agent->domain_name.',domain_uuid='.$callcenter_agent->domain_uuid.',sip_h_caller_destination=${caller_destination},'.$confirm.$last;
                             }
                         }
                     }
@@ -681,6 +687,296 @@ class ModXMLCURLController extends Controller
                     $xml->endElement(); // directory
                 }
                 break;
+            case 'sofia.conf':
+                $xml->startElement('configuration');
+                $xml->writeAttribute('name', $request->input('key_value'));
+                $xml->writeAttribute('description', 'Sofía Endpoint');
+                $xml->startElement('global_settings');
+
+                $sofia_global_settings = SofiaGlobalSetting::where('global_setting_enabled', 'true')
+                                        ->orderBy('global_setting_name', 'asc')
+                                        ->get();
+                foreach ($sofia_global_settings as $sofia_global_setting){
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text($sofia_global_setting->global_setting_name); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($sofia_global_setting->global_setting_value); $xml->endAttribute();
+                    $xml->endElement(); //param
+                }
+                $xml->endElement(); //global_settings
+
+                $xml->startElement('profiles');
+                $sip_profiles = SipProfile::where('sip_profile_enabled', 'true')
+                                ->where(function (Builder $query){
+                                    $query->where('sip_profile_hostname', $hostname)
+                                        ->orWhereNull('sip_profile_hostname')
+                                        ->orWhere('sip_profile_hostname', '');
+                                })
+                                ->orderBy('sip_profile_name', 'asc')
+                                ->get();
+                foreach ($sip_profiles as $sip_profile){
+                    $xml->startElement('profile');
+                    $xml->writeAttribute('name', $sip_profile->sip_profile_name);
+                    $xml->startElement('aliases');  // TODO: research how aliases work
+                    $xml->endElement(); //aliases
+                    $xml->startElement('gateways');  // TODO: research how aliases work
+
+                    $gateways = Gateway::where('profile', $sip_profile->sip_profile_name)
+                                        ->where('enable', 'true')
+                                        ->where(function(Builder $query){
+                                            $query->where('sip_profile_hostname', $hostname)
+                                                ->orWhereNull('sip_profile_hostname')
+                                                ->orWhere('sip_profile_hostname', '');
+                                        })
+                                        ->get();
+                    foreach($gateways as $gateway){
+                        $xml->startElement('gateway');
+                        $xml->writeAttribute('name', gateway->gateway_uuid);
+
+                        if(isset($gateway->username)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('username'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->username); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->distinct_to)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('distinct-to'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->distinct_to); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->auth_username)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('auth-username'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->auth_username); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->password)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('password'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->password); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->realm)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('realm'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->realm); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->from_user)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('from-user'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->from_user); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->from_domain)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('from-domain'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->from_domain); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->proxy)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('proxy'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->proxy); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->register_proxy)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('register-proxy'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->register_proxy); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->outbound_proxy)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('outbound-proxy'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->outbound_proxy); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->expire_seconds)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('expire-seconds'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->expire_seconds); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->register)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('register'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->register); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->register_transport)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('register-transport'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->register_transport); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+                        else{
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('register-transport'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text('udp'); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->contact_params)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('contact-params'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->contact_params); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->retry_seconds)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('retry-seconds'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->retry_seconds); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->extension)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('extension'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->extension); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->ping)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('ping'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->ping); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->ping_min)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('ping-min'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->ping_min); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->ping_max)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('ping-max'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->ping_max); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->contact_in_ping)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('contact-in-ping'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->contact_in_ping); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->context)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('context'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->context); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->caller_id_in_from)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('caller-id-in-from'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->caller_id_in_from); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->supress_cng)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('supress-cng'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->supress-cng); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        if(isset($gateway->extension_in_contact)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('extension-in-contact'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->extension_in_contact); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                        $xml->startElement('variables');
+                        if(isset($gateway->sip_cid_type)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text('sip_cid_type'); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->sip_cid_type); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+                        $xml->endElement(); //variables
+                        $xml->endElement(); //gateway
+                    }
+
+                    $xml->endElement(); //gateways
+
+                    $sip_profile_domains = SipProfileDomain::where('sip_profie_uuid', $sip_profile->sip_profie_uuid)
+                                            ->get();
+                    foreach($sip_profile_domains as $sip_profile_domain){
+                        $name = (is_null($sip_profile_domain->sip_profile_domain_name) || (strlen($sip_profile_domain->sip_profile_domain_name) == 0))?'false':$sip_profile_domain->sip_profile_domain_name;
+                        $alias = (is_null($sip_profile_domain->sip_profile_domain_alias) || (strlen($sip_profile_domain->sip_profile_domain_alias) == 0))?'false':$sip_profile_domain->sip_profile_domain_alias;
+                        $parse = (is_null($sip_profile_domain->sip_profile_domain_parse) || (strlen($sip_profile_domain->sip_profile_domain_parse) == 0))?'false':$sip_profile_domain->sip_profile_domain_parse;
+                        $xml->startElement('domain');
+                        $xml->startAttribute('name'); $xml->text($name); $xml->endAttribute();
+                        $xml->startAttribute('alias'); $xml->text($alias); $xml->endAttribute();
+                        $xml->startAttribute('parse'); $xml->text($parse); $xml->endAttribute();
+                        $xml->endElement(); //domain
+                    }
+
+                    $sip_profile_settings = SipProfileSetting::where('sip_profile_uuid', $sip_profile->sip_profile_uuid)
+                                            ->where('sip_profile_setting_enabled', 'true')
+                                            ->orderBy('sip_profile_setting_name', 'asc')
+                                            ->get();
+                    foreach($sip_profile_settings as $sip_profile_setting){
+                        if (isset($sip_profile_setting->sip_profile_setting_name)){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text($sip_profile_setting->sip_profile_setting_name); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($sip_profile_setting->sip_profile_setting_value); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+
+                    }
+                    $xml->endElement(); //profile
+                }
+                $xml->endElement(); //profiles
+                break;
+            case 'translate.conf':
+                $xml->startElement('configuration');
+                $xml->writeAttribute('name', $request->input('key_value'));
+                $xml->writeAttribute('description', 'Sofía Endpoint');
+                $xml->writeAttribute('autogenerated', 'true');
+                $xml->startElement('profiles');
+
+                $number_tanslations = NumberTranslation::where('number_translation_enabled', 'true')->get();
+                foreach($number_translations as $number_translation){
+                    $xml->startElement('profile');
+                    $xml->writeAttribute('name', $number_translation->number_translation_name);
+                    $xml->writeAttribute('description', $number_translation->number_translation_description);
+                    $xml->endElement(); // profile
+
+                    $number_translation_details = NumberTranslationDetail::where('number_translation_uuid', $number_translation->number_translation_uuid)
+                                                ->orderBy('number_translation_detail_order', 'asc')
+                                                ->get();
+                    foreach($number_translation_details as $number_translation_detail){
+                        $xml->startElement('rule');
+                        $xml->startAttribute('regex'); $xml->text($number_translation_detail->number_translation_detail_regex); $xml->endAttribute();
+                        $xml->startAttribute('replace'); $xml->text($number_translation_detail->number_translation_detail_replace); $xml->endAttribute();
+                        $xml->endElement(); //rule
+                    }
+                    $xml->endElement(); // profile
+                }
+
+                $xml->endElement(); // profiles
+                break;
             default:
                 $notfound = true;
                 $answer2 = $this->not_found();
@@ -717,7 +1013,7 @@ class ModXMLCURLController extends Controller
                     $s = $disk->put($path, base64_decode($recording->recording_base64, true));
                 }
 
-                if*((strlen($recording->recording_base64) <= 32) || (!$s)){
+                if((strlen($recording->recording_base64) <= 32) || (!$s)){
                     // No Base64, lets look in the local filesystem
                     $local_disk = Storage::build([
                         'driver' => 'local',
