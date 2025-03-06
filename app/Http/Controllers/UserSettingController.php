@@ -24,7 +24,7 @@ class UserSettingController extends Controller
                 ->get();
 
         foreach ($user_settings as $user_setting){
-            if (($name == $user_setting->user_setting_name) || is_null($name)){}
+            if (($name == $user_setting->user_setting_name) || is_null($name)){
                 switch($user_setting->user_setting_name){
                     case 'array':
                         $answer[] = $user_setting->user_setting_value;

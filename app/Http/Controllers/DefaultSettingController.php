@@ -19,7 +19,7 @@ class DefaultSettingController extends Controller
                 ->get();
 
         foreach ($default_settings as $default_setting){
-            if (($name == $default_setting->default_setting_name) || is_null($name)){}
+            if (($name == $default_setting->default_setting_name) || is_null($name)){
                 switch($default_setting->default_setting_name){
                     case 'array':
                         $answer[] = $default_setting->default_setting_value;

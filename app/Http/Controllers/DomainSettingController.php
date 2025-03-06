@@ -21,7 +21,7 @@ class DomainSettingController extends Controller
                 ->get();
 
         foreach ($domain_settings as $domain_setting){
-            if (($name == $domain_setting->domain_setting_name) || is_null($name)){}
+            if (($name == $domain_setting->domain_setting_name) || is_null($name)){
                 switch($domain_setting->domain_setting_name){
                     case 'array':
                         $answer[] = $domain_setting->domain_setting_value;
