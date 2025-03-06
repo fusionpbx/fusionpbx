@@ -248,7 +248,7 @@ class ModXMLCURLController extends Controller
                 }
 
                 foreach ($callcenter_agents as $callcenter_agent){
-                    $confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$callcengetr_agent->agent_call_timeout;
+                    $confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$callcenter_agent->agent_call_timeout;
                     if ($callcenter_agent->agent_record == "true"){
                         $record = sprintf(",execute_on_pre_bridge='record_session %s/%s/archive/\${strftime(%%Y)}/\${strftime(%%b)}/\${strftime(%%d)}/\${uuid}.\${record_ext}'", $recordings_dir, $callcenter_agent->domain_name);
                     }
