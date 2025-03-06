@@ -117,6 +117,7 @@ $body_width = $_SESSION['theme']['body_width']['text'] ?? '90%';
 $heading_text_color = $_SESSION['theme']['heading_text_color']['text'] ?? '#952424';
 $heading_text_size = $_SESSION['theme']['heading_text_size']['text'] ?? '15px';
 $heading_text_font = $_SESSION['theme']['heading_text_font']['text'] ?? 'arial';
+$input_height = $_SESSION['theme']['input_height']['text'] ?? '28px';
 $input_text_font = $_SESSION['theme']['input_text_font']['text'] ?? 'Arial';
 $input_text_size = $_SESSION['theme']['input_text_size']['text'] ?? '12px';
 $input_text_color = $_SESSION['theme']['input_text_color']['text'] ?? '#000';
@@ -1811,7 +1812,7 @@ else { //default: white
 		font-size: <?=$input_text_size?>;
 		color: <?=$input_text_color?>;
 		text-align: left;
-		height: 28px;
+		height: <?=$input_height?>;
 		padding: 4px 6px;
 		margin: 1px;
 		border-width: <?=$input_border_size?>;
