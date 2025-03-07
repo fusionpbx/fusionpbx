@@ -1023,7 +1023,7 @@ class ModXMLCURLController extends Controller
                         ->where('recording_filename', $ivr_menu->ivr_menu_greet_long);
             if ($recording_query->count() > 0){
                 $recording = $recording_query->first();
-                if(strlen($recording->recording_base64) > 32){
+                if(isset($recording->recording_base64) && (strlen($recording->recording_base64) > 32)){
                     $s = $disk->put($path, base64_decode($recording->recording_base64, true));
                 }
 
