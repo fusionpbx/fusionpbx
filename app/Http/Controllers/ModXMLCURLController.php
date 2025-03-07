@@ -719,6 +719,8 @@ class ModXMLCURLController extends Controller
                     $xml->startElement('profile');
                     $xml->writeAttribute('name', $sip_profile->sip_profile_name);
                     $xml->startElement('aliases');  // TODO: research how aliases work
+                    $xml->startComment();
+                    $xml->endComment();
                     $xml->endElement(); //aliases
                     $xml->startElement('gateways');  // TODO: research how aliases work
 
