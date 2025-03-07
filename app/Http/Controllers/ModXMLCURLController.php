@@ -708,7 +708,7 @@ class ModXMLCURLController extends Controller
                 $xml->startElement('profiles');
                 $sip_profiles = SipProfile::where('sip_profile_enabled', 'true')
                                 ->where(function (Builder $query){
-                                    $hostname = $this->get_hostname($request);
+                                    global $hostname;
                                     $query->where('sip_profile_hostname', $hostname)
                                         ->orWhereNull('sip_profile_hostname')
                                         ->orWhere('sip_profile_hostname', '');
@@ -725,7 +725,7 @@ class ModXMLCURLController extends Controller
                     $gateways = Gateway::where('profile', $sip_profile->sip_profile_name)
                                         ->where('enable', 'true')
                                         ->where(function(Builder $query){
-                                            $hostname = $this->get_hostname($request);
+                                            global $hostname;
                                             $query->where('sip_profile_hostname', $hostname)
                                                 ->orWhereNull('sip_profile_hostname')
                                                 ->orWhere('sip_profile_hostname', '');
