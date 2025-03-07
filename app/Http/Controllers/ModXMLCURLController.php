@@ -544,7 +544,7 @@ class ModXMLCURLController extends Controller
 
                     if ($ivr_menu->ivr_menu_direct_dial == 'true'){
                         $negative_lookahead = '';
-                        if (is_array($direct_dial_exclude) && (count($direct_dial_exclude) > 0)){
+                        if (isset($direct_dial_exclude) && is_array($direct_dial_exclude) && (count($direct_dial_exclude) > 0)){
                             $negative_lookahead = '(?!^('.implode('|', $direct_dial_exclude).')$)';
                         }
                         $direct_dial_regex = sprintf("/^(%s\\d{%s,%s})$/", $negative_lookahead, $direct_dial_digits_min, $direct_dial_digits_max);
