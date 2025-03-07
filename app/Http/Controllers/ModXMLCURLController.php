@@ -294,8 +294,8 @@ class ModXMLCURLController extends Controller
 
                     $xml->startElement('agent');
                     $xml->startAttribute('name'); $xml->text($callcenter_agent->call_center_agent_uuid); $xml->endAttribute();
-                    $xml->startAttribute('label'); $xml->text($callcenter_agent->call_center_agent_name.'@'.$callcenter_agent->domain_name); $xml->endAttribute();
-                    $xml->startAttribute('type'); $xml->text($callcenter_agent->call_center_agent_type); $xml->endAttribute();
+                    $xml->startAttribute('label'); $xml->text($callcenter_agent->agent_name.'@'.$callcenter_agent->domain_name); $xml->endAttribute();
+                    $xml->startAttribute('type'); $xml->text($callcenter_agent->agent_type); $xml->endAttribute();
                     $xml->startAttribute('contact'); $xml->text($agent_contact); $xml->endAttribute();
                     $xml->startAttribute('status'); $xml->text($callcenter_agent->agent_status); $xml->endAttribute();
 
