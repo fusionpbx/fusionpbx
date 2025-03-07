@@ -104,11 +104,11 @@ class ModXMLCURLController extends Controller
                 $dsn_callcenter_query = Variable::where('var_enabled', 'true')
                     ->whereIn('var_name', ['dsn','dsn_callcenter'])
                     ->orderByDesc('var_name');
-                $dsn_callcenters = $dsn_callcenter_query->first();
+                $dsn_callcenter = $dsn_callcenter_query->first();
                 if(App::hasDebugModeEnabled()){
                     \Log::debug('dsn_callcenter: '.$dsn_callcenter_query->toRawSql());
                 }
-                foreach($dsn_callcenters as $dsn_callcenter){
+                if(isset($dsn_callcenter->var_value)){
                     $xml->startElement('param');
                     $xml->startAttribute('name'); $xml->text('odbc-dsn'); $xml->endAttribute();
                     $xml->startAttribute('value'); $xml->text($dsn_callcenter->var_value); $xml->endAttribute();
