@@ -107,6 +107,7 @@ class ModXMLCURLController extends Controller
                 $dsn_callcenter = $dsn_callcenter_query->first();
                 if(App::hasDebugModeEnabled()){
                     \Log::debug('dsn_callcenter: '.$dsn_callcenter_query->toRawSql());
+                    \Log::debug('dsn_callcenter(row): '.print_r($dsn_callcenter, true));
                 }
                 if (isset($dsn_callcenter->name)){
                     $xml->startElement('param');
