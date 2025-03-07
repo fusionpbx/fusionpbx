@@ -99,7 +99,8 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('name', $request->input('key_value'));
                 $xml->writeAttribute('description', 'Call Center' );
                 $xml->startElement('settings');
-                $dsn_callcenter = Variable::whereIn('var_name', ['dsn','dsn_callcenter'])
+                $dsn_callcenter = Variable::where('var_enabled', 'true')
+                    ->whereIn('var_name', ['dsn','dsn_callcenter'])
                     ->orderByDesc('var_name')
                     ->first();
                 if (isset($dsn_callcenter->name)){
