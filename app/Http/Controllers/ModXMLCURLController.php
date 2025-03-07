@@ -29,6 +29,7 @@ use App\Models\Variable;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -104,6 +105,9 @@ class ModXMLCURLController extends Controller
                     ->whereIn('var_name', ['dsn','dsn_callcenter'])
                     ->orderByDesc('var_name');
                 $dsn_callcenter = $dsn_callcenter_query->first();
+                if(App::hasDebugModeEnabled()){
+                    \Log::debug('dsn_callcenter: '.$dsn_callcenter_query->dumpRawSql());
+                }
                 if (isset($dsn_callcenter->name)){
                     $xml->startElement('param');
                     $xml->startAttribute('name'); $xml->text('odbc-dsn'); $xml->endAttribute();
