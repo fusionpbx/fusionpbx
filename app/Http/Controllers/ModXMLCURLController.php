@@ -966,7 +966,6 @@ class ModXMLCURLController extends Controller
                     $xml->startElement('profile');
                     $xml->writeAttribute('name', $number_translation->number_translation_name);
                     $xml->writeAttribute('description', $number_translation->number_translation_description);
-                    $xml->endElement(); // profile
 
                     $number_translation_details = NumberTranslationDetail::where('number_translation_uuid', $number_translation->number_translation_uuid)
                                                 ->orderBy('number_translation_detail_order', 'asc')
