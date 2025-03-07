@@ -27,6 +27,7 @@ use App\Models\SipProfileSetting;
 use App\Models\SofiaGlobalSetting;
 use App\Models\Variable;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
