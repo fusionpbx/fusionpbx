@@ -290,7 +290,7 @@ class ModXMLCURLController extends Controller
                             }
                         }
                     }
-                    $agent_contact = str_replace('{caller_destination}','${caller_destination}', $agent_contact);
+                    //$agent_contact = str_replace('{caller_destination}','${caller_destination}', $agent_contact);
 
                     $xml->startElement('agent');
                     $xml->startAttribute('name'); $xml->text($callcenter_agent->call_center_agent_uuid); $xml->endAttribute();
