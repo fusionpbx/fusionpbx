@@ -100,9 +100,15 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('name', $request->input('key_value'));
                 $xml->writeAttribute('description', 'Call Center' );
                 $xml->startElement('settings');
-                // TODO: Fix, it should answer something
+                // TODO: Maybe a controller here, since variables use categories (fusion artifact)
                 $dsn_callcenter_query = Variable::where('var_enabled', 'true')
                     ->whereIn('var_name', ['dsn','dsn_callcenter'])
+                    ->where(function (Builder $query){
+                                    global $hostname;
+                                    $query->where('var_hostname', $hostname)
+                                        ->orWhereNull('var_hostname')
+                                        ->orWhere('var_hostname', '');
+                                })
                     ->orderByDesc('var_name');
                 $dsn_callcenter = $dsn_callcenter_query->first();
                 if(App::hasDebugModeEnabled()){
