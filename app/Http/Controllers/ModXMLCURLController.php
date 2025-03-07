@@ -324,9 +324,9 @@ class ModXMLCURLController extends Controller
 
                 $xml->startElement('tiers');
                 $callcenter_tiers = DB::table(CallCenterTier::getTableName())
-                                    ->select('v_call_center_tiers.domain_uuid, v_domains.domain_name, v_call_center_tiers.call_center_agent_uuid, v_call_center_tiers.call_center_queue_uuid, v_call_center_queues.queue_extension, v_call_center_tiers.tier_level, v_call_center_tiers.tier_position')
-                                    ->join('v_domains', 'domain_uuid', 'v_domains.domain_uuid')
-                                    ->join('v_call_center_queues', 'call_center_queue_uuid', 'v_call_center_queues.call_center_queue_uuid')
+                                    ->select(DB::raw('v_call_center_tiers.domain_uuid, v_domains.domain_name, v_call_center_tiers.call_center_agent_uuid, v_call_center_tiers.call_center_queue_uuid, v_call_center_queues.queue_extension, v_call_center_tiers.tier_level, v_call_center_tiers.tier_position'))
+                                    ->join('v_domains', CallCenterTier::getTableName().'.domain_uuid', 'v_domains.domain_uuid')
+                                    ->join('v_call_center_queues', CallCenterTier::getTableName().'.call_center_queue_uuid', 'v_call_center_queues.call_center_queue_uuid')
                                     ->get();
 
                 foreach ($callcenter_tiers as $callcenter_tier){
