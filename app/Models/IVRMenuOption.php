@@ -62,3 +62,4 @@ class IVRMenuOption extends Model
 	public function ivr_menu(): BelongsTo {
 		return $this->HasOne(DialplanDetail::class, 'dialplan_uuid', 'dialplan_uuid');
 	}
+}
