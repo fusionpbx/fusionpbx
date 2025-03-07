@@ -582,7 +582,7 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('description', 'Stream files from local dir');
 
                 $musics_on_hold = DB::table(MusicOnHold::getTableName())
-                                    ->select('v_domains.domain_name, v_music_on_hold.*')
+//                                    ->select('v_domains.domain_name, v_music_on_hold.*')
                                     ->leftJoin('v_domains', 'domain_uuid', 'v_domains.domain_uuid')
                                     ->orderBy('music_on_hold_name', 'asc')
                                     ->get();
