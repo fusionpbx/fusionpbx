@@ -374,7 +374,7 @@ class ModXMLCURLController extends Controller
 
                      $conference_profile_params = ConferenceProfileParam::where('conference_profile_uuid', $conference_profile->conference_profile_uuid)
                                                 ->where('profile_param_enabled', 'true')
-                                                ->get;
+                                                ->get();
                     foreach($conference_profile_params as $conference_profile_param){
                         $xml->startElement('param');
                         $xml->startAttribute('name'); $xml->text($conference_profile_param->profile_param_name); $xml->endAttribute();
