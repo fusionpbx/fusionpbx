@@ -496,7 +496,7 @@ class ModXMLCURLController extends Controller
                                 $ivr_menu_exit_sound = $base_path . '/' . $ivr_menu->ivr_menu_exit_sound;
                             }
                             else{
-                                $ivr_menu_invalid_sound = $sounds_dir . '/${default_language}/${default_dialect}/${default_voice}/ivr-record_exit_sound.wav';
+                                $ivr_menu_exit_sound = $sounds_dir . '/${default_language}/${default_dialect}/${default_voice}/ivr-record_exit_sound.wav';
                             }
                             break;
                     }
