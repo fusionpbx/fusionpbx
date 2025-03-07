@@ -89,10 +89,10 @@ class ModXMLCURLController extends Controller
                         $xml->writeAttribute('type', $access_control_node->node_description);
                         $xml->endElement(); // node
                     }
-                    $xml->endElement(); // list
+                    $xml->fullEndElement(); // list
                 }
 
-                $xml->endElement(); // network-lists
+                $xml->fullEndElement(); // network-lists
                 break;
             case 'callcenter.conf':
                 $xml->startElement('configuration');
@@ -102,7 +102,7 @@ class ModXMLCURLController extends Controller
                 $dsn_callcenter = Variable::whereIn('var_name', ['dsn','dsn_callcenter'])
                     ->orderByDesc('var_name')
                     ->first();
-                if ($dsn_callcenter->count() == 1){
+                if (isset($dsn_callcenter->name)){
                     $xml->startElement('param');
                     $xml->startAttribute('name'); $xml->text('odbc-dsn'); $xml->endAttribute();
                     $xml->startAttribute('value'); $xml->text($dsn_callcenter->var_value); $xml->endAttribute();
