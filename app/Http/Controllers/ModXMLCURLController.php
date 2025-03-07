@@ -38,8 +38,9 @@ use XMLWriter;
 
 class ModXMLCURLController extends Controller
 {
+    private string $hostname;
 
-    public function hostname(Request $request): ?string{
+    public function get_hostname(Request $request): ?string{
         $answer = $request->input('hostname') ?? null;
 
         if (is_null($answer)){
@@ -56,7 +57,7 @@ class ModXMLCURLController extends Controller
 
     public function configuration(Request $request): string{
 
-        $hostname = $this->hostname($request);
+        $hostname = $this->get_hostname($request);
 
         $answer = ''; $notfound = false;
         $xml = new XMLWriter();
