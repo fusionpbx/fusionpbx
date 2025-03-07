@@ -74,6 +74,21 @@
 			$domain = new domains();
 			$domain->set();
 
+		//initialize the settigns object
+			$settings = new settings(['database' => $database]);
+
+		//reload domain on domain change, if enabled
+			if ($settings->get('menu', 'domain_change_reload', false)) {
+				//unset the sesssion menu array
+					unset($_SESSION['menu']['array']);
+
+				//get the menu array and save it to the session
+					$menu = new menu;
+					$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+					$_SESSION['menu']['array'] = $menu->menu_array();
+					unset($menu);
+			}
+
 		//redirect the user
 			if (!empty($_SESSION["login"]["destination"])) {
 				// to default, or domain specific, login destination
