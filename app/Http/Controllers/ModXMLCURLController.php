@@ -723,7 +723,7 @@ class ModXMLCURLController extends Controller
                     $xml->startElement('gateways');  // TODO: research how aliases work
 
                     $gateways = Gateway::where('profile', $sip_profile->sip_profile_name)
-                                        ->where('enable', 'true')
+                                        ->where('enabled', 'true')
                                         ->where(function(Builder $query){
                                             global $hostname;
                                             $query->where('sip_profile_hostname', $hostname)
