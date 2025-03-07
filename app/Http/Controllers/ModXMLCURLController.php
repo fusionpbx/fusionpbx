@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
+use Log;
 use XMLWriter;
 
 class ModXMLCURLController extends Controller
@@ -52,7 +53,14 @@ class ModXMLCURLController extends Controller
         return $answer;
     }
 
+    private function dump(Request $request){
+        \Log::debug('input: '.print_r($request->toArray(), true));
+    }
+
     public function configuration(Request $request): string{
+        if(App::hasDebugModeEnabled()){
+            $this->dump($request);
+        }
 
         $hostname = $this->get_hostname($request);
 
