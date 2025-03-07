@@ -16,8 +16,8 @@ use Laravel\Sanctum\HasApiTokens;
 class ConferenceProfileParam extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
-	protected $table = 'v_conference_control_details';
-	protected $primaryKey = 'conference_control_detail_uuid';
+	protected $table = 'v_conference_profile_params';
+	protected $primaryKey = 'conference_profile_param_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
