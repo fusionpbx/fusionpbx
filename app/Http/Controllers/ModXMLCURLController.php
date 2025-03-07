@@ -733,7 +733,7 @@ class ModXMLCURLController extends Controller
                                         ->get();
                     foreach($gateways as $gateway){
                         $xml->startElement('gateway');
-                        $xml->writeAttribute('name', gateway->gateway_uuid);
+                        $xml->writeAttribute('name', $gateway->gateway_uuid);
 
                         if(isset($gateway->username)){
                             $xml->startElement('param');
