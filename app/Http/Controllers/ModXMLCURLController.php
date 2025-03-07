@@ -726,9 +726,9 @@ class ModXMLCURLController extends Controller
                                         ->where('enabled', 'true')
                                         ->where(function(Builder $query){
                                             global $hostname;
-                                            $query->where('sip_profile_hostname', $hostname)
-                                                ->orWhereNull('sip_profile_hostname')
-                                                ->orWhere('sip_profile_hostname', '');
+                                            $query->where('hostname', $hostname)
+                                                ->orWhereNull('hostname')
+                                                ->orWhere('hostname', '');
                                         })
                                         ->get();
                     foreach($gateways as $gateway){
