@@ -922,7 +922,7 @@ class ModXMLCURLController extends Controller
 
                     $xml->endElement(); //gateways
 
-                    $sip_profile_domains = SipProfileDomain::where('sip_profie_uuid', $sip_profile->sip_profie_uuid)
+                    $sip_profile_domains = SipProfileDomain::where('sip_profie_uuid', $sip_profile->sip_profile_uuid)
                                             ->get();
                     foreach($sip_profile_domains as $sip_profile_domain){
                         $name = (is_null($sip_profile_domain->sip_profile_domain_name) || (strlen($sip_profile_domain->sip_profile_domain_name) == 0))?'false':$sip_profile_domain->sip_profile_domain_name;
