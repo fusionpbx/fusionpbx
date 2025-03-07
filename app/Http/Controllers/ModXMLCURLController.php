@@ -405,7 +405,7 @@ class ModXMLCURLController extends Controller
 						WHERE child.ivr_menu_parent_uuid = parent.ivr_menu_uuid AND child.ivr_menu_enabled = 'true'
 					)
 					SELECT * FROM ivr_menus INNER JOIN v_domains USING(domain_uuid)";
-                $ivr_menus = DB::select($sql)->get();
+                $ivr_menus = DB::select(DB::raw($sql))->get();
                 foreach($ivr_menus as $ivr_menu){
                     $domain_settings = new DefaultSettingController;
                     Session::put('domain_uuid', $ivr_menu->domain_uuid);
