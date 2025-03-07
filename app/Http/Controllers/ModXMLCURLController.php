@@ -108,7 +108,7 @@ class ModXMLCURLController extends Controller
                     $xml->startAttribute('value'); $xml->text($dsn_callcenter->var_value); $xml->endAttribute();
                     $xml->endElement(); // param
                 }
-                $xml->endElement(); // settings
+                $xml->fullEndElement(); // settings
 
 
                 $xml->startElement('queues');
@@ -226,7 +226,7 @@ class ModXMLCURLController extends Controller
 
                     $xml->endElement(); // queue
                 }
-                $xml->endElement(); // queues
+                $xml->fullEndElement(); // queues
 
                 $default_settings = new DefaultSettingController;
                 $recordings_dir = $default_settings->get('switch', 'recordings', 'dir');
@@ -319,7 +319,7 @@ class ModXMLCURLController extends Controller
                     }
                     $xml->endElement(); // agent
                 }
-                $xml->endElement(); // agents
+                $xml->fullEndElement(); // agents
 
                 $xml->startElement('tiers');
                 $callcenter_tiers = DB::table(CallCenterTier::getTableName())
@@ -337,7 +337,7 @@ class ModXMLCURLController extends Controller
                     $xml->startAttribute('position'); $xml->text($callcenter_tier->tier_position); $xml->endAttribute();
                     $xml->endElement(); // tier
                 }
-                $xml->endElement(); // tiers
+                $xml->fullEndElement(); // tiers
                 break;
             case 'conference.conf':
                 $xml->startElement('configuration');
@@ -383,7 +383,7 @@ class ModXMLCURLController extends Controller
 
                     $xml->endElement(); // profile
                 }
-                $xml->endElement(); // profiles
+                $xml->fullEndElement(); // profiles
                 break;
             case 'ivr.conf':
                 $default_settings = new DefaultSettingController;
@@ -719,9 +719,7 @@ class ModXMLCURLController extends Controller
                     $xml->startElement('profile');
                     $xml->writeAttribute('name', $sip_profile->sip_profile_name);
                     $xml->startElement('aliases');  // TODO: research how aliases work
-                    $xml->startComment();
-                    $xml->endComment();
-                    $xml->endElement(); //aliases
+                    $xml->fullEndElement(); //aliases
                     $xml->startElement('gateways');  // TODO: research how aliases work
 
                     $gateways = Gateway::where('profile', $sip_profile->sip_profile_name)
@@ -918,11 +916,11 @@ class ModXMLCURLController extends Controller
                             $xml->startAttribute('value'); $xml->text($gateway->sip_cid_type); $xml->endAttribute();
                             $xml->endElement(); //param
                         }
-                        $xml->endElement(); //variables
+                        $xml->fullEndElement(); //variables
                         $xml->endElement(); //gateway
                     }
 
-                    $xml->endElement(); //gateways
+                    $xml->fullEndElement(); //gateways
 
                     $sip_profile_domains = SipProfileDomain::where('sip_profile_uuid', $sip_profile->sip_profile_uuid)
                                             ->get();
