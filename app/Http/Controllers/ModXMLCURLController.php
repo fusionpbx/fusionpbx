@@ -44,10 +44,6 @@ class ModXMLCURLController extends Controller
         $answer = $request->input('hostname') ?? null;
 
         if (is_null($answer)){
-            $answer = $request->header('Host') ?? null;
-        }
-
-        if (is_null($answer)){
             $ips = $request->ips();
             $answer = end($ips) ?? null;
         }
@@ -710,6 +706,7 @@ class ModXMLCURLController extends Controller
                 $xml->endElement(); //global_settings
 
                 $xml->startElement('profiles');
+                $hostname = $this->get_hostname($request);
                 $sip_profiles = SipProfile::where('sip_profile_enabled', 'true')
                                 ->where(function (Builder $query){
                                     $query->where('sip_profile_hostname', $hostname)
