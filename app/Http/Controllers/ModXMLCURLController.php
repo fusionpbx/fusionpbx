@@ -100,10 +100,10 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('description', 'Call Center' );
                 $xml->startElement('settings');
                 // TODO: Fix, it should answer something
-                $dsn_callcenter = Variable::where('var_enabled', 'true')
+                $dsn_callcenter_query = Variable::where('var_enabled', 'true')
                     ->whereIn('var_name', ['dsn','dsn_callcenter'])
-                    ->orderByDesc('var_name')
-                    ->first();
+                    ->orderByDesc('var_name');
+                $dsn_callcenter = $dsn_callcenter_query->first();
                 if (isset($dsn_callcenter->name)){
                     $xml->startElement('param');
                     $xml->startAttribute('name'); $xml->text('odbc-dsn'); $xml->endAttribute();

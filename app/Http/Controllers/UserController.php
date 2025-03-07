@@ -9,6 +9,7 @@ use Auth;
 use App\Http\Controllers\DefaultSettingController;
 use App\Http\Controllers\DomainSettingController;
 use App\Http\Controllers\UserSettingController;
+use Log;
 
 
 class UserController extends Controller
