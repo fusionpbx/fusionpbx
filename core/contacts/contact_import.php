@@ -149,7 +149,7 @@
 			}
 
 		//create token
-			$token = $object->create($_SERVER['PHP_SELF']);
+			$token = $token->create($_SERVER['PHP_SELF']);
 
 		//include header
 			$document['title'] = $text['title-contacts_import'];
