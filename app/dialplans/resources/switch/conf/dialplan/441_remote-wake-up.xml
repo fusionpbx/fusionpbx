@@ -1,0 +1,5 @@
+<extension name="remote-wake-up" number="*926" context="${domain_name}" continue="false" app_uuid="6e2f3a9d-8f35-43d3-84a4-21d5a3b1b7ef" order="441">
+	<condition field="destination_number" expression="^\*(926)$">
+		<action application="lua" data="lua/wakeup_service.lua remote"/>
+	</condition>
+</extension>
