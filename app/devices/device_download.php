@@ -252,6 +252,7 @@
 		$x = 0;
 		foreach ($available_columns as $table_name => $columns) {
 			$table_name_label = ucwords(str_replace(['-','_',],' ', $table_name));
+			echo "<div class='card'>\n";
 			echo "<div class='category'>\n";
 			echo "<b>".$table_name_label."</b>\n";
 			echo "<br>\n";
@@ -283,6 +284,7 @@
 			}
 			echo "</table>\n";
 			echo "<br>\n";
+			echo "</div>\n";
 			echo "</div>\n";
 		}
 	}
