@@ -214,8 +214,6 @@
 	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	echo "<input type='hidden' name='domain_uuid_target' id='domain_uuid_target' value=''>\n";
 
-	echo "<div class='card'>\n";
-	echo "<table class='list'>\n";
 	if (!empty($domain_settings)) {
 		//define the variable
 		$previous_domain_setting_category = '';
@@ -239,11 +237,13 @@
 			if ($previous_domain_setting_category != $row['domain_setting_category']) {
 				if (!empty($previous_domain_setting_category)) {
 					echo "</table>\n";
+					echo "</div>\n";
 
 					echo "<br>\n";
 				}
 				echo "<b>".escape($label_domain_setting_category)."</b><br>\n";
 
+				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {
