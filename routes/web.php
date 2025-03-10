@@ -1,6 +1,7 @@
 <?php
 
-
+use App\Http\Controllers\DomainController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Middleware\Authenticate;
@@ -42,3 +43,7 @@ Route::post('/curl/xml_handler/configuration', function (Request $request){
     $xml = new ModXMLCURLController;
     return response($xml->configuration($request), 200)->header('Content-Type','text/xml');
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
+Route::get('/menu', [MenuController::class, 'index']);
+Route::post('/menus', [MenuController::class, 'store']);
