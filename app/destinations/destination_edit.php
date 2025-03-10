@@ -400,16 +400,16 @@
 						foreach($destination_numbers as $destination_number) {
 
 							//convert the number to a regular expression
-								if (isset($destination_prefix) && !empty($destination_prefix)) {
+								if (isset($destination_prefix) && strlen($destination_prefix) > 0) {
 									$destination_numbers['destination_prefix'] = $destination_prefix;
 								}
-								if (isset($destination_trunk_prefix) && !empty($destination_trunk_prefix)) {
+								if (isset($destination_trunk_prefix) && strlen($destination_trunk_prefix) > 0) {
 									$destination_numbers['destination_trunk_prefix'] = $destination_trunk_prefix;
 								}
-								if (isset($destination_area_code) && !empty($destination_area_code)) {
+								if (isset($destination_area_code) && strlen($destination_area_code) > 0) {
 									$destination_numbers['destination_area_code'] = $destination_area_code;
 								}
-								if (isset($destination_number) && !empty($destination_number)) {
+								if (isset($destination_number) && strlen($destination_number) > 0) {
 									$destination_numbers['destination_number'] = $destination_number;
 								}
 								$destination_number_regex = $destination->to_regex($destination_numbers);
