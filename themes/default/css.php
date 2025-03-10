@@ -2996,6 +2996,7 @@ else { //default: white
 		}
 
 	span.hud_title {
+		padding: 0px 5px 0px 5px;
 		display: block;
 		width: 100%;
 		font-family: <?=$dashboard_label_text_font?>;
