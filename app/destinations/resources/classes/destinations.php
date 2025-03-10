@@ -30,28 +30,28 @@
  * @method get_array get the destinations
  * @method select build the html select
  */
-if (!class_exists('destinations')) {
 	class destinations {
 
+		const APP_NAME = 'destinations';
+		const APP_UUID = '5ec89622-b19c-3559-64f0-afde802ab139';
+		const PERMISSION_PREFIX = 'destination_';
+		const LIST_PAGE = 'destinations.php';
+		const TABLE = 'destinations';
+		const UUID_PREFIX = 'destination_';
+
 		/**
-		* declare public variables
-		*/
+		 * declare public variables
+		 */
 		public $destinations;
 		public $domain_uuid;
+		public $domain_name;
 		public $start_stamp_begin;
 		public $start_stamp_end;
 		public $quick_select;
 
 		/**
-		* declare private variables
-		*/
-		private $domain_name;
-		private $app_name;
-		private $app_uuid;
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
+		 * declare private variables
+		 */
 		private $database;
 		private $settings;
 
@@ -61,31 +61,23 @@ if (!class_exists('destinations')) {
 		public function __construct($setting_array = []) {
 
 			//open a database connection
-				if (empty($setting_array['database'])) {
-					$this->database = database::new();
-				} else {
-					$this->database = $setting_array['database'];
-				}
-
-			//get the settings object
-				if (empty($setting_array['settings'])) {
-					$this->settings = new settings();
-				} else {
-					$this->settings = $setting_array['settings'];
-				}
+			if (empty($setting_array['database'])) {
+				$this->database = database::new();
+			} else {
+				$this->database = $setting_array['database'];
+			}
 
 			//set the domain details
-				if (is_null($this->domain_uuid)) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-				}
+			$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $_SESSION['user_uuid'] ?? '';
 
-			//assign private variables
-				$this->app_name = 'destinations';
-				$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-				$this->permission_prefix = 'destination_';
-				$this->list_page = 'destinations.php';
-				$this->table = 'destinations';
-				$this->uuid_prefix = 'destination_';
+			//get the settings object
+			if (empty($setting_array['settings'])) {
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+			} else {
+				$this->settings = $setting_array['settings'];
+			}
+
 		}
 
 		/**
@@ -171,7 +163,6 @@ if (!class_exists('destinations')) {
 
 		}
 
-
 		/**
 		* Build the destination select list
 		* @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
@@ -197,7 +188,7 @@ if (!class_exists('destinations')) {
 			$response = '';
 
 			//create a single destination select list
-			if (!empty($_SESSION['destinations']['select_mode']['text']) && $_SESSION['destinations']['select_mode']['text'] == 'default') {
+			if (!empty($this->settings->get('destinations', 'select_mode')) && $this->settings->get('destinations', 'select_mode') == 'default') {
 				//get the destinations
 				if (!is_array($this->destinations)) {
 
@@ -367,7 +358,7 @@ if (!class_exists('destinations')) {
 					//add multi-lingual support
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 						$language2 = new text;
-						$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
+						$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
 					}
 
 					if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
@@ -448,33 +439,17 @@ if (!class_exists('destinations')) {
 			}
 
 			//create a dynamic destination select list
-			if ($_SESSION['destinations']['select_mode']['text'] == 'dynamic') {
+			if ($this->settings->get('destinations', 'select_mode') == 'dynamic') {
 
 				//remove special characters from the name
 				$destination_id = str_replace("]", "", $destination_name);
 				$destination_id = str_replace("[", "_", $destination_id);
 				//$destination_id = preg_replace('/[^a-zA-Z_,.]/', '', $destination_name);
 
-				?>
-				<script type="text/javascript">
-					function get_destinations(id, destination_type, action, search) {
-						//alert(action);
-						var xhttp = new XMLHttpRequest();
-						xhttp.onreadystatechange = function() {
-							if (this.readyState == 4 && this.status == 200) {
-								document.getElementById(id).innerHTML = this.responseText;
-							}
-						};
-						if (action) {
-							xhttp.open("GET", "/app/destinations/resources/destinations.php?destination_type="+destination_type+"&action="+action, true);
-						}
-						else {
-							xhttp.open("GET", "/app/destinations/resources/destinations.php?destination_type="+destination_type, true);
-						}
-						xhttp.send();
-					}
-				</script>
-				<?php
+				//include the javascript contents in the reponse
+				$response .= "<script type='text/javascript'>\n";
+				$response .= file_get_contents(dirname(__DIR__) . '/javascript/destinations.js');
+				$response .= "</script>\n";
 
 				//get the destinations
 				$destinations = $this->get($destination_type);
@@ -505,11 +480,11 @@ if (!class_exists('destinations')) {
 						//add multi-lingual support
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
 							$language2 = new text;
-							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$key);
+							$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$key);
 							$found = 'true';
 						}
 						if ($key == 'other') {
-							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/dialplans');
+							$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/dialplans');
 						}
 						//add the application to the select list
 						$response .= "		<option id='{$singular}' class='{$key}' value='".$key."' $selected>".$text2['title-'.$key]."</option>\n";
@@ -682,7 +657,7 @@ if (!class_exists('destinations')) {
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
-					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
+					$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
 				}
 
 				if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
@@ -897,7 +872,7 @@ if (!class_exists('destinations')) {
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
-					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
+					$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
 				}
 
 				if (isset($row['result']) && isset($row['result']['data'][0]) && !empty($row['select_value'][$destination_type])) {
@@ -1038,7 +1013,7 @@ if (!class_exists('destinations')) {
 		* delete records
 		*/
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
+			if (permission_exists(self::PERMISSION_PREFIX.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -1048,7 +1023,7 @@ if (!class_exists('destinations')) {
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
+						header('Location: '.self::LIST_PAGE);
 						exit;
 					}
 
@@ -1060,7 +1035,7 @@ if (!class_exists('destinations')) {
 								if (!empty($record['checked'] ) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//build delete array
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$array[self::TABLE][$x][self::UUID_PREFIX.'uuid'] = $record['uuid'];
 
 									//get the dialplan uuid and context
 										$sql = "select dialplan_uuid, destination_context from v_destinations ";
@@ -1088,8 +1063,8 @@ if (!class_exists('destinations')) {
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+									$this->database->app_name = self::APP_NAME;
+									$this->database->app_uuid = self::APP_UUID;
 									$this->database->delete($array);
 									unset($array);
 
@@ -1115,12 +1090,10 @@ if (!class_exists('destinations')) {
 									message::add($text['message-delete']);
 
 							}
-							unset($records);
 
 					}
 			}
 		} //method
-
 
 		/**
 		 * destination summary returns an array
@@ -1267,7 +1240,6 @@ if (!class_exists('destinations')) {
 				return $summary;
 		}
 
-
 		/**
 		* define singular function to convert a word in english to singular
 		*/
@@ -1308,7 +1280,6 @@ if (!class_exists('destinations')) {
 		} //method
 
 	} //class
-}
 /*
 $obj = new destinations;
 //$destinations = $obj->destinations;
@@ -1319,5 +1290,3 @@ echo $obj->select('ivr', 'example4', '');
 echo $obj->select('ivr', 'example5', '');
 echo $obj->select('ivr', 'example6', '');
 */
-
-?>
