@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DefaultSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\DefaultSetting;
 
 class DefaultSettingController extends Controller
 {
