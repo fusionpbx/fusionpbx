@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class FolowMeDestination extends Model
+class FollowMeDestination extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
 	protected $table = 'v_follow_me_destinations';

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUniqueIdentifier;
 
-class RinGroupUser extends Pivot
+class RingGroupUser extends Pivot
 {
 	use HasFactory, HasUniqueIdentifier;
 	protected $table = 'v_ring_group_users';
