@@ -14,6 +14,7 @@ use App\Models\ConferenceControl;
 use App\Models\ConferenceControlDetail;
 use App\Models\ConferenceProfile;
 use App\Models\ConferenceProfileParam;
+use App\Models\Extension;
 use App\Models\Gateway;
 use App\Models\IVRMenu;
 use App\Models\IVRMenuOption;
@@ -132,7 +133,7 @@ class ModXMLCURLController extends Controller
 
 
                 $xml->startElement('queues');
-                $callcenter_queues = CallCenterQueue::join('v_domains', CallCenterQueue::getTableName().'.domain_uuid', '=', 'v_domains.domain_uuid')->get();
+                $callcenter_queues = CallCenterQueue::join(Domain::getTableName(), CallCenterQueue::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')->get();
                 foreach ($callcenter_queues as $callcenter_queue){
                     $callcenter_queue->queue_name = str_replace(' ','-',$callcenter_queue->queue_name);
                     $xml->startElement('queue');
@@ -254,14 +255,14 @@ class ModXMLCURLController extends Controller
                 switch(env('DB_CONNECTION', 'mysql')){
                     case 'pgsql':
                         $callcenter_agents = DB::table(CallCenterAgent::getTableName())
-                                            ->select(DB::raw('SPLIT_PART(SPLIT_PART(a.agent_contact, "/", 2), "@", 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SPLIT_PART(SPLIT_PART('.CallCenterAgent::getTableName().'.agent_contact, "/", 2), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
-                                            ->join('v_domains',CallCenterAgent::getTableName().'.domain_uuid','v_domains.domain_uuid')
+                                            ->select(DB::raw('SPLIT_PART(SPLIT_PART(a.agent_contact, "/", 2), "@", 1) AS extension, (SELECT extension_uuid FROM '.Extension::getTableName().' WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SPLIT_PART(SPLIT_PART('.CallCenterAgent::getTableName().'.agent_contact, "/", 2), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, '.Domain::getTableName().'.domain_name'))
+                                            ->join(Domain::getTableName(),CallCenterAgent::getTableName().'.domain_uuid',Domain::getTableName().'.domain_uuid')
                                             ->get();
                         break;
                     default:
                         $callcenter_agents = DB::table(CallCenterAgent::getTableName())
-                                            ->select(DB::raw('SUBSTRING_INDEX(SUBSTRING_INDEX(agent_contact,"/", -1), "@", 1) AS extension, (SELECT extension_uuid FROM v_extensions WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SUBSTRING_INDEX(SUBSTRING_INDEX('.CallCenterAgent::getTableName().'.agent_contact, "/", -1), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, v_domains.domain_name'))
-                                            ->join('v_domains',CallCenterAgent::getTableName().'.domain_uuid','v_domains.domain_uuid')
+                                            ->select(DB::raw('SUBSTRING_INDEX(SUBSTRING_INDEX(agent_contact,"/", -1), "@", 1) AS extension, (SELECT extension_uuid FROM '.Extension::getTableName().' WHERE domain_uuid = '.CallCenterAgent::getTableName().'.domain_uuid AND extension = SUBSTRING_INDEX(SUBSTRING_INDEX('.CallCenterAgent::getTableName().'.agent_contact, "/", -1), "@", 1) limit 1) as extension_uuid,'.CallCenterAgent::getTableName().'.*, '.Domain::getTableName().'.domain_name'))
+                                            ->join(Domain::getTableName(),CallCenterAgent::getTableName().'.domain_uuid',Domain::getTableName().'.domain_uuid')
                                             ->get();
                         break;
                 }
@@ -343,9 +344,9 @@ class ModXMLCURLController extends Controller
 
                 $xml->startElement('tiers');
                 $callcenter_tiers = DB::table(CallCenterTier::getTableName())
-                                    ->select(DB::raw('v_call_center_tiers.domain_uuid, v_domains.domain_name, v_call_center_tiers.call_center_agent_uuid, v_call_center_tiers.call_center_queue_uuid, v_call_center_queues.queue_extension, v_call_center_tiers.tier_level, v_call_center_tiers.tier_position'))
-                                    ->join('v_domains', CallCenterTier::getTableName().'.domain_uuid', 'v_domains.domain_uuid')
-                                    ->join('v_call_center_queues', CallCenterTier::getTableName().'.call_center_queue_uuid', 'v_call_center_queues.call_center_queue_uuid')
+                                    ->select(DB::raw(CallCenterTier::getTableName().'.domain_uuid, '. Domain::getTableName().'.domain_name, '. CallCenterTier::getTableName().'.call_center_agent_uuid, '. CallCenterTier::getTableName().'.call_center_queue_uuid, '. CallCenterQueue::getTableName().'.queue_extension, '. CallCenterTier::getTableName().'.tier_level, '. CallCenterTier::getTableName().'.tier_position'))
+                                    ->join(Domain::getTableName(), CallCenterTier::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
+                                    ->join(CallCenterQueue::getTableName(), CallCenterTier::getTableName().'.call_center_queue_uuid', CallCenterQueue::getTableName().'.call_center_queue_uuid')
                                     ->get();
 
                 foreach ($callcenter_tiers as $callcenter_tier){
@@ -416,14 +417,14 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('description', 'IVR Menus' );
                 $xml->startElement('menus');
 
-                $sql = "WITH RECURSIVE ivr_menus AS (
-					SELECT * FROM v_ivr_menus
+                $sql = "WITH RECURSIVE ".IVRMenu::getTableName()." AS (
+					SELECT * FROM ".IVRMenuOption::getTableName()."
 						WHERE ivr_menu_uuid = '$ivr_menu_uuid' AND ivr_menu_enabled = 'true'
 						UNION ALL
-						SELECT child.* FROM v_ivr_menus AS child, ivr_menus AS parent
+						SELECT child.* FROM ".IVRMenuOption::getTableName()." AS child, ".IVRMenu::getTableName()." AS parent
 						WHERE child.ivr_menu_parent_uuid = parent.ivr_menu_uuid AND child.ivr_menu_enabled = 'true'
 					)
-					SELECT * FROM ivr_menus INNER JOIN v_domains USING(domain_uuid)";
+					SELECT * FROM ".IVRMenu::getTableName()." INNER JOIN ".Domain::getTableName()." USING(domain_uuid)";
                 $ivr_menus = DB::select($sql);
                 foreach($ivr_menus as $ivr_menu){
                     $domain_settings = new DefaultSettingController;
@@ -600,8 +601,7 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('description', 'Stream files from local dir');
 
                 $musics_on_hold = DB::table(MusicOnHold::getTableName())
-//                                    ->select('v_domains.domain_name, v_music_on_hold.*')
-                                    ->leftJoin('v_domains', MusicOnHold::getTableName().'.domain_uuid', 'v_domains.domain_uuid')
+                                    ->leftJoin(Domain::getTableName(), MusicOnHold::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
                                     ->orderBy('music_on_hold_name', 'asc')
                                     ->get();
 
@@ -1055,15 +1055,267 @@ class ModXMLCURLController extends Controller
     }
 
     public function directory(Request $request): string{
+        if(App::hasDebugModeEnabled()){
+            $this->dump($request);
+        }
+        $purpose = $request->input('purpose');
+        $action = $request->input('action');
+        $event_calling_function = $request->input('Event-Calling-Function');
+        $event_calling_file = $request->input('Event-Calling-File');
+        $user   = $request->input('user');
+        $domain_name = $request->input('doman') ?? ($request->input('doman_name') ?? ($request->input('variable_domain_name') ?? $request->input('variable_sip_from_host')));
+        $domain_uuid = $request->input('domain_uuid');
+        if (is_null($domain_uuid)){
+            $domain = Domain::where('domain_name', $domain_name)
+                            ->where('domain_enabled', 'true')
+                            ->first();
+            $domain_name = $domain->domain_name;
+            unset($domain);
+        }
+        $answer = '';
+        $xml = new XMLWriter();
+        $xml->openMemory();
+        $xml->setIndent(true);
+        $xml->setIndentString('  ');
+        $xml->startDocument( '1.0', 'UTF-8', 'no' );
+        $xml->startElement( 'document' );
+        $xml->writeAttribute('type', 'freeswitch/xml');
+        $xml->startElement('section');
+        $xml->writeAttribute('name', 'directory');
+
+        if (($purpose == 'gateways') || ($event_calling_function == 'switch_xml_locate_domain')){
+            $domains = Domain::all();
+            foreach($domains as $domain){
+                $xml->startElement('domain');
+                $xml->startAttribute('name'); $xml->text($domain->domain_name); $xml->endAttribute();
+                $xml->endElement(); //domain
+            }
+
+        }
+        elseif ($action == 'message-count') {
+            // TODO: Fusion has nothing here
+        }
+        elseif ($action == 'group_call'){
+            $extensions = Extension::where('domain_uuid', $domain_uuid)
+                            ->orderBy('call_group', 'asc')
+                            ->get();
+            $call_group_array = array(); $call_group_array_temp = array();
+            foreach($extensions as $extension){
+                if(isset($extension->call_group)){
+                    $tmp_array = explode(',', $extension->call_group);
+                    foreach ($tmp_array as $value){
+                        $value = trim($value);
+                        if(strlen($value) > 0){
+                            $call_group_array_temp[$value][] = $extension->extension;
+                        }
+                    }
+                    $call_group_array[$value] = implode(',', $call_group_array_temp);
+                }
+            }
+
+            $xml->startElement('domain');
+            $xml->writeAttribute('name', 'directory');
+            $xml->startElement('gropus');
+            foreach($call_group_array as $key => $value){
+                $call_group = trim($key);
+                $extension_list = trim($value);
+                if (strlen($call_group) > 0){
+                    $xml->startElement('group');
+                    $xml->writeAttribute('name', $call_group);
+                    $xml->startElement('users');
+                    $extension_array = explode(',', $extension_list);
+                    foreach($extension_array as $tmp_extension){
+                        $xml->startElement('user');
+                        $xml->startAttribute('id'); $xml->text($tmp_extension); $xml->endAttribute();
+                        $xml->startAttribute('type'); $xml->text('pointer'); $xml->endAttribute();
+                        $xml->endElement(); //user
+                    }
+                    $xml->fullEndElement(); // users
+                    $xml->fullEndElement(); // group
+                }
+            }
+            $xml->fullEndElement(); // groups
+            $xml->endElement(); // domain
+        }
+        elseif ($action == 'reverse-auth-lookup'){
+            $extension = Extension::where('domain_uuid', $domain_uuid)
+                            ->where('enabled', 'true')
+                            ->where(function (Builder $query){
+                                    global $user;
+                                    $query->where('extension', $user)
+                                        ->orWhere('number_alias', $user);
+                                })
+                            ->first();
+            if(isset($domain_name) && isset($extension->extension) && isset($extension->password)){
+                $xml->startElement('domain');
+                $xml->writeAttribute('name', $domain_name);
+                $xml->writeAttribute('alias', 'true');
+                $xml->startElement('user');
+                $xml->writeAttribute('id', $extension->extension);
+                if(isset($extension->number_alias)){
+                    $xml->writeAttribute('number-alias', $extension->number_alias);
+                }
+                $xml->startElement('params');
+                $xml->startElement('param');
+                $xml->startAttribute('name'); $xml->text('reverse-auth-user'); $xml->endAttribute();
+                $xml->startAttribute('value'); $xml->text($extension->extension); $xml->endAttribute();
+                $xml->endElement(); //param
+
+                $xml->startElement('param');
+                $xml->startAttribute('name'); $xml->text('reverse-auth-pass'); $xml->endAttribute();
+                $xml->startAttribute('value'); $xml->text($extension->password); $xml->endAttribute();
+                $xml->endElement(); //param
+
+                $xml->endElement(); // params
+                $xml->endElement(); // user
+                $xml->endElement(); // domain
+            }
+
+        }
+        elseif ($event_calling_function == 'switch_load_network_lists'){
+            $extensions = Extensions::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
+                            ->WhereNotNull('cidr')
+                            ->orWhere('cidr','<>','')
+                            ->orderBy('domain_name')
+                            ->get();
+            foreach($extensions as $extension){
+                if((isset($domain_name) && ($extension->domain_name == $domain_name)) || empty($domain_name)){
+                    $xml->startElement('domain');
+                    $xml->writeAttribute('name', $domain_name);
+                    $xml->writeAttribute('alias', 'true');
+                    $xml->startElement('groups');
+                    $xml->startElement('group');
+                    $xml->writeAttribute('name', 'default');
+                    $xml->startElement('users');
+
+                    $xml->startElement('user');
+                    $xml->startAttribute('id'); $xml->text($extension->extension); $xml->endAttribute();
+                    if ((isset($extension->cidr) && strlen($extension->cidr) > 0)){
+                        $xml->startAttribute('cidr'); $xml->text($extension->cidr); $xml->endAttribute();
+                    }
+                    $xml->endElement(); //user
+
+                    $xml->endElement(); // users
+                    $xml->endElement(); // group
+                    $xml->endElement(); // groups
+                    $xml->endElement(); // domain
+                }
+            }
+
+        }
+        elseif (($event_calling_function == 'populate_database') && ($event_calling_file == 'mod_directory.c')){
+            $extensions = Extensions::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
+                            ->where('directory_visible','true')
+                            ->orWhere('directory_exten_visible','true')
+                            ->orderBy('domain_name')
+                            ->get();
+            foreach($extensions as $extension){
+                if((isset($domain_name) && ($extension->domain_name == $domain_name)) || empty($domain_name)){
+                    $xml->startElement('domain');
+                    $xml->writeAttribute('name', $domain_name);
+                    $xml->writeAttribute('alias', 'true');
+                    $xml->startElement('groups');
+                    $xml->startElement('group');
+                    $xml->writeAttribute('name', 'default');
+                    $xml->startElement('users');
+
+                    $xml->startElement('user');
+                    $xml->startAttribute('id'); $xml->text($extension->extension); $xml->endAttribute();
+                    if (isset($extension->number_alias) && (strlen($extension->number_alias) > 0)){
+                        $xml->startAttribute('number-alias'); $xml->text($extension->number_alias); $xml->endAttribute();
+                    }
+                    $xml->startElement('params');
+
+                    if (isset($extension->directory_visible) && (strlen($extension->directory_visible) > 0)){
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('directory-visible'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($extension->directory_visible); $xml->endAttribute();
+                        $xml->endElement(); //param
+                    }
+
+                    if (isset($extension->directory_exten_visible) && (strlen($extension->directory_exten_visible) > 0)){
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('directory-exten-visible'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($extension->directory_exten_visible); $xml->endAttribute();
+                        $xml->endElement(); //param
+                    }
+
+                    $xml->endElement(); // params
+
+                    $xml->startElement('variables');
+                    if (isset($extension->effective_caller_id_name) && (strlen($extension->effective_caller_id_name) > 0)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('effective_caller_id_name'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($extension->effective_caller_id_name); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+                    if (isset($extension->directory_full_name) && (strlen($extension->directory_full_name) > 0)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('directory_full_name'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($extension->directory_full_name); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+                    $xml->endElement(); //variables
+
+                    $xml->endElement(); //user
+
+                    $xml->endElement(); // users
+                    $xml->endElement(); // group
+                    $xml->endElement(); // groups
+                    $xml->endElement(); // domain
+                }
+            }
+        }
+        else{
+            $default_settings = new DefaultSettingController;
+            $use_fs_path = $default_settings->get('config', 'xml_handler.fs_path', 'boolean') ?? 'false';
+            $number_as_presence_id = $default_settings->get('config', 'xml_handler.number_as_presence_id', 'boolean') ?? 'true';
+            $dial_string_based_on_userid = $default_settings->get('config', 'xml_handler.reg_as_number_alias', 'boolean') ?? 'false';
+            $sip_auth_method = strtoupper($request->input('sip_auth_method'));
+            $user = $request->input('user') ?? '';
+            $from_user = (($use_fs_path == 'true') && ($sip_auth_method == 'INVITE')) ? $user : $request->input('sip_auth_method');
+            $dialed_extension = $request->input('dialed_extension');
+            $source = 'database';
+            if (empty($dialed_extension)){
+                $use_fs_path = 'false';
+            }
+            if (empty($from_user)){
+                $from_user = $user;
+            }
+            if (($user == '*97') || (empty($user))){
+                $source = '';
+                $continue = false;
+            }
+
+            $loaded_from_db = false;
+            if (($source == 'database') || ($use_fs_path == 'true')){
+                $loaded_from_db = true;
+                $local_hostname = $this->get_hostname($request);    // TODO: verify this
+                $reg_user = $dialed_extension;
+                if ($dial_string_based_on_userid == 'false'){
+                    // TODO
+                }
+            }
+
+        }
+        $xml->endElement(); // section
+        $xml->endElement(); // document
+        $xml->endDocument();
+        $answer = $xml->outputMemory();
+        return $answer;
 
     }
 
     public function dialplan(Request $request): string{
-
+        if(App::hasDebugModeEnabled()){
+            $this->dump($request);
+        }
     }
 
     public function languages(Request $request): string{    // TODO: Verify name
-
+        if(App::hasDebugModeEnabled()){
+            $this->dump($request);
+        }
     }
 
     public function not_found(): string{                    // TODO: this or XMLWriter
