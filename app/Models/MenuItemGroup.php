@@ -9,14 +9,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Menu extends Model
+class MenuItemGroup extends Pivot
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
-	protected $table = 'v_ivr_menu_options';
-	protected $primaryKey = 'ivr_menu_option_uuid';
+	protected $table = 'v_menu_item_groups';
+	protected $primaryKey = 'menu_item_group_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -28,12 +29,11 @@ class Menu extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'menu_name',
-		'menu_language',
-		'menu_description',
+        'menu_uuid',
+        'menu_item_uuid',
+        'group_name',           // TODO: Review if this can be drop in the future
+        'group_uuid',
 	];
 
-    public function items(): HasMany	{
-		return $this->hasMany(MenuItem::class, 'menu_uuid', 'menu_uuid');
-	}
+
 }

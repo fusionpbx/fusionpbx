@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\HasUniqueIdentifier;
+use App\Models\MenuItem;
+use App\Models\MenuItemGroup;
 use App\Traits\GetTableName;
+use App\Traits\HasUniqueIdentifier;
 use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,4 +60,10 @@ class Group extends Model
 		$groups = DB::table('v_groups')->select('*')->whereNull('domain_uuid')->get();
 		return $groups;
 	}
+
+   	public function menuitems(): BelongsToMany {
+		return $this->belongsToMany(MenuItem::class, 'v_menu_item_groups', 'group_uuid', 'menu_item_uuid')->withTimestamps();
+//		$this->belongsToMany(User::class)->using(UserGroup::class);
+	}
+
 }
