@@ -3479,19 +3479,6 @@ else { //default: white
 		float: left;
 		}
 
-	div.action_bar > div.heading > div.count {
-		display: inline-block;
-		margin-left: 10px;
-		font-family: <?=$heading_count_text_font?>;
-		font-size: <?=$heading_count_text_size?>;
-		line-height: calc(<?=$heading_count_text_size?> + 1px);
-		color: <?=$heading_count_text_color?>;
-		font-weight: <?=$heading_count_text_weight?>;
-		border-radius: <?=$heading_count_border_radius?>;
-		background-color: <?=$heading_count_background_color?>;
-		padding: <?=$heading_count_padding?>;
-		}
-
 	div.action_bar > div.actions {
 		float: right;
 		white-space: normal;
@@ -3525,6 +3512,21 @@ else { //default: white
 		background: #fafafa;
 		font-size: 1.4em;
 	}
+
+/* COUNT **********************************************************************/
+
+	div.count {
+		display: inline-block;
+		margin-left: 10px;
+		font-family: <?=$heading_count_text_font?>;
+		font-size: <?=$heading_count_text_size?>;
+		line-height: calc(<?=$heading_count_text_size?> + 1px);
+		color: <?=$heading_count_text_color?>;
+		font-weight: <?=$heading_count_text_weight?>;
+		border-radius: <?=$heading_count_border_radius?>;
+		background-color: <?=$heading_count_background_color?>;
+		padding: <?=$heading_count_padding?>;
+		}
 
 /* LIST ************************************************************************/
 
