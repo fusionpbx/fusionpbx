@@ -2904,6 +2904,7 @@ else { //default: white
 
 	div.card {
 		margin-bottom: 15px;
+		overflow-x: auto;
 		<?php
 		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
 			if (isset($card_border_size) && !empty($card_border_color)) {
