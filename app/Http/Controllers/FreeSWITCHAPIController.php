@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\EventSocketBufferController;
 use App\Models\DefaultSetting;
 use App\Models\Setting;
-use Illuminate\Http\Request;
+use Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
