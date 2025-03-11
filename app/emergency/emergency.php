@@ -208,12 +208,11 @@ echo "<th class='left'>".$text['label-emergency_date']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_extension']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_event']."</th>\n";
-echo "<th class='left'>".$text['label-emergency_call_status']."</th>\n";
-if ($permission['xml_cdr_status'] || $permission['xml_cdr_hangup_cause']) {
-	echo "<th class='left'>".$text['label-cdr_details']."</th>\n";
-}
 if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
 	echo "<th class='center'>".$text['label-recording']."</th>\n";
+}
+if ($permission['xml_cdr_status'] || $permission['xml_cdr_hangup_cause']) {
+	echo "<th class='left'>".$text['label-emergency_call_status']."</th>\n";
 }
 echo "</tr>\n";
 
@@ -228,16 +227,6 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 		echo "	<td>".escape($row['time_formatted'])."</td>\n";
 		echo "	<td>".escape($row['extension'])."</td>\n";
 		echo "	<td>".escape($row['event'])."</td>\n";
-		echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? escape($row['status']) : '') . "</td>\n";
-		$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
-		if ($permission['xml_cdr_status'] || $permission['xml_cdr_hangup_cause']) {
-			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('emergency_logs_view_all')) {
-				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."&show=all' target='_blank'>CDR</a>" : '&nbsp;') . "</td>\n";
-			}
-			else {
-				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."' target='_blank'>CDR</a>" : '&nbsp;') . "</td>\n";
-			}
-		}
 		if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 			echo "	<td class='middle button center no-link no-wrap'>";
 			if ($row['recording'] !== '/') {
@@ -265,6 +254,16 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 			}
 		}
 	*/
+		$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+		if ($permission['xml_cdr_status'] || $permission['xml_cdr_hangup_cause']) {
+			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('emergency_logs_view_all')) {
+				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."&show=all' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
+			}
+			else {
+				//echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? escape($row['status']) : '') . "</td>\n";
+				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
+			}
+		}
 		echo "</tr>\n";
 		$x++;
 	}
