@@ -93,6 +93,27 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        // TODO: Find a better way to configure this
+        'freeswitch' => [
+            'driver' => 'mysql',
+            'url' => env('FS_DATABASE_URL'),
+            'host' => env('FS_DB_HOST', '127.0.0.1'),
+            'port' => env('FS_DB_PORT', '3306'),
+            'database' => env('FS_DB_DATABASE', 'freeswitch'),
+            'username' => env('FS_DB_USERNAME', 'coolpbx'),
+            'password' => env('FS_DB_PASSWORD', ''),
+            'unix_socket' => env('FS_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
     ],
 
     /*
