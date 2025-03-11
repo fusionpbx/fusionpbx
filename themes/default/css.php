@@ -1542,8 +1542,8 @@ else { //default: white
 		bottom: 0;
 		width: 340px;
 		padding: 20px 20px 100px 20px;
-		font-family: arial, san-serif;
-		font-size: 10pt;
+		font-family: <?=$table_row_text_font?>;
+		font-size: <?=$table_row_text_size?>;
 		overflow: hidden;
 		background: <?=$domain_selector_background_color?>;
 		-webkit-box-shadow: <?=$domain_selector_shadow_color?>;
