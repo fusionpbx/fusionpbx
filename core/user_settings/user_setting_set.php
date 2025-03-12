@@ -107,7 +107,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 					//revoke temporary permissions
 						$p->delete('user_setting_delete', 'temp');
 					//reset session variables to default
-						require "resources/classes/domains.php";
 						$domain = new domains();
 						$domain->set();
 				}

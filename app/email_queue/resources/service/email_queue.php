@@ -9,9 +9,6 @@
 		exit;
 	}
 
-//include files
-	include "resources/classes/permissions.php";
-
 //increase limits
 	set_time_limit(0);
 	ini_set('max_execution_time', 0);

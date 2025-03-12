@@ -96,7 +96,6 @@ class authentication {
 				//process the plugin
 				if (file_exists($plugin)) {
 					//run the plugin
-					include_once $plugin;
 					$object = new $class_name();
 					$object->domain_name = $this->domain_name;
 					$object->domain_uuid = $this->domain_uuid;

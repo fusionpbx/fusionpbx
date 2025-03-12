@@ -26,10 +26,7 @@
 
 /**
  * call_recordings class
- *
- * @method null download
  */
-if (!class_exists('call_recordings')) {
 	class call_recordings {
 
 		/**
@@ -525,6 +522,3 @@ if (!class_exists('call_recordings')) {
 		}
 
 	} //class
-}
-
-?>

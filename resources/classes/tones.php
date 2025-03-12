@@ -25,7 +25,6 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-if (!class_exists('tones')) {
 	class tones {
 
 		//define variables
@@ -33,7 +32,7 @@ if (!class_exists('tones')) {
 		private $music_list;
 		private $recordings_list;
 		private $default_tone_label;
-		
+
 		//class constructor
 		public function __construct() {
 			//add multi-lingual support
@@ -61,11 +60,8 @@ if (!class_exists('tones')) {
 				$this->tones = $tone_list ?? '';
 				unset($sql, $tones, $tone, $tone_list);
 		}
-		
+
 		public function tones_list() {
 			return $this->tones;
 		}
 	}
-}
-
-?>

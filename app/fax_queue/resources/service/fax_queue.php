@@ -8,7 +8,6 @@
 //includes files
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/pdo.php";
-	include "resources/classes/permissions.php";
 
 //increase limits
 	set_time_limit(0);

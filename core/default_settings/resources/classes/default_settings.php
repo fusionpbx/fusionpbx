@@ -26,12 +26,7 @@
 
 /**
  * default_settings class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('default_settings')) {
 	class default_settings {
 
 		/**
@@ -327,6 +322,3 @@ if (!class_exists('default_settings')) {
 		} //method
 
 	} //class
-}
-
-?>
