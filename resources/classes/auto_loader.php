@@ -159,9 +159,9 @@ class auto_loader {
 		$this->classes = [];
 
 		//store PHP language declared classes, interfaces, and traits
-		$curr_classes = get_declared_classes();
-		$curr_interfaces = get_declared_interfaces();
-		$curr_traits = get_declared_traits();
+		$current_classes = get_declared_classes();
+		$current_interfaces = get_declared_interfaces();
+		$current_traits = get_declared_traits();
 
 		//store the class name (key) and the path (value)
 		foreach ($files as $file) {
@@ -181,33 +181,33 @@ class auto_loader {
 			$new_traits = get_declared_traits();
 
 			//check for a new class
-			$classes = array_diff($new_classes, $curr_classes);
+			$classes = array_diff($new_classes, $current_classes);
 			if (!empty($classes)) {
 				foreach ($classes as $class) {
 					$this->classes[$class] = $file;
 				}
 				//overwrite previous array with new values
-				$curr_classes = $new_classes;
+				$current_classes = $new_classes;
 			}
 
 			//check for a new interface
-			$interfaces = array_diff($new_interfaces, $curr_interfaces);
+			$interfaces = array_diff($new_interfaces, $current_interfaces);
 			if (!empty($interfaces)) {
 				foreach ($interfaces as $interface) {
 					$this->classes[$interface] = $file;
 				}
 				//overwrite previous array with new values
-				$curr_interfaces = $new_interfaces;
+				$current_interfaces = $new_interfaces;
 			}
 
 			//check for a new trait
-			$traits = array_diff($new_traits, $curr_traits);
+			$traits = array_diff($new_traits, $current_traits);
 			if (!empty($traits)) {
 				foreach ($traits as $trait) {
 					$this->classes[$trait] = $file;
 				}
 				//overwrite previous array with new values
-				$curr_traits = $new_traits;
+				$current_traits = $new_traits;
 			}
 		}
 	}
