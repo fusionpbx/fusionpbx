@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Domain;
 use App\Http\Controllers\DefaultSettingController;
 use App\Http\Controllers\DomainSettingController;
+use Illuminate\Support\Facades\Session;
 
 class DomainController extends Controller
 {

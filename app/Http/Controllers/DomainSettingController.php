@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DomainSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\DomainSetting;
+use Illuminate\Support\Facades\Session;
 
 class DomainSettingController extends Controller
 {
@@ -12,7 +13,7 @@ class DomainSettingController extends Controller
 	public function get(string $category, string $subcategory, ?string $name = null){
         $domain_uuid = Session::get('domain_uuid');
         $answer = null;
-        $domain_settings = DB::table(DefaultSetting::getTableName())
+        $domain_settings = DB::table(DomainSetting::getTableName())
                 ->where('domain_setting_enabled', '=', 'true')
                 ->where('domain_setting_category', '=', $category)
                 ->where('domain_setting_subcategory', '=', $subcategory)
@@ -37,13 +38,13 @@ class DomainSettingController extends Controller
                     case 'name':
                     case 'text':
                     case 'uuid':
-                        $domain_setting->domain_setting_value;
+                        $answer = $domain_setting->domain_setting_value;
                         if (settype($answer, 'string') == false){
                             $domain_setting->domain_setting_value;
                         }
                         break 2;
                     case 'numeric':
-                        $domain_setting->domain_setting_value;
+                        $answer = $domain_setting->domain_setting_value;
                         if (strstr($answer, '.')){
                             if (settype($answer, 'float') == false){
                                 $answer = 0.0;
