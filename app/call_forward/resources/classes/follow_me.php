@@ -426,7 +426,6 @@
 
 								//synchronize configuration
 									if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
-										require_once "app/extensions/resources/classes/extension.php";
 										$ext = new extension;
 										$ext->xml();
 										unset($ext);
