@@ -521,5 +521,3 @@ class plugin_email {
 
 	}
 }
-
-?>
