@@ -26,10 +26,7 @@
 
 /**
  * xml_cdr class provides methods for adding cdr records to the database
- *
- * @method boolean add
  */
-if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
 		/**
@@ -2370,4 +2367,3 @@ if (!class_exists('xml_cdr')) {
 		}
 
 	} //class
-}
