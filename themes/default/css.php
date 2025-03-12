@@ -1099,46 +1099,6 @@ else { //default: white
 			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
-
-		div#body_header a {
-			color: <?=$body_header_text_link_color?>;
-			}
-
-		div#body_header a:hover {
-			color: <?=$body_header_text_link_color_hover?>;
-			text-decoration: none;
-			}
-
-		div#body_header_user_menu {
-			z-index: 6;
-			display: none;
-			position: absolute;
-			top: 50px;
-			/* right: specified in /resources/classes/menu.php */
-			padding: 15px;
-			background-color: <?=$body_header_background_color?>;
-			border: 1px solid <?=color_adjust($body_header_shadow_color, 0.05)?>;
-			<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
-			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			<?php unset($br); ?>
-			-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			}
-
-		@media (max-width: 575.98px) {
-			div#body_header_user_menu {
-				width: calc(100% - 20px);
-				/* right: specified in /resources/classes/menu.php */
-				}
-			}
-
-		div#body_header_user_menu a {
-			font-size: 90%;
-			text-decoration: none;
-			}
 	<?php } else { ?>
 		div#body_header {
 			padding: 10px;
@@ -1149,6 +1109,48 @@ else { //default: white
 			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
 	<?php } ?>
+
+	div#body_header a {
+		color: <?=$body_header_text_link_color?>;
+		}
+
+	div#body_header a:hover {
+		color: <?=$body_header_text_link_color_hover?>;
+		text-decoration: none;
+		}
+
+	div#body_header_user_menu {
+		z-index: 6;
+		display: none;
+		position: absolute;
+		<?php if ($menu_style != 'inline') { ?>
+			top: 50px;
+		<?php } ?>
+		/* right: specified in /resources/classes/menu.php */
+		padding: 15px;
+		background-color: <?=$body_header_background_color?>;
+		border: 1px solid <?=color_adjust($body_header_shadow_color, 0.05)?>;
+		<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		}
+
+	@media (max-width: 575.98px) {
+		div#body_header_user_menu {
+			width: calc(100% - 20px);
+			/* right: specified in /resources/classes/menu.php */
+			}
+		}
+
+	div#body_header_user_menu a {
+		font-size: 90%;
+		text-decoration: none;
+		}
 
 	div#body_header_brand_image {
 		display: inline-block;
