@@ -451,7 +451,24 @@
 				$destination_id = str_replace("[", "_", $destination_id);
 				//$destination_id = preg_replace('/[^a-zA-Z_,.]/', '', $destination_name);
 
-				
+				//send request for destinations
+				echo "<script type=\"text/javascript\">\n";
+				echo "	function get_destinations(id, destination_type, action, search) {\n";
+				echo "		var xhttp = new XMLHttpRequest();\n";
+				echo "		xhttp.onreadystatechange = function() {\n";
+				echo "			if (this.readyState == 4 && this.status == 200) {\n";
+				echo "				document.getElementById(id).innerHTML = this.responseText;\n";
+				echo "			}\n";
+				echo "		};\n";
+				echo "		if (action) {\n";
+				echo "			xhttp.open(\"GET\", \"/app/destinations/resources/destinations.php?destination_type=\"+destination_type+\"&action=\"+action, true);\n";
+				echo "		}\n";
+				echo "		else {\n";
+				echo "			xhttp.open(\"GET\", \"/app/destinations/resources/destinations.php?destination_type=\"+destination_type, true);\n";
+				echo "		}\n";
+				echo "		xhttp.send();\n";
+				echo "	}\n";
+				echo "</script>\n";
 
 				//get the destinations
 				$destinations = $this->get($destination_type);
