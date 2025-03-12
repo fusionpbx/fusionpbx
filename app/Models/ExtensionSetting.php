@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Extension;
 use App\Traits\HasUniqueIdentifier;
 
 use App\Traits\GetTableName;
@@ -17,11 +18,11 @@ use Illuminate\Notifications\Notifiable;
 
 use Laravel\Sanctum\HasApiTokens;
 
-class Voicemail extends Model
+class ExtensionSetting extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
-	protected $table = 'v_voicemails';
-	protected $primaryKey = 'voicemail_uuid';
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	protected $table = 'v_extension_settings';
+	protected $primaryKey = 'extension_setting_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -34,20 +35,12 @@ class Voicemail extends Model
      */
 	protected $fillable = [
         'domain_uuid',
-        'voicemail_id',
-        'voicemail_password',
-        'greeting_id',
-        'voicemail_alternate_greet_id',
-        'voicemail_mail_to',
-        'voicemail_sms_to',
-        'voicemail_transcription_enabled',
-        'voicemail_attach_file',
-        'voicemail_file',
-        'voicemail_local_after_email',
-        'voicemail_enabled',
-        'voicemail_description',
-        'voicemail_name_base64',
-        'voicemail_tutorial',
+        'extension_uuid',
+        'extension_setting_type',
+        'extension_setting_name',
+        'extension_setting_value',
+        'extension_setting_enabled',
+        'extension_setting_description',
 	];
 
     /**
@@ -56,7 +49,6 @@ class Voicemail extends Model
      * @var array<int, string>
      */
 	protected $hidden = [
-	    'voicemail_password',
 	];
 
     /**
@@ -67,15 +59,8 @@ class Voicemail extends Model
 	protected $casts = [
 	];
 
-	public function domain(): BelongsTo {
-		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	public function extension(): BelongsTo {
+		return $this->belongsTo(Extension::class, 'extension_suuid', 'extension_uuid');
 	}
 
-	public function voicemailmessages(): HasMany {
-		return $this->hasMany(VoicemailMessage::class, 'voicemail_uuid', 'voicemail_uuid');
-	}
-
-	public function voicemailoptionss(): HasMany {
-		return $this->hasMany(VoicemailOption::class, 'voicemail_uuid', 'voicemail_uuid');
-	}
 }

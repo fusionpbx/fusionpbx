@@ -189,6 +189,13 @@ class FreeSWITCHAPIController extends Controller
         $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
         $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
         $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
+
+        if (isset($param)){
+            // In case command has spaces
+            // XML-RPC expects command to be one word only
+            $full_command = $command . ' ' . $param;
+            list($command, $param) = explode(' ', $full_command, 2);
+        }
         $url = 'http://'.$host.':'.$http_port.'/webapi/'.$command.(isset($param)?urlencode($param):'');
         $response = Http::withBasicAuth($auth_user, $auth_pass)->get($url);
         if ($response->ok())

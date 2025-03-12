@@ -17,27 +17,33 @@ class DomainController extends Controller
     }
 
     public function switch_by_uuid(string $domain_uuid){
-         $domain = Domain::where('domain_uuid', $domain_uuid)->first();
 
-        if (Session::get('domain_uuid') != $domain->uuid){
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            };
-            Session::put('domain_uuid', $domain->domain_uuid);
-            Session::put('domain_name', $domain->domain_name);
-            Session::put('domain_description', !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name);
-            $_SESSION["domain_name"] = $domain->domain_name;
-            $_SESSION["domain_uuid"] = $domain->domain_uuid;
-            $_SESSION["domain_description"] = !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name;
+         $domain_query = Domain::where('domain_uuid', $domain_uuid)
+                                ->where('domain_enabled', 'true');
 
-            //set the context
-            Session::put('context', $_SESSION["domain_name"]);
-            $_SESSION["context"] = $_SESSION["domain_name"];
+        if ($domain_query->count() > 0){
+            $domain = $domain_query->first();
+            if (Session::get('domain_uuid') != $domain->domain_uuid){
 
-            // unset destinations belonging to old domain
-            unset($_SESSION["destinations"]["array"]);
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                };
+                Session::put('domain_uuid', $domain->domain_uuid);
+                Session::put('domain_name', $domain->domain_name);
+                Session::put('domain_description', !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name);
+                // TODO: Check if _SESSION is right
+                $_SESSION["domain_name"] = $domain->domain_name;
+                $_SESSION["domain_uuid"] = $domain->domain_uuid;
+                $_SESSION["domain_description"] = !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name;
 
-            $url = getFusionPBXPreviousURL(url()->previous());
+                //set the context
+                Session::put('context', $_SESSION["domain_name"]);
+                $_SESSION["context"] = $_SESSION["domain_name"];
+
+                // unset destinations belonging to old domain
+                unset($_SESSION["destinations"]["array"]);
+            }
+            $url = url()->previous();
             return redirect($url);
         }
     }

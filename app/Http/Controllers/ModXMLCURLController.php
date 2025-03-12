@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\DefaultSetting;
 use App\Http\Controllers\DefaultSettingController;
+use App\Http\Controllers\FreeSWITCHAPIController;
 
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
@@ -14,7 +15,10 @@ use App\Models\ConferenceControl;
 use App\Models\ConferenceControlDetail;
 use App\Models\ConferenceProfile;
 use App\Models\ConferenceProfileParam;
+use App\Models\Domain;
 use App\Models\Extension;
+use App\Models\ExtensionSetting;
+use App\Models\ExtensionUser;
 use App\Models\Gateway;
 use App\Models\IVRMenu;
 use App\Models\IVRMenuOption;
@@ -26,7 +30,9 @@ use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
 use App\Models\SofiaGlobalSetting;
+use App\Models\User;
 use App\Models\Variable;
+use App\Models\Voicemail;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -35,6 +41,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 use Log;
 use XMLWriter;
@@ -405,6 +412,14 @@ class ModXMLCURLController extends Controller
                     $xml->endElement(); // profile
                 }
                 $xml->fullEndElement(); // profiles
+                break;
+            case 'curl.conf':
+                $default_settings = new DefaultSettingController;
+                $max_bytes = $default_settings->get('config', 'curl.max_bytes', 'numeric') ?? 64000;
+                $validate_certs = $default_settings->get('config', 'curl.validate_certs', 'boolean') ?? 'false';
+                if ($max_bytes > 64000){
+                    $max_bytes = 64000; // Hardcode value from FreeSWITCH
+                }
                 break;
             case 'ivr.conf':
                 $default_settings = new DefaultSettingController;
@@ -1301,6 +1316,8 @@ class ModXMLCURLController extends Controller
             }
         }
         else{
+            $continue = true;
+            $api = new FreeSWITCHAPIController;
             $default_settings = new DefaultSettingController;
             $use_fs_path = $default_settings->get('config', 'xml_handler.fs_path', 'boolean') ?? 'false';
             $number_as_presence_id = $default_settings->get('config', 'xml_handler.number_as_presence_id', 'boolean') ?? 'true';
@@ -1327,10 +1344,623 @@ class ModXMLCURLController extends Controller
                 $local_hostname = $this->get_hostname($request);    // TODO: verify this
                 $reg_user = $dialed_extension;
                 if ($dial_string_based_on_userid == 'false'){
-                    // TODO
+                    $reg_user = $api->execute('user_data', $dialed_extension . '@' . $domain_name . ' attr id');
+                }
+                else{
+                    $reg_user = $dialed_extension;
+                }
+
+                $registrations = $api->execute('show', 'registrations as XML');
+                $xml = simplexml_load_string($registrations);
+                $row_count = $xml->attributes()['row_count'];
+                $database_hostname = null;
+                if ($row_count > 0){
+                    foreach($xml->row as $r){
+                        if (($r->reg_user == $reg_user) && ($r->realm == $domain_name) && ($r->expires > time())){
+                            $database_hostname = $r->hostname;
+                            break;
+                        }
+                    }
+                }
+
+                if (empty($database_hostname) && ($use_fs_path == 'true')){
+                    $use_fs_path = 'false';
                 }
             }
 
+            if ($continue){
+                $continue = false;
+                $extension_query = Extension::join(Domain::getTableName(), Extension::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
+                                ->where('domain_enabled', 'true')
+                                ->where('enable', 'true')
+                                ->where(Domain::getTableName().'.domain_uuid', $domain_uuid)
+                                ->where(function (Builder $query){
+                                    global $user;
+                                    $query->where('extension', $user)
+                                        ->orWhere('number_alias', $user);
+                                });
+                if ($extension_query->count() > 0){
+                        $continue = true;
+                        $extension1 = $extension_query->first();
+                        $extension_uuid = $extension1->extension_uuid;
+                        $extension = $extension1->extension;
+                        $cidr = $extension1->cidr ?? '';
+                        $number_alias = $extension1->number_alias ?? '';
+                        $extension_user_query = ExtensionUser::where('domain_uuid', $domain_uuid)
+                                            ->where('extension_uuid', $extension_uuid);
+                        if($extension_user_query->count() > 0){
+                            $extension_user = $extension_user_query->first();
+                            $user_uuid = $extension_user->user_uuid;
+
+                            if (isset($user_uuid)){
+                                $contact_query = User::where('domain_uuid', $domain_uuid)
+                                                ->where('user_uuid', $user_uuid);
+                                if($contact_query->count() > 0){
+                                    $contact_uuid1 = $contact_query->first();
+                                    $contact_uuid = $contact_uuid1->contact_uuid;
+                                }
+                            }
+                        }
+
+                        $password = $extension1->password;
+                        $mwi_account = $extension1->mwi_account;
+                        $auth_acl = $extension1->auth_acl;
+                        $sip_from_user = $extension1->extension;
+                        $sip_from_number = $extension1->number_alias ?? $extension1->extension;
+                        $call_group = $extension1->call_group;
+                        $call_screen_enabled = $extension1->call_screen_enabled;
+                        $user_record = $extension1->user_record;
+                        $hold_music = $extension1->hold_music;
+                        $toll_allow = $extension1->toll_allow;
+                        $accountcode = $extension1->accountcode;
+                        $user_context = $extension1->user_context;
+                        $effective_caller_id_name = $extension1->effective_caller_id_name;
+                        $effective_caller_id_number = $extension1->effective_caller_id_number;
+                        $outbound_caller_id_name = $extension1->outbound_caller_id_name;
+                        $outbound_caller_id_number = $extension1->outbound_caller_id_number;
+                        $emergency_caller_id_name = $extension1->emergency_caller_id_name;
+                        $emergency_caller_id_number = $extension1->emergency_caller_id_number;
+                        $missed_call_app = $extension1->missed_call_app;
+                        $missed_call_data = $extension1->missed_call_data;
+                        $directory_first_name = $extension1->directory_first_name;
+                        $directory_last_name = $extension1->directory_last_name;
+                        $directory_exten_visible = $extension1->directory_exten_visible;
+                        $limit_max = $extension1->limit_max;
+                        $call_timeout = $extension1->call_timeout;
+                        $max_registrations = $extension1->max_registrations;
+                        $limit_destinations = $extension1->limit_destination;
+                        $sip_force_contact = $extension1->sip_force_contact;
+                        $sip_force_expires = $extension1->sip_force_expires;
+                        $nibble_account = $extension1->nibble_account;
+                        $sip_bypass_media = $extension1->sip_bypass_media;
+                        $absolute_codec_string = $extension1->absolute_codec_string;
+                        $force_ping = $extension1->force_ping;
+                        $forward_all_enabled = $extension1->forward_all_enabled;
+                        $forward_all_destination = $extension1->forward_all_destination;
+                        $forward_busy_enabled = $extension1->forward_busy_enabled;
+                        $forward_busy_destination = $extension1->forward_busy_destination;
+                        $forward_no_answer_enabled = $extension1->forward_no_answer_enabled;
+                        $forward_no_answer_destination = $extension1->forward_no_answer_destination;
+                        $forward_user_not_registered_enabled = $extension1->forward_user_not_registered_enabled;
+                        $forward_user_not_registered_destination = $extension1->forward_user_not_registered_destination;
+                        $do_not_disturb = $extension1->do_not_disturb;
+                        if (isset($extension1->follow_me_uuid)){
+                            $follow_me_uuid = $extension1->follow_me_uuid;
+                            $follow_me_enabled = (($do_not_disturb == 'true') || ($forward_all_enabled == 'true'))? 'false' : $extension1->follow_me_enabled;
+                        }
+                        $presence_id = ($number_as_presence_id == 'true' ? $sip_from_number : $sip_from_user) . '@' . $domain_name;
+                        if ($do_not_disturb == 'true'){
+                            $dial_string = 'error/user_busy';
+                        }
+                        elseif (isset($extension1->dial_string)){
+                            $dial_string = $extension1->dial_string;
+                        }
+                        else{
+                            $destination = ($dial_string_based_on_userid == 'true' ? $sip_from_number : $sip_from_user) . '@' . $domain_name;
+                            if (empty($dial_string)){
+                                $dial_string = 'sip_invite_domain='.$domain_name.', presence_id='.$presence_id.'}${sofia_contact(*/'.$destination.')}';
+                            }
+                            if($use_fs_path == 'true'){
+                                if ($local_hostname == $database_hostname){
+                                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] local_host and database_host are the same.');
+                                }
+                                else{
+                                    $contact = trim($api->execute('sofia_contact', $destination));
+                                    $array = exploce('/', $contact);
+                                    $proxy = $database_hostname;
+                                    $exchange_profile = $default_settings->get('config', 'xml_handler.exchange_profile', 'text') ?? 'internal';
+                                    $profile = $default_settings->get('config', 'xml_handler.exchange_profile', 'text') ??
+                                        (($profile == 'user_not_registered')?'internal':$array[1]);
+                                    $dial_string = '{sip_h_X-context='.$domain_name.',sip_invite_domain='.$domain_name.',presence_id='.$presence_id.'}sofia/'.$profile.'/'.$destination.';fs_path=sip:'.$proxy;
+                                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $local_hostname: '.$local_hostname);
+                                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $database_hostname: '.$database_hostname);
+                                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $dial_string: '.$dial_string);
+                                }
+                            }
+                        }
+                }
+            }
+
+            if(isset($extension_uuid)){
+                $extension_settings = ExtensionSetting::where('extension_setting_enabled', 'true')
+                                    ->where('extension_uuid', $extension_uuid)
+                                    ->get();
+            }
+            else{
+                $continue = false;
+            }
+
+            if ($continue){
+                $vm_enabled = 'true';
+                $voicemail_query = VoiceMail::where('domain_uuid', $domain_uuid)
+                            ->where('voicemail_id', isset($number_alias)? $number_alias : $user)
+                            ->where('voicemail_enabled', 'true');
+                if($voicemail_query->count() > 0){
+                    // TODO: review if first or last
+                    $voicemail = $voicemail_query->first();
+                    $vm_passwrod = $voicemail->voicemail_password;
+                    $vm_attach_file = $voicemail->voicemail_attach_file ?? 'true';
+                    $vm_keep_local_after_email = $voicemail->voicemail_local_after_email ?? 'true';
+                    $vm_mailto = $voicemail->voicemail_mail_to ?? '';
+                }
+
+                if (isset($password)){
+                    $directory_full_name = trim(($directory_first_name ?? '').' '.($directory_last_name ?? ''));
+
+                    $xml->startElement('domain');
+                    $xml->writeAttribute('name', $domain_name);
+                    $xml->writeAttribute('alias', 'true');
+                    $xml->startElement('params');
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('jsonrpc-allowed-methods'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text('verto'); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('jsonrpc-allowed-event-channels'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text('demo,conference,presence'); $xml->endAttribute();        // TODO: find useful values
+                    $xml->endElement(); //param
+
+                    $xml->endElement(); // params
+
+                    $xml->startElement('groups');
+                    $xml->startElement('group');
+                    $xml->writeAttribute('name', 'default');
+                    $xml->startElement('users');
+
+                    $xml->startElement('user');
+                    if(isset($number_alias)){
+                        $xml->writeAttribute('number-alias', $number_alias);
+                    }
+                    if(isset($cidr)){
+                        $xml->writeAttribute('cidr', $cidr);
+                    }
+                    $xml->startElement('params');
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('password'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($password); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('vm-enabled'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($vm_enabled); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    if (isset($vm_mailto)){
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('vm-password'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($vm_password); $xml->endAttribute();
+                        $xml->endElement(); //param
+
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('vm-email-all-messages'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($vm_enabled); $xml->endAttribute();
+                        $xml->endElement(); //param
+
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('vm-attach-file'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($vm_attach_file); $xml->endAttribute();
+                        $xml->endElement(); //param
+
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('vm-keep-local-after-email'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($vm_keep_local_after_email); $xml->endAttribute();
+                        $xml->endElement(); //param
+
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('vm-mailto'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($vm_mailto); $xml->endAttribute();
+                        $xml->endElement(); //param
+                    }
+
+                    if (isset($mwi_account)){
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('MWI-Account'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($mwi_account); $xml->endAttribute();
+                        $xml->endElement(); //param
+                    }
+
+                    if (isset($auth_acl)){
+                        $xml->startElement('param');
+                        $xml->startAttribute('name'); $xml->text('auth-acl'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($auth_acl); $xml->endAttribute();
+                        $xml->endElement(); //param
+                    }
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('dial-string'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($dial_string); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('vento-context'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($user_context); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('verto-dialplan'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text('XML'); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('jsonrpc-allowed-methods'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text('verto'); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('jsonrpc-allowed-event-channels'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text('demo,conference,presence'); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    $xml->startElement('param');
+                    $xml->startAttribute('name'); $xml->text('max-registrations-per-extension'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($max_registrations); $xml->endAttribute();
+                    $xml->endElement(); //param
+
+                    foreach ($extension_settings as $extension_setting){
+                        if ($extension_setting->extension_setting_type == 'param'){
+                            $xml->startElement('param');
+                            $xml->startAttribute('name'); $xml->text($extension_setting->extension_setting_name); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($extension_setting->extension_setting_value); $xml->endAttribute();
+                            $xml->endElement(); //param
+                        }
+                    }
+
+                    $xml->endElement(); // params
+                    $xml->startElement('variables');
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('domain_uuid'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($domain_uuid); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('domain_name'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($domain_name); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('extension_uuid'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($extension_uuid); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    if(isset($user_uuid)){
+                        // TODO: Find out how to put more than one user, user-extension is a many-many relationship
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('user_uuid'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($user_uuid); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if(isset($contact_uuid)){
+                        // TODO: same here
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('contact_uuid'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($contact_uuid); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('call_timeout'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($call_timeout); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('caller_id_name'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($sip_from_user); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('caller_id_number'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($sip_from_number); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('presence_id'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($presence_id); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    if (isset($call_group)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('call_group'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($call_group); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($call_screen_enabled)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('call_screen_enabled'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($call_screen_enabled); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($user_record)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('user_record'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($user_record); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($hold_music)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('hold_music'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($hold_music); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($toll_allow)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('toll_allow'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($toll_allow); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($accountcode)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('accountcode'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($accountcode); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('user_context'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($user_context); $xml->endAttribute();
+                    $xml->endElement(); //variable
+
+                    if (isset($effective_caller_id_name)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('effective_caller_id_name'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($effective_caller_id_name); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($effective_caller_id_number)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('effective_caller_id_number'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($effective_caller_id_number); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($outbound_caller_id_name)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('outbound_caller_id_name'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($outbound_caller_id_name); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($outbound_caller_id_number)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('outbound_caller_id_number'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($outbound_caller_id_number); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($emergency_caller_id_name)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('emergency_caller_id_name'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($emergency_caller_id_name); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($emergency_caller_id_number)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('emergency_caller_id_number'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($emergency_caller_id_number); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($missed_call_app)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('missed_call_app'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($missed_call_app); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($missed_call_data)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('missed_call_data'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($missed_call_data); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($directory_full_name)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('directory_full_name'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($directory_full_name); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($directory_visible)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('directory-visible'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($directory_visible); $xml->endAttribute();
+                        $xml->endElement(); //variable
+
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('directory_visible'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($directory_visible); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($directory_exten_visible)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('directory-exten-visible'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($directory_exten_visible); $xml->endAttribute();
+                        $xml->endElement(); //variable
+
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('directory_exten_visible'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($directory_exten_visible); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    $xml->startElement('variable');
+                    $xml->startAttribute('name'); $xml->text('limit_max'); $xml->endAttribute();
+                    $xml->startAttribute('value'); $xml->text($limit_max ?? 5); $xml->endAttribute();   // TODO: find out why 5
+                    $xml->endElement(); //variable
+
+                    if (isset($limit_destination)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('limit_destination'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($limit_destination); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($sip_force_contact)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('sip-force-contact'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($sip_force_contact); $xml->endAttribute();
+                        $xml->endElement(); //variable
+
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('sip_force_contact'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($sip_force_contact); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($sip_force_expires)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('sip-force-expires'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($sip_force_expires); $xml->endAttribute();
+                        $xml->endElement(); //variable
+
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('sip_force_expires'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($sip_force_expires); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($nibble_account)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('nibble_account'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($nibble_account); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($absolute_codec_string)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('absolute_codec_string'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($absolute_codec_string); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($force_ping)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('force_ping'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($force_ping); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($sip_bypass_media)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text(Str::snake(Str::of($sip_bypass_media)->camel(), '_')); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text('true'); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_all_enabled)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_all_enabled'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_all_enabled); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_all_destination)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_all_destination'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_all_destination); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_busy_enabled)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_busy_enabled'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_busy_enabled); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_busy_destination)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_busy_destination'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_busy_destination); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_no_answer_enabled)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_no_answer_enabled'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_no_answer_enabled); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_no_answer_destination)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_no_answer_destination'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_no_answer_destination); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_user_not_registered_enabled)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_user_not_registered_enabled'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_user_not_registered_enabled); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($forward_user_not_registered_destination)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('forward_not_registered_destination'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($forward_user_not_registered_destination); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    if (isset($follow_me_enabled)){
+                        $xml->startElement('variable');
+                        $xml->startAttribute('name'); $xml->text('follow_me_enabled'); $xml->endAttribute();
+                        $xml->startAttribute('value'); $xml->text($follow_me_enabled); $xml->endAttribute();
+                        $xml->endElement(); //variable
+                    }
+
+                    foreach ($extension_settings as $extension_setting){
+                        if ($extension_setting->extension_setting_type == 'variable'){
+                            $xml->startElement('variable');
+                            $xml->startAttribute('name'); $xml->text($extension_setting->extension_setting_name); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($extension_setting->extension_setting_value); $xml->endAttribute();
+                            $xml->endElement(); //variable
+                        }
+                    }
+
+                    $xml->endElement(); // variables
+                    $xml->endElement(); // user
+
+                    $xml->endElement(); // users
+                    $xml->endElement(); // group
+                    $xml->endElement(); // groups
+                    $xml->endElement(); // domain
+                }
+            }
         }
         $xml->endElement(); // section
         $xml->endElement(); // document
