@@ -26,8 +26,6 @@
  */
 
 //define the schema class
-if (!class_exists('schema')) {
-
 	class schema {
 
 		//define variables
@@ -908,7 +906,6 @@ if (!class_exists('schema')) {
 		} //end function
 	}
 
-}
 
 //example use
 //require_once "resources/classes/schema.php";
@@ -917,4 +914,3 @@ if (!class_exists('schema')) {
 //$obj->schema();
 //$result_array = $schema->obj['sql'];
 //print_r($result_array);
-?>
