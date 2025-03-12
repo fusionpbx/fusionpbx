@@ -25,7 +25,6 @@
 */
 
 //define the user settings class
-if (!class_exists('user_settings')) {
 	class user_settings {
 
 		/**
@@ -181,6 +180,3 @@ if (!class_exists('user_settings')) {
 		} //method
 
 	} //class
-}
-
-?>
