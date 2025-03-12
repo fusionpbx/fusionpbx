@@ -25,7 +25,6 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-if (!class_exists('ringbacks')) {
 	class ringbacks {
 
 		//define variables
@@ -232,6 +231,3 @@ if (!class_exists('ringbacks')) {
 				return $select;
 		}
 	}
-}
-
-?>
