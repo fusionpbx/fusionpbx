@@ -850,7 +850,6 @@
 
 						//synchronize configuration
 							if (is_writable($switch_extensions)) {
-								require_once "app/extensions/resources/classes/extension.php";
 								$ext = new extension;
 								$ext->xml();
 								unset($ext);
