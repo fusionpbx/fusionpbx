@@ -88,7 +88,6 @@
 	$registrations = $obj->get($profile ?? null);
 
 //order the array
-	require_once "resources/classes/array_order.php";
 	$order = new array_order();
 	$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
 
