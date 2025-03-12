@@ -25,7 +25,6 @@
 */
 
 //define the modules class
-if (!class_exists('modules')) {
 	class modules {
 
 		/**
@@ -1101,7 +1100,6 @@ if (!class_exists('modules')) {
 
 
 	} //class
-}
 
 /*
 require_once "resources/classes/modules.php";
@@ -1138,5 +1136,3 @@ echo $mod->dir."\n";
 	//print_r($result);
 	//echo "</pre>\n";
 */
-
-?>
