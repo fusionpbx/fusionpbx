@@ -34,8 +34,7 @@ class events {
 			require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 			//includes files
-			require_once "resources/classes/database.php";
-			$database = new database;
+			$database = database::new();
 			$database->connect();
 			$this->db = $database->db;
 			return $this->db = $database->db;
