@@ -1102,7 +1102,6 @@
 	} //class
 
 /*
-require_once "resources/classes/modules.php";
 $mod = new modules;
 $mod->dir = $_SESSION['switch']['mod']['dir'];
 echo $mod->dir."\n";
