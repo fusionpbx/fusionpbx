@@ -27,7 +27,6 @@
 */
 
 //define the switch_music_on_hold class
-if (!class_exists('switch_music_on_hold')) {
 	class switch_music_on_hold {
 
 		/**
@@ -447,12 +446,10 @@ if (!class_exists('switch_music_on_hold')) {
 		} //method
 
 	} //class
-}
+
 
 //build and save the XML
 	//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 	//$moh = new switch_music_on_hold;
 	//$moh->xml();
 	//$moh->save();
-
-?>
