@@ -30,6 +30,14 @@ $database = new database;
 $database->app_name = 'emergency_logs';
 $database->app_uuid = 'de63b1ae-7750-11ee-b3a5-005056a27559';
 
+//set permissions for CDR details and call recordings
+$permission = array();
+$permission['xml_cdr_hangup_cause'] = permission_exists('xml_cdr_hangup_cause');
+$permission['xml_cdr_status'] = permission_exists('xml_cdr_status');
+$permission['xml_cdr_recording'] = permission_exists('xml_cdr_recording');
+$permission['xml_cdr_recording_play'] = permission_exists('xml_cdr_recording_play');
+$permission['xml_cdr_recording_download'] = permission_exists('xml_cdr_recording_download');
+
 //process the http post data by action
 if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
 
@@ -122,7 +130,10 @@ $sql .= "e.event, ";
 $sql .= "to_char(timezone(:time_zone, e.insert_date), 'DD Mon YYYY') as date_formatted, ";
 $sql .= "to_char(timezone(:time_zone, e.insert_date), 'HH12:MI:SS am') as time_formatted, ";
 $sql .= "e.insert_date, ";
-$sql .= "c.status as status ";
+$sql .= "c.status as status, ";
+$sql .= "concat(c.record_path, '/', c.record_name) as recording, ";	//temp
+$sql .= "c.record_path as call_recording_path, ";
+$sql .= "c.record_name as call_recording_name ";
 $sql .= "from v_emergency_logs e ";
 $sql .= "left join v_xml_cdr c ";
 $sql .= "on e.emergency_log_uuid = c.xml_cdr_uuid ";
@@ -197,7 +208,12 @@ echo "<th class='left'>".$text['label-emergency_date']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_time']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_extension']."</th>\n";
 echo "<th class='left'>".$text['label-emergency_event']."</th>\n";
-echo "<th class='left'>".$text['label-emergency_call_status']."</th>\n";
+if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
+	echo "<th class='center'>".$text['label-recording']."</th>\n";
+}
+if ($permission['xml_cdr_status'] || $permission['xml_cdr_hangup_cause']) {
+	echo "<th class='left'>".$text['label-emergency_call_status']."</th>\n";
+}
 echo "</tr>\n";
 
 if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_logs) != 0) {
@@ -211,7 +227,43 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 		echo "	<td>".escape($row['time_formatted'])."</td>\n";
 		echo "	<td>".escape($row['extension'])."</td>\n";
 		echo "	<td>".escape($row['event'])."</td>\n";
-		echo "	<td>".escape($row['status'])."</td>\n";
+		if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
+			echo "	<td class='middle button center no-link no-wrap'>";
+			if ($row['recording'] !== '/') {
+				if (permission_exists('call_recording_play')) {
+					$recording_file_ext = pathinfo($row['call_recording_name'], PATHINFO_EXTENSION);
+					switch ($recording_file_ext) {
+						case "wav" : $recording_type = "audio/wav"; break;
+						case "mp3" : $recording_type = "audio/mpeg"; break;
+						case "ogg" : $recording_type = "audio/ogg"; break;
+					}
+					echo "<audio id='recording_audio_".escape($row['emergency_log_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['emergency_log_uuid'])."')\" onended=\"recording_reset('".escape($row['emergency_log_uuid'])."');\" src='download.php?id=".urlencode($row['emergency_log_uuid'])."' type='".$recording_type."'></audio>";
+					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['emergency_log_uuid']),'onclick'=>"recording_play('".escape($row['emergency_log_uuid'])."')"]);
+				}
+				if (permission_exists('call_recording_download')) {
+					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['emergency_log_uuid']).'&binary']);
+				}
+			}
+			echo "	</td>\n";
+		}
+// debug: display file directory and filename of the call recording
+	/*
+		if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
+			if ($row['recording'] !== '/') {
+		    	echo "<td>" . escape($row['recording']) . "</td>\n";
+			}
+		}
+	*/
+		$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+		if ($permission['xml_cdr_status'] || $permission['xml_cdr_hangup_cause']) {
+			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('emergency_logs_view_all')) {
+				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."&show=all' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
+			}
+			else {
+				//echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? escape($row['status']) : '') . "</td>\n";
+				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
+			}
+		}
 		echo "</tr>\n";
 		$x++;
 	}

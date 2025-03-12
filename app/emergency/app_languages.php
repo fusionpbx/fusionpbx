@@ -189,4 +189,31 @@ $text['label-emergency_call_status']['zh-cn'] = "";
 $text['label-emergency_call_status']['ja-jp'] = "";
 $text['label-emergency_call_status']['ko-kr'] = "";
 
+$text['label-recording']['en-us'] = "Recording";
+$text['label-recording']['en-gb'] = "Recording";
+$text['label-recording']['ar-eg'] = "تسجيل";
+$text['label-recording']['de-at'] = "Aufnahme";
+$text['label-recording']['de-ch'] = "Aufnahme";
+$text['label-recording']['de-de'] = "Aufnahme";
+$text['label-recording']['el-gr'] = "Εγγραφή";
+$text['label-recording']['es-cl'] = "Grabación";
+$text['label-recording']['es-mx'] = "Grabación";
+$text['label-recording']['fr-ca'] = "Enregistrement";
+$text['label-recording']['fr-fr'] = "Enregistrement";
+$text['label-recording']['he-il'] = "הקלטה";
+$text['label-recording']['it-it'] = "Registrazione";
+$text['label-recording']['ka-ge'] = "ჩანაწერი";
+$text['label-recording']['nl-nl'] = "Opname";
+$text['label-recording']['pl-pl'] = "Nagranie";
+$text['label-recording']['pt-br'] = "Gravação";
+$text['label-recording']['pt-pt'] = "Gravação";
+$text['label-recording']['ro-ro'] = "Înregistrare";
+$text['label-recording']['ru-ru'] = "Запись";
+$text['label-recording']['sv-se'] = "Inspelning";
+$text['label-recording']['uk-ua'] = "Запис";
+$text['label-recording']['tr-tr'] = "Kayıt";
+$text['label-recording']['zh-cn'] = "记录";
+$text['label-recording']['ja-jp'] = "録音";
+$text['label-recording']['ko-kr'] = "녹음";
+
 ?>
