@@ -9,6 +9,7 @@ use App\Traits\GetTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -55,12 +56,11 @@ class MenuItem extends Model
 	}
 
 	public function children(): HasMany	{
-		return $this->hasMany(MenuItem::class, 'menu_item_parent_uuid')->orderBy('order');
+		return $this->hasMany(MenuItem::class, 'menu_item_parent_uuid')->orderBy('menu_item_order');
 	}
 
-	public function childrenRecursive()
-	{
-		return $this->hasMany(Menu::class, 'menu_item_parent_uuid')->with('childrenRecursive')->orderBy('order');
+	public function items(): HasMany {
+		return $this->hasMany(MenuItem::class, 'menu_item_parent_uuid', 'menu_item_uuid')->with('items')->orderBy('menu_item_order');
 	}
 
 	public function groups(): BelongsToMany {

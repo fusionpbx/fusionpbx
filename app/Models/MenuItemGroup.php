@@ -24,16 +24,22 @@ class MenuItemGroup extends Pivot
 	const UPDATED_AT = 'update_date';
 
 	/**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array<int, string>
+	 */
 	protected $fillable = [
-        'menu_uuid',
-        'menu_item_uuid',
-        'group_name',           // TODO: Review if this can be drop in the future
-        'group_uuid',
+		'menu_uuid',
+		'menu_item_uuid',
+		'group_name',           // TODO: Review if this can be drop in the future
+		'group_uuid',
 	];
 
+	public function menuItem(): BelongsTo {
+		return $this->belongsTo(MenuItem::class, 'menu_item_uuid', 'menu_item_uuid');
+	}
 
+	public function group(): BelongsTo {
+		return $this->belongsTo(Group::class, 'group_uuid', 'group_uuid');
+	}
 }

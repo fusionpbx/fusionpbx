@@ -15,8 +15,8 @@ use Laravel\Sanctum\HasApiTokens;
 class Menu extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
-	protected $table = 'v_ivr_menu_options';
-	protected $primaryKey = 'ivr_menu_option_uuid';
+	protected $table = 'v_menus';
+	protected $primaryKey = 'menu_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -33,7 +33,8 @@ class Menu extends Model
 		'menu_description',
 	];
 
-    public function items(): HasMany	{
-		return $this->hasMany(MenuItem::class, 'menu_uuid', 'menu_uuid');
+	public function items(): HasMany {
+		return $this->hasMany(MenuItem::class, 'menu_uuid', 'menu_uuid')
+			->whereNull('menu_item_parent_uuid');  // only root items in first level
 	}
 }

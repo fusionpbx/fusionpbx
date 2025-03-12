@@ -8,9 +8,14 @@ class MenuController extends Controller
 {
 	public function index()
 	{
-		$menus = Menu::whereNull("parent_id")->with("childrenRecursive")->orderBy("order")->get();
+		$menu = $this->getMenu();
 
-		return response()->json($menus);
+		return response()->json($menu);
+	}
+
+	public function getMenu()
+	{
+		return Menu::with(['items.items'])->get()->toArray();
 	}
 
 	public function store(Request $request)
