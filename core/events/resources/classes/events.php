@@ -2,9 +2,6 @@
 
 /**
  * events class provides an event system
- *
- * @method void load_plugins
- * @method dynamic __call
  */
 class events {
 
@@ -29,9 +26,6 @@ class events {
 	 */
 	public function __construct() {
 		//create the database connection
-
-			//includes files
-			require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 			//includes files
 			$database = database::new();
