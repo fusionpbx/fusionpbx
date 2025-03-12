@@ -471,7 +471,6 @@
 			}
 
 			//get the db variables
-			//require_once "resources/classes/config.php";
 			//$config = new config;
 			//$config_exists = $config->exists();
 			//$config_path = $config->find();
@@ -908,7 +907,6 @@
 
 
 //example use
-//require_once "resources/classes/schema.php";
 //$obj = new schema;
 //$obj->db_type = $db_type;
 //$obj->schema();
