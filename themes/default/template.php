@@ -20,7 +20,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202503120938'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202503121207'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -687,17 +687,15 @@
 				{/literal}
 			{/if}
 
-		//side/fixed menu: hide an open user menu in the body header or menu on scroll
-			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'fixed' }
-				{literal}
-				$(window).on('scroll', function() {
-					$('#body_header_user_menu').fadeOut(200);
-				});
-				$('div#main_content').on('click', function() {
-					$('#body_header_user_menu').fadeOut(200);
-				});
-				{/literal}
-			{/if}
+		//hide an open user menu in the body header or menu on scroll
+			{literal}
+			$(window).on('scroll', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			$('div#main_content').on('click', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			{/literal}
 
 		//create function to mimic toggling fade and slide at the same time
 			{literal}
