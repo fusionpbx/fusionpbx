@@ -420,6 +420,23 @@ class ModXMLCURLController extends Controller
                 if ($max_bytes > 64000){
                     $max_bytes = 64000; // Hardcode value from FreeSWITCH
                 }
+
+                $xml->startElement('configuration');
+                $xml->writeAttribute('name', $request->input('key_value'));
+                $xml->writeAttribute('description', 'cURL Module' );
+                $xml->startElement('settings');
+
+                $xml->startElement('param');
+                $xml->startAttribute('name'); $xml->text('max-bytes'); $xml->endAttribute();
+                $xml->startAttribute('value'); $xml->text($max_bytes); $xml->endAttribute();
+                $xml->endElement(); //param
+
+                $xml->startElement('param');
+                $xml->startAttribute('name'); $xml->text('validate-certs'); $xml->endAttribute();
+                $xml->startAttribute('value'); $xml->text($validate_certs); $xml->endAttribute();
+                $xml->endElement(); //param
+
+                $xml->endElement(); // settings
                 break;
             case 'ivr.conf':
                 $default_settings = new DefaultSettingController;
@@ -722,6 +739,22 @@ class ModXMLCURLController extends Controller
 
                     $xml->endElement(); // directory
                 }
+                break;
+            case 'memcache.conf':
+                $default_settings = new DefaultSettingController;
+                $memcache_servers= $default_settings->get('config', 'memcache.servers', 'text') ?? '127.0.0.1';
+
+                $xml->startElement('configuration');
+                $xml->writeAttribute('name', $request->input('key_value'));
+                $xml->writeAttribute('description', 'Memcache Configuration' );
+                $xml->startElement('settings');
+
+                $xml->startElement('param');
+                $xml->startAttribute('name'); $xml->text('memcache-servers'); $xml->endAttribute();
+                $xml->startAttribute('value'); $xml->text($memcache_servers); $xml->endAttribute();
+                $xml->endElement(); //param
+
+                $xml->endElement(); // settings
                 break;
             case 'sofia.conf':
                 $xml->startElement('configuration');
