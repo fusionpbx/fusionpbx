@@ -4,53 +4,53 @@ if ($domains_processed == 1) {
 
 	//get all of the sofia global default settings
 		$sql = "select * from v_sofia_global_settings \n";
-		$sofia_global_settings = $database->select($sql, null, 'all');
+		$database_settings = $database->select($sql, null, 'all');
 
 	//build array
 		$x = 0;
-		$settings['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = '9a0e83b3-e71c-4a9a-9f1c-680d32f756f8';
-		$settings['sofia_global_settings'][$x]['global_setting_name'] = 'log-level';
-		$settings['sofia_global_settings'][$x]['global_setting_value'] = '0';
-		$settings['sofia_global_settings'][$x]['global_setting_enabled'] = 'true';
-		$settings['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$global_settings[$x]['sofia_global_setting_uuid'] = '9a0e83b3-e71c-4a9a-9f1c-680d32f756f8';
+		$global_settings[$x]['global_setting_name'] = 'log-level';
+		$global_settings[$x]['global_setting_value'] = '0';
+		$global_settings[$x]['global_setting_enabled'] = 'true';
+		$global_settings[$x]['global_setting_description'] = '';
 		$x++;
-		$settings['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = 'c2aa551a-b6d2-49a6-b633-21b5b1ddd5df';
-		$settings['sofia_global_settings'][$x]['global_setting_name'] = 'auto-restart';
-		$settings['sofia_global_settings'][$x]['global_setting_value'] = 'true';
-		$settings['sofia_global_settings'][$x]['global_setting_enabled'] = 'true';
-		$settings['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$global_settings[$x]['sofia_global_setting_uuid'] = 'c2aa551a-b6d2-49a6-b633-21b5b1ddd5df';
+		$global_settings[$x]['global_setting_name'] = 'auto-restart';
+		$global_settings[$x]['global_setting_value'] = 'true';
+		$global_settings[$x]['global_setting_enabled'] = 'true';
+		$global_settings[$x]['global_setting_description'] = '';
 		$x++;
-		$settings['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = 'a9901c0c-efd8-4e66-9648-239566af576e';
-		$settings['sofia_global_settings'][$x]['global_setting_name'] = 'debug-presence';
-		$settings['sofia_global_settings'][$x]['global_setting_value'] = '0';
-		$settings['sofia_global_settings'][$x]['global_setting_enabled'] = 'true';
-		$settings['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$global_settings[$x]['sofia_global_setting_uuid'] = 'a9901c0c-efd8-4e66-9648-239566af576e';
+		$global_settings[$x]['global_setting_name'] = 'debug-presence';
+		$global_settings[$x]['global_setting_value'] = '0';
+		$global_settings[$x]['global_setting_enabled'] = 'true';
+		$global_settings[$x]['global_setting_description'] = '';
 		$x++;
-		$settings['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = '31054912-3b07-422d-a109-b995fd8d67f7';
-		$settings['sofia_global_settings'][$x]['global_setting_name'] = 'capture-server';
-		$settings['sofia_global_settings'][$x]['global_setting_value'] = 'udp:127.0.0.1:9060';
-		$settings['sofia_global_settings'][$x]['global_setting_enabled'] = 'false';
-		$settings['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$global_settings[$x]['sofia_global_setting_uuid'] = '31054912-3b07-422d-a109-b995fd8d67f7';
+		$global_settings[$x]['global_setting_name'] = 'capture-server';
+		$global_settings[$x]['global_setting_value'] = 'udp:127.0.0.1:9060';
+		$global_settings[$x]['global_setting_enabled'] = 'false';
+		$global_settings[$x]['global_setting_description'] = '';
 		$x++;
-		$settings['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = 'b27af7db-4ba5-452b-a5ed-a922c8f201aa';
-		$settings['sofia_global_settings'][$x]['global_setting_name'] = 'inbound-reg-in-new-thread';
-		$settings['sofia_global_settings'][$x]['global_setting_value'] = 'true';
-		$settings['sofia_global_settings'][$x]['global_setting_enabled'] = 'true';
-		$settings['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$global_settings[$x]['sofia_global_setting_uuid'] = 'b27af7db-4ba5-452b-a5ed-a922c8f201aa';
+		$global_settings[$x]['global_setting_name'] = 'inbound-reg-in-new-thread';
+		$global_settings[$x]['global_setting_value'] = 'true';
+		$global_settings[$x]['global_setting_enabled'] = 'true';
+		$global_settings[$x]['global_setting_description'] = '';
 		$x++;
-		$settings['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = 'cd33b89f-55ef-4b47-833a-538dba70e27e';
-		$settings['sofia_global_settings'][$x]['global_setting_name'] = 'max-reg-threads';
-		$settings['sofia_global_settings'][$x]['global_setting_value'] = '8';
-		$settings['sofia_global_settings'][$x]['global_setting_enabled'] = 'true';
-		$settings['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$global_settings[$x]['sofia_global_setting_uuid'] = 'cd33b89f-55ef-4b47-833a-538dba70e27e';
+		$global_settings[$x]['global_setting_name'] = 'max-reg-threads';
+		$global_settings[$x]['global_setting_value'] = '8';
+		$global_settings[$x]['global_setting_enabled'] = 'true';
+		$global_settings[$x]['global_setting_description'] = '';
 
 	//build an array of missing global settings
 		$x = 0;
-		foreach($settings['sofia_global_settings'] as $row) {
+		foreach($global_settings as $row) {
 			$y = 0;
 			$setting_found = false;
-			if (is_array($sofia_global_settings) && @sizeof($sofia_global_settings) != 0) {
-				foreach($sofia_global_settings as $field) {
+			if (is_array($database_settings) && @sizeof($database_settings) != 0) {
+				foreach($database_settings as $field) {
 					if ($row['sofia_global_setting_uuid'] == $field['sofia_global_setting_uuid']) {
 						$setting_found = true;
 						break;
