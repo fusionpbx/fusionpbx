@@ -2036,7 +2036,6 @@
 		echo "	".$text['label-hold_music']."\n";
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 		$options = '';
 		$moh = new switch_music_on_hold;
 		echo $moh->select('hold_music', $hold_music ?? '', $options);
