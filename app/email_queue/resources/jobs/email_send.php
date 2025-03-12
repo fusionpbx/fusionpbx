@@ -10,7 +10,6 @@
 	}
 
 //include files
-	include "resources/classes/permissions.php";
 	include_once "resources/phpmailer/class.phpmailer.php";
 	include_once "resources/phpmailer/class.smtp.php";
 
