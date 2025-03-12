@@ -827,7 +827,7 @@
 						if ($row['hangup_cause'] == 'NO_ANSWER') {
 							$status = 'no_answer';
 						}
-						if ($row['missed_call'] == '1') {
+						if ($row['missed_call']) {
 							$status = 'missed';
 						}
 						if (substr($row['destination_number'], 0, 3) == '*99') {
