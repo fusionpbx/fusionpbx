@@ -26,8 +26,6 @@
 
 /**
  * plugin_email
- *
- * @method email time based one time password authenticate the user
  */
 class plugin_email {
 
@@ -521,5 +519,3 @@ class plugin_email {
 
 	}
 }
-
-?>

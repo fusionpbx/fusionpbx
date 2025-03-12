@@ -26,12 +26,7 @@
 
 /**
  * fax_queue class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('fax_queue')) {
 	class fax_queue {
 
 		/**
@@ -274,6 +269,3 @@ if (!class_exists('fax_queue')) {
 			}
 		}
 	}
-}
-
-?>

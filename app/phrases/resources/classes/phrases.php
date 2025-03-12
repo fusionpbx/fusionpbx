@@ -25,7 +25,6 @@
 */
 
 //define the phrases class
-if (!class_exists('phrases')) {
 	class phrases {
 
 		/**
@@ -431,6 +430,3 @@ if (!class_exists('phrases')) {
 		} //method
 
 	} //class
-}
-
-?>

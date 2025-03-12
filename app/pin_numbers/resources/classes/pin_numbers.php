@@ -25,7 +25,6 @@
 */
 
 //define the pin numbers class
-if (!class_exists('pin_numbers')) {
 	class pin_numbers {
 
 		/**
@@ -245,6 +244,3 @@ if (!class_exists('pin_numbers')) {
 		}
 
 	}
-}
-
-?>

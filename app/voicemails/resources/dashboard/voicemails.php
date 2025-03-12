@@ -23,9 +23,6 @@
 //voicemail
 	echo "<div class='hud_box'>\n";
 
-//required class
-	require_once "app/voicemails/resources/classes/voicemail.php";
-
 //get the voicemail
 	$vm = new voicemail;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];

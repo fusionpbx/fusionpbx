@@ -2,12 +2,7 @@
 
 /**
  * fifo class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('fifo')) {
 	class fifo {
 
 		/**
@@ -283,6 +278,3 @@ if (!class_exists('fifo')) {
 		}
 
 	}
-}
-
-?>

@@ -26,12 +26,7 @@
 
 /**
  * switch class provides methods for copying switch_files
- *
- * @method string correct_path
- * @method string copy_scripts
- * @method string copy_languages
  */
-if (!class_exists('switch_files')) {
 	class switch_files {
 
 		/**
@@ -158,7 +153,6 @@ if (!class_exists('switch_files')) {
 		}
 
 	}
-}
 
 /*
 //example use
@@ -168,5 +162,3 @@ if (!class_exists('switch_files')) {
 	$obj->copy_scripts();
 	$obj->copy_languages();
 */
-
-?>

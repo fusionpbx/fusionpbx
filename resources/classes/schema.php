@@ -26,8 +26,6 @@
  */
 
 //define the schema class
-if (!class_exists('schema')) {
-
 	class schema {
 
 		//define variables
@@ -473,7 +471,6 @@ if (!class_exists('schema')) {
 			}
 
 			//get the db variables
-			//require_once "resources/classes/config.php";
 			//$config = new config;
 			//$config_exists = $config->exists();
 			//$config_path = $config->find();
@@ -908,13 +905,10 @@ if (!class_exists('schema')) {
 		} //end function
 	}
 
-}
 
 //example use
-//require_once "resources/classes/schema.php";
 //$obj = new schema;
 //$obj->db_type = $db_type;
 //$obj->schema();
 //$result_array = $schema->obj['sql'];
 //print_r($result_array);
-?>

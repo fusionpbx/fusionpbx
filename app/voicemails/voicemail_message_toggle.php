@@ -47,7 +47,6 @@
 //toggle the voicemail message
 	$toggled = 0;
 	if (is_array($voicemail_messages) && sizeof($voicemail_messages) > 0) {
-		require_once "resources/classes/voicemail.php";
 		foreach ($voicemail_messages as $voicemail_uuid => $voicemail_message_uuids) {
 			foreach ($voicemail_message_uuids as $voicemail_message_uuid) {
 				if (is_uuid($voicemail_uuid) && is_uuid($voicemail_message_uuid)) {

@@ -26,12 +26,7 @@
 
 /**
  * user_logs class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('user_logs')) {
 	class user_logs {
 
 		/**
@@ -151,6 +146,3 @@ if (!class_exists('user_logs')) {
 		}
 
 	}
-}
-
-?>

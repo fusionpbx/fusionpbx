@@ -28,11 +28,7 @@
 /**
  * domains class
  *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('domains')) {
 	class domains {
 
 		/**
@@ -786,6 +782,3 @@ if (!class_exists('domains')) {
 		}
 
 	}
-}
-
-?>

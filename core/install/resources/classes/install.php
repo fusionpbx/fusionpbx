@@ -1,6 +1,5 @@
 <?php
 
-if (!class_exists('install')) {
 	class install {
 
 		/**
@@ -154,7 +153,7 @@ if (!class_exists('install')) {
 			if(!$file_handle) { return; }
 			fwrite($file_handle, $conf);
 			fclose($file_handle);
-			
+
 			//if the config.conf file was saved return true
 			if (file_exists($config_file)) {
 				return true;
@@ -166,6 +165,3 @@ if (!class_exists('install')) {
 		}
 
 	}
-}
-
-?>

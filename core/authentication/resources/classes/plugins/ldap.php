@@ -209,5 +209,3 @@ class plugin_ldap {
 			return $result;
 	}
 }
-
-?>

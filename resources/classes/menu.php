@@ -27,7 +27,6 @@
 /**
  * menu class
  */
-if (!class_exists('menu')) {
 	class menu {
 
 		/**
@@ -1339,4 +1338,3 @@ if (!class_exists('menu')) {
 		}
 
 	}
-}

@@ -26,7 +26,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 //define the conference centers class
-if (!class_exists('conference_centers')) {
 	class conference_centers {
 
 		/**
@@ -800,7 +799,7 @@ if (!class_exists('conference_centers')) {
 
 
 	} //class
-}
+
 
 //example conference center
 	/*
@@ -814,5 +813,3 @@ if (!class_exists('conference_centers')) {
 	$result = $conference_center->rooms();
 	print_r($result);
 	*/
-
-?>

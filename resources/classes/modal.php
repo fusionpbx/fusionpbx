@@ -25,7 +25,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-if (!class_exists('modal')) {
 	class modal {
 
 		static function create($array) {
@@ -65,11 +64,7 @@ if (!class_exists('modal')) {
 			$modal .= "</div>";
 
 			return $modal;
-			unset($modal);
 
 		}
 
 	}
-}
-
-?>

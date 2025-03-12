@@ -27,7 +27,6 @@
 /**
  * Define the operator_panel class
  */
-if (!class_exists('basic_operator_panel')) {
 	class basic_operator_panel {
 
 		/**
@@ -245,6 +244,3 @@ if (!class_exists('basic_operator_panel')) {
 				return $result;
 		}
 	}
-}
-
-?>

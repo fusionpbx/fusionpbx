@@ -26,7 +26,6 @@
 */
 
 //define the switch_recordings class
-if (!class_exists('switch_recordings')) {
 	class switch_recordings {
 
 		/**
@@ -158,6 +157,3 @@ if (!class_exists('switch_recordings')) {
 		} //method
 
 	} //class
-}
-
-?>

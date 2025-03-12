@@ -25,7 +25,6 @@
 */
 
 //define the ivr_menu class
-if (!class_exists('ivr_menu')) {
 	class ivr_menu {
 
 		/**
@@ -489,6 +488,3 @@ if (!class_exists('ivr_menu')) {
 		}
 
 	}
-}
-
-?>

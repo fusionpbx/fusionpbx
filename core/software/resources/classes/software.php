@@ -2,10 +2,7 @@
 
 /**
  * software class
- *
- * @method string version
  */
-if (!class_exists('software')) {
 	class software {
 
 		/**
@@ -25,6 +22,3 @@ if (!class_exists('software')) {
 		}
 
 	}
-}
-
-?>

@@ -948,7 +948,6 @@ if (!function_exists('save_switch_xml')) {
 	function save_switch_xml() {
 		if (is_readable($_SESSION['switch']['extensions']['dir'])) {
 			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/resources/classes/extension.php")) {
-				require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."app/extensions/resources/classes/extension.php";
 				$extension = new extension;
 				$extension->xml();
 			}
@@ -958,7 +957,6 @@ if (!function_exists('save_switch_xml')) {
 				save_setting_xml();
 			}
 			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/modules/app_config.php")) {
-				require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/modules/resources/classes/modules.php";
 				$module = new modules;
 				$module->xml();
 				//$msg = $module->msg;

@@ -43,7 +43,6 @@
 	$text = $language->get();
 
 //permission restore default
-	require_once "core/groups/resources/classes/permission.php";
 	$permission = new permission;
 	$permission->restore();
 

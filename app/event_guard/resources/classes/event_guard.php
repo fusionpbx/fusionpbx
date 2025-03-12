@@ -26,12 +26,7 @@
 
 /**
  * event_guard_logs class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('event_guard')) {
 	class event_guard {
 
 		/**
@@ -303,6 +298,3 @@ if (!class_exists('event_guard')) {
 		}
 
 	}
-}
-
-?>

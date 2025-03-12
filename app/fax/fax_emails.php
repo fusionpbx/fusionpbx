@@ -29,7 +29,6 @@
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_message.php";
-require_once "resources/classes/text.php";
 
 //get accounts to monitor
 $sql = "select d.domain_name, f.* ";

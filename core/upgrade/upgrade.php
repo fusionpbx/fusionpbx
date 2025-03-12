@@ -189,8 +189,6 @@
 
 //run all app_defaults.php files
 	if ($upgrade_type == 'domains') {
-		require_once "resources/classes/config.php";
-		require_once "resources/classes/domains.php";
 		$domain = new domains;
 		$domain->display_type = $display_type;
 		$domain->upgrade();
@@ -199,7 +197,6 @@
 //upgrade schema and/or data_types
 	if ($upgrade_type == 'schema') {
 		//get the database schema put it into an array then compare and update the database as needed.
-		require_once "resources/classes/schema.php";
 		$obj = new schema;
 		if (isset($argv[2]) && $argv[2] == 'data_types') {
 			$obj->data_types = true;

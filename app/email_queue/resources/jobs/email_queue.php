@@ -11,7 +11,6 @@
 
 //includes files
 	require_once "resources/pdo.php";
-	include "resources/classes/permissions.php";
 	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits

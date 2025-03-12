@@ -308,7 +308,6 @@
 					$cache = new cache;
 					$cache->delete("configuration:local_stream.conf");
 
-				//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 					$music = new switch_music_on_hold;
 					$music->reload();
 

@@ -25,7 +25,6 @@
 */
 
 //define the sip profiles class
-if (!class_exists('sip_profiles')) {
 	class sip_profiles {
 
 		/**
@@ -434,6 +433,3 @@ if (!class_exists('sip_profiles')) {
 		}
 
 	}
-}
-
-?>

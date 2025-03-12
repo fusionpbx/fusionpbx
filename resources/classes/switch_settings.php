@@ -5,7 +5,6 @@
  *
  * @method settings will add missing switch directories to default settings
  */
-if (!class_exists('switch_settings')) {
 	class switch_settings {
 
 		public $event_socket_ip_address;
@@ -276,6 +275,3 @@ if (!class_exists('switch_settings')) {
 				unset($array);
 		}
 	}
-}
-
-?>

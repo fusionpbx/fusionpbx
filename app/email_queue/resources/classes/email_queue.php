@@ -2,12 +2,7 @@
 
 /**
  * email_queue class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('email_queue')) {
 	class email_queue {
 
 		/**
@@ -225,6 +220,3 @@ if (!class_exists('email_queue')) {
 		}
 
 	}
-}
-
-?>

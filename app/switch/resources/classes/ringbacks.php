@@ -25,7 +25,6 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-if (!class_exists('ringbacks')) {
 	class ringbacks {
 
 		//define variables
@@ -85,18 +84,15 @@ if (!class_exists('ringbacks')) {
 				*/
 
 			//get the tones
-				require_once "resources/classes/tones.php";
 				$tones = new tones;
 				$this->tones_list = $tones->tones_list();
 
 			//get music on hold	and recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
-					require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 					$music = new switch_music_on_hold;
 					$this->music_list = $music->get();
 				}
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
-					require_once "app/recordings/resources/classes/switch_recordings.php";
 					$recordings = new switch_recordings;
 					$this->recordings_list = $recordings->list_recordings();
 				}
@@ -232,6 +228,3 @@ if (!class_exists('ringbacks')) {
 				return $select;
 		}
 	}
-}
-
-?>

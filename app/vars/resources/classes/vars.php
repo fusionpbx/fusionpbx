@@ -25,7 +25,6 @@
 */
 
 //define the vars class
-if (!class_exists('vars')) {
 	class vars {
 
 		/**
@@ -258,6 +257,3 @@ if (!class_exists('vars')) {
 		}
 
 	}
-}
-
-?>

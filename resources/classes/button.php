@@ -25,7 +25,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-if (!class_exists('button')) {
 	class button {
 
 		public static $collapse = 'hide-md-dn';
@@ -127,7 +126,6 @@ if (!class_exists('button')) {
 					$button = $anchor.$button."</a>";
 				}
 			return $button;
-			unset($button);
 		}
 
 		private static function quote($value) {
@@ -135,7 +133,6 @@ if (!class_exists('button')) {
 		}
 
 	}
-}
 
 /*
 
@@ -236,5 +233,3 @@ if (!class_exists('button')) {
 
 
 */
-
-?>

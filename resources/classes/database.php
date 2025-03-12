@@ -3279,7 +3279,7 @@
 		 * @see database::__construct()
 		 * @see database::connect()
 		 */
-		public static function new(array $params = []) {
+		public static function new(array $params = []): static {
 			if (self::$database === null) {
 				self::$database = new database($params);
 				if (!self::$database->is_connected()) {
@@ -3326,7 +3326,6 @@
 /*
 //example usage
 	//find
-		require_once "resources/classes/database.php";
 		$database = new database;
 		$database->domain_uuid = $_SESSION["domain_uuid"];
 		$database->type = $db_type;
@@ -3343,7 +3342,6 @@
 		$database->find();
 		print_r($database->result);
 	//insert
-		require_once "resources/classes/database.php";
 		$database = new database;
 		$database->domain_uuid = $_SESSION["domain_uuid"];
 		$database->table = "v_ivr_menus";

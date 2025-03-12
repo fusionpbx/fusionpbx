@@ -25,7 +25,6 @@
 */
 
 //define the contacts class
-if (!class_exists('contacts')) {
 	class contacts {
 
 		const APP_NAME = "contacts";
@@ -277,6 +276,3 @@ if (!class_exists('contacts')) {
 		} //method
 
 	} //class
-}
-
-?>

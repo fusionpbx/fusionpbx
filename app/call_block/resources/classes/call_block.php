@@ -2,10 +2,7 @@
 
 /**
  * call block class
- *
- * @method null download
  */
-if (!class_exists('call_block')) {
 	class call_block {
 
 		/**
@@ -459,6 +456,3 @@ if (!class_exists('call_block')) {
 		} //method
 
 	} //class
-}
-
-?>

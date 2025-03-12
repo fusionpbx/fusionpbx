@@ -27,10 +27,7 @@
 
 /**
  * call broadcast class
- *
- * @method null download
  */
-if (!class_exists('call_broadcast')) {
 	class call_broadcast {
 
 		/**
@@ -177,6 +174,3 @@ if (!class_exists('call_broadcast')) {
 		}
 
 	}
-}
-
-?>

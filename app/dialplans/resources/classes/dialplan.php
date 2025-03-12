@@ -25,7 +25,6 @@
 */
 
 //define the dialplan class
-	if (!class_exists('dialplan')) {
 		class dialplan {
 
 			//variables
@@ -1580,6 +1579,3 @@
 
 
 		} //class
-	}
-
-?>

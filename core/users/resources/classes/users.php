@@ -26,12 +26,7 @@
 
 /**
  * users class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('users')) {
 	class users {
 
 		/**
@@ -315,6 +310,3 @@ if (!class_exists('users')) {
 			}
 		}
 	}
-}
-
-?>

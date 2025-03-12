@@ -25,7 +25,6 @@
 */
 
 //define the databases class
-if (!class_exists('databases')) {
 	class databases {
 
 		/**
@@ -169,6 +168,3 @@ if (!class_exists('databases')) {
 		}
 
 	}
-}
-
-?>

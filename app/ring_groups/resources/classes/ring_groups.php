@@ -25,7 +25,6 @@
 */
 
 //define the ring groups class
-if (!class_exists('ring_groups')) {
 	class ring_groups {
 
 		/**
@@ -512,6 +511,3 @@ if (!class_exists('ring_groups')) {
 		}
 
 	}
-}
-
-?>
