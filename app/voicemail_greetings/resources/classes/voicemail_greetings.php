@@ -25,7 +25,6 @@
 */
 
 //define the voicemail greetings class
-if (!class_exists('voicemail_greetings')) {
 	class voicemail_greetings {
 
 		/**
@@ -166,6 +165,3 @@ if (!class_exists('voicemail_greetings')) {
 		} //method
 
 	} //class
-}
-
-?>
