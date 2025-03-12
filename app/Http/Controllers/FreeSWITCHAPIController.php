@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\EventSocketBufferController;
+use App\Http\Controllers\EventSocketBufferController;
 use App\Models\DefaultSetting;
 use App\Models\Setting;
 use Illuminate\Http\Client\Request;
@@ -29,7 +29,7 @@ class FreeSWITCHAPIController extends Controller
     public function __destruct(){
 
         switch (env('FS_API_TYPE', 'XML_RPC')){
-            case 'EVENT_SOCKET'
+            case 'EVENT_SOCKET':
                 $this->es_close();
                 break;
             default:
@@ -41,26 +41,25 @@ class FreeSWITCHAPIController extends Controller
 
     private function es_connect($host, $port, $password){
         $errorn = null; $errordesc = null;
-        $this->$fp = @fsockopen($host, $port, $errorn, $errordesc, 3);
+        $this->fp = @fsockopen($host, $port, $errorn, $errordesc, 3);
         socket_set_timeout($this->fp, 30000);
         socket_set_blocking($this->fp, true);
 
-        while (!feof($fp)) {
+        while (!feof($this->fp)) {
             $event = $this->es_read_event();
             if(@$event['Content-Type'] == 'auth/request'){
-                    fputs($fp, 'auth '.($password)."\n\n");
+                    fputs($this->fp, 'auth '.($password)."\n\n");
                     break;
             }
         }
 
-        while (!feof($fp)) {
+        while (!feof($this->fp)) {
             $event = $this->es_read_event();
             if (@$event['Content-Type'] == 'command/reply') {
                 if (@$event['Reply-Text'] == '+OK accepted') {
-                    return $fp;
+                    return $this->fp;
                 }
-                $this->fp = false;
-                fclose($fp);
+                fclose($this->fp);
                 return false;
             }
         }
@@ -176,7 +175,7 @@ class FreeSWITCHAPIController extends Controller
                 $answer = null;
             }
             else{
-                $cmd = 'api '$command . ' ' . $param;
+                $cmd = 'api ' . $command . ' ' . $param;
                 $answer = $this->es_request($cmd);
             }
         }
@@ -189,17 +188,10 @@ class FreeSWITCHAPIController extends Controller
         $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
         $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
         $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
-
-        if (isset($param)){
-            // In case command has spaces
-            // XML-RPC expects command to be one word only
-            $full_command = $command . ' ' . $param;
-            list($command, $param) = explode(' ', $full_command, 2);
-        }
         $url = 'http://'.$host.':'.$http_port.'/webapi/'.$command.(isset($param)?urlencode($param):'');
         $response = Http::withBasicAuth($auth_user, $auth_pass)->get($url);
         if ($response->ok())
-            return $response->body() ? null;
+            return $response->body() ?? null;
         return null;
     }
 }
