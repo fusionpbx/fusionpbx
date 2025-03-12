@@ -118,13 +118,18 @@ if (session and session:ready()) then
 	sip_from_user = session:getVariable("sip_from_user");
 	emergency_caller_id_name = session:getVariable("emergency_caller_id_name");
 	emergency_caller_id_number = session:getVariable("emergency_caller_id_number");
+	outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
 	outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 	destination_number = session:getVariable("destination_number");
 end
 
 --set the defaults
-if (not emergency_caller_id_name) then emergency_caller_id_name = ''; end
-if (not emergency_caller_id_number) then emergency_caller_id_number = '' end
+if (not emergency_caller_id_name or emergency_caller_id_name == '') then
+	emergency_caller_id_name = outbound_caller_id_name
+end
+if (not emergency_caller_id_number or emergency_caller_id_number == '') then
+	emergency_caller_id_number = outbound_caller_id_number
+end
 
 --no emergency emails found under domain, using default
 local sql = "SELECT default_setting_value ";
@@ -181,6 +186,9 @@ end
 local t = dbh:first_row(sql);
 call_date = t.call_date;
 
+-- replace the hardcoded template subject with the event
+subject = event;
+
 --send the email
 if (#to > 0) then
 	--prepare the body
@@ -190,7 +198,6 @@ if (#to > 0) then
 		body = body:gsub("${emergency_caller_id_name}", emergency_caller_id_name);
 		body = body:gsub("${emergency_caller_id_number}", emergency_caller_id_number);
 		body = body:gsub("${sip_from_user}", sip_from_user);
-		body = body:gsub("${caller_id_number}", caller_id_number);
 		body = body:gsub("${message_date}", call_date);
 		body = body:gsub("${event}", event);
 		body = trim(body);
