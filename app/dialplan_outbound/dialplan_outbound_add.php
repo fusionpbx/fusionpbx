@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -318,7 +318,7 @@
 						$tmp_prefix == $dialplan_expression
 								? $outbound_prefix = ""
 								: $outbound_prefix = $tmp_prefix;
-	
+
 						if ($gateway_type == "gateway") {
 							$dialplan_name = $gateway_name.".".$abbrv;
 							if ($abbrv == "988") {
@@ -863,7 +863,7 @@
 	}
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";
-		
+
 	}
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
@@ -939,6 +939,7 @@ function type_onchange(dialplan_detail_type) {
 	echo $text['description-outbound-routes']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -1346,15 +1347,16 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "</table>";
-	echo "<br><br>";
+	echo "</table>\n";
+	echo "</div>\n";
+	echo "<br><br>\n";
 
 	if (!empty($action) && $action == "update") {
 		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-	echo "</form>";
+	echo "</form>\n";
 
 //show the footer
 	require_once "resources/footer.php";
