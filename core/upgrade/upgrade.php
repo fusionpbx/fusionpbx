@@ -181,6 +181,7 @@
 	$auto_loader = new auto_loader();
 	$auto_loader->reload_classes();
 	$auto_loader->update_cache();
+	$auto_loader->clear_cache();
 
 //get the version of the software
 	if ($upgrade_type == 'version') {
