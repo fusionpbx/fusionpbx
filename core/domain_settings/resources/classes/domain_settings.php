@@ -25,7 +25,6 @@
 */
 
 //define the domain settings class
-if (!class_exists('domain_settings')) {
 	class domain_settings {
 
 		/**
@@ -386,6 +385,3 @@ if (!class_exists('domain_settings')) {
 		} //method
 
 	} //class
-}
-
-?>
