@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -67,7 +67,7 @@
 	if (!empty($_REQUEST['search'])) {
 		$search = $_REQUEST['search'];
 	}
-		
+
 //get http post variables and set them to php variables
 	if (!empty($_REQUEST)) {
 		$default_setting_category = strtolower($_REQUEST["default_setting_category"] ?? '');
@@ -718,6 +718,12 @@
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='default'>".$text['label-default']."</option>\n";
 		echo "    	<option value='dynamic' ".(($default_setting_value == "dynamic") ? "selected='selected'" : null).">".$text['label-dynamic']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "cdr" && $subcategory == "column_overflow" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='hidden' ".(($default_setting_value == "hidden") ? "selected='selected'" : null).">".$text['label-hidden']."</option>\n";
+		echo "    	<option value='scroll' ".(($default_setting_value == "scroll") ? "selected='selected'" : null).">".$text['label-scroll']."</option>\n";
 		echo "	</select>\n";
 	}
 	elseif (is_json($default_setting_value)) {
