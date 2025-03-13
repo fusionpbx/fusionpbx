@@ -1514,4 +1514,57 @@ $text['label-custom']['zh-cn'] = "风俗";
 $text['label-custom']['ja-jp'] = "カスタム";
 $text['label-custom']['ko-kr'] = "관습";
 
+$text['label-hidden']['en-us'] = "Hidden";
+$text['label-hidden']['en-gb'] = "Hidden";
+$text['label-hidden']['ar-eg'] = "مخفي";
+$text['label-hidden']['de-at'] = "Versteckt";
+$text['label-hidden']['de-ch'] = "Versteckt";
+$text['label-hidden']['de-de'] = "Versteckt";
+$text['label-hidden']['el-gr'] = "Κρυφό";
+$text['label-hidden']['es-cl'] = "Oculto";
+$text['label-hidden']['es-mx'] = "Oculto";
+$text['label-hidden']['fr-ca'] = "Caché";
+$text['label-hidden']['fr-fr'] = "Caché";
+$text['label-hidden']['he-il'] = "הסתר";
+$text['label-hidden']['it-it'] = "Nascosto";
+$text['label-hidden']['ka-ge'] = "დამალული";
+$text['label-hidden']['nl-nl'] = "Verborgen";
+$text['label-hidden']['pl-pl'] = "Ukryty";
+$text['label-hidden']['pt-br'] = "Oculto";
+$text['label-hidden']['pt-pt'] = "Oculto";
+$text['label-hidden']['ro-ro'] = "Ascuns";
+$text['label-hidden']['ru-ru'] = "Скрыто";
+$text['label-hidden']['sv-se'] = "Dold";
+$text['label-hidden']['uk-ua'] = "Сховано";
+$text['label-hidden']['zh-cn'] = "隐藏";
+$text['label-hidden']['ja-jp'] = "隠し";
+$text['label-hidden']['ko-kr'] = "숨겨짐";
+
+$text['label-scroll']['en-us'] = "Scroll";
+$text['label-scroll']['en-gb'] = "Scroll";
+$text['label-scroll']['ar-eg'] = "تمرير";
+$text['label-scroll']['de-at'] = "Scrollen";
+$text['label-scroll']['de-ch'] = "Scrollen";
+$text['label-scroll']['de-de'] = "Scrollen";
+$text['label-scroll']['el-gr'] = "Κύλιση";
+$text['label-scroll']['es-cl'] = "Desplazar";
+$text['label-scroll']['es-mx'] = "Desplazar";
+$text['label-scroll']['fr-ca'] = "Faire défiler";
+$text['label-scroll']['fr-fr'] = "Faire défiler";
+$text['label-scroll']['he-il'] = "גלול";
+$text['label-scroll']['it-it'] = "Scorrere";
+$text['label-scroll']['ka-ge'] = "გადატანა";
+$text['label-scroll']['nl-nl'] = "Scrollen";
+$text['label-scroll']['pl-pl'] = "Przewiń";
+$text['label-scroll']['pt-br'] = "Deslocar";
+$text['label-scroll']['pt-pt'] = "Deslocar";
+$text['label-scroll']['ro-ro'] = "Derulați";
+$text['label-scroll']['ru-ru'] = "Прокрутить";
+$text['label-scroll']['sv-se'] = "Rulla";
+$text['label-scroll']['uk-ua'] = "Прокрутити";
+$text['label-scroll']['zh-cn'] = "滚动";
+$text['label-scroll']['ja-jp'] = "スクロール";
+$text['label-scroll']['ko-kr'] = "스크롤";
+
+
 ?>
