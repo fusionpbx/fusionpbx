@@ -1201,7 +1201,7 @@ class ModXMLCURLController extends Controller
                             $call_group_array_temp[$value][] = $extension->extension;
                         }
                     }
-
+                    // TODO: Find if array_walk or array_map is a better and ellegant option
                     foreach ($call_group_array_temp as $k => $v){
                         $call_group_array[$k] = implode(',', $v);
                     }
