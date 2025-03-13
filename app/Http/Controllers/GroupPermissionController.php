@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Group;
-use Illuminate\Support\Facades\Auth;
 use App\Models\GroupPermission;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GroupPermissionController extends Controller
 {
@@ -21,7 +22,7 @@ class GroupPermissionController extends Controller
 
 		if (!empty($this->telegram_id)){
 			$session_id = md5($this->telegram_id);
-			\Log::debug('$session_id: '.$session_id);
+			Log::debug('$session_id: '.$session_id);
 			\OKayInc\StatelessSession::start($session_id);
 			$coolpbx_user = \OKayInc\StatelessSession::get('coolpbx_user');
 			$coolpbx_domain = \OKayInc\StatelessSession::get('coolpbx_domain');
@@ -30,11 +31,11 @@ class GroupPermissionController extends Controller
 		}
 
 		if (Auth::check()){
-			\Log::debug('Authenticated');
+			Log::debug('Authenticated');
 			$user = User::find($user_uuid);
 			if (count($user->groups) > 0){
 				foreach ($user->groups as $group){
-					\Log::debug('$group->group_name: ' .$group->group_name);
+					Log::debug('$group->group_name: ' .$group->group_name);
 					$g = Group::find($group->group_uuid);
 					$permissions = $g->permissions()->where('v_permissions.permission_name', $permission_name)->get();
 					if (count($permissions) > 0)

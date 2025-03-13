@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\DomainSetting;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class UserSettingController extends Controller
 {
@@ -14,7 +15,7 @@ class UserSettingController extends Controller
         $domain_uuid = Session::get('domain_uuid');
         $user_uuid = Auth::id();
         $answer = null;
-        $user_settings = DB::table(DefaultSetting::getTableName())
+        $user_settings = DB::table(DomainSetting::getTableName())
                 ->where('domain_setting_enabled', '=', 'true')
                 ->where('domain_setting_category', '=', $category)
                 ->where('domain_setting_subcategory', '=', $subcategory)
@@ -40,13 +41,13 @@ class UserSettingController extends Controller
                     case 'name':
                     case 'text':
                     case 'uuid':
-                        $user_setting->user_setting_value;
+                        $answer = $user_setting->user_setting_value;
                         if (settype($answer, 'string') == false){
                             $user_setting->user_setting_value;
                         }
                         break 2;
                     case 'numeric':
-                        $user_setting->user_setting_value;
+                        $answer = $user_setting->user_setting_value;
                         if (strstr($answer, '.')){
                             if (settype($answer, 'float') == false){
                                 $answer = 0.0;

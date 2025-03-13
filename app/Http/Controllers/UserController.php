@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use DB;
-use Auth;
 use App\Http\Controllers\DefaultSettingController;
 use App\Http\Controllers\DomainSettingController;
 use App\Http\Controllers\UserSettingController;
-use Log;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 class UserController extends Controller
@@ -45,7 +45,7 @@ class UserController extends Controller
 				->join('v_domains', 'v_users.domain_uuid', '=', 'v_domains.domain_uuid')
 				->whereRaw('(username = ?) or (username = ? and domain_name = ?)',[$username.'@'.$domainname, $username, $domainname])
 				->value('v_users.user_uuid');
-			\Log::debug('$user_uuid: ' .$this->user_uuid);
+			Log::debug('$user_uuid: ' .$this->user_uuid);
 		}
 		return $this->user_uuid;
 	}
