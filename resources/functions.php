@@ -2118,7 +2118,7 @@
 //define email button (src: https://buttons.cm)
 	if (!function_exists('email_button')) {
 
-		function email_button($text = 'Click Here!', $link = URL, $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
+		function email_button($text = 'Click Here!', $link = 'URL', $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
 
 			// default button radius
 			$radius = !empty($radius) ? $radius : '3px';
