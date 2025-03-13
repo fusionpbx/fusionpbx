@@ -1147,7 +1147,7 @@ class ModXMLCURLController extends Controller
         $user   = $request->input('user');
         $domain_name = $request->input('doman') ?? ($request->input('doman_name') ?? ($request->input('variable_domain_name') ?? $request->input('variable_sip_from_host')));
         $domain_uuid = $request->input('domain_uuid');
-        if (is_null($domain_uuid)){
+        if (isset($domain_uuid)){
             $domain = Domain::where('domain_name', $domain_name)
                             ->where('domain_enabled', 'true')
                             ->first();
