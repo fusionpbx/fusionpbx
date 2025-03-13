@@ -1145,7 +1145,7 @@ class ModXMLCURLController extends Controller
         $event_calling_function = $request->input('Event-Calling-Function');
         $event_calling_file = $request->input('Event-Calling-File');
         $user   = $request->input('user');
-        $domain_name = $request->input('doman') ?? ($request->input('doman_name') ?? ($request->input('variable_domain_name') ?? $request->input('variable_sip_from_host')));
+        $domain_name = $request->input('domain') ?? $request->input('doman_name') ?? $request->input('variable_domain_name') ?? $request->input('variable_sip_from_host');
         $domain_query = Domain::where('domain_name', $domain_name)
                         ->where('domain_enabled', 'true');
         $domain = $domain_query->first();
