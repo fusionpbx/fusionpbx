@@ -1150,7 +1150,7 @@ class ModXMLCURLController extends Controller
                         ->where('domain_enabled', 'true');
         $domain = $domain_query->first();
         if(App::hasDebugModeEnabled()){
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$domain_query->dumpRawSql());
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$domain_query->toRawSql());
         }
         $domain_uuid = $domain->domain_uuid;
         unset($domain);
