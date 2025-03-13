@@ -1201,7 +1201,10 @@ class ModXMLCURLController extends Controller
                             $call_group_array_temp[$value][] = $extension->extension;
                         }
                     }
-                    $call_group_array[$value] = implode(',', $call_group_array_temp);
+
+                    foreach ($call_group_array_temp as $k => $v){
+                        $call_group_array[$k] = implode(',', $v);
+                    }
                 }
             }
 
