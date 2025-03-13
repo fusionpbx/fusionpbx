@@ -1147,14 +1147,13 @@ class ModXMLCURLController extends Controller
         $event_calling_file = $request->input('Event-Calling-File');
         $user   = $request->input('user');
         $domain_name = $request->input('doman') ?? ($request->input('doman_name') ?? ($request->input('variable_domain_name') ?? $request->input('variable_sip_from_host')));
-        if (empty($domain_uuid) && isset($domain_name)){
-            $domain = Domain::where('domain_name', $domain_name)
-                            ->where('domain_enabled', 'true')
-                            ->first();
-            $domain_uuid = $domain->domain_uuid;
-            unset($domain);
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_uuid: '.$domain_uuid);
-        }
+        $domain = Domain::where('domain_name', $domain_name)
+                        ->where('domain_enabled', 'true')
+                        ->first();
+        $domain_uuid = $domain->domain_uuid;
+        unset($domain);
+        Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_uuid: '.$domain_uuid);
+
         if (isset($domain_uuid) && empty($domain_name)){
             $domain = Domain::where('domain_uuid', $domain_uuid)
                             ->where('domain_enabled', 'true')
