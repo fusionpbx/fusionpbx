@@ -146,7 +146,7 @@ class settings {
 
 	/**
 	 * Returns the domain_uuid in this object used to load the settings
-	 * @return string Uuid of the domain used to load the object or an empty string
+	 * @return string UUID of the domain used to load the object or an empty string
 	 */
 	public function get_domain_uuid(): string {
 		if (!empty($this->domain_uuid)) {
@@ -157,7 +157,7 @@ class settings {
 
 	/**
 	 * Returns the user_uuid in this object used to load the settings
-	 * @return string Uuid of the user used to load the object or an empty string
+	 * @return string UUID of the user used to load the object or an empty string
 	 */
 	public function get_user_uuid(): string {
 		if (!empty($this->user_uuid)) {
