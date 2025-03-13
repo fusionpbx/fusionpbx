@@ -1995,7 +1995,7 @@ class ModXMLCURLController extends Controller
                 }
             }
         }
-        $xml->endElement(); // section
+        $xml->fullEndElement(); // section
         $xml->endElement(); // document
         $xml->endDocument();
         $answer = $xml->outputMemory();
