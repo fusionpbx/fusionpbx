@@ -62,8 +62,11 @@ class Domain extends Model
 		return $this->hasMany(GroupPermission::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function domainsettings(): HasMany {
-		return $this->hasMany(DomainSetting::class, 'domain_uuid', 'domain_uuid');
+	public function settings(?bool $domain_setting_enabled = null): HasMany {
+		return $this->hasMany(DomainSetting::class, 'domain_uuid', 'domain_uuid')
+                ->when(is_bool($extension_setting_enabled), function($query) use($domain_setting_enabled){
+                    return $query->where('domain_setting_enabled', $domain_setting_enabled ? 'true' : 'false');
+                });;
 	}
 
 	public function dialplans(): HasMany {
