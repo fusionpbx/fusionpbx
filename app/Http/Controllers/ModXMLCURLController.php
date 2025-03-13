@@ -44,7 +44,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-use Log;
 use XMLWriter;
 
 class ModXMLCURLController extends Controller
