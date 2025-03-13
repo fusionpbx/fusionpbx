@@ -695,7 +695,7 @@
 		$col_count++;
 	}
 	if ($permission['xml_cdr_caller_destination']) {
-		echo "<th class='nowrap'>".$text['label-caller_destination']."</th>\n";
+		echo "<th class='no-wrap'>".$text['label-caller_destination']."</th>\n";
 		$col_count++;
 	}
 	if ($permission['xml_cdr_destination']) {
@@ -913,7 +913,7 @@
 					}
 				//extension
 					if ($permission['xml_cdr_extension']) {
-						$content .= "	<td class='middle hide-sm-dn nowrap'>".$row['extension']." ".escape($row['extension_name'])."</td>\n";
+						$content .= "	<td class='middle hide-sm-dn no-wrap'>".$row['extension']." ".escape($row['extension_name'])."</td>\n";
 					}
 				//domain name
 					if ($permission['xml_cdr_all'] && $_REQUEST['show'] == "all") {
