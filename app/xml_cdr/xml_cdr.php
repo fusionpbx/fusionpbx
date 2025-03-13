@@ -664,11 +664,11 @@
 		echo ".hide-sm-dn, .hide-md-dn, .hide-lg-dn {\n";
 		echo "	all: revert;\n";
 		echo "}\n";
-		echo ".list {\n";
+		echo "div.card {\n";
 		echo "	overflow-x: scroll;\n";
 		echo "}\n";
 	} else {
-		echo ".list {\n";
+		echo "div.card {\n";
 		echo "	overflow-x: hidden;\n";
 		echo "}\n";
 	}
