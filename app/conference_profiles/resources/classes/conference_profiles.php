@@ -26,12 +26,7 @@
 
 /**
  * conference_profiles class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('conference_profiles')) {
 	class conference_profiles {
 
 		/**
@@ -432,6 +427,3 @@ if (!class_exists('conference_profiles')) {
 		}
 
 	}
-}
-
-?>

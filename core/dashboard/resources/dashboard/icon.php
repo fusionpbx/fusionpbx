@@ -12,10 +12,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], dirname($dashboard_url));
 
 //get the dashboard label
-	$dashboard_label = $text['title-'.$dashboard_key];
-	if (empty($dashboard_label)) {
-		$dashboard_label = $dashboard_name;
-	}
+	$dashboard_label = $text['title-'.$dashboard_key] ?? $dashboard_name;
 
 //prepare variables
 	$dashboard_target = ($dashboard_target == 'new') ? '_blank' : '_self';

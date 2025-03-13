@@ -82,8 +82,12 @@
 					$contact_note = $row['contact_note'];
 					$contact_note = escape($contact_note);
 					$contact_note = str_replace("\n","<br />",$contact_note);
+					$list_row_url = '';
 					if (permission_exists('contact_note_add')) {
 						$list_row_url = "contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid']);
+						if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+							$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+						}
 					}
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('contact_note_delete')) {
@@ -112,3 +116,4 @@
 	}
 
 ?>
+

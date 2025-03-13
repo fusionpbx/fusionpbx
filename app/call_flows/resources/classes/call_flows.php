@@ -25,7 +25,6 @@
 */
 
 //define the call_flows class
-if (!class_exists('call_flows')) {
 	class call_flows {
 
 		/**
@@ -410,6 +409,3 @@ if (!class_exists('call_flows')) {
 		} //method
 
 	} //class
-}
-
-?>

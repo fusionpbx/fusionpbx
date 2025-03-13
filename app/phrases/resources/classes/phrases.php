@@ -25,7 +25,6 @@
 */
 
 //define the phrases class
-if (!class_exists('phrases')) {
 	class phrases {
 
 		/**
@@ -76,7 +75,7 @@ if (!class_exists('phrases')) {
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
+						header('Location: '.$this->list_page);$is_uuid
 						exit;
 					}
 
@@ -496,3 +495,4 @@ if (!class_exists('phrases')) {
 		}
 	}
 }
+

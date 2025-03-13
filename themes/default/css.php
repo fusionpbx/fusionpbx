@@ -107,6 +107,48 @@ $heading_count_text_color = $_SESSION['theme']['heading_count_text_color']['text
 $heading_count_text_weight = $_SESSION['theme']['heading_count_text_weight']['text'] ?? '700';
 $heading_count_border_radius = $_SESSION['theme']['heading_count_border_radius']['text'] ?? '10px';
 $heading_count_background_color = $_SESSION['theme']['heading_count_background_color']['text'] ?? '#28a745';
+$body_color = $_SESSION['theme']['body_color']['text'] ?? '#ffffff';
+$body_border_radius = $_SESSION['theme']['body_border_radius']['text'] ?? null;
+$body_shadow_color = isset($_SESSION['theme']['body_shadow_color']['text']) ? '0 1px 4px '.$_SESSION['theme']['body_shadow_color']['text'] : 'none';
+$body_text_color = $_SESSION['theme']['body_text_color']['text'] ?? '#5f5f5f';
+$body_text_size = $_SESSION['theme']['body_text_size']['text'] ?? '12px';
+$body_text_font = $_SESSION['theme']['body_text_font']['text'] ?? 'arial';
+$body_width = $_SESSION['theme']['body_width']['text'] ?? '90%';
+$heading_text_color = $_SESSION['theme']['heading_text_color']['text'] ?? '#952424';
+$heading_text_size = $_SESSION['theme']['heading_text_size']['text'] ?? '15px';
+$heading_text_font = $_SESSION['theme']['heading_text_font']['text'] ?? 'arial';
+$input_height = $_SESSION['theme']['input_height']['text'] ?? '28px';
+$input_text_font = $_SESSION['theme']['input_text_font']['text'] ?? 'Arial';
+$input_text_size = $_SESSION['theme']['input_text_size']['text'] ?? '12px';
+$input_text_color = $_SESSION['theme']['input_text_color']['text'] ?? '#000';
+$input_text_placeholder_color = $_SESSION['theme']['input_text_placeholder_color']['text'] ?? '#999999; opacity: 1.0;';
+$input_border_size = $_SESSION['theme']['input_border_size']['text'] ?? '1px';
+$input_border_style = $_SESSION['theme']['input_border_style']['text'] ?? 'solid';
+$input_border_color = $_SESSION['theme']['input_border_color']['text'] ?? '#c0c0c0';
+$input_border_color_focus = $_SESSION['theme']['input_border_color_focus']['text'] ?? '#c0c0c0';
+$input_border_color_hover = $_SESSION['theme']['input_border_color_hover']['text'] ?? '#c0c0c0';
+$input_border_color_hover_focus = $_SESSION['theme']['input_border_color_hover_focus']['text'] ?? '#c0c0c0';
+$input_border_radius = $_SESSION['theme']['input_border_radius']['text'] ?? null;
+$input_outline_size = $_SESSION['theme']['input_outline_size']['text'] ?? '3px';
+$input_outline_size_focus = $_SESSION['theme']['input_outline_size_focus']['text'] ?? $input_outline_size;
+$input_outline_size_hover = $_SESSION['theme']['input_outline_size_hover']['text'] ?? $input_outline_size;
+$input_outline_size_hover_focus = $_SESSION['theme']['input_outline_size_hover_focus']['text'] ?? $input_outline_size;
+$input_outline_style = $_SESSION['theme']['input_outline_style']['text'] ?? null;
+$input_outline_color = $_SESSION['theme']['input_outline_color']['text'] ?? 'transparent';
+$input_outline_color_focus = $_SESSION['theme']['input_outline_color_focus']['text'] ?? $input_outline_color;
+$input_outline_color_hover = $_SESSION['theme']['input_outline_color_hover']['text'] ?? $input_outline_color;
+$input_outline_color_hover_focus = $_SESSION['theme']['input_outline_color_hover_focus']['text'] ?? $input_outline_color;
+$input_outline_radius = $_SESSION['theme']['input_outline_radius']['text'] ?? $input_border_radius ?? null;
+$input_background_color = $_SESSION['theme']['input_background_color']['text'] ?? '#fff';
+$input_shadow_inner_color = isset($_SESSION['theme']['input_shadow_inner_color']['text']) ? '0 0 3px '.$_SESSION['theme']['input_shadow_inner_color']['text'].' inset' : null;
+$input_shadow_inner_color_focus = isset($_SESSION['theme']['input_shadow_inner_color_focus']['text']) ? '0 0 3px '.$_SESSION['theme']['input_shadow_inner_color_focus']['text'].' inset' : null;
+$input_shadow_outer_color = isset($_SESSION['theme']['input_shadow_outer_color']['text']) ? '0 0 5px '.$_SESSION['theme']['input_shadow_outer_color']['text'] : null;
+$input_shadow_outer_color_focus = isset($_SESSION['theme']['input_shadow_outer_color_focus']['text']) ? '0 0 5px '.$_SESSION['theme']['input_shadow_outer_color_focus']['text'] : null;
+$input_toggle_style = $_SESSION['theme']['input_toggle_style']['text'] ?? 'switch_round';
+$input_toggle_switch_background_color_true = $_SESSION['theme']['input_toggle_switch_background_color_true']['text'] ?? '#2e82d0';
+$input_toggle_switch_background_color_false = $_SESSION['theme']['input_toggle_switch_background_color_false']['text'] ?? $input_border_color;
+$input_toggle_switch_handle_symbol = filter_var($_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+$input_toggle_switch_handle_color = $_SESSION['theme']['input_toggle_switch_handle_color']['text'] ?? '#ffffff';
 $login_body_top = $_SESSION['theme']['login_body_top']['text'] ?? '50%';
 $login_body_left = $_SESSION['theme']['login_body_left']['text'] ?? '50%';
 $login_body_padding = $_SESSION['theme']['login_body_padding']['text'] ?? '30px';
@@ -121,39 +163,30 @@ $login_link_text_color = $_SESSION['theme']['login_link_text_color']['text'] ?? 
 $login_link_text_size = $_SESSION['theme']['login_link_text_size']['text'] ?? '11px';
 $login_link_text_font = $_SESSION['theme']['login_link_text_font']['text'] ?? 'Arial';
 $login_link_text_color_hover = $_SESSION['theme']['login_link_text_color_hover']['text'] ?? '#5082ca';
-$body_color = $_SESSION['theme']['body_color']['text'] ?? '#ffffff';
-$body_border_radius = $_SESSION['theme']['body_border_radius']['text'] ?? null;
-$body_shadow_color = isset($_SESSION['theme']['body_shadow_color']['text']) ? '0 1px 4px '.$_SESSION['theme']['body_shadow_color']['text'] : 'none';
-$body_text_color = $_SESSION['theme']['body_text_color']['text'] ?? '#5f5f5f';
-$body_text_size = $_SESSION['theme']['body_text_size']['text'] ?? '12px';
-$body_text_font = $_SESSION['theme']['body_text_font']['text'] ?? 'arial';
-$body_width = $_SESSION['theme']['body_width']['text'] ?? '90%';
-$heading_text_color = $_SESSION['theme']['heading_text_color']['text'] ?? '#952424';
-$heading_text_size = $_SESSION['theme']['heading_text_size']['text'] ?? '15px';
-$heading_text_font = $_SESSION['theme']['heading_text_font']['text'] ?? 'arial';
-$input_text_placeholder_color = $_SESSION['theme']['input_text_placeholder_color']['text'] ?? '#999999; opacity: 1.0;';
-$input_text_font = $_SESSION['theme']['input_text_font']['text'] ?? 'Arial';
-$input_text_size = $_SESSION['theme']['input_text_size']['text'] ?? '12px';
-$input_text_color = $_SESSION['theme']['input_text_color']['text'] ?? '#000';
-$input_border_size = $_SESSION['theme']['input_border_size']['text'] ?? '1px';
-$input_border_color = $_SESSION['theme']['input_border_color']['text'] ?? '#c0c0c0';
-$input_border_color_hover_focus = $_SESSION['theme']['input_border_color_hover_focus']['text'] ?? '#c0c0c0';
-$input_background_color = $_SESSION['theme']['input_background_color']['text'] ?? '#fff';
-$input_shadow_inner_color = isset($_SESSION['theme']['input_shadow_inner_color']['text']) ? '0 0 3px '.$_SESSION['theme']['input_shadow_inner_color']['text'].' inset' : null;
-$input_shadow_inner_color_focus = isset($_SESSION['theme']['input_shadow_inner_color_focus']['text']) ? '0 0 3px '.$_SESSION['theme']['input_shadow_inner_color_focus']['text'].' inset' : null;
-$input_shadow_outer_color = isset($_SESSION['theme']['input_shadow_outer_color']['text']) ? '0 0 5px '.$_SESSION['theme']['input_shadow_outer_color']['text'] : null;
-$input_shadow_outer_color_focus = isset($_SESSION['theme']['input_shadow_outer_color_focus']['text']) ? '0 0 5px '.$_SESSION['theme']['input_shadow_outer_color_focus']['text'] : null;
-$input_border_radius = $_SESSION['theme']['input_border_radius']['text'] ?? null;
-$input_border_color_hover = $_SESSION['theme']['input_border_color_hover']['text'] ?? '#c0c0c0';
-$input_border_color_focus = $_SESSION['theme']['input_border_color_focus']['text'] ?? '#c0c0c0';
 $login_text_color = $_SESSION['theme']['login_text_color']['text'] ?? '#282828';
 $login_text_size = $_SESSION['theme']['login_text_size']['text'] ?? '12px';
 $login_text_font = $_SESSION['theme']['login_text_font']['text'] ?? 'Arial';
 $login_input_text_font = $_SESSION['theme']['login_input_text_font']['text'] ?? $input_text_font;
 $login_input_text_size = $_SESSION['theme']['login_input_text_size']['text'] ?? $input_text_size;
 $login_input_text_color = $_SESSION['theme']['login_input_text_color']['text'] ?? $input_text_color;
+$login_input_text_placeholder_color = $_SESSION['theme']['login_input_text_placeholder_color']['text'] ?? $input_text_placeholder_color;
 $login_input_border_size = $_SESSION['theme']['login_input_border_size']['text'] ?? $input_border_size;
+$login_input_border_style = $_SESSION['theme']['login_input_border_style']['text'] ?? $input_border_style;
 $login_input_border_color = $_SESSION['theme']['login_input_border_color']['text'] ?? $input_border_color;
+$login_input_border_color_focus = $_SESSION['theme']['login_input_border_color_focus']['text'] ?? $input_border_color_focus;
+$login_input_border_color_hover = $_SESSION['theme']['login_input_border_color_hover']['text'] ?? $input_border_color_hover;
+$login_input_border_color_hover_focus = $_SESSION['theme']['login_input_border_color_hover_focus']['text'] ?? $input_border_color_hover_focus;
+$login_input_border_radius = $_SESSION['theme']['login_input_border_radius']['text'] ?? $input_border_radius;
+$login_input_outline_size = $_SESSION['theme']['login_input_outline_size']['text'] ?? $input_outline_size;
+$login_input_outline_size_focus = $_SESSION['theme']['login_input_outline_size_focus']['text'] ?? $login_input_outline_size;
+$login_input_outline_size_hover = $_SESSION['theme']['login_input_outline_size_hover']['text'] ?? $login_input_outline_size;
+$login_input_outline_size_hover_focus = $_SESSION['theme']['login_input_outline_size_hover_focus']['text'] ?? $login_input_outline_size;
+$login_input_outline_style = $_SESSION['theme']['login_input_outline_style']['text'] ?? $input_outline_style;
+$login_input_outline_color = $_SESSION['theme']['login_input_outline_color']['text'] ?? $input_outline_color;
+$login_input_outline_color_focus = $_SESSION['theme']['login_input_outline_color_focus']['text'] ?? $input_outline_color_focus;
+$login_input_outline_color_hover = $_SESSION['theme']['login_input_outline_color_hover']['text'] ?? $input_outline_color_hover;
+$login_input_outline_color_hover_focus = $_SESSION['theme']['login_input_outline_color_hover_focus']['text'] ?? $input_outline_color_hover_focus;
+$login_input_outline_radius = $_SESSION['theme']['login_input_outline_radius']['text'] ?? $login_input_border_radius ?? null;
 $login_input_background_color = $_SESSION['theme']['login_input_background_color']['text'] ?? $input_background_color;
 $login_input_shadow_inner_color = $_SESSION['theme']['login_input_shadow_inner_color']['text'] ?? $input_shadow_inner_color;
 $login_input_shadow_inner_color = $login_input_shadow_inner_color != 'none' ? '0 0 3px '.$login_input_shadow_inner_color.' inset' : 'none';
@@ -163,16 +196,7 @@ $login_input_shadow_inner_color_focus = $_SESSION['theme']['login_input_shadow_i
 $login_input_shadow_inner_color_focus = $login_input_shadow_inner_color_focus != 'none' ? '0 0 3px '.$login_input_shadow_inner_color_focus.' inset' : 'none';
 $login_input_shadow_outer_color_focus = $_SESSION['theme']['login_input_shadow_outer_color_focus']['text'] ?? $input_shadow_outer_color_focus;
 $login_input_shadow_outer_color_focus = $login_input_shadow_outer_color_focus != 'none' ? '0 0 5px '.$login_input_shadow_outer_color_focus : 'none';
-$login_input_border_radius = $_SESSION['theme']['login_input_border_radius']['text'] ?? $input_border_radius;
-$login_input_border_color_hover = $_SESSION['theme']['login_input_border_color_hover']['text'] ?? $input_border_color_hover;
-$login_input_border_color_hover_focus = $_SESSION['theme']['login_input_border_color_hover_focus']['text'] ?? $input_border_color_hover_focus;
-$login_input_text_placeholder_color = $_SESSION['theme']['login_input_text_placeholder_color']['text'] ?? $input_text_placeholder_color;
 $pwstrength_background_color = $_SESSION['theme']['input_background_color']['text'] ?? 'rgb(245, 245, 245)';
-$input_toggle_style = $_SESSION['theme']['input_toggle_style']['text'] ?? 'switch_round';
-$input_toggle_switch_background_color_true = $_SESSION['theme']['input_toggle_switch_background_color_true']['text'] ?? '#2e82d0';
-$input_toggle_switch_background_color_false = $_SESSION['theme']['input_toggle_switch_background_color_false']['text'] ?? $input_border_color;
-$input_toggle_switch_handle_symbol = $_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] ?? 'false';
-$input_toggle_switch_handle_color = $_SESSION['theme']['input_toggle_switch_handle_color']['boolean'] ?? '#ffffff';
 $table_heading_text_color = $_SESSION['theme']['table_heading_text_color']['text'] ?? '#3164ad';
 $table_heading_text_size = $_SESSION['theme']['table_heading_text_size']['text'] ?? '12px';
 $table_heading_text_font = $_SESSION['theme']['table_heading_text_font']['text'] ?? 'arial';
@@ -294,7 +318,7 @@ $modal_message_color = $_SESSION['theme']['modal_message_color']['text'] ?? '#44
 $modal_message_alignment = $_SESSION['theme']['modal_message_alignment']['text'] ?? 'left';
 $modal_message_margin = $_SESSION['theme']['modal_message_margin']['text'] ?? '0 0 20px 0';
 $audio_player_indicator_color = $_SESSION['theme']['audio_player_indicator_color']['text'] ?? '#b90004';
-$audio_player_waveform_enabled = $_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? 'false';
+$audio_player_waveform_enabled = filter_var($_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL);
 $audio_player_waveform_height = $_SESSION['theme']['audio_player_waveform_height']['text'] ?? '70px';
 $custom_css_code = $_SESSION['theme']['custom_css_code']['text'] ?? null;
 
@@ -331,29 +355,29 @@ if (!empty($_SESSION['theme'])) {
 $background_images_enabled = false;
 if (!empty($_SESSION['username'])) {
 	//logged in - use standard background images
-	if (!empty($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+	if (filter_var($_SESSION['theme']['background_image_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['background_image'];
 	}
 
 	//logged in - use standard background colors
-	if (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	if (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
 else {
 	//not logged in - try using login background images
-	if (isset($_SESSION['theme']['login_background_image_enabled']['boolean']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
+	if (filter_var($_SESSION['theme']['login_background_image_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['login_background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['login_background_image'];
 	}
 
 	//otherwise, use standard background images
-	if (!empty($_SESSION['theme']['background_image_enabled']['boolean']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+	if (filter_var($_SESSION['theme']['background_image_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['background_image'];
 	}
@@ -366,11 +390,11 @@ else {
 	elseif (!empty($_SESSION['theme']['login_background_color']) && !empty($_SESSION['theme']['login_background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
@@ -703,18 +727,28 @@ else { //default: white
 	/* sub menu container (multiple columns) */
 	@media(min-width: 576px) {
 		ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column {
-			width: 330px;
+			width: max-content;
 			}
+		ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column:hover {
+			display: flex;
+			}
+		}
+
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item {
+		width: 100%;
+		margin-right: calc(<?=$menu_sub_text_size?> * 2);
 		}
 
 	/* sub menu item */
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link,
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item > a.nav-link {
+		width: 100%;
 		font-family: <?=$menu_sub_text_font?>;
 		color: <?=$menu_sub_text_color?>;
 		font-size: <?=$menu_sub_text_size?>;
 		margin: 0;
 		padding: 3px 14px !important;
+		white-space: nowrap;
 		}
 
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown {
@@ -749,7 +783,6 @@ else { //default: white
 		display: inline-block;
 		font-size: 8pt;
 		margin: 0 0 0 8px;
-		opacity: 0.30;
 		}
 
 	div.menu_side_sub > a.menu_side_item_sub > span.fas,
@@ -787,8 +820,13 @@ else { //default: white
 
 	/* logout icon */
 	a.logout_icon {
+		<?php if ($menu_style == 'fixed') { ?>
+			position: absolute;
+		<?php } else { ?>
+			display: block;
+		<?php } ?>
 		color: <?=$logout_icon_color?>;
-		padding: 14px 10px;
+		padding: 14px 10px 11px 10px;
 		}
 
 	a.logout_icon:hover,
@@ -1061,46 +1099,6 @@ else { //default: white
 			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
-
-		div#body_header a {
-			color: <?=$body_header_text_link_color?>;
-			}
-
-		div#body_header a:hover {
-			color: <?=$body_header_text_link_color_hover?>;
-			text-decoration: none;
-			}
-
-		div#body_header_user_menu {
-			z-index: 6;
-			display: none;
-			position: absolute;
-			top: 50px;
-			/* right: specified in /resources/classes/menu.php */
-			padding: 15px;
-			background-color: <?=$body_header_background_color?>;
-			border: 1px solid <?=color_adjust($body_header_shadow_color, 0.05)?>;
-			<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
-			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			<?php unset($br); ?>
-			-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			}
-
-		@media (max-width: 575.98px) {
-			div#body_header_user_menu {
-				width: calc(100% - 20px);
-				/* right: specified in /resources/classes/menu.php */
-				}
-			}
-
-		div#body_header_user_menu a {
-			font-size: 90%;
-			text-decoration: none;
-			}
 	<?php } else { ?>
 		div#body_header {
 			padding: 10px;
@@ -1111,6 +1109,48 @@ else { //default: white
 			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
 	<?php } ?>
+
+	div#body_header a {
+		color: <?=$body_header_text_link_color?>;
+		}
+
+	div#body_header a:hover {
+		color: <?=$body_header_text_link_color_hover?>;
+		text-decoration: none;
+		}
+
+	div#body_header_user_menu {
+		z-index: 6;
+		display: none;
+		position: absolute;
+		<?php if ($menu_style != 'inline') { ?>
+			top: 50px;
+		<?php } ?>
+		/* right: specified in /resources/classes/menu.php */
+		padding: 15px;
+		background-color: <?=$body_header_background_color?>;
+		border: 1px solid <?=color_adjust($body_header_shadow_color, 0.05)?>;
+		<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		}
+
+	@media (max-width: 575.98px) {
+		div#body_header_user_menu {
+			width: calc(100% - 20px);
+			/* right: specified in /resources/classes/menu.php */
+			}
+		}
+
+	div#body_header_user_menu a {
+		font-size: 90%;
+		text-decoration: none;
+		}
 
 	div#body_header_brand_image {
 		display: inline-block;
@@ -1504,8 +1544,8 @@ else { //default: white
 		bottom: 0;
 		width: 340px;
 		padding: 20px 20px 100px 20px;
-		font-family: arial, san-serif;
-		font-size: 10pt;
+		font-family: <?=$table_row_text_font?>;
+		font-size: <?=$table_row_text_size?>;
 		overflow: hidden;
 		background: <?=$domain_selector_background_color?>;
 		-webkit-box-shadow: <?=$domain_selector_shadow_color?>;
@@ -1789,12 +1829,19 @@ else { //default: white
 		font-size: <?=$input_text_size?>;
 		color: <?=$input_text_color?>;
 		text-align: left;
-		height: 28px;
+		height: <?=$input_height?>;
 		padding: 4px 6px;
 		margin: 1px;
 		border-width: <?=$input_border_size?>;
-		border-style: solid;
+		border-style: <?=$input_border_style?>;
 		border-color: <?=$input_border_color?>;
+		outline-width: <?=$input_outline_size?>;
+		<?php if (!empty($input_outline_style)) { ?>
+			outline-style: <?=$input_outline_style?>;
+		<?php } ?>
+		<?php if (!empty($input_outline_color)) { ?>
+			outline-color: <?=$input_outline_color?>;
+		<?php } ?>
 		background: <?=$input_background_color?>;
 		<?php
 		if (!empty($input_shadow_inner_color)) { $shadows[] = $input_shadow_inner_color; }
@@ -1814,23 +1861,28 @@ else { //default: white
 		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		<?php unset($br); ?>
+		<?php if (!empty($input_outline_radius)) { ?>
+			outline-radius: <?=$input_outline_radius?>
+		<?php } ?>
 		vertical-align: middle;
 		}
 
+	select.txt,
 	textarea.txt,
 	input[type=text].txt,
 	input[type=number].txt,
 	input[type=password].txt,
 	input[type=email].txt,
+	select.formfld,
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
 	input[type=url].formfld,
 	input[type=password].formfld,
 	input[type=email].formfld {
-		transition: width 0.25s;
-		-moz-transition: width 0.25s;
-		-webkit-transition: width 0.25s;
+		transition: all 0.25s ease;
+		-moz-transition: all 0.25s ease;
+		-webkit-transition: all 0.25s ease;
 		}
 
 	select.txt,
@@ -1846,12 +1898,14 @@ else { //default: white
 			}
 		}
 
+	select.txt:hover,
 	textarea.txt:hover,
 	input[type=text].txt:hover,
 	input[type=number].txt:hover,
 	input[type=password].txt:hover,
 	input[type=email].txt:hover,
 	label.txt:hover,
+	select.formfld:hover,
 	textarea.formfld:hover,
 	input[type=text].formfld:hover,
 	input[type=number].formfld:hover,
@@ -1859,15 +1913,29 @@ else { //default: white
 	input[type=password].formfld:hover,
 	input[type=email].formfld:hover,
 	label.formfld:hover {
-		border-color: <?=$input_border_color_hover?>;
+		border: none !important;
+		border-width: <?=$input_border_size?> !important;
+		border-style: <?=$input_border_style?> !important;
+		border-color: <?=$input_border_color_hover?> !important;
+		<?php if (!empty($input_outline_size_hover)) { ?>
+			outline-width: <?=$input_outline_size_hover?> !important;
+		<?php } ?>
+		<?php if (!empty($input_outline_style)) { ?>
+			outline-style: <?=$input_outline_style?>;
+		<?php } ?>
+		<?php if (!empty($input_outline_color_hover)) { ?>
+			outline-color: <?=$input_outline_color_hover?> !important;
+		<?php } ?>
 		}
 
+	select.txt:focus,
 	textarea.txt:focus,
 	input[type=text].txt:focus,
 	input[type=number].txt:focus,
 	input[type=password].txt:focus,
 	input[type=email].txt:focus,
 	label.txt:focus,
+	select.formfld:focus,
 	textarea.formfld:focus,
 	input[type=text].formfld:focus,
 	input[type=number].formfld:focus,
@@ -1875,7 +1943,10 @@ else { //default: white
 	input[type=password].formfld:focus,
 	input[type=email].formfld:focus,
 	label.formfld:focus {
-		border-color: <?=$input_border_color_focus?>;
+		border: none !important;
+		border-width: <?=$input_border_size?> !important;
+		border-style: <?=$input_border_style?> !important;
+		border-color: <?=$input_border_color_focus?> !important;
 		/* first clear */
 			-webkit-box-shadow: none;
 			-moz-box-shadow: none;
@@ -1895,17 +1966,98 @@ else { //default: white
 			?>
 		}
 
+	select.txt:focus-visible,
+	textarea.txt:focus-visible,
+	input[type=text].txt:focus-visible,
+	input[type=number].txt:focus-visible,
+	input[type=password].txt:focus-visible,
+	input[type=email].txt:focus-visible,
+	label.txt:focus-visible,
+	select.formfld:focus-visible,
+	textarea.formfld:focus-visible,
+	input[type=text].formfld:focus-visible,
+	input[type=number].formfld:focus-visible,
+	input[type=url].formfld:focus-visible,
+	input[type=password].formfld:focus-visible,
+	input[type=email].formfld:focus-visible,
+	label.formfld:focus-visible {
+		<?php if (!empty($input_outline_size_focus)) { ?>
+			outline-width: <?=$input_outline_size_focus?> !important;
+		<?php } ?>
+		<?php if (!empty($input_outline_style)) { ?>
+			outline-style: <?=$input_outline_style?> !important;
+		<?php } ?>
+		<?php if (!empty($input_outline_color_focus)) { ?>
+			outline-color: <?=$input_outline_color_focus?> !important;
+		<?php } ?>
+		}
+
+	select.txt:hover:focus,
+	textarea.txt:hover:focus,
+	input[type=text].txt:hover:focus,
+	input[type=number].txt:hover:focus,
+	input[type=password].txt:hover:focus,
+	input[type=email].txt:hover:focus,
+	label.txt:hover:focus,
+	select.formfld:hover:focus,
+	textarea.formfld:hover:focus,
+	input[type=text].formfld:hover:focus,
+	input[type=number].formfld:hover:focus,
+	input[type=url].formfld:hover:focus,
+	input[type=password].formfld:hover:focus,
+	input[type=email].formfld:hover:focus,
+	label.formfld:hover:focus {
+		border: none !important;
+		border-width: <?=$input_border_size?> !important;
+		border-style: <?=$input_border_style?> !important;
+		border-color: <?=$input_border_color_hover_focus?> !important;
+		}
+
+	select.txt:hover:focus-visible,
+	textarea.txt:hover:focus-visible,
+	input[type=text].txt:hover:focus-visible,
+	input[type=number].txt:hover:focus-visible,
+	input[type=password].txt:hover:focus-visible,
+	input[type=email].txt:hover:focus-visible,
+	label.txt:hover:focus-visible,
+	select.formfld:hover:focus-visible,
+	textarea.formfld:hover:focus-visible,
+	input[type=text].formfld:hover:focus-visible,
+	input[type=number].formfld:hover:focus-visible,
+	input[type=url].formfld:hover:focus-visible,
+	input[type=password].formfld:hover:focus-visible,
+	input[type=email].formfld:hover:focus-visible,
+	label.formfld:hover:focus-visible {
+		<?php if (!empty($input_outline_size_hover_focus)) { ?>
+			outline-width: <?=$input_outline_size_hover_focus?> !important;
+		<?php } ?>
+		<?php if (!empty($input_outline_style)) { ?>
+			outline-style: <?=$input_outline_style?> !important;
+		<?php } ?>
+		<?php if (!empty($input_outline_color_hover_focus)) { ?>
+			outline-color: <?=$input_outline_color_hover_focus?> !important;
+		<?php } ?>
+		}
+
 	textarea.txt,
 	textarea.formfld {
 		resize: both;
 		}
 
-	input.login {
+	input.txt.login {
 		font-family: <?=$login_input_text_font?>;
 		font-size: <?=$login_input_text_size?>;
 		color: <?=$login_input_text_color?>;
 		border-width: <?=$login_input_border_size?>;
+		border-style: <?=$login_input_border_style?>;
 		border-color: <?=$login_input_border_color?>;
+		outline-width: <?=$login_input_outline_size?>;
+		<?php if (!empty($login_input_outline_style)) { ?>
+			outline-style: <?=$login_input_outline_style?>;
+		<?php } ?>
+		<?php if (!empty($login_input_outline_color)) { ?>
+			outline-color: <?=$login_input_outline_color?>;
+		<?php } ?>
 		background: <?=$login_input_background_color?>;
 		/* first clear */
 			-webkit-box-shadow: none;
@@ -1930,14 +2082,32 @@ else { //default: white
 		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		<?php unset($br); ?>
+		<?php if (!empty($login_input_outline_radius)) { ?>
+			outline-radius: <?=$login_input_outline_radius?>
+		<?php } ?>
 		}
 
-	input.login:hover {
-		border-color: <?=$login_input_border_color_hover?>;
+	input.txt.login:hover {
+		border: none !important;
+		border-width: <?=$login_input_border_size?> !important;
+		border-style: <?=$login_input_border_style?> !important;
+		border-color: <?=$login_input_border_color_hover?> !important;
+		<?php if (!empty($login_input_outline_size_hover)) { ?>
+			outline-width: <?=$login_input_outline_size_hover?> !important;
+		<?php } ?>
+		<?php if (!empty($login_input_outline_style)) { ?>
+			outline-style: <?=$login_input_outline_style?> !important;
+		<?php } ?>
+		<?php if (!empty($login_input_outline_color_hover)) { ?>
+			outline-color: <?=$login_input_outline_color_hover?> !important;
+		<?php } ?>
 		}
 
-	input.login:focus {
-		border-color: <?=$login_input_border_color_hover_focus?>;
+	input.txt.login:focus {
+		border: none !important;
+		border-width: <?=$login_input_border_size?> !important;
+		border-style: <?=$login_input_border_style?> !important;
+		border-color: <?=$login_input_border_color_focus?> !important;
 		/* first clear */
 			-webkit-box-shadow: none;
 			-moz-box-shadow: none;
@@ -1957,12 +2127,45 @@ else { //default: white
 			?>
 		}
 
+	input.txt.login:focus-visible {
+		outline: none !important;
+		<?php if (!empty($login_input_outline_size_focus)) { ?>
+			outline-width: <?=$login_input_outline_size_focus?> !important;
+		<?php } ?>
+		<?php if (!empty($login_input_outline_style)) { ?>
+			outline-style: <?=$login_input_outline_style?> !important;
+		<?php } ?>
+		<?php if (!empty($login_input_outline_color_focus)) { ?>
+			outline-color: <?=$login_input_outline_color_focus?> !important;
+		<?php } ?>
+		}
+
+	input.txt.login:hover:focus {
+		border: none !important;
+		border-width: <?=$login_input_border_size?> !important;
+		border-style: <?=$login_input_border_style?> !important;
+		border-color: <?=$login_input_border_color_hover_focus?> !important;
+		}
+
+	input.txt.login:hover:focus-visible {
+		outline: none !important;
+		<?php if (!empty($login_input_outline_size_hover_focus)) { ?>
+			outline-width: <?=$login_input_outline_size_hover_focus?> !important;
+		<?php } ?>
+		<?php if (!empty($login_input_outline_style)) { ?>
+			outline-style: <?=$login_input_outline_style?> !important;
+		<?php } ?>
+		<?php if (!empty($login_input_outline_color_hover_focus)) { ?>
+			outline-color: <?=$login_input_outline_color_hover_focus?> !important;
+		<?php } ?>
+		}
+
 	/* style placeholder text (for browsers that support the attribute) - note: can't stack, each must be seperate */
-	input.login::-webkit-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* chrome/opera/safari */
-	input.login::-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 19+ */
-	input.login:-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 18- */
-	input.login:-ms-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ie 10+ */
-	input.login::placeholder { color: <?=$login_input_text_placeholder_color?>; } /* official standard */
+	input.txt.login::-webkit-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* chrome/opera/safari */
+	input.txt.login::-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 19+ */
+	input.txt.login:-moz-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ff 18- */
+	input.txt.login:-ms-input-placeholder { color: <?=$login_input_text_placeholder_color?>; } /* ie 10+ */
+	input.txt.login::placeholder { color: <?=$login_input_text_placeholder_color?>; } /* official standard */
 
 	input[type=password].formfld_highlight_bad,
 	input[type=password].formfld_highlight_bad:hover,
@@ -1999,9 +2202,10 @@ else { //default: white
 		width: 70px;
 		min-width: 70px;
 		margin-left: 15px;
-		-webkit-transition: all .5s ease;
-		-moz-transition: all .5s ease;
-		transition: all .5s ease;
+		-webkit-transition: all 0.25s ease;
+		-moz-transition: all 0.25s ease;
+		transition: all 0.25s ease;
+		vertical-align: middle;
 		}
 
 	input[type=text].list-search:focus {
@@ -2031,7 +2235,7 @@ else { //default: white
 
 	span.playback_progress_bar {
 		background-color: <?=$audio_player_indicator_color?>;
-		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+		<?php if ($audio_player_waveform_enabled) { ?>
 			width: 2px;
 			height: <?=$audio_player_waveform_height?>;
 			margin-bottom: 0;
@@ -2063,7 +2267,7 @@ else { //default: white
 		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
-		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+		<?php if ($audio_player_waveform_enabled) { ?>
 			padding-bottom: 0px;
 			background-size: 100% 100% !important;
 			background-repeat: no-repeat;
@@ -2141,8 +2345,9 @@ else { //default: white
 		<?php if ($input_toggle_style == 'switch_round') { ?>
 			border-radius: 22px;
 		<?php } ?>
-		-webkit-transition: .2s;
-		transition: .2s;
+		-webkit-transition: all 0.25s ease;
+		-moz-transition: all 0.25s ease;
+		transition: all 0.25s ease;
 		}
 
 	.slider:before { /* when disabled */
@@ -2182,8 +2387,9 @@ else { //default: white
 		<?php if ($input_toggle_style == 'switch_round') { ?>
 			border-radius: 50%;
 		<?php } ?>
-		-webkit-transition: .2s;
-		transition: .2s;
+		-webkit-transition: all 0.25s ease;
+		-moz-transition: all 0.25s ease;
+		transition: all 0.25s ease;
 		}
 
 	input:checked + .slider { /* when enabled */
@@ -2700,6 +2906,7 @@ else { //default: white
 
 	div.card {
 		margin-bottom: 15px;
+		overflow-x: auto;
 		<?php
 		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
 			if (isset($card_border_size) && !empty($card_border_color)) {
@@ -3061,10 +3268,41 @@ else { //default: white
 		}
 
 	div.grid > div.box.contact-details {
-		padding: 15px;
-		border: 1px solid <?=$table_row_border_color?>;
-		border-radius: 5px;
-		background: <?=$table_row_background_color_dark?>;
+		<?php
+		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
+			if (isset($card_border_size) && !empty($card_border_color)) {
+				echo "border: ".$card_border_size." solid ".$card_border_color.";\n";
+			}
+			else {
+				echo "border: none !important;\n";
+			}
+			if (isset($card_border_radius) || (isset($card_border_size) || !empty($card_border_color))) {
+				echo "-webkit-border-radius: ".$card_border_radius." !important;\n";
+				echo "-moz-border-radius: ".$card_border_radius." !important;\n";
+				echo "border-radius: ".$card_border_radius." !important;\n";
+			}
+			echo "padding: ".$card_padding.";\n";
+			if (!empty($card_background_color)) {
+				echo "background-color: " .$card_background_color.";\n";
+			}
+			if (!empty($card_shadow_color)) {
+				echo "-webkit-box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+				echo "-moz-box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+				echo "box-shadow: 0 2px ".($card_shadow_size ?? '7px')." ".$card_shadow_color.";\n";
+			}
+		}
+		else {
+			echo "border: 0;\n";
+			echo "-webkit-border-radius: 0 !important;\n";
+			echo "-moz-border-radius: 0 !important;\n";
+			echo "border-radius: 0 !important;\n";
+			echo "padding: 0;\n";
+			echo "background-color: none;\n";
+			echo "-webkit-box-shadow: none;\n";
+			echo "-moz-box-shadow: none;\n";
+			echo "box-shadow: none;\n";
+		}
+		?>
 		}
 
 	div.grid.contact-details {
@@ -3177,7 +3415,7 @@ else { //default: white
 		}
 		?>
 		top: <?php echo $action_bar_top; ?>;
-		text-align: right;
+		text-align: left;
 		border-top: <?=$action_bar_border_top?>;
 		border-right: <?=$action_bar_border_right?>;
 		border-bottom: <?=$action_bar_border_bottom?>;
@@ -3207,9 +3445,9 @@ else { //default: white
 				break;
 		}
 		?>
-		-webkit-transition: all .2s ease;
-		-moz-transition: all .2s ease;
-		transition: all .2s ease;
+		-webkit-transition: all 0.25s ease;
+		-moz-transition: all 0.25s ease;
+		transition: all 0.25s ease;
 		}
 
 	<?php
@@ -3242,19 +3480,6 @@ else { //default: white
 		}
 		?>
 		float: left;
-		}
-
-	div.action_bar > div.heading > div.count {
-		display: inline-block;
-		margin-left: 10px;
-		font-family: <?=$heading_count_text_font?>;
-		font-size: <?=$heading_count_text_size?>;
-		line-height: calc(<?=$heading_count_text_size?> + 1px);
-		color: <?=$heading_count_text_color?>;
-		font-weight: <?=$heading_count_text_weight?>;
-		border-radius: <?=$heading_count_border_radius?>;
-		background-color: <?=$heading_count_background_color?>;
-		padding: <?=$heading_count_padding?>;
 		}
 
 	div.action_bar > div.actions {
@@ -3290,6 +3515,21 @@ else { //default: white
 		background: #fafafa;
 		font-size: 1.4em;
 	}
+
+/* COUNT **********************************************************************/
+
+	div.count {
+		display: inline-block;
+		margin-left: 10px;
+		font-family: <?=$heading_count_text_font?>;
+		font-size: <?=$heading_count_text_size?>;
+		line-height: calc(<?=$heading_count_text_size?> + 1px);
+		color: <?=$heading_count_text_color?>;
+		font-weight: <?=$heading_count_text_weight?>;
+		border-radius: <?=$heading_count_border_radius?>;
+		background-color: <?=$heading_count_background_color?>;
+		padding: <?=$heading_count_padding?>;
+		}
 
 /* LIST ************************************************************************/
 
@@ -3633,6 +3873,52 @@ else { //default: white
 	.modal-actions {
 		display: block;
 		text-align: left;
+		}
+
+/* UPGRADE - SOURCE CODE PREVIEW ************************************************/
+
+	#source_preview_layer {
+		z-index: 999999;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		text-align: center;
+		vertical-align: middle;
+		}
+
+	#source_preview_container {
+		display: block;
+		overflow: auto;
+		background-color: <?=$modal_background_color?>;
+		padding: 25px 25px;
+		margin: auto 10%;
+		text-align: left;
+		box-shadow: <?=$modal_shadow?>;
+		border-radius: <?=$modal_corner_radius?>;
+		color: <?=$modal_message_color?>;
+		}
+
+	#source_preview_container div.title {
+		display: block;
+		font-weight: bold;
+		font-size: 120%;
+		font-family: <?=$modal_title_font?>;
+		color: <?=$modal_title_color?>;
+		text-align: <?=$modal_title_alignment?>;
+		margin: <?=$modal_title_margin?>;
+		}
+
+	#source_preview_container div.file_paths {
+		width: 100%;
+		max-height: 250px;
+		overflow: auto;
+		border: 1px solid <?=$table_row_border_color?>;
+		padding: 12px 15px;
+		background-color: <?=$table_row_background_color_light?>;
+		font-family: monospace; font-size: 85%;
+		color: green;
 		}
 
 /* ACE EDITOR *******************************************************************/

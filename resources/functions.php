@@ -1045,19 +1045,23 @@
 
 //check password strength against requirements (if any)
 	function check_password_strength($password, $text, $type = 'default') {
+
+		//initialize the settigns object
+		$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid']]);
+
 		if (!empty($password)) {
 			if ($type == 'default') {
-				$req['length'] = $_SESSION['extension']['password_length']['numeric'];
-				$req['number'] = ($_SESSION['extension']['password_number']['boolean'] == 'true') ? true : false;
-				$req['lowercase'] = ($_SESSION['extension']['password_lowercase']['boolean'] == 'true') ? true : false;
-				$req['uppercase'] = ($_SESSION['extension']['password_uppercase']['boolean'] == 'true') ? true : false;
-				$req['special'] = ($_SESSION['extension']['password_special']['boolean'] == 'true') ? true : false;
+				$req['length'] = $settings->get('extension', 'password_length', '10');
+				$req['number'] = $settings->get('extension', 'password_number', true);
+				$req['lowercase'] = $settings->get('extension', 'password_lowercase', true);
+				$req['uppercase'] = $settings->get('extension', 'password_uppercase', false);
+				$req['special'] = $settings->get('extension', 'password_special', false);
 			} elseif ($type == 'user') {
-				$req['length'] = $_SESSION['user']['password_length']['numeric'];
-				$req['number'] = ($_SESSION['user']['password_number']['boolean'] == 'true') ? true : false;
-				$req['lowercase'] = ($_SESSION['user']['password_lowercase']['boolean'] == 'true') ? true : false;
-				$req['uppercase'] = ($_SESSION['user']['password_uppercase']['boolean'] == 'true') ? true : false;
-				$req['special'] = ($_SESSION['user']['password_special']['boolean'] == 'true') ? true : false;
+				$req['length'] = $settings->get('users', 'password_length', '10');
+				$req['number'] = $settings->get('users', 'password_number', true);
+				$req['lowercase'] = $settings->get('users', 'password_lowercase', true);
+				$req['uppercase'] = $settings->get('users', 'password_uppercase', false);
+				$req['special'] = $settings->get('users', 'password_special', false);
 			}
 			if (is_numeric($req['length']) && $req['length'] != 0 && !preg_match_all('$\S*(?=\S{' . $req['length'] . ',})\S*$', $password)) { // length
 				$msg_errors[] = $req['length'] . '+ ' . $text['label-characters'];
@@ -2114,7 +2118,7 @@
 //define email button (src: https://buttons.cm)
 	if (!function_exists('email_button')) {
 
-		function email_button($text = 'Click Here!', $link = URL, $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
+		function email_button($text = 'Click Here!', $link = 'URL', $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
 
 			// default button radius
 			$radius = !empty($radius) ? $radius : '3px';

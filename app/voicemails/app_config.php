@@ -180,10 +180,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "agent";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "voicemail_local_after_forward";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_recording_instructions";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -401,6 +397,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "90";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days maintenance application will retain files.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "79d05433-a7ab-4641-ae5d-6eb7810eb560";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "use_deletion_queue";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Instead of deleting voicemails right away when pressing 7; queue them for deletion";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b06cc9df-379e-4b45-8bda-d2d431506317";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "deletion_queue_retention_hours";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "24";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of hours the voicemail deletion queue will retain deleted voicemails";
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_voicemails";
@@ -475,6 +487,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose to keep the voicemail file after sending to forward destinations.";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

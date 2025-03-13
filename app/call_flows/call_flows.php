@@ -46,7 +46,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get search
 	$search = $_REQUEST['search'] ?? null;
@@ -235,7 +235,7 @@
 	}
 	echo th_order_by('call_flow_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_flow_description', $text['label-call_flow_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('call_flow_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('call_flow_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -243,8 +243,12 @@
 	if (!empty($call_flows)) {
 		$x = 0;
 		foreach ($call_flows as $row) {
+			$list_row_url = '';
 			if (permission_exists('call_flow_edit')) {
 				$list_row_url = "call_flow_edit.php?id=".urlencode($row['call_flow_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('call_flow_add') || permission_exists('call_flow_edit') || permission_exists('call_flow_delete')) {
@@ -287,7 +291,7 @@
 				echo escape($row['call_flow_enabled']);
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['call_flow_description'])."&nbsp;</td>\n";
-			if (permission_exists('call_flow_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('call_flow_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -311,3 +315,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

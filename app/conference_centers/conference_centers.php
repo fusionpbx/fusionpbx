@@ -49,7 +49,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get posted data
 	if (!empty($_POST['conference_centers'])) {
@@ -221,7 +221,7 @@
 	echo th_order_by('conference_center_pin_length', $text['label-conference_center_pin_length'], $order_by, $order, null, "class='center shrink'");
 	echo th_order_by('conference_center_enabled', $text['label-conference_center_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('conference_center_description', $text['label-conference_center_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('conference_center_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('conference_center_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -229,8 +229,12 @@
 	if (!empty($conference_centers)) {
 		$x = 0;
 		foreach ($conference_centers as $row) {
+			$list_row_url = '';
 			if (permission_exists('conference_center_edit')) {
 				$list_row_url = "conference_center_edit.php?id=".$row['conference_center_uuid'];
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('conference_center_edit') || permission_exists('conference_center_delete')) {
@@ -262,7 +266,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['conference_center_description'])."&nbsp;</td>\n";
-			if (permission_exists('conference_center_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('conference_center_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -285,3 +289,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

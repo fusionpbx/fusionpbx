@@ -23,9 +23,6 @@
 //voicemail
 	echo "<div class='hud_box'>\n";
 
-//required class
-	require_once "app/voicemails/resources/classes/voicemail.php";
-
 //get the voicemail
 	$vm = new voicemail;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
@@ -111,7 +108,7 @@
 		echo "<span class='hud_content'>\n";
 		echo "<div style='position: relative; display: inline-block;'>\n";
 		echo "		<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
-		echo "		<span style=\"background-color: ".($row['dashboard_number_background_color'] ?? '#03c04a')."; color: ".($row['dashboard_number_text_color'] ?? '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$messages['new']."</span>\n";
+		echo "		<span style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#03c04a')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$messages['new']."</span>\n";
 		echo "	</div>\n";
 		echo "</span>";
 	}

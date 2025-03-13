@@ -149,7 +149,7 @@
 		echo "<span class='hud_content'>\n";
 		echo "<div style='position: relative; display: inline-block;'>\n";
 		echo "		<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
-		echo "		<span style=\"background-color: ".($row['dashboard_number_background_color'] ?? '#EA4C46')."; color: ".($row['dashboard_number_text_color'] ?? '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$num_rows."</span>\n";
+		echo "		<span style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#EA4C46')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$num_rows."</span>\n";
 		echo "	</div>\n";
 		echo "</span>";
 	}
@@ -188,9 +188,9 @@
 						"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '').
 						"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
 						"&dest=".urlencode($row['caller_id_number'] ?? '').
-						"&rec=".(isset($_SESSION['click_to_call']['record']['boolean']) ? $_SESSION['click_to_call']['record']['boolean'] : "false").
+						"&rec=".(filter_var($_SESSION['click_to_call']['record']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
 						"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text']) ? $_SESSION['click_to_call']['ringback']['text'] : "us-ring").
-						"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean']) ? $_SESSION['click_to_call']['auto_answer']['boolean'] : "true").
+						"&auto_answer=".(filter_var($_SESSION['click_to_call']['auto_answer']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
 						"');\" ".
 						"style='cursor: pointer;'";
 				}

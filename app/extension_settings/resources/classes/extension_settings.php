@@ -26,12 +26,7 @@
 
 /**
  * extension_settings class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('extension_settings')) {
 	class extension_settings {
 
 		/**
@@ -272,6 +267,3 @@ if (!class_exists('extension_settings')) {
 		}
 
 	}
-}
-
-?>

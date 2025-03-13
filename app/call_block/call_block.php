@@ -46,7 +46,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get posted data
 	if (!empty($_POST['call_blocks'])) {
@@ -301,7 +301,7 @@
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('insert_date', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
 	echo "<th class='hide-md-dn pct-20'>".$text['label-description']."</th>\n";
-	if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('call_block_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -309,8 +309,12 @@
 	if (!empty($result)) {
 		$x = 0;
 		foreach ($result as $row) {
+			$list_row_url = '';
 			if (permission_exists('call_block_edit')) {
 				$list_row_url = "call_block_edit.php?id=".urlencode($row['call_block_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('call_block_add') || permission_exists('call_block_edit') || permission_exists('call_block_delete')) {
@@ -381,7 +385,7 @@
 			echo "	</td>\n";
 			echo "	<td class='no-wrap'>".$row['date_formatted']." <span class='hide-sm-dn'>".$row['time_formatted']."</span></td>\n";
 			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";
-			if (permission_exists('call_block_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('call_block_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -405,3 +409,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

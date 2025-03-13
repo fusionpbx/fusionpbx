@@ -46,7 +46,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get posted data
 	if (!empty($_POST['conferences'])) {
@@ -223,7 +223,7 @@
 	echo "<th style='text-align: center;'>".$text['label-tools']."</th>\n";
 	echo th_order_by('conference_enabled', $text['table-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('conference_description', $text['table-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('conference_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('conference_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -231,8 +231,12 @@
 	if (!empty($conferences)) {
 		$x = 0;
 		foreach($conferences as $row) {
+			$list_row_url = '';
 			if (permission_exists('conference_edit')) {
 				$list_row_url = "conference_edit.php?id=".urlencode($row['conference_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('conference_add') || permission_exists('conference_edit') || permission_exists('conference_delete')) {
@@ -277,7 +281,7 @@
 				echo $text['label-'.$row['conference_enabled']];
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['conference_description'])."&nbsp;</td>\n";
-			if (permission_exists('conference_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('conference_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -301,3 +305,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

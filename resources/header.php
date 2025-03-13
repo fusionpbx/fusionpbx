@@ -28,8 +28,13 @@
 	require_once __DIR__ . "/require.php";
 
 //start the session
-	ini_set("session.cookie_httponly", true);
-	if (!isset($_SESSION)) { session_start(); }
+	if (!isset($_SESSION)) {
+		ini_set("session.cookie_httponly", true);
+		session_start();
+	}
+
+//connect to the database if not initialized
+	$database = database::new();
 
 //set the domains session
 	if (!isset($_SESSION['domains'])) {
@@ -77,11 +82,6 @@
 	}
 	else {
 		$content = '';
-	}
-
-//connect to the database if not initialized
-	if (!($database instanceof database)) {
-		$database = new database();
 	}
 
 //get the parent id

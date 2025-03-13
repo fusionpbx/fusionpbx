@@ -85,7 +85,7 @@
 	$order = $_GET["order"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the count
 	$sql = "select count(var_uuid) from v_vars ";
@@ -207,7 +207,7 @@
 		echo th_order_by('var_hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'");
 		echo th_order_by('var_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 		echo "<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
-		if (permission_exists('var_edit') && $list_row_edit_button == 'true') {
+		if (permission_exists('var_edit') && $list_row_edit_button) {
 			echo "<td class='action-button'>&nbsp;</td>\n";
 		}
 		echo "</tr>\n";
@@ -224,8 +224,12 @@
 					echo "</tr>\n";
 					write_header($row["var_category"]);
 				}
+			$list_row_url = '';
 			if (permission_exists('var_edit')) {
 				$list_row_url = "var_edit.php?id=".urlencode($row['var_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('var_add') || permission_exists('var_edit') || permission_exists('var_delete')) {
@@ -259,7 +263,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['var_description'] ?? '')."</td>\n";
-			if (permission_exists('var_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('var_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -283,3 +287,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

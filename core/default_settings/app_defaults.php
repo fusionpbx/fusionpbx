@@ -505,6 +505,15 @@
 			$database->execute($sql);
 			unset($sql);
 
+		//update editor settings used in javascript need to be a string
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_name = 'text' ";
+			$sql .= "where default_setting_category = 'editor' ";
+			$sql .= "and default_setting_subcategory in ('invisibles', 'indent_guides', 'line_numbers') ";
+			$sql .= "and default_setting_name = 'boolean' ";
+			$database->execute($sql);
+			unset($sql);
+
 	}
 
 ?>

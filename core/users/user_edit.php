@@ -105,10 +105,10 @@
 //retrieve password requirements
 	if (permission_exists('user_password')) {
 		$required['length'] = $_SESSION['users']['password_length']['numeric'];
-		$required['number'] = ($_SESSION['users']['password_number']['boolean'] == 'true') ? true : false;
-		$required['lowercase'] = ($_SESSION['users']['password_lowercase']['boolean'] == 'true') ? true : false;
-		$required['uppercase'] = ($_SESSION['users']['password_uppercase']['boolean'] == 'true') ? true : false;
-		$required['special'] = ($_SESSION['users']['password_special']['boolean'] == 'true') ? true : false;
+		$required['number'] = filter_var($_SESSION['users']['password_number']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+		$required['lowercase'] = filter_var($_SESSION['users']['password_lowercase']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+		$required['uppercase'] = filter_var($_SESSION['users']['password_uppercase']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+		$required['special'] = filter_var($_SESSION['users']['password_special']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 	}
 
 //prepare the data

@@ -1,6 +1,5 @@
 <?php
 
-if (!class_exists('xml')) {
 	class xml {
 
 		/**
@@ -12,6 +11,3 @@ if (!class_exists('xml')) {
 		}
 
 	}
-}
-
-?>

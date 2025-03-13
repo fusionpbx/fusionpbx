@@ -23,12 +23,7 @@
 
 /**
  * presence class
- *
- * @method boolean active
- * @method array show
  */
-			
-if (!class_exists('presence')) {
 	class presence {
 
 		/**
@@ -84,7 +79,6 @@ if (!class_exists('presence')) {
 			return $array;
 		}
 	}
-}
 
 //examples
 	/*
@@ -97,11 +91,9 @@ if (!class_exists('presence')) {
 			echo "active: true\n";
 		}
 		else {
-			echo "active: false\n";	
+			echo "active: false\n";
 		}
 	//show active the presence
 		$presence = new presence;
 		$array = $presence->show();
 	*/
-
-?>

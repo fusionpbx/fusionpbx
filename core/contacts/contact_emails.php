@@ -38,7 +38,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the contact list
 	$sql = "select * from v_contact_emails ";
@@ -71,7 +71,7 @@
 			echo "<th class='pct-15'>".$text['label-email_label']."</th>\n";
 			echo "<th>".$text['label-email_address']."</th>\n";
 			echo "<th class='hide-md-dn'>".$text['label-email_description']."</th>\n";
-			if (permission_exists('contact_email_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('contact_email_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -79,8 +79,12 @@
 			if (!empty($contact_emails)) {
 				$x = 0;
 				foreach ($contact_emails as $row) {
+					$list_row_url = '';
 					if (permission_exists('contact_email_edit')) {
 						$list_row_url = "contact_email_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_email_uuid']);
+						if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+							$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+						}
 					}
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('contact_email_delete')) {
@@ -92,7 +96,7 @@
 					echo "	<td>".escape($row['email_label'])." ".($row['email_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
 					echo "	<td class='no-link'><a href='mailto:".escape($row['email_address'])."'>".escape($row['email_address'])."</a>&nbsp;</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['email_description'])."&nbsp;</td>\n";
-					if (permission_exists('contact_email_edit') && $list_row_edit_button == 'true') {
+					if (permission_exists('contact_email_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 						echo "	</td>\n";
@@ -110,3 +114,4 @@
 	}
 
 ?>
+

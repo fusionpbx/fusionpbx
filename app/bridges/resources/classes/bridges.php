@@ -25,7 +25,6 @@
 */
 
 //define the bridges class
-if (!class_exists('bridges')) {
 	class bridges {
 
 		/**
@@ -255,6 +254,3 @@ if (!class_exists('bridges')) {
 		}
 
 	}
-}
-
-?>
