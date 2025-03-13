@@ -39,6 +39,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -1147,12 +1148,21 @@ class ModXMLCURLController extends Controller
         $user   = $request->input('user');
         $domain_name = $request->input('doman') ?? ($request->input('doman_name') ?? ($request->input('variable_domain_name') ?? $request->input('variable_sip_from_host')));
         $domain_uuid = $request->input('domain_uuid');
-        if (isset($domain_uuid)){
+        if (empty($domain_uuid) && isset($domain_name)){
             $domain = Domain::where('domain_name', $domain_name)
+                            ->where('domain_enabled', 'true')
+                            ->first();
+            $domain_uuid = $domain->domain_uuid;
+            unset($domain);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_uuid: '.$domain_uuid);
+        }
+        if (isset($domain_uuid) && empty($domain_name)){
+            $domain = Domain::where('domain_uuid', $domain_uuid)
                             ->where('domain_enabled', 'true')
                             ->first();
             $domain_name = $domain->domain_name;
             unset($domain);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_name: '.$domain_name);
         }
         $answer = '';
         $xml = new XMLWriter();
