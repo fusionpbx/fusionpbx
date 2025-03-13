@@ -28,22 +28,25 @@
 	Corey Moullas <cmoullas@emak.tech>
 */
 
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+
 //check if windows
 	if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 
-//executed via command line
-if (defined('STDIN')) {
+//command line
+	if (defined('STDIN')) { 
 
-	//add multi-lingual support
-		$language = new text;
-		$text = $language->get($settings->get('domain','language','en-us'), 'app/fax');
+		//add multi-lingual support
+			$language = new text;
+			$text = $language->get($settings->get('domain','language','en-us'), 'app/fax');
 
-}
-//executed via browser
-else {
+	}
 
-	//includes files
-		require_once dirname(__DIR__, 2) . "/resources/require.php";
+//web server
+	if (!defined('STDIN')) {
+
+	//additional include
 		require_once "resources/check_auth.php";
 
 	//set the domain_uuid and domain_name
