@@ -240,7 +240,7 @@
 									$p->delete('extension_edit', 'temp');
 
 								//send feature event notify to the phone
-									if (!empty($_SESSION['device']['feature_sync']['boolean']) && $_SESSION['device']['feature_sync']['boolean'] == "true") {
+									if (filter_var($_SESSION['device']['feature_sync']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 										foreach ($extensions as $uuid => $extension) {
 											$feature_event_notify = new feature_event_notify;
 											$feature_event_notify->domain_name = $_SESSION['domain_name'];
@@ -261,7 +261,6 @@
 
 								//synchronize configuration
 									if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
-										require_once "app/extensions/resources/classes/extension.php";
 										$ext = new extension;
 										$ext->xml();
 										unset($ext);

@@ -198,19 +198,25 @@
 		echo "			<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='if (this.checked) { refresh_stop(); } else { refresh_start(); } list_all_toggle();' ".(empty($rows) ? "style='visibility: hidden;'" : null).">\n";
 		echo "		</th>\n";
 	}
-	echo "		<th class='hide-small'>".$text['label-profile']."</th>\n";
-	//echo"		<th>".$text['label-created']."</th>\n";
+	if (permission_exists('call_active_profile')) {
+		echo "		<th class='hide-small'>".$text['label-profile']."</th>\n";
+	}
 	echo "		<th>".$text['label-duration']."</th>\n";
 	if ($show == 'all') {
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
-	//echo "		<th>".$text['label-number']."</th>\n";
 	echo "		<th class='hide-small'>".$text['label-cid-name']."</th>\n";
 	echo "		<th>".$text['label-cid-number']."</th>\n";
 	echo "		<th>".$text['label-destination']."</th>\n";
-	echo "		<th class='hide-small hide-medium'>".$text['label-app']."</th>\n";
-	echo "		<th class='hide-small hide-medium'>".$text['label-codec']."</th>\n";
-	echo "		<th class='hide-small hide-medium'>".$text['label-secure']."</th>\n";
+	if (permission_exists('call_active_application')) {
+		echo "		<th class='hide-small hide-medium'>".$text['label-app']."</th>\n";
+	}
+	if (permission_exists('call_active_codec')) {
+		echo "		<th class='hide-small hide-medium'>".$text['label-codec']."</th>\n";
+	}
+	if (permission_exists('call_active_secure')) {
+		echo "		<th class='hide-small hide-medium'>".$text['label-secure']."</th>\n";
+	}
 	if (permission_exists('call_active_eavesdrop') || permission_exists('call_active_hangup')) {
 		echo "		<th>&nbsp;</th>\n";
 	}
@@ -269,7 +275,9 @@
 					echo "			<input type='hidden' name='calls[$x][uuid]' value='".escape($uuid)."' />\n";
 					echo "		</td>\n";
 				}
-				echo "		<td class='hide-small'>".escape($sip_profile)."&nbsp;</td>\n";
+				if (permission_exists('call_active_profile')) {
+					echo "		<td class='hide-small'>".escape($sip_profile)."&nbsp;</td>\n";
+				}
 				//echo "		<td>".escape($created)."&nbsp;</td>\n";
 				echo "		<td>".escape($elapsed_time)."</td>\n";
 				if ($show == 'all') {
@@ -279,9 +287,15 @@
 				echo "		<td class='hide-small'>".escape($cid_name)."&nbsp;</td>\n";
 				echo "		<td>".escape($cid_num)."&nbsp;</td>\n";
 				echo "		<td>".escape($dest)."&nbsp;</td>\n";
-				echo "		<td class='hide-small hide-medium' style='max-width: 200px; word-wrap: break-word;'>".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
-				echo "		<td class='hide-small hide-medium'>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
-				echo "		<td class='hide-small hide-medium'>".escape($secure)."&nbsp;</td>\n";
+				if (permission_exists('call_active_application')) {
+					echo "		<td class='hide-small hide-medium' style='max-width: 200px; word-wrap: break-word;'>".(!empty($application) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
+				}
+				if (permission_exists('call_active_codec')) {
+					echo "		<td class='hide-small hide-medium'>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
+				}
+				if (permission_exists('call_active_secure')) {
+					echo "		<td class='hide-small hide-medium'>".escape($secure)."&nbsp;</td>\n";
+				}
 				if (permission_exists('call_active_eavesdrop') || permission_exists('call_active_hangup')) {
 					echo "		<td class='button right' style='padding-right: 0;'>\n";
 					//eavesdrop

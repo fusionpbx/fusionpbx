@@ -48,8 +48,8 @@
 	$search = $_GET["search"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
-	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$button_icon_add = $_SESSION['theme']['button_icon_add'] ?? '';
 
 //get the http post data
 	if (!empty($_POST['menus'])) {
@@ -154,7 +154,7 @@
 	echo th_order_by('menu_name', $text['label-menu_name'], $order_by, $order);
 	echo th_order_by('menu_language', $text['label-menu_language'], $order_by, $order);
 	echo "	<th class='hide-sm-dn'>".$text['label-menu_description']."</th>\n";
-	if (permission_exists('menu_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('menu_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -182,7 +182,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['menu_language'])."</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['menu_description'])."</td>\n";
-			if (permission_exists('menu_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('menu_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$button_icon_edit,'link'=>$list_row_url]);
 				echo "	</td>\n";

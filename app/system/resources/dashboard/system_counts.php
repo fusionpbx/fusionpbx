@@ -260,8 +260,8 @@
 
 	//get the domain active and inactive counts
 	$sql = "select ";
-	$sql .= "(select count(*) from v_domains where domain_enabled = 'true') as active, ";
-	$sql .= "(select count(*) from v_domains where domain_enabled = 'false') as inactive; ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'true') as active, ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'false') as inactive; ";
 	$row = $database->select($sql, null, 'row');
 	$domain_active = $row['active'];
 	$domain_inactive = $row['inactive'];

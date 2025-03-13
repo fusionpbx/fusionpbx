@@ -1382,7 +1382,7 @@
 
 								//save the array
 									$this->database->app_name = $this->app_name;
-									$this->databasee->app_uuid = $this->app_uuid;
+									$this->database->app_uuid = $this->app_uuid;
 									$this->database->save($array);
 									unset($array);
 

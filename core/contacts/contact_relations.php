@@ -38,7 +38,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the related contacts
 	$sql = "select ";
@@ -85,7 +85,7 @@
 			echo "<th>".$text['label-contact_relation_label']."</th>\n";
 			echo "<th>".$text['label-contact_relation_organization']."</th>\n";
 			echo "<th>".$text['label-contact_relation_name']."</th>\n";
-			if (permission_exists('contact_relation_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('contact_relation_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -93,8 +93,12 @@
 			if (!empty($contact_relations)) {
 				$x = 0;
 				foreach ($contact_relations as $row) {
+					$list_row_url = '';
 					if (permission_exists('contact_relation_edit')) {
 						$list_row_url = "contact_relation_edit.php?contact_uuid=".urlencode($contact_uuid)."&id=".urlencode($row['contact_relation_uuid']);
+						if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+							$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+						}
 					}
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('contact_relation_delete')) {
@@ -106,7 +110,7 @@
 					echo "	<td>".escape($row['relation_label'])."&nbsp;</td>\n";
 					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
 					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_name_given']).((!empty($row['contact_name_given']) && !empty($row['contact_name_family'])) ? ' ' : null).escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
-					if (permission_exists('contact_relation_edit') && $list_row_edit_button == 'true') {
+					if (permission_exists('contact_relation_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 						echo "	</td>\n";
@@ -124,3 +128,4 @@
 	}
 
 ?>
+

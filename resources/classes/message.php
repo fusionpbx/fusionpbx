@@ -25,7 +25,6 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-if (!class_exists('message')) {
 	class message {
 
 		static function add($message, $mood = null, $delay = null) {
@@ -71,6 +70,3 @@ if (!class_exists('message')) {
 			return $html;
 		}
 	}
-}
-
-?>

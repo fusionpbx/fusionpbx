@@ -117,6 +117,7 @@ $body_width = $_SESSION['theme']['body_width']['text'] ?? '90%';
 $heading_text_color = $_SESSION['theme']['heading_text_color']['text'] ?? '#952424';
 $heading_text_size = $_SESSION['theme']['heading_text_size']['text'] ?? '15px';
 $heading_text_font = $_SESSION['theme']['heading_text_font']['text'] ?? 'arial';
+$input_height = $_SESSION['theme']['input_height']['text'] ?? '28px';
 $input_text_font = $_SESSION['theme']['input_text_font']['text'] ?? 'Arial';
 $input_text_size = $_SESSION['theme']['input_text_size']['text'] ?? '12px';
 $input_text_color = $_SESSION['theme']['input_text_color']['text'] ?? '#000';
@@ -146,7 +147,7 @@ $input_shadow_outer_color_focus = isset($_SESSION['theme']['input_shadow_outer_c
 $input_toggle_style = $_SESSION['theme']['input_toggle_style']['text'] ?? 'switch_round';
 $input_toggle_switch_background_color_true = $_SESSION['theme']['input_toggle_switch_background_color_true']['text'] ?? '#2e82d0';
 $input_toggle_switch_background_color_false = $_SESSION['theme']['input_toggle_switch_background_color_false']['text'] ?? $input_border_color;
-$input_toggle_switch_handle_symbol = $_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] ?? 'false';
+$input_toggle_switch_handle_symbol = filter_var($_SESSION['theme']['input_toggle_switch_handle_symbol']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 $input_toggle_switch_handle_color = $_SESSION['theme']['input_toggle_switch_handle_color']['text'] ?? '#ffffff';
 $login_body_top = $_SESSION['theme']['login_body_top']['text'] ?? '50%';
 $login_body_left = $_SESSION['theme']['login_body_left']['text'] ?? '50%';
@@ -317,7 +318,7 @@ $modal_message_color = $_SESSION['theme']['modal_message_color']['text'] ?? '#44
 $modal_message_alignment = $_SESSION['theme']['modal_message_alignment']['text'] ?? 'left';
 $modal_message_margin = $_SESSION['theme']['modal_message_margin']['text'] ?? '0 0 20px 0';
 $audio_player_indicator_color = $_SESSION['theme']['audio_player_indicator_color']['text'] ?? '#b90004';
-$audio_player_waveform_enabled = $_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? 'false';
+$audio_player_waveform_enabled = filter_var($_SESSION['theme']['audio_player_waveform_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL);
 $audio_player_waveform_height = $_SESSION['theme']['audio_player_waveform_height']['text'] ?? '70px';
 $custom_css_code = $_SESSION['theme']['custom_css_code']['text'] ?? null;
 
@@ -354,29 +355,29 @@ if (!empty($_SESSION['theme'])) {
 $background_images_enabled = false;
 if (!empty($_SESSION['username'])) {
 	//logged in - use standard background images
-	if (!empty($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+	if (filter_var($_SESSION['theme']['background_image_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['background_image'];
 	}
 
 	//logged in - use standard background colors
-	if (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	if (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
 else {
 	//not logged in - try using login background images
-	if (isset($_SESSION['theme']['login_background_image_enabled']['boolean']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
+	if (filter_var($_SESSION['theme']['login_background_image_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['login_background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['login_background_image'];
 	}
 
 	//otherwise, use standard background images
-	if (!empty($_SESSION['theme']['background_image_enabled']['boolean']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+	if (filter_var($_SESSION['theme']['background_image_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && is_array($_SESSION['theme']['background_image'])) {
 		$background_images_enabled = true;
 		$background_images = $_SESSION['theme']['background_image'];
 	}
@@ -389,11 +390,11 @@ else {
 	elseif (!empty($_SESSION['theme']['login_background_color']) && !empty($_SESSION['theme']['login_background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0]) && !empty($_SESSION['theme']['background_color'][1])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 		$background_colors[1] = $_SESSION['theme']['background_color'][1];
 	}
-	elseif (!empty($_SESSION['theme']['background_color_enabled']) && $_SESSION['theme']['background_color_enabled']['boolean'] == 'true' && !empty($_SESSION['theme']['background_color'][0])) {
+	elseif (filter_var($_SESSION['theme']['background_color_enabled']['boolean'] ?? true, FILTER_VALIDATE_BOOL) && !empty($_SESSION['theme']['background_color'][0])) {
 		$background_colors[0] = $_SESSION['theme']['background_color'][0];
 	}
 }
@@ -726,18 +727,28 @@ else { //default: white
 	/* sub menu container (multiple columns) */
 	@media(min-width: 576px) {
 		ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column {
-			width: 330px;
+			width: max-content;
 			}
+		ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column:hover {
+			display: flex;
+			}
+		}
+
+	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item {
+		width: 100%;
+		margin-right: calc(<?=$menu_sub_text_size?> * 2);
 		}
 
 	/* sub menu item */
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link,
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item > a.nav-link {
+		width: 100%;
 		font-family: <?=$menu_sub_text_font?>;
 		color: <?=$menu_sub_text_color?>;
 		font-size: <?=$menu_sub_text_size?>;
 		margin: 0;
 		padding: 3px 14px !important;
+		white-space: nowrap;
 		}
 
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown {
@@ -772,7 +783,6 @@ else { //default: white
 		display: inline-block;
 		font-size: 8pt;
 		margin: 0 0 0 8px;
-		opacity: 0.30;
 		}
 
 	div.menu_side_sub > a.menu_side_item_sub > span.fas,
@@ -810,8 +820,13 @@ else { //default: white
 
 	/* logout icon */
 	a.logout_icon {
+		<?php if ($menu_style == 'fixed') { ?>
+			position: absolute;
+		<?php } else { ?>
+			display: block;
+		<?php } ?>
 		color: <?=$logout_icon_color?>;
-		padding: 14px 10px;
+		padding: 14px 10px 11px 10px;
 		}
 
 	a.logout_icon:hover,
@@ -1084,46 +1099,6 @@ else { //default: white
 			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
-
-		div#body_header a {
-			color: <?=$body_header_text_link_color?>;
-			}
-
-		div#body_header a:hover {
-			color: <?=$body_header_text_link_color_hover?>;
-			text-decoration: none;
-			}
-
-		div#body_header_user_menu {
-			z-index: 6;
-			display: none;
-			position: absolute;
-			top: 50px;
-			/* right: specified in /resources/classes/menu.php */
-			padding: 15px;
-			background-color: <?=$body_header_background_color?>;
-			border: 1px solid <?=color_adjust($body_header_shadow_color, 0.05)?>;
-			<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
-			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			<?php unset($br); ?>
-			-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
-			}
-
-		@media (max-width: 575.98px) {
-			div#body_header_user_menu {
-				width: calc(100% - 20px);
-				/* right: specified in /resources/classes/menu.php */
-				}
-			}
-
-		div#body_header_user_menu a {
-			font-size: 90%;
-			text-decoration: none;
-			}
 	<?php } else { ?>
 		div#body_header {
 			padding: 10px;
@@ -1134,6 +1109,48 @@ else { //default: white
 			box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
 			}
 	<?php } ?>
+
+	div#body_header a {
+		color: <?=$body_header_text_link_color?>;
+		}
+
+	div#body_header a:hover {
+		color: <?=$body_header_text_link_color_hover?>;
+		text-decoration: none;
+		}
+
+	div#body_header_user_menu {
+		z-index: 6;
+		display: none;
+		position: absolute;
+		<?php if ($menu_style != 'inline') { ?>
+			top: 50px;
+		<?php } ?>
+		/* right: specified in /resources/classes/menu.php */
+		padding: 15px;
+		background-color: <?=$body_header_background_color?>;
+		border: 1px solid <?=color_adjust($body_header_shadow_color, 0.05)?>;
+		<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		-webkit-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		-moz-box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		box-shadow: 0 2px <?=$body_header_shadow_size ?? '7px'?> <?=$body_header_shadow_color?>;
+		}
+
+	@media (max-width: 575.98px) {
+		div#body_header_user_menu {
+			width: calc(100% - 20px);
+			/* right: specified in /resources/classes/menu.php */
+			}
+		}
+
+	div#body_header_user_menu a {
+		font-size: 90%;
+		text-decoration: none;
+		}
 
 	div#body_header_brand_image {
 		display: inline-block;
@@ -1527,8 +1544,8 @@ else { //default: white
 		bottom: 0;
 		width: 340px;
 		padding: 20px 20px 100px 20px;
-		font-family: arial, san-serif;
-		font-size: 10pt;
+		font-family: <?=$table_row_text_font?>;
+		font-size: <?=$table_row_text_size?>;
 		overflow: hidden;
 		background: <?=$domain_selector_background_color?>;
 		-webkit-box-shadow: <?=$domain_selector_shadow_color?>;
@@ -1812,7 +1829,7 @@ else { //default: white
 		font-size: <?=$input_text_size?>;
 		color: <?=$input_text_color?>;
 		text-align: left;
-		height: 28px;
+		height: <?=$input_height?>;
 		padding: 4px 6px;
 		margin: 1px;
 		border-width: <?=$input_border_size?>;
@@ -2188,6 +2205,7 @@ else { //default: white
 		-webkit-transition: all 0.25s ease;
 		-moz-transition: all 0.25s ease;
 		transition: all 0.25s ease;
+		vertical-align: middle;
 		}
 
 	input[type=text].list-search:focus {
@@ -2217,7 +2235,7 @@ else { //default: white
 
 	span.playback_progress_bar {
 		background-color: <?=$audio_player_indicator_color?>;
-		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+		<?php if ($audio_player_waveform_enabled) { ?>
 			width: 2px;
 			height: <?=$audio_player_waveform_height?>;
 			margin-bottom: 0;
@@ -2249,7 +2267,7 @@ else { //default: white
 		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
 		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
-		<?php if ($audio_player_waveform_enabled === 'true') { ?>
+		<?php if ($audio_player_waveform_enabled) { ?>
 			padding-bottom: 0px;
 			background-size: 100% 100% !important;
 			background-repeat: no-repeat;
@@ -2888,6 +2906,7 @@ else { //default: white
 
 	div.card {
 		margin-bottom: 15px;
+		overflow-x: auto;
 		<?php
 		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
 			if (isset($card_border_size) && !empty($card_border_color)) {
@@ -3396,7 +3415,7 @@ else { //default: white
 		}
 		?>
 		top: <?php echo $action_bar_top; ?>;
-		text-align: right;
+		text-align: left;
 		border-top: <?=$action_bar_border_top?>;
 		border-right: <?=$action_bar_border_right?>;
 		border-bottom: <?=$action_bar_border_bottom?>;
@@ -3463,19 +3482,6 @@ else { //default: white
 		float: left;
 		}
 
-	div.action_bar > div.heading > div.count {
-		display: inline-block;
-		margin-left: 10px;
-		font-family: <?=$heading_count_text_font?>;
-		font-size: <?=$heading_count_text_size?>;
-		line-height: calc(<?=$heading_count_text_size?> + 1px);
-		color: <?=$heading_count_text_color?>;
-		font-weight: <?=$heading_count_text_weight?>;
-		border-radius: <?=$heading_count_border_radius?>;
-		background-color: <?=$heading_count_background_color?>;
-		padding: <?=$heading_count_padding?>;
-		}
-
 	div.action_bar > div.actions {
 		float: right;
 		white-space: normal;
@@ -3509,6 +3515,21 @@ else { //default: white
 		background: #fafafa;
 		font-size: 1.4em;
 	}
+
+/* COUNT **********************************************************************/
+
+	div.count {
+		display: inline-block;
+		margin-left: 10px;
+		font-family: <?=$heading_count_text_font?>;
+		font-size: <?=$heading_count_text_size?>;
+		line-height: calc(<?=$heading_count_text_size?> + 1px);
+		color: <?=$heading_count_text_color?>;
+		font-weight: <?=$heading_count_text_weight?>;
+		border-radius: <?=$heading_count_border_radius?>;
+		background-color: <?=$heading_count_background_color?>;
+		padding: <?=$heading_count_padding?>;
+		}
 
 /* LIST ************************************************************************/
 
@@ -3852,6 +3873,52 @@ else { //default: white
 	.modal-actions {
 		display: block;
 		text-align: left;
+		}
+
+/* UPGRADE - SOURCE CODE PREVIEW ************************************************/
+
+	#source_preview_layer {
+		z-index: 999999;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		text-align: center;
+		vertical-align: middle;
+		}
+
+	#source_preview_container {
+		display: block;
+		overflow: auto;
+		background-color: <?=$modal_background_color?>;
+		padding: 25px 25px;
+		margin: auto 10%;
+		text-align: left;
+		box-shadow: <?=$modal_shadow?>;
+		border-radius: <?=$modal_corner_radius?>;
+		color: <?=$modal_message_color?>;
+		}
+
+	#source_preview_container div.title {
+		display: block;
+		font-weight: bold;
+		font-size: 120%;
+		font-family: <?=$modal_title_font?>;
+		color: <?=$modal_title_color?>;
+		text-align: <?=$modal_title_alignment?>;
+		margin: <?=$modal_title_margin?>;
+		}
+
+	#source_preview_container div.file_paths {
+		width: 100%;
+		max-height: 250px;
+		overflow: auto;
+		border: 1px solid <?=$table_row_border_color?>;
+		padding: 12px 15px;
+		background-color: <?=$table_row_background_color_light?>;
+		font-family: monospace; font-size: 85%;
+		color: green;
 		}
 
 /* ACE EDITOR *******************************************************************/

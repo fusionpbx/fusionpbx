@@ -133,7 +133,6 @@
 
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
-			require_once "resources/classes/schema.php";
 			$obj = new schema();
 			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
 				$obj->data_types = true;
@@ -221,12 +220,12 @@
 				}
 			}
 			echo "<button type='button' class='btn btn-default' style='float: right;' onclick=\"$('#source_preview_layer').fadeOut(200);\">".$text['button-close']."</button>\n";
-			echo "<b>".$text['header-source_code_upgrade_preview']."</b>\n";
+			echo "<div class='title'>".$text['header-source_code_upgrade_preview']."</div>\n";
 			echo "<br><br>\n";
 			if (!empty($response) && is_array($response)) {
 				echo str_replace('APP_NAME', (!empty($_GET['title']) ? "<strong>".$_GET['title']."</strong>" : null), $text['description-source_code_changes_found']);
 				echo "<br><br><br>\n";
-				echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".($_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".($_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff')."; font-family: monospace; font-size: 85%; color: green;'>\n";
+				echo "<div class='file_paths'>\n";
 				if (!empty($response) && is_array($response)) {
 					echo implode("<br>\n<hr style='margin: 3px 0;'>\n", $response);
 				}
@@ -254,35 +253,6 @@
 	require_once "resources/header.php";
 
 //source preview layer
-	echo "<style>\n";
-	echo "	#source_preview_layer {\n";
-	echo "		z-index: 999999;\n";
-	echo "		position: absolute;\n";
-	echo "		left: 0px;\n";
-	echo "		top: 0px;\n";
-	echo "		right: 0px;\n";
-	echo "		bottom: 0px;\n";
-	echo "		text-align: center;\n";
-	echo "		vertical-align: middle;\n";
-	echo "		}\n";
-	echo "	#source_preview_container {\n";
-	echo "		display: block;\n";
-	echo "		overflow: auto;\n";
-	echo "		background-color: #fff;\n";
-	echo "		padding: 25px 25px;\n";
-	if (http_user_agent('mobile')) {
-		echo "	margin: 0;\n";
-	}
-	else {
-		echo "	margin: auto 10%;\n";
-	}
-	echo "		text-align: left;\n";
-	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
-	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
-	echo "		box-shadow: 0px 1px 20px #888;\n";
-	echo "		}\n";
-	echo "</style>\n";
-
 	echo "<div id='source_preview_layer' style='display: none;'>\n";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
 	echo "		<tr>\n";

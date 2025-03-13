@@ -236,7 +236,7 @@
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
-	if (permission_exists('event_guard_log_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('event_guard_log_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -244,8 +244,12 @@
 	if (is_array($event_guard_logs) && @sizeof($event_guard_logs) != 0) {
 		$x = 0;
 		foreach ($event_guard_logs as $row) {
+			$list_row_url = '';
 			if (permission_exists('event_guard_log_edit')) {
 				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row'>\n";
 			if (permission_exists('event_guard_log_add') || permission_exists('event_guard_log_edit') || permission_exists('event_guard_log_delete')) {
@@ -273,7 +277,7 @@
 			echo "	<td>".escape($row['extension'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($text['label-'.$row['log_status']])."</td>\n";
-			if (permission_exists('event_guard_log_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('event_guard_log_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

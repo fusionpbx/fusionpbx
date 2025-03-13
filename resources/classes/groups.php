@@ -27,11 +27,7 @@
 /**
  * groups class provides methods for add, delete groups, and add default groups
  *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('groups')) {
 	class groups {
 
 		/**
@@ -534,6 +530,3 @@ if (!class_exists('groups')) {
 			$_SESSION["user"]["group_level"] = $this->group_level;
 		}
 	}
-}
-
-?>

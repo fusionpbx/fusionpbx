@@ -26,10 +26,7 @@
 
 /**
  * xml_cdr class provides methods for adding cdr records to the database
- *
- * @method boolean add
  */
-if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
 		/**
@@ -369,7 +366,7 @@ if (!class_exists('xml_cdr')) {
 
 			//skip call detail records for calls blocked by call block
 				if (isset($xml->variables->call_block) && !empty($this->settings->get('call_block', 'save_call_detail_record'))) {
-					if ($xml->variables->call_block == 'true' && $this->settings->get('call_block', 'save_call_detail_record') == 'false') {
+					if ($xml->variables->call_block == 'true' && $this->settings->get('call_block', 'save_call_detail_record', false) !== true) {
 						//delete the xml cdr file
 						if (!empty($this->settings->get('switch', 'log'))) {
 							$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
@@ -612,12 +609,6 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->hangup_cause == 'NO_ANSWER') {
 							$status = 'no_answer';
 						}
-						if (substr($destination_number, 0, 3) == '*99') {
-							$status = 'voicemail';
-						}
-						if (isset($xml->variables->voicemail_message_seconds) && $xml->variables->voicemail_message_seconds > 0) {
-							$status = 'voicemail';
-						}
 						if ($xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
 							$status = 'cancelled';
 						}
@@ -633,11 +624,17 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->cc_side == 'agent' && $xml->variables->billsec == 0) {
 							$status = 'no_answer';
 						}
-						if (!isset($status)  && $xml->variables->billsec == 0) {
+						if (!isset($status) && $xml->variables->billsec == 0) {
 							$status = 'no_answer';
 						}
 						if ($missed_call == 'true') {
 							$status = 'missed';
+						}
+						if (substr($destination_number, 0, 3) == '*99') {
+							$status = 'voicemail';
+						}
+						if (!empty($xml->variables->voicemail_message_seconds)) {
+							$status = 'voicemail';
 						}
 
 					//set the key
@@ -692,7 +689,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key][0]['end_epoch'] = $end_epoch;
 						$this->array[$key][0]['end_stamp'] = is_numeric((int)$end_epoch) ? date('c', $end_epoch) : null;
 						$this->array[$key][0]['duration'] = urldecode($xml->variables->billsec);
-						$this->array[$key][0]['mduration'] = urldecode($xml->variables->billmsec);
+						$this->array[$key][0]['mduration'] = urldecode($xml->variables->mduration);
 						$this->array[$key][0]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key][0]['billmsec'] = urldecode($xml->variables->billmsec);
 						$this->array[$key][0]['hold_accum_seconds'] = urldecode($xml->variables->hold_accum_seconds);
@@ -2370,4 +2367,3 @@ if (!class_exists('xml_cdr')) {
 		}
 
 	} //class
-}

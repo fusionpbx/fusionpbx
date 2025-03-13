@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021-2024
+	Portions created by the Initial Developer are Copyright (C) 2021-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -468,7 +468,7 @@
 	$document['title'] = $text['title-dashboard'];
 	require_once "resources/header.php";
 
-//get the child groups
+//get the dashboard groups
 	$sql = "SELECT * FROM v_dashboard_groups as x, v_groups as g ";
 	$sql .= "WHERE x.dashboard_uuid = :dashboard_uuid ";
 	$sql .= "AND x.group_uuid = g.group_uuid ";
@@ -477,9 +477,9 @@
 	unset ($sql, $parameters);
 
 //get the groups
-	$sql = "SELECT group_uuid, group_name FROM v_groups ";
+	$sql = "SELECT group_uuid, domain_uuid, group_name FROM v_groups ";
 	$sql .= "WHERE (domain_uuid = :domain_uuid or domain_uuid is null)";
-	$sql .= "ORDER by group_name asc ";
+	$sql .= "ORDER BY domain_uuid desc, group_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$groups = $database->execute($sql, $parameters, 'all');
 	unset ($sql, $parameters);
@@ -779,7 +779,7 @@
 			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>\n";
-				echo $field['group_name'].((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+				echo $field['group_name'].((!empty($field['domain_uuid'])) ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
 				if (permission_exists('dashboard_group_delete') || if_group("superadmin")) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>\n";
@@ -938,7 +938,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-	
+
 	if ($dashboard_chart_type == "icon") {
 		echo "<tr class='type_icon'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1175,7 +1175,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-dashboard_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
