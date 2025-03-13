@@ -45,5 +45,10 @@ Route::post('/curl/xml_handler/configuration', function (Request $request){
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
+Route::post('/curl/xml_handler/directory', function (Request $request){
+    $xml = new ModXMLCURLController;
+    return response($xml->directory($request), 200)->header('Content-Type','text/xml');
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 Route::get('/menu', [MenuController::class, 'index']);
 Route::post('/menus', [MenuController::class, 'store']);
