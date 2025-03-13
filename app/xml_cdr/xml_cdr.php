@@ -658,6 +658,22 @@
 	$param = substr($param, 1); //remove leading '&'
 	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
 
+//column overflow setting
+	echo "<style>\n";
+	if ($settings->get('cdr', 'column_overflow', 'hidden') == 'scroll') {
+		echo ".hide-sm-dn, .hide-md-dn, .hide-lg-dn {\n";
+		echo "	all: revert;\n";
+		echo "}\n";
+		echo ".list {\n";
+		echo "	overflow-x: scroll;\n";
+		echo "}\n";
+	} else {
+		echo ".list {\n";
+		echo "	overflow-x: hidden;\n";
+		echo "}\n";
+	}
+	echo "</style>\n";
+
 //show the results
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
