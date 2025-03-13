@@ -63,7 +63,7 @@ class ModXMLCURLController extends Controller
     }
 
     private function dump(Request $request){
-        \Log::debug('input: '.print_r($request->toArray(), true));
+        Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] input: '.print_r($request->toArray(), true));
     }
 
     public function configuration(Request $request): string{
@@ -1147,7 +1147,6 @@ class ModXMLCURLController extends Controller
         $event_calling_file = $request->input('Event-Calling-File');
         $user   = $request->input('user');
         $domain_name = $request->input('doman') ?? ($request->input('doman_name') ?? ($request->input('variable_domain_name') ?? $request->input('variable_sip_from_host')));
-        $domain_uuid = $request->input('domain_uuid');
         if (empty($domain_uuid) && isset($domain_name)){
             $domain = Domain::where('domain_name', $domain_name)
                             ->where('domain_enabled', 'true')
