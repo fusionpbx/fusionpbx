@@ -510,7 +510,7 @@
 		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'plugin';
 		$array['email_templates'][$x]['template_subcategory'] = 'emergency';
-		$array['email_templates'][$x]['template_subject'] = '\${event}';
+		$array['email_templates'][$x]['template_subject'] = '${event}';
 		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "<strong>From:</strong> \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
@@ -530,7 +530,7 @@
 		$array['email_templates'][$x]['template_language'] = 'en-us';
 		$array['email_templates'][$x]['template_category'] = 'plugin';
 		$array['email_templates'][$x]['template_subcategory'] = 'emergency';
-		$array['email_templates'][$x]['template_subject'] = '\${event}';
+		$array['email_templates'][$x]['template_subject'] = '${event}';
 		$array['email_templates'][$x]['template_body'] = "<html>\n";
 		$array['email_templates'][$x]['template_body'] .= "<body>\n";
 		$array['email_templates'][$x]['template_body'] .= "<strong>From:</strong> \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
