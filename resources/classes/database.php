@@ -3279,7 +3279,7 @@
 		 * @see database::__construct()
 		 * @see database::connect()
 		 */
-		public static function new(array $params = []): static {
+		public static function new(array $params = []) {
 			if (self::$database === null) {
 				self::$database = new database($params);
 				if (!self::$database->is_connected()) {
