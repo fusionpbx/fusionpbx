@@ -1299,7 +1299,7 @@ class ModXMLCURLController extends Controller
 
         }
         elseif (($event_calling_function == 'populate_database') && ($event_calling_file == 'mod_directory.c')){
-            $extensions = Extensions::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
+            $extensions = Extension::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
                             ->where('directory_visible','true')
                             ->orWhere('directory_exten_visible','true')
                             ->orderBy('domain_name')
