@@ -165,9 +165,7 @@ class FreeSWITCHAPIController extends Controller
         switch ($name){
             case 'execute':
                 if(App::hasDebugModeEnabled()){
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments[0]: '.array_key_exists(0, $arguments) ? $arguments[0] : '(not set)');
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments[1]: '.array_key_exists(1, $arguments) ? $arguments[1] : '(not set)');
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments[2]: '.array_key_exists(2, $arguments) ? $arguments[2] : '(not set)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments: '. print_r($arguments, true));
                 }
                 if ((count($arguments) >= 2) && ($this->type == 'EVENT_SOCKET')){
                     return $this->es_execute($arguments[0], $arguments[1] ?? null);
