@@ -1507,7 +1507,7 @@ class ModXMLCURLController extends Controller
                         else{
                             $destination = ($dial_string_based_on_userid == 'true' ? $sip_from_number : $sip_from_user) . '@' . $domain_name;
                             if (empty($dial_string)){
-                                $dial_string = 'sip_invite_domain='.$domain_name.', presence_id='.$presence_id.'}${sofia_contact(*/'.$destination.')}';
+                                $dial_string = '{sip_invite_domain='.$domain_name.', presence_id='.$presence_id.'}${sofia_contact(*/'.$destination.')}';
                             }
                             if($use_fs_path == 'true'){
                                 if ($local_hostname == $database_hostname){
