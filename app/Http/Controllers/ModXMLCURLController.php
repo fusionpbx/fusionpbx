@@ -1268,7 +1268,7 @@ class ModXMLCURLController extends Controller
 
         }
         elseif ($event_calling_function == 'switch_load_network_lists'){
-            $extensions = Extensions::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
+            $extensions = Extension::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
                             ->WhereNotNull('cidr')
                             ->orWhere('cidr','<>','')
                             ->orderBy('domain_name')
