@@ -93,8 +93,8 @@ if ($domains_processed == 1) {
 
 				//add the recording path if needed
 					if ($row['queue_greeting'] != '') {
-						if (file_exists($setting->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
-							$queue_greeting_path = $setting->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'];
+						if (file_exists($settings->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
+							$queue_greeting_path = $settings->get('switch','recordings').'/'.$row['domain_name'].'/'.$row['queue_greeting'];
 						}
 						else {
 							$queue_greeting_path = trim($row['queue_greeting']);

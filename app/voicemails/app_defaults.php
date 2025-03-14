@@ -36,18 +36,18 @@ if ($domains_processed == 1) {
 	unset($sql, $parameters);
 	if (!empty($voicemails) && is_array($voicemails)) {
 		foreach($voicemails as $row) {
-			if (!empty($setting->get('switch','voicemail')) && !empty($row['voicemail_id']) && is_numeric($row['voicemail_id'])) {
-				if (!file_exists($setting->get('switch','voicemail')."/default/".$row['domain_name']."/".$row['voicemail_id'])) {
-					mkdir($setting->get('switch','voicemail')."/default/".$row['domain_name']."/".$row['voicemail_id'], 0770, true);
+			if (!empty($settings->get('switch','voicemail')) && !empty($row['voicemail_id']) && is_numeric($row['voicemail_id'])) {
+				if (!file_exists($settings->get('switch','voicemail')."/default/".$row['domain_name']."/".$row['voicemail_id'])) {
+					mkdir($settings->get('switch','voicemail')."/default/".$row['domain_name']."/".$row['voicemail_id'], 0770, true);
 				}
 			}
 		}
 	}
 
 	//define initial, get current, define correct languages folder paths
-	$switch_configuration_dir = !empty($setting->get('switch','conf')) ? $setting->get('switch','conf') : '/etc/freeswitch';
+	$switch_configuration_dir = !empty($settings->get('switch','conf')) ? $settings->get('switch','conf') : '/etc/freeswitch';
 	$switch_languages_dir_initial = $switch_configuration_dir.'/lang';
-	$switch_languages_dir_current = $setting->get('switch','languages') ?? '';
+	$switch_languages_dir_current = $settings->get('switch','languages') ?? '';
 	$switch_languages_dir_correct = $switch_configuration_dir.'/languages';
 
 	//ensure switch using languages (not lang) folder
