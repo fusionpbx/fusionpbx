@@ -13,6 +13,8 @@ export default defineConfig({
         alias: {
             '@adminlte': path.resolve(__dirname, 'node_modules/admin-lte'),
             '@bootstrap-icons': path.resolve(__dirname, 'node_modules/bootstrap-icons'),
+            '@overlayscrollbars': path.resolve(__dirname, 'node_modules/overlayscrollbars'),
+            '@popperjs': path.resolve(__dirname, 'node_modules/@popperjs'),
         }
     }
 });
