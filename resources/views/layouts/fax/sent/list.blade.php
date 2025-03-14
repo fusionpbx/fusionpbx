@@ -144,7 +144,7 @@
 @endsection
 
 @push('scripts')
-@vite(["node_modules/daterangepicker/daterangepicker.css", "node_modules/daterangepicker/daterangepicker.js?commonjs-entry"])
+@vite(["node_modules/daterangepicker/daterangepicker.scss", "node_modules/daterangepicker/daterangepicker.js?commonjs-entry"])
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -205,7 +205,7 @@
         return checked;
     }
 
-    
+
     function checkSelectedBoxAvailable(){
         var has=false;
         $('.action_checkbox').each(function(key,val){

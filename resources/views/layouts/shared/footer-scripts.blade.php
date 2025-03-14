@@ -3,7 +3,7 @@
 @yield('script-bottom')
 @stack('scripts')
 
-@vite(['node_modules/select2/dist/css/select2.min.css', 'resources/js/ui/component.toastr.js', 'node_modules/jquery-toast-plugin/dist/jquery.toast.min.css'])
+@vite(['node_modules/select2/dist/scss/select2.min.scss', 'resources/js/ui/component.toastr.js', 'node_modules/jquery-toast-plugin/dist/jquery.toast.min.scss'])
 
 
 <script>

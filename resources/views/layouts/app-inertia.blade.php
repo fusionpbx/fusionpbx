@@ -4,9 +4,9 @@
 
 <head>
     @include('layouts.shared/title-meta', ['title' => $title ?? null])
-    @yield('css')
+    @yield('scss')
 
-    @vite(['resources/scss/tailwind.css'])
+    @vite(['resources/scss/tailwind.scss'])
 
     @vite(['resources/js/vue.js'])
 

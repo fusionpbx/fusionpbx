@@ -492,7 +492,7 @@
                     } else {
                         $('#MobileAppModal').modal("hide");
                         // $("#appMobileAppSuccess").find("ul").html('');
-                        // $("#appMobileAppSuccess").css('display','block');
+                        // $("#appMobileAppSuccess").scss('display','block');
                         // $("#appMobileAppSuccess").find("ul").append('<li>'+response.success.message+'</li>');
                         $('#createMobileAppSuccessModal').modal("show");
                         $('#createMobileAppSuccessModalLabel').text("Reset Password");

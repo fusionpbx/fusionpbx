@@ -8,6 +8,11 @@
     "devDependencies": {
         "axios": "^1.1.2",
         "laravel-vite-plugin": "^0.7.5",
+        "sass": "^1.85.1",
         "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "admin-lte": "^4.0.0-beta3",
+        "bootstrap": "^5.0.1"
     }
 }

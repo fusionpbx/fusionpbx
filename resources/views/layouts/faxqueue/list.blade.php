@@ -150,7 +150,7 @@
 @endsection
 
 @push('scripts')
-@vite(["node_modules/daterangepicker/daterangepicker.css", "node_modules/daterangepicker/daterangepicker.js?commonjs-entry"])
+@vite(["node_modules/daterangepicker/daterangepicker.scss", "node_modules/daterangepicker/daterangepicker.js?commonjs-entry"])
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             $('#selectallCheckbox').on('change',function(){

@@ -106,8 +106,8 @@
                                             <h5><span class="badge bg-info">{{ ucfirst($file->fax_status) }}</span></h5>
                                         @endif
                                     </td>
-                                    
-                                    
+
+
                                 </tr>
                             @endforeach
                         @endif
@@ -143,7 +143,7 @@
                         @else
                             @foreach ($inboundFaxes as $key=>$file)
                                 <tr id="id{{ $file->fax_file_uuid  }}">
-                                
+
                                     <td>
                                         @if($file->fax_caller_id_name!='')
                                             <span class="text-body fw-bold">{{ $file->fax_caller_id_name ?? ''}}</span><br />
@@ -160,7 +160,7 @@
                                         <span class="text-body text-nowrap">{{ $file->fax_date->format('D, M d, Y ')}}</span>
                                         <span class="text-body text-nowrap">{{ $file->fax_date->format('h:i:s A') }}</span>
                                     </td>
-                                   
+
                                 </tr>
                             @endforeach
                         @endif
@@ -331,7 +331,7 @@
 @endsection
 
 @push('scripts')
-@vite(["node_modules/daterangepicker/daterangepicker.css", "node_modules/daterangepicker/daterangepicker.js?commonjs-entry"])
+@vite(["node_modules/daterangepicker/daterangepicker.scss", "node_modules/daterangepicker/daterangepicker.js?commonjs-entry"])
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

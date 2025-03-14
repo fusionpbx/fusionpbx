@@ -8,8 +8,7 @@
     @include('layouts.shared/head') --}}
     @include('layouts.shared/title-meta', ['title' => $title ?? null])
     @yield('css')
-    @include('layouts.shared/head-css', ['mode' => $mode ?? '', 'demo' => $demo ?? ''])
-    @vite(['resources/js/app.js','resources/js/hyper-head.js', 'resources/js/hyper-config.js'])
+    @include('layouts.shared/head-css')
 
     @stack('head.end')
 </head>
@@ -28,7 +27,7 @@
 
 
                     @include('layouts.shared/horizontal-nav')
-           
+
 
                     {{-- <div class="container-fluid"> --}}
                         @yield('content')
