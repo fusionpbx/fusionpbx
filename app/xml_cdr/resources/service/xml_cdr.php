@@ -80,11 +80,8 @@
 		exit;
 	}
 
-//get the settings
-	$setting = new settings();
-
 //get cdr settings
-	//$interval = $setting->get('xml_cdr', '$interval');
+	//$interval = $settings->get('xml_cdr', '$interval');
 
 //make sure the /var/run/fusionpbx directory exists
     if (!file_exists('/var/run/fusionpbx')) {
@@ -119,7 +116,7 @@
 	$cdr = new xml_cdr;
 
 //get the cdr record
-	$xml_cdr_dir = $setting->get('switch', 'log').'/xml_cdr';
+	$xml_cdr_dir = $settings->get('switch', 'log').'/xml_cdr';
 
 //loop through 
 	while (true) {

@@ -45,9 +45,9 @@
 			}
 
 			//check for existing configuration
-			if (!empty($setting->get('switch','conf')) && file_exists($setting->get('switch','conf')."/autoload_configs/translate.conf.xml")) {
+			if (!empty($settings->get('switch','conf')) && file_exists($settings->get('switch','conf')."/autoload_configs/translate.conf.xml")) {
 				//import existing data
-				$xml = file_get_contents($setting->get('switch','conf')."/autoload_configs/translate.conf.xml");
+				$xml = file_get_contents($settings->get('switch','conf')."/autoload_configs/translate.conf.xml");
 
 				//convert the xml string to an xml object
 				$xml = simplexml_load_string($xml);

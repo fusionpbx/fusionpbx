@@ -27,13 +27,13 @@
 if ($domains_processed == 1) {
 
 	//set the directory
-		if (!empty($setting->get('switch','conf'))) {
-			$xml_dir = $setting->get('switch','conf').'/autoload_configs';
+		if (!empty($settings->get('switch','conf'))) {
+			$xml_dir = $settings->get('switch','conf').'/autoload_configs';
 			$xml_file = $xml_dir."/local_stream.conf";
 		}
 
 	//rename the file
-		if (!empty($setting->get('switch','conf'))) {
+		if (!empty($settings->get('switch','conf'))) {
 			if (file_exists($xml_dir.'/local_stream.conf.xml')) {
 				rename($xml_dir.'/local_stream.conf', $xml_dir.'/'.$xml_file);
 			}
@@ -43,7 +43,7 @@ if ($domains_processed == 1) {
 		}
 
 	//add the music_on_hold list to the database
-		if (!empty($setting->get('switch','conf'))) {
+		if (!empty($settings->get('switch','conf'))) {
 			$sql = "select count(music_on_hold_uuid) from v_music_on_hold; ";
 			$num_rows = $database->select($sql, null, 'column');
 			unset($sql);

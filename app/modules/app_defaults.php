@@ -57,8 +57,8 @@
 			unset($sql, $modules, $index, $row);
 
 		//use the module class to get the list of modules from the db and add any missing modules
-			if (!empty($setting->get('switch','mod'))) {
-				$module->dir = $setting->get('switch','mod');
+			if (!empty($settings->get('switch','mod'))) {
+				$module->dir = $settings->get('switch','mod');
 				$module->get_modules();
 				$module->synch();
 				$module->xml();
