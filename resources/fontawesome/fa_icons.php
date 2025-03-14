@@ -113,6 +113,6 @@ if (
 	!empty($font_awesome_icons) && is_array($font_awesome_icons)
 	) {
 	foreach ($font_awesome_icons as $icon) {
-		echo "<span class='".escape(implode(' ', $icon['classes']))." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon['label'])."' onclick=\"$('#selected_icon').val('".escape(implode(' ', $icon['classes']))."'); $('#icons').slideUp(); $('#icon_search').fadeOut(200, function() { $('#icon_search').val(''); $('#grid_icon').fadeIn(); });\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+		echo "<span class='".escape(implode(' ', $icon['classes']))." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon['label'])."' onclick=\"$('#selected_icon').val('".escape(implode(' ', $icon['classes']))."'); $('#icon_color').show(); $('#icons').slideUp(); $('#icon_search').fadeOut(200, function() { $('#icon_search').val(''); $('#grid_icon').fadeIn(); });\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
 	}
 }

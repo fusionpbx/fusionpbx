@@ -188,9 +188,9 @@
 						"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '').
 						"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
 						"&dest=".urlencode($row['caller_id_number'] ?? '').
-						"&rec=".(isset($_SESSION['click_to_call']['record']['boolean']) ? $_SESSION['click_to_call']['record']['boolean'] : "false").
+						"&rec=".(filter_var($_SESSION['click_to_call']['record']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
 						"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text']) ? $_SESSION['click_to_call']['ringback']['text'] : "us-ring").
-						"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean']) ? $_SESSION['click_to_call']['auto_answer']['boolean'] : "true").
+						"&auto_answer=".(filter_var($_SESSION['click_to_call']['auto_answer']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
 						"');\" ".
 						"style='cursor: pointer;'";
 				}

@@ -273,8 +273,6 @@ function do_upgrade_code_submodules() {
  * Execute all app_defaults.php files
  */
 function do_upgrade_domains() {
-	require_once dirname(__DIR__, 2) . "/resources/classes/config.php";
-	require_once dirname(__DIR__, 2) . "/resources/classes/domains.php";
 	$domain = new domains;
 	$domain->display_type = 'text';
 	$domain->upgrade();
@@ -285,7 +283,6 @@ function do_upgrade_domains() {
  */
 function do_upgrade_schema(bool $data_types = false) {
 	//get the database schema put it into an array then compare and update the database as needed.
-	require_once dirname(__DIR__, 2) . "/resources/classes/schema.php";
 	$obj = new schema;
 	$obj->data_types = $data_types;
 	echo $obj->schema('text');

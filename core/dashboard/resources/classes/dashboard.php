@@ -26,12 +26,7 @@
 
 /**
  * dashboard class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('dashboard')) {
 	class dashboard {
 
 		/**
@@ -247,6 +242,3 @@ if (!class_exists('dashboard')) {
 		}
 
 	}
-}
-
-?>

@@ -17,41 +17,32 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
+
 //check permisions
-	if (empty($included) || !$included) {
-		//includes files
-		require_once dirname(__DIR__, 2) . "/resources/require.php";
-		require_once "resources/check_auth.php";
-		if (permission_exists('group_edit')) {
-			//access granted
-		}
-		else {
-			echo "access denied";
-			return;
-		}
+	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
 	}
 
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
-//permission restore default
-	$permission = new permission;
-	$permission->restore();
-
-//redirect the users
-	if (empty($included) || !$included) {
-		//show a message to the user
-		message::add($text['message-restore']);
-		header("Location: groups.php");
-		return;
+//download
+	if (is_uuid($_GET['id'])) {
+		$obj = new call_recordings;
+		$obj->recording_uuid = $_GET['id'];
+		$obj->binary = isset($_GET['binary']) ? true : false;
+		$obj->download();
 	}
 
 ?>

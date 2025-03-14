@@ -46,7 +46,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get posted data
 	if (!empty($_POST['call_center_queues']) && is_array($_POST['call_center_queues'])) {
@@ -219,7 +219,7 @@
 	//echo th_order_by('queue_abandoned_resume_allowed', $text['label-abandoned_resume_allowed'], $order_by, $order);
 	//echo th_order_by('queue_tier_rule_wait_multiply_level', $text['label-tier_rule_wait_multiply_level'], $order_by, $order);
 	echo th_order_by('queue_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('call_center_queue_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('call_center_queue_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -273,7 +273,7 @@
 			//echo "	<td>".escape($row[queue_abandoned_resume_allowed])."&nbsp;</td>\n";
 			//echo "	<td>".escape($row[queue_tier_rule_wait_multiply_level])."&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['queue_description'])."</td>\n";
-			if (permission_exists('call_center_queue_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('call_center_queue_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

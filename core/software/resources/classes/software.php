@@ -2,17 +2,14 @@
 
 /**
  * software class
- *
- * @method string version
  */
-if (!class_exists('software')) {
 	class software {
 
 		/**
 		 * version
 		 */
 		public static function version() {
-			return '5.4.1';
+			return '5.4.2';
 		}
 
 		/**
@@ -25,6 +22,3 @@ if (!class_exists('software')) {
 		}
 
 	}
-}
-
-?>

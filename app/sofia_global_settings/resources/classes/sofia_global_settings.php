@@ -26,12 +26,7 @@
 
 /**
  * sofia_global_settings class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('sofia_global_settings')) {
 	class sofia_global_settings {
 
 		/**
@@ -247,6 +242,3 @@ if (!class_exists('sofia_global_settings')) {
 		}
 
 	}
-}
-
-?>

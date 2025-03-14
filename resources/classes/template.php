@@ -25,7 +25,6 @@
 */
 
 //define the template class
-	if (!class_exists('template')) {
 		class template {
 
 			public $engine;
@@ -90,6 +89,3 @@
 				}
 			}
 		}
-	}
-
-?>

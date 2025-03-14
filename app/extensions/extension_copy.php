@@ -186,7 +186,6 @@
 
 //synchronize configuration
 	if (is_writable($_SESSION['switch']['extensions']['dir'])) {
-		require_once "app/extensions/resources/classes/extension.php";
 		$ext = new extension;
 		$ext->xml();
 		unset($ext);
