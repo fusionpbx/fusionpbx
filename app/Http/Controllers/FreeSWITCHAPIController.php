@@ -200,7 +200,10 @@ class FreeSWITCHAPIController extends Controller
         $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
         $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
         $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
-        $url = 'http://'.$host.':'.$http_port.'/webapi/'.$command.(isset($param)?urlencode($param):'');
+        $url = 'http://'.$host.':'.$http_port.'/txtapi/'.$command.(isset($param)?urlencode($param):'');
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $url: '. $url);
+        }
         $response = Http::withBasicAuth($auth_user, $auth_pass)
                     ->withOptions([
                         'debug' => App::hasDebugModeEnabled()
