@@ -159,8 +159,16 @@ class FreeSWITCHAPIController extends Controller
     }
 
     public function __call($name, $arguments){
+        if(App::hasDebugModeEnabled()){
+                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] __call:$name: '.$name);
+        }
         switch ($name){
             case 'execute':
+                if(App::hasDebugModeEnabled()){
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments[0]: '.$arguments[0] ?? '(not set)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments[1]: '.$arguments[1] ?? '(not set)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments[2]: '.$arguments[2] ?? '(not set)');
+                }
                 if ((count($arguments) >= 2) && ($this->type == 'EVENT_SOCKET')){
                     return $this->es_execute($arguments[0], $arguments[1] ?? null);
                 }
@@ -195,7 +203,12 @@ class FreeSWITCHAPIController extends Controller
         $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
         $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
         $url = 'http://'.$host.':'.$http_port.'/webapi/'.$command.(isset($param)?urlencode($param):'');
-        $response = Http::withBasicAuth($auth_user, $auth_pass)->get($url);
+        $response = Http::withBasicAuth($auth_user, $auth_pass)
+                    ->withOptions([
+                        'debug' => App::hasDebugModeEnabled()
+                        ,])
+                    ->get($url);
+
         if ($response->ok())
             return $response->body() ?? null;
         return null;

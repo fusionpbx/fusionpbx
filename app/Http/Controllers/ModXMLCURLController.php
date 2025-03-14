@@ -1396,7 +1396,7 @@ class ModXMLCURLController extends Controller
                     $reg_user = $dialed_extension;
                 }
 
-                $registrations = $api->execute('show', 'registrations as XML', $local_hostname);
+                $registrations = $api->execute('show', 'registrations as xml', $local_hostname);
                 if(App::hasDebugModeEnabled()){
                     Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $registrations: '.$registrations);
                 }
