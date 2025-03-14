@@ -1397,6 +1397,9 @@ class ModXMLCURLController extends Controller
                 }
 
                 $registrations = $api->execute('show', 'registrations as XML');
+                if(App::hasDebugModeEnabled()){
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $registrations: '.$registrations);
+                }
                 $xml = simplexml_load_string($registrations);
                 $row_count = $xml->attributes()['row_count'];
                 $database_hostname = null;
