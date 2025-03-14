@@ -15,9 +15,14 @@ class FreeSWITCHAPIController extends Controller
 {
     private $fp = null;
     private $buffer;
+    private string $type;
 
     public function __construct(){
-        switch (env('FS_API_TYPE', 'XML_RPC')){
+        $this->type = env('FS_API_TYPE', 'XML_RPC');
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->type: '.$this->type);
+        }
+        switch ($this->type){
             case 'EVENT_SOCKET':
                 $this->buffer = new EventSocketBufferController;
 
@@ -29,7 +34,7 @@ class FreeSWITCHAPIController extends Controller
 
     public function __destruct(){
 
-        switch (env('FS_API_TYPE', 'XML_RPC')){
+        switch ($this->type){
             case 'EVENT_SOCKET':
                 $this->es_close();
                 break;
@@ -155,11 +160,12 @@ class FreeSWITCHAPIController extends Controller
     public function __call($name, $arguments){
         switch ($name){
             case 'execute':
-                if ((count($arguments) == 2) && (env('FS_API_TYPE', 'XML_RPC') == 'EVENT_SOCKET')){
+                if ((count($arguments) >= 2) && ($this->type == 'EVENT_SOCKET')){
                     return $this->es_execute($arguments[0], $arguments[1] ?? null);
                 }
-                elseif((count($arguments) == 3) && (env('FS_API_TYPE', 'XML_RPC') == 'XML_RPC')){
-                    return $this->rpc_execute($arguments[0], $arguments[1], $arguments[2] ?? null);
+                elseif((count($arguments) == 3) && ($this->type == 'XML_RPC')){
+                    // FIXME: find the host
+                    return $this->rpc_execute($arguments[2] ?? '127.0.0.1', $arguments[0], $arguments[1]);
                 }
                 return null;
         }
