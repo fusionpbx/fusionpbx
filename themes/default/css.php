@@ -147,7 +147,7 @@ $input_shadow_outer_color_focus = !empty($settings->get('theme', 'input_shadow_o
 $input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch_round');
 $input_toggle_switch_background_color_true = $settings->get('theme', 'input_toggle_switch_background_color_true', '#2e82d0');
 $input_toggle_switch_background_color_false = $settings->get('theme', 'input_toggle_switch_background_color_false', $input_border_color);
-$input_toggle_switch_handle_symbol = filter_var($settings->get('theme', 'input_toggle_switch_handle_symbol', false), FILTER_VALIDATE_BOOL);
+$input_toggle_switch_handle_symbol = $settings->get('theme', 'input_toggle_switch_handle_symbol', false);
 $input_toggle_switch_handle_color = $settings->get('theme', 'input_toggle_switch_handle_color', '#ffffff');
 $login_body_top = $settings->get('theme', 'login_body_top', '50%');
 $login_body_left = $settings->get('theme', 'login_body_left', '50%');
@@ -318,7 +318,7 @@ $modal_message_color = $settings->get('theme', 'modal_message_color', '#444');
 $modal_message_alignment = $settings->get('theme', 'modal_message_alignment', 'left');
 $modal_message_margin = $settings->get('theme', 'modal_message_margin', '0 0 20px 0');
 $audio_player_indicator_color = $settings->get('theme', 'audio_player_indicator_color', '#b90004');
-$audio_player_waveform_enabled = filter_var($settings->get('theme', 'audio_player_waveform_enabled', true), FILTER_VALIDATE_BOOL);
+$audio_player_waveform_enabled = $settings->get('theme', 'audio_player_waveform_enabled', true);
 $audio_player_waveform_height = $settings->get('theme', 'audio_player_waveform_height', '70px');
 $custom_css_code = $settings->get('theme', 'custom_css_code', null);
 
@@ -355,29 +355,29 @@ if (!empty($_SESSION['theme'])) {
 $background_images_enabled = false;
 if (!empty($_SESSION['username'])) {
 	//logged in - use standard background images
-	if (filter_var($settings->get('theme', 'background_image_enabled', false), FILTER_VALIDATE_BOOL) && is_array($settings->get('theme', 'background_image', ''))) {
+	if ($settings->get('theme', 'background_image_enabled', false) && is_array($settings->get('theme', 'background_image', ''))) {
 		$background_images_enabled = true;
 		$background_images = $settings->get('theme', 'background_image', '');
 	}
 
 	//logged in - use standard background colors
-	if (filter_var($settings->get('theme', 'background_color_enabled', true), FILTER_VALIDATE_BOOL) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
+	if ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 		$background_colors[1] = $settings->get('theme', 'background_color')[1];
 	}
-	elseif (filter_var($settings->get('theme', 'background_color_enabled', true), FILTER_VALIDATE_BOOL) && !empty($settings->get('theme', 'background_color')[0])) {
+	elseif ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 	}
 }
 else {
 	//not logged in - try using login background images
-	if (filter_var($settings->get('theme', 'login_background_image_enabled', false), FILTER_VALIDATE_BOOL) && is_array($settings->get('theme', 'login_background_image', ''))) {
+	if ($settings->get('theme', 'login_background_image_enabled', false) && is_array($settings->get('theme', 'login_background_image', ''))) {
 		$background_images_enabled = true;
 		$background_images = $settings->get('theme', 'login_background_image', '');
 	}
 
 	//otherwise, use standard background images
-	if (filter_var($settings->get('theme', 'background_image_enabled', true), FILTER_VALIDATE_BOOL) && is_array($settings->get('theme', 'background_image', ''))) {
+	if ($settings->get('theme', 'background_image_enabled', true) && is_array($settings->get('theme', 'background_image', ''))) {
 		$background_images_enabled = true;
 		$background_images = $settings->get('theme', 'background_image', '');
 	}
@@ -390,11 +390,11 @@ else {
 	elseif (!empty($settings->get('theme', 'login_background_color', '')) && !empty($settings->get('theme', 'login_background_color')[0])) {
 		$background_colors[0] = $settings->get('theme', 'login_background_color')[0];
 	}
-	elseif (filter_var($settings->get('theme', 'background_color_enabled', true), FILTER_VALIDATE_BOOL) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
+	elseif ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 		$background_colors[1] = $settings->get('theme', 'background_color')[1];
 	}
-	elseif (filter_var($settings->get('theme', 'background_color_enabled', true), FILTER_VALIDATE_BOOL) && !empty($settings->get('theme', 'background_color')[0])) {
+	elseif ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 	}
 }
