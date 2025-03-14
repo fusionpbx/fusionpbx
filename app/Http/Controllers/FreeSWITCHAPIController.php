@@ -17,7 +17,6 @@ class FreeSWITCHAPIController extends Controller
     private $buffer;
 
     public function __construct(){
-        parent::__construct();
         switch (env('FS_API_TYPE', 'XML_RPC')){
             case 'EVENT_SOCKET':
                 $this->buffer = new EventSocketBufferController;
@@ -27,6 +26,7 @@ class FreeSWITCHAPIController extends Controller
                 break;
         }
     }
+
     public function __destruct(){
 
         switch (env('FS_API_TYPE', 'XML_RPC')){
@@ -36,8 +36,6 @@ class FreeSWITCHAPIController extends Controller
             default:
                 break;
         }
-
-        parent::__destruct();
     }
 
     private function es_connect($host, $port, $password){
