@@ -1268,7 +1268,7 @@ class ModXMLCURLController extends Controller
 
         }
         elseif ($event_calling_function == 'switch_load_network_lists'){
-            $extensions = Extensions::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
+            $extensions = Extension::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
                             ->WhereNotNull('cidr')
                             ->orWhere('cidr','<>','')
                             ->orderBy('domain_name')
@@ -1299,7 +1299,7 @@ class ModXMLCURLController extends Controller
 
         }
         elseif (($event_calling_function == 'populate_database') && ($event_calling_file == 'mod_directory.c')){
-            $extensions = Extensions::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
+            $extensions = Extension::join(Domain::getTableName(),Extension::getTableName().'.domain_uuid', Domain::getTableName().'.domain_uuid')
                             ->where('directory_visible','true')
                             ->orWhere('directory_exten_visible','true')
                             ->orderBy('domain_name')
@@ -1390,13 +1390,16 @@ class ModXMLCURLController extends Controller
                 $local_hostname = $this->get_hostname($request);    // TODO: verify this
                 $reg_user = $dialed_extension;
                 if ($dial_string_based_on_userid == 'false'){
-                    $reg_user = $api->execute('user_data', $dialed_extension . '@' . $domain_name . ' attr id');
+                    $reg_user = $api->execute('user_data', $dialed_extension . '@' . $domain_name . ' attr id', $local_hostname);
                 }
                 else{
                     $reg_user = $dialed_extension;
                 }
 
-                $registrations = $api->execute('show', 'registrations as XML');
+                $registrations = $api->execute('show', 'registrations as xml', $local_hostname);
+                if(App::hasDebugModeEnabled()){
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $registrations: '.$registrations);
+                }
                 $xml = simplexml_load_string($registrations);
                 $row_count = $xml->attributes()['row_count'];
                 $database_hostname = null;
@@ -1418,7 +1421,7 @@ class ModXMLCURLController extends Controller
                 $continue = false;
                 $extension_query = Extension::join(Domain::getTableName(), Extension::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
                                 ->where('domain_enabled', 'true')
-                                ->where('enable', 'true')
+                                ->where('enabled', 'true')
                                 ->where(Domain::getTableName().'.domain_uuid', $domain_uuid)
                                 ->where(function (Builder $query){
                                     global $user;
@@ -1511,7 +1514,7 @@ class ModXMLCURLController extends Controller
                                     Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] local_host and database_host are the same.');
                                 }
                                 else{
-                                    $contact = trim($api->execute('sofia_contact', $destination));
+                                    $contact = trim($api->execute('sofia_contact', $destination, $database_hostname));
                                     $array = exploce('/', $contact);
                                     $proxy = $database_hostname;
                                     $exchange_profile = $default_settings->get('config', 'xml_handler.exchange_profile', 'text') ?? 'internal';

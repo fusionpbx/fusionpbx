@@ -7,6 +7,7 @@ use App\Models\DefaultSetting;
 use App\Models\Setting;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -15,10 +16,14 @@ class FreeSWITCHAPIController extends Controller
 {
     private $fp = null;
     private $buffer;
+    private string $type;
 
     public function __construct(){
-        parent::__construct();
-        switch (env('FS_API_TYPE', 'XML_RPC')){
+        $this->type = env('FS_API_TYPE', 'XML_RPC');
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->type: '.$this->type);
+        }
+        switch ($this->type){
             case 'EVENT_SOCKET':
                 $this->buffer = new EventSocketBufferController;
 
@@ -27,17 +32,16 @@ class FreeSWITCHAPIController extends Controller
                 break;
         }
     }
+
     public function __destruct(){
 
-        switch (env('FS_API_TYPE', 'XML_RPC')){
+        switch ($this->type){
             case 'EVENT_SOCKET':
                 $this->es_close();
                 break;
             default:
                 break;
         }
-
-        parent::__destruct();
     }
 
     private function es_connect($host, $port, $password){
@@ -155,13 +159,20 @@ class FreeSWITCHAPIController extends Controller
     }
 
     public function __call($name, $arguments){
+        if(App::hasDebugModeEnabled()){
+                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] __call:$name: '.$name);
+        }
         switch ($name){
             case 'execute':
-                if ((count($arguments) == 2) && (env('FS_API_TYPE', 'XML_RPC') == 'EVENT_SOCKET')){
+                if(App::hasDebugModeEnabled()){
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments: '. print_r($arguments, true));
+                }
+                if ((count($arguments) >= 2) && ($this->type == 'EVENT_SOCKET')){
                     return $this->es_execute($arguments[0], $arguments[1] ?? null);
                 }
-                elseif((count($arguments) == 3) && (env('FS_API_TYPE', 'XML_RPC') == 'XML_RPC')){
-                    return $this->rpc_execute($arguments[0], $arguments[1], $arguments[2] ?? null);
+                elseif((count($arguments) == 3) && ($this->type == 'XML_RPC')){
+                    // FIXME: find the host
+                    return $this->rpc_execute($arguments[2] ?? '127.0.0.1', $arguments[0], $arguments[1]);
                 }
                 return null;
         }
@@ -189,8 +200,16 @@ class FreeSWITCHAPIController extends Controller
         $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
         $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
         $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
-        $url = 'http://'.$host.':'.$http_port.'/webapi/'.$command.(isset($param)?urlencode($param):'');
-        $response = Http::withBasicAuth($auth_user, $auth_pass)->get($url);
+        $url = 'http://'.$host.':'.$http_port.'/txtapi/'.$command.'?'.(isset($param)?rawurlencode($param):'');
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $url: '. $url);
+        }
+        $response = Http::withBasicAuth($auth_user, $auth_pass)
+                    ->withOptions([
+                        'debug' => App::hasDebugModeEnabled()
+                        ,])
+                    ->get($url);
+
         if ($response->ok())
             return $response->body() ?? null;
         return null;
