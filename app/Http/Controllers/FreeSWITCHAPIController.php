@@ -7,6 +7,7 @@ use App\Models\DefaultSetting;
 use App\Models\Setting;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
