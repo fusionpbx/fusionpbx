@@ -7,14 +7,17 @@
 
     @include('layouts.shared/head') --}}
     @include('layouts.shared/title-meta', ['title' => $title ?? null])
-    @yield('css')
+    @stack('css')
     @include('layouts.shared/head-css')
 
     @stack('head.end')
 </head>
 
-<body>
+<body class="login-page bg-body-secondary">
 
+@yield('content')
+
+@stack('footer-scripts')
 </body>
 
 </html>
