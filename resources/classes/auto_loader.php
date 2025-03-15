@@ -34,8 +34,10 @@
  */
 class auto_loader {
 
-	const FILE = 'autoloader_cache.php';
-	const CACHE_KEY = 'autoloader_classes';
+	const CLASSES_KEY = 'autoloader_classes';
+	const CLASSES_FILE = 'autoloader_cache.php';
+	const INTERFACES_KEY = "autoloader_interfaces";
+	const INTERFACES_FILE = "autoloader_interface_cache.php";
 
 	private $classes;
 
@@ -46,23 +48,36 @@ class auto_loader {
 	private $apcu_enabled;
 
 	/**
-	 * Cache path and file name
+	 * Cache path and file name for classes
 	 * @var string
 	 */
-	private static $cache_file = null;
+	private static $classes_file = null;
 
-	public function __construct($project_path = '') {
+	/**
+	 * Maps interfaces to classes
+	 * @var array
+	 */
+	private $interfaces;
+
+	/**
+	 * Cache path and file name for interfaces
+	 * @var string
+	 */
+	private static $interfaces_file = null;
+
+	public function __construct() {
 
 		//set if we can use RAM cache
 		$this->apcu_enabled = function_exists('apcu_enabled') && apcu_enabled();
 
 		//set cache location
-		self::$cache_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::FILE;
+		self::$classes_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::CLASSES_FILE;
+		self::$interfaces_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::INTERFACES_FILE;
 
 		//classes must be loaded before this object is registered
 		if (!$this->load_cache()) {
 			//cache miss so load them
-			$this->reload_classes($project_path);
+			$this->reload_classes();
 			//update the cache after loading classes array
 			$this->update_cache();
 		}
@@ -70,7 +85,16 @@ class auto_loader {
 		spl_autoload_register(array($this, 'loader'));
 	}
 
-	public function update_cache(string $file = ''): bool {
+	/**
+	 * Update the auto loader
+	 */
+	public function update() {
+		$this->clear_cache();
+		$this->reload_classes();
+		$this->update_cache();
+	}
+
+	public function update_cache(): bool {
 		//guard against writing an empty file
 		if (empty($this->classes)) {
 			return false;
@@ -78,65 +102,74 @@ class auto_loader {
 
 		//update RAM cache when available
 		if ($this->apcu_enabled) {
-			$success = apcu_store(self::CACHE_KEY, $this->classes);
+			$classes_cached = apcu_store(self::CLASSES_KEY, $this->classes);
+			$interfaces_cached = apcu_store(self::INTERFACES_KEY, $this->interfaces);
 			//do not save to drive when we are using apcu
-			if ($success) return true;
-		}
-
-		//ensure we have somewhere to put the file
-		if (empty($file)) {
-			$file = self::$cache_file;
+			if ($classes_cached && $interfaces_cached) return true;
 		}
 
 		//export the classes array using PHP engine
-		$data = var_export($this->classes, true);
+		$classes_array = var_export($this->classes, true);
 
 		//put the array in a form that it can be loaded directly to an array
-		$result = file_put_contents($file, "<?php\n return " . $data . ";\n");
-		if ($result !== false) {
-			return true;
+		$class_result = file_put_contents(self::$classes_file, "<?php\n return " . $classes_array . ";\n");
+		if ($class_result === false) {
+			//file failed to save - send error to syslog when debugging
+			$error_array = error_get_last();
+			self::log(LOG_WARNING, $error_array['message'] ?? '');
 		}
 
-		//file failed to save - send error to syslog when debugging
-		$error_array = error_get_last();
-		self::log(LOG_WARNING, $error_array['message'] ?? '');
+		//export the interfaces array using PHP engine
+		$interfaces_array = var_export($this->interfaces, true);
 
-		return false;
+		//put the array in a form that it can be loaded directly to an array
+		$interface_result = file_put_contents(self::$interfaces_file, "<?php\n return " . $interfaces_array . ";\n");
+		if ($interface_result === false) {
+			//file failed to save - send error to syslog when debugging
+			$error_array = error_get_last();
+			self::log(LOG_WARNING, $error_array['message'] ?? '');
+		}
+
+		$result = ($class_result && $interface_result);
+
+		return $result;
 	}
 
-	public function load_cache(string $file = ''): bool {
+	public function load_cache(): bool {
 		$this->classes = [];
+		$this->interfaces = [];
 
 		//use apcu when available
-		if ($this->apcu_enabled && apcu_exists(self::CACHE_KEY)) {
-			$this->classes = apcu_fetch(self::CACHE_KEY, $success);
-			if ($success) return true;
-		}
-
-		//use a standard file
-		if (empty($file)) {
-			$file = self::$cache_file;
+		if ($this->apcu_enabled && apcu_exists(self::CLASSES_KEY)) {
+			$this->classes = apcu_fetch(self::CLASSES_KEY, $classes_cached);
+			$this->interfaces = apcu_fetch(self::INTERFACES_KEY, $interfaces_cached);
+			//don't use files when we are using apcu caching
+			if ($classes_cached && $interfaces_cached) return true;
 		}
 
 		//use PHP engine to parse it
-		if (file_exists($file)) {
-			$this->classes = include $file;
+		if (file_exists(self::$classes_file)) {
+			$this->classes = include self::$classes_file;
+		}
+
+		//do the same for interface to class mappings
+		if (file_exists(self::$interfaces_file)) {
+			$this->interfaces = include self::$interfaces_file;
 		}
 
 		//catch edge case of first time using apcu cache
 		if ($this->apcu_enabled) {
-			apcu_store(self::CACHE_KEY, $this->classes);
+			apcu_store(self::CLASSES_KEY, $this->classes);
+			apcu_store(self::INTERFACES_KEY, $this->interfaces);
 		}
 
 		//return true when we have classes and false if the array is still empty
-		return !empty($this->classes);
+		return (!empty($this->classes) && !empty($this->interfaces));
 	}
 
-	public function reload_classes($project_path = '') {
+	public function reload_classes() {
 		//set project path using magic dir constant
-		if (empty($project_path)) {
-			$project_path = dirname(__DIR__, 2);
-		}
+		$project_path = dirname(__DIR__, 2);
 
 		//build the array of all locations for classes in specific order
 		$search_path = [
@@ -156,7 +189,7 @@ class auto_loader {
 		}
 
 		//reset the current array
-		$this->classes = [];
+		$class_list = [];
 
 		//store PHP language declared classes, interfaces, and traits
 		$current_classes = get_declared_classes();
@@ -184,7 +217,7 @@ class auto_loader {
 			$classes = array_diff($new_classes, $current_classes);
 			if (!empty($classes)) {
 				foreach ($classes as $class) {
-					$this->classes[$class] = $file;
+					$class_list[$class] = $file;
 				}
 				//overwrite previous array with new values
 				$current_classes = $new_classes;
@@ -194,7 +227,7 @@ class auto_loader {
 			$interfaces = array_diff($new_interfaces, $current_interfaces);
 			if (!empty($interfaces)) {
 				foreach ($interfaces as $interface) {
-					$this->classes[$interface] = $file;
+					$class_list[$interface] = $file;
 				}
 				//overwrite previous array with new values
 				$current_interfaces = $new_interfaces;
@@ -204,12 +237,24 @@ class auto_loader {
 			$traits = array_diff($new_traits, $current_traits);
 			if (!empty($traits)) {
 				foreach ($traits as $trait) {
-					$this->classes[$trait] = $file;
+					$class_list[$trait] = $file;
 				}
 				//overwrite previous array with new values
 				$current_traits = $new_traits;
 			}
 		}
+
+		//add only new classes
+		if (!empty($class_list)) {
+			foreach ($class_list as $class => $location) {
+				if (!isset($this->classes[$class])) {
+					$this->classes[$class] = $location;
+				}
+			}
+		}
+
+		//load interface to class mappings
+		$this->reload_interface_list();
 	}
 
 	/**
@@ -276,6 +321,24 @@ class auto_loader {
 		return false;
 	}
 
+	public function reload_interface_list() {
+		$this->interfaces = [];
+		if (!empty($this->classes)) {
+			$classes = array_keys($this->classes);
+			foreach ($classes as $class) {
+				$reflection = new ReflectionClass($class);
+				$interfaces = $reflection->getInterfaces();
+				foreach ($interfaces as $interface) {
+					$name = $interface->getName();
+					if (empty($this->interfaces[$name])) {
+						$this->interfaces[$name] = [];
+					}
+					$this->interfaces[$name][] = $class;
+				}
+			}
+		}
+	}
+
 	/**
 	 * Returns a list of classes loaded by the auto_loader. If no classes have been loaded an empty array is returned.
 	 * @return array List of classes loaded by the auto_loader or empty array
@@ -287,26 +350,70 @@ class auto_loader {
 		return [];
 	}
 
-	public static function clear_cache(string $file = '') {
+	/**
+	 * Returns a list of classes implementing the interface
+	 * @param string $interface_name
+	 * @return array
+	 */
+	public function get_interface_list(string $interface_name): array {
+		//make sure we can return values
+		if (empty($this->classes) || empty($this->interfaces)) {
+			return [];
+		}
+		//check if we have an interface with that name
+		if (!empty($this->interfaces[$interface_name])) {
+			//return the list of classes associated with that interface
+			return $this->interfaces[$interface_name];
+		}
+		//interface is not implemented by any classes
+		return [];
+	}
+
+	public function get_interfaces(): array {
+		if (!empty($this->interfaces)) {
+			return $this->interfaces;
+		}
+		return [];
+	}
+
+	public static function clear_cache(string $classes_file = '', string $interfaces_file = '') {
 
 		//check for apcu cache
 		if (function_exists('apcu_enabled') && apcu_enabled()) {
-			apcu_delete(self::CACHE_KEY);
+			apcu_delete(self::CLASSES_KEY);
+			apcu_delete(self::INTERFACES_KEY);
 		}
 
 		//set default file
-		if (empty(self::$cache_file)) {
-			self::$cache_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::FILE;
+		if (empty(self::$classes_file)) {
+			self::$classes_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::CLASSES_FILE;
 		}
 
 		//set file to clear
-		if (empty($file)) {
-			$file = self::$cache_file;
+		if (empty($classes_file)) {
+			$classes_file = self::$classes_file;
 		}
 
 		//remove the file when it exists
-		if (file_exists($file)) {
-			@unlink($file);
+		if (file_exists($classes_file)) {
+			@unlink($classes_file);
+			$error_array = error_get_last();
+			//send to syslog when debugging with either environment variable or debug in the url
+			self::log(LOG_WARNING, $error_array['message'] ?? '');
+		}
+
+		if (empty(self::$interfaces_file)) {
+			self::$interfaces_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::INTERFACES_FILE;
+		}
+
+		//set interfaces file to clear
+		if (empty($interfaces_file)) {
+			$interfaces_file = self::$interfaces_file;
+		}
+
+		//remove the file when it exists
+		if (file_exists($interfaces_file)) {
+			@unlink($interfaces_file);
 			$error_array = error_get_last();
 			//send to syslog when debugging with either environment variable or debug in the url
 			self::log(LOG_WARNING, $error_array['message'] ?? '');

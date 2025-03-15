@@ -141,9 +141,6 @@
 		fclose($file_handle);
 	}
 
-//include files
-	require dirname(__DIR__, 2) . "/resources/require.php";
-
 //check the permission
 	if(defined('STDIN')) {
 		$display_type = 'text'; //html, text
@@ -177,11 +174,13 @@
 		exit();
 	}
 
-//always update the auto_loader cache just-in-case the source files have updated
-	$auto_loader = new auto_loader();
-	$auto_loader->reload_classes();
-	$auto_loader->update_cache();
-	$auto_loader->clear_cache();
+//always update the now global autoload cache just-in-case the source files have updated
+	$autoload->update();
+
+//trigger clear cache for any classes that require it
+	foreach ($autoload->get_interface_list('clear_cache') as $class) {
+		$class::clear_cache();
+	}
 
 //get the version of the software
 	if ($upgrade_type == 'version') {
