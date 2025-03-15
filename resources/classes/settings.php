@@ -446,31 +446,13 @@ class settings {
 		}
 	}
 
-	/**
-	 * Clears the settings cache
-	 * @param string $type Empty clears all settings. Values can be global, domain, or user.
-	 */
-	public static function clear_cache(string $type = '') {
-		if (function_exists('apcu_enabled') && apcu_enabled()) {
-			switch ($type) {
-				case 'all':
-				case '':
-				default:
-					$type = "";
-					break;
-				case 'global':
-				case 'domain':
-				case 'user':
-					$type .= "_";
-					break;
-			}
-			$cache = apcu_cache_info(false);
-			if (!empty($cache['cache_list'])) {
-				foreach ($cache['cache_list'] as $entry) {
-					$key = $entry['info'];
-					if (str_starts_with($key, 'settings_' . $type)) {
-						apcu_delete($key);
-					}
+	public static function clear_cache() {
+		$cache = apcu_cache_info(false);
+		if (!empty($cache['cache_list'])) {
+			foreach ($cache['cache_list'] as $entry) {
+				$key = $entry['info'];
+				if (str_starts_with($key, 'settings_')) {
+					apcu_delete($key);
 				}
 			}
 		}
