@@ -9,7 +9,7 @@
  * @access public
  * @author Mark Crane <mark@fusionpbx.com>
  */
-class settings {
+class settings implements clear_cache {
 
 	/**
 	 * Set in the constructor. String used to load a specific domain. Must be a value domain UUID before sending to the constructor.
