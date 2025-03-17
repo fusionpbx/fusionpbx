@@ -2086,12 +2086,12 @@ class ModXMLCURLController extends Controller
             $dialplan_query = Dialplan::join(Domain::getTableName(), Dialplan::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
                                     ->join(Destination::getTableName(), Dialplan::getTableName().'.dialplan_uuid', '=', Destination::getTableName().'.dialplan_uuid')
                                     ->where(function (Builder $query) use ($hostname){
-                                        $query->where(Dialplan::getTableName().'hostname', $hostname)
-                                            ->orWhereNull(Dialplan::getTableName().'hostname');
+                                        $query->where(Dialplan::getTableName().'.hostname', $hostname)
+                                            ->orWhereNull(Dialplan::getTableName().'.hostname');
                                     })
                                     ->where(function (Builder $query) use ($destination_number){
                                         $query->where(function (Builder $query1) {
-                                            $query1->where(Dialplan::getTableName().'dialplan_context','LIKE','%public%')   // FIXME
+                                            $query1->where(Dialplan::getTableName().'.dialplan_context','LIKE','%public%')   // FIXME
                                             ->orWhereNull(Dialplan::getTableName().'.domain_uuid');
                                         })
                                         ->orWhere(function (Builder $query2) use ($destination_number){
@@ -2099,7 +2099,7 @@ class ModXMLCURLController extends Controller
                                                 ->orWhere(DB::raw('CONCAT(destination_prefix, destination_area_code, destination_number)'), '=', $destination_number)
                                                 ->orWhere(DB::raw('CONCAT(destination_trunk_prefix, destination_area_code, destination_number)'), '=', $destination_number)
                                                 ->orWhere(DB::raw('CONCAT(destination_prefix, destination_number)'), '=', $destination_number)
-                                                ->orWhere(DB::raw("CONCAT('+', destination_prefix,destination_number)"), '=', $destination_number)
+                                                ->orWhere(DB::raw("CONCAT('+', destination_prefix, destination_number)"), '=', $destination_number)
                                                 ->orWhere(DB::raw("CONCAT('+', destination_prefix, destination_area_code, destination_number)"), '=', $destination_number)
                                                 ->orWhere(DB::raw('CONCAT(destination_area_code, destination_number)'), '=', $destination_number);
 
