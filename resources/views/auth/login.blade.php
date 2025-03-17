@@ -5,7 +5,6 @@
         <div class="login-logo">
             <img src="{{asset('/storage/logo.png')}}" style="padding:20px;max-width:100%;">
         </div>
-        <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Business Phone System Portal</p>
@@ -43,7 +42,6 @@
                             </span>
                         @enderror
                     </div>
-                    <!--begin::Row-->
                     <div class="row">
                         <div class="col-8">
                             <div class="form-check">
@@ -53,15 +51,12 @@
                                 </label>
                             </div>
                         </div>
-                        <!-- /.col -->
                         <div class="col-4">
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">{{ __('Log in') }}</button>
                             </div>
                         </div>
-                        <!-- /.col -->
                     </div>
-                    <!--end::Row-->
                 </form>
                 <div class="social-auth-links text-center mb-3 d-grid gap-2">
                     <p>- OR -</p>
@@ -72,7 +67,6 @@
                         <i class="bi bi-google me-2"></i> Sign in using Google+
                     </a>
                 </div>
-                <!-- /.social-auth-links -->
                 <p class="mb-1">
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}">{{ __('I forgot my password') }}</a>
@@ -82,7 +76,6 @@
                     <a href="register.html" class="text-center"> Register a new membership </a>
                 </p>
             </div>
-            <!-- /.login-card-body -->
         </div>
     </div>
 @endsection
