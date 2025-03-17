@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Models\Extension;
-use App\Traits\HasUniqueIdentifier;
-
 use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 
