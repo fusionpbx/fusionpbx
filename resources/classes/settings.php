@@ -447,12 +447,14 @@ class settings implements clear_cache {
 	}
 
 	public static function clear_cache() {
-		$cache = apcu_cache_info(false);
-		if (!empty($cache['cache_list'])) {
-			foreach ($cache['cache_list'] as $entry) {
-				$key = $entry['info'];
-				if (str_starts_with($key, 'settings_')) {
-					apcu_delete($key);
+		if (function_exists('apcu_enabled') && apcu_enabled()) {
+			$cache = apcu_cache_info(false);
+			if (!empty($cache['cache_list'])) {
+				foreach ($cache['cache_list'] as $entry) {
+					$key = $entry['info'];
+					if (str_starts_with($key, 'settings_')) {
+						apcu_delete($key);
+					}
 				}
 			}
 		}
