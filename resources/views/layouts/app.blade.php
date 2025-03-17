@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @stack('before-css')
     @stack('css')
@@ -13,6 +13,7 @@
 
 
 <body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary">
+
     <div class="app-wrapper">
         @include('layouts.header')
         @include('layouts.sidebar')
@@ -23,6 +24,7 @@
         </main>
         @include('layouts.footer')
     </div>
+
     @stack('before-scripts')
     @include('layouts.scripts')
     @stack('scripts')
