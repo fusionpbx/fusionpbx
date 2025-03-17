@@ -1400,11 +1400,11 @@ class ModXMLCURLController extends Controller
                 if(App::hasDebugModeEnabled()){
                     Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $registrations: '.$registrations);
                 }
-                $xml = simplexml_load_string($registrations);
-                $row_count = $xml->attributes()['row_count'];
+                $xml2 = simplexml_load_string($registrations);
+                $row_count = $xml2->attributes()['row_count'];
                 $database_hostname = null;
                 if ($row_count > 0){
-                    foreach($xml->row as $r){
+                    foreach($xml2->row as $r){
                         if (($r->reg_user == $reg_user) && ($r->realm == $domain_name) && ($r->expires > time())){
                             $database_hostname = $r->hostname;
                             break;
@@ -1507,7 +1507,7 @@ class ModXMLCURLController extends Controller
                         else{
                             $destination = ($dial_string_based_on_userid == 'true' ? $sip_from_number : $sip_from_user) . '@' . $domain_name;
                             if (empty($dial_string)){
-                                $dial_string = 'sip_invite_domain='.$domain_name.', presence_id='.$presence_id.'}${sofia_contact(*/'.$destination.')}';
+                                $dial_string = '{sip_invite_domain='.$domain_name.', presence_id='.$presence_id.'}${sofia_contact(*/'.$destination.')}';
                             }
                             if($use_fs_path == 'true'){
                                 if ($local_hostname == $database_hostname){
