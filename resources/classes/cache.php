@@ -194,8 +194,8 @@ class cache {
 			}
 
 		//remove the autoloader file cache
-			if (file_exists(sys_get_temp_dir() . '/' . auto_loader::FILE)) {
-				@unlink(sys_get_temp_dir() . '/' . auto_loader::FILE);
+			if (file_exists(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE)) {
+				@unlink(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
 			}
 
 		//cache method memcache
