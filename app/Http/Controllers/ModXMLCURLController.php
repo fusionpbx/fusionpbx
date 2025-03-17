@@ -127,7 +127,7 @@ class ModXMLCURLController extends Controller
                     ->orderByDesc('var_name');
                 $dsn_callcenter = $dsn_callcenter_query->first();
                 if(App::hasDebugModeEnabled()){
-                    \Log::debug('dsn_callcenter: '.$dsn_callcenter_query->toRawSql());
+                    Log::debug('dsn_callcenter: '.$dsn_callcenter_query->toRawSql());
                 }
                 if(isset($dsn_callcenter->var_value)){
                     $xml->startElement('param');
@@ -965,7 +965,7 @@ class ModXMLCURLController extends Controller
                         if(isset($gateway->supress_cng)){
                             $xml->startElement('param');
                             $xml->startAttribute('name'); $xml->text('supress-cng'); $xml->endAttribute();
-                            $xml->startAttribute('value'); $xml->text($gateway->supress-cng); $xml->endAttribute();
+                            $xml->startAttribute('value'); $xml->text($gateway->supress_cng); $xml->endAttribute();
                             $xml->endElement(); //param
                         }
 
@@ -1517,7 +1517,7 @@ class ModXMLCURLController extends Controller
                                 }
                                 else{
                                     $contact = trim($api->execute('sofia_contact', $destination, $database_hostname));
-                                    $array = exploce('/', $contact);
+                                    $array = explode('/', $contact);
                                     $proxy = $database_hostname;
                                     $exchange_profile = $default_settings->get('config', 'xml_handler.exchange_profile', 'text') ?? 'internal';
                                     $profile = $default_settings->get('config', 'xml_handler.exchange_profile', 'text') ??
@@ -2084,14 +2084,14 @@ class ModXMLCURLController extends Controller
 
         if (($context_name == 'public') && ($dialplan_mode == 'single')){
             $dialplan_query = Dialplan::join(Domain::getTableName(), Dialplan::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
-                                    ->join(Destination::getTableName(), Dialplan::getTableName().'.dialplan_uuid', '=', Dialplan::getTableName().'.dialplan_uuid')
+                                    ->join(Destination::getTableName(), Dialplan::getTableName().'.dialplan_uuid', '=', Destination::getTableName().'.dialplan_uuid')
                                     ->where(function (Builder $query) use ($hostname){
                                         $query->where(Dialplan::getTableName().'hostname', $hostname)
                                             ->orWhereNull(Dialplan::getTableName().'hostname');
                                     })
                                     ->where(function (Builder $query) use ($destination_number){
                                         $query->where(function (Builder $query1) {
-                                            $query1->where('dialplan_context','LIKE','%public%')   // FIXME
+                                            $query1->where(Dialplan::getTableName().'dialplan_context','LIKE','%public%')   // FIXME
                                             ->orWhereNull(Dialplan::getTableName().'.domain_uuid');
                                         })
                                         ->orWhere(function (Builder $query2) use ($destination_number){
@@ -2099,8 +2099,8 @@ class ModXMLCURLController extends Controller
                                                 ->orWhere(DB::raw('CONCAT(destination_prefix, destination_area_code, destination_number)'), '=', $destination_number)
                                                 ->orWhere(DB::raw('CONCAT(destination_trunk_prefix, destination_area_code, destination_number)'), '=', $destination_number)
                                                 ->orWhere(DB::raw('CONCAT(destination_prefix, destination_number)'), '=', $destination_number)
-                                                ->orWhere(DB::raw('CONCAT('+', destination_prefix,destination_number)'), '=', $destination_number)
-                                                ->orWhere(DB::raw('CONCAT('+', destination_prefix, destination_area_code, destination_number)'), '=', $destination_number)
+                                                ->orWhere(DB::raw("CONCAT('+', destination_prefix,destination_number)"), '=', $destination_number)
+                                                ->orWhere(DB::raw("CONCAT('+', destination_prefix, destination_area_code, destination_number)"), '=', $destination_number)
                                                 ->orWhere(DB::raw('CONCAT(destination_area_code, destination_number)'), '=', $destination_number);
 
                                         });
