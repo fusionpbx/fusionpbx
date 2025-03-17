@@ -5,12 +5,8 @@
 <head>
     <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-    
 
-    @include('layouts.shared/title-meta', ['title' => $title ?? null])
     @stack('before-css')
-    @include('layouts.shared/head-css')
-
     @stack('css')
 </head>
 
