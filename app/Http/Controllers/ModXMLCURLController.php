@@ -15,7 +15,9 @@ use App\Models\ConferenceControl;
 use App\Models\ConferenceControlDetail;
 use App\Models\ConferenceProfile;
 use App\Models\ConferenceProfileParam;
+use App\Models\Dialplan;
 use App\Models\Domain;
+use App\Models\Destination;
 use App\Models\Extension;
 use App\Models\ExtensionSetting;
 use App\Models\ExtensionUser;
@@ -48,8 +50,6 @@ use XMLWriter;
 
 class ModXMLCURLController extends Controller
 {
-    private string $hostname;
-
     public function get_hostname(Request $request): ?string{
         $answer = $request->input('hostname') ?? null;
 
@@ -119,8 +119,7 @@ class ModXMLCURLController extends Controller
                 // TODO: Maybe a controller here, since variables use categories (fusion artifact)
                 $dsn_callcenter_query = Variable::where('var_enabled', 'true')
                     ->whereIn('var_name', ['dsn','dsn_callcenter'])
-                    ->where(function (Builder $query){
-                                    global $hostname;
+                    ->where(function (Builder $query) use ($hostname){
                                     $query->where('var_hostname', $hostname)
                                         ->orWhereNull('var_hostname')
                                         ->orWhere('var_hostname', '');
@@ -1146,15 +1145,18 @@ class ModXMLCURLController extends Controller
         $event_calling_file = $request->input('Event-Calling-File');
         $user   = $request->input('user');
         $domain_name = $request->input('domain') ?? $request->input('doman_name') ?? $request->input('variable_domain_name') ?? $request->input('variable_sip_from_host');
-        $domain_query = Domain::where('domain_name', $domain_name)
-                        ->where('domain_enabled', 'true');
-        $domain = $domain_query->first();
-        if(App::hasDebugModeEnabled()){
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$domain_query->toRawSql());
+        $domain_uuid = $request->input('domain_uuid');
+        if (empty($domain_uuid)){
+            $domain_query = Domain::where('domain_name', $domain_name)
+                            ->where('domain_enabled', 'true');
+            $domain = $domain_query->first();
+            if(App::hasDebugModeEnabled()){
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$domain_query->toRawSql());
+            }
+            $domain_uuid = $domain->domain_uuid;
+            unset($domain);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_uuid: '.$domain_uuid);
         }
-        $domain_uuid = $domain->domain_uuid;
-        unset($domain);
-        Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_uuid: '.$domain_uuid);
 
         if (isset($domain_uuid) && empty($domain_name)){
             $domain = Domain::where('domain_uuid', $domain_uuid)
@@ -2023,6 +2025,95 @@ class ModXMLCURLController extends Controller
         if(App::hasDebugModeEnabled()){
             $this->dump($request);
         }
+
+        $default_settings = new DefaultSettingController;
+        $dialplan_destination = $default_settings->get('dialplan', 'destination', 'text') ?? 'destination_number';
+        $dialplan_destination = $default_settings->get('destinations', 'dialplan_mode', 'text') ?? 'multiple';
+
+        $domain_name = 'global';
+        $call_context = $request->input('Caller-Context');
+        $context_name = (($call_context == 'public') || (substr($call_context, 0, 7) == 'public@') || (substr($call_context, -7) == '.public')) ? 'public' : $call_context;
+        $sip_to_user = $request->input('variable_sip_to_user');
+        $sip_req_user = $request->input('variable_sip_req_user');
+        $destination_number = $request->input("Caller-Destination-Number");
+        if (($dialplan_destination == '${sip_to_user}') || ($dialplan_destination == 'sip_to_user')){
+            $destination_number = urldecode($sip_to_user);
+        }
+        elseif (($dialplan_destination == '${sip_req_user}') || ($dialplan_destination == 'sip_req_user')){
+            $destination_number = urldecode($sip_req_user);
+        }
+        $hostname = $this->get_hostname($request);
+        $domain_name = $request->input('domain') ?? $request->input('doman_name') ?? $request->input('variable_domain_name') ?? $request->input('variable_sip_from_host');
+        $domain_uuid = $request->input('domain_uuid');
+        if (empty($domain_uuid)){
+            $domain_query = Domain::where('domain_name', $domain_name)
+                            ->where('domain_enabled', 'true');
+            $domain = $domain_query->first();
+            if(App::hasDebugModeEnabled()){
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$domain_query->toRawSql());
+            }
+            $domain_uuid = $domain->domain_uuid;
+            unset($domain);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_uuid: '.$domain_uuid);
+        }
+
+        if (isset($domain_uuid) && empty($domain_name)){
+            $domain = Domain::where('domain_uuid', $domain_uuid)
+                            ->where('domain_enabled', 'true')
+                            ->first();
+            $domain_name = $domain->domain_name;
+            unset($domain);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_name: '.$domain_name);
+        }
+
+        $xml = new XMLWriter();
+        $xml->openMemory();
+        $xml->setIndent(true);
+        $xml->setIndentString('  ');
+        $xml->startDocument( '1.0', 'UTF-8', 'no' );
+        $xml->startElement( 'document' );
+        $xml->writeAttribute('type', 'freeswitch/xml');
+        $xml->startElement('section');
+        $xml->writeAttribute('name', 'dialplan' );
+        $xml->writeAttribute('description', '' );
+
+        $xml->startElement('context');
+        $xml->writeAttribute('name', $call_context );
+        $xml->writeAttribute('destination_number', $destination_number );
+        $xml->writeAttribute('hostname', $hostname );
+
+        if (($context_name == 'public') && ($dialplan_mode == 'single')){
+            $dialplan_query = Dialplan::join(Domain::getTableName(), Dialplan::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
+                                    ->join(Destination::getTableName(), Dialplan::getTableName().'.dialplan_uuid', '=', Dialplan::getTableName().'.dialplan_uuid')
+                                    ->where(function (Builder $query) use ($hostname){
+                                        $query->where(Dialplan::getTableName().'hostname', $hostname)
+                                            ->orWhereNull(Dialplan::getTableName().'hostname');
+                                    })
+                                    ->where(function (Builder $query) use ($destination_number){
+                                        $query->where(function (Builder $query1) {
+                                            $query1->where('dialplan_context','LIKE','%public%')   // FIXME
+                                            ->orWhereNull(Dialplan::getTableName().'.domain_uuid');
+                                        })
+                                        ->orWhere(function (Builder $query2) use ($destination_number){
+                                            $query2->where('destination_number', '=', $destination_number)
+                                                ->orWhere(DB::raw('CONCAT(destination_prefix, destination_area_code, destination_number)'), '=', $destination_number)
+                                                ->orWhere(DB::raw('CONCAT(destination_trunk_prefix, destination_area_code, destination_number)'), '=', $destination_number)
+                                                ->orWhere(DB::raw('CONCAT(destination_prefix, destination_number)'), '=', $destination_number)
+                                                ->orWhere(DB::raw('CONCAT('+', destination_prefix,destination_number)'), '=', $destination_number)
+                                                ->orWhere(DB::raw('CONCAT('+', destination_prefix, destination_area_code, destination_number)'), '=', $destination_number)
+                                                ->orWhere(DB::raw('CONCAT(destination_area_code, destination_number)'), '=', $destination_number);
+
+                                        });
+                                    });
+        }
+
+        $xml->endElement(); // context
+
+        $xml->endElement(); // section
+        $xml->endElement(); // document
+        $xml->endDocument();
+        $answer = $xml->outputMemory();
+
     }
 
     public function languages(Request $request): string{    // TODO: Verify name
