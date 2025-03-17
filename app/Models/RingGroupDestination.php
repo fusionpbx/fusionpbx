@@ -52,6 +52,10 @@ class RingGroupDestination extends Model
 	protected $casts = [
 	];
 
+	public function domain(): BelongsTo {
+		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	}
+
 	public function ringroup(): BelongsTo {
 		return $this->belongsTo(RingGroup::class, 'ring_group_uuid', 'ring_group_uuid');
 	}

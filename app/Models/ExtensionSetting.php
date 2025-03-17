@@ -57,8 +57,12 @@ class ExtensionSetting extends Model
 	protected $casts = [
 	];
 
+	public function domain(): BelongsTo {
+		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	}
+
 	public function extension(): BelongsTo {
-		return $this->belongsTo(Extension::class, 'extension_suuid', 'extension_uuid');
+		return $this->belongsTo(Extension::class, 'extension_uuid', 'extension_uuid');
 	}
 
 }

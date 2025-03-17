@@ -89,3 +89,4 @@ class IVRMenu extends Model
 	public function options(): HasMany {
 		return $this->hasMany(IVRMenuOption::class, 'ivr_menu_uuid', 'ivr_menu_uuid');
 	}
+}

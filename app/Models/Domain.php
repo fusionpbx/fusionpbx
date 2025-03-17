@@ -42,10 +42,6 @@ class Domain extends Model
 		return $this->hasMany(Domain::class, 'domain_parent_uuid', 'domain_uuid');
 	}
 
-	public function extensions(): HasMany {
-		return $this->hasMany(Extension::class, 'domain_uuid', 'domain_uuid');
-	}
-
 	public function users(): HasMany {
 		return $this->hasMany(User::class, 'domain_uuid', 'domain_uuid');
 	}
@@ -199,11 +195,76 @@ class Domain extends Model
 			});
 	}
 
+	public function dialplandetails(?bool $dialplan_detail_enabled = null): HasMany {
+		return $this->hasMany(DialplanDetail::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($dialplan_detail_enabled), function ($query) use ($dialplan_detail_enabled) {
+				return $query->where('dialplan_detail_enabled', $dialplan_detail_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function extensions(): HasMany {
+		return $this->hasMany(Extension::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function extensionsettings(?bool $extension_setting_enabled = null): HasMany {
+		return $this->hasMany(ExtensionSetting::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($extension_setting_enabled), function ($query) use ($extension_setting_enabled) {
+				return $query->where('extension_setting_enabled', $extension_setting_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function followme(?bool $follow_me_enabled = null): HasMany {
+		return $this->hasMany(FollowMe::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($follow_me_enabled), function ($query) use ($follow_me_enabled) {
+				return $query->where('follow_me_enabled', $follow_me_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function ivr_menus(?bool $ivr_menu_enabled = null): HasMany {
+		return $this->hasMany(IVRMenu::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($ivr_menu_enabled), function ($query) use ($ivr_menu_enabled) {
+				return $query->where('ivr_menu_enabled', $ivr_menu_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function ivr_menu_options(?bool $ivr_menu_option_enabled = null): HasMany {
+		return $this->hasMany(IVRMenuOption::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($ivr_menu_option_enabled), function ($query) use ($ivr_menu_option_enabled) {
+				return $query->where('ivr_menu_option_enabled', $ivr_menu_option_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function ringroupforward(?bool $ring_group_forward_enabled = null): HasMany {
+		return $this->hasMany(RingGroup::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($ring_group_forward_enabled), function ($query) use ($ring_group_forward_enabled) {
+				return $query->where('ring_group_forward_enabled', $ring_group_forward_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function ringroupcallforward(?bool $ring_group_call_forward_enabled = null): HasMany {
+		return $this->hasMany(RingGroup::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($ring_group_call_forward_enabled), function ($query) use ($ring_group_call_forward_enabled) {
+				return $query->where('ring_group_call_forward_enabled', $ring_group_call_forward_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function ringroups(?bool $ring_group_enabled = null): HasMany {
+		return $this->hasMany(RingGroup::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($ring_group_enabled), function ($query) use ($ring_group_enabled) {
+				return $query->where('ring_group_enabled', $ring_group_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function ringroupdestinations(?bool $destination_enabled = null): HasMany {
+		return $this->hasMany(RingGroupDestination::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($destination_enabled), function ($query) use ($destination_enabled) {
+				return $query->where('destination_enabled', $destination_enabled ? 'true' : 'false');
+			});
+	}
+
 	public function recordings(): HasMany {
 		return $this->hasMany(Recording::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function ivr_menus(): HasMany {
-		return $this->hasMany(IVRMenu::class, 'domain_uuid', 'domain_uuid');
-	}
+
 }

@@ -40,6 +40,6 @@ class FollowMe extends Model
 	}
 
     public function destinations(): HasMany {
-		return $this->hasMany(FolowMeDestination::class, 'follow_me_uuid', 'follow_me_uuid');
+		return $this->hasMany(FollowMeDestination::class, 'follow_me_uuid', 'follow_me_uuid');
 	}
 }
