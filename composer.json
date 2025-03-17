@@ -7,9 +7,9 @@
     "require": {
         "php": "^8.2",
         "elvanto/litemoji": "^4.3",
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^12.0",
         "laravel/sanctum": "*",
-        "laravel/tinker": "^2.8.1",
+        "laravel/tinker": "^2.10.1",
         "okayinc/stateless-session": "^0.0.10"
     },
     "require-dev": {

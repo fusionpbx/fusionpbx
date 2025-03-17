@@ -29,7 +29,7 @@ use App\Models\Recording;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
-use App\Models\SofiaGlobalSetting;
+use App\Models\SipGlobalSetting;
 use App\Models\User;
 use App\Models\Variable;
 use App\Models\Voicemail;
@@ -762,7 +762,7 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('description', 'Sofía Endpoint');
                 $xml->startElement('global_settings');
 
-                $sofia_global_settings = SofiaGlobalSetting::where('global_setting_enabled', 'true')
+                $sofia_global_settings = SipGlobalSetting::where('global_setting_enabled', 'true')
                                         ->orderBy('global_setting_name', 'asc')
                                         ->get();
                 foreach ($sofia_global_settings as $sofia_global_setting){
