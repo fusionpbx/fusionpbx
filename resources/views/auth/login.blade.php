@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.simple')
 
 @section('content')
     <div class="login-box">
         <div class="login-logo">
-            <img src="{{asset('/storage/logo.png')}}" style="padding:20px;max-width:100%;">
+{{--            <img src="{{asset('/storage/logo.png')}}" style="padding:20px;max-width:100%;">--}}
         </div>
         <div class="card">
             <div class="card-body login-card-body">
@@ -58,23 +58,23 @@
                         </div>
                     </div>
                 </form>
-                <div class="social-auth-links text-center mb-3 d-grid gap-2">
-                    <p>- OR -</p>
-                    <a href="#" class="btn btn-primary">
-                        <i class="bi bi-facebook me-2"></i> Sign in using Facebook
-                    </a>
-                    <a href="#" class="btn btn-danger">
-                        <i class="bi bi-google me-2"></i> Sign in using Google+
-                    </a>
-                </div>
-                <p class="mb-1">
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}">{{ __('I forgot my password') }}</a>
-                    @endif
-                </p>
-                <p class="mb-0">
-                    <a href="register.html" class="text-center"> Register a new membership </a>
-                </p>
+{{--                <div class="social-auth-links text-center mb-3 d-grid gap-2">--}}
+{{--                    <p>- OR -</p>--}}
+{{--                    <a href="#" class="btn btn-primary">--}}
+{{--                        <i class="bi bi-facebook me-2"></i> Sign in using Facebook--}}
+{{--                    </a>--}}
+{{--                    <a href="#" class="btn btn-danger">--}}
+{{--                        <i class="bi bi-google me-2"></i> Sign in using Google+--}}
+{{--                    </a>--}}
+{{--                </div>--}}
+{{--                <p class="mb-1">--}}
+{{--                    @if (Route::has('password.request'))--}}
+{{--                        <a href="{{ route('password.request') }}">{{ __('I forgot my password') }}</a>--}}
+{{--                    @endif--}}
+{{--                </p>--}}
+{{--                <p class="mb-0">--}}
+{{--                    <a href="register.html" class="text-center"> Register a new membership </a>--}}
+{{--                </p>--}}
             </div>
         </div>
     </div>
