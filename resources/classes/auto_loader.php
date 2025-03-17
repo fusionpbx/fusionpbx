@@ -60,22 +60,33 @@ class auto_loader {
 	private $interfaces;
 
 	/**
+	 * @var array
+	 */
+	private $traits;
+
+	/**
 	 * Cache path and file name for interfaces
 	 * @var string
 	 */
 	private static $interfaces_file = null;
 
-	public function __construct() {
+	public function __construct($disable_cache = false) {
 
 		//set if we can use RAM cache
 		$this->apcu_enabled = function_exists('apcu_enabled') && apcu_enabled();
 
-		//set cache location
-		self::$classes_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::CLASSES_FILE;
-		self::$interfaces_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::INTERFACES_FILE;
+		//set classes cache location
+		if (empty(self::$classes_file)) {
+			self::$classes_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::CLASSES_FILE;
+		}
+
+		//set interface cache location
+		if (empty(self::$interfaces_file)) {
+			self::$interfaces_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::INTERFACES_FILE;
+		}
 
 		//classes must be loaded before this object is registered
-		if (!$this->load_cache()) {
+		if ($disable_cache || !$this->load_cache()) {
 			//cache miss so load them
 			$this->reload_classes();
 			//update the cache after loading classes array
@@ -83,178 +94,6 @@ class auto_loader {
 		}
 		//register this object to load any unknown classes
 		spl_autoload_register(array($this, 'loader'));
-	}
-
-	/**
-	 * Update the auto loader
-	 */
-	public function update() {
-		$this->clear_cache();
-		$this->reload_classes();
-		$this->update_cache();
-	}
-
-	public function update_cache(): bool {
-		//guard against writing an empty file
-		if (empty($this->classes)) {
-			return false;
-		}
-
-		//update RAM cache when available
-		if ($this->apcu_enabled) {
-			$classes_cached = apcu_store(self::CLASSES_KEY, $this->classes);
-			$interfaces_cached = apcu_store(self::INTERFACES_KEY, $this->interfaces);
-			//do not save to drive when we are using apcu
-			if ($classes_cached && $interfaces_cached) return true;
-		}
-
-		//export the classes array using PHP engine
-		$classes_array = var_export($this->classes, true);
-
-		//put the array in a form that it can be loaded directly to an array
-		$class_result = file_put_contents(self::$classes_file, "<?php\n return " . $classes_array . ";\n");
-		if ($class_result === false) {
-			//file failed to save - send error to syslog when debugging
-			$error_array = error_get_last();
-			self::log(LOG_WARNING, $error_array['message'] ?? '');
-		}
-
-		//export the interfaces array using PHP engine
-		$interfaces_array = var_export($this->interfaces, true);
-
-		//put the array in a form that it can be loaded directly to an array
-		$interface_result = file_put_contents(self::$interfaces_file, "<?php\n return " . $interfaces_array . ";\n");
-		if ($interface_result === false) {
-			//file failed to save - send error to syslog when debugging
-			$error_array = error_get_last();
-			self::log(LOG_WARNING, $error_array['message'] ?? '');
-		}
-
-		$result = ($class_result && $interface_result);
-
-		return $result;
-	}
-
-	public function load_cache(): bool {
-		$this->classes = [];
-		$this->interfaces = [];
-
-		//use apcu when available
-		if ($this->apcu_enabled && apcu_exists(self::CLASSES_KEY)) {
-			$this->classes = apcu_fetch(self::CLASSES_KEY, $classes_cached);
-			$this->interfaces = apcu_fetch(self::INTERFACES_KEY, $interfaces_cached);
-			//don't use files when we are using apcu caching
-			if ($classes_cached && $interfaces_cached) return true;
-		}
-
-		//use PHP engine to parse it
-		if (file_exists(self::$classes_file)) {
-			$this->classes = include self::$classes_file;
-		}
-
-		//do the same for interface to class mappings
-		if (file_exists(self::$interfaces_file)) {
-			$this->interfaces = include self::$interfaces_file;
-		}
-
-		//catch edge case of first time using apcu cache
-		if ($this->apcu_enabled) {
-			apcu_store(self::CLASSES_KEY, $this->classes);
-			apcu_store(self::INTERFACES_KEY, $this->interfaces);
-		}
-
-		//return true when we have classes and false if the array is still empty
-		return (!empty($this->classes) && !empty($this->interfaces));
-	}
-
-	public function reload_classes() {
-		//set project path using magic dir constant
-		$project_path = dirname(__DIR__, 2);
-
-		//build the array of all locations for classes in specific order
-		$search_path = [
-			$project_path . '/resources/interfaces/*.php',
-			$project_path . '/resources/traits/*.php',
-			$project_path . '/resources/classes/*.php',
-			$project_path . '/*/*/resources/interfaces/*.php',
-			$project_path . '/*/*/resources/traits/*.php',
-			$project_path . '/*/*/resources/classes/*.php',
-			$project_path . '/core/authentication/resources/classes/plugins/*.php',
-		];
-
-		//get all php files for each path
-		$files = [];
-		foreach ($search_path as $path) {
-			$files = array_merge($files, glob($path));
-		}
-
-		//reset the current array
-		$class_list = [];
-
-		//store PHP language declared classes, interfaces, and traits
-		$current_classes = get_declared_classes();
-		$current_interfaces = get_declared_interfaces();
-		$current_traits = get_declared_traits();
-
-		//store the class name (key) and the path (value)
-		foreach ($files as $file) {
-
-			//include the new class
-			try {
-				include_once $file;
-			} catch (Exception $e) {
-				//report the error
-				self::log(LOG_ERR, "Exception while trying to include file '$file': " . $e->getMessage());
-				continue;
-			}
-
-			//get the new classes
-			$new_classes = get_declared_classes();
-			$new_interfaces = get_declared_interfaces();
-			$new_traits = get_declared_traits();
-
-			//check for a new class
-			$classes = array_diff($new_classes, $current_classes);
-			if (!empty($classes)) {
-				foreach ($classes as $class) {
-					$class_list[$class] = $file;
-				}
-				//overwrite previous array with new values
-				$current_classes = $new_classes;
-			}
-
-			//check for a new interface
-			$interfaces = array_diff($new_interfaces, $current_interfaces);
-			if (!empty($interfaces)) {
-				foreach ($interfaces as $interface) {
-					$class_list[$interface] = $file;
-				}
-				//overwrite previous array with new values
-				$current_interfaces = $new_interfaces;
-			}
-
-			//check for a new trait
-			$traits = array_diff($new_traits, $current_traits);
-			if (!empty($traits)) {
-				foreach ($traits as $trait) {
-					$class_list[$trait] = $file;
-				}
-				//overwrite previous array with new values
-				$current_traits = $new_traits;
-			}
-		}
-
-		//add only new classes
-		if (!empty($class_list)) {
-			foreach ($class_list as $class => $location) {
-				if (!isset($this->classes[$class])) {
-					$this->classes[$class] = $location;
-				}
-			}
-		}
-
-		//load interface to class mappings
-		$this->reload_interface_list();
 	}
 
 	/**
@@ -321,19 +160,179 @@ class auto_loader {
 		return false;
 	}
 
-	public function reload_interface_list() {
+	/**
+	 * Update the auto loader
+	 */
+	public function update() {
+		self::clear_cache();
+		$this->reload_classes();
+		$this->update_cache();
+	}
+
+	public function update_cache(): bool {
+		//guard against writing an empty file
+		if (empty($this->classes)) {
+			return false;
+		}
+
+		//update RAM cache when available
+		if ($this->apcu_enabled) {
+			$classes_cached = apcu_store(self::CLASSES_KEY, $this->classes);
+			$interfaces_cached = apcu_store(self::INTERFACES_KEY, $this->interfaces);
+			//do not save to drive when we are using apcu
+			if ($classes_cached && $interfaces_cached)
+				return true;
+		}
+
+		//export the classes array using PHP engine
+		$classes_array = var_export($this->classes, true);
+
+		//put the array in a form that it can be loaded directly to an array
+		$class_result = file_put_contents(self::$classes_file, "<?php\n return " . $classes_array . ";\n");
+		if ($class_result === false) {
+			//file failed to save - send error to syslog when debugging
+			$error_array = error_get_last();
+			self::log(LOG_WARNING, $error_array['message'] ?? '');
+		}
+
+		//export the interfaces array using PHP engine
+		$interfaces_array = var_export($this->interfaces, true);
+
+		//put the array in a form that it can be loaded directly to an array
+		$interface_result = file_put_contents(self::$interfaces_file, "<?php\n return " . $interfaces_array . ";\n");
+		if ($interface_result === false) {
+			//file failed to save - send error to syslog when debugging
+			$error_array = error_get_last();
+			self::log(LOG_WARNING, $error_array['message'] ?? '');
+		}
+
+		$result = ($class_result && $interface_result);
+
+		return $result;
+	}
+
+	public function load_cache(): bool {
+		$this->classes = [];
 		$this->interfaces = [];
-		if (!empty($this->classes)) {
-			$classes = array_keys($this->classes);
-			foreach ($classes as $class) {
-				$reflection = new ReflectionClass($class);
-				$interfaces = $reflection->getInterfaces();
-				foreach ($interfaces as $interface) {
-					$name = $interface->getName();
-					if (empty($this->interfaces[$name])) {
-						$this->interfaces[$name] = [];
+		$this->traits = [];
+
+		//use apcu when available
+		if ($this->apcu_enabled && apcu_exists(self::CLASSES_KEY)) {
+			$this->classes = apcu_fetch(self::CLASSES_KEY, $classes_cached);
+			$this->interfaces = apcu_fetch(self::INTERFACES_KEY, $interfaces_cached);
+			//don't use files when we are using apcu caching
+			if ($classes_cached && $interfaces_cached)
+				return true;
+		}
+
+		//use PHP engine to parse it
+		if (file_exists(self::$classes_file)) {
+			$this->classes = include self::$classes_file;
+		}
+
+		//do the same for interface to class mappings
+		if (file_exists(self::$interfaces_file)) {
+			$this->interfaces = include self::$interfaces_file;
+		}
+
+		//catch edge case of first time using apcu cache
+		if ($this->apcu_enabled) {
+			apcu_store(self::CLASSES_KEY, $this->classes);
+			apcu_store(self::INTERFACES_KEY, $this->interfaces);
+		}
+
+		//return true when we have classes and false if the array is still empty
+		return (!empty($this->classes) && !empty($this->interfaces));
+	}
+
+	public function reload_classes() {
+		//set project path using magic dir constant
+		$project_path = dirname(__DIR__, 2);
+
+		//build the array of all locations for classes in specific order
+		$search_path = [
+			$project_path . '/resources/interfaces/*.php',
+			$project_path . '/resources/traits/*.php',
+			$project_path . '/resources/classes/*.php',
+			$project_path . '/*/*/resources/interfaces/*.php',
+			$project_path . '/*/*/resources/traits/*.php',
+			$project_path . '/*/*/resources/classes/*.php',
+			$project_path . '/core/authentication/resources/classes/plugins/*.php',
+		];
+
+		//get all php files for each path
+		$files = [];
+		foreach ($search_path as $path) {
+			$files = array_merge($files, glob($path));
+		}
+
+		//reset the current array
+		$class_list = [];
+
+		//store the class name (key) and the path (value)
+		foreach ($files as $file) {
+			$file_content = file_get_contents($file);
+
+			// Remove block comments
+			$file_content = preg_replace('/\/\*.*?\*\//s', '', $file_content);
+			// Remove single-line comments
+			$file_content = preg_replace('/(\/\/|#).*$/m', '', $file_content);
+
+			// Detect the namespace
+			$namespace = '';
+			if (preg_match('/\bnamespace\s+([^;{]+)[;{]/', $file_content, $namespace_match)) {
+				$namespace = trim($namespace_match[1]) . '\\';
+			}
+
+			// Regex to capture class, interface, or trait declarations
+			// It optionally captures an "implements" clause
+			// Note: This regex is a simplified version and may need adjustments for edge cases
+			$pattern = '/\b(class|interface|trait)\s+(\w+)(?:\s+extends\s+\w+)?(?:\s+implements\s+([^\\{]+))?/';
+
+			if (preg_match_all($pattern, $file_content, $matches, PREG_SET_ORDER)) {
+				foreach ($matches as $match) {
+
+					// "class", "interface", or "trait"
+					$type = $match[1];
+
+					// The class/interface/trait name
+					$name = trim($match[2], "\n\r\t\v\x00\\");
+
+					// Combine the namespace and name
+					$full_name = $namespace . $name;
+
+					// Store the class/interface/trait with its file overwriting any existing declaration.
+					$this->classes[$full_name] = $file;
+
+					// If it's a class that implements interfaces, process the implements clause.
+					if ($type === 'class' && isset($match[3]) && trim($match[3]) !== '') {
+						// Split the interface list by commas.
+						$interface_list = explode(',', $match[3]);
+						foreach ($interface_list as $interface) {
+							$interface_name = trim($interface, "\n\r\t\v\x00\\");
+							// Check that it is declared as an array so we can record the classes
+							if (empty($this->interfaces[$interface_name]))
+								$this->interfaces[$interface_name] = [];
+							// Record the classes that implement interface sorting by namspace and class name
+							$this->interfaces[$interface_name][] = $full_name;
+						}
 					}
-					$this->interfaces[$name][] = $class;
+				}
+			} else {
+
+				//
+				// When the file is in the classes|interfaces|traits folder then
+				// we must assume it is a valid class as IonCube will encode the
+				// class name. So, we use the file name as the class name in the
+				// global  namespace and  set it,  checking first  to ensure the
+				// basename does not  override an already declared class file in
+				// order to mimic previous behaviour.
+				//
+
+				// use the basename as the class name
+				$class_name = basename($file, '.php');
+				if (!isset($this->classes[$class_name])) {
+					$this->classes[$class_name] = $file;
 				}
 			}
 		}
@@ -376,7 +375,7 @@ class auto_loader {
 		return [];
 	}
 
-	public static function clear_cache(string $classes_file = '', string $interfaces_file = '') {
+	public static function clear_cache() {
 
 		//check for apcu cache
 		if (function_exists('apcu_enabled') && apcu_enabled()) {
@@ -390,9 +389,7 @@ class auto_loader {
 		}
 
 		//set file to clear
-		if (empty($classes_file)) {
-			$classes_file = self::$classes_file;
-		}
+		$classes_file = self::$classes_file;
 
 		//remove the file when it exists
 		if (file_exists($classes_file)) {
@@ -407,9 +404,7 @@ class auto_loader {
 		}
 
 		//set interfaces file to clear
-		if (empty($interfaces_file)) {
-			$interfaces_file = self::$interfaces_file;
-		}
+		$interfaces_file = self::$interfaces_file;
 
 		//remove the file when it exists
 		if (file_exists($interfaces_file)) {
