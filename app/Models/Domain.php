@@ -64,13 +64,9 @@ class Domain extends Model
 
 	public function settings(?bool $domain_setting_enabled = null): HasMany {
 		return $this->hasMany(DomainSetting::class, 'domain_uuid', 'domain_uuid')
-                ->when(is_bool($extension_setting_enabled), function($query) use($domain_setting_enabled){
+                ->when(is_bool($domain_setting_enabled), function($query) use($domain_setting_enabled){
                     return $query->where('domain_setting_enabled', $domain_setting_enabled ? 'true' : 'false');
                 });;
-	}
-
-	public function dialplans(): HasMany {
-		return $this->hasMany(Dialplan::class, 'domain_uuid', 'domain_uuid');
 	}
 
 	public function gateways(): HasMany {
@@ -109,8 +105,11 @@ class Domain extends Model
 		return $this->hasMany(BillingInvoice::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function bridges(): HasMany {
-		return $this->hasMany(Bridge::class, 'domain_uuid', 'domain_uuid');
+	public function bridges(?bool $bridge_enabled = null): HasMany {
+		return $this->hasMany(Bridge::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($bridge_enabled), function ($query) use ($bridge_enabled) {
+				return $query->where('bridge_enabled', $bridge_enabled ? 'true' : 'false');
+			});
 	}
 
 	public function callblocks(): HasMany {
@@ -133,20 +132,75 @@ class Domain extends Model
 		return $this->hasMany(CallFlow::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function conferencecenters(): HasMany {
-		return $this->hasMany(ConferenceCenter::class, 'domain_uuid', 'domain_uuid');
+	public function conferences(?bool $conference_enabled = null): HasMany {
+		return $this->hasMany(Conference::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($conference_enabled), function ($query) use ($conference_enabled) {
+				return $query->where('conference_enabled', $conference_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function conferencecenters(?bool $conference_center_enabled = null): HasMany {
+		return $this->hasMany(ConferenceCenter::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($conference_center_enabled), function ($query) use ($conference_center_enabled) {
+				return $query->where('conference_center_enabled', $conference_center_enabled ? 'true' : 'false');
+			});
 	}
 
 	public function conferencerooms(): HasMany {
 		return $this->hasMany(ConferenceRoom::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function recordings(): HasMany {
-		return $this->hasMany(Recording::class, 'domain_uuid', 'domain_uuid');
+	public function contactsettings(?bool $contact_setting_enabled = null): HasMany {
+		return $this->hasMany(ContactSetting::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($contact_setting_enabled), function ($query) use ($contact_setting_enabled) {
+				return $query->where('contact_setting_enabled', $contact_setting_enabled ? 'true' : 'false');
+			});
 	}
 
-	public function devices(): HasMany {
-		return $this->hasMany(Device::class, 'domain_uuid', 'domain_uuid');
+	public function destinations(?bool $destination_enabled = null): HasMany {
+		return $this->hasMany(Destination::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($destination_enabled), function ($query) use ($destination_enabled) {
+				return $query->where('destination_enabled', $destination_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function devices(?bool $device_enabled = null): HasMany {
+		return $this->hasMany(Device::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($device_enabled), function ($query) use ($device_enabled) {
+				return $query->where('device_enabled', $device_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function deviceprofiles(?bool $device_profile_enabled = null): HasMany {
+		return $this->hasMany(DeviceProfile::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($device_profile_enabled), function ($query) use ($device_profile_enabled) {
+				return $query->where('device_profile_enabled', $device_profile_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function deviceprofilesettings(?bool $profile_setting_enabled = null): HasMany {
+		return $this->hasMany(DeviceProfileSetting::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($profile_setting_enabled), function ($query) use ($profile_setting_enabled) {
+				return $query->where('profile_setting_enabled', $profile_setting_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function devicesettings(?bool $device_setting_enabled = null): HasMany {
+		return $this->hasMany(DeviceSetting::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($device_setting_enabled), function ($query) use ($device_setting_enabled) {
+				return $query->where('device_setting_enabled', $device_setting_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function dialplans(?bool $dialplan_enabled = null): HasMany {
+		return $this->hasMany(Dialplan::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($dialplan_enabled), function ($query) use ($dialplan_enabled) {
+				return $query->where('dialplan_enabled', $dialplan_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function recordings(): HasMany {
+		return $this->hasMany(Recording::class, 'domain_uuid', 'domain_uuid');
 	}
 
 	public function ivr_menus(): HasMany {

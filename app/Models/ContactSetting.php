@@ -57,4 +57,8 @@ class ContactSetting extends Model
 	public function contact(): BelongsTo {
 		return $this->belongsTo(Contact::class, 'contact_uuid', 'contact_uuid');
 	}
+
+	public function domain(): BelongsTo {
+		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	}
 }
