@@ -40,6 +40,7 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        
     ],
 
     /*
@@ -61,7 +62,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => 'fusionpbx',
             'model' => App\Models\User::class,
         ],
 

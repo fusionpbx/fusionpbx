@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
@@ -20,21 +21,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::redirect('/', '/login');
+
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    
+    
+});
+
 Route::middleware('auth')->group(function () {
     Route::post('/domains/switch', [DomainController::class, 'switch'])->name('switchDomain');
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');
     });
     Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('switchDomainFusionPBX');
+    Route::view('/dashboard', 'dashboard');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 });
-
-
-Route::middleware('guest')->group(function () {
-    Route::get('/', [UserController::class, 'login']);
-    Route::get('/login', [UserController::class, 'login']);
-    Route::post('/login', [UserController::class, 'authenticate'])->name('login');
-});
-
 
 Route::post('/curl/xml_handler/configuration', function (Request $request){
     $xml = new ModXMLCURLController;
