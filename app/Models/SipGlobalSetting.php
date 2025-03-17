@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasUniqueIdentifier;
 
-class SofiaGlobalSetting extends Model
+class SipGlobalSetting extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
 	protected $table = 'v_sofia_global_settings';
