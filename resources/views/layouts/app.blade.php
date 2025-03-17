@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @stack('before-css')
+    @vite('resources/scss/app.scss')
     @stack('css')
 </head>
 
