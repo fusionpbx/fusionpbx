@@ -41,7 +41,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the destinations objects
+//initialize the destinations object
 	$destination = new destinations;
 
 //action add or update
