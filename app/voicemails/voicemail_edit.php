@@ -63,6 +63,7 @@
 	$voicemail_option_digits = '';
 	$voicemail_option_description = '';
 	$voicemail_mail_to = '';
+	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 
 //get http variables and set them to php variables
 	$referer_path = $_REQUEST["referer_path"] ?? '';
@@ -833,7 +834,7 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('voicemail_transcription_enabled') && filter_var($_SESSION['transcribe']['enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('voicemail_transcription_enabled') && $transcribe_enabled) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_transcription_enabled']."\n";
