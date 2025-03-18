@@ -566,7 +566,7 @@
 		echo "	</select>\n";
 	}
 	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
-		echo "	<input class='formfld' type='password' id='domain_setting_value' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($row['domain_setting_value'])."\">\n";
+		echo "	<input class='formfld password' type='password' id='domain_setting_value' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($row['domain_setting_value'])."\">\n";
 	}
 	elseif ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'])."\">\n";

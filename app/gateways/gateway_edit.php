@@ -423,7 +423,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
+	echo "    <input class='formfld password' type='password' name='password' id='password' autocomplete='new-password' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
 	echo "    <br />\n";
 	echo "    ".$text['description-password']."\n";
 	echo "</td>\n";

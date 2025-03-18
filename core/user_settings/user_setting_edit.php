@@ -545,7 +545,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	</select>\n";
 	}
 	else if ($user_setting_subcategory == 'password' || substr_count($user_setting_subcategory, '_password') > 0 || $user_setting_category == "login" && $user_setting_subcategory == "password_reset_key" && $user_setting_name == "text") {
-		echo "	<input class='formfld' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($user_setting_value)."\">\n";
+		echo "	<input class='formfld password' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($user_setting_value)."\">\n";
 	}
 	else if ($user_setting_category == "theme" && substr_count($user_setting_subcategory, "_color") > 0 && ($user_setting_name == "text" || $user_setting_name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='user_setting_value' name='user_setting_value' value=\"".$user_setting_value."\">\n";

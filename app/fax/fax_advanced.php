@@ -314,7 +314,7 @@
 		echo "				</td>\n";
 		echo "				<td class='vtable' align='left'>\n";
 		echo "				  <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-		echo "					<input class='formfld' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($fax_email_connection_password ?? '')."\">\n";
+		echo "					<input class='formfld password' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($fax_email_connection_password ?? '')."\">\n";
 		echo "				<br />\n";
 		echo "					".$text['description-email_connection_password']."\n";
 		echo "				</td>\n";

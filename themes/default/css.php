@@ -119,6 +119,7 @@ $heading_text_size = $settings->get('theme', 'heading_text_size', '15px');
 $heading_text_font = $settings->get('theme', 'heading_text_font', 'arial');
 $input_height = $settings->get('theme', 'input_height', '28px');
 $input_text_font = $settings->get('theme', 'input_text_font', 'Arial');
+$input_text_font_password = $settings->get('theme', 'input_text_font_password', 'monospace');
 $input_text_size = $settings->get('theme', 'input_text_size', '12px');
 $input_text_color = $settings->get('theme', 'input_text_color', '#000');
 $input_text_placeholder_color = $settings->get('theme', 'input_text_placeholder_color', '#999999; opacity: 1.0;');
@@ -1883,6 +1884,12 @@ else { //default: white
 		transition: all 0.25s ease;
 		-moz-transition: all 0.25s ease;
 		-webkit-transition: all 0.25s ease;
+		}
+
+	input[type=text].txt.password,
+	input[type=text].formfld.password {
+		font-family: <?=$input_text_font_password?> !important;
+		max-width: 164px;
 		}
 
 	select.txt,
