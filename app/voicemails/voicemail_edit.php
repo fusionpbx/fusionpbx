@@ -41,9 +41,8 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the core objects
+//initialize the destinations objects
 	$destination = new destinations;
-	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
