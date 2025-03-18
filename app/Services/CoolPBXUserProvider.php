@@ -7,7 +7,7 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Support\Facades\Hash;
 
-class FusionPBXUserProvider extends EloquentUserProvider
+class CoolPBXUserProvider extends EloquentUserProvider
 {
     public function validateCredentials(UserContract $user, array $credentials): bool
     {
@@ -17,29 +17,29 @@ class FusionPBXUserProvider extends EloquentUserProvider
         if (isset($apiKey) && strlen($apiKey) > 30 && $apiKey === $user->api_key) {
             return true;
         }
-        
+
         $storedHash = $user->getAuthPassword();
-        
+
         if (substr($storedHash, 0, 1) === '$') {
             if (!empty($plain) && Hash::check($plain, $storedHash)) {
                 return true;
             }
         } else {
             $salt = $user->salt ?? '';
-            
+
             if (md5($salt . $plain) === $storedHash) {
                 $this->updatePasswordHash($user, $plain);
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     protected function updatePasswordHash(User $user, string $plain): void
     {
         $newHash = Hash::make($plain);
-        
+
         $user->forceFill([
             'password' => $newHash,
         ])->save();

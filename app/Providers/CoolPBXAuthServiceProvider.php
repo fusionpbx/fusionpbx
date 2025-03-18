@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use App\Services\FusionPBXUserProvider;
+use App\Services\CoolPBXUserProvider;
 
-class FusionPBXAuthServiceProvider extends ServiceProvider
+class CoolPBXAuthServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -21,8 +21,8 @@ class FusionPBXAuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Auth::provider('fusionpbx', function ($app, array $config) {
-            return new FusionPBXUserProvider($app['hash'], $config['model']);
+        Auth::provider('coolpbx', function ($app, array $config) {
+            return new CoolPBXUserProvider($app['hash'], $config['model']);
         });
     }
 }

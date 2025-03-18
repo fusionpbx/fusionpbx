@@ -27,8 +27,6 @@ Route::redirect('/', '/login');
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-    
-    
 });
 
 Route::middleware('auth')->group(function () {

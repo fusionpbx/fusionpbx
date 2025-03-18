@@ -168,7 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\FusionPBXAuthServiceProvider::class,
+        App\Providers\CoolPBXAuthServiceProvider::class,
     ])->toArray(),
 
     /*
