@@ -2024,6 +2024,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the font of text input content.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dbfa8a1a-51e5-4274-949c-e84f29e831f1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "input_text_font_password";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "monospace";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the font of password text input content.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "848fd70e-bbba-4f43-ac5d-897229bb19c8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "input_text_color";
