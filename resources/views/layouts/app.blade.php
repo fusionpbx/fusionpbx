@@ -5,13 +5,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @include('layouts.head')
 
     @stack('before-css')
     @vite('resources/scss/app.scss')
     @stack('css')
 </head>
-
-
 
 <body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary">
 
@@ -29,5 +28,6 @@
     @stack('before-scripts')
     @include('layouts.scripts')
     @stack('scripts')
+
 </body>
 </html>
