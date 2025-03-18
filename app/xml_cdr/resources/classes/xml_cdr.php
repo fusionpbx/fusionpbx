@@ -314,8 +314,14 @@
 		 */
 		public function xml_array($key, $leg, $xml_string) {
 
+			//set the directory
+				if (!empty($this->settings->get('switch', 'log'))) {
+					$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
+				}
+
 			//xml string is empty
-				if (empty($xml_string)) {
+				if (empty($xml_string) && !empty($xml_cdr_dir) && !empty($this->file)) {
+					unlink($xml_cdr_dir.'/'.$this->file);
 					return false;
 				}
 
@@ -351,10 +357,6 @@
 			//load the string into an xml object
 				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				if ($xml === false) {
-					//set the directory
-					if (!empty($this->settings->get('switch', 'log'))) {
-						$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
-					}
 
 					//failed to load the XML, move the XML file to the failed directory
 					if (!empty($xml_cdr_dir)) {
