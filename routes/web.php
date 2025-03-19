@@ -29,7 +29,7 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','permission'])->group(function () {
     Route::post('/domains/switch', [DomainController::class, 'switch'])->name('switchDomain');
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');
@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('switchDomainFusionPBX');
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+    Route::resource('/users', UserController::class)->name('users', 'users');
 });
 
 Route::post('/curl/xml_handler/configuration', function (Request $request){
