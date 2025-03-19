@@ -752,7 +752,7 @@
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	if ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
-		echo "&nbsp;&nbsp;".$text['label-reference'].": <a href='https://www.google.com/fonts' target='_blank'>".$text['label-web_fonts']."</a>\n";
+		echo "&nbsp;&nbsp;".$text['label-reference'].": <a href='https://fonts.google.com' target='_blank'>".$text['label-web_fonts']."</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
