@@ -208,7 +208,7 @@
 		//add custom to the list of categories
 		$categories['custom']['formatted'] = $text['label-custom'];
 		$categories['custom']['count'] = null;
-		
+
 		//add the other catefories to the array
 		foreach ($default_setting_categories as $default_setting_category => $quantity) {
 			$category = strtolower($default_setting_category);
@@ -398,7 +398,7 @@
 				if ($row['default_setting_value'] !== $field['default_setting_value']) {
 					$setting_bold = 'font-weight:bold;';
 				}
-				
+
 				//set the default value
 				if (!empty($field['default_setting_value'])) {
 					$default_value = 'Default: '.$field['default_setting_value'];
@@ -406,7 +406,7 @@
 				else {
 					$default_value = 'Default: null';
 				}
-				
+
 				//check if default enabled
 				if ($row['default_setting_enabled'] == $field['default_setting_enabled']) {
 					if ($custom_settings) {	continue; }
@@ -529,7 +529,7 @@
 			else if ($category == 'theme' && $subcategory == 'custom_css_code' && $name == 'text') {
 				echo "		[...]\n";
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') > 0 || substr_count($subcategory, '_secret') > 0) {
+			else if ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || substr_count($subcategory, '_key') > 0 || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', 10);	//use the same number of characters to mask the password length
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
