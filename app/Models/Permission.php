@@ -34,4 +34,15 @@ class Permission extends Model
 		'permission_name',
 		'permission_description',
 	];
+
+    public function groups(): BelongsToMany {
+        return $this->belongsToMany(
+            Group::class,
+            'v_group_permissions',
+            'permission_name',
+            'group_uuid',
+            'permission_name'
+        )->wherePivot('permission_assigned', 'true')
+            ->withPivot(['permission_assigned', 'permission_protected']);
+    }
 }

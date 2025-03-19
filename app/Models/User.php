@@ -68,8 +68,13 @@ class User extends Authenticatable
 	}
 
 	public function groups(): BelongsToMany {
-		return $this->belongsToMany(Group::class, 'v_user_groups', 'user_uuid', 'group_uuid')->withTimestamps();
-//		$this->belongsToMany(Group::class)->using(UserGroup::class);
+        return $this->belongsToMany(Group::class, 'v_user_groups', 'user_uuid', 'group_uuid')
+            ->using(UserGroup::class)
+            ->withPivot(['user_group_uuid', 'domain_uuid'])
+            ->withTimestamps([
+                'created_at' => 'insert_date',
+                'updated_at' => 'update_date'
+            ]);
 	}
 
 	public function domain(): BelongsTo {
@@ -99,4 +104,39 @@ class User extends Authenticatable
 	public function devices(): HasMany {
 		return $this->hasMany(Device::class, 'user_uuid', 'device_user_uuid');
 	}
+
+    public function getAllPermissionsAttribute()
+    {
+        return $this->groups->flatMap->permissions->unique('permission_uuid');
+    }
+
+    /**
+     * Check if user has a specific permission through any of their groups
+     *
+     * @param string $permission Permission name to check
+     * @return bool
+     */
+    public function hasPermission($permission)
+    {
+        if (!$this->relationLoaded('groups') || !$this->groups->first()?->relationLoaded('permissions')) {
+            $this->load('groups.permissions');
+        }
+
+        return $this->groups->flatMap->permissions->where('permission_name', $permission)->isNotEmpty();
+    }
+
+    /**
+     * Check if user has a specific role (group)
+     *
+     * @param string $role Name or UUID of the role/group
+     * @return bool
+     */
+    public function hasGroup($role)
+    {
+        if (!$this->relationLoaded('groups')) {
+            $this->load('groups');
+        }
+
+        return $this->groups->where('group_name', $role)->isNotEmpty();
+    }
 }

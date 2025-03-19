@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'login' => 'user_all',        
+    'login' => 'user_all',
     'users.index' => 'user_view',
     'users.create' => 'user_add',
     'users.store' => 'user_add',

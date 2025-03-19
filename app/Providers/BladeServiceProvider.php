@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Providers;
 
@@ -14,23 +14,20 @@ class BladeServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Blade::directive('hasRole', function ($expression) {
-            return "<?php if(Auth::check() && Auth::user()->groups->contains('group_name', {$expression})): ?>";
+        Blade::directive('hasgroup', function ($expression) {
+            return "<?php if(Auth::check() && Auth::user()->hasRole({$expression})): ?>";
         });
 
-        Blade::directive('endHasRole', function () {
+        Blade::directive('endhasgroup', function () {
             return "<?php endif; ?>";
         });
 
         Blade::directive('can', function ($expression) {
-            return "<?php if(Auth::check() && Auth::user()->groups->contains(function(\$group) use ($expression) { 
-                return \$group->permissions->contains('permission_name', $expression); 
-            })): ?>";
+            return "<?php if(Auth::check() && Auth::user()->hasPermission({$expression})): ?>";
         });
 
-        Blade::directive('endCan', function () {
+        Blade::directive('endcan', function () {
             return "<?php endif; ?>";
         });
-
     }
 }
