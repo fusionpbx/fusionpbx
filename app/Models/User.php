@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasUniqueIdentifier;
 
 class User extends Authenticatable
@@ -88,7 +89,7 @@ class User extends Authenticatable
 	}
 
 	public function conferences(): BelongsToMany {
-		return $this->belongsToMany(Conferences::class, 'v_conference_users', 'user_uuid', 'conference_uuid')->withTimestamps();
+		return $this->belongsToMany(Conference::class, 'v_conference_users', 'user_uuid', 'conference_uuid')->withTimestamps();
 	}
 
 	public function faxes(): BelongsToMany {
