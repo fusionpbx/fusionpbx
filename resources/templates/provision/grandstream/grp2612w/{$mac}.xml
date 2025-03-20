@@ -76,7 +76,7 @@
 
 		<!-- SIP Authentication ID -->
 		<!-- Pvalue P36 -->
-		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.user_id}</item>
+		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
 		<!-- Pvalue P34 -->
