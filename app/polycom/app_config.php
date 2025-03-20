@@ -839,5 +839,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "933";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "933 service";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d243151a-8120-464d-bdf5-91d9dc57bfc4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_boot_status_popup_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable boot status popup by default";
 
 ?>
