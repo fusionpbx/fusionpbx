@@ -202,7 +202,7 @@
 				//attempt digs
 				if (!empty($digs) && is_array($digs)) {
 					foreach ($digs as $dig) {
-						$response = shell_exec("dig +noall +answer ".$dig['value']." | awk '{ print $5 }'");
+						$response = shell_exec("dig +noall +answer ".escapeshellarg($dig['value'])." | awk '{ print $5 }'");
 						if (!empty($response)) {
 							$lines = explode("\n", $response);
 							foreach ($lines as $l => $line) {
