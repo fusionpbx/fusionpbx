@@ -85,6 +85,28 @@
 		$xml_response = trim(event_socket::api($cmd));
 		if ($xml_response) {
 			$xml = new SimpleXMLElement($xml_response);
+			
+			//turn into array
+				$profilesA = array();
+				foreach($xml->profile as $profile) {
+					$profilesA[] = $profile;
+				}
+			
+			//sort the array
+				function sortXML($a, $b) {
+					return strnatcmp($a->name, $b->name);
+				}
+				usort($profilesA, 'sortXML');
+
+			//convert array back to SimpleXMLElement
+				$xmlString = "<?xml version='1.0'?><profiles>";
+				foreach ($profilesA as $node) {
+					$xmlStringRow = $node -> saveXML();
+					$xmlString = $xmlString . $xmlStringRow;
+				}
+				$xmlString = $xmlString . "</profiles>";
+	
+				$xml = simplexml_load_string($xmlString);
 		}
 	}
 	catch(Exception $e) {
