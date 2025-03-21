@@ -2222,7 +2222,7 @@ class ModXMLCURLController extends Controller
 
         if (isset($domain_uuid)){
             $phrase_query = Phrase::where(function (Builder $query) use ($domain_uuid){
-                                        $query->where('dommain_uuid', $domain_uuid)
+                                        $query->where('domain_uuid', $domain_uuid)
                                             ->orWhereNull('domain_uuid');
                                     })
                             ->where(Phrase::getTableName().'.phrase_uuid', $macro_name)
