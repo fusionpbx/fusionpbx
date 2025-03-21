@@ -2030,7 +2030,7 @@ class ModXMLCURLController extends Controller
 
         $default_settings = new DefaultSettingController;
         $dialplan_destination = $default_settings->get('dialplan', 'destination', 'text') ?? 'destination_number';
-        $dialplan_destination = $default_settings->get('destinations', 'dialplan_mode', 'text') ?? 'multiple';
+        $dialplan_mode = $default_settings->get('destinations', 'dialplan_mode', 'text') ?? 'multiple';
 
         $domain_name = 'global';
         $call_context = $request->input('Caller-Context');
