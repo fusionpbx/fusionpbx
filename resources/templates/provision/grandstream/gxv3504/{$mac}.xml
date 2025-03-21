@@ -487,7 +487,7 @@
 <P35>{$account.1.user_id}</P35>
 
 <!-- SIP authenticate id-->
-<P36>{$account.1.user_id}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- SIP stun server -->
 <P76></P76>
