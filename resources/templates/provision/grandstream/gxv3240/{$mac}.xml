@@ -33,7 +33,7 @@
 <P35>{$account.1.user_id}</P35>
 
 <!-- SIP Authentication ID -->
-<P36>{$account.1.user_id}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- SIP Authentication Password -->
 <P34>{$account.1.password}</P34>
