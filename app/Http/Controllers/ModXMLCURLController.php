@@ -455,7 +455,7 @@ class ModXMLCURLController extends Controller
 						WHERE ivr_menu_uuid = '$ivr_menu_uuid' AND ivr_menu_enabled = 'true'
 						UNION ALL
 						SELECT child.* FROM ".IVRMenu::getTableName()." AS child, ".IVRMenu::getTableName()." AS parent
-						WHERE child.ivr_menu_parent_uuid = parent.ivr_menu_uuid AND child.ivr_enabled  = 'true'
+						WHERE child.ivr_menu_parent_uuid = parent.ivr_menu_uuid AND child.ivr_menu_enabled  = 'true'
 					)
 					SELECT * FROM ivr_menus INNER JOIN ".Domain::getTableName()." USING(domain_uuid)";
                 $ivr_menus = DB::select($sql);
