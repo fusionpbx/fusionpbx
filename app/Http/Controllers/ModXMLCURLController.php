@@ -2116,10 +2116,10 @@ class ModXMLCURLController extends Controller
         else{
             $dialplan_query = Dialplan::where('dialplan_enabled', 'true')
                                 ->when($context_name == 'public' || is_int(strpos($context_name, '@')),
-                                       function($query) use($user_enabled){
+                                       function($query) use($call_context){
                                             return $query->where('dialplan_context', $call_context);
                                         },
-                                       function($query) use($user_enabled){
+                                       function($query) use($call_context){
                                             return $query->whereIn('dialplan_context', [$call_context, '${domain_name}', 'global']);
                                         }
                                 )
