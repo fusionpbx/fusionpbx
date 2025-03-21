@@ -2128,7 +2128,10 @@ class ModXMLCURLController extends Controller
                                             ->orWhereNull(Dialplan::getTableName().'.hostname');
                                     })
                                 ->where('dialplan_enabled', 'true')
-                                ->orderBy('dialplan_order', 'ASC');;
+                                ->orderBy('dialplan_order', 'ASC');
+            if(App::hasDebugModeEnabled()){
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$dialplan_query->toRawSql());
+            }
         }
 
         $xml->endElement(); // context
