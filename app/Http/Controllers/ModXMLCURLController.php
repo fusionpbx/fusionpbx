@@ -2231,7 +2231,7 @@ class ModXMLCURLController extends Controller
             if(App::hasDebugModeEnabled()){
                 Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$phrase_query->toRawSql());
             }
-            $phrase = $phrase_query->first;
+            $phrase = $phrase_query->first();
             if (isset($phrase)){
                 $xml->startElement( 'macro' );
                 $xml->writeAttribute('name', $phrase->phrase_uuid);
