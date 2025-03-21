@@ -61,3 +61,13 @@ Route::post('/curl/xml_handler/directory', function (Request $request){
     $xml = new ModXMLCURLController;
     return response($xml->directory($request), 200)->header('Content-Type','text/xml');
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('/curl/xml_handler/dialplan', function (Request $request){
+    $xml = new ModXMLCURLController;
+    return response($xml->dialplan($request), 200)->header('Content-Type','text/xml');
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('/curl/xml_handler/languages', function (Request $request){
+    $xml = new ModXMLCURLController;
+    return response($xml->languages($request), 200)->header('Content-Type','text/xml');
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
