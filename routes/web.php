@@ -49,6 +49,9 @@ Route::middleware(['auth','permission'])->group(function () {
     // MENU ITEM
     Route::get('/menus/items/{menu_item_uuid}/edit', [MenuItemController::class, 'edit'])->name('menu_item.edit');
     Route::post('/menus/items/{menu_item_uuid}', [MenuItemController::class, 'update'])->name('menu_item.update');
+
+    // USERS
+    Route::resource('/users', UserController::class)->name('users', 'users');
 });
 
 Route::post('/curl/xml_handler/{binding}', function (Request $request, string $binding){
