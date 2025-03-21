@@ -2106,7 +2106,29 @@ class ModXMLCURLController extends Controller
                                                 ->orWhere(DB::raw('CONCAT(destination_area_code, destination_number)'), '=', $destination_number);
 
                                         });
-                                    });
+                                    })
+                                    ->where(Dialplan::getTableName().'.dialplan_enabled', 'true')
+                                    ->orderBy(Dialplan::getTableName().'dialplan_order', 'ASC');
+            if(App::hasDebugModeEnabled()){
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$dialplan_query->toRawSql());
+            }
+        }
+        else{
+            $dialplan_query = Dialplan::where('dialplan_enabled', 'true')
+                                ->when($context_name == 'public' || is_int(strpos($context_name, '@')),
+                                       function($query) use($user_enabled){
+                                            return $query->where('dialplan_context', $call_context);
+                                        },
+                                       function($query) use($user_enabled){
+                                            return $query->whereIn('dialplan_context', [$call_context, '${domain_name}', 'global']);
+                                        }
+                                )
+                                ->where(function (Builder $query) use ($hostname){
+                                        $query->where(Dialplan::getTableName().'.hostname', $hostname)
+                                            ->orWhereNull(Dialplan::getTableName().'.hostname');
+                                    })
+                                ->where('dialplan_enabled', 'true')
+                                ->orderBy('dialplan_order', 'ASC');;
         }
 
         $xml->endElement(); // context
