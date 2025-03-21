@@ -126,7 +126,7 @@
 <P35>{$account.1.user_id}</P35>
 
 <!-- Authenticate ID -->
-<P36>{$account.1.user_id}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- Authenticate Password -->
 <P34>{$account.1.password}</P34>

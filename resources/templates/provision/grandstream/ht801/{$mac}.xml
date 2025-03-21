@@ -619,7 +619,7 @@
 
 <!-- Authentication ID -->
 <!-- String -->
-<P36>{$account.1.user_id}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- Authentication password -->
 <!-- String -->
