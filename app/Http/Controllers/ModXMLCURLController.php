@@ -2140,7 +2140,7 @@ class ModXMLCURLController extends Controller
             else{
                 $dialplans = $dialplans->get();
                 foreach ($dialplans as $dialplan){
-                    $xml->writeRaw($dialplan->dialplan_xml);
+                    $xml->writeRaw($dialplan->dialplan_xml.PHP_EOL);
                 }
             }
         }
@@ -2165,7 +2165,7 @@ class ModXMLCURLController extends Controller
             }
             $dialplans = $dialplans_query->get();
             foreach ($dialplans as $dialplan){
-                $xml->writeRaw($dialplan->dialplan_xml);
+                $xml->writeRaw($dialplan->dialplan_xml.PHP_EOL);
             }
         }
 
