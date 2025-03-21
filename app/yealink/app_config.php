@@ -1731,5 +1731,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Power Saving Enabled. Options: 0-Disabled, 1-Enabled";	
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1098d21f-3e28-4024-9553-2a54943c48a3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_wifi_function_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or Disable the WiFi adapter. Options: 0-Disabled, 1-Enabled";
 
 ?>
