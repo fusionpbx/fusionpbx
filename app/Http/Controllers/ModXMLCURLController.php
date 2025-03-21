@@ -457,7 +457,7 @@ class ModXMLCURLController extends Controller
 						SELECT child.* FROM ".IVRMenu::getTableName()." AS child, ".IVRMenu::getTableName()." AS parent
 						WHERE child.ivr_menu_parent_uuid = parent.ivr_menu_uuid AND child.ivr_option_enabled  = 'true'
 					)
-					SELECT * FROM ".IVRMenu::getTableName()." INNER JOIN ".Domain::getTableName()." USING(domain_uuid)";
+					SELECT * FROM ivr_menus INNER JOIN ".Domain::getTableName()." USING(domain_uuid)";
                 $ivr_menus = DB::select($sql);
                 foreach($ivr_menus as $ivr_menu){
                     $domain_settings = new DefaultSettingController;
