@@ -19,6 +19,7 @@
         @include('layouts.sidebar')
         <main class="app-main">
             <div class="app-content">
+                @include('layouts.messages')
                 @yield('content')
             </div>
         </main>

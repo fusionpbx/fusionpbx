@@ -8,7 +8,7 @@
 		</p>
 	</a>
 	@if(!empty($item["items"]))
-	<ul class="nav nav-treeview">
+	<ul class="nav nav-treeview ps-2">
 		@foreach($item["items"] as $item)
 			@include('layouts.menu_item')
 		@endforeach

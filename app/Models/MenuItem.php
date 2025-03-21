@@ -64,7 +64,7 @@ class MenuItem extends Model
 	}
 
 	public function groups(): BelongsToMany {
-        return $this->belongsToMany(MenuItemGroup::class, 'v_menu_item_groups', 'menu_item_uuid', 'group_uuid')->withTimestamps();
+        return $this->belongsToMany(Group::class, 'v_menu_item_groups', 'menu_item_uuid', 'group_uuid')->orderBy('group_name')->withTimestamps();
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
 }

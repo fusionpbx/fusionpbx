@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Middleware\Authenticate;
@@ -37,6 +38,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('switchDomainFusionPBX');
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+    // MENU
+    Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');
+    Route::get('/menus/create', [MenuController::class, 'create'])->name('menu.create');
+    Route::post('/menus/', [MenuController::class, 'store'])->name('menu.store');
+    Route::get('/menus/{menu_uuid}/edit', [MenuController::class, 'edit'])->name('menu.edit');
+    Route::post('/menus/{menu_uuid}', [MenuController::class, 'update'])->name('menu.update');
+
+    // MENU ITEM
+    Route::get('/menus/items/{menu_item_uuid}/edit', [MenuItemController::class, 'edit'])->name('menu_item.edit');
+    Route::post('/menus/items/{menu_item_uuid}', [MenuItemController::class, 'update'])->name('menu_item.update');
 });
 
 Route::post('/curl/xml_handler/configuration', function (Request $request){
@@ -49,6 +61,3 @@ Route::post('/curl/xml_handler/directory', function (Request $request){
     $xml = new ModXMLCURLController;
     return response($xml->directory($request), 200)->header('Content-Type','text/xml');
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
-Route::get('/menu', [MenuController::class, 'index']);
-Route::post('/menus', [MenuController::class, 'store']);

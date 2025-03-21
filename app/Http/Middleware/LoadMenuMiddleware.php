@@ -16,9 +16,9 @@ class LoadMenuMiddleware
 	{
 		$MenuController = new MenuController;
 
-		$menu = $MenuController->getMenu();
+		$app_menu = $MenuController->getMenu();
 
-		View::share("menu", $menu);
+		View::share("app_menu", $app_menu);
 
 		return $next($request);
 	}

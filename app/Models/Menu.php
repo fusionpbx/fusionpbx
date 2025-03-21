@@ -35,6 +35,11 @@ class Menu extends Model
 
 	public function items(): HasMany {
 		return $this->hasMany(MenuItem::class, 'menu_uuid', 'menu_uuid')
+			->orderBy('menu_item_order')
 			->whereNull('menu_item_parent_uuid');  // only root items in first level
+	}
+
+	public function children(): HasMany {
+		return $this->hasMany(MenuItem::class, 'menu_uuid', 'menu_uuid')->orderBy('menu_item_title');
 	}
 }

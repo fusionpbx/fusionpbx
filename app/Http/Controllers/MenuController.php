@@ -2,22 +2,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
 	public function index()
 	{
-		$menu = $this->getMenu();
+		$menus = Menu::all();
 
-		return response()->json($menu);
+		return view("menu/index", compact("menus"));
 	}
 
 	public function getMenu()
 	{
-		$menu = [
+		$app_menu = [
 			"items" => []
 		];
 
@@ -36,10 +38,10 @@ class MenuController extends Controller
 			$results = DB::select($sql);
 			$results = json_decode(json_encode($results), true);
 
-			$menu["items"] = $this->buildMenu($results);
+			$app_menu["items"] = $this->buildMenu($results);
 		}
 
-		return $menu;
+		return $app_menu;
 	}
 
 	private function buildMenu($elements, $parentId = null, $idField = "menu_item_uuid", $parentField = "menu_item_parent_uuid")
@@ -64,17 +66,71 @@ class MenuController extends Controller
 		return $branch;
 	}
 
+	private function buildMenuFlat($elements, $parentId = null, $level = 1, $idField = "menu_item_uuid", $parentField = "menu_item_parent_uuid")
+	{
+		$sortedList = [];
+
+		foreach($elements as $key => $element)
+		{
+			if($element[$parentField] == $parentId)
+			{
+				$element["level"] = $level; // Add level field
+
+				$sortedList[] = $element; // Add parent first
+
+				unset($elements[$key]); // Remove processed element
+
+				// Recursively add children
+				$sortedList = array_merge($sortedList, $this->buildMenuFlat($element["items"], $element[$idField], $level + 1, $idField, $parentField));
+			}
+		}
+
+		return $sortedList;
+	}
+
+	public function create()
+	{
+		$menu = new Menu();
+
+		return view("menu/form", compact("menu"));
+	}
+
+	public function edit($menu_uuid)
+	{
+		$menu = Menu::with("items.groups", "items.items.groups")->findOrFail($menu_uuid);
+
+		$menu_items = $this->buildMenuFlat($menu->items->toArray());
+
+		return view("menu/form", compact("menu", "menu_items"));
+	}
+
 	public function store(Request $request)
 	{
-		$request->validate([
-			"name" => "required|string|max:255",
-			"url" => "nullable|string|max:255",
-			"parent_id" => "nullable|exists:menus,id",
-			"order" => "integer"
+		$validated = $request->validate([
+			"menu_name" => "required|string|max:255",
+			"menu_language" => "required|string|max:255",
+			"menu_description" => "required|string|max:255",
 		]);
 
-		$menu = Menu::create($request->all());
+		$validated["menu_uuid"] = Str::uuid();
 
-		return response()->json($menu, 201);
+		Menu::create($validated);
+
+		return redirect()->route("menu.index")->with("success", "Menu created successfully!");
+	}
+
+	public function update(Request $request, $menu_uuid)
+	{
+		$menu = Menu::findOrFail($menu_uuid);
+
+		$validated = $request->validate([
+			"menu_name" => "required|string|max:255",
+			"menu_language" => "required|string|max:255",
+			"menu_description" => "required|string|max:255",
+		]);
+
+		$menu->update($validated);
+
+		return redirect()->route("menu.edit", $menu_uuid)->with("success", "Menu updated successfully!");
 	}
 }
