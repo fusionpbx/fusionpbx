@@ -52,7 +52,7 @@
     <!-- SIP User ID, MaxLength 64 characters -->
     <P35>{$account.1.user_id}</P35>
     <!-- Authenticate ID, MaxLength 64 characters -->
-    <P36>{$account.1.user_id}</P36>
+    <P36>{$account.1.auth_id}</P36>
     <!-- Authenticate Password, MaxLength unlimited -->
     <P34>{$account.1.password}</P34>
     <!-- Voicemail UserID (User ID/extension for 3rd Party voice mail system), MaxLength 64 characters -->
