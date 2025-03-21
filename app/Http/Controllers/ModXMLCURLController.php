@@ -2221,7 +2221,10 @@ class ModXMLCURLController extends Controller
         $xml->writeAttribute('name', 'languages' );
 
         if (isset($domain_uuid)){
-            $phrase_query = Phrase::where(Phrase::getTableName().'.domain_uuid', $domain_uuid)
+            $phrase_query = Phrase::where(function (Builder $query) use ($domain_uuid){
+                                        $query->where('dommain_uuid', $domain_uuid)
+                                            ->orWhereNull('domain_uuid');
+                                    })
                             ->where(Phrase::getTableName().'.phrase_uuid', $macro_name)
                             ->where(Phrase::getTableName().'.phrase_language', $language)
                             ->where(Phrase::getTableName().'.phrase_enabled', 'true');
