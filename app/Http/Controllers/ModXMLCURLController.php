@@ -27,6 +27,8 @@ use App\Models\IVRMenuOption;
 use App\Models\MusicOnHold;
 use App\Models\NumberTranslation;
 use App\Models\NumberTranslationDetail;
+use App\Models\Phrase;
+use App\Models\PhraseDetail;
 use App\Models\Recording;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
@@ -2114,12 +2116,93 @@ class ModXMLCURLController extends Controller
         $xml->endDocument();
         $answer = $xml->outputMemory();
 
+        return $answer;
+
     }
 
     public function languages(Request $request): string{    // TODO: Verify name
         if(App::hasDebugModeEnabled()){
             $this->dump($request);
         }
+
+        $language = $request->input('lang');
+        $macro_name= $request->input('macro_name');
+        $domain_name = $request->input('domain') ?? $request->input('doman_name') ?? $request->input('variable_domain_name') ?? $request->input('variable_sip_from_host');
+        $domain_uuid = $request->input('domain_uuid');
+        if (empty($domain_uuid)){
+            $domain_query = Domain::where('domain_name', $domain_name)
+                            ->where('domain_enabled', 'true');
+            $domain = $domain_query->first();
+            if(App::hasDebugModeEnabled()){
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$domain_query->toRawSql());
+            }
+            $domain_uuid = $domain->domain_uuid;
+            unset($domain);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_uuid: '.$domain_uuid);
+        }
+
+        if (isset($domain_uuid) && empty($domain_name)){
+            $domain = Domain::where('domain_uuid', $domain_uuid)
+                            ->where('domain_enabled', 'true')
+                            ->first();
+            $domain_name = $domain->domain_name;
+            unset($domain);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] From DB $domain_name: '.$domain_name);
+        }
+
+        $xml = new XMLWriter();
+        $xml->openMemory();
+        $xml->setIndent(true);
+        $xml->setIndentString('  ');
+        $xml->startDocument( '1.0', 'UTF-8', 'no' );
+        $xml->startElement( 'document' );
+        $xml->writeAttribute('type', 'freeswitch/xml');
+        $xml->startElement('section');
+        $xml->writeAttribute('name', 'languages' );
+
+        if (isset($domain_uuid)){
+            $phrase_query = Phrase::where(Phrase::getTableName().'.domain_uuid', $domain_uuid)
+                            ->where(Phrase::getTableName().'.phrase_uuid', $macro_name)
+                            ->where(Phrase::getTableName().'.phrase_language', $language)
+                            ->where(Phrase::getTableName().'.phrase_enabled', 'true');
+            if(App::hasDebugModeEnabled()){
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$phrase_query->toRawSql());
+            }
+            $phrase = $phrase_query->first;
+            if (isset($phrase)){
+                $xml->startElement( 'macro' );
+                $xml->writeAttribute('name', $phrase->phrase_uuid);
+                $xml->startElement( 'input' );
+                $xml->writeAttribute('pattern', '(.*)');    // TODO: findout how to use the pattern field in v_phrase_details
+                $xml->startElement( 'match' );
+
+                $phrase_details_query = PhraseDetail::where('phrase_uuid', '=', $phrase->phrase_uuid)
+                            ->orderBy(PhraseDetail::getTableName().'.phrase_detail_order', 'asc');
+                if(App::hasDebugModeEnabled()){
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$phrase_query->toRawSql());
+                }
+                $phrase_details = $phrase_details_query->get();
+
+                foreach ($phrase_details as $phrase_detail){
+                    $xml->startElement('action');
+                    $xml->startAttribute('function'); $xml->text($phrase_detail->phrase_detail_function); $xml->endAttribute();
+                    $xml->startAttribute('data'); $xml->text($phrase_detail->phrase_detail_data); $xml->endAttribute();
+                    $xml->endElement(); //action
+                }
+                $xml->fullEndElement(); // match
+                $xml->endElement(); // input
+                $xml->endElement(); // macro
+            }
+
+
+        }
+
+        $xml->endElement(); // section
+        $xml->endElement(); // document
+        $xml->endDocument();
+        $answer = $xml->outputMemory();
+
+        return $answer;
     }
 
     public function not_found(): string{                    // TODO: this or XMLWriter

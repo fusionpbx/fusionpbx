@@ -30,7 +30,7 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','permission'])->group(function () {
     Route::post('/domains/switch', [DomainController::class, 'switch'])->name('switchDomain');
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');

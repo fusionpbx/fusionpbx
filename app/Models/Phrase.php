@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasUniqueIdentifier;
 use App\Traits\GetTableName;
+use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,15 +11,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
-class Permission extends Model
+class Phrase extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
-	protected $table = 'v_permissions';
-	protected $primaryKey = 'permission_uuid';
+	protected $table = 'v_phrases';
+	protected $primaryKey = 'phrase_uuid';
 	public $incrementing = false;
-	protected $keyType = 'string';
+	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
 	const UPDATED_AT = 'update_date';
 
@@ -29,20 +30,18 @@ class Permission extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-		'application_uuid',
-		'application_name',
-		'permission_name',
-		'permission_description',
+        'domain_uuid',
+        'phrase_name',
+        'phrase_language',
+        'phrase_enabled',
+        'phrase_description',
 	];
 
-    public function groups(): BelongsToMany {
-        return $this->belongsToMany(
-            Group::class,
-            'v_group_permissions',
-            'permission_name',
-            'group_uuid',
-            'permission_name'
-        )->wherePivot('permission_assigned', 'true')
-            ->withPivot(['permission_assigned', 'permission_protected']);
-    }
+	public function domain(): BelongsTo {
+		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	}
+
+    public function details(): HasMany {
+		return $this->hasMany(PhraseDetail::class, 'phrase_uuid', 'phrase_uuid');
+	}
 }

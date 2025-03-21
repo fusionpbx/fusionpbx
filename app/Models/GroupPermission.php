@@ -16,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class GroupPermission extends Pivot
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	use HasFactory, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_group_permissions';
 	protected $primaryKey = 'group_permission_uuid';
 	public $incrementing = false;
@@ -45,5 +45,7 @@ class GroupPermission extends Pivot
 	public function group(): BelongsTo {
 		return $this->belongsTo(Group::class, 'group_uuid', 'group_uuid');
 	}
-
+    public function permission(): BelongsTo {
+        return $this->belongsTo(Permission::class, 'permission_name', 'permission_name');
+    }
 }

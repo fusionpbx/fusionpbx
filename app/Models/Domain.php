@@ -42,8 +42,11 @@ class Domain extends Model
 		return $this->hasMany(Domain::class, 'domain_parent_uuid', 'domain_uuid');
 	}
 
-	public function users(): HasMany {
-		return $this->hasMany(User::class, 'domain_uuid', 'domain_uuid');
+	public function users(?bool $user_enabled = null): HasMany {
+        return $this->hasMany(User::class, 'domain_uuid', 'domain_uuid')
+                ->when(is_bool($user_enabled), function($query) use($user_enabled){
+                    return $query->where('user_enabled', $user_enabled ? 'true' : 'false');
+                });
 	}
 
 	public function groups(): HasMany {
@@ -62,7 +65,7 @@ class Domain extends Model
 		return $this->hasMany(DomainSetting::class, 'domain_uuid', 'domain_uuid')
                 ->when(is_bool($domain_setting_enabled), function($query) use($domain_setting_enabled){
                     return $query->where('domain_setting_enabled', $domain_setting_enabled ? 'true' : 'false');
-                });;
+                });
 	}
 
 	public function gateways(): HasMany {
@@ -231,6 +234,13 @@ class Domain extends Model
 		return $this->hasMany(IVRMenuOption::class, 'domain_uuid', 'domain_uuid')
 			->when(is_bool($ivr_menu_option_enabled), function ($query) use ($ivr_menu_option_enabled) {
 				return $query->where('ivr_menu_option_enabled', $ivr_menu_option_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function phrases(?bool $phrase_enabled = null): HasMany {
+		return $this->hasMany(Phrase::class, 'domain_uuid', 'domain_uuid')
+			->when(is_bool($phrase_enabled), function ($query) use ($phrase_enabled) {
+				return $query->where('phrase_enabled', $phrase_enabled ? 'true' : 'false');
 			});
 	}
 
