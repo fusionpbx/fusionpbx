@@ -198,7 +198,7 @@
 			}
 		}
 	}
-	unset($sql, $rows, $row);
+	unset($sql, $rows, $row, $parameters);
 
 //get the list of categories
 	if (!empty($default_setting_categories)) {
