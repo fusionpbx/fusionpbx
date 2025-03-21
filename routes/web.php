@@ -51,23 +51,13 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::post('/menus/items/{menu_item_uuid}', [MenuItemController::class, 'update'])->name('menu_item.update');
 });
 
-Route::post('/curl/xml_handler/configuration', function (Request $request){
+Route::post('/curl/xml_handler/{binding}', function (Request $request, string $binding){
     $xml = new ModXMLCURLController;
-    return response($xml->configuration($request), 200)->header('Content-Type','text/xml');
-})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    $allowedMethods = ['configuration', 'directory', 'dialplan', 'languages'];
 
+    if(!in_array($binding, $allowedMethods)){
+        return response('Method not allowed', 403)->header('Content-Type', 'text/xml');
+    }
 
-Route::post('/curl/xml_handler/directory', function (Request $request){
-    $xml = new ModXMLCURLController;
-    return response($xml->directory($request), 200)->header('Content-Type','text/xml');
-})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
-Route::post('/curl/xml_handler/dialplan', function (Request $request){
-    $xml = new ModXMLCURLController;
-    return response($xml->dialplan($request), 200)->header('Content-Type','text/xml');
-})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
-Route::post('/curl/xml_handler/languages', function (Request $request){
-    $xml = new ModXMLCURLController;
-    return response($xml->languages($request), 200)->header('Content-Type','text/xml');
+    return response($xml->$binding($request), 200)->header('Content-Type', 'text/xml');
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
