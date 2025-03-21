@@ -2085,7 +2085,7 @@ class ModXMLCURLController extends Controller
         $xml->writeAttribute('hostname', $hostname );
 
         if (($context_name == 'public') && ($dialplan_mode == 'single')){
-            $dialplan_query = Dialplan::join(Domain::getTableName(), Dialplan::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
+            $dialplans_query = Dialplan::join(Domain::getTableName(), Dialplan::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
                                     ->join(Destination::getTableName(), Dialplan::getTableName().'.dialplan_uuid', '=', Destination::getTableName().'.dialplan_uuid')
                                     ->where(function (Builder $query) use ($hostname){
                                         $query->where(Dialplan::getTableName().'.hostname', $hostname)
@@ -2110,11 +2110,42 @@ class ModXMLCURLController extends Controller
                                     ->where(Dialplan::getTableName().'.dialplan_enabled', 'true')
                                     ->orderBy(Dialplan::getTableName().'dialplan_order', 'ASC');
             if(App::hasDebugModeEnabled()){
-                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$dialplan_query->toRawSql());
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$dialplans_query->toRawSql());
+            }
+            if ($dialplans_query->count() == 0){
+                $xml->startElement('extension');
+                $xml->writeAttribute('name', 'not-found' );
+                $xml->writeAttribute('continue', 'false' );
+                $xml->writeAttribute('uuid', '3df49-0757-414b-8cf9-bcae2fd81ae7">]' );  // NOTE: find out why this UUID
+
+                $xml->startElement('condition');
+                $xml->writeAttribute('field', '' );
+                $xml->writeAttribute('expression', '' );
+
+                $xml->startElement('action');
+                $xml->startAttribute('application'); $xml->text('set'); $xml->endAttribute();
+                $xml->startAttribute('data'); $xml->text('call_direction=inbound'); $xml->endAttribute();
+                $xml->startAttribute('inline'); $xml->text('true'); $xml->endAttribute();
+                $xml->endElement(); //action
+
+                $xml->startElement('action');
+                $xml->startAttribute('application'); $xml->text('log'); $xml->endAttribute();
+                $xml->startAttribute('data'); $xml->text('WARNING [inbound routes] 404 not found ${sip_network_ip}'); $xml->endAttribute();
+                $xml->startAttribute('inline'); $xml->text('true'); $xml->endAttribute();
+                $xml->endElement(); //action
+
+                $xml->endElement(); // condition
+                $xml->endElement(); // extension
+            }
+            else{
+                $dialplans = $dialplans->get();
+                foreach ($dialplans as $dialplan){
+                    $xml->writeRaw($dialplan->dialplan_xml);
+                }
             }
         }
         else{
-            $dialplan_query = Dialplan::where('dialplan_enabled', 'true')
+            $dialplans_query = Dialplan::where('dialplan_enabled', 'true')
                                 ->when($context_name == 'public' || is_int(strpos($context_name, '@')),
                                        function($query) use($call_context){
                                             return $query->where('dialplan_context', $call_context);
@@ -2130,7 +2161,11 @@ class ModXMLCURLController extends Controller
                                 ->where('dialplan_enabled', 'true')
                                 ->orderBy('dialplan_order', 'ASC');
             if(App::hasDebugModeEnabled()){
-                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$dialplan_query->toRawSql());
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$dialplans_query->toRawSql());
+            }
+            $dialplans = $dialplans_query->get();
+            foreach ($dialplans as $dialplan){
+                $xml->writeRaw($dialplan->dialplan_xml);
             }
         }
 
