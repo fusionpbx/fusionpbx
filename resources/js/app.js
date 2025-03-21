@@ -1,8 +1,7 @@
 import '@adminlte/dist/js/adminlte.min.js';
 import '@overlayscrollbars/browser/overlayscrollbars.browser.es5.min.js';
 import '@popperjs/core/dist/umd/popper.min.js';
-
-
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
 const Default = {

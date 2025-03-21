@@ -35,6 +35,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');
     });
+
     Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('switchDomainFusionPBX');
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
