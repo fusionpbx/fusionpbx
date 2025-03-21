@@ -69,7 +69,7 @@
 		<item name="account.{$row.line_number}.sip.userid">{$row.user_id}</item>
 
 		<!-- SIP Authentication ID -->
-		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.user_id}</item>
+		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
 		<item name="account.{$row.line_number}.sip.subscriber.password">{$row.password}</item>
