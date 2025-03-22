@@ -236,6 +236,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "50cbb1bb-3d67-4320-9f7e-0b09aa09676d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ring_ready";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Add ring_ready in the dialplan to send 180 ringing to calling party";
 
 	//schema details
 		$y=0;
