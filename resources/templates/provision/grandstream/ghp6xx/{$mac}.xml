@@ -7,7 +7,7 @@
 		<!-- 1. This config template includes settings for account 1 only. To update item name to "account.i...", where i is the account index. For example, to update Account 12 SIP server address, include the following in config template: -->
 		<!-- Example, <item name="account.2.sip.server.1.address">sipserver.net</item> -->
 		<!-- 2. The template uses alias name to represent drop-down options. For example, Tel URI uses "Disabled, UserIsPhone, Enabled". To update this setting to "User=Phone", include the following in config template: -->
-		<!-- Example, <item name="account.1.sip.telUri">UserIsPhone</item> -->
+		<!-- Example, <item name="account.1.sip.teluri">UserIsPhone</item> -->
 		<!-- 3. For those settings without alias, numbers are informed to match drop-down options.  -->
 		<!-- End of Instruction -->
 
@@ -43,17 +43,17 @@
 
 		<!-- Outbound Proxy -->
 		{if $row.sip_transport != 'dns srv'}
-		<item name="account.{$line}.sip.outboundProxy.1.address">{if isset($row.outbound_proxy_primary)}{$row.outbound_proxy_primary}:{$row.sip_port}{/if}</item>
+		<item name="account.{$line}.sip.outboundproxy.1.address">{if isset($row.outbound_proxy_primary)}{$row.outbound_proxy_primary}:{$row.sip_port}{/if}</item>
 		{else}
-		<item name="account.{$line}.sip.outboundProxy.1.address">{if isset($row.outbound_proxy_primary)}{$row.outbound_proxy_primary}{/if}</item>
+		<item name="account.{$line}.sip.outboundproxy.1.address">{if isset($row.outbound_proxy_primary)}{$row.outbound_proxy_primary}{/if}</item>
 		{/if}
 		
 		
 		<!-- Secondary Outbound Proxy -->
 		{if $row.sip_transport != 'dns srv'}
-		<item name="account.{$line}.sip.outboundProxy.2.address">{if isset($row.outbound_proxy_secondary)}{$row.outbound_proxy_secondary}:{$row.sip_port}{/if}</item>
+		<item name="account.{$line}.sip.outboundproxy.2.address">{if isset($row.outbound_proxy_secondary)}{$row.outbound_proxy_secondary}:{$row.sip_port}{/if}</item>
 		{else}
-		<item name="account.{$line}.sip.outboundProxy.2.address">{if isset($row.outbound_proxy_secondary)}{$row.outbound_proxy_secondary}{/if}</item>
+		<item name="account.{$line}.sip.outboundproxy.2.address">{if isset($row.outbound_proxy_secondary)}{$row.outbound_proxy_secondary}{/if}</item>
 		{/if}
 
 		<!-- SIP User ID -->
@@ -70,7 +70,7 @@
 
 		<!-- Tel URI -->
 		<!-- Disabled, UserIsPhone, Enabled -->
-		<item name="account.{$line}.sip.telUri">Disabled</item>
+		<item name="account.{$line}.sip.teluri">Disabled</item>
 		
 		<!-- Voice Mail Access Number -->
 		<item name="account.{$line}.sip.voicemail.number">{$voicemail_number}</item>
@@ -86,38 +86,38 @@
 			{if $grandstream_dns_mode == 2}{$dnsmode='NaptrOrSrv'}{/if}
 			{if $grandstream_dns_mode == 3}{$dnsmode='UseConfiguredIP'}{/if}
 		{/if}
-		<item name="account.{$line}.network.dnsMode">{$dnsmode}</item>
+		<item name="account.{$line}.network.dnsmode">{$dnsmode}</item>
 
 		<!-- NAT Traversal -->
 		<!-- No, STUN -->
 		{if isset($grandstream_nat_traversal) && $grandstream_nat_traversal == 1}
-			<item name="account.{$line}.network.natTraversal">STUN</item>		
+			<item name="account.{$line}.network.nattraversal">STUN</item>		
 		{else}
-			<item name="account.{$line}.network.natTraversal">No</item>		
+			<item name="account.{$line}.network.nattraversal">No</item>		
 		{/if}
 		
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.network.supportRport">Yes</item>	
+		<item name="account.{$line}.network.supportrport">Yes</item>	
 
 		<!-- Proxy-Require -->
-		<item name="account.{$line}.network.proxyRequire"></item>
+		<item name="account.{$line}.network.proxyrequire"></item>
 		
 		<!--Maximum Number of SIP Request Retries -->
 		<!-- Number: 1 - 10 -->
-		<item name="account.{$line}.network.maxNumOfRetries">2</item>
+		<item name="account.{$line}.network.maxnumofretries">2</item>
 
 		<!-- DNS SRV Fail-over Mode -->
 		<!-- Default, SavedOneUntilDNSTTL, SavedOneUntilNoResponse, SavedWhenFailback -->
-		<item name="account.{$line}.network.dnsSRVFailoverMode">Default</item>
+		<item name="account.{$line}.network.dnssrvfailovermode">Default</item>
 
 		<!-- Failback Expiration (m) -->
-		<item name="account.{$line}.network.failbackTimer">60</item>
+		<item name="account.{$line}.network.failbacktimer">60</item>
 
 		<!-- Register Before DNS SRV Fail-over -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.network.dnsSRVRegisterBeforeFailover">No</item>
+		<item name="account.{$line}.network.dnssrvregisterbeforefailover">No</item>
 				
 		<!-- ############################################################################## -->
 		<!-- ##  Account 1/ SIP Settings-->
@@ -129,11 +129,11 @@
 		
 		<!-- Unregister on Reboot -->
 		<!-- No, Yes, Instance -->
-		<item name="account.{$line}.sip.unregisterOnReboot">Instance</item>
+		<item name="account.{$line}.sip.unregisteronreboot">Instance</item>
 		
 		<!-- Register Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
-		<item name="account.{$line}.sip.registerExpiration">{$row.register_expires}</item>
+		<item name="account.{$line}.sip.registerexpiration">{$row.register_expires}</item>
 		
 		<!-- SUBSCRIBE Expiration (m) -->
 		<!-- Number: 0 - 64800 -->
@@ -141,32 +141,32 @@
 
 		<!-- Reregister before Expiration (s)  -->
 		<!-- Number: 0 - 64800 -->
-		<item name="account.{$line}.sip.registerBeforeExpiration">0</item>
+		<item name="account.{$line}.sip.registerbeforeexpiration">0</item>
 
 		<!-- Registration Retry Wait Time (s) -->
-		<item name="account.{$line}.sip.registrationFailureRetryWaitTime">20</item>
+		<item name="account.{$line}.sip.registrationfailureretrywaittime">20</item>
 
 		<!-- Add Auth Header On Initial REGISTER -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.header.authOnInitialRegister">No</item>
+		<item name="account.{$line}.sip.header.authoninitialregister">No</item>
 		
 		<!-- Enable OPTIONS Keep Alive -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.keepAlive.enable">No</item>
+		<item name="account.{$line}.sip.keepalive.enable">No</item>
 		
 		<!-- OPTIONS Keep Alive Interval (s)  -->
-		<item name="account.{$line}.sip.keepAlive.interval">30</item>
+		<item name="account.{$line}.sip.keepalive.interval">30</item>
 		
 		<!-- OPTIONS Keep Alive Max Lost -->
-		<item name="account.{$line}.sip.keepAlive.maxLost">30</item>
+		<item name="account.{$line}.sip.keepalive.maxlost">30</item>
 
 		<!-- Subscribe for MWI -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.subscribe.forMwi">{if isset($subscribe_mwi)}Yes{else}No{/if}</item>
+		<item name="account.{$line}.sip.subscribe.formwi">{if isset($subscribe_mwi)}Yes{else}No{/if}</item>
 		
 		<!-- SUBSCRIBE for Registration -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.subscribe.forRegistration">No</item>
+		<item name="account.{$line}.sip.subscribe.forregistration">No</item>
 
         <!-- Use Privacy Header -->
 		<!-- Default, Yes, No -->
@@ -178,7 +178,7 @@
 		
 		<!-- Use X-Grandstream-PBX Header -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.header.xGrandstream">Yes</item>		
+		<item name="account.{$line}.sip.header.xgrandstream">Yes</item>		
 		
 		<!-- Use P-Access-Network-Info Header -->
 		<!-- Yes, No -->
@@ -190,7 +190,7 @@
 
 		<!-- Use MAC Header -->
 		<!-- No - No, Yes for REGISTER only - Register Only, Yes to all SIP - Yes To All Sip -->
-		<item name="account.{$line}.sip.header.macHeader">Register Only</item>	
+		<item name="account.{$line}.sip.header.macheader">Register Only</item>	
 		
 		<!-- Add MAC in User-Agent -->
 		<!-- No - No, Yes for all except REGISTER - Yes Except Register, Yes to all Sip - Yes To All Sip -->
@@ -215,26 +215,26 @@
 
 		<!-- Enable TCP Keep-alive -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.enableTCPKeepalive">Yes</item>			
+		<item name="account.{$line}.sip.enabletcpkeepalive">Yes</item>			
 		
 		<!-- SIP Listening Mode -->
 		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
-		<item name="account.{$line}.sip.listeningMode">Transport_Only</item>
+		<item name="account.{$line}.sip.listeningmode">Transport_Only</item>
 		
 		<!-- Local SIP Port -->
-		<item name="account.{$line}.sip.localPort">5060</item>
+		<item name="account.{$line}.sip.localport">5060</item>
 		
 		<!-- SIP URI Scheme When Using TLS -->
 		<!-- sip, sips -->
-		<item name="account.{$line}.sip.uriSchemeWhenUsingTls">sips</item>
+		<item name="account.{$line}.sip.urischemewhenusingtls">sips</item>
 		
 		<!-- Use Actual Ephemeral Port in Contact with TCP/TLS -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.sip.useActualEphemeralPortInContactWithTcpTls">No</item>
+		<item name="account.{$line}.sip.useactualephemeralportincontactwithtcptls">No</item>
 
 		<!-- Support SIP Instance ID -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.sip.supportInstanceId">Yes</item>
+		<item name="account.{$line}.sip.supportinstanceid">Yes</item>
 
 		<!-- SIP T1 Timeout -->
 		<!-- 0.5 sec - 0.5sec, 1 sec - 1sec, 2 sec - 2sec -->
@@ -246,7 +246,7 @@
 
 		<!-- Outbound Proxy Mode -->
 		<!-- In Route, Not In Route, Always Sent To -->
-		<item name="account.{$line}.sip.outboundProxy.mode">In Route</item>
+		<item name="account.{$line}.sip.outboundproxy.mode">In Route</item>
 
 		<!-- Enable 100rel -->
 		<!-- No, Yes -->
@@ -259,38 +259,38 @@
 		<!-- Account 1 Session Timer -->		
 		<!-- Enable Session Timer -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.sessionTimer.enable">Yes</item>		
+		<item name="account.{$line}.sip.sessiontimer.enable">Yes</item>		
 		
 		<!-- Session Expiration (s) -->
 		<!-- Session Timer is disabled if the value is 0 -->
-		<item name="account.{$line}.sip.sessionTimer.expiration">180</item>
+		<item name="account.{$line}.sip.sessiontimer.expiration">180</item>
 		
 		<!-- Min-SE(s) -->
-		<item name="account.{$line}.sip.minimumSE">90</item>		
+		<item name="account.{$line}.sip.minimumse">90</item>		
 		
 		<!-- Caller Request Timer -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.sip.sessionTimer.requestTimer.caller">No</item>
+		<item name="account.{$line}.sip.sessiontimer.requesttimer.caller">No</item>
 		
 		<!-- Callee Request Timer -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.sip.sessionTimer.requestTimer.callee">No</item>		
+		<item name="account.{$line}.sip.sessiontimer.requesttimer.callee">No</item>		
 		
 		<!-- Force Timer -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.sip.sessionTimer.force">No</item>
+		<item name="account.{$line}.sip.sessiontimer.force">No</item>
 
 		<!-- UAC Specify Refresher -->
 		<!-- Omit, UAC, UAS -->
-		<item name="account.{$line}.sip.sessionTimer.refresher.uacSpecify">Omit</item>
+		<item name="account.{$line}.sip.sessiontimer.refresher.uacspecify">Omit</item>
 		
 		<!-- UAS Specify Refresher -->
 		<!--UAC - 1, UAS - 2 -->
-		<item name="account.{$line}.sip.sessionTimer.refresher.uasSpecify">1</item>
+		<item name="account.{$line}.sip.sessiontimer.refresher.uasspecify">1</item>
 
 		<!-- Force INVITE -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.sip.sessionTimer.forceInvite">No</item>
+		<item name="account.{$line}.sip.sessiontimer.forceinvite">No</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Account 1/ Codec Settings-->
@@ -309,37 +309,37 @@
 
 		<!-- Codec Negotiation Priority -->
 		<!-- Caller, Callee -->
-		<item name="account.{$line}.codec.negotiatePriority">Callee</item>
+		<item name="account.{$line}.codec.negotiatepriority">Callee</item>
 
 		<!-- Use First Matching Vocoder in 200OK SDP -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.codec.useFirstMatch">No</item>
+		<item name="account.{$line}.codec.usefirstmatch">No</item>
 
 		<!-- iLBC Frame Size -->
 		<!-- 20ms, 30ms -->
-		<item name="account.{$line}.codec.iLBC.frameSize">30ms</item>
+		<item name="account.{$line}.codec.ilbc.framesize">30ms</item>
 
 		<!-- iLBC Payload Type -->
-		<item name="account.{$line}.codec.payloadType.ilbc">97</item>
+		<item name="account.{$line}.codec.payloadtype.ilbc">97</item>
 
 		<!-- G.726-32 Packing Mode -->
 		<!-- ITU, IETF -->
-		<item name="account.{$line}.codec.g723.32.packingMode">ITU</item>
+		<item name="account.{$line}.codec.g723.32.packingmode">ITU</item>
 
 		<!-- G.726-32 Dynamic Payload Type -->
-		<iitem name="account.{$line}.codec.payloadType.g72632">127</iitem>
+		<iitem name="account.{$line}.codec.payloadtype.g72632">127</iitem>
 
 		<!-- OPUS Payload Type -->
-		<item name="account.{$line}.codec.payloadType.opus">123</item>
+		<item name="account.{$line}.codec.payloadtype.opus">123</item>
 
 		<!-- Send DTMF -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.dtmf.sendInAudio">No</item>
-		<item name="account.{$line}.dtmf.sendInRtp">Yes</item>
-		<item name="account.{$line}.dtmf.sendInSip">No</item>	
+		<item name="account.{$line}.dtmf.sendinaudio">No</item>
+		<item name="account.{$line}.dtmf.sendinrtp">Yes</item>
+		<item name="account.{$line}.dtmf.sendinsip">No</item>	
 
 		<!-- DTMF Payload Type -->
-		<item name="account.{$line}.codec.payloadType.dtmf">101</item>
+		<item name="account.{$line}.codec.payloadtype.dtmf">101</item>
 
 		<!-- Enable Audio RED with FEC -->
 		<!-- Yes, No -->
@@ -347,31 +347,31 @@
 
 		<!-- Audio FEC Payload Type -->
 		<!-- Number: 96 - 126 -->
-		<item name="account.{$line}.codec.payloadType.fec.audio">121</item>
+		<item name="account.{$line}.codec.payloadtype.fec.audio">121</item>
 
 		<!-- Audio RED Payload Type -->
 		<!-- Number: 96 - 126 -->
-		<item name="account.{$line}.codec.payloadType.red">124</item>
+		<item name="account.{$line}.codec.payloadtype.red">124</item>
 
 		<!-- Silence Suppression -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.audio.silenceSuppression">No</item>
+		<item name="account.{$line}.audio.silencesuppression">No</item>
 		
 		<!-- Jitter Buffer Type -->
 		<!-- Fixed, Adaptive -->
 		{if isset ($grandstream_jitter_adapt) && $grandstream_jitter_adapt == 0}
-		<item name="account.{$line}.audio.jitterBufferType">Fixed</item>
+		<item name="account.{$line}.audio.jitterbuffertype">Fixed</item>
 		{else}
-		<item name="account.{$line}.audio.jitterBufferType">Adaptive</item>
+		<item name="account.{$line}.audio.jitterbuffertype">Adaptive</item>
 		{/if}
 		
 		<!-- Jitter Buffer Length -->
 		<!-- 100ms, 200ms, 300ms, 400ms, 500ms, 600ms, 700ms, 800ms -->
-		<item name="account.{$line}.audio.jitterBufferLength">300ms</item>		
+		<item name="account.{$line}.audio.jitterbufferlength">300ms</item>		
 
 		<!-- Voice Frames per TX -->
 		<!-- Number: 1 - 64 -->
-		<item name="account.{$line}.audio.voiceFramePerTX">2</item>		
+		<item name="account.{$line}.audio.voiceframepertx">2</item>		
 
 		<!-- G723 Rate -->
 		<!-- 6.3kbpsEncodingRate, 5.3kbpsEncodingRate -->
@@ -386,15 +386,15 @@
 	{if $grandstream_srtp==2}{$srtp='EnabledAndForced'}{/if}
 	{if $grandstream_srtp==3}{$srtp='Optional'}{/if}
 {/if}
-		<item name="account.{$line}.audio.srtpMode">{$srtp}</item>
+		<item name="account.{$line}.audio.srtpmode">{$srtp}</item>
 
 		<!-- SRTP Key Length -->
 		<!-- AES128 And 256Bit, AES128 Bit, AES256 Bit -->
-		<item name="account.{$line}.audio.srtpKeyLength">AES128 And 256Bit</item>
+		<item name="account.{$line}.audio.srtpkeylength">AES128 And 256Bit</item>
 
 		<!-- Crypto Life Time -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.audio.cryptoLifeTime">No</item>
+		<item name="account.{$line}.audio.cryptolifetime">No</item>
 
 		<!-- RTCP Mode -->
 		<!-- Default, Negotiated, RTCPMux, RTCPMuxOnly -->
@@ -402,15 +402,15 @@
 
 		<!-- RTCP Keep-Alive method -->
 		<!-- ReceiverReport, SenderReport -->
-		<item name="account.{$line}.rtcp.keepAliveMethod">ReceiverReport</item>
+		<item name="account.{$line}.rtcp.keepalivemethod">ReceiverReport</item>
 
 		<!-- RTP Keep-Alive method -->
 		<!-- RTPVersion1, No -->
-		<item name="account.{$line}.rtp.keepAliveMethod">RTPVersion1</item>
+		<item name="account.{$line}.rtp.keepalivemethod">RTPVersion1</item>
 
         <!-- Symmetric RTP -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.audio.symmetricRTP">No</item>
+		<item name="account.{$line}.audio.symmetricrtp">No</item>
 
 		<!--RTP IP Filter -->
 		<!-- Disable,IPOnly,IPandPort-->
@@ -425,19 +425,19 @@
 		<!-- General -->
 		<!-- Key as Send -->
 		<!-- Disabled, Pound, Star -->
-		<item name="account.{$line}.call.keyAsSend">Pound</item>
+		<item name="account.{$line}.call.keyassend">Pound</item>
 
 		<!-- No Key Entry Timeout (s) -->
 		<!-- Number: 1 - 15 -->
-		<item name="account.{$line}.call.noKeyEntryTimeout">4</item>
+		<item name="account.{$line}.call.nokeyentrytimeout">4</item>
 
 		<!-- Send Anonymous -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.call.sendAnonymous">No</item>
+		<item name="account.{$line}.call.sendanonymous">No</item>
 
 		<!-- Anonymous Call Rejection -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.call.rejectAnonymousCall">No</item>
+		<item name="account.{$line}.call.rejectanonymouscall">No</item>
 
 		<!-- Enable Call Waiting -->
 		<!-- Default, Yes, No -->
@@ -446,7 +446,7 @@
 			{if $grandstream_call_waiting==1}{$cw='No'}{/if}
 			{if $grandstream_call_waiting==2}{$cw='Yes'}{/if}
 		{/if}
-		<item name="account.{$line}.call.callWaiting">{$cw}</item>
+		<item name="account.{$line}.call.callwaiting">{$cw}</item>
 
 		<!-- RFC2543 Hold -->
 		<!-- Yes, No -->
@@ -462,65 +462,65 @@
 
 		<!-- Auto Answer -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.call.autoAnswer">No</item>
+		<item name="account.{$line}.call.autoanswer">No</item>
 		
 		<!-- Auto Answer Numbers -->
 		<!-- # String -->
-		<item name="account.{$line}.call.autoAnswerNumber"></item>
+		<item name="account.{$line}.call.autoanswernumber"></item>
 
 		<!-- Intercom -->
 		<!-- Play warning tone for Auto Answer Intercom -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.intercom.playWarningToneForAutoAnswer">Yes</item>
+		<item name="account.{$line}.intercom.playwarningtoneforautoanswer">Yes</item>
 
 		<!-- # Custom Alert-Info for Auto Answer. -->
 		<!-- # String -->
-		<item name="account.{$line}.intercom.customCallInfoForAutoAnswer"></item>
+		<item name="account.{$line}.intercom.customcallinfoforautoanswer"></item>
 
 		<!-- # Allow Auto Answer by Call-Info/Alert-Info. 0 - No, 1 - Yes. Default is Yes -->
 		<!-- # Number: 0, 1 -->
 		<!-- # Mandatory -->
-		<item name="account.{$line}.intercom.allowAutoAnswer">Yes</item>
+		<item name="account.{$line}.intercom.allowautoanswer">Yes</item>
 
 		<!-- Allow Barging by Call-Info/Alert-Info -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.intercom.allowBargingByCallInfo">No</item>
+		<item name="account.{$line}.intercom.allowbargingbycallinfo">No</item>
 
 		<!-- Mute on Intercom Auto Answer -->
 		<!-- No, Yes -->
-		<item name="account.{$line}.intercom.muteOnAnswerIntercom">No</item>
+		<item name="account.{$line}.intercom.muteonanswerintercom">No</item>
 
 		<!-- Transfer -->		
 		<!-- Transfer on Conference Hangup -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.call.transferOnConferenceHangup">No</item>
+		<item name="account.{$line}.call.transferonconferencehangup">No</item>
 
 		<!-- Enable Local Call Features -->
 		<!-- Yes, No -->
 		{if isset($grandstream_enable_call_features) && $grandstream_enable_call_features == 1}
-		<item name="account.{$line}.featureCodes.callFeatures">Yes</item>
+		<item name="account.{$line}.featurecodes.callfeatures">Yes</item>
 		{else}
-		<item name="account.{$line}.featureCodes.callFeatures">No</item>
+		<item name="account.{$line}.featurecodes.callfeatures">No</item>
 		{/if}
 
 		<!--Enable Recovery on Blind Transfer -->
-		<item name="account.{$line}.call.recoveryOnBlindTransfer">Yes</item>		
+		<item name="account.{$line}.call.recoveryonblindtransfer">Yes</item>		
 
 		<!-- Blind Transfer Wait Timeout -->
 		<!-- Number: 30 - 300 -->
-		<item name="account.{$line}.call.blindTransferTimeout">30</item>
+		<item name="account.{$line}.call.blindtransfertimeout">30</item>
 
 		<!-- Refer-To Use Target Contact -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.call.referToUseTargetContact">No</item>
+		<item name="account.{$line}.call.refertousetargetcontact">No</item>
 
 		<!-- Dial Plan -->
 		<!-- Dial Plan Prefix -->
-		<item name="account.{$line}.call.dialplanPrefix">{$grandstream_dial_prefix}</item>
+		<item name="account.{$line}.call.dialplanprefix">{$grandstream_dial_prefix}</item>
 
 		<!-- Bypass Dial Plan -->
 		<!-- contact,incoming,outgoing,dialing,Mpk,api -->
-		<item name="account.{$line}.call.dialplanBypass">Mpk</item>
+		<item name="account.{$line}.call.dialplanbypass">Mpk</item>
 		
 		<!-- Dial Plan -->
 		{if isset($grandstream_dial_plan) }
@@ -547,13 +547,13 @@
 
 		<!-- Ignore Alert-Info header -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.ring.ignoreSipAlertInfo">No</item>
+		<item name="account.{$line}.ring.ignoresipalertinfo">No</item>
 
 		<!-- Matching Incoming Caller ID. Matching Rule 1 -->
 		{if isset($grandstream_distinctive_ringtone_name_1)}
-		<item name="account.{$line}.ring.match.1.callerId">{$grandstream_distinctive_ringtone_name_1}</item>
+		<item name="account.{$line}.ring.match.1.callerid">{$grandstream_distinctive_ringtone_name_1}</item>
 		{else}
-		<item name="account.{$line}.ring.match.1.callerId"></item>
+		<item name="account.{$line}.ring.match.1.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -562,9 +562,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 2 -->
 		{if isset($grandstream_distinctive_ringtone_name_2)}
-		<item name="account.{$line}.ring.match.2.callerId">{$grandstream_distinctive_ringtone_name_2}</item>
+		<item name="account.{$line}.ring.match.2.callerid">{$grandstream_distinctive_ringtone_name_2}</item>
 		{else}
-		<item name="account.{$line}.ring.match.2.callerId"></item>
+		<item name="account.{$line}.ring.match.2.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -573,9 +573,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 3 -->
 		{if isset($grandstream_distinctive_ringtone_name_3)}
-		<item name="account.{$line}.ring.match.3.callerId">{$grandstream_distinctive_ringtone_name_3}</item>
+		<item name="account.{$line}.ring.match.3.callerid">{$grandstream_distinctive_ringtone_name_3}</item>
 		{else}
-		<item name="account.{$line}.ring.match.3.callerId"></item>
+		<item name="account.{$line}.ring.match.3.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -584,9 +584,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 4 -->
 		{if isset($grandstream_distinctive_ringtone_name_4)}
-		<item name="account.{$line}.ring.match.4.callerId">{$grandstream_distinctive_ringtone_name_4}</item>
+		<item name="account.{$line}.ring.match.4.callerid">{$grandstream_distinctive_ringtone_name_4}</item>
 		{else}
-		<item name="account.{$line}.ring.match.4.callerId"></item>
+		<item name="account.{$line}.ring.match.4.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -595,9 +595,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 5 -->
 		{if isset($grandstream_distinctive_ringtone_name_5)}
-		<item name="account.{$line}.ring.match.5.callerId">{$grandstream_distinctive_ringtone_name_5}</item>
+		<item name="account.{$line}.ring.match.5.callerid">{$grandstream_distinctive_ringtone_name_5}</item>
 		{else}
-		<item name="account.{$line}.ring.match.5.callerId"></item>
+		<item name="account.{$line}.ring.match.5.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -606,9 +606,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 6 -->
 		{if isset($grandstream_distinctive_ringtone_name_6)}
-		<item name="account.{$line}.ring.match.6.callerId">{$grandstream_distinctive_ringtone_name_6}</item>
+		<item name="account.{$line}.ring.match.6.callerid">{$grandstream_distinctive_ringtone_name_6}</item>
 		{else}
-		<item name="account.{$line}.ring.match.6.callerId"></item>
+		<item name="account.{$line}.ring.match.6.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -617,9 +617,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 7 -->
 		{if isset($grandstream_distinctive_ringtone_name_7)}
-		<item name="account.{$line}.ring.match.7.callerId">{$grandstream_distinctive_ringtone_name_7}</item>
+		<item name="account.{$line}.ring.match.7.callerid">{$grandstream_distinctive_ringtone_name_7}</item>
 		{else}
-		<item name="account.{$line}.ring.match.7.callerId"></item>
+		<item name="account.{$line}.ring.match.7.callerid"></item>
 		{/if}
 
 		
@@ -629,9 +629,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 8 -->
 		{if isset($grandstream_distinctive_ringtone_name_8)}
-		<item name="account.{$line}.ring.match.8.callerId">{$grandstream_distinctive_ringtone_name_8}</item>
+		<item name="account.{$line}.ring.match.8.callerid">{$grandstream_distinctive_ringtone_name_8}</item>
 		{else}
-		<item name="account.{$line}.ring.match.8.callerId"></item>
+		<item name="account.{$line}.ring.match.8.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -640,9 +640,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 9 -->
 		{if isset($grandstream_distinctive_ringtone_name_9)}
-		<item name="account.{$line}.ring.match.9.callerId">{$grandstream_distinctive_ringtone_name_9}</item>
+		<item name="account.{$line}.ring.match.9.callerid">{$grandstream_distinctive_ringtone_name_9}</item>
 		{else}
-		<item name="account.{$line}.ring.match.9.callerId"></item>
+		<item name="account.{$line}.ring.match.9.callerid"></item>
 		{/if}
 		
 		<!-- Distinctive Ring Tone -->
@@ -651,9 +651,9 @@
 		
 		<!-- Match Incoming Caller ID. Matching Rule 10 -->
 		{if isset($grandstream_distinctive_ringtone_name_10)}
-		<item name="account.{$line}.ring.match.10.callerId">{$grandstream_distinctive_ringtone_name_10}</item>
+		<item name="account.{$line}.ring.match.10.callerid">{$grandstream_distinctive_ringtone_name_10}</item>
 		{else}
-		<item name="account.{$line}.ring.match.10.callerId"></item>
+		<item name="account.{$line}.ring.match.10.callerid"></item>
 		{/if}
 
 		<!-- Distinctive Ring Tone -->
@@ -666,48 +666,48 @@
 		<!-- Account 1 Security Settings -->
         <!-- Check Domain Certificates -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.validate.domainCertificates">No</item>
+		<item name="account.{$line}.sip.validate.domaincertificates">No</item>
 
 		<!-- Validate Certification Chain 	 -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.validate.certificationChain">No</item>
+		<item name="account.{$line}.sip.validate.certificationchain">No</item>
 		
 		<!-- Validate Incoming SIP Messages -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.validate.incomingMessage">No</item>
+		<item name="account.{$line}.sip.validate.incomingmessage">No</item>
 
 		<!-- Allow Unsolicited REFER -->
 		<!-- Disabled, Enabled, EnabledOrForceAuth -->
-		<item name="account.{$line}.sip.allowUnsolicitedRefer">Disabled</item>
+		<item name="account.{$line}.sip.allowunsolicitedrefer">Disabled</item>
 
 		<!-- Accept Incoming SIP from Proxy Only  -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.validate.incomingServer">Yes</item>
+		<item name="account.{$line}.sip.validate.incomingserver">Yes</item>
 
 		<!-- Check SIP User ID for Incoming INVITE  -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.validate.userIdforInvite">No</item>
+		<item name="account.{$line}.sip.validate.useridforinvite">No</item>
 
 		<!-- Allow SIP Reset -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.allowSipReset">No</item>
+		<item name="account.{$line}.sip.allowsipreset">No</item>
 
 		<!-- Authenticate Incoming INVITE -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.authenticateIncomingInvite">No</item>
+		<item name="account.{$line}.sip.authenticateincominginvite">No</item>
 
 		<!-- Account 1 MOH -->
   		<!-- On Hold Reminder Tone -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.call.onHoldReminderTone">No</item>
+		<item name="account.{$line}.call.onholdremindertone">No</item>
 
 		<!-- Music On Hold URI -->
-		<item name="account.{$line}.sip.musicOnHoldUri"></item>
+		<item name="account.{$line}.sip.musiconholduri"></item>
 
 		<!-- Account 1 Advanced Features -->
 		<!-- Special Feature -->
 		<!-- Standard, Nortel MCS, Broadsoft, CBCOM, RNK, Sylantro, Huawai IMS, Phonepower, UCM Call Center,Zoom -->
-		<item name="account.{$line}.sip.specialFeature">Standard</item>
+		<item name="account.{$line}.sip.specialfeature">Standard</item>
 		{/for}
 		
 		<!-- ############################################################################## -->
@@ -720,26 +720,26 @@
 		
 		<!-- # Local RTP Port Range. Default is 200 -->
 		<!-- # Number: 48 - 10000 -->
-		<item name="network.rtp.local.portRange">200</item>
+		<item name="network.rtp.local.portrange">200</item>
 		
 		<!-- Use Random Port -->
 		<!-- Yes, No -->
-		<item name="network.rtp.useRandomPort">Yes</item>
+		<item name="network.rtp.userandomport">Yes</item>
 		
 		<!-- Keep-Alive Interval (s) -->
 		<!-- Number: 10 - 160 -->
-		<item name="sip.keepAliveInterval">20</item>
+		<item name="sip.keepaliveinterval">20</item>
 
 		<!-- STUN Server -->
-		<item name="network.stunServer"></item>
+		<item name="network.stunserver"></item>
 		
 		<!-- Use NAT IP. This will enable our SIP client to use this IP in the SIP/SDP message. Example 64.3.153.50 -->
 		<!-- String: a-z, A-Z, 0-9, ".", ":" -->
-		<item name="sip.userNatIp"></item>
+		<item name="sip.usernatip"></item>
 		
 		<!-- Delay Registration. Default is 0. -->
 		<!-- Number: 0 - 90 -->
-		<item name="sip.delayRegistration">0</item>
+		<item name="sip.delayregistration">0</item>
 		
 		<!-- Enable Outbound Notification. No or Yes. -->
 		<item name="ons.enable">Yes</item>
@@ -749,7 +749,7 @@
 		<!-- ############################################################################## -->
 		<!-- # Preferred Default Account.  -->
 		<!-- # Account1 - Account6  -->
-		<item name="call.dial.preferredAccount">Account1</item>
+		<item name="call.dial.preferredaccount">Account1</item>
 
 		<!-- # Mute Key Functions While Idle. DND, IdleMute, Disabled. -->
 		{$mki='DND'}
@@ -761,10 +761,10 @@
 
 		<!-- # Do not Escape '#' as 23% in SIP URL. -->
 		<!-- # Invert_Yes_No, Yes - No, No - Yes -->
-		<item name="sip.escapeUrl">Yes</item>
+		<item name="sip.escapeurl">Yes</item>
 
 		<!-- # User-Agent Prefix -->
-		<item name="device.userAgentPrefix"></item>
+		<item name="device.useragentprefix"></item>
 
 		<!-- # Enable Direct IP Call. -->
 		<!-- Yes, No -->
@@ -773,18 +773,18 @@
 		<!-- # Onhook Dial Barging -->
 		<!-- Yes, No -->
 		{if isset($grandstream_onhook_dial_barging) && $grandstream_onhook_dial_barging == 0}	
-		<item name="call.dial.offhook.allowBarging">No</item>
+		<item name="call.dial.offhook.allowbarging">No</item>
 		{else}
-		<item name="call.dial.offhook.allowBarging">Yes</item>
+		<item name="call.dial.offhook.allowbarging">Yes</item>
 		{/if}
 
 		<!-- # Off-hook Auto Dial -->
 		<!-- # String -->
-		<item name="call.dial.offhook.autoDial.number"></item>
+		<item name="call.dial.offhook.autodial.number"></item>
 
 		<!-- # Off-hook Auto Dial Delay -->
 		<!-- # Number: 0 - 10 -->
-		<item name="call.dial.offhook.autoDial.delay">0</item>
+		<item name="call.dial.offhook.autodial.delay">0</item>
 
 		<!-- # Off-hook/On-hook Timeout (s). Default is 30 -->
 		<item name="call.dial.offhook.timeout">30</item>
@@ -794,32 +794,32 @@
 		<item name="call.redial.expiration">30</item>		
 
 		<!-- # Allow Incoming Call Before Ringing. Yes or No -->
-		<item name="callFeatures.allowIncomingCallBeforeRinging">No</item>
+		<item name="callfeatures.allowncomingcallbeforeringing">No</item>
 
 		<!-- # Enable Call Waiting. -->
 		<!-- Yes, No -->
 		{if isset($grandstream_call_waiting) && $grandstream_call_waiting == 1}
-		<item name="call.callWaiting.enable">No</item>
+		<item name="call.callwaiting.enable">No</item>
 		{else}
-		<item name="call.callWaiting.enable">Yes</item>
+		<item name="call.callwaiting.enable">Yes</item>
 		{/if}
 
 		<!-- # Enable Call Waiting Tone. -->
 		<!-- Yes, No -->
 		{if isset($grandstream_call_waiting)}
-			{if $grandstream_call_waiting == "1"}   <item name="call.callWaiting.enableTone">No</item>{/if}
-			{if $grandstream_call_waiting == "2"}	<item name="call.callWaiting.enableTone">Yes</item>{/if}
+			{if $grandstream_call_waiting == "1"}   <item name="call.callwaiting.enabletone">No</item>{/if}
+			{if $grandstream_call_waiting == "2"}	<item name="call.callwaiting.enabletone">Yes</item>{/if}
 		{/if}
 
 		<!-- # Auto Answer Delay -->
 		<!-- # String -->
-		<item name="call.autoAnswerDelay.value">0</item>
+		<item name="call.autoanswerdelay.value">0</item>
 
 		<!-- Enable Auto Unmute. Yes or No -->
-		<item name="callFeatures.autoUnmute.enable">Yes</item>
+		<item name="callfeatures.autounmute.enable">Yes</item>
 
 		<!-- Enable Busy Tone on Remote Disconnect. Yes or No -->
-		<item name="call.disconnect.remote.enableTone">No</item>
+		<item name="call.disconnect.remote.enabletone">No</item>
 
 		<!-- Enable Mute Key In Call. Yes or No -->
 		<item name="call.disable.mute.key">No</item>		
@@ -828,7 +828,7 @@
 		<item name="call.transfer.enable">Yes</item>
 
 		<!-- # Hold Call Before Completing Transfer. Yes or No -->
-		<item name="call.transfer.holdCall.enable">Yes</item>
+		<item name="call.transfer.holdcall.enable">Yes</item>
 
 		<!-- Enable Conference. Yes or No -->
 		<item name="call.conference.enable">Yes</item>
@@ -840,7 +840,7 @@
 		<!-- # System Ringtone -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="audio.tone.systemRing">f1=440,f2=480,c=200/400;</item>
+		<item name="audio.tone.systemring">f1=440,f2=480,c=200/400;</item>
 		
 		<!-- # Dial Tone -->
 		<!-- # String -->
@@ -850,7 +850,7 @@
 		<!-- # Second Dial Tone -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="audio.tone.secondDial">f1=350,f2=440;</item>
+		<item name="audio.tone.seconddial">f1=350,f2=440;</item>
 		
 		<!-- # Message Waiting -->
 		<!-- # String -->
@@ -860,16 +860,16 @@
 		<!-- # Ring Back Tone -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="audio.tone.ringBack">f1=440,f2=480,c=200/400;</item>
+		<item name="audio.tone.ringback">f1=440,f2=480,c=200/400;</item>
 		
 		<!-- # Call Waiting Tone -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="audio.tone.callWaiting">f1=440,f2=440,c=25/525;</item>
+		<item name="audio.tone.callwaiting">f1=440,f2=440,c=25/525;</item>
 		
 		<!-- # Call Waiting Tone Gain -->
 		<!-- # Option  Low, Medium, High-->
-		<item name="audio.tone.callWaiting.gain">Low</item>
+		<item name="audio.tone.callwaiting.gain">Low</item>
 		
 		<!-- # Busy Tone -->
 		<!-- # String -->
@@ -887,11 +887,11 @@
 		<!-- ############################################################################## -->
 		<!-- Paging Barge -->
 		<!-- Disable, priority1, priority2, priority3, priority4, priority5, priority6, priority7, priority8, priority9, priority10 -->
-		<item name="multicast.paginBarge">Disable</item>
+		<item name="multicast.paginbarge">Disable</item>
 
 		<!-- Paging Priority Active -->
 		<!-- Yes, No -->
-		<item name="multicast.pagingPriorityActive">No</item>
+		<item name="multicast.pagingpriorityactive">No</item>
 
 		<!-- # Multicase Channel Number -->
 		<!-- # Number: 0 - 50 (0 for normal RTP packets, 1-50 for Polycom multicast format packets). Default is 0 -->
@@ -991,7 +991,7 @@
 			{if $grandstream_ipv_mode == 2}{$ippref='IPv4Only'}{/if}
 			{if $grandstream_ipv_mode == 3}{$ippref='IPv6Only'}{/if}
 		{/if}
-		<item name="network.internetProtocol">{$ippref}</item>
+		<item name="network.internetprotocol">{$ippref}</item>
 		
 		<!-- IPv4 Address Type -->
 		<!-- DHCP, Static IP -->
@@ -1005,10 +1005,10 @@
 		<!-- # DHCP -->
 		<!-- ########################################## -->
 		<!-- Host Name(Option 12) -->
-		<item name="network.dhcp.hostName">phone-{$mac|replace:'-':''}</item>
+		<item name="network.dhcp.hostname">phone-{$mac|replace:'-':''}</item>
 		
 		<!-- Vendor Class ID(Option 60) -->
-		<!-- <item name="network.dhcp.vendorID"></item> -->
+		<!-- <item name="network.dhcp.vendorid"></item> -->
 		
 		<!-- ########################################## -->
 		<!-- # Statically Configured -->
@@ -1086,7 +1086,7 @@
 		<!-- Static IPv6 Address -->
 		<item name="network.port.eth.1.ipv6.static.address"></item>
 		<!-- IPv6 Prefix Length -->
-		<item name="network.port.eth.1.ipv6.static.prefixLength"></item>
+		<item name="network.port.eth.1.ipv6.static.prefixlength"></item>
 		<!-- # Prefix Static: IPv6 Prefix (64bits) -->
 		<item name="network.port.eth.1.ipv6.static.prefix"></item>
 		
@@ -1104,17 +1104,17 @@
 		<!-- ##  Network Settings/Advanced Settings -->
 		<!-- ############################################################################## -->
 		<!-- DNS Refresh Timer (m)  -->
-		<item name="network.dns.refreshTime">0</item>
+		<item name="network.dns.refreshtime">0</item>
 
 		<!-- DNS Failure Cache Duration (m)  -->
-		<item name="network.dns.failureCacheDuration">0</item>
+		<item name="network.dns.failurecacheduration">0</item>
 
 		<!-- Enable LLDP -->
 		<!-- Yes, No -->
 		<item name="network.lldp.enable">Yes</item>
 		
 		<!-- LLDP TX Interval (s)  -->
-		<item name="network.lldp.txInterval">30</item>
+		<item name="network.lldp.txinterval">30</item>
 
 		<!-- Enable CDP -->
 		<!-- Yes, No -->
@@ -1123,16 +1123,16 @@
 		<!-- # Layer 3 QoS for SIP -->
 		<!-- # Number:0 - 63 -->
 		<!-- # Mandatory -->
-		<item name="network.qos.forSip">26</item>
+		<item name="network.qos.forsip">26</item>
 		
 		<!-- # Layer 3 QoS for RTP -->
 		<!-- # Number:0 - 63 -->
 		<!-- # Mandatory -->
-		<item name="network.qos.forRtp">46</item>
+		<item name="network.qos.forrtp">46</item>
 		
 		<!-- # Enable DHCP VLAN. Yes or No -->
 		<!-- # Mandatory -->
-		<item name="network.dhcp.enableVlan">No</item>
+		<item name="network.dhcp.enablevlan">No</item>
 		
 		<!-- # Enable Manual VLAN Configuration. Yes or No. -->
 		<!-- # Mandatory -->
@@ -1161,10 +1161,10 @@
 		<item name="Action URI Support">Yes</item>
 
 		<!-- Action URI Allowed IP List  -->
-		<item name="remoteControl.allowList"></item>
+		<item name="remotecontrol.allowlist"></item>
 
 		<!-- # CSTA Control. Yes or No -->
-		<item name="remoteControl.csta.enable">No</item>
+		<item name="remotecontrol.csta.enable">No</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Network Settings/Wi-Fi Settings -->
@@ -1179,7 +1179,7 @@
 
 		<!-- Country Code (for global version only) -->
 		<!-- "UNITEDARABEMIRATES","ALBANIA","ARMENIA","NETHERLANDSANTILLES","ARGENTINA","AUSTRALIA","ARUBA","AZERBAIJAN","BOSNIA","BARBADOS","BANGLADESH","BELGIUM","BULGARIA","BAHRAIN","BURUNDI","BENIN","BERMUDA","BRUNEI","BOLIVIA","BRAZIL","BAHAMAS","BOTSWANA","BELARUS","BELIZE","CANADA","CONGO","SWITZERLAND","CHILE","CHINA","COLOMBIA","COSTA","CYPRUS","CZECH","GERMANY","DENMARK","DOMINICAN","ALGERIA","ECUADOR","ESTONIA","EGYPT","SPAIN","ETHIOPIA","FINLAND","FIJI","FRANCE","GERNADA","GEORGIA","GHANA","GIBRALTAR","GREENLAND","GAMBIA","GUINEA","GUADELOUPE","GREECE","GUATEMALA","GUAM","GUYANA","HONGKONG","DONDURAS","CROATIA","HAITI","HUNGARY","INDONESIA","IRELAND","ISRAEL","INDIA","ICELAND","ITALY","JERSEY","JAMAICA","JORDAN","JAPAN","KENYA","KYRGYZSTAN","CAMBODIA","SOUTHKOREA","KUWAIT","CAYMAN","KAZAKHSTAN","LEBANON","LIECHTENSTEIN","SRILANKA","LIBERIA","LITHUANIA","LUXEMBOURG","LATVIA","MOROCOO","MONACO","MONTENEGRO","MACEDONIA","MALI","MONGOLIA","MACAU","MALT","MEXICO","MALAYSIA","NIGER","NIGERIA","NICARAGUA","NETHERLANDS","NEPAL","NEWZEALNAD","OMAN","PANAMA","PERU","PAPUA","PHILIPPINES","PAKISTAN","POLAND","PUERTORICO","PORTUGAL","PARAGUAY","QATAR","ROMANIA","SERBIA","RUSSIA","RWANDA","SAUDIARABIA","SWEDEN","SINGAPORE","SLOVAKIA","SLOVENIA","SIERRALEONE","TOGO","THAILAND","TURKMENISTAN","TUNISIA","TURKEY","TRINIDAD","TAIWAN","UKRAINE","UGANDA","UNITEDKINGDOM","UNITEDSTATES","URUGUAY","VENEZUELA","VERGINISLANDS","VIETNAM","YEMEN","SOUTHAFRICA","ZAMBIA","ZIMBABWE" -->
-		<item name="network.wifi.countryCode.public">UNITEDSTATES</item>
+		<item name="network.wifi.countrycode.public">UNITEDSTATES</item>
 
 
 		<!-- ############################################################################## -->
@@ -1335,7 +1335,7 @@
 			{/if}
 			{$row=$keys.line[$line]}
 			{$row.device_key_id = $row.device_key_id + 10}
-			<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$row.device_key_type]}</item>
+			<item name="pks.mpk.{$row.device_key_id}.keymode">{$key_types[$row.device_key_type]}</item>
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1352,7 +1352,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDS OpenDoor (27)-->
-		<!-- <item name="pks.mpk.12.keyMode">None</item> --> -->
+		<!-- <item name="pks.mpk.12.keymode">None</item> --> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1369,7 +1369,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.13.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.13.keymode">None</item> -->
 
 		<!-- # Account -->
 	    <!-- # Account1, Account2 -->
@@ -1386,7 +1386,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.14.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.14.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1403,7 +1403,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
         <!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.15.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.15.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1420,7 +1420,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.16.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.16.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1446,7 +1446,7 @@
 				{$keys.memory[$line] = ["device_key_id" => $line, "device_key_type" => "", "device_key_line" => "", "device_key_label" => "", "device_key_value" => ""]}
 			{/if}
 			{$row=$keys.memory[$line]}
-			<item name="pks.mpk.{$row.device_key_id}.keyMode">{$key_types[$row.device_key_type]}</item>
+			<item name="pks.mpk.{$row.device_key_id}.keymode">{$key_types[$row.device_key_type]}</item>
 
 			<!-- # Account. Account1, Account2, Account3, Account4 -->
 			<item name="pks.mpk.{$row.device_key_id}.account">{if !empty($row.device_key_line)}Account{$row.device_key_line}{/if}</item>
@@ -1459,7 +1459,7 @@
 			<item name="pks.mpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
 		{/for}
 
-		<!-- <item name="pks.mpk.1.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.1.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1476,7 +1476,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.2.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.2.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1493,7 +1493,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.3.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.3.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1510,7 +1510,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.4.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.4.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1527,7 +1527,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.5.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.5.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1544,7 +1544,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.6.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.6.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1561,7 +1561,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.7.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.7.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1578,7 +1578,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.8.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.8.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1595,7 +1595,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.9.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.9.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1612,7 +1612,7 @@
 		<!-- ###################################################################################### -->
 		<!-- # Mode -->
 		<!-- # None (-1), SpeedDial (0), DialDTMF (5), GDSOpenDoor (27)-->
-		<!-- <item name="pks.mpk.10.keyMode">None</item> -->
+		<!-- <item name="pks.mpk.10.keymode">None</item> -->
 
 		<!-- # Account -->
 		<!-- # Account1, Account2 -->
@@ -1630,31 +1630,31 @@
 		<!-- # Date and Time -->
 		<!-- # NTP Server -->
 		{if isset($ntp_server_primary)}
-		<item name="dateTime.ntp.server.1">{$ntp_server_primary}</item>
+		<item name="datetime.ntp.server.1">{$ntp_server_primary}</item>
 		{else}
-		<item name="dateTime.ntp.server.1">pool.ntp.org</item>
+		<item name="datetime.ntp.server.1">pool.ntp.org</item>
 		{/if}
 
 		<!-- # Secondary NTP Server -->
 		<!-- # String -->
 		{if isset($ntp_server_secondary)}
-		<item name="dateTime.ntp.server.2">{$ntp_server_secondary}</item>
+		<item name="datetime.ntp.server.2">{$ntp_server_secondary}</item>
 		{else}
-		<item name="dateTime.ntp.server.2"></item>
+		<item name="datetime.ntp.server.2"></item>
 		{/if}
 
 		<!-- # Enable Authenticated NTP -->
 		<!-- # Yes, No -->
-		<item name="dateTime.ntp.enableAuth">No</item>	
+		<item name="datetime.ntp.enableauth">No</item>	
 
 		<!-- # NTP Update Interval -->
 		<!-- # String -->
 		<!-- # Number: 5 - 1440, Default is 1440  -->
-		<item name="dateTime.ntp.updateInterval">1440</item>
+		<item name="datetime.ntp.updateinterval">1440</item>
 
 		<!-- # Allow DHCP Option 42 to override NTP server. Yes or No -->
 		<!-- # When set to Yes, it will override the configured NTP server -->
-		<item name="dateTime.override.dhcp.allowOption42">Yes</item>
+		<item name="datetime.override.dhcp.allowoption42">Yes</item>
 		
 		<!-- # Time Zone -->
 
@@ -1725,22 +1725,22 @@
 		<!-- # String -->
 		<!-- # Mandatory -->
 		{if isset($grandstream_time_zone) }
-		<item name="dateTime.timezone">{$grandstream_time_zone}</item>
+		<item name="datetime.timezone">{$grandstream_time_zone}</item>
 		{else}
-		<item name="dateTime.timezone">auto</item>
+		<item name="datetime.timezone">auto</item>
 		{/if}
 		
 		<!-- # Allow DHCP Option 2 to Override Time Zone Setting. Yes or No -->
 		{if isset($grandstream_dhcp_time_zone) && $grandstream_dhcp_time_zone == 0}
-		<item name="dateTime.override.dhcp.allowOption2">No</item>
+		<item name="datetime.override.dhcp.allowoption2">No</item>
 		{else}
-		<item name="dateTime.override.dhcp.allowOption2">Yes</item>
+		<item name="datetime.override.dhcp.allowoption2">Yes</item>
 		{/if}
 
 		<!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
 		<!-- # String -->
 		<!-- # Mandatory -->
-		<item name="dateTime.timezone.custom">MTZ+6MDT+5,M4.1.0,M11.1.0</item>
+		<item name="datetime.timezone.custom">MTZ+6MDT+5,M4.1.0,M11.1.0</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Security Settings /Web/SSH Access -->
@@ -1764,25 +1764,25 @@
 			{if $grandstream_web_access_mode == 2}{$wam='Disabled'}{/if}
 			{if $grandstream_web_access_mode == 3}{$wam='Both'}{/if}
 		{/if}
-		<item name="security.webAccessMode">$wam}</item>
+		<item name="security.webaccessmode">$wam}</item>
 
 		<!-- # Web Access Control.  None, Whitelist, or Blacklist -->
-		<item name="security.webAccessControl">None</item>
+		<item name="security.webaccesscontrol">None</item>
 
 		<!-- # Web Session Timeout(in minutes) -->
 		<!-- # Number: 2 - 60. Default is 10 -->
-		<item name="security.webAccess.session.timeout">20</item>
+		<item name="security.webaccess.session.timeout">20</item>
 
 		<!-- # Validate Server Certificates. Yes or No -->
-		<item name="security.validate.serverCertificate">No</item>
+		<item name="security.validate.servercertificate">No</item>
 
 		<!-- # Web/Keypad/Restrict mode Lockout Duration (0-60 minutes). Default is 5 -->
 		<!-- # Number: 0-60 -->
-		<item name="security.webKeypadRestrictModeLockoutDuration">5</item>
+		<item name="security.webkeypadrestrictmodelockoutduration">5</item>
 
 		<!-- # Web Access Attempt Limit -->
 		<!-- # Number: 1 - 10. Default is 5 -->
-		<item name="security.webAccess.attemptLimit">10</item>
+		<item name="security.webaccess.attemptlimit">10</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Security Settings / User Info Management -->
@@ -1809,18 +1809,18 @@
 
 		<!-- Enable Basic Settings in IVR -->
 		<!-- Yes, No -->
-		<item name="ivr.basicSettings.enable">Yes</item>	
+		<item name="ivr.basicsettings.enable">Yes</item>	
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Security Settings / Client Certificate -->
 		<!-- ############################################################################## -->
 		<!-- Minimum TLS Version -->
 		<!-- TLS_1_0, TLS_1_1, TLS_1_2 -->
-		<item name="security.minimum.TLS.version">TLS_1_0</item>
+		<item name="security.minimum.tls.version">TLS_1_0</item>
 		
 		<!-- Maximum TLS Version -->
 		<!-- UNLIMITED, TLS_1_0, TLS_1_1, TLS_1_2 -->
-		<item name="security.maximum.TLS.version">UNLIMITED</item>
+		<item name="security.maximum.tls.version">UNLIMITED</item>
 
 		<!-- Enable/Disable Weak Cipher Suites -->
 		<!-- Number: 0 - 5. Default is 0 -->
@@ -1842,32 +1842,32 @@
 		<!-- ##  System Settings/Security Settings /Trusted CA Certificates   ## -->
 		<!-- ############################################################################## -->
 		<!-- Trusted CA Certificates 1 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.1"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.1"></item> -->
 
 		<!-- Trusted CA Certificates 2 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.2"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.2"></item> -->
 
 		<!-- Trusted CA Certificates 3 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.3"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.3"></item> -->
 
 		<!-- Trusted CA Certificates 4 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.4"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.4"></item> -->
 
 		<!-- Trusted CA Certificates 5 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.5"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.5"></item> -->
 
 		<!-- Trusted CA Certificates 6 -->
-		<!-- <item name="trustedCACertificates.trustedCACertificate.6"></item> -->
+		<!-- <item name="trustedcacertificates.trustedcacertificate.6"></item> -->
 
 		<!-- # Load CA Certificates. Default Certificates, Custom Certificates, All Certificates-->
-		<!-- <item name="trustedCACertificates.load">Default Certificates</item> -->
+		<!-- <item name="trustedcacertificates.load">Default Certificates</item> -->
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Preferences /Display Control   ## -->
 		<!-- ############################################################################## -->
 		<!-- # New Message LED Indicator -->
 		<!-- blinking, off, solid -->
-		<item name="ledControl.mwi">blinking</item>
+		<item name="ledcontrol.mwi">blinking</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Preferences /Audio Control   ## -->
@@ -1890,11 +1890,11 @@
 
 		<!-- # Handset TX gain(dB)-->
 		<!-- 0(0), -6(1), 6(2),-5(3), -4(4), -3(5), -2(6), -1(7), 1(8), 2(9), 3(10), 4(11), 5(12). Default is 0 -->
-		<item name="audio.handset.txGain">0</item>
+		<item name="audio.handset.txgain">0</item>
 
 		<!-- # Enable HAC -->
 		<!-- Yes, No -->
-		<item name="audio.handset.enableHAC">No</item>
+		<item name="audio.handset.enablehac">No</item>
 
 		<!-- # Enable Bootup Tone -->
 		<!-- Yes, No -->
@@ -1905,11 +1905,11 @@
 		<!-- ############################################################################## -->
 		<!-- # LED Brightness : Active -->
 		<!-- # Number: 0 - 10. Default is 10 -->
-		<item name="ledControl.brightness.active">10</item>
+		<item name="ledcontrol.brightness.active">10</item>
 
 		<!-- # LED Brightness : Idle -->
 		<!-- # Number: 0 - 10. Default is 0 -->
-		<item name="ledControl.brightness.idle">0</item>
+		<item name="ledcontrol.brightness.idle">0</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  System Settings/Preferences /TR-069   ## -->
@@ -1929,29 +1929,29 @@
 
 		<!-- Periodic Inform Enable -->
 		<!-- Yes, No -->
-		<item name="tr069.periodicInform">Yes</item>
+		<item name="tr069.periodicinform">Yes</item>
 
 		<!-- Periodic Inform Interval (s) -->
-		<item name="tr069.periodicInformInterval">86400</item>
+		<item name="tr069.periodicinforminterval">86400</item>
 
 		<!-- Connection Request Username -->
-		<item name="tr069.connectionRequestUsername">{$mac|replace:'-':''|upper}</item>
+		<item name="tr069.connectionrequestusername">{$mac|replace:'-':''|upper}</item>
 
 		<!-- Connection Request Password -->
-		<item name="tr069.connectionRequestPassword">{$mac|replace:'-':''|upper}</item>
+		<item name="tr069.connectionrequestpassword">{$mac|replace:'-':''|upper}</item>
 
 		<!-- Connection Request Port -->
-		<item name="tr069.connectionRequestPort">7547</item>
+		<item name="tr069.connectionrequestport">7547</item>
 
 		<!-- CPE SSL Certificate -->
 		<item name="tr069.ssl.certificate"></item>
 
 		<!-- CPE SSL Private Key -->
-		<item name="tr069.ssl.privateKey"></item>
+		<item name="tr069.ssl.privatekey"></item>
 
 		<!-- Start TR-069 at Random Time -->
 		<!-- Yes, No -->
-		<item name="tr069.randomStart.enable">No</item>
+		<item name="tr069.randomstart.enable">No</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Firmware  ## -->
@@ -1966,11 +1966,11 @@
 		
 		<!-- Firmware Server Path -->
 		{if isset($grandstream_firmware_path) && isset($firmware_version)}
-		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>
+		<item name="provisioning.firmware.serverpath">{$grandstream_firmware_path}/{$firmware_version}</item>
 		{elseif isset($grandstream_firmware_path)}
-		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
+		<item name="provisioning.firmware.serverpath">{$grandstream_firmware_path}</item>
 		{else}
-		<item name="provisioning.firmware.serverPath">{$domain_name}{$project_path}/app/provision/resources/firmware/</item>
+		<item name="provisioning.firmware.serverpath">{$domain_name}{$project_path}/app/provision/resources/firmware/</item>
 		{/if}
 		
 		<!-- Firmware Server User Name -->
@@ -1980,10 +1980,10 @@
 		<item name="provisioning.firmware.password"></item>
 		
 		<!-- Firmware File Prefix -->
-		<item name="provisioning.firmware.filePrefix"></item>
+		<item name="provisioning.firmware.fileprefix"></item>
 		
 		<!-- Firmware File Postfix -->
-		<item name="provisioning.firmware.filePostfix"></item>
+		<item name="provisioning.firmware.filepostfix"></item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Config File  ## -->
@@ -1994,11 +1994,11 @@
 		
 		<!-- Config Server Path -->
 		{if $grandstream_config_server_path=="none"}
-		<item name="provisioning.config.serverPath"></item>
+		<item name="provisioning.config.serverpath"></item>
 		{elseif isset($grandstream_config_server_path)}
-		<item name="provisioning.config.serverPath">{$grandstream_config_server_path}</item>
+		<item name="provisioning.config.serverpath">{$grandstream_config_server_path}</item>
 		{elseif isset($domain_name)}
-		<item name="provisioning.config.serverPath">{$domain_name}{$project_path}/app/provision</item>
+		<item name="provisioning.config.serverpath">{$domain_name}{$project_path}/app/provision</item>
 		{/if}
 		
 		<!-- Config Server User Name -->
@@ -2008,20 +2008,20 @@
 		<item name="provisioning.config.password">{$http_auth_password}</item>
 
 		<!-- # Always Authenticate Before Challenge. Yes or No -->
-		<item name="provisioning.alwaysAuthenticateBeforeChallenge">No</item>
+		<item name="provisioning.alwaysauthenticatebeforechallenge">No</item>
 
 		<!-- Config File Prefix -->
-		<item name="provisioning.config.filePrefix"></item>
+		<item name="provisioning.config.fileprefix"></item>
 		
 		<!-- Config File Postfix -->
-		<item name="provisioning.config.filePostfix"></item>
+		<item name="provisioning.config.filepostfix"></item>
 
 		<!-- Authenticate Conf File -->
 		<!-- Yes, No -->
-		<item name="provisioning.config.authenticateFile">No</item>
+		<item name="provisioning.config.authenticatefile">No</item>
 
 		<!-- XML Config File Password -->
-		<item name="provisioning.config.filePassword"></item>
+		<item name="provisioning.config.filepassword"></item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Provision  ## -->
@@ -2036,7 +2036,7 @@
 		
 		<!-- Starting - Ending Hour of the Day (0-23) -->
 		<item name="provisioning.auto.hour">1</item>
-		<item name="provisioning.auto.endHour"></item>
+		<item name="provisioning.auto.endhour"></item>
 
 		<!-- Day of the Week -->
 		<!-- 0, 1 (default), 2, 3, 4, 5, 6 -->
@@ -2044,55 +2044,55 @@
 		<item name="provisioning.auto.day">1</item>
 
 		<!-- # Randomized Automatic Upgrade. No or Yes -->
-		<item name="provisioning.auto.randomTime.enable">No</item>
+		<item name="provisioning.auto.randomtime.enable">No</item>
 
 		<!-- # Firmware Upgrade and Provisioning -->
 		<!-- AlwaysCheck (default), CheckWhenChange, SkipCheck -->
-		<item name="provisioning.firmware.checkCondition">AlwaysCheck</item>
+		<item name="provisioning.firmware.checkcondition">AlwaysCheck</item>
 
 		<!-- # Allow DHCP Option 43 and Option 66 to override server. No, Yes, Prefer, fallback when failed. Default is No -->
 		<!-- # When set to Yes, it will override the configured provision path and method -->
 		<!-- Allow DHCP Option 43 and Option 66 to Override Server -->
 		<!-- No, Yes, Fallback-->
 		{if isset($grandstream_dhcp_option_override)}
-			{if $grandstream_dhcp_option_override == 0}<item name="provisioning.override.dhcp.allowCommonOptions">No</item>{/if}
-			{if $grandstream_dhcp_option_override == 1}<item name="provisioning.override.dhcp.allowCommonOptions">Yes</item>{/if}
-			{if $grandstream_dhcp_option_override == 2}<item name="provisioning.override.dhcp.allowCommonOptions">Fallback</item>{/if}
+			{if $grandstream_dhcp_option_override == 0}<item name="provisioning.override.dhcp.allowcommonoptions">No</item>{/if}
+			{if $grandstream_dhcp_option_override == 1}<item name="provisioning.override.dhcp.allowcommonoptions">Yes</item>{/if}
+			{if $grandstream_dhcp_option_override == 2}<item name="provisioning.override.dhcp.allowcommonoptions">Fallback</item>{/if}
 		{else}
-		<item name="provisioning.override.dhcp.allowCommonOptions">Yes</item>
+		<item name="provisioning.override.dhcp.allowcommonoptions">Yes</item>
 		{/if}
 
 		<!-- # Allow DHCP Option 120 to Override SIP Server -->
 		<!-- # No or Yes. -->
 		{if isset($grandstream_dhcp_option_override_sip_server) && $grandstream_dhcp_option_override_sip_server == 1}
-		<item name="sip.override.dhcp.allowOption120">Yes</item>
+		<item name="sip.override.dhcp.allowoption120">Yes</item>
 		{else}
-		<item name="sip.override.dhcp.allowOption120">No</item>
+		<item name="sip.override.dhcp.allowoption120">No</item>
 		{/if}
 
 		<!-- # Additional Override DHCP Option.  None, Option 150, Option 160.  -->
 		{if isset($grandstream_dhcp_option_additional_override)}
-			{if $grandstream_dhcp_option_additional_override == 0}<item name="provisioning.override.dhcp.allowCustomOption">None</item>{/if}
-			{if $grandstream_dhcp_option_additional_override == 1}<item name="provisioning.override.dhcp.allowCustomOption">Option 150</item>{/if}
-			{if $grandstream_dhcp_option_additional_override == 2}<item name="provisioning.override.dhcp.allowCustomOption">Option 160</item>{/if}
+			{if $grandstream_dhcp_option_additional_override == 0}<item name="provisioning.override.dhcp.allowcustomoption">None</item>{/if}
+			{if $grandstream_dhcp_option_additional_override == 1}<item name="provisioning.override.dhcp.allowcustomoption">Option 150</item>{/if}
+			{if $grandstream_dhcp_option_additional_override == 2}<item name="provisioning.override.dhcp.allowcustomoption">Option 160</item>{/if}
 		{else}
-		<item name="provisioning.override.dhcp.allowCustomOption"></item>
+		<item name="provisioning.override.dhcp.allowcustomoption"></item>
 		{/if}
 
 		<!-- # Download and Process ALL Available Config Files. No or Yes -->
-		<item name="provisioning.config.processAll.enable">No</item>
+		<item name="provisioning.config.processall.enable">No</item>
 				
 		<!-- # User Protection. No or Yes -->
-		<item name="provisioning.userProtect.enable">No</item>
+		<item name="provisioning.userprotect.enable">No</item>
 		
 		<!-- # 3CX Auto Provision. No or Yes. -->
-		<item name="provisioning.3cxAutoProvision">No</item>
+		<item name="provisioning.3cxautoprovision">No</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/Upgrade and Provisioning / Advanced Settings  ## -->
 		<!-- ############################################################################## -->
 		<!-- # Validate Hostname in Certificate. No, Yes. -->
-		<item name="provisioning.validateHostnameInCertificate">No</item>
+		<item name="provisioning.validatehostnameincertificate">No</item>
 
 		<!-- # Enable SIP NOTIFY Authentication. No or Yes -->
 		<!-- Yes, No -->
@@ -2120,13 +2120,13 @@
 		<item name="maintain.syslog.level">{$sl}</item>
 
 		<!-- Syslog Keyword Filter -->
-		<item name="maintain.syslog.keywordFiltering"></item>
+		<item name="maintain.syslog.keywordfiltering"></item>
 
 		<!-- # Send SIP Log. No - Do not send SIP log in Syslog, Yes - Send SIP log in Syslog if configured and set to DEBUG level. -->
 		{if isset($grandstream_send_sip_log) && $grandstream_send_sip_log==1}
-		<item name="maintain.syslog.sendSipLog">Yes</item>
+		<item name="maintain.syslog.sendsiplog">Yes</item>
 		{else}
-		<item name="maintain.syslog.sendSipLog">No</item>
+		<item name="maintain.syslog.sendsiplog">No</item>
 		{/if}
 
 		<!-- ############################################################################## -->
@@ -2134,99 +2134,99 @@
 		<!-- ############################################################################## -->
 		<!-- # Setup Completed.  -->
 		<!-- # String -->
-		<item name="ons.actionUrl.setupCompleted"></item>
+		<item name="ons.actionurl.setupcompleted"></item>
 
 		<!-- # Registered. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.registered"></item>
+		<item name="ons.actionurl.registered"></item>
 
 		<!-- # Unregistered. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.unregistered"></item>
+		<item name="ons.actionurl.unregistered"></item>
 
 		<!-- # Register failed. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.registerFailed"></item>
+		<item name="ons.actionurl.registerfailed"></item>
 
 		<!-- # Idle to Busy. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.idleToBusy"></item>
+		<item name="ons.actionurl.idletobusy"></item>
 
 		<!-- # Busy to Idle. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.busyToIdle"></item>
+		<item name="ons.actionurl.busytoidle"></item>
 
 		<!-- # Auto Provision Completed. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.autopFinish"></item>
+		<item name="ons.actionurl.autopfinish"></item>
 
 		<!-- # IP Change. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.IPChanged"></item>
+		<item name="ons.actionurl.ipchanged"></item>
 
 		<!-- # Off Hook. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.offHook"></item>
+		<item name="ons.actionurl.offhook"></item>
 
 		<!-- # On Hook. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.onHook"></item>
+		<item name="ons.actionurl.onhook"></item>
 
 		<!-- # Incoming Call. -->
 		<!-- # String -->
-		<item name="ons.actionUrl.incomingCall"></item>
+		<item name="ons.actionurl.incomingcall"></item>
 
 		<!-- # Outgoing Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.outgoingCall"></item>
+		<item name="ons.actionurl.outgoingcall"></item>
 
 		<!-- # Missed Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.missedCall"></item>
+		<item name="ons.actionurl.missedcall"></item>
 
 		<!-- # Established Call -->
 		<!-- # String  -->
-		<item name="ons.actionUrl.establishedCall"></item>
+		<item name="ons.actionurl.establishedcall"></item>
 
 		<!-- # Terminated Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.terminatedCall"></item>
+		<item name="ons.actionurl.terminatedcall"></item>
 
 		<!-- # Answered Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.answerNewInCall"></item>
+		<item name="ons.actionurl.answernewincall"></item>
 
 		<!-- # Blind Transfer -->
 		<!-- # String -->
-		<item name="ons.actionUrl.blindTransfer"></item>
+		<item name="ons.actionurl.blindtransfer"></item>
 
 		<!-- # Attended Transfer -->
 		<!-- # String -->
-		<item name="ons.actionUrl.attendedTransfer"></item>
+		<item name="ons.actionurl.attendedtransfer"></item>
 
 		<!-- # Transfer Completed -->
 		<!-- # String -->
-		<item name="ons.actionUrl.transferFinished"></item>
+		<item name="ons.actionurl.transferfinished"></item>
 
 		<!-- # Transfer failed -->
 		<!-- # String -->
-		<item name="ons.actionUrl.transferFailed"></item>
+		<item name="ons.actionurl.transferfailed"></item>
 
 		<!-- # Hold Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.holdCall"></item>
+		<item name="ons.actionurl.holdcall"></item>
 
 		<!-- # UnHold Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.unholdCall"></item>
+		<item name="ons.actionurl.unholdcall"></item>
 
 		<!-- # Mute Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.mute"></item>
+		<item name="ons.actionurl.mute"></item>
 
 		<!-- # Unmute Call -->
 		<!-- # String -->
-		<item name="ons.actionUrl.unMute"></item>
+		<item name="ons.actionurl.unmute"></item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Application/Hotel Service ## -->
@@ -2237,7 +2237,7 @@
 
 		<!-- # Hotel Address -->
 		<!-- # String -->
-		<item name="hotel.contactAddress"></item>
+		<item name="hotel.contactaddress"></item>
 
 		<!-- # Hotel Phone Number -->
 		<!-- # String -->
@@ -2261,7 +2261,7 @@
 		<item name="e911.held.protocol">HTTP</item>
 		
 		<!-- # HELD Protocol. 0, 30-1440 -->
-		<item name="e911.held.syncInterval">0</item>
+		<item name="e911.held.syncinterval">0</item>
 		
 		<!-- # Location Server -->
 		<!-- # String -->
@@ -2269,7 +2269,7 @@
 		
 		<!-- # Location Server Username -->
 		<!-- # String -->
-		<item name="e911.held.server.1.userId"></item>
+		<item name="e911.held.server.1.userid"></item>
 		
 		<!-- # Location Server Password -->
 		<!-- # String -->
@@ -2281,7 +2281,7 @@
 		
 		<!-- # Secondary Location Server Username -->
 		<!-- # String -->
-		<item name="e911.held.server.2.userId"></item>
+		<item name="e911.held.server.2.userid"></item>
 		
 		<!-- # Secondary Location Server Password -->
 		<!-- # String -->
@@ -2289,10 +2289,10 @@
 		
 		<!-- # HELD Location Types -->
 		<!-- # String: geodetic,civic,locationURI -->
-		<item name="e911.held.locationType"></item>
+		<item name="e911.held.locationtype"></item>
 		
 		<!-- # HELD Use LLDP Information. Yes or No -->
-		<item name="e911.held.lldpInfo">No</item>
+		<item name="e911.held.lldpinfo">No</item>
 		
 		<!-- # HELD NAI. Yes or No -->
 		<item name="e911.held.nai">No</item>
@@ -2382,7 +2382,7 @@
 		<item name="e911.emergency">911</item>
 		
 		<!-- # Geolocation-Routing Header. Yes or No -->
-		<item name="e911.header.geolocationRouting">No</item>
+		<item name="e911.header.geolocationrouting">No</item>
 		
 		<!-- # Priority Header. Yes or No -->
 		<item name="e911.header.priority">No</item>
@@ -2391,7 +2391,7 @@
 		<!-- ##  Application/Web Service -->
 		<!-- ############################################################################## -->
 		<!-- # Use Auto Location Service. Yes or No -->
-		<item name="services.autoLocation.enable">Yes</item>
+		<item name="services.autolocation.enable">Yes</item>
 
 		<!-- ############################################################################## -->
 		<!-- ##  Application/GDS -->
@@ -2402,24 +2402,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.1.type">None</item>
+		<item name="externalservice.1.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.1.account"></item>
+		<item name="externalservice.1.account"></item>
 		
 		<!-- System Identification -->
-		<item name="externalService.1.systemId"></item>
+		<item name="externalservice.1.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.1.systemNumber"></item>
+		<item name="externalservice.1.systemnumber"></item>
 		
 		<!-- Access Password -->
-		<item name="externalService.1.password"></item>
+		<item name="externalservice.1.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.1.ringtone"></item>		
+		<item name="externalservice.1.ringtone"></item>		
 
 		<!-- ############################################################### -->
 		<!-- # Order 2 -->
@@ -2427,24 +2427,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.2.type">None</item>
+		<item name="externalservice.2.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.2.account"></item>
+		<item name="externalservice.2.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.2.systemId"></item>
+		<item name="externalservice.2.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.2.systemNumber"></item>
+		<item name="externalservice.2.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.2.password"></item>
+		<item name="externalservice.2.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.2.ringtone"></item>		
+		<item name="externalservice.2.ringtone"></item>		
 
 		<!-- ############################################################### -->
 		<!-- # Order 3 -->
@@ -2452,24 +2452,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.3.type">None</item>
+		<item name="externalservice.3.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.3.account"></item>
+		<item name="externalservice.3.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.3.systemId"></item>
+		<item name="externalservice.3.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.3.systemNumber"></item>
+		<item name="externalservice.3.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.3.password"></item>
+		<item name="externalservice.3.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.3.ringtone"></item>		
+		<item name="externalservice.3.ringtone"></item>		
 
 		<!-- ############################################################### -->
 		<!-- # Order 4 -->
@@ -2477,24 +2477,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.4.type">None</item>
+		<item name="externalservice.4.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.4.account"></item>
+		<item name="externalservice.4.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.4.systemId"></item>
+		<item name="externalservice.4.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.4.systemNumber"></item>
+		<item name="externalservice.4.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.4.password"></item>
+		<item name="externalservice.4.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.4.ringtone"></item>		
+		<item name="externalservice.4.ringtone"></item>		
 		
 		<!-- ############################################################### -->
 		<!-- # Order 5 -->
@@ -2502,24 +2502,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.5.type">None</item>
+		<item name="externalservice.5.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.5.account"></item>
+		<item name="externalservice.5.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.5.systemId"></item>
+		<item name="externalservice.5.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.5.systemNumber"></item>
+		<item name="externalservice.5.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.5.password"></item>
+		<item name="externalservice.5.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.5.ringtone"></item>		
+		<item name="externalservice.5.ringtone"></item>		
 		
 		<!-- ############################################################### -->
 		<!-- # Order 6 -->
@@ -2527,24 +2527,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.6.type">None</item>
+		<item name="externalservice.6.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.6.account"></item>
+		<item name="externalservice.6.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.6.systemId"></item>
+		<item name="externalservice.6.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.6.systemNumber"></item>
+		<item name="externalservice.6.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.6.password"></item>
+		<item name="externalservice.6.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.6.ringtone"></item>		
+		<item name="externalservice.6.ringtone"></item>		
 		
 		<!-- ############################################################### -->
 		<!-- # Order 7 -->
@@ -2552,24 +2552,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.7.type">None</item>
+		<item name="externalservice.7.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.7.account"></item>
+		<item name="externalservice.7.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.7.systemId"></item>
+		<item name="externalservice.7.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.7.systemNumber"></item>
+		<item name="externalservice.7.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.7.password"></item>
+		<item name="externalservice.7.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.7.ringtone"></item>		
+		<item name="externalservice.7.ringtone"></item>		
 
 		<!-- ############################################################### -->
 		<!-- # Order 8 -->
@@ -2577,24 +2577,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.8.type">None</item>
+		<item name="externalservice.8.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.8.account"></item>
+		<item name="externalservice.8.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.8.systemId"></item>
+		<item name="externalservice.8.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.8.systemNumber"></item>
+		<item name="externalservice.8.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.8.password"></item>
+		<item name="externalservice.8.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.8.ringtone"></item>		
+		<item name="externalservice.8.ringtone"></item>		
 		
 		<!-- ############################################################### -->
 		<!-- # Order 9 -->
@@ -2602,24 +2602,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.9.type">None</item>
+		<item name="externalservice.9.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.9.account"></item>
+		<item name="externalservice.9.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.9.systemId"></item>
+		<item name="externalservice.9.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.9.systemNumber"></item>
+		<item name="externalservice.9.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.9.password"></item>
+		<item name="externalservice.9.password"></item>
 
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.9.ringtone"></item>		
+		<item name="externalservice.9.ringtone"></item>		
 		
 		<!-- ############################################################### -->
 		<!-- # Order 10 -->
@@ -2627,24 +2627,24 @@
 		<!-- Value-added Service - Value-added Service -->
 		<!-- Service Type -->
 		<!-- None, GDS. -->
-		<item name="externalService.10.type">None</item>
+		<item name="externalservice.10.type">None</item>
 		
 		<!-- # Account -->
 		<!-- # Account1 - Account2  -->
-		<item name="externalService.10.account"></item>
+		<item name="externalservice.10.account"></item>
 		
 		<!-- Display Name -->
-		<item name="externalService.10.systemId"></item>
+		<item name="externalservice.10.systemid"></item>
 		
 		<!-- System Number -->
-		<item name="externalService.10.systemNumber"></item>
+		<item name="externalservice.10.systemnumber"></item>
 		
 		<!-- Access Password / DTMF Content -->
-		<item name="externalService.10.password"></item>
+		<item name="externalservice.10.password"></item>
 		
 		<!-- System Ringtone -->
 		<!-- system, ring1.ogg, ring2.ogg, ring3.ogg, ring4.ogg, ring5.ogg,ring6.ogg, doorbell.ogg. -->
-		<item name="externalService.10.ringtone"></item>		
+		<item name="externalservice.10.ringtone"></item>		
 
 		<!-- ############################################################################## -->
 		<!-- ##  Application/PNP Service -->
@@ -2661,28 +2661,28 @@
 		<!-- ############################################################################## -->
 		<!-- Enable Account Sharing -->
 		<!-- Yes, No -->
-		<item name="accountSharing.enable">No</item>
+		<item name="accountsharing.enable">No</item>
 
 		<!-- Role in Account Sharing -->
 		<!-- host,guest -->
-		<item name="accountSharing.role">guest</item>
+		<item name="accountsharing.role">guest</item>
 
 		<!-- Group Name -->
-		<item name="accountSharing.groupName">AccountSharing</item>
+		<item name="accountsharing.groupname">AccountSharing</item>
 
 		<!-- Group Password -->
-		<item name="accountSharing.password">AccountSharing</item>
+		<item name="accountsharing.password">AccountSharing</item>
 
 		<!-- Account -->
 		<!-- Account1,Account2 -->
-		<item name="accountSharing.account">Account1</item>
+		<item name="accountsharing.account">Account1</item>
 
 		<!-- Account Name -->
-		<item name="accountSharing.name"></item>
+		<item name="accountsharing.name"></item>
 
 		<!-- Sync Ringing In Group -->
 		<!-- Yes, No -->
-		<item name="accountSharing.accurateRinging.enable">No</item>	
+		<item name="accountsharing.accurateringing.enable">No</item>	
 
 	</config>
 </gs_provision>
