@@ -1649,7 +1649,7 @@ if (!class_exists('xml_cdr')) {
 
 				//if http enabled is set to false then deny access
 					if (!defined('STDIN')) {
-						if ($this->setting->get('cdr', 'http_enabled') == "false") {
+						if ($this->setting->get('cdr', 'http_enabled', false)) {
 							openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 							syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR'].'] XML CDR import default setting http_enabled is not enabled. Line: '.__line__);
 							closelog();
@@ -1661,7 +1661,7 @@ if (!class_exists('xml_cdr')) {
 
 				//check for the correct username and password
 					if (!defined('STDIN')) {
-						if ($this->setting->get('cdr', 'http_enabled', true)) {
+						if ($this->setting->get('cdr', 'http_enabled', false)) {
 							if ($auth_array[0] == $_SERVER["PHP_AUTH_USER"] && $auth_array[1] == $_SERVER["PHP_AUTH_PW"]) {
 								//echo "access granted\n";
 								$this->username = $auth_array[0];
