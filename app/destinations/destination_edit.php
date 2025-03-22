@@ -182,8 +182,13 @@
 				exit;
 			}
 
+		//set destination_prefix to an empty string if its empty
+			if (empty($destination_prefix)) {
+				$destination_prefix = '';
+			}
+
 		//prevent spaces from being considered as a valid destination_number
-			if (isset($destination_number)) {
+			if (!empty($destination_number)) {
 				$destination_number = trim($destination_number);
 			}
 
@@ -205,11 +210,11 @@
 			if (empty($destination_enabled)) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
 		//check for duplicates
-			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $settings->get('destinations', 'unique', '')) {
+			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $settings->get('destinations', 'unique', false)) {
 				$sql = "select count(*) from v_destinations ";
 				$sql .= "where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number) ";
 				$sql .= "and destination_type = 'inbound' ";
-				$parameters['destination_number'] = $destination_number;
+				$parameters['destination_number'] = $destination_prefix.$destination_number;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
 					$msg .= $text['message-duplicate']."<br>\n";
