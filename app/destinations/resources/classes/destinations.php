@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,11 @@
 	class destinations {
 
 		/**
-		* declare public variables
-		*/
+		 * declare public variables
+		 */
 		public $destinations;
 		public $domain_uuid;
+		public $domain_name;
 		public $start_stamp_begin;
 		public $start_stamp_end;
 		public $quick_select;
@@ -63,16 +64,15 @@
 					$this->database = $setting_array['database'];
 				}
 
+			//set the domain details
+			$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $_SESSION['user_uuid'] ?? '';
+
 			//get the settings object
 				if (empty($setting_array['settings'])) {
-					$this->settings = new settings();
+					$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 				} else {
 					$this->settings = $setting_array['settings'];
-				}
-
-			//set the domain details
-				if (is_null($this->domain_uuid)) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
 			//assign private variables
@@ -167,7 +167,6 @@
 
 		}
 
-
 		/**
 		* Build the destination select list
 		* @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
@@ -193,7 +192,7 @@
 			$response = '';
 
 			//create a single destination select list
-			if (!empty($_SESSION['destinations']['select_mode']['text']) && $_SESSION['destinations']['select_mode']['text'] == 'default') {
+			if (!empty($this->settings->get('destinations', 'select_mode')) && $this->settings->get('destinations', 'select_mode') == 'default') {
 				//get the destinations
 				if (!is_array($this->destinations)) {
 
@@ -363,7 +362,7 @@
 					//add multi-lingual support
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 						$language2 = new text;
-						$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
+						$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
 					}
 
 					if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
@@ -444,7 +443,7 @@
 			}
 
 			//create a dynamic destination select list
-			if ($_SESSION['destinations']['select_mode']['text'] == 'dynamic') {
+			if ($this->settings->get('destinations', 'select_mode') == 'dynamic') {
 
 				//remove special characters from the name
 				$destination_id = str_replace("]", "", $destination_name);
@@ -499,11 +498,11 @@
 						//add multi-lingual support
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
 							$language2 = new text;
-							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$key);
+							$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$key);
 							$found = 'true';
 						}
 						if ($key == 'other') {
-							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/dialplans');
+							$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/dialplans');
 						}
 						//add the application to the select list
 						$response .= "		<option id='{$singular}' class='{$key}' value='".$key."' $selected>".$text2['title-'.$key]."</option>\n";
@@ -676,7 +675,7 @@
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
-					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
+					$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
 				}
 
 				if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
@@ -891,7 +890,7 @@
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
-					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
+					$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
 				}
 
 				if (isset($row['result']) && isset($row['result']['data'][0]) && !empty($row['select_value'][$destination_type])) {
@@ -1109,12 +1108,10 @@
 									message::add($text['message-delete']);
 
 							}
-							unset($records);
 
 					}
 			}
 		} //method
-
 
 		/**
 		 * destination summary returns an array
@@ -1260,7 +1257,6 @@
 			//return the array
 				return $summary;
 		}
-
 
 		/**
 		* define singular function to convert a word in english to singular
