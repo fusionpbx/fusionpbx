@@ -1141,27 +1141,57 @@
 					}
 
 				//get the time zone
-					$time_zone_name = $this->settings->get('domain','time_zone', '');
-					if (!empty($time_zone_name)) {
-						$time_zone_offset_raw = get_time_zone_offset($time_zone_name)/3600;
-						$time_zone_offset_hours = floor($time_zone_offset_raw);
-						$time_zone_offset_minutes = ($time_zone_offset_raw - $time_zone_offset_hours) * 60;
-						$time_zone_offset_minutes = number_pad($time_zone_offset_minutes, 2);
-						if ($time_zone_offset_raw > 0) {
-							$time_zone_offset_hours = number_pad($time_zone_offset_hours, 2);
-							$time_zone_offset_hours = "+".$time_zone_offset_hours;
-						}
-						else {
-							$time_zone_offset_hours = str_replace("-", "", $time_zone_offset_hours);
-							$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
-						}
-						$time_zone_offset = $time_zone_offset_hours.":".$time_zone_offset_minutes;
-						if (!isset($provision["time_zone_offset"])) {
-							$provision["time_zone_offset"] = $time_zone_offset;
+					$time_zone = $this->settings->get('domain','time_zone', 'UTC');
+
+				//calculate the time zone offset
+					if (!empty($time_zone)) {
+						$tz = new DateTimeZone($time_zone);
+						$current_date = new DateTime('now', $tz);
+						$offset_seconds = $tz->getOffset($current_date);
+						$time_zone_offset_hours = floor($offset_seconds / 3600);
+						$time_zone_offset_minutes = abs(floor(($offset_seconds % 3600) / 60));
+					}
+
+				//auto calculate the daylight savings settings
+					if ($this->settings->get('provision','daylight_savings_auto', true)) {
+						//initialize the variables
+						$dst_start = null;
+						$dst_start_month = null;
+						$dst_start_day = null;
+						$dst_start_hour = null;
+						$dst_end = null;
+						$dst_end_month = null;
+						$dst_end_day = null;
+						$dst_end_hour = null;
+
+						//prepare the daylight saving dates and build the transitions
+						date_default_timezone_set($time_zone);
+						$current_year = date('Y');
+						$tz = new DateTimeZone($time_zone);
+						$start_of_year = new DateTime($current_year.'-01-01 00:00:00', $tz);
+						$end_of_year = new DateTime($current_year.'-12-31 23:59:59', $tz);
+						$transitions = $tz->getTransitions($start_of_year->getTimestamp(), $end_of_year->getTimestamp());
+
+						//add the daylight savings to the provision array
+						foreach ($transitions as $transition) {
+							if ($transition['isdst']) {
+								$provision["daylight_savings_start"] = date('Y-m-d H:i:s', $transition['ts']);
+								$provision["daylight_savings_start_month"] = date('m', $transition['ts']);
+								$provision["daylight_savings_start_day"] = date('d', $transition['ts']);
+								$provision["daylight_savings_start_time"] = date('H', $transition['ts']);
+							} elseif (!$transition['isdst']) {
+								$provision["daylight_savings_stop"] = date('Y-m-d H:i:s', $transition['ts']);
+								$provision["daylight_savings_stop_month"] = date('m', $transition['ts']);
+								$provision["daylight_savings_stop_day"] = date('d', $transition['ts']);
+								$provision["daylight_savings_stop_time"] = date('H', $transition['ts']);
+							}
 						}
 					}
 
-				//set the daylight savings time
+				//set daylight savings settings for polycom
+					$provision["polycom_gmt_offset"] = $offset_seconds;
+
+				//set daylight savings settings time for yealink
 					if (!isset($provision["yealink_time_zone_start_time"])) {
 						$provision["yealink_time_zone_start_time"] = $provision["daylight_savings_start_month"]."/".$provision["daylight_savings_start_day"]."/".$provision["daylight_savings_start_time"];
 					}
