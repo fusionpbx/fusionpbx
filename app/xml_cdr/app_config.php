@@ -329,9 +329,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Used to import call detail records with HTTP POST";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f39db4b4-86bc-4d5d-9580-0f17c7934fe8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
