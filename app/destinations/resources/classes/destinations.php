@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,13 +28,6 @@
  * destinations
  */
 	class destinations {
-
-		const APP_NAME = 'destinations';
-		const APP_UUID = '5ec89622-b19c-3559-64f0-afde802ab139';
-		const PERMISSION_PREFIX = 'destination_';
-		const LIST_PAGE = 'destinations.php';
-		const TABLE = 'destinations';
-		const UUID_PREFIX = 'destination_';
 
 		/**
 		 * declare public variables
@@ -47,8 +40,15 @@
 		public $quick_select;
 
 		/**
-		 * declare private variables
-		 */
+		* declare private variables
+		*/
+		private $domain_name;
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
 		private $database;
 		private $settings;
 
@@ -58,23 +58,30 @@
 		public function __construct($setting_array = []) {
 
 			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
+				if (empty($setting_array['database'])) {
+					$this->database = database::new();
+				} else {
+					$this->database = $setting_array['database'];
+				}
 
 			//set the domain details
 			$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
 			$this->user_uuid = $_SESSION['user_uuid'] ?? '';
 
 			//get the settings object
-			if (empty($setting_array['settings'])) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			} else {
-				$this->settings = $setting_array['settings'];
-			}
+				if (empty($setting_array['settings'])) {
+					$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+				} else {
+					$this->settings = $setting_array['settings'];
+				}
 
+			//assign private variables
+				$this->app_name = 'destinations';
+				$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+				$this->permission_prefix = 'destination_';
+				$this->list_page = 'destinations.php';
+				$this->table = 'destinations';
+				$this->uuid_prefix = 'destination_';
 		}
 
 		/**
@@ -1024,7 +1031,7 @@
 		* delete records
 		*/
 		public function delete($records) {
-			if (permission_exists(self::PERMISSION_PREFIX.'delete')) {
+			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -1034,7 +1041,7 @@
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.self::LIST_PAGE);
+						header('Location: '.$this->list_page);
 						exit;
 					}
 
@@ -1046,7 +1053,7 @@
 								if (!empty($record['checked'] ) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//build delete array
-										$array[self::TABLE][$x][self::UUID_PREFIX.'uuid'] = $record['uuid'];
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 
 									//get the dialplan uuid and context
 										$sql = "select dialplan_uuid, destination_context from v_destinations ";
@@ -1074,8 +1081,8 @@
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = self::APP_NAME;
-									$this->database->app_uuid = self::APP_UUID;
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
