@@ -65,7 +65,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P48>{$outbound_proxy_primary}:{$account.1.sip_port}</P48>
+<P48>{$grandstream_outbound_proxy}:{$account.1.sip_port}</P48>
 
 
 <!-- # Secondary Outbound Proxy -->
