@@ -650,7 +650,7 @@ class pop3_class
 	{
 		if($this->state!="TRANSACTION")
 			return($this->SetError("cannot get the name of a POP3 connection that was not established and the user has logged in"));
-		if(strlen($this->connection_name) == 0)
+		if(empty($this->connection_name))
 			pop3_class::SetConnection(1, $this->connection_name, $this);
 		$connection_name = $this->connection_name;
 		return('');

@@ -1,6 +1,6 @@
 <?php
 /*-
- * Copyright (c) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+ * Copyright (c) 2022 - 2023 Mark J Crane <markjcrane@fusionpbx.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,9 +27,7 @@
 /**
  * email class
  *
- * @method boolean send
  */
-if (!class_exists('email')) {
 	class email {
 
 		/**
@@ -45,18 +43,19 @@ if (!class_exists('email')) {
 		public $subject;
 		public $body;
 		public $from_address;
-		public $from_name; 
+		public $from_name;
 		public $priority;
-		public $debug_level; 
-		public $attachments; 
+		public $debug_level;
+		public $attachments;
 		public $read_confirmation;
 		public $error;
 		public $response;
+		private $settings;
 
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct($params = []) {
 			//assign the variables
 			$this->app_name = 'email';
 			$this->name = 'email';
@@ -64,16 +63,29 @@ if (!class_exists('email')) {
 			$this->priority = 0;
 			$this->debug_level = 3;
 			$this->read_confirmation = false;
-		}
 
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
+			//set the domain_uuid
+			$this->domain_uuid = $params['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+			if (isset($params['settings'])) {
+				$this->settings = $params['settings'];
 			}
+
+			//set the database from the settings object if available
+			if ($this->settings instanceof settings && !isset($this->database)) {
+				$this->database = $this->settings->database();
+			}
+
+			//ensure we have a valid database object
+			if (!($this->database instanceof database)) {
+				$this->database = $params['database'] ?? database::new();
+			}
+
+			//ensure we have a valid settings object
+			if (!($this->settings) instanceof settings) {
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
+			}
+
 		}
 
 		/**
@@ -136,7 +148,7 @@ if (!class_exists('email')) {
 						if (substr($body_content_type, 0, 9) == "text/html") {
 							$this->body = $row["Body"];
 						}
-						if (substr($body_content_type, 0, 10) == "text/plain") { 
+						if (substr($body_content_type, 0, 10) == "text/plain") {
 							$body_plain = $row["Body"];
 							$this->body = $body_plain;
 						}
@@ -152,7 +164,7 @@ if (!class_exists('email')) {
 
 				//get the attachments and add to the email
 				$x = 0;
-				foreach ($decoded[0]["Parts"] as &$parts_array) {
+				foreach ($decoded[0]["Parts"] as $parts_array) {
 					//image/tiff;name="testfax.tif"
 					//text/plain; charset=ISO-8859-1; format=flowed
 					$content_type = $parts_array["Parts"][0]["Headers"]["content-type:"];
@@ -166,13 +178,13 @@ if (!class_exists('email')) {
 					//testfax.tif
 					$file = $parts_array["FileName"];
 
-					//inline	
+					//inline
 					$filedisposition = $parts_array["FileDisposition"];
 
 					$body_part = $parts_array["BodyPart"];
 					$body_length = $parts_array["BodyLength"];
 
-					if (strlen($file) > 0) {
+					if (!empty($file)) {
 						//get the file information
 							$file_ext = pathinfo($file, PATHINFO_EXTENSION);
 							$file_name = substr($file, 0, (strlen($file) - strlen($file_ext))-1 );
@@ -203,7 +215,7 @@ if (!class_exists('email')) {
 							$this->attachments[$x]['type'] = 'string';
 							$this->attachments[$x]['name'] = $file;
 							$this->attachments[$x]['value'] = $parts_array["Body"];
-						
+
 						//increment the id
 							$x++;
 					}
@@ -219,7 +231,7 @@ if (!class_exists('email')) {
 
 			//set the send_method if not already set
 			if (!isset($this->method)) {
-				if ($_SESSION['email_queue']['enabled']['boolean'] == 'true') {
+				if ($this->settings->get('email_queue','enabled', true)) {
 					$this->method = 'queue';
 				}
 				else {
@@ -230,20 +242,21 @@ if (!class_exists('email')) {
 			//add the email to the queue
 			if ($this->method == 'queue') {
 
-				//set the domain_uuid if not set
-				if (!isset($this->domain_uuid)) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-				}
-
 				//add the email_queue_uuid
 				$email_queue_uuid = uuid();
+
+				//set the email from address and name
+				$email_from = $this->from_address;
+				if (!empty($this->from_name)) {
+					$email_from = $this->from_name.'<'.$email_from.'>';
+				}
 
 				//prepare the array
 				$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid;
 				$array['email_queue'][0]['domain_uuid'] = $this->domain_uuid;
 				$array['email_queue'][0]['hostname'] = gethostname();
 				$array['email_queue'][0]['email_date'] = 'now()';
-				$array['email_queue'][0]['email_from'] = $this->from_address;
+				$array['email_queue'][0]['email_from'] = $email_from;
 				$array['email_queue'][0]['email_to'] = $this->recipients;
 				$array['email_queue'][0]['email_subject'] = $this->subject;
 				$array['email_queue'][0]['email_body'] = $this->body;
@@ -256,45 +269,92 @@ if (!class_exists('email')) {
 				if (is_array($this->attachments) && sizeof($this->attachments) > 0) {
 					$y = 0;
 					foreach ($this->attachments as $attachment) {
-						//set the name of the file
-						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-							$attachment['type'] = strtolower(pathinfo($attachment['value'], PATHINFO_EXTENSION));
+						//set the name of the file, determine extension
+						if ($attachment['path'] && $attachment['name']) {
+							if (file_exists($attachment['path'] && $attachment['name'])) {
+								$attachment['type'] = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
+							}
+						}
+						else if ($attachment['value']) {
+							//old method
+							if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
+								$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+								$attachment['path'] = pathinfo($attachment['value'], PATHINFO_DIRNAME);
+								$attachment['type'] = strtolower(pathinfo($attachment['value'], PATHINFO_EXTENSION));
+							}
+						}
+
+						//set the mime type
+						switch ($attachment['type']) {
+							case "jpg":
+							case "jpeg":
+								$attachment['mime_type'] = 'image/jpeg';
+								break;
+							case "gif":
+								$attachment['mime_type'] = 'image/gif';
+								break;
+							case "png":
+								$attachment['mime_type'] = 'image/png';
+								break;
+							case "pdf":
+								$attachment['mime_type'] = 'application/pdf';
+								break;
+							case "tif":
+							case "tiff":
+								$attachment['mime_type'] = 'image/tiff';
+								break;
+							case "mp3":
+								$attachment['mime_type'] = 'audio/mpeg';
+								break;
+							case "wav":
+								$attachment['mime_type'] = 'audio/x-wav';
+								break;
+							case "opus":
+								$attachment['mime_type'] = 'audio/opus';
+								break;
+							case "ogg":
+								$attachment['mime_type'] = 'audio/ogg';
+								break;
+							default:
+								$attachment['mime_type'] = 'binary/octet-stream';
 						}
 
 						//add the attachments to the array
 						$array['email_queue_attachments'][$y]['email_queue_attachment_uuid'] = uuid();
 						$array['email_queue_attachments'][$y]['email_queue_uuid'] = $email_queue_uuid;
 						$array['email_queue_attachments'][$y]['domain_uuid'] = $this->domain_uuid;
+						$array['email_queue_attachments'][$y]['email_attachment_mime_type'] = $attachment['mime_type'];
 						$array['email_queue_attachments'][$y]['email_attachment_type'] = $attachment['type'];
 						$array['email_queue_attachments'][$y]['email_attachment_name'] = $attachment['name'];
-						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-							$array['email_queue_attachments'][$y]['email_attachment_path'] = pathinfo($attachment['value'], PATHINFO_DIRNAME);
-						}
-						else {
-							$array['email_queue_attachments'][$y]['email_attachment_base64'] = base64_decode($attachment['value']);
-						}
+						$array['email_queue_attachments'][$y]['email_attachment_path'] = $attachment['path'];
+						$array['email_queue_attachments'][$y]['email_attachment_base64'] = $attachment['base64'];
 						$y++;
 					}
 				}
 
 				//add temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("email_queue_add", 'temp');
 				$p->add("email_queue_attachment_add", 'temp');
 
 				//save the dialplan
-				$database = new database;
-				$database->app_name = 'email';
-				$database->app_uuid = 'e24b5dab-3bcc-42e8-99c1-19b0c558c2d7';
-				$database->save($array);
-				//$dialplan_response = $database->message;
+				$this->database->app_name = 'email';
+				$this->database->app_uuid = 'e24b5dab-3bcc-42e8-99c1-19b0c558c2d7';
+				$this->database->save($array);
+				//$dialplan_response = $this->database->message;
 				unset($array);
 
 				//remove temporary permissions
 				$p->delete("dialplan_add", 'temp');
 				$p->delete("dialplan_detail_add", 'temp');
 
+				//return a human readable response for debugging
+				if ($this->database->message['message'] == 'OK') {
+					return "Added to queue";
+				} else {
+					//return the SQL server message
+					return $this->database->message['message'];
+				}
 			}
 
 			//send the email directly
@@ -345,14 +405,14 @@ if (!class_exists('email')) {
 
 						Array (
 							[0] => Array (
-								[type] => file (or 'path')
+								[mime_type] => image/jpeg (will be determined by file extension, if empty)
 								[name] => filename.ext
-								[value] => /folder/filename.ext
+								[path] => /source/folder/ (not used if base64 content)
+								[base64] => file content as base64 (not used if name and path set)
+								[cid] => content id of file attachment (only used if referencing attached files in body content)
 								)
 							[1] => Array (
-								[type] => string
-								[name] => filename.ext
-								[value] => (string of file contents - if base64, will be decoded automatically)
+								...
 								)
 						)
 
@@ -366,32 +426,25 @@ if (!class_exists('email')) {
 					include_once("resources/phpmailer/class.phpmailer.php");
 					include_once("resources/phpmailer/class.smtp.php");
 
-					//use the session email default settings
-					if ($_SESSION['email']['smtp_hostname']['text'] != '') { 
-						$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
+					//use the email default settings
+					if (!empty($this->settings->get('email','smtp_hostname'))) {
+						$smtp['hostname'] = $this->settings->get('email','smtp_hostname');
 					}
-					$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text']) ? $_SESSION['email']['smtp_host']['text']: '127.0.0.1');
-					if (isset($_SESSION['email']['smtp_port'])) {
-						$smtp['port'] = (int) $_SESSION['email']['smtp_port']['numeric'];
+					$smtp['host'] 		= (!empty($this->settings->get('email','smtp_host')) ? $this->settings->get('email','smtp_host'): '127.0.0.1');
+					if (!empty($this->settings->get('email','smtp_port'))) {
+						$smtp['port'] = (int)$this->settings->get('email','smtp_port');
 					}
 					else {
 						$smtp['port'] = 0;
 					}
-					$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['text'];
-					$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['text'];
-					$smtp['username'] 	= $_SESSION['email']['smtp_username']['text'];
-					$smtp['password'] 	= $_SESSION['email']['smtp_password']['text'];
-					$smtp['from'] 		= $_SESSION['email']['smtp_from']['text'];
-					$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['text'];
-					$smtp['validate_certificate'] = $_SESSION['email']['smtp_validate_certificate']['boolean'];
-					$smtp['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
-
-					if (isset($_SESSION['voicemail']['smtp_from']) && strlen($_SESSION['voicemail']['smtp_from']['text']) > 0) {
-						$smtp['from'] = $_SESSION['voicemail']['smtp_from']['text'];
-					}
-					if (isset($_SESSION['voicemail']['smtp_from_name']) && strlen($_SESSION['voicemail']['smtp_from_name']['text']) > 0) {
-						$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
-					}
+					$smtp['secure'] 	= $this->settings->get('email','smtp_secure');
+					$smtp['auth'] 		= $this->settings->get('email','smtp_auth');
+					$smtp['username'] 	= $this->settings->get('email','smtp_username');
+					$smtp['password'] 	= $this->settings->get('email','smtp_password');
+					$smtp['from'] 		= $this->settings->get('voicemail','smtp_from') ?? $this->settings->get('email','smtp_from');
+					$smtp['from_name'] 	= $this->settings->get('voicemail','smtp_from_name') ?? $this->settings->get('email','smtp_from_name');
+					$smtp['validate_certificate'] = $this->settings->get('email','smtp_validate_certificate', true);
+					$smtp['crypto_method'] = $this->settings->get('email','smtp_crypto_method') ?? null;
 
 					//override the domain-specific smtp server settings, if any
 					$sql = "select domain_setting_subcategory, domain_setting_value ";
@@ -400,8 +453,7 @@ if (!class_exists('email')) {
 					$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
 					$sql .= "and domain_setting_enabled = 'true' ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$database = new database;
-					$result = $database->select($sql, $parameters, 'all');
+					$result = $this->database->select($sql, $parameters, 'all');
 					if (is_array($result) && @sizeof($result) != 0) {
 						foreach ($result as $row) {
 							if ($row['domain_setting_value'] != '') {
@@ -420,7 +472,7 @@ if (!class_exists('email')) {
 					//create the email object and set general settings
 					$mail = new PHPMailer();
 					$mail->IsSMTP();
-					if ($smtp['hostname'] != '') {
+					if (!empty($smtp['hostname'])) {
 						$mail->Hostname = $smtp['hostname'];
 					}
 					$mail->Host = $smtp['host'];
@@ -438,7 +490,7 @@ if (!class_exists('email')) {
 					}
 
 					$smtp_secure = true;
-					if ($smtp['secure']  == "") {
+					if ($smtp['secure'] == "") {
 						$mail->SMTPSecure = 'none';
 						$mail->SMTPAutoTLS = false;
 						$smtp_secure = false;
@@ -452,7 +504,7 @@ if (!class_exists('email')) {
 						$mail->SMTPSecure = $smtp['secure'];
 					}
 
-					if ($smtp_secure && isset($smtp['validate_certificate']) && $smtp['validate_certificate'] == "false") {
+					if ($smtp_secure && isset($smtp['validate_certificate']) && !$smtp['validate_certificate']) {
 						//bypass certificate check e.g. for self-signed certificates
 						$smtp_options['ssl']['verify_peer'] = false;
 						$smtp_options['ssl']['verify_peer_name'] = false;
@@ -521,49 +573,35 @@ if (!class_exists('email')) {
 					if (is_array($this->attachments) && sizeof($this->attachments) > 0) {
 						foreach ($this->attachments as $attachment) {
 
-							//set the name of the file
-							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-
-							//set the mime type
-							switch (substr($attachment['name'], -4)) {
-								case ".png":
-									$attachment['mime_type'] = 'image/png';
-									break;
-								case ".pdf":
-									$attachment['mime_type'] = 'application/pdf';
-									break;
-								case ".mp3":
-									$attachment['mime_type'] = 'audio/mpeg';
-									break;
-								case ".wav":
-									$attachment['mime_type'] = 'audio/x-wav';
-									break;
-								case "opus":
-									$attachment['mime_type'] = 'audio/opus';
-									break;
-								case ".ogg":
-									$attachment['mime_type'] = 'audio/ogg';
-									break;
-							}
-
 							//add the attachments
-							if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-								$mail->AddAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+							if (file_exists($attachment['path'].'/'.$attachment['name'])) {
+								$mail->AddAttachment($attachment['path'].'/'.$attachment['name'], $attachment['name'], 'base64', $attachment['mime_type']);
 							}
 							else {
-								if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
-									$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['mime_type']);
-								}
-								else {
-									$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+								if ($attachment['base64']) {
+									if ($attachment['cid']) {
+										$mail->addStringEmbeddedImage(base64_decode($attachment['base64']), $attachment['cid'], $attachment['name'], 'base64', $attachment['mime_type']);
+									}
+									else {
+										$mail->AddStringAttachment(base64_decode($attachment['base64']), $attachment['name'], 'base64', $attachment['mime_type']);
+									}
 								}
 							}
 						}
 					}
 
+					//save output to a buffer
+					ob_start();
+
 					//send the email
-					if (!$mail->Send()) {
-						if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+					$mail_status = $mail->Send();
+
+					//get the output buffer
+					$this->response = ob_get_clean();
+
+					//send the email
+					if (!$mail_status) {
+						if (isset($mail->ErrorInfo) && !empty($mail->ErrorInfo)) {
 							$this->error = $mail->ErrorInfo;
 						}
 						return false;
@@ -585,7 +623,7 @@ if (!class_exists('email')) {
 		}
 
 	}
-}
+
 
 /*
 $email = new email;
@@ -598,5 +636,3 @@ $email->attachments = $email_attachments;
 $response = $mail->error;
 $sent = $email->send();
 */
-
-?>

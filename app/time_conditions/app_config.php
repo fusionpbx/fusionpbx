@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "Instrada le chiamate basandosi su giorno e ora.";
+		$apps[$x]['description']['ka-ge'] = "პირდაპირი ზარები დღის დროზე დაყრდნობით.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
@@ -34,9 +35,9 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "time_conditions";
 		$apps[$x]['destinations'][$y]['name'] = "time_conditions";
-		$apps[$x]['destinations'][$y]['sql'] = "select dialplan_name as name, dialplan_number as destination, dialplan_number as extension, dialplan_context as context, dialplan_description as description from v_dialplans ";
+		$apps[$x]['destinations'][$y]['sql'] = "select dialplan_uuid as time_condition_uuid, dialplan_uuid as uuid, dialplan_name as name, dialplan_number as destination, dialplan_number as extension, dialplan_context as context, dialplan_description as description from v_dialplans ";
 		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' and dialplan_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "dialplan_number asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(dialplan_number) asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "context";
 		$apps[$x]['destinations'][$y]['field']['name'] = "dialplan_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "dialplan_number";
@@ -392,6 +393,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "366";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
+
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c73fa4f6-aed5-49a3-8726-4c1d94847302";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "time_conditions";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "800-899";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for time conditions";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${dialplan_context}";

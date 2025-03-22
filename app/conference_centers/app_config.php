@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "კონფერენციის ცენტრები საშუალებას გაძლევთ, ერთი ან მეტი აუდიო ან ვიდეო კონფერენციის ოთახები გქონდეთ.";
 		$apps[$x]['description']['nl-nl'] = "Conferentie centra maakt instellen van een of meer audio en video conferenties mogelijk.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "O centro de conferências permite gerir uma ou mais salas de conferência de audio e vídeo.";
@@ -35,8 +36,9 @@
 		$apps[$x]['destinations'][$y]['label'] = "conference_centers";
 		$apps[$x]['destinations'][$y]['name'] = "conference_centers";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and conference_center_enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "conference_center_name asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(conference_center_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['conference_center_uuid'] = "conference_center_uuid";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "conference_center_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "conference_center_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "conference_center_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "conference_center_extension";
@@ -216,6 +218,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Request the account ID.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d93351de-8446-47ee-acdb-05cf340b8803";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "conference_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "200-299";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for conference centers";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";

@@ -25,20 +25,21 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-if (!class_exists('button')) {
 	class button {
 
 		public static $collapse = 'hide-md-dn';
 
 		static function create($array) {
-			$button_icons = $_SESSION['theme']['button_icons']['text'] != '' ? $_SESSION['theme']['button_icons']['text'] : 'auto';
+			$button_icons = !empty($_SESSION['theme']['button_icons']['text']) ? $_SESSION['theme']['button_icons']['text'] : 'auto';
 			//parse styles into array
-				if ($array['style']) {
+				if (!empty($array['style'])) {
 					$tmp = explode(';',$array['style']);
 					foreach ($tmp as $style) {
-						if ($style) {
+						if (!empty($style)) {
 							$style = explode(':', $style);
-							$styles[trim($style[0])] = trim($style[1]);
+							if (is_array($style) && @sizeof($style) == 2) {
+								$styles[trim($style[0])] = trim($style[1]);
+							}
 						}
 					}
 					$array['style'] = $styles;
@@ -46,51 +47,52 @@ if (!class_exists('button')) {
 				}
 			//button: open
 				$button = "<button ";
-				$button .= "type='".($array['type'] ? $array['type'] : 'button')."' ";
-				$button .= $array['name'] ? "name=".self::quote($array['name'])." " : null;
-				$button .= $array['value'] ? "value=".self::quote($array['value'])." " : null;
-				$button .= $array['id'] ? "id='".$array['id']."' " : null;
-				$button .= $array['label'] ? "alt=".self::quote($array['label'])." " : ($array['title'] ? "alt=".self::quote($array['title'])." " : null);
+				$button .= "type='".(!empty($array['type']) ? $array['type'] : 'button')."' ";
+				$button .= !empty($array['name']) ? "name=".self::quote($array['name'])." " : null;
+				$button .= !empty($array['value']) ? "value=".self::quote($array['value'])." " : null;
+				$button .= !empty($array['id']) ? "id='".$array['id']."' " : null;
+				$button .= !empty($array['label']) ? "alt=".self::quote($array['label'])." " : (!empty($array['title']) ? "alt=".self::quote($array['title'])." " : null);
 				if ($button_icons == 'only' || $button_icons == 'auto' || $array['title']) {
-					if ($array['title'] || $array['label']) {
-						$button .= "title=".($array['title'] ? self::quote($array['title']) : self::quote($array['label']))." ";
+					if (!empty($array['title']) || !empty($array['label'])) {
+						$button .= "title=".(!empty($array['title']) ? self::quote($array['title']) : self::quote($array['label']))." ";
 					}
 				}
-				$button .= $array['onclick'] ? "onclick=".self::quote($array['onclick'])." " : null;
-				$button .= $array['onmouseover'] ? "onmouseenter=".self::quote($array['onmouseover'])." " : null;
- 				$button .= $array['onmouseout'] ? "onmouseleave=".self::quote($array['onmouseout'])." " : null;
+				$button .= !empty($array['onclick']) ? "onclick=".self::quote($array['onclick'])." " : null;
+				$button .= !empty($array['onmouseover']) ? "onmouseenter=".self::quote($array['onmouseover'])." " : null;
+ 				$button .= !empty($array['onmouseout']) ? "onmouseleave=".self::quote($array['onmouseout'])." " : null;
 				//detect class addition (using + prefix)
-				$button_class = $array['class'] && $array['class'][0] == '+' ? 'default '.substr($array['class'], 1) : $array['class'];
-				$button .= "class='btn btn-".($button_class ? $button_class : 'default')." ".($array['disabled'] ? 'disabled' : null)."' ";
+				$button_class = !empty($array['class']) && substr($array['class'],0,1) == '+' ? 'default '.substr($array['class'], 1) : $array['class'] ?? '';
+				$button .= "class='btn btn-".(!empty($button_class) ? $button_class : 'default')." ".(isset($array['disabled']) && $array['disabled'] ? 'disabled' : null)."' ";
 				//ensure margin* styles are not applied to the button element when a link is defined
-				if (is_array($array['style']) && @sizeof($array['style']) != 0) {
+				if (!empty($array['style']) && is_array($array['style']) && @sizeof($array['style']) != 0) {
+					$styles = '';
 					foreach ($array['style'] as $property => $value) {
-						if (!$array['link'] || !substr_count($property, 'margin')) {
+						if (empty($array['link']) || !substr_count($property, 'margin')) {
 							$styles .= $property.': '.$value.'; ';
 						}
 					}
 					$button .= $styles ? "style=".self::quote($styles)." " : null;
 					unset($styles);
 				}
-				$button .= $array['disabled'] ? "disabled='disabled' " : null;
+				$button .= isset($array['disabled']) && $array['disabled'] ? "disabled='disabled' " : null;
 				$button .= ">";
 			//icon
-				if ($array['icon'] && (
+				if (!empty($array['icon']) && (
 					$button_icons == 'only' ||
 					$button_icons == 'always' ||
 					$button_icons == 'auto' ||
 					!$array['label']
 					)) {
-					$icon_class = is_array($array['icon']) ? $array['icon']['text'] : 'fas fa-'.$array['icon'];
-					$button .= "<span class='".$icon_class." fa-fw'></span>";
+					$icon_class = is_array($array['icon']) ? $array['icon']['text'] : $array['icon'];
+					$button .= "<span class='".(substr($icon_class, 0, 3) != 'fa-' ? 'fa-solid fa-' : null).$icon_class." fa-fw'></span>";
 				}
 			//label
-				if ($array['label'] && (
+				if (!empty($array['label']) && (
 					$button_icons != 'only' ||
 					!$array['icon'] ||
 					$array['class'] == 'link'
 					)) {
-					if ($array['icon'] && $button_icons != 'always' && $button_icons != 'never' && $array['collapse'] !== false) {
+					if (!empty($array['icon']) && $button_icons != 'always' && $button_icons != 'never' && isset($array['collapse']) && $array['collapse'] !== false) {
 						if ($array['collapse'] != '') {
 							$collapse_class = $array['collapse'];
 						}
@@ -98,18 +100,19 @@ if (!class_exists('button')) {
 							$collapse_class = self::$collapse;
 						}
 					}
-					$pad_class = $array['icon'] ? 'pad' : null;
-					$button .= "<span class='button-label ".$collapse_class." ".$pad_class."'>".$array['label']."</span>";
+					$pad_class = !empty($array['icon']) ? 'pad' : null;
+					$button .= "<span class='button-label ".($collapse_class ?? '')." ".$pad_class."'>".$array['label']."</span>";
 				}
 			//button: close
 				$button .= "</button>";
 			//link
-				if ($array['link']) {
+				if (!empty($array['link'])) {
 					$anchor = "<a ";
 					$anchor .= "href='".$array['link']."' ";
-					$anchor .= "target='".($array['target'] ? $array['target'] : '_self')."' ";
+					$anchor .= "target='".(!empty($array['target']) ? $array['target'] : '_self')."' ";
 					//ensure only margin* styles are applied to the anchor element
-					if (is_array($array['style']) && @sizeof($array['style']) != 0) {
+					if (!empty($array['style']) && is_array($array['style']) && @sizeof($array['style']) != 0) {
+						$styles = '';
 						foreach ($array['style'] as $property => $value) {
 							if (substr_count($property, 'margin')) {
 								$styles .= $property.': '.$value.'; ';
@@ -118,12 +121,11 @@ if (!class_exists('button')) {
 						$anchor .= $styles ? "style=".self::quote($styles)." " : null;
 						unset($styles);
 					}
-					$anchor .= $array['disabled'] ? "class='disabled' onclick='return false;' " : null;
+					$anchor .= isset($array['disabled']) && $array['disabled'] ? "class='disabled' onclick='return false;' " : null;
 					$anchor .= ">";
 					$button = $anchor.$button."</a>";
 				}
 			return $button;
-			unset($button);
 		}
 
 		private static function quote($value) {
@@ -131,7 +133,6 @@ if (!class_exists('button')) {
 		}
 
 	}
-}
 
 /*
 
@@ -163,7 +164,7 @@ if (!class_exists('button')) {
 
 	type		'button' (default) | 'submit' | 'link'
 	label		button text
-	icon		name without vendor prefix (e.g. 'user' instead of 'fa-user')
+	icon		name with full vendor style and prefix (e.g. 'fa-solid fa-user' instead of 'fa-user' or 'user')
 	value		submitted value (if type is also set to 'submit')
 	target		'_blank' | '_self' (default) | etc
 	onclick		javascript
@@ -232,5 +233,3 @@ if (!class_exists('button')) {
 
 
 */
-
-?>

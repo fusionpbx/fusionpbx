@@ -19,6 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Le menu peut être personnalisé ici";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "ამ ხელსაწყოთი შეგიძლიათ მენიუს ჩასწორება.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Os menus podem ser personalizados com esta ferramenta.";
@@ -86,13 +87,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_menus";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "menu_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_guid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
@@ -145,14 +139,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_menu_items";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_menus";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_item_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "menu_item_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_item_guid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
@@ -195,6 +181,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_icon";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_icon_color";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
@@ -261,15 +251,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_menu_item_groups";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_menu_items";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_group_name";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_group_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -398,5 +379,16 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "30c52958-b79f-499e-9f48-665a038bba23";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_change_reload";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Reloads the menu when switching tenants/domains - useful when custom menu(s) exist.";
+		$y++;
 
 ?>

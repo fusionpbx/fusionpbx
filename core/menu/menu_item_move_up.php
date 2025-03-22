@@ -23,12 +23,8 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -39,6 +35,9 @@
 		echo "access denied";
 		return;
 	}
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -62,7 +61,6 @@ if (count($_GET)>0) {
 			$sql .= "and menu_order = :menu_order ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['menu_order'] = $menu_order - 1;
-			$database = new database;
 			$database->app_name = 'menu';
 			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$database->execute($sql, $parameters);
@@ -75,7 +73,6 @@ if (count($_GET)>0) {
 			$sql .= "and menu_item_id = :menu_item_id ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['menu_item_id'] = $menu_item_id;
-			$database = new database;
 			$database->app_name = 'menu';
 			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$database->execute($sql, $parameters);

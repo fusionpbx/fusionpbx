@@ -24,12 +24,8 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -40,6 +36,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -57,7 +56,6 @@
 				//get current status
 					$sql = "select default_setting_enabled from v_default_settings where default_setting_uuid = :default_setting_uuid ";
 					$parameters['default_setting_uuid'] = $default_setting_uuid;
-					$database = new database;
 					$default_setting_enabled = $database->select($sql, $parameters, 'column');
 					$new_status = ($default_setting_enabled == 'true') ? 'false' : 'true';
 					unset($sql, $parameters);
@@ -65,7 +63,6 @@
 				//set new status
 					$array['default_settings'][0]['default_setting_uuid'] = $default_setting_uuid;
 					$array['default_settings'][0]['default_setting_enabled'] = $new_status;
-					$database = new database;
 					$database->app_name = 'default_settings';
 					$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 					$database->save($array);

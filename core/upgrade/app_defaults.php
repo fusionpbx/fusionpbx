@@ -26,12 +26,16 @@
 
 if ($domains_processed == 1) {
 
+	//remove smarty cache
+		foreach(glob(sys_get_temp_dir().'*.php') as $file) {
+			unlink($file);
+		}
+
 	//ensure the login message is set, if new message exists
 		$sql = "select count(*) as num_rows from v_default_settings ";
 		$sql .= "where default_setting_category = 'login' ";
 		$sql .= "and default_setting_subcategory = 'message' ";
 		$sql .= "and default_setting_name = 'text' ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 
@@ -57,7 +61,6 @@ if ($domains_processed == 1) {
 			$sql .= "'' ";
 			$sql .= ")";
 			$parameters['default_setting_value'] = $text['login-message_text'];
-			$database = new database;
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
 
@@ -70,7 +73,6 @@ if ($domains_processed == 1) {
 			$sql .= "where default_setting_category = 'login' ";
 			$sql .= "and default_setting_subcategory = 'message' ";
 			$sql .= "and default_setting_name = 'text' ";
-			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && count($result) > 0) {
 				foreach($result as $row) {
@@ -80,7 +82,7 @@ if ($domains_processed == 1) {
 				}
 
 				// compare to message in language file, update and enable if different
-				$new_default_setting_value = str_replace("''", "'", $text['login-message_text']);
+				$new_default_setting_value = str_replace("''", "'", $text['login-message_text'] ?? '');
 				if ($current_default_setting_value != $new_default_setting_value) {
 					$sql = "update v_default_settings set ";
 					$sql .= "default_setting_value = :default_setting_value, ";
@@ -88,7 +90,6 @@ if ($domains_processed == 1) {
 					$sql .= "where default_setting_uuid = :default_setting_uuid ";
 					$parameters['default_setting_value'] = $text['login-message_text'];
 					$parameters['default_setting_uuid'] = $current_default_setting_uuid;
-					$database = new database;
 					$database->execute($sql, $parameters);
 					unset($sql, $parameters);
 				}

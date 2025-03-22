@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,14 +31,11 @@ if ($domains_processed == 1) {
 		$group->defaults();
 
 	//create the user view combines username, organization, contact first and last name
-		$database = new database;
 		$database->execute("DROP VIEW view_users;", null);
 
 		$sql = "CREATE VIEW view_users AS ( \n";
 		$sql .= "	select u.domain_uuid, u.user_uuid, d.domain_name, u.username, u.user_status, u.user_enabled, u.add_date, \n";
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/app/contacts/app_config.php")) {
-			$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given ||' '|| c.contact_name_family as contact_name, c.contact_name_given, c.contact_name_family, \n";
-		}
+		$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given ||' '|| c.contact_name_family as contact_name, c.contact_name_given, c.contact_name_family, c.contact_note, \n";
 		$sql .= "	( \n";
 		$sql .= "		select \n";
 		$sql .= "		string_agg(g.group_name, ', ') \n";
@@ -68,35 +65,26 @@ if ($domains_processed == 1) {
 		$sql .= "		ORDER BY group_level DESC \n";
 		$sql .= "		LIMIT 1 \n";
 		$sql .= "	) AS group_level \n";
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/app/contacts/app_config.php")) {
-			$sql .= "	from v_contacts as c \n";
-			$sql .= "	right join v_users u on u.contact_uuid = c.contact_uuid \n";
-			$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
-		}
-		else {
-			$sql .= "	from v_users as u \n";
-			$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
-		}
+		$sql .= "	from v_contacts as c \n";
+		$sql .= "	right join v_users u on u.contact_uuid = c.contact_uuid \n";
+		$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
 		$sql .= "	where 1 = 1 \n";
 		$sql .= "	order by u.username asc \n";
 		$sql .= "); \n";
-		$database = new database;
 		$database->execute($sql, null);
 		unset($sql);
 
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select * from v_user_groups ";
 		$sql .= "where group_uuid is null; ";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result)) {
 			foreach($result as $row) {
-				if (strlen($row['group_name']) > 0) {
+				if (!empty($row['group_name'])) {
 					//get the group_uuid
 						$sql = "select group_uuid from v_groups ";
 						$sql .= "where group_name = :group_name ";
 						$parameters['group_name'] = $row['group_name'];
-						$database = new database;
 						$group_uuid = $database->execute($sql, $parameters, 'column');
 						unset($sql, $parameters);
 					//set the user_group_uuid
@@ -105,7 +93,6 @@ if ($domains_processed == 1) {
 						$sql .= "where user_group_uuid = :user_group_uuid; ";
 						$parameters['group_uuid'] = $group_uuid;
 						$parameters['user_group_uuid'] = $row['user_group_uuid'];
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 				}
@@ -116,7 +103,6 @@ if ($domains_processed == 1) {
 	//update users email if they are all null
 		$sql = "select count(*) from v_users ";
 		$sql .= "where user_email is not null; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 			$sql = "with users AS ( ";
@@ -130,14 +116,12 @@ if ($domains_processed == 1) {
 			$sql .= "set user_email = users.email_address ";
 			$sql .= "from users ";
 			$sql .= "where v_users.user_uuid = users.user_uuid;";
-			$database = new database;
 			$database->execute($sql, null);
 		}
 
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select count(*) from v_default_settings ";
 		$sql .= "where default_setting_category = 'user'; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows > 0) {
 			//build the array
@@ -167,11 +151,10 @@ if ($domains_processed == 1) {
 			$array['default_settings'][$x]['default_setting_subcategory'] = "password_special";
 
 			//add the temporary permission
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add("default_setting_edit", 'temp');
 
 			//save to the data
-			$database = new database;
 			$database->app_name = 'default_setting';
 			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 			$database->save($array, false);
@@ -187,7 +170,6 @@ if ($domains_processed == 1) {
 			//add the email templates to the database
 			$sql = "select count(*) as num_rows from v_email_templates ";
 			$sql .= "where email_template_uuid = '05b529c4-fba7-4071-bab3-143b076392e7' ";
-			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows == 0) {
 				//build the array
@@ -218,12 +200,11 @@ if ($domains_processed == 1) {
 				$x++;
 
 				//add the temporary permission
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add("email_template_add", 'temp');
 				$p->add("email_template_edit", 'temp');
 
 				//save to the data
-				$database = new database;
 				$database->app_name = 'email_templates';
 				$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
 				$database->save($array, false);
@@ -233,6 +214,17 @@ if ($domains_processed == 1) {
 				$p->delete("email_template_add", 'temp');
 				$p->delete("email_template_edit", 'temp');
 			}
+		}
+
+	//update the user_type when the value is null
+		$sql = "select count(*) from v_users ";
+		$sql .= "where user_type is null; ";
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows > 0) {
+			$sql = "update v_users ";
+			$sql .= "set user_type = 'default' ";
+			$sql .= "where user_type is null;";
+			$database->execute($sql, null);
 		}
 
 }

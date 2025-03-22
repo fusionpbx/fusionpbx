@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//set from session variables
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+
 //get posted data
-	if (is_array($_POST['call_center_agents'])) {
+	if (!empty($_POST['call_center_agents'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$call_center_agents = $_POST['call_center_agents'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
+	if (!empty($action) && !empty($call_center_agents)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('call_center_agent_delete')) {
@@ -69,50 +68,64 @@
 	}
 
 //get http variables and set them to php variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
-//add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = " (";
-		$sql_search .= "lower(agent_name) like :search ";
-		$sql_search .= "or lower(agent_id) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
+//add the search and show variables
+	$search = $_GET["search"] ?? '';
+	$show = $_GET["show"] ?? '';
 
 //get total call center agent count from the database
 	$sql = "select count(*) from v_call_center_agents ";
-	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('call_center_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if ($show == "all" && permission_exists('call_center_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (isset($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(agent_name) like :search ";
+		$sql .= "	or lower(agent_id) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('call_center_all')) {
+	if ($show == "all" && permission_exists('call_center_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select * ";
+	$sql .= "from v_call_center_agents ";
+	if ($show == "all" && permission_exists('call_center_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(agent_name) like :search ";
+		$sql .= "	or lower(agent_id) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
+	}
 	$sql .= order_by($order_by, $order, 'agent_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -125,7 +138,7 @@
 
 //show content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-call_center_agents']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-call_center_agents']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'call_center_queues.php','style'=>'margin-right: 15px;']);
 	if (permission_exists('call_center_imports')) {
@@ -142,7 +155,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>";
 	if (permission_exists('call_center_all')) {
-		if ($_GET['show'] == 'all') {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
@@ -171,14 +184,15 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('call_center_agent_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('call_center_all')) {
+	if ($show == "all" && permission_exists('call_center_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	//echo th_order_by('domain_uuid', 'domain_uuid', $order_by, $order);
@@ -192,16 +206,20 @@
 	//echo th_order_by('agent_wrap_up_time', $text['label-wrap_up_time'], $order_by, $order);
 	//echo th_order_by('agent_reject_delay_time', $text['label-reject_delay_time'], $order_by, $order);
 	//echo th_order_by('agent_busy_delay_time', $text['label-busy_delay_time'], $order_by, $order);
-	if (permission_exists('call_center_agent_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('call_center_agent_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($result)) {
+	if (!empty($result)) {
 		$x = 0;
 		foreach($result as $row) {
+			$list_row_url = '';
 			if (permission_exists('call_center_agent_edit')) {
 				$list_row_url = "call_center_agent_edit.php?id=".urlencode($row['call_center_agent_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('call_center_agent_delete')) {
@@ -210,8 +228,8 @@
 				echo "		<input type='hidden' name='call_center_agents[$x][uuid]' value='".escape($row['call_center_agent_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('call_center_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+			if ($show == "all" && permission_exists('call_center_all')) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				else {
@@ -239,7 +257,7 @@
 				$sql .= "where gateway_uuid = :gateway_uuid ";
 				$parameters['gateway_uuid'] = $bridge_statement[2];
 				$database = new database;
-				$result = $database->select($sql, $parameters, 'all');
+				$result = $database->select($sql, $parameters ?? null, 'all');
 				if (count($result) > 0) {
 					$gateway_name = $result[0]['gateway'];
 					$agent_contact = str_replace($bridge_statement[2], $gateway_name, $agent_contact);
@@ -252,7 +270,7 @@
 			//echo "	<td>".$row[agent_wrap_up_time]."</td>\n";
 			//echo "	<td>".$row[agent_reject_delay_time]."</td>\n";
 			//echo "	<td>".$row[agent_busy_delay_time]."</td>\n";
-			if (permission_exists('call_center_agent_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('call_center_agent_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -264,6 +282,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 
@@ -275,3 +294,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

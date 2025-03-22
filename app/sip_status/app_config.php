@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Affiche les informations système telles que les informations sur la RAM, le processeur et le disque dur.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "აჩვენებს სისტემის ისეთი პარამეტრების, როგორიცაა RAM, CPU და დისკი, ინფორმაციას.";
 		$apps[$x]['description']['nl-nl'] = "Toont de systeem informatie zoals RAM, CPU en Harddisk informatie.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

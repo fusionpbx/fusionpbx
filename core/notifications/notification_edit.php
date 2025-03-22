@@ -24,12 +24,8 @@ Contributor(s):
 Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -41,13 +37,15 @@ Mark J Crane <markjcrane@fusionpbx.com>
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 // retrieve software uuid
 	$sql = "select software_uuid, software_url, software_version from v_software";
-	$database = new database;
 	$row = $database->select($sql, null, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$software_uuid = $row["software_uuid"];
@@ -78,9 +76,9 @@ Mark J Crane <markjcrane@fusionpbx.com>
 			$web_server = $_SERVER['SERVER_SOFTWARE'];
 
 			// switch version
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_result = event_socket_request($fp, 'api version');
+			$esl = event_socket::create();
+			if ($esl->is_connected()) {
+				$switch_result = event_socket::api('version');
 			}
 			$switch_ver = trim($switch_result);
 
@@ -90,7 +88,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 				case "mysql" :	$sql = "select version();";			break;
 				case "sqlite" :	$sql = "select sqlite_version();";	break;
 			}
-			$database = new database;
 			$db_ver = $database->select($sql, null, 'column');
 			unset($sql);
 
@@ -159,7 +156,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 		// get local project notification participation flag
 		$sql = "select project_notifications from v_notifications";
-		$database = new database;
 		$current_project_notifications = $database->select($sql, null, 'row');
 		unset($sql);
 
@@ -186,7 +182,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 				if ($response['result'] == 'deleted') {
 					// set local project notification participation flag to false
 					$sql = "update v_notifications set project_notifications = 'false'";
-					$database = new database;
 					$database->execute($sql);
 					unset($sql);
 				}
@@ -246,7 +241,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 		if ($response['result'] == 'updated' || $response['result'] == 'inserted') {
 			// set local project notification participation flag to true
 			$sql = "update v_notifications set project_notifications = 'true'";
-			$database = new database;
 			$database->execute($sql);
 			unset($sql);
 			// set message
@@ -273,7 +267,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 		// check local project notification participation flag
 		$sql = "select project_notifications from v_notifications";
-		$database = new database;
 		$row = $database->select($sql, null, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
 			$setting["project_notifications"] = $row["project_notifications"];

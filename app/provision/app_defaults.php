@@ -28,26 +28,24 @@
 if ($domains_processed == 1) {
 
 	//normalize the mac address
-	$sql = "select device_uuid, device_mac_address ";
+	$sql = "select device_uuid, device_address ";
 	$sql .= "from v_devices ";
-	$sql .= "where (device_mac_address like '%-%' or device_mac_address like '%:%') ";
-	$database = new database;
+	$sql .= "where (device_address like '%-%' or device_address like '%:%') ";
 	$result = $database->select($sql, null, 'all');
-	if (is_array($result) && @sizeof($result) != 0) {
+	if (!empty($result)) {
 		foreach ($result as $row) {
 			//define update values
 				$device_uuid = $row["device_uuid"];
-				$device_mac_address = $row["device_mac_address"];
-				$device_mac_address = strtolower($device_mac_address);
-				$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+				$device_address = $row["device_address"];
+				$device_address = strtolower($device_address);
+				$device_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_address);
 			//build update array
 				$array['devices'][0]['device_uuid'] = $device_uuid;
-				$array['devices'][0]['device_mac_address'] = $device_mac_address;
+				$array['devices'][0]['device_address'] = $device_address;
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('device_add', 'temp');
 			//execute update
-				$database = new database;
 				$database->app_name = 'provision';
 				$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 				$database->save($array, false);
@@ -56,7 +54,7 @@ if ($domains_processed == 1) {
 				$p->delete('device_add', 'temp');
 		}
 	}
-	unset($sql, $result, $row);
+	unset($sql, $result, $row, $p);
 
 	//update http_auth_enabled set to true
 	$sql = "select count(*) from v_default_settings ";
@@ -69,21 +67,28 @@ if ($domains_processed == 1) {
 			$array['default_settings'][$x]['default_setting_enabled'] = 'true';
 
 		//grant temporary permissions
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('default_setting_edit', 'temp');
 
 		//execute update
-			$database = new database;
 			$database->app_name = 'provision';
 			$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 			$database->save($array, false);
 			unset($array);
 
-		//grant temporary permissions
-			$p = new permissions;
+		//revoke temporary permissions
 			$p->delete('default_setting_edit', 'temp');
+			unset($p);
 	}
 	unset($sql);
+
+	//update default settings in category provision set enabled to use type boolean
+	$sql = "update v_default_settings ";
+	$sql .= "set default_setting_name = 'boolean' ";
+	$sql .= "where default_setting_category = 'provision' ";
+	$sql .= "and default_setting_subcategory = 'enabled' ";
+	$sql .= "and default_setting_name <> 'boolean' ";
+	$database->execute($sql);
 
 	//update default settings
 	$sql = "update v_default_settings set ";
@@ -95,7 +100,6 @@ if ($domains_processed == 1) {
 	$sql .= "and default_setting_name = 'text' ";
 	$sql .= "and default_setting_value = 'false' ";
 	$sql .= "and default_setting_enabled = 'false' ";
-	$database = new database;
 	$database->execute($sql);
 
 	//update default settings
@@ -104,7 +108,6 @@ if ($domains_processed == 1) {
 	$sql .= "where default_setting_category = 'provision' ";
 	$sql .= "and default_setting_subcategory = 'http_auth_password' ";
 	$sql .= "and default_setting_name = 'text' ";
-	$database = new database;
 	$database->execute($sql);
 
 	//update domain settings
@@ -113,7 +116,23 @@ if ($domains_processed == 1) {
 	$sql .= "where domain_setting_category = 'provision' ";
 	$sql .= "and domain_setting_subcategory = 'http_auth_password' ";
 	$sql .= "and domain_setting_name = 'text' ";
-	$database = new database;
+	$database->execute($sql);
+
+	//update if the type is boolean with value of 0 or 1 use type text, or if type numeric use type text.
+	//explanation: the template default setting use string for the template values, boolean type only used with conditions
+	$sql = "update v_default_settings ";
+	$sql .= "set default_setting_name = 'text' ";
+	$sql .= "where ";
+	$sql .= "( ";
+	$sql .= " default_setting_category = 'provision' ";
+	$sql .= " and default_setting_value in ('0', '1') ";
+	$sql .= " and default_setting_name = 'boolean' ";
+	$sql .= ") ";
+	$sql .= "or ";
+	$sql .= "( ";
+	$sql .= "default_setting_category = 'provision' ";
+	$sql .= "and default_setting_name = 'numeric' ";
+	$sql .= ") ";
 	$database->execute($sql);
 
 }

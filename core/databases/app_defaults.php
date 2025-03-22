@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,14 +25,13 @@
 */
 
 //proccess this only one time
-if ($domains_processed == 1) {
+if (!empty($domains_processed) && $domains_processed == 1) {
 
 	//set the database driver
 		$sql = "select * from v_databases ";
 		$sql .= "where database_driver is null ";
-		$database = new database;
 		$result = $database->select($sql, null, 'all');
-		foreach ($result as &$row) {
+		foreach ($result as $row) {
 			$database_uuid = $row["database_uuid"];
 			$database_type = $row["database_type"];
 			$database_type_array = explode(":",  $database_type);
@@ -47,7 +46,6 @@ if ($domains_processed == 1) {
 			$sql .= "where database_uuid = :database_uuid ";
 			$parameters['database_driver'] = $database_driver;
 			$parameters['database_uuid'] = $database_uuid;
-			$database = new database;
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
 		}

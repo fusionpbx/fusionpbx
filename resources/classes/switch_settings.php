@@ -5,7 +5,6 @@
  *
  * @method settings will add missing switch directories to default settings
  */
-if (!class_exists('switch_settings')) {
 	class switch_settings {
 
 		public $event_socket_ip_address;
@@ -20,23 +19,13 @@ if (!class_exists('switch_settings')) {
 		}
 
 		/**
-		 * Called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * settings Set switch directories in default settings
 		 */
 		public function settings() {
 
 			//define the variables
 				if (!isset($this->event_socket_ip_address)) {
-					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+					if (!empty($_SESSION['event_socket_ip_address'])) {
 						$this->event_socket_ip_address = $_SESSION['event_socket_ip_address'];
 					}
 					else {
@@ -44,7 +33,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_port)) {
-					if (strlen($_SESSION['event_socket_port']) > 0) {
+					if (!empty($_SESSION['event_socket_port'])) {
 						$this->event_socket_port = $_SESSION['event_socket_port'];
 					}
 					else {
@@ -52,7 +41,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_password)) {
-					if (strlen($_SESSION['event_socket_password']) > 0) {
+					if (!empty($_SESSION['event_socket_password'])) {
 						$this->event_socket_password = $_SESSION['event_socket_password'];
 					}
 					else {
@@ -61,9 +50,8 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//connect to event socket
-				$esl = new event_socket;
-				$esl->connect($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
-
+				$esl = event_socket::create($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
+				
 			//run the api command
 				$result = $esl->request('api global_getvar');
 
@@ -76,11 +64,24 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 
+			//set defaults
+				$vars['base_dir'] = $vars['base_dir'] ?? '';
+				$vars['conf_dir'] = $vars['conf_dir'] ?? '';
+				$vars['db_dir'] = $vars['db_dir'] ?? '';
+				$vars['recordings_dir'] = $vars['recordings_dir'] ?? '';
+				$vars['script_dir'] = $vars['script_dir'] ?? '';
+				$vars['sounds_dir'] = $vars['sounds_dir'] ?? '';
+				$vars['storage_dir'] = $vars['storage_dir'] ?? '';
+				$vars['grammar_dir'] = $vars['grammar_dir'] ?? '';
+				$vars['log_dir'] = $vars['log_dir'] ?? '';
+				$vars['mod_dir'] = $vars['mod_dir'] ?? '';
+
 			//set the bin directory
 				if ($vars['base_dir'] == "/usr/local/freeswitch") {
-					$bin = "/usr/local/freeswitch/bin"; 
-				} else {
-					$bin = "";
+					$bin = '/usr/local/freeswitch/bin'; 
+				}
+				else {
+					$bin = '';
 				}
 
 			//create the default settings array
@@ -226,6 +227,7 @@ if (!class_exists('switch_settings')) {
 					}
 					$x++;
 				}
+				unset($array);
 
 			//add the missing default settings
 				if (count($missing) > 0) {
@@ -239,18 +241,21 @@ if (!class_exists('switch_settings')) {
 							$array['default_settings'][$i]['default_setting_value'] = $row['default_setting_value'];
 							$array['default_settings'][$i]['default_setting_enabled'] = $row['default_setting_enabled'];
 							$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
+
 						//increment the row id
 							$i++;
 					}
 					if (is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('default_setting_add', 'temp');
+
 						//execute insert
 							$database = new database;
 							$database->app_name = 'switch_settings';
 							$database->app_uuid = '84e91084-a227-43cd-ae99-a0f8ed61eb8b';
 							$database->save($array);
+
 						//revoke temporary permissions
 							$p->delete('default_setting_add', 'temp');
 					}
@@ -258,12 +263,10 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//set the default settings
-				if (is_array($array)) {
+				if (!empty($array) && is_array($array)) {
 					foreach ($array as $row) {
-						if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
-							if ($row['default_setting_enabled'] != "false") {
-								$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
-							}
+						if (isset($row['default_setting_enabled']) && $row['default_setting_enabled'] == "true" && isset($row['default_setting_subcategory'])) {
+							$_SESSION['switch'][$row['default_setting_subcategory']][$row['default_setting_name']] = $row['default_setting_value'] ?? '';
 						}
 					}
 				}
@@ -272,6 +275,3 @@ if (!class_exists('switch_settings')) {
 				unset($array);
 		}
 	}
-}
-
-?>

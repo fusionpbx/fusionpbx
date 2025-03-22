@@ -1,6 +1,5 @@
 <?php
 
-if (!class_exists('install')) {
 	class install {
 
 		/**
@@ -25,16 +24,6 @@ if (!class_exists('install')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * <p>Used to create the config.conf file.</p>
 		 * <p>BSD /usr/local/etc/fusionpbx</p>
 		 * <p>Linux /etc/fusionpbx</p>
@@ -43,7 +32,12 @@ if (!class_exists('install')) {
 		public function config() {
 
 			//set the default config file location
-			if (stristr(PHP_OS, 'BSD')) {
+			$os = strtoupper(substr(PHP_OS, 0, 3));
+			switch ($os) {
+				case "FRE":
+				case "OPE":
+				case "NET":
+				case "BSD":
 				$config_path = '/usr/local/etc/fusionpbx';
 				$config_file = $config_path.'/config.conf';
 				$document_root = '/usr/local/www/fusionpbx';
@@ -55,8 +49,10 @@ if (!class_exists('install')) {
 				$storage_dir = '/var/lib/freeswitch/storage';
 				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 				$scripts_dir = '/usr/share/freeswitch/scripts';
-			}
-			if (stristr(PHP_OS, 'Linux')) {
+				$php_dir = PHP_BINDIR;
+				$cache_location = '/var/cache/fusionpbx';
+				break;
+			case "LIN":
 				$config_path = '/etc/fusionpbx/';
 				$config_file = $config_path.'/config.conf';
 				$document_root = '/var/www/fusionpbx';
@@ -68,6 +64,25 @@ if (!class_exists('install')) {
 				$storage_dir = '/var/lib/freeswitch/storage';
 				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 				$scripts_dir = '/usr/share/freeswitch/scripts';
+				$php_dir = PHP_BINDIR;
+				$cache_location = '/var/cache/fusionpbx';
+				break;
+			case "WIN":
+				$system_drive = getenv('SystemDrive');
+				$config_path = $system_drive . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' ;
+				$config_file = $config_path.DIRECTORY_SEPARATOR.'config.conf';
+				$document_root = $_SERVER["DOCUMENT_ROOT"];
+
+				$conf_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'conf';
+				$sounds_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'sounds';
+				$database_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'db';
+				$recordings_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'recordings';
+				$storage_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'storage';
+				$voicemail_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'voicemail';
+				$scripts_dir = $_SERVER['ProgramFiles'].DIRECTORY_SEPARATOR.'freeswitch'.DIRECTORY_SEPARATOR.'scripts';
+				$php_dir = dirname(PHP_BINARY);
+				$cache_location = dirname($_SERVER['DOCUMENT_ROOT']).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'fusionpbx';
+				break;
 			}
 
 			//end the script if the config path is not set
@@ -108,12 +123,12 @@ if (!class_exists('install')) {
 			$conf .= "document.root = ".$document_root."\n";
 			$conf .= "project.path =\n";
 			$conf .= "temp.dir = /tmp\n";
-			$conf .= "php.dir = ".PHP_BINDIR."\n";
+			$conf .= "php.dir = ".$php_dir."\n";
 			$conf .= "php.bin = php\n";
 			$conf .= "\n";
 			$conf .= "#cache settings\n";
 			$conf .= "cache.method = file\n";
-			$conf .= "cache.location = /var/cache/fusionpbx\n";
+			$conf .= "cache.location = ".$cache_location."\n";
 			$conf .= "cache.settings = true\n";
 			$conf .= "\n";
 			$conf .= "#switch settings\n";
@@ -130,15 +145,15 @@ if (!class_exists('install')) {
 			$conf .= "xml_handler.reg_as_number_alias = false\n";
 			$conf .= "xml_handler.number_as_presence_id = true\n";
 			$conf .= "\n";
-			$conf .= "#error reporting hide show all errors except notices and warnings\n";
-			$conf .= "error.reporting = 'E_ALL ^ E_NOTICE ^ E_WARNING'\n";
+			$conf .= "#error reporting options: user,dev,all\n";
+			$conf .= "error.reporting = user\n";
 
 			//write the config file
 			$file_handle = fopen($config_file,"w");
 			if(!$file_handle) { return; }
 			fwrite($file_handle, $conf);
 			fclose($file_handle);
-			
+
 			//if the config.conf file was saved return true
 			if (file_exists($config_file)) {
 				return true;
@@ -150,6 +165,3 @@ if (!class_exists('install')) {
 		}
 
 	}
-}
-
-?>

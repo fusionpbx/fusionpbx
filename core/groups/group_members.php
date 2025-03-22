@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -47,19 +43,25 @@
 		return;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get the http post data
-	if (is_array($_POST['group_members'])) {
-		$action = $_POST['action'];
-		$group_uuid = $_POST['group_uuid'];
-		$group_members = $_POST['group_members'];
-	}
+//get the http data
+	$action = $_REQUEST['action'] ?? '';
+	$group_uuid = $_REQUEST['group_uuid'] ?? '';
+	$group_members = $_REQUEST['group_members'] ?? '';
+
+//set default values
+	$group_name = '';
+	$domain_uuid = '';
+	$list_row_url = '';
 
 //process the http post data by action
-	if ($action != '' && is_array($group_members) && @sizeof($group_members) != 0) {
+	if (!empty($action) && !empty($group_members)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('group_member_delete') && is_uuid($group_uuid)) {
@@ -75,11 +77,9 @@
 	}
 
 //get the group uuid, lookup domain uuid (if any) and name
-	$group_uuid = $_REQUEST['group_uuid'];
 	$sql = "select domain_uuid, group_name from v_groups ";
 	$sql .= "where group_uuid = :group_uuid ";
 	$parameters['group_uuid'] = $group_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$domain_uuid = $row["domain_uuid"];
@@ -93,7 +93,6 @@
 		$sql .= "domain_uuid = :domain_uuid ";
 		$sql .= "order by username ";
 		$parameters['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : $_SESSION['domain_uuid'];
-		$database = new database;
 		$users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -114,18 +113,21 @@
 	$sql .= "and ug.group_uuid = :group_uuid ";
 	$sql .= "order by d.domain_name asc, u.username asc ";
 	$parameters['group_uuid'] = $group_uuid;
-	$database = new database;
 	$user_groups = $database->select($sql, $parameters, 'all');
 	$num_rows = is_array($user_groups) && @sizeof($user_groups) != 0 ? sizeof($user_groups) : 0;
 	unset($sql, $parameters);
 
 //add group_member to the users array
-	foreach ($users as &$field) {
-		$field['group_member'] = 'false';
-		foreach($user_groups as $row) {
-			if ($row['user_uuid'] == $field['user_uuid']) {
-				$field['group_member'] = 'true';
-				break;
+	if (!empty($users)) {
+		foreach ($users as $field) {
+			$field['group_member'] = 'false';
+			if (!empty($user_groups)) {
+				foreach($user_groups as $row) {
+					if ($row['user_uuid'] == $field['user_uuid']) {
+						$field['group_member'] = 'true';
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -140,7 +142,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-group_members']." (".$group_name.": ".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-group_members']."</b><div class='count'>".$group_name.": ".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'groups.php']);
 	if (permission_exists('group_permission_view')) {
@@ -148,7 +150,7 @@
 	}
 
 	if (permission_exists('group_member_add')) {
-		echo 	"<form class='inline' method='post' action='groupmemberadd.php'>\n";
+		echo 	"<form class='inline' method='post' action='group_member_add.php'>\n";
 		echo "	<select name='user_uuid' class='formfld'>\n";
 		echo "		<option value=''>".$text['label-select']."...</option>\n";
 		foreach ($users as $row) {
@@ -179,11 +181,12 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('group_member_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($user_groups ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(!empty($user_groups) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	if (permission_exists('user_all')) {
@@ -194,7 +197,7 @@
 
 	if (is_array($user_groups) && @sizeof($user_groups) != 0) {
 		$x = 0;
-		foreach ($user_groups as &$row) {
+		foreach ($user_groups as $row) {
 			echo "<tr class='list-row' href='".$list_row_url."'>";
 			if (permission_exists('group_member_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -212,6 +215,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>";
 	echo "</form>";

@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -86,7 +82,7 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(pin_number) like :search ";
 		$sql_search .= "or lower(accountcode) like :search ";
@@ -130,7 +126,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-pin_numbers']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-pin_numbers']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>'margin-right: 15px;','link'=>'pin_download.php']);
 	if (permission_exists('pin_number_add')) {
@@ -174,6 +170,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('pin_number_add') || permission_exists('pin_number_edit') || permission_exists('pin_number_delete')) {
@@ -185,7 +182,7 @@
 	echo th_order_by('accountcode', $text['label-accountcode'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('pin_number_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('pin_number_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -193,8 +190,12 @@
 	if (is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
 		$x = 0;
 		foreach ($pin_numbers as $row) {
+			$list_row_url = '';
 			if (permission_exists('pin_number_edit')) {
 				$list_row_url = "pin_number_edit.php?id=".urlencode($row['pin_number_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('pin_number_add') || permission_exists('pin_number_edit') || permission_exists('pin_number_delete')) {
@@ -222,7 +223,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."&nbsp;</td>\n";
-			if (permission_exists('pin_number_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('pin_number_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -234,6 +235,7 @@
 	unset($pin_numbers);
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 

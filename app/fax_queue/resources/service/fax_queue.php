@@ -1,19 +1,13 @@
 <?php
 
-//check the permission
-	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-	}
-	else {
+//run from command line only
+	if (!defined('STDIN')) {
 		exit;
 	}
 
 //includes files
-	require_once "resources/require.php";
+	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/pdo.php";
-	include "resources/classes/permissions.php";
 
 //increase limits
 	set_time_limit(0);
@@ -86,12 +80,6 @@
 		exit;
 	}
 
-//fax queue enabled
-	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true') {
-		echo "FAX Queue is disabled in Default Settings\n";
-		exit;
-	}
-
 //make sure the /var/run/fusionpbx directory exists
 	if (!file_exists('/var/run/fusionpbx')) {
 		$result = mkdir('/var/run/fusionpbx', 0777, true);
@@ -116,27 +104,27 @@
 	}
 
 //set the fax queue interval
-	if (isset($_SESSION['fax_queue']['interval']['numeric'])) {
-		$fax_queue_interval = $_SESSION['fax_queue']['interval']['numeric'];
+	if (!empty($settings->get('fax_queue', 'interval'))) {
+		$fax_queue_interval = $settings->get('fax_queue', 'interval');
 	}
 	else {
 		$fax_queue_interval = '30';
 	}
 
 //set the fax queue limit
-	if (isset($_SESSION['fax_queue']['limit']['numeric'])) {
-		$fax_queue_limit = $_SESSION['fax_queue']['limit']['numeric'];
+	if (!empty($settings->get('fax_queue', 'limit'))) {
+		$fax_queue_limit = $settings->get('fax_queue', 'limit');
 	}
 	else {
 		$fax_queue_limit = '30';
 	}
-	if (isset($_SESSION['fax_queue']['debug']['boolean'])) {
-		$debug = $_SESSION['fax_queue']['debug']['boolean'];
+	if (!empty($settings->get('fax_queue', 'debug'))) {
+		$debug = $settings->get('fax_queue', 'debug');
 	}
 
 //set the fax queue retry interval
-	if (isset($_SESSION['fax_queue']['retry_interval']['numeric'])) {
-		$fax_retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+	if (!empty($settings->get('fax_queue', 'retry_interval'))) {
+		$fax_retry_interval = $settings->get('fax_queue', 'retry_interval');
 	}
 	else {
 		$fax_retry_interval = '180';
@@ -145,7 +133,7 @@
 //change the working directory
 	chdir($_SERVER['DOCUMENT_ROOT']);
 
-//get the messages waiting in the email queue
+//get the messages waiting in the fax queue
 	while (true) {
 
 		//get the fax messages that are waiting to send
@@ -153,7 +141,7 @@
 			$sql .= "where hostname = :hostname ";
 			$sql .= "and ( ";
 			$sql .= "	( ";
-			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying') ";
+			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying' or fax_status = 'busy') ";
 			$sql .= "		and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
 			$sql .= "	)  ";
 			$sql .= "	or ( ";
@@ -189,7 +177,7 @@
 		//process the messages
 			if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 				foreach($fax_queue as $row) {
-					$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
+					$command = PHP_BINARY." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
 					$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."'";
 					if (isset($debug)) {
 						//run process inline to see debug info

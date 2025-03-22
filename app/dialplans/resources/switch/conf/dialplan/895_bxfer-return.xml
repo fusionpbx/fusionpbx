@@ -1,0 +1,6 @@
+<extension name="bxfer-return" number="" context="global" continue="false" app_uuid="e68d77c6-d504-41f9-8a1c-ec5ee4dfa793" global="true" enabled="false" order="895">
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${sip_refer_to}" expression="@">
+		<action application="transfer" data="${sip_to_user} XML ${domain_name}"/>
+	</condition>
+</extension>

@@ -25,7 +25,6 @@
 */
 
 //define the time conditions class
-	if (!class_exists('time_conditions')) {
 		class time_conditions {
 
 			/**
@@ -79,7 +78,7 @@
 
 							//build the delete array
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 										//build delete array
 											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
@@ -100,7 +99,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_delete', 'temp');
 										$p->add('dialplan_detail_delete', 'temp');
 
@@ -161,7 +160,7 @@
 
 							//get current toggle state
 								foreach($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = "'".$record['uuid']."'";
 									}
 								}
@@ -193,7 +192,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('dialplan_edit', 'temp');
 
 									//save the array
@@ -252,7 +251,7 @@
 
 							//get checked records
 								foreach($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = "'".$record['uuid']."'";
 									}
 								}
@@ -264,7 +263,7 @@
 										$sql = "select * from v_".$this->table." ";
 										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 										$database = new database;
-										$rows = $database->select($sql, $parameters, 'all');
+										$rows = $database->select($sql, $parameters ?? null, 'all');
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
@@ -310,7 +309,8 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
+										$p->add('dialplan_add', 'temp');
 										$p->add('dialplan_detail_add', 'temp');
 
 									//save the array
@@ -321,6 +321,7 @@
 										unset($array);
 
 									//revoke temporary permissions
+										$p->delete('dialplan_add', 'temp');
 										$p->delete('dialplan_detail_add', 'temp');
 
 									//clear the cache
@@ -344,6 +345,3 @@
 
 
 		} //class
-	}
-
-?>

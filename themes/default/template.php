@@ -13,16 +13,16 @@
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<meta name="robots" content="noindex, nofollow, noarchive" />
 
 {*//external css files *}
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php'>
-
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202503130256'>
 {*//link to custom css file *}
-	{if $settings.theme.custom_css}
+	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
 	{/if}
 
@@ -41,10 +41,10 @@
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-colorpicker.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-pwstrength.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript'>{literal}window.FontAwesomeConfig = { autoReplaceSvg: false }{/literal}</script>
-	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/solid.min.js.php' defer></script>
+	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fontawesome/js/all.min.js.php' defer></script>
 
 {*//web font loader *}
-	{if $settings.theme.font_loader == 'true'}
+	{if isset($settings.theme.font_loader) && $settings.theme.font_loader == 'true'}
 		{if $settings.theme.font_retrieval != 'asynchronous'}
 			<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/{$settings.theme.font_loader_version}/webfont.js'></script>
 		{/if}
@@ -119,7 +119,7 @@
 							{literal}
 							$('.menu_side_control_state').hide();
 							$('.menu_side_item_main_sub_icons').hide();
-							$('.sub_arrows').removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
+							$('.sub_arrows').removeClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 							$('#menu_side_container').animate({ width: '{/literal}{$settings.theme.menu_side_width_contracted}{literal}px' }, 180, function() {
 								menu_side_state_current = 'contracted';
 							});
@@ -210,8 +210,8 @@
 				}
 
 				function menu_side_item_toggle(item_id) {
-					$('#sub_arrow_'+item_id).toggleClass(['fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}','fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}']);
-					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
+					$('#sub_arrow_'+item_id).toggleClass(['{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}','{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}']);
+					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 					$('#sub_'+item_id).slideToggle(180, function() {
 						{/literal}
 						{if $settings.theme.menu_side_item_main_sub_close != 'manual'}
@@ -223,55 +223,6 @@
 						{/if}
 						{literal}
 					});
-				}
-
-				function menu_side_state_set(state) {
-					var user_setting_set_path = '{/literal}{$project_path}{literal}/core/user_settings/user_setting_set.php?category=theme&subcategory=menu_side_state&name=text&value='+state;
-					var xhr = new XMLHttpRequest();
-					xhr.open('GET', user_setting_set_path);
-					xhr.send(null);
-					xhr.onreadystatechange = function () {
-						var setting_modified;
-						if (xhr.readyState === 4) {
-							if (xhr.status === 200) {
-								setting_modified = xhr.responseText;
-								if (setting_modified == 'true') {
-									document.getElementById('menu_side_state_set_expanded').style.display = state == 'expanded' ? 'none' : 'block';
-									document.getElementById('menu_side_state_set_contracted').style.display = state == 'contracted' ? 'none' : 'block';
-									{/literal}
-									{if $menu_side_state == 'hidden'}
-										{literal}
-										document.getElementById('menu_side_state_hidden_button').style.display='none';
-										{/literal}
-									{/if}
-									{literal}
-									if (state == 'expanded') {
-										if ($(window).width() >= 576) {
-											$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_expanded}{literal} }, 250);
-										}
-										else {
-											$('#menu_side_container').animate({ width: $(window).width() }, 180);
-										}
-										document.getElementById('menu_side_state_current').value = 'expanded';
-										display_message("{/literal}{$text.theme_message_menu_expanded}{literal}", 'positive', 1000);
-									}
-									else {
-										menu_side_contract();
-										if ($(window).width() >= 576) {
-											$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_contracted}{literal} }, 250);
-										}
-										menu_side_state_current = 'contracted';
-										document.getElementById('menu_side_state_current').value = 'contracted';
-										display_message("{/literal}{$text.theme_message_menu_contracted}{literal}", 'positive', 1000);
-									}
-								}
-								else if (setting_modified == 'deleted') {
-									display_message("{/literal}{$text.theme_message_menu_reset}{literal}", 'positive', 1000);
-									document.location.reload();
-								}
-							}
-						}
-					}
 				}
 				{/literal}
 		{/if}
@@ -293,11 +244,13 @@
 		//domain selector controls
 			{if $domain_selector_enabled}
 				{literal}
-				$('.domain_selector_domain').on('click', function() { show_domains(); });
-				$('#header_domain_selector_domain').on('click', function() { show_domains(); });
+				$('.header_domain_selector_domain').on('click', function() { event.preventDefault(); show_domains(); });
 				$('#domains_hide').on('click', function() { hide_domains(); });
 
 				function show_domains() {
+					$('#body_header_user_menu').fadeOut(200);
+					search_domains('domains_list');
+
 					$('#domains_visible').val(1);
 					var scrollbar_width = (window.innerWidth - $(window).width()); //gold: only solution that worked with body { overflow:auto } (add -ms-overflow-style: scrollbar; to <body> style for ie 10+)
 					if (scrollbar_width > 0) {
@@ -305,10 +258,9 @@
 						$('.navbar').css('margin-right',scrollbar_width); //adjust navbar margin to compensate
 						$('#domains_container').css('right',-scrollbar_width); //domain container right position to compensate
 					}
-					$(document).scrollTop(0);
 					$('#domains_container').show();
 					$('#domains_block').animate({marginRight: '+=300'}, 400, function() {
-						$('#domains_filter').trigger('focus');
+						$('#domains_search').trigger('focus');
 					});
 				}
 
@@ -316,8 +268,7 @@
 					$('#domains_visible').val(0);
 					$(document).ready(function() {
 						$('#domains_block').animate({marginRight: '-=300'}, 400, function() {
-							$('#domains_filter').val('');
-							domain_search($('#domains_filter').val());
+							$('#domains_search').val('');
 							$('.navbar').css('margin-right','0'); //restore navbar margin
 							$('#domains_container').css('right','0'); //domain container right position
 							$('#domains_container').hide();
@@ -365,7 +316,7 @@
 			{/if}
 
 		//common (used by delete and toggle)
-			{if $settings.theme.keyboard_shortcut_delete_enabled || $settings.theme.keyboard_shortcut_toggle_enabled}
+			{if !empty($settings.theme.keyboard_shortcut_delete_enabled) || !empty($settings.theme.keyboard_shortcut_toggle_enabled)}
 				var list_checkboxes;
 				list_checkboxes = document.querySelectorAll('table.list tr.list-row td.checkbox input[type=checkbox]');
 			{/if}
@@ -426,7 +377,7 @@
 					{/if}
 
 				//key: [delete], list: to delete checked, edit: to delete
-					{if $settings.theme.keyboard_shortcut_delete_enabled}
+					{if !empty($settings.theme.keyboard_shortcut_delete_enabled)}
 						{literal}
 						if (e.which == 46 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
 							e.preventDefault();
@@ -551,11 +502,28 @@
 						{/literal}
 					{/if}
 
+				//key: [left] / [right], audio playback: rewind / fast-forward
+					{literal}
+					if (
+						e.which == 39 &&
+						!(e.target.tagName == 'INPUT' && e.target.type == 'text') &&
+						e.target.tagName != 'TEXTAREA'
+						) {
+						recording_fast_forward();
+					}
+					if (
+						e.which == 37 &&
+						!(e.target.tagName == 'INPUT' && e.target.type == 'text') &&
+						e.target.tagName != 'TEXTAREA'
+						) {
+						recording_rewind();
+					}
+					{/literal}
+
 		//keydown end
 			{literal}
 			});
 			{/literal}
-
 
 		//link list rows
 			{literal}
@@ -587,20 +555,21 @@
 							showClose: true,
 						},
 						icons: {
-							time: 'fas fa-clock',
-							date: 'fas fa-calendar-alt',
-							up: 'fas fa-arrow-up',
-							down: 'fas fa-arrow-down',
-							previous: 'fas fa-chevron-left',
-							next: 'fas fa-chevron-right',
-							today: 'fas fa-calendar-check',
-							clear: 'fas fa-trash',
-							close: 'fas fa-times',
+							time: 'fa-solid fa-clock',
+							date: 'fa-solid fa-calendar-days',
+							up: 'fa-solid fa-arrow-up',
+							down: 'fa-solid fa-arrow-down',
+							previous: 'fa-solid fa-chevron-left',
+							next: 'fa-solid fa-chevron-right',
+							today: 'fa-solid fa-calendar-check',
+							clear: 'fa-solid fa-trash',
+							close: 'fa-solid fa-xmark',
 						}
 					});
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
 					$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+					$('.datetimepicker-future').datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
 					$('.datetimesecpicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
 			});
 			{/literal}
@@ -647,7 +616,7 @@
 			{/literal}
 
 		//crossfade menu brand images (if hover version set)
-			{if $settings.theme.menu_brand_image != '' && $settings.theme.menu_brand_image_hover != '' && $settings.theme.menu_style != 'side'}
+			{if !empty($settings.theme.menu_brand_image) && !empty($settings.theme.menu_brand_image_hover) && isset($settings.theme.menu_style) && $settings.theme.menu_style != 'side'}
 				{literal}
 				$(function(){
 					$('#menu_brand_image').on('mouseover',function(){
@@ -718,6 +687,25 @@
 				{/literal}
 			{/if}
 
+		//hide an open user menu in the body header or menu on scroll
+			{literal}
+			$(window).on('scroll', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			$('div#main_content').on('click', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			{/literal}
+
+		//create function to mimic toggling fade and slide at the same time
+			{literal}
+			(function($){
+				$.fn.toggleFadeSlide = function(speed = 200, easing, callback){
+					return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+				};
+			})(jQuery);
+			{/literal}
+
 	{literal}
 	}); //document ready end
 	{/literal}
@@ -725,24 +713,43 @@
 
 	//audio playback functions
 		{literal}
-		var recording_audio, audio_clock;
+		var recording_audio, audio_clock, recording_id_playing;
 
-		function recording_play(recording_id) {
-			if (document.getElementById('recording_progress_bar_'+recording_id)) {
-				document.getElementById('recording_progress_bar_'+recording_id).style.display='';
+		function recording_play(player_id, data, audio_type) {
+			if (document.getElementById('recording_progress_bar_' + player_id)) {
+				document.getElementById('recording_progress_bar_' + player_id).style.display='';
 			}
-			recording_audio = document.getElementById('recording_audio_'+recording_id);
+			recording_audio = document.getElementById('recording_audio_' + player_id);
 
 			if (recording_audio.paused) {
+				{/literal}
+				//create and load waveform image
+				{if $settings.theme.audio_player_waveform_enabled == 'true'}
+					{literal}
+					//list playback
+					if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+						document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+					}
+					//form playback
+					else if (document.getElementById('recording_progress_bar_' + player_id)) {
+						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+						document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+					}
+					{/literal}
+				{/if}
+				{literal}
 				recording_audio.volume = 1;
 				recording_audio.play();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>";
-				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
+				recording_id_playing = player_id;
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>";
+				audio_clock = setInterval(function () { update_progress(player_id); }, 20);
 
-				$('[id*=recording_button]').not('[id*=recording_button_'+recording_id+']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
-				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_'+recording_id+']').css('display', 'none');
+				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
+				$('[id*=recording_button_intro]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>");
+				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_' + player_id + ']').css('display', 'none');
 
-				$('audio').each(function(){$('#menu_side_container').width()
+				$('audio').each(function(){
 					if ($(this).get(0) != recording_audio) {
 						$(this).get(0).pause(); //stop playing
 						$(this).get(0).currentTime = 0; //reset time
@@ -751,45 +758,87 @@
 			}
 			else {
 				recording_audio.pause();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+				recording_id_playing = '';
+				if (player_id.substring(0,6) == 'intro_') {
+					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
+				}
+				else {
+					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+				}
 				clearInterval(audio_clock);
 			}
 		}
 
-		function recording_stop(recording_id) {
-			recording_reset(recording_id);
+		function recording_stop(player_id) {
+			recording_reset(player_id);
 			clearInterval(audio_clock);
 		}
 
-		function recording_reset(recording_id) {
-			recording_audio = document.getElementById('recording_audio_'+recording_id);
+		function recording_reset(player_id) {
+			recording_audio = document.getElementById('recording_audio_' + player_id);
 			recording_audio.pause();
 			recording_audio.currentTime = 0;
-			if (document.getElementById('recording_progress_bar_'+recording_id)) {
-				document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
+			if (document.getElementById('recording_progress_bar_' + player_id)) {
+				document.getElementById('recording_progress_bar_' + player_id).style.display='none';
 			}
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+			if (player_id.substring(0,6) == 'intro_') {
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
+			}
+			else {
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+			}
 			clearInterval(audio_clock);
 		}
 
-		function update_progress(recording_id) {
-			recording_audio = document.getElementById('recording_audio_'+recording_id);
-			var recording_progress = document.getElementById('recording_progress_'+recording_id);
+		function update_progress(player_id) {
+			recording_audio = document.getElementById('recording_audio_' + player_id);
+			var recording_progress = document.getElementById('recording_progress_' + player_id);
 			var value = 0;
-			if (recording_audio.currentTime > 0) {
-				value = (100 / recording_audio.duration) * recording_audio.currentTime;
+			if (recording_audio != null && recording_audio.currentTime > 0) {
+				value = Number(((100 / recording_audio.duration) * recording_audio.currentTime).toFixed(1));
 			}
-			recording_progress.style.marginLeft = value + '%';
-			if (parseInt(recording_audio.duration) > 30) { //seconds
-				clearInterval(audio_clock);
+			if (recording_progress) {
+				recording_progress.style.marginLeft = value + '%';
+			}
+			// if (recording_audio != null && parseInt(recording_audio.duration) > 30) { //seconds
+			// 	clearInterval(audio_clock);
+			// }
+		}
+
+		function recording_fast_forward() {
+			if (recording_audio) {
+				recording_audio.currentTime += {/literal}{if !empty($settings.theme.audio_player_scrub_seconds) }{$settings.theme.audio_player_scrub_seconds}{else}2{/if}{literal};
+				update_progress(recording_id_playing);
 			}
 		}
+
+		function recording_rewind() {
+			if (recording_audio) {
+				recording_audio.currentTime -= {/literal}{if !empty($settings.theme.audio_player_scrub_seconds) }{$settings.theme.audio_player_scrub_seconds}{else}2{/if}{literal};
+				update_progress(recording_id_playing);
+			}
+		}
+
+		function recording_seek(event, player_id) {
+			if (recording_audio) {
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					audio_player = document.getElementById('playback_progress_bar_background_' + player_id);
+				}
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					audio_player = document.getElementById('recording_progress_bar_' + player_id);
+				}
+				recording_audio.currentTime = (event.offsetX / audio_player.offsetWidth) * recording_audio.duration;
+				update_progress(recording_id_playing);
+				document.getElementById('recording_button_' + player_id).focus();
+			}
+		}
+
 		{/literal}
 
 	//handle action bar style on scroll
 		{literal}
 		window.addEventListener('scroll', function(){
-			action_bar_scroll('action_bar', 20);
+			action_bar_scroll('action_bar', {/literal}{if $settings.theme.menu_style == 'side'}60{else}20{/if}{literal});
 		}, false);
 		function action_bar_scroll(action_bar_id, scroll_position, function_sticky, function_inline) {
 			if (document.getElementById(action_bar_id)) {
@@ -849,27 +898,24 @@
 			btn_copy = document.getElementById("btn_copy");
 			btn_toggle = document.getElementById("btn_toggle");
 			btn_delete = document.getElementById("btn_delete");
+			btn_download = document.getElementById("btn_download");
+			btn_transcribe = document.getElementById("btn_transcribe");
+			btn_resend = document.getElementById("btn_resend");
 			if (checked == true) {
-				if (btn_copy) {
-					btn_copy.style.display = "inline";
-				}
-				if (btn_toggle) {
-					btn_toggle.style.display = "inline";
-				}
-				if (btn_delete) {
-					btn_delete.style.display = "inline";
-				}
+				if (btn_copy) { btn_copy.style.display = "inline"; }
+				if (btn_toggle) { btn_toggle.style.display = "inline"; }
+				if (btn_delete) { btn_delete.style.display = "inline"; }
+				if (btn_download) { btn_download.style.display = "inline"; }
+				if (btn_transcribe) { btn_transcribe.style.display = "inline"; }
+				if (btn_resend) { btn_resend.style.display = "inline"; }
 			}
 		 	else {
-				if (btn_copy) {
-					btn_copy.style.display = "none";
-				}
-				if (btn_toggle) {
-					btn_toggle.style.display = "none";
-				}
-				if (btn_delete) {
-					btn_delete.style.display = "none";
-				}
+				if (btn_copy) { btn_copy.style.display = "none"; }
+				if (btn_toggle) { btn_toggle.style.display = "none"; }
+				if (btn_delete) { btn_delete.style.display = "none"; }
+				if (btn_download) { btn_download.style.display = "none"; }
+				if (btn_transcribe) { btn_transcribe.style.display = "none"; }
+				if (btn_resend) { btn_resend.style.display = "none"; }
 		 	}
 		}
 		{/literal}
@@ -907,7 +953,7 @@
 		function list_self_check(checkbox_id) {
 			var inputs = document.getElementsByTagName('input');
 			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox') {
+				if (inputs[i].type === 'checkbox' && inputs[i].name.search['enabled'] == -1) {
 					inputs[i].checked = false;
 				}
 			}
@@ -1015,130 +1061,174 @@
 		{/literal}
 
 	{*//session timer *}
-		{$session_timer}
+		{if !empty($session_timer)}
+			{$session_timer}
+		{/if}
 
+	{*//domain selector *}
+	function search_domains(element_id) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			//if (this.readyState == 4 && this.status == 200) {
+			//	document.getElementById(element_id).innerHTML = this.responseText;
+			//}
+
+			//remove current options
+			document.getElementById(element_id).innerHTML = '';
+
+			if (this.readyState == 4 && this.status == 200) {
+
+				//create the json object from the response
+				obj = JSON.parse(this.responseText);
+
+				//update the domain count
+				document.getElementById('domain_count').innerText = obj.length;
+
+				//add new options from the json results
+				for (var i=0; i < obj.length; i++) {
+
+					//get the variables
+					domain_uuid = obj[i].domain_uuid;
+					domain_name = obj[i].domain_name;
+					if (obj[i].domain_description != null) {
+					//	domain_description = DOMPurify.sanitize(obj[i].domain_description);
+					}
+
+					//create a div element
+					var div = document.createElement('div');
+
+					//add a div title
+					div.title = obj[i].domain_name;
+
+					//add a css class
+					div.classList.add("domains_list_item");
+
+					//alternate the background color
+					if(i%2==0) {
+						div.style.background = '{$domain_selector_background_color_1}';
+					}
+					else {
+						div.style.background = '{$domain_selector_background_color_2}';
+					}
+
+					//set the active domain style
+					if ('{$domain_uuid}' == obj[i].domain_uuid) {
+						div.style.background = '{$domain_active_background_color}';
+						div.style.fontWeight = 'bold';
+						//div.classList.add("domains_list_item_active");
+						//var item_description_class = 'domain_active_list_item_description';
+					}
+					else {
+						//div.classList.add("domains_list_item_inactive");
+						//var item_description_class = 'domain_inactive_list_item_description';
+					}
+
+					//set link on domain div in list
+					div.setAttribute('onclick',"window.location.href='{$domains_app_path}?domain_uuid=" + obj[i].domain_uuid + "&domain_change=true';");
+
+					//define domain link text and description (if any)
+					link_label = obj[i].domain_name;
+					if (obj[i].domain_description != null) {
+						link_label += " <span class='domain_list_item_description' title=\"" + obj[i].domain_description + "\">" + obj[i].domain_description + "</span>";
+					}
+					var a_tag = document.createElement('a');
+					a_tag.setAttribute('href','manage:'+obj[i].domain_name);
+					a_tag.setAttribute('onclick','event.preventDefault();');
+					a_tag.innerHTML = link_label;
+					div.appendChild(a_tag);
+
+					document.getElementById(element_id).appendChild(div);
+				}
+			}
+		};
+		search = document.getElementById('domains_search');
+		if (search.value) {
+			//xhttp.open("GET", "/core/domains/domain_list.php?search="+search.value, true);
+			xhttp.open("GET", "/core/domains/domain_json.php?search="+search.value+"&{$domain_json_token_name}={$domain_json_token_hash}", true);
+		}
+		else {
+			//xhttp.open("GET", "/core/domains/domain_list.php", true);
+			xhttp.open("GET", "/core/domains/domain_json.php?{$domain_json_token_name}={$domain_json_token_hash}", true);
+		}
+		xhttp.send();
+	}
+	{*//domain selector *}
 	</script>
 
 </head>
 <body>
 
+	{*//video background *}
+	{if !empty({$background_video})}
+		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
+			<source src="{$background_video}" type="video/mp4">
+		</video>
+	{/if}
+
+	{*//image background *}
+	<div id='background-image'></div>
+
+	{*//color background *}
+	<div id='background-color'></div>
+
 	{*//message container *}
-		<div id='message_container'></div>
+	<div id='message_container'></div>
 
 	{*//domain selector *}
-		{if $authenticated && $domain_selector_enabled}
+	{if $authenticated && $domain_selector_enabled}
 
-			<div id='domains_container'>
-				<input type='hidden' id='domains_visible' value='0'>
-				<div id='domains_block'>
-					<div id='domains_header'>
-						<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
-						<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span style='font-size: 80%;'>({$domain_count})</span></a>
-						<br><br>
-						<input type='text' id='domains_filter' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup='domain_search(this.value)'>
-					</div>
-					<div id='domains_list'>
-						{foreach $domains as $row}
-							{if $row.domain_enabled}
-								{*//alternate background colors of inactive domains *}
-									{if $background_color == $domain_selector_background_color_1}
-										{$background_color=$domain_selector_background_color_2}
-									{else}
-										{$background_color=$domain_selector_background_color_1}
-									{/if}
-								{*//set active domain color *}
-									{if $domain_active_background_color != ''}
-										{if $row.domain_uuid == $domain_uuid}{$background_color=$domain_active_background_color}{/if}
-									{/if}
-								{*//active domain text hover color *}
-									{if $settings.theme.domain_active_text_color_hover != '' && $row.domain_uuid == $domain_uuid}
-										<div id='{$row.domain_name}' class='domains_list_item_active' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-									{elseif $settings.theme.domain_inactive_text_color_hover != '' && $row.domain_uuid != $domain_uuid}
-										<div id='{$row.domain_name}' class='domains_list_item_inactive' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-									{else}
-										<div id='{$row.domain_name}' class='domains_list_item' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-									{/if}
-								{*//domain link *}
-									<a href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true' {if $row.domain_uuid == $domain_uuid}style='font-weight: bold;'{/if}>{$row.domain_name}</a>
-								{*//domain description *}
-									{if $row.domain_description != ''}
-										{*//active domain description text color *}
-											{if $settings.theme.domain_active_desc_text_color != '' && $row.domain_uuid == $domain_uuid}
-												<span class='domain_active_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-										{*//inactive domains description text color *}
-											{elseif $settings.theme.domain_inactive_desc_text_color != '' && $row.domain_uuid != $domain_uuid}
-												<span class='domain_inactive_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-										{*//default domain description text color *}
-											{else}
-												<span class='domain_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-											{/if}
-									{/if}
-								</div>
-								{$ary_domain_names[]=$row.domain_name}
-								{$ary_domain_descs[]=$row.domain_description|replace:'"':'\"'}
-							{/if}
-						{/foreach}
-					</div>
-
-					<script>
-						{literal}
-						var domain_names = new Array("{/literal}{'","'|implode:$ary_domain_names}{literal}");
-						var domain_descs = new Array("{/literal}{'","'|implode:$ary_domain_descs}{literal}");
-						function domain_search(criteria) {
-							for (var x = 0; x < domain_names.length; x++) {
-								if (domain_names[x].toLowerCase().match(criteria.toLowerCase()) || domain_descs[x].toLowerCase().match(criteria.toLowerCase())) {
-									document.getElementById(domain_names[x]).style.display = '';
-								}
-								else {
-									document.getElementById(domain_names[x]).style.display = 'none';
-								}
-							}
-						}
-						{/literal}
-					</script>
-
+		<div id='domains_container'>
+			<input type='hidden' id='domains_visible' value='0'>
+			<div id='domains_block'>
+				<div id='domains_header'>
+					<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
+					<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains}<div class='count' id='domain_count' style='font-size: 80%;'></div></a>
+					<br><br>
+					<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
 				</div>
+				<div id='domains_list'></div>
 			</div>
-
-		{/if}
-
-	{*//qr code container for contacts *}
-		<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>
-			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>
-				<span id='qr_code' onclick="$('#qr_code_container').fadeOut(400);"></span>
-			</td></tr></table>
 		</div>
 
+	{/if}
+
+	{*//qr code container for contacts *}
+	<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>
+		<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>
+			<span id='qr_code' onclick="$('#qr_code_container').fadeOut(400);"></span>
+		</td></tr></table>
+	</div>
+
 	{*//login page *}
-		{if $login_page}
-			<div id='default_login'>
-				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
-				{$document_body}
-			</div>
-			<div id='footer_login'>
-				<span class='footer'>{$settings.theme.footer}</span>
-			</div>
+	{if !empty($login_page)}
+		<div id='default_login'>
+			<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
+			{$document_body}
+		</div>
+		<div id='footer_login'>
+			<span class='footer'>{$settings.theme.footer}</span>
+		</div>
 
 	{*//other pages *}
-		{else}
-			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
-				{$container_open}
-				{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
-				{$menu}
-				{if $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}<br />{/if}
-				{if $settings.theme.menu_style == 'side'}<input type='hidden' id='menu_side_state_current' value='{if $menu_side_state == 'hidden'}expanded{else}{$menu_side_state}{/if}'>{/if}
-			{else} {*//default: fixed *}
-				{$menu}
-				{$container_open}
-			{/if}
-			<div id='main_content'>
-				{$document_body}
-			</div>
-			<div id='footer'>
-				<span class='footer'>{$settings.theme.footer}</span>
-			</div>
-			{$container_close}
+	{else}
+		{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
+			{$container_open}
+			{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
+			{$menu}
+			{if $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}<br />{/if}
+			{if $settings.theme.menu_style == 'side'}<input type='hidden' id='menu_side_state_current' value='{if $menu_side_state == 'hidden'}expanded{else}{$menu_side_state}{/if}'>{/if}
+		{else} {*//default: fixed *}
+			{$menu}
+			{$container_open}
 		{/if}
+		<div id='main_content'>
+			{$document_body}
+		</div>
+		<div id='footer'>
+			<span class='footer'>{$settings.theme.footer}</span>
+		</div>
+		{$container_close}
+	{/if}
 
 </body>
 </html>

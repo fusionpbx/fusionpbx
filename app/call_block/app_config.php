@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "9ed63276-e085-4897-839c-4f2e36d92d6c";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "A tool to block incoming numbers.";
@@ -21,6 +21,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil pour bloquer des numéros d'appelant.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "ხელსაწყო შემომავალი ნომრების დასაბლოკად";
 		$apps[$x]['description']['nl-nl'] = "Gereedschap om inkommende nummers te blokkeren.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números que entram.";
@@ -39,6 +40,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "50";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of recent calls to show.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "47914bd9-e1c0-4e3d-87e0-41f95d58ce98";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_block";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "save_call_detail_record";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Choose whether to save the call detail record when the call is blocked.";
 
 	//permission details
 		$y=0;
@@ -65,7 +74,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_block_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_block_extension";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -82,6 +90,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "call_block_voicemail";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_block_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "view_call_block";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

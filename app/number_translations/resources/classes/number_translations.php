@@ -25,7 +25,6 @@
 */
 
 //define the number translations class
-if (!class_exists('number_translations')) {
 	class number_translations {
 
 		/**
@@ -39,6 +38,7 @@ if (!class_exists('number_translations')) {
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
+		public  $xml;
 
 		/**
 		 * declare public variables
@@ -63,16 +63,6 @@ if (!class_exists('number_translations')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * Check to see if the number translation already exists
 		 */
 		public function number_translation_exists($name) {
@@ -89,7 +79,7 @@ if (!class_exists('number_translations')) {
 		 */
 		public function import() {
 			//get the xml from the number templates
-				if (strlen($this->xml) > 0) {
+				if (!empty($this->xml)) {
 					//convert the xml string to an xml object
 						$xml = simplexml_load_string($this->xml);
 					//convert to json
@@ -97,7 +87,7 @@ if (!class_exists('number_translations')) {
 					//convert to an array
 						$number_translation = json_decode($json, true);
 				}
-				else if (strlen($this->json) > 0) {
+				else if (!empty($this->json)) {
 					//convert to an array
 						$number_translation = json_decode($this->json, true);
 				}
@@ -110,14 +100,14 @@ if (!class_exists('number_translations')) {
 						$x = 0;
 						$array['number_translations'][$x]['number_translation_name'] = $number_translation['@attributes']['name'];
 						$array['number_translations'][$x]['number_translation_enabled'] = "true";
-						if (strlen($number_translation['@attributes']['enabled']) > 0) {
+						if (!empty($number_translation['@attributes']['enabled'])) {
 							$array['number_translations'][$x]['number_translation_enabled'] = $number_translation['@attributes']['enabled'];
 						}
 						$array['number_translations'][$x]['number_translation_description'] = $number_translation['@attributes']['description'];
 					//loop through the condition array
 						$order = 5;
 						if (isset($number_translation['rule'])) {
-							foreach ($number_translation['rule'] as &$row) {
+							foreach ($number_translation['rule'] as $row) {
 								if (array_key_exists('@attributes', $row)) {
 									$row = $row['@attributes'];
 								}
@@ -128,7 +118,7 @@ if (!class_exists('number_translations')) {
 							}
 						}
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('number_translation_add', 'temp');
 						$p->add('number_translation_detail_add', 'temp');
 					//execute insert
@@ -137,7 +127,7 @@ if (!class_exists('number_translations')) {
 						$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
 						$database->save($array);
 						unset($array);
-						if ($this->display_type == "text") {
+						if (!empty($this->display_type) && $this->display_type == "text") {
 							if ($database->message['code'] != '200') { 
 								echo "number_translation:".$number_translation['@attributes']['name'].":	failed: ".$database->message['message']."\n";
 							}
@@ -185,7 +175,7 @@ if (!class_exists('number_translations')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('number_translation_detail_delete', 'temp');
 
 								//execute delete
@@ -399,7 +389,7 @@ if (!class_exists('number_translations')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('number_translation_detail_add', 'temp');
 
 								//save the array
@@ -423,11 +413,8 @@ if (!class_exists('number_translations')) {
 		} //method
 
 	} //class
-}
 
 /*
 $obj = new number_translations;
 $obj->delete();
 */
-
-?>

@@ -19,7 +19,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'user_log_delete';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
 	//User Logs
@@ -40,6 +39,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'hostname';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'timestamp';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
@@ -79,6 +82,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the user agent.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'session_id';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';

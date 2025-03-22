@@ -17,19 +17,15 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2024
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -42,14 +38,31 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//action add or update
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
+		$action = "update";
+		$user_uuid = $_REQUEST["id"];
+		$id = $_REQUEST["id"];
+	}
+	else {
+		$action = "add";
+	}
+
 //get the http post data
-	if ($_POST['action'] != '') {
-		$action = $_POST['action'];
-		$user_uuid = $_POST['user_uuid'];
-		$user_settings = $_POST['user_settings'];
+	if (!empty($_POST['action'])) {
+		$action = $_POST['action'] ?? '';
+		$user_uuid = $_POST['user_uuid'] ?? '';
+		$user_settings = $_POST['user_settings'] ?? '';
 
 		//process the http post data by action
-			if (is_array($user_settings) && @sizeof($user_settings) != 0) {
+			if (!empty($user_settings)) {
 				switch ($action) {
 					case 'toggle':
 						if (permission_exists('user_setting_edit')) {
@@ -78,7 +91,7 @@
 	if (
 		is_uuid($_REQUEST["user_id"]) &&
 		is_array($_REQUEST["id"]) &&
-		sizeof($_REQUEST["id"]) == 1 &&
+		!empty($_REQUEST["id"]) &&
 		($_REQUEST['enabled'] === 'true' || $_REQUEST['enabled'] === 'false')
 		) {
 
@@ -89,7 +102,6 @@
 		//update setting
 			$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuids[0];
 			$array['user_settings'][0]['user_setting_enabled'] = $enabled;
-			$database = new database;
 			$database->app_name = 'user_settings';
 			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 			$database->save($array);
@@ -103,46 +115,62 @@
 */
 
 //get the variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
-//common sql where
-	$sql_where = "where user_uuid = :user_uuid ";
-	$sql_where .= "and not ( ";
-	$sql_where .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
-	$sql_where .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
-	$sql_where .= ") ";
-	$parameters['user_uuid'] = $user_uuid;
+//set from session variables
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false';
+	$button_icon_back = !empty($_SESSION['theme']['button_icon_back']) ? $_SESSION['theme']['button_icon_back'] : '';
+	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
+	$button_icon_copy = !empty($_SESSION['theme']['button_icon_copy']) ? $_SESSION['theme']['button_icon_copy'] : '';
+	$button_icon_toggle = !empty($_SESSION['theme']['button_icon_toggle']) ? $_SESSION['theme']['button_icon_toggle'] : '';
+	$button_icon_all = !empty($_SESSION['theme']['button_icon_all']) ? $_SESSION['theme']['button_icon_all'] : '';
+	$button_icon_delete = !empty($_SESSION['theme']['button_icon_delete']) ? $_SESSION['theme']['button_icon_delete'] : '';
+	$button_icon_search = !empty($_SESSION['theme']['button_icon_search']) ? $_SESSION['theme']['button_icon_search'] : '';
+	$button_icon_edit = !empty($_SESSION['theme']['button_icon_edit']) ? $_SESSION['theme']['button_icon_edit'] : '';
+	$button_icon_reset = !empty($_SESSION['theme']['button_icon_reset']) ? $_SESSION['theme']['button_icon_reset'] : '';
 
 //prepare to page the results
 	$sql = "select count(*) from v_user_settings ";
-	$sql .= $sql_where;
-	$database = new database;
+	$sql .= "where user_uuid = :user_uuid ";
+	$sql .= "and not ( ";
+	$sql .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
+	$sql .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
+	$sql .= ") ";
+	$parameters['user_uuid'] = $user_uuid;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 100;
-	$param = "";
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 100;
+	$param = '';
+	$paging_controls = '';
 	if (isset($_GET['page'])) {
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
+	}
+	else {
+		$offset = 0;
 	}
 
 //get the list
 	$sql = "select user_setting_uuid, user_uuid, user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, cast(user_setting_enabled as text), user_setting_description ";
 	$sql .= "from v_user_settings ";
-	$sql .= $sql_where;
-	if ($order_by == '') {
+	$sql .= "where user_uuid = :user_uuid ";
+	$sql .= "and not ( ";
+	$sql .= " (user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
+	$sql .= " or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
+	$sql .= ") ";
+	if (!empty($order_by)) {
 		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
 	}
 	else {
 		$sql .= order_by($order_by, $order);
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
+	$parameters['user_uuid'] = $user_uuid;
 	$user_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $sql_where, $parameters);
 
@@ -150,19 +178,26 @@
 	$object = new token;
 	$token = $object->create('/core/user_settings/user_settings.php');
 
+//include the header
+	$document['title'] = $text['title-user_settings'];
+	require_once "resources/header.php";
+
 //show the content
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['header-user_settings']."</b></div>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['title-user_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px; display: none;','link'=>'users.php']);
+	if (permission_exists('user_add') || permission_exists('user_edit')) {
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.$user_uuid]);
+	}
+	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$button_icon_back,'style'=>'margin-right: 15px; display: none;','link'=>'users.php']);
 	if (permission_exists('user_setting_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>PROJECT_PATH.'/core/user_settings/user_setting_edit.php?user_uuid='.urlencode($_GET['id'])]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$button_icon_add,'id'=>'btn_add','link'=>PROJECT_PATH.'/core/user_settings/user_setting_edit.php?user_uuid='.urlencode($_GET['id'])]);
 	}
 	if (permission_exists('user_setting_edit') && $user_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$button_icon_toggle,'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('user_setting_delete') && $user_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -175,15 +210,16 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo $text['header_description-user_settings']."\n";
+	echo $text['title_description-user_settings']."\n";
 	echo "<br /><br />\n";
 
 	echo "<form id='form_list' method='post' action='/core/user_settings/user_settings.php'>\n";
 	echo "<input type='hidden' name='action' id='action' value=''>\n";
 	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>\n";
 
-	echo "<table class='list'>\n";
-	if (is_array($user_settings) && @sizeof($user_settings) != 0) {
+
+	if (!empty($user_settings)) {
+		$previous_user_setting_category = '';
 		$x = 0;
 		foreach ($user_settings as $row) {
 			$user_setting_category = strtolower($row['user_setting_category']);
@@ -201,13 +237,16 @@
 			}
 
 			if ($previous_user_setting_category != $row['user_setting_category']) {
-				if ($previous_user_setting_category != '') {
-					echo "</table>\n";
 
-					echo "<br>\n";
+				if (!empty($previous_user_setting_category)) {
+					echo "</table>\n";
+					echo "</div>\n";
+					echo "</div>\n";
 				}
+				echo "<div class='category' id='category_".$user_setting_category."'>\n";
 				echo "<b>".escape($label_user_setting_category)."</b><br>\n";
 
+				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				if (permission_exists('user_setting_add') || permission_exists('user_setting_edit') || permission_exists('user_setting_delete')) {
@@ -220,7 +259,7 @@
 				echo "<th class='pct-30'>".$text['label-value']."</th>";
 				echo "<th class='center'>".$text['label-enabled']."</th>";
 				echo "<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>";
-				if (permission_exists('user_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				if (permission_exists('user_setting_edit') && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -243,7 +282,8 @@
 				echo escape($row['user_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='hide-sm-dn'>".$row['user_setting_name']."&nbsp;</td>\n";
+			$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+			echo "	<td class='hide-sm-dn'>".$setting_types[array_search(strtolower($row['user_setting_name']), array_map('strtolower',$setting_types))]."</td>\n";
 			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['user_setting_category'];
 			$subcategory = $row['user_setting_subcategory'];
@@ -252,10 +292,9 @@
 				$sql = "select * from v_menus ";
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$parameters['menu_uuid'] = $row['user_setting_value'];
-				$database = new database;
 				$sub_result = $database->select($sql, $parameters, 'all');
-				if (is_array($sub_result) && sizeof($sub_result) != 0) {
-					foreach ($sub_result as &$sub_row) {
+				if (!empty($sub_result)) {
+					foreach ($sub_result as $sub_row) {
 						echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
 					}
 				}
@@ -281,7 +320,7 @@
 				) {
 				echo "		".$text['label-'.escape($row['user_setting_value'])];
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+			else if ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen(escape($row['user_setting_value'])));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
@@ -294,6 +333,9 @@
 				echo "		".$text['option-'.$row['user_setting_value']]."\n";
 			}
 			else if ($category == 'theme' && $subcategory == 'menu_side_toggle_body_width' && $name == 'text') {
+				echo "		".$text['option-'.$row['user_setting_value']]."\n";
+			}
+			else if ($category == 'theme' && $subcategory == 'input_toggle_style' && $name == 'text') {
 				echo "		".$text['option-'.$row['user_setting_value']]."\n";
 			}
 			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
@@ -312,8 +354,23 @@
 			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
 				echo "		".$text['label-'.$row['user_setting_value']]."\n";
 			}
+			else if ($row['user_setting_value'] == 'true' || $row['user_setting_value'] == 'false') {
+				echo "		".$text['label-'.$row['user_setting_value']]."\n";
+			}
 			else {
-				echo "		".escape($row['user_setting_value'])."\n";
+				if (!empty($row['user_setting_value']) && substr_count($row['user_setting_value'], "\n") > 0) {
+					$lines = explode("\n", $row['user_setting_value']);
+					if (!empty($lines) && is_array($lines) && @sizeof($lines) != 0) {
+						foreach ($lines as $i => $line) {
+							$lines[$i] = escape($line);
+						}
+						echo implode("<i class='fas fa-level-down-alt fa-rotate-90 fa-xs ml-2 mr-5' style='opacity: 0.3;'></i>", $lines);
+					}
+					unset($lines, $line);
+				}
+				else {
+					echo escape($row['user_setting_value'])."\n";
+				}
 			}
 			echo "	</td>\n";
 			if (permission_exists('user_setting_edit')) {
@@ -326,9 +383,9 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['user_setting_description'])."\">".escape($row['user_setting_description'])."&nbsp;</td>\n";
-			if (permission_exists('user_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('user_setting_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$button_icon_edit,'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
@@ -341,7 +398,11 @@
 	unset($user_settings);
 
 	echo "</table>\n";
+	echo "</div>\n";
+	echo "</div>\n";
 	echo "<br />\n";
+
+
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
@@ -362,5 +423,8 @@
 	echo "	}\n";
 
 	echo "</script>\n";
+
+//include the footer
+	require_once "resources/footer.php";
 
 ?>

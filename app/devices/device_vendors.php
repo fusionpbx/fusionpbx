@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -47,14 +43,14 @@
 	$text = $language->get();
 
 //get posted data
-	if (is_array($_POST['vendors'])) {
+	if (!empty($_POST['vendors']) && is_array($_POST['vendors'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$vendors = $_POST['vendors'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($vendors) && @sizeof($vendors) != 0) {
+	if (!empty($action) && !empty($vendors) && is_array($vendors) && @sizeof($vendors) != 0) {
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('device_vendor_edit')) {
@@ -75,12 +71,12 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? null;
+	$order = $_GET["order"] ?? null;
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	$search = strtolower($_GET["search"] ?? '');
+	if (!empty($search)) {
 		$sql_where = "where (";
 		$sql_where .= "lower(name) like :search ";
 		$sql_where .= "or lower(enabled) like :search ";
@@ -91,15 +87,15 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendors ";
-	$sql .= $sql_where;
+	$sql .= $sql_where ?? null;
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = $_GET['page'] ?? null;
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -109,7 +105,7 @@
 	$sql .= order_by($order_by, $order, 'name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -122,7 +118,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-device_vendors']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-device_vendors']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'devices.php']);
 	if (permission_exists('device_vendor_restore')) {
@@ -163,18 +159,18 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
-
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('device_vendor_edit') || permission_exists('device_vendor_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($result) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('name', $text['label-name'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-xs'");
-	if (permission_exists('device_vendor_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('device_vendor_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -182,8 +178,12 @@
 	if (is_array($result) && @sizeof($result) != 0) {
 		$x = 0;
 		foreach($result as $row) {
+			$list_row_url = '';
 			if (permission_exists('device_vendor_edit')) {
 				$list_row_url = "device_vendor_edit.php?id=".urlencode($row['device_vendor_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('device_vendor_edit') || permission_exists('device_vendor_delete')) {
@@ -202,7 +202,7 @@
 				echo $text['label-'.$row['enabled']];
 			}
 			echo "	<td class='description overflow hide-xs'>".escape($row['description'])."&nbsp;</td>\n";
-			if (permission_exists('device_vendor_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('device_vendor_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -214,6 +214,7 @@
 	unset($result);
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 
@@ -225,3 +226,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

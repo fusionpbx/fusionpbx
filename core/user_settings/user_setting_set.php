@@ -24,13 +24,12 @@ Contributor(s):
 Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
   	require_once "resources/check_auth.php";
+
+//connect to the database
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -87,7 +86,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 			$parameters['user_setting_category'] = $user_setting_category;
 			$parameters['user_setting_subcategory'] = $user_setting_subcategory;
 			$parameters['user_setting_name'] = $user_setting_name;
-			$database = new database;
 			$user_setting_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -99,10 +97,9 @@ Mark J Crane <markjcrane@fusionpbx.com>
 						$array['user_settings'][0]['user_uuid'] = $_SESSION['user_uuid'];
 						$array['user_settings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					//grant temporary permissions
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('user_setting_delete', 'temp');
 					//execute
-						$database = new database;
 						$database->app_name = 'user_settings';
 						$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 						$database->delete($array);
@@ -110,9 +107,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 					//revoke temporary permissions
 						$p->delete('user_setting_delete', 'temp');
 					//reset session variables to default
-						require "resources/classes/domains.php";
 						$domain = new domains();
-						$domain->db = $db;
 						$domain->set();
 				}
 
@@ -136,12 +131,11 @@ Mark J Crane <markjcrane@fusionpbx.com>
 					$array['user_settings'][0]['user_setting_enabled'] = $user_setting_enabled;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('user_setting_add', 'temp');
 					$p->add('user_setting_edit', 'temp');
 
 				//execute
-					$database = new database;
 					$database->app_name = 'user_settings';
 					$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 					$database->save($array);

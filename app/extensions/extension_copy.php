@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -41,6 +37,9 @@
 		echo "access denied";
 		exit;
 	}
+
+//initialize the database object
+	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -70,7 +69,6 @@
 	$sql .= "and extension_uuid = :extension_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['extension_uuid'] = $extension_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && @sizeof($row) != 0) {
 		$extension = $row["extension"];
@@ -102,6 +100,7 @@
 		$mwi_account = $row["mwi_account"];
 		$sip_bypass_media = $row["sip_bypass_media"];
 		$dial_string = $row["dial_string"];
+		$extension_type = $row["extension_type"];
 		$enabled = $row["enabled"];
 		$description = $row["description"].' ('.$text['button-copy'].')';
 	}
@@ -112,7 +111,7 @@
 	$array['extensions'][0]['extension_uuid'] = uuid();
 	$array['extensions'][0]['extension'] = $extension_new;
 	$array['extensions'][0]['number_alias'] = $number_alias_new;
-	$array['extensions'][0]['password'] = generate_password();
+	$array['extensions'][0]['password'] = generate_password($_SESSION["extension"]["password_length"]["numeric"], $_SESSION["extension"]["password_strength"]["numeric"]);
 	$array['extensions'][0]['accountcode'] = $password;
 	$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;
 	$array['extensions'][0]['effective_caller_id_number'] = $effective_caller_id_number;
@@ -140,11 +139,10 @@
 	$array['extensions'][0]['mwi_account'] = $mwi_account;
 	$array['extensions'][0]['sip_bypass_media'] = $sip_bypass_media;
 	$array['extensions'][0]['dial_string'] = $dial_string;
+	$array['extensions'][0]['extension_type'] = $extension_type;
 	$array['extensions'][0]['enabled'] = $enabled;
 	$array['extensions'][0]['description'] = $description;
-	$database = new database;
 	$database->save($array);
-	$message = $database->message;
 	unset($array);
 
 //get the source extension voicemail data
@@ -156,7 +154,6 @@
 			$sql .= "and voicemail_id = :voicemail_id ";
 			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$voicemail_mailto = $row["voicemail_mail_to"];
@@ -167,13 +164,12 @@
 			unset($sql, $parameters, $row);
 
 		//set the new voicemail password
-			if (strlen($voicemail_password) == 0) {
+			if (empty($voicemail_password)) {
 				$voicemail_password = generate_password(9, 1);
 			}
 
 		//add voicemail via class
 			$ext = new extension;
-			$ext->db = $db;
 			$ext->domain_uuid = $domain_uuid;
 			$ext->extension = $extension_new;
 			$ext->number_alias = $number_alias_new;
@@ -190,7 +186,6 @@
 
 //synchronize configuration
 	if (is_writable($_SESSION['switch']['extensions']['dir'])) {
-		require_once "app/extensions/resources/classes/extension.php";
 		$ext = new extension;
 		$ext->xml();
 		unset($ext);

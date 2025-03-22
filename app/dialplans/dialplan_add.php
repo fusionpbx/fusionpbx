@@ -17,18 +17,14 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -78,14 +74,14 @@
 		$dialplan_order = $_POST["dialplan_order"];
 		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
-		if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
+		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
 	}
 
 //set the default
-	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
+	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
 
 //add or update data from http post
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -96,14 +92,14 @@
 			}
 
 		//check for all required data
-			if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
-			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			if (strlen($condition_field_1) == 0) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-field']."<br>\n"; }
-			if (strlen($condition_expression_1) == 0) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-expression']."<br>\n"; }
-			if (strlen($action_application_1) == 0) { $msg .= $text['message-required'].$text['label-action_1']."<br>\n"; }
-			//if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			//if (strlen($dialplan_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			if (empty($domain_uuid)) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+			if (empty($dialplan_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (empty($condition_field_1)) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-field']."<br>\n"; }
+			if (empty($condition_expression_1)) { $msg .= $text['message-required'].$text['label-condition_1']." ".$text['label-expression']."<br>\n"; }
+			if (empty($action_application_1)) { $msg .= $text['message-required'].$text['label-action_1']."<br>\n"; }
+			//if (empty($dialplan_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (empty($dialplan_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -115,11 +111,11 @@
 				require_once "resources/footer.php";
 				return;
 			}
-	
+
 		//remove the invalid characters from the extension name
 			$dialplan_name = str_replace(" ", "_", $dialplan_name);
 			$dialplan_name = str_replace("/", "", $dialplan_name);
-	
+
 		//add the main dialplan include entry
 			$dialplan_uuid = uuid();
 			$array['dialplans'][0]['domain_uuid'] = $domain_uuid;
@@ -143,7 +139,7 @@
 			$array['dialplan_details'][0]['dialplan_detail_order'] = '1';
 
 		//add condition 2
-			if (strlen($condition_field_2) > 0) {
+			if (!empty($condition_field_2)) {
 				$dialplan_detail_uuid = uuid();
 				$array['dialplan_details'][1]['domain_uuid'] = $domain_uuid;
 				$array['dialplan_details'][1]['dialplan_uuid'] = $dialplan_uuid;
@@ -153,7 +149,7 @@
 				$array['dialplan_details'][1]['dialplan_detail_data'] = $condition_expression_2;
 				$array['dialplan_details'][1]['dialplan_detail_order'] = '2';
 			}
-	
+
 		//add action 1
 			$dialplan_detail_uuid = uuid();
 			$array['dialplan_details'][2]['domain_uuid'] = $domain_uuid;
@@ -165,9 +161,9 @@
 				$array['dialplan_details'][2]['dialplan_detail_data'] = $action_data_1;
 			}
 			$array['dialplan_details'][2]['dialplan_detail_order'] = '3';
-	
+
 		//add action 2
-			if (strlen($action_application_2) > 0) {
+			if (!empty($action_application_2)) {
 				$dialplan_detail_uuid = uuid();
 				$array['dialplan_details'][3]['domain_uuid'] = $domain_uuid;
 				$array['dialplan_details'][3]['dialplan_uuid'] = $dialplan_uuid;
@@ -179,18 +175,18 @@
 				}
 				$array['dialplan_details'][3]['dialplan_detail_order'] = '4';
 			}
-	
+
 		//execute inserts
 			$database = new database;
 			$database->app_name = 'dialplans';
 			$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 			$database->save($array);
 			unset($array);
-	
+
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$_SESSION["context"]);
-	
+
 		//send a message and redirect the user
 			message::add($text['message-update']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php");
@@ -253,19 +249,20 @@
 	echo $text['description-dialplan_manager-superadmin']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name)."\">\n";
+	echo "	<input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name ?? null)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	//echo "<tr>\n";
 	//echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	//echo "    Continue\n";
@@ -290,7 +287,7 @@
 	//echo "Extension Continue in most cases this is false. default: false\n";
 	//echo "</td>\n";
 	//echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-condition_1']."\n";
@@ -320,7 +317,7 @@
 		obj.parentNode.removeChild(obj);
 		Replace_condition_field_1(this.objs);
 	}
-	
+
 	function Replace_condition_field_1(obj){
 		obj[2].parentNode.insertBefore(obj[0],obj[2]);
 		obj[0].parentNode.removeChild(obj[1]);
@@ -335,7 +332,7 @@
 	echo "	<td nowrap='nowrap'>\n";
 	echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";'>\n";
 	echo "    <option value=''></option>\n";
-	if (strlen($condition_field_1) > 0) {
+	if (!empty($condition_field_1)) {
 		echo "    <option value='".escape($condition_field_1)."' selected='selected'>".escape($condition_field_1)."</option>\n";
 	}
 	echo "	<optgroup label='Field'>\n";
@@ -371,20 +368,20 @@
 	echo "	</td>\n";
 	//echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
 	echo "	<td>\n";
-	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"".escape($condition_expression_1)."\">\n";
+	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"".escape($condition_expression_1 ?? null)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
 	echo "	<div id='desc_condition_expression_1'></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-condition_2']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	
+
 	echo "	<table border='0'>\n";
 	echo "	<tr>\n";
 	//echo "	<td align='left'>".$text['label-field']."</td>\n";
@@ -413,7 +410,7 @@
 		obj.parentNode.removeChild(obj);
 		Replace_condition_field_2(this.objs);
 	}
-	
+
 	function Replace_condition_field_2(obj){
 		obj[2].parentNode.insertBefore(obj[0],obj[2]);
 		obj[0].parentNode.removeChild(obj[1]);
@@ -424,7 +421,7 @@
 	<?php
 	echo "    <select class='formfld' name='condition_field_2' id='condition_field_2' onchange='changeToInput_condition_field_2(this);this.style.visibility = \"hidden\";'>\n";
 	echo "    <option value=''></option>\n";
-	if (strlen($condition_field_2) > 0) {
+	if (!empty($condition_field_2)) {
 		echo "    <option value='".escape($condition_field_2)."' selected>".escape($condition_field_2)."</option>\n";
 	}
 	echo "	<optgroup label='Field'>\n";
@@ -460,45 +457,45 @@
 	echo "	</td>\n";
 	//echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
 	echo "	<td>\n";
-	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"".escape($condition_expression_2)."\">\n";
+	echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"".escape($condition_expression_2 ?? null)."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
 	echo "	<div id='desc_condition_expression_2'></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-action_1']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'action_1', escape($action_1));
+	echo $destination->select('dialplan', 'action_1', escape($action_1 ?? null));
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-action_2']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('dialplan', 'action_2', escape($action_2));
+	echo $destination->select('dialplan', 'action_2', escape($action_2 ?? null));
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "	<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo " 		".$text['label-context']."\n";
 	echo "	</td>\n";
 	echo "	<td colspan='4' class='vtable' align='left'>\n";
-	echo "		<input class='formfld' style='width: 60%;' type='text' name='dialplan_context' maxlength='255' value=\"".escape($dialplan_context)."\">\n";
+	echo "		<input class='formfld' style='width: 60%;' type='text' name='dialplan_context' maxlength='255' value=\"".escape($dialplan_context ?? null)."\">\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-order']."\n";
@@ -506,57 +503,48 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
-	if (strlen($dialplan_order) > 0) {
-		echo "		 <option selected='selected' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
+	if (!empty($dialplan_order)) {
+		echo "		 <option selected='selected' value='".escape($dialplan_order ?? null)."'>".escape($dialplan_order ?? null)."</option>\n";
 	}
 	$i = 200;
 	while($i <= 999) {
-		echo "		<option value='$i'>$i</option>\n";
+		echo "		<option value='".$i."'>".$i."</option>\n";
 		$i = $i + 10;
 	}
 	echo "	</select>\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "		".$text['label-enabled']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<select class='formfld' name='dialplan_enabled'>\n";
-	if ($dialplan_enabled == "true") {
-		echo "			<option value='true' selected='selected' >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "			<option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($dialplan_enabled == "false") {
-		echo "			<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "			<option value='false'>".$text['option-false']."</option>\n";
-	}
+	echo "			<option value='true'>".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".(!empty($dialplan_enabled) && $dialplan_enabled == "false" ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "	<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo " 		".$text['label-description']."\n";
 	echo "	</td>\n";
 	echo "	<td colspan='4' class='vtable' align='left'>\n";
-	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description)."\">\n";
+	echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".escape($dialplan_description ?? null)."\">\n";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
-	if ($action == "update") {
-		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	if (!empty($action) && $action == "update") {
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? null)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 

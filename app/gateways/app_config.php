@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "კარიბჭეები სხვა ხმოვან ქსელებთან წვდომის საშუალებას გაძლევთ. ესენი შეიძლება, ხმოვანი პროვაიდერები ან სხვა სისტემები იყოს, რომლებსაც SIP რეგისტრაცია სჭირდებათ.";
 		$apps[$x]['description']['nl-nl'] = "Gateways voorzien in toegang tot andere telefonie netwerken. Dit kunne de VOIP-providers zijn, of andere systemen die een SIP registratie behoeven.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Troncos garantem acesso à outras redes de voz. Podem ser provedores VoIP ou outros sistemas que requerem registro SIP.";
@@ -92,14 +93,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_gateways";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "gateway_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "gateway_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -182,6 +175,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "register_transport";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_params";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;

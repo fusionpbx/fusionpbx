@@ -28,9 +28,9 @@ if ($domains_processed == 1) {
 
 	//create phrases folder and add include line in xml for each language found
 		/*
-		if (strlen($_SESSION['switch']['languages']['dir']) > 0) {
-			if (is_readable($_SESSION['switch']['languages']['dir'])) {
-				$conf_lang_folders = glob($_SESSION['switch']['languages']['dir']."/*");
+		if (!empty($settings->get('switch','languages'))) {
+			if (is_readable($settings->get('switch','languages'))) {
+				$conf_lang_folders = glob($settings->get('switch','languages')."/*");
 				foreach ($conf_lang_folders as $conf_lang_folder) {
 					//create phrases folder, if necessary
 					if (!file_exists($conf_lang_folder."/phrases/")) {
@@ -65,17 +65,16 @@ if ($domains_processed == 1) {
 		*/
 
 	//if base64, convert existing incompatible phrases
-		if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+		if (!empty($settings->get('recordings','storage_type')) && $settings->get('recordings','storage_type') == 'base64') {
 			$sql = "select phrase_detail_uuid, phrase_detail_data ";
 			$sql .= "from v_phrase_details where phrase_detail_function = 'play-file' ";
-			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
-				foreach ($result as $index => &$row) {
+				foreach ($result as $index => $row) {
 					$phrase_detail_uuid = $row['phrase_detail_uuid'];
 					$phrase_detail_data = $row['phrase_detail_data'];
-					if (substr_count($phrase_detail_data, $_SESSION['switch']['recordings']['dir'].'/'.$domain_name) > 0) {
-						$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/', '', $phrase_detail_data);
+					if (substr_count($phrase_detail_data, $settings->get('switch','recordings').'/'.$domain_name) > 0) {
+						$phrase_detail_data = str_replace($settings->get('switch','recordings').'/'.$domain_name.'/', '', $phrase_detail_data);
 					}
 					//update function and data to be base64 compatible
 						$phrase_detail_data = "lua(streamfile.lua ".$phrase_detail_data.")";
@@ -84,10 +83,9 @@ if ($domains_processed == 1) {
 						$array['phrase_details'][$index]['phrase_detail_data'] = $phrase_detail_data;
 				}
 				if (is_array($array) && @sizeof($array) != 0) {
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
-					$database = new database;
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					$database->save($array, false);
@@ -100,32 +98,30 @@ if ($domains_processed == 1) {
 		}
 
 	//if not base64, revert base64 phrases to standard method
-		else if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+		else if (!empty($settings->get('recordings','storage_type')) && $settings->get('recordings','storage_type') != 'base64') {
 			$sql = "select phrase_detail_uuid, phrase_detail_data ";
 			$sql .= "from v_phrase_details where ";
 			$sql .= "phrase_detail_function = 'execute' ";
 			$sql .= "and phrase_detail_data like 'lua(streamfile.lua %)' ";
-			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
-				foreach ($result as $index => &$row) {
+				foreach ($result as $index => $row) {
 					$phrase_detail_uuid = $row['phrase_detail_uuid'];
 					$phrase_detail_data = $row['phrase_detail_data'];
 					//update function and data to use standard method
 						$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $phrase_detail_data);
 						$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
 						if (substr_count($phrase_detail_data, '/') === 0) {
-							$phrase_detail_data = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/'.$phrase_detail_data;
+							$phrase_detail_data = $settings->get('switch','recordings').'/'.$domain_name.'/'.$phrase_detail_data;
 						}
 						$array['phrase_details'][$index]['phrase_detail_uuid'] = $phrase_detail_uuid;
 						$array['phrase_details'][$index]['phrase_detail_function'] = 'play-file';
 						$array['phrase_details'][$index]['phrase_detail_data'] = $phrase_detail_data;
 				}
-				if (is_array($array) && @sizeof($array) != 0) {
-					$p = new permissions;
+				if (!empty($array)) {
+					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
-					$database = new database;
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					$database->save($array, false);
@@ -142,14 +138,13 @@ if ($domains_processed == 1) {
 		//save_phrases_xml();
 
 	//delete the phrase from memcache
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
 			//get phrase languages
 			$sql = "select distinct phrase_language from v_phrases order by phrase_language asc ";
-			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			//delete memcache var
-			if (is_array($result) && @sizeof($result) != 0) {
+			if (!empty($result)) {
 				foreach ($result as $row) {
 					//clear the cache
 					$cache = new cache;
@@ -158,7 +153,7 @@ if ($domains_processed == 1) {
 			}
 			unset($sql, $result, $row);
 		}
-		unset($fp);
+		unset($esl);
 
 }
 

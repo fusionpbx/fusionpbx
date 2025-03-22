@@ -3,7 +3,7 @@
 $x++;
 $array['dashboard'][$x]['dashboard_uuid'] = 'b9d92260-eaf7-4c05-a51e-3083e25516b3';
 $array['dashboard'][$x]['dashboard_name'] = 'Switch Status';
-$array['dashboard'][$x]['dashboard_path'] = 'app/switch/resources/dashboard/switch_status.php';
+$array['dashboard'][$x]['dashboard_path'] = 'switch/switch_status';
 $array['dashboard'][$x]['dashboard_order'] = '105';
 $array['dashboard'][$x]['dashboard_enabled'] = 'false';
 $array['dashboard'][$x]['dashboard_description'] = 'Switch details such as version, uptime, channels and registrations.';

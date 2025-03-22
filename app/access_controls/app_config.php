@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gérer les listes de contrôle d'accès";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "წვდომის კონტროლის სიების მართვა";
 		$apps[$x]['description']['nl-nl'] = "Beheer toegangs controle lijsten";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
@@ -54,7 +55,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "access_control_node_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 
 	//cache details
 		$apps[$x]['cache']['key'] = "configuration.acl.conf";
@@ -72,7 +72,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "access_control_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';		
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "access_control_default";
@@ -134,10 +134,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "node_cidr";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the IP CIDR range.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "node_domain";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the domain.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "node_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

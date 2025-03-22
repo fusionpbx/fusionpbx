@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	All Rights Reserved.
 
 	Contributor(s):
@@ -26,11 +26,8 @@
 
 /**
  * cache class provides an abstracted cache
- *
- * @method string dialplan - builds the dialplan for call center
  */
 //define the call center class
-	if (!class_exists('call_center')) {
 		class call_center {
 			/**
 			 * define the variables
@@ -63,16 +60,6 @@
 			}
 
 			/**
-			 * Called when there are no references to a particular object
-			 * unset the variables used in the class
-			 */
-			public function __destruct() {
-				foreach ($this as $key => $value) {
-					unset($this->$key);
-				}
-			}
-
-			/**
 			 * Add a dialplan for call center
 			 * @var string $domain_uuid		the multi-tenant id
 			 * @var string $value	string to be cached
@@ -88,7 +75,7 @@
 							$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
 
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('dialplan_delete', 'temp');
 							$p->add('dialplan_detail_delete', 'temp');
 
@@ -156,7 +143,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
 
-					if (strlen($this->queue_cid_prefix) > 0) {
+					if (!empty($this->queue_cid_prefix)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
@@ -166,7 +153,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_greeting) > 0) {
+					if (!empty($this->queue_greeting)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
@@ -176,7 +163,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_greeting) > 0) {
+					if (!empty($this->queue_greeting)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "playback";
@@ -186,7 +173,7 @@
 						$y++;
 					}
 
-					if (strlen($this->queue_cc_exit_keys) > 0) {
+					if (!empty($this->queue_cc_exit_keys)) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
@@ -204,7 +191,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
 
-					if (strlen($this->queue_timeout_action) > 0) {
+					if (!empty($this->queue_timeout_action)) {
 						$action_array = explode(":",$this->queue_timeout_action);
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -226,7 +213,7 @@
 					$array["dialplans"][0] = $dialplan;
 
 				//add temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add("dialplan_add", 'temp');
 					$p->add("dialplan_detail_add", 'temp');
 					$p->add("dialplan_edit", 'temp');
@@ -252,7 +239,7 @@
 					$array['call_center_queues'][0]['dialplan_uuid'] = $this->dialplan_uuid;
 
 				//grant temporary permissions
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('call_center_queue_edit', 'temp');
 
 				//execute update
@@ -304,8 +291,8 @@
 
 							//filter out unchecked, build where clause for below
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$uuids[] = "'".$record['uuid']."'";
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$uuids[] = $record['uuid'];
 									}
 								}
 
@@ -313,7 +300,7 @@
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, queue_name, queue_extension from v_".$this->table." ";
 									$sql .= "where domain_uuid = :domain_uuid ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$sql .= "and ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
@@ -348,18 +335,18 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$esl = event_socket::create();
 
 									//delete the queue in the switch
-										if ($fp) {
+										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION["domin_name"];
-												$response = event_socket_request($fp, $cmd);
+												$cmd = "callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION['domain_name'];
+												$response = event_socket::api($cmd);
 											}
 										}
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('call_center_tier_delete', 'temp');
 										$p->add('dialplan_delete', 'temp');
 										$p->add('dialplan_detail_delete', 'temp');
@@ -427,7 +414,7 @@
 
 							//filter out unchecked
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = $record['uuid'];
 									}
 								}
@@ -446,18 +433,17 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//setup the event socket connection
-										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										$esl = event_socket::create();
 
 									//delete the agent in the switch
-										if ($fp) {
+										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config agent del ".$uuid;
-												$response = event_socket_request($fp, $cmd);
+												event_socket::async("callcenter_config agent del $uuid");
 											}
 										}
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('call_center_tier_delete', 'temp');
 
 									//execute delete
@@ -513,8 +499,8 @@
 
 							//get checked records
 								foreach ($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$uuids[] = "'".$record['uuid']."'";
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$uuids[] = $record['uuid'];
 									}
 								}
 
@@ -523,7 +509,7 @@
 
 									//primary table
 										$sql = "select * from v_".$this->table." ";
-										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+										$sql .= "where ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
 										$database = new database;
 										$rows = $database->select($sql, $parameters, 'all');
 										if (is_array($rows) && @sizeof($rows) != 0) {
@@ -589,7 +575,7 @@
 								if (is_array($array) && @sizeof($array) != 0) {
 
 									//grant temporary permissions
-										$p = new permissions;
+										$p = permissions::new();
 										$p->add('call_center_tier_add', 'temp');
 										$p->add('dialplan_add', 'temp');
 
@@ -622,7 +608,6 @@
 			} //method
 
 		} //class
-	}
 
 /*
 $o = new call_center;
@@ -636,5 +621,3 @@ $c->destination_number = "";
 $c->queue_cc_exit_keys = "";
 $c->dialplan();
 */
-
-?>

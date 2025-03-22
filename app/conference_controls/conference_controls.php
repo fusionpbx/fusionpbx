@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2018-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -46,15 +42,18 @@
 	$language = new text;
 	$text = $language->get();
 
+//set from session variables
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+
 //get the http post data
-	if (is_array($_POST['conference_controls'])) {
+	if (!empty($_POST['conference_controls'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$conference_controls = $_POST['conference_controls'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($conference_controls) && @sizeof($conference_controls) != 0) {
+	if (!empty($action) && !empty($conference_controls)) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('conference_control_add')) {
@@ -76,17 +75,17 @@
 				break;
 		}
 
-		header('Location: conference_controls.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: conference_controls.php'.(!empty($search) ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //add the search string
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
+	$search = strtolower($_GET["search"] ?? '');
+	if (!empty($search)) {
 		$sql_search = "where (";
 		$sql_search .= "	lower(control_name) like :search ";
 		$sql_search .= "	or lower(control_description) like :search ";
@@ -96,14 +95,14 @@
 
 //get the count
 	$sql = "select count(conference_control_uuid) from v_conference_controls ";
-	$sql .= $sql_search;
+	$sql .= $sql_search ?? '';
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "&search=".$search : null;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -113,7 +112,7 @@
 	$sql .= order_by($order_by, $order, 'control_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$conference_controls = $database->select($sql, $parameters, 'all');
+	$conference_controls = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -126,7 +125,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-conference_controls']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_controls']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('conference_control_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'conference_control_edit.php']);
@@ -169,22 +168,23 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_control_add') || permission_exists('conference_control_edit') || permission_exists('conference_control_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($conference_controls ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($conference_controls) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	echo th_order_by('control_name', $text['label-control_name'], $order_by, $order);
 	echo th_order_by('control_enabled', $text['label-control_enabled'], $order_by, $order, null, "class='center shrink'");
 	echo "	<th class='hide-sm-dn'>".$text['label-control_description']."</th>\n";
-	if (permission_exists('conference_control_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('conference_control_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($conference_controls) && @sizeof($conference_controls) != 0) {
+	if (!empty($conference_controls)) {
 		$x = 0;
 		foreach ($conference_controls as $row) {
 			if (permission_exists('conference_control_edit')) {
@@ -215,7 +215,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['control_description'])."</td>\n";
-			if (permission_exists('conference_control_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('conference_control_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -227,6 +227,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

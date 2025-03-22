@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
 		$apps[$x]['category'] = 'system';
 		$apps[$x]['subcategory'] = 'email';
-		$apps[$x]['version'] = '2.10';
+		$apps[$x]['version'] = '2.11';
 		$apps[$x]['license'] = 'Member';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
@@ -32,9 +32,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "120";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the email queue. Default 120 seconds.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the email queue. Default 5 seconds.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d945ed66-39c1-44eb-b596-49c9399d8018";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
@@ -43,6 +43,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Limit the number of attempts before the email is set to failed.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "27c6f91a-7362-4028-95d1-bf05539fdf3b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "save_response";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Save the SMTP send response. Use this for debugging SMTP response.";
 		$y++;
 		//$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9eb5a16-e018-4a83-975e-eee2ed31f923";
 		//$apps[$x]['default_settings'][$y]['default_setting_category'] = "email_queue";
@@ -163,8 +171,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'email_debug';
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'email_substatus';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'email_response';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'email_debug';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		//$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$z++;
@@ -219,6 +227,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_email_queue';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'email_queue_uuid';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_mime_type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
@@ -232,6 +244,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_base64';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'email_attachment_cid';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$z++;

@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "Gestione Toni";
+		$apps[$x]['description']['ka-ge'] = "ტონების მართვა";
 		$apps[$x]['description']['nl-nl'] = "Beheer geluiden";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

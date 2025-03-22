@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -45,8 +41,16 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$conference_name = '';
+	$conference_extension = '';
+	$conference_pin_number = '';
+	$conference_flags = '';
+	$conference_account_code = '';
+	$conference_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$conference_uuid = $_REQUEST["id"];
 	}
@@ -55,18 +59,26 @@
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
-		$dialplan_uuid = $_POST["dialplan_uuid"];
+	if (!empty($_POST)) {
+		$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 		$conference_name = $_POST["conference_name"];
 		$conference_extension = $_POST["conference_extension"];
 		$conference_pin_number = $_POST["conference_pin_number"];
 		$conference_profile = $_POST["conference_profile"];
 		$conference_flags = $_POST["conference_flags"];
-		$conference_email_address = $_POST["conference_email_address"];
+		$conference_email_address = $_POST["conference_email_address"] ?? null;
 		$conference_account_code = $_POST["conference_account_code"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
-		$conference_enabled = $_POST["conference_enabled"];
+		$conference_enabled = $_POST["conference_enabled"] ?? 'false';
+
+		//set the context for users that do not have the permission
+		if (permission_exists('conference_context')) {
+			$conference_context = $_POST["conference_context"];
+		}
+		else if ($action == 'add') {
+			$conference_context = $_SESSION['domain_name'];
+		}
 
 		//sanitize the conference name
 		$conference_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_name);
@@ -74,12 +86,12 @@
 	}
 
 //delete the user from the v_conference_users
-	if ($_GET["a"] == "delete" && permission_exists("conference_delete")) {
+	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && permission_exists("conference_delete")) {
 
 		$user_uuid = $_REQUEST["user_uuid"];
 		$conference_uuid = $_REQUEST["id"];
 
-		$p = new permissions;
+		$p = permissions::new();
 		$p->add('conference_user_delete', 'temp');
 
 		$array['conference_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -101,7 +113,7 @@
 	}
 
 //add the user to the v_conference_users
-	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete") {
+	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && (empty($_GET["a"]) || $_GET["a"] != "delete")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$conference_uuid = $_REQUEST["id"];
@@ -112,7 +124,7 @@
 			$array['conference_users'][0]['conference_uuid'] = $conference_uuid;
 			$array['conference_users'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('conference_user_add', 'temp');
 
 			$database = new database;
@@ -131,7 +143,7 @@
 	}
 
 //process http post variables
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the conference id
 			if ($action == "add") {
@@ -152,16 +164,16 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
-			if (strlen($conference_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
-			if (strlen($conference_extension) == 0) { $msg .= "".$text['confirm-extension']."<br>\n"; }
-			//if (strlen($conference_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
-			if (strlen($conference_profile) == 0) { $msg .= "".$text['confirm-profile']."<br>\n"; }
-			//if (strlen($conference_flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
-			//if (strlen($conference_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-			//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-			if (strlen($conference_enabled) == 0) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($dialplan_uuid)) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
+			if (empty($conference_name)) { $msg .= "".$text['confirm-name']."<br>\n"; }
+			if (empty($conference_extension)) { $msg .= "".$text['confirm-extension']."<br>\n"; }
+			//if (empty($conference_pin_number)) { $msg .= "Please provide: Pin Number<br>\n"; }
+			if (empty($conference_profile)) { $msg .= "".$text['confirm-profile']."<br>\n"; }
+			//if (empty($conference_flags)) { $msg .= "Please provide: Flags<br>\n"; }
+			//if (empty($conference_order)) { $msg .= "Please provide: Order<br>\n"; }
+			//if (empty($conference_description)) { $msg .= "Please provide: Description<br>\n"; }
+			if (empty($conference_enabled)) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -176,7 +188,7 @@
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"])) {
 
 				//update the conference extension
 					$array['conferences'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -195,19 +207,20 @@
 					}
 					$array['conferences'][0]['conference_order'] = $conference_order;
 					$array['conferences'][0]['conference_description'] = $conference_description;
+					$array['conferences'][0]['conference_context'] = $conference_context;
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
 
 				//conference pin number
-					$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
+					$pin_number = (!empty($conference_pin_number)) ? '+'.$conference_pin_number : '';
 
 				//build the xml
-					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
+					$dialplan_xml = "<extension name=\"".xml::sanitize($conference_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($conference_extension)."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".$conference_uuid."\" inline=\"true\"/>\n";
-					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".$conference_name."\" inline=\"true\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".$conference_extension."\" inline=\"true\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_extension."@".$_SESSION['domain_name']."@".$conference_profile.$pin_number."+flags{'".$conference_flags."'}\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".xml::sanitize($conference_uuid)."\" inline=\"true\"/>\n";
+					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".xml::sanitize($conference_name)."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".xml::sanitize($conference_extension)."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".xml::sanitize($conference_extension)."@".$_SESSION['domain_name']."@".xml::sanitize($conference_profile.$pin_number)."+flags{'".xml::sanitize($conference_flags)."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
@@ -216,14 +229,17 @@
 					$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['dialplans'][0]['dialplan_name'] = $conference_name;
 					$array['dialplans'][0]['dialplan_number'] = $conference_extension;
+					if (isset($conference_context)) {
+						$array['dialplans'][0]["dialplan_context"] = $conference_context;
+					}
 					$array['dialplans'][0]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
+					$array['dialplans'][0]['dialplan_continue'] = 'false';
 					$array['dialplans'][0]['dialplan_order'] = '333';
-					$array['dialplans'][0]['dialplan_context'] = $_SESSION['domain_name'];
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
 
-					$p = new permissions;
+					$p = permissions::new();
 					$p->add('dialplan_add', 'temp');
 					$p->add('dialplan_edit', 'temp');
 
@@ -244,7 +260,7 @@
 					//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['dialplan_uuid'] = $dialplan_uuid;
 					$database = new database;
-					$database->execute($sql, $parameters);
+					$database->execute($sql, $parameters ?? null);
 					unset($sql, $parameters);
 
 				//add the message
@@ -270,7 +286,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_uuid = $_GET["id"];
 		$sql = "select * from v_conferences ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -278,8 +294,8 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_uuid'] = $conference_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		$row = $database->select($sql, $parameters ?? null, 'row');
+		if (!empty($row)) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_name = $row["conference_name"];
 			$conference_extension = $row["conference_extension"];
@@ -290,11 +306,16 @@
 			$conference_account_code = $row["conference_account_code"];
 			$conference_order = $row["conference_order"];
 			$conference_description = $row["conference_description"];
+			$conference_context = $row["conference_context"];
 			$conference_enabled = $row["conference_enabled"];
 			$conference_name = str_replace("-", " ", $conference_name);
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (empty($conference_context)) { $conference_context = $_SESSION['domain_name']; }
+	if (empty($conference_enabled)) { $conference_enabled = 'true'; }
 
 //get the conference profiles
 	$sql = "select * ";
@@ -312,9 +333,9 @@
 	$sql .= "and e.domain_uuid = :domain_uuid ";
 	$sql .= "and e.conference_uuid = :conference_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['conference_uuid'] = $conference_uuid;
+	$parameters['conference_uuid'] = $conference_uuid ?? null;
 	$database = new database;
-	$conference_users = $database->select($sql, $parameters, 'all');
+	$conference_users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //get the users
@@ -323,11 +344,11 @@
 	$sql .= "and user_enabled = 'true' ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$users = $database->select($sql, $parameters, 'all');
+	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //set the default
-	if ($conference_profile == "") { $conference_profile = "default"; }
+	if (empty($conference_profile)) { $conference_profile = "default"; }
 
 //create token
 	$object = new token;
@@ -351,8 +372,11 @@
 		if (permission_exists('conference_cdr_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'list','link'=>PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($conference_uuid)]);
 		}
-		if (permission_exists('conference_active_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
+		if (permission_exists('conference_interactive_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_extension)]);
+		}
+		else if (permission_exists('conference_active_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php']);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
@@ -363,6 +387,7 @@
 	echo $text['description']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -381,7 +406,7 @@
 	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"".escape($conference_extension)."\">\n";
+	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"".escape($conference_extension)."\" required='required' placeholder=\"".($_SESSION['conference']['extension_range']['text'] ?? '')."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-extension']."\n";
 	echo "</td>\n";
@@ -404,7 +429,7 @@
 			echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 			echo "		<td class='vtable'>";
 
-			if (is_array($conference_users) && @sizeof($conference_users) != 0) {
+			if (!empty($conference_users)) {
 				echo "		<table width='50%'>\n";
 				foreach ($conference_users as $field) {
 					echo "		<tr>\n";
@@ -497,7 +522,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='conference_order' class='formfld'>\n";
-	if (strlen(htmlspecialchars($dialplan_order))> 0) {
+	if (!empty($dialplan_order) && strlen(htmlspecialchars($dialplan_order) ?? '') != 0) {
 		echo "		<option selected='selected' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 	}
 	$i=0;
@@ -513,15 +538,36 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if (permission_exists('conference_context')) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='conference_context' maxlength='255' value=\"".escape($conference_context)."\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-enter-context']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['table-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='conference_enabled' name='conference_enabled' value='true' ".($conference_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' id='conference_enabled' name='conference_enabled'>\n";
+		echo "		<option value='true' ".($conference_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo "".$text['description-conference-enable']."\n";
 	echo "</td>\n";
@@ -539,10 +585,11 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	if ($action == "update") {
-		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? '')."'>\n";
 		echo "<input type='hidden' name='conference_uuid' value='".escape($conference_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

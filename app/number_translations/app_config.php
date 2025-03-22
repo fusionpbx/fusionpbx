@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gérer mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['he-il'] = "נהל את mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['it-it'] = "Gestisci mod_translate";  //translation provided by Google Translate
+		$apps[$x]['description']['ka-ge'] = "mod_translate-ის თარგმნა";
 		$apps[$x]['description']['nl-nl'] = "Beheer mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['pl-pl'] = "Zarządzaj mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['pt-br'] = "Gerenciar mod_translate";  //translation provided by Google Translate

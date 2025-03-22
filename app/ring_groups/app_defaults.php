@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,7 +30,6 @@ if ($domains_processed == 1) {
 	//select ring groups with an empty context
 	$sql = "select * from v_ring_groups ";
 	$sql .= "where ring_group_context is null ";
-	$database = new database;
 	$ring_groups = $database->select($sql, null, 'all');
 	if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
 		//get the domain list
@@ -50,10 +49,9 @@ if ($domains_processed == 1) {
 		}
 		if (is_array($array) && @sizeof($array) != 0) {
 			//grant temporary permissions
-				$p = new permissions;
+				$p = permissions::new();
 				$p->add('ring_group_edit', 'temp');
 			//execute update
-				$database = new database;
 				$database->app_name = 'ring_groups';
 				$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 				$database->save($array, false);
@@ -62,6 +60,13 @@ if ($domains_processed == 1) {
 				$p->delete('ring_group_edit', 'temp');
 		}
 	}
+
+	//enable ring group destinations by default 
+	$sql = "update v_ring_group_destinations ";
+	$sql .= "set destination_enabled = true ";
+	$sql .= "where destination_enabled is null; ";
+	$database->execute($sql, null);
+	unset($sql);
 
 }
 

@@ -26,7 +26,6 @@
 */
 
 //define the switch_recordings class
-if (!class_exists('switch_recordings')) {
 	class switch_recordings {
 
 		/**
@@ -63,16 +62,6 @@ if (!class_exists('switch_recordings')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * list recordings
 		 */
 		public function list_recordings() {
@@ -82,10 +71,13 @@ if (!class_exists('switch_recordings')) {
 			$parameters['domain_uuid'] = $this->domain_uuid;
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
-			if (is_array($result) && @sizeof($result) != 0) {
-				foreach ($result as &$row) {
+			if (!empty($result)) {
+				foreach ($result as $row) {
 					$recordings[$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']."/".$row['recording_filename']] = $row['recording_filename'];
 				}
+			}
+			else {
+				$recordings = false;
 			}
 			unset($sql, $parameters, $result, $row);
 			return $recordings;
@@ -114,7 +106,7 @@ if (!class_exists('switch_recordings')) {
 
 						//get recording filename, build delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid'])) {
 
 									//get filename
 										$sql = "select recording_filename from v_recordings ";
@@ -145,7 +137,7 @@ if (!class_exists('switch_recordings')) {
 								//delete recording files
 									if (is_array($filenames) && @sizeof($filenames) != 0) {
 										foreach ($filenames as $filename) {
-											if (isset($filename) && strlen($filename) > 0 && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename)) {
+											if (isset($filename) && !empty($filename) && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename)) {
 												@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename);
 											}
 										}
@@ -165,6 +157,3 @@ if (!class_exists('switch_recordings')) {
 		} //method
 
 	} //class
-}
-
-?>

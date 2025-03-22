@@ -2,10 +2,7 @@
 
 /**
  * call block class
- *
- * @method null download
  */
-if (!class_exists('call_block')) {
 	class call_block {
 
 		/**
@@ -19,6 +16,7 @@ if (!class_exists('call_block')) {
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
+		private $database;
 
 		/**
 		 * declare public variables
@@ -33,6 +31,9 @@ if (!class_exists('call_block')) {
 		 */
 		public function __construct() {
 
+			//initialize the database
+				$this->database = new database;
+
 			//assign private variables
 				$this->app_name = 'call_block';
 				$this->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
@@ -43,16 +44,6 @@ if (!class_exists('call_block')) {
 				$this->toggle_field = 'call_block_enabled';
 				$this->toggle_values = ['true','false'];
 
-		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		/**
@@ -78,7 +69,7 @@ if (!class_exists('call_block')) {
 
 						//filter out unchecked, build where clause for below
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -86,11 +77,15 @@ if (!class_exists('call_block')) {
 						//get necessary call block details
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, call_block_number from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "where ( ";
+								$sql .= "	domain_uuid = :domain_uuid ";
+								if (permission_exists('call_block_domain')) {
+									$sql .= " or domain_uuid is null ";
+								}
+								$sql .= ") ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$call_block_numbers[$row['uuid']] = $row['call_block_number'];
@@ -103,7 +98,9 @@ if (!class_exists('call_block')) {
 							$x = 0;
 							foreach ($call_block_numbers as $call_block_uuid => $call_block_number) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $call_block_uuid;
-								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								if (!permission_exists('call_block_domain')) {
+									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
 								$x++;
 							}
 
@@ -111,10 +108,9 @@ if (!class_exists('call_block')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//clear the cache
@@ -154,7 +150,7 @@ if (!class_exists('call_block')) {
 
 						//get current toggle state
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -163,8 +159,7 @@ if (!class_exists('call_block')) {
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -186,10 +181,9 @@ if (!class_exists('call_block')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//clear the cache
@@ -230,7 +224,7 @@ if (!class_exists('call_block')) {
 
 						//get checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -241,8 +235,7 @@ if (!class_exists('call_block')) {
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
 
@@ -262,10 +255,9 @@ if (!class_exists('call_block')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -301,26 +293,73 @@ if (!class_exists('call_block')) {
 
 						//filter checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
-						//get the caller id info from cdrs
+						//get the caller id info from call detail records
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select caller_id_name, caller_id_number, caller_destination from v_xml_cdr ";
 								$sql .= "where xml_cdr_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
-								unset($sql);
+								$rows = $this->database->select($sql, $parameters ?? null, 'all');
+								unset($sql, $parameters);
+							}
+
+						//get the caller id info from call detail records
+							if (isset($_SESSION['domain_uuid']) && is_uuid($_SESSION['domain_uuid'])) {
+								//get the destination country code
+								$sql = "select distinct(destination_prefix), ";
+								$sql .= "(select count(destination_prefix) from v_destinations where domain_uuid = :domain_uuid and destination_prefix = d.destination_prefix) as count ";
+								$sql .= "from v_destinations as d ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and destination_prefix <> '' ";
+								$sql .= "and destination_enabled = 'true' ";
+								$sql .= "order by count desc limit 1; ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$destination_country_code = $this->database->select($sql, $parameters ?? null, 'column');
+								unset($sql, $parameters);
+
+								//use the the destination country code to set the country code
+								if (!empty($destination_country_code)) {
+									$destination_country_code = trim($destination_country_code, "+ ");
+									$country_code = $destination_country_code;
+								}
+							}
+
+						//get the users that are assigned to the extension
+							if (!permission_exists('call_block_extension')) {
+								$sql = "select extension_uuid from v_extension_users ";
+								$sql .= "where user_uuid = :user_uuid ";
+								$parameters['user_uuid'] = $_SESSION['user_uuid'];
+								$user_extensions = $this->database->select($sql, $parameters ?? null, 'all');
+								unset($sql, $parameters);
+							}
+
+						//get the country code from default settings
+							if (!empty($_SESSION['domain']['country_code']['numeric'])) {
+								$country_code = $_SESSION['domain']['country_code']['numeric'];
 							}
 
 						//loop through records
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $x => $row) {
 
+									//remove e.164 and country code
+										if (substr($row["caller_id_number"],0,1) == "+") {
+											//format e.164
+											$call_block_number = str_replace("+".trim($country_code), "", trim($row["caller_id_number"]));
+										}
+										elseif (!empty($row["caller_id_number"])) {
+											//remove the country code if its the first in the string
+											$call_block_number = ltrim(trim($row["caller_id_number"]), $country_code ?? '');
+										}
+										else {
+											$call_block_number = '';
+										}
+
 									//build insert array
-										if (permission_exists('call_block_all')) {
+										if (permission_exists('call_block_extension')) {
 											$array['call_block'][$x]['call_block_uuid'] = uuid();
 											$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 											$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
@@ -328,17 +367,8 @@ if (!class_exists('call_block')) {
 												$array['call_block'][$x]['extension_uuid'] = $this->extension_uuid;
 											}
 											if ($this->call_block_direction == 'inbound') {
-												//remove e.164 and country code
-												if (trim($row["caller_id_number"])[0] == "+") {
-													//format e.164
-													$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
-												} else {
-													//remove the country code if its the first in the string
-													$call_block_number = ltrim(trim($row["caller_id_number"]),$_SESSION['domain']['country_code']['numeric']);
-												}
-												//build the array
-												$array['call_block'][$x]['call_block_country_code'] = trim($_SESSION['domain']['country_code']['numeric']);
-												$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+												$array['call_block'][$x]['call_block_name'] = '';
+												$array['call_block'][$x]['call_block_country_code'] = trim($country_code ?? '');
 												$array['call_block'][$x]['call_block_number'] = $call_block_number;
 												$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 											}
@@ -353,19 +383,16 @@ if (!class_exists('call_block')) {
 											$x++;
 										}
 										else {
-											if (is_array($_SESSION['user']['extension'])) {
-												foreach ($_SESSION['user']['extension'] as $field) {
+											if (is_array($user_extensions)) {
+												foreach ($user_extensions as $field) {
 													if (is_uuid($field['extension_uuid'])) {
 														$array['call_block'][$x]['call_block_uuid'] = uuid();
 														$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 														$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
 														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
 														if ($this->call_block_direction == 'inbound') {
-															//remove e.164 and country code
-															$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
-
-															//build the array
-															$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+															$array['call_block'][$x]['call_block_name'] = '';
+															$array['call_block'][$x]['call_block_country_code'] = trim($country_code ?? '');
 															$array['call_block'][$x]['call_block_number'] = $call_block_number;
 															$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 														}
@@ -395,8 +422,7 @@ if (!class_exists('call_block')) {
 									$sql .= "and app_uuid = '".$this->app_uuid."' ";
 									$sql .= "and dialplan_enabled <> 'true' ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters);
+									$rows = $this->database->select($sql, $parameters);
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $x => $row) {
 											$array['dialplans'][$x]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -406,15 +432,14 @@ if (!class_exists('call_block')) {
 									unset($rows, $parameters);
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
-									$response = $database->message;
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
+									$response = $this->database->message;
 									unset($array);
 
 								//revoke temporary permissions
@@ -431,6 +456,3 @@ if (!class_exists('call_block')) {
 		} //method
 
 	} //class
-}
-
-?>

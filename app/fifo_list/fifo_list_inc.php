@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -50,9 +46,9 @@
 
 //show the list
 	$switch_cmd = 'fifo list';
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
-		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$esl = event_socket::create();
+	if ($esl->is_connected()) {
+		$xml_str = trim(event_socket::api($switch_cmd));
 		try {
 			$xml = new SimpleXMLElement($xml_str);
 		}
@@ -81,6 +77,7 @@
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
+		echo "<div class='card'>\n";
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th>".$text['label-name']."</th>\n";
@@ -133,6 +130,7 @@
 			$c = $c ? 0 : 1;
 		}
 		echo "</table>\n";
+		echo "</div>\n";
 	}
 
 ?>

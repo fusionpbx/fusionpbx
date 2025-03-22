@@ -19,6 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
@@ -33,13 +34,6 @@
 		$apps[$x]['db'][$y]['table']['name'] = "v_software";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "software_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

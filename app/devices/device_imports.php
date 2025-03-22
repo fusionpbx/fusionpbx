@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -51,7 +47,7 @@
 			$fp = fopen("php://memory", 'r+');
 			fputs($fp, $input);
 			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure); // $escape only got added in 5.3.0
+			$data = fgetcsv($fp, null, $delimiter, $enclosure, $escape);
 			fclose($fp);
 			return $data;
 		}
@@ -61,10 +57,10 @@
 	ini_set('max_execution_time',7200);
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"];
-	$from_row = $_POST["from_row"];
-	$delimiter = $_POST["data_delimiter"];
-	$enclosure = $_POST["data_enclosure"];
+	$action = $_POST["action"] ?? null;
+	$from_row = $_POST["from_row"] ?? null;
+	$delimiter = $_POST["data_delimiter"] ?? null;
+	$enclosure = $_POST["data_enclosure"] ?? null;
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -76,7 +72,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_import')) {
+	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_import')) {
 		if ($_POST['type'] == 'csv') {
 			$file = $_SESSION['server']['temp']['dir']."/devices-".$_SESSION['domain_name'].".csv";
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
@@ -86,7 +82,7 @@
 	}
 
 //get the schema
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file'])) {
+	if (!empty($delimiter) && file_exists($_SESSION['file'] ?? '')) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -109,12 +105,12 @@
 				}
 
 				//filter for specific tables and build the schema array
-				if ($table_name == "devices" || $table_name == "device_lines" || 
+				if ($table_name == "devices" || $table_name == "device_lines" ||
 					$table_name == "device_keys" || $table_name == "device_settings") {
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
 					foreach ($table['fields'] as $row) {
-						if ($row['deprecated'] !== 'true') {
+						if (empty($row['deprecated']) || $row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
 							}
@@ -135,7 +131,7 @@
 	}
 
 //match the column names to the field names
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+	if (!empty($delimiter) && file_exists($_SESSION['file'] ?? '') && $action != 'import') {
 
 		//validate the token
 			$token = new token;
@@ -168,12 +164,13 @@
 			echo $text['description-import']."\n";
 			echo "<br /><br />\n";
 
+			echo "<div class='card'>\n";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
-				$line_field = trim(trim($line_field), $enclosure);
+				$line_field = preg_replace('#[^a-zA-Z0-9_]#', '', $line_field);
 				echo "<tr>\n";
 				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
@@ -204,6 +201,7 @@
 			}
 
 			echo "</table>\n";
+			echo "</div>\n";
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
@@ -239,7 +237,7 @@
 	}
 
 //upload the csv
-	if (file_exists($_SESSION['file']) && $action == 'import') {
+	if (file_exists($_SESSION['file'] ?? '') && $action == 'import') {
 
 		//validate the token
 			$token = new token;
@@ -251,7 +249,7 @@
 
 		//user selected fields
 			$fields = $_POST['fields'];
-			
+
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
@@ -289,7 +287,7 @@
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
-									
+
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
 
@@ -309,15 +307,15 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
-									//normalize the MAC address
-									if ($field_name == "device_mac_address") {
+									//normalize the device address
+									if ($field_name == "device_address") {
 										$result[$key] = strtolower($result[$key]);
 										$result[$key] = preg_replace('#[^a-fA-F0-9./]#', '', $result[$key]);
 									}
 
 									//build the data array
-									if (strlen($table_name) > 0) {
-										if (strlen($parent) == 0) {
+									if (!empty($table_name)) {
+										if (empty($parent)) {
 											if ($field_name != "username") {
 												$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 												$array[$table_name][$row_id][$field_name] = $result[$key];
@@ -338,12 +336,12 @@
 									}
 								}
 
-							// Do not duplicate MAC addresses, get the device UUID from the database and set it in the array
+							// Do not duplicate device addresses, get the device UUID from the database and set it in the array
 								if (isset($array['devices']) && !isset($array['devices'][$row_id]['device_uuid']) &&
-									isset($array['devices'][$row_id]['device_mac_address'])) {
+									isset($array['devices'][$row_id]['device_address'])) {
 									$sql = "SELECT device_uuid, domain_uuid FROM v_devices ";
-									$sql .= "WHERE device_mac_address = :mac ";
-									$parameters['mac'] = $array['devices'][$row_id]['device_mac_address'];
+									$sql .= "WHERE device_address = :mac ";
+									$parameters['mac'] = $array['devices'][$row_id]['device_address'];
 									$row = $database->select($sql, $parameters, 'row');
 									if (is_array($row)) {
 										// Validate that the hit we got is for the same domain, if not add a message stating the fact
@@ -370,7 +368,7 @@
 											//remove empty device keys
 											if (isset($row['device_keys'])) {
 												$y = 0;
-												foreach ($row['device_keys'] as &$sub_row) {
+												foreach ($row['device_keys'] as $sub_row) {
 													if (count($sub_row) == 2) {
 														unset($array['devices'][$x]['device_keys']);
 													}
@@ -381,7 +379,7 @@
 											//remove empty device lines
 											if (isset($row['device_lines'])) {
 												$y = 0;
-												foreach ($row['device_lines'] as &$sub_row) {
+												foreach ($row['device_lines'] as $sub_row) {
 													if (count($sub_row) == 2) {
 														unset($array['devices'][$x]['device_lines']);
 													}
@@ -417,7 +415,7 @@
 						//remove empty device keys
 						if (isset($row['device_keys'])) {
 							$y = 0;
-							foreach ($row['device_keys'] as &$sub_row) {
+							foreach ($row['device_keys'] as $sub_row) {
 								if (count($sub_row) == 2) {
 									unset($array['devices'][$x]['device_keys']);
 								}
@@ -428,7 +426,7 @@
 						//remove empty device lines
 						if (isset($row['device_lines'])) {
 							$y = 0;
-							foreach ($row['device_lines'] as &$sub_row) {
+							foreach ($row['device_lines'] as $sub_row) {
 								if (count($sub_row) == 2) {
 									unset($array['devices'][$x]['device_lines']);
 								}
@@ -449,8 +447,8 @@
 						//$message = $database->message;
 						//view_array($message);
 					}
-				
-					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+
+					if (!empty($_SESSION['provision']['path']['text'])) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();
@@ -485,6 +483,7 @@
 	echo $text['description-import']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
@@ -492,7 +491,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>".($data ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
@@ -524,6 +523,7 @@
 	echo "    <select class='formfld' style='width:40px;' name='data_delimiter'>\n";
 	echo "    <option value=','>,</option>\n";
 	echo "    <option value='|'>|</option>\n";
+	echo "    <option value='	'>TAB</option>\n";
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-import_delimiter']."\n";
@@ -555,6 +555,7 @@
 	echo "</tr>\n";
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br><br>";
 
 	echo "<input name='type' type='hidden' value='csv'>\n";

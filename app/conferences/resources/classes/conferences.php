@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -25,7 +25,6 @@
 */
 
 //define the conferences class
-if (!class_exists('conferences')) {
 	class conferences {
 
 		/**
@@ -56,17 +55,6 @@ if (!class_exists('conferences')) {
 				$this->toggle_values = ['true','false'];
 
 		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
 		/**
 		 * delete records
 		 */
@@ -90,7 +78,7 @@ if (!class_exists('conferences')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//get the dialplan uuid
 										$sql = "select dialplan_uuid from v_conferences ";
@@ -119,7 +107,7 @@ if (!class_exists('conferences')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_user_delete', 'temp');
 									$p->add('dialplan_detail_delete', 'temp');
 									$p->add('dialplan_delete', 'temp');
@@ -180,7 +168,7 @@ if (!class_exists('conferences')) {
 
 						//get current toggle state
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -214,7 +202,7 @@ if (!class_exists('conferences')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
@@ -271,7 +259,7 @@ if (!class_exists('conferences')) {
 
 						//get checked records
 							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -352,7 +340,7 @@ if (!class_exists('conferences')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_user_add', 'temp');
 									$p->add('dialplan_add', 'temp');
 
@@ -385,6 +373,3 @@ if (!class_exists('conferences')) {
 		}
 
 	}
-}
-
-?>

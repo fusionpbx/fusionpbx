@@ -25,7 +25,6 @@
 */
 
 //define the pin numbers class
-if (!class_exists('pin_numbers')) {
 	class pin_numbers {
 
 		/**
@@ -55,16 +54,6 @@ if (!class_exists('pin_numbers')) {
 				$this->toggle_field = 'enabled';
 				$this->toggle_values = ['true','false'];
 
-		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		/**
@@ -255,6 +244,3 @@ if (!class_exists('pin_numbers')) {
 		}
 
 	}
-}
-
-?>

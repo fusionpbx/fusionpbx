@@ -25,7 +25,6 @@
 */
 
 //define the bridges class
-if (!class_exists('bridges')) {
 	class bridges {
 
 		/**
@@ -58,16 +57,6 @@ if (!class_exists('bridges')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete records
 		 */
 		public function delete($records) {
@@ -90,7 +79,7 @@ if (!class_exists('bridges')) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								}
@@ -142,7 +131,7 @@ if (!class_exists('bridges')) {
 
 						//get current toggle state
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -216,7 +205,7 @@ if (!class_exists('bridges')) {
 
 						//get checked records
 							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -265,6 +254,3 @@ if (!class_exists('bridges')) {
 		}
 
 	}
-}
-
-?>

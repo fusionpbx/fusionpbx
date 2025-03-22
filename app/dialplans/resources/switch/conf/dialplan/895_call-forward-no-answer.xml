@@ -1,0 +1,5 @@
+<extension name="call-forward-no-answer" number="" context="global" continue="false" app_uuid="4922d8a5-d636-4354-b14d-bd6fdc79dc61" global="true" order="895">
+	<condition field="${forward_no_answer_enabled}" expression="^true$">
+		<action application="transfer" data="${forward_no_answer_destination} XML ${context}"/>
+	</condition>
+</extension>

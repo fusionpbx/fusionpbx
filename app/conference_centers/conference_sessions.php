@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -42,19 +38,25 @@
 		exit;
 	}
 
+//connect to the database
+	$database = new database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
+//set from session variables
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+
 //get the http post data
-	if (is_array($_POST['conference_sessions'])) {
+	if (!empty($_POST['conference_sessions'])) {
 		$action = $_POST['action'];
 		$meeting_uuid = $_POST['meeting_uuid'];
 		$conference_sessions = $_POST['conference_sessions'];
 	}
 
 //process the http post data by action
-	if ($action != '' && is_array($conference_sessions) && @sizeof($conference_sessions) != 0) {
+	if (!empty($action) && !empty($conference_sessions)) {
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('conference_session_delete')) {
@@ -70,12 +72,12 @@
 	}
 
 //set variables from the http values
-	$meeting_uuid = $_GET["id"];
-	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'start_epoch';
-	$order = $_GET["order"] != '' ? $_GET["order"] : 'desc';
+	$meeting_uuid = $_GET["id"] ?? '';
+	$order_by = $_GET["order_by"] ?? '' ? $_GET["order_by"] : 'start_epoch';
+	$order = $_GET["order"] ?? '' ? $_GET["order"] : 'desc';
 
 //add meeting_uuid to a session variable
-	if (is_uuid($meeting_uuid)) {
+	if (!empty($meeting_uuid) && is_uuid($meeting_uuid)) {
 		$_SESSION['meeting']['uuid'] = $meeting_uuid;
 	}
 
@@ -84,19 +86,17 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and meeting_uuid = :meeting_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'];
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'] ?? '';
+	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = '';
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-	
 
 //get the list
 	$sql = "select * from v_conference_sessions ";
@@ -105,9 +105,8 @@
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'];
-	$database = new database;
-	$conference_sessions = $database->select($sql, $parameters, 'all');
+	$parameters['meeting_uuid'] = $_SESSION['meeting']['uuid'] ?? '';
+	$conference_sessions = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -135,7 +134,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-conference_sessions']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_sessions']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'conference_rooms.php']);
 	if (permission_exists('conference_session_delete') && $conference_sessions) {
@@ -159,6 +158,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='meeting_uuid' value=\"".escape($meeting_uuid)."\">\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('conference_session_delete')) {
@@ -172,12 +172,12 @@
 	echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 	//echo th_order_by('recording', $text['label-recording'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>\n";
-	if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if ($list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
-	if (is_array($conference_sessions) && sizeof($conference_sessions) != 0) {
+	if (!empty($conference_sessions)) {
 		$x = 0;
 		foreach($conference_sessions as $row) {
 			$tmp_year = date("Y", $row['start_epoch']);
@@ -192,12 +192,12 @@
 				$end_date = date("j M Y h:i:sa", $row['end_epoch']);
 			}
 			$time_difference = '';
-			if (strlen($row['end_epoch']) > 0) {
+			if (!empty($row['end_epoch'])) {
 				$time_difference = $row['end_epoch'] - $row['start_epoch'];
 				$time_difference = gmdate("G:i:s", $time_difference);
 			}
 
-			if (strlen($row['start_epoch']) > 0) {
+			if (!empty($row['start_epoch'])) {
 				$list_row_url = "conference_session_details.php?uuid=".urlencode($row['conference_session_uuid']);
 				echo "<tr class='list-row' href='".$list_row_url."'>\n";
 				if (permission_exists('conference_session_delete')) {
@@ -212,7 +212,7 @@
 				echo "	<td>".escape($row['profile'])."&nbsp;</td>\n";
 				$recording_name = $row['recording'];
 				echo "	<td class='button no-link'>\n";
-				if (strlen($recording_name) > 0 && file_exists($recording_name)) {
+				if (!empty($recording_name) && file_exists($recording_name)) {
 					echo "<table border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "<tr>\n";
 					echo "<td>\n";
@@ -232,7 +232,7 @@
 					echo "</table>\n";
 				}
 				echo "	</td>\n";
-				if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				if ($list_row_edit_button) {
 					echo "	<td class='action-button'>\n";
 					echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 					echo "	</td>\n";
@@ -245,6 +245,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

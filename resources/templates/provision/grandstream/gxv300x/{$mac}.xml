@@ -149,7 +149,11 @@
     <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
     <P208>0</P208>
     <!-- NTP Server -->
-    <P30>us.pool.ntp.org</P30>
+    {if isset($ntp_server_primary)}
+	<P30>{$ntp_server_primary}</P30>
+	{else}
+	<P30>pool.ntp.org</P30>
+	{/if}
     <!-- Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
     <!-- When set to Yes(1), it will override the configured NTP server. -->
     <P144>0</P144>
@@ -209,7 +213,7 @@
     <!-- SIP User ID -->
     <P35>{$account.1.user_id}</P35>
     <!-- Authenticate ID -->
-    <P36>{$account.1.user_id}</P36>
+    <P36>{$account.1.auth_id}</P36>
     <!-- Authenticate password -->
     <P34>{$account.1.password}</P34>
     <!-- Display Name (John Doe) -->

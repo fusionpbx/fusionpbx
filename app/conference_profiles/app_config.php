@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = " პროფილის სახით შენახული კონფერენციის პარამეტრების ჯგუფი.";
 		$apps[$x]['description']['nl-nl'] = "Een groep conferentie parameters die gezamenlijk als profiel opgeslagen zijn.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

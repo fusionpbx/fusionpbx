@@ -1,11 +1,7 @@
 <?php
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+    require_once dirname(__DIR__, 3) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -30,8 +26,8 @@
 	$destinations = $destination->get($destination_type);
 
 //show the select
-	echo "	<select name='subaction' id='action' class='formfld' style='".$select_style."'>\n";
-	echo "	<option value=''></option>\n";
+	echo "	<select name='subaction' id='action' class='formfld' ".(!empty($select_style) ? "style='".$select_style."'" : null).">\n";
+	echo "		<option value=''></option>\n";
 	foreach($destinations as $key => $rows) {
 		$singular = $destination->singular($key);
 		if ($key == $action && permission_exists("{$singular}_destinations")) {
@@ -54,8 +50,8 @@
 					$select_label = str_replace('email-icon', '&#9993', $select_label);
 
 					//add the select option
-					$uuid = isset($row[$singular.'_uuid']) ? $row[$singular.'_uuid'] : $row['uuid'];
-					echo "		<option id='{$uuid}' value='".$select_value."'>".$select_label."</option>\n";
+					$uuid = isset($row[$singular.'_uuid']) ? $row[$singular.'_uuid'] : ($row['uuid'] ?? '');
+					echo "		<option id='".$uuid."' value='".$select_value."'>".$select_label."</option>\n";
 				}
 			}
 		}

@@ -20,13 +20,14 @@
 		$apps[$x]['description']['fr-fr'] = "Configurez les notifications.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "გაფრთხილების პარამეტრების კონფიგურაცია.";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Настройка параметров уведомлений";
-		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['sv-se'] = "Konfigurera notifieringsinställningar.";
 		$apps[$x]['description']['uk-ua'] = "";
 
 	//schema details

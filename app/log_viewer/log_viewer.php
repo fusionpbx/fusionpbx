@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -57,8 +53,8 @@
 	}
 
 //set a default file size
-	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) {
-		$_POST['size'] = "32";
+	if (!isset($_POST['size']) || empty($_POST['size'])) {
+		$_POST['size'] = "512";
 	}
 
 //set a default filter
@@ -94,7 +90,7 @@
 				}
 			}
 			if (isset($filename) && file_exists($filename)) {
-				session_cache_limiter('public');
+				@session_cache_limiter('public');
 				$fd = fopen($filename, "rb");
 				header("Content-Type: binary/octet-stream");
 				header("Content-Length: " . filesize($filename));
@@ -136,7 +132,17 @@
 	echo 		$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
 	echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='line_number' id='line_number' value='1' ".($_POST['line_number'] == 1 ? 'checked' : null)."> ".$text['label-line_number']."</label>";
 	echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='sort' id='sort' value='desc' ".($_POST['sort'] == 'desc' ? 'checked' : null)."> ".$text['label-sort']."</label>";
-	echo 		$text['label-display']." <input type='text' class='formfld' style='width: 50px; text-align: center;' name='size' value=\"".escape($_POST['size'])."\" onclick='this.select();'> ".$text['label-size'];
+	echo 		$text['label-display']." <select class='formfld' style='width: 60px; text-align: center;' name='size'>";
+	echo 			"<option value='32' ".($_POST['size'] == 32 ? "selected='selected'" : null).">32</option>";
+	echo 			"<option value='64' ".($_POST['size'] == 64 ? "selected='selected'" : null).">64</option>";
+	echo 			"<option value='128' ".($_POST['size'] == 128 ? "selected='selected'" : null).">128</option>";
+	echo 			"<option value='256' ".($_POST['size'] == 256 ? "selected='selected'" : null).">256</option>";
+	echo 			"<option value='512' ".($_POST['size'] == 512 ? "selected='selected'" : null).">512</option>";
+	echo 			"<option value='1024' ".($_POST['size'] == 1024 ? "selected='selected'" : null).">1024</option>";
+	echo 			"<option value='2048' ".($_POST['size'] == 2048 ? "selected='selected'" : null).">2048</option>";
+	echo 			"<option value='4096' ".($_POST['size'] == 4096 ? "selected='selected'" : null).">4096</option>";
+	echo 		"</select> ";
+	echo 		$text['label-size'];
 	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','name'=>'submit']);
 	if (permission_exists('log_download')) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'log_viewer.php?a=download&n='.basename($log_file)]);
@@ -146,9 +152,9 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "<table width='100%' style='table-layout: fixed;' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td style='background-color: #1c1c1c; padding: 8px; text-align: left;'>";
+	echo "		<td style='background-color: #1c1c1c; padding: 8px; text-align: left; overflow-wrap: break-word;'>";
 
 	if (permission_exists('log_view')) {
 
@@ -200,29 +206,25 @@
 		$array_filter[6]['type'] = 'bold';
 		$array_filter[6]['font'] = 'monospace';
 
-		$file_size = filesize($log_file);
-
-		/*
-		// removed: duplicate of above
-		if (isset($_POST['submit'])) {
-			if (strlen($_POST['size']) == 0) { $_POST['size'] = "32"; }
+		$file_size = 0;
+		if (file_exists($log_file)) {
+			$file_size = filesize($log_file);
 		}
-		*/
 
 		echo "<div style='padding-bottom: 10px; text-align: right; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #fff;'>";
 		$user_file_size = '32768';
-		if (isset($_POST['submit'])) {
-			if (!is_numeric($_POST['size'])) {
-				//should generate log warning here...
-				$user_file_size = 1024 * 32;
-			}
-			else {
-				$user_file_size = $_POST['size'] * 1024;
-			}
-			if (strlen($_REQUEST['filter']) > 0) {
-				$filter = $_REQUEST['filter'];
-			}
+		
+		if (!is_numeric($_POST['size'])) {
+			//should generate log warning here...
+			$user_file_size = 512 * 1024;
 		}
+		else {
+			$user_file_size = $_POST['size'] * 1024;
+		}
+		if (!empty($_REQUEST['filter'])) {
+			$filter = $_REQUEST['filter'];
+		}
+
 		//echo "Log File Size: " . $file_size . " bytes. <br />";
 		echo "	".$text['label-displaying']." ".number_format($user_file_size,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].".";
 		echo "</div>";
@@ -248,7 +250,7 @@
 				else {
 					//open the file
 					$byte_count ='0';
-					if ($file) {
+					if (!empty($file)) {
 						fseek($file, 0);
 					}
 					echo "<br>".$text['label-open_file']."<br>";
@@ -272,7 +274,7 @@
 
 		//start processing
 		$byte_count = 0;
-		if ($file) {
+		if (!empty($file)) {
 			while(!feof($file)) {
 				$log_line = escape(fgets($file));
 				$byte_count++;
@@ -320,7 +322,7 @@
 		else {
 			$adj_index = 1;
 		}
-		if (is_array($array_output)) {
+		if (!empty($array_output) && is_array($array_output)) {
 			foreach ($array_output as $index => $line) {
 				$line_num = "";
 				if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
@@ -342,7 +344,7 @@
 	require_once "resources/footer.php";
 
 //close the file
-	if ($file) {
+	if (!empty($file)) {
 		fclose($file);
 	}
 

@@ -2,12 +2,7 @@
 
 /**
  * email_queue class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('email_queue')) {
 	class email_queue {
 
 		/**
@@ -33,16 +28,6 @@ if (!class_exists('email_queue')) {
 				$this->toggle_field = '';
 				$this->toggle_values = ['true','false'];
 				$this->location = 'email_queue.php';
-		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		/**
@@ -235,6 +220,3 @@ if (!class_exists('email_queue')) {
 		}
 
 	}
-}
-
-?>

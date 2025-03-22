@@ -44,31 +44,18 @@ class captcha {
 	}
 
 	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
 	 * Create the captcha image
 	 * @var string $code
 	 */
 	public function image_captcha() {
 
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
+		//includes files
+		require dirname(__DIR__, 2) . "/resources/require.php";
 
 		//includes files
 		require_once "resources/functions.php";
-		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
 		//start the session
-		ini_set("session.cookie_httponly", True);
 		if (!isset($_SESSION)) { session_start(); }
 
 		//$_SESSION["captcha"] = substr(md5(uuid()), 0, 6);
@@ -87,7 +74,7 @@ class captcha {
 		//exit;
 
 		// Randomize the fonts
-		srand(uuid());
+		srand();
 		$random = (rand()%count($fonts));
 		//$font = $font_path.'/'.$fonts[$random];
 		$font = $fonts[$random];

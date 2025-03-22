@@ -28,14 +28,13 @@
 
 		//add the conference controls list to the database
 		$sql = "select count(*) from v_conference_controls; ";
-		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 
 			//set the directory
-				$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+				$xml_dir = $settings->get('switch','conf').'/autoload_configs';
 				$xml_file = $xml_dir."/conference.conf";
-				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/conference.conf';
+				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/conference.conf';
 
 			//rename the file
 				if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
@@ -66,10 +65,9 @@
 						$array['conference_controls'][0]['control_name'] = $control_name;
 						$array['conference_controls'][0]['control_enabled'] = 'true';
 
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('conference_control_add', 'temp');
 
-						$database = new database;
 						$database->app_name = 'conference_controls';
 						$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 						$database->save($array);
@@ -93,15 +91,14 @@
 								$array['conference_control_details'][0]['conference_control_detail_uuid'] = $conference_control_detail_uuid;
 								$array['conference_control_details'][0]['control_digits'] = $control_digits;
 								$array['conference_control_details'][0]['control_action'] = $control_action;
-								if (strlen($control_data) > 0) {
+								if (!empty($control_data)) {
 									$array['conference_control_details'][0]['control_data'] = $control_data;
 								}
 								$array['conference_control_details'][0]['control_enabled'] = $control_enabled;
 
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('conference_control_detail_add', 'temp');
 
-								$database = new database;
 								$database->app_name = 'conference_controls';
 								$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 								$database->save($array);

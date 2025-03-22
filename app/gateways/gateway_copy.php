@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -71,6 +67,7 @@
 				$expire_seconds = $row["expire_seconds"];
 				$register = $row["register"];
 				$register_transport = $row["register_transport"];
+				$contact_params = $row["contact_params"];
 				$retry_seconds = $row["retry_seconds"];
 				$extension = $row["extension"];
 				$codec_prefs = $row["codec_prefs"];
@@ -92,10 +89,10 @@
 			unset($sql, $parameters, $row);
 
 		//set defaults
-			if (strlen($expire_seconds) == 0) {
+			if (empty($expire_seconds)) {
 				$expire_seconds = '800';
 			}
-			if (strlen($retry_seconds) == 0) {
+			if (empty($retry_seconds)) {
 				$retry_seconds = '30';
 			}
 
@@ -116,6 +113,7 @@
 			$array['gateways'][0]['expire_seconds'] = $expire_seconds;
 			$array['gateways'][0]['register'] = $register;
 			$array['gateways'][0]['register_transport'] = $register_transport;
+			$array['gateways'][0]['contact_params'] = $contact_params;
 			$array['gateways'][0]['retry_seconds'] = $retry_seconds;
 			$array['gateways'][0]['extension'] = $extension;
 			$array['gateways'][0]['codec_prefs'] = $codec_prefs;
@@ -123,7 +121,7 @@
 			//$array['gateways'][0]['channels'] = $channels;
 			$array['gateways'][0]['caller_id_in_from'] = $caller_id_in_from;
 			$array['gateways'][0]['supress_cng'] = $supress_cng;
-         		$array['gateways'][0]['sip_cid_type'] = $sip_cid_type;
+			$array['gateways'][0]['sip_cid_type'] = $sip_cid_type;
 			$array['gateways'][0]['extension_in_contact'] = $extension_in_contact;
 			$array['gateways'][0]['context'] = $context;
 			$array['gateways'][0]['profile'] = $profile;
@@ -145,8 +143,8 @@
 			save_gateway_xml();
 
 		//clear the cache
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			$hostname = trim(event_socket_request($fp, 'api switchname'));
+			$esl = event_socket::create();
+			$hostname = trim(event_socket::api('switchname'));
 			$cache = new cache;
 			$cache->delete("configuration:sofia.conf:".$hostname);
 

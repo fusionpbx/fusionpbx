@@ -20,6 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Logs du switch.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['ka-ge'] = "კომუტატორის ჟურნალის ჩვენება.";
 		$apps[$x]['description']['nl-nl'] = "Centale log tonen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";

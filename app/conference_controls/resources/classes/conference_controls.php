@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019-2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,12 +26,7 @@
 
 /**
  * conference_controls class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('conference_controls')) {
 	class conference_controls {
 
 		/**
@@ -58,16 +53,6 @@ if (!class_exists('conference_controls')) {
 			//assign the variables
 				$this->app_name = 'conference_controls';
 				$this->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
-		}
-
-		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
 		}
 
 		/**
@@ -100,7 +85,7 @@ if (!class_exists('conference_controls')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 										$array['conference_control_details'][$x][$this->name.'_uuid'] = $record['uuid'];
 									}
@@ -113,7 +98,7 @@ if (!class_exists('conference_controls')) {
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//grant temporary permissions
-									$p = new permissions;
+									$p = permissions::new();
 									$p->add('conference_control_detail_delete', 'temp');
 
 								//execute delete
@@ -156,17 +141,20 @@ if (!class_exists('conference_controls')) {
 					}
 
 				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+					if (!empty($records) && is_array($records) && @sizeof($records) != 0) {
+
 						//build the delete array
 							$x = 0;
-							foreach ($records as $record) {
-								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
-									}
+							if (!empty($records) && is_array($records) && @sizeof($records) != 0) {
+								foreach ($records as $record) {
+									//add to the array
+										if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+											$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
+										}
 
-								//increment the id
-									$x++;
+									//increment the id
+										$x++;
+								}
 							}
 
 						//delete the checked rows
@@ -215,8 +203,8 @@ if (!class_exists('conference_controls')) {
 				//toggle the checked records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -224,7 +212,7 @@ if (!class_exists('conference_controls')) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -235,7 +223,7 @@ if (!class_exists('conference_controls')) {
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								//create the array
 									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
 									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
@@ -288,15 +276,15 @@ if (!class_exists('conference_controls')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
 							foreach ($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -307,17 +295,19 @@ if (!class_exists('conference_controls')) {
 
 						//build update array
 							$x = 0;
-							foreach ($states as $uuid => $state) {
-								//create the array
-									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
-									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+							if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
+								foreach ($states as $uuid => $state) {
+									//create the array
+										$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
+										$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
-								//increment the id
-									$x++;
+									//increment the id
+										$x++;
+								}
 							}
 
 						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
 									$database = new database;
 									$database->app_name = $this->app_name;
@@ -362,8 +352,8 @@ if (!class_exists('conference_controls')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -375,7 +365,7 @@ if (!class_exists('conference_controls')) {
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $database->select($sql, $parameters ?? null, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {
@@ -386,7 +376,7 @@ if (!class_exists('conference_controls')) {
 
 											//add copy to the description
 												$array[$this->table][$x][$this->name.'_uuid'] = $primary_uuid;
-												$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+												$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '').' ('.$text['label-copy'].')';
 
 											//details sub table
 												$sql_2 = "select * from v_conference_control_details where conference_control_uuid = :conference_control_uuid";
@@ -431,6 +421,3 @@ if (!class_exists('conference_controls')) {
 		}
 
 	}
-}
-
-?>

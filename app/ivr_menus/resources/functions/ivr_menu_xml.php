@@ -91,7 +91,7 @@
 
 					//add each IVR menu to the XML config
 						$tmp = "<include>\n";
-						if (strlen($ivr_menu_description) > 0) {
+						if (!empty($ivr_menu_description)) {
 							$tmp .= "	<!-- $ivr_menu_description -->\n";
 						}
 						if (count($_SESSION["domains"]) > 1) {
@@ -109,13 +109,13 @@
 							$tmp .= "		greet-long=\"".$ivr_menu_greet_long."\"\n";
 						}
 						if (stripos($ivr_menu_greet_short, 'mp3') !== false || stripos($ivr_menu_greet_short, 'wav') !== false) {
-							if (strlen($ivr_menu_greet_short) > 0) {
+							if (!empty($ivr_menu_greet_short)) {
 								$tmp .= "		greet-short=\"".$ivr_menu_greet_short."\"\n";
 							}
 						}
 						else {
 							//not found
-							if (strlen($ivr_menu_greet_short) > 0) {
+							if (!empty($ivr_menu_greet_short)) {
 								$tmp .= "		greet-short=\"".$ivr_menu_greet_short."\"\n";
 							}
 						}
@@ -141,7 +141,7 @@
 						$database = new database;
 						$sub_result = $database->select($sub_sql, $parameters, 'all');
 						if (is_array($sub_result) && @sizeof($sub_result) != 0) {
-							foreach ($sub_result as &$sub_row) {
+							foreach ($sub_result as $sub_row) {
 								//$ivr_menu_uuid = $sub_row["ivr_menu_uuid"];
 								$ivr_menu_option_digits = $sub_row["ivr_menu_option_digits"];
 								$ivr_menu_option_action = $sub_row["ivr_menu_option_action"];
@@ -149,7 +149,7 @@
 								$ivr_menu_option_description = $sub_row["ivr_menu_option_description"];
 
 								$tmp .= "		<entry action=\"$ivr_menu_option_action\" digits=\"$ivr_menu_option_digits\" param=\"$ivr_menu_option_param\"/>";
-								if (strlen($ivr_menu_option_description) == 0) {
+								if (empty($ivr_menu_option_description)) {
 									$tmp .= "\n";
 								}
 								else {

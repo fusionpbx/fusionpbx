@@ -24,12 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -68,6 +64,8 @@
 	$available_columns[] = 'destination_type_voice';
 	$available_columns[] = 'destination_type_fax';
 	$available_columns[] = 'destination_type_text';
+	$available_columns[] = 'destination_conditions';
+	$available_columns[] = 'destination_actions';
 	$available_columns[] = 'destination_app';
 	$available_columns[] = 'destination_data';
 	$available_columns[] = 'destination_alternate_app';
@@ -110,7 +108,7 @@
 	}
 
 //get the extensions from the database and send them as output
-	if (is_array($_REQUEST["column_group"]) && @sizeof($_REQUEST["column_group"]) != 0) {
+	if (!empty($_REQUEST["column_group"]) && is_array($_REQUEST["column_group"]) && @sizeof($_REQUEST["column_group"]) != 0) {
 
 		//validate the token
 			$token = new token;
@@ -150,7 +148,6 @@
 
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
-
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-destination_export']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -159,14 +156,15 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-	
+
 	echo $text['description-destination_export'];
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($available_columns ?: "style='visibility: hidden;'").">\n";
+	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(empty($available_columns) ? "style='visibility: hidden;'" : null).">\n";
 	echo "	</th>\n";
 	echo "	<th>".$text['label-column_name']."</th>\n";
 	echo "</tr>\n";
@@ -175,7 +173,7 @@
 		$x = 0;
 		foreach ($available_columns as $column_name) {
 			$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			echo "<tr class='list-row' href='".($list_row_url ?? null)."'>\n";
 			echo "	<td class='checkbox'>\n";
 			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
 			echo "	</td>\n";
@@ -186,6 +184,7 @@
 	}
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";

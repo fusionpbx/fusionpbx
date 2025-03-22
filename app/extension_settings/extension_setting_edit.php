@@ -17,16 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2021-2023
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
 //includes files
-	require_once "resources/require.php";
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -42,8 +38,15 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$extension_uuid = '';
+	$extension_setting_uuid = '';
+	$extension_setting_name = '';
+	$extension_setting_value = '';
+	$extension_setting_description = '';
+
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_setting_uuid = $_REQUEST["id"];
 		$id = $_REQUEST["id"];
@@ -53,25 +56,25 @@
 	}
 
 //get the extension id
-	if (is_uuid($_REQUEST["extension_setting_uuid"])) {
+	if (!empty($_REQUEST["extension_setting_uuid"]) && is_uuid($_REQUEST["extension_setting_uuid"])) {
 		$extension_setting_uuid = $_REQUEST["extension_setting_uuid"];
 	}
-	if (is_uuid($_REQUEST["extension_uuid"])) {
+	if (!empty($_REQUEST["extension_uuid"]) && is_uuid($_REQUEST["extension_uuid"])) {
 		$extension_uuid = $_REQUEST["extension_uuid"];
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
-		$domain_uuid = $_POST["domain_uuid"];
+	if (!empty($_POST)) {
+		$domain_uuid = $_POST["domain_uuid"] ?? null;
 		$extension_setting_type = $_POST["extension_setting_type"];
 		$extension_setting_name = $_POST["extension_setting_name"];
 		$extension_setting_value = $_POST["extension_setting_value"];
-		$extension_setting_enabled = $_POST["extension_setting_enabled"];
+		$extension_setting_enabled = $_POST["extension_setting_enabled"] ?? 'false';
 		$extension_setting_description = $_POST["extension_setting_description"];
 	}
 
 //process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//validate the token
 			$token = new token;
@@ -82,7 +85,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action'])) {
 
 				//prepare the array(s)
 				//send the array to the database class
@@ -116,13 +119,13 @@
 
 		//check for all required data
 			$msg = '';
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (strlen($extension_setting_type) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_type']."<br>\n"; }
-			if (strlen($extension_setting_name) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_name']."<br>\n"; }
-			//if (strlen($extension_setting_value) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_value']."<br>\n"; }
-			if (strlen($extension_setting_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_enabled']."<br>\n"; }
-			//if (strlen($extension_setting_description) == 0) { $msg .= $text['message-required']." ".$text['label-extension_setting_description']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			if (empty($extension_setting_type)) { $msg .= $text['message-required']." ".$text['label-extension_setting_type']."<br>\n"; }
+			if (empty($extension_setting_name)) { $msg .= $text['message-required']." ".$text['label-extension_setting_name']."<br>\n"; }
+			//if (empty($extension_setting_value)) { $msg .= $text['message-required']." ".$text['label-extension_setting_value']."<br>\n"; }
+			if (empty($extension_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-extension_setting_enabled']."<br>\n"; }
+			//if (empty($extension_setting_description)) { $msg .= $text['message-required']." ".$text['label-extension_setting_description']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -136,7 +139,7 @@
 			}
 
 		//add the extension_setting_uuid
-			if (!is_uuid($extension_setting_uuid)) {
+			if (empty($extension_setting_uuid)) {
 				$extension_setting_uuid = uuid();
 			}
 
@@ -156,8 +159,8 @@
 			$database->app_name = 'extension settings';
 			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$database->save($array);
-		
-		//clear the cache	
+
+		//clear the cache
 			$sql = "select extension, number_alias, user_context from v_extensions ";
 			$sql .= "where extension_uuid = :extension_uuid ";
 			$parameters['extension_uuid'] = $extension_uuid;
@@ -166,7 +169,7 @@
 			$cache = new cache;
 			$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
 			$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
-		
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -182,7 +185,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		//$sql .= "extension_uuid, ";
 		//$sql .= "domain_uuid, ";
@@ -196,11 +199,11 @@
 		$sql .= "where extension_setting_uuid = :extension_setting_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['extension_setting_uuid'] = $extension_setting_uuid;
+		$parameters['extension_setting_uuid'] = $extension_setting_uuid ?? '';
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
-			if (is_uuid($row["extension_uuid"])) {
+		if (!empty($row)) {
+			if (!empty($row["extension_uuid"]) && is_uuid($row["extension_uuid"])) {
 				$extension_uuid = $row["extension_uuid"];
 			}
 			//$domain_uuid = $row["domain_uuid"];
@@ -212,6 +215,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if (empty($extension_setting_enabled)) { $extension_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -254,6 +260,7 @@
 		}
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	//echo "<tr>\n";
@@ -262,7 +269,7 @@
 	//echo "</td>\n";
 	//echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	//echo "	<select class='formfld' name='domain_uuid'>\n";
-	//if (strlen($domain_uuid) == 0) {
+	//if (empty($domain_uuid)) {
 	//	echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
 	//}
 	//else {
@@ -289,13 +296,13 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='extension_setting_type'>\n";
 	echo "		<option value=''></option>\n";
-	if ($extension_setting_type == "param") {
+	if (!empty($extension_setting_type) && $extension_setting_type == "param") {
 		echo "		<option value='param' selected='selected'>".$text['label-param']."</option>\n";
 	}
 	else {
 		echo "		<option value='param'>".$text['label-param']."</option>\n";
 	}
-	if ($extension_setting_type == "variable") {
+	if (!empty($extension_setting_type) && $extension_setting_type == "variable") {
 		echo "		<option value='variable' selected='selected'>".$text['label-variable']."</option>\n";
 	}
 	else {
@@ -334,20 +341,18 @@
 	echo "	".$text['label-extension_setting_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='extension_setting_enabled'>\n";
-	if ($extension_setting_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='extension_setting_enabled' name='extension_setting_enabled' value='true' ".($extension_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='extension_setting_enabled' name='extension_setting_enabled'>\n";
+		echo "		<option value='true' ".($extension_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($extension_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($extension_setting_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-extension_setting_enabled']."\n";
 	echo "</td>\n";
@@ -365,6 +370,7 @@
 	echo "</tr>\n";
 
 	echo "</table>\n";
+	echo "</div>\n";
 	echo "<br /><br />\n";
 
 	echo "<input type='hidden' name='extension_uuid' value='".$extension_uuid."'>\n";

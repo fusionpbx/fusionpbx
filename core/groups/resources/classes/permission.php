@@ -33,7 +33,7 @@
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						include($config_path);
 						$x++;
 					}
@@ -44,9 +44,9 @@
 				//restore default permissions
 					$x = 0;
 					foreach ($apps as $row) {
-						if (is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+						if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
 							foreach ($row['permissions'] as $permission) {
-								if (is_array($permission['groups'])) {
+								if (!empty($permission['groups']) && is_array($permission['groups'])) {
 									foreach ($permission['groups'] as $group_name) {
 										if (is_array($group_name_array) || !in_array($group_name, $group_name_array)) {
 											$group_name_array[] = $group_name;
@@ -95,7 +95,7 @@
 						}
 						if (is_array($array) && @sizeof($array) != 0) {
 							//grant temporary permissions
-								$p = new permissions;
+								$p = permissions::new();
 								$p->add('group_permission_delete', 'temp');
 							//execute delete
 								$database = new database;
@@ -130,7 +130,7 @@
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						include($config_path);
 						$x++;
 					}
@@ -138,10 +138,10 @@
 				//restore default permissions
 					$x = 0;
 					foreach ($apps as $row) {
-						if (is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+						if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
 							foreach ($row['permissions'] as $permission) {
 								//set the variables
-								if ($permission['groups']) {
+								if (!empty($permission['groups'])) {
 									foreach ($permission['groups'] as $group_name) {
 										//check group protection
 										$group_uuid = null;
@@ -185,7 +185,7 @@
 
 					if (is_array($array) && @sizeof($array)) {
 						//grant temporary permissions
-							$p = new permissions;
+							$p = permissions::new();
 							$p->add('group_permission_add', 'temp');
 
 						//execute insert

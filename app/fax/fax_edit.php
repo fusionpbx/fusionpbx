@@ -17,19 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2024
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files;
-	require_once "resources/require.php";
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -54,7 +50,7 @@
 	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
 //get the fax extension
-	if (is_numeric($fax_extension) > 0) {
+	if (!empty($fax_extension) && is_numeric($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
@@ -80,10 +76,10 @@
 	}
 
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$fax_uuid = $_REQUEST["id"];
-		$dialplan_uuid = $_REQUEST["dialplan_uuid"];
+		$dialplan_uuid = $_REQUEST["dialplan_uuid"] ?? null;
 	}
 	else {
 		$action = "add";
@@ -93,7 +89,7 @@
 	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($fax_uuid)) {
+			if (!empty($_POST['action']) && is_uuid($fax_uuid)) {
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $fax_uuid;
 
@@ -122,7 +118,9 @@
 		$fax_accountcode = $_POST["accountcode"];
 		$fax_destination_number = $_POST["fax_destination_number"];
 		$fax_prefix = $_POST["fax_prefix"];
-		$fax_email = implode(',',array_filter($_POST["fax_email"]));
+		$fax_email = implode(',',array_filter($_POST["fax_email"] ?? []));
+		$fax_file = $_POST["fax_file"];
+		$fax_email_confirmation = implode(',',array_filter($_POST["fax_email_confirmation"] ?? []));
 		$fax_email_connection_type = $_POST["fax_email_connection_type"];
 		$fax_email_connection_host = $_POST["fax_email_connection_host"];
 		$fax_email_connection_port = $_POST["fax_email_connection_port"];
@@ -138,7 +136,7 @@
 		$fax_caller_id_number = $_POST["fax_caller_id_number"];
 		$fax_toll_allow = $_POST["fax_toll_allow"];
 		$fax_forward_number = $_POST["fax_forward_number"];
-		if (strlen($fax_destination_number) == 0) {
+		if (empty($fax_destination_number)) {
 			$fax_destination_number = $fax_extension;
 		}
 		if (strlen($fax_forward_number) > 3) {
@@ -152,23 +150,22 @@
 		else {
 			$forward_prefix = $forward_prefix.$fax_forward_number.'#'; //found
 		}
-		$fax_local = $_POST["fax_local"]; //! @todo check in database
+		$fax_local = $_POST["fax_local"] ?? null; //! @todo check in database
 		$fax_description = $_POST["fax_description"];
-		$fax_send_greeting = $_POST["fax_send_greeting"];
 		$fax_send_channels = $_POST["fax_send_channels"];
 
 		//restrict size of user data
 		$fax_name = substr($fax_name, 0, 30);
 		$fax_extension = substr($fax_extension, 0, 15);
-		$accountcode = substr($accountcode, 0, 80);
-		$fax_prefix = substr($fax_prefix, 0, 12);
-		$fax_caller_id_name = substr($fax_caller_id_name, 0, 20);
+		$accountcode = substr($accountcode ?? '', 0, 80);
+		$fax_prefix = substr($fax_prefix ?? '', 0, 12);
+		$fax_caller_id_name = substr($fax_caller_id_name, 0, 40);
 		$fax_caller_id_number = substr($fax_caller_id_number, 0, 20);
 		$fax_forward_number = substr($fax_forward_number, 0, 20);
 	}
 
 //delete the user from the fax users
-	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] == "delete" && permission_exists("fax_extension_delete")) {
+	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && !empty($_GET["a"]) && $_GET["a"] == "delete" && permission_exists("fax_extension_delete")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$fax_uuid = $_REQUEST["id"];
@@ -178,7 +175,7 @@
 			$array['fax_users'][0]['fax_uuid'] = $fax_uuid;
 			$array['fax_users'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_user_delete', 'temp');
 
 			$database = new database;
@@ -196,7 +193,7 @@
 	}
 
 //add the user to the fax users
-	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete") {
+	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && (empty($_GET["a"]) || $_GET["a"] != "delete")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$fax_uuid = $_REQUEST["id"];
@@ -206,7 +203,7 @@
 			$array['fax_users'][0]['fax_uuid'] = $fax_uuid;
 			$array['fax_users'][0]['user_uuid'] = $user_uuid;
 
-			$p = new permissions;
+			$p = permissions::new();
 			$p->add('fax_user_add', 'temp');
 
 			$database = new database;
@@ -227,9 +224,9 @@
 	clearstatcache();
 
 //process the data
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
-		$msg = '';
+		//get the fax_uuid
 		if ($action == "update" && is_uuid($_POST["fax_uuid"]) && permission_exists('fax_extension_edit')) {
 			$fax_uuid = $_POST["fax_uuid"];
 		}
@@ -243,9 +240,10 @@
 			}
 
 		//check for all required data
-			if (strlen($fax_extension) == 0) { $msg .= "".$text['confirm-ext']."<br>\n"; }
-			if (strlen($fax_name) == 0) { $msg .= "".$text['confirm-fax']."<br>\n"; }
-			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+			$msg = '';
+			if (permission_exists('fax_extension') && empty($fax_extension)) { $msg .= "".$text['confirm-ext']."<br>\n"; }
+			if (empty($fax_name)) { $msg .= "".$text['confirm-fax']."<br>\n"; }
+			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -267,23 +265,26 @@
 		//escape the commas with a backslash and remove the spaces
 			$fax_email = str_replace(" ", "", $fax_email);
 
+		//escape the commas with a backslash and remove the spaces
+			$fax_email_confirmation = str_replace(" ", "", $fax_email_confirmation);
+
 		//set the $php_bin
 			//if (file_exists(PHP_BINDIR."/php")) { $php_bin = 'php'; }
 			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 				$php_bin = 'php.exe';
 			}
-			elseif (file_exists(PHP_BINDIR."/php5")) { 
-				$php_bin = 'php5'; 
+			elseif (file_exists(PHP_BINDIR."/php5")) {
+				$php_bin = 'php5';
 			}
 			else {
 				$php_bin = 'php';
 			}
 
 		//add or update the database
-			if ($_POST["persistformvar"] != "true") {
+			if (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true") {
 
 				//prep authorized senders
-					if (sizeof($fax_email_outbound_authorized_senders) > 0) {
+					if (is_array($fax_email_outbound_authorized_senders) && (sizeof($fax_email_outbound_authorized_senders) > 0)) {
 						foreach ($fax_email_outbound_authorized_senders as $sender_num => $sender) {
 							if ($sender == '' || (substr_count($sender, '@') == 1 && !valid_email($sender)) || substr_count($sender, '.') == 0) {
 								unset($fax_email_outbound_authorized_senders[$sender_num]);
@@ -302,7 +303,7 @@
 						$array['fax'][0]['dialplan_uuid'] = $dialplan_uuid;
 
 					//assign temp permission
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('fax_add', 'temp');
 
 					//set the dialplan action
@@ -314,45 +315,53 @@
 						$array['fax'][0]['fax_uuid'] = $fax_uuid;
 
 					//assign temp permission
-						$p = new permissions;
+						$p = permissions::new();
 						$p->add('fax_edit', 'temp');
 				}
 
 				if (is_array($array) && @sizeof($array) != 0) {
 					//add common columns to array
 						$array['fax'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['fax'][0]['fax_extension'] = $fax_extension;
-						$array['fax'][0]['accountcode'] = $fax_accountcode;
-						$array['fax'][0]['fax_destination_number'] = $fax_destination_number;
-						$array['fax'][0]['fax_prefix'] = $fax_prefix;
+						if (permission_exists('fax_extension')) {
+							$array['fax'][0]['fax_extension'] = $fax_extension;
+						}
+						if (permission_exists('fax_accountcode')) {
+							$array['fax'][0]['accountcode'] = $fax_accountcode;
+						}
+						if (permission_exists('fax_destination_number')) {
+							$array['fax'][0]['fax_destination_number'] = $fax_destination_number;
+						}
+						if (permission_exists('fax_prefix')) {
+							$array['fax'][0]['fax_prefix'] = $fax_prefix;
+						}
 						$array['fax'][0]['fax_name'] = $fax_name;
-						$array['fax'][0]['fax_email'] = $fax_email;
-						if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
-							$array['fax'][0]['fax_email_connection_type'] = $fax_email_connection_type;
-							$array['fax'][0]['fax_email_connection_host'] = $fax_email_connection_host;
-							$array['fax'][0]['fax_email_connection_port'] = $fax_email_connection_port;
-							$array['fax'][0]['fax_email_connection_security'] = $fax_email_connection_security;
-							$array['fax'][0]['fax_email_connection_validate'] = $fax_email_connection_validate;
-							$array['fax'][0]['fax_email_connection_username'] = $fax_email_connection_username;
-							$array['fax'][0]['fax_email_connection_password'] = $fax_email_connection_password;
-							$array['fax'][0]['fax_email_connection_mailbox'] = $fax_email_connection_mailbox;
-							$array['fax'][0]['fax_email_inbound_subject_tag'] = $fax_email_inbound_subject_tag;
-							$array['fax'][0]['fax_email_outbound_subject_tag'] = $fax_email_outbound_subject_tag;
-							$array['fax'][0]['fax_email_outbound_authorized_senders'] = $fax_email_outbound_authorized_senders;
+						if (permission_exists('fax_email')) {
+							$array['fax'][0]['fax_email'] = $fax_email;
+							$array['fax'][0]['fax_file'] = $fax_file;
 						}
-						$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
-						$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
-						$array['fax'][0]['fax_toll_allow'] = $fax_toll_allow;
-						if ($action == "add" && strlen($fax_forward_number) > 0) {
-							$array['fax'][0]['fax_forward_number'] = $fax_forward_number;
+						if (permission_exists('fax_email_confirmation')) {
+							$array['fax'][0]['fax_email_confirmation'] = $fax_email_confirmation;
 						}
-						if ($action == "update") {
-							$array['fax'][0]['fax_forward_number'] = strlen($fax_forward_number) > 0 ? $fax_forward_number : null;
+						if (permission_exists('fax_caller_id_name')) {
+							$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
 						}
-						if (permission_exists('fax_send_greeting')) {
-							$array['fax'][0]['fax_send_greeting'] = strlen($fax_send_greeting) != 0 ? $fax_send_greeting : null;
+						if (permission_exists('fax_caller_id_number')) {
+							$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
 						}
-						$array['fax'][0]['fax_send_channels'] = strlen($fax_send_channels) != 0 ? $fax_send_channels : null;
+						if (permission_exists('fax_toll_allow')) {
+							$array['fax'][0]['fax_toll_allow'] = $fax_toll_allow;
+						}
+						if (permission_exists('fax_forward_number')) {
+							if ($action == "add" && !empty($fax_forward_number)) {
+								$array['fax'][0]['fax_forward_number'] = $fax_forward_number;
+							}
+							if ($action == "update") {
+								$array['fax'][0]['fax_forward_number'] = !empty($fax_forward_number) ? $fax_forward_number : null;
+							}
+						}
+						if (permission_exists('fax_send_channels')) {
+							$array['fax'][0]['fax_send_channels'] = strlen($fax_send_channels) != 0 ? $fax_send_channels : null;
+						}
 						$array['fax'][0]['fax_description'] = $fax_description;
 
 					//execute
@@ -385,7 +394,6 @@
 
 				//dialplan add or update
 					$c = new fax;
-					$c->db = $db;
 					$c->domain_uuid = $_SESSION['domain_uuid'];
 					$c->dialplan_uuid = $dialplan_uuid;
 					$c->fax_name = $fax_name;
@@ -410,7 +418,7 @@
 	}
 
 //pre-populate the form
-	if (is_uuid($_GET['id']) && $_POST["persistformvar"] != "true") {
+	if (!empty($_GET['id']) && is_uuid($_GET['id']) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$fax_uuid = $_GET["id"];
 		$sql = "select * from v_fax ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -427,23 +435,13 @@
 			$fax_prefix = $row["fax_prefix"];
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
-			$fax_email_connection_type = $row["fax_email_connection_type"];
-			$fax_email_connection_host = $row["fax_email_connection_host"];
-			$fax_email_connection_port = $row["fax_email_connection_port"];
-			$fax_email_connection_security = $row["fax_email_connection_security"];
-			$fax_email_connection_validate = $row["fax_email_connection_validate"];
-			$fax_email_connection_username = $row["fax_email_connection_username"];
-			$fax_email_connection_password = $row["fax_email_connection_password"];
-			$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
-			$fax_email_inbound_subject_tag = $row["fax_email_inbound_subject_tag"];
-			$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
-			$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
+			$fax_file = $row["fax_file"];
+			$fax_email_confirmation = $row["fax_email_confirmation"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_toll_allow = $row["fax_toll_allow"];
 			$fax_forward_number = $row["fax_forward_number"];
 			$fax_description = $row["fax_description"];
-			$fax_send_greeting = $row["fax_send_greeting"];
 			$fax_send_channels = $row["fax_send_channels"];
 		}
 		unset($sql, $parameters, $row);
@@ -453,39 +451,46 @@
 	}
 
 //get the fax users
-	$sql = "select * from v_fax_users as e, v_users as u ";
-	$sql .= "where e.user_uuid = u.user_uuid  ";
-	$sql .= "and e.domain_uuid = :domain_uuid ";
-	$sql .= "and e.fax_uuid = :fax_uuid ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['fax_uuid'] = $fax_uuid;
-	$database = new database;
-	$fax_users = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	if (!empty($fax_uuid) && is_uuid($fax_uuid)) {
+		$sql = "select * from v_fax_users as e, v_users as u ";
+		$sql .= "where e.user_uuid = u.user_uuid  ";
+		$sql .= "and e.domain_uuid = :domain_uuid ";
+		$sql .= "and e.fax_uuid = :fax_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['fax_uuid'] = $fax_uuid;
+		$database = new database;
+		$fax_users = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+	}
 
 //get the users that are not assigned to this fax server
-	$sql = "select * from v_users \n";
-	$sql .= "where domain_uuid = :domain_uuid \n";
-	$sql .= "and user_uuid not in (\n";
-	$sql .= "	select user_uuid from v_fax_users ";
-	$sql .= "	where domain_uuid = :domain_uuid ";
-	$sql .= "	and fax_uuid = :fax_uuid ";
-	$sql .= "	and user_uuid is not null ";
-	$sql .= ")\n";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['fax_uuid'] = $fax_uuid;
-	$database = new database;
-	$available_users = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	if (!empty($fax_uuid) && is_uuid($fax_uuid)) {
+		$sql = "select * from v_users \n";
+		$sql .= "where domain_uuid = :domain_uuid \n";
+		$sql .= "and user_uuid not in (\n";
+		$sql .= "	select user_uuid from v_fax_users ";
+		$sql .= "	where domain_uuid = :domain_uuid ";
+		$sql .= "	and fax_uuid = :fax_uuid ";
+		$sql .= "	and user_uuid is not null ";
+		$sql .= ")\n";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['fax_uuid'] = $fax_uuid;
+		$database = new database;
+		$available_users = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+	}
 
 //replace the dash with a space
-	$fax_name = str_replace("-", " ", $fax_name);
+	$fax_name = str_replace("-", " ", $fax_name ?? '');
 
 //build the fax_emails array
-	$fax_emails = explode(',',$fax_email);
+	$fax_emails = explode(',', $fax_email ?? '');
+
+//build the fax_email_confirmations array
+	$fax_email_confirmations = explode(',', $fax_email_confirmation ?? '');
 
 //set the dialplan_uuid
-	if (!is_uuid($dialplan_uuid)) {
+	if (empty($dialplan_uuid) || !is_uuid($dialplan_uuid)) {
 		$dialplan_uuid = uuid();
 	}
 
@@ -497,39 +502,33 @@
 	$document['title'] = $text['title-fax_server_settings'];
 	require_once "resources/header.php";
 
-//advanced button js
-	echo "<script type='text/javascript' language='JavaScript'>\n";
-	echo "	function toggle_advanced(advanced_id) {\n";
-	echo "		$('#'+advanced_id).toggle();\n";
-	echo "		if ($('#'+advanced_id).is(':visible')) {\n";
-	echo "			$('html, body').animate({scrollTop: $('#'+advanced_id).offset().top - 80}, 'slow');\n";
-	echo "		}\n";
-	echo "	}\n";
-	echo "	function add_sender() {\n";
-	echo "		var newdiv = document.createElement('div');\n";
-	echo "		newdiv.innerHTML = \"<input type='text' class='formfld' style='width: 225px; min-width: 225px; max-width: 225px; margin-top: 3px;' name='fax_email_outbound_authorized_senders[]' maxlength='255'>\";";
-	echo "		document.getElementById('authorized_senders').appendChild(newdiv);";
-	echo "	}\n";
-	echo "</script>\n";
-
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-fax_server_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
+
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'fax.php']);
 	if ($action == "update") {
 		$button_margin = 'margin-left: 15px;';
+		if (permission_exists('fax_extension_advanced')) {
+			$button_margin = 'margin-left: 15px;';
+			if (function_exists("imap_open") && file_exists("fax_files_remote.php")) {
+				echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','style'=>($button_margin ?? ''),'link'=>'fax_advanced.php?id='.urlencode($fax_uuid)]);
+			}
+			unset($button_margin);
+		}
 		if (permission_exists('fax_extension_copy')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-copy','btn_copy');"]);
 			unset($button_margin);
 		}
 		if (permission_exists('fax_extension_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 			unset($button_margin);
 		}
 	}
+
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -544,46 +543,33 @@
 		}
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-name']."\n";
+	echo "</td>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='fax_name' maxlength='30' value=\"".escape($fax_name)."\" required='required'>\n";
+	echo "<br />\n";
+	echo "".$text['description-name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-	if (!permission_exists('fax_extension_delete')) {
-
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-email']."\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='email' name='fax_email' maxlength='255' value=\"".escape($fax_email)."\">\n";
-		echo "<br />\n";
-		echo "	".$text['description-email']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-	}
-	else { //admin, superadmin, etc
-
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-name']."\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_name' maxlength='30' value=\"".escape($fax_name)."\" required='required'>\n";
-		echo "<br />\n";
-		echo "".$text['description-name']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
+	if (permission_exists('fax_extension')) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-extension']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_extension' maxlength='15' value=\"".escape($fax_extension)."\" required='required'>\n";
+		echo "	<input class='formfld' type='text' name='fax_extension' maxlength='15' value=\"".escape($fax_extension ?? '')."\" required='required' placeholder=\"".($_SESSION['fax']['extension_range']['text'] ?? '')."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-extension']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('fax_accountcode')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-accountcode']."\n";
@@ -595,253 +581,175 @@
 		echo $text['description-accountcode']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('fax_destination_number')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-destination-number']."\n";
+		echo "	".$text['label-destination_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' value=\"".escape($fax_destination_number)."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' value=\"".escape($fax_destination_number ?? '')."\">\n";
 		echo "<br />\n";
-		echo " ".$text['description-destination-number']."\n";
+		echo " ".$text['description-destination_number']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('fax_prefix')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-fax_prefix']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_prefix' maxlength='12' value=\"".escape($fax_prefix)."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_prefix' maxlength='12' value=\"".escape($fax_prefix ?? '')."\">\n";
 		echo "<br />\n";
 		echo " ".$text['description-fax_prefix']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('fax_email')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
-		foreach($fax_emails as $email) {
-			echo "<tr>\n";
-			echo "<td>\n";
-			echo "	<input class='formfld' type=\"text\" name=\"fax_email[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
-			echo "</td>\n";
+		foreach ($fax_emails as $email) {
+			echo "	<input class='formfld' type='email' name='fax_email[".$x."]' maxlength='255' value=\"".escape($email)."\"><br>\n";
 			$x++;
 		}
-		echo "<tr>\n";
-		echo "	<td>\n";
-		echo "		<input class='formfld' type=\"text\" name=\"fax_email[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
-		echo "	</td>\n";
-		echo "</table>\n";
+		echo "	<input class='formfld' type='email' name='fax_email[".$x++."]' maxlength='255' value=''>\n";
+		echo "<br />\n";
 		echo "	".$text['description-email']."\n";
-		if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
-			echo "<br /><br />\n";
-			echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>"toggle_advanced('advanced_email_connection');"]);
-		}
-		echo "<br />\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-caller-id-name']."\n";
-		echo "</td>\n";
-		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='20' value=\"".escape($fax_caller_id_name)."\">\n";
-		echo "<br />\n";
-		echo "".$text['description-caller-id-name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-caller-id-number']."\n";
+		echo "	".$text['label-email_fax_file']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='20' min='0' step='1' value=\"".escape($fax_caller_id_number)."\">\n";
+		echo "	<select class='formfld' name='fax_file' id='fax_file'>\n";
+		echo "		<option value='attach' ".(empty($fax_file) || $fax_fax_file == 'attach' ? "selected='selected'" : null).">".$text['option-attachment']."</option>\n";
+		echo "		<option value='link' ".($fax_file == "link" ? "selected='selected'" : null).">".$text['option-download_link']."</option>\n";
+		echo "	</select>\n";
 		echo "<br />\n";
-		echo "".$text['description-caller-id-number']."\n";
+		echo $text['description-email_fax_file']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
+	if (permission_exists('fax_email_confirmation')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_confirmation']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		$x = 0;
+		foreach ($fax_email_confirmations as $email) {
+			echo "	<input class='formfld' type='email' name='fax_email_confirmation[".$x."]' maxlength='255' value=\"".escape($email)."\"><br>\n";
+			$x++;
+		}
+		echo "	<input class='formfld' type='email' name='fax_email_confirmation[".$x++."]' maxlength='255' value=''>\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_confirmation']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('fax_caller_id_name')) {
+		echo "<tr>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-caller_id_name']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='40' value=\"".escape($fax_caller_id_name ?? '')."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-caller_id_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('fax_caller_id_number')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-caller_id_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='20' min='0' step='1' value=\"".escape($fax_caller_id_number ?? '')."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-caller_id_number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('fax_forward_number')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-forward']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='20' value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : escape($fax_forward_number))."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='20' value=\"".(!empty($fax_forward_number) && is_numeric($fax_forward_number) ? format_phone($fax_forward_number) : escape($fax_forward_number ?? ''))."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-forward-number']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-		
+	}
+
+	if (permission_exists('fax_toll_allow')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-toll_allow']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_toll_allow' maxlength='20' min='0' step='1' value=\"".escape($fax_toll_allow)."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_toll_allow' maxlength='20' min='0' step='1' value=\"".escape($fax_toll_allow ?? '')."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-toll_allow']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
 
-		if (permission_exists('fax_user_view')) {
-			if ($action == "update") {
-				echo "	<tr>";
-				echo "		<td class='vncell' valign='top'>".$text['label-user-list']."</td>";
-				echo "		<td class='vtable'>";
+	if (permission_exists('fax_user_view')) {
+		if ($action == "update") {
+			echo "	<tr>";
+			echo "		<td class='vncell' valign='top'>".$text['label-user-list']."</td>";
+			echo "		<td class='vtable'>";
 
-				if (is_array($fax_users) && @sizeof($fax_users) != 0) {
-					echo "		<table style='width: 50%; min-width: 200px; max-width: 450px;'>\n";
-					foreach($fax_users as $field) {
-						echo "		<tr>\n";
-						echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
-						echo "			<td>\n";
-						echo "				<a href='fax_edit.php?id=".urlencode($fax_uuid)."&domain_uuid=".urlencode($_SESSION['domain_uuid'])."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-						echo "			</td>\n";
-						echo "		</tr>\n";
-					}
-					echo "		</table>\n";
-					echo "		<br />\n";
+			if (!empty($fax_users) && is_array($fax_users) && @sizeof($fax_users) != 0) {
+				echo "		<table style='width: 50%; min-width: 150px; max-width: 450px;'>\n";
+				foreach ($fax_users as $field) {
+					echo "		<tr>\n";
+					echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
+					echo "			<td>\n";
+					echo "				<a href='fax_edit.php?id=".urlencode($fax_uuid)."&domain_uuid=".urlencode($_SESSION['domain_uuid'])."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "			</td>\n";
+					echo "		</tr>\n";
 				}
-				unset($fax_users);
-				if (is_array($available_users) && @sizeof($available_users) != 0) {
-					echo "		<select name='user_uuid' class='formfld' style='width: auto;'>\n";
-					echo "			<option value=''></option>\n";
-					foreach($available_users as $field) {
-						echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
-					}
-					echo "		</select>";
-					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-					echo "		<br>\n";
-					echo "		".$text['description-user-add']."\n";
-					echo "		<br />\n";
-					unset($available_users);
-				}
-				echo "		</td>";
-				echo "	</tr>";
+				echo "		</table>\n";
+				echo "		<br />\n";
 			}
-		}
-
-		if (permission_exists('fax_send_greeting')) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-fax_send_greeting']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
-				echo "<script>\n";
-				echo "var Objs;\n";
-				echo "\n";
-				echo "function changeToInput(obj){\n";
-				echo "	tb=document.createElement('INPUT');\n";
-				echo "	tb.type='text';\n";
-				echo "	tb.name=obj.name;\n";
-				echo "	tb.setAttribute('class', 'formfld');\n";
-				echo "	tb.setAttribute('style', 'width: 350px;');\n";
-				echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-				echo "	tbb=document.createElement('INPUT');\n";
-				echo "	tbb.setAttribute('class', 'btn');\n";
-				echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-				echo "	tbb.type='button';\n";
-				echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
-				echo "	tbb.objs=[obj,tb,tbb];\n";
-				echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
-				echo "	obj.parentNode.insertBefore(tb,obj);\n";
-				echo "	obj.parentNode.insertBefore(tbb,obj);\n";
-				echo "	obj.parentNode.removeChild(obj);\n";
-				echo "}\n";
-				echo "\n";
-				echo "function Replace(obj){\n";
-				echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-				echo "	obj[0].parentNode.removeChild(obj[1]);\n";
-				echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-				echo "}\n";
-				echo "</script>\n";
-				echo "\n";
+			unset($fax_users);
+			if (!empty($available_users) && is_array($available_users) && @sizeof($available_users) != 0) {
+				echo "		<select name='user_uuid' class='formfld' style='width: auto;'>\n";
+				echo "			<option value=''></option>\n";
+				foreach ($available_users as $field) {
+					echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+				}
+				echo "		</select>";
+				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+				echo "		<br>\n";
+				echo "		".$text['description-user-add']."\n";
+				echo "		<br />\n";
+				unset($available_users);
 			}
-			echo "	<select name='fax_send_greeting' class='formfld' ".((permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) ? "onchange='changeToInput(this);'" : null).">\n";
-			echo "		<option></option>\n";
-			//recordings
-				if($dh = opendir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/")) {
-					$tmp_selected = false;
-					$files = Array();
-					echo "<optgroup label='Recordings'>\n";
-					while ($file = readdir($dh)) {
-						if ($file != "." && $file != ".." && $file[0] != '.') {
-							if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)) {
-								$selected = ($fax_send_greeting == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file && strlen($fax_send_greeting) > 0) ? true : false;
-								echo "	<option value='".escape($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)."' ".(($selected) ? "selected='selected'" : null).">".escape($file)."</option>\n";
-								if ($selected) { $tmp_selected = true; }
-							}
-						}
-					}
-					closedir($dh);
-					echo "</optgroup>\n";
-				}
-			//phrases
-				$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$database = new database;
-				$result = $database->select($sql, $parameters, 'all');
-				if (is_array($array) && @sizeof($array) != 0) {
-					echo "<optgroup label='Phrases'>\n";
-					foreach ($result as &$row) {
-						$selected = ($fax_send_greeting == "phrase:".$row["phrase_uuid"]) ? true : false;
-						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' ".(($selected) ? "selected='selected'" : null).">".escape($row["phrase_name"])."</option>\n";
-						if ($selected) { $tmp_selected = true; }
-					}
-					echo "</optgroup>\n";
-				}
-				unset($sql, $parameters, $result, $row);
-			//sounds
-				$file = new file;
-				$sound_files = $file->sounds();
-				if (is_array($sound_files)) {
-					echo "<optgroup label='Sounds'>\n";
-					foreach ($sound_files as $value) {
-						if (strlen($value) > 0) {
-							if (substr($fax_send_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-								$fax_send_greeting = substr($fax_send_greeting, 71);
-							}
-							$selected = ($fax_send_greeting == $value) ? true : false;
-							echo "	<option value='".escape($value)."' ".(($selected) ? "selected='selected'" : null).">".escape($value)."</option>\n";
-							if ($selected) { $tmp_selected = true; }
-						}
-					}
-					echo "</optgroup>\n";
-				}
-			//select
-				if (strlen($fax_send_greeting) > 0) {
-					if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
-						if (!$tmp_selected) {
-							echo "<optgroup label='selected'>\n";
-							if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$fax_send_greeting)) {
-								echo "		<option value='".escape($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$fax_send_greeting)."' selected='selected'>".escape($ivr_menu_greet_long)."</option>\n";
-							}
-							else if (substr($fax_send_greeting, -3) == "wav" || substr($fax_send_greeting, -3) == "mp3") {
-								echo "		<option value='".escape($fax_send_greeting)."' selected='selected'>".escape($fax_send_greeting)."</option>\n";
-							}
-							else {
-								echo "		<option value='".escape($fax_send_greeting)."' selected='selected'>".escape($fax_send_greeting)."</option>\n";
-							}
-							echo "</optgroup>\n";
-						}
-						unset($tmp_selected);
-					}
-				}
-			echo "	</select>\n";
-			echo "<br />\n";
-			echo " ".$text['description-fax_send_greeting']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
+			echo "		</td>";
+			echo "	</tr>";
 		}
+	}
 
+	if (permission_exists('fax_send_channels')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-fax_send_channels']."\n";
@@ -852,32 +760,23 @@
 		echo " ".$text['description-fax_send_channels']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-description']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_description' maxlength='255' value=\"".escape($fax_description)."\">\n";
-		echo "<br />\n";
-		echo "".$text['description-info']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='fax_description' maxlength='255' value=\"".escape($fax_description ?? '')."\">\n";
+	echo "<br />\n";
+	echo "".$text['description-info']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>";
 	if ($action == "update") {
-		if (!permission_exists('fax_extension_delete')) {
-			echo "	<input type='hidden' name='fax_name' value=\"".escape($fax_name)."\">\n";
-			echo "	<input type='hidden' name='fax_extension' value=\"".escape($fax_extension)."\">\n";
-			echo "	<input type='hidden' name='fax_destination_number' value=\"".escape($fax_destination_number)."\">\n";
-			echo "	<input type='hidden' name='fax_caller_id_name' value=\"".escape($fax_caller_id_name)."\">\n";
-			echo "	<input type='hidden' name='fax_caller_id_number' value=\"".escape($fax_caller_id_number)."\">\n";
-			echo "	<input type='hidden' name='fax_forward_number' value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : escape($fax_forward_number))."\">\n";
-			echo "	<input type='hidden' name='fax_description' value=\"".escape($fax_description)."\">\n";
-		}
 		echo "		<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
 		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
@@ -885,208 +784,8 @@
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</div>\n";
 	echo "<br />\n";
-
-	if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
-
-		echo "<div id='advanced_email_connection' ".(($fax_email_connection_host == '') ? "style='display: none;'" : null).">\n";
-
-		echo "<div class='action_bar sub'>\n";
-		echo "	<div class='heading'><b>".$text['label-advanced_settings']."</b></div>\n";
-		echo "	<div class='actions'>\n";
-		echo "	</div>\n";
-		echo "	<div style='clear: both;'></div>\n";
-		echo "</div>\n";
-
-		echo $text['description-advanced_settings']."\n";
-		echo "<br><br>\n";
-
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "	<tr>";
-		echo "		<td width='50%' valign='top'>";
-
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-			echo "<tr>";
-			echo "<td colspan='2'>";
-			echo "	<span style='font-weight: bold; color: #000;'>".$text['label-email_account_connection']."</span><br><br>";
-			echo "</td>";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_connection_type']."\n";
-			echo "</td>\n";
-			echo "<td width='70%' class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='fax_email_connection_type'>\n";
-			echo "		<option value='imap'>IMAP</option>\n";
-			echo "		<option value='pop3' ".(($fax_email_connection_type == 'pop3') ? "selected" : null).">POP3</option>\n";
-			echo "	</select>\n";
-			echo "<br />\n";
-			echo "	".$text['description-email_connection_type']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_connection_server']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' style='white-space: nowrap;' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"".escape($fax_email_connection_host)."\">&nbsp;<strong style='font-size: 15px;'>:</strong>&nbsp;";
-			echo 	"<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value=\"$fax_email_connection_port\">\n";
-			echo "<br />\n";
-			echo "	".$text['description-email_connection_server']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_connection_security']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='fax_email_connection_security'>\n";
-			echo "		<option value=''></option>\n";
-			echo "		<option value='ssl' ".(($fax_email_connection_security == 'ssl') ? "selected" : null).">SSL</option>\n";
-			echo "		<option value='tls' ".(($fax_email_connection_security == 'tls') ? "selected" : null).">TLS</option>\n";
-			echo "	</select>\n";
-			echo "<br />\n";
-			echo "	".$text['description-email_connection_security']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_connection_validate']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='fax_email_connection_validate'>\n";
-			echo "		<option value='true'>".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".(($fax_email_connection_validate == 'false') ? "selected" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
-			echo "<br />\n";
-			echo "	".$text['description-email_connection_validate']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_connection_username']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='fax_email_connection_username' maxlength='255' value=\"".escape($fax_email_connection_username)."\">\n";
-			echo "  <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-			echo "<br />\n";
-			echo "	".$text['description-email_connection_username']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_connection_password']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "  <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-			echo "	<input class='formfld' type='password' name='fax_email_connection_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"".escape($fax_email_connection_password)."\">\n";
-			echo "<br />\n";
-			echo "	".$text['description-email_connection_password']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_connection_mailbox']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='fax_email_connection_mailbox' maxlength='255' value=\"".escape($fax_email_connection_mailbox)."\">\n";
-			echo "<br />\n";
-			echo "	".$text['description-email_connection_mailbox']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			echo "</table>\n";
-
-		echo "		</td>";
-		echo "		<td style='white-space: nowrap;'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-		echo "		<td width='50%' valign='top'>";
-
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-			echo "<tr>";
-			echo "<td colspan='2'>";
-			echo "	<span style='font-weight: bold; color: #000;'>".$text['label-email_remote_inbox']."</span><br><br>";
-			echo "</td>";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-email_inbound_subject_tag']."\n";
-			echo "</td>\n";
-			echo "<td width='70%' class='vtable' align='left'>\n";
-			echo "	<span style='font-size: 18px;'>[ <input class='formfld' type='text' name='fax_email_inbound_subject_tag' maxlength='255' value=\"".escape($fax_email_inbound_subject_tag)."\"> ]</span>\n";
-			echo "<br />\n";
-			echo "	".$text['description-email_inbound_subject_tag']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-
-			if (file_exists("fax_emails.php")) {
-
-				echo "<tr>";
-				echo "<td colspan='2'>";
-				echo "	<br><br>";
-				echo "	<span style='font-weight: bold; color: #000;'>".$text['label-email_email-to-fax']."</span><br><br>";
-				echo "</td>";
-				echo "</tr>\n";
-
-				echo "<tr>\n";
-				echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-				echo "	".$text['label-email_outbound_subject_tag']."\n";
-				echo "</td>\n";
-				echo "<td width='70%' class='vtable' align='left'>\n";
-				echo "	<span style='font-size: 18px;'>[ <input class='formfld' type='text' name='fax_email_outbound_subject_tag' maxlength='255' value=\"$fax_email_outbound_subject_tag\"> ]</span>\n";
-				echo "<br />\n";
-				echo "	".$text['description-email_outbound_subject_tag']."\n";
-				echo "</td>\n";
-				echo "</tr>\n";
-
-				echo "<tr>\n";
-				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-				echo "	".$text['label-email_outbound_authorized_senders']."\n";
-				echo "</td>\n";
-				echo "<td class='vtable' align='left' valign='top'>\n";
-				echo "	<table cellpadding='0' cellspacing='0' border='0'>";
-				echo "		<tr>";
-				echo "			<td id='authorized_senders'>";
-
-				if (substr_count($fax_email_outbound_authorized_senders, ',') > 0) {
-					$senders = explode(',', $fax_email_outbound_authorized_senders);
-				}
-				else {
-					$senders[] = $fax_email_outbound_authorized_senders;
-				}
-				$senders[] = ''; // empty one
-				foreach ($senders as $sender_num => $sender) {
-					echo "	<input class='formfld' style='width: 225px; min-width: 225px; max-width: 225px; ".(($sender_num > 0) ? "margin-top: 3px;" : null)."' type='text' name='fax_email_outbound_authorized_senders[]' maxlength='255' value=\"$sender\">".((sizeof($senders) > 0 && $sender_num < (sizeof($senders) - 1) ) ? "<br>" : null);
-				}
-				echo "			</td>";
-				echo "			<td style='vertical-align: bottom;'>";
-				echo "				<a href='javascript:void(0);' onclick='add_sender();'>$v_link_label_add</a>";
-				echo "			</td>";
-				echo "		</tr>";
-				echo "	</table>";
-				echo "	".$text['description-email_outbound_authorized_senders']."\n";
-				echo "</td>\n";
-				echo "</tr>\n";
-
-			}
-
-			echo "</table>\n";
-
-		echo "		</td>\n";
-		echo "	</tr>\n";
-		echo "</table>\n";
-		echo "<br><br>\n";
-		echo "</div>\n";
-	}
 
 	echo "</form>";
 
