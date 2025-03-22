@@ -46,10 +46,14 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::post('/menus/', [MenuController::class, 'store'])->name('menu.store');
     Route::get('/menus/{menu_uuid}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::post('/menus/{menu_uuid}', [MenuController::class, 'update'])->name('menu.update');
+    Route::get('/menus/{menu_uuid}/destroy', [MenuController::class, 'destroy'])->name('menu.destroy');
 
     // MENU ITEM
+    Route::get('/menus/{menu_uuid}/items/create', [MenuItemController::class, 'create'])->name('menu_item.create');
+    Route::post('/menus/{menu_uuid}/items/', [MenuItemController::class, 'store'])->name('menu_item.store');
     Route::get('/menus/items/{menu_item_uuid}/edit', [MenuItemController::class, 'edit'])->name('menu_item.edit');
     Route::post('/menus/items/{menu_item_uuid}', [MenuItemController::class, 'update'])->name('menu_item.update');
+    Route::get('/menus/items/{menu_item_uuid}/destroy', [MenuItemController::class, 'destroy'])->name('menu_item.destroy');
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');

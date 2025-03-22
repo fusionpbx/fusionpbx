@@ -6,6 +6,9 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card card-primary mb-4">
+				<div class="card-footer">
+					<a href="{{ route('menu.create') }}"><button type="button" class="btn btn-success">Add</button></a>
+				</div>
 				<div class="card-header">
 					<h3 class="card-title">Menu Manager</h3>
 				</div>
