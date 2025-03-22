@@ -9,7 +9,7 @@
 				<div class="card-header">
 					<h3 class="card-title">Menu Item</h3>
 				</div>
-				<form method="POST" action="{{ route('menu_item.update', $menu_item->menu_item_uuid) }}">
+				<form method="POST" action="{{ $menu_item->exists ? route('menu_item.update', $menu_item->menu_item_uuid) : route('menu_item.store', $menu->menu_uuid) }}">
 					@csrf
 					<div class="card-body">
 						<div class="form-group">
@@ -32,7 +32,7 @@
 							<label for="menu_item_parent_uuid">Parent menu</label>
 							<select name="menu_item_parent_uuid" id="menu_item_parent_uuid" class="form-control">
 								<option value="" {{ old('menu_item_protected', $menu_item->menu_item_parent_uuid) == '' ? 'selected' : '' }}></option>
-								@foreach($menu_item->menu->children as $option)
+								@foreach($menu->children as $option)
 								<option value="{{ $option->menu_item_uuid }}" {{ old('menu_item_parent_uuid', $menu_item->menu_item_parent_uuid) == $option->menu_item_uuid ? 'selected' : '' }}>{{ $option->menu_item_title }}</option>
 								@endforeach
 							</select>
@@ -64,6 +64,9 @@
 					</div>
 					<div class="card-footer">
 						<button type="submit" class="btn btn-primary">Save</button>
+						@if($menu_item->exists)
+						<a href="{{ route('menu_item.destroy', $menu_item->menu_item_uuid) }}"><button type="button" class="btn btn-danger">Delete</button></a>
+						@endif
 					</div>
 				</form>
 			</div>

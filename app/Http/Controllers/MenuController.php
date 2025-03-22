@@ -133,4 +133,13 @@ class MenuController extends Controller
 
 		return redirect()->route("menu.edit", $menu_uuid)->with("success", "Menu updated successfully!");
 	}
+
+	public function destroy($menu_uuid)
+	{
+		$menu = Menu::findOrFail($menu_uuid);
+
+		$menu->delete();
+
+		return redirect()->route("menu.index")->with("success", "Menu deleted successfully!");
+	}
 }
