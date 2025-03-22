@@ -711,7 +711,7 @@
 													$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
 												}
 												else {
-                          //end a message to the user the device is not unique
+													//send a message to the user the device is not unique
 													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
 													message::add($message,'negative');
 												}
