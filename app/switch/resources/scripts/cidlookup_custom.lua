@@ -87,7 +87,7 @@
                 params = {phone_number = '%'..caller..'%'};
 
                 if (debug["sql"]) then
-                	freeswitch.consoleLog("WARNING", "[cidlookup]  NEMERALD_DEBUG SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
+                	freeswitch.consoleLog("WARNING", "[cidlookup]  DEBUG SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
                 end
 
                 dbh:query(sql, params)
@@ -111,7 +111,7 @@
                 	params = {cnam_uuid = cnam_uuid; phone_number = caller; cnam = name};
 
                 	if (debug["sql"]) then
-                        	freeswitch.consoleLog("WARNING", "[cidlookup]  NEMERALD_DEBUG SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
+                        	freeswitch.consoleLog("WARNING", "[cidlookup]  DEBUG SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
                 	end
 
                 	dbh:query(sql, params)
