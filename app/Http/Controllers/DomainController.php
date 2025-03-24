@@ -64,7 +64,7 @@ class DomainController extends Controller
     }
 
     // returns all the available domains
-    public function select_control(): string{
+    public function select_control(): mixed{
         // FIX ME
         $db_type = DB::getConfig("driver");
         $sql = "WITH RECURSIVE children AS (
@@ -91,5 +91,6 @@ class DomainController extends Controller
         }
 
         $domains = DB::select($sql);
+        return $domains;
     }
 }
