@@ -44,8 +44,6 @@ class MenuItemController extends Controller
 			"menu_item_description" => "required|string|max:255",
 		]);
 
-		$validated["menu_item_uuid"] = Str::uuid();
-
 		$menu_item = MenuItem::create($validated);
 
 		$groups = array_values($request["groups"] ?? []);

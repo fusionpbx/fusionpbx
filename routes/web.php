@@ -31,19 +31,26 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth','permission'])->group(function () {
-    Route::post('/domains/switch', [DomainController::class, 'switch'])->name('switchDomain');
+    Route::view('/dashboard', 'dashboard');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+    // DOMAIN
+    Route::get('/domains', [DomainController::class, 'index'])->name('domain.index');
+    Route::get('/domains/create', [DomainController::class, 'create'])->name('domain.create');
+    Route::post('/domains', [DomainController::class, 'store'])->name('domain.store');
+    Route::get('/domains/{domain_uuid}/edit', [DomainController::class, 'edit'])->name('domain.edit');
+    Route::post('/domains/{domain_uuid}', [DomainController::class, 'update'])->name('domain.update');
+    Route::get('/domains/{domain_uuid}/destroy', [DomainController::class, 'destroy'])->name('domain.destroy');
+    Route::post('/domains/switch', [DomainController::class, 'switch'])->name('domain.switch');
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');
     });
-
-    Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('switchDomainFusionPBX');
-    Route::view('/dashboard', 'dashboard');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+    Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('domain.switchuuid');
 
     // MENU
     Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');
     Route::get('/menus/create', [MenuController::class, 'create'])->name('menu.create');
-    Route::post('/menus/', [MenuController::class, 'store'])->name('menu.store');
+    Route::post('/menus', [MenuController::class, 'store'])->name('menu.store');
     Route::get('/menus/{menu_uuid}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::post('/menus/{menu_uuid}', [MenuController::class, 'update'])->name('menu.update');
     Route::get('/menus/{menu_uuid}/destroy', [MenuController::class, 'destroy'])->name('menu.destroy');

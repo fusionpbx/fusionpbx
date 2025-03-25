@@ -5,15 +5,68 @@ namespace App\Http\Controllers;
 use App\Models\Domain;
 use App\Http\Controllers\DefaultSettingController;
 use App\Http\Controllers\DomainSettingController;
+use App\Http\Requests\DomainRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
-
 class DomainController extends Controller
 {
-    //
+	public function index()
+	{
+		$domains = Domain::all();
+
+		return view("domain/index", compact("domains"));
+	}
+
+	public function create()
+	{
+		$domain = new Domain();
+
+        $domains = Domain::all();
+
+		return view("domain/form", compact("domain", "domains"));
+	}
+
+	public function store(DomainRequest $request)
+	{
+		$validated = $request->validated();
+
+		Domain::create($validated);
+
+		return redirect()->route("domain.index")->with("success", "Domain created successfully!");
+	}
+
+	public function edit($domain_uuid)
+	{
+		$domain = Domain::findOrFail($domain_uuid);
+
+        $domains = Domain::all();
+
+		return view("domain/form", compact("domain", "domains"));
+	}
+
+	public function update(Request $request, $domain_uuid)
+	{
+		$domain = Domain::findOrFail($domain_uuid);
+
+        $validated = $request->validated();
+
+		$domain->update($validated);
+
+		return redirect()->route("domain.edit", $domain_uuid)->with("success", "Domain updated successfully!");
+	}
+
+	public function destroy($domain_uuid)
+	{
+		$domain = Domain::findOrFail($domain_uuid);
+
+		$domain->delete();
+
+		return redirect()->route("domain.index")->with("success", "Domain deleted successfully!");
+	}
 
     public function switch(Request $request){
         return $this->switch_by_uuid($request->domain_uuid);
