@@ -7,30 +7,30 @@
             <h3 class="card-title mb-0">
                 <i class="fas fa-layer-group mr-2"></i> {{__('Groups Table')}}
             </h3>
-            
+
             <div class="card-tools">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Group actions">
-                    
+
                     <a href="{{ route('users.index') }}" class="btn btn-secondary">
-                        
+
                         <i class="fas fa-users mr-1"></i> {{__('Users')}}
                     </a>
-                    
+
                     <button type="button" class="btn btn-warning" onclick="restoreDefault()">
                         <i class="fas fa-undo mr-1"></i> {{__('Restore Default')}}
                     </button>
-                    
+
                     <a href="{{ route('groups.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
                     </a>
-                    
+
                     <button class="btn btn-info" data-toggle="modal" data-target="#shareModal">
                         <i class="fas fa-share-alt mr-1"></i> {{__('Share')}}
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <div class="card-body">
             <livewire:groups-table />
         </div>
@@ -70,31 +70,25 @@
         </div>
     </div>
 </div>
-
-
-
-
 @endsection
-
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('bulkUpdateForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Get form data as an object
         const formData = Object.fromEntries(new FormData(this));
-        
+
         // Use $wire.dispatch for modern Livewire
         Livewire.dispatch('bulk-update', formData);
-        
+
         // Close the modal (assuming you're using Bootstrap)
         $('#bulkUpdateModal').modal('hide');
     });
 });
 
-// Use Livewire's event system
 document.addEventListener('livewire:init', () => {
     Livewire.on('show-bulk-update-modal', () => {
         $('#bulkUpdateModal').modal('show');

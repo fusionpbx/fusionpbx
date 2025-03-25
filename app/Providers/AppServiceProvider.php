@@ -19,14 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (app()->environment('production')) {
-            response()->header('Content-Security-Policy', 
-                "default-src 'self'; " .
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; " .
-                "style-src 'self' 'unsafe-inline'; " .
-                "img-src 'self' data:; " .
-                "connect-src 'self';"
-            );
-        }
+        //
     }
 }

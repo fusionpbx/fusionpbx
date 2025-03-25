@@ -2,6 +2,7 @@ import '@adminlte/dist/js/adminlte.min.js';
 import '@overlayscrollbars/browser/overlayscrollbars.browser.es5.min.js';
 import '@popperjs/core/dist/umd/popper.min.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import '../../vendor/rappasoft/laravel-livewire-tables/resources/imports/laravel-livewire-tables-all.js';
 
 const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
 const Default = {
