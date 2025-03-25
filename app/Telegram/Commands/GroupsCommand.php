@@ -15,6 +15,7 @@ use App\Models\Domain;
 use App\Models\Group;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GroupController;
+use App\Services\GroupService;
 
 class GroupsCommand extends UserCommand
 {
@@ -52,7 +53,7 @@ class GroupsCommand extends UserCommand
 
 		if ($authenticated){
 			$answer = __('telegram.accesible-groups') . PHP_EOL;
-			$groups = new GroupController();
+			$groups = new GroupService();
 			$local_groups = $groups->findFromDomainUuid($domain_uuid);
 			$global_groups = $groups->findGlobals();
 			if ($local_groups->count() > 0) {

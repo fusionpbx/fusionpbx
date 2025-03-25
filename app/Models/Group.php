@@ -36,6 +36,7 @@ class Group extends Model
 		'group_protected',
 		'group_level',
 		'group_description',
+		'domain_uuid'
 	];
 
     public function users(): BelongsToMany {
@@ -68,6 +69,7 @@ class Group extends Model
         )->wherePivot('permission_assigned', 'true')
             ->withPivot(['permission_assigned', 'permission_protected']);
     }
+
 
 	public static function findGlobals() {
 		$groups = DB::table('v_groups')->select('*')->whereNull('domain_uuid')->get();

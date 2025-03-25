@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
@@ -28,6 +29,7 @@ Route::redirect('/', '/login');
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    
 });
 
 Route::middleware(['auth','permission'])->group(function () {
@@ -57,6 +59,9 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');
+
+    //GROUP
+    Route::resource('/groups', GroupController::class)->name('groups', 'groups');
 });
 
 Route::post('/curl/xml_handler/{binding}', function (Request $request, string $binding){
