@@ -5,6 +5,7 @@ use App\Http\Controllers\DomainController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/users', UserController::class)->name('users', 'users');
 });
 
-Route::post('/curl/xml_handler/{binding}', function (Request $request, string $binding){
+Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){
     $xml = new ModXMLCURLController;
     $allowedMethods = ['configuration', 'directory', 'dialplan', 'languages'];
 
@@ -69,3 +70,5 @@ Route::post('/curl/xml_handler/{binding}', function (Request $request, string $b
 
     return response($xml->$binding($request), 200)->header('Content-Type', 'text/xml');
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post("/switch/format_cdr", [ModFormatCDRController::class, 'store'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
