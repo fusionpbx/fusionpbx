@@ -901,6 +901,9 @@
 		unset($sql, $parameters);
 	}
 
+//set defaults
+	if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
