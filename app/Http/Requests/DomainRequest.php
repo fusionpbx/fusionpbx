@@ -15,8 +15,8 @@ class DomainRequest extends FormRequest
 	{
 		return [
 			"domain_name" => "required|string|max:255",
-			"domain_description" => "required|string|max:255",
-			"domain_enabled" => "optional|string|in:true,false",
+			"domain_description" => "sometimes|string|max:255",
+			"domain_enabled" => "required|string|in:true,false",
 		];
 	}
 }

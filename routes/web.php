@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
@@ -48,6 +49,14 @@ Route::middleware(['auth','permission'])->group(function () {
     });
     Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('domain.switchuuid');
 
+    // GROUP
+    Route::get('/groups', [GroupController::class, 'index'])->name('group.index');
+    Route::get('/groups/create', [GroupController::class, 'create'])->name('group.create');
+    Route::post('/groups', [GroupController::class, 'store'])->name('group.store');
+    Route::get('/groups/{group_uuid}/edit', [GroupController::class, 'edit'])->name('group.edit');
+    Route::post('/groups/{group_uuid}', [GroupController::class, 'update'])->name('group.update');
+    Route::get('/groups/{group_uuid}/destroy', [GroupController::class, 'destroy'])->name('group.destroy');
+
     // MENU
     Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');
     Route::get('/menus/create', [MenuController::class, 'create'])->name('menu.create');
@@ -64,7 +73,13 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/menus/items/{menu_item_uuid}/destroy', [MenuItemController::class, 'destroy'])->name('menu_item.destroy');
 
     // USERS
-    Route::resource('/users', UserController::class)->name('users', 'users');
+    // Route::resource('/users', UserController::class)->name('users', 'users');
+    Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/users', [UserController::class, 'store'])->name('user.store');
+    Route::get('/users/{user_uuid}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/users/{user_uuid}', [UserController::class, 'update'])->name('user.update');
+    Route::get('/users/{user_uuid}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){

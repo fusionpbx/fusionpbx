@@ -48,7 +48,7 @@ class DomainController extends Controller
 		return view("domain/form", compact("domain", "domains"));
 	}
 
-	public function update(Request $request, $domain_uuid)
+	public function update(DomainRequest $request, $domain_uuid)
 	{
 		$domain = Domain::findOrFail($domain_uuid);
 
