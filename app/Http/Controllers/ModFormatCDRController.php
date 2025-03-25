@@ -22,6 +22,6 @@ class ModFormatCDRController extends Controller
 
         // Detect Format
         $default_settings = new DefaultSettingController;
-        $format = $default_settings->get('config', 'format_cdr.format', 'text') ? 'xml';
+        $format = $default_settings->get('config', 'format_cdr.format', 'text') ?? 'xml';
     }
 }
