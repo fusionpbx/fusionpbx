@@ -40,6 +40,10 @@ class ModFormatCDRController extends Controller
         $format = $default_settings->get('config', 'format_cdr.format', 'text') ?? 'xml';
         $recordings = $default_settings->get('switch', 'recordings', 'dir');
 
+        if(App::hasDebugModeEnabled()){
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $format: '.$format);
+        }
+
         switch ($format){
             case 'json':
                 // TODO: implement
@@ -640,6 +644,9 @@ class ModFormatCDRController extends Controller
                     return response()->json(['errors' => ['Error inserting a CDR.']], 422);
                 }
                  return response($uuid, 200);
+        }
+        else{
+            return response()->json(['errors' => ['UUID already in the CDR.']], 422);
         }
     }
 }
