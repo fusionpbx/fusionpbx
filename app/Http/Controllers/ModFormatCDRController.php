@@ -26,7 +26,7 @@ class ModFormatCDRController extends Controller
 
         $rules = [
             'cdr' => ['required'],
-            'uuid' =? ['uuid:4'],
+            'uuid' => ['uuid:4'],
         ];
 
         $validator1 = Validator::make($request->all, $rules);
