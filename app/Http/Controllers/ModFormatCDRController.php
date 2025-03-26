@@ -29,7 +29,7 @@ class ModFormatCDRController extends Controller
             'uuid' => ['uuid:4'],
         ];
 
-        $validator1 = Validator::make($request->all, $rules);
+        $validator1 = Validator::make($request->all(), $rules);
         if ($validator1->fails()) {
             return response()->json(['errors' => $validator1->errors()], 422);
         }
