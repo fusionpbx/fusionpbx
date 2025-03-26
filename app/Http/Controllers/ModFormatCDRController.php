@@ -43,7 +43,7 @@ class ModFormatCDRController extends Controller
         $dbType = DB::getConfig("driver");
 
         if(App::hasDebugModeEnabled()){
-                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $format: '.$format);
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $format: '.$format);
         }
 
         switch ($format){
@@ -586,6 +586,10 @@ class ModFormatCDRController extends Controller
 
                 $cdrFormat = $defaultSettings->get('cdr', 'format', 'text') ?? 'xml';
                 $cdrStorage = $defaultSettings->get('cdr', 'storage', 'text') ?? 'db';
+                if(App::hasDebugModeEnabled()){
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $cdrFormat: '.$cdrFormat);
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $cdrStorage: '.$cdrStorage);
+                }
                 //save to the database in xml format
                 if ($cdrFormat == "xml" && $cdrStorage == "db") {
                     $payload['xml'] = $request->input('cdr');
