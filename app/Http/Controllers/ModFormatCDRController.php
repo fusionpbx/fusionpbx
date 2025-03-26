@@ -26,22 +26,28 @@ class ModFormatCDRController extends Controller
 
         $rules = [
             'cdr' => ['required'],
-            'uuid' =? ['uuid:4'],
+            'uuid' => ['required'],
         ];
 
-        $validator1 = Validator::make($request->all, $rules);
+        $validator1 = Validator::make($request->all(), $rules);
         if ($validator1->fails()) {
             return response()->json(['errors' => $validator1->errors()], 422);
         }
         unset($validator1);
 
         // Detect Format
-        $default_settings = new DefaultSettingController;
-        $format = $default_settings->get('config', 'format_cdr.format', 'text') ?? 'xml';
-        $recordings = $default_settings->get('switch', 'recordings', 'dir');
+        $defaultSettings = new DefaultSettingController;
+        $format = $defaultSettings->get('config', 'format_cdr.format', 'text') ?? 'xml';
+        $recordings = $defaultSettings->get('switch', 'recordings', 'dir');
+
+        $dbType = DB::getConfig("driver");
+
+        if(App::hasDebugModeEnabled()){
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $format: '.$format);
+        }
 
         switch ($format){
-            'json':
+            case 'json':
                 // TODO: implement
                 break;
             default:
@@ -63,7 +69,7 @@ class ModFormatCDRController extends Controller
                 ['uuid' => $uuid],
                 ['uuid' => 'uuid:4']
             );
-        }
+
         if ($validator2->fails()) {
             return response()->json(['errors' => $validator2->errors()], 422);
         }
@@ -206,6 +212,7 @@ class ModFormatCDRController extends Controller
             }
 
             //get the last bridge_uuid from the call to preserve previous behavior
+            $last_bridge = null;
             foreach ($cdr->variables->bridge_uuids as $bridge) {
                 $last_bridge = urldecode($bridge);
             }
@@ -228,21 +235,21 @@ class ModFormatCDRController extends Controller
             //$payload['digits_dialed'] = urldecode($cdr->variables->digits_dialed);
             $payload['sip_hangup_disposition'] = urldecode($cdr->variables->sip_hangup_disposition);
             $payload['pin_number'] = urldecode($cdr->variables->pin_number);
-            $payload['record_type'] = isset($cdr->variables->record_type)?urldecode($cdr->variables->record_type):($request->input('record_type')](?'call');
+            $payload['record_type'] = isset($cdr->variables->record_type)?urldecode($cdr->variables->record_type):($request->input('record_type')??'call');
 
             //time
             $start_epoch = urldecode($cdr->variables->start_epoch);
             $payload['start_epoch'] = $start_epoch;
-            if ($db_type == 'pgsql'){
+            if ($dbType == 'pgsql'){
                 $payload['start_stamp'] = is_numeric($start_epoch) ? date('c', $start_epoch) : null;
             }
             else{
-                $payload['start_stamp'] = urldecode($cdr->variables->start_stamp;
+                $payload['start_stamp'] = urldecode($cdr->variables->start_stamp);
 
             }
             $answer_epoch = urldecode($cdr->variables->answer_epoch);
             $payload['answer_epoch'] = $answer_epoch;
-            if ($db_type == 'pgsql'){
+            if ($dbType == 'pgsql'){
                 $payload['answer_stamp'] = is_numeric($answer_epoch) ? date('c', $answer_epoch) : null;
             }
             else{
@@ -250,7 +257,7 @@ class ModFormatCDRController extends Controller
             }
             $end_epoch = urldecode($cdr->variables->end_epoch);
             $payload['end_epoch'] = $end_epoch;
-            if ($db_type == 'pgsql'){
+            if ($dbType == 'pgsql'){
                 $payload['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
             }
             else{
@@ -323,6 +330,8 @@ class ModFormatCDRController extends Controller
             }
 
             //store the call leg
+            $leg = (substr($request->input('uuid'), 0, 2) == 'a_') ? 'a' : 'b';
+
             $payload['leg'] = $leg;
 
             //store the originating leg uuid
@@ -390,7 +399,7 @@ class ModFormatCDRController extends Controller
             */
 
             //send the domain name to the cdr log
-			Log::info("ndomain_name is `$domain_name`;\ndomain_uuid is '$domain_uuid'\n");
+			Log::info("domain_name is `$domain_name`;\ndomain_uuid is '$domain_uuid'\n");
             if (empty(($domain_uuid))){
                 $current_domain= Domain::when(empty($domain_name) && $context != 'public' && $context != 'default',
                     function($query) use($context){
@@ -575,15 +584,20 @@ class ModFormatCDRController extends Controller
                 }
                 */
 
-                $cdr_format = $default_settings->get('cdr', 'format', 'text') ?? 'xml';
-                $cdr_storage = $default_settings->get('cdr', 'storage', 'text') ?? 'db';
+                $cdrFormat = $defaultSettings->get('cdr', 'format', 'text') ?? 'xml';
+                $cdrStorage = $defaultSettings->get('cdr', 'storage', 'text') ?? 'db';
+                if(App::hasDebugModeEnabled()){
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $cdrFormat: '.$cdrFormat);
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $cdrStorage: '.$cdrStorage);
+                }
                 //save to the database in xml format
-                if ($cdr_format == "xml" && $cdr_storage == "db") {
-                    $payload['xml'] = $cdr_string;
+                if ($cdrFormat == "xml" && $cdrStorage == "db") {
+                    $payload['xml'] = $request->input('cdr');
                 }
 
                 //save to the database in json format
-                if ($cdr_format == "json" && $cdr_storage == "db") {
+                //FIXME
+                if ($cdrFormat == "json" && $cdrStorage == "db") {
                     $payload['json'] = json_encode($cdr);
                 }
 
@@ -614,14 +628,14 @@ class ModFormatCDRController extends Controller
                         $payload['extension_uuid'] = $extension_uuid;
                 }
 
-                if ($cdr_storage == "dir") {
+                if ($cdrStorage == "dir") {
                     if (!empty($uuid)) {
-                        $switch_log = $default_settings->get('switch', 'log', 'text');
+                        $switch_log = $defaultSettings->get('switch', 'log', 'text');
                         $tmp_dir = $switch_log.'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
                         if(!file_exists($tmp_dir)) {
                             mkdir($tmp_dir, 0770, true);
                         }
-                        if ($cdr_format == "xml") {
+                        if ($cdrFormat == "xml") {
                             $tmp_file = $uuid.'.xml';
                             $fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
                             fwrite($fh, $xml_string);
@@ -641,4 +655,8 @@ class ModFormatCDRController extends Controller
                 }
                  return response($uuid, 200);
         }
+        else{
+            return response()->json(['errors' => ['UUID already in the CDR.']], 422);
+        }
+    }
 }
