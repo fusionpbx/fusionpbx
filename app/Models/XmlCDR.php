@@ -122,8 +122,7 @@ class XmlCDR extends Model
     protected function ccQueueAnsweredEpoch(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucfirst($value),
-            set: fn (string $value) => strtolower($value),
+            set: fn (string $value) => empty($value) ? NULL : $value,
         );
     }
 
