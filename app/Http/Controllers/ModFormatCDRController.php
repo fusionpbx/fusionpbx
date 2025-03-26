@@ -330,6 +330,8 @@ class ModFormatCDRController extends Controller
             }
 
             //store the call leg
+            $leg = (substr($request->input('uuid'), 0, 2) == 'a_') ? 'a' : 'b';
+
             $payload['leg'] = $leg;
 
             //store the originating leg uuid
