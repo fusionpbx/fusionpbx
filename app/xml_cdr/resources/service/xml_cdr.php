@@ -125,7 +125,7 @@
 			$database->connect();
 
 			//sleep for a moment
-			usleep(100000);
+			sleep(3);
 		}
 
 		//find and process cdr records
