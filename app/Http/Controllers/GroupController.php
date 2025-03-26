@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Domain;
 use App\Models\Group;
+use App\Models\Domain;
+use App\Http\Requests\GroupRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
@@ -13,7 +15,6 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
         return view('pages.groups.index');
     }
 
@@ -29,9 +30,9 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(GroupRequest $request)
     {
-        Group::create($request->all());
+        Group::create($request->validated());
         return redirect()->route('groups.index');
     }
 
@@ -55,9 +56,8 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Group $group)
+    public function update(GroupRequest $request, Group $group)
     {
-        //
         $group->update($request->all());
         return redirect()->route('groups.index');
     }

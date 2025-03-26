@@ -8,13 +8,10 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use App\Models\Group;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Livewire\Attributes\On;
+use Illuminate\Support\Str;
 
 class GroupsTable extends DataTableComponent
 {
-
-
     protected $model = Group::class;
 
     public function configure(): void
@@ -36,40 +33,30 @@ class GroupsTable extends DataTableComponent
             'markProtected' => 'Mark as Protected',
             'markUnprotected' => 'Mark as Unprotected',
             'bulkDelete' => 'Delete',
-            'bulkUpdate' => 'Update'
+            'bulkCopy' => 'Copy',
         ];
     }
-
 
     public function markProtected()
     {
         $selectedRows = $this->getSelected();
 
-        Group::whereIn('group_uuid', $selectedRows)->update(['group_protected' => true]);
+        Group::whereIn('group_uuid', $selectedRows)->update(['group_protected' => 'true']);
 
         $this->clearSelected();
         $this->dispatch('refresh');
-        session()->flash('success', 'Los grupos fueron protegidos exitosamente.');
+        session()->flash('success', 'The groups were successfully protected.');
     }
 
     public function markUnprotected()
     {
         $selectedRows = $this->getSelected();
 
-        Group::whereIn('group_uuid', $selectedRows)->update(['group_protected' => false]);
+        Group::whereIn('group_uuid', $selectedRows)->update(['group_protected' => 'false']);
 
         $this->clearSelected();
         $this->dispatch('refresh');
-        session()->flash('success', 'Los grupos fueron desprotegidos exitosamente.');
-    }
-
-    public function bulkActionConfirm($action)
-    {
-        if ($action === 'update') {
-            $this->dispatch('show-bulk-update-modal');
-        } elseif ($action === 'delete') {
-            $this->dispatch('confirm-bulk-delete');
-        }
+        session()->flash('success', 'The groups were successfully unprotected.');
     }
 
 
@@ -80,101 +67,66 @@ class GroupsTable extends DataTableComponent
         try {
             DB::beginTransaction();
 
-            $protectedGroups = Group::whereIn('group_uuid', $selectedRows)
-                ->where('group_protected', true)
-                ->count();
-
-            if ($protectedGroups > 0) {
-                $this->addError('bulk_delete', 'No se pueden eliminar grupos protegidos');
-                DB::rollBack();
-                return;
-            }
-
             Group::whereIn('group_uuid', $selectedRows)->delete();
 
             DB::commit();
 
             $this->clearSelected();
             $this->dispatch('refresh');
-            session()->flash('success', 'Grupos eliminados exitosamente');
+            session()->flash('success', 'Groups successfully deleted.');
         } catch (\Exception $e) {
             DB::rollBack();
-            session()->flash('error', 'Hubo un problema al eliminar los grupos: ' . $e->getMessage());
+            session()->flash('error', 'There was a problem deleting the groups: ' . $e->getMessage());
         }
     }
 
-    #[On('bulk-update')]
-    public function bulkUpdate($data)
+    public function bulkCopy()
     {
+
         $selectedRows = $this->getSelected();
-    
-        $validator = Validator::make($data, [
-            'group_level' => 'sometimes|integer',
-            'group_description' => 'sometimes|string|max:255'
-        ]);
-    
-        if ($validator->fails()) {
-            $this->addError('bulk_update', $validator->errors()->first());
-            return;
-        }
-    
+
         try {
             DB::beginTransaction();
-    
-            $updateData = array_filter([
-                'group_level' => $data['group_level'] ?? null,
-                'group_description' => $data['group_description'] ?? null
-            ]);
-    
-            $protectedGroups = Group::whereIn('group_uuid', $selectedRows)
-                ->where('group_protected', true)
-                ->count();
-    
-            if ($protectedGroups > 0) {
-                $this->addError('bulk_update', 'No se pueden modificar grupos protegidos');
-                DB::rollBack();
-                return;
+
+            foreach ($selectedRows as $groupUuid) {
+                $originalGroup = Group::findOrFail($groupUuid);
+
+                $newGroup = $originalGroup->replicate();
+                $newGroup->group_uuid = Str::uuid();
+                $newGroup->group_description = $newGroup->group_description . ' (Copy)';
+                $newGroup->save();
+
+
+                $permissions = $originalGroup->permissions()->get();
+                $permissionsToSync = [];
+                foreach ($permissions as $permission) {
+                    $permissionsToSync[$permission->permission_name] = [
+                        'group_permission_uuid' => Str::uuid(),
+                        'permission_assigned' => $permission->pivot->permission_assigned,
+                        'permission_protected' => $permission->pivot->permission_protected
+                    ];
+                }
+                $newGroup->permissions()->sync($permissionsToSync);
             }
-    
-            Group::whereIn('group_uuid', $selectedRows)->update($updateData);
-    
+
             DB::commit();
-    
+
             $this->clearSelected();
             $this->dispatch('refresh');
-            session()->flash('success', 'Grupos actualizados exitosamente');
         } catch (\Exception $e) {
             DB::rollBack();
-            session()->flash('error', 'Hubo un problema al actualizar los grupos: ' . $e->getMessage());
+            throw $e;
+            session()->flash('error', 'There was a problem copying the groups: ' . $e->getMessage());
         }
-    }
-
-    public function bulkUpdateModal()
-    {
-        $this->dispatch('open-modal', 'bulk-update-modal');
     }
 
     public function columns(): array
     {
         return [
+
             Column::make("Name", "group_name")
                 ->sortable()
-                ->searchable()
-                ->format(fn($value) => ucfirst($value)),
-
-            BooleanColumn::make("Protected", "group_protected")
-                ->format(function ($value) {
-                    return $value ? '<span class="text-success">True</span>' : '<span class="text-danger">False</span>';
-                })
-
-                ->sortable(),
-
-            Column::make("Level", "group_level")
-                ->sortable(),
-
-            Column::make("Description", "group_description")
-                ->searchable()
-                ->format(fn($value) => substr($value, 0, 50) . (strlen($value) > 50 ? '...' : '')),
+                ->searchable(),
 
             Column::make("Permissions", "group_uuid")
                 ->format(function ($value) {
@@ -184,6 +136,7 @@ class GroupsTable extends DataTableComponent
                     return $totalPermissions;
                 })
                 ->searchable(),
+
             Column::make("Mermbers", "group_uuid")
                 ->format(function ($value) {
                     $group = Group::find($value);
@@ -193,12 +146,24 @@ class GroupsTable extends DataTableComponent
                 })
                 ->searchable(),
 
+            Column::make("Level", "group_level")
+                ->sortable(),
+
+            BooleanColumn::make("Protected", "group_protected")
+                ->sortable(),
+
+            Column::make("Description", "group_description")
+                ->searchable()
+                ->sortable(),
         ];
     }
 
     public function builder(): Builder
     {
-        $query = Group::query()->with('permissions')->with('users');
+        $query = Group::query()
+                ->with('permissions')
+                ->with('users')
+                ->orderBy('group_name', 'asc');
         return $query;
     }
 }

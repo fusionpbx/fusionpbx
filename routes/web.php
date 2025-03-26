@@ -6,6 +6,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
@@ -33,19 +34,29 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth','permission'])->group(function () {
-    Route::post('/domains/switch', [DomainController::class, 'switch'])->name('switchDomain');
+    Route::view('/dashboard', 'dashboard');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+    // DOMAIN
+    Route::get('/domains', [DomainController::class, 'index'])->name('domain.index');
+    Route::get('/domains/create', [DomainController::class, 'create'])->name('domain.create');
+    Route::post('/domains', [DomainController::class, 'store'])->name('domain.store');
+    Route::get('/domains/{domain_uuid}/edit', [DomainController::class, 'edit'])->name('domain.edit');
+    Route::post('/domains/{domain_uuid}', [DomainController::class, 'update'])->name('domain.update');
+    Route::get('/domains/{domain_uuid}/destroy', [DomainController::class, 'destroy'])->name('domain.destroy');
+    Route::post('/domains/switch', [DomainController::class, 'switch'])->name('domain.switch');
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');
     });
+    Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('domain.switchuuid');
 
-    Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('switchDomainFusionPBX');
-    Route::view('/dashboard', 'dashboard');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+    // GROUP
+    Route::resource('/groups', GroupController::class)->name('groups', 'groups');
 
     // MENU
     Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');
     Route::get('/menus/create', [MenuController::class, 'create'])->name('menu.create');
-    Route::post('/menus/', [MenuController::class, 'store'])->name('menu.store');
+    Route::post('/menus', [MenuController::class, 'store'])->name('menu.store');
     Route::get('/menus/{menu_uuid}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::post('/menus/{menu_uuid}', [MenuController::class, 'update'])->name('menu.update');
     Route::get('/menus/{menu_uuid}/destroy', [MenuController::class, 'destroy'])->name('menu.destroy');
@@ -58,13 +69,16 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/menus/items/{menu_item_uuid}/destroy', [MenuItemController::class, 'destroy'])->name('menu_item.destroy');
 
     // USERS
-    Route::resource('/users', UserController::class)->name('users', 'users');
-
-    //GROUP
-    Route::resource('/groups', GroupController::class)->name('groups', 'groups');
+    // Route::resource('/users', UserController::class)->name('users', 'users');
+    Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/users', [UserController::class, 'store'])->name('user.store');
+    Route::get('/users/{user_uuid}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/users/{user_uuid}', [UserController::class, 'update'])->name('user.update');
+    Route::get('/users/{user_uuid}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
-Route::post('/curl/xml_handler/{binding}', function (Request $request, string $binding){
+Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){
     $xml = new ModXMLCURLController;
     $allowedMethods = ['configuration', 'directory', 'dialplan', 'languages'];
 
@@ -74,3 +88,5 @@ Route::post('/curl/xml_handler/{binding}', function (Request $request, string $b
 
     return response($xml->$binding($request), 200)->header('Content-Type', 'text/xml');
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post("/switch/format_cdr", [ModFormatCDRController::class, 'store'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

@@ -13,7 +13,7 @@ use App\Traits\HasUniqueIdentifier;
 
 class XmlCdr extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable;
 	protected $table = 'v_xml_cdr';
 	protected $primaryKey = 'xml_cdr_uuid';
 	public $incrementing = false;
@@ -27,6 +27,7 @@ class XmlCdr extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
+        'xml_cdr_uuid',     // primary key comes from FreeSWITCH
         'sip_call_id',
         'domain_name',
         'accountcode',
@@ -99,6 +100,7 @@ class XmlCdr extends Model
         'carrier_name',
         'billing_status',
         'billing_json',
+        'record_type',
 	];
 
     /**

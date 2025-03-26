@@ -6,7 +6,6 @@ use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
@@ -111,8 +110,6 @@ class MenuController extends Controller
 			"menu_language" => "required|string|max:255",
 			"menu_description" => "required|string|max:255",
 		]);
-
-		$validated["menu_uuid"] = Str::uuid();
 
 		Menu::create($validated);
 
