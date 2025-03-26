@@ -63,7 +63,7 @@ class ModFormatCDRController extends Controller
                 ['uuid' => $uuid],
                 ['uuid' => 'uuid:4']
             );
-        }
+
         if ($validator2->fails()) {
             return response()->json(['errors' => $validator2->errors()], 422);
         }
