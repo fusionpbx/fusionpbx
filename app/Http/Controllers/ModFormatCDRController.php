@@ -399,7 +399,7 @@ class ModFormatCDRController extends Controller
             */
 
             //send the domain name to the cdr log
-			Log::info("ndomain_name is `$domain_name`;\ndomain_uuid is '$domain_uuid'\n");
+			Log::info("domain_name is `$domain_name`;\ndomain_uuid is '$domain_uuid'\n");
             if (empty(($domain_uuid))){
                 $current_domain= Domain::when(empty($domain_name) && $context != 'public' && $context != 'default',
                     function($query) use($context){
