@@ -16,6 +16,7 @@ class GroupsTable extends DataTableComponent
 
     public function configure(): void
     {
+        $canEdit = auth()->user()->hasPermission('group_edit');
         $this->setPrimaryKey('group_uuid')
             ->setTableAttributes([
                 'class' => 'table table-striped table-hover table-bordered'
@@ -23,22 +24,44 @@ class GroupsTable extends DataTableComponent
             ->setSearchEnabled()
             ->setSearchPlaceholder('Search Groups')
             ->setPerPageAccepted([10, 25, 50, 100])
-            ->setTableRowUrl(fn($row) => route('groups.edit', $row->group_uuid))
+            ->setTableRowUrl(function($row) use ($canEdit) {
+                return $canEdit 
+                    ? route('groups.edit', $row->group_uuid) 
+                    : null;
+            })
             ->setPaginationEnabled();
     }
 
     public function bulkActions(): array
     {
-        return [
-            'markProtected' => 'Mark as Protected',
-            'markUnprotected' => 'Mark as Unprotected',
-            'bulkDelete' => 'Delete',
-            'bulkCopy' => 'Copy',
-        ];
+        $bulckActions = [];
+
+        if (auth()->user()->hasPermission('group_edit')) {
+            $bulckActions['markProtected'] = 'Mark as Protected';
+            $bulckActions['markUnprotected'] = 'Mark as Unprotected';
+        }
+
+        if (auth()->user()->hasPermission('group_delete')) {
+            $bulckActions['bulkDelete'] = 'Delete';
+        }
+
+        if(auth()->user()->hasPermission('group_add')) {
+            $bulckActions['bulkCopy'] = 'Copy';
+        }
+
+        return $bulckActions;
+
+
     }
 
     public function markProtected()
     {
+        if (!auth()->user()->hasPermission('group_edit')) {
+            session()->flash('error', 'You do not have permission to mark groups as protected.');
+            return;
+        }
+
+
         $selectedRows = $this->getSelected();
 
         Group::whereIn('group_uuid', $selectedRows)->update(['group_protected' => 'true']);
@@ -50,6 +73,11 @@ class GroupsTable extends DataTableComponent
 
     public function markUnprotected()
     {
+        if (!auth()->user()->hasPermission('group_edit')) {
+            session()->flash('error', 'You do not have permission to mark groups as unprotected.');
+            return;
+        }
+
         $selectedRows = $this->getSelected();
 
         Group::whereIn('group_uuid', $selectedRows)->update(['group_protected' => 'false']);
@@ -62,6 +90,11 @@ class GroupsTable extends DataTableComponent
 
     public function bulkDelete()
     {
+        if (!auth()->user()->hasPermission('group_delete')) {
+            session()->flash('error', 'You do not have permission to delete groups.');
+            return;
+        }
+
         $selectedRows = $this->getSelected();
 
         try {
@@ -82,6 +115,10 @@ class GroupsTable extends DataTableComponent
 
     public function bulkCopy()
     {
+        if (!auth()->user()->hasPermission('group_add')) {
+            session()->flash('error', 'You do not have permission to copy groups.');
+            return;
+        }
 
         $selectedRows = $this->getSelected();
 

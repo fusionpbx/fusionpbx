@@ -11,14 +11,14 @@ class PermissionMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $currentName = $request->route()->getName();
+        $routeName = $request->route()->getName();
         $permissions = config('permissions');
 
-        if (!array_key_exists($currentName, $permissions)) {
+        if (!array_key_exists($routeName, $permissions)) {
             return $next($request);
         }
 
-        $requiredPermission = $permissions[$currentName];
+        $requiredPermission = $permissions[$routeName];
         $user = Auth::user();
 
         foreach ($user->groups as $group) {

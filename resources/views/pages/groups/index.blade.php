@@ -9,14 +9,16 @@
             </h3>
 
             <div class="card-tools">
-                <div class="btn-group btn-group-sm d-flex gap-2" role="group" aria-label="Group actions">
-                    <a href="" class="btn btn-primary">
+                <div class="d-flex gap-2 " role="group" aria-label="Group actions">
+                    <a href="" class="btn btn-primary btn-sm">
                         <i class="fas fa-users mr-1"></i> {{__('Users')}}
                     </a>
 
-                    <a href="{{ route('groups.create') }}" class="btn btn-primary">
+                    @can('group_add')
+                    <a href="{{ route('groups.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
-                    </a>
+                    </a>            
+                    @endcan
                 </div>
             </div>
         </div>
