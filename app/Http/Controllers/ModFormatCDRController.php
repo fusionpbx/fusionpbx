@@ -228,7 +228,7 @@ class ModFormatCDRController extends Controller
             //$payload['digits_dialed'] = urldecode($cdr->variables->digits_dialed);
             $payload['sip_hangup_disposition'] = urldecode($cdr->variables->sip_hangup_disposition);
             $payload['pin_number'] = urldecode($cdr->variables->pin_number);
-            $payload['record_type'] = isset($cdr->variables->record_type)?urldecode($cdr->variables->record_type):($request->input('record_type')](?'call');
+            $payload['record_type'] = isset($cdr->variables->record_type)?urldecode($cdr->variables->record_type):($request->input('record_type')??'call');
 
             //time
             $start_epoch = urldecode($cdr->variables->start_epoch);
@@ -237,7 +237,7 @@ class ModFormatCDRController extends Controller
                 $payload['start_stamp'] = is_numeric($start_epoch) ? date('c', $start_epoch) : null;
             }
             else{
-                $payload['start_stamp'] = urldecode($cdr->variables->start_stamp;
+                $payload['start_stamp'] = urldecode($cdr->variables->start_stamp);
 
             }
             $answer_epoch = urldecode($cdr->variables->answer_epoch);
