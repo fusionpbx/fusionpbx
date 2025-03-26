@@ -210,6 +210,7 @@ class ModFormatCDRController extends Controller
             }
 
             //get the last bridge_uuid from the call to preserve previous behavior
+            $last_bridge = null;
             foreach ($cdr->variables->bridge_uuids as $bridge) {
                 $last_bridge = urldecode($bridge);
             }
