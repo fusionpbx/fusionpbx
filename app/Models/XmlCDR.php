@@ -357,7 +357,7 @@ class XmlCDR extends Model
         );
     }
 
-    protected function originationLegUuid(): Attribute
+    protected function originatingLegUuid(): Attribute
     {
         return Attribute::make(
             set: fn (?string $value) => empty($value) ? NULL : $value,
