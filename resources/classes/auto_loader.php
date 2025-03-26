@@ -296,7 +296,7 @@ class auto_loader {
 					$type = $match[1];
 
 					// The class/interface/trait name
-					$name = trim($match[2], "\n\r\t\v\x00\\");
+					$name = trim($match[2]);
 
 					// Combine the namespace and name
 					$full_name = $namespace . $name;
@@ -309,7 +309,7 @@ class auto_loader {
 						// Split the interface list by commas.
 						$interface_list = explode(',', $match[3]);
 						foreach ($interface_list as $interface) {
-							$interface_name = trim($interface, "\n\r\t\v\x00\\");
+							$interface_name = trim($interface);
 							// Check that it is declared as an array so we can record the classes
 							if (empty($this->interfaces[$interface_name]))
 								$this->interfaces[$interface_name] = [];
