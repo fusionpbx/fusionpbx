@@ -74,7 +74,7 @@ if ($domains_processed == 1) {
 				if (!empty($row['dashboard_height'])) { $array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height']; }
 				if (!empty($row['dashboard_target'])) { $array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target']; }
 				if (!empty($row['dashboard_label_background_color'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color']; }
-				if (!empty($row['dashboard_label_background_color_hover'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color_hover']; }
+				if (!empty($row['dashboard_label_background_color_hover'])) { $array['dashboard'][$x]['dashboard_label_background_color_hover'] = $row['dashboard_label_background_color_hover']; }
 				if (!empty($row['dashboard_background_color'])) { $array['dashboard'][$x]['dashboard_background_color'] = $row['dashboard_background_color']; }
 				if (!empty($row['dashboard_background_color_hover'])) { $array['dashboard'][$x]['dashboard_background_color_hover'] = $row['dashboard_background_color_hover']; }
 				if (!empty($row['dashboard_detail_background_color'])) { $array['dashboard'][$x]['dashboard_detail_background_color'] = $row['dashboard_detail_background_color']; }
