@@ -322,13 +322,6 @@ class XmlCDR extends Model
         );
     }
 
-    protected function callCenterQueueUuid(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) => empty($value) ? NULL : $value,
-        );
-    }
-
     protected function networkAddr(): Attribute
     {
         return Attribute::make(
