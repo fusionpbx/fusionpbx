@@ -36,11 +36,11 @@ class ModFormatCDRController extends Controller
         unset($validator1);
 
         // Detect Format
-        $default_settings = new DefaultSettingController;
-        $format = $default_settings->get('config', 'format_cdr.format', 'text') ?? 'xml';
-        $recordings = $default_settings->get('switch', 'recordings', 'dir');
+        $defaultSettings = new DefaultSettingController;
+        $format = $defaultSettings->get('config', 'format_cdr.format', 'text') ?? 'xml';
+        $recordings = $defaultSettings->get('switch', 'recordings', 'dir');
 
-        $db_type = DB::getConfig("driver");
+        $dbType = DB::getConfig("driver");
 
         if(App::hasDebugModeEnabled()){
                     Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $format: '.$format);
@@ -240,7 +240,7 @@ class ModFormatCDRController extends Controller
             //time
             $start_epoch = urldecode($cdr->variables->start_epoch);
             $payload['start_epoch'] = $start_epoch;
-            if ($db_type == 'pgsql'){
+            if ($dbType == 'pgsql'){
                 $payload['start_stamp'] = is_numeric($start_epoch) ? date('c', $start_epoch) : null;
             }
             else{
@@ -249,7 +249,7 @@ class ModFormatCDRController extends Controller
             }
             $answer_epoch = urldecode($cdr->variables->answer_epoch);
             $payload['answer_epoch'] = $answer_epoch;
-            if ($db_type == 'pgsql'){
+            if ($dbType == 'pgsql'){
                 $payload['answer_stamp'] = is_numeric($answer_epoch) ? date('c', $answer_epoch) : null;
             }
             else{
@@ -257,7 +257,7 @@ class ModFormatCDRController extends Controller
             }
             $end_epoch = urldecode($cdr->variables->end_epoch);
             $payload['end_epoch'] = $end_epoch;
-            if ($db_type == 'pgsql'){
+            if ($dbType == 'pgsql'){
                 $payload['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
             }
             else{
@@ -584,15 +584,16 @@ class ModFormatCDRController extends Controller
                 }
                 */
 
-                $cdr_format = $default_settings->get('cdr', 'format', 'text') ?? 'xml';
-                $cdr_storage = $default_settings->get('cdr', 'storage', 'text') ?? 'db';
+                $cdrFormat = $defaultSettings->get('cdr', 'format', 'text') ?? 'xml';
+                $cdrStorage = $defaultSettings->get('cdr', 'storage', 'text') ?? 'db';
                 //save to the database in xml format
-                if ($cdr_format == "xml" && $cdr_storage == "db") {
-                    $payload['xml'] = $cdr_string;
+                if ($cdrFormat == "xml" && $cdrStorage == "db") {
+                    $payload['xml'] = $request->input('cdr');
                 }
 
                 //save to the database in json format
-                if ($cdr_format == "json" && $cdr_storage == "db") {
+                //FIXME
+                if ($cdrFormat == "json" && $cdrStorage == "db") {
                     $payload['json'] = json_encode($cdr);
                 }
 
@@ -623,14 +624,14 @@ class ModFormatCDRController extends Controller
                         $payload['extension_uuid'] = $extension_uuid;
                 }
 
-                if ($cdr_storage == "dir") {
+                if ($cdrStorage == "dir") {
                     if (!empty($uuid)) {
-                        $switch_log = $default_settings->get('switch', 'log', 'text');
+                        $switch_log = $defaultSettings->get('switch', 'log', 'text');
                         $tmp_dir = $switch_log.'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
                         if(!file_exists($tmp_dir)) {
                             mkdir($tmp_dir, 0770, true);
                         }
-                        if ($cdr_format == "xml") {
+                        if ($cdrFormat == "xml") {
                             $tmp_file = $uuid.'.xml';
                             $fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
                             fwrite($fh, $xml_string);

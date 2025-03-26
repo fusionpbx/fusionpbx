@@ -119,7 +119,478 @@ class XmlCDR extends Model
 	protected $casts = [
 	];
 
+    protected function domainUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function extensionUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function sipCallId(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function domainName(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function accountcode(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function direction(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function defaultLanguage(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function context(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function callerIdName(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function callerIdNumber(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function callerDestination(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function sourceNumber(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function destinationNumber(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function startEpoch(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function startStamp(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function answerStamp(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function answerEpoch(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function endEpoch(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function endStamp(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function duration(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function mduration(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function billsec(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function billmsec(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function bridgeUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function readCodec(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function readRate(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function writeCode(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function writeRate(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function remoteMediaIp(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function callCenterQueueUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function networkAddr(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function recordPath(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function recordName(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function recordLenght(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function leg(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function originationLegUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function pddMs(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function rtpAudioInMos(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function lastApp(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function lastArg(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function voicemailMessage(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function missedCall(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function callCenterQueueUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccSide(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccMemberUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccQueueJoinedEpoch(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccQueue(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccMemberSessionUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccAgentUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccAgent(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccAgentType(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccAgentBridged(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
     protected function ccQueueAnsweredEpoch(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccQueueTerminatedEpoch(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccQueueCanceledEpoch(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccCancelReason(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function ccCause(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+        protected function waitsec(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function conferenceName(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function conferenceUuid(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function conferenceMemberId(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+
+    protected function digitsDialed(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function pinNumber(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function hangupCause(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+
+    protected function hangCauseQ850(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function sipHangupDisposition(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function xml(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => empty($value) ? NULL : $value,
+        );
+    }
+
+    protected function json(): Attribute
     {
         return Attribute::make(
             set: fn (string $value) => empty($value) ? NULL : $value,
