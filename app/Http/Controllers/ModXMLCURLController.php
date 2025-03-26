@@ -1595,11 +1595,7 @@ class ModXMLCURLController extends Controller
                                 ->where('domain_enabled', 'true')
                                 ->where('enabled', 'true')
                                 ->where(Domain::getTableName().'.domain_uuid', $domain_uuid)
-                                ->where(function (Builder $query){
-                                    global $user;
-                                    $query->where('extension', $user)
-                                        ->orWhere('number_alias', $user);
-                                });
+                                ->whereAny(['extension', 'number_alias'], $user);
                 if ($extension_query->count() > 0){
                         $continue = true;
                         $extension1 = $extension_query->first();
