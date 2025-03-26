@@ -40,6 +40,8 @@ class ModFormatCDRController extends Controller
         $format = $default_settings->get('config', 'format_cdr.format', 'text') ?? 'xml';
         $recordings = $default_settings->get('switch', 'recordings', 'dir');
 
+        $db_type = DB::getConfig("driver");
+
         if(App::hasDebugModeEnabled()){
                     Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $format: '.$format);
         }
