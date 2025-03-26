@@ -41,7 +41,7 @@ class ModFormatCDRController extends Controller
         $recordings = $default_settings->get('switch', 'recordings', 'dir');
 
         switch ($format){
-            'json':
+            case 'json':
                 // TODO: implement
                 break;
             default:
