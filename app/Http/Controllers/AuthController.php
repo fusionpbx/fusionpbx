@@ -2,17 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\DefaultSettingController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use Socialite;
 
 class AuthController extends Controller
 {
     public function index()
     {
-        return view('auth.login');
+        $defaultSettings = new DefaultSettingController;
+        $userUnique = $defaultSettings->get('users', 'unique', 'text');
+        $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
+        $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
+
+        // Environmental Variables have preference
+        $openidClientId = env('OKTA_CLIENT_ID');
+        $openidSecreitId = env('OKTA_CLIENT_SECRET');
+        $loginDestination = env('OKTA_REDIRECT_URL');
+        $openidBaseUrl = env('OKTA_BASE_URL') ?? env('APP_URL');
+
+        if (isset($userUnique) && ($userUnique == 'global') &&
+            isset($openidSecreitId) &&
+            isset($openidClientId) &&
+            isset($loginDestination) &&
+            isset($openidBaseUrl) &&
+            isset($defaultDomainUuid) &&
+            isset($defaultGroupUuid)
+        ){
+            $oktaEnabled = true;
+        }
+        else{
+            $oktaEnabled = false;
+        }
+
+        return view('auth.login')->with('okta_enabled', $oktaEnabled);
     }
 
     public function login(Request $request)
@@ -47,5 +76,42 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');
+    }
+
+    public function redirectToProvider()
+    {
+        return Socialite::driver('okta')->redirect();
+    }
+
+	public function handleProviderCallback(Request $request)
+    {
+        $user = Socialite::driver('okta')->user();
+
+        $localUser = User::where('username', $user->email)->first();
+
+        // create a local user with the email and token from Okta
+        if (! $localUser) {
+            $defaultSettings = new DefaultSettingController;
+            $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
+            $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
+            $localUser = User::create([
+                'username' => $user->email,
+                'user_email' => $user->email,
+                'user_enabled'  => 'true',
+                'token' => $user->token,
+            ]);
+        } else {
+            // if the user already exists, just update the token:
+            $localUser->token = $user->token;
+            $localUser->save();
+        }
+
+        try {
+            Auth::login($localUser);
+        } catch (\Throwable $e) {
+            return redirect('/login-okta');
+        }
+
+        return redirect()->intended('/dashboard');
     }
 }

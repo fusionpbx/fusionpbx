@@ -61,6 +61,16 @@
                             </div>
                         </div>
                     </div>
+                    @if ($okta_enabled == true)
+                    <div class="row">
+                    <div class="col-8"></div>
+                    <div class="col-4">
+                            <div class="d-grid gap-2">
+                                <a href="{{ route('login-okta') }}" class="btn btn-primary">{{ __('Log in with OKTA') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </form>
                 {{--                <div class="social-auth-links text-center mb-3 d-grid gap-2"> --}}
                 {{--                    <p>- OR -</p> --}}
