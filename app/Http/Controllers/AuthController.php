@@ -26,7 +26,7 @@ class AuthController extends Controller
         // Environmental Variables have preference
         $openidClientId = env('OKTA_CLIENT_ID');
         $openidSecreitId = env('OKTA_CLIENT_SECRET');
-        $loginDestination = env('OKTA_REDIRECT_URL');
+        $loginDestination = env('OKTA_REDIRECT_URI');
         $openidBaseUrl = env('OKTA_BASE_URL') ?? env('APP_URL');
 
         if(App::hasDebugModeEnabled()){
