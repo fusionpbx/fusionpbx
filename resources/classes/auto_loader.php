@@ -134,6 +134,7 @@ class auto_loader {
 		$search_path[] = glob($project_path . "/*/*/resources/interfaces/" . $class_name . ".php");
 		$search_path[] = glob($project_path . "/*/*/resources/traits/" . $class_name . ".php");
 		$search_path[] = glob($project_path . "/*/*/resources/classes/" . $class_name . ".php");
+		$search_path[] = glob($project_path . "/core/authentication/resources/classes/plugins/" . $class_name . ".php");
 
 		//collapse all entries to only the matched entry
 		$matches = array_filter($search_path);
