@@ -1,3 +1,16 @@
 {
-    "user": "user"
+    "user": "user",
+    "Users": "Users",
+    "Groups Table": "Groups Table",
+    "Restore Default": "Restore Default",
+    "Add": "Add",
+    "Share": "Share",
+    "Bulk Update Groups": "Bulk Update Groups",
+    "Group Level": "Group Level",
+    "Grpou Description": "Group Description",
+    "Group Name": "Group Name",
+    "Cancel": "Cancel",
+    "Update": "Update"
+
 }
+    

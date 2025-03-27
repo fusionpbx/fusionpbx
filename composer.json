@@ -10,7 +10,9 @@
         "laravel/framework": "^12.0",
         "laravel/sanctum": "*",
         "laravel/tinker": "^2.10.1",
-        "okayinc/stateless-session": "^0.0.10"
+        "livewire/livewire": "^3.6",
+        "okayinc/stateless-session": "^0.0.10",
+        "rappasoft/laravel-livewire-tables": "^3.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

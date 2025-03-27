@@ -12,13 +12,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Traits\HandlesStringBooleans;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class Group extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
+	
 	protected $table = 'v_groups';
 	protected $primaryKey = 'group_uuid';
 	public $incrementing = false;
@@ -26,6 +28,9 @@ class Group extends Model
 	const CREATED_AT = 'insert_date';
 	const UPDATED_AT = 'update_date';
 
+	protected static $stringBooleanFields = [
+		'group_protected'
+	];
 	/**
      * The attributes that are mass assignable.
      *
@@ -36,6 +41,7 @@ class Group extends Model
 		'group_protected',
 		'group_level',
 		'group_description',
+		'domain_uuid'
 	];
 
     public function users(): BelongsToMany {
@@ -69,6 +75,7 @@ class Group extends Model
             ->withPivot(['permission_assigned', 'permission_protected']);
     }
 
+
 	public static function findGlobals() {
 		$groups = DB::table('v_groups')->select('*')->whereNull('domain_uuid')->get();
 		return $groups;
@@ -78,5 +85,6 @@ class Group extends Model
 		return $this->belongsToMany(MenuItem::class, 'v_menu_item_groups', 'group_uuid', 'menu_item_uuid')->withTimestamps();
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
+
 
 }

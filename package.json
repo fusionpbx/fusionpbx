@@ -12,6 +12,7 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.7.2",
         "@popperjs/core": "^2.11.8",
         "admin-lte": "^4.0.0-beta3",
         "bootstrap": "^5.0.1",

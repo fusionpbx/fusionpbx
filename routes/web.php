@@ -30,6 +30,7 @@ Route::redirect('/', '/login');
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    
 });
 
 Route::middleware(['auth','permission'])->group(function () {
@@ -50,12 +51,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('domain.switchuuid');
 
     // GROUP
-    Route::get('/groups', [GroupController::class, 'index'])->name('group.index');
-    Route::get('/groups/create', [GroupController::class, 'create'])->name('group.create');
-    Route::post('/groups', [GroupController::class, 'store'])->name('group.store');
-    Route::get('/groups/{group_uuid}/edit', [GroupController::class, 'edit'])->name('group.edit');
-    Route::post('/groups/{group_uuid}', [GroupController::class, 'update'])->name('group.update');
-    Route::get('/groups/{group_uuid}/destroy', [GroupController::class, 'destroy'])->name('group.destroy');
+    Route::resource('/groups', GroupController::class)->name('groups', 'groups');
 
     // MENU
     Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');
