@@ -1738,5 +1738,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or Disable the WiFi adapter. Options: 0-Disabled, 1-Enabled";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e01400ea-ef55-4da1-aa09-3be3001f6932";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_force_voice_ring_volume";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Forced ringer volume: 0 - 15, default: empty";
 
 ?>
