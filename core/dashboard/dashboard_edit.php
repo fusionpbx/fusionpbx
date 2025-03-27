@@ -538,6 +538,20 @@
 	echo "			$('.type_icon, .type_content').hide();\n";
 	echo "			$('.type_chart').show();\n";
 	echo "		}\n";
+	echo "		if ($('#dashboard_url').val() != '') {\n";
+	echo "			$('#dashboard_target').show();\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('#dashboard_target').hide();\n";
+	echo "		}\n";
+	echo "		if ($('.dashboard_target option:selected').val() == 'new') {\n";
+	echo "			$('#dashboard_width').show();\n";
+	echo "			$('#dashboard_height').show();\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('#dashboard_width').hide();\n";
+	echo "			$('#dashboard_height').hide();\n";
+	echo "		}\n";
 	echo "	}\n";
 	echo "</script>\n";
 
@@ -672,14 +686,28 @@
 		echo "	".$text['label-link']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."'>\n";
+		echo "	<input class='formfld' type='text' id='dashboard_url' name='dashboard_url' maxlength='255' value='".escape($dashboard_url)."' onchange=\"adjust_form();\">\n";
 		echo "<br />\n";
 		echo $text['description-dashboard_url'] ?? '';
 		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon' id='dashboard_target' ".($dashboard_path != 'dashboard/icon' || empty($dashboard_url) ? "style='display: none;'" : null).">\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo $text['label-target']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name='dashboard_target' class='formfld dashboard_target' onchange=\"adjust_form();\">\n";
+		echo "		<option value='self'>".$text['label-current_window']."</option>\n";
+		echo "		<option value='new' ".(!empty($dashboard_target) && $dashboard_target == 'new' ? "selected='selected'" : null).">".$text['label-new_window']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-dashboard_target']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr class='type_icon' id='dashboard_width' ".($dashboard_path != 'dashboard/icon' || $dashboard_target != 'new' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-width']."\n";
 		echo "</td>\n";
@@ -691,7 +719,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
+		echo "<tr class='type_icon' id='dashboard_height' ".($dashboard_path != 'dashboard/icon' || $dashboard_target != 'new' ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-height']."\n";
 		echo "</td>\n";
@@ -700,20 +728,6 @@
 		echo "<br />\n";
 		echo $text['description-dashboard_height'] ?? '';
 		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "class='type_icon' style='display: none;'" : null).">\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo $text['label-target']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<select name='dashboard_target' class='formfld'>\n";
-		echo "		<option value='self'>".$text['label-current_window']."</option>\n";
-		echo "		<option value='new' ".(!empty($dashboard_target) && $dashboard_target == 'new' ? "selected='selected'" : null).">".$text['label-new_window']."</option>\n";
-		echo "	</select>\n";
-		echo "<br />\n";
-		echo $text['description-dashboard_target']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
