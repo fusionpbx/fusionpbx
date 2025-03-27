@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\DefaultSettingController;
+use App\Models\Domain;
+use App\Models\Group;
 use App\Models\User;
+use App\Models\UserGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -104,32 +107,54 @@ class AuthController extends Controller
             Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $user = '.print_r($user, true));
         }
 
-        $localUser = User::where('username', $user->email)->first();
-
-        // create a local user with the email and token from Okta
-        if (! $localUser) {
-            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User NOT in the DB');
-            $defaultSettings = new DefaultSettingController;
-            $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
-            $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
-            $localUser = User::create([
-                'username' => $user->email,
-                'user_email' => $user->email,
-                'user_enabled'  => 'true',
-                'token' => $user->token,
-            ]);
+        $localGroup = Group::where('group_uuid', $defaultGroupUuid)->first();
+        $localDomain = Group::where('domain_uuid', $defaultDomainUuid)->first();
+        if (!localGroup || !$localDomain){
+            return back()
+            ->with('error', __('Default Group or Domain does not exist, contact your system admin.'));
         }
-        else {
-            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User already in the DB');
-            // if the user already exists, just update the token:
-            $localUser->token = $user->token;
-            $localUser->save();
-        }
+        else{
+            $localUser = User::where('username', $user->email)->first();
+            // create a local user with the email and token from Okta
+            if (!$localUser) {
+                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User NOT in the DB');
+                $defaultSettings = new DefaultSettingController;
+                $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
+                $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
+                $localUser = User::create([
+                    'username' => $user->user->preferred_username,
+                    'user_email' => $user->email,
+                    'user_enabled'  => 'true',
+                    'token' => $user->token,
+                    'domain_uuid' => $defaultDomainUuid,
+                ]);
 
-        try {
-            Auth::login($localUser);
-        } catch (\Throwable $e) {
-            return redirect('/login-okta');
+                $localUserGroup = UserGroup::where('user_uuid', $localUser->user_uuid)
+                                ->where('group_uuid', $defaultGroupUuid)
+                                ->where('domain_uuid', $defaultDomainUuid)
+                                ->first();
+
+                if (!$localUserGroup){
+                    $localUserGroup = UserGroup::create([
+                        'domain_uuid' => $defaultDomainUuid,
+                        'group_name' => $localGroup->group_name,        // TODO: Get rid of this in the future
+                        'group_uuid' => $defaultGroupUuid,
+                        'user_group' => $localUser->user_uuid,
+                    ]);
+                }
+            }
+            else {
+                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User already in the DB');
+                // if the user already exists, just update the token:
+                $localUser->token = $user->token;
+                $localUser->save();
+            }
+
+            try {
+                Auth::login($localUser);
+            } catch (\Throwable $e) {
+                return redirect('/login-okta');
+            }
         }
 
         return redirect()->intended('/dashboard');
