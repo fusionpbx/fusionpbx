@@ -100,11 +100,15 @@ class AuthController extends Controller
 	public function handleProviderCallback(Request $request)
     {
         $user = Socialite::driver('okta')->user();
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $user = '.print_r($user, true));
+        }
 
         $localUser = User::where('username', $user->email)->first();
 
         // create a local user with the email and token from Okta
         if (! $localUser) {
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User NOT in the DB');
             $defaultSettings = new DefaultSettingController;
             $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
             $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
@@ -114,7 +118,9 @@ class AuthController extends Controller
                 'user_enabled'  => 'true',
                 'token' => $user->token,
             ]);
-        } else {
+        }
+        else {
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User already in the DB');
             // if the user already exists, just update the token:
             $localUser->token = $user->token;
             $localUser->save();
