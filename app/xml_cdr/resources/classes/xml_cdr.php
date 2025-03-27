@@ -1988,59 +1988,66 @@
 		 * download the recordings
 		 */
 		public function download() {
-			if (permission_exists('xml_cdr_view')) {
 
-				//get call recording from database
-				if (is_uuid($this->recording_uuid)) {
-					$sql = "select record_name, record_path from v_xml_cdr ";
-					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-					$parameters['xml_cdr_uuid'] = $this->recording_uuid;
-					$row = $this->database->select($sql, $parameters, 'row');
-					if (!empty($row) && is_array($row)) {
-						$record_name = $row['record_name'];
-						$record_path = $row['record_path'];
+			//check the permission
+			if (!permission_exists('xml_cdr_view')) {
+				//echo "permission denied";
+				return;
+			}
+
+			//check for a valid uuid
+			if (!is_uuid($this->recording_uuid)) {
+				//echo "invalid uuid";
+				return;
+			}
+
+			//get call recording from database
+			$sql = "select record_name, record_path from v_xml_cdr ";
+			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+			$parameters['xml_cdr_uuid'] = $this->recording_uuid;
+			$row = $this->database->select($sql, $parameters, 'row');
+			if (!empty($row) && is_array($row)) {
+				$record_name = $row['record_name'];
+				$record_path = $row['record_path'];
+			}
+			unset ($sql, $parameters, $row);
+
+			//build full path
+			$record_file = $record_path.'/'.$record_name;
+
+			//download the file
+			if ($record_file != '/' && file_exists($record_file)) {
+				ob_clean();
+				$fd = fopen($record_file, "rb");
+				if ($this->binary) {
+					header("Content-Type: application/force-download");
+					header("Content-Type: application/octet-stream");
+					header("Content-Type: application/download");
+					header("Content-Description: File Transfer");
+				}
+				else {
+					$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
+					switch ($file_ext) {
+						case "wav" : header("Content-Type: audio/x-wav"); break;
+						case "mp3" : header("Content-Type: audio/mpeg"); break;
+						case "ogg" : header("Content-Type: audio/ogg"); break;
 					}
-					unset ($sql, $parameters, $row);
+				}
+				$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
+				header('Content-Disposition: attachment; filename="'.$record_name.'"');
+				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+				if ($this->binary) {
+					header("Content-Length: ".filesize($record_file));
+				}
+				ob_clean();
+
+				//content-range
+				if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
+					$this->range_download($record_file);
 				}
 
-				//build full path
-				$record_file = $record_path.'/'.$record_name;
-
-				//download the file
-				if ($record_file != '/' && file_exists($record_file)) {
-					ob_clean();
-					$fd = fopen($record_file, "rb");
-					if ($this->binary) {
-						header("Content-Type: application/force-download");
-						header("Content-Type: application/octet-stream");
-						header("Content-Type: application/download");
-						header("Content-Description: File Transfer");
-					}
-					else {
-						$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
-						switch ($file_ext) {
-							case "wav" : header("Content-Type: audio/x-wav"); break;
-							case "mp3" : header("Content-Type: audio/mpeg"); break;
-							case "ogg" : header("Content-Type: audio/ogg"); break;
-						}
-					}
-					$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
-					header('Content-Disposition: attachment; filename="'.$record_name.'"');
-					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-					if ($this->binary) {
-						header("Content-Length: ".filesize($record_file));
-					}
-					ob_clean();
-
-					//content-range
-					if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
-						$this->range_download($record_file);
-					}
-
-					fpassthru($fd);
-				}
-
+				fpassthru($fd);
 			}
 
 		} //end download method
