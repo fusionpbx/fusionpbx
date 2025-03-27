@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Socialite;
@@ -27,6 +28,14 @@ class AuthController extends Controller
         $loginDestination = env('OKTA_REDIRECT_URL');
         $openidBaseUrl = env('OKTA_BASE_URL') ?? env('APP_URL');
 
+        if(App::hasDebugModeEnabled()){
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $openidClientId = '.$openidClientId);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $openidSecreitId = '.$openidSecreitId);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $loginDestination = '.$loginDestination);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $openidBaseUrl = '.$openidBaseUrl);
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $userUnique = '.$userUnique);
+        }
+
         if (isset($userUnique) && ($userUnique == 'global') &&
             isset($openidSecreitId) &&
             isset($openidClientId) &&
@@ -39,6 +48,10 @@ class AuthController extends Controller
         }
         else{
             $oktaEnabled = false;
+        }
+
+        if(App::hasDebugModeEnabled()){
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $oktaEnabled = '.(int)$oktaEnabled);
         }
 
         return view('auth.login')->with('okta_enabled', $oktaEnabled);
