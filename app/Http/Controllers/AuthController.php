@@ -108,7 +108,7 @@ class AuthController extends Controller
 
         // create a local user with the email and token from Okta
         if (! $localUser) {
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User NOT in the DB');
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User NOT in the DB');
             $defaultSettings = new DefaultSettingController;
             $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
             $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
@@ -120,7 +120,7 @@ class AuthController extends Controller
             ]);
         }
         else {
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User already in the DB');
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User already in the DB');
             // if the user already exists, just update the token:
             $localUser->token = $user->token;
             $localUser->save();
