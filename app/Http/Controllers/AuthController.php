@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\DefaultSettingController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Http;
