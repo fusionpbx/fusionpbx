@@ -66,7 +66,7 @@
                     <div class="col-8"></div>
                     <div class="col-4">
                             <div class="d-grid gap-2">
-                                <a href="{{ route('login-okta') }}" class="btn btn-primary">{{ __('Log in with OKTA') }}</button>
+                                <a href="{{ route('login-okta') }}" class="btn btn-primary">{{ __('Log in with OKTA') }}</a>
                             </div>
                         </div>
                     </div>
