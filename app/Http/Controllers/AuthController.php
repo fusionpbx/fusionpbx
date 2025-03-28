@@ -106,6 +106,9 @@ class AuthController extends Controller
         if(App::hasDebugModeEnabled()){
             Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $user = '.print_r($user, true));
         }
+        $defaultSettings = new DefaultSettingController;
+        $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
+        $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
 
         $localGroup = Group::where('group_uuid', $defaultGroupUuid)->first();
         $localDomain = Group::where('domain_uuid', $defaultDomainUuid)->first();
@@ -118,9 +121,7 @@ class AuthController extends Controller
             // create a local user with the email and token from Okta
             if (!$localUser) {
                 Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User NOT in the DB');
-                $defaultSettings = new DefaultSettingController;
-                $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
-                $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
+
                 $localUser = User::create([
                     'username' => $user->user->preferred_username,
                     'user_email' => $user->email,
