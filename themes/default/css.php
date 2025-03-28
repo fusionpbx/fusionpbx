@@ -2951,6 +2951,10 @@ else { //default: white
 		?>
 		}
 
+		div.card:has(.datetimepicker) {
+			overflow-x: visible;
+		}
+
 /* DASHBOARD **********************************************************************/
 
 	/* login message */
