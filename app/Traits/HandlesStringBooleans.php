@@ -115,4 +115,19 @@ trait HandlesStringBooleans
     {
         return $this->attributes[$key] ?? null;
     }
+
+    public function fill(array $attributes)
+    {
+        $stringBooleanFields = static::getStringBooleanFields();
+
+        foreach($stringBooleanFields as $field)
+        {
+            if(!array_key_exists($field, $attributes))
+            {
+                $attributes[$field] = 'false'; // Default unchecked checkboxes to 'false'
+            }
+        }
+
+        return parent::fill($attributes);
+    }
 }
