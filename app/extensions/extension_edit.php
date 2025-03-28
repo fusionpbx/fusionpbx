@@ -67,9 +67,9 @@
 	$provision_line_label                 = $settings->get('provision','line_label', null);
 	$provision_line_display_name          = $settings->get('provision','line_display_name', null);
 	$provision_outbound_proxy_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_primary', null);
+	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_secondary', null);
 	$provision_server_address_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_server_address_secondary   = $settings->get('provision','outbound_proxy_primary', null);
+	$provision_server_address_secondary   = $settings->get('provision','outbound_proxy_secondary', null);
 	$provision_line_sip_port              = $settings->get('provision','line_sip_port', null);
 	$provision_line_sip_transport         = $settings->get('provision','line_sip_transport', null);
 	$provision_line_register_expires      = $settings->get('provision','line_register_expires', null);
