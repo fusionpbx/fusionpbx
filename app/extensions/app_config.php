@@ -374,7 +374,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the maximum number of concurrent outbound calls allowed";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Sets the default value for the 'Limit Max' field when adding a new extension";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a4a14e4-8937-4a02-8038-ea5afb1d842f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
