@@ -65,13 +65,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/menus/items/{menu_item_uuid}/destroy', [MenuItemController::class, 'destroy'])->name('menu_item.destroy');
 
     // USERS
-    // Route::resource('/users', UserController::class)->name('users', 'users');
-    Route::get('/users', [UserController::class, 'index'])->name('user.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('user.create');
-    Route::post('/users', [UserController::class, 'store'])->name('user.store');
-    Route::get('/users/{user_uuid}/edit', [UserController::class, 'edit'])->name('user.edit');
-    Route::post('/users/{user_uuid}', [UserController::class, 'update'])->name('user.update');
-    Route::get('/users/{user_uuid}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::resource('/users', UserController::class)->name('users', 'users');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){

@@ -6,6 +6,7 @@ use App\Http\Controllers\DefaultSettingController;
 use App\Http\Controllers\DomainSettingController;
 use App\Http\Controllers\UserSettingController;
 use App\Http\Requests\UserRequest;
+use App\Models\Contact;
 use App\Models\Domain;
 use App\Models\Group;
 use App\Models\Language;
@@ -24,60 +25,57 @@ class UserController extends Controller
 
 	public function index()
 	{
-		$users = User::all();
-
-		return view("user/index", compact("domains"));
+		return view("pages.users.index");
 	}
 
 	public function create()
 	{
-		$user = new User();
-
 		$domains = Domain::all();
 		$groups = Group::all();
 		$languages = Language::all();
+		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
-		//timezones
-        //NOTE: Timezones are taken from the Linux filesystem
-
-		return view("user/form", compact("user", "domains", "groups", "languages"));
+		return view("pages.users.form", compact("domains", "groups", "languages", "timezones"));
 	}
 
 	public function store(UserRequest $request)
 	{
-		$validated = $request->validated();
-		User::create($validated);
+		User::create($request->validated());
 
-		return redirect()->route("user.index")->with("success", "User created successfully!");
+		return redirect()->route("pages.users.index");
 	}
 
-	public function edit($userUuid)
+	public function show(User $user)
 	{
-		$user = User::findOrFail($userUuid);
+		//
+	}
+
+	public function edit(User $user)
+	{
+		$contacts = Contact::all();
 		$domains = Domain::all();
 		$groups = Group::all();
 		$languages = Language::all();
+		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
-		//timezones
+		$selectedLanguage = $user->usersettings->where('user_setting_subcategory', 'language')->first()->user_setting_value ?? null;
+		$selectedTimezone = $user->usersettings->where('user_setting_subcategory', 'time_zone')->first()->user_setting_value ?? null;
 
-		return view("user/form", compact("user", "domains", "groups", "languages"));
+		return view("pages.users.form", compact("user", "contacts", "domains", "groups", "languages", "timezones", "selectedLanguage", "selectedTimezone"));
 	}
 
-	public function update(UserRequest $request, $userUuid)
+	public function update(UserRequest $request, User $user)
 	{
-		$user = User::findOrFail($userUuid);
-		$validated = $request->validated();
-		$user->update($validated);
+		$user->update($request->validated());
 
-		return redirect()->route("user.edit", $userUuid)->with("success", "User updated successfully!");
+		return redirect()->route("users.index");
 	}
 
-	public function destroy($userUuid)
+	public function destroy(User $user)
 	{
-		$user = User::findOrFail($userUuid);
 		$user->delete();
 
-		return redirect()->route("user.index")->with("success", "User deleted successfully!");
+		return redirect()->route("users.index");
 	}
 
     public function login(){

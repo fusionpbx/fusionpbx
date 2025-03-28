@@ -81,7 +81,8 @@ class User extends Authenticatable
             ->withTimestamps([
                 'created_at' => 'insert_date',
                 'updated_at' => 'update_date'
-            ]);
+            ])
+            ->orderBy('group_name');
 	}
 
 	public function domain(): BelongsTo {
@@ -89,7 +90,7 @@ class User extends Authenticatable
 	}
 
 	public function usersettings(): HasMany {
-		return $this->hasMany(UserSetting::class, 'user_setting_uuid', 'user_setting_uuid');
+		return $this->hasMany(UserSetting::class, 'user_uuid', 'user_uuid');
 	}
 
 	public function callcenteragent(): BelongsTo {
