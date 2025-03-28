@@ -111,8 +111,11 @@ class AuthController extends Controller
         $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
 
         $localGroup = Group::where('group_uuid', $defaultGroupUuid)->first();
-        $localDomain = Group::where('domain_uuid', $defaultDomainUuid)->first();
+        $localDomain = Domain::where('domain_uuid', $defaultDomainUuid)->first();
         if (!$localGroup || !$localDomain){
+            if(App::hasDebugModeEnabled()){
+                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Default Group or Domain does not exist, contact your system admin.');
+            }
             return back()
             ->with('error', __('Default Group or Domain does not exist, contact your system admin.'));
         }
