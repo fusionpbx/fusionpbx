@@ -23,8 +23,9 @@ class GroupController extends Controller
      */
     public function create()
     {
-        $domain = Domain::all();
-        return view('pages.groups.form', compact('domain'));
+        $domains = Domain::all();
+
+        return view('pages.groups.form', compact('domains'));
     }
 
     /**
@@ -33,6 +34,7 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         Group::create($request->validated());
+
         return redirect()->route('groups.index');
     }
 
@@ -49,8 +51,9 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
-        $domain = Domain::all();
-        return view('pages.groups.form', compact('group', 'domain'));
+        $domains = Domain::all();
+
+        return view('pages.groups.form', compact('group', 'domains'));
     }
 
     /**
@@ -59,6 +62,7 @@ class GroupController extends Controller
     public function update(GroupRequest $request, Group $group)
     {
         $group->update($request->all());
+
         return redirect()->route('groups.index');
     }
 

@@ -30,7 +30,7 @@ Route::redirect('/', '/login');
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-    
+
 });
 
 Route::middleware(['auth','permission'])->group(function () {
@@ -38,12 +38,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
     // DOMAIN
-    Route::get('/domains', [DomainController::class, 'index'])->name('domain.index');
-    Route::get('/domains/create', [DomainController::class, 'create'])->name('domain.create');
-    Route::post('/domains', [DomainController::class, 'store'])->name('domain.store');
-    Route::get('/domains/{domain_uuid}/edit', [DomainController::class, 'edit'])->name('domain.edit');
-    Route::post('/domains/{domain_uuid}', [DomainController::class, 'update'])->name('domain.update');
-    Route::get('/domains/{domain_uuid}/destroy', [DomainController::class, 'destroy'])->name('domain.destroy');
+    Route::resource('/domains', DomainController::class)->name('domains', 'domains');
     Route::post('/domains/switch', [DomainController::class, 'switch'])->name('domain.switch');
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');

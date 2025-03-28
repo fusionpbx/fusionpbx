@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\HasUniqueIdentifier;
 use App\Traits\GetTableName;
+use App\Traits\HandlesStringBooleans;
+use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Domain extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
 	protected $table = 'v_domains';
 	protected $primaryKey = 'domain_uuid';
 	public $incrementing = false;
@@ -32,6 +33,10 @@ class Domain extends Model
 	    'domain_name',
 	    'domain_enabled',
 	    'domain_description',
+	];
+
+	protected static $stringBooleanFields = [
+		'domain_enabled'
 	];
 
     protected function domainParentUuid(): Attribute

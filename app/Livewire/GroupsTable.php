@@ -25,8 +25,8 @@ class GroupsTable extends DataTableComponent
             ->setSearchPlaceholder('Search Groups')
             ->setPerPageAccepted([10, 25, 50, 100])
             ->setTableRowUrl(function($row) use ($canEdit) {
-                return $canEdit 
-                    ? route('groups.edit', $row->group_uuid) 
+                return $canEdit
+                    ? route('groups.edit', $row->group_uuid)
                     : null;
             })
             ->setPaginationEnabled();
@@ -34,22 +34,22 @@ class GroupsTable extends DataTableComponent
 
     public function bulkActions(): array
     {
-        $bulckActions = [];
+        $bulkActions = [];
 
         if (auth()->user()->hasPermission('group_edit')) {
-            $bulckActions['markProtected'] = 'Mark as Protected';
-            $bulckActions['markUnprotected'] = 'Mark as Unprotected';
+            $bulkActions['markProtected'] = 'Mark as Protected';
+            $bulkActions['markUnprotected'] = 'Mark as Unprotected';
         }
 
         if (auth()->user()->hasPermission('group_delete')) {
-            $bulckActions['bulkDelete'] = 'Delete';
+            $bulkActions['bulkDelete'] = 'Delete';
         }
 
         if(auth()->user()->hasPermission('group_add')) {
-            $bulckActions['bulkCopy'] = 'Copy';
+            $bulkActions['bulkCopy'] = 'Copy';
         }
 
-        return $bulckActions;
+        return $bulkActions;
 
 
     }
@@ -174,7 +174,7 @@ class GroupsTable extends DataTableComponent
                 })
                 ->searchable(),
 
-            Column::make("Mermbers", "group_uuid")
+            Column::make("Members", "group_uuid")
                 ->format(function ($value) {
                     $group = Group::find($value);
                     $totalUsers = $group->users->count();
