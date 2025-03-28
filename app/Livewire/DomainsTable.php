@@ -149,15 +149,14 @@ class DomainsTable extends DataTableComponent
     {
         return [
 
+            Column::make("UUID", "domain_uuid")->hideIf(true),
+
             Column::make("Name", "domain_name")
                 ->sortable()
                 ->searchable(),
 
-            // BooleanColumn::make("Enabled", "domain_enabled")
-                // ->sortable(),
-
-            Column::make("x", "domain_enabled"),
-            Column::make("UUID", "domain_uuid")->hideIf(true),
+            BooleanColumn::make("Enabled", "domain_enabled")
+                ->sortable(),
 
             Column::make("Description", "domain_description")
                 ->searchable()
