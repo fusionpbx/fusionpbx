@@ -1336,11 +1336,11 @@
 
 				if (permission_exists('device_line_server_address_secondary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					$provision_server_address_primary = $settings->get('provision', 'server_address_secondary');
-					if (!empty($provision_server_address_primary) && is_array($provision_server_address_primary)) {
+					$provision_server_address_secondary = $settings->get('provision', 'server_address_secondary');
+					if (!empty($provision_server_address_secondary) && is_array($provision_server_address_secondary)) {
 						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][server_address_secondary]'>\n";
 						echo "					<option value=''></option>\n";
-						foreach($provision_server_address_primary as $field) {
+						foreach($provision_server_address_secondary as $field) {
 							echo "					<option value='".$field."' ".(($row['server_address_secondary'] == $field) ? "selected" : null).">".$field."</option>\n";
 						}
 						echo "				</select>\n";
