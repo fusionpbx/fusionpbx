@@ -112,7 +112,7 @@ class AuthController extends Controller
 
         $localGroup = Group::where('group_uuid', $defaultGroupUuid)->first();
         $localDomain = Group::where('domain_uuid', $defaultDomainUuid)->first();
-        if (!localGroup || !$localDomain){
+        if (!$localGroup || !$localDomain){
             return back()
             ->with('error', __('Default Group or Domain does not exist, contact your system admin.'));
         }
