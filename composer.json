@@ -9,10 +9,12 @@
         "elvanto/litemoji": "^4.3",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "*",
+        "laravel/socialite": "^5.18",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
         "okayinc/stateless-session": "^0.0.10",
-        "rappasoft/laravel-livewire-tables": "^3.7"
+        "rappasoft/laravel-livewire-tables": "^3.7",
+        "socialiteproviders/okta": "^4.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

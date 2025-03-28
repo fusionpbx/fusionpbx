@@ -3,26 +3,26 @@ namespace App\Traits;
 
 /**
  * Trait HandlesStringBooleans
- * 
+ *
  * This trait handles string representations of boolean values in database fields.
- * 
+ *
  * IMPORTANT: Any model using this trait should define a static $stringBooleanFields array
  * that contains the names of all fields to be handled as string booleans.
- * 
+ *
  * @property static array $stringBooleanFields Fields to be handled as string booleans
  */
 trait HandlesStringBooleans
 {
     /**
      * Get the string boolean fields for the current model.
-     * 
+     *
      * @return array
      */
     protected static function getStringBooleanFields(): array
     {
         return static::$stringBooleanFields ?? [];
     }
-    
+
     /**
      * Boot the trait and register model events.
      * This is automatically called by Laravel during model booting.
@@ -36,7 +36,7 @@ trait HandlesStringBooleans
                 }
             }
         });
-        
+
         static::updating(function ($model) {
             foreach (static::getStringBooleanFields() as $field) {
                 if (!isset($model->attributes[$field]) || $model->attributes[$field] === null) {
@@ -45,19 +45,15 @@ trait HandlesStringBooleans
             }
         });
     }
-    
+
     /**
      * Initialize the trait.
      * This is automatically called by Laravel during model initialization.
+     *
      */
     public function initializeHandlesStringBooleans()
     {
-        $stringBooleanFields = static::getStringBooleanFields();
-        if (!empty($stringBooleanFields)) {
-            foreach ($stringBooleanFields as $field) {
-                $this->casts[$field] = 'boolean';
-            }
-        }
+        // Do not add to $this->casts as this conflicts with our custom getAttribute logic
     }
 
     /**
@@ -69,14 +65,19 @@ trait HandlesStringBooleans
     public function getAttribute($key)
     {
         $stringBooleanFields = static::getStringBooleanFields();
+
+        // Only apply our custom logic if the key is in our string boolean fields
         if (in_array($key, $stringBooleanFields)) {
-            $value = $this->getAttributeValue($key);
-            return $value === 'true';
+            // Get the raw attribute value before any casting
+            $value = $this->getAttributeFromArray($key);
+
+            // More flexible comparison to handle different formats of 'true'
+            return in_array(strtolower($value), ['true', '1', 'yes', 'on'], true);
         }
-        
+
         return parent::getAttribute($key);
     }
-    
+
     /**
      * Set a given attribute on the model.
      *
@@ -88,10 +89,45 @@ trait HandlesStringBooleans
     {
         $stringBooleanFields = static::getStringBooleanFields();
         if (in_array($key, $stringBooleanFields)) {
-            $this->attributes[$key] = $value === true || $value === 'on' ? 'true' : 'false';
+            // Handle various truthy values
+            if (is_bool($value)) {
+                $this->attributes[$key] = $value ? 'true' : 'false';
+            } else if (is_string($value)) {
+                $lowerValue = strtolower($value);
+                $this->attributes[$key] = in_array($lowerValue, ['true', '1', 'yes', 'on']) ? 'true' : 'false';
+            } else {
+                $this->attributes[$key] = $value ? 'true' : 'false';
+            }
             return $this;
         }
-        
+
         return parent::setAttribute($key, $value);
+    }
+
+    /**
+     * Get an attribute from the model's attributes array.
+     * This method gets the actual value from the attributes array without applying casts.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    protected function getAttributeFromArray($key)
+    {
+        return $this->attributes[$key] ?? null;
+    }
+
+    public function fill(array $attributes)
+    {
+        $stringBooleanFields = static::getStringBooleanFields();
+
+        foreach($stringBooleanFields as $field)
+        {
+            if(!array_key_exists($field, $attributes))
+            {
+                $attributes[$field] = 'false'; // Default unchecked checkboxes to 'false'
+            }
+        }
+
+        return parent::fill($attributes);
     }
 }

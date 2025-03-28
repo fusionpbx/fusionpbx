@@ -8,8 +8,8 @@
                 {{ isset($group) ? 'Edit Group' : 'Create Group' }}
             </h3>
         </div>
-        
-        <form action="{{ isset($group) ? route('groups.update', $group->group_uuid) : route('groups.store') }}" 
+
+        <form action="{{ isset($group) ? route('groups.update', $group->group_uuid) : route('groups.store') }}"
               method="POST">
             @csrf
             @if(isset($group))
@@ -21,11 +21,11 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="group_name" class="form-label">Group Name</label>
-                            <input 
-                                type="text" 
-                                class="form-control @error('group_name') is-invalid @enderror" 
-                                id="group_name" 
-                                name="group_name" 
+                            <input
+                                type="text"
+                                class="form-control @error('group_name') is-invalid @enderror"
+                                id="group_name"
+                                name="group_name"
                                 placeholder="Enter group name"
                                 value="{{ old('group_name', $group->group_name ?? '') }}"
                                 required
@@ -39,16 +39,16 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="domain_uuid" class="form-label">Domain</label>
-                            <select 
-                                class="form-select @error('domain_uuid') is-invalid @enderror" 
-                                id="domain_uuid" 
+                            <select
+                                class="form-select @error('domain_uuid') is-invalid @enderror"
+                                id="domain_uuid"
                                 name="domain_uuid"
                             >
                                 <option value="">Global</option>
-                                @foreach($domain as $domain)
-                                    <option value="{{ $domain->domain_uuid }}" 
+                                @foreach($domains as $domain)
+                                    <option value="{{ $domain->domain_uuid }}"
                                         {{ old('domain_uuid', (isset($group) ? $group->domain_uuid : Auth::user()->domain_uuid) ??  '') == $domain->domain_uuid ? 'selected' : '' }}>
-                                        {{ $domain->domain_name }}  
+                                        {{ $domain->domain_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -63,15 +63,15 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="group_level" class="form-label">Group Level</label>
-                            <select 
-                                class="form-select @error('group_level') is-invalid @enderror" 
-                                id="group_level" 
+                            <select
+                                class="form-select @error('group_level') is-invalid @enderror"
+                                id="group_level"
                                 name="group_level"
                                 required
                             >
                                 <option value="">Select Level</option>
                                 @foreach(range(10, 90, 10) as $level)
-                                    <option value="{{ $level }}" 
+                                    <option value="{{ $level }}"
                                         {{ old('group_level', $group->group_level ?? '') == $level ? 'selected' : '' }}>
                                         {{ $level }}
                                     </option>
@@ -98,11 +98,11 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="group_description" class="form-label">Group Description</label>
-                            <textarea 
-                                class="form-control @error('group_description') is-invalid @enderror" 
-                                id="group_description" 
-                                name="group_description" 
-                                rows="3" 
+                            <textarea
+                                class="form-control @error('group_description') is-invalid @enderror"
+                                id="group_description"
+                                name="group_description"
+                                rows="3"
                                 placeholder="Enter group description"
                             >{{ old('group_description', $group->group_description ?? '') }}</textarea>
                             @error('group_description')

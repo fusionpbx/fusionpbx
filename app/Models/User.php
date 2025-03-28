@@ -11,11 +11,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
+
 
 class User extends Authenticatable
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, HandlesStringBooleans;
 	protected $table = 'v_users';
 	protected $primaryKey = 'user_uuid';
 	public $incrementing = false;
@@ -37,7 +39,12 @@ class User extends Authenticatable
 		'api_key',
 		'user_totp_secret',
 		'user_enabled',
+        'token',
 	];
+
+    protected static $stringBooleanFields = [
+        'user_enabled',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.

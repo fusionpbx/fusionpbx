@@ -17,41 +17,40 @@ class GroupsTable extends DataTableComponent
     public function configure(): void
     {
         $canEdit = auth()->user()->hasPermission('group_edit');
-        $this->setPrimaryKey('group_uuid')
+        $tableConfig = $this->setPrimaryKey('group_uuid')
             ->setTableAttributes([
                 'class' => 'table table-striped table-hover table-bordered'
             ])
             ->setSearchEnabled()
             ->setSearchPlaceholder('Search Groups')
             ->setPerPageAccepted([10, 25, 50, 100])
-            ->setTableRowUrl(function($row) use ($canEdit) {
-                return $canEdit 
-                    ? route('groups.edit', $row->group_uuid) 
-                    : null;
-            })
             ->setPaginationEnabled();
+
+        if ($canEdit) {
+            $tableConfig->setTableRowUrl(function($row) use ($canEdit) {
+                return route('groups.edit', $row->group_uuid);
+            });
+        }
     }
 
     public function bulkActions(): array
     {
-        $bulckActions = [];
+        $bulkActions = [];
 
         if (auth()->user()->hasPermission('group_edit')) {
-            $bulckActions['markProtected'] = 'Mark as Protected';
-            $bulckActions['markUnprotected'] = 'Mark as Unprotected';
+            $bulkActions['markProtected'] = 'Mark as Protected';
+            $bulkActions['markUnprotected'] = 'Mark as Unprotected';
         }
 
         if (auth()->user()->hasPermission('group_delete')) {
-            $bulckActions['bulkDelete'] = 'Delete';
+            $bulkActions['bulkDelete'] = 'Delete';
         }
 
         if(auth()->user()->hasPermission('group_add')) {
-            $bulckActions['bulkCopy'] = 'Copy';
+            $bulkActions['bulkCopy'] = 'Copy';
         }
 
-        return $bulckActions;
-
-
+        return $bulkActions;
     }
 
     public function markProtected()
@@ -60,7 +59,6 @@ class GroupsTable extends DataTableComponent
             session()->flash('error', 'You do not have permission to mark groups as protected.');
             return;
         }
-
 
         $selectedRows = $this->getSelected();
 
@@ -87,7 +85,6 @@ class GroupsTable extends DataTableComponent
         session()->flash('success', 'The groups were successfully unprotected.');
     }
 
-
     public function bulkDelete()
     {
         if (!auth()->user()->hasPermission('group_delete')) {
@@ -113,6 +110,9 @@ class GroupsTable extends DataTableComponent
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function bulkCopy()
     {
         if (!auth()->user()->hasPermission('group_add')) {
@@ -133,7 +133,6 @@ class GroupsTable extends DataTableComponent
                 $newGroup->group_description = $newGroup->group_description . ' (Copy)';
                 $newGroup->save();
 
-
                 $permissions = $originalGroup->permissions()->get();
                 $permissionsToSync = [];
                 foreach ($permissions as $permission) {
@@ -153,35 +152,25 @@ class GroupsTable extends DataTableComponent
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
-            session()->flash('error', 'There was a problem copying the groups: ' . $e->getMessage());
         }
     }
 
     public function columns(): array
     {
         return [
-
             Column::make("Name", "group_name")
                 ->sortable()
                 ->searchable(),
 
             Column::make("Permissions", "group_uuid")
-                ->format(function ($value) {
-                    $group = Group::find($value);
-                    $totalPermissions = $group->permissions->count();
+                ->format(function ($value, $row, Column $column) {
+                    return $row->permissions_count;
+                }),
 
-                    return $totalPermissions;
-                })
-                ->searchable(),
-
-            Column::make("Mermbers", "group_uuid")
-                ->format(function ($value) {
-                    $group = Group::find($value);
-                    $totalUsers = $group->users->count();
-
-                    return $totalUsers;
-                })
-                ->searchable(),
+            Column::make("Members", "group_uuid")
+                ->format(function ($value, $row, Column $column) {
+                    return $row->users_count;
+                }),
 
             Column::make("Level", "group_level")
                 ->sortable(),
@@ -197,10 +186,9 @@ class GroupsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $query = Group::query()
-                ->with('permissions')
-                ->with('users')
-                ->orderBy('group_name', 'asc');
-        return $query;
+        return Group::query()
+            ->withCount('permissions')
+            ->withCount('users')
+            ->orderBy('group_name');
     }
 }
