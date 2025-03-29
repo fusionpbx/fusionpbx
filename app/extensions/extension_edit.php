@@ -67,9 +67,9 @@
 	$provision_line_label                 = $settings->get('provision','line_label', null);
 	$provision_line_display_name          = $settings->get('provision','line_display_name', null);
 	$provision_outbound_proxy_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_server_address_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_server_address_secondary   = $settings->get('provision','outbound_proxy_primary', null);
+	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_secondary', null);
+	$provision_server_address_primary     = $settings->get('provision','server_address_primary', null);
+	$provision_server_address_secondary   = $settings->get('provision','server_address_secondary', null);
 	$provision_line_sip_port              = $settings->get('provision','line_sip_port', null);
 	$provision_line_sip_transport         = $settings->get('provision','line_sip_transport', null);
 	$provision_line_register_expires      = $settings->get('provision','line_register_expires', null);
@@ -695,10 +695,14 @@
 													$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
 													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $domain_uuid;
 													$array["devices"][$j]["device_lines"][0]["server_address"] = $domain_name;
-													if ($provision_outbound_proxy_primary !== null) $array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = $provision_outbound_proxy_primary;
-													if ($provision_outbound_proxy_secondary !== null) $array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $provision_outbound_proxy_secondary;
-													if ($provision_server_address_primary !== null) $array["devices"][$j]["device_lines"][0]["server_address_primary"] = $provision_server_address_primary;
-													if ($provision_server_address_secondary !== null) $array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $provision_server_address_secondary;
+													//return the first item if data type = array, returns value if data type = text 
+													function getFirstItem($value) {
+													    return is_array($value) ? $value[0] : $value;
+													}
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = getFirstItem($provision_outbound_proxy_primary);
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = getFirstItem($provision_outbound_proxy_secondary);
+													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = getFirstItem($provision_server_address_primary);
+													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = getFirstItem($provision_server_address_secondary);
 													$array["devices"][$j]["device_lines"][0]["label"] = $line_label;
 													$array["devices"][$j]["device_lines"][0]["display_name"] = $line_display_name;
 													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
