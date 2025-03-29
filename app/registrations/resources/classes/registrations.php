@@ -402,23 +402,32 @@
 
 										//send the api command
 											if (!empty($command) && $event_socket->is_connected()) {
-												$response_api[$registration['user']]['command'] = $event_socket->request('api ' . $command);
-												$response_api[$registration['user']]['log'] = $event_socket->request("log notice $command");
+												$response = $event_socket->request('api ' . $command);
+												$response_api[$user]['command'] = $command;
+												$response_api[$user]['log'] = $response;
 											}
 									}
 								}
 
 								//set message
 									if (is_array($response_api)) {
-										$message = $response_message;
 										foreach ($response_api as $registration_user => $response) {
-											if (trim($response['command']) != '-ERR no reply') {
-												$message .= "<br>\n<strong>".$registration_user."</strong>: ".$response['command'];
+											if (is_array($response['command'])) {
+												foreach($response['command'] as $command) {
+													$command = trim($command ?? '');
+													if ($command !== '-ERR no reply') {
+														$message .= "<br>\n<strong>".escape($registration_user)."</strong>: ".escape($response_message);
+													}
+												}
+											}
+											else {
+												if (!empty($response['command']) && $response['command'] !== '-ERR no reply') {
+													$message .= "<br>\n<strong>".escape($registration_user)."</strong>: ".escape($response_message);
+												}
 											}
 										}
 										message::add($message, 'positive', '7000');
 									}
-
 							}
 							else {
 								message::add($text['error-event-socket'], 'negative', 5000);
