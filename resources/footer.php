@@ -40,6 +40,12 @@
 	if (!isset($_SESSION["menu"])) { $_SESSION["menu"] = null; }
 	if (!isset($_SESSION["username"])) { $_SESSION["username"] = null; }
 
+//save the session domains array to a variable of type array
+	$domains = $_SESSION['domains'] ?? [];
+
+//count the number of domains
+	$domain_count = count($domains);
+
 //get the output from the buffer
 	$body = ($content_from_db ?? '').ob_get_contents();
 	ob_end_clean(); //clean the buffer
@@ -175,7 +181,7 @@
 		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).($document_title ?? '');
 		$view->assign('document_title', $document_title);
 	//domain selector control
-		$domain_selector_enabled = permission_exists('domain_select') && count($_SESSION['domains']) > 1 ? true : false;
+		$domain_selector_enabled = permission_exists('domain_select') && $domain_count > 1 ? true : false;
 		$view->assign('domain_selector_enabled', $domain_selector_enabled);
 	//browser name
 		$user_agent = http_user_agent();
@@ -188,15 +194,15 @@
 	//domains application path
 		$view->assign('domains_app_path', PROJECT_PATH.(file_exists($_SERVER['DOCUMENT_ROOT'].'/app/domains/domains.php') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
 	//domain count
-		$view->assign('domain_count', is_array($_SESSION['domains']) ? sizeof($_SESSION['domains']) : 0);
+		$view->assign('domain_count', $domain_count);
 	//domain selector row background colors
 		$view->assign('domain_selector_background_color_1', !empty($_SESSION['theme']['domain_inactive_background_color'][0]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
 		$view->assign('domain_selector_background_color_2', !empty($_SESSION['theme']['domain_inactive_background_color'][1]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
 		$view->assign('domain_active_background_color', !empty($_SESSION['theme']['domain_active_background_color']['text']) ? $_SESSION['theme']['domain_active_background_color']['text'] : '#eeffee');
 	//domain list
-		$view->assign('domains', $_SESSION['domains']);
+		$view->assign('domains', $domains);
 	//domain uuid
-		$view->assign('domain_uuid', $_SESSION['domain_uuid']);
+		$view->assign('domain_uuid', $domain_uuid);
 	//menu container
 		//load menu array into the session
 			if (!isset($_SESSION['menu']['array'])) {
