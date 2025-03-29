@@ -46,6 +46,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//return the first item if data type = array, returns value if data type = text 
+	function get_first_item($value) {
+	    return is_array($value) ? $value[0] : $value;
+	}
+
 //initialize the core objects
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
@@ -695,14 +700,11 @@
 													$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
 													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $domain_uuid;
 													$array["devices"][$j]["device_lines"][0]["server_address"] = $domain_name;
-													//return the first item if data type = array, returns value if data type = text 
-													function getFirstItem($value) {
-													    return is_array($value) ? $value[0] : $value;
-													}
-													$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = getFirstItem($provision_outbound_proxy_primary);
-													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = getFirstItem($provision_outbound_proxy_secondary);
-													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = getFirstItem($provision_server_address_primary);
-													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = getFirstItem($provision_server_address_secondary);
+
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = get_first_item($provision_outbound_proxy_primary);
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = get_first_item($provision_outbound_proxy_secondary);
+													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = get_first_item($provision_server_address_primary);
+													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = get_first_item($provision_server_address_secondary);
 													$array["devices"][$j]["device_lines"][0]["label"] = $line_label;
 													$array["devices"][$j]["device_lines"][0]["display_name"] = $line_display_name;
 													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
