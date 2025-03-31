@@ -112,8 +112,8 @@ class UserController extends Controller
 			foreach($groups as $group)
 			{
 				$syncGroups[$group] = [
-					"domain_uuid" => $user->domain->domain_uuid,
-					"group_name" => $groupsDB[$group] ?? null,
+					"domain_uuid" => $user->domain->domain_uuid, //NOTE: won't need in the future
+					"group_name" => $groupsDB[$group] ?? null, //NOTE: won't need in the future
 				];
 			}
 		}
