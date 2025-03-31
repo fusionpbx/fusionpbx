@@ -45,6 +45,8 @@ class UserController extends Controller
 
 		$this->syncGroups($request, $user);
 
+		$this->syncSettings($request, $user);
+
 		return redirect()->route("pages.users.index");
 	}
 
@@ -76,6 +78,8 @@ class UserController extends Controller
 		$user->update($validated);
 
 		$this->syncGroups($request, $user);
+
+		$this->syncSettings($request, $user);
 
 		return redirect()->route("users.index");
 	}
@@ -115,6 +119,40 @@ class UserController extends Controller
 		}
 
 		$user->groups()->sync($syncGroups);
+	}
+
+	private function syncSettings(UserRequest $request, User $user)
+	{
+		$settings = [
+			"language" => $request->input("language"),
+			"time_zone" => $request->input("timezone"),
+		];
+
+		foreach($settings as $setting_subcategory => $setting_value)
+		{
+			if($setting_value)
+			{
+				$setting_name = match ($setting_subcategory)
+				{
+					"language" => "code",
+					"time_zone" => "name",
+					default => "",
+				};
+
+				$user->usersettings()->updateOrCreate(
+					[
+						"user_uuid" => $user->user_uuid,
+						"user_setting_subcategory" => $setting_subcategory,
+					],
+					[
+						"domain_uuid" => $user->domain_uuid,
+						"user_setting_category" => "domain",
+						"user_setting_name" => $setting_name,
+						"user_setting_value" => $setting_value,
+					]
+				);
+			}
+		}
 	}
 
     public function login(){

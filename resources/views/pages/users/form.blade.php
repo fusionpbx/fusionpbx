@@ -98,21 +98,21 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="user_language" class="form-label">Language</label>
+                            <label for="language" class="form-label">Language</label>
                             <select
-                                class="form-select @error('user_language') is-invalid @enderror"
-                                id="user_language"
-                                name="user_language"
+                                class="form-select @error('language') is-invalid @enderror"
+                                id="language"
+                                name="language"
                             >
                                 <option value="">Select language</option>
                                 @foreach($languages as $language)
-                                    <option value="{{ $language->language_uuid }}"
-										{{ old('user_language', $selectedLanguage ?? '') == $language->code ? 'selected' : '' }}>
+                                    <option value="{{ $language->code }}"
+										{{ old('language', $selectedLanguage ?? '') == $language->code ? 'selected' : '' }}>
                                         {{ $language->language }} [{{ $language->code }}]
                                     </option>
                                 @endforeach
                             </select>
-                            @error('user_language')
+                            @error('language')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>

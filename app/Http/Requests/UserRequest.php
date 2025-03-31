@@ -20,6 +20,8 @@ class UserRequest extends FormRequest
 			"user_email" => "required|email|max:255",
 			"password" => ($isCreating ? "required" : "nullable") . "|string|confirmed",
 			"domain_uuid" => "required|uuid",
+			"language" => "nullable",
+			"timezone" => "nullable",
 			"user_enabled" => "nullable",
 		];
 	}
