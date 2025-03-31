@@ -457,13 +457,14 @@ class settings implements clear_cache {
 						apcu_delete($key);
 					}
 				}
-				global $settings, $domain_uuid, $user_uuid;
+				global $settings;
 				//check there is a settings object
 				if (!empty($settings) && ($settings instanceof settings)) {
+					$database = $settings->database();
 					$domain_uuid = $settings->get_domain_uuid();
 					$user_uuid = $settings->get_user_uuid();
 					//recreate the settings object to reload all settings from database
-					$settings = new settings(['database' => database::new(), 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+					$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 				}
 			}
 		}
