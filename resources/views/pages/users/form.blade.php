@@ -48,7 +48,6 @@
                                 name="password"
                                 placeholder="Enter password"
                                 value=""
-                                required
                             >
                             @error('password')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -60,17 +59,16 @@
                 <div class="row">
                     <div class="col-md-6 mt-3">
                         <div class="form-group">
-                            <label for="password_confirm" class="form-label">Confirm password</label>
+                            <label for="password_confirmation" class="form-label">Confirm password</label>
                             <input
-                                type="text"
-                                class="form-control @error('password_confirm') is-invalid @enderror"
-                                id="password_confirm"
-                                name="password_confirm"
+                                type="password"
+                                class="form-control @error('password_confirmation') is-invalid @enderror"
+                                id="password_confirmation"
+                                name="password_confirmation"
                                 placeholder="Confirm password"
                                 value=""
-                                required
                             >
-                            @error('password_confirm')
+                            @error('password_confirmation')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
@@ -109,7 +107,7 @@
                                 <option value="">Select language</option>
                                 @foreach($languages as $language)
                                     <option value="{{ $language->language_uuid }}"
-										{{ old('user_language', $selectedLanguage) == $language->code ? 'selected' : '' }}>
+										{{ old('user_language', $selectedLanguage ?? '') == $language->code ? 'selected' : '' }}>
                                         {{ $language->language }} [{{ $language->code }}]
                                     </option>
                                 @endforeach
@@ -133,7 +131,7 @@
                                 <option value="">Select timezone</option>
                                 @foreach($timezones as $timezone)
                                     <option value="{{ $timezone }}"
-									    {{ old('user_timezone', $selectedTimezone) == $timezone ? 'selected' : '' }}>
+									    {{ old('user_timezone', $selectedTimezone ?? '') == $timezone ? 'selected' : '' }}>
                                         {{ $timezone }}
                                     </option>
                                 @endforeach
@@ -157,7 +155,7 @@
                                 <option value="">Select contact</option>
                                 @foreach($contacts as $contact)
                                     <option value="{{ $contact->contact_uuid }}"
-										{{ old('contact_uuid', $user->contact_uuid) == $contact->contact_uuid ? 'selected' : '' }}>
+										{{ old('contact_uuid', $user->contact_uuid ?? '') == $contact->contact_uuid ? 'selected' : '' }}>
                                         {{ $contact->contact_nickname }}
                                     </option>
                                 @endforeach
@@ -175,7 +173,7 @@
                             <label for="groups" class="form-label">Groups</label>
 							@foreach($groups as $group)
 							@php
-								$checked = $user->groups->contains('group_uuid', $group->group_uuid);
+								$checked = isset($user) && $user->groups->contains('group_uuid', $group->group_uuid);
 							@endphp
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" name="groups[]" value="{{ $group->group_uuid }}" @if($checked) checked @endif>
@@ -201,12 +199,27 @@
                                 <option value="">Select domain</option>
                                 @foreach($domains as $domain)
                                     <option value="{{ $domain->domain_uuid }}"
-										{{ old('domain_uuid', $user->domain_uuid) == $domain->domain_uuid ? 'selected' : '' }}>
+										{{ old('domain_uuid', $user->domain_uuid ?? '') == $domain->domain_uuid ? 'selected' : '' }}>
                                         {{ $domain->domain_name }}
                                     </option>
                                 @endforeach
                             </select>
                             @error('domain_uuid')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label d-block">Enabled</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="user_enabled" name="user_enabled" value="true" {{ old('user_enabled', $user->user_enabled ?? false) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="user_enabled">{{ __('Enabled') }}</label>
+                            </div>
+                            @error('user_enabled')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>

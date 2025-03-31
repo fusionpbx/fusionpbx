@@ -30,17 +30,20 @@ class UserController extends Controller
 
 	public function create()
 	{
+		$contacts = Contact::all();
 		$domains = Domain::all();
 		$groups = Group::all();
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
-		return view("pages.users.form", compact("domains", "groups", "languages", "timezones"));
+		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones"));
 	}
 
 	public function store(UserRequest $request)
 	{
-		User::create($request->validated());
+		$user = User::create($request->validated());
+
+		$this->syncGroups($request, $user);
 
 		return redirect()->route("pages.users.index");
 	}
@@ -66,7 +69,13 @@ class UserController extends Controller
 
 	public function update(UserRequest $request, User $user)
 	{
-		$user->update($request->validated());
+		$validated = $request->validated();
+
+		$this->handlePassword($validated);
+
+		$user->update($validated);
+
+		$this->syncGroups($request, $user);
 
 		return redirect()->route("users.index");
 	}
@@ -76,6 +85,36 @@ class UserController extends Controller
 		$user->delete();
 
 		return redirect()->route("users.index");
+	}
+
+	private function handlePassword(&$request)
+	{
+		if(empty($request["password"]))
+		{
+			unset($request["password"]);
+		}
+	}
+
+	private function syncGroups(UserRequest $request, User $user)
+	{
+		$groups = array_values($request->input("groups", []));
+
+		$syncGroups = [];
+
+		if(!empty($groups))
+		{
+    		$groupsDB = Group::whereIn("group_uuid", $groups)->pluck("group_name", "group_uuid");
+
+			foreach($groups as $group)
+			{
+				$syncGroups[$group] = [
+					"domain_uuid" => $user->domain->domain_uuid,
+					"group_name" => $groupsDB[$group] ?? null,
+				];
+			}
+		}
+
+		$user->groups()->sync($syncGroups);
 	}
 
     public function login(){

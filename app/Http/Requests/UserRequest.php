@@ -13,8 +13,14 @@ class UserRequest extends FormRequest
 
 	public function rules(): array
 	{
-		return [
+		$isCreating = $this->isMethod("post");
 
+		return [
+			"username" => "required|string|max:255",
+			"user_email" => "required|email|max:255",
+			"password" => ($isCreating ? "required" : "nullable") . "|string|confirmed",
+			"domain_uuid" => "required|uuid",
+			"user_enabled" => "nullable",
 		];
 	}
 }
