@@ -450,11 +450,20 @@ class settings implements clear_cache {
 		if (function_exists('apcu_enabled') && apcu_enabled()) {
 			$cache = apcu_cache_info(false);
 			if (!empty($cache['cache_list'])) {
+				//clear apcu cache
 				foreach ($cache['cache_list'] as $entry) {
 					$key = $entry['info'];
 					if (str_starts_with($key, 'settings_')) {
 						apcu_delete($key);
 					}
+				}
+				global $settings, $domain_uuid, $user_uuid;
+				//check there is a settings object
+				if (!empty($settings) && ($settings instanceof settings)) {
+					$domain_uuid = $settings->get_domain_uuid();
+					$user_uuid = $settings->get_user_uuid();
+					//recreate the settings object to reload all settings from database
+					$settings = new settings(['database' => database::new(), 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 				}
 			}
 		}
