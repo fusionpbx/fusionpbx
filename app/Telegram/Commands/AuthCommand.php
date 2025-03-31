@@ -14,6 +14,7 @@ use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use App\Services\UserService;
 
 class AuthCommand extends UserCommand
 {
@@ -58,10 +59,11 @@ class AuthCommand extends UserCommand
 			\Log::debug('$coolpbx_password: ' .$coolpbx_password);
 
 			$user_controller = new UserController;
-			$authenticated = $user_controller->Autheticate($coolpbx_user, $coolpbx_domain, $coolpbx_password);
+            $userService = new UserService;
+			$authenticated = $userService->authenticate($coolpbx_user, $coolpbx_domain, $coolpbx_password);
 
 			if ($authenticated){
-				$user_uuid = $user_controller->getUuid($coolpbx_user, $coolpbx_domain);
+				$user_uuid = $userService->getUuid($coolpbx_user, $coolpbx_domain);
 				$user = User::find($user_uuid);
 				$domain_uuid = $user->domain_uuid;
 				\Log::debug('$domain_uuid: ' .$domain_uuid);
