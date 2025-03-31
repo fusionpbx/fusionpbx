@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 
 class UserController extends Controller
@@ -30,13 +31,15 @@ class UserController extends Controller
 
 	public function create()
 	{
+		$api_key = Str::uuid();
+
 		$contacts = Contact::all();
 		$domains = Domain::all();
 		$groups = Group::all();
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
-		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones"));
+		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones", "api_key"));
 	}
 
 	public function store(UserRequest $request)

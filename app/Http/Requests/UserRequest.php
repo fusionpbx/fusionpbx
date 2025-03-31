@@ -23,6 +23,7 @@ class UserRequest extends FormRequest
 			"language" => "nullable",
 			"timezone" => "nullable",
 			"user_enabled" => "nullable",
+			"api_key" => "nullable|uuid",
 		];
 	}
 }

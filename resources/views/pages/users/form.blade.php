@@ -212,6 +212,35 @@
                 </div>
 
                 <div class="row mt-3">
+                    <div class="col-md-5 mt-3">
+                        <div class="form-group">
+                            <label for="api_key" class="form-label">APIKEY</label>
+                            <input
+                                type="password"
+                                class="form-control @error('api_key') is-invalid @enderror"
+                                id="api_key"
+                                name="api_key"
+                                placeholder="APIKEY"
+                                value="{{ old('user_name', $api_key ?? $user->api_key) }}"
+                                required
+                            >
+
+                            @error('api_key')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-1 mt-3">
+                        <div class="form-group">
+                            <label class="form-label">&nbsp;</label>
+                            <button class="btn btn-outline-secondary form-control" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label d-block">Enabled</label>
