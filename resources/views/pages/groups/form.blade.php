@@ -2,22 +2,36 @@
 
 @section('content')
 <div class="container-fluid ">
-    <div class="card card-primary mt-3">
+    <div class="card card-primary mt-3 card-outline">
         <div class="card-header">
             <h3 class="card-title">
                 {{ isset($group) ? 'Edit Group' : 'Create Group' }}
             </h3>
 
+            @if (isset($group))
             <div class="card-tools">
-                <div class="d-flex gap-2 " role="group" aria-label="Group actions">
-                    <a href="" class="btn btn-primary btn-sm">
-                        <i class="fas fa-key mr-1"></i> {{__('Permissions')}}
-                    </a>
-                    <a href="{{ route('usergroup.index', [$group->group_uuid]) }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-users mr-1"></i> {{__('Members')}}
-                    </a>
-                </div>
+                <a  href="{{ route('permissions.index', ['group_uuid' => old('group_uuid', $group->group_uuid ?? '')]) }}" class="btn btn-primary btn-sm">
+                    <i class="fa fa-key" aria-hidden="true"></i>
+                    {{ __('Permissions') }}
+                </a>
+
+                <a href="" class="btn btn-primary btn-sm">
+                    <i class="fas fa-users mr-1"></i> {{ __('Members') }}
+                </a>
+
+                <a href="{{route('groups.copy', $group->group_uuid)}}" class="btn btn-primary btn-sm">
+                    <i class="fa fa-clone" aria-hidden="true"></i> {{ __('Copy') }}
+                </a>
+                
+                <form action="{{ route('groups.destroy', $group->group_uuid) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to delete this group?')">
+                        <i class="fa fa-trash" aria-hidden="true"></i> {{ __('Delete') }}
+                    </button>
+                </form>
             </div>
+            @endif
         </div>
 
         <form action="{{ isset($group) ? route('groups.update', $group->group_uuid) : route('groups.store') }}"

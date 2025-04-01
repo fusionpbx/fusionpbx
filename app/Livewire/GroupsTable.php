@@ -14,6 +14,7 @@ class GroupsTable extends DataTableComponent
 {
     protected $model = Group::class;
 
+
     public function configure(): void
     {
         $canEdit = auth()->user()->hasPermission('group_edit');
@@ -157,31 +158,40 @@ class GroupsTable extends DataTableComponent
 
     public function columns(): array
     {
-        return [
+        $columns = [
             Column::make("Name", "group_name")
                 ->sortable()
                 ->searchable(),
-
-            Column::make("Permissions", "group_uuid")
+        ];
+       
+        if (auth()->user()->hasPermission('group_permission_view')) {
+            $columns[] = Column::make("Permissions", "group_uuid")
                 ->format(function ($value, $row, Column $column) {
-                    return $row->permissions_count;
-                }),
-
+                    return '<a href="'.route('permissions.index', ['group_uuid' => $value]).'" class="text-primary underline">'
+                    .$row->permissions_count.
+                    '</a>';
+                })
+                ->html();
+        }
+        
+        $columns = array_merge($columns, [
             Column::make("Members", "group_uuid")
                 ->format(function ($value, $row, Column $column) {
                     return $row->users_count;
                 }),
-
+    
             Column::make("Level", "group_level")
                 ->sortable(),
-
+    
             BooleanColumn::make("Protected", "group_protected")
                 ->sortable(),
-
+    
             Column::make("Description", "group_description")
                 ->searchable()
                 ->sortable(),
-        ];
+        ]);
+        
+        return $columns;
     }
 
     public function builder(): Builder

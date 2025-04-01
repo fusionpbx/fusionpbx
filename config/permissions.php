@@ -18,4 +18,19 @@ return [
     'groups.edit' => 'group_edit',
     'groups.update' => 'group_edit',
     'groups.destroy' => 'group_delete',
+
+    'permissions.index' => 'permission_view',
+    'permissions.create' => 'permission_add',
+    'permissions.update' => 'permission_edit',
+    'permissions.store' => 'permission_add',
+    'permissions.edit' => 'permission_edit',
+    'permissions.destroy' => 'permission_delete',
+
+
+    'permissions.index' => 'group_permission_view',
+    'permissions.update' => 'group_permission_add',
+    'permissions.update'=> 'group_permission_edit',
+    'permissions.show' => 'group_permission_view',
+    'permissions.update'=> 'group_permission_delete',
+
 ];
