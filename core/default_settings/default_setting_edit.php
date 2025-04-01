@@ -139,6 +139,15 @@
 				// fix null
 				$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
 
+				//reset the cache for settings object
+				settings::clear_cache();
+
+				//reset others
+				$classes_to_clear = array_filter($autoload->get_interface_list('clear_cache'), function ($class) { return $class !== 'settings'; });
+				foreach ($classes_to_clear as $class_name) {
+					$class_name::clear_cache();
+				}
+
 				//update switch timezone variables
 				if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
 					//get the dialplan_uuid
