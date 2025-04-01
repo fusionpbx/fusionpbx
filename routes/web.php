@@ -8,6 +8,7 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,12 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // GROUP
     Route::resource('/groups', GroupController::class)->name('groups', 'groups');
+    Route::get('/groups/{group}/copy', [GroupController::class, 'copy'])->name('groups.copy');
+
+    // PERMISSION
+    Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
+    Route::put('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
+    
 
     // MENU
     Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');

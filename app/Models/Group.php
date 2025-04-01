@@ -75,6 +75,12 @@ class Group extends Model
             ->withPivot(['permission_assigned', 'permission_protected']);
     }
 
+    public function groupPermissions(): HasMany
+    {
+        return $this->hasMany(GroupPermission::class, 'group_uuid', 'group_uuid');
+    }
+
+
 
 	public static function findGlobals() {
 		$groups = DB::table('v_groups')->select('*')->whereNull('domain_uuid')->get();
