@@ -989,13 +989,12 @@ if(!function_exists('path_join')) {
 		}
 
 		$prefix = null;
-		foreach ($paths as $path) {
+		foreach ($paths as $index => $path) {
 			if($prefix === null && !empty($path)) {
 				if(substr($path, 0, 1) == '/') $prefix = '/';
 				else $prefix = '';
 			}
-			$path = trim( $path, '/' );
-			$path = trim( $path, '\\' );
+			$paths[$index] = trim($path, '/\\');
 		}
 
 		if($prefix === null){
