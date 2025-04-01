@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -119,10 +119,6 @@
 		return;
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create('/app/calls_active/calls_active_inc.php');
-
 //add the style
 	echo "<style>\n";
 	echo "	/* Small screens: Hide columns with class 'hide-small' */\n";
@@ -141,49 +137,6 @@
 	echo "\n";
 	echo "</style>\n";
 
-//show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
-	echo "	<div class='actions'>\n";
-	echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
-	if (permission_exists('call_active_eavesdrop') && !empty($user['extensions'])) {
-		if (sizeof($user['extensions']) > 1) {
-			echo "	<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $user['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
-			echo "	<i class='fas fa-headphones' style='margin-left: 15px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'></i>\n";
-			echo "	<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
-			if (is_array($user['extensions'])) {
-				foreach ($user['extensions'] as $user_extension) {
-					echo "	<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
-				}
-			}
-			echo "	</select>\n";
-		}
-		else if (sizeof($user['extensions']) == 1) {
-			echo "	<input type='hidden' id='eavesdrop_dest' value=\"".escape($user['extension'][0]['destination'])."\">\n";
-		}
-	}
-	if (permission_exists('call_active_hangup') && $rows) {
-		echo button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'phone-slash','id'=>'btn_delete','onclick'=>"refresh_stop(); modal_open('modal-hangup','btn_hangup');"]);
-	}
-	if (permission_exists('call_active_all')) {
-		if ($show == "all") {
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$theme_button_icon_back,'link'=>'calls_active.php','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$theme_button_icon_all,'link'=>'calls_active.php?show=all','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
-		}
-	}
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	if (permission_exists('call_active_hangup') && $rows) {
-		echo modal::create(['id'=>'modal-hangup','type'=>'general','message'=>$text['confirm-hangups'],'actions'=>button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'check','id'=>'btn_hangup','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('hangup'); list_form_submit('form_list');"])]);
-	}
-
-	echo $text['description']."\n";
-	echo "<br /><br />\n";
-
 //show the results
 	echo "<div id='cmd_reponse'></div>\n";
 
@@ -191,7 +144,7 @@
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 
 	echo "<div class='card'>\n";
-	echo "	<table class='list'>\n";
+	echo "	<table id='calls_active' class='list'>\n";
 	echo "	<tr class='list-header'>\n";
 	if (permission_exists('call_active_hangup')) {
 		echo "		<th class='checkbox'>\n";
@@ -320,7 +273,7 @@
 
 	echo "	</table>\n";
 	echo "</div>\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "<input type='hidden' name='".$_SESSION['app']['calls_active']['token']['name']."' value='".$_SESSION['app']['calls_active']['token']['hash']."'>\n";
 	echo "</form>\n";
 
 ?>
