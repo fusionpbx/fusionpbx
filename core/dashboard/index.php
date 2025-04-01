@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2024
+	Portions created by the Initial Developer are Copyright (C) 2022-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -294,7 +294,7 @@ foreach ($dashboard as $row) {
 	}
 	if (!empty($row['dashboard_background_color'])) {
 		$background_color = json_decode($row['dashboard_background_color'], true);
-		echo "#".$dashboard_name." .hud_content {\n";
+		echo "#".$dashboard_name." .hud_box {\n";
 		echo "	background: ".$background_color[0].";\n";
 		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
 			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
@@ -306,7 +306,7 @@ foreach ($dashboard as $row) {
 	}
 	if (!empty($row['dashboard_background_color_hover'])) {
 		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-		echo "#".$dashboard_name.":hover .hud_content {\n";
+		echo "#".$dashboard_name.":hover .hud_box {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
 		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
 			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
@@ -348,8 +348,8 @@ foreach ($dashboard as $row) {
 	}
 	switch ($row['dashboard_row_span']) {
 		case 1:
-			echo "#".$dashboard_name." .hud_content {\n";
-			echo "	height: 89.5px;\n";
+			echo "#".$dashboard_name." .hud_box {\n";
+			echo "	height: 91px;\n";
 			echo "}\n";
 			echo "#".$dashboard_name." .hud_stat {\n";
 			echo "	line-height: 0;\n";
@@ -366,18 +366,18 @@ foreach ($dashboard as $row) {
 			echo "}\n";
 			break;
 		case 2:
-			echo "#".$dashboard_name." .hud_content {\n";
-			echo "	height: 195px;\n";
+			echo "#".$dashboard_name." .hud_box {\n";
+			echo "	height: 198px;\n";
 			echo "}\n";
 			break;
 		case 3:
-			echo "#".$dashboard_name." .hud_content {\n";
-			echo "	height: 300.5px;\n";
+			echo "#".$dashboard_name." .hud_box {\n";
+			echo "	height: 306.5px;\n";
 			echo "}\n";
 			break;
 		default: //if empty
-			echo "#".$dashboard_name." .hud_content {\n";
-			echo "	height: 195px;\n";
+			echo "#".$dashboard_name." .hud_box {\n";
+			echo "	height: 198px;\n";
 			echo "}\n";
 	}
 
