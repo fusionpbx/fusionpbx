@@ -6,6 +6,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Middleware\Authenticate;
@@ -66,6 +67,10 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');
+
+    // USER GROUP
+    Route::get('/groups/{group}/members', [UserGroupController::class, 'index'])->name('usergroup.index');
+    Route::put('/groups/{group}/members', [UserGroupController::class, 'update'])->name('usergroup.update');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){

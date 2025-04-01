@@ -7,6 +7,17 @@
             <h3 class="card-title">
                 {{ isset($group) ? 'Edit Group' : 'Create Group' }}
             </h3>
+
+            <div class="card-tools">
+                <div class="d-flex gap-2 " role="group" aria-label="Group actions">
+                    <a href="" class="btn btn-primary btn-sm">
+                        <i class="fas fa-key mr-1"></i> {{__('Permissions')}}
+                    </a>
+                    <a href="{{ route('usergroup.index', [$group->group_uuid]) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-users mr-1"></i> {{__('Members')}}
+                    </a>
+                </div>
+            </div>
         </div>
 
         <form action="{{ isset($group) ? route('groups.update', $group->group_uuid) : route('groups.store') }}"

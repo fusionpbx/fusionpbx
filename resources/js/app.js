@@ -22,22 +22,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+const togglePassword = document.getElementById('togglePassword');
 
-document.getElementById('togglePassword').addEventListener('click', function()
+if(togglePassword)
 {
-    let apikey = document.getElementById('api_key');
-    let icon = this.querySelector('i');
+    document.getElementById('togglePassword').addEventListener('click', function()
+    {
+        let apikey = document.getElementById('api_key');
+        let icon = this.querySelector('i');
 
-    if(apikey.type === "password")
-    {
-        apikey.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-    }
-    else
-    {
-        apikey.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-    }
-});
+        if(apikey.type === "password")
+        {
+            apikey.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        }
+        else
+        {
+            apikey.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    });
+}
+
