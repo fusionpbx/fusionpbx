@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017-2023
+	Portions created by the Initial Developer are Copyright (C) 2017-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -258,6 +258,8 @@
 	echo "</script>\n";
 
 //show the content
+	echo "<div class='hud_box' style='".(!empty($row['dashboard_background_color']) ? 'padding: 0 5px;' : 'background: none; border: none; box-shadow: none;')."'>";
+
 	echo "<div class='action_bar sub'>\n";
 	echo "	<div class='heading'><b>".$text['header-call_center_queues'].(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
 	echo "	<div class='actions'>\n";
@@ -299,5 +301,6 @@
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
+	echo "</div>\n";
 
 ?>
