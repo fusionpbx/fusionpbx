@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -44,5 +42,17 @@ class Permission extends Model
             'permission_name'
         )->wherePivot('permission_assigned', 'true')
             ->withPivot(['permission_assigned', 'permission_protected']);
+    }
+
+    public function groupPermissions(): BelongsTo {
+        return $this->belongsTo(GroupPermission::class, 'permission_name', 'permission_name');
+    }
+
+    public function groupPermissionByGroup($groupUuid = null): BelongsTo
+    {      
+        return $this->belongsTo(GroupPermission::class, 'permission_name', 'permission_name')
+            ->when($groupUuid, function($query, $groupUuid) {
+                return $query->where('group_uuid', $groupUuid);
+            });
     }
 }
