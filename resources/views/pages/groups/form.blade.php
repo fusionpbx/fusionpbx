@@ -97,7 +97,7 @@
                                 id="group_level"
                                 name="group_level"
                                 required
-                                value="{{ old('group_level', $group->group_level ?? '') }
+                                value="{{ old('group_level', $group->group_level ?? '') }}"
                             >
                             <datalist id="group_levels">
                                 <option value="10"></option>
