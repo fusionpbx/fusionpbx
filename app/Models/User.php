@@ -89,15 +89,15 @@ class User extends Authenticatable
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function usersettings(): HasMany {
+	public function userSettings(): HasMany {
 		return $this->hasMany(UserSetting::class, 'user_uuid', 'user_uuid');
 	}
 
-	public function callcenteragent(): BelongsTo {
+	public function callCenterAgent(): BelongsTo {
 		return $this->belongsTo(CallCenterAgent::class, 'user_uuid', 'user_uuid');
 	}
 
-	public function conferencerooms(): BelongsToMany {
+	public function conferenceRooms(): BelongsToMany {
 		return $this->belongsToMany(ConferenceRoom::class, 'v_conference_room_users', 'user_uuid', 'conference_room_uuid')->withTimestamps();
 	}
 

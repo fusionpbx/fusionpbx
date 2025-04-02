@@ -108,7 +108,7 @@ class MenuController extends Controller
 	{
 		$validated = $request->validate([
 			"menu_name" => "required|string|max:255",
-			"menu_language" => ['required','string','min:5','max:16','regex:/[a-z]+\-[a-z]+/i'], //TODO: Find a better regex, maybe a Request class to verify
+			"menu_language" => ['required','string','min:5','max:16','regex:/[a-z]{2,3}\-\w+/i'], //TODO: Find a better regex, maybe a Request class to verify
 			"menu_description" => "required|string|max:255",
 		]);
 
@@ -123,7 +123,7 @@ class MenuController extends Controller
 
 		$validated = $request->validate([
 			"menu_name" => "required|string|max:255",
-			"menu_language" => ['required','string','min:5','max:16','regex:/[a-z]+\-[a-z]+/i'], //TODO: Find a better regex, maybe a Request class to verify
+			"menu_language" => ['required','string','min:5','max:16','regex:/[a-z]{2,3}\-\w+/i'], //TODO: Find a better regex, maybe a Request class to verify
 			"menu_description" => "required|string|max:255",
 		]);
 

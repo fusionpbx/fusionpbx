@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\User;
+use App\Models\UserGroup;
 use Illuminate\Http\Request;
 
 class UserGroupController extends Controller
@@ -12,10 +13,10 @@ class UserGroupController extends Controller
     {
         $members = $group->users;
 
-        $users = User::whereDoesntHave('groups', function ($query) use ($group)
-        {
-            $query->where('v_user_groups.group_uuid', $group->group_uuid);
-        })->get();
+        $users = User::whereDoesntHave('groups', function ($query) use ($group){
+            $query->where(UserGroup::getTableName().'.group_uuid', $group->group_uuid);
+            })
+            ->get();
 
         return view('pages.groups.members', compact('group', 'members', 'users'));
     }
