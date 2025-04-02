@@ -87,8 +87,9 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="group_level" class="form-label" class="form-control @error('group_level') is-invalid @enderror">Group Level</label>
+                            <label for="group_level" class="form-label" >Group Level</label>
                             <input
+                                class="form-control @error('group_level') is-invalid @enderror"
                                 type="number"
                                 min="0"
                                 placeholder="50"
