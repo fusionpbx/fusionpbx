@@ -87,19 +87,27 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="group_level" class="form-label">Group Level</label>
-                            <input type="number" min="0" placeholder="50" step="1" list="group_levels" id="group_level" name="group_level" required>
+                            <label for="group_level" class="form-label" class="form-control @error('group_level') is-invalid @enderror">Group Level</label>
+                            <input
+                                type="number"
+                                min="0"
+                                placeholder="50"
+                                step="1"
+                                list="group_levels"
+                                id="group_level"
+                                name="group_level"
+                                required
+                            >
                             <datalist id="group_levels">
                                 <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
-                                <option value="10"></option>
+                                <option value="20"></option>
+                                <option value="30"></option>
+                                <option value="40"></option>
+                                <option value="50"></option>
+                                <option value="60"></option>
+                                <option value="70"></option>
+                                <option value="80"></option>
+                                <option value="90"></option>
                             </datalist>
                             <!--
                             <select
