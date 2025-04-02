@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\MenuItem;
+use App\Models\MenuItemGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,8 +29,8 @@ class MenuController extends Controller
 
 			$sql = "
 				SELECT DISTINCT mi.*
-				FROM v_menu_items mi
-				INNER JOIN v_menu_item_groups mig ON mig.menu_item_uuid = mi.menu_item_uuid
+				FROM ".MenuItem::getTableName()." mi
+				INNER JOIN ".MenuItemGroup::getTableName()." mig ON mig.menu_item_uuid = mi.menu_item_uuid
 				WHERE mig.group_uuid IN ('" . implode("', '", $userGroups). "')
 				ORDER BY mi.menu_item_order
 			";
@@ -107,7 +108,7 @@ class MenuController extends Controller
 	{
 		$validated = $request->validate([
 			"menu_name" => "required|string|max:255",
-			"menu_language" => "required|string|max:255",
+			"menu_language" => ['required','string','min:5','max:16','regex:/[a-z]+\-[a-z]+/i'], //TODO: Find a better regex, maybe a Request class to verify
 			"menu_description" => "required|string|max:255",
 		]);
 
@@ -122,7 +123,7 @@ class MenuController extends Controller
 
 		$validated = $request->validate([
 			"menu_name" => "required|string|max:255",
-			"menu_language" => "required|string|max:255",
+			"menu_language" => ['required','string','min:5','max:16','regex:/[a-z]+\-[a-z]+/i'], //TODO: Find a better regex, maybe a Request class to verify
 			"menu_description" => "required|string|max:255",
 		]);
 
