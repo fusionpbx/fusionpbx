@@ -419,7 +419,7 @@
 				echo "	</td>\n";
 			}
 			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-				echo "	<td>".escape($domain_name)."</td>\n";
+				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class='no-wrap'>";
 			echo permission_exists('device_edit') ? "<a href='".$list_row_url."'>".escape(format_device_address($row['device_address']))."</a>" : escape(format_device_address($row['device_address']));
