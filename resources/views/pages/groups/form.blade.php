@@ -88,6 +88,20 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="group_level" class="form-label">Group Level</label>
+                            <input type="number" min="0" placeholder="50" step="1" list="group_levels" id="group_level" name="group_level" required>
+                            <datalist id="group_levels">
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                                <option value="10"></option>
+                            </datalist>
+                            <!--
                             <select
                                 class="form-select @error('group_level') is-invalid @enderror"
                                 id="group_level"
@@ -102,6 +116,7 @@
                                     </option>
                                 @endforeach
                             </select>
+                            -->
                             @error('group_level')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
