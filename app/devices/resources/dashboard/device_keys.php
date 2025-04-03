@@ -427,7 +427,7 @@
 	$token = $object->create('/app/devices/resources/dashboard/device_keys.php');
 
 //show the content
-	echo "<div class='hud_box' style='".(!empty($dashboard_background_color) ? 'padding: 0 5px;' : 'background: none; border: none; box-shadow: none;')."'>";
+	echo "<div class='hud_box' style='".(!empty($dashboard_background_color) ? 'padding-left: 5px;' : 'background: none; border: none; box-shadow: none;')."'>";
 
 	echo "<div class='action_bar sub'>\n";
 	echo "	<div class='heading'><b>".$text['title-device_keys']."</b></div>\n";
