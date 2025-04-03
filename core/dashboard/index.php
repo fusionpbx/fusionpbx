@@ -147,9 +147,11 @@
 			}
 
 			//save the data
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
-			$database->save($array);
+			if (is_array($array)) {
+				$database->app_name = 'dashboard';
+				$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
+				$database->save($array);
+			}
 
 			//redirect the browser
 			message::add($text['message-update']);
@@ -348,8 +350,8 @@ foreach ($dashboard as $row) {
 	}
 	switch ($row['dashboard_row_span']) {
 		case 1:
-			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 91.5px;\n";
+			echo "#".$dashboard_name." .hud_content {\n";
+			echo "	height: 89.5px;\n";
 			echo "}\n";
 			echo "#".$dashboard_name." .hud_stat {\n";
 			echo "	line-height: 0;\n";
@@ -366,18 +368,18 @@ foreach ($dashboard as $row) {
 			echo "}\n";
 			break;
 		case 2:
-			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 199px;\n";
+			echo "#".$dashboard_name." .hud_content {\n";
+			echo "	height: 195px;\n";
 			echo "}\n";
 			break;
 		case 3:
-			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 308.5px;\n";
+			echo "#".$dashboard_name." .hud_content {\n";
+			echo "	height: 300.5px;\n";
 			echo "}\n";
 			break;
 		default: //if empty
-			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 199px;\n";
+			echo "#".$dashboard_name." .hud_content {\n";
+			echo "	height: 195px;\n";
 			echo "}\n";
 	}
 
