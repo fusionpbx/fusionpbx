@@ -8,6 +8,7 @@ use App\Http\Controllers\DomainSettingController;
 use App\Http\Requests\DomainRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -108,14 +109,14 @@ class DomainController extends Controller
 	}
 
 	// returns all the available domains
-	public function select_control(): mixed{
+	public function selectControl(): mixed{
 		// FIX ME
 		$db_type = DB::getConfig("driver");
 		$sql = "WITH RECURSIVE children AS (
-					SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, ".($db_type == 'pgsql'?"CAST(d.domain_enabled AS text)":"d.domain_enabled").", d.domain_description, '' AS parent_domain_name, 1 AS depth, domain_name AS path, (SELECT COUNT(*) FROM ".Domain::getTableName()." d1 d1.domain_parent_uuid = d.domain_uuid) AS kids FROM ".Domain::getTableName()." d
+					SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, ".($db_type == 'pgsql'?"CAST(d.domain_enabled AS text)":"d.domain_enabled").", d.domain_description, CAST('' AS CHAR(255)) AS parent_domain_name, 1 AS depth, domain_name AS path, (SELECT COUNT(*) FROM ".Domain::getTableName()." d1 WHERE d1.domain_parent_uuid = d.domain_uuid) AS kids FROM ".Domain::getTableName()." d
 					WHERE ";
 
-		if (can('domain_select')){
+		if(Auth::user()->hasPermission('domain_select')){
 			// if permission domain_select
 			$sql .= "d.domain_parent_uuid IS null OR NOT exists (SELECT 1 FROM ".Domain::getTableName()." t1 WHERE d.domain_parent_uuid = t1.domain_uuid) ";
 		}

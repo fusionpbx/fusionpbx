@@ -118,6 +118,23 @@
 {{--                    <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>--}}
 {{--                </a>--}}
 {{--            </li>--}}
+
+            <form action="{{ route('domain.switch') }}" method="POST">
+                @csrf
+                <li class="nav-item dropdown">
+                    <a id="dropdownMenu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link dropdown-toggle">
+                        <i class="fa-solid fa-earth-americas"></i>
+                        {{ Session::get('domain_name') }}
+                    </a>
+                    @can('domain_select')
+                    <ul aria-labelledby="dropdownMenu" class="dropdown-menu border-0 shadow">
+                        @foreach($domainSelectControl as $domain)
+                        <li><button type="submit" name="domain_uuid" value="{{ $domain->domain_uuid }}" class="dropdown-item">{{ $domain->domain_name }}</button></li>
+                        @endforeach
+                    </ul>
+                    @endcan
+                </li>
+            </form>
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     <img src="{{ asset('assets/avatar.jpg') }}"
