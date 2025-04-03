@@ -59,7 +59,7 @@ class FreeSWITCHAPIController extends Controller
         }
 
         while (!feof($this->fp)) {
-            $event = $this->es_read_event();
+            $event = $this->es_read_event();    
             if (@$event['Content-Type'] == 'command/reply') {
                 if (@$event['Reply-Text'] == '+OK accepted') {
                     return $this->fp;
@@ -214,4 +214,41 @@ class FreeSWITCHAPIController extends Controller
             return $response->body() ?? null;
         return null;
     }
+
+    // public function switch_gateway_status($gateway_uuid, $result_type = 'xml')
+    // {
+    //     if ($this->es_connected()) {
+    //         $cmd = 'api sofia xmlstatus gateway ' . $gateway_uuid;
+    //         $response = $this->es_request($cmd);
+            
+    //         if ($response == "Invalid Gateway!") {
+    //             $cmd = 'api sofia xmlstatus gateway ' . strtoupper($gateway_uuid);
+    //             $response = $this->es_request($cmd);
+    //         }
+            
+    //         return $response;
+    //     }
+        
+    //     return "Unable to connect to FreeSWITCH";
+    // }
+
+    // public function execute(string $command, ?string $param = null)
+    // {
+    //     if (!$this->es_connected()) {
+            
+    //         $event_socket = Setting::first();
+    //         $this->fp = $this->es_connect(
+    //             $event_socket->event_socket_ip_address ?? '127.0.0.1', 
+    //             $event_socket->event_socket_port ?? 8021, 
+    //             $event_socket->event_socket_password ?? 'ClueCon'
+    //         );
+    //     }
+        
+    //     if ($this->fp === false) {
+    //         return null;
+    //     }
+        
+    //     $cmd = 'api ' . $command . ' ' . $param;
+    //     return $this->es_request($cmd);
+    // }
 }

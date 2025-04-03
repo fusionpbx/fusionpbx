@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\GateWayController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
@@ -54,6 +55,10 @@ Route::middleware(['auth','permission'])->group(function () {
     // PERMISSION
     Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
     Route::put('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
+
+    // GETEWAY
+    Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
+    Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
     
 
     // MENU

@@ -102,5 +102,5 @@ class PermissionController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
-    }   
+    }
 }
