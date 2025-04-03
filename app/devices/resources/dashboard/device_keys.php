@@ -427,10 +427,12 @@
 	$token = $object->create('/app/devices/resources/dashboard/device_keys.php');
 
 //show the content
-	echo "<div class='hud_box' style='".(!empty($dashboard_background_color) ? 'padding-left: 5px;' : 'background: none; border: none; box-shadow: none;')."'>";
+	echo "<div class='hud_box'>";
+
+	echo "<div class='hud_content' style='display: block;'>\n";
 
 	echo "<div class='action_bar sub'>\n";
-	echo "	<div class='heading'><b>".$text['title-device_keys']."</b></div>\n";
+	echo "	<div class='heading' style='padding-left: 5px;'><b>".$text['title-device_keys']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-apply'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".($user_id ?? '')."@".($server_address ?? '')."&domain=".($server_address ?? '')."&agent=".($device_key_vendor ?? '')."';"]);
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"list_form_submit('form_list_device_keys');"]);
@@ -626,6 +628,8 @@
 	echo "</table>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
+
+	echo "</div>\n";
 
 	echo "</div>\n";
 
