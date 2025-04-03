@@ -258,10 +258,12 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<div class='hud_box' style='".(!empty($dashboard_background_color) ? 'padding-left: 5px;' : 'background: none; border: none; box-shadow: none;')."'>";
+	echo "<div class='hud_box'>";
+
+	echo "<div class='hud_content' style='display: block;'>\n";
 
 	echo "<div class='action_bar sub'>\n";
-	echo "	<div class='heading'><b>".$text['header-call_center_queues'].(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
+	echo "	<div class='heading' style='padding-left: 5px;'><b>".$text['header-call_center_queues'].(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.getElementById('form_list_call_center_agent_dashboard').submit();"]);
 	echo "	</div>\n";
@@ -270,7 +272,7 @@
 
 	echo "<form id='form_list_call_center_agent_dashboard' method='post'>\n";
 
-	echo "<table class='list'>\n";
+	echo "<table class='list' style='padding: 0 5px;'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th>".$text['label-queue_name']."</th>\n";
 	echo "	<th class='shrink'>".$text['label-status']."</th>\n";
@@ -301,6 +303,9 @@
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
+
+	echo "</div>\n";
+
 	echo "</div>\n";
 
 ?>
