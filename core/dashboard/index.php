@@ -349,7 +349,7 @@ foreach ($dashboard as $row) {
 	switch ($row['dashboard_row_span']) {
 		case 1:
 			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 91px;\n";
+			echo "	height: 91.5px;\n";
 			echo "}\n";
 			echo "#".$dashboard_name." .hud_stat {\n";
 			echo "	line-height: 0;\n";
@@ -367,17 +367,17 @@ foreach ($dashboard as $row) {
 			break;
 		case 2:
 			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 198px;\n";
+			echo "	height: 199px;\n";
 			echo "}\n";
 			break;
 		case 3:
 			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 306.5px;\n";
+			echo "	height: 308.5px;\n";
 			echo "}\n";
 			break;
 		default: //if empty
 			echo "#".$dashboard_name." .hud_box {\n";
-			echo "	height: 198px;\n";
+			echo "	height: 199px;\n";
 			echo "}\n";
 	}
 
