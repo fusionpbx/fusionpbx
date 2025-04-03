@@ -55,22 +55,13 @@ Route::middleware(['auth','permission'])->group(function () {
     // PERMISSION
     Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
     Route::put('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
-    
 
     // MENU
-    Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');
-    Route::get('/menus/create', [MenuController::class, 'create'])->name('menu.create');
-    Route::post('/menus', [MenuController::class, 'store'])->name('menu.store');
-    Route::get('/menus/{menu_uuid}/edit', [MenuController::class, 'edit'])->name('menu.edit');
-    Route::post('/menus/{menu_uuid}', [MenuController::class, 'update'])->name('menu.update');
-    Route::get('/menus/{menu_uuid}/destroy', [MenuController::class, 'destroy'])->name('menu.destroy');
+    Route::resource('/menus', MenuController::class)->name('menus', 'menus');
 
     // MENU ITEM
-    Route::get('/menus/{menu_uuid}/items/create', [MenuItemController::class, 'create'])->name('menu_item.create');
-    Route::post('/menus/{menu_uuid}/items/', [MenuItemController::class, 'store'])->name('menu_item.store');
-    Route::get('/menus/items/{menu_item_uuid}/edit', [MenuItemController::class, 'edit'])->name('menu_item.edit');
-    Route::post('/menus/items/{menu_item_uuid}', [MenuItemController::class, 'update'])->name('menu_item.update');
-    Route::get('/menus/items/{menu_item_uuid}/destroy', [MenuItemController::class, 'destroy'])->name('menu_item.destroy');
+    Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
+    Route::get('/menuitems/create/{menu}', [MenuItemController::class, 'create'])->name('menuitems.create');
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');
