@@ -296,7 +296,7 @@ foreach ($dashboard as $row) {
 	}
 	if (!empty($row['dashboard_background_color'])) {
 		$background_color = json_decode($row['dashboard_background_color'], true);
-		echo "#".$dashboard_name." .hud_box {\n";
+		echo "#".$dashboard_name." .hud_content {\n";
 		echo "	background: ".$background_color[0].";\n";
 		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
 			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
@@ -308,7 +308,7 @@ foreach ($dashboard as $row) {
 	}
 	if (!empty($row['dashboard_background_color_hover'])) {
 		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-		echo "#".$dashboard_name.":hover .hud_box {\n";
+		echo "#".$dashboard_name.":hover .hud_content {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
 		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
 			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
@@ -536,7 +536,6 @@ function toggle_grid_row_end_all() {
 		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
 		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
-		$dashboard_background_color = $row['dashboard_background_color'] ?? '';
 		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
 		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
 
@@ -563,7 +562,6 @@ function toggle_grid_row_end_all() {
 		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
 		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
 		$dashboard_number_background_color = preg_replace($text_pattern, '', $dashboard_number_background_color);
-		$dashboard_background_color = preg_replace($text_pattern, '', $dashboard_background_color);
 		$dashboard_details_state = preg_replace($text_pattern, '', $dashboard_details_state);
 		$dashboard_row_span = preg_replace($number_pattern, '', $dashboard_row_span);
 		$dashboard_path = preg_replace($text_pattern, '', strtolower($row['dashboard_path']));
