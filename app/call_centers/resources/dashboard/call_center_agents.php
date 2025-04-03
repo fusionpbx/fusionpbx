@@ -258,7 +258,7 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<div class='hud_box' style='".(!empty($dashboard_background_color) ? 'padding: 0 5px;' : 'background: none; border: none; box-shadow: none;')."'>";
+	echo "<div class='hud_box' style='".(!empty($dashboard_background_color) ? 'padding-left: 5px;' : 'background: none; border: none; box-shadow: none;')."'>";
 
 	echo "<div class='action_bar sub'>\n";
 	echo "	<div class='heading'><b>".$text['header-call_center_queues'].(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
