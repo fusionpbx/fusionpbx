@@ -40,30 +40,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="from_user" class="form-label">From User</label>
-                                <input type="text" class="form-control @error('from_user') is-invalid @enderror"
-                                    id="from_user" name="from_user" placeholder="From User"
-                                    value="{{ old('from_user', $gateway->from_user ?? '') }}">
-                                @error('from_user')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
 
-
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="from_domain" class="form-label">From Domain</label>
-                                <input type="text" class="form-control @error('from_domain') is-invalid @enderror"
-                                    id="from_domain" name="from_domain" placeholder="From Domain"
-                                    value="{{ old('from_domain', $gateway->from_domain ?? '') }}">
-                                @error('from_domain')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
                         <div class="col-md-6 advancedSection" style="display: block;">
                             <div class="form-group">
                                 <label for="domain_uuid" class="form-label">Domain</label>
@@ -133,6 +110,29 @@
                                     id="realm" name="realm" placeholder="Realm"
                                     value="{{ old('realm', $gateway->realm ?? '') }}">
                                 @error('realm')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="from_user" class="form-label">From User</label>
+                                <input type="text" class="form-control @error('from_user') is-invalid @enderror"
+                                    id="from_user" name="from_user" placeholder="From User"
+                                    value="{{ old('from_user', $gateway->from_user ?? '') }}">
+                                @error('from_user')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="from_domain" class="form-label">From Domain</label>
+                                <input type="text" class="form-control @error('from_domain') is-invalid @enderror"
+                                    id="from_domain" name="from_domain" placeholder="From Domain"
+                                    value="{{ old('from_domain', $gateway->from_domain ?? '') }}">
+                                @error('from_domain')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -391,7 +391,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 advancedSection"  style="display: block;">
+                        <div class="col-md-6 pt-3 advancedSection"  style="display: block;">
                             <div class="form-check form-switch">
                                 <input type="hidden" name="distinct_to" value="false">
                                 <input class="form-check-input" type="checkbox" role="switch" id="distinct_to"
@@ -405,8 +405,6 @@
                                 @enderror
                             </div>
                         </div>
-
-
                     </div>
 
                     <div class="row mt-3">

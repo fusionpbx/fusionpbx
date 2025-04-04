@@ -193,13 +193,17 @@ class GatewaysTable extends DataTableComponent
 
         $columns = [
             Column::make("Gateway", "gateway")
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
             Column::make("Proxy", "proxy")
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
             Column::make("Context", "context")
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
             Column::make("Register", "register")
-                ->sortable(),
+                ->sortable()
+                ->searchable()
         ];
 
 
@@ -254,7 +258,8 @@ class GatewaysTable extends DataTableComponent
             ->html();
 
         $columns[] = Column::make("Hostname", "hostname")
-            ->sortable();
+            ->sortable()
+            ->searchable();
 
 
         // $columns[] = Column::make("Enabled", "enabled")
@@ -270,10 +275,12 @@ class GatewaysTable extends DataTableComponent
         //     ->html();
 
         $columns[] = Column::make("Enabled", "enabled")
-            ->sortable();
+            ->sortable()
+            ->searchable();
 
         $columns[] = Column::make("Description", "description")
-            ->sortable();
+            ->sortable()
+            ->searchable();
 
         return $columns;
     }

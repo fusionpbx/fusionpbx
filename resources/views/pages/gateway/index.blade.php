@@ -18,10 +18,6 @@
                         <i class="fa fa-stop" aria-hidden="true"></i> {{__('Stop')}}
                     </a>
 
-                    <a href="" class="btn btn-primary btn-sm">
-                        <i class="fa fa-repeat" aria-hidden="true"></i> {{__('Refresh')}}
-                    </a>
-
                     @can('gateway_add')
                     <a href="{{ route('gateways.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
