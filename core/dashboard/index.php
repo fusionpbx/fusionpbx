@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2024
+	Portions created by the Initial Developer are Copyright (C) 2022-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -147,9 +147,11 @@
 			}
 
 			//save the data
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
-			$database->save($array);
+			if (is_array($array)) {
+				$database->app_name = 'dashboard';
+				$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
+				$database->save($array);
+			}
 
 			//redirect the browser
 			message::add($text['message-update']);
