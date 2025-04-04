@@ -15,14 +15,14 @@
                     {{ __('Permissions') }}
                 </a>
 
-                <a href="" class="btn btn-primary btn-sm">
-                    <i class="fas fa-users mr-1"></i> {{ __('Members') }}
+                <a href="{{ route('usergroup.index', [$group->group_uuid]) }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-users mr-1"></i> {{__('Members')}}
                 </a>
 
                 <a href="{{route('groups.copy', $group->group_uuid)}}" class="btn btn-primary btn-sm">
                     <i class="fa fa-clone" aria-hidden="true"></i> {{ __('Copy') }}
                 </a>
-                
+
                 <form action="{{ route('groups.destroy', $group->group_uuid) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
@@ -87,7 +87,31 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="group_level" class="form-label">Group Level</label>
+                            <label for="group_level" class="form-label" >Group Level</label>
+                            <input
+                                class="form-control @error('group_level') is-invalid @enderror"
+                                type="number"
+                                min="0"
+                                placeholder="50"
+                                step="1"
+                                list="group_levels"
+                                id="group_level"
+                                name="group_level"
+                                required
+                                value="{{ old('group_level', $group->group_level ?? '') }}"
+                            >
+                            <datalist id="group_levels">
+                                <option value="10"></option>
+                                <option value="20"></option>
+                                <option value="30"></option>
+                                <option value="40"></option>
+                                <option value="50"></option>
+                                <option value="60"></option>
+                                <option value="70"></option>
+                                <option value="80"></option>
+                                <option value="90"></option>
+                            </datalist>
+                            <!--
                             <select
                                 class="form-select @error('group_level') is-invalid @enderror"
                                 id="group_level"
@@ -102,6 +126,7 @@
                                     </option>
                                 @endforeach
                             </select>
+                            -->
                             @error('group_level')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror

@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MenuRequest;
 use App\Models\Menu;
 use App\Models\MenuItem;
+use App\Models\MenuItemGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,12 +13,50 @@ class MenuController extends Controller
 {
 	public function index()
 	{
-		$menus = Menu::all();
-
-		return view("menu/index", compact("menus"));
+		return view('pages.menus.index');
 	}
 
-	public function getMenu()
+	public function create()
+	{
+		return view("pages.menus.form");
+	}
+
+	public function store(MenuRequest $request)
+	{
+		Menu::create($request->validated());
+
+		return redirect()->route("menus.index");
+	}
+
+    public function show(Menu $menu)
+    {
+        //
+    }
+
+	public function edit(Menu $menu)
+	{
+		$menu->load("items.groups", "items.items.groups");
+
+		$menu_items = $this->buildMenuFlat($menu->items->toArray());
+
+		return view("pages.menus.form", compact("menu", "menu_items"));
+	}
+
+	public function update(MenuRequest $request, Menu $menu)
+	{
+		$menu->update($request->validated());
+
+		return redirect()->route("menus.index");
+	}
+
+    public function destroy(Menu $menu)
+    {
+        $menu->delete();
+
+        return redirect()->route('menus.index');
+    }
+
+public function getMenu()
 	{
 		$app_menu = [
 			"items" => []
@@ -28,8 +68,8 @@ class MenuController extends Controller
 
 			$sql = "
 				SELECT DISTINCT mi.*
-				FROM v_menu_items mi
-				INNER JOIN v_menu_item_groups mig ON mig.menu_item_uuid = mi.menu_item_uuid
+				FROM ".MenuItem::getTableName()." mi
+				INNER JOIN ".MenuItemGroup::getTableName()." mig ON mig.menu_item_uuid = mi.menu_item_uuid
 				WHERE mig.group_uuid IN ('" . implode("', '", $userGroups). "')
 				ORDER BY mi.menu_item_order
 			";
@@ -85,58 +125,5 @@ class MenuController extends Controller
 		}
 
 		return $sortedList;
-	}
-
-	public function create()
-	{
-		$menu = new Menu();
-
-		return view("menu/form", compact("menu"));
-	}
-
-	public function edit($menu_uuid)
-	{
-		$menu = Menu::with("items.groups", "items.items.groups")->findOrFail($menu_uuid);
-
-		$menu_items = $this->buildMenuFlat($menu->items->toArray());
-
-		return view("menu/form", compact("menu", "menu_items"));
-	}
-
-	public function store(Request $request)
-	{
-		$validated = $request->validate([
-			"menu_name" => "required|string|max:255",
-			"menu_language" => "required|string|max:255",
-			"menu_description" => "required|string|max:255",
-		]);
-
-		Menu::create($validated);
-
-		return redirect()->route("menu.index")->with("success", "Menu created successfully!");
-	}
-
-	public function update(Request $request, $menu_uuid)
-	{
-		$menu = Menu::findOrFail($menu_uuid);
-
-		$validated = $request->validate([
-			"menu_name" => "required|string|max:255",
-			"menu_language" => "required|string|max:255",
-			"menu_description" => "required|string|max:255",
-		]);
-
-		$menu->update($validated);
-
-		return redirect()->route("menu.edit", $menu_uuid)->with("success", "Menu updated successfully!");
-	}
-
-	public function destroy($menu_uuid)
-	{
-		$menu = Menu::findOrFail($menu_uuid);
-
-		$menu->delete();
-
-		return redirect()->route("menu.index")->with("success", "Menu deleted successfully!");
 	}
 }

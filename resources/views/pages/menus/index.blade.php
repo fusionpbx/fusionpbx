@@ -5,17 +5,13 @@
     <div class="mt-3 card card-primary card-outline">
         <div class="card-header">
             <h3 class="card-title mb-0">
-                <i class="fas fa-layer-group mr-2"></i> {{__('Groups Table')}}
+                <i class="fas fa-layer-menu mr-2"></i> {{__('Menus Table')}}
             </h3>
 
             <div class="card-tools">
-                <div class="d-flex gap-2 " role="group" aria-label="Group actions">
-                    <a href="{{ route('users.index') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-users mr-1"></i> {{__('Users')}}
-                    </a>
-
-                    @can('group_add')
-                    <a href="{{ route('groups.create') }}" class="btn btn-primary btn-sm">
+                <div class="d-flex gap-2 " role="menu" aria-label="Menu actions">
+                    @can('menu_add')
+                    <a href="{{ route('menus.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
                     </a>
                     @endcan
@@ -24,7 +20,7 @@
         </div>
 
         <div class="card-body">
-            <livewire:groups-table/>
+            <livewire:menus-table/>
         </div>
     </div>
 </div>

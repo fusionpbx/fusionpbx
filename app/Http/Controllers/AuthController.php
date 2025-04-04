@@ -60,7 +60,8 @@ class AuthController extends Controller
 
         return view('auth.login')->with('okta_enabled', $oktaEnabled);
     }
-
+    
+    //TODO: add support for the non-global loging style from Fusion
     public function login(Request $request)
     {
         $request->validate([

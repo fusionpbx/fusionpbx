@@ -285,7 +285,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3 " >
+                    <div class="row mt-3" >
                         <div class="col-md-4 advancedSection"  style="display: block;">
                             <div class="form-group">
                                 <label for="channels" class="form-label">Channels</label>

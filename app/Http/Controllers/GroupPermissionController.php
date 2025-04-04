@@ -17,7 +17,7 @@ class GroupPermissionController extends Controller
 	public function setTelegramUser(?int $telegram_id){
 		$this->telegram_id = $telegram_id;
 	}
-	public function allowed(string $permission_name): bool {
+	public function allowed(string $permissionName): bool {
 		$result = false;
 
 		if (!empty($this->telegram_id)){
@@ -37,7 +37,7 @@ class GroupPermissionController extends Controller
 				foreach ($user->groups as $group){
 					Log::debug('$group->group_name: ' .$group->group_name);
 					$g = Group::find($group->group_uuid);
-					$permissions = $g->permissions()->where('v_permissions.permission_name', $permission_name)->get();
+					$permissions = $g->permissions()->where('v_permissions.permission_name', $permissionName)->get();
 					if (count($permissions) > 0)
 						$result = true;
 
