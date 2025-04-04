@@ -26,10 +26,6 @@
  * Tim Fry <tim@fusionpbx.com>
  */
 
-// require the class loader and global functions
-//require dirname(__DIR__, 2) . '/resources/classes/auto_loader.php'; new auto_loader();
-//require dirname(__DIR__, 2) . '/resources/functions.php';
-
 require_once dirname(__DIR__, 2) . '/resources/require.php';
 
 // Disable output buffering and compression
