@@ -35,11 +35,7 @@ class MenuController extends Controller
 
 	public function edit(Menu $menu)
 	{
-		$menu->load("items.groups", "items.items.groups");
-
-		$menu_items = $this->buildMenuFlat($menu->items->toArray());
-
-		return view("pages.menus.form", compact("menu", "menu_items"));
+		return view("pages.menus.form", compact("menu"));
 	}
 
 	public function update(MenuRequest $request, Menu $menu)
@@ -56,7 +52,7 @@ class MenuController extends Controller
         return redirect()->route('menus.index');
     }
 
-public function getMenu()
+	public function getMenu()
 	{
 		$app_menu = [
 			"items" => []

@@ -44,35 +44,14 @@
 		</form>
 	</div>
 
-	@if(!empty($menu_items))
 	<div class="card card-primary mt-3">
 		<div class="card-header">
 			<h3 class="card-title">Menu Items</h3>
 		</div>
-		<div class="card-body p-0">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Title</th>
-						<th>Groups</th>
-						<th>Target</th>
-						<th>Protected</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($menu_items as $menu_item)
-					<tr class="align-middle">
-						<td class="ps-{{ $menu_item["level"] * 2 }}"><a href="{{ route('menuitems.edit',  $menu_item["menu_item_uuid"]) }}">{{ $menu_item["menu_item_title"]}}</a></td>
-						<td>{{ implode(", ", array_column($menu_item["groups"], "group_name")) }}</td>
-						<td>{{ $menu_item["menu_item_category"] }}</td>
-						<td>{{ $menu_item["menu_item_protected"] }}</td>
-					</tr>
-					@endforeach
-				</tbody>
-			</table>
+		<div class="card-body">
+			<livewire:menu-items-table menu_uuid="{{ $menu->menu_uuid }}"/>
 		</div>
 	</div>
-	@endif
 </div>
 
 @endsection
