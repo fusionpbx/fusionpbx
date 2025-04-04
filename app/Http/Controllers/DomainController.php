@@ -110,32 +110,38 @@ class DomainController extends Controller
 
 	// returns all the available domains
 	public function selectControl(): mixed{
-		// FIX ME
-		$db_type = DB::getConfig("driver");
-		$sql = "WITH RECURSIVE children AS (
-					SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, ".($db_type == 'pgsql'?"CAST(d.domain_enabled AS text)":"d.domain_enabled").", d.domain_description, CAST('' AS CHAR(255)) AS parent_domain_name, 1 AS depth, domain_name AS path, (SELECT COUNT(*) FROM ".Domain::getTableName()." d1 WHERE d1.domain_parent_uuid = d.domain_uuid) AS kids FROM ".Domain::getTableName()." d
-					WHERE ";
+		$domains = [];
 
-		if(Auth::user()->hasPermission('domain_select')){
-			// if permission domain_select
-			$sql .= "d.domain_parent_uuid IS null OR NOT exists (SELECT 1 FROM ".Domain::getTableName()." t1 WHERE d.domain_parent_uuid = t1.domain_uuid) ";
+		if(Auth::check())
+		{
+			// FIX ME
+			$db_type = DB::getConfig("driver");
+			$sql = "WITH RECURSIVE children AS (
+						SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, ".($db_type == 'pgsql'?"CAST(d.domain_enabled AS text)":"d.domain_enabled").", d.domain_description, CAST('' AS CHAR(255)) AS parent_domain_name, 1 AS depth, domain_name AS path, (SELECT COUNT(*) FROM ".Domain::getTableName()." d1 WHERE d1.domain_parent_uuid = d.domain_uuid) AS kids FROM ".Domain::getTableName()." d
+						WHERE ";
+
+			if(Auth::user()->hasPermission('domain_select')){
+				// if permission domain_select
+				$sql .= "d.domain_parent_uuid IS null OR NOT exists (SELECT 1 FROM ".Domain::getTableName()." t1 WHERE d.domain_parent_uuid = t1.domain_uuid) ";
+			}
+			else {
+				// if NOT permission domain_select
+				$sql .= "domain_uuid = '".Session::get('domain_uuid')."' ";
+			}
+
+			$sql .= "UNION
+			SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, ".($db_type == 'pgsql'?"CAST(tp.domain_enabled AS text)":"tp.domain_enabled").", tp.domain_description, c.domain_name AS parent_domain_name, depth + 1, CONCAT(path,';',tp.domain_name), (SELECT count(*) from ".Domain::getTableName()." d1 where d1.domain_parent_uuid = tp.domain_uuid) AS kids FROM ".Domain::getTableName()." tp
+					JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children ";
+
+			// Where
+
+			if(App::hasDebugModeEnabled()){
+				Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $sql: '.$sql);
+			}
+
+			$domains = DB::select($sql);
 		}
-		else {
-			// if NOT permission domain_select
-			$sql .= "domain_uuid = '".Session::get('domain_uuid')."' ";
-		}
 
-		$sql .= "UNION
-		SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, ".($db_type == 'pgsql'?"CAST(tp.domain_enabled AS text)":"tp.domain_enabled").", tp.domain_description, c.domain_name AS parent_domain_name, depth + 1, CONCAT(path,';',tp.domain_name), (SELECT count(*) from ".Domain::getTableName()." d1 where d1.domain_parent_uuid = tp.domain_uuid) AS kids FROM ".Domain::getTableName()." tp
-				JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children ";
-
-		// Where
-
-		if(App::hasDebugModeEnabled()){
-			Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $sql: '.$sql);
-		}
-
-		$domains = DB::select($sql);
 		return $domains;
 	}
 }

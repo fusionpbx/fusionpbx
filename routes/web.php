@@ -61,7 +61,7 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // MENU ITEM
     Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
-    Route::get('/menuitems/create/{menu}', [MenuItemController::class, 'create'])->name('menuitems.create');
+    Route::get('/menus/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');
