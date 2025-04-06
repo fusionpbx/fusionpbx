@@ -79,13 +79,13 @@
                 if (debug["info"]) then
                     freeswitch.consoleLog("notice", "[voicemail][deleted] message: " .. uuid .. "\n");
                 end
+                message_number = message_number + 1;
             end
-
         
         --clear the variable
             db_voicemail_uuid = '';
             messages_to_delete = {};
-        
+
         --flush dtmf digits from the input buffer
             session:flushDigits();
 

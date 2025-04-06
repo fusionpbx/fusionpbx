@@ -123,6 +123,25 @@
     </input>
   </macro>
 
+  <macro name="voicemail_deleted_message_count">
+    <input pattern="^(1):(.*)$" break_on_match="true">
+      <match>
+        <action function="play-file" data="voicemail/vm-you_have.wav"/>
+        <action function="say" data="$1" method="pronounced" type="items"/>
+        <action function="play-file" data="voicemail/vm-$2.wav"/>
+        <action function="play-file" data="voicemail/vm-message.wav"/>
+      </match>
+    </input>
+    <input pattern="^(\d+):(.*)$">
+      <match>
+        <action function="play-file" data="voicemail/vm-you_have.wav"/>
+        <action function="say" data="$1" method="pronounced" type="items"/>
+        <action function="play-file" data="voicemail/vm-$2.wav"/>
+        <action function="play-file" data="voicemail/vm-messages.wav"/>
+      </match>
+    </input>
+  </macro>
+
   <macro name="voicemail_menu">
     <input pattern="^([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*])$">
       <match>
