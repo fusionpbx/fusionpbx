@@ -254,9 +254,9 @@
 				echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 				echo "<tr style='position: -webkit-sticky; position: sticky; z-index: 5; top: 0;'>\n";
 				echo "<th class='hud_heading'>".$text['label-extension']."</th>\n";
-				echo "<th class='hud_heading'>".$text['label-caller_id']."</th>\n";
+				echo "<th class='hud_heading'>".$text['label-outbound_cid_name']."</th>\n";
 				if (!permission_exists('outbound_caller_id_select')) {
-					echo "<th class='hud_heading'>".$text['label-destination']."</th>\n";
+					echo "<th class='hud_heading'>".$text['label-outbound_cid_number']."</th>\n";
 				}
 				echo "</tr>\n";
 
