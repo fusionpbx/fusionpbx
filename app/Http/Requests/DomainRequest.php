@@ -18,12 +18,12 @@ class DomainRequest extends FormRequest
 
 	public function rules(): array
 	{
-        dd($this);
+        //dd($this);
 		return [
 			"domain_name" => [
                                 "bail",
                                 "required",
-//                                Rule::unique('App\Models\Domain,domain_name')->ignore($this->route('domain') ? $this->route('domain')->domain_uuid : null),
+                                Rule::unique('App\Models\Domain,domain_name')->ignore($this->isMethod('put') ? $this->route('domain')->domain_uuid : null),
                                 "string",
                                 "max:253",      // DNS max lenght
                               ],
