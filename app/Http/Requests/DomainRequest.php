@@ -19,7 +19,7 @@ class DomainRequest extends FormRequest
 			"domain_name" => [
                                 "bail",
                                 "required",
-                                Rule::unique('App\Models\Domain,domain_name')->ignore($this->route('domain') ? $this->route('domain')->domain_uuid : null),
+//                                Rule::unique('App\Models\Domain,domain_name')->ignore($this->route('domain') ? $this->route('domain')->domain_uuid : null),
                                 "string",
                                 "max:255",
                               ],
