@@ -4,7 +4,10 @@ namespace App\Http\Requests;
 
 use App\Models\Domain;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+
 
 class DomainRequest extends FormRequest
 {
@@ -15,13 +18,14 @@ class DomainRequest extends FormRequest
 
 	public function rules(): array
 	{
+        dd($this->route('domain'));
 		return [
 			"domain_name" => [
                                 "bail",
                                 "required",
 //                                Rule::unique('App\Models\Domain,domain_name')->ignore($this->route('domain') ? $this->route('domain')->domain_uuid : null),
                                 "string",
-                                "max:255",
+                                "max:253",      // DNS max lenght
                               ],
 			"domain_description" => "bail|sometimes|nullable|string|max:255",
 			"domain_enabled" => "nullable|in:true,false",
