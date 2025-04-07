@@ -19,11 +19,10 @@ class DomainRequest extends FormRequest
 	public function rules(): array
 	{
         //dd($this);
-		return [
+		$r =  [
 			"domain_name" => [
                                 "bail",
                                 "required",
-                                Rule::unique('App\Models\Domain,domain_name')->ignore($this->isMethod('put') ? $this->route('domain')->domain_uuid : null),
                                 "string",
                                 "max:253",      // DNS max lenght
                               ],
@@ -31,5 +30,9 @@ class DomainRequest extends FormRequest
 			"domain_enabled" => "nullable|in:true,false",
 			"domain_parent_uuid" => "bail|nullable|uuid",
 		];
+        if ($this->isMethod('put')){
+            $r['domain_name'][] = Rule::unique('App\Models\Domain,domain_name');
+        }
+        return $r;
 	}
 }
