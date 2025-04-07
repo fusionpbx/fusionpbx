@@ -18,7 +18,7 @@ class DomainRequest extends FormRequest
 
 	public function rules(): array
 	{
-        dd($this->route('domain'));
+        dd($this);
 		return [
 			"domain_name" => [
                                 "bail",
