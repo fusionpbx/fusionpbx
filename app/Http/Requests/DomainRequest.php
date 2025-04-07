@@ -34,7 +34,7 @@ class DomainRequest extends FormRequest
             if(App::hasDebugModeEnabled()){
                 Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] PUT');
             }
-            $r['domain_name'][] = Rule::unique('App\Models\Domain,domain_name');
+            $r['domain_name'][] = Rule::unique('App\Models\Domain','domain_name');
         }
         return $r;
 	}
