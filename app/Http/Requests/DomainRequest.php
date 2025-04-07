@@ -30,7 +30,7 @@ class DomainRequest extends FormRequest
 			"domain_enabled" => "nullable|in:true,false",
 			"domain_parent_uuid" => "bail|nullable|uuid",
 		];
-        if ($this->isMethod('put')){
+        if ($this->isMethod('post')){
             if(App::hasDebugModeEnabled()){
                 Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] PUT');
             }
