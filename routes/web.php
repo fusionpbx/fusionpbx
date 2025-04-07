@@ -46,7 +46,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');
     });
-    Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('domain.switchuuid');
+    Route::get('/domains/switch/{domain}', [DomainController::class, 'switchByUuid'])->name('domain.switchuuid');
 
     // GROUP
     Route::resource('/groups', GroupController::class)->name('groups', 'groups');
