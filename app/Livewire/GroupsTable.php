@@ -18,7 +18,11 @@ class GroupsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Group::leftJoin(Domain::getTableName(), 'domain_uuid', '=', 'domain_uuid')
-            ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(v_groups.group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name"));
+            ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(v_groups.group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name"))
+            ->withCount('permissions')
+            ->withCount('users')
+            ->orderBy('group_name');
+;
     }
 
     public function configure(): void
@@ -200,6 +204,7 @@ class GroupsTable extends DataTableComponent
         return $columns;
     }
 
+    /*
     public function builder(): Builder
     {
         return Group::query()
@@ -207,4 +212,5 @@ class GroupsTable extends DataTableComponent
             ->withCount('users')
             ->orderBy('group_name');
     }
+    */
 }
