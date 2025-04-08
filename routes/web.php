@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DialplanController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MenuController;
@@ -39,6 +40,9 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth','permission'])->group(function () {
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+    // DIALPLAN
+    Route::resource('/dialplans', DialplanController::class)->name('dialplans', 'dialplans');
 
     // DOMAIN
     Route::resource('/domains', DomainController::class)->name('domains', 'domains');
