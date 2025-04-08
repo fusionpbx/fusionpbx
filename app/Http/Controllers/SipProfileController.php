@@ -30,8 +30,7 @@ class SipProfileController extends Controller
      */
     public function store(Request $request)
     {
-        // SipProfile::create($request->validated());
-        // return redirect()->route('sipprofiles.index');
+
     }
 
     /**
@@ -84,8 +83,6 @@ class SipProfileController extends Controller
     public function copy($uuid)
     {
         $originalProfile = SipProfile::where('sip_profile_uuid', $uuid)->first();
-
-
 
         DB::beginTransaction();
         try {
