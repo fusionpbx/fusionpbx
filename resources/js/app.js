@@ -10,16 +10,47 @@ const Default = {
     scrollbarClickScroll: true,
 };
 document.addEventListener('DOMContentLoaded', function() {
-    const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-    if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-            scrollbars: {
-                theme: Default.scrollbarTheme,
-                autoHide: Default.scrollbarAutoHide,
-                clickScroll: Default.scrollbarClickScroll,
-            },
+    // const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+    // if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+    //     OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+    //         scrollbars: {
+    //             theme: Default.scrollbarTheme,
+    //             autoHide: Default.scrollbarAutoHide,
+    //             clickScroll: Default.scrollbarClickScroll,
+    //         },
+    //     });
+    // }
+
+    const repeaters = document.querySelectorAll(".repeater");
+
+    repeaters.forEach(function(element)
+    {
+        const container = element.querySelector(".repeater-container");
+        const itemAdd = element.querySelector(".repeater-add");
+        const template = container.querySelector("template");
+
+        itemAdd.addEventListener("click", function(e)
+        {
+            e.preventDefault();
+
+            const clone = template.content.cloneNode(true);
+
+            container.appendChild(clone);
         });
-    }
+
+        container.addEventListener("click", function(e)
+        {
+            const itemRemove = e.target.closest(".repeater-remove");
+
+            if(itemRemove)
+            {
+                e.preventDefault();
+
+                itemRemove.closest(".repeater-item").remove();
+            }
+        });
+    });
+
 });
 
 const togglePassword = document.getElementById('togglePassword');
