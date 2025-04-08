@@ -2,18 +2,24 @@
 
 namespace App\Livewire;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
+use App\Models\Domain;
 use App\Models\Group;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class GroupsTable extends DataTableComponent
 {
-    protected $model = Group::class;
+    // protected $model = Group::class;
 
+    public function builder(): Builder
+    {
+        return Group::leftJoin(Domain::getTableName(), 'domain_uuid', '=', 'domain_uuid')
+            ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(v_groups.group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name"));
+    }
 
     public function configure(): void
     {
@@ -163,7 +169,7 @@ class GroupsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
         ];
-       
+
         if (auth()->user()->hasPermission('group_permission_view')) {
             $columns[] = Column::make("Permissions", "group_uuid")
                 ->format(function ($value, $row, Column $column) {
@@ -173,24 +179,24 @@ class GroupsTable extends DataTableComponent
                 })
                 ->html();
         }
-        
+
         $columns = array_merge($columns, [
             Column::make("Members", "group_uuid")
                 ->format(function ($value, $row, Column $column) {
                     return $row->users_count;
                 }),
-    
+
             Column::make("Level", "group_level")
                 ->sortable(),
-    
+
             BooleanColumn::make("Protected", "group_protected")
                 ->sortable(),
-    
+
             Column::make("Description", "group_description")
                 ->searchable()
                 ->sortable(),
         ]);
-        
+
         return $columns;
     }
 
