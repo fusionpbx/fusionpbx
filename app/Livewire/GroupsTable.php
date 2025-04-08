@@ -17,7 +17,7 @@ class GroupsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Group::leftJoin(Domain::getTableName(), 'domain_uuid', '=', 'domain_uuid')
+        return Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
             ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(v_groups.group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name"))
             ->withCount('permissions')
             ->withCount('users')
