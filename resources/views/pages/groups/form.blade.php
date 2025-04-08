@@ -22,7 +22,7 @@
                 <a href="{{route('groups.copy', $group->group_uuid)}}" class="btn btn-primary btn-sm">
                     <i class="fa fa-clone" aria-hidden="true"></i> {{ __('Copy') }}
                 </a>
-
+                
                 <form action="{{ route('groups.destroy', $group->group_uuid) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')

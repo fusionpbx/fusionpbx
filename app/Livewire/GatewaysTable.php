@@ -168,7 +168,6 @@ class GatewaysTable extends DataTableComponent
     public function configure(): void
     {
         $canEdit = auth()->user()->hasPermission('gateway_edit');
-        $canDelete = auth()->user()->hasPermission('gateway_delete');
 
         $tableConfig = $this->setPrimaryKey('gateway_uuid')
             ->setTableAttributes([
@@ -245,7 +244,7 @@ class GatewaysTable extends DataTableComponent
 
             $columns[] = Column::make("Action", "gateway_uuid")
                 ->format(function ($value, $row, Column $column) {
-                    return '<a class="btn btn-sm btn-primary" disabled>Start</a>'; // Botón fijo
+                    return '<a class="btn btn-sm btn-primary" disabled>Start</a>';
                 })
                 ->html();
 

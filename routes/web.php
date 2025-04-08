@@ -11,6 +11,7 @@ use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SipProfileController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,11 +56,15 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // PERMISSION
     Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
-    Route::put('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::put('group/{groupUuid}/permissions/', [PermissionController::class, 'update'])->name('permissions.update');
 
     // GETEWAY
     Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
     Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
+
+    // SIP PROFILE
+    Route::resource('/sipprofiles', SipProfileController::class)->name('sipprofiles', 'sipprofiles');
+    Route::get('/sipprofiles/{sipprofile}/copy', [SipProfileController::class, 'copy'])->name('sipprofiles.copy');
     
 
     // MENU

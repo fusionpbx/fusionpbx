@@ -7,6 +7,7 @@ use App\Models\Domain;
 use App\Models\Gateway;
 use App\Models\SipProfile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class GateWayController extends Controller
@@ -36,7 +37,7 @@ class GateWayController extends Controller
     public function store(GatewayRequest $request)
     {
         Gateway::create($request->validated());
-
+        
         return redirect()->route('gateways.index');
     }
 

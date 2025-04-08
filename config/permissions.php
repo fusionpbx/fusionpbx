@@ -41,4 +41,22 @@ return [
     'gateways.update' => 'gateway_edit',
     'gateways.destroy' => 'gateway_delete',
 
+    'sipprofiles.index' => 'sip_profile_view',
+    'sipprofiles.create' => 'sip_profile_add',
+    'sipprofiles.store' => 'sip_profile_add',
+    'sipprofiles.edit' => 'sip_profile_edit',
+    'sipprofiles.update' => 'sip_profile_edit',
+    'sipprofiles.destroy' => 'sip_profile_delete',
+    'sipprofiles.copy' => 'sip_profile_add',  
+
+    'sipprofiles.domains.create' => 'sip_profile_domain_add',
+    'sipprofiles.domains.edit' => 'sip_profile_domain_edit',
+    'sipprofiles.domains.destroy' => 'sip_profile_domain_delete',
+    'sipprofiles.domains.view' => 'sip_profile_domain_view',
+    
+
+    'sipprofiles.settings.create' => 'sip_profile_setting_add',
+    'sipprofiles.settings.edit' => 'sip_profile_setting_edit',
+    'sipprofiles.settings.destroy' => 'sip_profile_setting_delete',
+    'sipprofiles.settings.view' => 'sip_profile_setting_view',
 ];
