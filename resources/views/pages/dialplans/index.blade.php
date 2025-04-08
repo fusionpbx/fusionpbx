@@ -10,10 +10,6 @@
 
             <div class="card-tools">
                 <div class="d-flex gap-2 " role="dialplan" aria-label="Dialplan actions">
-                    <a href="" class="btn btn-primary btn-sm">
-                        <i class="fas fa-users mr-1"></i> {{__('Users')}}
-                    </a>
-
                     @can('dialplan_add')
                     <a href="{{ route('dialplans.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}

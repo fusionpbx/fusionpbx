@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dialplan;
+use App\Models\Domain;
 use App\Http\Requests\DialplanRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -20,9 +21,9 @@ class DialplanController extends Controller
 
 	public function create()
 	{
-		$dialplans = Dialplan::all();
+		$domains = Domain::all();
 
-		return view("pages.dialplans.form", compact("dialplans"));
+		return view("pages.dialplans.form", compact("domains"));
 	}
 
 	public function store(DialplanRequest $request)
@@ -39,9 +40,11 @@ class DialplanController extends Controller
 
 	public function edit(Dialplan $dialplan)
 	{
-		$dialplans = Dialplan::all();
+		$domains = Domain::all();
 
-		return view("pages.dialplans.form", compact("dialplan", "dialplans"));
+		$dialplan->load("dialplandetails");
+
+		return view("pages.dialplans.form", compact("dialplan", "domains"));
 	}
 
 	public function update(DialplanRequest $request, Dialplan $dialplan)
