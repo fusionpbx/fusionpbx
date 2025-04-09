@@ -232,8 +232,8 @@
                                 @include('pages.dialplans.detail_template')
                             @else
                                 @include('pages.dialplans.detail_template')
-                                @foreach($dialplan->dialplandetails as $detail)
-                                    @include('pages.dialplans.detail')
+                                @foreach($dialplan->dialplandetails as $i => $detail)
+                                    @include('pages.dialplans.detail', ['detail' => $detail, 'index' => $i])
                                 @endforeach
                             @endif
                         </tbody>

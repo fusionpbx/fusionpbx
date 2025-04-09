@@ -29,13 +29,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemAdd = element.querySelector(".repeater-add");
         const template = container.querySelector("template");
 
+        let currentIndex = container.querySelectorAll(".repeater-item").length;
+
         itemAdd.addEventListener("click", function(e)
         {
             e.preventDefault();
 
-            const clone = template.content.cloneNode(true);
+            let html = template.innerHTML.replace(/__INDEX__/g, currentIndex);
+
+            const tempTemplate = document.createElement("template");
+
+            tempTemplate.innerHTML = html;
+
+            const clone = tempTemplate.content.cloneNode(true);
 
             container.appendChild(clone);
+
+            currentIndex++;
         });
 
         container.addEventListener("click", function(e)
