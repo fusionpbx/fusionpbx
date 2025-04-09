@@ -17,11 +17,17 @@ class GroupsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
+
+        $q =  Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
             ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(".Domain::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name"))
             ->withCount('permissions')
             ->withCount('users')
             ->orderBy('group_name');
+
+        if(App::hasDebugModeEnabled()){
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$q->toRawSql());
+        }
+        return $q;
     }
 
     public function configure(): void
