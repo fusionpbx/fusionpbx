@@ -98,7 +98,7 @@ class GroupPermissionController extends Controller
         return view('pages.permission.index', compact(
             'search',
             'permissionsByApp',
-            'groupUuid',
+            'group_uuid',
             'group',
             'filter',
             'permissions'
