@@ -20,7 +20,7 @@ class GroupsTable extends DataTableComponent
     {
 
         $query =  Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
-            ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name.group"))
+            ->select('group_uuid', 'group_protected', 'group_level', 'group_description','group_name', DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name.group"))
             ->withCount('permissions')
             ->withCount('users')
             ->orderBy('group_name');
