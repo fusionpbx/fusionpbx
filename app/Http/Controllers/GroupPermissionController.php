@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupPermission;
 use App\Models\User;
+use App\Http\Requests\GroupPermissionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -49,7 +50,7 @@ class GroupPermissionController extends Controller
 		return $result;
 	}
 
-	    public function index(PermissionRequest $request, $groupUuid = null)
+	    public function index(GroupPermissionRequest $request, $groupUuid = null)
     {
         $search = $request->input('search', '');
         $groupUuid = $groupUuid ?? $request->input('group_uuid');
