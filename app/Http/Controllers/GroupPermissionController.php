@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Http\Requests\GroupPermissionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class GroupPermissionController extends Controller
