@@ -59,7 +59,7 @@ class GroupPermissionController extends Controller
 
         $group = $groupUuid ? Group::findOrFail($groupUuid) : null;
 
-        $query = GroupPermission::query();
+        $query = Permission::query();
 
         if ($groupUuid) {
             $query->when($filter === 'assigned', function ($q) use ($groupUuid) {
