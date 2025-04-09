@@ -15,21 +15,20 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class GroupsTable extends DataTableComponent
 {
-    // protected $model = Group::class;
 
     public function builder(): Builder
     {
 
-        $q =  Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
-            ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name"))
+        $query =  Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
+            ->select('group_uuid', 'group_protected', 'group_level', 'group_description', DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name_group"))
             ->withCount('permissions')
             ->withCount('users')
             ->orderBy('group_name');
 
         if(App::hasDebugModeEnabled()){
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$q->toRawSql());
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$query->toRawSql());
         }
-        return $q;
+        return $query;
     }
 
     public function configure(): void
@@ -176,7 +175,7 @@ class GroupsTable extends DataTableComponent
     public function columns(): array
     {
         $columns = [
-            Column::make("Name", "group_name")
+            Column::make("Name", "group_name_group")
                 ->sortable()
                 ->searchable(),
         ];
@@ -210,14 +209,4 @@ class GroupsTable extends DataTableComponent
 
         return $columns;
     }
-
-    /*
-    public function builder(): Builder
-    {
-        return Group::query()
-            ->withCount('permissions')
-            ->withCount('users')
-            ->orderBy('group_name');
-    }
-    */
 }
