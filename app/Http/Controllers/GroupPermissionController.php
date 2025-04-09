@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\GroupPermission;
+use App\Models\Permission;
 use App\Models\User;
 use App\Http\Requests\GroupPermissionRequest;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class GroupPermissionController extends Controller
 
         $group = $groupUuid ? Group::findOrFail($groupUuid) : null;
 
-        $query = Permission::query();
+        $query = GroupPermission::query();
 
         if ($groupUuid) {
             $query->when($filter === 'assigned', function ($q) use ($groupUuid) {
