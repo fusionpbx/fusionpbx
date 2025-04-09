@@ -2869,7 +2869,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "keyboard_shortcut_copy_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "key: [ctrl]+[c], list,edit: to copy";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2c0621d4-da12-40c1-8878-fc45a2f76d08";
