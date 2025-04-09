@@ -186,7 +186,7 @@ class GroupsTable extends DataTableComponent
         if (auth()->user()->hasPermission('group_permission_view')) {
             $columns[] = Column::make("Permissions", "group_uuid")
                 ->format(function ($value, $row, Column $column) {
-                    return '<a href="'.route('permissions.index', ['group_uuid' => $value]).'" class="text-primary underline">'
+                    return '<a href="'.route('permissions.index', ['groupUuid' => $value]).'" class="text-primary underline">'
                     .$row->permissions_count.
                     '</a>';
                 })
