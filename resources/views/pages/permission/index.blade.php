@@ -25,7 +25,7 @@
                             <i class="fas fa-users mr-1"></i> {{ __('Users') }}
                         </a>
                         
-                        <form action="{{ route('permissions.index', ['group_uuid' => $group->group_uuid]) }}" method="GET" class="d-flex gap-2">
+                        <form action="{{ route('permissions.index', ['groupUuid' => $group->group_uuid]) }}" method="GET" class="d-flex gap-2">
                             <input type="hidden" name="group_uuid" value="{{ $groupUuid }}">
 
                             <select name="filter" class="form-select mr-2 " onchange="this.form.submit()">
