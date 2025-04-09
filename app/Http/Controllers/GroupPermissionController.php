@@ -52,7 +52,7 @@ class GroupPermissionController extends Controller
 		return $result;
 	}
 
-	    public function index(GroupPermissionRequest $request, $groupUuid = null)
+    public function index(GroupPermissionRequest $request, $groupUuid = null)
     {
         $search = $request->input('search', '');
         $groupUuid = $groupUuid ?? $request->input('group_uuid');
