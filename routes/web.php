@@ -57,8 +57,16 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/groups/{group}/copy', [GroupController::class, 'copy'])->name('groups.copy');
 
     // PERMISSION
-    Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
+    //Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
+    Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    //Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
+    //Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
     Route::put('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::patch('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
+    //Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
+    #Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
+    //Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+    //Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
 
     // MENU
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
