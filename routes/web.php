@@ -4,13 +4,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DialplanController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupPermissionController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -58,11 +58,11 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // PERMISSION
     //Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
-    Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/permissions', [GroupPermissionController::class, 'index'])->name('permissions.index');
     //Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
     //Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
-    Route::put('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
-    Route::patch('/permissions/{groupUuid}', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::put('/permissions/{groupUuid}', [GroupPermissionController::class, 'update'])->name('permissions.update');
+    Route::patch('/permissions/{groupUuid}', [GroupPermissionController::class, 'update'])->name('permissions.update');
     //Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
     #Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
     //Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
