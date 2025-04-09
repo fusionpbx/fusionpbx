@@ -243,7 +243,11 @@
 			--update the call block count
 				if (call_block) then
 					sql = "update v_call_block ";
-					sql = sql .. "set call_block_count = call_block_count + 1 ";
+					if (call_block_count == nil or call_block_count == '') then
+						sql = sql .. "set call_block_count = '1' ";
+					else
+						sql = sql .. "set call_block_count = call_block_count + 1 ";
+					end
 					sql = sql .. "where call_block_uuid = :call_block_uuid ";
 					local params = {call_block_uuid = call_block_uuid};
 					if (debug["sql"]) then
