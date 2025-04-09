@@ -56,6 +56,7 @@ class GroupPermissionController extends Controller
     {
         $search = $request->input('search', '');
         $groupUuid = $groupUuid ?? $request->input('group_uuid');
+        $group_uuid = $groupUuid;
         $filter = $request->input('filter', 'all');
 
         $group = $groupUuid ? Group::findOrFail($groupUuid) : null;
