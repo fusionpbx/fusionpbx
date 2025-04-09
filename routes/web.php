@@ -59,7 +59,7 @@ Route::middleware(['auth','permission'])->group(function () {
     // PERMISSION
     //Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
     #Route::get('/permissions', [GroupPermissionController::class, 'index'])->name('permissions.index');
-    Route::get('/groups/{groupUuid}/permissions', [GroupPermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/groups/{group_uuid}/permissions', [GroupPermissionController::class, 'index'])->name('permissions.index');
     //Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
     //Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
     Route::put('/permissions/{groupUuid}', [GroupPermissionController::class, 'update'])->name('permissions.update');

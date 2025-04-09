@@ -52,11 +52,10 @@ class GroupPermissionController extends Controller
 		return $result;
 	}
 
-    public function index(GroupPermissionRequest $request, $groupUuid = null)
+    public function index(GroupPermissionRequest $request, $group_uuid = null)
     {
         $search = $request->input('search', '');
         $groupUuid = $groupUuid ?? $request->input('group_uuid');
-        $group_uuid = $groupUuid;   // Workaround
         $filter = $request->input('filter', 'all');
 
         $group = $groupUuid ? Group::findOrFail($groupUuid) : null;
