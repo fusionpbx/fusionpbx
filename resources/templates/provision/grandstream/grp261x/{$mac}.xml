@@ -147,8 +147,11 @@
 
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, TlsOrTcp -->
-		<item name="account.{$line}.sip.transport">{if $row.sip_transport=='tcp'}TCP{elseif $row.sip_transport=='tls'}Tls Or Tcp{else}UDP{/if}</item>
-
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">2</item>{/if}
+	
 		<!-- SIP Listening Mode -->
 		<!-- TransportOnly, Dual, Dual_BLF_Enforced, Dual_Secured -->
 		<item name="account.{$line}.sip.listeningMode">TransportOnly</item>
