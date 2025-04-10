@@ -177,7 +177,7 @@
 							@endphp
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" name="groups[]" value="{{ $group->group_uuid }}" @if($checked) checked @endif>
-								<label class="form-check-label">{{ $group->group_name }}</label>
+								<label class="form-check-label">{{ $group->full_group_name }}</label>
 							</div>
 							@endforeach
                             @error('groups')

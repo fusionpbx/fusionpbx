@@ -35,8 +35,9 @@ class UserController extends Controller
 		$api_key = Str::uuid();
 
 		$contacts = Contact::all();
+		$currentDomain = Domain::find(Session::get('domain_uuid'));
+		$groups = $currentDomain->groups;
 		$domains = Domain::all();
-		$groups = Group::all();
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
@@ -64,8 +65,7 @@ class UserController extends Controller
 		$contacts = Contact::all();
 		$domains = Domain::all();
 		$currentDomain = Domain::find(Session::get('domain_uuid'));
-		$groups = $currentDomain->groups();
-//		$groups = Group::all();
+		$groups = $currentDomain->groups;
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
