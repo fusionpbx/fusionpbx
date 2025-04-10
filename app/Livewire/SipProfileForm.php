@@ -15,7 +15,7 @@ class SipProfileForm extends Component
     public $sip_profile_uuid;
     public $sip_profile_name;
     public $sip_profile_hostname;
-    public $sip_profile_enabled = 'true';
+    public $sip_profile_enabled = true;
     public $sip_profile_description;
 
     public $domains = [];
@@ -182,8 +182,9 @@ class SipProfileForm extends Component
 
     public function save()
     {
-        $this->validate();
+        $validate = $this->validate();
 
+        dd($validate);
 
         if ($this->sipProfile) {
             if (!$this->canEditSipProfile) {
@@ -303,7 +304,6 @@ class SipProfileForm extends Component
                 'sip_profile_enabled' => $this->sip_profile_enabled,
                 'sip_profile_description' => $this->sip_profile_description,
             ]);
-
 
             foreach ($filteredDomains as $domain) {
                 SipProfileDomain::create([

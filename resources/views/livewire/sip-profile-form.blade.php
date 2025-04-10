@@ -66,10 +66,10 @@
                             <div class="form-group">
                                 <label class="form-label d-block">Enabled</label>
                                 <div class="form-check form-switch">
-                                    <input type="hidden" name="sip_profile_enabled" value="false">
+                                    {{-- <input type="hidden" name="sip_profile_enabled" value="false"> --}}
                                     <input class="form-check-input" type="checkbox" role="switch"
                                         id="sip_profile_enabled" wire:model="sip_profile_enabled" value="true"
-                                        {{ $sip_profile_enabled == 'true' ? 'checked' : '' }}>
+                                        {{ $sip_profile_enabled ? 'checked' : '' }}>
                                     <label class="form-check-label"
                                         for="sip_profile_enabled">{{ __('Enabled') }}</label>
                                 </div>
