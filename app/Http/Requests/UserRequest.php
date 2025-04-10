@@ -18,12 +18,12 @@ class UserRequest extends FormRequest
 	public function rules(): array
 	{
 		$isCreating = $this->isMethod("post");
-        $default_settings = new DefaultSettingController;
-        $reqLength = $default_settings->get('users', 'password_length', 'numeric') ?? 0;
-        $reqNumber = $default_settings->get('users', 'password_number', 'boolean') ?? false;
-        $reqLowcase = $default_settings->get('users', 'password_lowercase', 'boolean') ?? false;
-        $reqUpcase = $default_settings->get('users', 'password_uppercase', 'boolean') ?? false;
-        $reqSpecial = $default_settings->get('users', 'password_special', 'boolean') ?? false;
+        $defaultSettings = new DefaultSettingController;
+        $reqLength = $defaultSettings->get('users', 'password_length', 'numeric') ?? 0;
+        $reqNumber = $defaultSettings->get('users', 'password_number', 'boolean') ?? false;
+        $reqLowcase = $defaultSettings->get('users', 'password_lowercase', 'boolean') ?? false;
+        $reqUpcase = $defaultSettings->get('users', 'password_uppercase', 'boolean') ?? false;
+        $reqSpecial = $defaultSettings->get('users', 'password_special', 'boolean') ?? false;
         $userUnique = $defaultSettings->get('users', 'unique', 'text');
 
 		$rule =  [
