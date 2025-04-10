@@ -169,8 +169,8 @@
 
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="groups" class="form-label">Groups</label>
+                        <label for="groups" class="form-label">Groups</label>
+                        <div class="form-group" style="column-count: 2; -webkit-column-count: 2; -moz-column-count: 2;">
 							@foreach($groups as $group)
 							@php
 								$checked = isset($user) && $user->groups->contains('group_uuid', $group->group_uuid);
