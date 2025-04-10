@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Controllers\DomainSettingController;
+use App\Http\Controllers\DefaultSettingController;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Session;
