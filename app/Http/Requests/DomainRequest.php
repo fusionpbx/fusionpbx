@@ -29,7 +29,7 @@ class DomainRequest extends FormRequest
                                 "regex:/(?:[a-z0-9])((?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/i",
                               ],
 			"domain_description" => "bail|sometimes|nullable|string|max:255",
-			"domain_enabled" => "nullable|in:true,false",
+			"domain_enabled" => "bail|nullable|in:true,false",
 			"domain_parent_uuid" => "bail|nullable|uuid",
 		];
         if ($this->isMethod('post')){
