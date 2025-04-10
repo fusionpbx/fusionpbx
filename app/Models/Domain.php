@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class Domain extends Model
@@ -63,19 +64,14 @@ class Domain extends Model
 	}
 
 	public function users(?bool $user_enabled = null): HasMany {
-        return $this->hasMany(User::class, 'domain_uuid', 'domain_uuid')
-                ->when(is_bool($user_enabled), function($query) use($user_enabled){
-                    return $query->where('user_enabled', $user_enabled ? 'true' : 'false');
-                });
+	        return $this->hasMany(User::class, 'domain_uuid', 'domain_uuid')
+        	        ->when(is_bool($user_enabled), function($query) use($user_enabled){
+                	    return $query->where('user_enabled', $user_enabled ? 'true' : 'false');
+	                });
 	}
 
 	public function groups(): HasMany {
-        $query =  Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
-            ->select('group_uuid', 'group_protected', 'group_level', 'group_description','group_name', DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name_group"),'domain_name');
-        return $query;
-
-//        $globals = DB::table($this->table)->whereNull('domain_uuid');
-//		return $this->hasMany(Group::class, 'domain_uuid', 'domain_uuid')->union($globals);
+		return $this->hasMany(Group::class, 'domain_uuid', 'domain_uuid')->orWhereNull('domain_uuid'); //->select('*',DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name_group"));
 	}
 
 	public function userGroups(): HasMany {

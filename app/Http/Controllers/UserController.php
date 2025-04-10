@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 
@@ -62,7 +63,9 @@ class UserController extends Controller
 	{
 		$contacts = Contact::all();
 		$domains = Domain::all();
-		$groups = Group::all();
+		$currentDomain = Domain::find(Session::get('domain_uuid'));
+		$groups = $currentDomain->groups();
+//		$groups = Group::all();
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
