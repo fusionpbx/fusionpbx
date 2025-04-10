@@ -208,11 +208,11 @@
                 </div>
             </div>
 
-            <div class="card card-primary m-3">
+            <div class="card card-primary m-3 repeater">
                 <div class="card-header">
                     <h3 class="card-title">Detail</h3>
                 </div>
-                <div class="card-body p-0 repeater">
+                <div class="card-body p-0">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -238,10 +238,12 @@
                             @endif
                         </tbody>
                     </table>
+                </div>
+
+                <div class="card-body p-3 text-end">
                     <button class="btn btn-success repeater-add">
                         <i class="fas fa-add"></i>
                     </button>
-
                 </div>
             </div>
 

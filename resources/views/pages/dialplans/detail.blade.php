@@ -9,13 +9,12 @@
 		</select>
 	</td>
 	<td>
-		<select class="form-select">
-			<option></option>
-			<option value="condition">Condition</option>
-			<option value="regex">Regular Expression</option>
-			<option value="action">Action</option>
-			<option value="anti-action">Anti-Action</option>
-		</select>
+		<input list="type_list" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_type]" value="{{ old('dialplan_detail_type', $detail->dialplan_detail_type ?? '') }}">
+		<datalist id="type_list">
+			@foreach($types as $type)
+				<option value="{{ $type['key'] }}">{{ $type['value'] }}</option>
+			@endforeach
+		</datalist>
 	</td>
 	<td>
 		<input type="text" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_data]" value="{{ old('dialplan_detail_data', $detail->dialplan_detail_data ?? '') }}">
