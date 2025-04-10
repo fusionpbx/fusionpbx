@@ -182,9 +182,7 @@ class SipProfileForm extends Component
 
     public function save()
     {
-        $validate = $this->validate();
-
-        dd($validate);
+        $this->validate();
 
         if ($this->sipProfile) {
             if (!$this->canEditSipProfile) {
