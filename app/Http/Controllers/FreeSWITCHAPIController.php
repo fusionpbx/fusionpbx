@@ -2,253 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\EventSocketBufferController;
-use App\Models\DefaultSetting;
-use App\Models\Setting;
-use Illuminate\Http\Client\Request;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+use App\Facades\FreeSwitch;
+use Illuminate\Http\Request;
 
 class FreeSWITCHAPIController extends Controller
 {
-    private $fp = null;
-    private $buffer;
-    private string $type;
-
-    public function __construct(){
-        $this->type = env('FS_API_TYPE', 'XML_RPC');
-        if(App::hasDebugModeEnabled()){
-            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->type: '.$this->type);
-        }
-        switch ($this->type){
-            case 'EVENT_SOCKET':
-                $this->buffer = new EventSocketBufferController;
-
-                break;
-            default:
-                break;
-        }
+        /**
+     * Execute a command on the FreeSWITCH server
+     *
+     * @param string $command The command to execute
+     * @param string|null $param Optional parameters for the command
+     * @return string|null The response from the FreeSWITCH server
+     */
+    public function execute(string $command, ?string $param = null): ?string
+    {
+        return FreeSwitch::execute($command, $param);
     }
-
-    public function __destruct(){
-
-        switch ($this->type){
-            case 'EVENT_SOCKET':
-                $this->es_close();
-                break;
-            default:
-                break;
-        }
+    
+    /**
+     * Get gateway status
+     *
+     * @param string $gateway_uuid The UUID of the gateway
+     * @param string $result_type The type of result (xml, json, etc)
+     * @return string|null The gateway status
+     */
+    public function switchGatewayStatus(string $gateway_uuid, string $result_type = 'xml'): ?string
+    {
+        return FreeSwitch::getGatewayStatus($gateway_uuid, $result_type);
     }
-
-    private function es_connect($host, $port, $password){
-        $errorn = null; $errordesc = null;
-        $this->fp = @fsockopen($host, $port, $errorn, $errordesc, 3);
-        socket_set_timeout($this->fp, 30000);
-        socket_set_blocking($this->fp, true);
-
-        while (!feof($this->fp)) {
-            $event = $this->es_read_event();
-            if(@$event['Content-Type'] == 'auth/request'){
-                    fputs($this->fp, 'auth '.($password)."\n\n");
-                    break;
-            }
-        }
-
-        while (!feof($this->fp)) {
-            $event = $this->es_read_event();    
-            if (@$event['Content-Type'] == 'command/reply') {
-                if (@$event['Reply-Text'] == '+OK accepted') {
-                    return $this->fp;
-                }
-                fclose($this->fp);
-                return false;
-            }
-        }
+    
+    /**
+     * Get server status
+     * 
+     * @return string|null The server status
+     */
+    public function getServerStatus(): ?string
+    {
+        return FreeSwitch::getServerStatus();
     }
-
-    private function es_connected(): bool {
-        if (!$this->fp) {
-            return false;
-        }
-        if (feof($this->fp) === true) {
-            return false;
-        }
-        return true;
-    }
-
-    private function es_read_event() {
-        if (!$this->fp) {
-            return false;
-        }
-
-        $b = $this->buffer;
-        $content_length = 0;
-        $content = Array();
-
-        while (true) {
-            while(($line = $b->read_line()) !== false ) {
-                if ($line == '') {
-                    break 2;
-                }
-                $kv = explode(':', $line, 2);
-                $content[trim($kv[0])] = trim($kv[1]);
-            }
-
-            if (feof($this->fp)) {
-                break;
-            }
-
-            $buffer = fgets($this->fp, 1024);
-            $b->append($buffer);
-        }
-
-        if (array_key_exists('Content-Length', $content)) {
-            $str = $b->read_n($content['Content-Length']);
-            if ($str === false) {
-                while (!feof($this->fp)) {
-                    $buffer = fgets($this->fp, 1024);
-                    $b->append($buffer);
-                    $str = $b->read_n($content['Content-Length']);
-                    if ($str !== false) {
-                        break;
-                    }
-                }
-            }
-            if ($str !== false) {
-                $content['$'] = $str;
-            }
-        }
-
-        return $content;
-    }
-
-    private function es_request($cmd) {
-        if (!$this->fp) {
-            return false;
-        }
-
-        $cmd_array = explode("\n", $cmd);
-        foreach ($cmd_array as &$value) {
-                fputs($this->fp, $value."\n");
-        }
-        fputs($this->fp, "\n"); //second line feed to end the headers
-
-        $event = $this->es_read_event();
-
-        if (array_key_exists('$', $event)) {
-                return $event['$'];
-        }
-        return $event;
-    }
-
-    private function es_reset_fp($fp = false){
-        $tmp = $this->fp;
-        $this->fp = $fp;
-        return $tmp;
-    }
-
-    private function es_close() {
-        if ($this->fp) {
-                fclose($this->fp);
-                $this->fp = false;
-        }
-    }
-
-    public function __call($name, $arguments){
-        if(App::hasDebugModeEnabled()){
-                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] __call:$name: '.$name);
-        }
-        switch ($name){
-            case 'execute':
-                if(App::hasDebugModeEnabled()){
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $arguments: '. print_r($arguments, true));
-                }
-                if ((count($arguments) >= 2) && ($this->type == 'EVENT_SOCKET')){
-                    return $this->es_execute($arguments[0], $arguments[1] ?? null);
-                }
-                elseif((count($arguments) == 3) && ($this->type == 'XML_RPC')){
-                    // FIXME: find the host
-                    return $this->rpc_execute($arguments[2] ?? '127.0.0.1', $arguments[0], $arguments[1]);
-                }
-                return null;
-        }
-    }
-
-    private function es_execute(string $command, ?string $param = null): ?string{
-
-        if (!$this->es_connected()){
-            $event_socket = Setting::first();
-            $this->fp = $this->es_connect($event_socket->event_socket_ip_address ?? '127.0.0.1', $event_socket->event_socket_port ?? 8021, $event_socket->event_socket_password ?? 'ClueCon');
-            if ($this->fp === false){
-                $answer = null;
-            }
-            else{
-                $cmd = 'api ' . $command . ' ' . $param;
-                $answer = $this->es_request($cmd);
-            }
-        }
-
-        return $answer;
-    }
-
-    private function rpc_execute(string $host, string $command, ?string $param = null): ?string{
-        $default_settings = new DefaultSettingController;
-        $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
-        $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
-        $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
-        $url = 'http://'.$host.':'.$http_port.'/txtapi/'.$command.'?'.(isset($param)?rawurlencode($param):'');
-        if(App::hasDebugModeEnabled()){
-            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $url: '. $url);
-        }
-        $response = Http::withBasicAuth($auth_user, $auth_pass)
-                    ->withOptions([
-                        'debug' => App::hasDebugModeEnabled()
-                        ,])
-                    ->get($url);
-
-        if ($response->ok())
-            return $response->body() ?? null;
-        return null;
-    }
-
-    // public function switch_gateway_status($gateway_uuid, $result_type = 'xml')
-    // {
-    //     if ($this->es_connected()) {
-    //         $cmd = 'api sofia xmlstatus gateway ' . $gateway_uuid;
-    //         $response = $this->es_request($cmd);
-            
-    //         if ($response == "Invalid Gateway!") {
-    //             $cmd = 'api sofia xmlstatus gateway ' . strtoupper($gateway_uuid);
-    //             $response = $this->es_request($cmd);
-    //         }
-            
-    //         return $response;
-    //     }
-        
-    //     return "Unable to connect to FreeSWITCH";
-    // }
-
-    // public function execute(string $command, ?string $param = null)
-    // {
-    //     if (!$this->es_connected()) {
-            
-    //         $event_socket = Setting::first();
-    //         $this->fp = $this->es_connect(
-    //             $event_socket->event_socket_ip_address ?? '127.0.0.1', 
-    //             $event_socket->event_socket_port ?? 8021, 
-    //             $event_socket->event_socket_password ?? 'ClueCon'
-    //         );
-    //     }
-        
-    //     if ($this->fp === false) {
-    //         return null;
-    //     }
-        
-    //     $cmd = 'api ' . $command . ' ' . $param;
-    //     return $this->es_request($cmd);
-    // }
 }
