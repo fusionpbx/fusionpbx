@@ -2,14 +2,15 @@
 
 namespace App\Livewire;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class UsersTable extends DataTableComponent
 {
@@ -173,7 +174,7 @@ class UsersTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $query = User::query()
+        $query = User::where('domain_uuid', Session::get('domain_uuid'))
 				->with('groups')
                 ->orderBy('username', 'asc');
         return $query;
