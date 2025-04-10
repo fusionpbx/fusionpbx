@@ -44,7 +44,7 @@ class UserRequest extends FormRequest
 			"language" => ['bail', 'nullable','min:2','regex:/[a-z]{2,3}\-\w+/i'],   // TODO: Find a better rule
 			"timezone" => ["nullable", 'regex:/^\w+\/\w[\w\-]+\w$/i'],
             "contact_uuid" => "nullable|uuid",
-			"user_enabled" => "bail|nullable|in:on",
+			"user_enabled" => "bail|nullable",
 			"api_key" => "nullable|min:30",
 		];
 
