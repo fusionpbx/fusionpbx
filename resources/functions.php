@@ -2029,20 +2029,37 @@
 		return false;
 	}
 
-//escape user data
-	function escape($string) {
-		if (is_string($string)) {
-			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-		} elseif (is_numeric($string)) {
-			return $string;
-		} else {
-			$string = (array) $string;
-			if (isset($string[0])) {
-				return htmlentities($string[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-			}
+/**
+ * Escape the user data
+ * <p>Escapes all characters which have HTML character entity
+ * @param string $string the value to escape
+ * @return string
+ * @link https://www.php.net/htmlentities
+ */
+function escape($string) {
+	if (is_string($string)) {
+		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+	} elseif (is_numeric($string)) {
+		return $string;
+	} else {
+		$string = (array) $string;
+		if (isset($string[0])) {
+			return htmlentities($string[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 		}
-		return false;
 	}
+	return false;
+}
+
+/**
+ * Escape the user data for a textarea
+ * <p>Escapes & " ' < and > characters</p>
+ * @param string $string the value to escape
+ * @return string
+ * @link https://www.php.net/htmlspecialchars
+ */
+function escape_textarea($string) {
+	return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}
 
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
