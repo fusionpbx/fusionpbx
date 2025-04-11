@@ -52,7 +52,7 @@ class UserController extends Controller
 
 		$this->syncSettings($request, $user);
 
-		return redirect()->view("pages.users.index");
+		return redirect()->route("users.index");
 	}
 
 	public function show(User $user)
@@ -87,7 +87,7 @@ class UserController extends Controller
 
 		$this->syncSettings($request, $user);
 
-		return redirect()->view("users.index");
+		return redirect()->route("users.index");
 	}
 
 	public function destroy(User $user)
