@@ -153,6 +153,9 @@ class UsersTable extends DataTableComponent
             Column::make("UUID", "user_uuid")->hideIf(true),
 
             Column::make("User", "user_email")
+                ->format(function ($value, $row, Column $column) {
+                    return $row->username.'<br/><small>'.$row->user_email.'</small>';
+                })
                 ->sortable()
                 ->searchable(),
 
