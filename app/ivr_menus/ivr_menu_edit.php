@@ -60,8 +60,7 @@
 	$ringbacks = new ringbacks;
 
 //get the list of domains
-	$domains_object = new domains;
-	$domains = $domains_object->all(false);
+	$domains = domains::all();
 
 //validate the ringback
 	if (!$ringbacks->valid($ivr_menu_ringback)) {
