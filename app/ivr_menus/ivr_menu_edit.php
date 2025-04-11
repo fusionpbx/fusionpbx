@@ -1561,7 +1561,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='ivr_menu_description'>".$ivr_menu_description."</textarea>\n";
+	echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='ivr_menu_description'>".htmlspecialchars($ivr_menu_description, ENT_QUOTES, 'UTF-8')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
