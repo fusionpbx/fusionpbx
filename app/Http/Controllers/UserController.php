@@ -12,6 +12,7 @@ use App\Models\Group;
 use App\Models\Language;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -46,7 +47,14 @@ class UserController extends Controller
 
 	public function store(UserRequest $request)
 	{
-		$user = User::create($request->validated());
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $request: '.print_r($request->toArray(), true));
+        }
+        $validatedUser = $request->validated();
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $request: '.print_r($validatedUser->toArray(), true));
+        }
+		$user = User::create($validatedUser);
 
 		$this->syncGroups($request, $user);
 
