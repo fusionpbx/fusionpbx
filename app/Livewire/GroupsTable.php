@@ -18,12 +18,16 @@ class GroupsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-
+        $currentDomain = Domain::find(Session::get('domain_uuid'));
         $query =  Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
             ->select('group_uuid', 'group_protected', 'group_level', 'group_description','group_name', DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name_group"),'domain_name')
             ->withCount('permissions')
             ->withCount('users')
-            ->orderBy('group_name');
+            ->orderBy('group_name')
+            ->when(!auth()->user()->hasPermission('domain_select'), function($query, $currentDomain) {
+                return $query->where('domain_uuid', $currentDomain->domain_uuid);
+            });
+
 
         if(App::hasDebugModeEnabled()){
             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$query->toRawSql());
