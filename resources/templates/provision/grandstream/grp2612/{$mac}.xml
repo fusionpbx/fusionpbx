@@ -3304,7 +3304,11 @@
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
 		<!-- Pvalue P8393 -->
-		<item name="features.history.missedCallNotification">Yes</item>
+		{if isset($grandstream_missed_call_notification)}
+		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
+		{else}
+		<item name="features.history.missedCallNotification">No</item>
+		{/if}
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<!-- Pvalue P8391 -->
