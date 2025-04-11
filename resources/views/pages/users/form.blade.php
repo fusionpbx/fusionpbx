@@ -187,6 +187,7 @@
                     </div>
                 </div>
 
+                @if ($canSelectDomain == true)
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -210,6 +211,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <div class="row mt-3">
                     <div class="col-md-5 mt-3">

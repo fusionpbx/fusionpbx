@@ -41,14 +41,19 @@ class UserController extends Controller
 		$domains = Domain::all();
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
 
-		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones", "api_key", 'currentDomain'));
+		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones", "api_key", 'currentDomain', 'canSelectDomain'));
 	}
 
 	public function store(UserRequest $request)
 	{
         if(App::hasDebugModeEnabled()){
             Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $request: '.print_r($request->toArray(), true));
+        }
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
+        if (!$canSelectDomain){
+            $request['domain_uuid'] = Session::get('domain_uuid');
         }
         $validatedUser = $request->validated();
         if(App::hasDebugModeEnabled()){
@@ -76,15 +81,21 @@ class UserController extends Controller
 		$groups = $currentDomain->groups;
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
 
 		$selectedLanguage = $user->userSettings->where('user_setting_subcategory', 'language')->first()->user_setting_value ?? null;
 		$selectedTimezone = $user->userSettings->where('user_setting_subcategory', 'time_zone')->first()->user_setting_value ?? null;
 
-		return view("pages.users.form", compact("user", "contacts", "domains", "groups", "languages", "timezones", "selectedLanguage", "selectedTimezone", 'currentDomain'));
+		return view("pages.users.form", compact("user", "contacts", "domains", "groups", "languages", "timezones", "selectedLanguage", "selectedTimezone", 'currentDomain', 'canSelectDomain'));
 	}
 
 	public function update(UserRequest $request, User $user)
 	{
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
+        if (!$canSelectDomain){
+            $request['domain_uuid'] = Session::get('domain_uuid');
+        }
+
 		$validated = $request->validated();
 
 		$this->handlePassword($validated);

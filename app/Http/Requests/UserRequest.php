@@ -40,7 +40,7 @@ class UserRequest extends FormRequest
                 "string",
                 "confirmed"
             ],
-			"domain_uuid" => "bail|required|uuid",
+			"domain_uuid" => "sometimes|uuid",
 			"language" => ['bail', 'nullable','min:2','regex:/[a-z]{2,3}\-\w+/i'],   // TODO: Find a better rule
 			"timezone" => ["nullable", 'regex:/^\w+\/\w[\w\-]+\w$/i'],
             "contact_uuid" => "nullable|uuid",
