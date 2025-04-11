@@ -42,6 +42,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//initialize the database connection
+	$database = database::new();
+
 //set defaults
 	$recording_name = '';
 	$recording_message = '';
@@ -247,7 +250,6 @@
 				$array['recordings'][0]['recording_description'] = $recording_description;
 
 				//execute update
-				$database = new database;
 				$database->app_name = 'recordings';
 				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
@@ -273,7 +275,6 @@
 		$sql .= "and recording_uuid = :recording_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['recording_uuid'] = $recording_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$recording_filename = $row["recording_filename"];
@@ -439,7 +440,7 @@
 		echo "    ".$text['label-message']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <textarea class='formfld' name='recording_message' style='width: 300px; height: 150px;'>".escape($recording_message)."</textarea>\n";
+		echo "    <textarea class='formfld' name='recording_message' style='width: 300px; height: 150px;'>".htmlspecialchars($recording_message, ENT_QUOTES, 'UTF-8')."</textarea>\n";
 		echo "<br />\n";
 		echo $text['description-message']."\n";
 		echo "</td>\n";
