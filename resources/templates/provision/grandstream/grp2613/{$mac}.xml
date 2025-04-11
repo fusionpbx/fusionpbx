@@ -907,21 +907,21 @@
 
 		<!-- DND Call Feature On -->
 		<!-- Pvalue P2344 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOn"></item>
+		<item name="account.{$row.line_number}.featureCodes.dndOn">*78</item>
 
 		<!-- DND Call Feature Off  -->
 		<!-- Pvalue P2345 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOff"></item>
+		<item name="account.{$row.line_number}.featureCodes.dndOff">*79</item>
 
 		<!-- #Call Forward Unconditionally (All) - On -->
 		<!-- # String -->
 		<!-- Pvalue P26013 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn"></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn">*72</item>
 
 		<!-- #Call Forward Unconditionally (All) - Off -->
 		<!-- # String -->
 		<!-- Pvalue P26014 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff"></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff">*73</item>
 
 		<!-- #Call Forward Unconditionally (All) - Target -->
 		<!-- # String -->
@@ -1482,7 +1482,7 @@
 		<!-- # Enable/Disable WiFi -->
 		<!-- # No - Off, OffAndHideMenuFromLCD, Yes - On. -->
 		<!-- Pvalue P7800 -->
-		<item name="network.wifi.enable">Off</item>
+		<item name="network.wifi.enable">Yes</item>
 
 		<!-- # Access Point 1 -->
 		<!-- # SSID -->
