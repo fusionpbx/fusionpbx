@@ -154,7 +154,7 @@ class UsersTable extends DataTableComponent
 
             Column::make("User", "user_email")
                 ->format(function ($value, $row, Column $column) {
-                    return $row->username.'<br/><small>'.$row->user_email.'</small>';
+                    return $row->user_email;		// TODO: show more information
                 })
                 ->sortable()
                 ->searchable(),
