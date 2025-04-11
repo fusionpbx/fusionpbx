@@ -52,7 +52,7 @@ class UserController extends Controller
         }
         $validatedUser = $request->validated();
         if(App::hasDebugModeEnabled()){
-            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $request: '.print_r($validatedUser->toArray(), true));
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $request: '.print_r($validatedUser, true));
         }
 		$user = User::create($validatedUser);
 
