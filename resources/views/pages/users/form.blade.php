@@ -199,7 +199,7 @@
                                 <option value="">Select domain</option>
                                 @foreach($domains as $domain)
                                     <option value="{{ $domain->domain_uuid }}"
-										{{ old('domain_uuid', $user->domain_uuid ?? '') == $domain->domain_uuid ? 'selected' : '' }}>
+										{{ old('domain_uuid', $user->domain_uuid ?? $currentDomain->domain_uuid) == $domain->domain_uuid ? 'selected' : '' }}>
                                         {{ $domain->domain_name }}
                                     </option>
                                 @endforeach

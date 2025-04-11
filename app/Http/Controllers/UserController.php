@@ -41,7 +41,7 @@ class UserController extends Controller
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
-		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones", "api_key"));
+		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones", "api_key", 'currentDomain'));
 	}
 
 	public function store(UserRequest $request)
@@ -72,7 +72,7 @@ class UserController extends Controller
 		$selectedLanguage = $user->userSettings->where('user_setting_subcategory', 'language')->first()->user_setting_value ?? null;
 		$selectedTimezone = $user->userSettings->where('user_setting_subcategory', 'time_zone')->first()->user_setting_value ?? null;
 
-		return view("pages.users.form", compact("user", "contacts", "domains", "groups", "languages", "timezones", "selectedLanguage", "selectedTimezone"));
+		return view("pages.users.form", compact("user", "contacts", "domains", "groups", "languages", "timezones", "selectedLanguage", "selectedTimezone", 'currentDomain'));
 	}
 
 	public function update(UserRequest $request, User $user)
