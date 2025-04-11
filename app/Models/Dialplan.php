@@ -63,7 +63,7 @@ class Dialplan extends Model
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function dialplandetails(): HasMany {
+	public function dialplanDetails(): HasMany {
 		return $this->hasMany(DialplanDetail::class, 'dialplan_uuid', 'dialplan_uuid')
 			->orderBy('dialplan_detail_group')
 			->orderBy('dialplan_detail_order');

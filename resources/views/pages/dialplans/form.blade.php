@@ -48,7 +48,6 @@
                                 name="dialplan_number"
                                 placeholder="Enter dialplan number"
                                 value="{{ old('dialplan_number', $dialplan->dialplan_number ?? '') }}"
-                                required
                             >
                             @error('dialplan_number')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -68,7 +67,6 @@
                                 name="hostname"
                                 placeholder="Enter dialplan hostname"
                                 value="{{ old('hostname', $dialplan->hostname ?? '') }}"
-                                required
                             >
                             @error('hostname')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -88,7 +86,6 @@
                                 name="dialplan_context"
                                 placeholder="Enter dialplan context"
                                 value="{{ old('dialplan_context', $dialplan->dialplan_context ?? '') }}"
-                                required
                             >
                             @error('dialplan_context')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -111,7 +108,6 @@
                                 name="dialplan_order"
                                 placeholder="Enter dialplan order"
                                 value="{{ old('dialplan_order', $dialplan->dialplan_order ?? '') }}"
-                                required
                             >
                             @error('dialplan_order')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -228,11 +224,11 @@
                             </tr>
                         </thead>
                         <tbody class="repeater-container">
-                            @if($dialplan->dialplandetails->isEmpty())
+                            @if($dialplan->dialplanDetails->isEmpty())
                                 @include('pages.dialplans.detail_template')
                             @else
                                 @include('pages.dialplans.detail_template')
-                                @foreach($dialplan->dialplandetails as $i => $detail)
+                                @foreach($dialplan->dialplanDetails as $i => $detail)
                                     @include('pages.dialplans.detail', ['detail' => $detail, 'index' => $i])
                                 @endforeach
                             @endif

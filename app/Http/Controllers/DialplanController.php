@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use XMLWriter;
 
 class DialplanController extends Controller
 {
@@ -35,6 +36,12 @@ class DialplanController extends Controller
 
 		$this->syncDetails($request, $dialplan);
 
+		$dialplan_xml = $this->buildXML($dialplan);
+
+   		$dialplan->dialplan_xml = $dialplan_xml;
+
+		$dialplan->save();
+
 		return redirect()->route("dialplans.index");
 	}
 
@@ -47,7 +54,7 @@ class DialplanController extends Controller
 	{
 		$domains = Domain::all();
 
-		$dialplan->load("dialplandetails");
+		$dialplan->load("dialplanDetails");
 
 		$types = $this->getTypesList();
 
@@ -59,6 +66,12 @@ class DialplanController extends Controller
 		$dialplan->update($request->validated());
 
 		$this->syncDetails($request, $dialplan);
+
+		$dialplan_xml = $this->buildXML($dialplan);
+
+   		$dialplan->dialplan_xml = $dialplan_xml;
+
+		$dialplan->save();
 
 		return redirect()->route("dialplans.index");
 	}
@@ -80,8 +93,8 @@ class DialplanController extends Controller
 			$dialplan_details[$key]["domain_uuid"] = $dialplan->domain->domain_uuid; //NOTE: won't need in the future
 		}
 
-		$dialplan->dialplandetails()->delete();
-		$dialplan->dialplandetails()->upsert($dialplan_details, "dialplan_detail_uuid");
+		$dialplan->dialplanDetails()->delete();
+		$dialplan->dialplanDetails()->upsert($dialplan_details, "dialplan_detail_uuid");
 	}
 
 	private function getTypesList()
@@ -295,5 +308,62 @@ class DialplanController extends Controller
 			['key' => 'wait_for_silence', 'value' => 'wait_for_silence'],
 			['key' => 'wait_for_video_ready', 'value' => 'wait_for_video_ready'],
 		];
+	}
+
+	private function buildXML(Dialplan $dialplan)
+	{
+		$xml = new XMLWriter();
+		$xml->openMemory();
+		$xml->setIndent(true);
+		$xml->setIndentString('  ');
+
+		$xml->startElement("extension");
+		$xml->writeAttribute("name", $dialplan->dialplan_name);
+		$xml->writeAttribute("uuid", $dialplan->dialplan_uuid);
+		$xml->writeAttribute("continue", $dialplan->dialplan_continue);
+
+		$currentCondition = null;
+
+		foreach($dialplan->dialplanDetails as $dialplanDetail)
+		{
+			$tag = $dialplanDetail->dialplan_detail_tag;
+
+			if($tag === "condition")
+			{
+				if($currentCondition !== null)
+				{
+					$xml->endElement();
+				}
+
+				$currentCondition = $dialplanDetail;
+
+				$xml->startElement("condition");
+				$xml->writeAttribute("field", htmlspecialchars($dialplanDetail->dialplan_detail_type));
+				$xml->writeAttribute("expression", htmlspecialchars($dialplanDetail->dialplan_detail_data));
+				$xml->writeAttribute("break", $dialplanDetail->dialplan_detail_break);
+			}
+			else
+			{
+				$xml->startElement($tag);
+				$xml->writeAttribute("application", htmlspecialchars($dialplanDetail->dialplan_detail_type));
+				$xml->writeAttribute("data", htmlspecialchars($dialplanDetail->dialplan_detail_data));
+
+				if(isset($dialplanDetail->dialplan_detail_inline))
+				{
+					$xml->writeAttribute("inline", $dialplanDetail->dialplan_detail_inline);
+				}
+
+				$xml->endElement();
+			}
+		}
+
+		if($currentCondition !== null)
+		{
+			$xml->endElement();
+		}
+
+		$xml->endElement();
+
+		return $xml->outputMemory();
 	}
 }

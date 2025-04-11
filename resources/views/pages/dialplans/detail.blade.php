@@ -39,7 +39,7 @@
 		<input type="number" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_group]" value="{{ old('dialplan_detail_group', $detail->dialplan_detail_group ?? '') }}">
 	</td>
 	<td>
-		<input type="number" step="5" min="0" max="100" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_order]" value="{{ old('dialplan_detail_order', $detail->dialplan_detail_order ?? '') }}">
+		<input type="number" step="5" min="0" max="1000" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_order]" value="{{ old('dialplan_detail_order', $detail->dialplan_detail_order ?? '') }}">
 	</td>
 	<td>
 		<select class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_enabled]">
