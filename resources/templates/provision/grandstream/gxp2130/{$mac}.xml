@@ -2214,7 +2214,11 @@
 		<item name="sip.showError">Yes</item>
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
+		{if isset($grandstream_missed_call_notification)}
 		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
+		{else}
+		<item name="features.history.missedCallNotification">No</item>
+		{/if}
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<item name="call.dial.callComplete.enable"/>
