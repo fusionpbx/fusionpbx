@@ -341,7 +341,8 @@ CREATE TABLE sip_authentication (
     profile_name character varying(255),
     hostname character varying(255),
     last_nc integer,
-sip_authentication_uuid uuid PRIMARY KEY default gen_random_uuid()
+    algorithm integer DEFAULT 1 NOT NULL
+    sip_authentication_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE sip_authentication OWNER TO fusionpbx;
 
