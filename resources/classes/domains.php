@@ -719,22 +719,79 @@
 		} //end settings method
 
 		/**
-		 * get a domain list
+		 * get all enabled domains
+		 * @returns array enabled domains with uuid as array key
 		 */
-		public function all(bool $domain_enabled = true) {
+		public static function enabled() {
+
+			//define database as global
+				global $database;
 
 			//define default return value
 				$domains = [];
 
 			//get the domains from the database
 				$sql = "select * from v_domains ";
-				if ($domain_enabled) {
-					$sql .= "where domain_enabled = true ";
-				}
+				$sql .= "where domain_enabled = true ";
 				$sql .= "order by domain_name asc; ";
-				$result = $this->database->select($sql, null, 'all');
+				$result = $database->select($sql, null, 'all');
 				if (!empty($result)) {
-					$domains = $result;
+					foreach($result as $row) {
+						$domains[$row['domain_uuid']] = $row;
+					}
+				}
+
+			//return the domains array
+				return $domains;
+		}
+
+		/**
+		 * get all disabled domains
+		 * @returns array disabled domains with uuid as array key
+		 */
+		public static function disabled() {
+
+			//define database as global
+				global $database;
+
+			//define default return value
+				$domains = [];
+
+			//get the domains from the database
+				$sql = "select * from v_domains ";
+				$sql .= "where domain_enabled = false ";
+				$sql .= "order by domain_name asc; ";
+				$result = $database->select($sql, null, 'all');
+				if (!empty($result)) {
+					foreach($result as $row) {
+						$domains[$row['domain_uuid']] = $row;
+					}
+				}
+
+			//return the domains array
+				return $domains;
+		}
+
+		/**
+		 * get all domains
+		 * @returns array all domains with uuid as array key
+		 */
+		public static function all() {
+
+			//define database as global
+				global $database;
+
+			//define default return value
+				$domains = [];
+
+			//get the domains from the database
+				$sql = "select * from v_domains ";
+				$sql .= "order by domain_name asc; ";
+				$result = $database->select($sql, null, 'all');
+				if (!empty($result)) {
+					foreach($result as $row) {
+						$domains[$row['domain_uuid']] = $row;
+					}
 				}
 
 			//return the domains array
@@ -743,10 +800,11 @@
 
 		/**
 		 * get a domain list
+		 * 	@returns void
 		 */
 		public function session() {
 			//get the list of domains
-				$domains = $this->all();
+				$domains = self::all();
 
 			//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
@@ -765,8 +823,10 @@
 							}
 						}
 					}
-					$_SESSION['domains'][$row['domain_uuid']] = $row;
 				}
+
+			//set the domains session array
+				$_SESSION['domains'] = $domains;
 		}
 
 	}
