@@ -424,7 +424,7 @@
 	}
 	echo th_order_by('greeting_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'", "id=".urlencode($voicemail_id));
 	$col_count++;
-	if (permission_exists('voicemail_greeting_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('voicemail_greeting_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -437,8 +437,12 @@
 				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_greeting_uuid'])."' onclick=\"recording_seek(event,'".escape($row['voicemail_greeting_uuid'])."')\" style='display: none;'><td id='playback_progress_bar_background_".escape($row['voicemail_greeting_uuid'])."' class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_greeting_uuid'])."'></span></td></tr>\n";
 				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 			}
+			$list_row_url = '';
 			if (permission_exists('voicemail_greeting_edit')) {
 				$list_row_url = "voicemail_greeting_edit.php?id=".urlencode($row['voicemail_greeting_uuid'])."&voicemail_id=".urlencode($voicemail_id);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('voicemail_greeting_delete')) {
@@ -493,7 +497,7 @@
 				echo "	<td class='center no-wrap hide-xs'>".$file_date."</td>\n";
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['greeting_description'])."&nbsp;</td>\n";
-			if (permission_exists('voicemail_greeting_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('voicemail_greeting_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -605,3 +609,4 @@
 	}
 
 ?>
+

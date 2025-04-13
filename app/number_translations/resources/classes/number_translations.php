@@ -25,7 +25,6 @@
 */
 
 //define the number translations class
-if (!class_exists('number_translations')) {
 	class number_translations {
 
 		/**
@@ -414,11 +413,8 @@ if (!class_exists('number_translations')) {
 		} //method
 
 	} //class
-}
 
 /*
 $obj = new number_translations;
 $obj->delete();
 */
-
-?>

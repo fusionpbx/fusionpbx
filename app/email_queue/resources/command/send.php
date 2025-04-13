@@ -153,10 +153,9 @@
 	unset($parameters);
 
 //get the email queue settings
-	$setting = new settings(["domain_uuid" => $domain_uuid]);
-	$smtp_from = $setting->get('email', 'smtp_from');
-	$smtp_from_name = $setting->get('email', 'smtp_from_name', $smtp_from);
-	$save_response = $setting->get('email_queue', 'save_response');
+	$smtp_from = $settings->get('email', 'smtp_from');
+	$smtp_from_name = $settings->get('email', 'smtp_from_name', $smtp_from);
+	$save_response = $settings->get('email_queue', 'save_response');
 
 //debug information
 	if (!empty($debug) && $debug == 'true') {

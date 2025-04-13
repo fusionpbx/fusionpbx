@@ -332,8 +332,12 @@
 	if (!empty($fax_queue)) {
 		$x = 0;
 		foreach ($fax_queue as $row) {
+			$list_row_url = '';
 			if ($permission['fax_queue_edit']) {
 				$list_row_url = "fax_queue_edit.php?id=".urlencode($row['fax_queue_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if ($permission['fax_queue_add'] || $permission['fax_queue_edit'] || $permission['fax_queue_delete']) {

@@ -182,11 +182,6 @@ log = require "resources.functions.log".ring_group
 		call_direction = "local";
 	end
 
---set ring ready
-	if (session:ready()) then
-		session:execute("ring_ready", "");
-	end
-
 --define additional variables
 	external = "false";
 
@@ -932,6 +927,25 @@ log = require "resources.functions.log".ring_group
 						end
 						row.record_session = record_session
 
+					--call timeout ignored with enterprise adjust the destinaton_timeout to honor the call timeout
+						if (ring_group_strategy == "enterprise") then
+							delay = tonumber(destination_delay)
+							if (delay >= 1000) then
+								delay = delay / 1000;
+							end
+							timeout = tonumber(destination_timeout);
+							call_timeout = tonumber(ring_group_call_timeout);
+							if (delay == 0 and call_timeout < timeout) then
+								destination_timeout = call_timeout;
+							end
+							if (delay > 0 and call_timeout < delay + timeout) then
+								destination_timeout = (delay + timeout) - call_timeout;
+								if (delay >= call_timeout) then
+									goto continue
+								end
+							end
+						end
+
 					--process according to user_exists, sip_uri, external number
 						if (user_exists == "true") then
 							--get the extension_uuid
@@ -1045,6 +1059,7 @@ log = require "resources.functions.log".ring_group
 					--increment the value of x
 						x = x + 1;
 				end
+				::continue::
 			end
 
 		--release dbh before bridge

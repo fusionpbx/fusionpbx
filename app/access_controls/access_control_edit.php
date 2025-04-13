@@ -202,7 +202,7 @@
 				//attempt digs
 				if (!empty($digs) && is_array($digs)) {
 					foreach ($digs as $dig) {
-						$response = shell_exec("dig +noall +answer ".$dig['value']." | awk '{ print $5 }'");
+						$response = shell_exec("dig +noall +answer ".escapeshellarg(str_replace(' ', '', $dig['value']))." | awk '{ print $5 }'");
 						if (!empty($response)) {
 							$lines = explode("\n", $response);
 							foreach ($lines as $l => $line) {
@@ -217,7 +217,7 @@
 									$array['access_controls'][0]['access_control_nodes'][$y]['access_control_node_uuid'] = uuid();
 									$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $dig['type'];
 									$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $line.'/32';
-									$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = !empty($dig['description']) ? $dig['description'] : $dig['value'];
+									$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = !empty($dig['description']) ? $dig['description'] : str_replace(' ', '', $dig['value']);
 									$y++;
 								}
 							}

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -182,8 +182,13 @@
 				exit;
 			}
 
+		//set destination_prefix to an empty string if its empty
+			if (empty($destination_prefix)) {
+				$destination_prefix = '';
+			}
+
 		//prevent spaces from being considered as a valid destination_number
-			if (isset($destination_number)) {
+			if (!empty($destination_number)) {
 				$destination_number = trim($destination_number);
 			}
 
@@ -205,11 +210,11 @@
 			if (empty($destination_enabled)) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
 		//check for duplicates
-			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $settings->get('destinations', 'unique', '')) {
+			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $settings->get('destinations', 'unique', false)) {
 				$sql = "select count(*) from v_destinations ";
 				$sql .= "where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number) ";
 				$sql .= "and destination_type = 'inbound' ";
-				$parameters['destination_number'] = $destination_number;
+				$parameters['destination_number'] = $destination_prefix.$destination_number;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
 					$msg .= $text['message-duplicate']."<br>\n";
@@ -1964,7 +1969,6 @@
 		echo "	".$text['label-destination_hold_music']."\n";
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 		$music_on_hold = new switch_music_on_hold;
 		echo $music_on_hold->select('destination_hold_music', $destination_hold_music, null);
 		echo "	<br />\n";
@@ -2097,7 +2101,7 @@
 
 	//enabled
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";

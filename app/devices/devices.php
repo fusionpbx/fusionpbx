@@ -397,8 +397,12 @@
 				}
 			}
 
+			$list_row_url = '';
 			if (permission_exists('device_edit')) {
 				$list_row_url = "device_edit.php?id=".urlencode($row['device_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 
 			$device_provisioned_method = '';
@@ -419,7 +423,7 @@
 				echo "	</td>\n";
 			}
 			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-				echo "	<td>".escape($domain_name)."</td>\n";
+				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class='no-wrap'>";
 			echo permission_exists('device_edit') ? "<a href='".$list_row_url."'>".escape(format_device_address($row['device_address']))."</a>" : escape(format_device_address($row['device_address']));
@@ -473,3 +477,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

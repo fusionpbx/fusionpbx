@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2015-2024
+	Portions created by the Initial Developer are Copyright (C) 2015-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,7 +29,6 @@
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_message.php";
-require_once "resources/classes/text.php";
 
 //get accounts to monitor
 $sql = "select d.domain_name, f.* ";
@@ -79,37 +78,34 @@ if (!empty($result) && @sizeof($result) != 0) {
 		$fax_accountcode = $row["accountcode"];
 		$fax_toll_allow = $row["fax_toll_allow"];
 
-		//get event socket connection parameters
-		$setting = new settings(["database" => $database, "domain_uuid" => $domain_uuid]);
-
 		//send the domain name to the command line output
 		if (!empty($fax_email_connection_host) && !empty($fax_email_connection_username)) {
 			echo "Domain Name: ".$domain_name."\n";
 		}
 
 		//get the cover font
-		$fax_cover_font_default =$setting->get('fax','cover_font');
-		$fax_cover_font = $setting->get('fax','cover_font');
+		$fax_cover_font_default =$settings->get('fax','cover_font');
+		$fax_cover_font = $settings->get('fax','cover_font');
 		if(empty($fax_cover_font)) {
 			$fax_cover_font = $fax_cover_font_default;
 		}
 		
 		//get the allowed file extensions
-		$fax_allowed_extension_default = arr_to_map($setting->get('fax','allowed_extension'));
+		$fax_allowed_extension_default = arr_to_map($settings->get('fax','allowed_extension'));
 		if($fax_allowed_extension_default == false){
 			$tmp = array('.pdf', '.tiff', '.tif');
 			$fax_allowed_extension_default = arr_to_map($tmp);
 		}
-		$fax_allowed_extension = arr_to_map($setting->get('fax','allowed_extension'));
+		$fax_allowed_extension = arr_to_map($settings->get('fax','allowed_extension'));
 		if($fax_allowed_extension == false) {
 			$fax_allowed_extension = $fax_allowed_extension_default;
 		}
 
 		//set needed variables
-		$fax_page_size = $setting->get('fax','page_size');
-		$fax_resolution = $setting->get('fax','resolution');
-		$fax_header = $setting->get('fax','cover_header');
-		$fax_footer = $setting->get('fax','cover_footer');
+		$fax_page_size = $settings->get('fax','page_size');
+		$fax_resolution = $settings->get('fax','resolution');
+		$fax_header = $settings->get('fax','cover_header');
+		$fax_footer = $settings->get('fax','cover_footer');
 		$fax_sender = $fax_caller_id_name;
 
 		//open account connection
@@ -222,7 +218,7 @@ if (!empty($result) && @sizeof($result) != 0) {
 					}
 
 					// set fax directory (used for pdf creation - cover and/or attachments)
-					$fax_dir = $setting->get('switch','storage').'/fax'.(($domain_name != '') ? '/'.$domain_name : null);
+					$fax_dir = $settings->get('switch','storage').'/fax'.(($domain_name != '') ? '/'.$domain_name : null);
 
 					//handle attachments (if any)
 					$emailed_files = Array();

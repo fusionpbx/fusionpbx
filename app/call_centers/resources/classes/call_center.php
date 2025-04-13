@@ -26,11 +26,8 @@
 
 /**
  * cache class provides an abstracted cache
- *
- * @method string dialplan - builds the dialplan for call center
  */
 //define the call center class
-	if (!class_exists('call_center')) {
 		class call_center {
 			/**
 			 * define the variables
@@ -611,7 +608,6 @@
 			} //method
 
 		} //class
-	}
 
 /*
 $o = new call_center;
@@ -625,5 +621,3 @@ $c->destination_number = "";
 $c->queue_cc_exit_keys = "";
 $c->dialplan();
 */
-
-?>

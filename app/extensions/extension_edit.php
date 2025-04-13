@@ -38,12 +38,60 @@
 		exit;
 	}
 
-//initialize the database object
-	$database = database::new();
+//get the domain and user UUIDs
+	$domain_uuid = $domain_uuid ?? '';
+	$user_uuid = $user_uuid ?? '';
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//return the first item if data type = array, returns value if data type = text 
+	function get_first_item($value) {
+	    return is_array($value) ? $value[0] : $value;
+	}
+
+//initialize the core objects
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
+	$config = config::load();
+	$database = database::new(['config' => $config]);
+	$domain_name = $database->select('select domain_name from v_domains where domain_uuid = :domain_uuid', ['domain_uuid' => $domain_uuid], 'column');
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+
+//set defaults
+	$limit_extensions                     = $settings->get('limit', 'extensions', null);
+	$limit_devices                        = $settings->get('limit', 'devices', null);
+	$extension_limit_max                  = $settings->get('extension', 'limit_max', 5);
+	$extension_call_timeout               = $settings->get('extension', 'call_timeout', 30);
+	$extension_max_registrations          = $settings->get('extension', 'max_registrations', null);
+	$extension_password_length            = $settings->get('extension', 'password_length', 20);       //set default to 20
+	$extension_password_strength          = $settings->get('extension', 'password_strength', 4);      //set default to use numbers, Upper/Lowercase letters, special characters
+	$extension_user_record_default        = $settings->get('extension', 'user_record_default', '');
+	$provision_path                       = $settings->get('provision', 'path', '');
+	$provision_line_label                 = $settings->get('provision','line_label', null);
+	$provision_line_display_name          = $settings->get('provision','line_display_name', null);
+	$provision_outbound_proxy_primary     = $settings->get('provision','outbound_proxy_primary', null);
+	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_secondary', null);
+	$provision_server_address_primary     = $settings->get('provision','server_address_primary', null);
+	$provision_server_address_secondary   = $settings->get('provision','server_address_secondary', null);
+	$provision_line_sip_port              = $settings->get('provision','line_sip_port', null);
+	$provision_line_sip_transport         = $settings->get('provision','line_sip_transport', null);
+	$provision_line_register_expires      = $settings->get('provision','line_register_expires', null);
+	$theme_input_toggle_style             = $settings->get('theme','input_toggle_style', '');                       //set default to empty string
+	$voicemail_password_length            = $settings->get('voicemail', 'password_length', 6);                      //set default to 6
+	$voicemail_transcription_enabled_default = $settings->get('voicemail', 'transcription_enabled_default', false); //set default to false
+	$voicemail_enabled_default               = $settings->get('voicemail', 'enabled_default', true);
+	$switch_voicemail                        = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . "/default/$domain_name";
+	$switch_extensions                       = $settings->get('switch', 'extensions', '/etc/freeswitch/directory');
+	$switch_sounds                           = $settings->get('switch', 'sounds', '/usr/share/freeswitch/sounds');
+	$transcribe_enabled                      = $settings->get('transcribe', 'enabled', false);
+
+//cast to integers if they have values
+	if ($limit_extensions !== null) $limit_extensions = intval($limit_extensions);
+	if ($limit_devices !== null) $limit_devices = intval($limit_devices);
+	if ($extension_password_length !== null) $extension_password_length = intval($extension_password_length);
+	if ($extension_max_registrations !== null) $extension_max_registrations = intval($extension_max_registrations);
 
 //set the action as an add or an update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -57,16 +105,16 @@
 
 //get total extension count from the database, check limit, if defined
 	if ($action == 'add') {
-		if (!empty($_SESSION['limit']['extensions']['numeric'])) {
-			$sql = "select count(*) ";
+		if ($limit_extensions > 0) {
+			$sql = "select count(extension_uuid) ";
 			$sql .= "from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['domain_uuid'] = $domain_uuid;
 			$total_extensions = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
-			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
-				message::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
+			if ($total_extensions >= $limit_extensions) {
+				message::add($text['message-maximum_extensions'].' '.$limit_extensions, 'negative');
 				header('Location: extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null));
 				exit;
 			}
@@ -176,16 +224,15 @@
 			$user_uuid = $_POST["extension_users"][0]["user_uuid"] ?? null;
 
 		//device provisioning variables
-			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
+			if (!empty($_POST["devices"])) {
 
 				//get the devices
 				$sql = "select count(device_uuid) from v_devices ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
 					$sql .= "and device_user_uuid = :user_uuid ";
-					$parameters['user_uuid'] = $_SESSION['user_uuid'];
+					$parameters['user_uuid'] = $user_uuid;
 				}
-				$sql .= "order by device_address asc ";
 				$parameters['domain_uuid'] = $domain_uuid;
 				$total_devices = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
@@ -195,8 +242,8 @@
 						!empty($device["device_address"]) &&
 						strtolower($device["device_address"]) == 'uuid' &&
 						(
-							!isset($_SESSION['limit']['devices']['numeric']) ||
-							$total_devices < $_SESSION['limit']['devices']['numeric']
+							$limit_devices === null ||
+							$total_devices < $limit_devices
 						)) {
 						$device_address = strtolower(uuid());
 					}
@@ -229,7 +276,7 @@
 					$parameters['device_address'] = $device_address;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row)) {
-						if ($_SESSION['domain_uuid'] == $row['domain_uuid']) {
+						if ($domain_uuid == $row['domain_uuid']) {
 							$device_uuid = $row['device_uuid'];
 							$device_domain_name = $row['device_domain_name'];
 							$device_unique = true;
@@ -314,7 +361,7 @@
 				$domain_uuid = $_POST["domain_uuid"];
 			}
 			else {
-				$domain_uuid = $_SESSION['domain_uuid'];
+				$domain_uuid = $domain_uuid;
 			}
 
 		//validate the token
@@ -345,10 +392,8 @@
 			}
 
 		//prevent users from bypassing extension limit by using range
-			if (!empty($_SESSION['limit']['extensions']['numeric'])) {
-				if (isset($total_extensions) && ($total_extensions ?? 0) + $range > $_SESSION['limit']['extensions']['numeric']) {
-					$range = $_SESSION['limit']['extensions']['numeric'] - $total_extensions;
-				}
+			if (isset($total_extensions) && ($total_extensions ?? 0) + $range > $limit_extensions) {
+				$range = $limit_extensions - $total_extensions;
 			}
 
 		//add or update the database
@@ -416,8 +461,8 @@
 									}
 
 								//get the password length and strength
-									$password_length = $_SESSION["extension"]["password_length"]["numeric"];
-									$password_strength = $_SESSION["extension"]["password_strength"]["numeric"];
+									$password_length = $extension_password_length;
+									$password_strength = $extension_password_strength;
 
 								//extension does not exist add it
 									if ($action == "add" || $range > 1) {
@@ -428,7 +473,7 @@
 
 								//prepare the values for mwi account
 										if (!empty($mwi_account) && strpos($mwi_account, '@') === false) {
-											$mwi_account .= "@".$_SESSION['domain_name'];
+											$mwi_account .= "@".$domain_name;
 										}
 
 								//generate a password
@@ -492,7 +537,7 @@
 									}
 									else {
 										if ($action == "add") {
-											$array["extensions"][$i]["max_registrations"] = $_SESSION['extension']['max_registrations']['numeric'];
+											$array["extensions"][$i]["max_registrations"] = $extension_max_registrations;
 										}
 									}
 									if (permission_exists("extension_limit")) {
@@ -504,7 +549,7 @@
 									}
 									else {
 										if ($action == "add") {
-											$array["extensions"][$i]["user_context"] = $_SESSION['domain_name'];
+											$array["extensions"][$i]["user_context"] = $domain_name;
 										}
 									}
 									if (permission_exists('extension_missed_call')) {
@@ -605,11 +650,11 @@
 												}
 
 												//get the dislplay label
-												if ($_SESSION['provision']['line_label']['text'] == 'auto') {
+												if ($provision_line_label == 'auto') {
 													$line_label = $extension;
 												}
 												else {
-													$line_label = $_SESSION['provision']['line_label']['text'];
+													$line_label = $provision_line_label;
 													$line_label = str_replace("\${name}", $name, $line_label);
 													$line_label = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_label);
 													$line_label = str_replace("\${caller_id_name}", $effective_caller_id_name, $line_label);
@@ -622,11 +667,11 @@
 												}
 
 												//get the dislplay name
-												if ($_SESSION['provision']['line_display_name']['text'] == 'auto') {
+												if ($provision_line_display_name == 'auto') {
 													$line_display_name = $name;
 												}
 												else {
-													$line_display_name = $_SESSION['provision']['line_display_name']['text'];
+													$line_display_name = $provision_line_display_name;
 													$line_display_name = str_replace("\${name}", $name, $line_display_name);
 													$line_display_name = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_display_name);
 													$line_display_name = str_replace("\${caller_id_name}", $effective_caller_id_name, $line_display_name);
@@ -638,16 +683,10 @@
 													$line_display_name = str_replace("\${description}", $description, $line_display_name);
 												}
 
-												//send a message to the user the device is not unique
-												if (!$device_unique) {
-													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
-													message::add($message,'negative');
-												}
-
 												//build the devices array
-												if ($device_unique && $device_address != '000000000000') {
+												if (($device_unique && $device_mac_address != '000000000000') || $device_mac_address == '000000000000') {
 													$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
-													$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
+													$array["devices"][$j]["domain_uuid"] = $domain_uuid;
 													$array["devices"][$j]["device_address"] = $device_address;
 													$array["devices"][$j]["device_label"] = $extension;
 													if (!empty($device_vendor)) {
@@ -659,24 +698,30 @@
 													$array["devices"][$j]["device_enabled"] = "true";
 													$array["devices"][$j]["device_lines"][0]["device_uuid"] = $device_uuids[$d];
 													$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
-													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
-													$array["devices"][$j]["device_lines"][0]["server_address"] = $_SESSION['domain_name'];
-													$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = $_SESSION['provision']['outbound_proxy_primary']['text'];
-													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
-													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = $_SESSION['provision']['server_address_primary']['text'];
-													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $_SESSION['provision']['server_address_secondary']['text'];
+													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $domain_uuid;
+													$array["devices"][$j]["device_lines"][0]["server_address"] = $domain_name;
+
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = get_first_item($provision_outbound_proxy_primary);
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = get_first_item($provision_outbound_proxy_secondary);
+													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = get_first_item($provision_server_address_primary);
+													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = get_first_item($provision_server_address_secondary);
 													$array["devices"][$j]["device_lines"][0]["label"] = $line_label;
 													$array["devices"][$j]["device_lines"][0]["display_name"] = $line_display_name;
 													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["password"] = $password;
 													$array["devices"][$j]["device_lines"][0]["line_number"] = is_numeric($line_numbers[$d]) ? $line_numbers[$d] : '1';
-													$array["devices"][$j]["device_lines"][0]["sip_port"] = $_SESSION['provision']['line_sip_port']['text'];
-													$array["devices"][$j]["device_lines"][0]["sip_transport"] = $_SESSION['provision']['line_sip_transport']['text'];
-													$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['text'];
+													if ($provision_line_sip_port !== null) $array["devices"][$j]["device_lines"][0]["sip_port"] = $provision_line_sip_port;
+													if ($provision_line_sip_transport !== null) $array["devices"][$j]["device_lines"][0]["sip_transport"] = $provision_line_sip_transport;
+													if ($provision_line_register_expires !== null) $array["devices"][$j]["device_lines"][0]["register_expires"] = $provision_line_register_expires;
 													$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
 												}
-
+												else {
+													//send a message to the user the device is not unique
+													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
+													message::add($message,'negative');
+												}
+												
 												//increment
 												$j++;
 											}
@@ -689,7 +734,7 @@
 							if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 								//set the voicemail password
 									if (empty($voicemail_password)) {
-										$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
+										$voicemail_password = generate_password($voicemail_password_length, 1);
 									}
 
 								//add  the voicemail to the array
@@ -711,8 +756,8 @@
 												$voicemail_uuid = uuid();
 												$voicemail_tutorial = 'true';
 												//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
-												if (!permission_exists('voicemail_transcription_enabled') && isset($_SESSION['voicemail']['transcription_enabled_default']['boolean'])) {
-													$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'];
+												if (!permission_exists('voicemail_transcription_enabled')) {
+													$voicemail_transcription_enabled = $voicemail_transcription_enabled_default;
 												}
 											}
 
@@ -738,8 +783,8 @@
 											$array["voicemails"][$i]["voicemail_description"] = $description;
 
 										//make sure the voicemail directory exists
-											if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
-												mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770, true);
+											if (!file_exists($switch_voicemail.'/'.$voicemail_id)) {
+												mkdir($switch_voicemail."/".$voicemail_id, 0770, true);
 											}
 
 									}
@@ -772,8 +817,8 @@
 						$sql .= "and server_address = :server_address ";
 						$sql .= "and user_id = :user_id ";
 						$parameters['password'] = $password;
-						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-						$parameters['server_address'] = $_SESSION['domain_name'];
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['server_address'] = $domain_name;
 						$parameters['user_id'] = $extension;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
@@ -786,7 +831,7 @@
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and device_key_value = :device_key_value ";
 						$parameters['device_key_label'] = $effective_caller_id_name;
-						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['domain_uuid'] = $domain_uuid;
 						$parameters['device_key_value'] = $extension;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
@@ -808,20 +853,17 @@
 					if (permission_exists('extension_add') || permission_exists('extension_edit')) {
 
 						//synchronize configuration
-							if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
-								require_once "app/extensions/resources/classes/extension.php";
+							if (is_writable($switch_extensions)) {
 								$ext = new extension;
 								$ext->xml();
 								unset($ext);
 							}
 
 						//write the provision files
-							if (!empty($_SESSION['provision']['path']['text'])) {
-								if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
-									$prov = new provision;
-									$prov->domain_uuid = $domain_uuid;
-									$response = $prov->write();
-								}
+							if (!empty($provision_path) && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
+								$prov = new provision;
+								$prov->domain_uuid = $domain_uuid;
+								$response = $prov->write();
 							}
 
 						//clear the cache
@@ -942,8 +984,8 @@
 
 	}
 	else {
-		$voicemail_file = $_SESSION['voicemail']['voicemail_file']['text'];
-		$voicemail_local_after_email = $_SESSION['voicemail']['keep_local']['boolean'];
+		$voicemail_file = $settings->get('voicemail', 'voicemail_file', 'attach');
+		$voicemail_local_after_email = $settings->get('voicemail','keep_local', true);
 	}
 
 //get the device lines
@@ -966,7 +1008,7 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	if (!permission_exists('device_all') && !permission_exists('device_domain_all')) {
 		$sql .= "and device_user_uuid = :user_uuid ";
-		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+		$parameters['user_uuid'] = $user_uuid;
 	}
 	$sql .= "order by device_address asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
@@ -1044,30 +1086,30 @@
 	$toll_allow = str_replace(':',',', $toll_allow ?? '');
 
 //get installed languages
-	$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
+	$language_paths = glob($switch_sounds."/*/*/*");
 	foreach ($language_paths as $key => $path) {
-		$path = str_replace($_SESSION["switch"]['sounds']['dir'].'/', "", $path);
+		$path = str_replace($switch_sounds.'/', "", $path);
 		$path_array = explode('/', $path);
 		if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
 			unset($language_paths[$key]);
 		}
-		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key] ?? '');
+		$language_paths[$key] = str_replace($switch_sounds."/","",$language_paths[$key] ?? '');
 		if (empty($language_paths[$key])) {
 			unset($language_paths[$key]);
 		}
 	}
 
 //set the defaults
-	if (empty($user_context)) { $user_context = $_SESSION['domain_name']; }
-	if (empty($max_registrations)) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric'] ?? ''; }
+	if (empty($user_context)) { $user_context = $domain_name; }
+	if (empty($max_registrations)) { $max_registrations = $extension_max_registrations ?? ''; }
 	if (empty($accountcode)) { $accountcode = get_accountcode(); }
-	if (empty($limit_max)) { $limit_max = $_SESSION['extension']['limit_max']['numeric'] ?? 5; }
+	if (empty($limit_max)) { $limit_max = $extension_limit_max; }
 	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
-	if (empty($call_timeout)) { $call_timeout = $_SESSION['extension']['call_timeout']['numeric'] ?? 30; }
+	if (empty($call_timeout)) { $call_timeout = $extension_call_timeout; }
 	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
-	if (empty($user_record)) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
-	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
-	if (empty($voicemail_enabled)) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
+	if (empty($user_record)) { $user_record = $extension_user_record_default; }
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $voicemail_transcription_enabled_default; }
+	if (empty($voicemail_enabled)) { $voicemail_enabled = $voicemail_enabled_default; }
 	if (empty($enabled)) { $enabled = 'true'; }
 
 //create token
@@ -1132,7 +1174,7 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null)]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
@@ -1144,14 +1186,14 @@
 			unset($button_margin);
 		}
 		if (permission_exists('extension_setting_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_settings'],'id'=>'btn_settings','style'=>'','link'=>PROJECT_PATH.'/app/extension_settings/extension_settings.php?id='.urlencode($extension_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_settings','style'=>'','link'=>PROJECT_PATH.'/app/extension_settings/extension_settings.php?id='.urlencode($extension_uuid)]);
 		}
 		if (permission_exists('extension_copy')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"copy_extension();"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"copy_extension();"]);
 		}
 
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -1165,7 +1207,7 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	if ($action == "add" || permission_exists("extension_extension")) {
-		echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension ?? '')."\" required='required' placeholder=\"".($_SESSION['extension']['extension_range']['text'] ?? '')."\">\n";
+		echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension ?? '')."\" required='required' placeholder=\"".$settings->get('extension','extension_range','')."\">\n";
 		echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 		echo "<br />\n";
 		echo $text['description-extension']."\n";
@@ -1197,7 +1239,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-		echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($password ?? '')."\">\n";
+		echo "    <input class='formfld password' type='password' name='password' id='password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($password ?? '')."\">\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
@@ -1270,7 +1312,7 @@
 			}
 			echo "			</select>";
 			if ($action == "update") {
-				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add')]);
 			}
 			echo "			<br>\n";
 		}
@@ -1404,7 +1446,7 @@
 						}
 					}
 				}
-				if (permission_exists('device_address_uuid') && (!isset($_SESSION['limit']['devices']['numeric']) || $total_devices < $_SESSION['limit']['devices']['numeric'])) {
+				if (permission_exists('device_address_uuid') && ($limit_devices === null || $total_devices < $limit_devices)) {
 					echo "							<option disabled='disabled'></option>\n";
 					echo "							<option value='UUID'>".$text['label-generate']."</option>\n";
 				}
@@ -1439,7 +1481,7 @@
 				echo "		</td>\n";
 				if (is_array($device_lines) && @sizeof($device_lines) != 0) {
 					echo "		<td>\n";
-					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add')]);
 					echo "		</td>\n";
 				}
 				echo "	</tr>\n";
@@ -1788,7 +1830,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('voicemail_transcription_enabled') && ($_SESSION['transcribe']['enabled']['boolean'] ?? '') == "true") {
+		if (permission_exists('voicemail_transcription_enabled') && $transcribe_enabled) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-voicemail_transcription_enabled']."\n";
@@ -1904,10 +1946,10 @@
 		echo "	".$text['label-call_group']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (!empty($_SESSION['call_group']['name']) && is_array($_SESSION['call_group']['name'])) {
+		if (!empty($settings->get('call_group', 'name')) && is_array($settings->get('call_group', 'name'))) {
 			echo "	<select class='formfld' name='call_group'>\n";
 			echo "		<option value=''></option>\n";
-			foreach ($_SESSION['call_group']['name'] as $name) {
+			foreach ($settings->get('call_group', 'name') as $name) {
 				if ($name == $call_group) {
 					echo "		<option value='".escape($name)."' selected='selected'>".escape($name)."</option>\n";
 				}
@@ -1998,7 +2040,6 @@
 		echo "	".$text['label-hold_music']."\n";
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 		$options = '';
 		$moh = new switch_music_on_hold;
 		echo $moh->select('hold_music', $hold_music ?? '', $options);
@@ -2271,7 +2312,7 @@
 		echo "    ".$text['label-enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
 			echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
 			echo "		<span class='slider'></span>\n";
@@ -2311,7 +2352,7 @@
 		echo "<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
 		echo "<input type='hidden' name='id' id='id' value='".escape($extension_uuid)."'>";
 		if (!permission_exists('extension_domain')) {
-			echo "<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
+			echo "<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$domain_uuid."'>";
 		}
 		echo "<input type='hidden' name='delete_type' id='delete_type' value=''>";
 		echo "<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";

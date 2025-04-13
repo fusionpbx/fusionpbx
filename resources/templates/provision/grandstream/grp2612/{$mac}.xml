@@ -76,7 +76,7 @@
 
 		<!-- SIP Authentication ID -->
 		<!-- Pvalue P36 -->
-		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.user_id}</item>
+		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
 		<!-- Pvalue P34 -->
@@ -227,10 +227,10 @@
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, Tls Or Tcp -->
 		<!-- Pvalue P130 -->
-		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'UDP'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
-		{if $row.sip_transport == 'TCP'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'TLS'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">2</item>{/if}
 
 		<!-- SIP Listening Mode -->
 		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
@@ -1478,6 +1478,7 @@
 		<!-- ########################################################################################## -->
 		<!-- ## Network/WiFi Settings         GRP2614/GRP2615/GRP2616/GRP2624/GRP2634/GRP2670/GRP2650/GRP2636           -->
 		<!-- ########################################################################################## -->
+		{if isset($grandstream_wifi_enabled) && $grandstream_wifi_enabled == 'Yes'}
 		<!-- # Enable/Disable WiFi -->
 		<!-- # No - Off, OffAndHideMenuFromLCD, Yes - On. -->
 		<!-- Pvalue P7800 -->
@@ -1846,6 +1847,7 @@
 		<!-- # VoWLan Target Delay. Low, Medium, or High -->
 		<!-- Pvalue P82281 -->
 		<item name="wifi.vowlan_target_delay">Low</item>
+		{/if}
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/ Web Access     ## -->
@@ -3302,7 +3304,11 @@
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
 		<!-- Pvalue P8393 -->
-		<item name="features.history.missedCallNotification">Yes</item>
+		{if isset($grandstream_missed_call_notification)}
+		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
+		{else}
+		<item name="features.history.missedCallNotification">No</item>
+		{/if}
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<!-- Pvalue P8391 -->
@@ -4565,7 +4571,7 @@
 
 		<!-- MPK Value -->
 		<!-- Pvalue P303 -->
-		<item name="pks.mpk.{$row.device_key_id}.value"></item>
+		<item name="pks.mpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
 
 {/foreach}
 

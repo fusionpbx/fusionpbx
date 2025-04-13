@@ -25,7 +25,6 @@
 */
 
 //define the fax class
-if (!class_exists('fax')) {
 	class fax {
 
 		/**
@@ -725,7 +724,6 @@ if (!class_exists('fax')) {
 		}
 
 	} //class
-}
 
 /*
 $o = new fax;
@@ -738,5 +736,3 @@ $c->destination_number = $fax_destination_number;
 $c->fax_description = $fax_description;
 $c->dialplan();
 */
-
-?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -557,7 +557,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	}
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -674,6 +674,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			echo modal::create(['id'=>'modal-block','type'=>'general','message'=>$text['confirm-block'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_block','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_form_submit('form_list');"])]);
 		}
 
+		echo "<div class='card'>\n";
+
 		foreach (['inbound','outbound'] as $direction) {
 			echo "<table class='list' id='list_".$direction."' ".($direction == 'outbound' ? "style='display: none;'" : null).">\n";
 			echo "<tr class='list-header'>\n";
@@ -753,6 +755,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			}
 			echo "</table>\n";
 		}
+
+		echo "</div>\n";
 
 		echo "<br />\n";
 		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

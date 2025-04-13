@@ -27,7 +27,6 @@
 /**
  * menu class
  */
-if (!class_exists('menu')) {
 	class menu {
 
 		/**
@@ -427,6 +426,7 @@ if (!class_exists('menu')) {
 									$menu_item_parent_uuid = $uuid_array[$menu['parent_uuid']] ?? null;
 									$menu_item_category = $menu['category'];
 									$menu_item_icon = $menu['icon'] ?? null;
+									$menu_item_icon_color = $menu['icon_color'] ?? null;
 									$menu_item_path = $menu['path'];
 									$menu_item_order = $menu['order'] ?? null;
 									$menu_item_description = $menu['desc'] ?? null;
@@ -471,6 +471,7 @@ if (!class_exists('menu')) {
 												$array['menu_items'][$x]['menu_item_link'] = $menu_item_path;
 												$array['menu_items'][$x]['menu_item_category'] = $menu_item_category;
 												$array['menu_items'][$x]['menu_item_icon'] = $menu_item_icon;
+												$array['menu_items'][$x]['menu_item_icon_color'] = $menu_item_icon_color;
 												if (!empty($menu_item_order)) {
 													$array['menu_items'][$x]['menu_item_order'] = $menu_item_order;
 												}
@@ -745,7 +746,7 @@ if (!class_exists('menu')) {
 			//get the menu from the database
 				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ";
 				$sql .= "i.menu_item_title, i.menu_item_protected, i.menu_item_category, ";
-				$sql .= "i.menu_item_icon, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql .= "i.menu_item_icon, i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
 				$sql .= "from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = :menu_language ";
@@ -814,7 +815,7 @@ if (!class_exists('menu')) {
 				}
 
 			//get the child menu from the database
-				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_icon, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_icon, i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
 				$sql .= "from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = :menu_language ";
@@ -854,6 +855,7 @@ if (!class_exists('menu')) {
 							$menu_item_link = $row['menu_item_link'];
 							$menu_item_category = $row['menu_item_category'];
 							$menu_item_icon = $row['menu_item_icon'];
+							$menu_item_icon_color = $row['menu_item_icon_color'];
 							$menu_item_uuid = $row['menu_item_uuid'];
 							$menu_item_parent_uuid = $row['menu_item_parent_uuid'];
 
@@ -1010,7 +1012,7 @@ if (!class_exists('menu')) {
 						$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
 						if ($this->settings->get('theme', 'menu_main_icons', true) === true) {
 							if (!empty($menu_parent['menu_item_icon']) && substr($menu_parent['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
-								$menu_main_icon = "<span class='".escape($menu_parent['menu_item_icon'])."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>";
+								$menu_main_icon = "<span class='".escape($menu_parent['menu_item_icon'])."' ".(!empty($menu_parent['menu_item_icon_color']) ? "style='color: ".$menu_parent['menu_item_icon_color']." !important;'" : null)." title=\"".escape($menu_parent['menu_language_title'])."\"></span>";
 							}
 							else {
 								$menu_main_icon = null;
@@ -1043,13 +1045,13 @@ if (!class_exists('menu')) {
 								$menu_sub_icon = null;
 								if ($this->settings->get('theme', 'menu_sub_icons', true) !== false) {
 									if (!empty($menu_sub['menu_item_icon']) && substr($menu_sub['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
-										$menu_sub_icon = "<span class='".escape($menu_sub['menu_item_icon'])."'></span>";
+										$menu_sub_icon = "<span class='".escape($menu_sub['menu_item_icon'])."' style='".(!empty($menu_sub['menu_item_icon_color']) ? "color: ".$menu_sub['menu_item_icon_color']." !important;" : "opacity: 0.3;")."'></span>";
 									}
 									else {
 										$menu_sub_icon = null;
 									}
 								}
-								$html .= "						<li class='nav-item'><a class='nav-link' href='".$mod_a_2."' ".$mod_a_3.">".($this->settings->get('theme', 'menu_sub_icons', true) != false ? "<span class='fa-solid fa-minus d-inline-block d-sm-none float-left' style='margin: 4px 10px 0 25px;'></span>" : '').escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
+								$html .= "						<li class='nav-item'><a class='nav-link' href='".$mod_a_2."' ".$mod_a_3." onclick='event.stopPropagation();'>".($this->settings->get('theme', 'menu_sub_icons', true) != false ? "<span class='fa-solid fa-minus d-inline-block d-sm-none float-left' style='margin: 4px 10px 0 25px;'></span>" : '').escape($menu_sub['menu_language_title']).$menu_sub_icon."</a></li>\n";
 								if ($columns > 1 && $column_current == 1 && ($index_sub+1) > (ceil(@sizeof($menu_parent['menu_items'])/2)-1)) {
 									$html .= "								</ul>\n";
 									$html .= "							</div>\n";
@@ -1078,9 +1080,9 @@ if (!class_exists('menu')) {
 							$this->settings->get('theme', 'header_user_visible', 'true') == 'true' &&	//app_defaults schema data type is 'text' but should be boolean here
 							$this->settings->get('theme', 'user_visible', 'true') == 'true'				//app_defaults schema data type is 'text' but should be boolean here
 					) {
-
 						//set (default) user graphic size and icon
 						$user_graphic = "<i class='".$this->settings->get('theme', 'body_header_icon_user', 'fa-solid fa-user-circle')."'></i>";
+
 						//overwrite user graphic with image from session, if exists
 						if ($this->settings->get('theme', 'body_header_user_image', true) == true && !empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
 							$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: 15px; height: 15px; border-radius: 50%; margin-top: -2px; background-image: url('".PROJECT_PATH."/core/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
@@ -1090,13 +1092,15 @@ if (!class_exists('menu')) {
 						$html .= "			<a class='nav-link header_user d-none d-sm-block' href='show:usermenu' title=\"".$_SESSION['username']."\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span class='d-none d-md-inline' style='margin-left: 7px;'>".escape($_SESSION['username'])."</span></a>";
 						$html .= "		</li>\n";
 					}
+
 				//domain name/selector
-					if (!empty($_SESSION['username']) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $this->settings->get('theme', 'domain_visible', 'true') == 'true') {
+					if (permission_exists('domain_select') && $this->settings->get('theme', 'domain_visible', 'true') == 'true' && !empty($_SESSION['username']) && !empty($_SESSION['domains']) && count($_SESSION['domains']) > 1) {
 						$html .= "		<li class='nav-item'>\n";
 						$html .= "			<a class='nav-link header_domain header_domain_selector_domain d-block d-sm-none' href='select:domain' onclick='event.preventDefault();' data-toggle='collapse' data-target='#main_navbar' title='".$this->text['theme-label-open_selector']."'><span class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')."'></span><span style='margin-left: 7px;'>".escape($_SESSION['domain_name'])."</span></a>";
 						$html .= "			<a class='nav-link header_domain header_domain_selector_domain d-none d-sm-block' href='select:domain' onclick='event.preventDefault();' title='".$this->text['theme-label-open_selector']."'><span class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')."'></span><span class='d-none d-md-inline' style='margin-left: 7px;'>".escape($_SESSION['domain_name'])."</span></a>";
 						$html .= "		</li>\n";
 					}
+
 				//logout icon
 					if (!empty($_SESSION['username']) && isset($_SESSION['theme']['logout_icon_visible']) && $this->settings->get('theme', 'logout_icon_visible', 'false') == "true") {
 						$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
@@ -1211,7 +1215,7 @@ if (!class_exists('menu')) {
 							$html .= "	<div class='menu_side_item_main_sub_icons' style='float: right; margin-right: -1px; ".($menu_side_state != 'expanded' ? "display: none;" : null)."'><i id='sub_arrow_".$menu_item_main['menu_item_uuid']."' class='sub_arrows ".$this->settings->get('theme', 'menu_side_item_main_sub_icon_expand', 'fa-solid fa-chevron-down')." fa-xs'></i></div>\n";
 						}
 						if (!empty($menu_item_main['menu_item_icon']) && substr($menu_item_main['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
-							$html .= "<i class='menu_side_item_icon ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px;'></i>";
+							$html .= "<i class='menu_side_item_icon ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px; ".(!empty($menu_item_main['menu_item_icon_color']) ? "color: ".$menu_item_main['menu_item_icon_color']." !important;" : null)."'></i>";
 						}
 						$html .= "<span class='menu_side_item_title' style='".($menu_side_state != 'expanded' ? "display: none;" : null)."'>".$menu_item_main['menu_language_title']."</span>";
 						$html .= "</a>\n";
@@ -1222,7 +1226,7 @@ if (!class_exists('menu')) {
 									$menu_sub_icon = null;
 									if ($this->settings->get('theme', 'menu_sub_icons', true) !== false) {
 										if (!empty($menu_item_sub['menu_item_icon']) && substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
-											$menu_sub_icon = "<span class='".escape($menu_item_sub['menu_item_icon']).(substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-' ? ' fa-fw' : null)."'></span>";
+											$menu_sub_icon = "<span class='".escape($menu_item_sub['menu_item_icon']).(substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-' ? ' fa-fw' : null)."' style='".(!empty($menu_item_sub['menu_item_icon_color']) ? "color: ".$menu_item_sub['menu_item_icon_color']." !important;" : "opacity: 0.3;")."'></span>";
 										}
 										else {
 											$menu_sub_icon = null;
@@ -1238,6 +1242,7 @@ if (!class_exists('menu')) {
 					$html .= "	<div style='height: 100px;'></div>\n";
 				}
 			$html .= "</div>\n";
+			$content_container_onclick = "";
 			if ($menu_side_state != 'expanded') {
 				$content_container_onclick = "onclick=\"clearTimeout(menu_side_contract_timer); if ($(window).width() >= 576) { menu_side_contract(); }\"";
 			}
@@ -1335,4 +1340,3 @@ if (!class_exists('menu')) {
 		}
 
 	}
-}

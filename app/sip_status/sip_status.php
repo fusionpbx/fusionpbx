@@ -84,7 +84,31 @@
 		$cmd = "sofia xmlstatus";
 		$xml_response = trim(event_socket::api($cmd));
 		if ($xml_response) {
+			//read the xml string into an xml object
 			$xml = new SimpleXMLElement($xml_response);
+
+			//sort the SIP profiles alphabetically
+			//turn into array
+			$profiles_array = array();
+			foreach($xml->profile as $profile) {
+				$profiles_array[] = $profile;
+			}
+
+			//sort the array
+			function sort_xml($a, $b) {
+				return strnatcmp($a->name, $b->name);
+			}
+			usort($profiles_array, 'sort_xml');
+
+			//convert array back to SimpleXMLElement
+			$xml_string = "<?xml version='1.0'?><profiles>";
+			foreach ($profiles_array as $node) {
+				$xml_string .= $node->saveXML();
+			}
+			$xml_string .= "</profiles>";
+
+			//read the xml string into a new xml object
+			$xml = simplexml_load_string($xml_string);
 		}
 	}
 	catch(Exception $e) {

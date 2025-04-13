@@ -134,15 +134,15 @@
 	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
-	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
-	$button_icon_copy = !empty($_SESSION['theme']['button_icon_copy']) ? $_SESSION['theme']['button_icon_copy'] : '';
-	$button_icon_toggle = !empty($_SESSION['theme']['button_icon_toggle']) ? $_SESSION['theme']['button_icon_toggle'] : '';
-	$button_icon_all = !empty($_SESSION['theme']['button_icon_all']) ? $_SESSION['theme']['button_icon_all'] : '';
-	$button_icon_delete = !empty($_SESSION['theme']['button_icon_delete']) ? $_SESSION['theme']['button_icon_delete'] : '';
-	$button_icon_search = !empty($_SESSION['theme']['button_icon_search']) ? $_SESSION['theme']['button_icon_search'] : '';
-	$button_icon_edit = !empty($_SESSION['theme']['button_icon_edit']) ? $_SESSION['theme']['button_icon_edit'] : '';
-	$button_icon_reset = !empty($_SESSION['theme']['button_icon_reset']) ? $_SESSION['theme']['button_icon_reset'] : '';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$button_icon_add = $_SESSION['theme']['button_icon_add'] ?? '';
+	$button_icon_copy = $_SESSION['theme']['button_icon_copy'] ?? '';
+	$button_icon_toggle = $_SESSION['theme']['button_icon_toggle'] ?? '';
+	$button_icon_all = $_SESSION['theme']['button_icon_all'] ?? '';
+	$button_icon_delete = $_SESSION['theme']['button_icon_delete'] ?? '';
+	$button_icon_search = $_SESSION['theme']['button_icon_search'] ?? '';
+	$button_icon_edit = $_SESSION['theme']['button_icon_edit'] ?? '';
+	$button_icon_reset = $_SESSION['theme']['button_icon_reset'] ?? '';
 
 //get the number of rows in the dialplan
 	$sql = "select count(*) from v_dialplans ";
@@ -150,7 +150,7 @@
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (empty($app_uuid)) {
@@ -541,7 +541,7 @@
 		($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3" && permission_exists('outbound_route_edit')) ||
 		($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7" && permission_exists('fifo_edit')) ||
 		($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit')) ||
-		permission_exists('dialplan_edit')) && $list_row_edit_button == 'true'
+		permission_exists('dialplan_edit')) && $list_row_edit_button
 		) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -551,9 +551,13 @@
 		$x = 0;
 		foreach ($dialplans as $row) {
 
+			$list_row_url = '';
 			if ($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1") {
 				if (permission_exists('time_condition_edit') || permission_exists('dialplan_edit')) {
 					$list_row_url = PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
+					if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+						$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+					}
 				}
 			}
 			else if (
@@ -563,6 +567,9 @@
 				permission_exists('dialplan_edit')
 				) {
 				$list_row_url = "dialplan_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			else {
 				unset($list_row_url);
@@ -618,7 +625,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['dialplan_description'])."&nbsp;</td>\n";
-			if ($list_row_edit_button == 'true' && (
+			if ($list_row_edit_button && (
 				(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
 				($row['app_uuid'] == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
 				($row['app_uuid'] == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3" && permission_exists('outbound_route_edit')) ||
@@ -648,3 +655,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

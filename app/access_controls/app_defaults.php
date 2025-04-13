@@ -33,7 +33,7 @@
 		if ($num_rows == 0) {
 
 			//set the directory
-				$xml_dir = $setting->get('switch','conf').'/autoload_configs';
+				$xml_dir = $settings->get('switch','conf').'/autoload_configs';
 				$xml_file = $xml_dir."/acl.conf.xml";
 				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/acl.conf';
 

@@ -26,10 +26,7 @@
 
 /**
  * call_recordings class
- *
- * @method null download
  */
-if (!class_exists('call_recordings')) {
 	class call_recordings {
 
 		/**
@@ -483,7 +480,7 @@ if (!class_exists('call_recordings')) {
 				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 				//get the recording location for this domain
-				$call_recording_location = $domain_settings->get('switch', 'recordings', '/var/lib/freeswitch/storage/recordings') . '/default';
+				$call_recording_location = $domain_settings->get('switch', 'recordings', '/var/lib/freeswitch/recordings');
 
 				//get the retention days for this domain
 				$retention_days = $domain_settings->get('call_recordings', 'filesystem_retention_days', '');
@@ -493,8 +490,8 @@ if (!class_exists('call_recordings')) {
 					$retention_days = intval($retention_days);
 
 					//get list of mp3 and wav files
-					$mp3_files = glob("$call_recording_location/$domain_name/*/archive/*.mp3");
-					$wav_files = glob("$call_recording_location/$domain_name/*/archive/*.wav");
+					$mp3_files = glob("$call_recording_location/$domain_name/archive/*/*/*/*.mp3");
+					$wav_files = glob("$call_recording_location/$domain_name/archive/*/*/*/*.wav");
 
 					//combine to single array
 					$domain_call_recording_files = array_merge($mp3_files, $wav_files);
@@ -507,7 +504,7 @@ if (!class_exists('call_recordings')) {
 							//remove the file when it is older
 							if (unlink($file)) {
 								//log success
-								maintenance_service::log_write(self::class, "Removed $file from call_recordings", $domain_uuid);
+								maintenance_service::log_write(self::class, "Removed $file from call_recordings older than $retention_days days", $domain_uuid);
 							} else {
 								//log failure
 								maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
@@ -525,6 +522,3 @@ if (!class_exists('call_recordings')) {
 		}
 
 	} //class
-}
-
-?>

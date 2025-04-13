@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,7 +54,7 @@
 	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the http post data
 	if (!empty($_POST['action'])) {
@@ -161,7 +161,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$domain_name." (".$num_rows.")</b></div>\n"; //$text['title-domain_settings']
+	echo "	<div class='heading'><b id='heading_sub'>".$domain_name."</b><div class='count'>".number_format($num_rows)."</div></div>\n"; //$text['title-domain_settings']
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'action_bar_sub_button_back','style'=>'','link'=>PROJECT_PATH.'/core/domains/domains.php']);
 	if (permission_exists('default_setting_view') && $num_rows) {
@@ -214,8 +214,6 @@
 	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	echo "<input type='hidden' name='domain_uuid_target' id='domain_uuid_target' value=''>\n";
 
-	echo "<div class='card'>\n";
-	echo "<table class='list'>\n";
 	if (!empty($domain_settings)) {
 		//define the variable
 		$previous_domain_setting_category = '';
@@ -239,11 +237,13 @@
 			if ($previous_domain_setting_category != $row['domain_setting_category']) {
 				if (!empty($previous_domain_setting_category)) {
 					echo "</table>\n";
+					echo "</div>\n";
 
 					echo "<br>\n";
 				}
 				echo "<b>".escape($label_domain_setting_category)."</b><br>\n";
 
+				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {
@@ -259,7 +259,7 @@
 				echo th_order_by('domain_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
 				echo th_order_by('domain_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
-				if (permission_exists('domain_setting_edit') && $list_row_edit_button == 'true') {
+				if (permission_exists('domain_setting_edit') && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -320,7 +320,7 @@
 				) {
 				echo "		".$text['label-'.escape($row['domain_setting_value'])];
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
+			else if ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen(escape($row['domain_setting_value'])));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
@@ -389,7 +389,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['domain_setting_description'])."\">".escape($row['domain_setting_description'])."&nbsp;</td>\n";
-			if (permission_exists('domain_setting_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('domain_setting_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

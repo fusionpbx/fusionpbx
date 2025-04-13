@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -70,30 +70,37 @@
 			$toll_allow = $_POST["toll_allow"] ?? '';
 			$pin_numbers_enable = $_POST["pin_numbers_enabled"] ?? null;
 			if (empty($pin_numbers_enable)) { $pin_numbers_enable = "false"; }
+
 		//set the default type
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
 			$gateway_3_type = 'gateway';
+
 		//set the gateway type to bridge
 			if (strtolower(substr($gateway, 0, 6)) == "bridge") {
 				$gateway_type = 'bridge';
 			}
+
 		//set the type to enum
 			if (strtolower(substr($gateway, 0, 4)) == "enum") {
 				$gateway_type = 'enum';
 			}
+
 		//set the type to freetdm
 			if (strtolower(substr($gateway, 0, 7)) == "freetdm") {
 				$gateway_type = 'freetdm';
 			}
+
 		//set the type to transfer
 			if (strtolower(substr($gateway, 0, 8)) == "transfer") {
 				$gateway_type = 'transfer';
 			}
+
 		//set the type to dingaling
 			if (strtolower(substr($gateway, 0, 4)) == "xmpp") {
 				$gateway_type = 'xmpp';
 			}
+
 		//set the gateway_uuid and gateway_name
 			if ($gateway_type == "gateway") {
 				$gateway_array = explode(":",$gateway);
@@ -107,26 +114,32 @@
 
 		//set the gateway_2 variable
 			$gateway_2 = $_POST["gateway_2"];
+
 		//set the type to bridge
 			if (strtolower(substr($gateway_2, 0, 6)) == "bridge") {
 				$gateway_2_type = 'bridge';
 			}
+
 		//set type to enum
 			if (strtolower(substr($gateway_2, 0, 4)) == "enum") {
 				$gateway_2_type = 'enum';
 			}
+
 		//set the type to freetdm
 			if (strtolower(substr($gateway_2, 0, 7)) == "freetdm") {
 				$gateway_2_type = 'freetdm';
 			}
+
 		//set the type to transfer
 			if (strtolower(substr($gateway_2, 0, 8)) == "transfer") {
 				$gateway_type = 'transfer';
 			}
+
 		//set the type to dingaling
 			if (strtolower(substr($gateway_2, 0, 4)) == "xmpp") {
 				$gateway_2_type = 'xmpp';
 			}
+
 		//set the gateway_2_id and gateway_2_name
 			if ($gateway_2_type == "gateway" && !empty($_POST["gateway_2"])) {
 				$gateway_2_array = explode(":",$gateway_2);
@@ -140,26 +153,32 @@
 
 		//set the gateway_3 variable
 			$gateway_3 = $_POST["gateway_3"];
+
 		//set the type to bridge
 			if (strtolower(substr($gateway_3, 0, 6)) == "bridge") {
 				$gateway_3_type = 'bridge';
 			}
+
 		//set the type to enum
 			if (strtolower(substr($gateway_3, 0, 4)) == "enum") {
 				$gateway_3_type = 'enum';
 			}
+
 		//set the type to freetdm
 			if (strtolower(substr($gateway_3, 0, 7)) == "freetdm") {
 				$gateway_3_type = 'freetdm';
 			}
+
 		//set the type to dingaling
 			if (strtolower(substr($gateway_3, 0, 4)) == "xmpp") {
 				$gateway_3_type = 'xmpp';
 			}
+
 		//set the type to transfer
 			if (strtolower(substr($gateway_3, 0, 8)) == "transfer") {
 				$gateway_type = 'transfer';
 			}
+
 		//set the gateway_3_id and gateway_3_name
 			if ($gateway_3_type == "gateway" && !empty($_POST["gateway_3"])) {
 				$gateway_3_array = explode(":",$gateway_3);
@@ -170,6 +189,7 @@
 				$gateway_3_id = '';
 				$gateway_3_name = '';
 			}
+
 		//set additional variables
 			$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 			$dialplan_description = $_POST["dialplan_description"];
@@ -318,7 +338,7 @@
 						$tmp_prefix == $dialplan_expression
 								? $outbound_prefix = ""
 								: $outbound_prefix = $tmp_prefix;
-	
+
 						if ($gateway_type == "gateway") {
 							$dialplan_name = $gateway_name.".".$abbrv;
 							if ($abbrv == "988") {
@@ -863,7 +883,7 @@
 	}
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";
-		
+
 	}
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
@@ -880,6 +900,9 @@
 		$bridges = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
+
+//set defaults
+	if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; }
 
 //create token
 	$object = new token;
@@ -939,6 +962,7 @@ function type_onchange(dialplan_detail_type) {
 	echo $text['description-outbound-routes']."\n";
 	echo "<br /><br />\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -1346,15 +1370,16 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "</table>";
-	echo "<br><br>";
+	echo "</table>\n";
+	echo "</div>\n";
+	echo "<br><br>\n";
 
 	if (!empty($action) && $action == "update") {
 		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-	echo "</form>";
+	echo "</form>\n";
 
 //show the footer
 	require_once "resources/footer.php";

@@ -58,6 +58,11 @@ $display_type = 'text';
 //run
 show_upgrade_menu();
 
+/**
+ * Show upgrade menu
+ * @global type $text
+ * @global type $software_name
+ */
 function show_upgrade_menu() {
 	global $text, $software_name, $settings;
 	//error_reporting(E_ALL);
@@ -87,12 +92,15 @@ function show_upgrade_menu() {
 			case 1:
 				do_upgrade_code();
 				do_upgrade_code_submodules();
+				do_upgrade_auto_loader();
 				break;
 			case '1a':
 				do_upgrade_code();
+				do_upgrade_auto_loader();
 				break;
 			case '1b':
 				do_upgrade_code_submodules();
+				do_upgrade_auto_loader();
 				break;
 			case 2:
 				do_upgrade_schema();
@@ -101,33 +109,56 @@ function show_upgrade_menu() {
 				do_upgrade_schema(true);
 				break;
 			case 3:
+				do_upgrade_auto_loader();
 				do_upgrade_domains();
 				break;
 			case 4:
+				do_upgrade_auto_loader();
 				do_upgrade_menu();
 				break;
 			case 5:
+				do_upgrade_auto_loader();
 				do_upgrade_permissions();
 				break;
 			case 6:
+				do_upgrade_auto_loader();
 				do_filesystem_permissions($text, $settings);
 				break;
 			case 7:
 				do_upgrade_code();
+				do_upgrade_auto_loader();
 				do_upgrade_schema();
 				do_upgrade_domains();
 				do_upgrade_menu();
 				do_upgrade_permissions();
 				do_filesystem_permissions($text, $settings);
 				break;
-			case 8:
+			case 9:
 				break;
 			case 0:
+			case 'q':
 				exit();
 		}
 	}
 }
 
+/**
+ * Rebuild the cache file
+ * @global type $text
+ */
+function do_upgrade_auto_loader() {
+	global $text, $autoload;
+	//remove temp files
+	unlink(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
+	unlink(sys_get_temp_dir() . '/' . auto_loader::INTERFACES_FILE);
+	//create a new instance of the autoloader
+	$autoload->update();
+	echo "{$text['message-updated_autoloader']}\n";
+}
+
+/**
+ * Update file system permissions
+ */
 function do_filesystem_permissions($text, settings $settings) {
 
 	echo ($text['label-header1'] ?? "Root account or sudo account must be used for this option") . "\n";
@@ -158,6 +189,8 @@ function do_filesystem_permissions($text, settings $settings) {
 		if ($log_directory !== null) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
+		//update the auto_loader cache permissions file
+		$directories[] = sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE;
 		//execute chown command for each directory
 		foreach ($directories as $dir) {
 			if ($dir !== null) {
@@ -185,6 +218,10 @@ function show_software_version() {
 	echo software::version() . "\n";
 }
 
+/**
+ * Upgrade the source folder
+ * @return type
+ */
 function do_upgrade_code() {
 	//assume failed
 	$result = ['result' => false, 'message' => 'Failed'];
@@ -199,6 +236,10 @@ function do_upgrade_code() {
 	return;
 }
 
+/**
+ * Upgrade any of the git submodules
+ * @global type $text
+ */
 function do_upgrade_code_submodules() {
 	global $text;
 	$updateable_repos = git_find_repos(dirname(__DIR__, 2)."/app");
@@ -223,25 +264,28 @@ function do_upgrade_code_submodules() {
 	}
 }
 
-//run all app_defaults.php files
+/**
+ * Execute all app_defaults.php files
+ */
 function do_upgrade_domains() {
-	require_once dirname(__DIR__, 2) . "/resources/classes/config.php";
-	require_once dirname(__DIR__, 2) . "/resources/classes/domains.php";
 	$domain = new domains;
 	$domain->display_type = 'text';
 	$domain->upgrade();
 }
 
-//upgrade schema and/or data_types
+/**
+ * Upgrade schema and/or data_types
+ */
 function do_upgrade_schema(bool $data_types = false) {
 	//get the database schema put it into an array then compare and update the database as needed.
-	require_once dirname(__DIR__, 2) . "/resources/classes/schema.php";
 	$obj = new schema;
 	$obj->data_types = $data_types;
 	echo $obj->schema('text');
 }
 
-//restore the default menu
+/**
+ * Restore the default menu
+ */
 function do_upgrade_menu() {
 	global $included, $sel_menu, $menu_uuid, $menu_language;
 	//get the menu uuid and language
@@ -273,7 +317,9 @@ function do_upgrade_menu() {
 	}
 }
 
-//restore the default permissions
+/**
+ * Restore the default permissions
+ */
 function do_upgrade_permissions() {
 	global $included;
 	//default the permissions
@@ -285,7 +331,9 @@ function do_upgrade_permissions() {
 	echo $text['message-upgrade_permissions'] . "\n";
 }
 
-//default upgrade schema and app defaults
+/**
+ * Default upgrade schema and app defaults
+ */
 function do_upgrade_defaults() {
 	//add multi-lingual support
 	$language = new text;
@@ -309,6 +357,10 @@ function do_upgrade_defaults() {
 	echo "\n";
 }
 
+/**
+ * Load the old config.php file
+ * @return type
+ */
 function load_config_php() {
 	//if the config file doesn't exist and the config.php does exist use it to write a new config file
 	//include the config.php

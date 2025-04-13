@@ -38,7 +38,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //get the extension list
 	$sql = "select e.extension_uuid, e.extension, e.enabled, e.description ";
@@ -69,7 +69,7 @@
 			echo "<th>".$text['label-extension']."</th>\n";
 			echo "<th class='center'>".$text['label-enabled']."</th>\n";
 			echo "<th class='hide-md-dn'>".$text['label-description']."</th>\n";
-			if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('extension_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -77,8 +77,12 @@
 			if (!empty($contact_extensions)) {
 				$x = 0;
 				foreach ($contact_extensions as $row) {
+					$list_row_url = '';
 					if (permission_exists('extension_edit')) {
 						$list_row_url = PROJECT_PATH.'/app/extensions/extension_edit.php?id='.urlencode($row['extension_uuid']);
+						if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+							$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+						}
 					}
 					echo "<tr class='list-row' href='".$list_row_url."' ".($row['url_primary'] ? "style='font-weight: bold;'" : null).">\n";
 					echo "	<td>";
@@ -91,7 +95,7 @@
 					echo "	</td>\n";
 					echo "	<td class='center'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".$row['description']."&nbsp;</td>\n";
-					if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
+					if (permission_exists('extension_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 						echo "	</td>\n";
@@ -109,3 +113,4 @@
 	}
 
 ?>
+

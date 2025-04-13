@@ -38,7 +38,11 @@
 		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 		<!-- Secondary SIP Server -->
+		{if isset($row.server_address_secondary)}
 		<item name="account.{$row.line_number}.sip.server.2.address">{$row.server_address_secondary}:{$row.sip_port}</item>
+		{else}
+		<item name="account.{$row.line_number}.sip.server.2.address"/>
+		{/if}
 
 		<!-- Outbound Proxy -->
 		{if $row.sip_transport != 'dns srv' && isset($row.outbound_proxy_primary)}
@@ -65,7 +69,7 @@
 		<item name="account.{$row.line_number}.sip.userid">{$row.user_id}</item>
 
 		<!-- SIP Authentication ID -->
-		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.user_id}</item>
+		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
 		<item name="account.{$row.line_number}.sip.subscriber.password">{$row.password}</item>
@@ -176,10 +180,11 @@
 
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, Tls Or Tcp -->
-		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
-		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
+		<!-- Variable Value: {$row.sip_transport} -->
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">2</item>{/if}
 
 		<!-- SIP Listening Mode -->
 		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
@@ -2133,7 +2138,11 @@
 
 		<!-- # Transfer Mode via VPK/MPK. -->
 		<!-- BlindTransfer, AttendedTransfer,  NewCall -->
+		{if isset($grandstream_transfer_mode_via_vpk)}
+		<item name="call.transfer.modeViaVpk">{$grandstream_transfer_mode_via_vpk}</item>
+		{else}
 		<item name="call.transfer.modeViaVpk">BlindTransfer</item>
+		{/if}
 
 		<!-- # Show On Hold Duration. Yes or No -->
 		<item name="call.hold.showHoldDuration.enable">Yes</item>
@@ -2205,7 +2214,11 @@
 		<item name="sip.showError">Yes</item>
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
+		{if isset($grandstream_missed_call_notification)}
 		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
+		{else}
+		<item name="features.history.missedCallNotification">No</item>
+		{/if}
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<item name="call.dial.callComplete.enable"/>

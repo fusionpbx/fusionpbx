@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,52 +39,65 @@
 	}
 
 //change the domain
-	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true") {
-		if (permission_exists('domain_select')) {
+	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
 
-			//update the domain session variables
-				$domain_uuid = $_GET["domain_uuid"];
+		//update the domain session variables
+			$domain_uuid = $_GET["domain_uuid"];
 
-			//get the domain details
-				$sql = "select * from v_domains ";
-				$sql .= "order by domain_name asc ";
-				$domains = $database->select($sql, null, 'all');
-				if (!empty($domains)) {
-					foreach($domains as $row) {
-						$_SESSION['domains'][$row['domain_uuid']] = $row;
-					}
+		//get the domain details
+			$sql = "select * from v_domains ";
+			$sql .= "order by domain_name asc ";
+			$domains = $database->select($sql, null, 'all');
+			if (!empty($domains)) {
+				foreach($domains as $row) {
+					$_SESSION['domains'][$row['domain_uuid']] = $row;
 				}
-				unset($sql, $domains);
+			}
+			unset($sql, $domains);
 
-			//validate the domain change
-				if (empty($_SESSION['domains'][$domain_uuid])) {
-					die("invalid domain");
-				}
-			
-			//update the domain session variables
-				$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
-				$_SESSION['domain_uuid'] = $domain_uuid;
-				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
-				$_SESSION["context"] = $_SESSION["domain_name"];
+		//validate the domain change
+			if (empty($_SESSION['domains'][$domain_uuid])) {
+				die("invalid domain");
+			}
 
-			//clear the extension array so that it is regenerated for the selected domain
-				unset($_SESSION['extension_array']);
+		//update the domain session variables
+			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
+			$_SESSION['domain_uuid'] = $domain_uuid;
+			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
+			$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
+			$_SESSION["context"] = $_SESSION["domain_name"];
 
-			//set the setting arrays
-				$domain = new domains();
-				$domain->set();
+		//clear the extension array so that it is regenerated for the selected domain
+			unset($_SESSION['extension_array']);
 
-			//redirect the user
-				if (!empty($_SESSION["login"]["destination"])) {
-					// to default, or domain specific, login destination
-					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["text"]);
-				}
-				else {
-					header("Location: ".PROJECT_PATH."/core/dashboard/");
-				}
-				exit;
-		}
+		//set the setting arrays
+			$domain = new domains();
+			$domain->set();
+
+		//initialize the settigns object
+			$settings = new settings(['database' => $database]);
+
+		//reload domain on domain change, if enabled
+			if ($settings->get('menu', 'domain_change_reload', false)) {
+				//unset the sesssion menu array
+					unset($_SESSION['menu']['array']);
+
+				//get the menu array and save it to the session
+					$menu = new menu;
+					$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+					$_SESSION['menu']['array'] = $menu->menu_array();
+					unset($menu);
+			}
+
+		//redirect the user
+			if (!empty($_SESSION["login"]["destination"])) {
+				// to default, or domain specific, login destination
+				header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["text"]);
+			}
+			else {
+				header("Location: ".PROJECT_PATH."/core/dashboard/");
+			}
+			exit;
 	}
 
 //check permission
@@ -143,7 +156,7 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //add the search string
 	if (!empty($search)) {
@@ -243,7 +256,7 @@
 	echo "<th class='center'>".$text['label-tools']."</th>";
 	echo th_order_by('domain_enabled', $text['label-domain_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-domain_description']."</th>\n";
-	if (permission_exists('domain_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('domain_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -291,7 +304,7 @@
 				echo "	</td>\n";
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['domain_description'])."</td>\n";
-			if (permission_exists('domain_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('domain_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

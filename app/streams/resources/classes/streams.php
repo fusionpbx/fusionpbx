@@ -25,7 +25,6 @@
 */
 
 //define the streams class
-if (!class_exists('streams')) {
 	class streams {
 
 		/**
@@ -244,6 +243,3 @@ if (!class_exists('streams')) {
 		}
 
 	}
-}
-
-?>

@@ -82,7 +82,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //build the query string
 	$query_string = '';
@@ -198,7 +198,7 @@
 			}
 		}
 	}
-	unset($sql, $rows, $row);
+	unset($sql, $rows, $row, $parameters);
 
 //get the list of categories
 	if (!empty($default_setting_categories)) {
@@ -208,7 +208,7 @@
 		//add custom to the list of categories
 		$categories['custom']['formatted'] = $text['label-custom'];
 		$categories['custom']['count'] = null;
-		
+
 		//add the other catefories to the array
 		foreach ($default_setting_categories as $default_setting_category => $quantity) {
 			$category = strtolower($default_setting_category);
@@ -398,7 +398,7 @@
 				if ($row['default_setting_value'] !== $field['default_setting_value']) {
 					$setting_bold = 'font-weight:bold;';
 				}
-				
+
 				//set the default value
 				if (!empty($field['default_setting_value'])) {
 					$default_value = 'Default: '.$field['default_setting_value'];
@@ -406,7 +406,7 @@
 				else {
 					$default_value = 'Default: null';
 				}
-				
+
 				//check if default enabled
 				if ($row['default_setting_enabled'] == $field['default_setting_enabled']) {
 					if ($custom_settings) {	continue; }
@@ -458,7 +458,7 @@
 				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
 				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
-				if ($permission['default_setting_edit'] && $list_row_edit_button == 'true') {
+				if ($permission['default_setting_edit'] && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -529,7 +529,7 @@
 			else if ($category == 'theme' && $subcategory == 'custom_css_code' && $name == 'text') {
 				echo "		[...]\n";
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') > 0 || substr_count($subcategory, '_secret') > 0) {
+			else if ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || substr_count($subcategory, '_key') > 0 || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', 10);	//use the same number of characters to mask the password length
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
@@ -603,7 +603,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['default_setting_description'])."\">".escape($row['default_setting_description'])."</td>\n";
-			if ($permission['default_setting_edit'] && $list_row_edit_button == 'true') {
+			if ($permission['default_setting_edit'] && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

@@ -474,7 +474,9 @@
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($ring_group_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($ring_group_extension)."$\">\n";
-			$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
+			if ($settings->get('ring_group', 'ring_ready', true)) {
+				$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
+			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".xml::sanitize($ring_group_uuid)."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
 			$dialplan_xml .= "	</condition>\n";

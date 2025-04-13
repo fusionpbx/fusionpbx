@@ -69,7 +69,7 @@
 		<item name="account.{$row.line_number}.sip.userid">{$row.user_id}</item>
 
 		<!-- SIP Authentication ID -->
-		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.user_id}</item>
+		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
 		<item name="account.{$row.line_number}.sip.subscriber.password">{$row.password}</item>
@@ -2138,7 +2138,11 @@
 
 		<!-- # Transfer Mode via VPK/MPK. -->
 		<!-- BlindTransfer, AttendedTransfer,  NewCall -->
+		{if isset($grandstream_transfer_mode_via_vpk)}
+		<item name="call.transfer.modeViaVpk">{$grandstream_transfer_mode_via_vpk}</item>
+		{else}
 		<item name="call.transfer.modeViaVpk">BlindTransfer</item>
+		{/if}
 
 		<!-- # Show On Hold Duration. Yes or No -->
 		<item name="call.hold.showHoldDuration.enable">Yes</item>
@@ -2210,7 +2214,11 @@
 		<item name="sip.showError">Yes</item>
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
+		{if isset($grandstream_missed_call_notification)}
 		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
+		{else}
+		<item name="features.history.missedCallNotification">No</item>
+		{/if}
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<item name="call.dial.callComplete.enable"/>

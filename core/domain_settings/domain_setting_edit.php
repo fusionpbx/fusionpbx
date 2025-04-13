@@ -307,6 +307,9 @@
 						}
 					}
 
+				//clear domain apcu cache due to changes
+					settings::clear_cache('domain');
+
 				//redirect the browser
 					if ($action == "update") {
 						message::add($text['message-update']);
@@ -562,8 +565,8 @@
 		echo "    	<option value='textarea' ".($domain_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
 		echo "	</select>\n";
 	}
-	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
-		echo "	<input class='formfld' type='password' id='domain_setting_value' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($row['domain_setting_value'])."\">\n";
+	elseif ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+		echo "	<input class='formfld password' type='password' id='domain_setting_value' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($row['domain_setting_value'])."\">\n";
 	}
 	elseif ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'])."\">\n";
@@ -780,7 +783,7 @@
 	echo "<br />\n";
 	echo $text['description-value']."\n";
 	if ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
-		echo "&nbsp;&nbsp;".$text['label-reference'].": <a href='https://www.google.com/fonts' target='_blank'>".$text['label-web_fonts']."</a>\n";
+		echo "&nbsp;&nbsp;".$text['label-reference'].": <a href='https://fonts.google.com' target='_blank'>".$text['label-web_fonts']."</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";

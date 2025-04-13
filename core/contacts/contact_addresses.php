@@ -38,7 +38,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //set the uuid
 	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
@@ -88,8 +88,12 @@
 				$x = 0;
 				foreach ($contact_addresses as $row) {
 					$map_query = $row['address_street']." ".$row['address_extended'].", ".$row['address_locality'].", ".$row['address_region'].", ".$row['address_region'].", ".$row['address_postal_code'];
+					$list_row_url = '';
 					if (permission_exists('contact_address_edit')) {
 						$list_row_url = "contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_address_uuid']);
+						if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+							$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+						}
 					}
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('contact_address_delete')) {
@@ -123,3 +127,4 @@
 	}
 
 ?>
+

@@ -37,9 +37,9 @@
 		<!-- SIP Server -->
 		<!-- Pvalue P47 -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 
 		<!-- Secondary SIP Server -->
@@ -65,9 +65,9 @@
 		<!-- BLF Server -->
 		<!-- Pvalue P2375 -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 
 		<!-- SIP User ID -->
@@ -76,7 +76,7 @@
 
 		<!-- SIP Authentication ID -->
 		<!-- Pvalue P36 -->
-		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.user_id}</item>
+		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
 		<!-- Pvalue P34 -->
@@ -142,7 +142,7 @@
 		<item name="account.{$row.line_number}.network.natTraversal">{$grandstream_nat_traversal}</item>
 		{else}
 		<item name="account.{$row.line_number}.network.natTraversal">Auto</item>
-		{/if}		
+		{/if}
 
 		<!-- Support Rport (RFC 3581) -->
 		<!-- Yes, No -->
@@ -227,10 +227,10 @@
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, Tls Or Tcp -->
 		<!-- Pvalue P130 -->
-		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'UDP'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
-		{if $row.sip_transport == 'TCP'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'TLS'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">2</item>{/if}
 
 		<!-- SIP Listening Mode -->
 		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
@@ -907,21 +907,21 @@
 
 		<!-- DND Call Feature On -->
 		<!-- Pvalue P2344 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOn"></item>
+		<item name="account.{$row.line_number}.featureCodes.dndOn">*78</item>
 
 		<!-- DND Call Feature Off  -->
 		<!-- Pvalue P2345 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOff"></item>
+		<item name="account.{$row.line_number}.featureCodes.dndOff">*79</item>
 
 		<!-- #Call Forward Unconditionally (All) - On -->
 		<!-- # String -->
 		<!-- Pvalue P26013 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn"></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn">*72</item>
 
 		<!-- #Call Forward Unconditionally (All) - Off -->
 		<!-- # String -->
 		<!-- Pvalue P26014 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff"></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff">*73</item>
 
 		<!-- #Call Forward Unconditionally (All) - Target -->
 		<!-- # String -->
@@ -1478,10 +1478,11 @@
 		<!-- ########################################################################################## -->
 		<!-- ## Network/WiFi Settings         GRP2614/GRP2615/GRP2616/GRP2624/GRP2634/GRP2670/GRP2650/GRP2636           -->
 		<!-- ########################################################################################## -->
+		{if isset($grandstream_wifi_enabled) && $grandstream_wifi_enabled == 'Yes'}
 		<!-- # Enable/Disable WiFi -->
 		<!-- # No - Off, OffAndHideMenuFromLCD, Yes - On. -->
 		<!-- Pvalue P7800 -->
-		<item name="network.wifi.enable">Off</item>
+		<item name="network.wifi.enable">Yes</item>
 
 		<!-- # Access Point 1 -->
 		<!-- # SSID -->
@@ -1846,6 +1847,7 @@
 		<!-- # VoWLan Target Delay. Low, Medium, or High -->
 		<!-- Pvalue P82281 -->
 		<item name="wifi.vowlan_target_delay">Low</item>
+		{/if}
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/ Web Access     ## -->
@@ -3302,7 +3304,11 @@
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
 		<!-- Pvalue P8393 -->
-		<item name="features.history.missedCallNotification">Yes</item>
+		{if isset($grandstream_missed_call_notification)}
+		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
+		{else}
+		<item name="features.history.missedCallNotification">No</item>
+		{/if}
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<!-- Pvalue P8391 -->
@@ -3762,6 +3768,7 @@
 
 		<!-- # Secondary NTP Server -->
 		<!-- # String -->
+		<!-- Pvalue P8333 -->
 		{if isset($ntp_server_secondary)}
 		<item name="dateTime.ntp.server.2">{$ntp_server_secondary}</item>
 		{else}
@@ -4470,14 +4477,14 @@
 		<!-- # Virtual Multi-Purpose Keys (VPKs) -->
 		<!-- # Note: 1. Fixed VPKs can only be edited. Adding or deleting Fixed VPK is not allowed. -->
 		<!-- #       2. Even if a Dynamic VPK has mode set to None, it should be added in sequence. Skipping one will remove everything after that VPK.  -->
-		<!-- #       3. For GRP2650 --> 
-		<!-- #       4. For GRP2670/GRP2636 --> 
-		<!-- #       5. For GRP2624/34 --> 
-		<!-- #       6. For GRP2616  --> 
-		<!-- #       7. For GRP2615 --> 
-		<!-- #       8. For GRP2614 --> 
-		<!-- #       9. For GRP2613 --> 
-		<!-- #       10. For GRP2612 --> 
+		<!-- #       3. For GRP2650 -->
+		<!-- #       4. For GRP2670/GRP2636 -->
+		<!-- #       5. For GRP2624/34 -->
+		<!-- #       6. For GRP2616  -->
+		<!-- #       7. For GRP2615 -->
+		<!-- #       8. For GRP2614 -->
+		<!-- #       9. For GRP2613 -->
+		<!-- #       10. For GRP2612 -->
 		<!-- ###################################################################################### -->
 
 		<!-- # Key Mode for line VPK. -->
@@ -4535,8 +4542,8 @@
 
 		<!-- ###################################################################################### -->
 		<!-- ## Programmable Keys/Physical Multi-Purpose Keys
-		<!-- # Note: 1. For GRP2634 --> 
-		<!-- #       2. For GRP2614/GRP2616/GRP2636 --> 
+		<!-- # Note: 1. For GRP2634 -->
+		<!-- #       2. For GRP2614/GRP2616/GRP2636 -->
 		<!-- ###################################################################################### -->
 
 {foreach $keys['memory'] as $row}
@@ -4565,7 +4572,7 @@
 
 		<!-- MPK Value -->
 		<!-- Pvalue P303 -->
-		<item name="pks.mpk.{$row.device_key_id}.value"></item>
+		<item name="pks.mpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
 
 {/foreach}
 

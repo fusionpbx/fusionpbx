@@ -52,20 +52,6 @@
 		$users = $_POST['users'] ?? '';
 	}
 
-//check to see if contact details are in the view
-	$sql = "select * from view_users ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$parameters = null;
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$row = $database->select($sql, $parameters, 'row');
-	if (isset($row['contact_organization'])) {
-		$show_contact_fields = true;
-	}
-	else {
-		$show_contact_fields = false;
-	}
-	unset($parameters);
-
 //process the http post data by action
 	if (!empty($action) && is_array($users) && @sizeof($users) != 0) {
 		switch ($action) {
@@ -103,7 +89,7 @@
 	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
 
 //add the search string
 	if (!empty($search)) {
@@ -113,7 +99,7 @@
 		$sql_search .= "	or lower(group_names) like :search ";
 		$sql_search .= "	or lower(contact_organization) like :search ";
 		$sql_search .= "	or lower(contact_name) like :search ";
-		//$sql_search .= "	or lower(user_status) like :search ";
+		$sql_search .= "	or lower(contact_note) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -153,9 +139,7 @@
 
 //get the list
 	$sql = "select domain_name, domain_uuid, user_uuid, username, group_names, ";
-	if ($show_contact_fields) {
-		$sql .= "contact_organization,contact_name, ";
-	}
+	$sql .= "contact_organization,contact_name,contact_note, ";
 	$sql .= "cast(user_enabled as text) ";
 	$sql .= "from view_users ";
 	if ($show == "all" && permission_exists('user_all')) {
@@ -260,24 +244,26 @@
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
 	echo th_order_by('group_names', $text['label-groups'], $order_by, $order, null, null, $param);
-	if ($show_contact_fields) {
-		echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $param);
-		echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $param);
-	}
+	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $param);
+	echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $param);
 	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
 	//echo th_order_by('user_status', $text['label-user_status'], $order_by, $order);
 	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order);
+	echo th_order_by('contact_note', $text['label-contact_note'], $order_by, $order, null, "class='center'", $param);
 	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'", $param);
-	if (permission_exists('user_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('user_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
-
 	if (is_array($users) && @sizeof($users) != 0) {
 		$x = 0;
 		foreach ($users as $row) {
+			$list_row_url = '';
 			if (permission_exists('user_edit')) {
 				$list_row_url = "user_edit.php?id=".urlencode($row['user_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('user_add') || permission_exists('user_edit') || permission_exists('user_delete')) {
@@ -298,14 +284,13 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['group_names'])."</td>\n";
-			if ($show_contact_fields) {
-				echo "	<td>".escape($row['contact_organization'])."</td>\n";
-				echo "	<td>".escape($row['contact_name'])."</td>\n";
-			}
+			echo "	<td>".escape($row['contact_organization'])."</td>\n";
+			echo "	<td>".escape($row['contact_name'])."</td>\n";
 			//echo "	<td>".escape($row['contact_name_given'])."</td>\n";
 			//echo "	<td>".escape($row['contact_name_family'])."</td>\n";
 			//echo "	<td>".escape($row['user_status'])."</td>\n";
 			//echo "	<td>".escape($row['add_date'])."</td>\n";
+			echo "	<td>".escape($row['contact_note'])."</td>\n";
 			if (permission_exists('user_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['user_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
@@ -315,7 +300,7 @@
 				echo $text['label-'.$row['user_enabled']];
 			}
 			echo "	</td>\n";
-			if (permission_exists('user_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('user_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";

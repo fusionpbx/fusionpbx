@@ -240,7 +240,7 @@
 	echo "	<th class='pct-60'>".$text['label-play']."</th>\n";
 	echo th_order_by('stream_enabled', $text['label-stream_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('stream_description', $text['label-stream_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('stream_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('stream_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -248,8 +248,12 @@
 	if (!empty($streams)) {
 		$x = 0;
 		foreach ($streams as $row) {
+			$list_row_url = '';
 			if (permission_exists('stream_edit')) {
 				$list_row_url = "stream_edit.php?id=".urlencode($row['stream_uuid']);
+				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('stream_add') || permission_exists('stream_edit') || permission_exists('stream_delete')) {
@@ -293,7 +297,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['stream_description'])."&nbsp;</td>\n";
-			if (permission_exists('stream_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('stream_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -315,3 +319,4 @@
 	require_once "resources/footer.php";
 
 ?>
+

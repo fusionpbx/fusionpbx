@@ -1824,6 +1824,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the height of buttons.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8aeb3718-4a00-4e27-810b-41cd169a82c5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "input_height";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "28px";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the height of text inputs.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7f8048b5-e4aa-4625-987f-5f9b80abe81b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "input_background_color";
@@ -2015,6 +2023,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Arial";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the font of text input content.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dbfa8a1a-51e5-4274-949c-e84f29e831f1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "input_text_font_password";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "monospace";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the font of password text input content.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "848fd70e-bbba-4f43-ac5d-897229bb19c8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -2853,7 +2869,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "keyboard_shortcut_copy_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "key: [ctrl]+[c], list,edit: to copy";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2c0621d4-da12-40c1-8878-fc45a2f76d08";
