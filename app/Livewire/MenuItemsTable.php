@@ -3,20 +3,21 @@
 namespace App\Livewire;
 
 use App\Http\Controllers\MenuController;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class MenuItemsTable extends DataTableComponent
 {
-    protected $model = MenuItem::class;
+    //protected $model = MenuItem::class;
 
     protected $menu_uuid = null;
 
@@ -160,7 +161,7 @@ class MenuItemsTable extends DataTableComponent
             Column::make("UUID", "menu_item_uuid")->hideIf(true),
 
             Column::make("Name", "menu_item_title")->searchable(),
-
+/*
             Column::make("Parent", "menu_item_parent_uuid")
                 ->format(function ($value, $row, Column $column) {
 					$parents = [];
@@ -170,7 +171,7 @@ class MenuItemsTable extends DataTableComponent
 					}
 					return implode(", ", $parents);
                 }),
-
+*/
             Column::make("Groups", "menu_item_uuid")
                 ->format(function ($value, $row, Column $column) {
 					$groups = [];
@@ -188,9 +189,54 @@ class MenuItemsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+	$sql = "WITH RECURSIVE children AS (
+			SELECT mi.*,  1 as depth, menu_item_title as menu_path FROM v_menu_items mi WHERE mi.menu_item_parent_uuid IS NULL OR NOT EXISTS (SELECT 1 FROM v_menu_items t1 WHERE mi.menu_item_parent_uuid = t1.menu_item_uuid)
+			UNION
+			SELECT tp.*, depth + 1, CONCAT(menu_path,'->',tp.menu_item_title) FROM v_menu_items tp JOIN children c ON tp.menu_item_parent_uuid = c.menu_item_uuid
+		)
+		SELECT * FROM children WHERE menu_uuid = '.$this->menu_uuid.' ORDER BY menu_path ASC";
+//	$query = DB::select($sql);
+/*
+	$query = DB::query()
+		->withRecursiveExpression('children', function ($rq){
+			$rq->selectRaw("mi.*, 1 AS depth, menu_item_title AS menu_path FROM v_menu_items mi WHERE mi.menu_item_parent_uuid IS NULL OR NOT EXISTS (SELECT 1 FROM v_menu_items t1 WHERE mi.menu_item_parent_uuid = t1.menu_item_uuid)")
+				->unionAll(function ($uq) {
+					$uq->selectRaw("tp.*, depth + 1, CONCAT(menu_path,'->',tp.menu_item_title)")
+						->from ("v_menu_items", "tp")
+						->join('children', "tp.menu_item_parent_uuid", "=", "children.menu_item_uuid");
+			});
+		})
+		->from('children')
+		->where('menu_uuid', $this->menu_uuid)
+		->orderBy('menu_path', 'ASC');
+
+	$queryA = DB::table('v_menu_items','mi')->selectRaw("mi.*, 1 AS depth, menu_item_title AS menu_path")
+				->from('v_menu_items', 'mi')
+				->whereNull('mi.menu_item_parent_uuid') //  IS NULL OR NOT EXISTS (SELECT 1 FROM v_menu_items t1 WHERE mi.menu_item_parent_uuid = t1.menu_item_uuid)")
+				->unionAll(function ($uq) {
+					$uq->selectRaw("tp.*, depth + 1, CONCAT(menu_path,'->',tp.menu_item_title)")
+						->from ("v_menu_items", "tp")
+						->join('children', "tp.menu_item_parent_uuid", "=", "children.menu_item_uuid");
+				});
+	$query = DB::table('children')
+		->withRecursiveExpression('children', $queryA);
+/*
+	$class = 'Illuminate\Database\Eloquent\Builder';
+	$query = unserialize(
+		preg_replace(
+			'/^O:\d+:"[^"]++"/', 
+			'O:'.strlen($class).':"'.$class.'"',
+			serialize($query)
+		));
+*/
+	// NOTE: this will disapear in CoolPBX 2.1+
         $query = MenuItem::query()
 				->where("menu_uuid", "=", $this->menu_uuid)
                 ->orderBy('menu_item_title', 'asc');
+
+ 	if(App::hasDebugModeEnabled()){
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$query->toRawSql());
+        }
         return $query;
     }
 }
