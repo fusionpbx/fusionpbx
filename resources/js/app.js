@@ -66,27 +66,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-const togglePassword = document.getElementById('togglePassword');
+const togglePassword = document.querySelectorAll(".togglePassword");
 
-if(togglePassword)
+togglePassword.forEach(function(element)
 {
-    document.getElementById('togglePassword').addEventListener('click', function()
+    element.addEventListener('click', function(e)
     {
-        let apikey = document.getElementById('api_key');
-        let icon = this.querySelector('i');
+        e.preventDefault();
 
-        if(apikey.type === "password")
+        let container = element.closest(".row");
+        let input = container.querySelector("input");
+        let icon = this.querySelector("i");
+
+        if(input.type === "password")
         {
-            apikey.type = "text";
+            input.type = "text";
             icon.classList.remove("fa-eye");
             icon.classList.add("fa-eye-slash");
         }
         else
         {
-            apikey.type = "password";
+            input.type = "password";
             icon.classList.remove("fa-eye-slash");
             icon.classList.add("fa-eye");
         }
     });
-}
+});
 
