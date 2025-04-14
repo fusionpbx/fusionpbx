@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class SipProfileForm extends Component
@@ -330,7 +331,7 @@ class SipProfileForm extends Component
         return redirect()->route('sipprofiles.index');
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.sip-profile-form');
     }
