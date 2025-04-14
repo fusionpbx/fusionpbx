@@ -42,7 +42,7 @@
 	$text = $language->get();
 
 //additional includes
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$archive_request = isset($_POST['archive_request']) && $_POST['archive_request'] == 'true' ? true : false;
 	require_once "xml_cdr_inc.php";
 

@@ -179,7 +179,7 @@
 	require_once "resources/header.php";
 
 //xml cdr include
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	require_once "xml_cdr_inc.php";
 
 //javascript function: send_cmd

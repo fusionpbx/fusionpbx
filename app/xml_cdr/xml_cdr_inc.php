@@ -285,7 +285,7 @@
 	//$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 
 //prepare to page the results
-	//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
+	//$rows_per_page = $settings->get('domain', 'paging', 50); //set on the page that includes this page
 	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) {
 		$_GET['page'] = 0;
 	}

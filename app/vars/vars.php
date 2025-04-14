@@ -105,7 +105,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$param = $order_by ? "&order_by=".$order_by."&order=".$order : null;
 	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];

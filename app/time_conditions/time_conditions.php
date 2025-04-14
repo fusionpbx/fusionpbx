@@ -112,7 +112,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page data
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".urlencode($search) : null;
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('time_condition_all')) {
 		$param .= "&show=all";

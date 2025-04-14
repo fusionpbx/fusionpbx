@@ -95,7 +95,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "";
 	if (isset($_GET['page'])) {
 		$page = $_GET['page'];
