@@ -238,7 +238,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".($contact_name ? $contact_name : $text['header-contact-edit'])."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contacts.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contacts.php']);
 	if (permission_exists('contact_time_add')) {
 		//detect timer state (and start time)
 		$sql = "select ";
@@ -293,7 +293,7 @@
 		echo "		</select>";
 	}
 	if (permission_exists('contact_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'id'=>'btn_edit','style'=>'margin-left: 15px;','collapse'=>'hide-sm-dn','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'id'=>'btn_edit','style'=>'margin-left: 15px;','collapse'=>'hide-sm-dn','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

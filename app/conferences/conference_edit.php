@@ -367,19 +367,19 @@
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
 
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conferences.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conferences.php']);
 	if ($action == 'update') {
 		if (permission_exists('conference_cdr_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'list','link'=>PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($conference_uuid)]);
 		}
 		if (permission_exists('conference_interactive_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_extension)]);
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'style'=>'','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_extension)]);
 		}
 		else if (permission_exists('conference_active_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php']);
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'style'=>'','link'=>'../conferences_active/conferences_active.php']);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -449,7 +449,7 @@
 				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 			echo "			</select>";
-			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add')]);
 
 			echo "			<br>\n";
 			echo "			".$text['description-user-add']."\n";
