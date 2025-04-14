@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Livewire;
 
 use App\Http\Requests\AccessControlRequest;
 use Livewire\Component;
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
+use App\Rules\ValidCidr;
 use Illuminate\Support\Str;
 
 class AccessControlForm extends Component
@@ -56,7 +56,6 @@ class AccessControlForm extends Component
 
     public function mount($accessControlUuid = null)
     {
-
         if ($accessControlUuid) {
 
             $this->accessControl = AccessControl::where('access_control_uuid', $accessControlUuid)->first();
@@ -89,10 +88,16 @@ class AccessControlForm extends Component
 
     public function addNode()
     {
-        $this->validate();
+        $this->validate(
+            [
+                'nodes.*.node_type' => 'required|in:allow,deny',
+                'nodes.*.node_cidr' => ['required', 'string', 'max:255', new ValidCidr()],
+                'nodes.*.node_description' => 'nullable|string|max:255',
+            ]
+        );
 
         $this->nodes[] = [
-            'access_control_node_uuid' => (string) Str::uuid(),
+            'access_control_node_uuid' => Str::uuid()->toString(),
             'node_type' => '',
             'node_cidr' => '',
             'node_description' => '',
@@ -129,6 +134,7 @@ class AccessControlForm extends Component
 
     public function save()
     {
+
         $this->validate();
 
         if ($this->accessControlUuid) {
@@ -142,15 +148,14 @@ class AccessControlForm extends Component
 
             AccessControlNode::where('access_control_uuid', $this->accessControlUuid)->delete();
         } else {
-
+            $uuid = Str::uuid()->toString();
             $accessControl = new AccessControl();
-            $accessControl->access_control_uuid = (string) Str::uuid();
+            $accessControl->access_control_uuid = $uuid;
             $accessControl->access_control_name = $this->accessControlName;
             $accessControl->access_control_default = $this->accessControlDefault;
             $accessControl->access_control_description = $this->accessControlDescription;
             $accessControl->save();
-
-            $this->accessControlUuid = $accessControl->access_control_uuid;
+            $accessControl->access_control_uuid = $uuid;
         }
 
 
@@ -163,9 +168,6 @@ class AccessControlForm extends Component
             $accessControlNode->node_description = $node['node_description'];
             $accessControlNode->save();
         }
-
-
-        session()->flash('message', $this->accessControl ? 'Control de acceso actualizado con éxito.' : 'Control de acceso creado con éxito.');
 
         return redirect()->route('accesscontrol.index');
     }

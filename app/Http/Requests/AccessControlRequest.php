@@ -26,9 +26,7 @@ class AccessControlRequest extends FormRequest
             'accessControlName' => 'required|string|max:255',
             'accessControlDefault' => 'required|in:allow,deny',
             'accessControlDescription' => 'nullable|string|max:255',
-            'nodes.*.node_type' => 'nullable|in:allow,deny',
-            'nodes.*.node_cidr' => ['nullable', 'string', 'max:255', new ValidCidr],
-            'nodes.*.node_description' => 'nullable|string|max:255',
+            'nodes' => 'array',
         ];
     }
 
