@@ -118,7 +118,7 @@
 	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
-	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get total gateway count from the database
 	$sql = "select count(*) from v_gateways where true ";
