@@ -207,7 +207,7 @@ if (!empty($groups)) {
 echo "				<td valign='top' nowrap='nowrap'>\n";
 echo "					<input type='text' class='txt list-search' id='search' placeholder=\"".$text['label-filter']."\" value=\"".escape($_REQUEST['filter'] ?? '')."\" onfocus='refresh_stop();' onkeyup='refresh_start();' onblur='refresh_start();'>\n";
 if (!empty($_REQUEST['filter'])) {
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','style'=>(empty($_REQUEST['filter']) ? 'display: none;' : null),'onclick'=>"document.getElementById('search').value = '';",'onmouseover'=>'refresh_stop();','onmouseout'=>'refresh_start();']);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','style'=>(empty($_REQUEST['filter']) ? 'display: none;' : null),'onclick'=>"document.getElementById('search').value = '';",'onmouseover'=>'refresh_stop();','onmouseout'=>'refresh_start();']);
 }
 echo "				</td>\n";
 echo "				</tr>\n";

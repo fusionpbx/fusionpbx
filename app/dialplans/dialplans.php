@@ -135,14 +135,14 @@
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
-	$button_icon_add = $_SESSION['theme']['button_icon_add'] ?? '';
-	$button_icon_copy = $_SESSION['theme']['button_icon_copy'] ?? '';
-	$button_icon_toggle = $_SESSION['theme']['button_icon_toggle'] ?? '';
-	$button_icon_all = $_SESSION['theme']['button_icon_all'] ?? '';
-	$button_icon_delete = $_SESSION['theme']['button_icon_delete'] ?? '';
-	$button_icon_search = $_SESSION['theme']['button_icon_search'] ?? '';
-	$button_icon_edit = $_SESSION['theme']['button_icon_edit'] ?? '';
-	$button_icon_reset = $_SESSION['theme']['button_icon_reset'] ?? '';
+	$button_icon_add = $settings->get('theme', 'button_icon_add') ?? '';
+	$button_icon_copy = $settings->get('theme', 'button_icon_copy') ?? '';
+	$button_icon_toggle = $settings->get('theme', 'button_icon_toggle') ?? '';
+	$button_icon_all = $settings->get('theme', 'button_icon_all') ?? '';
+	$button_icon_delete = $settings->get('theme', 'button_icon_delete') ?? '';
+	$button_icon_search = $settings->get('theme', 'button_icon_search') ?? '';
+	$button_icon_edit = $settings->get('theme', 'button_icon_edit') ?? '';
+	$button_icon_reset = $settings->get('theme', 'button_icon_reset') ?? '';
 
 //get the number of rows in the dialplan
 	$sql = "select count(*) from v_dialplans ";

@@ -433,8 +433,8 @@
 	echo "	<div class='action_bar sub'>\n";
 	echo "		<div class='heading' style='padding-left: 5px;'><b>".$text['title-device_keys']."</b></div>\n";
 	echo "		<div class='actions' style='padding-top: 2px;'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-apply'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".($user_id ?? '')."@".($server_address ?? '')."&domain=".($server_address ?? '')."&agent=".($device_key_vendor ?? '')."';"]);
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"list_form_submit('form_list_device_keys');"]);
+	echo button::create(['type'=>'button','label'=>$text['button-apply'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".($user_id ?? '')."@".($server_address ?? '')."&domain=".($server_address ?? '')."&agent=".($device_key_vendor ?? '')."';"]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"list_form_submit('form_list_device_keys');"]);
 	echo "		</div>\n";
 	echo "		<div style='clear: both;'></div>\n";
 	echo "	</div>\n";

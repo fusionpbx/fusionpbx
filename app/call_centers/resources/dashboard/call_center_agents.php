@@ -264,7 +264,7 @@
 	echo "	<div class='action_bar sub'>\n";
 	echo "		<div class='heading' style='padding-left: 5px;'><b>".$text['header-call_center_queues'].(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
 	echo "		<div class='actions' style='padding-top: 2px;'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.getElementById('form_list_call_center_agent_dashboard').submit();"]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"document.getElementById('form_list_call_center_agent_dashboard').submit();"]);
 	echo "		</div>\n";
 	echo "		<div style='clear: both;'></div>\n";
 	echo "	</div>\n";

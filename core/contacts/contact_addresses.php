@@ -111,7 +111,7 @@
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['address_description'])."&nbsp;</td>\n";
 					if (permission_exists('contact_address_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

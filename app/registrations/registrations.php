@@ -123,7 +123,7 @@
 	echo "	<div class='heading'><b>".$text['header-registrations']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$reload) {
-		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.(!empty($qs) ? '?'.$qs['show'].$qs['search'].$qs['profile'] : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$settings->get('theme', 'button_icon_refresh'),'link'=>$location.(!empty($qs) ? '?'.$qs['show'].$qs['search'].$qs['profile'] : null)]);
 	}
 	if ($registrations) {
 		echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-unregister','btn_unregister');"]);
@@ -134,10 +134,10 @@
 	if (permission_exists('registration_all')) {
 		if (!empty($show) && $show == 'all') {
 			echo 	"<input type='hidden' name='show' value='".escape($show)."'>";
-			echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.($qs['search'] || $qs['profile'] ? '?' : null).$qs['search'].$qs['profile']]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>$location.($qs['search'] || $qs['profile'] ? '?' : null).$qs['search'].$qs['profile']]);
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.'?show=all'.(!empty($qs) ? $qs['search'].$qs['profile'] : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>$location.'?show=all'.(!empty($qs) ? $qs['search'].$qs['profile'] : null)]);
 		}
 		if (!empty($profile)) {
 			echo 	"<input type='hidden' name='profile' value='".escape($profile)."'>";
@@ -146,8 +146,8 @@
 	}
 	if (!$reload) {
 		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-		//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
+		echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+		//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
