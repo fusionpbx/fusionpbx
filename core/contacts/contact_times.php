@@ -38,7 +38,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //set the uuid
 	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
