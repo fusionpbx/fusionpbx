@@ -29,6 +29,9 @@
 
 		static function create($array) {
 
+			//define as global
+			global $settings;
+
 			//add multi-lingual support
 			$language = new text;
 			$text = $language->get();
