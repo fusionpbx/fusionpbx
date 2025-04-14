@@ -206,7 +206,7 @@ class GatewaysTable extends DataTableComponent
                 ->searchable()
         ];
 
-
+        // To do: Uncomment once FreeSwitchAPIController is working.
         // $columns[] = Column::make("Status", "gateway_uuid")
         //     ->format(function($value, $row, Column $column) {
         //         $status = $this->gatewayStatuses[$value]['status'] ?? 'unknown';
@@ -228,7 +228,7 @@ class GatewaysTable extends DataTableComponent
             ->html();
 
 
-
+            //To do: Uncomment once FreeSwitchAPIController is working.
             // $columns[] = Column::make("Action", "gateway_uuid")
             //     ->format(function ($value, $row, Column $column) {
             //         $status = $this->gatewayStatuses[$value]['status'] ?? 'unknown';
@@ -261,7 +261,7 @@ class GatewaysTable extends DataTableComponent
             ->sortable()
             ->searchable();
 
-
+        // To do: Uncomment once FreeSwitchAPIController is working.
         // $columns[] = Column::make("Enabled", "enabled")
         //     ->format(function ($value, $row, Column $column) use ($canEdit) {
         //         if ($canEdit) {

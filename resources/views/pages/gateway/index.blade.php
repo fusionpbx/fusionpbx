@@ -24,9 +24,10 @@
                     </a>
                     @endcan
                     
-                    <a href="?show=all"  class="btn btn-primary btn-sm">
-                        <i class="fa fa-globe" aria-hidden="true"></i> {{__('Show All')}}
-                    </a>
+
+                    <a href="{{ route('gateways.index', ['show' => 'all']) }}" class="btn btn-primary btn-sm">
+                        <i class="fa fa-globe" aria-hidden="true"></i> {{ __('Show All') }}
+                    </a>                   
 
                 </div>
             </div>
