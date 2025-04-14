@@ -53,6 +53,7 @@ class GroupController extends Controller
     public function edit(Group $group)
     {
         $domains = Domain::all();
+	$groupUuid = $group->group_uuid;
 
         return view('pages.groups.form', compact('group', 'domains'));
     }

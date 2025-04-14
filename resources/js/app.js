@@ -2,6 +2,9 @@ import '@adminlte/dist/js/adminlte.min.js';
 import '@overlayscrollbars/browser/overlayscrollbars.browser.es5.min.js';
 import '@popperjs/core/dist/umd/popper.min.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-xml-doc';
+import 'prismjs/themes/prism.css';
 
 const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
 const Default = {
@@ -10,39 +13,83 @@ const Default = {
     scrollbarClickScroll: true,
 };
 document.addEventListener('DOMContentLoaded', function() {
-    const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-    if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-            scrollbars: {
-                theme: Default.scrollbarTheme,
-                autoHide: Default.scrollbarAutoHide,
-                clickScroll: Default.scrollbarClickScroll,
-            },
+    // const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+    // if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+    //     OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+    //         scrollbars: {
+    //             theme: Default.scrollbarTheme,
+    //             autoHide: Default.scrollbarAutoHide,
+    //             clickScroll: Default.scrollbarClickScroll,
+    //         },
+    //     });
+    // }
+
+    const repeaters = document.querySelectorAll(".repeater");
+
+    repeaters.forEach(function(element)
+    {
+        const container = element.querySelector(".repeater-container");
+        const itemAdd = element.querySelector(".repeater-add");
+        const template = container.querySelector("template");
+
+        let currentIndex = container.querySelectorAll(".repeater-item").length;
+
+        itemAdd.addEventListener("click", function(e)
+        {
+            e.preventDefault();
+
+            let html = template.innerHTML.replace(/__INDEX__/g, currentIndex);
+
+            const tempTemplate = document.createElement("template");
+
+            tempTemplate.innerHTML = html;
+
+            const clone = tempTemplate.content.cloneNode(true);
+
+            container.appendChild(clone);
+
+            currentIndex++;
         });
-    }
+
+        container.addEventListener("click", function(e)
+        {
+            const itemRemove = e.target.closest(".repeater-remove");
+
+            if(itemRemove)
+            {
+                e.preventDefault();
+
+                itemRemove.closest(".repeater-item").remove();
+            }
+        });
+    });
+
 });
 
-const togglePassword = document.getElementById('togglePassword');
+const togglePassword = document.querySelectorAll(".togglePassword");
 
-if(togglePassword)
+togglePassword.forEach(function(element)
 {
-    document.getElementById('togglePassword').addEventListener('click', function()
+    element.addEventListener('click', function(e)
     {
-        let apikey = document.getElementById('api_key');
-        let icon = this.querySelector('i');
+        e.preventDefault();
 
-        if(apikey.type === "password")
+        let container = element.closest(".row");
+        let input = container.querySelector("input");
+        let icon = this.querySelector("i");
+
+        if(input.type === "password")
         {
-            apikey.type = "text";
+            input.type = "text";
             icon.classList.remove("fa-eye");
             icon.classList.add("fa-eye-slash");
         }
         else
         {
-            apikey.type = "password";
+            input.type = "password";
             icon.classList.remove("fa-eye-slash");
             icon.classList.add("fa-eye");
         }
     });
-}
+});
 

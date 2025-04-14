@@ -81,6 +81,18 @@ class Group extends Model
     }
 
 
+	public function getFullGroupNameAttribute(){
+
+		if (array_key_exists('domain_uuid', $this->attributes) && (!is_null($this->attributes['domain_uuid']))){
+			$myDomain = Domain::find($this->attributes['domain_uuid']);
+			$suffix = '@'.$myDomain->domain_name;
+		}
+		else
+			$suffix = '@Global';
+
+		return $this->attributes['group_name'].$suffix;
+	}
+
 
 	public static function findGlobals() {
 		$groups = DB::table('v_groups')->select('*')->whereNull('domain_uuid')->get();

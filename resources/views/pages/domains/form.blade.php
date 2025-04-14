@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <label class="form-label d-block">Enabled</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="domain_enabled" name="domain_enabled" value="true" {{ old('domain_enabled', $domain->domain_enabled ?? false) ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" role="switch" id="domain_enabled" name="domain_enabled" value="true" {{ old('domain_enabled', $domain->domain_enabled ?? true) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="domain_enabled">{{ __('Enabled') }}</label>
                             </div>
                             @error('domain_enabled')

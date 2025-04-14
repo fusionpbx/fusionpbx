@@ -60,7 +60,7 @@ class AuthController extends Controller
 
         return view('auth.login')->with('okta_enabled', $oktaEnabled);
     }
-    
+
     //TODO: add support for the non-global loging style from Fusion
     public function login(Request $request)
     {
@@ -74,7 +74,7 @@ class AuthController extends Controller
             'password' => $request->password,
         ];
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
+        if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
             $request->session()->regenerate();
             $domain = Auth::user()->domain;
             Session::put('domain_uuid', $domain->domain_uuid);
@@ -101,7 +101,7 @@ class AuthController extends Controller
         return Socialite::driver('okta')->redirect();
     }
 
-	public function handleProviderCallback(Request $request)
+    public function handleProviderCallback(Request $request)
     {
         $user = Socialite::driver('okta')->user();
         if(App::hasDebugModeEnabled()){
