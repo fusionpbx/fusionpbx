@@ -33,4 +33,12 @@ return [
     'permissions.show' => 'group_permission_view',
     'permissions.update'=> 'group_permission_delete',
 
+    'gateways.index' => 'gateway_view',
+    'gateways.create' => 'gateway_add',
+    'gateways.store' => 'gateway_add',
+    'gateways.edit' => 'gateway_edit',
+    'gateways.copy' => 'gateway_add',
+    'gateways.update' => 'gateway_edit',
+    'gateways.destroy' => 'gateway_delete',
+
 ];

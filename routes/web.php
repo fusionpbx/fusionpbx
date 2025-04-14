@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DialplanController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\GateWayController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupPermissionController;
 use App\Http\Controllers\MenuController;
@@ -68,6 +69,11 @@ Route::middleware(['auth','permission'])->group(function () {
     #Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
     //Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
     //Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+
+    // GETEWAY
+    Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
+    Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
+    
 
     // MENU
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
