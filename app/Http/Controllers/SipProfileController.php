@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\SipProfile;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,7 +14,7 @@ class SipProfileController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : mixed
     {
         return view('pages.sipprofile.index');
     }
@@ -20,7 +22,7 @@ class SipProfileController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         return view('pages.sipprofile.form');
     }
@@ -44,7 +46,7 @@ class SipProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($uuid)
+    public function edit($uuid) : View
     {
         $sipProfile = SipProfile::with(['sipprofiledomains', 'sipprofilesettings'])->where('sip_profile_uuid', $uuid)->firstOrFail();
         return view('pages.sipprofile.form', compact('sipProfile'));
@@ -62,15 +64,18 @@ class SipProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($uuid)
+    public function destroy($uuid) : RedirectResponse
     {
         $sipProfile = SipProfile::where('sip_profile_uuid', $uuid)->firstOrFail();
-        DB::beginTransaction();
+
         try {
+            DB::beginTransaction();
             $sipProfile->sipprofiledomains()->delete();
             $sipProfile->sipprofilesettings()->delete();
             $sipProfile->delete();
+
             DB::commit();
+
             return redirect()->route('sipprofiles.index');
 
         } catch (\Exception $e) {
@@ -80,12 +85,12 @@ class SipProfileController extends Controller
         }
     }
 
-    public function copy($uuid)
+    public function copy($uuid) : RedirectResponse
     {
         $originalProfile = SipProfile::where('sip_profile_uuid', $uuid)->first();
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $newProfile = $originalProfile->replicate();
             $newProfile->sip_profile_uuid = Str::uuid();
             $newProfile->sip_profile_description = $originalProfile->sip_profile_description . ' (copy)';
