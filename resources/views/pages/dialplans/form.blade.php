@@ -243,10 +243,32 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="dialplan_xml" tabindex="-1" aria-labelledby="dialplan_xml" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Dialplan XML</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+<pre><code class="language-xml">{{ $dialplan->dialplan_xml ?? '' }}</code></pre>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 4px;">
                     {{ isset($dialplan) ? 'Update Dialplan' : 'Create Dialplan' }}
                 </button>
+                @if(isset($dialplan))
+                <button type="button" class="btn btn-secondary px-4 py-2" data-bs-toggle="modal" data-bs-target="#dialplan_xml" style="border-radius: 4px;">View XML</button>
+                @endif
                 <a href="{{ route('dialplans.index') }}" class="btn btn-secondary ml-2 px-4 py-2" style="border-radius: 4px;">
                     Cancel
                 </a>
