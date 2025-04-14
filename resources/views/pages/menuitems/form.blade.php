@@ -27,7 +27,11 @@
 						</div>
 						<div class="form-group">
 							<label for="menu_item_category">Target</label>
-							<input type="text" value="{{ $menuitem->menu_item_category ?? old('menu_item_category') }}" class="form-control" name="menu_item_category" id="menu_item_category" required>
+							<select name="menu_item_category" id="menu_item_category" required class="form-select @error('domain_uuid') is-invalid @enderror">
+								<option value='internal' {{ (($menuitem->menu_item_category ?? old('menu_item_category')) == 'internal') ? 'selected' : '' }} >internal</option>
+								<option value='external' {{ (($menuitem->menu_item_category ?? old('menu_item_category')) == 'external') ? 'selected' : '' }}>external</option>
+								<option value='email' {{ (($menuitem->menu_item_category ?? old('menu_item_category')) == 'email') ? 'selected' : '' }}>email</option>
+							</select>
 						</div>
 						<!-- <div class="form-group">
 							<label for="menuitem_icon">Icon</label>
@@ -50,7 +54,7 @@
 							@endphp
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" name="groups[]" value="{{ $group->group_uuid }}" @if($checked) checked @endif>
-								<label class="form-check-label">{{ $group->group_name }}</label>
+								<label class="form-check-label">{{ $group->full_group_name }}</label>
 							</div>
 							@endforeach
 						</div>
@@ -64,7 +68,7 @@
 						</div>
 						<div class="form-group">
 							<label for="menu_item_description">Description</label>
-							<input type="text" value="{{ $menuitem->menu_item_description ?? old('menu_item_description') }}" class="form-control" name="menu_item_description" id="menu_item_description" required>
+							<input type="text" value="{{ $menuitem->menu_item_description ?? old('menu_item_description') }}" class="form-control" name="menu_item_description" id="menu_item_description" >
 						</div>
 					</div>
 					<div class="card-footer">

@@ -21,7 +21,7 @@ class MenuItemRequest extends FormRequest
 			"menu_item_category" => "required|string|max:255",
 			"menu_item_icon" => "string|max:255",
 			"menu_item_protected" => "nullable",
-			"menu_item_description" => "optional|string|max:255",
+			"menu_item_description" => "sometimes|nullable|string|max:255",
 		];
 	}
 }

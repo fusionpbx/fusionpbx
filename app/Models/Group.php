@@ -82,7 +82,8 @@ class Group extends Model
 
 
 	public function getFullGroupNameAttribute(){
-		if (!is_null($this->attributes['domain_uuid'])){
+
+		if (array_key_exists('domain_uuid', $this->attributes) && (!is_null($this->attributes['domain_uuid']))){
 			$myDomain = Domain::find($this->attributes['domain_uuid']);
 			$suffix = '@'.$myDomain->domain_name;
 		}
