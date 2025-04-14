@@ -241,7 +241,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&id=".$fax_uuid."&box=".$_GET['box'].(!empty($_GET['order_by']) ? "&order_by=".$_GET['order_by'] : null).(!empty($_GET['order']) ? "&order=".$_GET['order'] : null);
 	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);

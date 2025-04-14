@@ -192,7 +192,7 @@
 	$num_rows = $database->select($sql, $parameters  ?? null, 'column');
 
 //prepare the paging
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	if (!empty($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
 	if (!empty($context)) { $params[] = "context=".urlencode($context); }
 	if (!empty($search)) { $params[] = "search=".urlencode($search); }

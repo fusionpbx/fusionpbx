@@ -129,7 +129,7 @@
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$param .= ($show == 'all' && permission_exists('user_all')) ? "&show=all" : null;
 	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
