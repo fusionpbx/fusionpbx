@@ -73,8 +73,14 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
 
     // MENU ITEM
-    Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
-    Route::get('/menus/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
+//    Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
+    Route::get('/menu/{menu}/menuitem/{menuitem}/edit', [MenuItemController::class, 'edit'])->name('menuitems.edit');
+    Route::get('/menu/{menu}/menuitems', [MenuItemController::class, 'index'])->name('menuitems.index');
+    Route::put('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'update'])->name('menuitems.update');
+    Route::patch('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'update'])->name('menuitems.update');
+    Route::delete('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'destroy'])->name('menuitems.destroy');
+    Route::get('/menu/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
+    Route::post('/menu/{menu}/menuitems', [MenuItemController::class, 'store'])->name('menuitems.store');
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');
