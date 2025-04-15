@@ -171,6 +171,7 @@ return [
         App\Providers\CoolPBXAuthServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
+        App\Providers\FreeSwitchServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -186,6 +187,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'FreeSwitch' => App\Facades\FreeSwitch::class,
     ])->toArray(),
 
 ];

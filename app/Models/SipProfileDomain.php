@@ -29,6 +29,7 @@ class SipProfileDomain extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
+		'sip_profile_uuid',
 		'sip_profile_domain_name',
 		'sip_profile_domain_alias',
 		'sip_profile_domain_parse',

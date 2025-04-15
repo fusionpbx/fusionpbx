@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DialplanController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\GateWayController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupPermissionController;
 use App\Http\Controllers\MenuController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Controllers\XmlCDRController;
+use App\Http\Controllers\SipProfileController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -69,6 +71,15 @@ Route::middleware(['auth','permission'])->group(function () {
     #Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
     //Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
     //Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+
+    // GETEWAY
+    Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
+    Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
+
+    // SIP PROFILE
+    Route::resource('/sipprofiles', SipProfileController::class)->name('sipprofiles', 'sipprofiles');
+    Route::get('/sipprofiles/{sipprofile}/copy', [SipProfileController::class, 'copy'])->name('sipprofiles.copy');
+    
 
     // MENU
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
