@@ -116,6 +116,12 @@
 
 	if (!function_exists('check_cidr')) {
 
+		/**
+		 * Checks if the $ip_address is within the range of the given $cidr
+		 * @param string $cidr
+		 * @param string $ip_address
+		 * @return bool
+		 */
 		function check_cidr($cidr, $ip_address) {
 			if (isset($cidr) && !empty($cidr)) {
 				list ($subnet, $mask) = explode('/', $cidr);
