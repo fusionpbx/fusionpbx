@@ -1094,7 +1094,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ffffff";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the background color (and opacity) of the Dashboard blocks.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a secondary background color, for a gradient effect.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1af7813b-50b0-4616-8b9a-9dfd757c633a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -1350,7 +1350,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ffffff";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the background color of the Dashboard block detail area.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a secondary background color, for a gradient effect.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b60d97bf-fed3-4484-b5ba-18c46b1a58a7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
@@ -2901,7 +2901,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "keyboard_shortcut_copy_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "key: [ctrl]+[c], list,edit: to copy";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2c0621d4-da12-40c1-8878-fc45a2f76d08";
