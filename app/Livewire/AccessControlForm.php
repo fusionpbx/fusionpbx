@@ -6,47 +6,43 @@ use Livewire\Component;
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
 use App\Rules\ValidCidr;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 
 class AccessControlForm extends Component
 {
     public $accessControl;
     public $accessControlUuid;
-    public $accessControlName = '';
-    public $accessControlDefault = '';
-    public $accessControlDescription = '';
-    public $nodes = [];
-    public $selectedNodes = [];
+    public string $accessControlName = '';
+    public string $accessControlDefault = '';
+    public ?string $accessControlDescription = '';
+    public array $nodes = [];
+    public array $selectedNodes = [];
 
-    public $canEdit = false;
-    public $canDelete = false;
-    public $canAdd = false;
-    public $canView = false;
-    public $canAddNode = false;
-    public $canEditNode = false;
-    public $canDeleteNode = false;
+    public bool $canEdit = false;
+    public bool $canDelete = false;
+    public bool $canAdd = false;
+    public bool $canView = false;
+    public bool $canAddNode = false;
+    public bool $canEditNode = false;
+    public bool $canDeleteNode = false;
 
 
-    public function rules()
+    public function rules() : array
     {
         $request = new AccessControlRequest();
         return $request->rules();
     }
 
-    public function messages()
+    public function messages() : array
     {
         $request = new AccessControlRequest();
         return $request->messages();
     }
 
-    public function loadPermissions()
+    public function loadPermissions() : void
     {
         $user = auth()->user();
-
-        $this->canEdit = $user->hasPermission('access_control_edit');
-        $this->canDelete = $user->hasPermission('access_control_delete');
-        $this->canAdd = $user->hasPermission('access_control_add');
-        $this->canView = $user->hasPermission('access_control_view');
 
         $this->canAddNode = $user->hasPermission('access_control_node_add');
         $this->canEditNode = $user->hasPermission('access_control_node_edit');
@@ -54,7 +50,7 @@ class AccessControlForm extends Component
     }
 
 
-    public function mount($accessControlUuid = null)
+    public function mount($accessControlUuid = null) : void
     {
         if ($accessControlUuid) {
 
@@ -86,7 +82,7 @@ class AccessControlForm extends Component
         }
     }
 
-    public function addNode()
+    public function addNode() : void
     {
         $this->validate(
             [
@@ -104,14 +100,14 @@ class AccessControlForm extends Component
         ];
     }
 
-    public function removeNode($index)
+    public function removeNode($index) : void
     {
 
         unset($this->nodes[$index]);
         $this->nodes = array_values($this->nodes);
     }
 
-    public function toggleSelectAll()
+    public function toggleSelectAll() : void
     {
         if (count($this->selectedNodes) === count($this->nodes)) {
             $this->selectedNodes = [];
@@ -120,7 +116,7 @@ class AccessControlForm extends Component
         }
     }
 
-    public function deleteSelected()
+    public function deleteSelected() : void
     {
         foreach ($this->selectedNodes as $index) {
 
@@ -132,7 +128,7 @@ class AccessControlForm extends Component
         $this->selectedNodes = [];
     }
 
-    public function save()
+    public function save() : void
     {
 
         $this->validate();
@@ -169,10 +165,10 @@ class AccessControlForm extends Component
             $accessControlNode->save();
         }
 
-        return redirect()->route('accesscontrol.index');
+        redirect()->route('accesscontrol.index')        ;
     }
 
-    public function render()
+    public function render() : View
     {
         return view('livewire.access-control-form');
     }

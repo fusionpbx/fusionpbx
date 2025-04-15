@@ -148,14 +148,14 @@ class AccessControlTable extends DataTableComponent
         $columns = [
             Column::make("Access control uuid", "access_control_uuid")
                 ->sortable()
-                ->searchable(),
-            Column::make("Access control name", "access_control_name")
+                ->hideIf(true),
+            Column::make("Name", "access_control_name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Access control default", "access_control_default")
+            Column::make("Default", "access_control_default")
                 ->sortable()
                 ->searchable(),
-            Column::make("Access control description", "access_control_description")
+            Column::make("Description", "access_control_description")
                 ->sortable()
                 ->searchable(),
         ];

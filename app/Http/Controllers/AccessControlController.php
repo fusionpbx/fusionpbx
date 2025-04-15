@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -13,7 +15,7 @@ class AccessControlController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : mixed
     {
         return view('pages.accessControl.index');
     }
@@ -21,7 +23,7 @@ class AccessControlController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create() : View
     {
         return view('pages.accessControl.form');
     }
@@ -45,7 +47,7 @@ class AccessControlController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($uuid)
+    public function edit($uuid) : View
     {
         $accessControl = AccessControl::with('accesscontrolnodes')->where('access_control_uuid', $uuid)->firstOrFail();
         $accessControlUuid = $accessControl->access_control_uuid;
@@ -64,7 +66,7 @@ class AccessControlController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($uuid)
+    public function destroy($uuid) : RedirectResponse
     {
 
 
@@ -85,9 +87,10 @@ class AccessControlController extends Controller
         }
     }
 
-    public function copy($uuid)
+    public function copy($uuid) : RedirectResponse
     {
         $originalAccessControl = AccessControl::where('access_control_uuid', $uuid)->firstOrFail();
+        
         try {
             DB::beginTransaction();
 
