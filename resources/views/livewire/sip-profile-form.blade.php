@@ -10,7 +10,7 @@
                         @if (isset($sipProfile))
                             @can('sip_profile_delete')
                                 <form action="{{ route('sipprofiles.destroy', $sipProfile->sip_profile_uuid) }}"
-                                    method="POST" class="d-inline">
+                                    method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this SIP Profile?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-primary btn-sm">
