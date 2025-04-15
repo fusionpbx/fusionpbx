@@ -90,7 +90,7 @@ class AccessControlController extends Controller
     public function copy($uuid) : RedirectResponse
     {
         $originalAccessControl = AccessControl::where('access_control_uuid', $uuid)->firstOrFail();
-        
+
         try {
             DB::beginTransaction();
 

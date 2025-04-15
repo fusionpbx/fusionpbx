@@ -165,7 +165,7 @@ class AccessControlForm extends Component
             $accessControlNode->save();
         }
 
-        redirect()->route('accesscontrol.index')        ;
+        redirect()->route('accesscontrol.index');
     }
 
     public function render() : View

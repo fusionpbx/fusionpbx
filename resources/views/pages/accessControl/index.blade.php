@@ -14,9 +14,16 @@
                         <i class="fas fa-users mr-1"></i> {{__('Users')}}
                     </a>
 
+                    <a href="" class="btn btn-primary btn-sm">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>    
+                        {{ __('Reload') }}
+                    </a>
+
+                    @can('access_control_add')
                     <a href="{{route('accesscontrol.create')}}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
-                    </a>
+                    </a>                        
+                    @endcan
                 </div>
             </div>
         </div>
