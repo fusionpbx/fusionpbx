@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
+use App\Http\Controllers\XmlCDRController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +89,9 @@ Route::middleware(['auth','permission'])->group(function () {
     // USER GROUP
     Route::get('/groups/{group}/members', [UserGroupController::class, 'index'])->name('usergroup.index');
     Route::put('/groups/{group}/members', [UserGroupController::class, 'update'])->name('usergroup.update');
+
+    // XML CDR
+    Route::get('/xmlcdr', [XmlCDRController::class, 'index'])->name('xmlcdr.index');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){
