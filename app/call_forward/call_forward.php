@@ -231,25 +231,25 @@
 
 		if (count($extensions) > 0) {
 			if (permission_exists('call_forward')) {
-				echo button::create(['type' => 'button', 'label' => $text['label-call_forward'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_cfwd', 'onclick' => "list_action_set('toggle_call_forward'); modal_open('modal-toggle','btn_toggle');"]);
+				echo button::create(['type' => 'button', 'label' => $text['label-call_forward'], 'icon' => $settings->get('theme', 'button_icon_toggle'), 'collapse' => false, 'name' => 'btn_toggle_cfwd', 'onclick' => "list_action_set('toggle_call_forward'); modal_open('modal-toggle','btn_toggle');"]);
 			}
 			if (permission_exists('follow_me')) {
-				echo button::create(['type' => 'button', 'label' => $text['label-follow_me'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_follow', 'onclick' => "list_action_set('toggle_follow_me'); modal_open('modal-toggle','btn_toggle');"]);
+				echo button::create(['type' => 'button', 'label' => $text['label-follow_me'], 'icon' => $settings->get('theme', 'button_icon_toggle'), 'collapse' => false, 'name' => 'btn_toggle_follow', 'onclick' => "list_action_set('toggle_follow_me'); modal_open('modal-toggle','btn_toggle');"]);
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo button::create(['type' => 'button', 'label' => $text['label-dnd'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_dnd', 'onclick' => "list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
+				echo button::create(['type' => 'button', 'label' => $text['label-dnd'], 'icon' => $settings->get('theme', 'button_icon_toggle'), 'collapse' => false, 'name' => 'btn_toggle_dnd', 'onclick' => "list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
 			}
 		}
 		if ($show !== 'all' && permission_exists('call_forward_all')) {
-			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $_SESSION['theme']['button_icon_all'], 'link' => '?show=all' . (!empty($params) ? '&'.implode('&', $params) : null)]);
+			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $settings->get('theme', 'button_icon_all'), 'link' => '?show=all' . (!empty($params) ? '&'.implode('&', $params) : null)]);
 		}
 		echo "<form id='form_search' class='inline' method='get'>\n";
 		if ($show == 'all' && permission_exists('call_forward_all')) {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		echo "<input type='text' class='txt list-search' name='search' id='search' value=\"" . escape($search) . "\" placeholder=\"" . $text['label-search'] . "\" onkeydown=''>";
-		echo button::create(['label' => $text['button-search'], 'icon' => $_SESSION['theme']['button_icon_search'], 'type' => 'submit', 'id' => 'btn_search']);
-		//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
+		echo button::create(['label' => $text['button-search'], 'icon' => $settings->get('theme', 'button_icon_search'), 'type' => 'submit', 'id' => 'btn_search']);
+		//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
 		if (!empty($paging_controls_mini)) {
 			echo "<span style='margin-left: 15px;'>" . $paging_controls_mini . "</span>";
 		}
@@ -296,7 +296,7 @@
 		echo "	<th>" . $text['label-dnd'] . "</th>\n";
 	}
 	echo "	<th class='" . ($is_included ? 'hide-md-dn' : 'hide-sm-dn') . "'>" . $text['label-description'] . "</th>\n";
-	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 	if ($list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -404,7 +404,7 @@
 			echo "	<td class='description overflow " . ($is_included ? 'hide-md-dn' : 'hide-sm-dn') . "'>" . escape($row['description']) . "&nbsp;</td>\n";
 			if ($list_row_edit_button) {
 				echo "	<td class='action-button'>";
-				echo button::create(['type' => 'button', 'title' => $text['button-edit'], 'icon' => $_SESSION['theme']['button_icon_edit'], 'link' => $list_row_url]);
+				echo button::create(['type' => 'button', 'title' => $text['button-edit'], 'icon' => $settings->get('theme', 'button_icon_edit'), 'link' => $list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
