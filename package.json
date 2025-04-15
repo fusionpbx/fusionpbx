@@ -20,6 +20,7 @@
         "bootstrap4-duallistbox": "^4.0.2",
         "install": "^0.13.0",
         "jquery": "^3.7.1",
-        "overlayscrollbars": "^2.11.1"
+        "overlayscrollbars": "^2.11.1",
+        "prismjs": "^1.30.0"
     }
 }

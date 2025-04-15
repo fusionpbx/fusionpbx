@@ -8,44 +8,41 @@ use Illuminate\Support\Str;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class SipProfileForm extends Component
 {
     public $sipProfile;
-    public $sip_profile_uuid;
-    public $sip_profile_name;
-    public $sip_profile_hostname;
-    public $sip_profile_enabled = true;
-    public $sip_profile_description;
+    public string $sip_profile_uuid;
+    public string $sip_profile_name;
+    public ?string $sip_profile_hostname ;
+    public bool $sip_profile_enabled = true;
+    public string $sip_profile_description;
 
-    public $domains = [];
-    public $settings = [];
+    public ?array $domains = [];
+    public ?array $settings = [];
 
-    public $domainsToDelete = [];
-    public $settingsToDelete = [];
+    public array $domainsToDelete = [];
+    public array $settingsToDelete = [];
 
-    public $canViewSipProfile = false;
-    public $canAddSipProfile = false;
-    public $canEditSipProfile = false;
-    public $canDeleteSipProfile = false;
+    public bool $canViewDomain = false;
+    public bool $canAddDomain = false;
+    public bool $canEditDomain = false;
+    public bool $canDeleteDomain = false;
 
-    public $canViewDomain = false;
-    public $canAddDomain = false;
-    public $canEditDomain = false;
-    public $canDeleteDomain = false;
+    public bool $canViewSetting = false;
+    public bool $canAddSetting = false;
+    public bool $canEditSetting = false;
+    public bool $canDeleteSetting = false;
 
-    public $canViewSetting = false;
-    public $canAddSetting = false;
-    public $canEditSetting = false;
-    public $canDeleteSetting = false;
-
-    public function rules()
+    public function rules() 
     {
         $request = new SipProfileRequest();
         return $request->rules();
     }
 
-    public function mount($sipProfile = null)
+    public function mount($sipProfile = null) : void
     {
 
         if ($sipProfile) {
@@ -81,11 +78,6 @@ class SipProfileForm extends Component
 
         $this->loadPermissions();
 
-        if (!$this->canViewSipProfile) {
-            session()->flash('error', 'You do not have permission to view SIP Profiles.');
-            return redirect()->route('dashboard');
-        }
-
 
         if (empty($this->domains) && $this->canAddDomain) {
             $this->addDomain();
@@ -97,14 +89,9 @@ class SipProfileForm extends Component
         }
     }
 
-    private function loadPermissions()
+    private function loadPermissions() : void
     {
         $user = auth()->user();
-
-        $this->canViewSipProfile = $user->hasPermission('sip_profile_view');
-        $this->canAddSipProfile = $user->hasPermission('sip_profile_add');
-        $this->canEditSipProfile = $user->hasPermission('sip_profile_edit');
-        $this->canDeleteSipProfile = $user->hasPermission('sip_profile_delete');
 
         $this->canViewDomain = $user->hasPermission('sip_profile_domain_view');
         $this->canAddDomain = $user->hasPermission('sip_profile_domain_add');
@@ -118,7 +105,7 @@ class SipProfileForm extends Component
         $this->canDeleteSetting = $user->hasPermission('sip_profile_setting_delete');
     }
 
-    public function addDomain()
+    public function addDomain() : void
     {
         if (!$this->canAddDomain) {
             session()->flash('error', 'You do not have permission to add domains.');
@@ -134,7 +121,7 @@ class SipProfileForm extends Component
         ];
     }
 
-    public function removeDomain($index)
+    public function removeDomain($index) : void
     {
         if (!$this->canDeleteDomain) {
             session()->flash('error', 'You do not have permission to delete domains.');
@@ -148,7 +135,7 @@ class SipProfileForm extends Component
         unset($this->domains[$index]);
         $this->domains = array_values($this->domains);
     }
-    public function addSetting()
+    public function addSetting() : void
     {
         if (!$this->canAddSetting) {
             session()->flash('error', 'You do not have permission to add settings.');
@@ -165,7 +152,7 @@ class SipProfileForm extends Component
         ];
     }
 
-    public function removeSetting($index)
+    public function removeSetting($index) : void
     {
         if (!$this->canDeleteSetting) {
             session()->flash('error', 'You do not have permission to delete settings.');
@@ -180,22 +167,9 @@ class SipProfileForm extends Component
         $this->settings = array_values($this->settings);
     }
 
-    public function save()
+    public function save() : void
     {
         $this->validate();
-
-        if ($this->sipProfile) {
-            if (!$this->canEditSipProfile) {
-                session()->flash('error', 'You do not have permission to edit SIP Profiles.');
-                return;
-            }
-        } else {
-            if (!$this->canAddSipProfile) {
-                session()->flash('error', 'You do not have permission to add SIP Profiles.');
-                return;
-            }
-        }
-
 
         $filteredDomains = collect($this->domains)->filter(function ($domain) {
             return !empty($domain['sip_profile_domain_name']);
@@ -209,24 +183,24 @@ class SipProfileForm extends Component
         $hasNewDomains = collect($filteredDomains)->filter(fn($d) => empty($d['sip_profile_domain_uuid']))->count() > 0;
         if ($hasNewDomains && !$this->canAddDomain) {
             session()->flash('error', 'You do not have permission to add domains.');
-            return;
+            
         }
 
         if (!empty($this->domainsToDelete) && !$this->canDeleteDomain) {
             session()->flash('error', 'You do not have permission to delete domains.');
-            return;
+            
         }
 
 
         $hasNewSettings = collect($filteredSettings)->filter(fn($s) => empty($s['sip_profile_setting_uuid']))->count() > 0;
         if ($hasNewSettings && !$this->canAddSetting) {
             session()->flash('error', 'You do not have permission to add settings.');
-            return;
+            
         }
         
         if (!empty($this->settingsToDelete) && !$this->canDeleteSetting) {
             session()->flash('error', 'You do not have permission to delete settings.');
-            return;
+            
         }
 
 
@@ -327,10 +301,10 @@ class SipProfileForm extends Component
             session()->flash('message', 'SIP Profile created successfully.');
         }
 
-        return redirect()->route('sipprofiles.index');
+        redirect()->route('sipprofiles.index');
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.sip-profile-form');
     }

@@ -54,7 +54,7 @@ class SipProfileTable extends DataTableComponent
         return $bulkActions;
     }
 
-    public function toggleSipProfile()
+    public function toggleSipProfile(): void
     {
         if (!auth()->user()->hasPermission('sip_profile_edit')) {
             session()->flash('error', 'You do not have permission to toggle SIP Profile status.');
@@ -73,7 +73,7 @@ class SipProfileTable extends DataTableComponent
         session()->flash('message', 'SIP Profile status toggled successfully');
     }
 
-    public function bulkDelete()
+    public function bulkDelete(): void
     {
         if (!auth()->user()->hasPermission('sip_profile_delete')) {
             session()->flash('error', 'You do not have permission to delete SIP Profiles.');

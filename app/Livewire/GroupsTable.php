@@ -2,18 +2,40 @@
 
 namespace App\Livewire;
 
+use App\Models\Domain;
+use App\Models\Group;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
-use App\Models\Group;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class GroupsTable extends DataTableComponent
 {
-    protected $model = Group::class;
 
+    public function builder(): Builder
+    {
+        $currentDomain = Domain::find(Session::get('domain_uuid'));
+        $query =  Group::leftJoin(Domain::getTableName(), Group::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
+            ->select('group_uuid', 'group_protected', 'group_level', 'group_description','group_name', DB::raw("CONCAT(".Group::getTableName().".group_name,'@', IFNULL(v_domains.domain_name,'Global')) AS group_name_group"),'domain_name')
+            ->withCount('permissions')
+            ->withCount('users')
+            ->orderBy('group_name')
+            ->when(!auth()->user()->hasPermission('domain_select'), function($query, $currentDomain) {
+                // When the permision is not set, you can only have access to the domain groups
+                return $query->where('domain_uuid', $currentDomain->domain_uuid);
+            });
+
+
+        if(App::hasDebugModeEnabled()){
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$query->toRawSql());
+        }
+        return $query;
+    }
 
     public function configure(): void
     {
@@ -160,45 +182,40 @@ class GroupsTable extends DataTableComponent
     {
         $columns = [
             Column::make("Name", "group_name")
+                ->format(function ($value, $row, Column $column) {
+                    return $row->group_name_group;
+                })
                 ->sortable()
                 ->searchable(),
         ];
-       
+
         if (auth()->user()->hasPermission('group_permission_view')) {
             $columns[] = Column::make("Permissions", "group_uuid")
                 ->format(function ($value, $row, Column $column) {
-                    return '<a href="'.route('permissions.index', ['group_uuid' => $value]).'" class="text-primary underline">'
+                    return '<a href="'.route('permissions.index', ['groupUuid' => $value]).'" class="text-primary underline">'
                     .$row->permissions_count.
                     '</a>';
                 })
                 ->html();
         }
-        
+
         $columns = array_merge($columns, [
             Column::make("Members", "group_uuid")
                 ->format(function ($value, $row, Column $column) {
                     return $row->users_count;
                 }),
-    
+
             Column::make("Level", "group_level")
                 ->sortable(),
-    
+
             BooleanColumn::make("Protected", "group_protected")
                 ->sortable(),
-    
+
             Column::make("Description", "group_description")
                 ->searchable()
                 ->sortable(),
         ]);
-        
-        return $columns;
-    }
 
-    public function builder(): Builder
-    {
-        return Group::query()
-            ->withCount('permissions')
-            ->withCount('users')
-            ->orderBy('group_name');
+        return $columns;
     }
 }

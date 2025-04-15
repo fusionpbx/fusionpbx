@@ -6,6 +6,8 @@ use App\Http\Requests\GatewayRequest;
 use App\Models\Domain;
 use App\Models\Gateway;
 use App\Models\SipProfile;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -15,7 +17,7 @@ class GateWayController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): mixed
     {
         return view('pages.gateway.index');
     }
@@ -23,7 +25,7 @@ class GateWayController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create() : View
     {
         $domains = Domain::all();
         $profiles = SipProfile::all();
@@ -34,7 +36,7 @@ class GateWayController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(GatewayRequest $request)
+    public function store(GatewayRequest $request) : RedirectResponse
     {
         Gateway::create($request->validated());
         
@@ -52,10 +54,9 @@ class GateWayController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Gateway $gateway)
+    public function edit(Gateway $gateway) : View
     {
         $domains = Domain::all();
-
         $profiles = SipProfile::all();
 
         return view('pages.gateway.form', compact('gateway', 'domains', 'profiles'));
@@ -64,7 +65,7 @@ class GateWayController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(GatewayRequest $request, Gateway $gateway)
+    public function update(GatewayRequest $request, Gateway $gateway) : RedirectResponse
     {
         $gateway->update($request->all());
 
@@ -74,33 +75,31 @@ class GateWayController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Gateway $gateway)
+    public function destroy(Gateway $gateway) : RedirectResponse
     {
         $gateway->delete();
 
         return redirect()->route('gateways.index');
     }
 
-    public function copy(Gateway $gateway)
+    public function copy(Gateway $gateway) : RedirectResponse
     {
 
         try {
             DB::beginTransaction();
             if (auth()->user()->hasPermission('gateway_add')) {
-
                 $newGateway = $gateway->replicate();
                 $newGateway->gateway_uuid = Str::uuid();
                 $newGateway->description = $newGateway->description . ' (Copy)';
                 $newGateway->save();
 
-
-
                 DB::commit();
-                return redirect()->route('gateways.index')->with('success', 'Gateway copied successfully!');
+
             }
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
         }
+        return redirect()->route('gateways.index')->with('success', 'Gateway copied successfully!');
     }
 }

@@ -12,9 +12,11 @@ use App\Models\Group;
 use App\Models\Language;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 
@@ -34,23 +36,36 @@ class UserController extends Controller
 		$api_key = Str::uuid();
 
 		$contacts = Contact::all();
+		$currentDomain = Domain::find(Session::get('domain_uuid'));
+		$groups = $currentDomain->groups;
 		$domains = Domain::all();
-		$groups = Group::all();
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
 
-		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones", "api_key"));
+		return view("pages.users.form", compact("contacts", "domains", "groups", "languages", "timezones", "api_key", 'currentDomain', 'canSelectDomain'));
 	}
 
 	public function store(UserRequest $request)
 	{
-		$user = User::create($request->validated());
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $request: '.print_r($request->toArray(), true));
+        }
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
+        if (!$canSelectDomain){
+            $request['domain_uuid'] = Session::get('domain_uuid');
+        }
+        $validatedUser = $request->validated();
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $validatedUser: '.print_r($validatedUser, true));
+        }
+		$user = User::create($validatedUser);
 
 		$this->syncGroups($request, $user);
 
 		$this->syncSettings($request, $user);
 
-		return redirect()->route("pages.users.index");
+		return redirect()->route("users.index");
 	}
 
 	public function show(User $user)
@@ -62,18 +77,25 @@ class UserController extends Controller
 	{
 		$contacts = Contact::all();
 		$domains = Domain::all();
-		$groups = Group::all();
+		$currentDomain = Domain::find(Session::get('domain_uuid'));
+		$groups = $currentDomain->groups;
 		$languages = Language::all();
 		$timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
 
 		$selectedLanguage = $user->userSettings->where('user_setting_subcategory', 'language')->first()->user_setting_value ?? null;
 		$selectedTimezone = $user->userSettings->where('user_setting_subcategory', 'time_zone')->first()->user_setting_value ?? null;
 
-		return view("pages.users.form", compact("user", "contacts", "domains", "groups", "languages", "timezones", "selectedLanguage", "selectedTimezone"));
+		return view("pages.users.form", compact("user", "contacts", "domains", "groups", "languages", "timezones", "selectedLanguage", "selectedTimezone", 'currentDomain', 'canSelectDomain'));
 	}
 
 	public function update(UserRequest $request, User $user)
 	{
+        $canSelectDomain = auth()->user()->hasPermission('domain_select');
+        if (!$canSelectDomain){
+            $request['domain_uuid'] = Session::get('domain_uuid');
+        }
+
 		$validated = $request->validated();
 
 		$this->handlePassword($validated);
@@ -115,7 +137,7 @@ class UserController extends Controller
 			foreach($groups as $group)
 			{
 				$syncGroups[$group] = [
-					"domain_uuid" => $user->domain->domain_uuid, //NOTE: won't need in the future
+					"domain_uuid" => $user->domain_uuid, //NOTE: won't need in the future
 					"group_name" => $groupsDB[$group] ?? null, //NOTE: won't need in the future
 				];
 			}
