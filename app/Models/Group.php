@@ -19,7 +19,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Group extends Model
 {
-	use HasApiTokens, Notifiable, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
+	use Notifiable, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
 
 	protected $table = 'v_groups';
 	protected $primaryKey = 'group_uuid';

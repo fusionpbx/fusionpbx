@@ -25,9 +25,9 @@ class GroupsTable extends DataTableComponent
             ->withCount('permissions')
             ->withCount('users')
             ->orderBy('group_name')
-            ->when(!auth()->user()->hasPermission('domain_select'), function($query, $currentDomain) {
+            ->when(!auth()->user()->hasPermission('domain_select'), function($query ) use ($currentDomain)  {
                 // When the permision is not set, you can only have access to the domain groups
-                return $query->where('domain_uuid', $currentDomain->domain_uuid);
+                return $query->where(Domain::getTableName().'.domain_uuid' , $currentDomain->domain_uuid);
             });
 
 

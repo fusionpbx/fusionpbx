@@ -33,6 +33,13 @@ return [
     'permissions.show' => 'group_permission_view',
     'permissions.update'=> 'group_permission_delete',
 
+    'accesscontrol.index' => 'access_control_view',
+    'accesscontrol.create' => 'access_control_add',
+    'accesscontrol.store' => 'access_control_add',
+    'accesscontrol.edit' => 'access_control_edit',
+    'accesscontrol.update' => 'access_control_edit',
+    'accesscontrol.destroy' => 'access_control_delete',
+
     'gateways.index' => 'gateway_view',
     'gateways.create' => 'gateway_add',
     'gateways.store' => 'gateway_add',
