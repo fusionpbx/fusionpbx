@@ -13,12 +13,12 @@ class EventSocketBuffer
         $this->eol = "\n";
     }
 
-    public function append($str)
+    public function append($str) : void
     {
         $this->content .= $str;
     }
 
-    public function read_line()
+    public function read_line() : string|false
     {
         $ar = explode($this->eol, $this->content, 2);
         if (count($ar) != 2) {
@@ -28,7 +28,7 @@ class EventSocketBuffer
         return $ar[0];
     }
 
-    public function read_n($n)
+    public function read_n($n) : string|false
     {
         if (strlen($this->content) < $n) {
             return false;
@@ -38,7 +38,7 @@ class EventSocketBuffer
         return $s;
     }
 
-    public function read_all($n = null)
+    public function read_all($n = null) : string
     {
         $tmp = $this->content;
         $this->content = '';

@@ -129,7 +129,7 @@ class FreeSwitchConnectionManager
         return true;
     }
 
-    private function es_read_event()
+    private function es_read_event() 
     {
         if (!$this->fp) {
             return false;
@@ -175,7 +175,7 @@ class FreeSwitchConnectionManager
         return $content;
     }
 
-    private function es_request($cmd)
+    private function es_request($cmd) : ?string
     {
         if (!$this->fp) {
             return false;
@@ -231,9 +231,7 @@ class FreeSwitchConnectionManager
         return null;
     }
     
-    // Prevenir la clonación del objeto
     private function __clone() {}
     
-    // Prevenir la deserialización
     public function __wakeup() {}
 }

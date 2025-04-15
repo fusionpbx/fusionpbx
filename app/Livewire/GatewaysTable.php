@@ -20,10 +20,11 @@ class GatewaysTable extends DataTableComponent
 
     public function boot(): void
     {
-        $this->getGatewayStatuses();
+        //To do: Uncomment once FreeSwitchAPIController is working.
+        // $this->getGatewayStatuses();
     }
 
-    public function getGatewayStatuses()
+    public function getGatewayStatuses() 
     {
         $fsapi = new FreeSWITCHAPIController();
         $gateways = Gateway::all();

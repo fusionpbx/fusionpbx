@@ -12,7 +12,7 @@ class FreeSwitchServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register() : void
     {
         $this->app->singleton('freeswitch', function ($app) {
             return new FreeSwitchService();
@@ -24,7 +24,7 @@ class FreeSwitchServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot() : void
     {
         //
     }
