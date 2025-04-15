@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasUniqueIdentifier;
 use App\Traits\GetTableName;
+use App\Traits\HandlesStringBooleans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class SipProfileSetting extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
 	protected $table = 'v_sip_profile_settings';
 	protected $primaryKey = 'sip_profile_setting_uuid';
 	public $incrementing = false;
@@ -29,6 +30,7 @@ class SipProfileSetting extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
+		'sip_profile_uuid',
 		'sip_profile_setting_name',
 		'sip_profile_setting_value',
 		'sip_profile_setting_enabled',

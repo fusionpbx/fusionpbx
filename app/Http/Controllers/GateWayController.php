@@ -9,6 +9,7 @@ use App\Models\SipProfile;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class GateWayController extends Controller
@@ -38,7 +39,7 @@ class GateWayController extends Controller
     public function store(GatewayRequest $request) : RedirectResponse
     {
         Gateway::create($request->validated());
-
+        
         return redirect()->route('gateways.index');
     }
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('layouts.head')
-
+    @livewireStyles
     @stack('before-css')
     @vite('resources/scss/app.scss')
     @stack('css')
@@ -25,7 +25,7 @@
         </main>
         @include('layouts.footer')
     </div>
-
+    @livewireScripts
     @stack('before-scripts')
     @include('layouts.scripts')
     @stack('scripts')
