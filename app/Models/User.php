@@ -40,6 +40,8 @@ class User extends Authenticatable
 		'user_totp_secret',
 		'user_enabled',
         'token',
+        'domain_uuid',
+        'contact_uuid',
 	];
 
     protected static $stringBooleanFields = [

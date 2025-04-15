@@ -1,16 +1,17 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DialplanController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\GateWayController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupPermissionController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SipProfileController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
@@ -42,21 +43,33 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+    // DIALPLAN
+    Route::resource('/dialplans', DialplanController::class)->name('dialplans', 'dialplans');
+
     // DOMAIN
     Route::resource('/domains', DomainController::class)->name('domains', 'domains');
     Route::post('/domains/switch', [DomainController::class, 'switch'])->name('domain.switch');
     Route::get('/domains/switch', function () {
         return redirect('/dashboard');
     });
-    Route::get('/domains/switch/{domain}', [DomainController::class, 'switch_by_uuid'])->name('domain.switchuuid');
+    Route::get('/domains/switch/{domain}', [DomainController::class, 'switchByUuid'])->name('domain.switchuuid');
 
     // GROUP
     Route::resource('/groups', GroupController::class)->name('groups', 'groups');
     Route::get('/groups/{group}/copy', [GroupController::class, 'copy'])->name('groups.copy');
 
     // PERMISSION
-    Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
-    Route::put('group/{groupUuid}/permissions/', [PermissionController::class, 'update'])->name('permissions.update');
+    //Route::resource('/permissions', PermissionController::class)->name('permissions', 'permissions');
+    #Route::get('/permissions', [GroupPermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/groups/{groupUuid}/permissions', [GroupPermissionController::class, 'index'])->name('permissions.index');
+    //Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
+    //Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
+    Route::put('/permissions/{groupUuid}', [GroupPermissionController::class, 'update'])->name('permissions.update');
+    Route::patch('/permissions/{groupUuid}', [GroupPermissionController::class, 'update'])->name('permissions.update');
+    //Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
+    #Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
+    //Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+    //Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
 
     // GETEWAY
     Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
@@ -71,8 +84,14 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
 
     // MENU ITEM
-    Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
-    Route::get('/menus/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
+//    Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
+    Route::get('/menu/{menu}/menuitem/{menuitem}/edit', [MenuItemController::class, 'edit'])->name('menuitems.edit');
+    Route::get('/menu/{menu}/menuitems', [MenuItemController::class, 'index'])->name('menuitems.index');
+    Route::put('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'update'])->name('menuitems.update');
+    Route::patch('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'update'])->name('menuitems.update');
+    Route::delete('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'destroy'])->name('menuitems.destroy');
+    Route::get('/menu/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
+    Route::post('/menu/{menu}/menuitems', [MenuItemController::class, 'store'])->name('menuitems.store');
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');

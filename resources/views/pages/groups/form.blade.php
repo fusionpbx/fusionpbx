@@ -10,7 +10,7 @@
 
             @if (isset($group))
             <div class="card-tools">
-                <a  href="{{ route('permissions.index', ['group_uuid' => old('group_uuid', $group->group_uuid ?? '')]) }}" class="btn btn-primary btn-sm">
+                <a  href="{{ route('permissions.index', ['group_uuid' => old('group_uuid', $group->group_uuid ?? ''), 'groupUuid' => old('group_uuid', $group->group_uuid ?? '')]) }}" class="btn btn-primary btn-sm">
                     <i class="fa fa-key" aria-hidden="true"></i>
                     {{ __('Permissions') }}
                 </a>

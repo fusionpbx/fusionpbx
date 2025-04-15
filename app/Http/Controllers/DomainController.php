@@ -61,11 +61,11 @@ class DomainController extends Controller
 	}
 
 	public function switch(Request $request){
-		return $this->switch_by_uuid($request->domain_uuid);
+		return $this->switchByUuid($request->domain_uuid);
 
 	}
 
-	public function switch_by_uuid(string $domain_uuid){
+	public function switchByUuid(string $domain_uuid){
 
 		 $domain_query = Domain::where('domain_uuid', $domain_uuid)
 								->where('domain_enabled', 'true');
