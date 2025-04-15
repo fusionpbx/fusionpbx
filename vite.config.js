@@ -5,7 +5,7 @@ import path from 'path';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/scss/app.scss', 'resources/js/app.js'],
+            input: ['resources/scss/app.scss', 'resources/js/app.js', 'resources/js/jquery.js'],
             refresh: true,
         }),
     ],
@@ -15,6 +15,7 @@ export default defineConfig({
             '@bootstrap-icons': path.resolve(__dirname, 'node_modules/bootstrap-icons'),
             '@overlayscrollbars': path.resolve(__dirname, 'node_modules/overlayscrollbars'),
             '@popperjs': path.resolve(__dirname, 'node_modules/@popperjs'),
+
         }
     }
 });

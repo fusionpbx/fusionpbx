@@ -39,7 +39,7 @@ class MenuItemsTable extends DataTableComponent
             ->setSearchPlaceholder('Search MenuItems')
             ->setTableRowUrl(function($row) use ($canEdit) {
                 return $canEdit
-                    ? route('menuitems.edit', $row->menu_item_uuid)
+                    ? route('menuitems.edit', ['menu' => $this->menu_uuid, 'menuitem' => $row->menu_item_uuid])
                     : null;
             });
     }
@@ -159,6 +159,7 @@ class MenuItemsTable extends DataTableComponent
         return [
 
             Column::make("UUID", "menu_item_uuid")->hideIf(true),
+//            Column::make("Menu UUID", "menu_uuid"),
 
             Column::make("Name", "menu_item_title")->searchable(),
 /*
@@ -189,14 +190,14 @@ class MenuItemsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+/*
 	$sql = "WITH RECURSIVE children AS (
 			SELECT mi.*,  1 as depth, menu_item_title as menu_path FROM v_menu_items mi WHERE mi.menu_item_parent_uuid IS NULL OR NOT EXISTS (SELECT 1 FROM v_menu_items t1 WHERE mi.menu_item_parent_uuid = t1.menu_item_uuid)
 			UNION
 			SELECT tp.*, depth + 1, CONCAT(menu_path,'->',tp.menu_item_title) FROM v_menu_items tp JOIN children c ON tp.menu_item_parent_uuid = c.menu_item_uuid
 		)
 		SELECT * FROM children WHERE menu_uuid = '.$this->menu_uuid.' ORDER BY menu_path ASC";
-//	$query = DB::select($sql);
-/*
+	$query = DB::select($sql);
 	$query = DB::query()
 		->withRecursiveExpression('children', function ($rq){
 			$rq->selectRaw("mi.*, 1 AS depth, menu_item_title AS menu_path FROM v_menu_items mi WHERE mi.menu_item_parent_uuid IS NULL OR NOT EXISTS (SELECT 1 FROM v_menu_items t1 WHERE mi.menu_item_parent_uuid = t1.menu_item_uuid)")
@@ -231,8 +232,8 @@ class MenuItemsTable extends DataTableComponent
 */
 	// NOTE: this will disapear in CoolPBX 2.1+
         $query = MenuItem::query()
-				->where("menu_uuid", "=", $this->menu_uuid)
-                ->orderBy('menu_item_title', 'asc');
+			->where("menu_uuid", "=", $this->menu_uuid)
+			->orderBy('menu_item_title', 'asc');
 
  	if(App::hasDebugModeEnabled()){
             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$query->toRawSql());

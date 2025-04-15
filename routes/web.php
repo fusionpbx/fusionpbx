@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DialplanController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\GateWayController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupPermissionController;
 use App\Http\Controllers\MenuController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
+use App\Http\Controllers\SipProfileController;
 use App\Http\Middleware\Authenticate;
 use App\Models\AccessControl;
 use Illuminate\Http\Request;
@@ -71,12 +73,27 @@ Route::middleware(['auth','permission'])->group(function () {
     //Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
     //Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
 
+    // GETEWAY
+    Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
+    Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
+
+    // SIP PROFILE
+    Route::resource('/sipprofiles', SipProfileController::class)->name('sipprofiles', 'sipprofiles');
+    Route::get('/sipprofiles/{sipprofile}/copy', [SipProfileController::class, 'copy'])->name('sipprofiles.copy');
+    
+
     // MENU
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
 
     // MENU ITEM
-    Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
-    Route::get('/menus/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
+//    Route::resource('/menuitems', MenuItemController::class)->name('menuitems', 'menuitems');
+    Route::get('/menu/{menu}/menuitem/{menuitem}/edit', [MenuItemController::class, 'edit'])->name('menuitems.edit');
+    Route::get('/menu/{menu}/menuitems', [MenuItemController::class, 'index'])->name('menuitems.index');
+    Route::put('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'update'])->name('menuitems.update');
+    Route::patch('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'update'])->name('menuitems.update');
+    Route::delete('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'destroy'])->name('menuitems.destroy');
+    Route::get('/menu/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
+    Route::post('/menu/{menu}/menuitems', [MenuItemController::class, 'store'])->name('menuitems.store');
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');

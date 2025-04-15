@@ -9,7 +9,7 @@
 				<div class="card-header">
 					<h3 class="card-title">Menu Item</h3>
 				</div>
-				<form method="POST" action="{{ isset($menuitem) ? route('menuitems.update', $menuitem->menu_item_uuid) : route('menuitems.store', $menu->menu_uuid) }}">
+				<form method="POST" action="{{ isset($menuitem) ? route('menuitems.update', [$menuitem->menu_uuid, $menuitem->menu_item_uuid]) : route('menuitems.store', $menu->menu_uuid) }}">
 					@csrf
 					@if(isset($menuitem))
 						@method('PUT')
