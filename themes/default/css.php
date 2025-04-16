@@ -3137,7 +3137,7 @@ else { //default: white
 			height: 350px;
 			display: block;
 			<?php
-			echo "background: ".$dashboard_detail_background_color[0].";\n";
+			echo "background: ".($dashboard_detail_background_color[0] ?? '#ffffff').";\n";
 			if ($dashboard_background_gradient_style == 'mirror') {
 				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[1]." 0%, ".$dashboard_detail_background_color[0]." 30%, ".$dashboard_detail_background_color[0]." 70%, ".$dashboard_detail_background_color[1]." 100%);\n";
 			}
