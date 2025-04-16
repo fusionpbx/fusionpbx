@@ -132,7 +132,6 @@ class plugin_database {
 								$banners[] = [
 									'name' => $open_id_class,
 									'image' => $open_id_class::get_banner_image(),
-									'alt' => $open_id_class::get_banner_alt(),
 									'url' => '/app/open_id/open_id.php?action=' . $open_id_class,
 								];
 							}

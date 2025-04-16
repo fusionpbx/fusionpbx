@@ -107,7 +107,7 @@
 							</div>
 							{foreach $banners as $banner}
 								<a class='{$banner.class}' style='display: inline-block; margin-top: 15px;' href='{$project_path}{$banner.url}'>
-									<img src='data:image/png;base64,{$banner.image}' alt='{$banner.alt}'/>
+									{$banner.image}
 								</a><br />
 							{/foreach}
 						{/if}
