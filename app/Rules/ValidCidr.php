@@ -43,7 +43,7 @@ class ValidCidr implements ValidationRule
         $valid_mask = false;
 
         if (str_contains($value, "/")) {
-            [$value, $mask] = explode("/", $value);
+            [$value, $mask] = explode("/", $value, 2);
         } elseif ($this->has_bits) {
             // if we specify a bit constraint, assume the bits are required
             $fail($this->message());
