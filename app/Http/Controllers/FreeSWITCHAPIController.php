@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class FreeSWITCHAPIController extends Controller
 {
-        /**
+    /**
      * Execute a command on the FreeSWITCH server
      *
      * @param string $command The command to execute
@@ -18,7 +18,7 @@ class FreeSWITCHAPIController extends Controller
     {
         return FreeSwitch::execute($command, $param);
     }
-    
+
     /**
      * Get gateway status
      *
@@ -30,10 +30,10 @@ class FreeSWITCHAPIController extends Controller
     {
         return FreeSwitch::getGatewayStatus($gateway_uuid, $result_type);
     }
-    
+
     /**
      * Get server status
-     * 
+     *
      * @return string|null The server status
      */
     public function getServerStatus(): ?string

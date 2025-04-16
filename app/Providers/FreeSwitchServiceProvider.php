@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\FreeSwitch\FreeSwitchService;
+use App\Contracts\FreeSwitchConnectionManagerInterface;
+use App\Services\FreeSwitch\FreeSwitchConnectionManager;
 use Illuminate\Support\ServiceProvider;
 
 class FreeSwitchServiceProvider extends ServiceProvider
@@ -14,9 +15,7 @@ class FreeSwitchServiceProvider extends ServiceProvider
      */
     public function register() : void
     {
-        $this->app->singleton('freeswitch', function ($app) {
-            return new FreeSwitchService();
-        });
+        $this->app->singleton(FreeSwitchConnectionManagerInterface::class, FreeSwitchConnectionManager::class);
     }
 
     /**
