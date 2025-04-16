@@ -40,7 +40,7 @@ class ValidCidr implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $mask = null;
-        $valid_mask = true;
+        $valid_mask = false;
 
         if (str_contains($value, "/")) {
             [$value, $mask] = explode("/", $value);
@@ -59,6 +59,12 @@ class ValidCidr implements ValidationRule
                 );
             }
             $valid_address = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+
+	    // Special case ::/0
+	    if ($value == '::/0'){
+		$valid_mask = true;
+		$valid_address = true;
+	   }
         } else {
             // ipv4
             if ($mask !== null) {
