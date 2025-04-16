@@ -8,6 +8,7 @@ use App\Models\XmlCDR;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class XmlCDRTable extends DataTableComponent
@@ -68,6 +69,76 @@ class XmlCDRTable extends DataTableComponent
         return [
 
             Column::make("UUID", "xml_cdr_uuid")->hideIf(true),
+
+            Column::make("", "direction")
+                ->format(function ($value, $row, Column $column) {
+
+                    $content = "";
+
+                    if($row->direction == 'inbound' || $row->direction == 'local')
+                    {
+                        if($row->answer_stamp != '' && $row->bridge_uuid != '')
+                        {
+                            $call_result = 'answered';
+                        }
+                        else if($row->answer_stamp != '' && $row->bridge_uuid == '')
+                        {
+                            $call_result = 'voicemail';
+                        }
+                        else if($row->answer_stamp == '' && $row->bridge_uuid == '' && $row->sip_hangup_disposition != 'send_refuse')
+                        {
+                            $call_result = 'cancelled';
+                        }
+                        else
+                        {
+                            $call_result = 'failed';
+                        }
+                    }
+                    else if($row->direction == 'outbound')
+                    {
+                        if($row->answer_stamp != '' && $row->bridge_uuid != '')
+                        {
+                            $call_result = 'answered';
+                        }
+                        else if($row->hangup_cause == 'NORMAL_CLEARING')
+                        {
+                            $call_result = 'answered';
+                        }
+                        else if($row->answer_stamp == '' && $row->bridge_uuid != '')
+                        {
+                            $call_result = 'cancelled';
+                        }
+                        else
+                        {
+                            $call_result = 'failed';
+                        }
+                    }
+
+                    if($row->record_type == "text")
+                    {
+                        $call_result = 'answered';
+                    }
+
+                    if(!empty($row->direction))
+                    {
+                        $image_name = "icon_cdr_" . $row->direction . "_" . $call_result;
+
+                        if ($row->leg == 'b')
+                        {
+                            $image_name .= '_b';
+                        }
+
+                        $image_name .= ".png";
+
+                        $title = __($row->direction) . ': ' . __($call_result) . ($row->leg == 'b' ? '(b)' : '');
+
+                        $content = '<img src="' . asset("assets/icons/xml_cdr/$image_name") . '" style="border: none; cursor: help;" title="' . $title . '">';
+                    }
+
+                    return $content;
+                })->html()
+                ->searchable()
+                ->sortable(),
 
             Column::make("Ext.", "extension.extension")
                 ->searchable()
@@ -139,6 +210,7 @@ class XmlCDRTable extends DataTableComponent
     {
         $query = XmlCDR::query()
                 ->with("extension")
+                ->where( XmlCDR::getTableName() . ".domain_uuid", "=", Session::get("domain_uuid"))
                 ->orderBy("start_epoch", "desc");
         return $query;
     }
