@@ -260,7 +260,7 @@
                                 <label for="context" class="form-label">Context</label>
                                 <input type="text" class="form-control @error('context') is-invalid @enderror"
                                     id="context" name="context" placeholder="Context"
-                                    value="{{ old('context', $gateway->context ?? 'public') }}">
+                                    value="{{ old('context', $gateway->context ?? 'public') }}" required>
                                 @error('context')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -290,7 +290,7 @@
                             <div class="form-group">
                                 <label for="channels" class="form-label">Channels</label>
                                 <input type="number" class="form-control @error('channels') is-invalid @enderror"
-                                    id="channels" name="channels" placeholder="Channels" min="1" max="65535"
+                                    id="channels" name="channels" placeholder="Channels" min="0" max="65535"
                                     value="{{ old('channels', $gateway->channels ?? '') }}">
                                 @error('channels')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -329,7 +329,7 @@
                         <div class="col-md-3 advancedSection"  style="display: block;" >
                             <div class="form-group">
                                 <label for="ping" class="form-label">Ping</label>
-                                <input type="text" class="form-control @error('ping') is-invalid @enderror"
+                                <input type="number" class="form-control @error('ping') is-invalid @enderror"
                                     id="ping" name="ping" placeholder="Ping" min="1" max="65535"
                                     value="{{ old('ping', $gateway->ping ?? '') }}">
                                 @error('ping')
@@ -393,6 +393,7 @@
 
                         <div class="col-md-6 pt-3 advancedSection"  style="display: block;">
                             <div class="form-check form-switch">
+                                <label class="form-label d-block"> &nbsp;</label>
                                 <input type="hidden" name="distinct_to" value="false">
                                 <input class="form-check-input" type="checkbox" role="switch" id="distinct_to"
                                     name="distinct_to" value="true"

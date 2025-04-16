@@ -9,12 +9,14 @@ use App\Http\Controllers\GroupPermissionController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Controllers\XmlCDRController;
 use App\Http\Controllers\SipProfileController;
 use App\Http\Middleware\Authenticate;
+use App\Models\AccessControl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -100,6 +102,10 @@ Route::middleware(['auth','permission'])->group(function () {
     // USER GROUP
     Route::get('/groups/{group}/members', [UserGroupController::class, 'index'])->name('usergroup.index');
     Route::put('/groups/{group}/members', [UserGroupController::class, 'update'])->name('usergroup.update');
+
+    // ACCESS CONTROL
+    Route::resource('/accesscontrol', AccessControlController::class)->name('accesscontrol', 'accesscontrol');
+    Route::get('/accesscontrol/{accesscontrol}/copy', [AccessControlController::class, 'copy'])->name('accesscontrol.copy');
 
     // XML CDR
     Route::get('/xmlcdr', [XmlCDRController::class, 'index'])->name('xmlcdr.index');

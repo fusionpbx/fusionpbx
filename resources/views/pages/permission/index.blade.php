@@ -39,7 +39,7 @@
                                 placeholder="{{ __('Search...') }}" value="{{ $search ?? '' }}">
                             <button type="submit" class="btn btn-primary btn-sm">{{ __('Search') }}</button>
                             @if ($search)
-                                <a href="{{ route('permissions.index', ['group_uuid' => $group->group_uuid  ]) }}"
+                                <a href="{{ route('permissions.index', ['groupUuid' => $group->group_uuid]) }}"
                                     class="btn btn-secondary ml-2">{{ __('Clear') }}</a>
                             @endif
                         </form>
@@ -100,7 +100,6 @@
                                 @endforeach
                                 </tr>
                             </thead>
-                            
                         </table>
                     </div>
                 </div>    

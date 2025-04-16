@@ -28,9 +28,12 @@ class AccessControl extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
+		'access_control_uuid',
 		'access_control_name',
 		'access_control_default',
 		'access_control_description',
+		'update_user',
+		'insert_user'
 	];
 
     /**
@@ -50,7 +53,7 @@ class AccessControl extends Model
 	];
 
     public function accesscontrolnodes(): HasMany {
-		return $this->hasMany(AccessControlNodes::class, 'access_control_uuid', 'access_control_uuid');
+		return $this->hasMany(AccessControlNode::class, 'access_control_uuid', 'access_control_uuid');
 	}
 }
 

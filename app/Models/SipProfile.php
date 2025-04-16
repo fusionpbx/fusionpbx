@@ -56,7 +56,6 @@ class SipProfile extends Model
      */
 	protected $casts = [
 	];
-
     public function sipprofiledomains(): HasMany {
 		return $this->hasMany(SipProfileDomain::class, 'sip_profile_uuid', 'sip_profile_uuid');
 	}
