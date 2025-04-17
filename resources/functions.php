@@ -133,17 +133,33 @@
 
 		/**
 		 * Checks if the $ip_address is within the range of the given $cidr
-		 * @param string $cidr
+		 * @param string|array $cidr
 		 * @param string $ip_address
-		 * @return bool
+		 * @return bool return true if the IP address is in CIDR or if it is empty
 		 */
 		function check_cidr($cidr, $ip_address) {
-			if (isset($cidr) && !empty($cidr)) {
-				list ($subnet, $mask) = explode('/', $cidr);
-				return ( ip2long($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long($subnet);
-			} else {
-				return false;
+
+			//no cidr restriction
+			if (empty($cidr)) {
+				return true;
 			}
+
+			//check to see if the user's remote address is in the cidr array
+			if (is_array($cidr) {
+			    	//cidr is an array
+				foreach ($cidr as $value) {
+					if (check_cidr($value, $_SERVER['REMOTE_ADDR'])) {
+						return true;
+					}
+				}
+			} else {
+				//cidr is a string
+				list ($subnet, $mask) = explode('/', $cidr);
+				return (ip2long($ip_address) & ~((1 << (32 - $mask)) - 1)) == ip2long($subnet);
+			}
+
+			//value not found in cidr
+			return false;
 		}
 
 	}
