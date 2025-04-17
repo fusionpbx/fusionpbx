@@ -918,6 +918,11 @@ log = require "resources.functions.log".ring_group
 							record_session = true;
 						end
 
+					--set record session to false if the recording was already started
+						if (session:getVariable("record_path") ~= nil and session:getVariable("record_name") ~= nil) then
+							record_session = false;
+						end
+
 					--record the session
 						if (record_session) then
 							record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
