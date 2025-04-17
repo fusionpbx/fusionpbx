@@ -145,7 +145,7 @@
 			}
 
 			//check to see if the user's remote address is in the cidr array
-			if (is_array($cidr) {
+			if (is_array($cidr)) {
 			    	//cidr is an array
 				foreach ($cidr as $value) {
 					if (check_cidr($value, $ip_address)) {
