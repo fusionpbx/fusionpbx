@@ -213,7 +213,7 @@ class authentication {
 	 * The associative array
 	 * @global database $database
 	 * @global string $conf
-	 * @param array|bool $result Associative array containing: domain_uuid, domain_name, user_uuid, username. Contact keys can be empty but should still be present. They include: contact_uuid, contact_name_given, contact_name_family, contact_image.
+	 * @param array|bool $result Associative array containing: domain_uuid, domain_name, user_uuid, username. Contact keys can be empty, but should still be present. They include: contact_uuid, contact_name_given, contact_name_family, contact_image.
 	 * @param array $user_settings User settings from the v_user_settings table or an empty array.
 	 * @return void
 	 */
@@ -228,7 +228,7 @@ class authentication {
 		}
 
 		// Required keys
-		$required_fields = [
+		$required_keys = [
 			'domain_uuid' => true,
 			'domain_name' => true,
 			'user_uuid'   => true,
@@ -237,7 +237,7 @@ class authentication {
 
 		// Any missing required_fields are left in the $diff array.
 		// When all keys are present the $diff array will be empty.
-		$diff = array_diff_key($required_fields, $result);
+		$diff = array_diff_key($required_keys, $result);
 
 		// All required keys must be present in the $result associative array
 		if (!empty($diff)) {
@@ -295,7 +295,7 @@ class authentication {
 			$_SESSION["user"]["contact_image"] = !empty($result["contact_image"]) && is_uuid($result["contact_image"]) ? $result["contact_image"] : null;
 		}
 
-		//empty the  permissions
+		//empty the permissions
 		if (isset($_SESSION['permissions'])) {
 			unset($_SESSION['permissions']);
 		}
