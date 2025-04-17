@@ -2,15 +2,15 @@
 
 namespace App\Services\FreeSwitch;
 
-use App\Http\Controllers\EventSocketBufferController;
 use App\Models\Setting;
+use App\Contracts\FreeSwitchConnectionManagerInterface;
 use App\Support\Freeswitch\EventSocketBuffer;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\ConnectionException;
 
-class FreeSwitchConnectionManager
+class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterface
 {
     private mixed $fp = null;
     private ?EventSocketBuffer $buffer = null;
@@ -29,6 +29,11 @@ class FreeSwitchConnectionManager
         }
 
         $this->connect();
+    }
+
+    public function getConnectionType(): string
+    {
+        return $this->type;
     }
 
     public function connect(): bool
