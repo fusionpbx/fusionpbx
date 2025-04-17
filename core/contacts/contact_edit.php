@@ -1688,7 +1688,7 @@ if (permission_exists('contact_phone_view')) {
 			echo "			</div>\n";
 		}
 		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
-		echo "				<a href='../xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'] ?? '')."'>\n";
+		echo "				<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'] ?? '')."'>\n";
 		echo "					<i class='fas fa-search fa-fw' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 3px; margin-right: 3px;' title=\"".$text['button-cdr']."\"></i>\n";
 		echo "				</a>\n";
 
