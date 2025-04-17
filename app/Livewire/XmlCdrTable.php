@@ -15,6 +15,13 @@ class XmlCDRTable extends DataTableComponent
 {
     protected $model = XmlCDR::class;
 
+    public $filters = [];
+
+    public function mount($filters = [])
+    {
+        $this->filters = $filters;
+    }
+
     public function configure(): void
     {
         $canEdit = auth()->user()->hasPermission('xml_cdr_edit');
@@ -22,8 +29,7 @@ class XmlCDRTable extends DataTableComponent
             ->setTableAttributes([
                 'class' => 'table table-striped table-hover table-bordered'
             ])
-            ->setSearchEnabled()
-            ->setSearchPlaceholder('Search XmlCDRs')
+            ->setSearchDisabled()
             ->setPerPageAccepted([10, 25, 50, 100])
             ->setPaginationEnabled();
     }
@@ -137,41 +143,33 @@ class XmlCDRTable extends DataTableComponent
 
                     return $content;
                 })->html()
-                ->searchable()
                 ->sortable(),
 
             Column::make("Ext.", "extension.extension")
-                ->searchable()
                 ->sortable(),
 
             Column::make("Caller name", "caller_id_name")
-                ->searchable()
                 ->sortable(),
 
             Column::make("Caller number", "caller_id_number")
-                ->searchable()
                 ->sortable(),
 
             Column::make("Caller destination", "caller_destination")
-                ->searchable()
                 ->sortable(),
 
             Column::make("Destination", "destination_number")
-                ->searchable()
                 ->sortable(),
 
             Column::make("Date", "start_epoch")
                 ->format(function ($value, $row, Column $column) {
                     return date('D j M Y H:i:s', $row->start_epoch);
                 })
-                ->searchable()
                 ->sortable(),
 
             Column::make("TTA", "answer_epoch")
                 ->format(function ($value, $row, Column $column) {
                     return (int)$row->answer_epoch - (int)$row->start_epoch;
                 })
-                ->searchable()
                 ->sortable(),
 
             Column::make("Duration", "duration")
@@ -183,7 +181,6 @@ class XmlCDRTable extends DataTableComponent
 
                     return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
                 })
-                ->searchable()
                 ->sortable(),
 
             Column::make("PDD", "pdd_ms")
@@ -193,15 +190,12 @@ class XmlCDRTable extends DataTableComponent
 
                     return number_format($seconds, 2) . 's';
                 })
-                ->searchable()
                 ->sortable(),
 
             Column::make("MOS", "rtp_audio_in_mos")
-                ->searchable()
                 ->sortable(),
 
             Column::make("Hangup cause", "hangup_cause")
-                ->searchable()
                 ->sortable(),
         ];
     }
@@ -211,6 +205,7 @@ class XmlCDRTable extends DataTableComponent
         $query = XmlCDR::query()
                 ->with("extension")
                 ->where( XmlCDR::getTableName() . ".domain_uuid", "=", Session::get("domain_uuid"))
+                ->when($this->filters['caller_destination'] ?? null, fn($q, $v) => $q->where('caller_destination', '=', $v))
                 ->orderBy("start_epoch", "desc");
         return $query;
     }
