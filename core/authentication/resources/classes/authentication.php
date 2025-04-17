@@ -187,7 +187,7 @@ class authentication {
 				//get the cidr restrictions from global, domain, and user default settings
 				$user_settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 				$cidr_list = $user_settings->get('domain', 'cidr', []);
-				if (self::check_user_cidr($cidr_list)) {
+				if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
 					//user passed the cidr check
 					self::create_user_session($result, $user_settings);
 				} else {
@@ -205,22 +205,6 @@ class authentication {
 
 		//return the result
 			return $result ?? false;
-	}
-
-	private static function check_user_cidr($cidr_list = []): bool {
-		//no cidr restriction
-		if (empty($cidr_list)) {
-			return true;
-		}
-
-		//check to see if user remote address is in the cidr array
-		foreach ($cidr_list as $cidr) {
-			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**
