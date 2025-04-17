@@ -246,6 +246,9 @@ $message_alert_background_color = $settings->get('theme', 'message_alert_backgro
 $operator_panel_border_color = $settings->get('theme', 'operator_panel_border_color', '#b9c5d8');
 $operator_panel_sub_background_color = $settings->get('theme', 'operator_panel_sub_background_color', '#e5eaf5');
 $operator_panel_main_background_color = $settings->get('theme', 'operator_panel_main_background_color', '#fff');
+$dashboard_background_color = $settings->get('theme', 'dashboard_background_color', '');
+$dashboard_background_gradient_style = $settings->get('theme', 'dashboard_background_gradient_style', '');
+$dashboard_background_gradient_angle = $settings->get('theme', 'dashboard_background_gradient_angle', '');
 $dashboard_border_radius = $settings->get('theme', 'dashboard_border_radius', '5px');
 $dashboard_border_color = $settings->get('theme', 'dashboard_border_color', '#ffffff');
 $dashboard_border_color_hover = $settings->get('theme', 'dashboard_border_color_hover', '#ffffff');
@@ -270,8 +273,7 @@ $dashboard_number_title_text_font = $settings->get('theme', 'dashboard_number_ti
 $dashboard_number_title_text_shadow_color = $settings->get('theme', 'dashboard_number_title_text_shadow_color', '#737983');
 $dashboard_detail_shadow_color = $settings->get('theme', 'dashboard_detail_shadow_color', '#ffffff');
 $dashboard_detail_heading_text_size = $settings->get('theme', 'dashboard_detail_heading_text_size', '11px');
-$dashboard_detail_background_color_edge = $settings->get('theme', 'dashboard_detail_background_color_edge', '#ffffff');
-$dashboard_detail_background_color_center = $settings->get('theme', 'dashboard_detail_background_color_center', '#ffffff');
+$dashboard_detail_background_color = $settings->get('theme', 'dashboard_detail_background_color', '');
 $dashboard_detail_row_text_size = $settings->get('theme', 'dashboard_detail_row_text_size', '11px');
 $dashboard_shadow_color = $settings->get('theme', 'dashboard_shadow_color', '#d0d8e5');
 $dashboard_footer_background_color = $settings->get('theme', 'dashboard_footer_background_color', '#e5e9f0');
@@ -2968,33 +2970,11 @@ else { //default: white
 		margin-bottom: 15px;
 		}
 
-	div.widget div.hud_box:first-of-type {
-		<?php
-		if (!empty($dashboard_shadow_color)) {
-			echo "-webkit-box-shadow: 0 px 7px ".$dashboard_shadow_color.";\n";
-			echo "-moz-box-shadow: 0 2px 7px ".$dashboard_shadow_color.";\n";
-			echo "box-shadow: 0 2px 7px ".$dashboard_shadow_color.";\n";
-		}
-		?>
-		}
-
 	/* hud boxes */
 	div.hud_box {
 		height: auto;
 		vertical-align: top;
 		text-align: center;
-		<?php
-		$color_edge = $dashboard_detail_background_color_edge;
-		$color_center = $dashboard_detail_background_color_center;
-		?>
-		background: <?=$color_center?>;
-		background-image: -ms-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: -moz-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: -o-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: -webkit-gradient(linear, left, right, color-stop(0, <?=$color_edge?>), color-stop(0.30, <?=$color_center?>), color-stop(0.70, <?=$color_center?>), color-stop(1, <?=$color_edge?>));
-		background-image: -webkit-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: linear-gradient(to right, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		<?php unset($color_edge, $color_center); ?>
 		<?php $br = format_border_radius($dashboard_border_radius, '5px'); ?>
 		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
@@ -3007,6 +2987,24 @@ else { //default: white
 
 	div.hud_box:hover {
 		border: 1px solid <?=$dashboard_border_color_hover?>;
+		}
+
+	div.widget div.hud_box:first-of-type {
+		<?php
+		echo "background: ".($dashboard_background_color[0] ?? '#ffffff').";\n";
+		if ($dashboard_background_gradient_style == 'mirror') {
+			echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[1]." 0%, ".$dashboard_background_color[0]." 30%, ".$dashboard_background_color[0]." 70%, ".$dashboard_background_color[1]." 100%);\n";
+		}
+		else { //simple
+			echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[0]." 0%, ".$dashboard_background_color[1]." 100%);\n";
+		}
+
+		if (!empty($dashboard_shadow_color)) {
+			echo "-webkit-box-shadow: 0 px 7px ".$dashboard_shadow_color.";\n";
+			echo "-moz-box-shadow: 0 2px 7px ".$dashboard_shadow_color.";\n";
+			echo "box-shadow: 0 2px 7px ".$dashboard_shadow_color.";\n";
+		}
+		?>
 		}
 
 	span.hud_title {
@@ -3138,6 +3136,15 @@ else { //default: white
 		div.hud_details {
 			height: 350px;
 			display: block;
+			<?php
+			echo "background: ".($dashboard_detail_background_color[0] ?? '#ffffff').";\n";
+			if ($dashboard_background_gradient_style == 'mirror') {
+				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[1]." 0%, ".$dashboard_detail_background_color[0]." 30%, ".$dashboard_detail_background_color[0]." 70%, ".$dashboard_detail_background_color[1]." 100%);\n";
+			}
+			else { //simple
+				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[0]." 0%, ".$dashboard_detail_background_color[1]." 100%);\n";
+			}
+			?>
 			}
 		}
 
@@ -3147,18 +3154,6 @@ else { //default: white
 		font-family: <?=$table_heading_text_font?>;
 		color: <?=$table_heading_text_color?>;
 		padding-top: 3px;
-		<?php
-		$color_edge = $dashboard_detail_background_color_edge;
-		$color_center = $dashboard_detail_background_color_center;
-		?>
-		background: <?=$color_center?>;
-		background-image: -ms-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: -moz-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: -o-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: -webkit-gradient(linear, left, right, color-stop(0, <?=$color_edge?>), color-stop(0.30, <?=$color_center?>), color-stop(0.70, <?=$color_center?>), color-stop(1, <?=$color_edge?>));
-		background-image: -webkit-linear-gradient(left, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		background-image: linear-gradient(to right, <?=$color_edge?> 0%, <?=$color_center?> 30%, <?=$color_center?> 70%, <?=$color_edge?> 100%);
-		<?php unset($color_edge, $color_center); ?>
 		}
 
 	th.hud_heading:first-of-type {
