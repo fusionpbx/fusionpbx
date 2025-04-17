@@ -310,7 +310,7 @@ class authentication {
 
 		//get the domains
 		if (file_exists($project_root . '/app/domains/resources/domains.php') && !is_cli()) {
-			require_once $project_root . 'app/domains/resources/domains.php';
+			require_once $project_root . '/app/domains/resources/domains.php';
 		}
 
 		//store user settings in the session when available
