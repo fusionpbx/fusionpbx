@@ -148,7 +148,7 @@
 			if (is_array($cidr) {
 			    	//cidr is an array
 				foreach ($cidr as $value) {
-					if (check_cidr($value, $_SERVER['REMOTE_ADDR'])) {
+					if (check_cidr($value, $ip_address)) {
 						return true;
 					}
 				}
