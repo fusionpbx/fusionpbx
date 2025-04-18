@@ -71,7 +71,7 @@
 		sql = sql .. "AND destination_enabled = 'true' ";
 		local params = {destination_number = destination_number};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
+			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; destination_number: " .. destination_number .. "\n");
 		end
 		dbh:query(sql, params, function(row)
 
@@ -131,6 +131,10 @@
 				session:execute("set", "caller_id_number="..outbound_caller_id_number);
 				session:execute("set", "effective_caller_id_number="..outbound_caller_id_number);
 			end
+
+		--set the destination number to sip_to_user and sip_req_user
+			session:execute("set", "sip_to_user="..var["destination_number"]);
+			session:execute("set", "sip_req_user="..var["destination_number"]);
 
 		--send to the console
 			freeswitch.consoleLog("notice", "[app:dialplan:outbound:is_local] " .. value .. " source: cache\n");
