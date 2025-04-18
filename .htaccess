@@ -1,0 +1,8 @@
+RewriteEngine On
+Redirect	301	/core/users/users.php				/users
+Redirect	301	/app/gateways/gateways.php			/gateways
+Redirect	301	/app/dialplans/dialplans.php			/dialplans
+Redirect	301	/app/access_controls/access_controls.php	/accesscontrol
+Redirect	301	/core/domains/domains.php			/domains
+Redirect	301	/core/groups/groups.php				/groups
+Redirect	301	/core/menu/menu.php				/menus
