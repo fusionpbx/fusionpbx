@@ -10,9 +10,8 @@
         </div>
 
         <div class="card-body">
-            <livewire:xml-cdr-table/>
+            <livewire:xml-cdr-page />
         </div>
     </div>
 </div>
 @endsection
-

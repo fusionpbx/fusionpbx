@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 class DialplansTable extends DataTableComponent
 {
-    protected $model = Dialplan::class;
+    //protected $model = Dialplan::class;
 
     public function configure(): void
     {
@@ -177,7 +177,40 @@ class DialplansTable extends DataTableComponent
 
     public function builder(): Builder
     {
-		$query = Dialplan::query()
+	$showAll = request()->query('show') === 'all';
+	$appUuid = request()->query('app_uuid') ?? '';
+	$context = request()->query('context') ?? '';
+	$query = Dialplan::query()
+		->when( $showAll && auth()->user()->hasPermission('dialplan_all'),
+			function($query){},
+			function($query){
+				$query->where(function ($q) {
+					$q->where('domain_uuid', Session::get('domain_uuid'))
+						->orWhereNull('domain_uuid');
+				});
+			}
+		)
+		->when ( !Str::isUuid($appUuid),
+			function($query){
+				$query->where('app_uuid','<>','c03b422e-13a8-bd1b-e42b-b6b9b4d27ce')
+					->where('dialplan_context','<>', 'public');
+				//TODO: verify if it is a good idea to hind outbound rates: app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
+			},
+			function($query) use($appUuid){
+				if ($appUuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'){
+					$query->where('app_uuid','c03b422e-13a8-bd1b-e42b-b6b9b4d27ce')
+						->orWhere('dialplan_context','public');
+				}
+				else{
+					$query->where('app_uuid', $appUuid);
+				}
+			}
+		)
+		->when (!empty($context),
+			function($query) use($context){
+				$query->where('dialplan_context', $context);
+			}
+		)
                 ->orderBy('dialplan_order', 'asc')
                 ->orderBy('dialplan_name', 'asc');
         return $query;
