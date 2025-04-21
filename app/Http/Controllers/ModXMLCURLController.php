@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\DefaultSetting;
-use App\Http\Controllers\DefaultSettingController;
-use App\Http\Controllers\FreeSWITCHAPIController;
+use App\Facades\FreeSwitch;
+use App\Facades\DefaultSetting;
 
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
@@ -52,6 +51,7 @@ use XMLWriter;
 
 class ModXMLCURLController extends Controller
 {
+
     public function get_hostname(Request $request): ?string{
         $answer = $request->input('hostname') ?? null;
 
@@ -257,8 +257,7 @@ class ModXMLCURLController extends Controller
                 }
                 $xml->fullEndElement(); // queues
 
-                $default_settings = new DefaultSettingController;
-                $recordings_dir = $default_settings->get('switch', 'recordings', 'dir');
+                $recordings_dir = DefaultSetting::get('switch', 'recordings', 'dir');
                 $xml->startElement('agents');
                 switch(env('DB_CONNECTION', 'mysql')){
                     case 'pgsql':
@@ -415,9 +414,8 @@ class ModXMLCURLController extends Controller
                 $xml->fullEndElement(); // profiles
                 break;
             case 'curl.conf':
-                $default_settings = new DefaultSettingController;
-                $max_bytes = $default_settings->get('config', 'curl.max_bytes', 'numeric') ?? 64000;
-                $validate_certs = $default_settings->get('config', 'curl.validate_certs', 'boolean') ?? 'false';
+                $max_bytes = DefaultSetting::get('config', 'curl.max_bytes', 'numeric') ?? 64000;
+                $validate_certs = DefaultSetting::get('config', 'curl.validate_certs', 'boolean') ?? 'false';
                 if ($max_bytes > 64000){
                     $max_bytes = 64000; // Hardcode value from FreeSWITCH
                 }
@@ -440,29 +438,28 @@ class ModXMLCURLController extends Controller
                 $xml->endElement(); // settings
                 break;
             case 'format_cdr.conf':
-                $default_settings = new DefaultSettingController;
-                $format = $default_settings->get('config','format_cdr.format', 'text') ?? 'xml';
-                $url = $default_settings->get('config','format_cdr.url', 'text');
-                $cred = $default_settings->get('config','format_cdr.cred', 'text');
-                $retries = $default_settings->get('config','format_cdr.retries', 'numeric') ?? 2;
-                $delay = $default_settings->get('config','format_cdr.delay', 'numeric') ?? 5;
-                $log_http_and_disk = $default_settings->get('config','format_cdr.log_http_and_disk', 'boolean') ?? 'false';
-                $log_dir = $default_settings->get('config','format_cdr.log_dir', 'dir');
-                $log_b_leg = $default_settings->get('config','format_cdr.log_b_leg', 'boolean') ?? 'true';
-                $prefix_a_leg = $default_settings->get('config','format_cdr.log_b_leg', 'boolean') ?? 'false';
-                $encode = $default_settings->get('config','format_cdr.encode', 'boolean') ?? 'true';
-                $disable_100_continue = $default_settings->get('config','format_cdr.encode', 'boolean') ?? 'true';
-                $err_log_dir = $default_settings->get('config','format_cdr.err_log_dir', 'dir');
-                $auth_scheme = $default_settings->get('config','format_cdr.auth_scheme', 'text') ?? 'any';
-                $enable_cacert_check = $default_settings->get('config','format_cdr.enable_cacert_check', 'boolean') ?? 'false';
-                $enable_ssl_verify_host = $default_settings->get('config','format_cdr.enable_ssl_verify_host', 'boolean') ?? 'true';
-                $ssl_cert_path = $default_settings->get('config','format_cdr.ssl_cert_path', 'text');
-                $ssl_key_path = $default_settings->get('config','format_cdr.ssl_key_path', 'text');
-                $ssl_key_password = $default_settings->get('config','format_cdr.ssl_key_password', 'text');
-                $ssl_cacert_file = $default_settings->get('config','format_cdr.ssl_cacert_file', 'text');
-                $ssl_version = $default_settings->get('config','format_cdr.ssl_version', 'text');
-                $cookie_file = $default_settings->get('config','format_cdr.cookie_file', 'text');
-                $encode_values = $default_settings->get('config','format_cdr.encode_values', 'boolean') ?? 'true';
+                $format =  DefaultSetting::get('config','format_cdr.format', 'text') ?? 'xml';
+                $url =  DefaultSetting::get('config','format_cdr.url', 'text');
+                $cred =  DefaultSetting::get('config','format_cdr.cred', 'text');
+                $retries =  DefaultSetting::get('config','format_cdr.retries', 'numeric') ?? 2;
+                $delay =  DefaultSetting::get('config','format_cdr.delay', 'numeric') ?? 5;
+                $log_http_and_disk =  DefaultSetting::get('config','format_cdr.log_http_and_disk', 'boolean') ?? 'false';
+                $log_dir =  DefaultSetting::get('config','format_cdr.log_dir', 'dir');
+                $log_b_leg =  DefaultSetting::get('config','format_cdr.log_b_leg', 'boolean') ?? 'true';
+                $prefix_a_leg =  DefaultSetting::get('config','format_cdr.log_b_leg', 'boolean') ?? 'false';
+                $encode =  DefaultSetting::get('config','format_cdr.encode', 'boolean') ?? 'true';
+                $disable_100_continue =  DefaultSetting::get('config','format_cdr.encode', 'boolean') ?? 'true';
+                $err_log_dir =  DefaultSetting::get('config','format_cdr.err_log_dir', 'dir');
+                $auth_scheme =  DefaultSetting::get('config','format_cdr.auth_scheme', 'text') ?? 'any';
+                $enable_cacert_check =  DefaultSetting::get('config','format_cdr.enable_cacert_check', 'boolean') ?? 'false';
+                $enable_ssl_verify_host =  DefaultSetting::get('config','format_cdr.enable_ssl_verify_host', 'boolean') ?? 'true';
+                $ssl_cert_path =  DefaultSetting::get('config','format_cdr.ssl_cert_path', 'text');
+                $ssl_key_path =  DefaultSetting::get('config','format_cdr.ssl_key_path', 'text');
+                $ssl_key_password =  DefaultSetting::get('config','format_cdr.ssl_key_password', 'text');
+                $ssl_cacert_file =  DefaultSetting::get('config','format_cdr.ssl_cacert_file', 'text');
+                $ssl_version =  DefaultSetting::get('config','format_cdr.ssl_version', 'text');
+                $cookie_file =  DefaultSetting::get('config','format_cdr.cookie_file', 'text');
+                $encode_values =  DefaultSetting::get('config','format_cdr.encode_values', 'boolean') ?? 'true';
 
                 $xml->startElement('configuration');
                 $xml->writeAttribute('name', $request->input('key_value'));
@@ -607,8 +604,7 @@ class ModXMLCURLController extends Controller
                 $xml->endElement(); // profiles
                 break;
             case 'ivr.conf':
-                $default_settings = new DefaultSettingController;
-                $sounds_dir = $default_settings->get('switch', 'sounds', 'dir');
+                $sounds_dir =  DefaultSetting::get('switch', 'sounds', 'dir');
                 $sound_prefix = $sounds_dir . '/${default_language}/${default_dialect}/${default_voice}/';
                 $ivr_menu_uuid =$request->input('Menu-Name');
 
@@ -627,12 +623,11 @@ class ModXMLCURLController extends Controller
 					SELECT * FROM ivr_menus INNER JOIN ".Domain::getTableName()." USING(domain_uuid)";
                 $ivr_menus = DB::select($sql);
                 foreach($ivr_menus as $ivr_menu){
-                    $domain_settings = new DefaultSettingController;
                     Session::put('domain_uuid', $ivr_menu->domain_uuid);
-                    $direct_dial_digits_min = $domain_settings->get('ivr_menu', 'direct_dial_digits_min', 'numeric') ?? 2;
-                    $direct_dial_digits_max = $domain_settings->get('ivr_menu', 'direct_dial_digits_max', 'numeric') ?? 11;
-                    $storage_type = $domain_settings->get('recordings', 'storage_type', 'text');
-                    $storage_path = $domain_settings->get('recordings', 'storage_path', 'text');
+                    $direct_dial_digits_min =  DefaultSetting::get('ivr_menu', 'direct_dial_digits_min', 'numeric') ?? 2;
+                    $direct_dial_digits_max =  DefaultSetting::get('ivr_menu', 'direct_dial_digits_max', 'numeric') ?? 11;
+                    $storage_type =  DefaultSetting::get('recordings', 'storage_type', 'text');
+                    $storage_path =  DefaultSetting::get('recordings', 'storage_path', 'text');
 
                     if (isset($storage_path)){
                         $storage_path = str_replace('${domain_name}',$ivr_menu->domain_name, $storage_path);
@@ -642,7 +637,7 @@ class ModXMLCURLController extends Controller
                     switch($storage_type){
                         case 'base64':
                             // For BASE64, and external sync software should be used if Freeswitch is not local
-                            $recordings_dir = $domain_settings->get('switch', 'recordings', 'dir');
+                            $recordings_dir =  DefaultSetting::get('switch', 'recordings', 'dir');
                             $base_path = $recordings_dir . '/' . $ivr_menu->domain_name;
 
                             if (isset($ivr_menu->ivr_menu_greet_long)){
@@ -667,7 +662,7 @@ class ModXMLCURLController extends Controller
                             break;
                         case 'http_cache':
                             // For HTTP Cache, we publish the files in /storage/
-                            $recordings_dir = $domain_settings->get('switch', 'recordings', 'dir');
+                            $recordings_dir =  DefaultSetting::get('switch', 'recordings', 'dir');
                             $base_path = $recordings_dir . '/' . $ivr_menu->domain_name;
 
                             if (isset($ivr_menu->ivr_menu_greet_long)){
@@ -692,8 +687,8 @@ class ModXMLCURLController extends Controller
                             break;
 
                         default:
-                            $sounds_dir = $default_settings->get('switch', 'sounds', 'dir');
-                            $recordings_dir = $domain_settings->get('switch', 'recordings', 'dir');
+                            $sounds_dir =  DefaultSetting::get('switch', 'sounds', 'dir');
+                            $recordings_dir =  DefaultSetting::get('switch', 'recordings', 'dir');
                             $base_path = $recordings_dir . '/' . $ivr_menu->domain_name;
                             $ivr_menu_greet_long = $base_path . '/' . $ivr_menu->ivr_menu_greet_long;
 
@@ -810,12 +805,12 @@ class ModXMLCURLController extends Controller
                     Session::put('domain_uuid', $music_on_hold->domain_uuid);
                     if (isset($music_on_hold->domain_uuid)){
                         $name = $music_on_hold->domain_name . '/';
-                        $domain_settings = new DefaultSettingController;
-                        $sounds_dir = $domain_settings->get('switch', 'sounds', 'dir');
+                       
+                        $sounds_dir =  DefaultSetting::get('switch', 'sounds', 'dir');
                     }
                     else{
-                        $default_settings = new DefaultSettingController;
-                        $sounds_dir = $default_settings->get('switch', 'sounds', 'dir');
+                        
+                        $sounds_dir =  DefaultSetting::get('switch', 'sounds', 'dir');
                     }
                     $name .= $music_on_hold->music_on_hold_name;
                     if (isset($music_on_hold->music_on_hold_rate)){
@@ -909,8 +904,8 @@ class ModXMLCURLController extends Controller
                 }
                 break;
             case 'memcache.conf':
-                $default_settings = new DefaultSettingController;
-                $memcache_servers= $default_settings->get('config', 'memcache.servers', 'text') ?? '127.0.0.1';
+                
+                $memcache_servers=  DefaultSetting::get('config', 'memcache.servers', 'text') ?? '127.0.0.1';
 
                 $xml->startElement('configuration');
                 $xml->writeAttribute('name', $request->input('key_value'));
@@ -1222,11 +1217,11 @@ class ModXMLCURLController extends Controller
                 $xml->writeAttribute('autogenerated', 'true');
                 $xml->startElement('settings');
 
-                $default_settings = new DefaultSettingController;
-                $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
-                $auth_realm = $default_settings->get('config', 'xml_rpc.auth_realm', 'text') ?? 'freeswitch';
-                $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
-                $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
+                
+                $http_port = DefaultSetting::get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
+                $auth_realm = DefaultSetting::get('config', 'xml_rpc.auth_realm', 'text') ?? 'freeswitch';
+                $auth_user = DefaultSetting::get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
+                $auth_pass = DefaultSetting::get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
 
                 $xml->startElement('param');
                 $xml->startAttribute('name'); $xml->text('http-port'); $xml->endAttribute();
@@ -1292,7 +1287,7 @@ class ModXMLCURLController extends Controller
                         'driver' => 'local',
                         'root' => '/',
                     ]);
-                    $recordings_dir = $domain_settings->get('switch', 'recordings', 'dir');
+                    $recordings_dir = DefaultSetting::get('switch', 'recordings', 'dir');
                     list($t, $rel_path) = explode('/', $path, 2); unset($t);
                     $full_path = $recordings_dir . '/' . $rel_path;
                     if($local_disk->exists($full_path)){
@@ -1535,11 +1530,9 @@ class ModXMLCURLController extends Controller
         }
         else{
             $continue = true;
-            $api = new FreeSWITCHAPIController;
-            $default_settings = new DefaultSettingController;
-            $use_fs_path = $default_settings->get('config', 'xml_handler.fs_path', 'boolean') ?? 'false';
-            $number_as_presence_id = $default_settings->get('config', 'xml_handler.number_as_presence_id', 'boolean') ?? 'true';
-            $dial_string_based_on_userid = $default_settings->get('config', 'xml_handler.reg_as_number_alias', 'boolean') ?? 'false';
+            $use_fs_path =  DefaultSetting::get('config', 'xml_handler.fs_path', 'boolean') ?? 'false';
+            $number_as_presence_id =  DefaultSetting::get('config', 'xml_handler.number_as_presence_id', 'boolean') ?? 'true';
+            $dial_string_based_on_userid =  DefaultSetting::get('config', 'xml_handler.reg_as_number_alias', 'boolean') ?? 'false';
             $sip_auth_method = strtoupper($request->input('sip_auth_method'));
             $user = $request->input('user') ?? '';
             $from_user = (($use_fs_path == 'true') && ($sip_auth_method == 'INVITE')) ? $user : $request->input('sip_auth_method');
@@ -1562,13 +1555,13 @@ class ModXMLCURLController extends Controller
                 $local_hostname = $this->get_hostname($request);    // TODO: verify this
                 $reg_user = $dialed_extension;
                 if ($dial_string_based_on_userid == 'false'){
-                    $reg_user = $api->execute('user_data', $dialed_extension . '@' . $domain_name . ' attr id', $local_hostname);
+                    $reg_user = FreeSwitch::execute('user_data', $dialed_extension . '@' . $domain_name . ' attr id', $local_hostname);
                 }
                 else{
                     $reg_user = $dialed_extension;
                 }
 
-                $registrations = $api->execute('show', 'registrations as xml', $local_hostname);
+                $registrations = FreeSwitch::execute('show', 'registrations as xml', $local_hostname);
                 if(App::hasDebugModeEnabled()){
                     Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $registrations: '.$registrations);
                 }
@@ -1682,11 +1675,11 @@ class ModXMLCURLController extends Controller
                                     Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] local_host and database_host are the same.');
                                 }
                                 else{
-                                    $contact = trim($api->execute('sofia_contact', $destination, $database_hostname));
+                                    $contact = FreeSwitch::execute('sofia_contact', $destination, $database_hostname);
                                     $array = explode('/', $contact);
                                     $proxy = $database_hostname;
-                                    $exchange_profile = $default_settings->get('config', 'xml_handler.exchange_profile', 'text') ?? 'internal';
-                                    $profile = $default_settings->get('config', 'xml_handler.exchange_profile', 'text') ??
+                                    $exchange_profile = DefaultSetting::get('config', 'xml_handler.exchange_profile', 'text') ?? 'internal';
+                                    $profile = DefaultSetting::get('config', 'xml_handler.exchange_profile', 'text') ??
                                         (($profile == 'user_not_registered')?'internal':$array[1]);
                                     $dial_string = '{sip_h_X-context='.$domain_name.',sip_invite_domain='.$domain_name.',presence_id='.$presence_id.'}sofia/'.$profile.'/'.$destination.';fs_path=sip:'.$proxy;
                                     Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $local_hostname: '.$local_hostname);
@@ -2192,9 +2185,8 @@ class ModXMLCURLController extends Controller
             $this->dump($request);
         }
 
-        $default_settings = new DefaultSettingController;
-        $dialplan_destination = $default_settings->get('dialplan', 'destination', 'text') ?? 'destination_number';
-        $dialplan_mode = $default_settings->get('destinations', 'dialplan_mode', 'text') ?? 'multiple';
+        $dialplan_destination =  DefaultSetting::get('dialplan', 'destination', 'text') ?? 'destination_number';
+        $dialplan_mode =  DefaultSetting::get('destinations', 'dialplan_mode', 'text') ?? 'multiple';
 
         $domain_name = 'global';
         $call_context = $request->input('Caller-Context');

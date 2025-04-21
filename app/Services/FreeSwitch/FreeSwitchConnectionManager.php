@@ -4,6 +4,7 @@ namespace App\Services\FreeSwitch;
 
 use App\Models\Setting;
 use App\Contracts\FreeSwitchConnectionManagerInterface;
+use App\Facades\DefaultSetting;
 use App\Support\Freeswitch\EventSocketBuffer;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
@@ -61,13 +62,11 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
         return $this->es_connected();
     }
 
-    public function executeCommand(string $command, ?string $param = null): ?string
+    public function executeCommand(string $command, ?string $param = null, string $host = '127.0.0.1'): ?string
     {
         if ($this->type === 'EVENT_SOCKET') {
             return $this->es_execute($command, $param);
         } else { // XML_RPC
-            $settings = Setting::first();
-            $host = $settings->event_socket_ip_address ?? '127.0.0.1';
             return $this->rpc_execute($host, $command, $param);
         }
     }
@@ -202,10 +201,9 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
 
     private function rpc_execute(string $host, string $command, ?string $param = null): ?string
     {
-        $default_settings = app()->make('App\Http\Controllers\DefaultSettingController');
-        $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
-        $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
-        $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
+        $http_port = DefaultSetting::get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
+        $auth_user = DefaultSetting::get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
+        $auth_pass = DefaultSetting::get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
 
         $url = 'http://'.$host.':'.$http_port.'/txtapi/'.$command.'?'.(isset($param) ? rawurlencode($param) : '');
 

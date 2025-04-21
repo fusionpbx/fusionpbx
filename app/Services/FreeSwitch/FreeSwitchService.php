@@ -25,10 +25,10 @@ class FreeSwitchService
     public function execute(string $command, ?string $param = null): ?string
     {
         if (App::hasDebugModeEnabled()) {
-            Log::debug('['.__CLASS__.']['.__METHOD__.'] Executing command: ' . $command . ' ' . $param);
+            Log::debug('['.__CLASS__.']['.__METHOD__.'] Executing command: ' . $command . ' ' . $param );
         }
 
-        return $this->connection->executeCommand($command, $param);
+        return $this->connection->executeCommand($command, $param, $host = '127.0.0.1');
     }
 
     /**
