@@ -22,7 +22,7 @@ class XmlCdrPage extends Component
 
     public function resetFilters()
     {
-        $this->filters = $this->defaultFilters();
+        $this->filters = $this->initFilters();
     }
 
     public function applyFilters() {}

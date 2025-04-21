@@ -205,7 +205,20 @@ class XmlCDRTable extends DataTableComponent
         $query = XmlCDR::query()
                 ->with("extension")
                 ->where( XmlCDR::getTableName() . ".domain_uuid", "=", Session::get("domain_uuid"))
+                ->when($this->filters['direction'] ?? null, fn($q, $v) => $q->where('direction', '=', $v))
+                ->when($this->filters['leg'] ?? null, fn($q, $v) => $q->where('leg', '=', $v))
+                ->when($this->filters['extension'] ?? null, fn($q, $v) => $q->where('extension.extension', '=', $v))
+                ->when($this->filters['caller_id_name'] ?? null, fn($q, $v) => $q->where('caller_id_name', '=', $v))
+                ->when($this->filters['caller_id_number'] ?? null, fn($q, $v) => $q->where('caller_id_number', '=', $v))
+                ->when($this->filters['start_range_from'] ?? null, fn($q, $v) => $q->where('start_stamp', '>=', $v))
+                ->when($this->filters['start_range_to'] ?? null, fn($q, $v) => $q->where('start_stamp', '<', $v))
+                ->when($this->filters['duration_min'] ?? null, fn($q, $v) => $q->where('duration', '>=', $v))
+                ->when($this->filters['duration_max'] ?? null, fn($q, $v) => $q->where('duration', '<', $v))
                 ->when($this->filters['caller_destination'] ?? null, fn($q, $v) => $q->where('caller_destination', '=', $v))
+                ->when($this->filters['destination'] ?? null, fn($q, $v) => $q->where('destination_number', '=', $v))
+                // ->when($this->filters['tta'] ?? null, fn($q, $v) => $q->where('destination_number', '=', $v))
+                ->when($this->filters['hangup_cause'] ?? null, fn($q, $v) => $q->where('hangup_cause', '=', $v))
+                ->when($this->filters['order_field'] ?? null, fn($q, $v) => $q->orderBy($this->filters['order_field'], $this->filters['order_sort'] ?? 'asc'))
                 ->orderBy("start_epoch", "desc");
         return $query;
     }
