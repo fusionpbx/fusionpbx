@@ -14,16 +14,16 @@ class DialplanRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			"domain_uuid" => "bail|nullable|uuid",
+			"domain_uuid" => "bail|nullable|uuid|exists:App\Models\Domain,domain_uuid",
 			"dialplan_name" => "bail|required|string|max:255",
 			"hostname" => "bail|nullable|string|max:255",
-			"dialplan_context" => "bail|nullable|string|max:255",
-			"dialplan_name" => "bail|nullable|string|max:255",
+			"dialplan_context" => "bail|required|string|max:255",
+			"dialplan_name" => "bail|required|string|max:255",
 			"dialplan_number" => "bail|nullable|string|max:255",
 			"dialplan_destination" => "bail|nullable|string|max:255",
 			"dialplan_continue" => "bail|nullable|string|max:255",
-			"dialplan_xml" => "bail|nullable|string|max:255",
-			"dialplan_order" => "bail|nullable|string|max:255",
+			"dialplan_xml" => "bail|nullable|string",
+			"dialplan_order" => "bail|integer|min:0|max:999",
 			"dialplan_enabled" => "bail|nullable|string|max:255",
 			"dialplan_description" => "bail|nullable|string|max:255",
 		];

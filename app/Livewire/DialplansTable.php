@@ -25,7 +25,8 @@ class DialplansTable extends DataTableComponent
             ])
             ->setSearchEnabled()
             ->setSearchPlaceholder('Search Dialplans')
-            ->setPerPageAccepted([10, 25, 50, 100])
+            ->setPerPageAccepted([10, 25, 50, 100, 250])
+	    ->setDefaultPerPage(100)
             ->setTableRowUrl(function($row) use ($canEdit) {
                 return $canEdit
                     ? route('dialplans.edit', $row->dialplan_uuid)
