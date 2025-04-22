@@ -28,7 +28,7 @@
         </div>
 
         <div class="card-body">
-            <livewire:sipprofile-table/>
+            <livewire:sip-profile-table/>
         </div>
     </div>
 </div>
