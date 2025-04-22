@@ -7414,5 +7414,3 @@ $text['label-required']['tr-tr'] = "Gerekli";
 $text['label-required']['zh-cn'] = "必需的";
 $text['label-required']['ja-jp'] = "必要";
 $text['label-required']['ko-kr'] = "필수의";
-
-?>

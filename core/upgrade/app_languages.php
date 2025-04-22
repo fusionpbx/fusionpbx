@@ -619,7 +619,7 @@ $text['label-update_filesystem_permissions']['uk-ua'] = "Управління п
 $text['label-update_filesystem_permissions']['tr-tr'] = "Dosya Sistemi İzinleri";
 $text['label-update_filesystem_permissions']['zh-cn'] = "文件系统权限";
 $text['label-update_filesystem_permissions']['ja-jp'] = "ファイルシステムの権限";
-$text['label-update_filesystem_permissions']['ko-kr'] = "파일 시스템 권한"
+$text['label-update_filesystem_permissions']['ko-kr'] = "파일 시스템 권한";
 
 $text['message-updated_autoloader']['en-us'] = 'Updated autoloader';
 $text['message-updated_autoloader']['en-gb'] = 'Updated autoloader';

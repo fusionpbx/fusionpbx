@@ -782,5 +782,3 @@ $text['description-message']['tr-tr'] = "Kayıt mesajı.";
 $text['description-message']['zh-cn'] = "录音消息。";
 $text['description-message']['ja-jp'] = "録音メッセージ。";
 $text['description-message']['ko-kr'] = "녹음 메시지입니다.";
-
-?>
