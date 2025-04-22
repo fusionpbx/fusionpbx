@@ -26,8 +26,7 @@ class ValidCidr implements ValidationRule
         public ?int $ipv4maxbits = null,
         public ?int $ipv6minbits = null,
         public ?int $ipv6maxbits = null,
-    )
-    {
+    ) {
         $this->has_bits = func_num_args() > 0;
     }
 
@@ -60,11 +59,11 @@ class ValidCidr implements ValidationRule
             }
             $valid_address = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 
-	    // Special case ::/0
-	    if ($value == '::/0'){
-		$valid_mask = true;
-		$valid_address = true;
-	   }
+            // Special case ::/0
+            if ($value === '::' && $mask === '0') {
+                $valid_address = true;
+                $valid_mask = true;
+            }
         } else {
             // ipv4
             if ($mask !== null) {
