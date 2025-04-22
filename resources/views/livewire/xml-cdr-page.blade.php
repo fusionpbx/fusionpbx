@@ -25,7 +25,7 @@
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Status</label>
-                <select name="call_result" class="form-select" wire:model.defer="filters.leg">
+                <select name="call_result" class="form-select" wire:model.defer="filters.status">
                     <option value=""></option>
                     <option value="answered">Answered</option>
                     <option value="missed">Missed</option>
@@ -98,7 +98,7 @@
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Destination</label>
-                <input type="number" class="form-control" wire:model.defer="filters.destination">
+                <input type="number" class="form-control" wire:model.defer="filters.destination_number">
             </div>
         </div>
     </div>

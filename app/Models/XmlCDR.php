@@ -591,6 +591,86 @@ class XmlCDR extends Model
         );
     }
 
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            get: function()
+            {
+                $call_result = '';
+
+                if($this->direction == 'inbound' || $this->direction == 'local')
+                {
+                    if($this->answer_stamp != '' && $this->bridge_uuid != '')
+                    {
+                        $call_result = 'answered';
+                    }
+                    else if($this->answer_stamp != '' && $this->bridge_uuid == '')
+                    {
+                        $call_result = 'voicemail';
+                    }
+                    else if($this->answer_stamp == '' && $this->bridge_uuid == '' && $this->sip_hangup_disposition != 'send_refuse')
+                    {
+                        $call_result = 'cancelled';
+                    }
+                    else
+                    {
+                        $call_result = 'failed';
+                    }
+                }
+                else if($this->direction == 'outbound')
+                {
+                    if($this->answer_stamp != '' && $this->bridge_uuid != '')
+                    {
+                        $call_result = 'answered';
+                    }
+                    else if($this->hangup_cause == 'NORMAL_CLEARING')
+                    {
+                        $call_result = 'answered';
+                    }
+                    else if($this->answer_stamp == '' && $this->bridge_uuid != '')
+                    {
+                        $call_result = 'cancelled';
+                    }
+                    else
+                    {
+                        $call_result = 'failed';
+                    }
+                }
+
+                if($this->record_type == 'text')
+                {
+                    $call_result = 'answered';
+                }
+
+                return $call_result;
+            }
+        );
+    }
+
+    protected function tta(): Attribute
+    {
+        return Attribute::make(
+            get: function()
+            {
+                return (int)$this->answer_epoch ?? 0 - (int)$this->start_epoch ?? 0;
+            }
+        );
+    }
+
+    protected function pdd_ms(): Attribute
+    {
+        return Attribute::make(
+            get: function()
+            {
+                $milliseconds = $this->pdd_ms;
+
+                $seconds = $milliseconds / 1000;
+
+                return number_format($seconds, 2) . 's';
+            }
+        );
+    }
+
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
