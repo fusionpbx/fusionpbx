@@ -16,7 +16,7 @@ class SipProfileForm extends Component
     public $sipProfile;
     public string $sip_profile_uuid;
     public string $sip_profile_name;
-    public ?string $sip_profile_hostname ;
+    public ?string $sip_profile_hostname = '';
     public bool $sip_profile_enabled = true;
     public string $sip_profile_description;
 
