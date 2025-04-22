@@ -1,7 +1,6 @@
 <tr class="repeater-item">
 	<td>
 		<select class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_tag]">
-			<option value=""></option>
 			<option value="condition" {{ old('dialplan_detail_tag', $detail->dialplan_detail_tag ?? '') === 'condition' ? 'selected' : '' }}>Condition</option>
 			<option value="regex" {{ old('dialplan_detail_tag', $detail->dialplan_detail_tag ?? '') === 'regex' ? 'selected' : '' }}>Regular Expression</option>
 			<option value="action" {{ old('dialplan_detail_tag', $detail->dialplan_detail_tag ?? '') === 'action' ? 'selected' : '' }}>Action</option>
@@ -29,21 +28,20 @@
 		</select>
 	</td>
 	<td>
-		<select class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_inline]>
+		<select class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_inline]">
 			<option value=""></option>
 			<option value="true" {{ old('dialplan_detail_inline', $detail->dialplan_detail_inline ?? '') === 'true' ? 'selected' : '' }}>True</option>
 			<option value="false" {{ old('dialplan_detail_inline', $detail->dialplan_detail_inline ?? '') === 'false' ? 'selected' : '' }}>False</option>
 		</select>
 	</td>
 	<td>
-		<input type="number" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_group]" value="{{ old('dialplan_detail_group', $detail->dialplan_detail_group ?? '') }}">
+		<input type="number" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_group]" value="{{ old('dialplan_detail_group', $detail->dialplan_detail_group ?? '0') }}" required >
 	</td>
 	<td>
-		<input type="number" step="5" min="0" max="1000" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_order]" value="{{ old('dialplan_detail_order', $detail->dialplan_detail_order ?? '') }}">
+		<input type="number" step="1" min="0" max="1000" class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_order]" value="{{ old('dialplan_detail_order', $detail->dialplan_detail_order ?? intval($index) * 10) }}" required >
 	</td>
 	<td>
 		<select class="form-control" name="dialplan_details[{{$index}}][dialplan_detail_enabled]">
-			<option value=""></option>
 			<option value="true" {{ old('dialplan_detail_enabled', $detail->dialplan_detail_enabled ?? '') === 'true' ? 'selected' : '' }}>True</option>
 			<option value="false" {{ old('dialplan_detail_enabled', $detail->dialplan_detail_enabled ?? '') === 'false' ? 'selected' : '' }}>False</option>
 		</select>

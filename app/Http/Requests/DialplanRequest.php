@@ -26,6 +26,7 @@ class DialplanRequest extends FormRequest
 			"dialplan_order" => "bail|integer|min:0|max:999",
 			"dialplan_enabled" => "bail|nullable|string|max:255",
 			"dialplan_description" => "bail|nullable|string|max:255",
+			"app_uuid" => 'nullable|uuid',
 		];
 	}
 }

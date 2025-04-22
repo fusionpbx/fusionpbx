@@ -36,7 +36,9 @@ class DialplanController extends Controller
 		$request->mergeIfMissing([
 			'domain_uuid' => Session::get('domain_uuid'),
 			'dialplan_context' => ($request->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name'),
-			'app_uuid' => Str::uuid(),
+			'app_uuid' => '90b0e24e-8014-4424-a606-06ea2f5e60c1', //Str::uuid(),
+			'dialplan_continue' => 'false',
+			'dialplan_enabled' => 'false',
 		]);
 		$dialplan = Dialplan::create($request->validated());
 
@@ -70,10 +72,21 @@ class DialplanController extends Controller
 
 	public function update(DialplanRequest $request, Dialplan $dialplan)
 	{
+		if(App::hasDebugModeEnabled()){
+			Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '. $request);
+		}
+
 		$request->mergeIfMissing([
 			'domain_uuid' => Session::get('domain_uuid'),
 			'dialplan_context' => ($request->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name'),
+			'dialplan_continue' => 'false',
+			'dialplan_enabled' => 'false',
 		]);
+
+		if(App::hasDebugModeEnabled()){
+			Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '. $request);
+		}
+
 		$dialplan->update($request->validated());
 
 		$this->syncDetails($request, $dialplan);
@@ -101,7 +114,8 @@ class DialplanController extends Controller
 		foreach($dialplan_details as $key => $value)
 		{
 			$dialplan_details[$key]["dialplan_detail_uuid"] = Str::uuid(); //NOTE: won't need in the future
-			$dialplan_details[$key]["domain_uuid"] = $dialplan->domain->domain_uuid; //NOTE: won't need in the future
+			$dialplan_details[$key]["domain_uuid"] = $dialplan->domain->domain_uuid;
+			$dialplan_details[$key]["dialplan_detail_group"] = intval($dialplan_details[$key]["dialplan_detail_group"]);
 		}
 
 		$dialplan->dialplanDetails()->delete();

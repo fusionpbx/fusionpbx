@@ -166,7 +166,7 @@
                         <div class="form-group">
                             <label class="form-label d-block">Continue</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="dialplan_continue" name="dialplan_continue" value="true" {{ old('dialplan_continue', $dialplan->dialplan_continue ?? false) ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" role="switch" id="dialplan_continue" name="dialplan_continue" value="true" {{ old('dialplan_continue', $dialplan->dialplan_continue ?? false) ? 'checked' : 'checked' }}>
                                 <label class="form-check-label" for="dialplan_continue">{{ __('Continue') }}</label>
                             </div>
                             @error('dialplan_continue')

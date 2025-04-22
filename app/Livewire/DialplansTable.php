@@ -2,15 +2,17 @@
 
 namespace App\Livewire;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use App\Models\Dialplan;
+use App\Models\DialplanDetail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class DialplansTable extends DataTableComponent
 {
@@ -102,6 +104,7 @@ class DialplansTable extends DataTableComponent
         try {
             DB::beginTransaction();
 
+            DialplanDetail::whereIn('dialplan_uuid', $selectedRows)->delete();
             Dialplan::whereIn('dialplan_uuid', $selectedRows)->delete();
 
             DB::commit();
@@ -214,6 +217,10 @@ class DialplansTable extends DataTableComponent
 		)
                 ->orderBy('dialplan_order', 'asc')
                 ->orderBy('dialplan_name', 'asc');
+
+	if(App::hasDebugModeEnabled()){
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] query: '.$query->toRawSql());
+        }
         return $query;
     }
 }

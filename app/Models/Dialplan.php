@@ -29,18 +29,18 @@ class Dialplan extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
-        'domain_uuid',
-        'app_uuid',
-        'hostname',
-        'dialplan_context',
-        'dialplan_name',
-        'dialplan_number',
-        'dialplan_destination',
-        'dialplan_continue',
-        'dialplan_xml',
-        'dialplan_order',
-        'dialplan_enabled',
-        'dialplan_description',
+	        'domain_uuid',
+	        'app_uuid',
+	        'hostname',
+	        'dialplan_context',
+	        'dialplan_name',
+	        'dialplan_number',
+	        'dialplan_destination',
+	        'dialplan_continue',
+	        'dialplan_xml',
+	        'dialplan_order',
+	        'dialplan_enabled',
+	        'dialplan_description',
 	];
 
     /**
@@ -65,8 +65,9 @@ class Dialplan extends Model
 
 	public function dialplanDetails(): HasMany {
 		return $this->hasMany(DialplanDetail::class, 'dialplan_uuid', 'dialplan_uuid')
-			->orderBy('dialplan_detail_group')
-			->orderBy('dialplan_detail_order');
+			->orderBy('dialplan_detail_group', 'asc')
+			->orderByRaw("case when dialplan_detail_tag='condition' then 0 when dialplan_detail_tag='regex' then 1 when dialplan_detail_tag='action' then 2 when dialplan_detail_tag='anti-action' then 4 end ASC")
+			->orderBy('dialplan_detail_order', 'asc');
 	}
 
 	public function callcenterqueue(): BelongsTo {
