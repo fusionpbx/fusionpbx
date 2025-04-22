@@ -30,7 +30,7 @@ class DomainRequest extends FormRequest
                               ],
 			"domain_description" => "bail|sometimes|nullable|string|max:255",
 			"domain_enabled" => "bail|nullable|in:true,false",
-			"domain_parent_uuid" => "bail|nullable|uuid",
+			"domain_parent_uuid" => "bail|nullable|uuid|exists:App\Models\Domain,domain_uuid",
 		];
         if ($this->isMethod('post')){
             if(App::hasDebugModeEnabled()){

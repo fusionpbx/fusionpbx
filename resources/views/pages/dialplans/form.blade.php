@@ -85,7 +85,8 @@
                                 id="dialplan_context"
                                 name="dialplan_context"
                                 placeholder="Enter dialplan context"
-                                value="{{ old('dialplan_context', $dialplan->dialplan_context ?? '') }}"
+                                value="{{ old('dialplan_context', $dialplan->dialplan_context ?? $dialplan_default_context ) }}"
+				required
                             >
                             @error('dialplan_context')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -100,14 +101,15 @@
                             <label for="dialplan_order" class="form-label">Order</label>
                             <input
                                 type="number"
-                                step="5"
+                                step="1"
                                 min="0"
-                                max="1000"
+                                max="999"
                                 class="form-control @error('dialplan_order') is-invalid @enderror"
                                 id="dialplan_order"
                                 name="dialplan_order"
                                 placeholder="Enter dialplan order"
-                                value="{{ old('dialplan_order', $dialplan->dialplan_order ?? '') }}"
+                                value="{{ old('dialplan_order', $dialplan->dialplan_order ?? '200') }}"
+				required
                             >
                             @error('dialplan_order')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -116,6 +118,7 @@
                     </div>
                 </div>
 
+		@can('dialplan_domain')
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -139,7 +142,7 @@
                         </div>
                     </div>
                 </div>
-
+		@endcan
                 <div class="row mt-3">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -224,7 +227,7 @@
                             </tr>
                         </thead>
                         <tbody class="repeater-container">
-                            @if($dialplan->dialplanDetails->isEmpty())
+                            @if(empty($dialplan) || $dialplan->dialplanDetails->isEmpty())
                                 @include('pages.dialplans.detail_template')
                             @else
                                 @include('pages.dialplans.detail_template')

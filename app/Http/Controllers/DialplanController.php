@@ -26,12 +26,18 @@ class DialplanController extends Controller
 		$domains = Domain::all();
 
 		$types = $this->getTypesList();
+		$dialplan_default_context = (request()->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name');
 
-		return view("pages.dialplans.form", compact("domains", "types"));
+		return view("pages.dialplans.form", compact("domains", "types", "dialplan_default_context"));
 	}
 
 	public function store(DialplanRequest $request)
 	{
+		$request->mergeIfMissing([
+			'domain_uuid' => Session::get('domain_uuid'),
+			'dialplan_context' => ($request->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name'),
+			'app_uuid' => Str::uuid(),
+		]);
 		$dialplan = Dialplan::create($request->validated());
 
 		$this->syncDetails($request, $dialplan);
@@ -57,12 +63,17 @@ class DialplanController extends Controller
 		$dialplan->load("dialplanDetails");
 
 		$types = $this->getTypesList();
+		$dialplan_default_context = (request()->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name');
 
-		return view("pages.dialplans.form", compact("dialplan", "domains", "types"));
+		return view("pages.dialplans.form", compact("dialplan", "domains", "types", "dialplan_default_context"));
 	}
 
 	public function update(DialplanRequest $request, Dialplan $dialplan)
 	{
+		$request->mergeIfMissing([
+			'domain_uuid' => Session::get('domain_uuid'),
+			'dialplan_context' => ($request->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name'),
+		]);
 		$dialplan->update($request->validated());
 
 		$this->syncDetails($request, $dialplan);
