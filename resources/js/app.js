@@ -116,5 +116,10 @@ document.addEventListener('DOMContentLoaded', function() {
               format: 'yyyy-MM-dd HH:mm'
             }
         });
+
+        element.addEventListener('change.td', function(e)
+        {
+            element.dispatchEvent(new Event('input', { bubbles: true }));
+        });
     });
 });
