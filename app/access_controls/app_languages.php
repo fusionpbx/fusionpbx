@@ -675,5 +675,3 @@ $text['description-access_control_export']['tr-tr'] = "Dışa aktarmaya dahil et
 $text['description-access_control_export']['zh-cn'] = "选择您希望包含在导出中的字段。";
 $text['description-access_control_export']['ja-jp'] = "エクスポートに含めるフィールドを選択します。";
 $text['description-access_control_export']['ko-kr'] = "내보내기에 포함할 필드를 선택합니다.";
-
-?>

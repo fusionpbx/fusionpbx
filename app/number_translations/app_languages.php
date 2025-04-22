@@ -458,5 +458,3 @@ $text['description-number_translation_description']['tr-tr'] = "Numara çeviri a
 $text['description-number_translation_description']['zh-cn'] = "输入号码翻译说明。";
 $text['description-number_translation_description']['ja-jp'] = "数値変換の説明を入力します。";
 $text['description-number_translation_description']['ko-kr'] = "숫자 번역 설명을 입력합니다.";
-
-?>

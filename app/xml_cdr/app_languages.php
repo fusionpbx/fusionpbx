@@ -4148,5 +4148,3 @@ $text['label-ring_group']['tr-tr'] = "Yüzük Grubu";
 $text['label-ring_group']['zh-cn'] = "环组";
 $text['label-ring_group']['ja-jp'] = "リンググループ";
 $text['label-ring_group']['ko-kr'] = "링 그룹";
-
-?>
