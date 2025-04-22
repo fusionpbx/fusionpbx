@@ -169,18 +169,57 @@ class XmlCDRTable extends DataTableComponent
                 ->when($this->filters['direction'] ?? null, fn($q, $v) => $q->where('direction', '=', $v))
                 ->when($this->filters['leg'] ?? null, fn($q, $v) => $q->where('leg', '=', $v))
                 // ->when($this->filters['status'] ?? null, fn($q, $v) => $q->where('status', '=', $v))
+                ->when($this->filters['status'] ?? null, function ($q, $v) {
+                    return match($v)
+                    {
+                        'answered' => $q->whereNotNull('answer_stamp')->whereNotNull('bridge_uuid'),
+                        'voicemail' => $q->whereNotNull('answer_stamp')->whereNull('bridge_uuid'),
+                        'missed' => $q->where('missed_call', true),
+                        'cancelled' => $q->where(function ($q) {
+                            $q->where(function ($q) {
+                                $q->whereIn('direction', ['inbound', 'local'])
+                                ->whereNull('answer_stamp')
+                                ->whereNull('bridge_uuid')
+                                ->where('sip_hangup_disposition', '!=', 'send_refuse');
+                            })
+                            ->orWhere(function ($q) {
+                                $q->whereIn('direction', ['inbound', 'local'])
+                                ->whereNotNull('answer_stamp')
+                                ->whereNull('bridge_uuid')
+                                ->where('voicemail_message', false);
+                            })
+                            ->orWhere(function ($q) {
+                                $q->where('direction', 'outbound')
+                                ->whereNull('answer_stamp')
+                                ->whereNotNull('bridge_uuid');
+                            });
+                        }),
+
+                        default => $q->whereNull('answer_stamp')->whereNull('bridge_uuid')->where('duration', 0),
+                    };
+                })
                 ->when($this->filters['extension'] ?? null, fn($q, $v) => $q->where('extension.extension', '=', $v))
                 ->when($this->filters['caller_id_name'] ?? null, fn($q, $v) => $q->where('caller_id_name', '=', $v))
                 ->when($this->filters['caller_id_number'] ?? null, fn($q, $v) => $q->where('caller_id_number', '=', $v))
-                // ->when($this->filters['start_range_from'] ?? null, fn($q, $v) => $q->where('start_stamp', '>=', $v))
-                // ->when($this->filters['start_range_to'] ?? null, fn($q, $v) => $q->where('start_stamp', '<', $v))
+                ->when($this->filter['start_range_from'] ?? null, fn($q, $v) => $q->where('start_stamp', '>=', $v))
+                ->when($this->filters['start_range_to'] ?? null, fn($q, $v) => $q->where('start_stamp', '<', $v))
                 ->when($this->filters['duration_min'] ?? null, fn($q, $v) => $q->where('duration', '>=', $v))
-                ->when($this->filters['duration_max'] ?? null, fn($q, $v) => $q->where('duration', '<', $v))
+                ->when($this->filters['duration_max'] ?? null, fn($q, $v) => $q->where('duration', '<=', $v))
                 ->when($this->filters['caller_destination'] ?? null, fn($q, $v) => $q->where('caller_destination', '=', $v))
                 ->when($this->filters['destination_number'] ?? null, fn($q, $v) => $q->where('destination_number', '=', $v))
-                // ->when($this->filters['tta'] ?? null, fn($q, $v) => $q->where('destination_number', '=', $v))
+                ->when($this->filters['tta_min'] ?? null, fn($q, $v) => $q->where(DB::raw('answer_epoch - start_epoch'), '>=', $v))
+                ->when($this->filters['tta_max'] ?? null, fn($q, $v) => $q->where(DB::raw('answer_epoch - start_epoch'), '<=', $v))
                 ->when($this->filters['hangup_cause'] ?? null, fn($q, $v) => $q->where('hangup_cause', '=', $v))
-                // ->when($this->filters['recording'] ?? null, fn($q, $v) => $q->where('recording', '=', $v))
+                ->when($this->filters['recording'] ?? null, function ($q, $v) {
+                    return match ($v)
+                    {
+                        'true' => $q->whereNotNull('record_path')->whereNotNull('record_name'),
+                        'false' => $q->where(function ($query) {
+                            $query->whereNull('record_path')->orWhereNull('record_name');
+                        }),
+                        default => null,
+                    };
+                })
                 ->when($this->filters['order_field'] ?? null, fn($q, $v) => $q->orderBy($this->filters['order_field'], $this->filters['order_sort'] ?? 'asc'))
                 ->orderBy("start_epoch", "desc");
         return $query;

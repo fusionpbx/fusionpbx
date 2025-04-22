@@ -600,15 +600,15 @@ class XmlCDR extends Model
 
                 if($this->direction == 'inbound' || $this->direction == 'local')
                 {
-                    if($this->answer_stamp != '' && $this->bridge_uuid != '')
+                    if(!empty($this->answer_stamp) && !empty($this->bridge_uuid))
                     {
                         $call_result = 'answered';
                     }
-                    else if($this->answer_stamp != '' && $this->bridge_uuid == '')
+                    else if(!empty($this->answer_stamp) && empty($this->bridge_uuid))
                     {
                         $call_result = 'voicemail';
                     }
-                    else if($this->answer_stamp == '' && $this->bridge_uuid == '' && $this->sip_hangup_disposition != 'send_refuse')
+                    else if(empty($this->answer_stamp) && empty($this->bridge_uuid) && $this->sip_hangup_disposition != 'send_refuse')
                     {
                         $call_result = 'cancelled';
                     }
@@ -619,7 +619,7 @@ class XmlCDR extends Model
                 }
                 else if($this->direction == 'outbound')
                 {
-                    if($this->answer_stamp != '' && $this->bridge_uuid != '')
+                    if(!empty($this->answer_stamp) && !empty($this->bridge_uuid))
                     {
                         $call_result = 'answered';
                     }
@@ -627,7 +627,7 @@ class XmlCDR extends Model
                     {
                         $call_result = 'answered';
                     }
-                    else if($this->answer_stamp == '' && $this->bridge_uuid != '')
+                    else if(empty($this->answer_stamp) && !empty($this->bridge_uuid))
                     {
                         $call_result = 'cancelled';
                     }
@@ -652,7 +652,7 @@ class XmlCDR extends Model
         return Attribute::make(
             get: function()
             {
-                return (int)$this->answer_epoch ?? 0 - (int)$this->start_epoch ?? 0;
+                return ($this->answer_epoch ?? 0) - ($this->start_epoch ?? 0);
             }
         );
     }

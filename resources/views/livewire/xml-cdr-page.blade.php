@@ -4,7 +4,7 @@
         <div class="col-md-4">
             <div class="form-group mb-3">
                 <label>Direction</label>
-                <select name="direction" class="form-select" wire:model.defer="filters.direction">
+                <select class="form-select" wire:model.defer="filters.direction">
                     <option value=""></option>
                     <option value="inbound">Inbound</option>
                     <option value="outbound">Outbound</option>
@@ -15,7 +15,7 @@
         <div class="col-md-2">
             <div class="form-group mb-3">
                 <label></label>
-                <select name="leg" class="form-select" wire:model.defer="filters.leg">
+                <select class="form-select" wire:model.defer="filters.leg">
                     <option value=""></option>
                     <option value="a">a-leg</option>
                     <option value="b">b-leg</option>
@@ -25,7 +25,7 @@
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Status</label>
-                <select name="call_result" class="form-select" wire:model.defer="filters.status">
+                <select class="form-select" wire:model.defer="filters.status">
                     <option value=""></option>
                     <option value="answered">Answered</option>
                     <option value="missed">Missed</option>
@@ -103,16 +103,22 @@
         </div>
     </div>
     <div class="row g-2 gx-4">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="form-group mb-3">
                 <label>TTA (sec)</label>
-                <input type="number" class="form-control" wire:model.defer="filters.tta">
+                <input type="number" class="form-control" placeholder="Minimum" wire:model.defer="filters.tta_min">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group mb-3">
+                <label></label>
+                <input type="number" class="form-control" placeholder="Maximum" wire:model.defer="filters.tta_max">
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Hangup Cause</label>
-                <select name="hangup_cause" class="form-select" wire:model.defer="filters.hangup_cause">
+                <select class="form-select" wire:model.defer="filters.hangup_cause">
 				    <option value=""></option>
                     <option value="ALLOTTED_TIMEOUT">Allotted Timeout</option>
                     <option value="ATTENDED_TRANSFER">Attended Transfer</option>
@@ -153,7 +159,7 @@
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Recording</label>
-                <select name="recording" class="form-select" wire:model.defer="filters.recording">
+                <select class="form-select" wire:model.defer="filters.recording">
                     <option value=""></option>
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -163,7 +169,8 @@
         <div class="col-md-4">
             <div class="form-group mb-3">
                 <label>Order</label>
-                <select name="order_field" class="form-select" wire:model.defer="filters.order_field">
+                <select class="form-select" wire:model.defer="filters.order_field">
+                    <option value=""></option>
                     <option value="extension">Extension</option>
                     <option value="domain_name">Domain</option>
                     <option value="caller_id_name">Caller Name</option>
@@ -182,9 +189,10 @@
         <div class="col-md-2">
             <div class="form-group mb-3">
                 <label></label>
-                <select name="order_sort" class="form-select" wire:model.defer="filters.order_sort">
-                    <option value="desc" selected="selected">Descending</option>
+                <select class="form-select" wire:model.defer="filters.order_sort">
+                    <option value=""></option>
                     <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
                 </select>
             </div>
         </div>
