@@ -29,6 +29,5 @@
     @stack('before-scripts')
     @include('layouts.scripts')
     @stack('scripts')
-
 </body>
 </html>

@@ -172,6 +172,7 @@ return [
         App\Providers\BladeServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
         App\Providers\FreeSwitchServiceProvider::class,
+        App\Providers\DefaultSettingServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -188,6 +189,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'FreeSwitch' => App\Facades\FreeSwitch::class,
+        'DefaultSetting' => App\Facades\DefaultSetting::class
     ])->toArray(),
 
 ];

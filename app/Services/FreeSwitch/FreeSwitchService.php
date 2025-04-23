@@ -2,18 +2,19 @@
 
 namespace App\Services\FreeSwitch;
 
+use App\Contracts\FreeSwitchConnectionManagerInterface;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class FreeSwitchService
 {
-    protected $connection;
+    protected FreeSwitchConnectionManagerInterface $connection;
 
-    public function __construct()
+    public function __construct(FreeSwitchConnectionManagerInterface $connection)
     {
-        $this->connection = FreeSwitchConnectionManager::getInstance();
+        $this->connection = $connection;
     }
-    
+
     /**
      * Execute a command on the FreeSWITCH server
      *
@@ -24,12 +25,12 @@ class FreeSwitchService
     public function execute(string $command, ?string $param = null): ?string
     {
         if (App::hasDebugModeEnabled()) {
-            Log::debug('['.__CLASS__.']['.__METHOD__.'] Executing command: ' . $command . ' ' . $param);
+            Log::debug('['.__CLASS__.']['.__METHOD__.'] Executing command: ' . $command . ' ' . $param );
         }
-        
-        return $this->connection->executeCommand($command, $param);
+
+        return $this->connection->executeCommand($command, $param, $host = '127.0.0.1');
     }
-    
+
     /**
      * Check if the service is connected to the FreeSWITCH server
      *
@@ -39,7 +40,7 @@ class FreeSwitchService
     {
         return $this->connection->isConnected();
     }
-    
+
     /**
      * Force a reconnection to the FreeSWITCH server
      *
@@ -50,7 +51,7 @@ class FreeSwitchService
         $this->connection->close();
         return $this->connection->connect();
     }
-    
+
     /**
      * Get the connection type (EVENT_SOCKET or XML_RPC)
      *
@@ -60,7 +61,7 @@ class FreeSwitchService
     {
         return $this->connection->getConnectionType();
     }
-    
+
     /**
      * Get gateway status
      *
@@ -72,25 +73,25 @@ class FreeSwitchService
     {
         $cmd = 'sofia xmlstatus gateway ' . $gateway_uuid;
         $response = $this->execute($cmd);
-        
+
         if ($response == "Invalid Gateway!") {
             $cmd = 'sofia xmlstatus gateway ' . strtoupper($gateway_uuid);
             $response = $this->execute($cmd);
         }
-        
+
         return $response;
     }
-    
+
     /**
      * Get server status
-     * 
+     *
      * @return string|null The server status
      */
     public function getServerStatus(): ?string
     {
         return $this->execute('status');
     }
-    
+
     /**
      * Close the connection to the FreeSWITCH server
      */

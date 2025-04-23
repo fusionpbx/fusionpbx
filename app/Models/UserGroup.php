@@ -2,6 +2,7 @@
 
     namespace App\Models;
 
+    use App\Traits\GetTableName;
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -10,7 +11,7 @@
 
     class UserGroup extends Pivot
     {
-        use HasFactory, HasUniqueIdentifier;
+        use HasFactory, HasUniqueIdentifier, GetTableName;
 
         protected $table = 'v_user_groups';
         protected $primaryKey = 'user_group_uuid';
