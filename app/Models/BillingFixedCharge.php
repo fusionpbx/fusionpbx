@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\CreatedUpdatedBy;
+use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\HasUniqueIdentifier;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Sanctum\HasApiTokens;
 
 class BillingFixedCharge extends Model
 {
@@ -53,7 +53,7 @@ class BillingFixedCharge extends Model
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
-	
+
 	public function billing(): BelongsTo {
 		return $this->belongsTo(BillingProfile::class, 'billing_uuid', 'billing_uuid');
 	}

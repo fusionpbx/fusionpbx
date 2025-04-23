@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\HasUniqueIdentifier;
+use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HasUniqueIdentifier;
 use App\Traits\HandlesStringBooleans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

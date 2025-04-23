@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Group;
+use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
 use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
-use App\Models\Group;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

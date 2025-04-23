@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Models\Phrase;
-use App\Traits\HasUniqueIdentifier;
+use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

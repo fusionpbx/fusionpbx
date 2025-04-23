@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\CreatedUpdatedBy;
+use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\HasUniqueIdentifier;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class BillingProfileDeal extends Pivot
 {

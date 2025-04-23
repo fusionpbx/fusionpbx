@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\HasUniqueIdentifier;
+use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,7 +50,7 @@ class Permission extends Model
     }
 
     public function groupPermissionByGroup($groupUuid = null): BelongsTo
-    {      
+    {
         return $this->belongsTo(GroupPermission::class, 'permission_name', 'permission_name')
             ->when($groupUuid, function($query, $groupUuid) {
                 return $query->where('group_uuid', $groupUuid);

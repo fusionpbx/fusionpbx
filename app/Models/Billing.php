@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\CreatedUpdatedBy;
+use App\Traits\HasUniqueIdentifier;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\HasUniqueIdentifier;
+
 
 class Billing extends Model
 {
@@ -74,7 +76,7 @@ class Billing extends Model
 	public function billingauthorizedpaymentsources(): HasMany {
 		return $this->hasMany(Billing::class, 'billing_uuid', 'billing_uuid');
 	}
-	
+
 	public function billingfixedcharges(): HasMany {
 		return $this->hasMany(BillingFixedCharge::class, 'billing_uuid', 'billing_uuid');
 	}

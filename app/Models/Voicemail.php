@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
-
 use Laravel\Sanctum\HasApiTokens;
 
 class Voicemail extends Model
