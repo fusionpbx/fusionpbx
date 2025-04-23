@@ -2,12 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Facades\FreeSwitch;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Gateway;
-use App\Http\Controllers\FreeSWITCHAPIController;
 use Illuminate\Support\Str;
 
 class GatewaysTable extends DataTableComponent
@@ -26,12 +26,11 @@ class GatewaysTable extends DataTableComponent
 
     public function getGatewayStatuses() 
     {
-        $fsapi = new FreeSWITCHAPIController();
         $gateways = Gateway::all();
 
         foreach ($gateways as $gateway) {
 
-            $response = $fsapi->execute('sofia', 'xmlstatus gateway ' . $gateway->gateway_uuid);
+            $response = FreeSwitch::execute('sofia', 'xmlstatus gateway ' . $gateway->gateway_uuid);
 
             if ($response == "Invalid Gateway!") {
                 $this->gatewayStatuses[$gateway->gateway_uuid] = [
@@ -58,8 +57,7 @@ class GatewaysTable extends DataTableComponent
 
     public function startGateway($gatewayUuid)
     {
-        $fsapi = new FreeSWITCHAPIController();
-        $response = $fsapi->execute('sofia', 'profile external rescan');
+        $response = FreeSwitch::execute('sofia', 'profile external rescan');
 
         $this->getGatewayStatuses();
 
@@ -68,8 +66,8 @@ class GatewaysTable extends DataTableComponent
 
     public function stopGateway($gatewayUuid)
     {
-        $fsapi = new FreeSWITCHAPIController();
-        $response = $fsapi->execute('sofia', 'profile external killgw ' . $gatewayUuid);
+       
+        $response = FreeSwitch::execute('sofia', 'profile external killgw ' . $gatewayUuid);
 
         $this->getGatewayStatuses();
 

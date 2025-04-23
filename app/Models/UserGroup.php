@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class UserGroup extends Pivot
 {
     use HasFactory, HasUniqueIdentifier;
-
     protected $table = 'v_user_groups';
     protected $primaryKey = 'user_group_uuid';
     public $incrementing = false;

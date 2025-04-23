@@ -2,37 +2,34 @@
 
 namespace App\Services\FreeSwitch;
 
-use App\Http\Controllers\EventSocketBufferController;
 use App\Models\Setting;
+use App\Contracts\FreeSwitchConnectionManagerInterface;
+use App\Facades\DefaultSetting;
+use App\Support\Freeswitch\EventSocketBuffer;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Client\ConnectionException;
 
-class FreeSwitchConnectionManager
+class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterface
 {
-    private static ?FreeSwitchConnectionManager $instance = null;
-    private $fp = null;
-    private $buffer;
+    private mixed $fp = null;
+    private ?EventSocketBuffer $buffer = null;
     private string $type;
 
-    private function __construct()
+    public function __construct()
     {
-        $this->type = env('FS_API_TYPE', 'XML_RPC');
-        if (App::hasDebugModeEnabled()) {
-            Log::debug('['.__CLASS__.']['.__METHOD__.'] $this->type: '.$this->type);
-        }
-        
-        if ($this->type === 'EVENT_SOCKET') {
-            $this->buffer = new EventSocketBufferController;
-        }
-    }
+        $this->type = config('freeswitch.api_type', 'XML_RPC');
 
-    public static function getInstance(): self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
+        if (App::hasDebugModeEnabled()) {
+            Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] $this->type: ' . $this->type);
         }
-        
-        return self::$instance;
+
+        if ($this->type === 'EVENT_SOCKET') {
+            $this->buffer = new EventSocketBuffer();
+        }
+
+        $this->connect();
     }
 
     public function getConnectionType(): string
@@ -52,7 +49,7 @@ class FreeSwitchConnectionManager
         $password = $settings->event_socket_password ?? 'ClueCon';
 
         $this->fp = $this->es_connect($host, $port, $password);
-        
+
         return $this->fp !== false;
     }
 
@@ -61,17 +58,15 @@ class FreeSwitchConnectionManager
         if ($this->type !== 'EVENT_SOCKET') {
             return true;
         }
-        
+
         return $this->es_connected();
     }
 
-    public function executeCommand(string $command, ?string $param = null): ?string
+    public function executeCommand(string $command, ?string $param = null, string $host = '127.0.0.1'): ?string
     {
         if ($this->type === 'EVENT_SOCKET') {
             return $this->es_execute($command, $param);
         } else { // XML_RPC
-            $settings = Setting::first();
-            $host = $settings->event_socket_ip_address ?? '127.0.0.1';
             return $this->rpc_execute($host, $command, $param);
         }
     }
@@ -84,15 +79,15 @@ class FreeSwitchConnectionManager
         }
     }
 
-    private function es_connect($host, $port, $password)
+    private function es_connect(string $host, int $port, string $password): mixed
     {
-        $errorn = null; $errordesc = null;
-        $this->fp = @fsockopen($host, $port, $errorn, $errordesc, 3);
-        
+        $error_code = null; $error_message = null;
+        $this->fp = @fsockopen($host, $port, $error_code, $error_message, 3);
+
         if (!$this->fp) {
             return false;
         }
-        
+
         socket_set_timeout($this->fp, 30000);
         socket_set_blocking($this->fp, true);
 
@@ -105,7 +100,7 @@ class FreeSwitchConnectionManager
         }
 
         while (!feof($this->fp)) {
-            $event = $this->es_read_event();    
+            $event = $this->es_read_event();
             if (@$event['Content-Type'] == 'command/reply') {
                 if (@$event['Reply-Text'] == '+OK accepted') {
                     return $this->fp;
@@ -114,7 +109,7 @@ class FreeSwitchConnectionManager
                 return false;
             }
         }
-        
+
         return false;
     }
 
@@ -129,17 +124,16 @@ class FreeSwitchConnectionManager
         return true;
     }
 
-    private function es_read_event() 
+    private function es_read_event(): array|false
     {
         if (!$this->fp) {
             return false;
         }
 
-        $b = $this->buffer;
         $content = [];
 
         while (true) {
-            while (($line = $b->read_line()) !== false) {
+            while (($line = $this->buffer->read_line()) !== false) {
                 if ($line == '') {
                     break 2;
                 }
@@ -152,16 +146,16 @@ class FreeSwitchConnectionManager
             }
 
             $buffer = fgets($this->fp, 1024);
-            $b->append($buffer);
+            $this->buffer->append($buffer);
         }
 
         if (array_key_exists('Content-Length', $content)) {
-            $str = $b->read_n($content['Content-Length']);
+            $str = $this->buffer->read_n($content['Content-Length']);
             if ($str === false) {
                 while (!feof($this->fp)) {
                     $buffer = fgets($this->fp, 1024);
-                    $b->append($buffer);
-                    $str = $b->read_n($content['Content-Length']);
+                    $this->buffer->append($buffer);
+                    $str = $this->buffer->read_n($content['Content-Length']);
                     if ($str !== false) {
                         break;
                     }
@@ -175,7 +169,7 @@ class FreeSwitchConnectionManager
         return $content;
     }
 
-    private function es_request($cmd) : ?string
+    private function es_request(string $cmd): ?string
     {
         if (!$this->fp) {
             return false;
@@ -207,31 +201,34 @@ class FreeSwitchConnectionManager
 
     private function rpc_execute(string $host, string $command, ?string $param = null): ?string
     {
-        $default_settings = app()->make('App\Http\Controllers\DefaultSettingController');
-        $http_port = $default_settings->get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
-        $auth_user = $default_settings->get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
-        $auth_pass = $default_settings->get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
-        
+        $http_port = DefaultSetting::get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
+        $auth_user = DefaultSetting::get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
+        $auth_pass = DefaultSetting::get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
+
         $url = 'http://'.$host.':'.$http_port.'/txtapi/'.$command.'?'.(isset($param) ? rawurlencode($param) : '');
-        
+
         if (App::hasDebugModeEnabled()) {
             Log::debug('['.__CLASS__.']['.__METHOD__.'] $url: '. $url);
         }
-        
-        $response = \Illuminate\Support\Facades\Http::withBasicAuth($auth_user, $auth_pass)
-                    ->withOptions([
-                        'debug' => App::hasDebugModeEnabled(),
-                    ])
-                    ->get($url);
+
+        try {
+            $response = Http::withBasicAuth($auth_user, $auth_pass)
+                ->withOptions([
+                    'debug' => App::hasDebugModeEnabled(),
+                ])
+                ->get($url);
+
+        } catch (ConnectionException $e) {
+            if (App::hasDebugModeEnabled()) {
+                Log::error('['.__CLASS__.']['.__METHOD__.'] Error: ' . $e->getMessage());
+            }
+            return null;
+        }
 
         if ($response->ok()) {
             return $response->body() ?? null;
         }
-        
+
         return null;
     }
-    
-    private function __clone() {}
-    
-    public function __wakeup() {}
 }

@@ -6,6 +6,7 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@rollup/plugin-inject": "^5.0.5",
         "axios": "^1.1.2",
         "laravel-vite-plugin": "^1.0.0",
         "sass": "^1.85.1",
@@ -20,7 +21,7 @@
         "bootstrap-icons": "^1.11.3",
         "bootstrap4-duallistbox": "^4.0.2",
         "install": "^0.13.0",
-        "jquery": "^3.7.1",
+        "jquery": "3.2.1",
         "overlayscrollbars": "^2.11.1",
         "prismjs": "^1.30.0"
     }

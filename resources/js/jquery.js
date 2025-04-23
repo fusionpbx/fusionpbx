@@ -1,17 +1,14 @@
-import $ from 'jquery';
-import 'bootstrap4-duallistbox/dist/jquery.bootstrap-duallistbox.min.js';
-import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox.min.css';
+import $ from "jquery";
+window.$ = window.jQuery= $;
 
 $(function () {
+
     $(".duallistbox").bootstrapDualListbox({
         infoText: false,
         nonSelectedListLabel: 'Users',
         selectedListLabel: 'Current members',
     });
-});
 
-
-$(function () {
     function actualizarIndices(tableSelector) {
         $(tableSelector + ' tbody tr:not(.static-row)').each(function (index) {
             $(this).find('input, select').each(function () {
@@ -37,24 +34,24 @@ $(function () {
     $('#add-domain').click(function () {
         const lastRow = $('#domains-table tbody tr:last');
         const newRow = lastRow.clone();
-    
+
         // Agregar botón eliminar si no existe
         if (newRow.find('.delete-row').length === 0) {
             newRow.append(crearBotonEliminar());
         }
-    
+
         newRow.insertBefore('#new-domain-row');
         actualizarIndices('#domains-table');
-    
+
         // Ocultar el botón de agregar
         $('#add-domain').hide();
     });
-    
+
     // 👉 Evento para eliminar fila
     $(document).on('click', '.delete-row', function () {
         $(this).closest('tr').remove();
         actualizarIndices('#domains-table');
-    
+
         // Mostrar el botón de agregar si no hay filas dinámicas
         if ($('#domains-table tbody tr').length <= 1) {
             $('#add-domain').show();
@@ -87,3 +84,4 @@ $(function () {
         actualizarIndices('#settings-table');
     });
 });
+
