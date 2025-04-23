@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\DefaultSetting;
 use App\Models\Domain;
 use App\Models\Extension;
 use App\Models\XmlCDR;
-use App\Http\Controllers\DefaultSettingController;
 use App\Http\Controllers\DomainSettingController;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -36,9 +36,8 @@ class ModFormatCDRController extends Controller
         unset($validator1);
 
         // Detect Format
-        $defaultSettings = new DefaultSettingController;
-        $format = $defaultSettings->get('config', 'format_cdr.format', 'text') ?? 'xml';
-        $recordings = $defaultSettings->get('switch', 'recordings', 'dir');
+        $format = DefaultSetting::get('config', 'format_cdr.format', 'text') ?? 'xml';
+        $recordings = DefaultSetting::get('switch', 'recordings', 'dir');
 
         $dbType = DB::getConfig("driver");
 
@@ -584,8 +583,8 @@ class ModFormatCDRController extends Controller
                 }
                 */
 
-                $cdrFormat = $defaultSettings->get('cdr', 'format', 'text') ?? 'xml';
-                $cdrStorage = $defaultSettings->get('cdr', 'storage', 'text') ?? 'db';
+                $cdrFormat = DefaultSetting::get('cdr', 'format', 'text') ?? 'xml';
+                $cdrStorage = DefaultSetting::get('cdr', 'storage', 'text') ?? 'db';
                 if(App::hasDebugModeEnabled()){
                     Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $cdrFormat: '.$cdrFormat);
                     Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $cdrStorage: '.$cdrStorage);
@@ -630,7 +629,7 @@ class ModFormatCDRController extends Controller
 
                 if ($cdrStorage == "dir") {
                     if (!empty($uuid)) {
-                        $switch_log = $defaultSettings->get('switch', 'log', 'text');
+                        $switch_log = DefaultSetting::get('switch', 'log', 'text');
                         $tmp_dir = $switch_log.'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
                         if(!file_exists($tmp_dir)) {
                             mkdir($tmp_dir, 0770, true);

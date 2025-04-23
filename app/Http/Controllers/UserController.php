@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\DefaultSettingController;
+use App\Facades\DefaultSetting;
 use App\Http\Controllers\DomainSettingController;
 use App\Http\Controllers\UserSettingController;
 use App\Http\Requests\UserRequest;
@@ -191,8 +191,7 @@ class UserController extends Controller
             $dds = new DomainSettingController;
             $setting = $dds->get($category, $subcategory, $name);
             if (!isset($setting)){
-                $ds = new DefaultSettingController;
-                $setting = $ds->get($category, $subcategory, $name);
+                $setting = DefaultSetting::get($category, $subcategory, $name);
             }
         }
 

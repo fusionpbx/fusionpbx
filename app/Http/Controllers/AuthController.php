@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\DefaultSettingController;
+use App\Facades\DefaultSetting;
 use App\Models\Domain;
 use App\Models\Group;
 use App\Models\User;
@@ -21,10 +21,10 @@ class AuthController extends Controller
 {
     public function index()
     {
-        $defaultSettings = new DefaultSettingController;
-        $userUnique = $defaultSettings->get('users', 'unique', 'text');
-        $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
-        $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
+
+        $userUnique = DefaultSetting::get('users', 'unique', 'text');
+        $defaultDomainUuid = DefaultSetting::get('openid', 'default_domain_uuid', 'uuid');
+        $defaultGroupUuid = DefaultSetting::get('openid', 'default_group_uuid', 'uuid');
 
         // Environmental Variables have preference
         $openidClientId = env('OKTA_CLIENT_ID');
@@ -107,9 +107,9 @@ class AuthController extends Controller
         if(App::hasDebugModeEnabled()){
             Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $user = '.print_r($user, true));
         }
-        $defaultSettings = new DefaultSettingController;
-        $defaultDomainUuid = $defaultSettings->get('openid', 'default_domain_uuid', 'uuid');
-        $defaultGroupUuid = $defaultSettings->get('openid', 'default_group_uuid', 'uuid');
+        
+        $defaultDomainUuid = DefaultSetting::get('openid', 'default_domain_uuid', 'uuid');
+        $defaultGroupUuid = DefaultSetting::get('openid', 'default_group_uuid', 'uuid');
 
         $localGroup = Group::where('group_uuid', $defaultGroupUuid)->first();
         $localDomain = Domain::where('domain_uuid', $defaultDomainUuid)->first();

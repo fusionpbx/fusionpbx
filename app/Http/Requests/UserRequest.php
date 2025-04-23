@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Controllers\DefaultSettingController;
+use App\Facades\DefaultSetting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Session;
@@ -18,13 +18,12 @@ class UserRequest extends FormRequest
 	public function rules(): array
 	{
 		$isCreating = $this->isMethod("post");
-        $defaultSettings = new DefaultSettingController;
-        $reqLength = $defaultSettings->get('users', 'password_length', 'numeric') ?? 0;
-        $reqNumber = $defaultSettings->get('users', 'password_number', 'boolean') ?? false;
-        $reqLowcase = $defaultSettings->get('users', 'password_lowercase', 'boolean') ?? false;
-        $reqUpcase = $defaultSettings->get('users', 'password_uppercase', 'boolean') ?? false;
-        $reqSpecial = $defaultSettings->get('users', 'password_special', 'boolean') ?? false;
-        $userUnique = $defaultSettings->get('users', 'unique', 'text');
+        $reqLength = DefaultSetting::get('users', 'password_length', 'numeric') ?? 0;
+        $reqNumber = DefaultSetting::get('users', 'password_number', 'boolean') ?? false;
+        $reqLowcase = DefaultSetting::get('users', 'password_lowercase', 'boolean') ?? false;
+        $reqUpcase = DefaultSetting::get('users', 'password_uppercase', 'boolean') ?? false;
+        $reqSpecial = DefaultSetting::get('users', 'password_special', 'boolean') ?? false;
+        $userUnique = DefaultSetting::get('users', 'unique', 'text');
 
 		$rule =  [
 			"username" => [

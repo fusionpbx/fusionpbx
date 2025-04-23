@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\DefaultSetting;
 use App\Models\Domain;
-use App\Http\Controllers\DefaultSettingController;
 use App\Http\Controllers\DomainSettingController;
 use App\Http\Requests\DomainRequest;
 use Illuminate\Http\Request;
@@ -101,8 +101,7 @@ class DomainController extends Controller
 		$dds = new DomainSettingController;
 		$setting = $dds->get($category, $subcategory, $name);
 		if (!isset($setting)){
-			$ds = new DefaultSettingController;
-			$setting = $ds->get($category, $subcategory, $name);
+			$setting = DefaultSetting::get($category, $subcategory, $name);
 		}
 
 		return $ds ?? null;
