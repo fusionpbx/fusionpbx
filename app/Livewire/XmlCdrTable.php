@@ -72,11 +72,13 @@ class XmlCDRTable extends DataTableComponent
 
     public function columns(): array
     {
-        return [
+        $columns = [
+            Column::make("UUID", "xml_cdr_uuid")->hideIf(true)
+        ];
 
-            Column::make("UUID", "xml_cdr_uuid")->hideIf(true),
-
-            Column::make("", "direction")
+        if(auth()->user()->hasPermission('xml_cdr_direction'))
+        {
+            $columns[] = Column::make("", "direction")
                 ->format(function ($value, $row, Column $column) {
 
                     $content = "";
@@ -101,36 +103,55 @@ class XmlCDRTable extends DataTableComponent
 
                     return $content;
                 })->html()
-                ->sortable(),
+                ->sortable();
+        }
 
-            Column::make("Ext.", "extension.extension")
-                ->sortable(),
+        if(auth()->user()->hasPermission('xml_cdr_extension'))
+        {
+            $columns[] = Column::make("Ext.", "extension.extension")->sortable();
+        }
 
-            Column::make("Caller name", "caller_id_name")
-                ->sortable(),
+        if(auth()->user()->hasPermission('xml_cdr_caller_id_name'))
+        {
+            $columns[] = Column::make("Caller name", "caller_id_name")->sortable();
+        }
 
-            Column::make("Caller number", "caller_id_number")
-                ->sortable(),
+        if(auth()->user()->hasPermission('xml_cdr_caller_id_number'))
+        {
+            $columns[] = Column::make("Caller number", "caller_id_number")->sortable();
+        }
 
-            Column::make("Caller destination", "caller_destination")
-                ->sortable(),
+        if(auth()->user()->hasPermission('xml_cdr_caller_destination'))
+        {
+            $columns[] = Column::make("Caller destination", "caller_destination")->sortable();
+        }
 
-            Column::make("Destination", "destination_number")
-                ->sortable(),
+        if(auth()->user()->hasPermission('xml_cdr_destination'))
+        {
+            $columns[] = Column::make("Destination", "destination_number")->sortable();
+        }
 
-            Column::make("Date", "start_epoch")
+        if(auth()->user()->hasPermission('xml_cdr_start'))
+        {
+            $columns[] = Column::make("Date", "start_epoch")
                 ->format(function ($value, $row, Column $column) {
                     return date('D j M Y H:i:s', $row->start_epoch);
                 })
-                ->sortable(),
+                ->sortable();
+        }
 
-            Column::make("TTA", "answer_epoch")
+        if(auth()->user()->hasPermission('xml_cdr_tta'))
+        {
+            $columns[] = Column::make("TTA", "answer_epoch")
                 ->format(function ($value, $row, Column $column) {
                     return $row->tta;
                 })
-                ->sortable(),
+                ->sortable();
+        }
 
-            Column::make("Duration", "duration")
+        if(auth()->user()->hasPermission('xml_cdr_duration'))
+        {
+            $columns[] = Column::make("Duration", "duration")
                 ->format(function ($value, $row, Column $column) {
                     $seconds = $row->duration;
                     $hours = floor($seconds / 3600);
@@ -139,26 +160,38 @@ class XmlCDRTable extends DataTableComponent
 
                     return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
                 })
-                ->sortable(),
+                ->sortable();
+        }
 
-            Column::make("PDD", "pdd_ms")
+        if(auth()->user()->hasPermission('xml_cdr_pdd'))
+        {
+            $columns[] = Column::make("PDD", "pdd_ms")
                 ->format(function ($value, $row, Column $column) {
                     return $row->pdd_ms;
                 })
-                ->sortable(),
+                ->sortable();
+        }
 
-            Column::make("MOS", "rtp_audio_in_mos")
-                ->sortable(),
+        if(auth()->user()->hasPermission('xml_cdr_mos'))
+        {
+            $columns[] = Column::make("MOS", "rtp_audio_in_mos")->sortable();
+        }
 
-            Column::make("Status", "xml_cdr_uuid")
+        if(auth()->user()->hasPermission('xml_cdr_status'))
+        {
+            $columns[] = Column::make("Status", "xml_cdr_uuid")
                 ->format(function ($value, $row, Column $column) {
                     return ucfirst($row->status);
                 })
-                ->sortable(),
+                ->sortable();
+        }
 
-            Column::make("Hangup cause", "hangup_cause")
-                ->sortable(),
-        ];
+        if(auth()->user()->hasPermission('xml_cdr_hangup_cause'))
+        {
+            $columns[] = Column::make("Hangup cause", "hangup_cause")->sortable();
+        }
+
+        return $columns;
     }
 
     public function builder(): Builder

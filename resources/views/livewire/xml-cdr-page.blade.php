@@ -1,6 +1,7 @@
 <div>
     {{-- Filter Form --}}
     <div class="row g-2 gx-4">
+        @can('xml_cdr_search_direction')
         <div class="col-md-4">
             <div class="form-group mb-3">
                 <label>Direction</label>
@@ -12,6 +13,9 @@
                 </select>
             </div>
         </div>
+        @endcan
+
+        @can('xml_cdr_b_leg')
         <div class="col-md-2">
             <div class="form-group mb-3">
                 <label></label>
@@ -22,6 +26,9 @@
                 </select>
             </div>
         </div>
+        @endcan
+
+        @can('xml_cdr_search_status')
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Status</label>
@@ -35,14 +42,19 @@
                 </select>
             </div>
         </div>
+        @endcan
     </div>
     <div class="row g-2 gx-4">
+        @can('xml_cdr_search_extension')
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Extension</label>
                 <input type="text" class="form-control" wire:model.defer="filters.extension">
             </div>
         </div>
+        @endcan
+
+        @can('xml_cdr_search_caller_id')
         <div class="col-md-3">
             <div class="form-group mb-3">
                 <label>Caller ID</label>
@@ -55,8 +67,10 @@
                 <input type="text" class="form-control" placeholder="{{__('Number')}}" wire:model.defer="filters.caller_id_number">
             </div>
         </div>
+        @endcan
     </div>
     <div class="row g-2 gx-4">
+        @can('xml_cdr_search_start_range')
         <div class="col-md-3">
             <div class="form-group mb-3">
                 <label>Start Range</label>
@@ -75,6 +89,9 @@
                 </div>
             </div>
         </div>
+        @endcan
+
+        @can('xml_cdr_search_duration')
         <div class="col-md-3">
             <div class="form-group mb-3">
                 <label>Duration (sec)</label>
@@ -87,22 +104,29 @@
                 <input type="number" class="form-control" placeholder="Maximum" wire:model.defer="filters.duration_max">
             </div>
         </div>
+        @endcan
     </div>
     <div class="row g-2 gx-4">
+        @can('xml_cdr_search_caller_destination')
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Caller Destination</label>
                 <input type="number" class="form-control" wire:model.defer="filters.caller_destination">
             </div>
         </div>
+        @endcan
+
+        @can('xml_cdr_search_destination')
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Destination</label>
                 <input type="number" class="form-control" wire:model.defer="filters.destination_number">
             </div>
         </div>
+        @endcan
     </div>
     <div class="row g-2 gx-4">
+        @can('xml_cdr_search_tta')
         <div class="col-md-3">
             <div class="form-group mb-3">
                 <label>TTA (sec)</label>
@@ -115,6 +139,9 @@
                 <input type="number" class="form-control" placeholder="Maximum" wire:model.defer="filters.tta_max">
             </div>
         </div>
+        @endcan
+
+        @can('xml_cdr_search_hangup_cause')
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Hangup Cause</label>
@@ -153,9 +180,11 @@
                 </select>
             </div>
         </div>
+        @endcan
     </div>
 
     <div class="row g-2 gx-4">
+        @can('xml_cdr_search_recording')
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label>Recording</label>
@@ -166,23 +195,26 @@
                 </select>
             </div>
         </div>
+        @endcan
+
+        @can('xml_cdr_search_order')
         <div class="col-md-4">
             <div class="form-group mb-3">
                 <label>Order</label>
                 <select class="form-select" wire:model.defer="filters.order_field">
                     <option value=""></option>
-                    <option value="extension">Extension</option>
-                    <option value="domain_name">Domain</option>
-                    <option value="caller_id_name">Caller Name</option>
-                    <option value="caller_id_number">Caller Number</option>
-                    <option value="caller_destination">Caller Destination</option>
-                    <option value="destination_number">Destination</option>
-                    <option value="start_stamp" selected="selected">Start</option>
-                    <option value="tta">TTA</option>
-                    <option value="duration">Duration</option>
-                    <option value="pdd_ms">PDD</option>
-                    <option value="rtp_audio_in_mos">MOS</option>
-                    <option value="hangup_cause">Hangup Cause</option>
+                    @can('xml_cdr_search_extension')<option value="extension">Extension</option>@endcan
+                    @can('xml_cdr_all')<option value="domain_name">Domain</option>@endcan
+                    @can('xml_cdr_caller_id_name')<option value="caller_id_name">Caller Name</option>@endcan
+                    @can('xml_cdr_caller_id_number')<option value="caller_id_number">Caller Number</option>@endcan
+                    @can('xml_cdr_caller_destination')<option value="caller_destination">Caller Destination</option>@endcan
+                    @can('xml_cdr_destination')<option value="destination_number">Destination</option>@endcan
+                    @can('xml_cdr_start')<option value="start_stamp" selected="selected">Start</option>@endcan
+                    @can('xml_cdr_tta')<option value="tta">TTA</option>@endcan
+                    @can('xml_cdr_duration')<option value="duration">Duration</option>@endcan
+                    @can('xml_cdr_pdd')<option value="pdd_ms">PDD</option>@endcan
+                    @can('xml_cdr_mos')<option value="rtp_audio_in_mos">MOS</option>@endcan
+                    @can('xml_cdr_hangup_cause')<option value="hangup_cause">Hangup Cause</option>@endcan
                 </select>
             </div>
         </div>
@@ -196,6 +228,7 @@
                 </select>
             </div>
         </div>
+        @endcan
     </div>
 
     <div class="row g-2 mb-5 justify-content-end">
