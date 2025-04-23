@@ -1141,27 +1141,68 @@
 					}
 
 				//get the time zone
-					$time_zone_name = $this->settings->get('domain','time_zone', '');
-					if (!empty($time_zone_name)) {
-						$time_zone_offset_raw = get_time_zone_offset($time_zone_name)/3600;
-						$time_zone_offset_hours = floor($time_zone_offset_raw);
-						$time_zone_offset_minutes = ($time_zone_offset_raw - $time_zone_offset_hours) * 60;
-						$time_zone_offset_minutes = number_pad($time_zone_offset_minutes, 2);
-						if ($time_zone_offset_raw > 0) {
-							$time_zone_offset_hours = number_pad($time_zone_offset_hours, 2);
-							$time_zone_offset_hours = "+".$time_zone_offset_hours;
+					$time_zone = $this->settings->get('domain','time_zone', 'UTC');
+
+				//auto calculate the daylight savings settings
+					if ($this->settings->get('provision','daylight_savings_auto', true)) {
+						//initialize the variables
+						$daylight_savings_start = null;
+						$daylight_savings_end = null;
+
+						//prepare the daylight saving dates and build the transitions
+						date_default_timezone_set($time_zone);
+						$current_year = date('Y');
+						$tz = new DateTimeZone($time_zone);
+						$start_of_year = new DateTime($current_year.'-01-01 00:00:00', $tz);
+						$end_of_year = new DateTime($current_year.'-12-31 23:59:59', $tz);
+						$transitions = $tz->getTransitions($start_of_year->getTimestamp(), $end_of_year->getTimestamp());
+
+						//add the daylight savings to the provision array
+						foreach ($transitions as $transition) {
+							if ($transition['isdst']) {
+								//daylight savings time
+								if ($daylight_savings_start === null || $transition['ts'] < $daylight_savings_start) {
+									$daylight_savings_start = $transition['ts'];
+								}
+							} else {
+								//standard time
+								$standard_offset_seconds = $transition['offset'];
+							}
 						}
-						else {
-							$time_zone_offset_hours = str_replace("-", "", $time_zone_offset_hours);
-							$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
+
+						//find the end of daylight saving time
+						foreach ($transitions as $transition) {
+							if (!$transition['isdst']) {
+								// daylight saving time end
+								if ($daylight_savings_start !== null && $transition['ts'] > $daylight_savings_start) {
+									$daylight_savings_end = $transition['ts'];
+									break;
+								}
+							}
 						}
-						$time_zone_offset = $time_zone_offset_hours.":".$time_zone_offset_minutes;
-						if (!isset($provision["time_zone_offset"])) {
-							$provision["time_zone_offset"] = $time_zone_offset;
+
+						//prepare the provision array
+						if ($daylight_savings_start !== null) {
+							$provision["daylight_savings_start"] = date('Y-m-d H:i:s', $daylight_savings_start);
+							$provision["daylight_savings_start_month"] = date('m', $daylight_savings_start);
+							$provision["daylight_savings_start_day"] = date('d', $daylight_savings_start);
+							$provision["daylight_savings_start_time"] = date('H', $daylight_savings_start);
 						}
+						if ($daylight_savings_end !== null) {
+							$provision["daylight_savings_end"] = date('Y-m-d H:i:s', $daylight_savings_end);
+							$provision["daylight_savings_end_month"] = date('m', $daylight_savings_end);
+							$provision["daylight_savings_end_day"] = date('d', $daylight_savings_end);
+							$provision["daylight_savings_end_time"] = date('H', $daylight_savings_end);
+						}
+
+						//add a generic gmt_offset
+						$provision["gmt_offset"] = $standard_offset_seconds;
+
+						//set daylight savings settings for polycom
+						$provision["polycom_gmt_offset"] = $standard_offset_seconds;
 					}
 
-				//set the daylight savings time
+				//set daylight savings settings time for yealink
 					if (!isset($provision["yealink_time_zone_start_time"])) {
 						$provision["yealink_time_zone_start_time"] = $provision["daylight_savings_start_month"]."/".$provision["daylight_savings_start_day"]."/".$provision["daylight_savings_start_time"];
 					}
@@ -1336,7 +1377,7 @@
 										$provision_dir_array = explode(";", $provision["path"]);
 										if (is_array($provision_dir_array)) {
 											foreach ($provision_dir_array as $directory) {
-												//destinatino file path
+												//destination file path
 													$dest_path = path_join($directory, $file_name);
 
 													if ($device_enabled == 'true') {

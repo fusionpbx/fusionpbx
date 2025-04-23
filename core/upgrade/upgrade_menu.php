@@ -147,18 +147,13 @@ function show_upgrade_menu() {
  * @global type $text
  */
 function do_upgrade_auto_loader() {
-	global $text;
-	//remove temp file
-	unlink(sys_get_temp_dir() . '/' . auto_loader::FILE);
+	global $text, $autoload;
+	//remove temp files
+	unlink(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
+	unlink(sys_get_temp_dir() . '/' . auto_loader::INTERFACES_FILE);
 	//create a new instance of the autoloader
-	$loader = new auto_loader();
-	//reload the classes
-	$loader->reload_classes();
-	echo "{$text['label-reloaded_classes']}\n";
-	//re-create cache file
-	if ($loader->update_cache()) {
-		echo "{$text['label-updated_cache']}\n";
-	}
+	$autoload->update();
+	echo "{$text['message-updated_autoloader']}\n";
 }
 
 /**
@@ -195,7 +190,7 @@ function do_filesystem_permissions($text, settings $settings) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
 		//update the auto_loader cache permissions file
-		$directories[] = sys_get_temp_dir() . '/' . auto_loader::FILE;
+		$directories[] = sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE;
 		//execute chown command for each directory
 		foreach ($directories as $dir) {
 			if ($dir !== null) {

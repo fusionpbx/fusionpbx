@@ -757,8 +757,8 @@
 		if (permission_exists('call_center_wallboard')) {
 			echo button::create(['type'=>'button','label'=>$text['button-wallboard'],'icon'=>'th','link'=>PROJECT_PATH.'/app/call_center_wallboard/call_center_wallboard.php?queue_name='.urlencode($call_center_queue_uuid)]);
 		}
-		//echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'link'=>'cmd.php?cmd=unload&id='.urlencode($call_center_queue_uuid)]);
-		//echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'link'=>'cmd.php?cmd=load&id='.urlencode($call_center_queue_uuid)]);
+		//echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'cmd.php?cmd=unload&id='.urlencode($call_center_queue_uuid)]);
+		//echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'link'=>'cmd.php?cmd=load&id='.urlencode($call_center_queue_uuid)]);
 		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme','button_icon_reload', ''),'link'=>'cmd.php?cmd=reload&id='.urlencode($call_center_queue_uuid)]);
 		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$settings->get('theme','button_icon_view', ''),'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/call_center_active/call_center_active.php?queue_name='.urlencode($call_center_queue_uuid)]);
 	}

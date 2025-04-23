@@ -184,22 +184,19 @@
 	}
 	unset($parameters);
 
-//get the email queue settings
-	$setting = new settings(["domain_uuid" => $domain_uuid]);
-
 //prepare the smtp from and from name variables
-	$email_from = $setting->get('fax','smtp_from');
-	$email_from_name = $setting->get('fax','smtp_from_name');
+	$email_from = $settings->get('fax','smtp_from');
+	$email_from_name = $settings->get('fax','smtp_from_name');
 	if (empty($email_from)) {
-		$email_from = $setting->get('email','smtp_from');
+		$email_from = $settings->get('email','smtp_from');
 	}
 	if (empty($email_from_name)) {
-		$email_from_name = $setting->get('email','smtp_from_name');
+		$email_from_name = $settings->get('email','smtp_from_name');
 	}
 
 //prepare the variables to send the fax
 	$email_from_address = $email_from;
-	$retry_limit = $setting->get('fax_queue','retry_limit');
+	$retry_limit = $settings->get('fax_queue','retry_limit');
 
 //prepare the fax retry count
 	if (!isset($fax_retry_count)) {
@@ -252,7 +249,7 @@
 			if ($fax_retry_count == 0) {
 				//use default settings or domain settings (defaults to t38)
 				$fax_options = '';
-				foreach($setting->get('fax','variable') as $variable) {
+				foreach($settings->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
 				}
 			}
@@ -283,7 +280,7 @@
 			else {
 				//try the user definable method again
 				$fax_options = '';
-				foreach($setting->get('fax','variable') as $variable) {
+				foreach($settings->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
 				}
 			}
@@ -298,7 +295,7 @@
 
 		//check to see if the destination number is local
 			$local_destination = false;
-			if ($setting->get('fax_queue','prefer_local', false)) {
+			if ($settings->get('fax_queue','prefer_local', false)) {
 				$sql = "select count(destination_uuid) ";
 				$sql .= "from v_destinations ";
 				$sql .= "where (";
@@ -463,7 +460,7 @@
 		//send the email
 			if (!empty($fax_email_address) && file_exists($fax_file)) {
 				//get the language code
-				$language_code = $setting->get('domain','language');
+				$language_code = $settings->get('domain','language');
 
 				//get the template subcategory
 				if (isset($fax_relay) && $fax_relay == 'true') {

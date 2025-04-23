@@ -143,9 +143,9 @@
 	echo 			"<option value='4096' ".($_POST['size'] == 4096 ? "selected='selected'" : null).">4096</option>";
 	echo 		"</select> ";
 	echo 		$text['label-size'];
-	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','name'=>'submit']);
+	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$settings->get('theme', 'button_icon_save'),'style'=>'margin-left: 15px;','name'=>'submit']);
 	if (permission_exists('log_download')) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'log_viewer.php?a=download&n='.basename($log_file)]);
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'style'=>'margin-left: 15px;','link'=>'log_viewer.php?a=download&n='.basename($log_file)]);
 	}
 	echo 		"</form>\n";
 	echo "	</div>\n";

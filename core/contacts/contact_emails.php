@@ -38,7 +38,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the contact list
 	$sql = "select * from v_contact_emails ";
@@ -98,7 +98,7 @@
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['email_description'])."&nbsp;</td>\n";
 					if (permission_exists('contact_email_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

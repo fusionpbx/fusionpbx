@@ -248,15 +248,15 @@
 				echo "<div class='hud_details hud_box' id='hud_caller_id_details' style='text-align: right;'>";
 
 				if (is_array($extensions) && @sizeof($extensions) != 0) {
-					echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'style'=>"position: absolute; margin-top: -35px; margin-left: -72px;"]);
+					echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'style'=>"position: absolute; margin-top: -35px; margin-left: -72px;"]);
 				}
 
 				echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 				echo "<tr style='position: -webkit-sticky; position: sticky; z-index: 5; top: 0;'>\n";
 				echo "<th class='hud_heading'>".$text['label-extension']."</th>\n";
-				echo "<th class='hud_heading'>".$text['label-caller_id']."</th>\n";
+				echo "<th class='hud_heading'>".$text['label-outbound_cid_name']."</th>\n";
 				if (!permission_exists('outbound_caller_id_select')) {
-					echo "<th class='hud_heading'>".$text['label-destination']."</th>\n";
+					echo "<th class='hud_heading'>".$text['label-outbound_cid_number']."</th>\n";
 				}
 				echo "</tr>\n";
 

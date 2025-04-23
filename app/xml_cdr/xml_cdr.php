@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -179,7 +179,7 @@
 	require_once "resources/header.php";
 
 //xml cdr include
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	require_once "xml_cdr_inc.php";
 
 //javascript function: send_cmd
@@ -281,7 +281,7 @@
 		echo "	<input type='hidden' name='order' value='".escape($order)."'>\n";
 	}
 	if ($archive_request) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php']);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>'sync-alt','style'=>'margin-left: 15px;','onclick'=>'location.reload(true);']);
 	if (isset($_GET['status']) &&  $_GET['status'] != 'missed') {
@@ -289,7 +289,7 @@
 	}
 
 	if ($permission['xml_cdr_export']) {
-		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'onclick'=>"toggle_select('export_format'); this.blur();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'onclick'=>"toggle_select('export_format'); this.blur();"]);
 		echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
 		if ($permission['xml_cdr_export_csv']) {
@@ -301,10 +301,10 @@
 		echo "		</select>";
 	}
 	if (!$archive_request && $permission['xml_cdr_delete']) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	if ($permission['xml_cdr_all'] && $_REQUEST['show'] !== 'all') {
-		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	}
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
@@ -646,8 +646,8 @@
 		if (!$archive_request && $permission['xml_cdr_search_advanced']) {
 			echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>"xml_cdr_search.php".($_REQUEST['show'] == 'all' ? '?show=all' : null),'style'=>'margin-right: 15px;']);
 		}
-		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','link'=>($archive_request ? 'xml_cdr_archive.php' : 'xml_cdr.php')]);
-		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_save','name'=>'submit']);
+		echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','link'=>($archive_request ? 'xml_cdr_archive.php' : 'xml_cdr.php')]);
+		echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_save','name'=>'submit']);
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<br />\n";
@@ -657,6 +657,22 @@
 //mod paging parameters for inclusion in column sort heading links
 	$param = substr($param, 1); //remove leading '&'
 	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
+
+//column overflow setting
+	echo "<style>\n";
+	if ($settings->get('cdr', 'column_overflow', 'hidden') == 'scroll') {
+		echo ".hide-sm-dn, .hide-md-dn, .hide-lg-dn {\n";
+		echo "	all: revert;\n";
+		echo "}\n";
+		echo "div.card {\n";
+		echo "	overflow-x: scroll;\n";
+		echo "}\n";
+	} else {
+		echo "div.card {\n";
+		echo "	overflow-x: hidden;\n";
+		echo "}\n";
+	}
+	echo "</style>\n";
 
 //show the results
 	echo "<form id='form_list' method='post'>\n";
@@ -968,10 +984,10 @@
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if ($permission['xml_cdr_recording_play']) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."\" type='".escape($record_type)."'></audio>";
-								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
+								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
 							}
 							if ($permission['xml_cdr_recording_download']) {
-								$content .= button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"download.php?id=".urlencode($row['xml_cdr_uuid'])."&t=bin"]);
+								$content .= button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>"download.php?id=".urlencode($row['xml_cdr_uuid'])."&t=bin"]);
 							}
 							$content .= 	"</td>\n";
 						}

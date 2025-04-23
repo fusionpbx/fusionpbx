@@ -345,9 +345,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Used to import call detail records with HTTP POST";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f39db4b4-86bc-4d5d-9580-0f17c7934fe8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
@@ -412,6 +412,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "127.0.0.1/32";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Limit allowed range of addresses for CDR over HTTP POST.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4750feaf-70d0-4425-af37-036060ce7d37";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "column_overflow";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "hidden";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Hide overflowing columns or use horizontal scroll bar";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7b9a5a95-a964-4fa1-b1b6-7641ca478405";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";

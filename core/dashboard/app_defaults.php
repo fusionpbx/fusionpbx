@@ -54,10 +54,10 @@ if ($domains_processed == 1) {
 				$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 				$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
 				$array['dashboard'][$x]['dashboard_path'] = $row['dashboard_path'];
-				$array['dashboard'][$x]['dashboard_chart_type'] = $row['dashboard_chart_type'] ?? "doughnut";
+				$array['dashboard'][$x]['dashboard_chart_type'] = $row['dashboard_chart_type'];
 				$array['dashboard'][$x]['dashboard_column_span'] = $row['dashboard_column_span'] ?? 1;
-				$array['dashboard'][$x]['dashboard_row_span'] = $row['dashboard_row_span'] ?? 2;
-				$array['dashboard'][$x]['dashboard_details_state'] = $row['dashboard_details_state'] ?? "expanded";
+				$array['dashboard'][$x]['dashboard_row_span'] = $row['dashboard_row_span'] ?? 1;
+				$array['dashboard'][$x]['dashboard_details_state'] = $row['dashboard_details_state'];
 				$array['dashboard'][$x]['dashboard_order'] = $row['dashboard_order'];
 				$array['dashboard'][$x]['dashboard_enabled'] = $row['dashboard_enabled'];
 				$array['dashboard'][$x]['dashboard_description'] = $row['dashboard_description'];
@@ -74,7 +74,7 @@ if ($domains_processed == 1) {
 				if (!empty($row['dashboard_height'])) { $array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height']; }
 				if (!empty($row['dashboard_target'])) { $array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target']; }
 				if (!empty($row['dashboard_label_background_color'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color']; }
-				if (!empty($row['dashboard_label_background_color_hover'])) { $array['dashboard'][$x]['dashboard_label_background_color'] = $row['dashboard_label_background_color_hover']; }
+				if (!empty($row['dashboard_label_background_color_hover'])) { $array['dashboard'][$x]['dashboard_label_background_color_hover'] = $row['dashboard_label_background_color_hover']; }
 				if (!empty($row['dashboard_background_color'])) { $array['dashboard'][$x]['dashboard_background_color'] = $row['dashboard_background_color']; }
 				if (!empty($row['dashboard_background_color_hover'])) { $array['dashboard'][$x]['dashboard_background_color_hover'] = $row['dashboard_background_color_hover']; }
 				if (!empty($row['dashboard_detail_background_color'])) { $array['dashboard'][$x]['dashboard_detail_background_color'] = $row['dashboard_detail_background_color']; }

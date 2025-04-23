@@ -314,8 +314,14 @@
 		 */
 		public function xml_array($key, $leg, $xml_string) {
 
+			//set the directory
+				if (!empty($this->settings->get('switch', 'log'))) {
+					$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
+				}
+
 			//xml string is empty
-				if (empty($xml_string)) {
+				if (empty($xml_string) && !empty($xml_cdr_dir) && !empty($this->file)) {
+					unlink($xml_cdr_dir.'/'.$this->file);
 					return false;
 				}
 
@@ -351,10 +357,6 @@
 			//load the string into an xml object
 				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				if ($xml === false) {
-					//set the directory
-					if (!empty($this->settings->get('switch', 'log'))) {
-						$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
-					}
 
 					//failed to load the XML, move the XML file to the failed directory
 					if (!empty($xml_cdr_dir)) {
@@ -695,7 +697,7 @@
 						$this->array[$key][0]['end_epoch'] = $end_epoch;
 						$this->array[$key][0]['end_stamp'] = is_numeric((int)$end_epoch) ? date('c', $end_epoch) : null;
 						$this->array[$key][0]['duration'] = urldecode($xml->variables->billsec);
-						$this->array[$key][0]['mduration'] = urldecode($xml->variables->mduration);
+						$this->array[$key][0]['mduration'] = urldecode($xml->variables->billmsec);
 						$this->array[$key][0]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key][0]['billmsec'] = urldecode($xml->variables->billmsec);
 						$this->array[$key][0]['hold_accum_seconds'] = urldecode($xml->variables->hold_accum_seconds);
@@ -1666,7 +1668,7 @@
 
 				//authentication for xml cdr http post
 					if (!defined('STDIN')) {
-						if ($this->settings->get('cdr', 'http_enabled')) {
+						if ($this->settings->get('cdr', 'http_enabled', false)) {
 							//get the contents of xml_cdr.conf.xml
 								$conf_xml_string = file_get_contents($this->settings->get('switch', 'conf').'/autoload_configs/xml_cdr.conf.xml');
 
@@ -1698,7 +1700,7 @@
 
 				//if http enabled is set to false then deny access
 					if (!defined('STDIN')) {
-						if ($this->settings->get('cdr', 'http_enabled') == false) {
+						if ($this->settings->get('cdr', 'http_enabled', false)) {
 							openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 							syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR'].'] XML CDR import default setting http_enabled is not enabled. Line: '.__line__);
 							closelog();
@@ -1710,7 +1712,7 @@
 
 				//check for the correct username and password
 					if (!defined('STDIN')) {
-						if ($this->settings->get('cdr', 'http_enabled', true)) {
+						if ($this->settings->get('cdr', 'http_enabled', false)) {
 							if ($auth_array[0] == $_SERVER["PHP_AUTH_USER"] && $auth_array[1] == $_SERVER["PHP_AUTH_PW"]) {
 								//echo "access granted\n";
 								$this->username = $auth_array[0];
@@ -1986,59 +1988,66 @@
 		 * download the recordings
 		 */
 		public function download() {
-			if (permission_exists('xml_cdr_view')) {
 
-				//get call recording from database
-				if (is_uuid($this->recording_uuid)) {
-					$sql = "select record_name, record_path from v_xml_cdr ";
-					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-					$parameters['xml_cdr_uuid'] = $this->recording_uuid;
-					$row = $this->database->select($sql, $parameters, 'row');
-					if (!empty($row) && is_array($row)) {
-						$record_name = $row['record_name'];
-						$record_path = $row['record_path'];
+			//check the permission
+			if (!permission_exists('xml_cdr_view')) {
+				//echo "permission denied";
+				return;
+			}
+
+			//check for a valid uuid
+			if (!is_uuid($this->recording_uuid)) {
+				//echo "invalid uuid";
+				return;
+			}
+
+			//get call recording from database
+			$sql = "select record_name, record_path from v_xml_cdr ";
+			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+			$parameters['xml_cdr_uuid'] = $this->recording_uuid;
+			$row = $this->database->select($sql, $parameters, 'row');
+			if (!empty($row) && is_array($row)) {
+				$record_name = $row['record_name'];
+				$record_path = $row['record_path'];
+			}
+			unset ($sql, $parameters, $row);
+
+			//build full path
+			$record_file = $record_path.'/'.$record_name;
+
+			//download the file
+			if ($record_file != '/' && file_exists($record_file)) {
+				ob_clean();
+				$fd = fopen($record_file, "rb");
+				if ($this->binary) {
+					header("Content-Type: application/force-download");
+					header("Content-Type: application/octet-stream");
+					header("Content-Type: application/download");
+					header("Content-Description: File Transfer");
+				}
+				else {
+					$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
+					switch ($file_ext) {
+						case "wav" : header("Content-Type: audio/x-wav"); break;
+						case "mp3" : header("Content-Type: audio/mpeg"); break;
+						case "ogg" : header("Content-Type: audio/ogg"); break;
 					}
-					unset ($sql, $parameters, $row);
+				}
+				$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
+				header('Content-Disposition: attachment; filename="'.$record_name.'"');
+				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+				if ($this->binary) {
+					header("Content-Length: ".filesize($record_file));
+				}
+				ob_clean();
+
+				//content-range
+				if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
+					$this->range_download($record_file);
 				}
 
-				//build full path
-				$record_file = $record_path.'/'.$record_name;
-
-				//download the file
-				if ($record_file != '/' && file_exists($record_file)) {
-					ob_clean();
-					$fd = fopen($record_file, "rb");
-					if ($this->binary) {
-						header("Content-Type: application/force-download");
-						header("Content-Type: application/octet-stream");
-						header("Content-Type: application/download");
-						header("Content-Description: File Transfer");
-					}
-					else {
-						$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
-						switch ($file_ext) {
-							case "wav" : header("Content-Type: audio/x-wav"); break;
-							case "mp3" : header("Content-Type: audio/mpeg"); break;
-							case "ogg" : header("Content-Type: audio/ogg"); break;
-						}
-					}
-					$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
-					header('Content-Disposition: attachment; filename="'.$record_name.'"');
-					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-					if ($this->binary) {
-						header("Content-Length: ".filesize($record_file));
-					}
-					ob_clean();
-
-					//content-range
-					if (isset($_SERVER['HTTP_RANGE']) && !$this->binary)  {
-						$this->range_download($record_file);
-					}
-
-					fpassthru($fd);
-				}
-
+				fpassthru($fd);
 			}
 
 		} //end download method

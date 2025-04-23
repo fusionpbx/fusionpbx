@@ -38,7 +38,7 @@
 	}
 
 //set from session variables
-	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the contact attachment list
 	$sql = "select *, length(decode(attachment_content,'base64')) as attachment_size from v_contact_attachments ";
@@ -135,7 +135,7 @@
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['attachment_description'])."</td>\n";
 					if (permission_exists('contact_attachment_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

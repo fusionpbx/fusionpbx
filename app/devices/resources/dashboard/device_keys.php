@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 */
@@ -427,22 +427,25 @@
 	$token = $object->create('/app/devices/resources/dashboard/device_keys.php');
 
 //show the content
-	echo "<div class='action_bar sub'>\n";
-	echo "	<div class='heading'><b>".$text['title-device_keys']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-apply'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".($user_id ?? '')."@".($server_address ?? '')."&domain=".($server_address ?? '')."&agent=".($device_key_vendor ?? '')."';"]);
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"list_form_submit('form_list_device_keys');"]);
+	echo "<div class='hud_box'>";
+
+	echo "<div class='hud_content' style='display: block;'>\n";
+	echo "	<div class='action_bar sub'>\n";
+	echo "		<div class='heading' style='padding-left: 5px;'><b>".$text['title-device_keys']."</b></div>\n";
+	echo "		<div class='actions' style='padding-top: 2px;'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-apply'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".($user_id ?? '')."@".($server_address ?? '')."&domain=".($server_address ?? '')."&agent=".($device_key_vendor ?? '')."';"]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"list_form_submit('form_list_device_keys');"]);
+	echo "		</div>\n";
+	echo "		<div style='clear: both;'></div>\n";
 	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
 
 	if (!empty($is_included) && !$is_included) {
 		echo $text['description-device_keys']."\n";
 		echo "<br /><br />\n";
 	}
 
-	echo "<form method='post' name='frm' id='form_list_device_keys' action=''>\n";
-	echo "<table class='list'>\n";
+	echo "	<form method='post' name='frm' id='form_list_device_keys' action=''>\n";
+	echo "	<table class='list'>\n";
 	$x = 0;
 	if (is_array($device_keys) && @sizeof($device_keys) != 0) {
 		foreach ($device_keys as $row) {
@@ -621,8 +624,11 @@
 				$x++;
 		}
 	}
-	echo "</table>\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "</form>";
+	echo "	</table>\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "	</form>\n";
+	echo "</div>\n";
+
+	echo "</div>\n";
 
 ?>

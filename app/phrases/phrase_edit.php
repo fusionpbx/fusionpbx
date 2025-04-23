@@ -447,11 +447,11 @@ if (count($_POST) > 0) {
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'phrases.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'phrases.php']);
 	if ($action == "update" && permission_exists('phrase_delete')) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','onclick'=>'submit_phrase()','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -530,11 +530,12 @@ if (count($_POST) > 0) {
 	echo "	    <input type='text' class='formfld' name='sleep' style='width: 40px; min-width: 40px; max-width: 40px; display: none'>";
 	echo "    </span>";
 	echo "	</td>\n";
+
 	echo "</tr>\n";
 	echo "<tr>";
 	echo "<td>&nbsp;</td>";
 	echo "<td class='vtable' style='align=center;' colspan='2'><center>";
-	echo button::create(['type'=>'button','icon'=>$_SESSION['theme']['button_icon_add'], 'label' => $text['label-add'], 'onclick' => 'add_row()']);
+	echo button::create(['type'=>'button','icon'=>$settings->get('theme', 'button_icon_add'), 'label' => $text['label-add'], 'onclick' => 'add_row()']);
 	echo button::create(['type'=>'button','icon'=>'fa-solid fa-minus', 'label' => $text['label-delete'], 'onclick' => 'remove_row()']);
 	echo "</center></td>";
 	echo "<td>&nbsp;</td>";

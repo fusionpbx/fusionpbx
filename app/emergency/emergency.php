@@ -106,7 +106,7 @@ $num_rows = $database->select($sql, $parameters ?? null, 'column');
 unset($sql, $parameters);
 
 //prepare to page the results
-$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+$rows_per_page = $settings->get('domain', 'paging', 50);
 $param = !empty($search) ? "&search=".$search : null;
 $param .= (!empty($_GET['page']) && $show == 'all' && permission_exists('user_log_all')) ? "&show=all" : null;
 $page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
@@ -170,7 +170,7 @@ echo "<div class='action_bar' id='action_bar'>\n";
 echo "	<div class='heading'><b>".$text['title-emergency_logs']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 echo "	<div class='actions'>\n";
 if ($emergency_logs) {
-	echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+	echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 }
 echo 		"<form id='form_search' class='inline' method='get'>\n";
 if (permission_exists('emergency_logs_view_all')) {
@@ -178,11 +178,11 @@ if (permission_exists('emergency_logs_view_all')) {
 		echo "<input type='hidden' name='show' value='all'>\n";
 	}
 	else {
-		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all&search='.$search]);
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all&search='.$search]);
 	}
 }
 echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 if ($paging_controls_mini != '') {
 	echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 }
@@ -238,10 +238,10 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 						case "ogg" : $recording_type = "audio/ogg"; break;
 					}
 					echo "<audio id='recording_audio_".escape($row['emergency_log_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['emergency_log_uuid'])."')\" onended=\"recording_reset('".escape($row['emergency_log_uuid'])."');\" src='download.php?id=".urlencode($row['emergency_log_uuid'])."' type='".$recording_type."'></audio>";
-					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['emergency_log_uuid']),'onclick'=>"recording_play('".escape($row['emergency_log_uuid'])."')"]);
+					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.escape($row['emergency_log_uuid']),'onclick'=>"recording_play('".escape($row['emergency_log_uuid'])."')"]);
 				}
 				if (permission_exists('call_recording_download')) {
-					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['emergency_log_uuid']).'&binary']);
+					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>'download.php?id='.urlencode($row['emergency_log_uuid']).'&binary']);
 				}
 			}
 			echo "	</td>\n";

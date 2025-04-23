@@ -46,7 +46,7 @@
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
 			if (function_exists('posix_getsid')) {
-				if (posix_getsid($pid) === false) { 
+				if (posix_getsid($pid) === false) {
 					//process is not running
 					$exists = false;
 				}
@@ -80,19 +80,16 @@
 		exit;
 	}
 
-//get the settings
-	$setting = new settings();
-
 //get cdr settings
-	//$interval = $setting->get('xml_cdr', '$interval');
+	//$interval = $settings->get('xml_cdr', '$interval');
 
 //make sure the /var/run/fusionpbx directory exists
-    if (!file_exists('/var/run/fusionpbx')) {
-        $result = mkdir('/var/run/fusionpbx', 0777, true);
-        if (!$result) {
-            die('Failed to create /var/run/fusionpbx');
-        }
-    }
+	if (!file_exists('/var/run/fusionpbx')) {
+		$result = mkdir('/var/run/fusionpbx', 0777, true);
+		if (!$result) {
+			die('Failed to create /var/run/fusionpbx');
+		}
+	}
 
 //create the process id file if the process doesn't exist
 	if (!$pid_exists) {
@@ -113,20 +110,22 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
-
-
 //import the call detail records from HTTP POST or file system
 	$cdr = new xml_cdr;
 
 //get the cdr record
-	$xml_cdr_dir = $setting->get('switch', 'log').'/xml_cdr';
+	$xml_cdr_dir = $settings->get('switch', 'log').'/xml_cdr';
 
-//loop through 
+//service loop
 	while (true) {
 
-		//import the call detail records from HTTP POST or file system
-		if (!$cdr) {
-			$cdr = new xml_cdr;
+		//make sure the database connection is available
+		while (!$database->is_connected()) {
+			//connect to the database
+			$database->connect();
+
+			//sleep for a moment
+			sleep(3);
 		}
 
 		//find and process cdr records
