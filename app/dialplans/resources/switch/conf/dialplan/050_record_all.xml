@@ -1,4 +1,4 @@
-<extension name="record_all" continue="true" uuid="d83d8d76-413b-4a2e-aae0-bedf988833f0" enabled="false" order="50">
+<extension name="record_all" number="" context="${domain_name}" continue="true" app_uuid="d83d8d76-413b-4a2e-aae0-bedf988833f0" enabled="false" order="50">
 	<condition field="${call_direction}" expression="^inbound" break="never">
 		<action application="set" data="record_stereo_swap=true" inline="true"/>
 	</condition>
