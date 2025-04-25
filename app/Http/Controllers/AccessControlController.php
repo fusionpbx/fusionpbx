@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
+use App\Repositories\AccessControlRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,14 @@ use Illuminate\Support\Str;
 
 class AccessControlController extends Controller
 {
+    protected $accessControlRepository;
+
+    public function __construct(AccessControlRepository $accessControlRepository)
+    {
+        $this->accessControlRepository = $accessControlRepository;
+    }
+
+
     /**
      * Display a listing of the resource.
      */
@@ -49,7 +58,7 @@ class AccessControlController extends Controller
      */
     public function edit($uuid) : View
     {
-        $accessControl = AccessControl::with('accesscontrolnodes')->where('access_control_uuid', $uuid)->firstOrFail();
+        $accessControl = $this->accessControlRepository->findByUuidWithNodes($uuid);
         $accessControlUuid = $accessControl->access_control_uuid;
 
         return view('pages.accessControl.form', compact('accessControl', 'accessControlUuid'));
@@ -68,49 +77,13 @@ class AccessControlController extends Controller
      */
     public function destroy($uuid) : RedirectResponse
     {
-
-
-        $accessControl = AccessControl::where('access_control_uuid', $uuid)->firstOrFail();
-        try {
-            DB::beginTransaction();
-
-            AccessControlNode::whereIn('access_control_uuid', $accessControl)->delete();
-
-            AccessControl::whereIn('access_control_uuid', $accessControl)->delete();
-
-            DB::commit();
-
-            return redirect()->route('accesscontrol.index');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $this->accessControlRepository->delete($uuid);
+        return redirect()->route('accesscontrol.index');
     }
 
     public function copy($uuid) : RedirectResponse
     {
-        $originalAccessControl = AccessControl::where('access_control_uuid', $uuid)->firstOrFail();
-
-        try {
-            DB::beginTransaction();
-
-            $newAccessControl = $originalAccessControl->replicate();
-            $newAccessControl->access_control_uuid = Str::uuid();
-            $newAccessControl->access_control_description = $newAccessControl->access_control_description . ' (Copy)';
-            $newAccessControl->save();
-
-            foreach ($originalAccessControl->accesscontrolnodes as $node) {
-                $newNode = $node->replicate();
-                $newNode->access_control_node_uuid = Str::uuid();
-                $newNode->access_control_uuid = $newAccessControl->access_control_uuid;
-                $newNode->save();
-            }
-
-            DB::commit();
-            return redirect()->route('accesscontrol.index');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            throw $th;
-        }
+        $this->accessControlRepository->copy($uuid);
+        return redirect()->route('accesscontrol.index');
     }
 }
