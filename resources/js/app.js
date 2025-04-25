@@ -26,46 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     //     });
     // }
 
-    const repeaters = document.querySelectorAll(".repeater");
-
-    repeaters.forEach(function(element)
-    {
-        const container = element.querySelector(".repeater-container");
-        const itemAdd = element.querySelector(".repeater-add");
-        const template = container.querySelector("template");
-
-        let currentIndex = container.querySelectorAll(".repeater-item").length;
-
-        itemAdd.addEventListener("click", function(e)
-        {
-            e.preventDefault();
-
-            let html = template.innerHTML.replace(/__INDEX__/g, currentIndex);
-
-            const tempTemplate = document.createElement("template");
-
-            tempTemplate.innerHTML = html;
-
-            const clone = tempTemplate.content.cloneNode(true);
-
-            container.appendChild(clone);
-
-            currentIndex++;
-        });
-
-        container.addEventListener("click", function(e)
-        {
-            const itemRemove = e.target.closest(".repeater-remove");
-
-            if(itemRemove)
-            {
-                e.preventDefault();
-
-                itemRemove.closest(".repeater-item").remove();
-            }
-        });
-    });
-
     const togglePassword = document.querySelectorAll(".togglePassword");
 
     togglePassword.forEach(function(element)
