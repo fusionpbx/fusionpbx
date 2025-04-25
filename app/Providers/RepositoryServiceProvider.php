@@ -25,12 +25,11 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->app->bind(SipProfileRepository::class, function ($app) {
             return new SipProfileRepository(
-                new SipProfile(),
-                new SipProfileDomain(),
-                new SipProfileSetting()
+                $app->make(SipProfile::class),
+                $app->make(SipProfileDomain::class),
+                $app->make(SipProfileSetting::class)
             );
         });
-        
     }
 
     /**

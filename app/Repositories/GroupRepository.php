@@ -47,15 +47,13 @@ class GroupRepository
     {
         try {
             DB::beginTransaction();
-            
-            // Replicar el grupo base
+                     
             $newGroup = $group->replicate();
             $newGroup->group_uuid = Str::uuid();
             $newGroup->group_name = $group->group_name;
             $newGroup->group_description = $group->group_description . ' (Copy)';
             $newGroup->save();
             
-            // Copiar los permisos asociados
             $permissions = $group->permissions()->get();
             $permissionsToSync = [];
             
