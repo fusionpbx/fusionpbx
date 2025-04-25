@@ -13,7 +13,7 @@ class LoadDomainsMiddleware
 {
 	public function handle(Request $request, Closure $next)
 	{
-		$DomainController = new DomainController;
+		$DomainController = app()->make(DomainController::class);
 
 		$domainSelectControl = $DomainController->selectControl();
 

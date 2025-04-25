@@ -32,8 +32,8 @@ class AccessControl extends Model
 		'access_control_name',
 		'access_control_default',
 		'access_control_description',
+		'insert_user',
 		'update_user',
-		'insert_user'
 	];
 
     /**

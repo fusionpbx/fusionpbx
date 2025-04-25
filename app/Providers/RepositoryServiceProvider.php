@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
+use App\Models\Domain;
 use App\Models\Group;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
 use App\Repositories\AccessControlRepository;
+use App\Repositories\DomainRepository;
 use App\Repositories\GroupRepository;
 use App\Repositories\SipProfileRepository;
 use Illuminate\Support\ServiceProvider;
@@ -40,6 +42,12 @@ class RepositoryServiceProvider extends ServiceProvider
             return new AccessControlRepository(
                 $app->make(AccessControl::class),
                 $app->make(AccessControlNode::class)
+            );
+        });
+
+        $this->app->bind(DomainRepository::class, function ($app) {
+            return new DomainRepository(
+                $app->make(Domain::class)
             );
         });
     }

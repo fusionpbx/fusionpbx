@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -38,12 +39,6 @@ class AccessControlRepository
         return $this->accessControl->with('accesscontrolnodes')->where('access_control_uuid', $uuid)->firstOrFail();
     }
 
-    /**
-     * Elimina un control de acceso y sus nodos por UUID
-     * 
-     * @param string $uuid
-     * @return bool
-     */
     public function delete(string $uuid): bool
     {
         try {
@@ -61,12 +56,6 @@ class AccessControlRepository
         }
     }
 
-    /**
-     * Crea una copia de un control de acceso existente
-     * 
-     * @param string $uuid
-     * @return AccessControl
-     */
     public function copy(string $uuid): AccessControl
     {
         $originalAccessControl = $this->findByUuidWithNodes($uuid);
@@ -74,13 +63,13 @@ class AccessControlRepository
         try {
             DB::beginTransaction();
 
-            // Replicar el control de acceso
+           
             $newAccessControl = $originalAccessControl->replicate();
             $newAccessControl->access_control_uuid = Str::uuid();
             $newAccessControl->access_control_description = $newAccessControl->access_control_description . ' (Copy)';
             $newAccessControl->save();
 
-            // Replicar cada nodo asociado
+            
             foreach ($originalAccessControl->accesscontrolnodes as $node) {
                 $newNode = $node->replicate();
                 $newNode->access_control_node_uuid = Str::uuid();
@@ -96,59 +85,48 @@ class AccessControlRepository
         }
     }
 
-    /**
-     * Guarda un nuevo control de acceso
-     * 
-     * @param array $data
-     * @return AccessControl
-     */
+
     public function create(array $data): AccessControl
     {
+        if(Auth::check() && !isset($data['insert_user'])) {
+            $data['insert_user'] = Auth::user()->user_uuid;
+        }
+
         $accessControl = new AccessControl();
         $accessControl->access_control_uuid = Str::uuid()->toString();
         $accessControl->access_control_name = $data['access_control_name'];
         $accessControl->access_control_default = $data['access_control_default'];
         $accessControl->access_control_description = $data['access_control_description'];
-        $accessControl->save();
+        $accessControl->insert_user = $data['insert_user'] ?? null;
 
+        $accessControl->save();
+        
         return $accessControl;
     }
 
-    /**
-     * Actualiza un control de acceso existente
-     * 
-     * @param string $uuid
-     * @param array $data
-     * @return AccessControl
-     */
+
     public function update(string $uuid, array $data): AccessControl
     {
+        if(Auth::check() && !isset($data['update_user'])) {
+            $data['update_user'] = Auth::user()->user_uuid;
+        }
+
         $accessControl = $this->findByUuid($uuid);
         $accessControl->access_control_name = $data['access_control_name'];
         $accessControl->access_control_default = $data['access_control_default'];
         $accessControl->access_control_description = $data['access_control_description'];
+        $accessControl->update_user = $data['update_user'] ?? null;
         $accessControl->save();
 
         return $accessControl;
     }
 
-    /**
-     * Elimina todos los nodos de un control de acceso
-     * 
-     * @param string $uuid
-     * @return bool
-     */
+
     public function deleteAllNodes(string $uuid): bool
     {
         return $this->accessControlNode->where('access_control_uuid', $uuid)->delete();
     }
 
-    /**
-     * Crea un nuevo nodo para un control de acceso
-     * 
-     * @param array $nodeData
-     * @return AccessControlNode
-     */
     public function createNode(array $nodeData): AccessControlNode
     {
         $accessControlNode = new AccessControlNode();

@@ -36,6 +36,8 @@ class Domain extends Model
 	    'domain_name',
 	    'domain_enabled',
 	    'domain_description',
+		'insert_user',
+		'update_user',
 	];
 
 	protected static $stringBooleanFields = [

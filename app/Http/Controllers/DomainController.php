@@ -6,15 +6,20 @@ use App\Facades\DefaultSetting;
 use App\Models\Domain;
 use App\Http\Controllers\DomainSettingController;
 use App\Http\Requests\DomainRequest;
+use App\Repositories\DomainRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class DomainController extends Controller
 {
+	protected $domainRepository;
+
+	public function __construct(DomainRepository $domainRepository)
+	{
+		$this->domainRepository = $domainRepository;
+	}
+
+
 	public function index()
 	{
 		return view("pages.domains.index");
@@ -22,14 +27,13 @@ class DomainController extends Controller
 
 	public function create()
 	{
-		$domains = Domain::all();
-
+		$domains = $this->domainRepository->all();
 		return view("pages.domains.form", compact("domains"));
 	}
 
 	public function store(DomainRequest $request)
 	{
-		Domain::create($request->validated());
+		$this->domainRepository->create($request->validated());
 
 		return redirect()->route("domains.index");
 	}
@@ -41,106 +45,76 @@ class DomainController extends Controller
 
 	public function edit(Domain $domain)
 	{
-		$domains = Domain::all();
+		$domains = $this->domainRepository->all();
 
 		return view("pages.domains.form", compact("domain", "domains"));
 	}
 
 	public function update(DomainRequest $request, Domain $domain)
 	{
-		$domain->update($request->validated());
+		$this->domainRepository->update($domain, $request->validated());
 
 		return redirect()->route("domains.index");
 	}
 
 	public function destroy(Domain $domain)
 	{
-		$domain->delete();
+		$this->domainRepository->delete($domain);
 
 		return redirect()->route('domains.index');
 	}
 
-	public function switch(Request $request){
+	public function switch(Request $request)
+	{
 		return $this->switchByUuid($request->domain_uuid);
 
 	}
 
-	public function switchByUuid(string $domain_uuid){
+	public function switchByUuid(string $domain_uuid)
+	{
+        if ($this->domainRepository->existsByUuid($domain_uuid)) {
+            $domain = $this->domainRepository->findByUuid($domain_uuid);
+            
+            if (Session::get('domain_uuid') != $domain->domain_uuid) {
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                };
+                
+                Session::put('domain_uuid', $domain->domain_uuid);
+                Session::put('domain_name', $domain->domain_name);
+                Session::put('domain_description', !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name);
+                // TODO: Check if _SESSION is right
+                $_SESSION["domain_name"] = $domain->domain_name;
+                $_SESSION["domain_uuid"] = $domain->domain_uuid;
+                $_SESSION["domain_description"] = !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name;
 
-		 $domain_query = Domain::where('domain_uuid', $domain_uuid)
-								->where('domain_enabled', 'true');
+                //set the context
+                Session::put('context', $_SESSION["domain_name"]);
+                $_SESSION["context"] = $_SESSION["domain_name"];
 
-		if ($domain_query->count() > 0){
-			$domain = $domain_query->first();
-			if (Session::get('domain_uuid') != $domain->domain_uuid){
-
-				if (session_status() == PHP_SESSION_NONE) {
-					session_start();
-				};
-				Session::put('domain_uuid', $domain->domain_uuid);
-				Session::put('domain_name', $domain->domain_name);
-				Session::put('domain_description', !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name);
-				// TODO: Check if _SESSION is right
-				$_SESSION["domain_name"] = $domain->domain_name;
-				$_SESSION["domain_uuid"] = $domain->domain_uuid;
-				$_SESSION["domain_description"] = !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name;
-
-				//set the context
-				Session::put('context', $_SESSION["domain_name"]);
-				$_SESSION["context"] = $_SESSION["domain_name"];
-
-				// unset destinations belonging to old domain
-				unset($_SESSION["destinations"]["array"]);
-			}
-			$url = url()->previous();
-			return redirect($url);
-		}
+                // unset destinations belonging to old domain
+                unset($_SESSION["destinations"]["array"]);
+            }
+            
+            $url = url()->previous();
+            return redirect($url);
+        }
 	}
 
-	public function default_setting(string $category, string $subcategory, ?string $name = null){
-		$dds = new DomainSettingController;
-		$setting = $dds->get($category, $subcategory, $name);
-		if (!isset($setting)){
-			$setting = DefaultSetting::get($category, $subcategory, $name);
-		}
+	public function default_setting(string $category, string $subcategory, ?string $name = null)
+	{
+        $dds = new DomainSettingController;
+        $setting = $dds->get($category, $subcategory, $name);
+        if (!isset($setting)) {
+            $setting = DefaultSetting::get($category, $subcategory, $name);
+        }
 
-		return $ds ?? null;
+        return $ds ?? null;
 	}
 
 	// returns all the available domains
-	public function selectControl(): mixed{
-		$domains = [];
-
-		if(Auth::check())
-		{
-			// FIX ME
-			$db_type = DB::getConfig("driver");
-			$sql = "WITH RECURSIVE children AS (
-						SELECT d.domain_uuid, d.domain_parent_uuid, d.domain_name, ".($db_type == 'pgsql'?"CAST(d.domain_enabled AS text)":"d.domain_enabled").", d.domain_description, CAST('' AS CHAR(255)) AS parent_domain_name, 1 AS depth, domain_name AS path, (SELECT COUNT(*) FROM ".Domain::getTableName()." d1 WHERE d1.domain_parent_uuid = d.domain_uuid) AS kids FROM ".Domain::getTableName()." d
-						WHERE ";
-
-			if(Auth::user()->hasPermission('domain_select')){
-				// if permission domain_select
-				$sql .= "d.domain_parent_uuid IS null OR NOT exists (SELECT 1 FROM ".Domain::getTableName()." t1 WHERE d.domain_parent_uuid = t1.domain_uuid) ";
-			}
-			else {
-				// if NOT permission domain_select
-				$sql .= "domain_uuid = '".Session::get('domain_uuid')."' ";
-			}
-
-			$sql .= "UNION
-			SELECT tp.domain_uuid, tp.domain_parent_uuid, tp.domain_name, ".($db_type == 'pgsql'?"CAST(tp.domain_enabled AS text)":"tp.domain_enabled").", tp.domain_description, c.domain_name AS parent_domain_name, depth + 1, CONCAT(path,';',tp.domain_name), (SELECT count(*) from ".Domain::getTableName()." d1 where d1.domain_parent_uuid = tp.domain_uuid) AS kids FROM ".Domain::getTableName()." tp
-					JOIN children c ON tp.domain_parent_uuid = c.domain_uuid ) SELECT * FROM children ";
-
-			// Where
-
-			if(App::hasDebugModeEnabled()){
-				Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $sql: '.$sql);
-			}
-
-			$domains = DB::select($sql);
-		}
-
-		return $domains;
+	public function selectControl(): mixed
+	{
+		return $this->domainRepository->getForSelectControl();
 	}
 }
