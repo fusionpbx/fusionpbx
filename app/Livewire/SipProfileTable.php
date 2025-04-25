@@ -14,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 class SipProfileTable extends DataTableComponent
 {
     protected $model = SipProfile::class;
-
+    protected $sipProfileRepository;
     public function configure(): void
     {
         $canEdit = auth()->user()->hasPermission('sip_profile_edit');
@@ -43,9 +43,6 @@ class SipProfileTable extends DataTableComponent
             $bulkActions['toggleSipProfile'] = 'Toggle';
         }
         
-        // if(auth()->user()->hasPermission('sip_profile_add')) {
-        //     $bulkActions['bulkCopy'] = 'Copy';
-        // }
 
         if (auth()->user()->hasPermission('sip_profile_delete')) {
             $bulkActions['bulkDelete'] = 'Delete';

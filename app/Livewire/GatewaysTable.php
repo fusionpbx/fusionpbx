@@ -21,7 +21,7 @@ class GatewaysTable extends DataTableComponent
     public function boot(): void
     {
         //To do: Uncomment once FreeSwitchAPIController is working.
-        // $this->getGatewayStatuses();
+        //$this->getGatewayStatuses();
     }
 
     public function getGatewayStatuses() 

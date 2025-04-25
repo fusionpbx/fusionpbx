@@ -5,23 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\Domain;
 use App\Http\Requests\GroupRequest;
+use App\Repositories\GroupRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $groupRepository;    
+
+    public function __construct(GroupRepository $groupRepository)
+    {
+        $this->groupRepository = $groupRepository;
+    }
+
+
     public function index()
     {
         return view('pages.groups.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $domains = Domain::all();
@@ -29,88 +30,52 @@ class GroupController extends Controller
         return view('pages.groups.form', compact('domains'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(GroupRequest $request)
     {
-        Group::create($request->validated());
+        $this->groupRepository->create($request->validated());
 
         return redirect()->route('groups.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Group $group)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Group $group)
     {
         $domains = Domain::all();
-        $groupUuid = $group->group_uuid;
 
         return view('pages.groups.form', compact('group', 'domains'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(GroupRequest $request, Group $group)
     {
-        $group->update($request->all());
+        $this->groupRepository->update($group, $request->all());
 
         return redirect()->route('groups.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Group $group)
     {
-        if ($group->group_protected) {
-            return redirect()->route('groups.index')->with('error', 'You cannot delete a protected group');
+        try {
+            $this->groupRepository->delete($group);
+            return redirect()->route('groups.index');
+        } catch (\Exception $e) {
+            return redirect()->route('groups.index')->with('error', $e->getMessage());
         }
-
-        $group->delete();
-        return redirect()->route('groups.index');
     }
+
 
     public function copy(Group $group)
     {
         try {
-            DB::beginTransaction();
-            if (auth()->user()->hasPermission('group_add')) {
-                $newGroup = $group->replicate();
-                $newGroup->group_uuid = Str::uuid();
-                $newGroup->group_name = $group->group_name;
-                $newGroup->group_description = $group->group_description . ' (Copy)';
-                $newGroup->save();
-
-                $permissions = $group->permissions()->get();
-                $permissionsToSync = [];
-
-                foreach ($permissions as $permission) {
-                    $permissionsToSync[$permission->permission_name] = [
-                        'group_permission_uuid' => Str::uuid(),
-                        'permission_assigned' => $permission->pivot->permission_assigned,
-                        'permission_protected' => $permission->pivot->permission_protected
-                    ];
-                }
-
-                $newGroup->permissions()->sync($permissionsToSync);
-
-                DB::commit();
+            if ($this->groupRepository->userHasPermission('group_add')) {
+                $this->groupRepository->copy($group);
                 return redirect()->route('groups.index')->with('success', 'Group copied successfully!');
             }
+            return redirect()->route('groups.index')->with('error', 'You do not have permission to copy groups');
         } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
             return redirect()->route('groups.index')->with('error', 'Failed to copy group: ' . $e->getMessage());
         }
     }
