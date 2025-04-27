@@ -396,7 +396,7 @@
 			//$dial_string .= "fax_retry_sleep=180,";
 			$dial_string .= "fax_verbose=true,";
 			//$dial_string .= "fax_use_ecm=off,";
-			$dial_string .= "absolute_codec_string=PCMU,PCMA,";
+			$dial_string .= "absolute_codec_string=\'PCMU,PCMA\',";
 			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
 
 		//connect to event socket and send the command
