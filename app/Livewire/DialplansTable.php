@@ -137,6 +137,13 @@ class DialplansTable extends DataTableComponent
                 $newDialplan->dialplan_uuid = Str::uuid();
                 $newDialplan->dialplan_description = $newDialplan->dialplan_description . ' (Copy)';
                 $newDialplan->save();
+
+                foreach ($originalDialplan->dialPlanDetail as $detail) {
+                    $newDialPlanDetail = $detail->replicate();
+                    $newDialPlanDetail->dialplan_detail_uuid = Str::uuid();
+                    $newDialPlanDetail->dialplan_uuid = $newDialplan->dialplan_uuid;
+                    $newDialPlanDetail->save();
+                }
             }
 
             DB::commit();

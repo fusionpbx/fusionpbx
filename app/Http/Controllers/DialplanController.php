@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use XMLWriter;
 
 class DialplanController extends Controller
 {
@@ -26,6 +25,7 @@ class DialplanController extends Controller
 		$domains = Domain::all();
 
 		$types = $this->getTypesList();
+
 		$dialplan_default_context = (request()->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name');
 
 		return view("pages.dialplans.form", compact("domains", "types", "dialplan_default_context"));
@@ -33,24 +33,7 @@ class DialplanController extends Controller
 
 	public function store(DialplanRequest $request)
 	{
-		$request->mergeIfMissing([
-			'domain_uuid' => Session::get('domain_uuid'),
-			'dialplan_context' => ($request->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name'),
-			'app_uuid' => '90b0e24e-8014-4424-a606-06ea2f5e60c1', //Str::uuid(),
-			'dialplan_continue' => 'false',
-			'dialplan_enabled' => 'false',
-		]);
-		$dialplan = Dialplan::create($request->validated());
 
-		$this->syncDetails($request, $dialplan);
-
-		$dialplan_xml = $this->buildXML($dialplan);
-
-   		$dialplan->dialplan_xml = $dialplan_xml;
-
-		$dialplan->save();
-
-		return redirect()->route("dialplans.index");
 	}
 
 	public function show(Dialplan $dialplan)
@@ -65,6 +48,7 @@ class DialplanController extends Controller
 		$dialplan->load("dialplanDetails");
 
 		$types = $this->getTypesList();
+
 		$dialplan_default_context = (request()->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name');
 
 		return view("pages.dialplans.form", compact("dialplan", "domains", "types", "dialplan_default_context"));
@@ -72,32 +56,7 @@ class DialplanController extends Controller
 
 	public function update(DialplanRequest $request, Dialplan $dialplan)
 	{
-		if(App::hasDebugModeEnabled()){
-			Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '. $request);
-		}
 
-		$request->mergeIfMissing([
-			'domain_uuid' => Session::get('domain_uuid'),
-			'dialplan_context' => ($request->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name'),
-			'dialplan_continue' => 'false',
-			'dialplan_enabled' => 'false',
-		]);
-
-		if(App::hasDebugModeEnabled()){
-			Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '. $request);
-		}
-
-		$dialplan->update($request->validated());
-
-		$this->syncDetails($request, $dialplan);
-
-		$dialplan_xml = $this->buildXML($dialplan);
-
-   		$dialplan->dialplan_xml = $dialplan_xml;
-
-		$dialplan->save();
-
-		return redirect()->route("dialplans.index");
 	}
 
 	public function destroy(Dialplan $dialplan)
@@ -105,21 +64,6 @@ class DialplanController extends Controller
 		$dialplan->delete();
 
 		return redirect()->route('dialplans.index');
-	}
-
-	private function syncDetails(DialplanRequest $request, Dialplan $dialplan)
-	{
-		$dialplan_details = array_values($request->input("dialplan_details", []));
-
-		foreach($dialplan_details as $key => $value)
-		{
-			$dialplan_details[$key]["dialplan_detail_uuid"] = Str::uuid(); //NOTE: won't need in the future
-			$dialplan_details[$key]["domain_uuid"] = $dialplan->domain->domain_uuid;
-			$dialplan_details[$key]["dialplan_detail_group"] = intval($dialplan_details[$key]["dialplan_detail_group"]);
-		}
-
-		$dialplan->dialplanDetails()->delete();
-		$dialplan->dialplanDetails()->upsert($dialplan_details, "dialplan_detail_uuid");
 	}
 
 	private function getTypesList()
@@ -333,62 +277,5 @@ class DialplanController extends Controller
 			['key' => 'wait_for_silence', 'value' => 'wait_for_silence'],
 			['key' => 'wait_for_video_ready', 'value' => 'wait_for_video_ready'],
 		];
-	}
-
-	private function buildXML(Dialplan $dialplan)
-	{
-		$xml = new XMLWriter();
-		$xml->openMemory();
-		$xml->setIndent(true);
-		$xml->setIndentString('  ');
-
-		$xml->startElement("extension");
-		$xml->writeAttribute("name", $dialplan->dialplan_name);
-		$xml->writeAttribute("uuid", $dialplan->dialplan_uuid);
-		$xml->writeAttribute("continue", $dialplan->dialplan_continue);
-
-		$currentCondition = null;
-
-		foreach($dialplan->dialplanDetails as $dialplanDetail)
-		{
-			$tag = $dialplanDetail->dialplan_detail_tag;
-
-			if($tag === "condition")
-			{
-				if($currentCondition !== null)
-				{
-					$xml->endElement();
-				}
-
-				$currentCondition = $dialplanDetail;
-
-				$xml->startElement("condition");
-				$xml->writeAttribute("field", htmlspecialchars($dialplanDetail->dialplan_detail_type));
-				$xml->writeAttribute("expression", htmlspecialchars($dialplanDetail->dialplan_detail_data));
-				$xml->writeAttribute("break", $dialplanDetail->dialplan_detail_break);
-			}
-			else
-			{
-				$xml->startElement($tag);
-				$xml->writeAttribute("application", htmlspecialchars($dialplanDetail->dialplan_detail_type));
-				$xml->writeAttribute("data", htmlspecialchars($dialplanDetail->dialplan_detail_data));
-
-				if(isset($dialplanDetail->dialplan_detail_inline))
-				{
-					$xml->writeAttribute("inline", $dialplanDetail->dialplan_detail_inline);
-				}
-
-				$xml->endElement();
-			}
-		}
-
-		if($currentCondition !== null)
-		{
-			$xml->endElement();
-		}
-
-		$xml->endElement();
-
-		return $xml->outputMemory();
 	}
 }
