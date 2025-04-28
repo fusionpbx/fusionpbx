@@ -5,12 +5,14 @@ namespace App\Providers;
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
 use App\Models\Domain;
+use App\Models\Gateway;
 use App\Models\Group;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
 use App\Repositories\AccessControlRepository;
 use App\Repositories\DomainRepository;
+use App\Repositories\GatewayRepository;
 use App\Repositories\GroupRepository;
 use App\Repositories\SipProfileRepository;
 use Illuminate\Support\ServiceProvider;
@@ -50,6 +52,14 @@ class RepositoryServiceProvider extends ServiceProvider
                 $app->make(Domain::class)
             );
         });
+
+        $this->app->bind(GatewayRepository::class, function ($app) {
+            return new GatewayRepository(
+                $app->make(Gateway::class)
+            );
+        });
+        
+        
     }
 
     /**

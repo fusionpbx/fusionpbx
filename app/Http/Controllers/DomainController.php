@@ -112,7 +112,6 @@ class DomainController extends Controller
         return $ds ?? null;
 	}
 
-	// returns all the available domains
 	public function selectControl(): mixed
 	{
 		return $this->domainRepository->getForSelectControl();
