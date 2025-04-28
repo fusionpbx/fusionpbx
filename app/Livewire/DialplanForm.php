@@ -276,7 +276,7 @@ private function buildXML(Dialplan $dialplan)
 		$xml->startElement("extension");
 		$xml->writeAttribute("name", $dialplan->dialplan_name);
 		$xml->writeAttribute("uuid", $dialplan->dialplan_uuid);
-		$xml->writeAttribute("continue", $dialplan->dialplan_continue);
+		$xml->writeAttribute("continue", $dialplan->dialplan_continue?'true':'false');
 
 		$currentCondition = null;
 
@@ -296,7 +296,10 @@ private function buildXML(Dialplan $dialplan)
 				$xml->startElement("condition");
 				$xml->writeAttribute("field", htmlspecialchars($dialplanDetail->dialplan_detail_type));
 				$xml->writeAttribute("expression", htmlspecialchars($dialplanDetail->dialplan_detail_data));
-				$xml->writeAttribute("break", $dialplanDetail->dialplan_detail_break);
+				if (isset($$dialplanDetail->dialplan_detail_break))
+				{
+					$xml->writeAttribute("break", $dialplanDetail->dialplan_detail_break);
+				}
 			}
 			else
 			{
