@@ -81,7 +81,7 @@ Route::middleware(['auth','permission'])->group(function () {
     // SIP PROFILE
     Route::resource('/sipprofiles', SipProfileController::class)->name('sipprofiles', 'sipprofiles');
     Route::get('/sipprofiles/{sipprofile}/copy', [SipProfileController::class, 'copy'])->name('sipprofiles.copy');
-    
+
 
     // MENU
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
@@ -109,6 +109,8 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // XML CDR
     Route::get('/xmlcdr', [XmlCDRController::class, 'index'])->name('xmlcdr.index');
+    Route::get('/xmlcdr/{xmlcdr}/play', [XmlCDRController::class, 'download'])->name('xmlcdr.play');
+    Route::get('/xmlcdr/{xmlcdr}/download', [XmlCDRController::class, 'download'])->name('xmlcdr.download');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){

@@ -111,6 +111,11 @@ class XmlCDRTable extends DataTableComponent
             $columns[] = Column::make("Ext.", "extension.extension")->sortable();
         }
 
+        if(auth()->user()->hasPermission('xml_cdr_all'))
+        {
+            $columns[] = Column::make("Domain", "domain_name")->sortable();
+        }
+
         if(auth()->user()->hasPermission('xml_cdr_caller_id_name'))
         {
             $columns[] = Column::make("Caller name", "caller_id_name")->sortable();
@@ -129,6 +134,29 @@ class XmlCDRTable extends DataTableComponent
         if(auth()->user()->hasPermission('xml_cdr_destination'))
         {
             $columns[] = Column::make("Destination", "destination_number")->sortable();
+        }
+
+        if(auth()->user()->hasPermission('xml_cdr_recording') && (auth()->user()->hasPermission('xml_cdr_recording_play') || auth()->user()->hasPermission('xml_cdr_recording_download')))
+        {
+            $columns[] = Column::make("Recording", "record_type")
+                ->format(function ($value, $row, Column $column) {
+                    if($row->record_type == "call")
+                    {
+                        $play = route('xmlcdr.play', $row->xml_cdr_uuid);
+                        $download = route('xmlcdr.download', $row->xml_cdr_uuid);
+
+                        $recording = "
+                        <div class='progress-bar' style='background-color: #0d6efd; width: 0; height: 3px; position: relative; margin: 5px 0;'></div>
+                        <audio id='recording_audio_{$row->xml_cdr_uuid}' style='display: none;' preload='none' src='{$play}' type='audio/wav'></audio>
+                        <button type='button' id='recording_button_{$row->xml_cdr_uuid}' alt='Play / Pause' title='Play / Pause' class='btn btn-secondary btn-xmlcdr'><i class='fas fa-play'></i></button>
+                        <a href='{$download}' target='_self'><button alt='Download' title='Download' class='btn btn-secondary'><i class='fas fa-download'></i></button></a>
+                        ";
+
+                        return $recording;
+                    }
+                })
+                ->html()
+                ->sortable();
         }
 
         if(auth()->user()->hasPermission('xml_cdr_start'))
@@ -188,7 +216,16 @@ class XmlCDRTable extends DataTableComponent
 
         if(auth()->user()->hasPermission('xml_cdr_hangup_cause'))
         {
-            $columns[] = Column::make("Hangup cause", "hangup_cause")->sortable();
+            $columns[] = Column::make("Hangup cause", "hangup_cause")
+            ->format(function ($value, $row, Column $column) {
+                $hangup_cause = $row->hangup_cause;
+                $hangup_cause = str_replace("_", " ", $hangup_cause);
+                $hangup_cause = strtolower($hangup_cause);
+                $hangup_cause = ucwords($hangup_cause);
+
+                return $hangup_cause;
+            })
+            ->sortable();
         }
 
         return $columns;
