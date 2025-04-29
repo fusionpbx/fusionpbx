@@ -16,7 +16,7 @@ class DefaultSettingServiceProvider extends ServiceProvider
         $this->app->singleton(DefaultSettingRepository::class, function ($app) {
             return new DefaultSettingRepository();
         });
-        
+
         $this->app->singleton('default-setting', function ($app) {
             return new DefaultSettingService(
                 $app->make(DefaultSettingRepository::class)
