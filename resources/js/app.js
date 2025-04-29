@@ -82,4 +82,46 @@ document.addEventListener('DOMContentLoaded', function() {
             element.dispatchEvent(new Event('input', { bubbles: true }));
         });
     });
+
+
+    const buttonXMLCDR = document.querySelectorAll('.btn-xmlcdr');
+
+    buttonXMLCDR.forEach(function(button)
+    {
+        const cell = button.closest("td");
+        const icon = button.querySelector('i');
+        const audio = cell.querySelector('audio');
+        const progressBar = cell.querySelector('.progress-bar');
+
+        button.addEventListener('click', function(e)
+        {
+            e.stopPropagation();
+
+            if(audio.paused)
+            {
+                audio.play();
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-pause');
+            }
+            else
+            {
+                audio.pause();
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+            }
+        });
+
+        audio.addEventListener('timeupdate', function()
+        {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        });
+
+        audio.addEventListener('ended', function()
+        {
+            icon.classList.remove('fa-pause');
+            icon.classList.add('fa-play');
+            progressBar.style.width = `0%`;
+        });
+    });
 });

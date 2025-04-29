@@ -10,6 +10,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
+use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
@@ -46,6 +47,9 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+    // BRIDGE
+    Route::resource('/bridges', BridgeController::class)->name('bridges', 'bridges');
+
     // DIALPLAN
     Route::resource('/dialplans', DialplanController::class)->name('dialplans', 'dialplans');
 
@@ -81,7 +85,7 @@ Route::middleware(['auth','permission'])->group(function () {
     // SIP PROFILE
     Route::resource('/sipprofiles', SipProfileController::class)->name('sipprofiles', 'sipprofiles');
     Route::get('/sipprofiles/{sipprofile}/copy', [SipProfileController::class, 'copy'])->name('sipprofiles.copy');
-    
+
 
     // MENU
     Route::resource('/menus', MenuController::class)->name('menus', 'menus');
@@ -109,6 +113,8 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // XML CDR
     Route::get('/xmlcdr', [XmlCDRController::class, 'index'])->name('xmlcdr.index');
+    Route::get('/xmlcdr/{xmlcdr}/play', [XmlCDRController::class, 'download'])->name('xmlcdr.play');
+    Route::get('/xmlcdr/{xmlcdr}/download', [XmlCDRController::class, 'download'])->name('xmlcdr.download');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){
