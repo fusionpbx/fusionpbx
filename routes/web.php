@@ -16,6 +16,7 @@ use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Controllers\XmlCDRController;
 use App\Http\Controllers\SipProfileController;
+use App\Http\Controllers\StreamController;
 use App\Http\Middleware\Authenticate;
 use App\Models\AccessControl;
 use Illuminate\Http\Request;
@@ -99,6 +100,9 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::delete('/menu/{menu}/menuitem/{menuitem}', [MenuItemController::class, 'destroy'])->name('menuitems.destroy');
     Route::get('/menu/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
     Route::post('/menu/{menu}/menuitems', [MenuItemController::class, 'store'])->name('menuitems.store');
+
+    // STREAMS
+    Route::resource('/streams', StreamController::class)->name('streams', 'streams');
 
     // USERS
     Route::resource('/users', UserController::class)->name('users', 'users');
