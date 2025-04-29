@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
 use App\Models\Bridge;
+use App\Models\Dialplan;
 use App\Models\Domain;
 use App\Models\Gateway;
 use App\Models\Group;
@@ -17,6 +18,7 @@ use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
 use App\Repositories\AccessControlRepository;
 use App\Repositories\BridgeRepository;
+use App\Repositories\DialplanRepository;
 use App\Repositories\DomainRepository;
 use App\Repositories\GatewayRepository;
 use App\Repositories\GroupRepository;
@@ -93,6 +95,12 @@ class RepositoryServiceProvider extends ServiceProvider
                 $app->make(Bridge::class)
             );
         });
+
+        $this->app->bind(DialplanRepository::class, function ($app) {
+            return new DialplanRepository(
+                $app->make(Dialplan::class),
+            );
+            });
         
     }
 
