@@ -104,12 +104,14 @@ class AuthController extends Controller
     public function handleProviderCallback(Request $request)
     {
         $user = Socialite::driver('okta')->user();
-        if(App::hasDebugModeEnabled()){
-            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $user = '.print_r($user, true));
-        }
-        
         $defaultDomainUuid = DefaultSetting::get('openid', 'default_domain_uuid', 'uuid');
         $defaultGroupUuid = DefaultSetting::get('openid', 'default_group_uuid', 'uuid');
+
+        if(App::hasDebugModeEnabled()){
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $defaultDomainUuid = '. $defaultDomainUuid);
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $defaultGroupUuid = '. $defaultGroupUuid);
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $user = '.print_r($user, true));
+        }
 
         $localGroup = Group::where('group_uuid', $defaultGroupUuid)->first();
         $localDomain = Domain::where('domain_uuid', $defaultDomainUuid)->first();
@@ -127,24 +129,32 @@ class AuthController extends Controller
                 Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] User NOT in the DB');
 
                 $localUser = User::create([
-                    'username' => $user->user->preferred_username,
+                    'username' => $user->user['preferred_username'],
                     'user_email' => $user->email,
                     'user_enabled'  => 'true',
                     'token' => $user->token,
                     'domain_uuid' => $defaultDomainUuid,
                 ]);
 
+	        if(App::hasDebugModeEnabled()){
+	            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $localUser = '.print_r($localUser, true));
+	        }
+
                 $localUserGroup = UserGroup::where('user_uuid', $localUser->user_uuid)
                                 ->where('group_uuid', $defaultGroupUuid)
                                 ->where('domain_uuid', $defaultDomainUuid)
                                 ->first();
+
+	        if(App::hasDebugModeEnabled()){
+	            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $localUserGroup = '.print_r($localUserGroup, true));
+	        }
 
                 if (!$localUserGroup){
                     $localUserGroup = UserGroup::create([
                         'domain_uuid' => $defaultDomainUuid,
                         'group_name' => $localGroup->group_name,        // TODO: Get rid of this in the future
                         'group_uuid' => $defaultGroupUuid,
-                        'user_group' => $localUser->user_uuid,
+                        'user_uuid' => $localUser->user_uuid,
                     ]);
                 }
             }
