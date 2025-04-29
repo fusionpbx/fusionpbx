@@ -7,6 +7,9 @@ use App\Models\AccessControlNode;
 use App\Models\Domain;
 use App\Models\Gateway;
 use App\Models\Group;
+use App\Models\Menu;
+use App\Models\MenuItem;
+use App\Models\MenuItemGroup;
 use App\Models\Permission;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
@@ -15,6 +18,8 @@ use App\Repositories\AccessControlRepository;
 use App\Repositories\DomainRepository;
 use App\Repositories\GatewayRepository;
 use App\Repositories\GroupRepository;
+use App\Repositories\MenuItemRepository;
+use App\Repositories\MenuRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\SipProfileRepository;
 use Illuminate\Support\ServiceProvider;
@@ -66,7 +71,20 @@ class RepositoryServiceProvider extends ServiceProvider
                 $app->make(Permission::class)
             );
         });
-        
+
+        $this->app->bind(MenuRepository::class, function ($app) {
+            return new MenuRepository(
+                $app->make(Menu::class),
+                $app->make(MenuItem::class),
+                $app->make(MenuItemGroup::class)
+            );
+        });
+
+        $this->app->bind(MenuItemRepository::class, function ($app){
+            return new MenuItemRepository(
+                $app->make(MenuItem::class)
+            );
+        });
         
     }
 
