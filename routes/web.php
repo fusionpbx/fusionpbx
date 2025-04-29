@@ -10,6 +10,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
+use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
@@ -45,6 +46,9 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth','permission'])->group(function () {
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+    // BRIDGE
+    Route::resource('/bridges', BridgeController::class)->name('bridges', 'bridges');
 
     // DIALPLAN
     Route::resource('/dialplans', DialplanController::class)->name('dialplans', 'dialplans');

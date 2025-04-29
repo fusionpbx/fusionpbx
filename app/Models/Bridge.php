@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Bridge extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, HandlesStringBooleans;
 	protected $table = 'v_bridges';
 	protected $primaryKey = 'bridge_uuid';
 	public $incrementing = false;
@@ -32,6 +33,10 @@ class Bridge extends Model
         'bridge_destination',
         'bridge_enabled',
         'bridge_description',
+	];
+
+	protected static $stringBooleanFields = [
+		'bridge_enabled'
 	];
 
     /**
