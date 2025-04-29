@@ -7,3 +7,4 @@ Redirect	301	/core/domains/domains.php			/domains
 Redirect	301	/core/groups/groups.php				/groups
 Redirect	301	/core/menu/menu.php				/menus
 Redirect	301	/app/sip_profiles/sip_profiles.php		/sipprofiles
+Redirect	301	/app/bridges/bridges.php			/bridges

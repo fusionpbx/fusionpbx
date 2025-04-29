@@ -15,9 +15,9 @@ class GroupRequest extends FormRequest
 	{
 		return [
 			"group_name" => "required|string|max:255",
-			"domain_uuid" => "nullable|uuid",
+            "domain_uuid" => "sometimes|uuid|exists:App\Models\Domain,domain_uuid",
 			"group_level" => "nullable|numeric|integer|min:0",
-			"group_protected" => "nullable|string|in:on",
+			"group_protected" => "nullable|string|in:on,true,false",
 			"group_description" => "nullable|string|max:255",
 		];
 	}
