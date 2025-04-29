@@ -131,7 +131,7 @@ class UsersTable extends DataTableComponent
 
                 $newUser = $originalUser->replicate();
                 $newUser->user_uuid = Str::uuid();
-                $newUser->user_description = $newUser->user_description . ' (Copy)';
+                $newUser->user_email = $originalUser->user_email . '-Copy';
                 $newUser->save();
             }
 

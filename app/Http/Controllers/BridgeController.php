@@ -3,12 +3,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BridgeRequest;
 use App\Models\Bridge;
+use App\Repositories\BridgeRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class BridgeController extends Controller
 {
+	protected $bridgeRepository;
+
+	public function __construct(BridgeRepository $bridgeRepository)
+	{
+		$this->bridgeRepository = $bridgeRepository;
+	}
 	public function index()
 	{
 		return view('pages.bridges.index');
@@ -25,7 +32,7 @@ class BridgeController extends Controller
 
     	$data['domain_uuid'] = session('domain_uuid');
 
-		$bridge = Bridge::create($data);
+		$bridge = $this->bridgeRepository->create($data);
 
 		return redirect()->route("bridges.edit", $bridge->bridge_uuid);
 	}
@@ -42,14 +49,14 @@ class BridgeController extends Controller
 
 	public function update(BridgeRequest $request, Bridge $bridge)
 	{
-		$bridge->update($request->validated());
+		$this->bridgeRepository->update($bridge, $request->validated());
 
-		return redirect()->route("bridges.edit", $bridge->bridge_uuid);
+        return redirect()->route("bridges.edit", $bridge->bridge_uuid);
 	}
 
     public function destroy(Bridge $bridge)
     {
-        $bridge->delete();
+        $this->bridgeRepository->delete($bridge);
 
         return redirect()->route('bridges.index');
     }
