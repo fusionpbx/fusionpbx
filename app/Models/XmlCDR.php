@@ -369,9 +369,16 @@ class XmlCDR extends Model
     protected function pddMs(): Attribute
     {
         return Attribute::make(
+            get: function()
+            {
+                $milliseconds = $this->pdd_ms;
+                $seconds = $milliseconds / 1000;
+                return number_format($seconds, 2) . 's';
+            },
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
+
 
     protected function rtpAudioInMos(): Attribute
     {
@@ -658,17 +665,28 @@ class XmlCDR extends Model
         );
     }
 
-    protected function pdd_ms(): Attribute
+    protected function callResult(): Attribute
     {
         return Attribute::make(
-            get: function()
-            {
-                $milliseconds = $this->pdd_ms;
-
-                $seconds = $milliseconds / 1000;
-
-                return number_format($seconds, 2) . 's';
-            }
+           get: function () {
+                $call_result = 'failed';
+                if (($this->direction == 'inbound') || ($this->direction == 'local')){
+                    if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }
+                    else if (isset($this->answer_stamp) && empty($this->bridge_uuid)) { $call_result = 'voicemail'; }
+                    else if (empty($this->answer_stamp) && empty($this->bridge_uuid) && $this->sip_hangup_disposition != 'send_refuse') { $call_result = 'cancelled'; }
+                    else { $call_result = 'failed'; }
+                }
+                else if ($this->direction == 'outbound') {
+                    if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }
+                    else if ($this->hangup_cause == 'NORMAL_CLEARING') { $call_result = 'answered'; }
+                    else if (empty($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'cancelled'; }
+                    else { $call_result = 'failed'; }
+                }
+                else if ($this->record_type == 'text'){
+                    $call_result = 'answered';
+                }
+                return $call_result;
+           }
         );
     }
 
