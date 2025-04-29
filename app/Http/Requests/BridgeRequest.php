@@ -15,7 +15,7 @@ class BridgeRequest extends FormRequest
 	{
 		return [
 			"bridge_name" => "bail|required|string|max:255",
-			"bridge_destination" => "bail|nullable|string|max:255",
+			"bridge_destination" => "bail|required|string|max:255",
 			"bridge_enabled" => "bail|nullable|in:true,false",
 			"bridge_description" => "bail|nullable|string|max:255",
 		];
