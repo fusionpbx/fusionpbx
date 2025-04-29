@@ -258,7 +258,7 @@ class DialplanForm extends Component
             'dialplan_xml' => $this->buildXML($this->dialplan),
         ]);
 
-        redirect()->route('dialplans.index');
+        redirect()->route('dialplans.edit', $this->dialplan->dialplan_uuid);
     }
 
     public function render(): View
