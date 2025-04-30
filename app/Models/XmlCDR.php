@@ -369,9 +369,9 @@ class XmlCDR extends Model
     protected function pddMs(): Attribute
     {
         return Attribute::make(
-            get: function()
+            get: function($value)
             {
-                $milliseconds = $this->pdd_ms;
+                $milliseconds = $value;
                 $seconds = $milliseconds / 1000;
                 return number_format($seconds, 2) . 's';
             },

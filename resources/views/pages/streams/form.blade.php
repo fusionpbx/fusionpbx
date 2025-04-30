@@ -60,6 +60,30 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="domain_uuid" class="form-label">Domain</label>
+                            <select
+                                class="form-select @error('domain_uuid') is-invalid @enderror"
+                                id="domain_uuid"
+                                name="domain_uuid"
+                            >
+                                <option value="">Global</option>
+                                @foreach($domains as $domain)
+                                    <option value="{{ $domain->domain_uuid }}"
+                                        {{ old('domain_uuid', (isset($stream) ? $stream->domain_uuid : Auth::user()->domain_uuid) ??  '') == $domain->domain_uuid ? 'selected' : '' }}>
+                                        {{ $domain->domain_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('domain_uuid')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label class="form-label d-block">Enabled</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch" id="stream_enabled" name="stream_enabled" value="true" {{ old('stream_enabled', $stream->stream_enabled ?? true) ? 'checked' : '' }}>
