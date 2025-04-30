@@ -144,6 +144,7 @@ class StreamsTable extends DataTableComponent
                 $newStream->stream_uuid = Str::uuid();
                 $newStream->domain_uuid = $newStream->domain_uuid;
                 $newStream->stream_name = $newStream->stream_name . ' (Copy)';
+                $newStream->stream_location = $newStream->stream_location;
                 $newStream->stream_enabled = $newStream->stream_enabled;
                 $newStream->stream_description = $newStream->stream_description;
                 $newStream->save();
