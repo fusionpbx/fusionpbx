@@ -171,6 +171,16 @@ class StreamsTable extends DataTableComponent
                 ->sortable(),
 
             Column::make("Stream location", "stream_location")
+                ->format(function ($value, $row, Column $column) {
+                    if (!empty($row->stream_location))
+                    {
+                        $location_parts = explode('://',$row->stream_location);
+                        $http_protocol = ($location_parts[0] == "shout") ? 'http' : 'https';
+                        $location = $location_parts[1] ?? '';
+                        return "<audio src='{$http_protocol}://{$location}' controls='controls'>";
+                    }
+                })
+                ->html()
                 ->sortable(),
 
             BooleanColumn::make("Stream enabled", "stream_enabled")
