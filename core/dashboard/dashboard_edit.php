@@ -538,13 +538,19 @@
 	echo "			$('.type_icon, .type_content').hide();\n";
 	echo "			$('.type_chart').show();\n";
 	echo "		}\n";
+	echo "		if ($('#selected_icon option:selected').val() != '') {\n";
+	echo "			$('#dashboard_icon_color').show();\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('#dashboard_icon_color').hide();\n";
+	echo "		}\n";
 	echo "		if ($('#dashboard_url').val() != '') {\n";
 	echo "			$('#dashboard_target').show();\n";
 	echo "		}\n";
 	echo "		else {\n";
 	echo "			$('#dashboard_target').hide();\n";
 	echo "		}\n";
-	echo "		if ($('.dashboard_target option:selected').val() == 'new') {\n";
+	echo "		if ($('#dashboard_target option:selected').val() == 'new' && $('#dashboard_url').val() != '') {\n";
 	echo "			$('#dashboard_width').show();\n";
 	echo "			$('#dashboard_height').show();\n";
 	echo "		}\n";
@@ -629,7 +635,7 @@
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 			echo "	<tr>\n";
 			echo "		<td>\n";
-			echo "			<select class='formfld' name='dashboard_icon' id='selected_icon' onchange=\"$('#icons').slideUp(200); $('#icon_search').fadeOut(200, function() { $('#grid_icon').fadeIn(); });\">\n";
+			echo "			<select class='formfld' name='dashboard_icon' id='selected_icon' onchange=\"$('#icons').slideUp(200); $('#icon_search').fadeOut(200, function() { $('#grid_icon').fadeIn(); }); adjust_form();\">\n";
 			echo "				<option value=''></option>\n";
 			foreach ($font_awesome_icons as $icon) {
 				$selected = $dashboard_icon == implode(' ', $icon['classes']) ? "selected" : null;
@@ -638,7 +644,7 @@
 			echo "			</select>\n";
 			echo "		</td>\n";
 			echo "		<td style='padding: 0 0 0 5px;'>\n";
-			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"load_icons(); $(this).fadeOut(200, function() { $('#icons').fadeIn(200); $('#icon_search').fadeIn(200).focus(); });\"><span class='fa-solid fa-th'></span></button>";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"load_icons(); $(this).fadeOut(200, function() { $('#icons').fadeIn(200); $('#icon_search').fadeIn(200).focus(); }); $('#dashboard_icon_color').show();\"><span class='fa-solid fa-th'></span></button>";
 			echo "			<input id='icon_search' type='text' class='formfld' style='display: none;' onkeyup=\"if (this.value.length >= 3) { delay_submit(this.value); } else if (this.value == '') { load_icons(); } else { $('#icons').html(''); }\" placeholder=\"".$text['label-search']."\">\n";
 			echo "		</td>\n";
 			echo "	</tr>\n";
@@ -664,13 +670,13 @@
 			echo "</script>\n";
 		}
 		else {
-			echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
+			echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."' onchange=\"adjust_form();\">";
 		}
 		echo			$text['description-dashboard_icon']."\n";
 		echo "		</td>";
 		echo "	</tr>";
 
-		echo "<tr class='type_icon'>\n";
+		echo "<tr class='type_icon' id='dashboard_icon_color' ".(empty($dashboard_icon) && empty($dashboard_icon_color) ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_icon_color']."\n";
 		echo "</td>\n";
@@ -698,7 +704,7 @@
 		echo $text['label-target']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select name='dashboard_target' class='formfld dashboard_target' onchange=\"adjust_form();\">\n";
+		echo "	<select name='dashboard_target' class='formfld' onchange=\"adjust_form();\">\n";
 		echo "		<option value='self'>".$text['label-current_window']."</option>\n";
 		echo "		<option value='new' ".(!empty($dashboard_target) && $dashboard_target == 'new' ? "selected='selected'" : null).">".$text['label-new_window']."</option>\n";
 		echo "	</select>\n";
