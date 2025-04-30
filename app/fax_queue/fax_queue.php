@@ -313,13 +313,15 @@
 	//echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
 	echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-md-dn'");
+	if ($permission['fax_queue_all']) {
+		echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-md-dn'");
+	}
 	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, null, "class='hide-md-dn'");
 	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order);
 	echo th_order_by('fax_number', $text['label-fax_number'], $order_by, $order);
 	echo th_order_by('fax_email_address', $text['label-fax_email_address'], $order_by, $order);
 	echo th_order_by('insert_user', $text['label-insert_user'], $order_by, $order);
-//	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
+	//echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
 	echo th_order_by('fax_status', $text['label-fax_status'], $order_by, $order);
 	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order);
 	echo th_order_by('fax_notify_date', $text['label-fax_notify_date'], $order_by, $order);
@@ -351,13 +353,15 @@
 			}
 			echo "	<td nowrap='nowrap'>".escape($row['fax_date_formatted'])."</td>\n";
 			echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['fax_time_formatted'])."</td>\n";
-			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
+			if ($permission['fax_queue_all']) {
+				echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
+			}
 			echo "	<td class='hide-md-dn'>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
 			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address'] ?? ''))."</td>\n";
 			echo "	<td>".escape($row['insert_user']) ."</td>\n";
-//			echo "	<td>".escape($row['fax_file'])."</td>\n";
+			//echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['fax_status']])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_notify_date_formatted'])." ".escape($row['fax_notify_time_formatted'])."</td>\n";
