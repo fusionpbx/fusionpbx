@@ -3,13 +3,9 @@
 namespace App\Livewire;
 
 use App\Http\Requests\SipProfileRequest;
+use App\Repositories\SipProfileRepository;
 use Livewire\Component;
-use Illuminate\Support\Str;
-use App\Models\SipProfile;
-use App\Models\SipProfileDomain;
-use App\Models\SipProfileSetting;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class SipProfileForm extends Component
 {
@@ -35,6 +31,13 @@ class SipProfileForm extends Component
     public bool $canAddSetting = false;
     public bool $canEditSetting = false;
     public bool $canDeleteSetting = false;
+    
+    protected $sipProfileRepository;
+
+    public function boot(SipProfileRepository $sipProfileRepository)
+    {
+        $this->sipProfileRepository = $sipProfileRepository;
+    }
 
     public function rules() 
     {
@@ -44,7 +47,6 @@ class SipProfileForm extends Component
 
     public function mount($sipProfile = null) : void
     {
-
         if ($sipProfile) {
             $this->sipProfile = $sipProfile;
             $this->sip_profile_uuid = $sipProfile->sip_profile_uuid;
@@ -52,7 +54,6 @@ class SipProfileForm extends Component
             $this->sip_profile_hostname = $sipProfile->sip_profile_hostname;
             $this->sip_profile_enabled = $sipProfile->sip_profile_enabled;
             $this->sip_profile_description = $sipProfile->sip_profile_description;
-
 
             foreach ($sipProfile->sipprofiledomains as $domain) {
                 $this->domains[] = [
@@ -62,7 +63,6 @@ class SipProfileForm extends Component
                     'sip_profile_domain_parse' => $domain->sip_profile_domain_parse,
                 ];
             }
-
 
             foreach ($sipProfile->sipprofilesettings as $setting) {
                 $this->settings[] = [
@@ -75,14 +75,11 @@ class SipProfileForm extends Component
             }
         }
 
-
         $this->loadPermissions();
-
 
         if (empty($this->domains) && $this->canAddDomain) {
             $this->addDomain();
         }
-
 
         if (empty($this->settings) && $this->canAddSetting) {
             $this->addSetting();
@@ -98,7 +95,6 @@ class SipProfileForm extends Component
         $this->canEditDomain = $user->hasPermission('sip_profile_domain_edit');
         $this->canDeleteDomain = $user->hasPermission('sip_profile_domain_delete');
 
-
         $this->canViewSetting = $user->hasPermission('sip_profile_setting_view');
         $this->canAddSetting = $user->hasPermission('sip_profile_setting_add');
         $this->canEditSetting = $user->hasPermission('sip_profile_setting_edit');
@@ -111,7 +107,6 @@ class SipProfileForm extends Component
             session()->flash('error', 'You do not have permission to add domains.');
             return;
         }
-
 
         $this->domains[] = [
             'sip_profile_domain_uuid' => '',
@@ -135,13 +130,13 @@ class SipProfileForm extends Component
         unset($this->domains[$index]);
         $this->domains = array_values($this->domains);
     }
+
     public function addSetting() : void
     {
         if (!$this->canAddSetting) {
             session()->flash('error', 'You do not have permission to add settings.');
             return;
         }
-
 
         $this->settings[] = [
             'sip_profile_setting_uuid' => '',
@@ -179,129 +174,59 @@ class SipProfileForm extends Component
             return !empty($setting['sip_profile_setting_name']);
         })->toArray();
 
-
         $hasNewDomains = collect($filteredDomains)->filter(fn($d) => empty($d['sip_profile_domain_uuid']))->count() > 0;
         if ($hasNewDomains && !$this->canAddDomain) {
             session()->flash('error', 'You do not have permission to add domains.');
-            
+            return;
         }
 
         if (!empty($this->domainsToDelete) && !$this->canDeleteDomain) {
             session()->flash('error', 'You do not have permission to delete domains.');
-            
+            return;
         }
-
 
         $hasNewSettings = collect($filteredSettings)->filter(fn($s) => empty($s['sip_profile_setting_uuid']))->count() > 0;
         if ($hasNewSettings && !$this->canAddSetting) {
             session()->flash('error', 'You do not have permission to add settings.');
-            
+            return;
         }
         
         if (!empty($this->settingsToDelete) && !$this->canDeleteSetting) {
             session()->flash('error', 'You do not have permission to delete settings.');
-            
+            return;
         }
 
+        $profileData = [
+            'sip_profile_name' => $this->sip_profile_name,
+            'sip_profile_hostname' => $this->sip_profile_hostname,
+            'sip_profile_enabled' => $this->sip_profile_enabled,
+            'sip_profile_description' => $this->sip_profile_description,
+        ];
 
-        if ($this->sipProfile) {
-            $this->sipProfile->update([
-                'sip_profile_name' => $this->sip_profile_name,
-                'sip_profile_hostname' => $this->sip_profile_hostname,
-                'sip_profile_enabled' => $this->sip_profile_enabled,
-                'sip_profile_description' => $this->sip_profile_description,
-            ]);
-
-
-
-            foreach ($filteredDomains as $domain) {
-                if (empty($domain['sip_profile_domain_uuid'])) {
-                    SipProfileDomain::create([
-                        'sip_profile_domain_uuid' => Str::uuid(),
-                        'sip_profile_uuid' => $this->sipProfile->sip_profile_uuid,
-                        'sip_profile_domain_name' => $domain['sip_profile_domain_name'],
-                        'sip_profile_domain_alias' => $domain['sip_profile_domain_alias'],
-                        'sip_profile_domain_parse' => $domain['sip_profile_domain_parse'],
-                    ]);
-                } else {
-
-                    SipProfileDomain::where('sip_profile_domain_uuid', $domain['sip_profile_domain_uuid'])
-                        ->update([
-                            'sip_profile_domain_name' => $domain['sip_profile_domain_name'],
-                            'sip_profile_domain_alias' => $domain['sip_profile_domain_alias'],
-                            'sip_profile_domain_parse' => $domain['sip_profile_domain_parse'],
-                        ]);
-                }
+        try {
+            if ($this->sipProfile) {
+                $this->sipProfileRepository->update(
+                    $this->sipProfile->sip_profile_uuid,
+                    $profileData,
+                    $filteredDomains,
+                    $filteredSettings,
+                    $this->domainsToDelete,
+                    $this->settingsToDelete
+                );
+                session()->flash('message', 'SIP Profile updated successfully.');
+            } else {
+                $this->sipProfileRepository->create(
+                    $profileData,
+                    $filteredDomains,
+                    $filteredSettings
+                );
+                session()->flash('message', 'SIP Profile created successfully.');
             }
 
-
-            if (!empty($this->domainsToDelete)) {
-                SipProfileDomain::whereIn('sip_profile_domain_uuid', $this->domainsToDelete)->delete();
-            }
-
-            foreach ($filteredSettings as $setting) {
-                if (empty($setting['sip_profile_setting_uuid'])) {
-
-                    SipProfileSetting::create([
-                        'sip_profile_setting_uuid' => Str::uuid(),
-                        'sip_profile_uuid' => $this->sipProfile->sip_profile_uuid,
-                        'sip_profile_setting_name' => $setting['sip_profile_setting_name'],
-                        'sip_profile_setting_value' => $setting['sip_profile_setting_value'],
-                        'sip_profile_setting_enabled' => $setting['sip_profile_setting_enabled'],
-                        'sip_profile_setting_description' => $setting['sip_profile_setting_description'],
-                    ]);
-                } else {
-
-                    SipProfileSetting::where('sip_profile_setting_uuid', $setting['sip_profile_setting_uuid'])
-                        ->update([
-                            'sip_profile_setting_name' => $setting['sip_profile_setting_name'],
-                            'sip_profile_setting_value' => $setting['sip_profile_setting_value'],
-                            'sip_profile_setting_enabled' => $setting['sip_profile_setting_enabled'],
-                            'sip_profile_setting_description' => $setting['sip_profile_setting_description'],
-                        ]);
-                }
-            }
-
-            if (!empty($this->settingsToDelete)) {
-                SipProfileSetting::whereIn('sip_profile_setting_uuid', $this->settingsToDelete)->delete();
-            }
-
-            session()->flash('message', 'SIP Profile updated successfully.');
-        } else {
-
-            $newProfile = SipProfile::create([
-                'sip_profile_uuid' => Str::uuid(),
-                'sip_profile_name' => $this->sip_profile_name,
-                'sip_profile_hostname' => $this->sip_profile_hostname,
-                'sip_profile_enabled' => $this->sip_profile_enabled,
-                'sip_profile_description' => $this->sip_profile_description,
-            ]);
-
-            foreach ($filteredDomains as $domain) {
-                SipProfileDomain::create([
-                    'sip_profile_domain_uuid' => Str::uuid(),
-                    'sip_profile_uuid' => $newProfile->sip_profile_uuid,
-                    'sip_profile_domain_name' => $domain['sip_profile_domain_name'],
-                    'sip_profile_domain_alias' => $domain['sip_profile_domain_alias'],
-                    'sip_profile_domain_parse' => $domain['sip_profile_domain_parse'],
-                ]);
-            }
-
-            foreach ($filteredSettings as $setting) {
-                SipProfileSetting::create([
-                    'sip_profile_setting_uuid' => Str::uuid(),
-                    'sip_profile_uuid' => $newProfile->sip_profile_uuid,
-                    'sip_profile_setting_name' => $setting['sip_profile_setting_name'],
-                    'sip_profile_setting_value' => $setting['sip_profile_setting_value'],
-                    'sip_profile_setting_enabled' => $setting['sip_profile_setting_enabled'],
-                    'sip_profile_setting_description' => $setting['sip_profile_setting_description'],
-                ]);
-            }
-
-            session()->flash('message', 'SIP Profile created successfully.');
+            redirect()->route('sipprofiles.index');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error saving SIP Profile: ' . $e->getMessage());
         }
-
-        redirect()->route('sipprofiles.index');
     }
 
     public function render(): View

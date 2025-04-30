@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SipProfile;
+use App\Repositories\SipProfileRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,14 @@ use Illuminate\Support\Str;
 
 class SipProfileController extends Controller
 {
+    protected $sipProfileRepository;
+
+
+    public function __construct(SipProfileRepository $sipProfileRepository)
+    {
+        $this->sipProfileRepository = $sipProfileRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -48,7 +57,7 @@ class SipProfileController extends Controller
      */
     public function edit($uuid) : View
     {
-        $sipProfile = SipProfile::with(['sipprofiledomains', 'sipprofilesettings'])->where('sip_profile_uuid', $uuid)->firstOrFail();
+        $sipProfile = $this->sipProfileRepository->findByUuid($uuid, true);
         return view('pages.sipprofile.form', compact('sipProfile'));
     }
 
@@ -57,8 +66,6 @@ class SipProfileController extends Controller
      */
     public function update(Request $request, SipProfile $sipProfile)
     {
-        // $sipProfile->update($request->validated());
-        // return redirect()->route('sipprofiles.index');
     }
 
     /**
@@ -66,56 +73,23 @@ class SipProfileController extends Controller
      */
     public function destroy($uuid) : RedirectResponse
     {
-        $sipProfile = SipProfile::where('sip_profile_uuid', $uuid)->firstOrFail();
-
         try {
-            DB::beginTransaction();
-            $sipProfile->sipprofiledomains()->delete();
-            $sipProfile->sipprofilesettings()->delete();
-            $sipProfile->delete();
-
-            DB::commit();
-
+            $this->sipProfileRepository->delete($uuid);
             return redirect()->route('sipprofiles.index');
-
         } catch (\Exception $e) {
-            DB::rollBack();
             throw $e;
-            return redirect()->route('sipprofiles.index');
+            return redirect()->route('sipprofiles.index')->with('error', 'Failed to delete SIP Profile');
         }
     }
 
     public function copy($uuid) : RedirectResponse
     {
-        $originalProfile = SipProfile::where('sip_profile_uuid', $uuid)->first();
-
         try {
-            DB::beginTransaction();
-            $newProfile = $originalProfile->replicate();
-            $newProfile->sip_profile_uuid = Str::uuid();
-            $newProfile->sip_profile_description = $originalProfile->sip_profile_description . ' (copy)';
-            $newProfile->save();
-
-            foreach ($originalProfile->sipprofiledomains as $domain) {
-                $newDomain = $domain->replicate();
-                $newDomain->sip_profile_domain_uuid = Str::uuid();
-                $newDomain->sip_profile_uuid = $newProfile->sip_profile_uuid;
-                $newDomain->save();
-            }
-
-            foreach ($originalProfile->sipprofilesettings as $setting) {
-                $newSetting = $setting->replicate();
-                $newSetting->sip_profile_setting_uuid = Str::uuid();
-                $newSetting->sip_profile_uuid = $newProfile->sip_profile_uuid;
-                $newSetting->save();
-            }
-
-            DB::commit();
+            $newProfile = $this->sipProfileRepository->copy($uuid);
             return redirect()->route('sipprofiles.index', $newProfile->sip_profile_uuid);
         } catch (\Exception $e) {
-            DB::rollBack();
             throw $e;
-            return redirect()->route('sipprofiles.index');
+            return redirect()->route('sipprofiles.index')->with('error', 'Failed to copy SIP Profile');
         }
     }
 }
