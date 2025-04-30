@@ -27,6 +27,7 @@ class StreamRequest extends FormRequest
 			"stream_location" => "bail|required|string|max:255",
 			"stream_enabled" => "bail|nullable|in:true,false",
 			"stream_description" => "bail|nullable|string|max:255",
+			"domain_uuid" => "sometimes|uuid|exists:App\Models\Domain,domain_uuid",
 		];
 
 		if ($isCreating){
