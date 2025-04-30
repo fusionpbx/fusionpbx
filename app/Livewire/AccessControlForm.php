@@ -2,6 +2,7 @@
 namespace App\Livewire;
 
 use App\Http\Requests\AccessControlRequest;
+use App\Repositories\AccessControlRepository;
 use Livewire\Component;
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
@@ -27,6 +28,12 @@ class AccessControlForm extends Component
     public bool $canEditNode = false;
     public bool $canDeleteNode = false;
 
+    protected $accessControlRepository;
+
+    public function boot(AccessControlRepository $accessControlRepository)
+    {
+        $this->accessControlRepository = $accessControlRepository;
+    }
 
     public function rules() : array
     {
@@ -49,12 +56,10 @@ class AccessControlForm extends Component
         $this->canDeleteNode = $user->hasPermission('access_control_node_delete');
     }
 
-
     public function mount($accessControlUuid = null) : void
     {
         if ($accessControlUuid) {
-
-            $this->accessControl = AccessControl::where('access_control_uuid', $accessControlUuid)->first();
+            $this->accessControl = $this->accessControlRepository->findByUuid($accessControlUuid);
 
             if ($this->accessControl) {
                 $this->accessControlUuid = $this->accessControl->access_control_uuid;
@@ -75,7 +80,6 @@ class AccessControlForm extends Component
                     ->toArray();
             }
         }
-
 
         if (empty($this->nodes)) {
             $this->addNode();
@@ -102,7 +106,6 @@ class AccessControlForm extends Component
 
     public function removeNode($index) : void
     {
-
         unset($this->nodes[$index]);
         $this->nodes = array_values($this->nodes);
     }
@@ -119,7 +122,6 @@ class AccessControlForm extends Component
     public function deleteSelected() : void
     {
         foreach ($this->selectedNodes as $index) {
-
             if (isset($this->nodes[$index])) {
                 unset($this->nodes[$index]);
             }
@@ -130,39 +132,31 @@ class AccessControlForm extends Component
 
     public function save() : void
     {
-
         $this->validate();
 
+        $formData = [
+            'access_control_name' => $this->accessControlName,
+            'access_control_default' => $this->accessControlDefault,
+            'access_control_description' => $this->accessControlDescription,
+        ];
+
         if ($this->accessControlUuid) {
-
-            $accessControl = $this->accessControl;
-            $accessControl->access_control_name = $this->accessControlName;
-            $accessControl->access_control_default = $this->accessControlDefault;
-            $accessControl->access_control_description = $this->accessControlDescription;
-            $accessControl->save();
-
-
-            AccessControlNode::where('access_control_uuid', $this->accessControlUuid)->delete();
+            $accessControl = $this->accessControlRepository->update($this->accessControlUuid, $formData);
+            $this->accessControlRepository->deleteAllNodes($this->accessControlUuid);
         } else {
-            $uuid = Str::uuid()->toString();
-            $accessControl = new AccessControl();
-            $accessControl->access_control_uuid = $uuid;
-            $accessControl->access_control_name = $this->accessControlName;
-            $accessControl->access_control_default = $this->accessControlDefault;
-            $accessControl->access_control_description = $this->accessControlDescription;
-            $accessControl->save();
-            $accessControl->access_control_uuid = $uuid;
+            $accessControl = $this->accessControlRepository->create($formData);
         }
 
-
         foreach ($this->nodes as $node) {
-            $accessControlNode = new AccessControlNode();
-            $accessControlNode->access_control_node_uuid = $node['access_control_node_uuid'];
-            $accessControlNode->access_control_uuid = $accessControl->access_control_uuid;
-            $accessControlNode->node_type = $node['node_type'];
-            $accessControlNode->node_cidr = $node['node_cidr'];
-            $accessControlNode->node_description = $node['node_description'];
-            $accessControlNode->save();
+            $nodeData = [
+                'access_control_node_uuid' => $node['access_control_node_uuid'],
+                'access_control_uuid' => $accessControl->access_control_uuid,
+                'node_type' => $node['node_type'],
+                'node_cidr' => $node['node_cidr'],
+                'node_description' => $node['node_description'],
+            ];
+            
+            $this->accessControlRepository->createNode($nodeData);
         }
 
         redirect()->route('accesscontrol.index');

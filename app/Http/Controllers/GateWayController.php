@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GatewayRequest;
-use App\Models\Domain;
 use App\Models\Gateway;
-use App\Models\SipProfile;
+use App\Repositories\GatewayRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class GateWayController extends Controller
 {
+    protected $gatewayRepository;
+
+    public function __construct(GatewayRepository $gatewayRepository)
+    {
+        $this->gatewayRepository = $gatewayRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -27,8 +31,8 @@ class GateWayController extends Controller
      */
     public function create() : View
     {
-        $domains = Domain::all();
-        $profiles = SipProfile::all();
+        $domains = $this->gatewayRepository->getAllDomains();
+        $profiles = $this->gatewayRepository->getAllSipProfiles();
 
         return view('pages.gateway.form', compact('domains', 'profiles'));
     }
@@ -38,7 +42,7 @@ class GateWayController extends Controller
      */
     public function store(GatewayRequest $request) : RedirectResponse
     {
-        Gateway::create($request->validated());
+        $this->gatewayRepository->create($request->validated());
         
         return redirect()->route('gateways.index');
     }
@@ -56,8 +60,8 @@ class GateWayController extends Controller
      */
     public function edit(Gateway $gateway) : View
     {
-        $domains = Domain::all();
-        $profiles = SipProfile::all();
+        $domains = $this->gatewayRepository->getAllDomains();
+        $profiles = $this->gatewayRepository->getAllSipProfiles();
 
         return view('pages.gateway.form', compact('gateway', 'domains', 'profiles'));
     }
@@ -67,7 +71,7 @@ class GateWayController extends Controller
      */
     public function update(GatewayRequest $request, Gateway $gateway) : RedirectResponse
     {
-        $gateway->update($request->all());
+        $this->gatewayRepository->update($gateway, $request->all());
 
         return redirect()->route('gateways.index');
     }
@@ -77,24 +81,18 @@ class GateWayController extends Controller
      */
     public function destroy(Gateway $gateway) : RedirectResponse
     {
-        $gateway->delete();
+        $this->gatewayRepository->delete($gateway);
 
         return redirect()->route('gateways.index');
     }
 
     public function copy(Gateway $gateway) : RedirectResponse
     {
-
         try {
             DB::beginTransaction();
             if (auth()->user()->hasPermission('gateway_add')) {
-                $newGateway = $gateway->replicate();
-                $newGateway->gateway_uuid = Str::uuid();
-                $newGateway->description = $newGateway->description . ' (Copy)';
-                $newGateway->save();
-
+                $this->gatewayRepository->copy($gateway);
                 DB::commit();
-
             }
         } catch (\Exception $e) {
             DB::rollBack();

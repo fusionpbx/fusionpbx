@@ -49,7 +49,7 @@
 			<h3 class="card-title">Menu Items</h3>
 		</div>
 		<div class="card-body">
-			<livewire:menu-items-table menu_uuid="{{ $menu->menu_uuid }}"/>
+			<livewire:menu-items-table :menu_uuid="isset($menu) ? $menu->menu_uuid : null" />
 		</div>
 	</div>
 </div>

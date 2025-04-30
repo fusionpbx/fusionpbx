@@ -14,7 +14,7 @@ class LoadMenuMiddleware
 {
 	public function handle(Request $request, Closure $next)
 	{
-		$MenuController = new MenuController;
+		$MenuController = app()->make(MenuController::class);
 
 		$app_menu = $MenuController->getMenu();
 

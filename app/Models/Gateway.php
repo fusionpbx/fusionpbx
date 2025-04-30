@@ -64,6 +64,8 @@ class Gateway extends Model
         'hostname',
         'enabled',
         'description',
+        'insert_user',
+        'update_user',
 	];
 
     /**
