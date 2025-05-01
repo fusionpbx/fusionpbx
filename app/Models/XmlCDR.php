@@ -147,6 +147,7 @@ class XmlCDR extends Model
     protected function domainName(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -161,6 +162,7 @@ class XmlCDR extends Model
     protected function direction(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -231,7 +233,7 @@ class XmlCDR extends Model
     protected function answerStamp(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => empty($value) ? NULL : $value,
+            get: fn (?string $value) => $value ?? NULL,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -288,6 +290,7 @@ class XmlCDR extends Model
     protected function bridgeUuid(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -582,6 +585,7 @@ class XmlCDR extends Model
     protected function sipHangupDisposition(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -673,16 +677,8 @@ class XmlCDR extends Model
     protected function callResult(): Attribute
     {
         return Attribute::make(
-           get: function () {
+           get: function (){
                 $call_result = 'failed';
-                if(App::hasDebugModeEnabled()){
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->direction = '.$this->direction);
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->answer_stamp = '.$this->answer_stamp ?? '(null)');
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->bridge_uuid = '.$this->bridge_uuid ?? '(null)');
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->sip_hangup_disposition = '.$this->sip_hangup_disposition ?? '(null)');
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->hangup_cause = '.$this->hangup_cause ?? '(null)');
-                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->record_type = '.$this->record_type ?? '(null)');
-                }
                 if (($this->direction == 'inbound') || ($this->direction == 'local')){
                     if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }
                     else if (isset($this->answer_stamp) && empty($this->bridge_uuid)) { $call_result = 'voicemail'; }

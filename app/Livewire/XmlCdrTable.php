@@ -2,14 +2,15 @@
 
 namespace App\Livewire;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\XmlCDR;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class XmlCDRTable extends DataTableComponent
 {
@@ -209,7 +210,7 @@ class XmlCDRTable extends DataTableComponent
 
         if(auth()->user()->hasPermission('xml_cdr_status'))
         {
-            $columns[] = Column::make("Status", "xml_cdr_uuid")
+            $columns[] = Column::make("Status", "answer_stamp")
                 ->format(function ($value, $row, Column $column) {
                     return ucfirst($row->status);
                 })
@@ -236,8 +237,7 @@ class XmlCDRTable extends DataTableComponent
     public function builder(): Builder
     {
         $query = XmlCDR::query()
-                ->with("extension")
-                ->where( XmlCDR::getTableName() . ".domain_uuid", "=", Session::get("domain_uuid"))
+		->where( XmlCDR::getTableName() . ".domain_uuid", "=", Session::get("domain_uuid"))
                 ->when($this->filters['direction'] ?? null, fn($q, $v) => $q->where('direction', '=', $v))
                 ->when($this->filters['leg'] ?? null, fn($q, $v) => $q->where('leg', '=', $v))
                 // ->when($this->filters['status'] ?? null, fn($q, $v) => $q->where('status', '=', $v))
@@ -293,7 +293,11 @@ class XmlCDRTable extends DataTableComponent
                     };
                 })
                 ->when($this->filters['order_field'] ?? null, fn($q, $v) => $q->orderBy($this->filters['order_field'], $this->filters['order_sort'] ?? 'asc'))
+                ->with("extension")
                 ->orderBy("start_epoch", "desc");
+        	if(App::hasDebugModeEnabled()){
+//			$query->dump();
+		}
         return $query;
     }
 }
