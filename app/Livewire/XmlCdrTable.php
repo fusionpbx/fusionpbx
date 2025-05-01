@@ -30,7 +30,8 @@ class XmlCDRTable extends DataTableComponent
                 'class' => 'table table-striped table-hover table-bordered'
             ])
             ->setSearchDisabled()
-            ->setPerPageAccepted([10, 25, 50, 100])
+            ->setPerPageAccepted([10, 25, 50, 100, 250])
+            ->setDefaultPerPage(100)        // TODO: Use domain setting
             ->setPaginationEnabled();
     }
 
