@@ -231,6 +231,7 @@ class XmlCDR extends Model
     protected function answerStamp(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
