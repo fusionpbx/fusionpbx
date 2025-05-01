@@ -676,12 +676,12 @@ class XmlCDR extends Model
            get: function () {
                 $call_result = 'failed';
                 if(App::hasDebugModeEnabled()){
-                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->direction = '.$this->direction);
-                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->answer_stamp = '.$this->answer_stamp ?? '(null)');
-                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->bridge_uuid = '.$this->bridge_uuid ?? '(null)');
-                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->sip_hangup_disposition = '.$this->sip_hangup_disposition ?? '(null)');
-                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->hangup_cause = '.$this->hangup_cause ?? '(null)');
-                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->record_type = '.$this->record_type ?? '(null)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->direction = '.$this->direction);
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->answer_stamp = '.$this->answer_stamp ?? '(null)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->bridge_uuid = '.$this->bridge_uuid ?? '(null)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->sip_hangup_disposition = '.$this->sip_hangup_disposition ?? '(null)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->hangup_cause = '.$this->hangup_cause ?? '(null)');
+                    Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->record_type = '.$this->record_type ?? '(null)');
                 }
                 if (($this->direction == 'inbound') || ($this->direction == 'local')){
                     if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }
