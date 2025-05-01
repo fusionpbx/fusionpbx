@@ -196,7 +196,8 @@ class XmlCDRTable extends DataTableComponent
         {
             $columns[] = Column::make("PDD", "pdd_ms")
                 ->format(function ($value, $row, Column $column) {
-                    return $row->pdd_ms;
+                    $seconds = $row->pdd_ms / 1000;
+                    return number_format($seconds, 4).'s';
                 })
                 ->sortable();
         }

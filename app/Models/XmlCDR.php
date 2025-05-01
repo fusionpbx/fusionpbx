@@ -371,9 +371,7 @@ class XmlCDR extends Model
         return Attribute::make(
             get: function($value)
             {
-                $milliseconds = $value;
-                $seconds = $milliseconds / 1000;
-                return number_format($seconds, 2) . 's';
+                return number_format($value, 4);
             },
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
