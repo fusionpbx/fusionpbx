@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class XmlCDR extends Model
@@ -672,6 +674,14 @@ class XmlCDR extends Model
         return Attribute::make(
            get: function () {
                 $call_result = 'failed';
+                if(App::hasDebugModeEnabled()){
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->direction = '.$this->direction);
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->answer_stamp = '.$this->answer_stamp ?? '(null)');
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->bridge_uuid = '.$this->bridge_uuid ?? '(null)');
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->sip_hangup_disposition = '.$this->sip_hangup_disposition ?? '(null)');
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->hangup_cause = '.$this->hangup_cause ?? '(null)');
+                    Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $this->record_type = '.$this->record_type ?? '(null)');
+                }
                 if (($this->direction == 'inbound') || ($this->direction == 'local')){
                     if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }
                     else if (isset($this->answer_stamp) && empty($this->bridge_uuid)) { $call_result = 'voicemail'; }
