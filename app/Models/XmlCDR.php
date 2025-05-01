@@ -660,7 +660,11 @@ class XmlCDR extends Model
         return Attribute::make(
             get: function()
             {
-                return ($this->answer_epoch ?? 0) - ($this->start_epoch ?? 0);
+                $tta = ($this->answer_epoch ?? 0) - ($this->start_epoch ?? 0);
+                if ($tta < 0){
+                    $tta = '';
+                }
+                return $tta;
             }
         );
     }
