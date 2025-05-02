@@ -247,6 +247,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_call_log';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_call_stats";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
