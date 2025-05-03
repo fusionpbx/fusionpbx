@@ -2,8 +2,6 @@
 
 /**
  * cache class provides an abstracted cache
- *
- * @method string glob
  */
 class file {
 
@@ -12,12 +10,17 @@ class file {
 	*/
 	public $recursive;
 	public $files;
+	private $settings;
 
 	/**
 	 * Called when the object is created
+	 * @param settings $settings Settings object
 	 */
-	public function __construct() {
-		//place holder
+	public function __construct($settings = null) {
+		if ($settings === null) {
+			$settings = new settings();
+		}
+		$this->settings = $settings;
 	}
 
 	/**
@@ -66,8 +69,8 @@ class file {
 		if (!isset($voice)) { $voice = 'callie'; }
 
 		//set the variables
-		if (!empty($_SESSION['switch']['sounds']['dir']) && file_exists($_SESSION['switch']['sounds']['dir'])) {
-			$dir = $_SESSION['switch']['sounds']['dir'].'/'.$language.'/'.$dialect.'/'.$voice;
+		if (!empty($this->settings->get('switch', 'sounds')) && file_exists($this->settings->get('switch', 'sounds'))) {
+			$dir = $this->settings->get('switch', 'sounds').'/'.$language.'/'.$dialect.'/'.$voice;
 			$rate = '8000';
 			$files = $this->glob($dir.'/*/'.$rate, true);
 		}
@@ -93,5 +96,3 @@ class file {
 	$files = $file->sounds();
 	print_r($files);
 */
-
-?>
