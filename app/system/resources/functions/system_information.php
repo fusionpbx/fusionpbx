@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Portions created by the Initial Developer are Copyright (C) 2008-2023
+	  Portions created by the Initial Developer are Copyright (C) 2008-2025
 	  the Initial Developer. All Rights Reserved.
 
 	  Contributor(s):
@@ -109,25 +109,20 @@
 					$system_information['git']['date'] = 'unknown';
 				} else {
 					$git_branch = shell_exec($git_exe . ' --git-dir=' . $git_path . ' name-rev --name-only HEAD');
-					rtrim($git_branch);
 					$git_commit = shell_exec($git_exe . ' --git-dir=' . $git_path . ' rev-parse HEAD');
-					rtrim($git_commit);
 					$git_origin = shell_exec($git_exe . ' --git-dir=' . $git_path . ' config --get remote.origin.url');
-					rtrim($git_origin);
 					$git_origin = preg_replace('/\.git$/', '', $git_origin);
 					$git_status = shell_exec($git_exe . ' --git-dir=' . $git_path . ' status | grep "Your branch"');
-					if (!empty($git_status))
-						rtrim($git_status);
 					$git_age = shell_exec($git_exe . ' --git-dir=' . $git_path . ' log --pretty=format:%at "HEAD^!"');
-					rtrim($git_age);
+
 					$git_date = DateTime::createFromFormat('U', $git_age);
 					$git_age = $git_date->diff(new DateTime('now'));
-					$system_information['git']['branch'] = $git_branch;
-					$system_information['git']['origin'] = $git_origin;
-					$system_information['git']['commit'] = $git_commit;
-					$system_information['git']['status'] = $git_status;
-					$system_information['git']['age'] = $git_age;
-					$system_information['git']['date'] = $git_date;
+					$system_information['git']['branch'] = trim($git_branch) ?? '';
+					$system_information['git']['origin'] = trim($git_origin) ?? '';
+					$system_information['git']['commit'] = trim($git_commit) ?? '';
+					$system_information['git']['status'] = trim($git_status) ?? '';
+					$system_information['git']['age'] = $git_age ?? '';
+					$system_information['git']['date'] = $git_date ?? '';
 				}
 			} else {
 				$system_information['git']['path'] = 'unknown';
@@ -157,13 +152,13 @@
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 				$data = explode("\n", shell_exec('systeminfo /FO CSV 2> nul'));
 				$data = array_combine(str_getcsv($data[0]), str_getcsv($data[1]));
-				$os_name = $data['OS Name'];
-				$os_version = $data['OS Version'];
+				$os_name = trim($data['OS Name']);
+				$os_version = trim($data['OS Version']);
 				unset($data);
 			} else {
-				$os_kernel = shell_exec('uname -a');
-				$os_name = shell_exec('lsb_release -is');
-				$os_version = shell_exec('lsb_release -rs');
+				$os_kernel = trim(shell_exec('uname -a'));
+				$os_name = trim(shell_exec('lsb_release -is'));
+				$os_version = trim(shell_exec('lsb_release -rs'));
 			}
 			$system_information['os']['name'] = $os_name;
 			$system_information['os']['version'] = $os_version;
@@ -278,7 +273,8 @@
 				//database version
 				$sql = "select version(); ";
 				$database = new database;
-				$database_version = $database->select($sql, null, 'column');
+				$database_name = $database->select($sql, null, 'column');
+				$database_array = explode(' ', $database_name);
 
 				//database connections
 				$sql = "select count(*) from pg_stat_activity; ";
@@ -291,7 +287,8 @@
 				$database_size = $database->select($sql, null, 'all');
 
 				$system_information['database']['type'] = 'pgsql';
-				$system_information['database']['version'] = $database_version;
+				$system_information['database']['name'] = $database_array[0];
+				$system_information['database']['version'] = $database_array[1];
 				$system_information['database']['connections'] = $database_connections;
 
 				foreach ($database_size as $row) {
