@@ -150,7 +150,7 @@ class XmlCDRTable extends DataTableComponent
                         $recording = "
                         <div class='progress-bar' style='background-color: #0d6efd; width: 0; height: 3px; position: relative; margin: 5px 0;'></div>
                         <audio id='recording_audio_{$row->xml_cdr_uuid}' style='display: none;' preload='none' src='{$play}' type='audio/wav'></audio>
-                        <button type='button' id='recording_button_{$row->xml_cdr_uuid}' alt='Play / Pause' title='Play / Pause' class='btn btn-secondary btn-xmlcdr'><i class='fas fa-play'></i></button>
+                        <button type='button' id='recording_button_{$row->xml_cdr_uuid}' alt='Play / Pause' title='Play / Pause' class='btn btn-secondary btn-play-audio'><i class='fas fa-play'></i></button>
                         <a href='{$download}' target='_self'><button alt='Download' title='Download' class='btn btn-secondary'><i class='fas fa-download'></i></button></a>
                         ";
 
