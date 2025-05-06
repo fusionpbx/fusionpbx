@@ -2516,7 +2516,7 @@ if (!function_exists('get_memory_details')) {
 				// calculate memory usage percentage
 				$array['memory_usage'] = ($array['used_memory'] / $array['total_memory']) * 100;
 
-				$array['memory_percent'] = round($array['memory_usage'], 2) . '%';
+				$array['memory_percent'] = round($array['memory_usage'], 2);
 				return $array;
 			}
 		}
