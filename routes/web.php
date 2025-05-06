@@ -106,6 +106,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/musiconhold', MusicOnHoldController::class)->name('musiconhold', 'musiconhold');
     Route::get('/musiconhold/{musiconhold}/{file}/play', [MusicOnHoldController::class, 'play'])->name('musiconhold.play');
     Route::get('/musiconhold/{musiconhold}/{file}/download', [MusicOnHoldController::class, 'download'])->name('musiconhold.download');
+    Route::post('/musiconhold/upload', [MusicOnHoldController::class, 'upload'])->name('musiconhold.upload');
 
     // STREAMS
     Route::resource('/streams', StreamController::class)->name('streams', 'streams');

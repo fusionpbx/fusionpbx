@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MusicOnHoldRequest;
 use App\Models\MusicOnHold;
 
 class MusicOnHoldController extends Controller
@@ -37,6 +38,8 @@ class MusicOnHoldController extends Controller
 
 		$list = [];
 
+        $categories = array_unique($musiconhold->pluck("music_on_hold_name")->toArray());
+
 		foreach($musiconhold as $m)
 		{
 			$file_list = [];
@@ -67,7 +70,32 @@ class MusicOnHoldController extends Controller
 			}
 		}
 
-        return view('pages.musiconhold.index', compact('list'));
+        return view('pages.musiconhold.index', compact('list', 'categories'));
+    }
+
+    public function upload(MusicOnHoldRequest $request)
+    {
+        $validated = $request->validated();
+
+        if($request->hasFile('music_on_hold_file'))
+        {
+            $music_on_hold_name = $validated['music_on_hold_name'];
+            $music_on_hold_rate = $validated['music_on_hold_rate'];
+            $folder = "music/{$music_on_hold_name}/{$music_on_hold_rate}";
+            $file = $request->file('music_on_hold_file');
+
+            $fileName = $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
+
+            $file->storeAs('uploads/' . $folder, $fileName, 'public');
+
+            MusicOnHold::firstOrCreate([
+                'music_on_hold_name' => $validated['music_on_hold_name'],
+                'music_on_hold_rate' => $validated['music_on_hold_rate'],
+                'music_on_hold_path' => '$${sounds_dir}/music/' . $validated['music_on_hold_name'] . '/' . $validated['music_on_hold_rate'],
+            ]);
+
+            return redirect()->route('musiconhold.index');
+        }
     }
 
 	public function play(MusicOnHold $musiconhold, $file)
