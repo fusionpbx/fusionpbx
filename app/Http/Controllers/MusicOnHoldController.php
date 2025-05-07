@@ -27,7 +27,9 @@ class MusicOnHoldController extends Controller
 
 	private function getActualDirectory(MusicOnHold $musiconhold)
 	{
-		$sound_directory = "/usr/share/freeswitch/sounds"; //TODO: get this value from settings service
+        //TODO: get directory from settings service
+		// $sound_directory = "/usr/share/freeswitch/sounds";
+		$sound_directory = storage_path("app/public/") . "uploads"; //TODO: get this value from settings service
 
 		return str_replace('$${sounds_dir}', $sound_directory, $musiconhold->music_on_hold_path);
 	}
@@ -63,7 +65,8 @@ class MusicOnHoldController extends Controller
 
 					$list[] = [
 						"id" => $m->music_on_hold_uuid,
-						"name" => $m->kHz,
+						"name" => $m->music_on_hold_name,
+						"rate" => $m->kHz,
 						"files" => $file_list
 					];
 				}
@@ -86,6 +89,7 @@ class MusicOnHoldController extends Controller
 
             $fileName = $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
 
+            //TODO: get directory from settings service
             $file->storeAs('uploads/' . $folder, $fileName, 'public');
 
             MusicOnHold::firstOrCreate([
