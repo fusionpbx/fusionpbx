@@ -100,7 +100,7 @@ class RepositoryServiceProvider extends ServiceProvider
             return new DialplanRepository(
                 $app->make(Dialplan::class),
             );
-            });
+        });
         
     }
 
