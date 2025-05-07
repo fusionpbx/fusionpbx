@@ -61,9 +61,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //shutdown call back function
 	function shutdown() {
 		//when the fax status is still sending
@@ -72,7 +69,6 @@
 		$sql .= "set fax_status = 'trying' ";
 		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
 		$sql .= "and fax_status = 'sending' ";
-		$database = new database;
 		$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 		$database->execute($sql, $parameters);
 		unset($sql);
@@ -184,6 +180,9 @@
 	}
 	unset($parameters);
 
+//get the settings object
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
 //prepare the smtp from and from name variables
 	$email_from = $settings->get('fax','smtp_from');
 	$email_from_name = $settings->get('fax','smtp_from_name');
@@ -195,7 +194,6 @@
 	}
 
 //prepare the variables to send the fax
-	$email_from_address = $email_from;
 	$retry_limit = $settings->get('fax_queue','retry_limit');
 
 //prepare the fax retry count
@@ -389,7 +387,7 @@
 			$dial_string .= "fax_uuid="            . $fax_uuid . ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid . ",";
 			$dial_string .= "mailto_address='"     . $fax_email_address . "',";
-			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
+			$dial_string .= "mailfrom_address='"   . $email_from . "',";
 			$dial_string .= "fax_retry_attempts="  . $fax_retry_count . ",";
 			$dial_string .= "fax_retry_limit="     . $retry_limit . ",";
 			$dial_string .= "fax_recipient='"      . escape_quote($fax_recipient) . "',";
@@ -619,7 +617,7 @@
 							$email->recipients = $email_address;
 							$email->subject = $email_subject;
 							$email->body = $email_body;
-							$email->from_address = $email_from_address;
+							$email->from_address = $email_from;
 							$email->from_name = $email_from_name;
 							$email->attachments = $email_attachments;
 							$email->debug_level = 3;
@@ -632,7 +630,7 @@
 								echo "template_subcategory: ".$template_subcategory."\n";
 								echo "email_adress: ".$email_address."\n";
 								echo "email_from: ".$email_from_name."\n";
-								echo "email_from_name: ".$email_from_address."\n";
+								echo "email_from_name: ".$email_from."\n";
 								echo "email_subject: ".$email_subject."\n";
 								//echo "email_body: ".$email_body."\n";
 								echo "email_error: ".$email_error."\n";
