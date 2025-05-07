@@ -518,7 +518,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (filter_var($_SESSION['email_queue']['save_response']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if ($settings->get('email_queue', 'save_response', false)) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-email_response']."\n";
