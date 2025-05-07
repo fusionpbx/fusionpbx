@@ -519,7 +519,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			//send the email
-			$email = new email;
+			$email = new email(["domain_uuid" => $domain_uuid]);
 			$email->recipients = $fax_email;
 			$email->subject = $email_subject;
 			$email->body = $email_body;

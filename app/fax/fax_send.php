@@ -98,7 +98,6 @@
 				$parameters['fax_uuid'] = $fax_uuid;
 				$parameters['user_uuid'] = $user_uuid;
 			}
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				//set database fields as variables
@@ -195,7 +194,6 @@ if (!function_exists('fax_split_dtmf')) {
 //check if the domain is enabled
 	$sql = "select domain_enabled::text from v_domains where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if ($row['domain_enabled'] == "true") {
 		$domain_enabled = true;
@@ -204,6 +202,9 @@ if (!function_exists('fax_split_dtmf')) {
 		$domain_enabled = false;
 	}
 	unset($sql, $parameters, $row);
+
+//initialize database and settings
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //clear file status cache
 	clearstatcache();
@@ -680,7 +681,6 @@ if (!function_exists('fax_split_dtmf')) {
 		//get the fax mail to address and fax prefix
 		$sql = "select * from v_fax where fax_uuid = :fax_uuid ";
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		//$mail_to_address = $row["fax_email"];
 		$fax_prefix = $row["fax_prefix"];
@@ -692,7 +692,6 @@ if (!function_exists('fax_split_dtmf')) {
 		} else {
 			$sql = "select user_email from v_users where user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $user_uuid;
-			$database = new database;
 			$user_settings = $database->select($sql, $parameters, 'row');
 
 			$mail_to_address = $user_settings["user_email"];
@@ -735,7 +734,6 @@ if (!function_exists('fax_split_dtmf')) {
 		$sql .= "and dialplan_detail_data like 'provider_prefix%' ";
 		$sql .= "and dialplan_detail_enabled = 'true' ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		$dialplan_detail_data = $row["dialplan_detail_data"];
 		unset($sql, $parameters, $row);
@@ -846,7 +844,6 @@ if (!function_exists('fax_split_dtmf')) {
 				$p->add('fax_queue_add', 'temp');
 
 				//save the data
-				$database = new database;
 				$database->app_name = 'fax queue';
 				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 				$database->save($array);
@@ -921,7 +918,6 @@ if (!defined('STDIN')) {
 			}
 		}
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$contacts = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters, $row);
 
@@ -1226,4 +1222,5 @@ function showgrid($pdf) {
 	}
 }
 */
+
 ?>
