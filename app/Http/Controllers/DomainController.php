@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\DefaultSetting;
+use App\Facades\Domain as FacadesDomain;
 use App\Models\Domain;
 use App\Http\Controllers\DomainSettingController;
 use App\Http\Requests\DomainRequest;
@@ -66,54 +67,7 @@ class DomainController extends Controller
 
 	public function switch(Request $request)
 	{
-		return $this->switchByUuid($request->domain_uuid);
+		return FacadesDomain::switchByUuid($request->domain_uuid);
 
-	}
-
-	public function switchByUuid(string $domain_uuid)
-	{
-        if ($this->domainRepository->existsByUuid($domain_uuid)) {
-            $domain = $this->domainRepository->findByUuid($domain_uuid);
-            
-            if (Session::get('domain_uuid') != $domain->domain_uuid) {
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start();
-                };
-                
-                Session::put('domain_uuid', $domain->domain_uuid);
-                Session::put('domain_name', $domain->domain_name);
-                Session::put('domain_description', !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name);
-                // TODO: Check if _SESSION is right
-                $_SESSION["domain_name"] = $domain->domain_name;
-                $_SESSION["domain_uuid"] = $domain->domain_uuid;
-                $_SESSION["domain_description"] = !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name;
-
-                //set the context
-                Session::put('context', $_SESSION["domain_name"]);
-                $_SESSION["context"] = $_SESSION["domain_name"];
-
-                // unset destinations belonging to old domain
-                unset($_SESSION["destinations"]["array"]);
-            }
-            
-            $url = url()->previous();
-            return redirect($url);
-        }
-	}
-
-	public function default_setting(string $category, string $subcategory, ?string $name = null)
-	{
-        $dds = new DomainSettingController;
-        $setting = $dds->get($category, $subcategory, $name);
-        if (!isset($setting)) {
-            $setting = DefaultSetting::get($category, $subcategory, $name);
-        }
-
-        return $ds ?? null;
-	}
-
-	public function selectControl(): mixed
-	{
-		return $this->domainRepository->getForSelectControl();
 	}
 }
