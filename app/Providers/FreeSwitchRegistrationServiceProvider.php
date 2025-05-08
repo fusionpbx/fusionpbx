@@ -7,7 +7,7 @@ use App\Services\FreeSwitch\FreeSwitchRegistrationService;
 use App\Services\FreeSwitch\FreeSwitchService;
 use Illuminate\Support\ServiceProvider;
 
-class FreeSwitchRegistrationServiceProvaider extends ServiceProvider
+class FreeSwitchRegistrationServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

@@ -173,7 +173,7 @@ return [
         \SocialiteProviders\Manager\ServiceProvider::class,
         App\Providers\FreeSwitchServiceProvider::class,
         App\Providers\DefaultSettingServiceProvider::class,
-        App\Providers\FreeSwitchRegistrationServiceProvaider::class,     
+        App\Providers\FreeSwitchRegistrationServiceProvider::class,     
     ])->toArray(),
 
     /*
