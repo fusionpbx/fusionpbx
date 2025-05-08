@@ -81,7 +81,7 @@
 
 //sanitize the variables
 	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
-	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $default_setting_category);
 
 //build the query string
 	$query_string = '';
