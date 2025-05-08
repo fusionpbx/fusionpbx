@@ -30,12 +30,6 @@ class RegistrationsTable extends DataTableComponent
 
         ])->from(DB::raw('(SELECT *, "registered", "user", "agent", "contact", "connection_status", "ping_time", "lan_ip", "registration_ip", "network_port", "connection_status" as is_registered FROM v_sip_profiles) as v_sip_profiles'));
 
-        $showAll = request()->input('show') === 'all';
-
-        if (!$showAll && !auth()->user()->hasPermission('registration_all')) {
-            $query->where('sip_profile_uuid', auth()->user()->sip_profile_uuid);
-        }
-        
 
         return $query->withRegistrationStatus();
     }
