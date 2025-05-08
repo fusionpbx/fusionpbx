@@ -4,12 +4,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StreamRequest;
 use App\Models\Domain;
 use App\Models\Stream;
+use App\Repositories\StreamRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StreamController extends Controller
 {
+	protected $streamRepository;
+
+	public function __construct(StreamRepository $streamRepository)
+	{
+		$this->streamRepository = $streamRepository;
+	}
+
 	public function index()
 	{
 		return view('pages.streams.index');
@@ -24,11 +32,7 @@ class StreamController extends Controller
 
 	public function store(StreamRequest $request)
 	{
-		$data = $request->validated();
-
-    	$data['domain_uuid'] = session('domain_uuid');
-
-		$stream = Stream::create($data);
+		$stream = $this->streamRepository->create($request->validated());
 
 		return redirect()->route("streams.edit", $stream->stream_uuid);
 	}
@@ -47,14 +51,14 @@ class StreamController extends Controller
 
 	public function update(StreamRequest $request, Stream $stream)
 	{
-		$stream->update($request->validated());
+		$this->streamRepository->update($stream, $request->validated());
 
 		return redirect()->route("streams.edit", $stream->stream_uuid);
 	}
 
     public function destroy(Stream $stream)
     {
-        $stream->delete();
+		$this->streamRepository->delete($stream);
 
         return redirect()->route('streams.index');
     }

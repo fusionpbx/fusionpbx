@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class XmlCDR extends Model
@@ -145,6 +147,7 @@ class XmlCDR extends Model
     protected function domainName(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -159,6 +162,7 @@ class XmlCDR extends Model
     protected function direction(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -229,6 +233,7 @@ class XmlCDR extends Model
     protected function answerStamp(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => $value ?? NULL,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -285,6 +290,7 @@ class XmlCDR extends Model
     protected function bridgeUuid(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -371,9 +377,7 @@ class XmlCDR extends Model
         return Attribute::make(
             get: function($value)
             {
-                $milliseconds = $value;
-                $seconds = $milliseconds / 1000;
-                return number_format($seconds, 2) . 's';
+                return number_format($value, 4);
             },
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
@@ -581,6 +585,7 @@ class XmlCDR extends Model
     protected function sipHangupDisposition(): Attribute
     {
         return Attribute::make(
+            get: fn (?string $value) => empty($value) ? NULL : $value,
             set: fn (?string $value) => empty($value) ? NULL : $value,
         );
     }
@@ -660,7 +665,11 @@ class XmlCDR extends Model
         return Attribute::make(
             get: function()
             {
-                return ($this->answer_epoch ?? 0) - ($this->start_epoch ?? 0);
+                $tta = ($this->answer_epoch ?? 0) - ($this->start_epoch ?? 0);
+                if ($tta < 0){
+                    $tta = '';
+                }
+                return $tta;
             }
         );
     }
@@ -668,7 +677,7 @@ class XmlCDR extends Model
     protected function callResult(): Attribute
     {
         return Attribute::make(
-           get: function () {
+           get: function (){
                 $call_result = 'failed';
                 if (($this->direction == 'inbound') || ($this->direction == 'local')){
                     if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }

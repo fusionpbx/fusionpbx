@@ -16,6 +16,7 @@ use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationsController;
+use App\Http\Controllers\MusicOnHoldController;
 use App\Http\Controllers\XmlCDRController;
 use App\Http\Controllers\SipProfileController;
 use App\Http\Controllers\StreamController;
@@ -103,6 +104,12 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/menu/{menu}/menuitems/create', [MenuItemController::class, 'create'])->name('menuitems.create');
     Route::post('/menu/{menu}/menuitems', [MenuItemController::class, 'store'])->name('menuitems.store');
 
+    // MUSIC ON HOLD
+    Route::resource('/musiconhold', MusicOnHoldController::class)->name('musiconhold', 'musiconhold');
+    Route::get('/musiconhold/{musiconhold}/{file}/play', [MusicOnHoldController::class, 'play'])->name('musiconhold.play');
+    Route::get('/musiconhold/{musiconhold}/{file}/download', [MusicOnHoldController::class, 'download'])->name('musiconhold.download');
+    Route::post('/musiconhold/upload', [MusicOnHoldController::class, 'upload'])->name('musiconhold.upload');
+
     // STREAMS
     Route::resource('/streams', StreamController::class)->name('streams', 'streams');
 
@@ -119,7 +126,7 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // XML CDR
     Route::get('/xmlcdr', [XmlCDRController::class, 'index'])->name('xmlcdr.index');
-    Route::get('/xmlcdr/{xmlcdr}/play', [XmlCDRController::class, 'download'])->name('xmlcdr.play');
+    Route::get('/xmlcdr/{xmlcdr}/play', [XmlCDRController::class, 'play'])->name('xmlcdr.play');
     Route::get('/xmlcdr/{xmlcdr}/download', [XmlCDRController::class, 'download'])->name('xmlcdr.download');
 
     Route::resource('registrations', RegistrationsController::class)->name('registrations', 'registrations');

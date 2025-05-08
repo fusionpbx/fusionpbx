@@ -16,6 +16,7 @@ use App\Models\Permission;
 use App\Models\SipProfile;
 use App\Models\SipProfileDomain;
 use App\Models\SipProfileSetting;
+use App\Models\Stream;
 use App\Repositories\AccessControlRepository;
 use App\Repositories\BridgeRepository;
 use App\Repositories\DialplanRepository;
@@ -26,6 +27,7 @@ use App\Repositories\MenuItemRepository;
 use App\Repositories\MenuRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\SipProfileRepository;
+use App\Repositories\StreamRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -101,7 +103,13 @@ class RepositoryServiceProvider extends ServiceProvider
                 $app->make(Dialplan::class),
             );
         });
-        
+
+        $this->app->bind(StreamRepository::class, function ($app) {
+            return new StreamRepository(
+                $app->make(Stream::class)
+            );
+        });
+
     }
 
     /**

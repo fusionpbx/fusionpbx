@@ -10,9 +10,9 @@
 
             <div class="card-tools">                
                 <div class="d-flex gap-2 " role="group" aria-label="Group actions">
-                    <button type="button" class="btn btn-primary btn-sm" onclick="">
+                    <a href="{{route('registrations.index', ['show' => 'all'])}}" type="button" class="btn btn-primary btn-sm" onclick="">
                         <i class="fa fa-globe mr-1"></i> {{__('Show All')}}
-                    </button>
+                    </a>
                 </div>
             </div>
 

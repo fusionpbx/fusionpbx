@@ -194,6 +194,8 @@ class DialplansTable extends DataTableComponent
 	$query = Dialplan::query()
 		->when( $showAll && auth()->user()->hasPermission('dialplan_all'),
 			function($query){
+			},
+			function($query){
 				$query->where(function ($q) {
 					$q->where('domain_uuid', Session::get('domain_uuid'))
 						->orWhereNull('domain_uuid');

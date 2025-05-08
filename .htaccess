@@ -8,3 +8,5 @@ Redirect	301	/core/groups/groups.php				/groups
 Redirect	301	/core/menu/menu.php				/menus
 Redirect	301	/app/sip_profiles/sip_profiles.php		/sipprofiles
 Redirect	301	/app/bridges/bridges.php			/bridges
+Redirect	301	/app/xml_cdr/xml_cdr.php			/xmlcdr
+Redirect	301	/core/dashboard					/dashboard

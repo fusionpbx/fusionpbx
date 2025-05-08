@@ -84,9 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    const buttonXMLCDR = document.querySelectorAll('.btn-xmlcdr');
+    const buttonPlayAudio = document.querySelectorAll('.btn-play-audio');
 
-    buttonXMLCDR.forEach(function(button)
+    buttonPlayAudio.forEach(function(button)
     {
         const cell = button.closest("td");
         const icon = button.querySelector('i');

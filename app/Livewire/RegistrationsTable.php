@@ -14,7 +14,6 @@ class RegistrationsTable extends DataTableComponent
     protected $registrations = [];
     protected $model = SipProfile::class;
 
-
     public function builder(): Builder
     {
         $query = SipProfile::query()->select([
@@ -29,17 +28,16 @@ class RegistrationsTable extends DataTableComponent
             DB::raw("'connection_status' as connection_status"),
             DB::raw("'ping_time' as ping_time"),
 
-        ])->from(DB::raw('(SELECT *, "registered", "user", "agent", "contact", "connection_status", "ping_time", "lan_ip", "registration_ip", "network_port", "connection_status" as is_registered FROM v_sip_profiles) as v_sip_profiles'))
-            ->withRegistrationStatus();
+        ])->from(DB::raw('(SELECT *, "registered", "user", "agent", "contact", "connection_status", "ping_time", "lan_ip", "registration_ip", "network_port", "connection_status" as is_registered FROM v_sip_profiles) as v_sip_profiles'));
 
         $showAll = request()->input('show') === 'all';
 
         if (!$showAll && !auth()->user()->hasPermission('registration_all')) {
             $query->where('sip_profile_uuid', auth()->user()->sip_profile_uuid);
-            
         }
+        
 
-        return $query;
+        return $query->withRegistrationStatus();
     }
 
     public function configure(): void
@@ -62,7 +60,6 @@ class RegistrationsTable extends DataTableComponent
                 ->sortable()
                 ->hideIf(true)
                 ->searchable(),
-
 
             Column::make("User", "user")
                 ->format(function ($value, $row, Column $column) {
@@ -96,11 +93,8 @@ class RegistrationsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
 
-
             Column::make("Port", "network_port")
                 ->sortable(),
-
-
 
             Column::make("Status", "connection_status")
                 ->format(function ($value, $row, Column $column) {
@@ -116,11 +110,9 @@ class RegistrationsTable extends DataTableComponent
                 })
                 ->sortable(),
 
-
             Column::make("Profile", "sip_profile_name")
                 ->sortable()
                 ->searchable(),
-
         ];
     }
 
@@ -137,7 +129,6 @@ class RegistrationsTable extends DataTableComponent
 
     public function showDetails($username, $domain)
     {
-
         $registration = null;
         foreach ($this->registrations as $reg) {
             $userParts = explode('@', $reg['user'] ?? '');
@@ -158,7 +149,6 @@ class RegistrationsTable extends DataTableComponent
     public function unregister()
     {
         try {
-
             $profilesUuids = $this->getSelected();
 
             $profiles = SipProfile::query()
@@ -169,7 +159,6 @@ class RegistrationsTable extends DataTableComponent
             $this->clearSelected();
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            throw $e;
             session()->flash('error', 'Error unregistering device: ' . $e->getMessage());
         }
     }
@@ -177,7 +166,6 @@ class RegistrationsTable extends DataTableComponent
     public function provision()
     {
         try {
-
             $profilesUuids = $this->getSelected();
 
             $profiles = SipProfile::query()
@@ -188,14 +176,13 @@ class RegistrationsTable extends DataTableComponent
             $this->clearSelected();
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            throw $e;
+            session()->flash('error', 'Error provisioning device: ' . $e->getMessage());
         }
     }
 
     public function reboot()
     {
         try {
-
             $profilesUuids = $this->getSelected();
 
             $profiles = SipProfile::query()
@@ -206,9 +193,7 @@ class RegistrationsTable extends DataTableComponent
             $this->clearSelected();
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            throw $e;
+            session()->flash('error', 'Error rebooting device: ' . $e->getMessage());
         }
     }
-
-
 }

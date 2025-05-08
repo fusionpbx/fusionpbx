@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,6 +58,16 @@ class MusicOnHold extends Model
      */
 	protected $casts = [
 	];
+
+    protected function kHz(): Attribute
+    {
+        return Attribute::make(
+            get: function()
+            {
+                return $this->music_on_hold_rate / 1000;
+            }
+        );
+    }
 
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
