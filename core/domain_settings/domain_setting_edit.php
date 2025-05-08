@@ -88,6 +88,11 @@
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
+//sanitize the variables
+	if (!empty($domain_setting_category)) {
+		$domain_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $domain_setting_category);
+	}
+
 //process the data
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
