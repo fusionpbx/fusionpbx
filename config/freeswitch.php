@@ -13,6 +13,8 @@ return [
     |
     */
 
-    'api_type' => env('FS_API_TYPE', 'XML_RPC')
+    'api_type' => env('FS_API_TYPE', 'XML_RPC'),
+    
+    
 
 ];

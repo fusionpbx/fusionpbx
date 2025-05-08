@@ -14,6 +14,8 @@ use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\RegistrationsController;
 use App\Http\Controllers\MusicOnHoldController;
 use App\Http\Controllers\XmlCDRController;
 use App\Http\Controllers\SipProfileController;
@@ -126,6 +128,8 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/xmlcdr', [XmlCDRController::class, 'index'])->name('xmlcdr.index');
     Route::get('/xmlcdr/{xmlcdr}/play', [XmlCDRController::class, 'play'])->name('xmlcdr.play');
     Route::get('/xmlcdr/{xmlcdr}/download', [XmlCDRController::class, 'download'])->name('xmlcdr.download');
+
+    Route::resource('registrations', RegistrationsController::class)->name('registrations', 'registrations');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){
