@@ -5,6 +5,7 @@ namespace App\View\Components;
 use Closure;
 use App\Models\MusicOnHold;
 use App\Models\Recording;
+use App\Models\Stream;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\Component;
@@ -15,12 +16,12 @@ class SwitchMusicOnHold extends Component
     public $selected;
     public $options;
 
-    public function __construct($name = "", $selected = null, $musiconhold = false, $recordings = false, $streams = false)
+    public function __construct($name = "", $selected = null, $withMusicOnHold = false, $withRecordings = false, $withStreams = false)
     {
         $this->name = $name;
         $this->selected = $selected;
 
-        if($musiconhold)
+        if($withMusicOnHold)
         {
             $mohs = MusicOnHold::where("domain_uuid", Session::get("domain_uuid"))->orWhereNull("domain_uuid")->get();
             $values = [];
@@ -54,7 +55,7 @@ class SwitchMusicOnHold extends Component
             ];
         }
 
-        if($recordings)
+        if($withRecordings)
         {
             $recordings = Recording::where("domain_uuid", Session::get("domain_uuid"))->get();
             $values = [];
@@ -73,9 +74,40 @@ class SwitchMusicOnHold extends Component
             ];
         }
 
-        // if($streams)
-        // {
-        // }
+        if($withStreams)
+        {
+            $streams = Stream::where(function ($query) {
+                $query->where("domain_uuid", Session::get("domain_uuid"))->orWhereNull("domain_uuid");
+            })
+            ->where("stream_enabled", "true")
+            ->orderBy("stream_name", "asc")
+            ->get();
+
+            $values = [];
+
+            foreach($streams as $stream)
+            {
+                $values[] = [
+                    "id" => $stream->stream_location,
+                    "name" => $stream->stream_name
+                ];
+            }
+
+            $this->options[] = [
+                "label" => __("Streams"),
+                "values" => $values
+            ];
+        }
+
+        $this->options[] = [
+            "label" => __("Others"),
+            "values" => [
+                [
+                    "id" => __("silence"),
+                    "name" => __("none")
+                ]
+            ]
+        ];
 
         $this->options = json_decode(json_encode($this->options));
     }
