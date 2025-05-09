@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\DefaultSetting;
-use App\Facades\Domain as FacadesDomain;
+use App\Facades\DomainService;
 use App\Models\Domain;
-use App\Http\Controllers\DomainSettingController;
 use App\Http\Requests\DomainRequest;
 use App\Repositories\DomainRepository;
 use Illuminate\Http\Request;
@@ -67,7 +65,7 @@ class DomainController extends Controller
 
 	public function switch(Request $request)
 	{
-		return FacadesDomain::switchByUuid($request->domain_uuid);
+		return DomainService::switchByUuid($request->domain_uuid);
 
 	}
 }

@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
+use App\Collections\SipRegistrationCollection;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
 use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -64,4 +63,23 @@ class SipProfile extends Model
 	public function sipprofilesettings(): HasMany {
 		return $this->hasMany(SipProfileSetting::class, 'sip_profile_uuid', 'sip_profile_uuid');
 	}
+
+	public function newCollection(array $models = [])
+    {
+        return new SipRegistrationCollection($models);
+    }
+    
+    public function scopeWithRegistrationStatus($query)
+    {
+    
+        $query->afterQuery(function ($results) {
+            if ($results instanceof \Illuminate\Database\Eloquent\Collection) {
+                return $results->withRegistrationStatus();
+            }
+            
+            return $results;
+        });
+        
+        return $query;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Facades\DefaultSetting;
+use App\Facades\Setting;
 use App\Http\Controllers\DomainSettingController;
 use App\Repositories\DomainRepository;
 use Illuminate\Support\Facades\Session;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 class DomainService
 {
     protected $domainRepository;
+    protected $settingService;
 
     public function __construct(DomainRepository $domainRepository)
     {
@@ -48,15 +50,10 @@ class DomainService
         return false;
     }
 
-    public function defaultSetting(string $category, string $subcategory, ?string $name = null)
-    {
-        $dds = new DomainSettingController;
-        $setting = $dds->get($category, $subcategory, $name);
-        if (!isset($setting)) {
-            $setting = DefaultSetting::get($category, $subcategory, $name);
-        }
 
-        return $setting ?? null;
+    public function get(string $category, string $subcategory, ?string $name = null)
+    {
+        return Setting::getSetting($category, $subcategory, $name);
     }
 
     public function selectControl()

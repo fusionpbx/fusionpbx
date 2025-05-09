@@ -4,7 +4,7 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Domain extends Facade
+class DomainService extends Facade
 {
     /**
      * Get the registered name of the component.

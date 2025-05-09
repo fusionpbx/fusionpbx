@@ -174,6 +174,8 @@ return [
         App\Providers\FreeSwitchServiceProvider::class,
         App\Providers\DefaultSettingServiceProvider::class,
         App\Providers\DomainServiceProvider::class,
+        App\Providers\FreeSwitchRegistrationServiceProvider::class,     
+        App\Providers\SettingServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -191,7 +193,9 @@ return [
         // 'Example' => App\Facades\Example::class,
         'FreeSwitch' => App\Facades\FreeSwitch::class,
         'DefaultSetting' => App\Facades\DefaultSetting::class,
+        'FreeSwitchRegistration' => App\Facades\FreeSwitchRegistration::class,
         'Domain' => App\Facades\Domain::class,
+        'Setting' => App\Facades\Setting::class,
     ])->toArray(),
 
 ];

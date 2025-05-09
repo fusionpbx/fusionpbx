@@ -12,6 +12,7 @@ use App\Models\Group;
 use App\Models\Language;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Services\SettingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -24,11 +25,14 @@ use Illuminate\Support\Str;
 class UserController extends Controller
 {
     protected $userRepository;
+    protected $settingService;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, SettingService $settingService)
     {
+        $this->settingService = $settingService;
         $this->userRepository = $userRepository;
     }
+
 
     private $username = null;
     private $domainName = null;
@@ -139,18 +143,8 @@ class UserController extends Controller
         return view('auth.login');
     }
 
-    public function defaultSetting(string $category, string $subcategory, ?string $name = null)
+    public function get(string $category, string $subcategory, ?string $name = null)
     {
-        $uds = new UserSettingController;
-        $setting = $uds->get($category, $subcategory, $name);
-        if (!isset($setting)) {                  // TODO: Verify if it is easier to use DomainController instead
-            $dds = new DomainSettingController;
-            $setting = $dds->get($category, $subcategory, $name);
-            if (!isset($setting)) {
-                $setting = DefaultSetting::get($category, $subcategory, $name);
-            }
-        }
-
-        return $setting ?? null;
+        return $this->settingService->getSetting($category, $subcategory, $name);
     }
 }
