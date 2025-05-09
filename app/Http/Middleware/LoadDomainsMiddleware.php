@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Facades\Domain as FacadesDomain;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -13,9 +14,8 @@ class LoadDomainsMiddleware
 {
 	public function handle(Request $request, Closure $next)
 	{
-		$DomainController = app()->make(DomainController::class);
 
-		$domainSelectControl = $DomainController->selectControl();
+		$domainSelectControl = FacadesDomain::selectControl();
 
 		View::share("domainSelectControl", $domainSelectControl);
 
