@@ -4,7 +4,9 @@ namespace App\View\Components;
 
 use Closure;
 use App\Models\MusicOnHold;
+use App\Models\Recording;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\Component;
 
 class SwitchMusicOnHold extends Component
@@ -13,14 +15,14 @@ class SwitchMusicOnHold extends Component
     public $selected;
     public $options;
 
-    public function __construct($name = "", $selected = null, $musiconhold = true, $streams = true, $recordings = true)
+    public function __construct($name = "", $selected = null, $musiconhold = false, $recordings = false, $streams = false)
     {
         $this->name = $name;
         $this->selected = $selected;
 
         if($musiconhold)
         {
-            $mohs = MusicOnHold::all();
+            $mohs = MusicOnHold::where("domain_uuid", Session::get("domain_uuid"))->orWhereNull("domain_uuid")->get();
             $values = [];
             $previous_name = "";
 
@@ -47,17 +49,31 @@ class SwitchMusicOnHold extends Component
             }
 
             $this->options[] = [
-                "label" => "Music on Hold",
+                "label" => __("Music on Hold"),
                 "values" => $values
             ];
+        }
 
+        if($recordings)
+        {
+            $recordings = Recording::where("domain_uuid", Session::get("domain_uuid"))->get();
+            $values = [];
+
+            foreach($recordings as $recording)
+            {
+                $values[] = [
+                    "id" => Session::get("switch")["recordings"]["dir"] ?? "" . '/' . Session::get("domain_name") . "/" . $recording->recording_filename,
+                    "name" => $recording->recording_filename
+                ];
+            }
+
+            $this->options[] = [
+                "label" => __("Recordings"),
+                "values" => $values
+            ];
         }
 
         // if($streams)
-        // {
-        // }
-
-        // if($recordings)
         // {
         // }
 
