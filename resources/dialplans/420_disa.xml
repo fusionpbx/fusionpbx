@@ -1,0 +1,16 @@
+<extension name="disa" number="*3472" context="${domain_name}" continue="false" app_uuid="3ade2d9a-f55d-4240-bb60-b4a3ab36951c" enabled="false" order="420">
+	<condition field="destination_number" expression="^\*(3472)$">
+		<action application="answer" enabled="true"/>
+		<action application="set" data="pin_number={v_pin_number}" enabled="true"/>
+		<action application="set" data="dialplan_context=${context}" enabled="true"/>
+		<action application="set" data="outbound_caller_id_name=" enabled="false"/>
+		<action application="set" data="outbound_caller_id_number=" enabled="false"/>
+		<action application="set" data="predefined_destination=" enabled="false"/>
+		<action application="set" data="fallback_destination=" enabled="false"/>
+		<action application="set" data="digit_min_length=" enabled="false"/>
+		<action application="set" data="digit_max_length=" enabled="false"/>
+		<action application="lua" data="disa.lua" enabled="true"/>
+	</condition>
+</extension>
+
+

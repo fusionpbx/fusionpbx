@@ -1,0 +1,8 @@
+<extension name="is_zrtp_secure" number="" context="global" continue="true" app_uuid="951808c2-b778-404d-bd17-50b5df4b88f4" global="true" order="360">
+	<condition field="${zrtp_secure_media_confirmed}" expression="^true$">
+		<action application="sleep" data="1000"/>
+		<action application="playback" data="misc/call_secured.wav"/>
+		<anti-action application="eval" data="not_secure"/>
+	</condition>
+</extension>
+

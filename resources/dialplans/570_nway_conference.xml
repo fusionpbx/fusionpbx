@@ -1,0 +1,5 @@
+<extension name="nway_conference" number="nway" context="${domain_name}" continue="false" app_uuid="20617852-b069-4ace-9137-3d6a16588f6f" enabled="false" order="570">
+	<condition field="destination_number" expression="^nway">
+		<action application="conference" data="${destination_number}@${domain_name}+flags{mintwo}"/>
+	</condition>
+</extension>

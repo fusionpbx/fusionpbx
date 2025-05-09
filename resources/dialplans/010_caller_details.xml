@@ -1,0 +1,7 @@
+<extension name="caller-details" context="public" continue="true" app_uuid="b1cd7509-5576-469a-892d-d0cfb66a4197" global="true" order="10">
+	<condition field="" expression="" break="never">
+		<action application="set" data="caller_destination=${sip_to_user}" inline="true"/>
+		<action application="set" data="caller_id_name=${caller_id_name}" inline="true"/>
+		<action application="set" data="caller_id_number=${caller_id_number}"/>
+	</condition>
+</extension>

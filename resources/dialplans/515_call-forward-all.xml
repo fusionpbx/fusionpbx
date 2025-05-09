@@ -1,0 +1,18 @@
+<extension name="call-forward-all" number="" context="global" continue="false" app_uuid="57cf8f1f-9a2e-4996-bd80-d9300249b1ca" global="true" order="515">
+	<condition field="${forward_all_enabled}" expression="true"/>
+	<condition field="${call_direction}" expression="^local$" break="on-true">
+		<action application="set" data="outbound_caller_id_name=${user_data ${destination_number}@${domain_name} var outbound_caller_id_name}" inline="true" enabled="false"/>
+		<action application="set" data="outbound_caller_id_number=${user_data ${destination_number}@${domain_name} var outbound_caller_id_number}" inline="true" enabled="false"/>
+		<action application="set" data="accountcode=${user_data ${destination_number}@${domain_name} var accountcode}" inline="true" enabled="true"/>
+		<action application="transfer" data="${forward_all_destination} XML ${domain_name}" enabled="true"/>
+	</condition>
+	<condition field="${forward_all_enabled}" expression="true"/>
+	<condition field="${call_direction}" expression="^inbound$" break="on-true">
+		<action application="set" data="outbound_caller_id_name=${user_data ${destination_number}@${domain_name} var outbound_caller_id_name}" inline="true" enabled="false"/>
+		<action application="set" data="outbound_caller_id_number=${user_data ${destination_number}@${domain_name} var outbound_caller_id_number}" inline="true" enabled="false"/>
+		<action application="set" data="outbound_caller_id_name=${caller_id_name}" inline="true" enabled="true"/>
+		<action application="set" data="outbound_caller_id_number=${caller_id_number}" inline="true" enabled="true"/>
+		<action application="set" data="sip_h_Diversion=&lt;sip:${caller_destination}@${external_sip_ip}:5060&gt;;reason=unconditional" enabled="false"/>
+		<action application="transfer" data="${forward_all_destination} XML ${domain_name}" enabled="true"/>
+	</condition>
+</extension>

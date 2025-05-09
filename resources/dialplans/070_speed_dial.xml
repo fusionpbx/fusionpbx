@@ -1,0 +1,7 @@
+<extension name="speed_dial" number="*0[ext]" context="${domain_name}" continue="false" app_uuid="1a4a2611-01e3-4582-982b-4ada4d314ea3" enabled="true" order="70">
+	<condition field="destination_number" expression="^\*0(.*)$">
+		<action application="set" data="permissions=false"/>
+		<action application="lua" data="app.lua speed_dial $1"/>
+	</condition>
+</extension>
+

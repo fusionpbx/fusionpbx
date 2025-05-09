@@ -1,0 +1,6 @@
+<extension name="intercept-ext-polycom" number="*97[ext]" context="global" continue="false" app_uuid="07493266-2b99-400a-8fde-3e1a9d11f575" global="true" order="290">
+	<condition field="destination_number" expression="^\*97(\d+)$">
+		<action application="answer"/>
+		<action application="lua" data="intercept.lua $1"/>
+	</condition>
+</extension>

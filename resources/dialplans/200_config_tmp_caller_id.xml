@@ -1,0 +1,7 @@
+<extension name="config_tmp_caller_id"  context="global" continue="false" app_uuid="897845b0-1f13-444c-84fe-432fd47338ca" global="true" enabled="false" order="200">
+	<condition field="destination_number" expression="^\*22553743$">
+		<action application="set" data="caller_id_sound_current=phrase:3bbba16a-49af-43f6-8925-1b8d2d9115cd"/>
+		<action application="set" data="caller_id_sound_prompt=phrase:f3931718-1835-47b9-b808-4acc8cdf534e"/>
+		<action application="set" data="caller_id_sound_goodbye=phrase:52cf56cc-dfaa-4e8e-aecc-83810a35df57"/>
+		<action application="lua" data="app.lua caller_id"/>
+</extension>

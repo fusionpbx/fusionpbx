@@ -1,0 +1,13 @@
+<!-- voicemail provide user extension -->
+<extension name="vmain_user" number="*97" context="global" continue="false" app_uuid="5d47ab13-f25d-4f62-a68e-2a7d945d05b7" global="true" order="330">
+	<condition field="destination_number" expression="^\*97$">
+		<action application="answer"/>
+		<action application="sleep" data="1000"/>
+		<action application="set" data="record_append=false"/>
+		<action application="set" data="voicemail_action=check"/>
+		<action application="set" data="voicemail_id=${user_name}"/>
+		<action application="set" data="voicemail_profile=default"/>
+		<action application="lua" data="app.lua voicemail"/>
+		<!--<action application="voicemail" data="check default ${domain_name} ${caller_id_number}"/>-->
+	</condition>
+</extension>

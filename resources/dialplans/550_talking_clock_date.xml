@@ -1,0 +1,8 @@
+<extension name="talking clock date" number="*9171" context="global" continue="false" app_uuid="780e174b-a645-478e-b53c-0eb08b9a043c" global="true" order="550">
+	<condition field="destination_number" expression="^\*9171$">
+		<action application="answer"/>
+		<action application="sleep" data="1000"/>
+		<action application="say" data="${default_language} CURRENT_DATE pronounced ${strepoch()}"/>
+		<action application="hangup"/>
+	</condition>
+</extension>

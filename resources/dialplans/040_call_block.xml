@@ -1,0 +1,5 @@
+<extension name="call_block" number="" context="${domain_name}" continue="true" app_uuid="b1b31930-d0ee-4395-a891-04df94599f1f" enabled="false" order="40">
+	<condition field="${call_direction}" expression="^(inbound|outbound)$" >
+		<action application="lua" data="app.lua call_block"/>
+	</condition>
+</extension>

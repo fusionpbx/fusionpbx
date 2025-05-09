@@ -1,0 +1,11 @@
+<extension name="cidlookup" number="" context="${domain_name}" continue="true" app_uuid="a0cb498c-6e09-441f-83ea-a7684565c44e" enabled="false" order="870">
+	<condition field="${user_exists}" expression="^true$" break="never"/>
+	<condition field="${call_direction}" expression="^inbound$" break="never"/>
+	<condition field="${module_exists(mod_cidlookup)}" expression="^true$" break="never"/>
+	<condition field="caller_id_number" expression="^\+?1?(\d{10})$" break="never">
+		<action application="set" data="cidlookup_caller_id_name=${cidlookup(1$1)}" inline="true"/>
+	</condition>
+	<condition field="${cidlookup_caller_id_name}" expression="^(?!UNKNOWN)">
+		<action application="set" data="effective_caller_id_name=${cidlookup_caller_id_name}" inline="true"/>
+	</condition>
+</extension>

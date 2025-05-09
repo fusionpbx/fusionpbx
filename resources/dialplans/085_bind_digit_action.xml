@@ -1,0 +1,23 @@
+<extension name="bind_digit_action" number="" context="${domain_name}" continue="true" app_uuid="7e007a4d-886b-4cdf-81f4-da9eb4689f1c" enabled="false" order="85">
+	<condition field="${from_user_exists}" expression="true" break="never">
+		<action application="set" data="bind_target=self" inline="true"/>
+		<action application="set" data="bind_action_target=self" inline="true"/>
+		<!-- The caller here is remote so only assign feature codes to internal recipient -->
+		<anti-action application="set" data="bind_target=peer" inline="true"/>
+		<anti-action application="set" data="bind_action_target=peer" inline="true"/>
+	</condition>
+	<condition>
+		<!-- <action application="export" data="conf_xfer_number=xfer-${create_uuid foo}-${domain_name}"/>-->
+		<action application="bind_digit_action" data="local,*1,exec:execute_extension,dx XML ${context},${bind_target},${bind_action_target}"/>
+		<action application="bind_digit_action" data="local,*3,exec:execute_extension,cf XML ${context},${bind_target},${bind_action_target}"/>
+		<action application="bind_digit_action" data="local,*4,exec:execute_extension,att_xfer XML ${context},${bind_target},${bind_action_target}"/>
+		<!-- <action application="bind_digit_action" data="local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@${domain_name},${bind_target},${bind_action_target}"/> -->
+		<action application="digit_action_set_realm" data="local"/>
+	</condition>
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${from_user_exists}" expression="true">
+		<action application="set" data="bridge_pre_execute_bleg_app=lua"/>
+		<action application="set" data="bridge_pre_execute_bleg_data=bind_digit_bleg.lua ${context}"/>
+	</condition>
+</extension>
+

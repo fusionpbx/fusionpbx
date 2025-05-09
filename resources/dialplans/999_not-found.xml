@@ -1,0 +1,6 @@
+<extension name="not-found" context="public" continue="false" app_uuid="23d198e5-7a8e-4af7-b573-2d166c1c24ff" global="true" order="999">
+	<condition field="" expression="">
+		<action application="set" data="call_direction=inbound" inline="true"/>
+		<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip}"/>
+	</condition>
+</extension>

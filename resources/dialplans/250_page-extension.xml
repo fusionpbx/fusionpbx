@@ -1,0 +1,10 @@
+<extension name="page-extension" number="*8[ext]" context="${domain_name}" continue="false" app_uuid="1b224444-de8b-448d-b2d1-19feaac3effa" order="250">
+	<condition field="destination_number" expression="^\*8(\d{2,7})$">
+		<action application="set" data="destinations=$1"/>
+		<action application="set" data="pin_number={v_pin_number}"/>
+		<action application="set" data="mute=true"/>
+		<action application="set" data="moderator=false" />
+		<action application="lua" data="page.lua"/>
+	</condition>
+</extension>
+

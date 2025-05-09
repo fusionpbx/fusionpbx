@@ -1,0 +1,13 @@
+<extension name="group-intercept" number="*8" context="${domain_name}" continue="false" app_uuid="15332e83-12f5-44d3-8472-633736eb4b9b" order="230">
+	<condition field="destination_number" expression="^\*8$"/>
+	<!-- if it is call from another node then needed UUID already in sip header       -->
+	<!-- So we can just do intercept without calling Lua script again on current node -->
+	<condition field="${sip_h_X-intercept_uuid}" expression="^(.+)$" break="on-true">
+		<action application="intercept" data="$1"/>
+	</condition>
+	<condition>
+		<action application="answer"/>
+		<action application="lua" data="intercept_group.lua inbound"/>
+	</condition>
+</extension>
+

@@ -1,0 +1,9 @@
+<extension name="operator" number="0" context="${domain_name}" continue="false" app_uuid="0e1cd2d7-9d84-4959-8b6c-0cb23de4de59" enabled="false" order="480">
+	<condition field="destination_number" expression="^0$|^operator$">
+		<action application="export" data="transfer_context={v_context}" enabled="true"/>
+		<action application="bind_meta_app" data="4 ab s execute_extension::att_xfer XML ${context}" enabled="false"/>
+		<action application="bind_meta_app" data="5 ab s execute_extension::xfer_vm XML ${context}" enabled="false"/>
+		<action application="set" data="domain_name={v_context}" enabled="true"/>
+		<action application="transfer" data="${operator} XML {v_context}" enabled="true"/>
+	</condition>
+</extension>

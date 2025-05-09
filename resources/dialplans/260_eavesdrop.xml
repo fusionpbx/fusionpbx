@@ -1,0 +1,7 @@
+<extension name="eavesdrop" number="*33[ext]" context="${domain_name}" continue="false" app_uuid="e944af7e-8fcc-429b-a32f-0dcdce1585d8" order="260">
+	<condition field="destination_number" expression="^\*33(\d{2,7})$">
+		<action application="answer"/>
+		<action application="set" data="pin_number={v_pin_number}"/>
+		<action application="lua" data="eavesdrop.lua $1"/>
+	</condition>
+</extension>

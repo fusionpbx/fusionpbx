@@ -1,0 +1,16 @@
+<extension name="page" number="*724" context="${domain_name}" continue="false" app_uuid="2011c518-696d-4878-a9b2-b217b6311311" enabled="false" order="240">
+	<condition field="destination_number" expression="^\*724$" >
+		<action application="set" data="caller_id_name=Page" />
+		<action application="set" data="caller_id_number=" />
+		<action application="set" data="pin_number={v_pin_number}" />
+		<action application="set" data="destinations=101-103,105" />
+		<action application="set" data="moderator=false" />
+		<action application="set" data="mute=true" />
+		<action application="set" data="check_destination_status=true" enabled="false" />
+		<action application="set" data="api_hangup_hook=conference page-${destination_number}@${domain_name} kick all" enabled="false"/>
+		<action application="set" data="execute_on_answer=sched_hangup +80 allotted_timeout" enabled="false"/>
+		<action application="lua" data="page.lua" />
+	</condition>
+</extension>
+
+

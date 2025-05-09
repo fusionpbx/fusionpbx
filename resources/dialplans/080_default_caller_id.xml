@@ -1,0 +1,20 @@
+<extension name="default_caller_id" number="" context="${domain_name}" continue="true" app_uuid="9660e536-976d-47cb-872e-85957c51bd3d" order="80">
+	<condition field="${call_direction}" expression="outbound"/>
+	<condition field="${emergency_caller_id_name}" expression="^$" break="never">
+		<action application="set" data="emergency_caller_id_name=${default_emergency_caller_id_name}" inline="true"/>
+	</condition>
+	<condition field="${call_direction}" expression="outbound"/>
+	<condition field="${emergency_caller_id_number}" expression="^$" break="never">
+		<action application="set" data="emergency_caller_id_number=${default_emergency_caller_id_number}" inline="true"/>
+	</condition>
+	<condition field="${call_direction}" expression="outbound"/>
+	<condition field="${loopback_leg}" expression="^$"/>
+	<condition field="${outbound_caller_id_name}" expression="^$" break="never">
+		<action application="set" data="outbound_caller_id_name=${default_outbound_caller_id_name}" inline="true"/>
+	</condition>
+	<condition field="${call_direction}" expression="outbound"/>
+	<condition field="${loopback_leg}" expression="^$"/>
+	<condition field="${outbound_caller_id_number}" expression="^$" break="never">
+		<action application="set" data="outbound_caller_id_number=${default_outbound_caller_id_number}" inline="true"/>
+	</condition>
+</extension>

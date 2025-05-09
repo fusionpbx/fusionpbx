@@ -1,0 +1,72 @@
+<!--
+@usage
+  set `conf_xfer_number` and do transfer to `conf_xfer_from_dialplan`
+
+<action application="export" data="conf_xfer_number=xfer-${create_uuid foo}-${domain_name}">
+<action application="bind_digit_action" data="local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@${domain_name},${bind_target}"/>
+
+Control DTMF sequence
+	`*0` transfer `self` to enter number and `peer` leg to conference room
+	`##` transfer `self` to enter number and hangup `peer` leg
+	`*#` transfer `self` to conference room and hangup `peer` leg
+-->
+
+<extension name="conf-xfer" number="" context="conf-xfer@${domain_name}" continue="false" app_uuid="04e6a380-a27e-4032-bedf-f5b2249ea54d" enabled="false" order="250">
+
+	<condition field="destination_number" expression="^conf_add_begin$" break="on-true">
+		<action application="set" data="api_result=${conference(${conf_xfer_number} unmute ${conference_member_id} quiet)}"/>
+		<action application="bind_digit_action" data="conf-xfer,*0,api:lua,transfer2.lua ${uuid} conf_enter_number::XML::conf-xfer@${domain_name} conf_enter_to::XML::conf-xfer@${domain_name}"/>
+		<action application="bind_digit_action" data="conf-xfer,##,api:lua,transfer2.lua ${uuid} conf_enter_number::XML::conf-xfer@${domain_name} ::KILL::"/>
+		<action application="bind_digit_action" data="conf-xfer,*#,api:lua,transfer2.lua ${uuid} conf_add_end::XML::conf-xfer@${domain_name} ::KILL::"/>
+		<action application="bind_digit_action" data="conf,*#,exec:execute_extension,conf_add_begin XML conf-xfer@${domain_name}"/>
+		<action application="bind_digit_action" data="none,NONE,api:sleep,1"/>
+		<action application="set" data="continue_on_fail=true"/>
+		<action application="transfer" data="conf_enter_number XML conf-xfer@${domain_name}"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_add_end$" break="on-true">
+		<action application="digit_action_set_realm" data="conf"/>
+		<action application="set" data="api_result=${conference(${conf_xfer_number} mute ${conference_member_id})}"/>
+		<action application="conference" data="${conf_xfer_number}@page"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_enter_number$" break="on-true">
+		<action application="digit_action_set_realm" data="none"/>
+		<action application="read" data="2 11 'tone_stream://%(10000,0,350,440)' target_num 30000 #"/>
+		<action application="execute_extension" data="conf_bridge_${target_num} XML conf-xfer@${domain_name}"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_bridge_$" break="on-true">
+		<action application="execute_extension" data="conf_add_end  XML conf-xfer@${domain_name}"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_bridge_\*$" break="on-true">
+		<action application="execute_extension" data="conf_add_end XML conf-xfer@${domain_name}"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_bridge_(\d{2,7})$" break="on-true">
+		<action application="digit_action_set_realm" data="conf-xfer"/>
+		<action application="bridge" data="{conf_xfer_number=${conf_xfer_number},transfer_after_bridge=conf_enter_to:XML:conf-xfer@${domain_name}}user/$1@${domain_name}"/>
+		<action application="execute_extension" data="conf_enter_number  XML conf-xfer@${domain_name}"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_bridge_" break="on-true">
+		<action application="playback" data="voicemail/vm-that_was_an_invalid_ext.wav"/>
+		<action application="execute_extension" data="conf_enter_number XML conf-xfer@${domain_name}"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_enter_to$" break="on-true">
+		<action application="unbind_meta_app" data=""/>
+		<action application="bind_digit_action" data="conf,*#,exec:execute_extension,conf_add_begin XML conf-xfer@${domain_name}"/>
+		<action application="digit_action_set_realm" data="conf"/>
+		<action application="answer" data=""/>
+		<action application="playback" data="tone_stream://L=1;%(500, 0, 640)"/>
+		<action application="conference" data="${conf_xfer_number}@page"/>
+	</condition>
+
+	<condition field="destination_number" expression="^conf_xfer_from_dialplan$">
+		<action application="lua" data="transfer2.lua ${uuid} conf_add_begin::XML::conf-xfer@${domain_name} conf_enter_to::XML::conf-xfer@${domain_name}"/>
+	</condition>
+
+</extension>
+

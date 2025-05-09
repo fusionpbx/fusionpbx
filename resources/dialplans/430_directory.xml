@@ -1,0 +1,5 @@
+<extension name="directory" number="*411" context="global" continue="false" app_uuid="a223dc70-28a1-4979-834e-8af813cd8ea6" global="true" order="430">
+	<condition field="destination_number" expression="^\*411$">
+		<action application="lua" data="directory.lua"/>
+	</condition>
+</extension>

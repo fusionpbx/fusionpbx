@@ -1,0 +1,8 @@
+<extension name="redial" number="*870" context="global" continue="true" app_uuid="459da8c1-073a-458e-ae7e-8194342f9583" global="true" order="60">
+	<condition field="destination_number" expression="^(redial|\*870)$" break="on-true">
+		<action application="transfer" data="${hash(select/${domain_name}-last_dial/${caller_id_number})}"/>
+	</condition>
+	<condition field="" expression="" break="never">
+		<action application="hash" data="insert/${domain_name}-last_dial/${caller_id_number}/${destination_number}"/>
+	</condition>
+</extension>

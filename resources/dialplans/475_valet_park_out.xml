@@ -1,0 +1,6 @@
+<extension name="valet_park_out" number="5901-5999" context="${domain_name}" continue="false" app_uuid="242130d4-61d6-4daf-9dd1-b139a2b3b166" enabled="false" order="475">
+	<condition field="destination_number" expression="^(?:park\+)?(59[0-9][0-9])$">
+		<action application="answer"/>
+		<action application="valet_park" data="5900@${domain_name} $1"/>
+	</condition>
+</extension>

@@ -1,0 +1,12 @@
+<extension name="extension_queue" context="${domain_name}" continue="false" app_uuid="854df474-bf40-419e-9ba7-3bd27a52d98a" enabled="false" order="560">
+	<condition field="${user_exists}" expression="^true$">
+		<action application="answer" data=""/>
+		<action application="set" data="fifo_simo=1"/>
+		<action application="set" data="fifo_timeout=1"/>
+		<action application="set" data="fifo_lag=1"/>
+		<action application="set" data="fifo_destroy_after_use=true"/>
+		<action application="set" data="fifo_music=local_stream://default"/>
+		<action application="set" data="result=${fifo_member(add ${destination_number}@${domain_name} {fifo_member_wait=nowait}user/${destination_number}@${domain_name}"/>
+		<action application="fifo" data="${destination_number}@${domain_name} in"/>
+	</condition>
+</extension>

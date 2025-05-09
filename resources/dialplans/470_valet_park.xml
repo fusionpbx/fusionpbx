@@ -1,0 +1,25 @@
+<extension name="valet_park" number="park+*5901-*5999" context="${domain_name}" continue="false" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="true" order="470">
+	<condition field="destination_number" expression="^(park)?\+?\*(59[0-9][0-9])$" break="never"/>
+	<condition field="${sip_h_Referred-By}" expression="sip:(.*)@.*" break="never">
+		<action application="set" data="referred_by_user=$1" inline="true"/>
+	</condition>
+	<condition field="destination_number" expression="^(park)?\+?\*(59[0-9][0-9])$" break="never">
+		<action application="set" data="park_in_use=false" inline="true"/>
+		<action application="set" data="park_lot=$2" inline="true"/>
+		<action application="info" data=""/>
+	</condition>
+	<condition field="destination_number" expression="^(park)?\+?\*(59[0-9][0-9])$"/>
+	<condition field="${referred_by_user}" expression="^.+$" break="never">
+		<action application="set" data="valet_info_park=${valet_info park@${domain_name}}|\*${park_lot}" inline="true"/>
+		<action application="set" data="park_in_use=${regex ${valet_info park@${domain_name}}|\*${park_lot}}" inline="true"/>
+	</condition>
+	<condition field="${park_in_use}" expression="true" break="never">
+		<action application="transfer" data="${referred_by_user} XML ${context}"/>
+		<anti-action application="set" data="effective_caller_id_name=${cond ${regex ${direction} | inbound} == true ? 'park#${caller_id_name}' : 'park#${callee_id_name}'}" inline="true"/>
+		<anti-action application="set" data="valet_parking_timeout=900"/>
+		<anti-action application="set" data="valet_hold_music=${hold_music}"/>
+		<anti-action application="set" data="valet_parking_orbit_exten=${cond ${regex ${referred_by_user} | ^$} == true ? ${sip_from_user} : ${referred_by_user}}"/>
+		<anti-action application="answer" data=""/>
+		<anti-action application="valet_park" data="park@${domain_name} *${park_lot}"/>
+	</condition>
+</extension>

@@ -1,0 +1,9 @@
+<extension name="please_hold" number="" context="global" continue="true" app_uuid="c3ea29d1-db41-421e-91b7-b0984e50bcae" global="true" enabled="false" order="350">
+	<condition field="${user_exists}" expression="^true$">
+		<action application="set" data="transfer_ringback=${hold_music}"/>
+		<action application="answer"/>
+		<action application="sleep" data="1500"/>
+		<action application="playback" data="ivr/ivr-hold_connect_call.wav"/>
+	</condition>
+</extension>
+

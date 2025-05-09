@@ -67,7 +67,7 @@ class Dialplan extends Model
 	public function dialplanDetails(): HasMany {
 		return $this->hasMany(DialplanDetail::class, 'dialplan_uuid', 'dialplan_uuid')
 			->orderBy('dialplan_detail_group', 'asc')
-			->orderByRaw("case when dialplan_detail_tag='condition' then 0 when dialplan_detail_tag='regex' then 1 when dialplan_detail_tag='action' then 2 when dialplan_detail_tag='anti-action' then 4 end ASC")
+			->orderByRaw("case when dialplan_detail_tag='condition' then 0 when dialplan_detail_tag='regex' then 1 when dialplan_detail_tag='action' then 2 when dialplan_detail_tag='anti-action' then 4 else 100 end ASC")
 			->orderBy('dialplan_detail_order', 'asc');
 	}
 

@@ -1,0 +1,58 @@
+<extension name="user_record" number="" context="${domain_name}" continue="true" app_uuid="43539dd3-d555-4498-835a-3245a0b184ca" enabled="true" order="50">
+	<condition field="${user_exists}" expression="^true$" break="never"/>
+	<condition field="${user_record}" expression="^all$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${user_exists}" expression="^true$" break="never"/>
+	<condition field="${call_direction}" expression="^inbound$" break="never"/>
+	<condition field="${user_record}" expression="^inbound$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${user_exists}" expression="^true$" break="never"/>
+	<condition field="${call_direction}" expression="^outbound$" break="never"/>
+	<condition field="${user_record}" expression="^outbound$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${user_exists}" expression="^true$" break="never"/>
+	<condition field="${call_direction}" expression="^local$" break="never"/>
+	<condition field="${user_record}" expression="^local$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${from_user_exists}" expression="^true$" break="never">
+		<action application="set" data="from_user_record=${user_data ${sip_from_user}@${sip_from_host} var user_record}" inline="true"/>
+	</condition>
+	<condition field="${from_user_exists}" expression="^true$" break="never"/>
+	<condition field="${from_user_record}" expression="^all$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${from_user_exists}" expression="^true$" break="never"/>
+	<condition field="${call_direction}" expression="^inbound$" break="never"/>
+	<condition field="${from_user_record}" expression="^inbound$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${from_user_exists}" expression="^true$" break="never"/>
+	<condition field="${call_direction}" expression="^outbound$" break="never"/>
+	<condition field="${from_user_record}" expression="^outbound$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${from_user_exists}" expression="^true$" break="never"/>
+	<condition field="${call_direction}" expression="^local$" break="never"/>
+	<condition field="${from_user_record}" expression="^local$" break="never">
+		<action application="set" data="record_session=true" inline="true"/>
+	</condition>
+	<condition field="${record_session}" expression="^true$">
+		<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true" enabled="true"/>
+		<action application="set" data="record_name=${uuid}.${record_ext}" inline="true" enabled="true"/>
+		<!--<action application="set" data="record_name=${destination_number}-${caller_id_number}_${strftime(%Y-%m-%d %H:%M)}.${record_ext}" inline="true" enabled="true"/>-->
+		<action application="mkdir" data="${record_path}" enabled="true"/>
+		<action application="set" data="recording_follow_transfer=true" inline="true" enabled="true"/>
+		<action application="bind_digit_action" data="local,*5,api:uuid_record,${uuid} mask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self" enabled="true"/>
+		<action application="bind_digit_action" data="local,*6,api:uuid_record,${uuid} unmask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self" enabled="true"/>
+		<action application="set" data="record_append=true" inline="true" enabled="true"/>
+		<action application="set" data="record_in_progress=true" inline="true" enabled="true"/>
+		<action application="set" data="api_on_answer=uuid_record ${uuid} start ${record_path}/${record_name}" inline="false" enabled="false"/>
+		<action application="set" data="RECORD_ANSWER_REQ=true" enabled="true"/>
+		<action application="record_session" data="${record_path}/${record_name}" enabled="true"/>
+	</condition>
+</extension>
+

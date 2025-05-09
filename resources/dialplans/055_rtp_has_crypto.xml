@@ -1,0 +1,7 @@
+<extension name="rtp_has_crypto" number="" context="global" continue="true" app_uuid="e23d96cc-20db-4fa5-98a0-a75c402fa291" global="true" order="55">
+	<condition field="${rtp_has_crypto}" expression="^(AEAD_AES_256_GCM_8|AEAD_AES_128_GCM_8|AES_CM_256_HMAC_SHA1_80|AES_CM_192_HMAC_SHA1_80|AES_CM_128_HMAC_SHA1_80|AES_CM_256_HMAC_SHA1_32|AES_CM_192_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_32|AES_CM_128_NULL_AUTH)$">
+		<action application="set" data="rtp_secure_media=optional" inline="true"/>
+		<action application="export" data="rtp_secure_media=optional" inline="true"/>
+	</condition>
+</extension>
+

@@ -1,0 +1,18 @@
+<extension name="do-not-disturb" number="*77,*78,*79" context="global" continue="false" app_uuid="df32d982-e39e-4ae5-a46d-aed1893873f2" global="true" enabled="true" order="490">
+	<condition field="destination_number" expression="^\*77$" break="on-true">
+		<action application="set" data="enabled=toggle"/>
+		<action application="lua" data="do_not_disturb.lua"/>
+	</condition>
+	<condition field="destination_number" expression="^\*78$|\*363$" break="on-true">
+		<action application="set" data="enabled=true"/>
+		<action application="lua" data="do_not_disturb.lua"/>
+	</condition>
+	<condition field="destination_number" expression="^\*79$" break="on-true">
+		<action application="set" data="enabled=false"/>
+		<action application="lua" data="do_not_disturb.lua"/>
+	</condition>
+	<condition field="destination_number" expression="^dnd\+${caller_id_number}$" break="on-true">
+		<action application="set" data="enabled=toggle"/>
+		<action application="lua" data="do_not_disturb.lua"/>
+	</condition>
+</extension>

@@ -1,0 +1,15 @@
+<extension name="call_screen" number="[ext]" context="${domain_name}" continue="true" app_uuid="b26a08a5-a062-42ca-b90f-d47f905dd876" order="495">
+	<condition field="${call_screen_enabled}" expression="^true$"/>
+	<condition field="${call_direction}" expression="^inbound$">
+		<action application="set" data="call_screen_file=/tmp/${domain_name}-${caller_id_number}.${record_ext}" inline="true"/>
+		<action application="answer"/>
+		<action application="sleep" data="1000"/>
+		<action application="phrase" data="voicemail_record_name"/>
+		<action application="playback" data="tone_stream://%(500, 0, 640)"/>
+		<action application="set" data="playback_terminators=#*0123456789"/>
+		<action application="record" data="${call_screen_file} 7 200 2"/>
+		<action application="set" data="group_confirm_key=1"/>
+		<action application="set" data="fail_on_single_reject=true"/>
+		<action application="set" data="group_confirm_file=phrase:screen_confirm:${call_screen_file}"/>
+	</condition>
+</extension>

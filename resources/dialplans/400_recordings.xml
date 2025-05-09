@@ -1,0 +1,10 @@
+<extension name="recordings" number="*732" context="${domain_name}" continue="false" app_uuid="430737df-5385-42d1-b933-22600d3fb79e" order="400">
+	<condition field="destination_number" expression="^\*(732)$">
+		<action application="answer"/>
+		<action application="set" data="pin_number={v_pin_number}"/>
+		<action application="set" data="recording_id="/>
+		<action application="set" data="recording_prefix=recording"/>
+		<action application="set" data="record_append=false"/>
+		<action application="lua" data="recordings.lua"/>
+	</condition>
+</extension>

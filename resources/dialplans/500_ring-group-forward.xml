@@ -1,0 +1,10 @@
+<extension name="ring-group-forward" number="*75" context="${domain_name}" continue="false" app_uuid="738cba74-4fa1-4e85-9c50-1bbdbc25346c" enabled="true" order="500">
+	<condition field="destination_number" expression="^\*75$" break="on-true">
+		<action application="set" data="pin_number={v_pin_number}"/>
+		<action application="set" data="enabled=toggle"/>
+		<action application="set" data="ring_group_number="/>
+		<action application="set" data="forward_destination="/>
+		<action application="set" data="forward_reset=true"/>
+		<action application="lua" data="app/ring_groups/resources/scripts/call_forward.lua"/>
+	</condition>
+</extension>

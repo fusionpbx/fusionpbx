@@ -1,0 +1,7 @@
+<extension name="valet_park_auto" number="park+5900" context="${domain_name}" continue="false" app_uuid="c192ee50-084d-40d8-8d9a-6959369382c8" enabled="false" order="470">
+	<condition field="destination_number" expression="^(?:(?:park\+\*?)|(?:\*))(5900)$"/>
+	<condition field="${sip_h_Referred-By}" expression="sip:(.*)@.*" break="never">
+		<action application="valet_park" data="5900@${domain_name} auto in 5901 5999"/>
+		<anti-action application="valet_park" data="5900@${domain_name} auto out 5901 5999"/>
+	</condition>
+</extension>

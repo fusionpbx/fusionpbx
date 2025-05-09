@@ -1,0 +1,13 @@
+<extension name="call_recording_on_demand" number="" context="${domain_name}" continue="true" app_uuid="3746fc9c-f331-48c0-82d8-a80b1bfffa06" enabled="false" order="45">
+	<condition field="${sip_authorized}" expression="true" break="never">
+		<action application="set" data="bind_target=both" inline="true"/>
+		<!-- set to peer to prevent manipulate of call by caller -->
+		<anti-action application="set" data="bind_target=peer" inline="true"/>
+	</condition>
+	<condition>
+		<action application="bind_digit_action" data="local,*2,exec:record_session,$${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},${bind_target}"/>
+		<action application="digit_action_set_realm" data="local"/>
+		<action application="bind_digit_action" data="local,*5,api:uuid_record,${uuid} mask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},${bind_target}"/>
+		<action application="bind_digit_action" data="local,*6,api:uuid_record,${uuid} unmask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},${bind_target}"/>
+	</condition>
+</extension>

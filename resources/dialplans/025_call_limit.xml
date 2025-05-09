@@ -1,0 +1,5 @@
+<extension name="call-limit" number="" context="${domain_name}" continue="true" app_uuid="4670c44c-45dd-4bae-97ba-b0dfe0aca639" enabled="false" order="25">
+	<condition field="${call_direction}" expression="^(inbound|outbound)$">
+		<action application="limit" data="hash inbound ${domain_uuid} ${max_calls} !USER_BUSY"/>
+	</condition>
+</extension>

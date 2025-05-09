@@ -1,0 +1,8 @@
+<!-- In call Transfer for phones without a transfer button -->
+<extension name="dx" number="dx" context="global" continue="false" app_uuid="ddcf7740-78ca-4035-8c19-e2df10cebf67" global="true" order="300">
+	<condition field="destination_number" expression="^dx$">
+		<action application="answer"/>
+		<action application="read" data="2 6 'tone_stream://%(10000,0,350,440)' digits 5000 #"/>
+		<action application="transfer" data="-bleg ${digits}"/>
+	</condition>
+</extension>

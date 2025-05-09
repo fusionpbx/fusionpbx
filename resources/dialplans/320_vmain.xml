@@ -1,0 +1,23 @@
+<!-- voicemail main extension, used when * is pressed from an external number -->
+<extension name="vmain" number="*98" context="global" continue="false" app_uuid="d085a1e3-c53a-4480-9ca6-6a362899a681" global="true" order="320">
+	<condition field="destination_number" expression="^vmain$|^\*4000$|^\*98$" break="never">
+		<action application="answer"/>
+		<action application="sleep" data="1000"/>
+		<action application="set" data="record_append=false"/>
+		<action application="set" data="voicemail_action=check"/>
+		<action application="set" data="voicemail_profile=default"/>
+		<action application="set" data="voicemail_authorized=false"/>
+		<action application="lua" data="app.lua voicemail"/>
+		<!--<action application="voicemail" data="check default ${domain_name}"/>-->
+	</condition>
+	<condition field="destination_number" expression="^(vmain$|^\*4000$|^\*98|voicemail\+)(\d{2,12})$">
+		<action application="answer"/>
+		<action application="sleep" data="1000"/>
+		<action application="set" data="record_append=false"/>
+		<action application="set" data="voicemail_action=check"/>
+		<action application="set" data="voicemail_id=$2"/>
+		<action application="set" data="voicemail_profile=default"/>
+		<action application="set" data="voicemail_authorized=false"/>
+		<action application="lua" data="app.lua voicemail"/>
+	</condition>
+</extension>

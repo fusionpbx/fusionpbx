@@ -1,0 +1,7 @@
+<extension name="is_transfer" number="is_transfer" context="global" continue="false" app_uuid="da8e22c7-9e07-4ff5-a28b-faf35ba8d411" global="true" order="330">
+	<condition field="destination_number" expression="^is_transfer$"/>
+	<condition field="${digits}" expression="^(\d+)$">
+		<action application="transfer" data="-aleg ${digits} XML ${context}"/>
+		<anti-action application="eval" data="cancel transfer"/>
+	</condition>
+</extension>
