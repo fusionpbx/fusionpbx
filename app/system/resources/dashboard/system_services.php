@@ -153,6 +153,16 @@ echo "			);\n";
 echo "		</script>\n";
 
 if ($dashboard_details_state != 'disabled') {
+        // Define friendly names for known system services
+	$service_friendly_names = [
+		'email_queue'         => 'Email Queue',
+		'event_guard'         => 'Event Guard',
+		'fax_queue'           => 'Fax Queue',
+		'maintenance_service' => 'Maintenance Service',
+		'message_events'      => 'Message Events',
+		'message_queue'       => 'Message Queue',
+		'xml_cdr'             => 'XML CDR'
+	];
 echo "	<div class='hud_details hud_box' id='hud_system_services_details'>\n";
 echo "		<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 echo "			<tr>\n";
@@ -163,8 +173,10 @@ echo "			</tr>\n";
 		$row_style[true] = "row_style1";
 		$c = true;
 		foreach ($services as $name => $enabled) {
+			// Use mapped friendly name, or fall back to default formatting
+			$display_name = $service_friendly_names[$name] ?? ucwords(str_replace('_', ' ', $name));
 			echo "  <tr>\n";
-			echo "    <td valign='top' class='{$row_style[$c]}' hud_text>$name</td>\n";
+			echo "    <td valign='top' class='{$row_style[$c]}' hud_text>$display_name</td>\n";
 			echo "    <td valign='top' class='{$row_style[$c]}' hud_text style='text-align: center;'>" . ($enabled ? $text['label-yes'] ?? 'Yes' : $text['label-no'] ?? 'No') . "</td>\n";
 			echo "  </tr>\n";
 			$c = !$c;
