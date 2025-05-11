@@ -228,6 +228,9 @@
 					$total = $parts[1];
 					$used = $parts[2];
 					$percent_memory = round(($used / $total) * 100, 1);
+
+					// Set style color based on thresholds
+					$style = ($percent_memory > 90) ? "color: red;" : (($percent_memory > 75) ? "color: orange;" : "");
 					
 					// Format with used/total (e.g. "40% (3.2G/8G)")
 					$total_h = round($total / (1024*1024*1024), 1) . 'G';
@@ -235,9 +238,7 @@
 					
 					echo "<tr class='tr_link_void'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".
-						$percent_memory."% (".$used_h." / ".$total_h.")".
-						"</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_memory."% (".$used_h." / ".$total_h.")"."</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -255,15 +256,16 @@
 					
 					// Only show swap if it exists (total > 0)
 					if ($swap_total > 0) {
-						$percent_swap = round(($swap_used / $swap_total) * 100, 1) . '%';
+						$percent_swap = round(($swap_used / $swap_total) * 100, 1);
 						$swap_total_h = round($swap_total / (1024*1024*1024), 1) . 'G';
 						$swap_used_h = round($swap_used / (1024*1024*1024), 1) . 'G';
+
+						// Set style color based on thresholds
+						$style = ($percent_swap > 90) ? "color: red;" : (($percent_swap > 75) ? "color: orange;" : "");
 						
 						echo "<tr class='tr_link_void'>\n";
 						echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-swap_usage']."</td>\n";
-						echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".
-							$percent_swap." (".$swap_used_h." / ".$swap_total_h.")".
-							"</td>\n";
+						echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_swap."% (".$swap_used_h." / ".$swap_total_h.")"."</td>\n";
 						echo "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -274,10 +276,12 @@
 			if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
 					  
 				if (!empty($percent_disk_usage) && $used_space != '-' && $total_space != '-') {
+					// Set style color based on thresholds
+					$style = ($percent_disk_usage > 90) ? "color: red;" : (($percent_disk_usage > 75) ? "color: orange;" : "");
+					
 					echo "<tr class='tr_link_void'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_disk_usage."% (".$used_space." / ".$total_space.")".
-						"</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_disk_usage."% (".$used_space." / ".$total_space.")"."</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -321,15 +325,13 @@
 			}
 	
 			if (!empty($connections)) {
+				// Set style color based on thresholds
+				$ratio = $current_connections / $max_connections;
+				$style = ($ratio > 0.9) ? "color: red;" : (($ratio > 0.75) ? "color: orange;" : "");
+				
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='" . $row_style[$c] . " hud_text'>" . $text['label-database_connections'] . "</td>\n";
-				if ($current_connections / $max_connections > 0.75) {
-					echo "<td valign='top' class='" . $row_style[$c] . " hud_text' style='color: orange; text-align: right;'>" . $connections . "</td>\n";
-				} elseif ($current_connections / $max_connections > 0.9) {
-					echo "<td valign='top' class='" . $row_style[$c] . " hud_text' style='color: red; text-align: right;'>" . $connections . "</td>\n";
-				} else {
-					echo "<td valign='top' class='" . $row_style[$c] . " hud_text' style='text-align: right;'>" . $connections . "</td>\n";
-				}
+				echo "<td valign='top' class='" . $row_style[$c] . " hud_text' style='text-align: right; $style'>" . $connections . "</td>\n";
 				echo "</tr>\n";
 				$c = ($c) ? 0 : 1;
 			}
