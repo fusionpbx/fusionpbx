@@ -219,8 +219,8 @@ if ($dashboard_details_state != 'disabled') {
 echo "  <div class='hud_details hud_box' id='hud_system_services_details'>\n";
 echo "    <table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 echo "      <tr>\n";
-echo "        <th class='hud_heading' width='40%'>".($text['label-service'] ?? 'Service')."</th>\n";
-echo "        <th class='hud_heading' width='10%' style='text-align: center;'>".($text['label-running'] ?? 'Running')."</th>\n";
+echo "        <th class='hud_heading' width='45%'>".($text['label-service'] ?? 'Service')."</th>\n";
+echo "        <th class='hud_heading' width='20%' style='text-align: center;'>".($text['label-running'] ?? 'Running')."</th>\n";
 echo "        <th class='hud_heading' width='35%' style='text-align: center;'>".($text['label-runtime'] ?? 'Runtime')."</th>\n";
 echo "      </tr>\n";
 
