@@ -2,9 +2,8 @@
 
 namespace App\Collections;
 
-use App\Services\FreeSwitch\FreeSwitchRegistrationService;
+use App\Facades\FreeSwitchRegistration;
 use Illuminate\Database\Eloquent\Collection;
-use App\Services\FreeSwitch\FreeSwitchService;
 
 class SipRegistrationCollection extends Collection
 {
@@ -21,7 +20,7 @@ class SipRegistrationCollection extends Collection
             return $this;
         }
 
-        $registrationData = app(FreeSwitchRegistrationService::class)->fetchRegistrationStatus($sipProfileNames);
+        $registrationData = FreeSwitchRegistration::fetchRegistrationStatus($sipProfileNames);
         
         $allProfiles = $this->all();
         $result = new static([]);

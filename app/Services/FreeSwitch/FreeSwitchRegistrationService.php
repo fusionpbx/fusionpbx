@@ -19,14 +19,12 @@ class FreeSwitchRegistrationService
         $this->useMockResponses = env('FREESWITCH_USE_MOCK_RESPONSES', false);
     }
 
-    public function getRegistrations(string $profile = 'all'): array
+    public function getRegistrations(array $sipProfileUserNames): array
     {
         $id = 0;
         $registrations = [];
 
-        $profiles = $this->getActiveProfiles($profile);
-
-        foreach ($profiles as $profileName) {
+        foreach ($sipProfileUserNames as $profileName) {
             if ($this->useMockResponses) {
                 $xml_response = $this->getMockRegistrationXml($profileName);
             } else {
@@ -89,78 +87,13 @@ class FreeSwitchRegistrationService
         return $registrations;
     }
 
-    public function getActiveProfilesWithRegistrations(): array
-    {
-        $activeProfiles = $this->getActiveProfiles();
-        $profilesWithRegistrations = [];
-
-        foreach ($activeProfiles as $profileName) {
-            if ($this->useMockResponses) {
-                $xml_response = $this->getMockRegistrationXml($profileName);
-            } else {
-                $xml_response = FreeSwitch::execute(
-                    "sofia xmlstatus profile",
-                    "'$profileName' reg"
-                );
-            }
-
-            if (empty($xml_response) || $xml_response == "Invalid Profile!") {
-                continue;
-            }
-
-            $xml_response = $this->normalizeXmlResponse($xml_response);
-
-            try {
-                $xml = new SimpleXMLElement($xml_response);
-                $array = json_decode(json_encode($xml), true);
-
-                if (!empty($array) && isset($array['registrations']['registration'])) {
-                    $profilesWithRegistrations[] = $profileName;
-                }
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
-
-        return $profilesWithRegistrations;
-    }
-
-
-    public function getActiveProfiles(string $specificProfile = 'all'): array
-    {
-        if ($specificProfile !== 'all') {
-            return [$specificProfile];
-        }
-
-        if ($this->useMockResponses) {
-            return $this->getMockActiveProfiles();
-        }
-
-        $response = FreeSwitch::execute('sofia', 'status');
-
-        if (empty($response)) {
-            return [];
-        }
-
-        $profiles = [];
-        $lines = explode("\n", $response);
-
-        foreach ($lines as $line) {
-            if (preg_match('/^\s*(\w+)\s+(\w+)\s+running/', $line, $matches)) {
-                $profiles[] = $matches[1];
-            }
-        }
-
-
-        return $profiles;
-    }
 
     private function normalizeXmlResponse(string $xml_response): string
     {
         $xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]|\xEF\xBB\xBF/', '', $xml_response);
 
-        $xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
-        $xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
+        $xml_response = str_replace("<profile-info>", "<profile>", $xml_response);
+        $xml_response = str_replace("</profile-info>", "</profile>", $xml_response);
 
         $xml_response = str_replace("&", "&amp;", $xml_response);
 
@@ -214,25 +147,20 @@ class FreeSwitchRegistrationService
         return '';
     }
 
-    public function fetchRegistrationStatus(array $sipUsernames): array
+    public function fetchRegistrationStatus(array $sipProfileNames): array
     {
-        if (empty($sipUsernames)) {
+        if (empty($sipProfileNames)) {
             return [];
         }
 
-        $allRegistrations = $this->getRegistrations();
-
+        $allRegistrations = $this->getRegistrations($sipProfileNames);
         $results = [];
 
         foreach ($allRegistrations as $reg) {
             $user = $reg['user'] ?? '';
-            $username = explode('@', $user)[0] ?? '';
             $profile = $reg['sip_profile_name'] ?? '';
 
-
-
-            if (in_array($profile, $sipUsernames)) {
-
+            if (in_array($profile, $sipProfileNames)) {
                 $results[$profile] = [
                     'registered' => true,
                     'ip_address' => $reg['network-ip'] ?? null,
@@ -240,7 +168,7 @@ class FreeSwitchRegistrationService
                     'user' => $user,
                     'agent' => $reg['agent'] ?? null,
                     'timestamp' => now(),
-                    'status' => 'online',
+                    'status' => $reg['status'] ?? null,
                     'lan_ip' => $reg['lan-ip'] ?? null,
                     'ping_status' => $reg['ping-status'] ?? null,
                     'ping_time' => $reg['ping-time'] ?? null
@@ -339,7 +267,7 @@ class FreeSwitchRegistrationService
     {
         $mockResponses = [
             'internal' => <<<XML
-<profile_info>
+<profile>
   <name>internal</name>
   <domain-name>example.com</domain-name>
   <registrations>   
@@ -374,10 +302,10 @@ class FreeSwitchRegistrationService
       <mwi-account>2000@example.com</mwi-account>
     </registration>
   </registrations>
-</profile_info>
+</profile>
 XML,
             'external' => <<<XML
-<profile_info>
+<profile>
   <name>external</name>
   <domain-name>example.com</domain-name>
   <registrations>
@@ -412,11 +340,11 @@ XML,
       <mwi-account>4000@example.com</mwi-account>
     </registration>
   </registrations>
-</profile_info>
+</profile>
 XML
         ];
 
-        return $mockResponses[$profile] ?? '<profile_info><registrations></registrations></profile_info>';
+        return $mockResponses[$profile] ?? '<profile><registrations></registrations></profile>';
     }
 
     private function getMockActionResponse(string $action, string $user): string
