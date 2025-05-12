@@ -204,35 +204,41 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
         $http_port = DefaultSetting::get('config', 'xml_rpc.http_port', 'numeric') ?? 8080;
         $auth_user = DefaultSetting::get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
         $auth_pass = DefaultSetting::get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
-    
+
         $url = 'http://'.$host.':'.$http_port.'/txtapi/'.$command.'?'.(isset($param) ? rawurlencode($param) : '');
-    
+
         if (App::hasDebugModeEnabled()) {
             Log::debug('['.__CLASS__.']['.__METHOD__.'] $url: '. $url);
+            Log::debug('['.__CLASS__.']['.__METHOD__.'] $auth_user: '. $auth_user);
+            Log::debug('['.__CLASS__.']['.__METHOD__.'] $auth_pass: '. $auth_pass);
         }
-    
+
         try {
             $options = [];
-            
+
             if (App::hasDebugModeEnabled()) {
                 $options['debug'] = fopen('php://temp', 'w+');
             }
-            
+
             $response = Http::withBasicAuth($auth_user, $auth_pass)
                 ->withOptions($options)
                 ->get($url);
-    
+
         } catch (ConnectionException $e) {
             if (App::hasDebugModeEnabled()) {
                 Log::error('['.__CLASS__.']['.__METHOD__.'] Error: ' . $e->getMessage());
             }
             return null;
         }
-    
+
+        if (App::hasDebugModeEnabled()) {
+            Log::debug('['.__CLASS__.']['.__METHOD__.'] $response->body: '. $response->body());
+	}
+
         if ($response->ok()) {
             return $response->body() ?? null;
         }
-    
+
         return null;
     }
 }

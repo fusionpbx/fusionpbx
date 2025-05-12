@@ -87,6 +87,71 @@ class FreeSwitchRegistrationService
         return $registrations;
     }
 
+    public function getActiveProfilesWithRegistrations(): array
+    {
+        $activeProfiles = $this->getActiveProfiles();
+        $profilesWithRegistrations = [];
+
+        foreach ($activeProfiles as $profileName) {
+            if ($this->useMockResponses) {
+                $xml_response = $this->getMockRegistrationXml($profileName);
+            } else {
+                $xml_response = FreeSwitch::execute(
+                    "sofia xmlstatus profile",
+                    "'$profileName' reg"
+                );
+            }
+
+            if (empty($xml_response) || $xml_response == "Invalid Profile!") {
+                continue;
+            }
+
+            $xml_response = $this->normalizeXmlResponse($xml_response);
+
+            try {
+                $xml = new SimpleXMLElement($xml_response);
+                $array = json_decode(json_encode($xml), true);
+
+                if (!empty($array) && isset($array['registrations']['registration'])) {
+                    $profilesWithRegistrations[] = $profileName;
+                }
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        return $profilesWithRegistrations;
+    }
+
+
+    public function getActiveProfiles(string $specificProfile = 'all'): array
+    {
+        if ($specificProfile !== 'all') {
+            return [$specificProfile];
+        }
+
+        if ($this->useMockResponses) {
+            return $this->getMockActiveProfiles();
+        }
+
+        $response = FreeSwitch::execute('show', 'registrations as xml');
+
+        if (empty($response)) {
+            return [];
+        }
+
+        $profiles = [];
+        $lines = explode("\n", $response);
+
+        foreach ($lines as $line) {
+            if (preg_match('/^\s*(\w+)\s+(\w+)\s+running/', $line, $matches)) {
+                $profiles[] = $matches[1];
+            }
+        }
+
+
+        return $profiles;
+    }
 
     private function normalizeXmlResponse(string $xml_response): string
     {

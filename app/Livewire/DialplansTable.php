@@ -204,13 +204,13 @@ class DialplansTable extends DataTableComponent
 		)
 		->when ( !Str::isUuid($appUuid),
 			function($query){
-				$query->where('app_uuid','<>','c03b422e-13a8-bd1b-e42b-b6b9b4d27ce')
+				$query->where('app_uuid','<>','c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4')
 					->where('dialplan_context','<>', 'public');
 				//TODO: verify if it is a good idea to hind outbound rates: app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
 			},
 			function($query) use($appUuid){
 				if ($appUuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'){
-					$query->where('app_uuid','c03b422e-13a8-bd1b-e42b-b6b9b4d27ce')
+					$query->where('app_uuid','c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4')
 						->orWhere('dialplan_context','public');
 				}
 				else{
