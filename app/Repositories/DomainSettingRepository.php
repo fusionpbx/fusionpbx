@@ -10,12 +10,11 @@ class DomainSettingRepository
 {
     public function findByCategoryAndSubcategory(string $category, string $subcategory, string $domainUuid): Collection
     {
-        return DB::table(DomainSetting::getTableName())
-                ->where('domain_setting_enabled', '=', 'true')
+        return DomainSetting::where('domain_setting_enabled', '=', 'true')
                 ->where('domain_setting_category', '=', $category)
                 ->where('domain_setting_subcategory', '=', $subcategory)
                 ->where('domain_uuid', '=', $domainUuid)
-                ->orderBy('default_setting_order')
+                ->orderBy('domain_setting_order')
                 ->get();
     }
 }
