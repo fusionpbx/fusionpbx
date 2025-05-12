@@ -54,10 +54,16 @@
 
 //disk usage
 	if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-		$tmp = shell_exec("df / 2>&1");
+		$tmp = shell_exec("df -h / 2>&1"); // Added -h for human-readable sizes
 		$tmp = explode("\n", $tmp);
 		$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 		$tmp = explode(' ', $tmp);
+
+		// Extract values (columns may vary slightly by OS)
+		$used_space = $tmp[2] ?? '-';
+		$total_space = $tmp[1] ?? '-';
+		$percent_disk_usage = '';
+		
 		foreach ($tmp as $stat) {
 			if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 		}
@@ -161,7 +167,7 @@
 		echo "<div class='hud_details hud_box' id='hud_system_status_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
-		echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
+		echo "<th class='hud_heading' width='35%'>".$text['label-item']."</th>\n";
 		echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
 		echo "</tr>\n";
 
@@ -171,6 +177,31 @@
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software::version()."</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
+
+		// OS Type and Version (for Linux)
+			if (stristr(PHP_OS, 'Linux')) {
+				// Try to get pretty OS name
+				$os_info = '';
+				if (file_exists('/etc/os-release')) {
+					$os_release = parse_ini_file('/etc/os-release');
+					$os_info = $os_release['PRETTY_NAME'] ?? '';
+				} 
+				// Fallback to basic uname info
+				elseif (function_exists('php_uname')) {
+					$os_info = php_uname('s') . ' ' . php_uname('r'); // e.g. "Linux 5.10.0"
+				}
+				
+				// Clean up the output
+				$os_info = str_replace('"', '', $os_info); // Remove quotes if present
+				
+				if (!empty($os_info)) {
+					echo "<tr class='tr_link_void'>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-os_version']."</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$os_info."</td>\n";
+					echo "</tr>\n";
+					$c = ($c) ? 0 : 1;
+				}
+			}
 
 		//os uptime
 			if (stristr(PHP_OS, 'Linux')) {
@@ -186,39 +217,71 @@
 				}
 			}
 
-		//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
+		//memory usage
 			if (stristr(PHP_OS, 'Linux')) {
-				$free = shell_exec("/usr/bin/which free");
-				$awk = shell_exec("/usr/bin/which awk");
-				$percent_memory = round((float)shell_exec(escapeshellcmd($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'")), 1);
-				if (!empty($percent_memory)) {
+				// Get memory usage percentage
+				$meminfo = shell_exec('free -b | grep Mem');
+				if (!empty($meminfo)) {
+					$meminfo = preg_replace('/\s+/', ' ', trim($meminfo));
+					$parts = explode(' ', $meminfo);
+					
+					$total = $parts[1];
+					$used = $parts[2];
+					$percent_memory = round(($used / $total) * 100, 1);
+
+					// Set style color based on thresholds
+					$style = ($percent_memory > 90) ? "color: red;" : (($percent_memory > 75) ? "color: orange;" : "");
+					
+					// Format with used/total (e.g. "40% (3.2G/8G)")
+					$total_h = round($total / (1024*1024*1024), 1) . 'G';
+					$used_h = round($used / (1024*1024*1024), 1) . 'G';
+					
 					echo "<tr class='tr_link_void'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_memory."%</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_memory."% (".$used_h." / ".$total_h.")"."</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
 			}
 
-		//memory available
+		//swap usage
 			if (stristr(PHP_OS, 'Linux')) {
-				$result = trim(shell_exec('free -hw | grep \'Mem:\' | cut -d\' \' -f 55-64'));
-				if (!empty($result)) {
-					echo "<tr class='tr_link_void'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_available']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$result."</td>\n";
-					echo "</tr>\n";
-					$c = ($c) ? 0 : 1;
+				$swapinfo = shell_exec('free -b | grep Swap');
+				if (!empty($swapinfo)) {
+					$swapinfo = preg_replace('/\s+/', ' ', trim($swapinfo));
+					$parts = explode(' ', $swapinfo);
+					
+					$swap_total = $parts[1];
+					$swap_used = $parts[2];
+					
+					// Only show swap if it exists (total > 0)
+					if ($swap_total > 0) {
+						$percent_swap = round(($swap_used / $swap_total) * 100, 1);
+						$swap_total_h = round($swap_total / (1024*1024*1024), 1) . 'G';
+						$swap_used_h = round($swap_used / (1024*1024*1024), 1) . 'G';
+
+						// Set style color based on thresholds
+						$style = ($percent_swap > 90) ? "color: red;" : (($percent_swap > 75) ? "color: orange;" : "");
+						
+						echo "<tr class='tr_link_void'>\n";
+						echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-swap_usage']."</td>\n";
+						echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_swap."% (".$swap_used_h." / ".$swap_total_h.")"."</td>\n";
+						echo "</tr>\n";
+						$c = ($c) ? 0 : 1;
+					}
 				}
 			}
 
-		//disk usage
-			if (stristr(PHP_OS, 'Linux')) {
-				//calculated above
-				if (!empty($percent_disk_usage)) {
+		//disk usage display
+			if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
+					  
+				if (!empty($percent_disk_usage) && $used_space != '-' && $total_space != '-') {
+					// Set style color based on thresholds
+					$style = ($percent_disk_usage > 90) ? "color: red;" : (($percent_disk_usage > 75) ? "color: orange;" : "");
+					
 					echo "<tr class='tr_link_void'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_disk_usage."%</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_disk_usage."% (".$used_space." / ".$total_space.")"."</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -227,28 +290,48 @@
 		//db connections
 			switch ($db_type) {
 				case 'pgsql':
-					$sql = "select count(*) from pg_stat_activity";
+					$sql_current = "SELECT count(*) FROM pg_stat_activity";
+					$sql_max = "SHOW max_connections";
 					break;
 				case 'mysql':
-					$sql = "show status where `variable_name` = 'Threads_connected'";
+					$sql_current = "SHOW STATUS WHERE `variable_name` = 'Threads_connected'";
+					$sql_max = "SHOW VARIABLES LIKE 'max_connections'";
 					break;
 				default:
-					unset($sql);
+					unset($sql_current, $sql_max);
 					if (!empty($db_path) && !empty($dbfilename)) {
-						$tmp =  shell_exec("lsof ".realpath($db_path).'/'.$dbfilename);
+						$tmp = shell_exec("lsof " . realpath($db_path) . '/' . $dbfilename);
 						$tmp = explode("\n", $tmp);
 						$connections = sizeof($tmp) - 1;
 					}
 			}
-			if (!empty($sql)) {
+	
+			if (!empty($sql_current) && !empty($sql_max)) {
 				if (!isset($database)) { $database = new database; }
-				$connections = $database->select($sql, null, 'column');
-				unset($sql);
+				
+				// Get current connections
+				$current_connections = $database->select($sql_current, null, 'column');
+				
+				// Get max connections (handles both PostgreSQL & MySQL)
+				$max_result = $database->select($sql_max, null, ($db_type == 'pgsql') ? 'column' : 'row');
+				$max_connections = ($db_type == 'mysql') ? $max_result['Value'] : $max_result;
+				
+				// Format as "current/max"
+				$connections = ($current_connections !== false && $max_connections !== false) 
+					? "Current: " . $current_connections . ", Max: " . $max_connections 
+					: "N/A";
+				
+				unset($sql_current, $sql_max);
 			}
+	
 			if (!empty($connections)) {
+				// Set style color based on thresholds
+				$ratio = $current_connections / $max_connections;
+				$style = ($ratio > 0.9) ? "color: red;" : (($ratio > 0.75) ? "color: orange;" : "");
+				
 				echo "<tr class='tr_link_void'>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-database_connections']."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$connections."</td>\n";
+				echo "<td valign='top' class='" . $row_style[$c] . " hud_text'>" . $text['label-database_connections'] . "</td>\n";
+				echo "<td valign='top' class='" . $row_style[$c] . " hud_text' style='text-align: right; $style'>" . $connections . "</td>\n";
 				echo "</tr>\n";
 				$c = ($c) ? 0 : 1;
 			}
