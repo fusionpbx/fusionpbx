@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Session;
 class DomainRepository
 {
     protected $model;
-    protected $domainRepository;
     protected $dialplanRepository;
 
     public function __construct(Domain $domain, DialplanRepository $dialplanRepository)
