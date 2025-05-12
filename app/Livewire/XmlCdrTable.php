@@ -275,7 +275,10 @@ class XmlCDRTable extends DataTableComponent
                             });
                         }),
 
-                        default => $q->whereNull('answer_stamp')->whereNull('bridge_uuid')->where('duration', 0),
+                        default => $q->whereNull('answer_stamp')->whereNull('bridge_uuid')->where(function ($q){
+                                $q->where('duration', 0)->orWhereNull('duration');
+
+                        }),
                     };
                 })
                 ->when($this->filters['extension'] ?? null, fn($q, $v) => $q->where('extension.extension', '=', $v))
