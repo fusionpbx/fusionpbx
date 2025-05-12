@@ -136,7 +136,7 @@ class FreeSwitchRegistrationService
             return $this->getMockActiveProfiles();
         }
 
-        $response = FreeSwitch::execute('sofia', 'status');
+        $response = FreeSwitch::execute('show', 'registrations as xml');
 
         if (empty($response)) {
             return [];
