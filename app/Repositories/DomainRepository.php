@@ -6,14 +6,12 @@ use App\Facades\Setting;
 use App\Models\Dialplan;
 use App\Models\DialplanDetail;
 use App\Models\Domain;
-use App\Repositories\dialplanRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
 
 class DomainRepository
 {
@@ -21,10 +19,9 @@ class DomainRepository
     protected $domainRepository;
     protected $dialplanRepository;
 
-    public function __construct(Domain $domain, DomainRepository $domainRepository, dialplanRepository $dialplanRepository)
+    public function __construct(Domain $domain, DialplanRepository $dialplanRepository)
     {
         $this->model = $domain;
-        $this->domainRepository = $domainRepository;
         $this->dialplanRepository = $dialplanRepository;
     }
 
@@ -131,7 +128,7 @@ class DomainRepository
                 ->whereNotNull('app_uuid');
         if(App::hasDebugModeEnabled())
         {
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $dialplans_query: '.$dialplans_query->toRawSql());
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $dialplans_query: '.$dialplan_query->toRawSql());
         }
         $dialplans = $dialplan_query->get();
         $x = 0; $array = [];
@@ -144,7 +141,8 @@ class DomainRepository
                 $lenght = Setting::getDefaultSetting('security', 'pin_lenght', 'var') ?? 8;
                 $newPin = str_pad(rand(0, pow(10, $lenght) - 1),$lenght, '0', STR_PAD_LEFT);
                 $xmlString = str_replace("{v_context}", $new_dommain_uuid, $xmlString);
-                $xmlString = str_replace("{v_pin_number}", generate_password($length, 1), $xmlString);
+                // TODO: fix $length variable missing
+//                $xmlString = str_replace("{v_pin_number}", generate_password($length, 1), $xmlString);
 
                 $xml = simplexml_load_string($xmlString);
                 $json = json_encode($xml);
@@ -161,7 +159,7 @@ class DomainRepository
                 }
 
                 $app_uuid_exists = false;
-                foreach($dialplasn as $dialplan)
+                foreach($dialplans as $dialplan)
                 {
                     if ($dialplan['@attributes']['app_uuid'] == $dialplan->app_uuid)
                     {
