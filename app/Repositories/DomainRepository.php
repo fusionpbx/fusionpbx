@@ -129,15 +129,18 @@ class DomainRepository
                                 ->orWhereNull('domain_uuid');
                         })
                 ->whereNotNull('app_uuid');
-        if(App::hasDebugModeEnabled()){
+        if(App::hasDebugModeEnabled())
+        {
             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $dialplans_query: '.$dialplans_query->toRawSql());
         }
         $dialplans = $dialplan_query->get();
         $x = 0; $array = [];
 
-        foreach ($dialplanFiles as $dialplanFile){
+        foreach ($dialplanFiles as $dialplanFile)
+        {
             $xmlString = $dialplanStorage::get($dialplanFile);
-            if (!empty($xmlString)){
+            if (!empty($xmlString))
+            {
                 $lenght = Setting::getDefaultSetting('security', 'pin_lenght', 'var') ?? 8;
                 $newPin = str_pad(rand(0, pow(10, $lenght) - 1),$lenght, '0', STR_PAD_LEFT);
                 $xmlString = str_replace("{v_context}", $new_dommain_uuid, $xmlString);
@@ -147,8 +150,10 @@ class DomainRepository
                 $json = json_encode($xml);
                 $newDialplan = json_decode($json, true);
 
-                if (!empty($newDialplan)) {
-                    if (empty($newDialplan['condition'][0])) {
+                if (!empty($newDialplan))
+                {
+                    if (empty($newDialplan['condition'][0]))
+                    {
                         $tmp = $newDialplan['condition'];
                         unset($newDialplan['condition']);
                         $newDialplan['condition'][0] = $tmp;
@@ -156,14 +161,17 @@ class DomainRepository
                 }
 
                 $app_uuid_exists = false;
-                foreach($dialplasn as $dialplan){
-                    if ($dialplan['@attributes']['app_uuid'] == $dialplan->app_uuid) {
+                foreach($dialplasn as $dialplan)
+                {
+                    if ($dialplan['@attributes']['app_uuid'] == $dialplan->app_uuid)
+                    {
                         $app_uuid_exists = true;
                         break;
                     }
                 }
 
-                if (!$app_uuid_exists){
+                if (!$app_uuid_exists)
+                {
                     $dialplan_global = (isset($newDialplan['@attributes']['global']) && $newDialplan['@attributes']['global'] == "true");
                     $dialplan_context = $dialplan['@attributes']['context'];
                     $dialplan_context = str_replace("\${domain_name}", $newDomain->domain_name, $dialplan_context);
@@ -175,20 +183,25 @@ class DomainRepository
                     $array['dialplans'][$x]['dialplan_name'] = $dialplan['@attributes']['name'];
                     $array['dialplans'][$x]['dialplan_number'] = $dialplan['@attributes']['number'];
                     $array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
-                    if (!empty($dialplan['@attributes']['destination'])) {
+                    if (!empty($dialplan['@attributes']['destination']))
+                    {
                         $array['dialplans'][$x]['dialplan_destination'] = $dialplan['@attributes']['destination'];
                     }
-                    if (!empty($dialplan['@attributes']['continue'])) {
+                    if (!empty($dialplan['@attributes']['continue']))
+                    {
                         $array['dialplans'][$x]['dialplan_continue'] = $dialplan['@attributes']['continue'];
                     }
                     $array['dialplans'][$x]['dialplan_order'] = $dialplan['@attributes']['order'];
-                    if (!empty($dialplan['@attributes']['enabled'])) {
+                    if (!empty($dialplan['@attributes']['enabled']))
+                    {
                         $array['dialplans'][$x]['dialplan_enabled'] = $dialplan['@attributes']['enabled'];
                     }
-                    else {
+                    else
+                    {
                         $array['dialplans'][$x]['dialplan_enabled'] = "true";
                     }
-                    if (!empty($dialplan['@attributes']['description'])) {
+                    if (!empty($dialplan['@attributes']['description']))
+                    {
                         $array['dialplans'][$x]['dialplan_description'] = $dialplan['@attributes']['description'];
                     }
 
@@ -198,7 +211,8 @@ class DomainRepository
                     $newInsertedDialplan = Dialplan::create($array['dialplans'][$x]);
                     $dialplan_uuid = $newInsertedDialplan->dialplan_uuid;
                     if (isset($dialplan['condition'])) {
-                        foreach ($dialplan['condition'] as &$row) {
+                        foreach ($dialplan['condition'] as &$row)
+                        {
 
                             $array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
@@ -207,54 +221,68 @@ class DomainRepository
                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $order;
                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row['@attributes']['field'];
                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row['@attributes']['expression'];
-                            if (!empty($row['@attributes']['break'])) {
+                            if (!empty($row['@attributes']['break']))
+                            {
                                 $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row['@attributes']['break'];
                             }
                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
-                            if (isset($row['@attributes']['enabled'])) {
+                            if (isset($row['@attributes']['enabled']))
+                            {
                                 $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row['@attributes']['enabled'];
                             }
-                            else {
+                            else
+                            {
                                 $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
                             }
                             $y++;
 
-                            if (!empty($row['action']) || !empty($row['anti-action'])) {
+                            if (!empty($row['action']) || !empty($row['anti-action']))
+                            {
                                 $condition_self_closing_tag = false;
-                                if (empty($row['action'][0])) {
-                                    if ($row['action']['@attributes']['application']) {
+                                if (empty($row['action'][0]))
+                                {
+                                    if ($row['action']['@attributes']['application'])
+                                    {
                                         $tmp = $row['action'];
                                         unset($row['action']);
                                         $row['action'][0] = $tmp;
                                     }
                                 }
-                                if (empty($row['anti-action'][0])) {
-                                    if ($row['anti-action']['@attributes']['application']) {
+                                if (empty($row['anti-action'][0]))
+                                {
+                                    if ($row['anti-action']['@attributes']['application'])
+                                    {
                                         $tmp = $row['anti-action'];
                                         unset($row['anti-action']);
                                         $row['anti-action'][0] = $tmp;
                                     }
                                 }
                                 $order = $order + 5;
-                                if (isset($row['action'])) {
-                                    foreach ($row['action'] as &$row2) {
+                                if (isset($row['action']))
+                                {
+                                    foreach ($row['action'] as &$row2)
+                                    {
                                         $array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $order;
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row2['@attributes']['application'];
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row2['@attributes']['data'];
-                                        if (!empty($row2['@attributes']['inline'])) {
+                                        if (!empty($row2['@attributes']['inline']))
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row2['@attributes']['inline'];
                                         }
-                                        else {
+                                        else
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = null;
                                         }
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
-                                        if (isset($row2['@attributes']['enabled'])) {
+                                        if (isset($row2['@attributes']['enabled']))
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
                                         }
-                                        else {
+                                        else
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
                                         }
                                         $y++;
@@ -264,24 +292,29 @@ class DomainRepository
                                     }
                                 }
                                 if (isset($row['anti-action'])) {
-                                    foreach ($row['anti-action'] as &$row2) {
+                                    foreach ($row['anti-action'] as &$row2)
+                                    {
                                         $array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'anti-action';
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $order;
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row2['@attributes']['application'];
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row2['@attributes']['data'];
-                                        if (!empty($row2['@attributes']['inline'])) {
+                                        if (!empty($row2['@attributes']['inline']))
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row2['@attributes']['inline'];
                                         }
-                                        else {
+                                        else
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = null;
                                         }
                                         $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
-                                        if (isset($row2['@attributes']['enabled'])) {
+                                        if (isset($row2['@attributes']['enabled']))
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
                                         }
-                                        else {
+                                        else
+                                        {
                                             $array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
                                         }
                                         $y++;
@@ -291,12 +324,14 @@ class DomainRepository
                                     }
                                 }
                             }
-                            else {
+                            else
+                            {
                                 $condition_self_closing_tag = true;
                             }
 
                             //if not a self closing tag then increment the group
-                            if (!$condition_self_closing_tag) {
+                            if (!$condition_self_closing_tag)
+                            {
                                 $group++;
                             }
 
@@ -308,16 +343,19 @@ class DomainRepository
                         }
 
                         // We have $array with all data, lets start pushing into the model
-                        foreach ($array['dialplans'][$x]['dialplan_details'] as $newDialplanDetail){
+                        foreach ($array['dialplans'][$x]['dialplan_details'] as $newDialplanDetail)
+                        {
                             $newInsertedDialplanDetail = DialplanDetail::create($newDialplanDetail);
                         }
                         $xmlPayload = $this->dialplanRepository->buildXML($newInsertedDialplan);
-                        if(App::hasDebugModeEnabled()){
+                        if(App::hasDebugModeEnabled())
+                        {
                             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $xmlPayload: '.$xmlPayload);
                         }
                         $newInsertedDialplan->update(['xml' => $xmlPayload]);
 
-                }   // app_uuid_exists
+                    }   // app_uuid_exists
+                }
             }
         }
     }
