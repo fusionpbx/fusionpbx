@@ -214,6 +214,12 @@ class XmlCDRTable extends DataTableComponent
         {
             $columns[] = Column::make("Status", "answer_stamp")
                 ->format(function ($value, $row, Column $column) {
+/**
+			if(App::hasDebugModeEnabled())
+        		{
+				Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $row: '.print_r($row, true));
+        		}
+**/
                     return ucfirst($row->status);
                 })
                 ->sortable();
