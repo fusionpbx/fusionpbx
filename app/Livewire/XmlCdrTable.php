@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\XmlCDR;
+use App\Facades\Setting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,7 @@ class XmlCDRTable extends DataTableComponent
 
     public function configure(): void
     {
+        $limit = Setting::get('cdr','limit', 'numeric') ?? 100;
         $canEdit = auth()->user()->hasPermission('xml_cdr_edit');
         $this->setPrimaryKey('xml_cdr_uuid')
             ->setTableAttributes([
@@ -32,7 +34,7 @@ class XmlCDRTable extends DataTableComponent
             ])
             ->setSearchDisabled()
             ->setPerPageAccepted([10, 25, 50, 100, 250])
-            ->setDefaultPerPage(100)        // TODO: Use domain setting
+            ->setDefaultPerPage($limit)
             ->setPaginationEnabled();
     }
 

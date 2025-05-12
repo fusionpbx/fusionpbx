@@ -680,15 +680,15 @@ class XmlCDR extends Model
            get: function (){
                 $call_result = 'failed';
                 if (($this->direction == 'inbound') || ($this->direction == 'local')){
-                    if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }
-                    else if (isset($this->answer_stamp) && empty($this->bridge_uuid)) { $call_result = 'voicemail'; }
+                    if (!empty($this->answer_stamp) && !empty($this->bridge_uuid)) { $call_result = 'answered'; }
+                    else if (!empty($this->answer_stamp) && empty($this->bridge_uuid)) { $call_result = 'voicemail'; }
                     else if (empty($this->answer_stamp) && empty($this->bridge_uuid) && $this->sip_hangup_disposition != 'send_refuse') { $call_result = 'cancelled'; }
                     else { $call_result = 'failed'; }
                 }
                 else if ($this->direction == 'outbound') {
-                    if (isset($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'answered'; }
+                    if (!empty($this->answer_stamp) && !empty($this->bridge_uuid)) { $call_result = 'answered'; }
                     else if ($this->hangup_cause == 'NORMAL_CLEARING') { $call_result = 'answered'; }
-                    else if (empty($this->answer_stamp) && isset($this->bridge_uuid)) { $call_result = 'cancelled'; }
+                    else if (empty($this->answer_stamp) && !empty($this->bridge_uuid)) { $call_result = 'cancelled'; }
                     else { $call_result = 'failed'; }
                 }
                 else if ($this->record_type == 'text'){
