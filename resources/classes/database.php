@@ -2250,9 +2250,9 @@
 					$this->db->beginTransaction();
 
 				//loop through the array
-					if (is_array($array)) foreach ($array as $parent_name => $schema_array) {
+					if (is_array($array)) foreach ($array as $parent_name => $parent_array) {
 
-						if (is_array($schema_array)) foreach ($schema_array as $schema_id => $array) {
+						if (is_array($parent_array)) foreach ($parent_array as $row_id => $parent_field_array) {
 
 							//set the variables
 								$table_name = self::TABLE_PREFIX.$parent_name;
@@ -2262,8 +2262,8 @@
 							//if the uuid is set then set parent key exists and value
 								//determine if the parent_key_exists
 								$parent_key_exists = false;
-								if (isset($array[$parent_key_name])) {
-									$parent_key_value = $array[$parent_key_name];
+								if (isset($parent_field_array[$parent_key_name])) {
+									$parent_key_value = $parent_field_array[$parent_key_name];
 									$parent_key_exists = true;
 								}
 								else {
@@ -2281,8 +2281,8 @@
 
 							//get the parent field names
 								$parent_field_names = array();
-								if (is_array($array)) {
-									foreach ($array as $key => $value) {
+								if (is_array($parent_field_array)) {
+									foreach ($parent_field_array as $key => $value) {
 										if (!is_array($value)) {
 											$parent_field_names[] = self::sanitize($key);
 										}
@@ -2335,8 +2335,8 @@
 											if (!$parent_key_exists) {
 												$sql .= $parent_key_name.", ";
 											}
-											if (is_array($array)) {
-												foreach ($array as $array_key => $array_value) {
+											if (is_array($parent_field_array)) {
+												foreach ($parent_field_array as $array_key => $array_value) {
 													if (!is_array($array_value)) {
 														$array_key = self::sanitize($array_key);
 														if ($array_key != 'insert_user' &&
@@ -2356,8 +2356,8 @@
 											if (!$parent_key_exists) {
 												$sql .= "'".$parent_key_value."', ";
 											}
-											if (is_array($array)) {
-												foreach ($array as $array_key => $array_value) {
+											if (is_array($parent_field_array)) {
+												foreach ($parent_field_array as $array_key => $array_value) {
 													if (!is_array($array_value)) {
 														if ($array_key != 'insert_user' &&
 															$array_key != 'insert_date' &&
@@ -2429,7 +2429,7 @@
 												$message["details"][$m]["name"] = $this->app_name;
 												$message["details"][$m]["message"] = $e->getMessage();
 												$message["details"][$m]["code"] = "400";
-												$message["details"][$m]["array"] = $array;
+												$message["details"][$m]["array"] = $parent_field_array;
 												$message["details"][$m]["sql"] = $sql;
 												if (is_array($params)) {
 													$message["details"][$m]["params"] = $params;
@@ -2458,8 +2458,8 @@
 										//parent data
 											$params = array();
 											$sql = "UPDATE ".$table_name." SET ";
-											if (is_array($array)) {
-												foreach ($array as $array_key => $array_value) {
+											if (is_array($parent_field_array)) {
+												foreach ($parent_field_array as $array_key => $array_value) {
 													if (!is_array($array_value) && $array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
 														if (!isset($array_value) || (isset($array_value) && $array_value === '')) {
@@ -2555,8 +2555,8 @@
 								unset($sql, $action);
 
 							//child data
-								if (is_array($array)) {
-									foreach ($array as $key => $value) {
+								if (is_array($parent_field_array)) {
+									foreach ($parent_field_array as $key => $value) {
 										if (is_array($value)) {
 												$child_table_name = self::TABLE_PREFIX.$key;
 												$child_table_name = self::sanitize($child_table_name);
@@ -2568,7 +2568,7 @@
 
 													//determine if the parent key exists in the child array
 														$parent_key_exists = false;
-														if (!isset($array[$parent_key_name])) {
+														if (!isset($parent_field_array[$parent_key_name])) {
 															$parent_key_exists = true;
 														}
 
@@ -2623,7 +2623,7 @@
 
 																	//add to the parent array
 																		if (is_array($child_array)) {
-																			$old_array[$parent_name][$schema_id][$key][] = $child_array;
+																			$old_array[$parent_name][$row_id][$key][] = $child_array;
 																		}
 																}
 																unset($prep_statement);
@@ -3326,7 +3326,6 @@
 /*
 //example usage
 	//find
-		require_once "resources/classes/database.php";
 		$database = new database;
 		$database->domain_uuid = $_SESSION["domain_uuid"];
 		$database->type = $db_type;
@@ -3343,7 +3342,6 @@
 		$database->find();
 		print_r($database->result);
 	//insert
-		require_once "resources/classes/database.php";
 		$database = new database;
 		$database->domain_uuid = $_SESSION["domain_uuid"];
 		$database->table = "v_ivr_menus";

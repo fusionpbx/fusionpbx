@@ -8,7 +8,6 @@
 //includes files
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/pdo.php";
-	include "resources/classes/permissions.php";
 
 //increase limits
 	set_time_limit(0);
@@ -104,31 +103,28 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
-//get the fax queue settings
-	$setting = new settings(["category" => "fax_queue"]);
-
 //set the fax queue interval
-	if (!empty($setting->get('fax_queue', 'interval'))) {
-		$fax_queue_interval = $setting->get('fax_queue', 'interval');
+	if (!empty($settings->get('fax_queue', 'interval'))) {
+		$fax_queue_interval = $settings->get('fax_queue', 'interval');
 	}
 	else {
 		$fax_queue_interval = '30';
 	}
 
 //set the fax queue limit
-	if (!empty($setting->get('fax_queue', 'limit'))) {
-		$fax_queue_limit = $setting->get('fax_queue', 'limit');
+	if (!empty($settings->get('fax_queue', 'limit'))) {
+		$fax_queue_limit = $settings->get('fax_queue', 'limit');
 	}
 	else {
 		$fax_queue_limit = '30';
 	}
-	if (!empty($setting->get('fax_queue', 'debug'))) {
-		$debug = $setting->get('fax_queue', 'debug');
+	if (!empty($settings->get('fax_queue', 'debug'))) {
+		$debug = $settings->get('fax_queue', 'debug');
 	}
 
 //set the fax queue retry interval
-	if (!empty($setting->get('fax_queue', 'retry_interval'))) {
-		$fax_retry_interval = $setting->get('fax_queue', 'retry_interval');
+	if (!empty($settings->get('fax_queue', 'retry_interval'))) {
+		$fax_retry_interval = $settings->get('fax_queue', 'retry_interval');
 	}
 	else {
 		$fax_retry_interval = '180';

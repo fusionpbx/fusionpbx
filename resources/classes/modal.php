@@ -25,10 +25,12 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-if (!class_exists('modal')) {
 	class modal {
 
 		static function create($array) {
+
+			//define as global
+			global $settings;
 
 			//add multi-lingual support
 			$language = new text;
@@ -56,7 +58,7 @@ if (!class_exists('modal')) {
 							$array['title'] = !empty($array['title']) ? $array['title'] : $text['modal_title-confirmation'];
 					}
 				//prefix cancel button to action
-					$array['actions'] = button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'collapse'=>'never','onclick'=>'modal_close(); '.($array['onclose'] ?? '')]).$array['actions'];
+					$array['actions'] = button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'collapse'=>'never','onclick'=>'modal_close(); '.($array['onclose'] ?? '')]).$array['actions'];
 			}
 			$modal .= !empty($array['title']) ? "		<span class='modal-title'>".$array['title']."</span>\n" : null;
 			$modal .= !empty($array['message']) ? "		<span class='modal-message'>".$array['message']."</span>\n" : null;
@@ -65,11 +67,7 @@ if (!class_exists('modal')) {
 			$modal .= "</div>";
 
 			return $modal;
-			unset($modal);
 
 		}
 
 	}
-}
-
-?>

@@ -25,7 +25,6 @@
 */
 
 //define the conferences class
-if (!class_exists('conferences')) {
 	class conferences {
 
 		/**
@@ -374,6 +373,3 @@ if (!class_exists('conferences')) {
 		}
 
 	}
-}
-
-?>

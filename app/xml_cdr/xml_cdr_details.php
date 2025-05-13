@@ -175,7 +175,7 @@
 	}
 
 //get the cdr log from the database
-	if ($call_log_enabled) {
+	if (permission_exists('xml_cdr_call_log') && $call_log_enabled) {
 		$sql = "select * from v_xml_cdr_logs ";
 		if (permission_exists('xml_cdr_all')) {
 			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
@@ -383,9 +383,9 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
-	if ($call_log_enabled && isset($log_content) && !empty($log_content)) {
-		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$_SESSION['theme']['button_icon_search'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
+		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
 	if ($transcribe_enabled && !empty($transcribe_engine) && empty($record_transcription)) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);

@@ -25,7 +25,6 @@
 */
 
 //define the time conditions class
-	if (!class_exists('time_conditions')) {
 		class time_conditions {
 
 			/**
@@ -346,6 +345,3 @@
 
 
 		} //class
-	}
-
-?>

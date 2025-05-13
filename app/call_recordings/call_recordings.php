@@ -178,13 +178,13 @@
 	echo "	<div class='heading'><b>".$text['title-call_recordings']." </b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('call_recording_download') && !empty($call_recordings)) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'id'=>'btn_download','name'=>'btn_download','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && !empty($call_recordings)) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','style'=>'display: none;','collapse'=>'hide-xs','onclick'=>"list_action_set('transcribe'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('call_recording_delete') && !empty($call_recordings)) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('call_recording_all')) {
@@ -192,12 +192,12 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=\"$('#btn_reset').hide(); $('#btn_search').show();\">";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>(empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>(empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
 	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -287,10 +287,10 @@
 							case "ogg" : $recording_type = "audio/ogg"; break;
 						}
 						echo "<audio id='recording_audio_".escape($row['call_recording_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['call_recording_uuid'])."')\" onended=\"recording_reset('".escape($row['call_recording_uuid'])."');\" src='download.php?id=".urlencode($row['call_recording_uuid'])."' type='".$recording_type."'></audio>";
-						echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['call_recording_uuid']),'onclick'=>"recording_play('".escape($row['call_recording_uuid'])."')"]);
+						echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.escape($row['call_recording_uuid']),'onclick'=>"recording_play('".escape($row['call_recording_uuid'])."')"]);
 					}
 					if (permission_exists('call_recording_download')) {
-						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
+						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
 					}
 					if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && $transcriptions_exists === true) {
 						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','style'=>(empty($row['call_recording_transcription']) ? 'visibility:hidden;' : null),'onclick'=>"document.getElementById('transcription_".$row['call_recording_uuid']."').style.display = document.getElementById('transcription_".$row['call_recording_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
@@ -303,7 +303,7 @@
 			echo "	<td class='left hide-sm-dn shrink'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
 			if (permission_exists('xml_cdr_details')) {
 				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>PROJECT_PATH.'/app/xml_cdr/xml_cdr_details.php?id='.urlencode($row['call_recording_uuid'])]);
+				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'link'=>PROJECT_PATH.'/app/xml_cdr/xml_cdr_details.php?id='.urlencode($row['call_recording_uuid'])]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";

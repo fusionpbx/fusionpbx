@@ -375,11 +375,11 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php']);
 	if ($action == 'update' && permission_exists('call_block_delete')) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -647,7 +647,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		echo "		</select>\n";
 		echo "	</div>\n";
 		echo "	<div class='actions'>\n";
-		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php']);
+		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php']);
 		if ($recent_calls) {
 			$select_margin = 'margin-left: 15px;';
 			if (permission_exists('call_block_extension')) {
@@ -673,6 +673,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		if ($recent_calls) {
 			echo modal::create(['id'=>'modal-block','type'=>'general','message'=>$text['confirm-block'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_block','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_form_submit('form_list');"])]);
 		}
+
+		echo "<div class='card'>\n";
 
 		foreach (['inbound','outbound'] as $direction) {
 			echo "<table class='list' id='list_".$direction."' ".($direction == 'outbound' ? "style='display: none;'" : null).">\n";
@@ -753,6 +755,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			}
 			echo "</table>\n";
 		}
+
+		echo "</div>\n";
 
 		echo "<br />\n";
 		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";

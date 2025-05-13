@@ -61,9 +61,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //shutdown call back function
 	function shutdown() {
 		//when the fax status is still sending
@@ -72,7 +69,6 @@
 		$sql .= "set fax_status = 'trying' ";
 		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
 		$sql .= "and fax_status = 'sending' ";
-		$database = new database;
 		$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 		$database->execute($sql, $parameters);
 		unset($sql);
@@ -184,22 +180,21 @@
 	}
 	unset($parameters);
 
-//get the email queue settings
-	$setting = new settings(["domain_uuid" => $domain_uuid]);
+//get the settings object
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //prepare the smtp from and from name variables
-	$email_from = $setting->get('fax','smtp_from');
-	$email_from_name = $setting->get('fax','smtp_from_name');
+	$email_from = $settings->get('fax','smtp_from');
+	$email_from_name = $settings->get('fax','smtp_from_name');
 	if (empty($email_from)) {
-		$email_from = $setting->get('email','smtp_from');
+		$email_from = $settings->get('email','smtp_from');
 	}
 	if (empty($email_from_name)) {
-		$email_from_name = $setting->get('email','smtp_from_name');
+		$email_from_name = $settings->get('email','smtp_from_name');
 	}
 
 //prepare the variables to send the fax
-	$email_from_address = $email_from;
-	$retry_limit = $setting->get('fax_queue','retry_limit');
+	$retry_limit = $settings->get('fax_queue','retry_limit');
 
 //prepare the fax retry count
 	if (!isset($fax_retry_count)) {
@@ -252,7 +247,7 @@
 			if ($fax_retry_count == 0) {
 				//use default settings or domain settings (defaults to t38)
 				$fax_options = '';
-				foreach($setting->get('fax','variable') as $variable) {
+				foreach($settings->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
 				}
 			}
@@ -283,7 +278,7 @@
 			else {
 				//try the user definable method again
 				$fax_options = '';
-				foreach($setting->get('fax','variable') as $variable) {
+				foreach($settings->get('fax','variable') as $variable) {
 					$fax_options .= $variable.",";
 				}
 			}
@@ -298,7 +293,7 @@
 
 		//check to see if the destination number is local
 			$local_destination = false;
-			if ($setting->get('fax_queue','prefer_local', false)) {
+			if ($settings->get('fax_queue','prefer_local', false)) {
 				$sql = "select count(destination_uuid) ";
 				$sql .= "from v_destinations ";
 				$sql .= "where (";
@@ -392,7 +387,7 @@
 			$dial_string .= "fax_uuid="            . $fax_uuid . ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid . ",";
 			$dial_string .= "mailto_address='"     . $fax_email_address . "',";
-			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
+			$dial_string .= "mailfrom_address='"   . $email_from . "',";
 			$dial_string .= "fax_retry_attempts="  . $fax_retry_count . ",";
 			$dial_string .= "fax_retry_limit="     . $retry_limit . ",";
 			$dial_string .= "fax_recipient='"      . escape_quote($fax_recipient) . "',";
@@ -463,7 +458,7 @@
 		//send the email
 			if (!empty($fax_email_address) && file_exists($fax_file)) {
 				//get the language code
-				$language_code = $setting->get('domain','language');
+				$language_code = $settings->get('domain','language');
 
 				//get the template subcategory
 				if (isset($fax_relay) && $fax_relay == 'true') {
@@ -622,7 +617,7 @@
 							$email->recipients = $email_address;
 							$email->subject = $email_subject;
 							$email->body = $email_body;
-							$email->from_address = $email_from_address;
+							$email->from_address = $email_from;
 							$email->from_name = $email_from_name;
 							$email->attachments = $email_attachments;
 							$email->debug_level = 3;
@@ -635,7 +630,7 @@
 								echo "template_subcategory: ".$template_subcategory."\n";
 								echo "email_adress: ".$email_address."\n";
 								echo "email_from: ".$email_from_name."\n";
-								echo "email_from_name: ".$email_from_address."\n";
+								echo "email_from_name: ".$email_from."\n";
 								echo "email_subject: ".$email_subject."\n";
 								//echo "email_body: ".$email_body."\n";
 								echo "email_error: ".$email_error."\n";

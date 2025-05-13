@@ -1,0 +1,25 @@
+<extension name="record_all" number="" context="${domain_name}" continue="true" app_uuid="d83d8d76-413b-4a2e-aae0-bedf988833f0" enabled="false" order="50">
+	<condition field="${call_direction}" expression="^inbound" break="never">
+		<action application="set" data="record_stereo_swap=true" inline="true"/>
+	</condition>
+	<condition field="${call_direction}" expression="^outbound$" break="never">
+		<action application="set" data="record_stereo=true" inline="true"/>
+	</condition>
+	<condition field="${call_direction}" expression="^local$" break="never">
+		<action application="set" data="record_stereo=true" inline="true"/>
+	</condition>
+	<condition field="${record_path}" expression="^$"/>
+	<condition field="${record_name}" expression="^$">
+		<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true"/>
+		<action application="set" data="record_name=${uuid}.${record_ext}" inline="true"/>
+		<action application="mkdir" data="${record_path}"/>
+		<action application="set" data="recording_follow_transfer=true" inline="true"/>
+		<action application="bind_digit_action" data="local,*5,api:uuid_record,${uuid} mask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self"/>
+		<action application="bind_digit_action" data="local,*6,api:uuid_record,${uuid} unmask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self"/>
+		<action application="set" data="record_append=true" inline="true"/>
+		<action application="set" data="record_in_progress=true" inline="true"/>
+		<action application="set" data="api_on_answer=uuid_record ${uuid} start ${record_path}/${record_name}" inline="false"/>
+		<action application="set" data="record_answer_req=true"/>
+		<action application="record_session" data="${record_path}/${record_name}"/>
+	</condition>
+</extension>

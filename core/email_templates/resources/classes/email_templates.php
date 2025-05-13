@@ -25,7 +25,6 @@
 */
 
 //define the email templates class
-if (!class_exists('email_templates')) {
 	class email_templates {
 
 		/**
@@ -244,6 +243,3 @@ if (!class_exists('email_templates')) {
 		}
 
 	}
-}
-
-?>

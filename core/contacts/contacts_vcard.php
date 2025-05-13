@@ -42,7 +42,6 @@ if (!empty($_GET)) {
 		$text = $language->get();
 
 	//create the vcard object
-		require_once "resources/classes/vcard.php";
 		$vcard = new vcard();
 
 	//get the contact id

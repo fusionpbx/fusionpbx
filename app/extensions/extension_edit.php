@@ -46,6 +46,11 @@
 	$language = new text;
 	$text = $language->get();
 
+//return the first item if data type = array, returns value if data type = text 
+	function get_first_item($value) {
+	    return is_array($value) ? $value[0] : $value;
+	}
+
 //initialize the core objects
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
@@ -67,9 +72,9 @@
 	$provision_line_label                 = $settings->get('provision','line_label', null);
 	$provision_line_display_name          = $settings->get('provision','line_display_name', null);
 	$provision_outbound_proxy_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_server_address_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_server_address_secondary   = $settings->get('provision','outbound_proxy_primary', null);
+	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_secondary', null);
+	$provision_server_address_primary     = $settings->get('provision','server_address_primary', null);
+	$provision_server_address_secondary   = $settings->get('provision','server_address_secondary', null);
 	$provision_line_sip_port              = $settings->get('provision','line_sip_port', null);
 	$provision_line_sip_transport         = $settings->get('provision','line_sip_transport', null);
 	$provision_line_register_expires      = $settings->get('provision','line_register_expires', null);
@@ -228,7 +233,6 @@
 					$sql .= "and device_user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $user_uuid;
 				}
-				$sql .= "order by device_address asc ";
 				$parameters['domain_uuid'] = $domain_uuid;
 				$total_devices = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
@@ -679,14 +683,8 @@
 													$line_display_name = str_replace("\${description}", $description, $line_display_name);
 												}
 
-												//send a message to the user the device is not unique
-												if (!$device_unique) {
-													$message = $text['message-duplicate'].(if_group("superadmin") && $domain_name != $device_domain_name ? ": ".$device_domain_name : null);
-													message::add($message,'negative');
-												}
-
 												//build the devices array
-												if ($device_unique && $device_address != '000000000000') {
+												if (($device_unique && $device_mac_address != '000000000000') || $device_mac_address == '000000000000') {
 													$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
 													$array["devices"][$j]["domain_uuid"] = $domain_uuid;
 													$array["devices"][$j]["device_address"] = $device_address;
@@ -702,10 +700,11 @@
 													$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
 													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $domain_uuid;
 													$array["devices"][$j]["device_lines"][0]["server_address"] = $domain_name;
-													if ($provision_outbound_proxy_primary !== null) $array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = $provision_outbound_proxy_primary;
-													if ($provision_outbound_proxy_secondary !== null) $array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $provision_outbound_proxy_secondary;
-													if ($provision_server_address_primary !== null) $array["devices"][$j]["device_lines"][0]["server_address_primary"] = $provision_server_address_primary;
-													if ($provision_server_address_secondary !== null) $array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $provision_server_address_secondary;
+
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = get_first_item($provision_outbound_proxy_primary);
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = get_first_item($provision_outbound_proxy_secondary);
+													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = get_first_item($provision_server_address_primary);
+													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = get_first_item($provision_server_address_secondary);
 													$array["devices"][$j]["device_lines"][0]["label"] = $line_label;
 													$array["devices"][$j]["device_lines"][0]["display_name"] = $line_display_name;
 													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
@@ -717,7 +716,12 @@
 													if ($provision_line_register_expires !== null) $array["devices"][$j]["device_lines"][0]["register_expires"] = $provision_line_register_expires;
 													$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
 												}
-
+												else {
+													//send a message to the user the device is not unique
+													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
+													message::add($message,'negative');
+												}
+												
 												//increment
 												$j++;
 											}
@@ -850,7 +854,6 @@
 
 						//synchronize configuration
 							if (is_writable($switch_extensions)) {
-								require_once "app/extensions/resources/classes/extension.php";
 								$ext = new extension;
 								$ext->xml();
 								unset($ext);
@@ -1236,7 +1239,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-		echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($password ?? '')."\">\n";
+		echo "    <input class='formfld password' type='password' name='password' id='password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($password ?? '')."\">\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
@@ -2037,7 +2040,6 @@
 		echo "	".$text['label-hold_music']."\n";
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 		$options = '';
 		$moh = new switch_music_on_hold;
 		echo $moh->select('hold_music', $hold_music ?? '', $options);

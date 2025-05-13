@@ -399,4 +399,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enter your Acrobits application code here. This can be found in your Acrobits portal.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "33a4d8e2-b915-450e-99f8-232a06662d26";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "daylight_savings_auto";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto calculate daylight saving start and stop date and times.";
+
 ?>

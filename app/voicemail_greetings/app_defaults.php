@@ -68,8 +68,8 @@ if ($domains_processed == 1) {
 	unset($sql, $result, $row);
 
 	//get settings
-	$voicemail_storage_type = $setting->get('voicemail','storage_type');
-	$switch_storage = $setting->get('switch','storage');
+	$voicemail_storage_type = $settings->get('voicemail','storage_type');
+	$switch_storage = $settings->get('switch','storage');
 
 	//if base64, populate from existing greeting files, then remove
 	if (!empty($voicemail_storage_type) && $voicemail_storage_type == 'base64') {

@@ -72,6 +72,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-WWW MMM DD (default), 1-DD-MMM-YY, 2-YYYY-MM-DD, 3-DD/MM/YYYY, 4-MM/DD/YY, 5-DD MMM YYYY, 6-WWW DD MMM";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a3ab8042-059f-438c-870c-845db8e629ed";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_backlight_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "60";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "the delay time (in seconds) to change the intensity of the LCD screen when the IP phone is inactive.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "05bcbb47-06f6-4c81-a1c9-cdf2982d60a7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_rport";
@@ -448,6 +456,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the CP960 firmware ROM";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "665d6719-56f9-4bac-82ca-a70698c09eac";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t19p";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T19P_E2-53.84.0.160.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T19P firmware ROM";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d5fdf57e-45b2-4704-bdbf-ff7821692a07";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t23g";
@@ -535,6 +551,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "t42s-66.81.0.110.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T42S firmware ROM";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "965d5dad-d3d2-49a7-a3f3-7237a0fece21";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "$yealink_firmware_t44w";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T46U(T43U,T46U,T41U,T48U,T42U,T44U,T44W)-108.87.0.15.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T44W firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5fb6ef46-0a7f-4bb6-b415-49b437454321";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -1731,5 +1755,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Power Saving Enabled. Options: 0-Disabled, 1-Enabled";	
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1098d21f-3e28-4024-9553-2a54943c48a3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_wifi_function_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or Disable the WiFi adapter. Options: 0-Disabled, 1-Enabled";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e01400ea-ef55-4da1-aa09-3be3001f6932";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_force_voice_ring_volume";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Forced ringer volume: 0 - 15, default: empty";
 
 ?>

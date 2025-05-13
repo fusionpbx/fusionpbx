@@ -119,16 +119,16 @@
 	$order = $_GET["order"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false';
-	$button_icon_back = !empty($_SESSION['theme']['button_icon_back']) ? $_SESSION['theme']['button_icon_back'] : '';
-	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
-	$button_icon_copy = !empty($_SESSION['theme']['button_icon_copy']) ? $_SESSION['theme']['button_icon_copy'] : '';
-	$button_icon_toggle = !empty($_SESSION['theme']['button_icon_toggle']) ? $_SESSION['theme']['button_icon_toggle'] : '';
-	$button_icon_all = !empty($_SESSION['theme']['button_icon_all']) ? $_SESSION['theme']['button_icon_all'] : '';
-	$button_icon_delete = !empty($_SESSION['theme']['button_icon_delete']) ? $_SESSION['theme']['button_icon_delete'] : '';
-	$button_icon_search = !empty($_SESSION['theme']['button_icon_search']) ? $_SESSION['theme']['button_icon_search'] : '';
-	$button_icon_edit = !empty($_SESSION['theme']['button_icon_edit']) ? $_SESSION['theme']['button_icon_edit'] : '';
-	$button_icon_reset = !empty($_SESSION['theme']['button_icon_reset']) ? $_SESSION['theme']['button_icon_reset'] : '';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
+	$button_icon_back = !empty($settings->get('theme', 'button_icon_back')) ? $settings->get('theme', 'button_icon_back') : '';
+	$button_icon_add = !empty($settings->get('theme', 'button_icon_add')) ? $settings->get('theme', 'button_icon_add') : '';
+	$button_icon_copy = !empty($settings->get('theme', 'button_icon_copy')) ? $settings->get('theme', 'button_icon_copy') : '';
+	$button_icon_toggle = !empty($settings->get('theme', 'button_icon_toggle')) ? $settings->get('theme', 'button_icon_toggle') : '';
+	$button_icon_all = !empty($settings->get('theme', 'button_icon_all')) ? $settings->get('theme', 'button_icon_all') : '';
+	$button_icon_delete = !empty($settings->get('theme', 'button_icon_delete')) ? $settings->get('theme', 'button_icon_delete') : '';
+	$button_icon_search = !empty($settings->get('theme', 'button_icon_search')) ? $settings->get('theme', 'button_icon_search') : '';
+	$button_icon_edit = !empty($settings->get('theme', 'button_icon_edit')) ? $settings->get('theme', 'button_icon_edit') : '';
+	$button_icon_reset = !empty($settings->get('theme', 'button_icon_reset')) ? $settings->get('theme', 'button_icon_reset') : '';
 
 //prepare to page the results
 	$sql = "select count(*) from v_user_settings ";
@@ -187,7 +187,7 @@
 	echo "	<div class='heading'><b id='heading_sub'>".$text['title-user_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.$user_uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.$user_uuid]);
 	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$button_icon_back,'style'=>'margin-right: 15px; display: none;','link'=>'users.php']);
 	if (permission_exists('user_setting_add')) {
@@ -320,7 +320,7 @@
 				) {
 				echo "		".$text['label-'.escape($row['user_setting_value'])];
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
+			else if ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen(escape($row['user_setting_value'])));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {

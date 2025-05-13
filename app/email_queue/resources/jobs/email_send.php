@@ -10,7 +10,6 @@
 	}
 
 //include files
-	include "resources/classes/permissions.php";
 	include_once "resources/phpmailer/class.phpmailer.php";
 	include_once "resources/phpmailer/class.smtp.php";
 
@@ -157,7 +156,7 @@
 //get the email settings
 	$retry_limit = $settings->get('email_queue', 'retry_limit');
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
-	$save_response = $settings->get('email_queue', 'save_response');
+	$save_response = $settings->get('email_queue', 'save_response', false);
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -369,7 +368,7 @@
 			$parameters['email_body'] = $email_body;
 			$parameters['email_transcription'] = $transcribe_message;
 		}
-		if (isset($save_response) && $save_response == 'true') {
+		if ($save_response) {
 			$sql .= "email_response = :email_response, ";
 			$parameters['email_response'] = $email_settings."\n".$email_response;
 		}

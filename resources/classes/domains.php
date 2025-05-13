@@ -28,11 +28,7 @@
 /**
  * domains class
  *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('domains')) {
 	class domains {
 
 		/**
@@ -723,29 +719,79 @@ if (!class_exists('domains')) {
 		} //end settings method
 
 		/**
-		 * get a domain list
+		 * get all enabled domains
+		 * @returns array enabled domains with uuid as array key
 		 */
-		public function all() {
+		public static function enabled() {
+
+			//define database as global
+				global $database;
+
+			//define default return value
+				$domains = [];
+
 			//get the domains from the database
-				if ($this->database->table_exists('v_domains')) {
-					$sql = "select * from v_domains order by domain_name asc;";
-					$result = $this->database->select($sql, null, 'all');
+				$sql = "select * from v_domains ";
+				$sql .= "where domain_enabled = true ";
+				$sql .= "order by domain_name asc; ";
+				$result = $database->select($sql, null, 'all');
+				if (!empty($result)) {
 					foreach($result as $row) {
-						$domain_names[] = $row['domain_name'];
+						$domains[$row['domain_uuid']] = $row;
 					}
-					unset($prep_statement);
 				}
 
-			//build the domains array in the correct order
-				if (is_array($domain_names)) {
-					foreach ($domain_names as $dn) {
-						foreach ($result as $row) {
-							if ($row['domain_name'] == $dn) {
-								$domains[] = $row;
-							}
-						}
+			//return the domains array
+				return $domains;
+		}
+
+		/**
+		 * get all disabled domains
+		 * @returns array disabled domains with uuid as array key
+		 */
+		public static function disabled() {
+
+			//define database as global
+				global $database;
+
+			//define default return value
+				$domains = [];
+
+			//get the domains from the database
+				$sql = "select * from v_domains ";
+				$sql .= "where domain_enabled = false ";
+				$sql .= "order by domain_name asc; ";
+				$result = $database->select($sql, null, 'all');
+				if (!empty($result)) {
+					foreach($result as $row) {
+						$domains[$row['domain_uuid']] = $row;
 					}
-					unset($result);
+				}
+
+			//return the domains array
+				return $domains;
+		}
+
+		/**
+		 * get all domains
+		 * @returns array all domains with uuid as array key
+		 */
+		public static function all() {
+
+			//define database as global
+				global $database;
+
+			//define default return value
+				$domains = [];
+
+			//get the domains from the database
+				$sql = "select * from v_domains ";
+				$sql .= "order by domain_name asc; ";
+				$result = $database->select($sql, null, 'all');
+				if (!empty($result)) {
+					foreach($result as $row) {
+						$domains[$row['domain_uuid']] = $row;
+					}
 				}
 
 			//return the domains array
@@ -754,38 +800,33 @@ if (!class_exists('domains')) {
 
 		/**
 		 * get a domain list
+		 * 	@returns void
 		 */
 		public function session() {
 			//get the list of domains
-				$domains = $this->all();
+				$domains = self::all();
 
 			//get the domain
 				$domain_array = explode(":", $_SERVER["HTTP_HOST"] ?? '');
 
 			//set domain_name and domain_uuid and update domains array with domain_uuid as the key
-				if (!empty($domains) && is_array($domains)) {
-					foreach($domains as $row) {
-						if (!isset($_SESSION['username'])) {
-							if (!empty($domains) && count($domains) == 1) {
-								$domain_uuid = $row["domain_uuid"];
-								$domain_name = $row['domain_name'];
+				foreach($domains as $row) {
+					if (!isset($_SESSION['username'])) {
+						if (!empty($domains) && count($domains) == 1) {
+							$_SESSION["domain_uuid"] = $row["domain_uuid"];
+							$_SESSION["domain_name"] = $row['domain_name'];
+						}
+						else {
+							if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
 								$_SESSION["domain_uuid"] = $row["domain_uuid"];
-								$_SESSION["domain_name"] = $row['domain_name'];
-							}
-							else {
-								if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
-									$_SESSION["domain_uuid"] = $row["domain_uuid"];
-									$_SESSION["domain_name"] = $row["domain_name"];
-								}
+								$_SESSION["domain_name"] = $row["domain_name"];
 							}
 						}
-						$_SESSION['domains'][$row['domain_uuid']] = $row;
 					}
-					unset($domains, $prep_statement);
 				}
+
+			//set the domains session array
+				$_SESSION['domains'] = $domains;
 		}
 
 	}
-}
-
-?>

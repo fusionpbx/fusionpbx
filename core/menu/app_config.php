@@ -380,4 +380,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "30c52958-b79f-499e-9f48-665a038bba23";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_change_reload";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Reloads the menu when switching tenants/domains - useful when custom menu(s) exist.";
+		$y++;
+
 ?>

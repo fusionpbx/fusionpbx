@@ -27,9 +27,7 @@
 /**
  * email class
  *
- * @method boolean send
  */
-if (!class_exists('email')) {
 	class email {
 
 		/**
@@ -625,7 +623,7 @@ if (!class_exists('email')) {
 		}
 
 	}
-}
+
 
 /*
 $email = new email;

@@ -11,7 +11,6 @@
 
 //includes files
 	require_once "resources/pdo.php";
-	include "resources/classes/permissions.php";
 	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
@@ -70,11 +69,8 @@
 		exit;
 	}
 
-//get the email queue settings
-	$setting = new settings(["category" => "email_queue"]);
-
 //email queue enabled
-	if ($setting->get('email_queue', 'enabled') != 'true') {
+	if ($settings->get('email_queue', 'enabled') != 'true') {
 		echo "Email Queue is disabled in Default Settings\n";
 		exit;
 	}
@@ -103,20 +99,20 @@
 	}
 
 //get the call center settings
-	$interval = $setting->get('email_queue', 'interval');
+	$interval = $settings->get('email_queue', 'interval');
 
 //set the defaults
 	if (!is_numeric($interval)) { $interval = 30; }
 
 //set the email queue limit
-	if (!empty($setting->get('email_queue', 'limit'))) {
-		$email_queue_limit = $setting->get('email_queue', 'limit');
+	if (!empty($settings->get('email_queue', 'limit'))) {
+		$email_queue_limit = $settings->get('email_queue', 'limit');
 	}
 	else {
 		$email_queue_limit = '30';
 	}
-	if (!empty($setting->get('email_queue', 'debug'))) {
-		$debug = $setting->get('email_queue', 'debug');
+	if (!empty($settings->get('email_queue', 'debug'))) {
+		$debug = $settings->get('email_queue', 'debug');
 	}
 
 //get the messages waiting in the email queue

@@ -133,7 +133,6 @@
 
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
-			require_once "resources/classes/schema.php";
 			$obj = new schema();
 			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
 				$obj->data_types = true;
@@ -270,7 +269,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-upgrade']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'submit','label'=>$text['button-upgrade_execute'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'never']);
+	echo button::create(['type'=>'submit','label'=>$text['button-upgrade_execute'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'never']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

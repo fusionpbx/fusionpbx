@@ -92,16 +92,24 @@
 						{/if}
 					</div>
 					<div>
-						<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_login}' />
-						<!--
-						{if !empty($username)}
-							<br /><br />
-							<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
-						{/if}
-						-->
-						<br />
+						<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_login}' /><br />
 						{if !empty($login_password_reset_enabled) && $login_password_reset_enabled}
-						<a class='login_link' class='btn' href='{$project_path}/resources/login.php?action=request'>{$button_forgot_password}</a>
+							<a class='login_link' style='display: inline-block; margin-top: 15px;' href='{$project_path}/resources/login.php?action=request'>{$button_forgot_password}</a><br />
+						{/if}
+						{if !empty($username)}
+							<a class='login_link' style='display: inline-block; margin-top: 15px;' href='{$project_path}/logout.php'>{$button_cancel}</a>
+						{/if}
+						{if isset($banners)}
+							<div style="display: flex; align-items: center; gap: 10px;">
+								<hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+									<span style="font-size: 0.8em; color: #666;">or</span>
+								<hr style="flex: 1; border: none; border-top: 1px solid #ccc;">
+							</div>
+							{foreach $banners as $banner}
+								<a class='{$banner.class}' style='display: inline-block; margin-top: 15px;' href='{$project_path}{$banner.url}'>
+									{$banner.image}
+								</a><br />
+							{/foreach}
 						{/if}
 					</div>
 				</form>

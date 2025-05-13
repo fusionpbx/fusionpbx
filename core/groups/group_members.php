@@ -144,7 +144,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-group_members']."</b><div class='count'>".$group_name.": ".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'groups.php']);
 	if (permission_exists('group_permission_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>'margin-right: 15px;','link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid)]);
 	}
@@ -163,11 +163,11 @@
 		echo 	"<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 		echo 	"<input type='hidden' name='group_name' value='".escape($group_name)."'>\n";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo button::create(['type'=>'submit','label'=>$text['button-add_member'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-xs']);
+		echo button::create(['type'=>'submit','label'=>$text['button-add_member'],'icon'=>$settings->get('theme', 'button_icon_add'),'collapse'=>'hide-xs']);
 		echo "	</form>\n";
 	}
 	if (permission_exists('group_member_delete') && $user_groups) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

@@ -9,7 +9,7 @@
  * @access public
  * @author Mark Crane <mark@fusionpbx.com>
  */
-class settings {
+class settings implements clear_cache {
 
 	/**
 	 * Set in the constructor. String used to load a specific domain. Must be a value domain UUID before sending to the constructor.
@@ -158,6 +158,28 @@ class settings {
 		else {
 			return $this->settings[$category][$subcategory] ?? $default_value;
 		}
+	}
+
+	/**
+	 * Returns the domain_uuid in this object used to load the settings
+	 * @return string UUID of the domain used to load the object or an empty string
+	 */
+	public function get_domain_uuid(): string {
+		if (!empty($this->domain_uuid)) {
+			return $this->domain_uuid;
+		}
+		return "";
+	}
+
+	/**
+	 * Returns the user_uuid in this object used to load the settings
+	 * @return string UUID of the user used to load the object or an empty string
+	 */
+	public function get_user_uuid(): string {
+		if (!empty($this->user_uuid)) {
+			return $this->user_uuid;
+		}
+		return "";
 	}
 
 	/**
@@ -424,31 +446,25 @@ class settings {
 		}
 	}
 
-	/**
-	 * Clears the settings cache
-	 * @param string $type Empty clears all settings. Values can be global, domain, or user.
-	 */
-	public static function clear_cache(string $type = '') {
+	public static function clear_cache() {
 		if (function_exists('apcu_enabled') && apcu_enabled()) {
-			switch ($type) {
-				case 'all':
-				case '':
-				default:
-					$type = "";
-					break;
-				case 'global':
-				case 'domain':
-				case 'user':
-					$type .= "_";
-					break;
-			}
 			$cache = apcu_cache_info(false);
 			if (!empty($cache['cache_list'])) {
+				//clear apcu cache
 				foreach ($cache['cache_list'] as $entry) {
 					$key = $entry['info'];
-					if (str_starts_with($key, 'settings_' . $type)) {
+					if (str_starts_with($key, 'settings_')) {
 						apcu_delete($key);
 					}
+				}
+				global $settings;
+				//check there is a settings object
+				if (!empty($settings) && ($settings instanceof settings)) {
+					$database = $settings->database();
+					$domain_uuid = $settings->get_domain_uuid();
+					$user_uuid = $settings->get_user_uuid();
+					//recreate the settings object to reload all settings from database
+					$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 				}
 			}
 		}

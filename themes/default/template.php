@@ -20,7 +20,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202504150207'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -687,17 +687,15 @@
 				{/literal}
 			{/if}
 
-		//side/fixed menu: hide an open user menu in the body header or menu on scroll
-			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'fixed' }
-				{literal}
-				$(window).on('scroll', function() {
-					$('#body_header_user_menu').fadeOut(200);
-				});
-				$('div#main_content').on('click', function() {
-					$('#body_header_user_menu').fadeOut(200);
-				});
-				{/literal}
-			{/if}
+		//hide an open user menu in the body header or menu on scroll
+			{literal}
+			$(window).on('scroll', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			$('div#main_content').on('click', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			{/literal}
 
 		//create function to mimic toggling fade and slide at the same time
 			{literal}
@@ -1084,7 +1082,7 @@
 				obj = JSON.parse(this.responseText);
 
 				//update the domain count
-				document.getElementById('domain_count').innerText = '('+ obj.length +')';
+				document.getElementById('domain_count').innerText = obj.length;
 
 				//add new options from the json results
 				for (var i=0; i < obj.length; i++) {
@@ -1184,7 +1182,7 @@
 			<div id='domains_block'>
 				<div id='domains_header'>
 					<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
-					<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span id='domain_count' style='font-size: 80%;'></span></a>
+					<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains}<div class='count' id='domain_count' style='font-size: 80%;'></div></a>
 					<br><br>
 					<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
 				</div>

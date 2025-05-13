@@ -27,6 +27,21 @@
 	  Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	*/
 
+	if (!function_exists('str_contains')) {
+		/**
+		 * Determine if a string contains a given substring
+		 * <p>Performs a case-sensitive check indicating if <b>needle</b> is contained in <b>haystack</b>.</p>
+		 * @param string $haystack The string to search in.
+		 * @param string $needle The substring to search for in the <b>haystack</b>.
+		 * @return bool Returns <i>true</i> if <b>needle</b> is in <b>haystack</b>, <i>false</i> otherwise
+		 * @link https://www.php.net/manual/en/function.str-contains.php Official PHP documentation
+		 * @see str_ends_with(), str_starts_with(), strpos(), stripos(), strrpos(), strripos(), strstr(), strpbrk(), substr(), preg_match()
+		 */
+		function str_contains(string $haystack, string $needle): bool {
+			return strpos($haystack, $needle) !== false;
+		}
+	}
+
 	if (!function_exists('str_starts_with')) {
 		/**
 		 * Checks if a string starts with a given substring
@@ -116,13 +131,35 @@
 
 	if (!function_exists('check_cidr')) {
 
+		/**
+		 * Checks if the $ip_address is within the range of the given $cidr
+		 * @param string|array $cidr
+		 * @param string $ip_address
+		 * @return bool return true if the IP address is in CIDR or if it is empty
+		 */
 		function check_cidr($cidr, $ip_address) {
-			if (isset($cidr) && !empty($cidr)) {
-				list ($subnet, $mask) = explode('/', $cidr);
-				return ( ip2long($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long($subnet);
-			} else {
-				return false;
+
+			//no cidr restriction
+			if (empty($cidr)) {
+				return true;
 			}
+
+			//check to see if the user's remote address is in the cidr array
+			if (is_array($cidr)) {
+			    	//cidr is an array
+				foreach ($cidr as $value) {
+					if (check_cidr($value, $ip_address)) {
+						return true;
+					}
+				}
+			} else {
+				//cidr is a string
+				list ($subnet, $mask) = explode('/', $cidr);
+				return (ip2long($ip_address) & ~((1 << (32 - $mask)) - 1)) == ip2long($subnet);
+			}
+
+			//value not found in cidr
+			return false;
 		}
 
 	}
@@ -2029,20 +2066,37 @@
 		return false;
 	}
 
-//escape user data
-	function escape($string) {
-		if (is_string($string)) {
-			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-		} elseif (is_numeric($string)) {
-			return $string;
-		} else {
-			$string = (array) $string;
-			if (isset($string[0])) {
-				return htmlentities($string[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-			}
+/**
+ * Escape the user data
+ * <p>Escapes all characters which have HTML character entity
+ * @param string $string the value to escape
+ * @return string
+ * @link https://www.php.net/htmlentities
+ */
+function escape($string) {
+	if (is_string($string)) {
+		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+	} elseif (is_numeric($string)) {
+		return $string;
+	} else {
+		$string = (array) $string;
+		if (isset($string[0])) {
+			return htmlentities($string[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 		}
-		return false;
 	}
+	return false;
+}
+
+/**
+ * Escape the user data for a textarea
+ * <p>Escapes & " ' < and > characters</p>
+ * @param string $string the value to escape
+ * @return string
+ * @link https://www.php.net/htmlspecialchars
+ */
+function escape_textarea($string) {
+	return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}
 
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
@@ -2118,7 +2172,7 @@
 //define email button (src: https://buttons.cm)
 	if (!function_exists('email_button')) {
 
-		function email_button($text = 'Click Here!', $link = URL, $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
+		function email_button($text = 'Click Here!', $link = 'URL', $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
 
 			// default button radius
 			$radius = !empty($radius) ? $radius : '3px';

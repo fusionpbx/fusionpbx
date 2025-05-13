@@ -141,9 +141,6 @@
 		fclose($file_handle);
 	}
 
-//include files
-	require dirname(__DIR__, 2) . "/resources/require.php";
-
 //check the permission
 	if(defined('STDIN')) {
 		$display_type = 'text'; //html, text
@@ -177,10 +174,13 @@
 		exit();
 	}
 
-//always update the auto_loader cache just-in-case the source files have updated
-	$auto_loader = new auto_loader();
-	$auto_loader->reload_classes();
-	$auto_loader->update_cache();
+//always update the now global autoload cache just-in-case the source files have updated
+	$autoload->update();
+
+//trigger clear cache for any classes that require it
+	foreach ($autoload->get_interface_list('clear_cache') as $class) {
+		$class::clear_cache();
+	}
 
 //get the version of the software
 	if ($upgrade_type == 'version') {
@@ -189,8 +189,6 @@
 
 //run all app_defaults.php files
 	if ($upgrade_type == 'domains') {
-		require_once "resources/classes/config.php";
-		require_once "resources/classes/domains.php";
 		$domain = new domains;
 		$domain->display_type = $display_type;
 		$domain->upgrade();
@@ -199,7 +197,6 @@
 //upgrade schema and/or data_types
 	if ($upgrade_type == 'schema') {
 		//get the database schema put it into an array then compare and update the database as needed.
-		require_once "resources/classes/schema.php";
 		$obj = new schema;
 		if (isset($argv[2]) && $argv[2] == 'data_types') {
 			$obj->data_types = true;

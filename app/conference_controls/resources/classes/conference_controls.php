@@ -26,12 +26,7 @@
 
 /**
  * conference_controls class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
-if (!class_exists('conference_controls')) {
 	class conference_controls {
 
 		/**
@@ -426,6 +421,3 @@ if (!class_exists('conference_controls')) {
 		}
 
 	}
-}
-
-?>

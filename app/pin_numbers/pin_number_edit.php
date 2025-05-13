@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -162,12 +162,13 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-pin_number']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'pin_numbers.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'action','value'=>'save']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'pin_numbers.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','name'=>'action','value'=>'save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -217,15 +218,16 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "</div>\n";
+	echo "<br /><br />\n";
 
 	if ($action == "update") {
 		echo "<input type='hidden' name='pin_number_uuid' value='".escape($pin_number_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-	echo "</form>";
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";
