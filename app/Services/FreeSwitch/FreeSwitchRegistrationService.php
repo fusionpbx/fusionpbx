@@ -32,9 +32,10 @@ class FreeSwitchRegistrationService
                     "sofia xmlstatus profile",
                     "'$profileName' reg"
                 );
+                
             }
 
-            if (empty($xml_response) || $xml_response == "Invalid Profile!") {
+            if (empty($xml_response) || str_contains($xml_response, 'Invalid')) {
                 continue;
             }
 
@@ -50,6 +51,7 @@ class FreeSwitchRegistrationService
             try {
                 libxml_use_internal_errors(true);
                 $xml = new SimpleXMLElement($xml_response);
+                dd($xml);
                 if ($xml === false) {
                     $errors = libxml_get_errors();
                     if (!empty($errors)) {
@@ -179,6 +181,8 @@ class FreeSwitchRegistrationService
         $xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
         $xml_response = str_replace("&lt;", "", $xml_response);
         $xml_response = str_replace("&gt;", "", $xml_response);
+
+        // dd($xml_response);
 
         return $xml_response;
     }
@@ -359,26 +363,25 @@ class FreeSwitchRegistrationService
 XML,
             'external' => <<<XML
 <profile>
-  <name>external</name>
-  <domain-name>example.com</domain-name>
   <registrations>
     <registration>
-      <call-id>6c42a1e5-89fb3ec2@203.0.113.10</call-id>
-      <user>3000@example.com</user>
-      <contact>&quot;&quot; &lt;sip:999@184.147.21.228;transport=udp;fs_nat=yes;fs_path=sip%3A999%40184.147.21.228%3A5060%3Btransport%3Dudp&gt;</contact>
-      <agent>X-Lite release 5.5.0 stamp 97576</agent>
-      <status>Registered(UDP)(unknown) exp(2021-05-05 12:25:10) rx(42) tx(0)</status>
-      <ping-status>OPTIONS keepalive status: OK</ping-status>
-      <ping-time>320</ping-time>
-      <host>203.0.113.1</host>
-      <network-ip>203.0.113.10</network-ip>
-      <network-port>5060</network-port>
-      <sip-auth-user>3000</sip-auth-user>
-      <sip-auth-realm>example.com</sip-auth-realm>
-      <mwi-account>3000@example.com</mwi-account>
+        <call-id>G6sckKCTIN</call-id>
+        <user>999@hornblower.tel</user>
+        <contact>&quot;&quot; sip:999@184.147.21.228;transport=udp;fs_nat=yes;fs_path=sip%3A999%40184.147.21.228%3A5060%3Btransport%3Dudp</contact>
+        <agent>Linphone-Desktop/5.0.17 (andres.okay.com.mx) mageia/9 Qt/5.15.7 LinphoneSDK/5.2.70</agent>
+        <status>Registered(UDP-NAT)(unknown) exp(2025-05-13 20:17:38) expsecs(2538)</status>
+        <ping-status>Reachable</ping-status>
+        <ping-time>0.00</ping-time>
+        <host>chi-pbx-dev.hornblower.com</host>
+        <network-ip>184.147.21.228</network-ip>
+        <network-port>5060</network-port>
+        <sip-auth-user>999</sip-auth-user>
+        <sip-auth-realm>hornblower.tel</sip-auth-realm>
+        <mwi-account>999@hornblower.tel</mwi-account>
     </registration>
   </registrations>
 </profile>
+
 XML
         ];
 
