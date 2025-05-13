@@ -51,7 +51,6 @@ class FreeSwitchRegistrationService
             try {
                 libxml_use_internal_errors(true);
                 $xml = new SimpleXMLElement($xml_response);
-                dd($xml);
                 if ($xml === false) {
                     $errors = libxml_get_errors();
                     if (!empty($errors)) {
@@ -181,8 +180,6 @@ class FreeSwitchRegistrationService
         $xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
         $xml_response = str_replace("&lt;", "", $xml_response);
         $xml_response = str_replace("&gt;", "", $xml_response);
-
-        // dd($xml_response);
 
         return $xml_response;
     }
