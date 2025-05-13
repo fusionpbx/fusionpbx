@@ -65,7 +65,9 @@ class DomainController extends Controller
 
 	public function switch(Request $request)
 	{
-		return DomainService::switchByUuid($request->domain_uuid);
+		DomainService::switchByUuid($request->domain_uuid);
 
+		$url = url()->previous();
+		return redirect($url);
 	}
 }

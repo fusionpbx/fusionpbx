@@ -43,11 +43,7 @@ class DomainService
                 // Unset destinations belonging to old domain
                 unset($_SESSION["destinations"]["array"]);
             }
-
-            return true;
         }
-
-        return false;
     }
 
 
