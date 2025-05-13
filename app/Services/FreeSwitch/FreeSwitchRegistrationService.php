@@ -39,13 +39,25 @@ class FreeSwitchRegistrationService
             }
 
             $xml_response = $this->normalizeXmlResponse($xml_response);
+            if (App::hasDebugModeEnabled()) {
+                Log::error('[' . __CLASS__ . '][' . __METHOD__ . '] Normalized XML: ' . $xml_response);
+            }
 
             if (App::hasDebugModeEnabled()) {
                 Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] XML Response: ' . $xml_response);
             }
 
             try {
+		libxml_use_internal_errors(true);
                 $xml = new SimpleXMLElement($xml_response);
+		if ($xml === false){
+			$errors = libxml_get_errors();
+			if (!empty($errors)){
+		            if (App::hasDebugModeEnabled()) {
+	        	        Log::error('[' . __CLASS__ . '][' . __METHOD__ . '] XML Errors: ' . print_r($errors, true));
+	        	    }
+			}
+		}
                 $array = json_decode(json_encode($xml), true);
 
                 if (!empty($array) && isset($array['registrations']['registration'])) {
