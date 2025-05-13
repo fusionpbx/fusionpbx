@@ -40,6 +40,10 @@ class FreeSwitchRegistrationService
 
             $xml_response = $this->normalizeXmlResponse($xml_response);
 
+            if (App::hasDebugModeEnabled()) {
+                Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] XML Response: ' . $xml_response);
+            }
+
             try {
                 $xml = new SimpleXMLElement($xml_response);
                 $array = json_decode(json_encode($xml), true);
