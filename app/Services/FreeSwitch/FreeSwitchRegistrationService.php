@@ -336,39 +336,23 @@ class FreeSwitchRegistrationService
     {
         $mockResponses = [
             'internal' => <<<XML
+ <?xml version="1.0" encoding="ISO-8859-1"?>
 <profile>
-  <name>internal</name>
-  <domain-name>example.com</domain-name>
-  <registrations>   
+  <registrations>
     <registration>
-      <call-id>4a95c9d3-57c5dcaa@192.168.1.100</call-id>
-      <user>1000@example.com</user>
-      <contact>"1000" <sip:1000@192.168.1.100:5060;rinstance=9dcea4fc3e5d9e33></contact>
-      <agent>Grandstream GXP1620 1.0.4.55</agent>
-      <status>Registered(UDP)(unknown) exp(2021-05-05 12:28:41) rx(31) tx(0)</status>
-      <ping-status>OPTIONS keepalive status: OK</ping-status>
-      <ping-time>250</ping-time>
-      <host>192.168.1.1</host>
-      <network-ip>192.168.1.100</network-ip>
-      <network-port>5060</network-port>
-      <sip-auth-user>1000</sip-auth-user>
-      <sip-auth-realm>example.com</sip-auth-realm>
-      <mwi-account>1000@example.com</mwi-account>
-    </registration>
-    <registration>
-      <call-id>2b84f5c7-a56b4dce@192.168.1.101</call-id>
-      <user>2000@example.com</user>
-      <contact>"2000" <sip:2000@192.168.1.101:5060;rinstance=7ea3b5fc1e4d8e22></contact>
-      <agent>Yealink SIP-T21P 52.84.0.20</agent>
-      <status>Registered(UDP)(unknown) exp(2021-05-05 12:30:15) rx(15) tx(0)</status>
-      <ping-status>OPTIONS keepalive status: OK</ping-status>
-      <ping-time>150</ping-time>
-      <host>192.168.1.1</host>
-      <network-ip>192.168.1.101</network-ip>
-      <network-port>5060</network-port>
-      <sip-auth-user>2000</sip-auth-user>
-      <sip-auth-realm>example.com</sip-auth-realm>
-      <mwi-account>2000@example.com</mwi-account>
+        <call-id>G6sckKCTIN</call-id>
+        <user>999@hornblower.tel</user>
+        <contact>&quot;&quot; &lt;sip:999@184.147.21.228;transport=udp;fs_nat=yes;fs_path=sip%3A999%40184.147.21.228%3A5060%3Btransport%3Dudp&gt;</contact>
+        <agent>Linphone-Desktop/5.0.17 (andres.okay.com.mx) mageia/9 Qt/5.15.7 LinphoneSDK/5.2.70</agent>
+        <status>Registered(UDP-NAT)(unknown) exp(2025-05-13 18:29:38) expsecs(3598)</status>
+        <ping-status>Reachable</ping-status>
+        <ping-time>0.00</ping-time>
+        <host>chi-pbx-dev.hornblower.com</host>
+        <network-ip>184.147.21.228</network-ip>
+        <network-port>5060</network-port>
+        <sip-auth-user>999</sip-auth-user>
+        <sip-auth-realm>hornblower.tel</sip-auth-realm>
+        <mwi-account>999@hornblower.tel</mwi-account>
     </registration>
   </registrations>
 </profile>

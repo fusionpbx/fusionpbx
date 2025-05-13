@@ -81,7 +81,8 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
 
     private function es_connect(string $host, int $port, string $password): mixed
     {
-        $error_code = null; $error_message = null;
+        $error_code = null;
+        $error_message = null;
         $this->fp = @fsockopen($host, $port, $error_code, $error_message, 3);
 
         if (!$this->fp) {
@@ -94,7 +95,7 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
         while (!feof($this->fp)) {
             $event = $this->es_read_event();
             if (@$event['Content-Type'] == 'auth/request') {
-                fputs($this->fp, 'auth '.($password)."\n\n");
+                fputs($this->fp, 'auth ' . ($password) . "\n\n");
                 break;
             }
         }
@@ -177,7 +178,7 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
 
         $cmd_array = explode("\n", $cmd);
         foreach ($cmd_array as &$value) {
-            fputs($this->fp, $value."\n");
+            fputs($this->fp, $value . "\n");
         }
         fputs($this->fp, "\n"); //second line feed to end the headers
 
@@ -205,12 +206,12 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
         $auth_user = DefaultSetting::get('config', 'xml_rpc.auth_user', 'text') ?? 'freeswitch';
         $auth_pass = DefaultSetting::get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
 
-        $url = 'http://'.$host.':'.$http_port.'/txtapi/'.$command.'?'.(isset($param) ? rawurlencode($param) : '');
+        $url = 'http://' . $host . ':' . $http_port . '/txtapi/' . $command . '?' . (isset($param) ? rawurlencode($param) : '');
 
         if (App::hasDebugModeEnabled()) {
-            Log::debug('['.__CLASS__.']['.__METHOD__.'] $url: '. $url);
-            Log::debug('['.__CLASS__.']['.__METHOD__.'] $auth_user: '. $auth_user);
-            Log::debug('['.__CLASS__.']['.__METHOD__.'] $auth_pass: '. $auth_pass);
+            Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] $url: ' . $url);
+            Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] $auth_user: ' . $auth_user);
+            Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] $auth_pass: ' . $auth_pass);
         }
 
         try {
@@ -221,19 +222,23 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
             }
 
             $response = Http::withBasicAuth($auth_user, $auth_pass)
+                ->withHeaders([
+                    'Accept' => 'application/xml',
+                    'Content-Type' => 'application/xml',
+                ])
                 ->withOptions($options)
                 ->get($url);
-
+                
         } catch (ConnectionException $e) {
             if (App::hasDebugModeEnabled()) {
-                Log::error('['.__CLASS__.']['.__METHOD__.'] Error: ' . $e->getMessage());
+                Log::error('[' . __CLASS__ . '][' . __METHOD__ . '] Error: ' . $e->getMessage());
             }
             return null;
         }
 
         if (App::hasDebugModeEnabled()) {
-            Log::debug('['.__CLASS__.']['.__METHOD__.'] $response->body: '. $response->body());
-	}
+            Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] $response->body: ' . $response->body());
+        }
 
         if ($response->ok()) {
             return $response->body() ?? null;
