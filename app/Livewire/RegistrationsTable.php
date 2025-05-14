@@ -105,7 +105,7 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Ping Time", "ping_time")
                 ->format(function ($value, $row, Column $column) {
-                    return $value ? $value . ' ms' : '';
+                    return $value ? '<nobr>'.$value . ' ms</nobr>' : '';
                 })
                 ->sortable(),
 
