@@ -65,7 +65,9 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Agent", "agent")
                 ->format(function ($value, $row, Column $column) {
-                    return strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$value2 = strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$output = '<div style="cursor:pointer;" title="'.$value.'">'.$value2.'</div>';
+                    return $output;
                 })
                 ->html()
                 ->sortable()
