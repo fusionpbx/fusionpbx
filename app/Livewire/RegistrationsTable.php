@@ -96,6 +96,7 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Status", "connection_status")
                 ->format(function ($value, $row, Column $column) {
+                    $value = str_replace(') ',')<br/>', $value);
                     $statusClass = substr($value, 0, 10) === 'Registered' ? 'success' : 'warning';
                     return '<span class="badge bg-' . $statusClass . '">' . $value . '</span>';
                 })
