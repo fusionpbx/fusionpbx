@@ -6,10 +6,8 @@ use App\Http\Requests\DialplanRequest;
 use App\Repositories\DialplanRepository;
 use Livewire\Component;
 use Illuminate\Support\Str;
-use App\Models\Dialplan;
-use App\Models\DialplanDetail;
+use App\Repositories\DialplanDetailRepository;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class DialplanForm extends Component
 {
@@ -39,12 +37,15 @@ class DialplanForm extends Component
     public $dialplan_default_context = '';
     public $domains = [];
     public $types = [];
+    public $app_id = null;
 
     protected $dialplanRepository;
+    protected $dialplanDetailRepository;
 
-    public function boot(DialplanRepository $dialplanRepository)
+    public function boot(DialplanRepository $dialplanRepository, DialplanDetailRepository $dialplanDetailRepository)
     {
         $this->dialplanRepository = $dialplanRepository;
+        $this->dialplanDetailRepository = $dialplanDetailRepository;
     }
 
     public function rules()
@@ -53,15 +54,18 @@ class DialplanForm extends Component
         return $request->rules();
     }
 
-    public function mount($dialplan = null, $domains = [], $types = [], $dialplan_default_context = ''): void
+    public function mount($dialplan = null, $domains = [], $types = [], $dialplan_default_context = '', $app_id = null): void
     {
         $this->domains = $domains;
         $this->types = $types;
         $this->dialplan_default_context = $dialplan_default_context;
+        $this->app_id = $app_id;
 
-        if ($dialplan) {
+        if ($dialplan)
+        {
             $this->dialplan = $dialplan;
             $this->domain_uuid = $dialplan->domain_uuid;
+            $this->app_id = $dialplan->app_id;
             $this->dialplan_uuid = $dialplan->dialplan_uuid;
             $this->hostname = $dialplan->hostname;
             $this->dialplan_context = $dialplan->dialplan_context;
@@ -73,7 +77,8 @@ class DialplanForm extends Component
             $this->dialplan_enabled = $dialplan->dialplan_enabled ?? false;
             $this->dialplan_description = $dialplan->dialplan_description;
 
-            foreach ($dialplan->dialplanDetails as $dialplanDetail) {
+            foreach ($dialplan->dialplanDetails as $dialplanDetail)
+            {
                 $this->dialplanDetails[] = [
                     'dialplan_detail_uuid' => $dialplanDetail->dialplan_detail_uuid,
                     'dialplan_detail_tag' => $dialplanDetail->dialplan_detail_tag,
@@ -90,7 +95,8 @@ class DialplanForm extends Component
 
         $this->loadPermissions();
 
-        if (empty($this->dialplanDetails) && $this->canAddDialplanDetail) {
+        if (empty($this->dialplanDetails) && $this->canAddDialplanDetail)
+        {
             $this->addDialplanDetail();
         }
     }
@@ -107,7 +113,8 @@ class DialplanForm extends Component
 
     public function addDialplanDetail(): void
     {
-        if (!$this->canAddDialplanDetail) {
+        if (!$this->canAddDialplanDetail)
+        {
             session()->flash('error', 'You do not have permission to add dialplan details.');
             return;
         }
@@ -127,12 +134,14 @@ class DialplanForm extends Component
 
     public function removeDialplanDetail($index): void
     {
-        if (!$this->canDeleteDialplanDetail) {
+        if (!$this->canDeleteDialplanDetail)
+        {
             session()->flash('error', 'You do not have permission to delete dialplan detail.');
             return;
         }
 
-        if (isset($this->dialplanDetails[$index]['dialplan_detail_uuid']) && !empty($this->dialplanDetails[$index]['dialplan_detail_uuid'])) {
+        if (isset($this->dialplanDetails[$index]['dialplan_detail_uuid']) && !empty($this->dialplanDetails[$index]['dialplan_detail_uuid']))
+        {
             $this->dialplanDetailsToDelete[] = $this->dialplanDetails[$index]['dialplan_detail_uuid'];
         }
 
@@ -144,24 +153,28 @@ class DialplanForm extends Component
     {
         $this->validate();
 
-        $filteredDialplanDetails = collect($this->dialplanDetails)->filter(function ($dialplanDetail) {
+        $filteredDialplanDetails = collect($this->dialplanDetails)->filter(function ($dialplanDetail)
+        {
             return !empty($dialplanDetail['dialplan_detail_tag']);
         })->toArray();
 
         $hasNewDialplanDetails = collect($filteredDialplanDetails)->filter(fn($d) => empty($d['dialplan_detail_uuid']))->count() > 0;
 
-        if ($hasNewDialplanDetails && !$this->canAddDialplanDetail) {
+        if ($hasNewDialplanDetails && !$this->canAddDialplanDetail)
+        {
             session()->flash('error', 'You do not have permission to add dialplanDetails.');
             return;
         }
 
-        if (!empty($this->dialplanDetailsToDelete) && !$this->canDeleteDialplanDetail) {
+        if (!empty($this->dialplanDetailsToDelete) && !$this->canDeleteDialplanDetail)
+        {
             session()->flash('error', 'You do not have permission to delete dialplanDetails.');
             return;
         }
 
         $dialplanData = [
             'domain_uuid' => $this->domain_uuid,
+            'app_uuid' => $this->app_uuid,
             'hostname' => $this->hostname,
             'dialplan_context' => $this->dialplan_context,
             'dialplan_name' => $this->dialplan_name,
@@ -173,15 +186,22 @@ class DialplanForm extends Component
             'dialplan_description' => $this->dialplan_description,
         ];
 
-        if ($this->dialplan) {
+        if ($this->dialplan)
+        {
             $updated = $this->dialplanRepository->update($this->dialplan->dialplan_uuid, $dialplanData);
-            
-            if (!$updated) {
+
+            if (!$updated)
+            {
                 session()->flash('error', 'Failed to update dialplan.');
                 return;
             }
-            
-            $this->updateDialplanDetails($filteredDialplanDetails);
+
+            $this->dialplanDetailRepository->update($this->dialplan->dialplan_uuid, $filteredDialplanDetails);
+
+            if (!empty($this->dialplanDetailsToDelete))
+            {
+                $this->dialplanDetailRepository->delete($this->dialplanDetailsToDelete);
+            }
 
             $this->dialplan = $this->dialplanRepository->findByUuidWithDetails($this->dialplan->dialplan_uuid);
             $xml = $this->dialplanRepository->buildXML($this->dialplan);
@@ -191,12 +211,14 @@ class DialplanForm extends Component
             ]);
 
             session()->flash('message', 'Dialplan updated successfully.');
-        } else {
+        }
+        else
+        {
             $dialplanData['dialplan_uuid'] = Str::uuid();
             $this->dialplan = $this->dialplanRepository->create($dialplanData);
-            
-            $this->createDialplanDetails($filteredDialplanDetails);
-            
+
+            $this->dialplanDetailRepository->create($this->dialplan->dialplan_uuid, $filteredDialplanDetails);
+
             $this->dialplan = $this->dialplanRepository->findByUuidWithDetails($this->dialplan->dialplan_uuid);
             $xml = $this->dialplanRepository->buildXML($this->dialplan);
             $this->dialplan->update([
@@ -208,60 +230,6 @@ class DialplanForm extends Component
         }
 
         redirect()->route('dialplans.edit', $this->dialplan->dialplan_uuid);
-    }
-
-    protected function updateDialplanDetails(array $filteredDialplanDetails): void
-    {
-        foreach ($filteredDialplanDetails as $dialplanDetail) {
-            if (empty($dialplanDetail['dialplan_detail_uuid'])) {
-                DialplanDetail::create([
-                    'dialplan_detail_uuid' => Str::uuid(),
-                    'dialplan_uuid' => $this->dialplan->dialplan_uuid,
-                    'dialplan_detail_tag' => $dialplanDetail['dialplan_detail_tag'],
-                    'dialplan_detail_type' => $dialplanDetail['dialplan_detail_type'],
-                    'dialplan_detail_data' => $dialplanDetail['dialplan_detail_data'],
-                    'dialplan_detail_break' => $dialplanDetail['dialplan_detail_break'],
-                    'dialplan_detail_inline' => $dialplanDetail['dialplan_detail_inline'],
-                    'dialplan_detail_group' => $dialplanDetail['dialplan_detail_group'],
-                    'dialplan_detail_order' => $dialplanDetail['dialplan_detail_order'],
-                    'dialplan_detail_enabled' => $dialplanDetail['dialplan_detail_enabled'],
-                ]);
-            } else {
-                DialplanDetail::where('dialplan_detail_uuid', $dialplanDetail['dialplan_detail_uuid'])
-                    ->update([
-                        'dialplan_detail_tag' => $dialplanDetail['dialplan_detail_tag'],
-                        'dialplan_detail_type' => $dialplanDetail['dialplan_detail_type'],
-                        'dialplan_detail_data' => $dialplanDetail['dialplan_detail_data'],
-                        'dialplan_detail_break' => $dialplanDetail['dialplan_detail_break'],
-                        'dialplan_detail_inline' => $dialplanDetail['dialplan_detail_inline'],
-                        'dialplan_detail_group' => $dialplanDetail['dialplan_detail_group'],
-                        'dialplan_detail_order' => $dialplanDetail['dialplan_detail_order'],
-                        'dialplan_detail_enabled' => $dialplanDetail['dialplan_detail_enabled'],
-                    ]);
-            }
-        }
-
-        if (!empty($this->dialplanDetailsToDelete)) {
-            DialplanDetail::whereIn('dialplan_detail_uuid', $this->dialplanDetailsToDelete)->delete();
-        }
-    }
-
-    protected function createDialplanDetails(array $filteredDialplanDetails): void
-    {
-        foreach ($filteredDialplanDetails as $dialplanDetail) {
-            DialplanDetail::create([
-                'dialplan_detail_uuid' => Str::uuid(),
-                'dialplan_uuid' => $this->dialplan->dialplan_uuid,
-                'dialplan_detail_tag' => $dialplanDetail['dialplan_detail_tag'],
-                'dialplan_detail_type' => $dialplanDetail['dialplan_detail_type'],
-                'dialplan_detail_data' => $dialplanDetail['dialplan_detail_data'],
-                'dialplan_detail_break' => $dialplanDetail['dialplan_detail_break'],
-                'dialplan_detail_inline' => $dialplanDetail['dialplan_detail_inline'],
-                'dialplan_detail_group' => $dialplanDetail['dialplan_detail_group'],
-                'dialplan_detail_order' => $dialplanDetail['dialplan_detail_order'],
-                'dialplan_detail_enabled' => $dialplanDetail['dialplan_detail_enabled'],
-            ]);
-        }
     }
 
     public function render(): View

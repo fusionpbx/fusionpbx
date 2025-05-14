@@ -36,29 +36,29 @@ class DialplanRepository
         if (!isset($data['dialplan_uuid'])) {
             $data['dialplan_uuid'] = Str::uuid();
         }
-        
+
         return $this->model->create($data);
     }
 
     public function update(string $uuid, array $data): bool
     {
         $dialplan = $this->findByUuid($uuid);
-        
+
         if (!$dialplan) {
             return false;
         }
-        
+
         return $dialplan->update($data);
     }
 
     public function delete(string $uuid): bool
     {
         $dialplan = $this->findByUuid($uuid);
-        
+
         if (!$dialplan) {
             return false;
         }
-        
+
         return $dialplan->delete();
     }
 
