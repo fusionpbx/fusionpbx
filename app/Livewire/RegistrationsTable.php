@@ -75,7 +75,9 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Contact", "contact")
                 ->format(function ($value, $row, Column $column) {
-                    return strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$value2 = strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$output = '<div style="cursor:pointer;" title="'.$value.'">'.$value2.'</div>';
+                    return $output;
                 })
                 ->html()
                 ->sortable()
@@ -94,7 +96,7 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Status", "connection_status")
                 ->format(function ($value, $row, Column $column) {
-                    $statusClass = $value === 'Registered' ? 'success' : 'warning';
+                    $statusClass = substr($value, 0, 10) === 'Registered' ? 'success' : 'warning';
                     return '<span class="badge bg-' . $statusClass . '">' . $value . '</span>';
                 })
                 ->html()
