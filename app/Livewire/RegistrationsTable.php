@@ -107,6 +107,7 @@ class RegistrationsTable extends DataTableComponent
                 ->format(function ($value, $row, Column $column) {
                     return $value ? '<nobr>'.$value . ' ms</nobr>' : '';
                 })
+                ->html()
                 ->sortable(),
 
             Column::make("Profile", "sip_profile_name")
