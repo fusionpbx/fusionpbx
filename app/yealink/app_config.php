@@ -554,7 +554,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "965d5dad-d3d2-49a7-a3f3-7237a0fece21";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "$yealink_firmware_t44w";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t44w";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T46U(T43U,T46U,T41U,T48U,T42U,T44U,T44W)-108.87.0.15.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
