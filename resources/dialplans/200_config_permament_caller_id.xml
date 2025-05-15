@@ -4,4 +4,5 @@
 		<action application="set" data="caller_id_sound_prompt=phrase:f3931718-1835-47b9-b808-4acc8cdf534e"/>
 		<action application="set" data="caller_id_sound_goodbye=phrase:52cf56cc-dfaa-4e8e-aecc-83810a35df57"/>
 		<action application="lua" data="app.lua caller_id true"/>
+	</condition>
 </extension>

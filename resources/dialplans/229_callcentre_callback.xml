@@ -1,4 +1,4 @@
-<extension name="callcentre_callback" continue="false" context="${domain_name}" continue="false" app_uuid="eb478e66-f637-4ae7-b1eb-9a7b87a1bd9e" global="true" order="229">
+<extension name="callcentre_callback" continue="false" context="${domain_name}"  app_uuid="eb478e66-f637-4ae7-b1eb-9a7b87a1bd9e" global="true" order="229">
 	<condition field="destination_number" expression="callback-(\d+)-(\d+)">
 		<action application="set" data="queue_caller_id_number=$1"/>
 		<action application="set" data="queue_original_id_number=$2"/>
