@@ -544,6 +544,24 @@
 		$array['email_templates'][$x]['template_type'] = 'html';
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+
+		$array['email_templates'][$x]['email_template_uuid'] = '54616982-68ae-4e55-99f4-e45ffa68e379';
+		$array['email_templates'][$x]['template_language'] = 'en-us';
+		$array['email_templates'][$x]['template_category'] = 'email';
+		$array['email_templates'][$x]['template_subcategory'] = 'test';
+		$array['email_templates'][$x]['template_subject'] = 'Test Message';
+		$array['email_templates'][$x]['template_body'] = "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "<strong>Test Message</strong><br />\n";
+		$array['email_templates'][$x]['template_body'] .= "<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "This message is a test of the SMTP settings configured within your PBX.<br />\n";
+		$array['email_templates'][$x]['template_body'] .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = 'Message sent by the Email Test feature found at the top of the Email Queue app.';
 
 		//build array of email template uuids
 		foreach ($array['email_templates'] as $row) {
