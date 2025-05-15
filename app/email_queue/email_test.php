@@ -41,9 +41,41 @@
 //prepare the email
 	$email_recipient = !empty($_POST['to']) && valid_email($_POST['to']) ? strtolower($_POST['to']) : null;
 
-	$email_body = "<b>Test Message</b><br /><br />\n";
-	$email_body .= "This message is a test of the SMTP settings configured within your PBX.<br />\n";
-	$email_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
+//retrieve email template
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$language_dialect = $settings->get('domain', 'language', 'en-us');
+	if (!empty($language_dialect)) {
+		$sql = "select ";
+		$sql .= "	template_subject, ";
+		$sql .= "	template_body ";
+		$sql .= "from ";
+		$sql .= "	v_email_templates ";
+		$sql .= "where ";
+		$sql .= "	template_language = :template_language ";
+		$sql .= "	and template_category = 'email' ";
+		$sql .= "	and template_subcategory = 'test' ";
+		$sql .= "	and template_type = 'html' ";
+		$sql .= "	and template_enabled = 'true' ";
+		$sql .= "	and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "limit 1 ";
+		$parameters['template_language'] = $language_dialect;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$template = $database->select($sql, $parameters, 'row');
+		unset($sql, $parameters);
+	}
+//use email template
+	if (!empty($template) && (!empty($template['template_body']) || !empty($template['template_body']))) {
+		$email_subject = $template['template_subject'];
+		$email_body = $template['template_body'];
+	}
+//no template found, use default message
+	else {
+		$email_subject = 'Test Message';
+		$email_body = "<b>Test Message</b><br /><br />\n";
+		$email_body .= "This message is a test of the SMTP settings configured within your PBX.<br />\n";
+		$email_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
+	}
 
 	$email_from_address = $_SESSION['email']['smtp_from']['text'];
 	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
@@ -52,7 +84,7 @@
 	$sent = 0;
 	$email = new email;
 	$email->recipients = $email_recipient;
-	$email->subject = 'Test Message';
+	$email->subject = $email_subject;
 	$email->body = $email_body;
 	$email->from_address = $email_from_address;
 	$email->from_name = $email_from_name;
