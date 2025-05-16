@@ -33,6 +33,7 @@ class ContactPhone extends Model
         'phone_type_voice',
         'phone_type_video',
         'phone_type_text',
+        'phone_type_fax',
         'phone_speed_dial',
         'phone_country_code',
         'phone_number',
