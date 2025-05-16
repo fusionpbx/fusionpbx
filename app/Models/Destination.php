@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use DB;
 
 class Destination extends Model
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasFactory, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_destinations';
 	protected $primaryKey = 'destination_uuid';
 	public $incrementing = false;

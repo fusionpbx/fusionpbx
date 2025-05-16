@@ -2,18 +2,21 @@
 
 namespace App\Livewire;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use App\Models\Domain;
+use App\Repositories\DomainRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class DomainsTable extends DataTableComponent
 {
     protected $model = Domain::class;
+    protected $domainRepository;
 
     public function configure(): void
     {
@@ -96,7 +99,20 @@ class DomainsTable extends DataTableComponent
         }
 
         $selectedRows = $this->getSelected();
+        if (App::hasDebugModeEnabled()) {
+             Log::debug('[DomainRepository:getForSelectControl] $selectedRows: ' . print_r($selectedRows, true));
+        }
+	foreach ($selectedRows as $domain_uuid)
+	{
+		$trashedDomain = Domain::find($domain_uuid);
+		if (isset($trashedDomain))
+		{
+			$this->domainRepository = new DomainRepository($trashedDomain, null);
+			$this->domainRepository->delete($trashedDomain);
+		}
+	}
 
+	// NOTE: Don't know if this still necessary
         try {
             DB::beginTransaction();
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ConferenceRoomUser extends Pivot
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasFactory, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_conference_room_users';
 	protected $primaryKey = 'conference_room_user_uuid';
 	public $incrementing = false;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class RingGroup extends Model
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasFactory, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_ring_groups';
 	protected $primaryKey = 'ring_group_uuid';
 	public $incrementing = false;

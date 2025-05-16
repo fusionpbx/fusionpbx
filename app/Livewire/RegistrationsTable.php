@@ -65,7 +65,9 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Agent", "agent")
                 ->format(function ($value, $row, Column $column) {
-                    return strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$value2 = strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$output = '<div style="cursor:pointer;" title="'.$value.'">'.$value2.'</div>';
+                    return $output;
                 })
                 ->html()
                 ->sortable()
@@ -73,7 +75,9 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Contact", "contact")
                 ->format(function ($value, $row, Column $column) {
-                    return strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$value2 = strlen($value) > 30 ? substr($value, 0, 27) . '...' : $value;
+			$output = '<div style="cursor:pointer;" title="'.$value.'">'.$value2.'</div>';
+                    return $output;
                 })
                 ->html()
                 ->sortable()
@@ -92,7 +96,8 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Status", "connection_status")
                 ->format(function ($value, $row, Column $column) {
-                    $statusClass = $value === 'Registered' ? 'success' : 'warning';
+                    $value = str_replace(') ',')<br/>', $value);
+                    $statusClass = substr($value, 0, 10) === 'Registered' ? 'success' : 'warning';
                     return '<span class="badge bg-' . $statusClass . '">' . $value . '</span>';
                 })
                 ->html()
@@ -100,8 +105,9 @@ class RegistrationsTable extends DataTableComponent
 
             Column::make("Ping Time", "ping_time")
                 ->format(function ($value, $row, Column $column) {
-                    return $value ? $value . ' ms' : '';
+                    return $value ? '<nobr>'.$value . ' ms</nobr>' : '';
                 })
+                ->html()
                 ->sortable(),
 
             Column::make("Profile", "sip_profile_name")

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Facades\Setting;
+use App\Helpers\getModel;
 use App\Models\Dialplan;
 use App\Models\DialplanDetail;
 use App\Models\Domain;
@@ -11,14 +12,16 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class DomainRepository
 {
     protected $model;
     protected $dialplanRepository;
 
-    public function __construct(Domain $domain, DialplanRepository $dialplanRepository)
+    public function __construct(Domain $domain, ?DialplanRepository $dialplanRepository)
     {
         $this->model = $domain;
         $this->dialplanRepository = $dialplanRepository;
@@ -49,6 +52,7 @@ class DomainRepository
 
     public function delete(Domain $domain): ?bool
     {
+        $this->deleteRecords($domain);
         return $domain->delete();
     }
 
@@ -73,7 +77,6 @@ class DomainRepository
 
         return ($query->count() > 0);
     }
-
 
     public function getForSelectControl(): mixed
     {
@@ -120,7 +123,7 @@ class DomainRepository
                         });
         natsort($dialplanFiles);
 
-        $dialplan_query = $this->model::where(function($query) use ($new_dommain_uuid){
+        $dialplan_query = Dialplan::where(function($query) use ($new_dommain_uuid){
                         return $query->where('domain_uuid','=', $new_dommain_uuid)
                                 ->orWhereNull('domain_uuid');
                         })
@@ -134,18 +137,26 @@ class DomainRepository
 
         foreach ($dialplanFiles as $dialplanFile)
         {
-            $xmlString = $dialplanStorage::get($dialplanFile);
+            $xmlString = $dialplanStorage->get($dialplanFile);
             if (!empty($xmlString))
             {
                 $lenght = Setting::getDefaultSetting('security', 'pin_lenght', 'var') ?? 8;
                 $newPin = str_pad(rand(0, pow(10, $lenght) - 1),$lenght, '0', STR_PAD_LEFT);
                 $xmlString = str_replace("{v_context}", $new_dommain_uuid, $xmlString);
-                // TODO: fix $length variable missing
-//                $xmlString = str_replace("{v_pin_number}", generate_password($length, 1), $xmlString);
+                $xmlString = str_replace("{v_pin_number}", $newPin, $xmlString);
+	        if(App::hasDebugModeEnabled())
+        	{
+            		Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] XML to import: '.$xmlString);
+        	}
 
                 $xml = simplexml_load_string($xmlString);
                 $json = json_encode($xml);
                 $newDialplan = json_decode($json, true);
+
+	        if(App::hasDebugModeEnabled())
+	        {
+	            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Pre Normalization Dialplan: '.print_r($newDialplan, true));
+	        }
 
                 if (!empty($newDialplan))
                 {
@@ -156,12 +167,26 @@ class DomainRepository
                         $newDialplan['condition'][0] = $tmp;
                     }
                 }
+	        if(App::hasDebugModeEnabled())
+	        {
+	            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Importing dialplan: '.print_r($newDialplan, true));
+	        }
+
 
                 $app_uuid_exists = false;
                 foreach($dialplans as $dialplan)
                 {
-                    if ($dialplan['@attributes']['app_uuid'] == $dialplan->app_uuid)
+		        if(App::hasDebugModeEnabled())
+		        {
+		            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Looking at dialplan: '.print_r($dialplan, true));
+		        }
+
+                    if ($newDialplan['@attributes']['app_uuid'] == $dialplan->app_uuid)
                     {
+		        if(App::hasDebugModeEnabled())
+		        {
+		            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Exists, skipping.');
+		        }
                         $app_uuid_exists = true;
                         break;
                     }
@@ -170,36 +195,38 @@ class DomainRepository
                 if (!$app_uuid_exists)
                 {
                     $dialplan_global = (isset($newDialplan['@attributes']['global']) && $newDialplan['@attributes']['global'] == "true");
-                    $dialplan_context = $dialplan['@attributes']['context'];
+                    $dialplan_context = $newDialplan['@attributes']['context'];
                     $dialplan_context = str_replace("\${domain_name}", $newDomain->domain_name, $dialplan_context);
                     $domain_uuid = $dialplan_global ? null : $newDomain->domain_uuid;
                     $x = 0;
 
                     $array['dialplans'][$x]['domain_uuid'] = $domain_uuid;
-                    $array['dialplans'][$x]['app_uuid'] = $dialplan['@attributes']['app_uuid'];
-                    $array['dialplans'][$x]['dialplan_name'] = $dialplan['@attributes']['name'];
-                    $array['dialplans'][$x]['dialplan_number'] = $dialplan['@attributes']['number'];
+                    $array['dialplans'][$x]['app_uuid'] = $newDialplan['@attributes']['app_uuid'];
+                    $array['dialplans'][$x]['dialplan_name'] = $newDialplan['@attributes']['name'];
+                    if (!empty($newDialplan['@attributes']['number'])){
+                        $array['dialplans'][$x]['dialplan_number'] = $newDialplan['@attributes']['number'];
+		    }
                     $array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
-                    if (!empty($dialplan['@attributes']['destination']))
+                    if (!empty($newDialplan['@attributes']['destination']))
                     {
-                        $array['dialplans'][$x]['dialplan_destination'] = $dialplan['@attributes']['destination'];
+                        $array['dialplans'][$x]['dialplan_destination'] = $newDialplan['@attributes']['destination'];
                     }
-                    if (!empty($dialplan['@attributes']['continue']))
+                    if (!empty($newDialplan['@attributes']['continue']))
                     {
-                        $array['dialplans'][$x]['dialplan_continue'] = $dialplan['@attributes']['continue'];
+                        $array['dialplans'][$x]['dialplan_continue'] = $newDialplan['@attributes']['continue'];
                     }
-                    $array['dialplans'][$x]['dialplan_order'] = $dialplan['@attributes']['order'];
-                    if (!empty($dialplan['@attributes']['enabled']))
+                    $array['dialplans'][$x]['dialplan_order'] = $newDialplan['@attributes']['order'];
+                    if (!empty($newDialplan['@attributes']['enabled']))
                     {
-                        $array['dialplans'][$x]['dialplan_enabled'] = $dialplan['@attributes']['enabled'];
+                        $array['dialplans'][$x]['dialplan_enabled'] = $newDialplan['@attributes']['enabled'];
                     }
                     else
                     {
                         $array['dialplans'][$x]['dialplan_enabled'] = "true";
                     }
-                    if (!empty($dialplan['@attributes']['description']))
+                    if (!empty($newDialplan['@attributes']['description']))
                     {
-                        $array['dialplans'][$x]['dialplan_description'] = $dialplan['@attributes']['description'];
+                        $array['dialplans'][$x]['dialplan_description'] = $newDialplan['@attributes']['description'];
                     }
 
                     $y = 0;
@@ -344,14 +371,42 @@ class DomainRepository
                         {
                             $newInsertedDialplanDetail = DialplanDetail::create($newDialplanDetail);
                         }
-                        $xmlPayload = $this->dialplanRepository->buildXML($newInsertedDialplan);
-                        if(App::hasDebugModeEnabled())
-                        {
-                            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $xmlPayload: '.$xmlPayload);
-                        }
-                        $newInsertedDialplan->update(['xml' => $xmlPayload]);
+			if (is_object($this->dialplanRepository))
+			{
+	                        $xmlPayload = $this->dialplanRepository->buildXML($newInsertedDialplan);
+	                        if(App::hasDebugModeEnabled())
+        	                {
+                	            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $xmlPayload: '.$xmlPayload);
+                        	}
+	                        $newInsertedDialplan->update(['xml' => $xmlPayload]);
+			}
+			else
+			{
+               	            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Constructor called with null dialplanRepository, no XML to create');
+			}
 
                     }   // app_uuid_exists
+                }
+            }
+        }
+    }
+
+    private function deleteRecords(Domain $domain)
+    {
+        $models = getModels();
+        foreach ($models as $model)
+        {
+            $table = $model::getTableName();
+            if(App::hasDebugModeEnabled())
+            {
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Model: '.$model.' Table:'.$table);
+            }
+
+            if (Schema::hasColumn($table, 'domain_uuid'))
+            {
+                $rows = $model::where('domain_uuid', $domain->domain_uuid)->get();
+                foreach ($rows as $row){
+                    $row->delete();
                 }
             }
         }

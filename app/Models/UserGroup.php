@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class UserGroup extends Pivot
 {
-    use HasFactory, HasUniqueIdentifier;
+    use HasFactory, HasUniqueIdentifier, GetTableName;
     protected $table = 'v_user_groups';
     protected $primaryKey = 'user_group_uuid';
     public $incrementing = false;

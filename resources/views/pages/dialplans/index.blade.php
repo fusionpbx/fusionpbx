@@ -10,11 +10,19 @@
 
             <div class="card-tools">
                 <div class="d-flex gap-2 " role="dialplan" aria-label="Dialplan actions">
-                    @can('dialplan_add')
-                    <a href="{{ route('dialplans.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus mr-1"></i> {{__('Add')}}
-                    </a>
-                    @endcan
+	                @if($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4")
+                        @can('inbound_route_add')
+                        <a href="{{ route('dialplans.inbound.create', ['app_uuid' => $app_uuid]) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus mr-1"></i> {{__('Add')}}
+                        </a>
+                        @endcan
+                    @else
+                        @can('dialplan_add')
+                        <a href="{{ route('dialplans.create') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus mr-1"></i> {{__('Add')}}
+                        </a>
+                        @endcan
+                    @endif
                 </div>
             </div>
         </div>

@@ -16,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Voicemail extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_voicemails';
 	protected $primaryKey = 'voicemail_uuid';
 	public $incrementing = false;

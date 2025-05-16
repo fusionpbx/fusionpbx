@@ -32,16 +32,33 @@ class FreeSwitchRegistrationService
                     "sofia xmlstatus profile",
                     "'$profileName' reg"
                 );
+                
             }
 
-            if (empty($xml_response) || $xml_response == "Invalid Profile!") {
+            if (empty($xml_response) || str_contains($xml_response, 'Invalid')) {
                 continue;
             }
 
             $xml_response = $this->normalizeXmlResponse($xml_response);
+            if (App::hasDebugModeEnabled()) {
+                Log::error('[' . __CLASS__ . '][' . __METHOD__ . '] Normalized XML: ' . $xml_response);
+            }
+
+            if (App::hasDebugModeEnabled()) {
+                Log::debug('[' . __CLASS__ . '][' . __METHOD__ . '] XML Response: ' . $xml_response);
+            }
 
             try {
+                libxml_use_internal_errors(true);
                 $xml = new SimpleXMLElement($xml_response);
+                if ($xml === false) {
+                    $errors = libxml_get_errors();
+                    if (!empty($errors)) {
+                        if (App::hasDebugModeEnabled()) {
+                            Log::error('[' . __CLASS__ . '][' . __METHOD__ . '] XML Errors: ' . print_r($errors, true));
+                        }
+                    }
+                }
                 $array = json_decode(json_encode($xml), true);
 
                 if (!empty($array) && isset($array['registrations']['registration'])) {
@@ -155,26 +172,14 @@ class FreeSwitchRegistrationService
 
     private function normalizeXmlResponse(string $xml_response): string
     {
-        $xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]|\xEF\xBB\xBF/', '', $xml_response);
-
-        $xml_response = str_replace("<profile-info>", "<profile>", $xml_response);
-        $xml_response = str_replace("</profile-info>", "</profile>", $xml_response);
-
-        $xml_response = str_replace("&", "&amp;", $xml_response);
-
-        $xml_response = str_replace("&amp;lt;", "&lt;", $xml_response);
-        $xml_response = str_replace("&amp;gt;", "&gt;", $xml_response);
-        $xml_response = str_replace("&amp;amp;", "&amp;", $xml_response);
-
-        $xml_response = str_replace("&lt;", "<", $xml_response);
-        $xml_response = str_replace("&gt;", ">", $xml_response);
-
-        $xml_response = preg_replace_callback('/<contact>(.*?)<\/contact>/', function ($matches) {
-            $content = $matches[1];
-            $content = preg_replace('/"([^"]*)"(\s+)<sip:/', '&quot;$1&quot;$2&lt;sip:', $content);
-            $content = str_replace("></", ">&lt;/", $content);
-            return "<contact>" . $content . "</contact>";
-        }, $xml_response);
+        $xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $xml_response);
+        if ($xml_response == "Invalid Profile!") {
+            $xml_response = "<error_msg>" . !empty($text['label-message']) . "</error_msg>";
+        }
+        $xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
+        $xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
+        $xml_response = str_replace("&lt;", "", $xml_response);
+        $xml_response = str_replace("&gt;", "", $xml_response);
 
         return $xml_response;
     }
@@ -332,80 +337,48 @@ class FreeSwitchRegistrationService
     {
         $mockResponses = [
             'internal' => <<<XML
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <profile>
-  <name>internal</name>
-  <domain-name>example.com</domain-name>
-  <registrations>   
+  <registrations>
     <registration>
-      <call-id>4a95c9d3-57c5dcaa@192.168.1.100</call-id>
-      <user>1000@example.com</user>
-      <contact>"1000" <sip:1000@192.168.1.100:5060;rinstance=9dcea4fc3e5d9e33></contact>
-      <agent>Grandstream GXP1620 1.0.4.55</agent>
-      <status>Registered(UDP)(unknown) exp(2021-05-05 12:28:41) rx(31) tx(0)</status>
-      <ping-status>OPTIONS keepalive status: OK</ping-status>
-      <ping-time>250</ping-time>
-      <host>192.168.1.1</host>
-      <network-ip>192.168.1.100</network-ip>
-      <network-port>5060</network-port>
-      <sip-auth-user>1000</sip-auth-user>
-      <sip-auth-realm>example.com</sip-auth-realm>
-      <mwi-account>1000@example.com</mwi-account>
-    </registration>
-    <registration>
-      <call-id>2b84f5c7-a56b4dce@192.168.1.101</call-id>
-      <user>2000@example.com</user>
-      <contact>"2000" <sip:2000@192.168.1.101:5060;rinstance=7ea3b5fc1e4d8e22></contact>
-      <agent>Yealink SIP-T21P 52.84.0.20</agent>
-      <status>Registered(UDP)(unknown) exp(2021-05-05 12:30:15) rx(15) tx(0)</status>
-      <ping-status>OPTIONS keepalive status: OK</ping-status>
-      <ping-time>150</ping-time>
-      <host>192.168.1.1</host>
-      <network-ip>192.168.1.101</network-ip>
-      <network-port>5060</network-port>
-      <sip-auth-user>2000</sip-auth-user>
-      <sip-auth-realm>example.com</sip-auth-realm>
-      <mwi-account>2000@example.com</mwi-account>
+        <call-id>G6sckKCTIN</call-id>
+        <user>999@hornblower.tel</user>
+        <contact>&quot;&quot; &lt;sip:999@184.147.21.228;transport=udp;fs_nat=yes;fs_path=sip%3A999%40184.147.21.228%3A5060%3Btransport%3Dudp&gt;</contact>
+        <agent>Linphone-Desktop/5.0.17 (andres.okay.com.mx) mageia/9 Qt/5.15.7 LinphoneSDK/5.2.70</agent>
+        <status>Registered(UDP-NAT)(unknown) exp(2025-05-13 18:29:38) expsecs(3598)</status>
+        <ping-status>Reachable</ping-status>
+        <ping-time>0.00</ping-time>
+        <host>chi-pbx-dev.hornblower.com</host>
+        <network-ip>184.147.21.228</network-ip>
+        <network-port>5060</network-port>
+        <sip-auth-user>999</sip-auth-user>
+        <sip-auth-realm>hornblower.tel</sip-auth-realm>
+        <mwi-account>999@hornblower.tel</mwi-account>
     </registration>
   </registrations>
 </profile>
 XML,
             'external' => <<<XML
 <profile>
-  <name>external</name>
-  <domain-name>example.com</domain-name>
   <registrations>
     <registration>
-      <call-id>6c42a1e5-89fb3ec2@203.0.113.10</call-id>
-      <user>3000@example.com</user>
-      <contact>"3000" <sip:3000@203.0.113.10:5060;rinstance=1ac2e3fc4d5b6e77></contact>
-      <agent>X-Lite release 5.5.0 stamp 97576</agent>
-      <status>Registered(UDP)(unknown) exp(2021-05-05 12:25:10) rx(42) tx(0)</status>
-      <ping-status>OPTIONS keepalive status: OK</ping-status>
-      <ping-time>320</ping-time>
-      <host>203.0.113.1</host>
-      <network-ip>203.0.113.10</network-ip>
-      <network-port>5060</network-port>
-      <sip-auth-user>3000</sip-auth-user>
-      <sip-auth-realm>example.com</sip-auth-realm>
-      <mwi-account>3000@example.com</mwi-account>
-    </registration>
-    <registration>
-      <call-id>9d8e7c6b-5a4f3e2d@10.0.0.5</call-id>
-      <user>CL750A4000@example.com</user>
-      <contact>"4000" <sip:4000@10.0.0.5:5060;rinstance=2bd4e6fc8a9c1d33></contact>
-      <agent>CL750A/2.3.0.0</agent>
-      <status>Registered(UDP)(unknown) exp(2021-05-05 12:35:22) rx(8) tx(0)</status>
-      <ping-status>OPTIONS keepalive status: OK</ping-status>
-      <ping-time>175</ping-time>
-      <host>10.0.0.1</host>
-      <network-ip>10.0.0.5</network-ip>
-      <network-port>5060</network-port>
-      <sip-auth-user>4000</sip-auth-user>
-      <sip-auth-realm>example.com</sip-auth-realm>
-      <mwi-account>4000@example.com</mwi-account>
+        <call-id>G6sckKCTIN</call-id>
+        <user>999@hornblower.tel</user>
+        <contact>&quot;&quot; sip:999@184.147.21.228;transport=udp;fs_nat=yes;fs_path=sip%3A999%40184.147.21.228%3A5060%3Btransport%3Dudp</contact>
+        <agent>Linphone-Desktop/5.0.17 (andres.okay.com.mx) mageia/9 Qt/5.15.7 LinphoneSDK/5.2.70</agent>
+        <status>Registered(UDP-NAT)(unknown) exp(2025-05-13 20:17:38) expsecs(2538)</status>
+        <ping-status>Reachable</ping-status>
+        <ping-time>0.00</ping-time>
+        <host>chi-pbx-dev.hornblower.com</host>
+        <network-ip>184.147.21.228</network-ip>
+        <network-port>5060</network-port>
+        <sip-auth-user>999</sip-auth-user>
+        <sip-auth-realm>hornblower.tel</sip-auth-realm>
+        <mwi-account>999@hornblower.tel</mwi-account>
     </registration>
   </registrations>
 </profile>
+
 XML
         ];
 

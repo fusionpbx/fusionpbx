@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Stream extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, HandlesStringBooleans;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, HandlesStringBooleans, GetTableName;
 	protected $table = 'v_streams';
 	protected $primaryKey = 'stream_uuid';
 	public $incrementing = false;

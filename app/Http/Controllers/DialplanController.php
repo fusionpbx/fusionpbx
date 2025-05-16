@@ -5,20 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Dialplan;
 use App\Models\Domain;
 use App\Http\Requests\DialplanRequest;
+use App\Models\Destination;
+use App\Repositories\DialplanDetailRepository;
 use App\Repositories\DialplanRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class DialplanController extends Controller
 {
 	protected $dialplanRepository;
+	protected $dialplanDetailRepository;
 
-	public function __construct(DialplanRepository $dialplanRepository)
+	public function __construct(DialplanRepository $dialplanRepository, DialplanDetailRepository $dialplanDetailRepository)
     {
         $this->dialplanRepository = $dialplanRepository;
+        $this->dialplanDetailRepository = $dialplanDetailRepository;
     }
-	public function index()
+
+	public function index(Request $request)
 	{
-		return view("pages.dialplans.index");
+		$app_uuid = $request->query("app_uuid");
+
+		return view("pages.dialplans.index", compact("app_uuid"));
 	}
 
 	public function create()
@@ -67,4 +75,20 @@ class DialplanController extends Controller
 
 		return redirect()->route('dialplans.index');
 	}
+
+	public function createInbound(Request $request)
+	{
+		$app_uuid = $request->query("app_uuid");
+
+		$destinations = Destination::where("domain_uuid", Session::get("domain_uuid"))->get();
+
+		return view("pages.dialplans.inbound.form", compact("app_uuid", "destinations"));
+	}
+
+	// public function storeInbound(MenuItemRequest $request)
+	// {
+    //     $menuItem = $this->dialplanDetailRepository->createInbound($request->validated());
+
+    //     return redirect()->route("menus.edit", [$menuItem->menu_uuid]);
+	// }
 }

@@ -16,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class SipGlobalSetting extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_sofia_global_settings';
 	protected $primaryKey = 'sofia_global_setting_uuid';
 	public $incrementing = false;
