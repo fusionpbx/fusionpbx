@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DeviceProfileKey extends Model
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasFactory, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_device_profile_keys';
 	protected $primaryKey = 'device_profile_key_uuid';
 	public $incrementing = false;

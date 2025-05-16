@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class RingGroupUser extends Pivot
 {
-	use HasFactory, HasUniqueIdentifier;
+	use HasFactory, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_ring_group_users';
 	protected $primaryKey = 'ring_group_user_uuid';
 	public $incrementing = false;

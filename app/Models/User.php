@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, HandlesStringBooleans;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, HandlesStringBooleans, GetTableName;
 	protected $table = 'v_users';
 	protected $primaryKey = 'user_uuid';
 	public $incrementing = false;

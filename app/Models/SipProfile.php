@@ -16,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class SipProfile extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName,HandlesStringBooleans;
+	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
 	protected $table = 'v_sip_profiles';
 	protected $primaryKey = 'sip_profile_uuid';
 	public $incrementing = false;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Billing extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, GetTableName, HasUniqueIdentifier;
 	protected $table = 'v_billings';
 	protected $primaryKey = 'billing_uuid';
 	public $incrementing = false;
