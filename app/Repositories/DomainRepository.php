@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Facades\Setting;
+use App\Helpers\getModel;
 use App\Models\Dialplan;
 use App\Models\DialplanDetail;
 use App\Models\Domain;
@@ -20,7 +21,7 @@ class DomainRepository
     protected $model;
     protected $dialplanRepository;
 
-    public function __construct(Domain $domain, DialplanRepository $dialplanRepository)
+    public function __construct(Domain $domain, ?DialplanRepository $dialplanRepository)
     {
         $this->model = $domain;
         $this->dialplanRepository = $dialplanRepository;
@@ -370,12 +371,19 @@ class DomainRepository
                         {
                             $newInsertedDialplanDetail = DialplanDetail::create($newDialplanDetail);
                         }
-                        $xmlPayload = $this->dialplanRepository->buildXML($newInsertedDialplan);
-                        if(App::hasDebugModeEnabled())
-                        {
-                            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $xmlPayload: '.$xmlPayload);
-                        }
-                        $newInsertedDialplan->update(['xml' => $xmlPayload]);
+			if (is_object($this->dialplanRepository))
+			{
+	                        $xmlPayload = $this->dialplanRepository->buildXML($newInsertedDialplan);
+	                        if(App::hasDebugModeEnabled())
+        	                {
+                	            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $xmlPayload: '.$xmlPayload);
+                        	}
+	                        $newInsertedDialplan->update(['xml' => $xmlPayload]);
+			}
+			else
+			{
+               	            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Constructor called with null dialplanRepository, no XML to create');
+			}
 
                     }   // app_uuid_exists
                 }
@@ -389,9 +397,14 @@ class DomainRepository
         foreach ($models as $model)
         {
             $table = $model::getTableName();
+            if(App::hasDebugModeEnabled())
+            {
+                Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] Model: '.$model.' Table:'.$table);
+            }
+
             if (Schema::hasColumn($table, 'domain_uuid'))
             {
-                $rows = \App\Models\$model::where('domain_uuid', $domain->domain_uuid)->get();
+                $rows = $model::where('domain_uuid', $domain->domain_uuid)->get();
                 foreach ($rows as $row){
                     $row->delete();
                 }
