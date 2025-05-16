@@ -158,11 +158,20 @@
 <!--# SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0-->
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
-    <!--# P130 = 0-->
-{if $account.1.sip_transport == 'udp'}P130 = 0{/if}
-{if $account.1.sip_transport == 'tcp'}P130 = 1{/if}
-{if $account.1.sip_transport == 'tls'}P130 = 2{/if}
-{if $account.1.sip_transport == 'dns srv'}P130 = 1{/if}
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
+    <P130>{$tp}</P130>
 
 <!--# SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
@@ -792,11 +801,20 @@
 <!--# SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0-->
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
-<!--# P448 = 0-->
-{if $account.2.sip_transport == 'udp'}P448 = 0{/if}
-{if $account.2.sip_transport == 'tcp'}P448 = 1{/if}
-{if $account.2.sip_transport == 'tls'}P448 = 2{/if}
-{if $account.2.sip_transport == 'dns srv'}P448 = 1{/if}
+{$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
+    <P448>{$tp}</P448>
 
 <!--# SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
@@ -1422,11 +1440,20 @@
 <!--# SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0-->
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
-    <!--# P548 = 0-->
-{if $account.3.sip_transport == 'udp'}P548 = 0{/if}
-{if $account.3.sip_transport == 'tcp'}P548 = 1{/if}
-{if $account.3.sip_transport == 'tls'}P548 = 2{/if}
-{if $account.3.sip_transport == 'dns srv'}P548 = 1{/if}
+{$tp=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
+    <P548>{$tp}</P548>
 
 <!--# SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
@@ -2052,11 +2079,20 @@
 <!--# SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0-->
 <!--# Number: 0, 1, 2-->
 <!--# Mandatory-->
-    <!--# P648 = 0-->
-{if $account.4.sip_transport == 'udp'}P648 = 0{/if}
-{if $account.4.sip_transport == 'tcp'}P648 = 1{/if}
-{if $account.4.sip_transport == 'tls'}P648 = 2{/if}
-{if $account.4.sip_transport == 'dns srv'}P648 = 1{/if}
+{$tp=0}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
+    <P648>{$tp}</P648>
 
 <!--# SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1-->
 <!--# Number: 0, 1-->
