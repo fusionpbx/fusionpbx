@@ -13,6 +13,27 @@
         <voicemailNumber>*97</voicemailNumber>
         <subscribeForVoicemail>1</subscribeForVoicemail>
         <wsContactsUrl>https://{$row.server_address}/app/provision/index.php?address={$mac}&file=directory.json</wsContactsUrl>
+
+      <rewriting>
+    <rule>
+      <conditions>
+        <condition type="equals" param="933"/>
+      </conditions>
+      <actions>
+        <action type="overrideDialAction" param="gsmCall"/>
+      </actions>
+    </rule>
+
+    <rule>
+      <conditions>
+        <condition type="equals" param="911"/>
+      </conditions>
+      <actions>
+        <action type="overrideDialAction" param="gsmCall"/>
+      </actions>
+    </rule>
+  </rewriting>
 </account>
+
 {if $row@index eq 1}{break}{/if}
 {/foreach}
