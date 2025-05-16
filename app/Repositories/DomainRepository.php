@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,6 +51,7 @@ class DomainRepository
 
     public function delete(Domain $domain): ?bool
     {
+        $this->deleteRecords($domain);
         return $domain->delete();
     }
 
@@ -74,7 +76,6 @@ class DomainRepository
 
         return ($query->count() > 0);
     }
-
 
     public function getForSelectControl(): mixed
     {
@@ -377,6 +378,22 @@ class DomainRepository
                         $newInsertedDialplan->update(['xml' => $xmlPayload]);
 
                     }   // app_uuid_exists
+                }
+            }
+        }
+    }
+
+    private function deleteRecords(Domain $domain)
+    {
+        $models = getModels();
+        foreach ($models as $model)
+        {
+            $table = $model::getTableName();
+            if (Schema::hasColumn($table, 'domain_uuid'))
+            {
+                $rows = \App\Models\$model::where('domain_uuid', $domain->domain_uuid)->get();
+                foreach ($rows as $row){
+                    $row->delete();
                 }
             }
         }
