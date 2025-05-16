@@ -170,5 +170,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to keep PHP session files on the server until the maintenance application deletes them";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "746334ab-a3a9-453d-aab6-edf6671f880a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dashboard_extra_system_services";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "freeswitch, nginx, postgresql, sshd";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "A comma separated list of additional system services to monitor the status of in the system services dashboard card";
 
 ?>
