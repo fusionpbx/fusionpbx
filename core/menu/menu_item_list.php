@@ -45,6 +45,7 @@
 		$action = $_POST['action'];
 		$menu_uuid = $_POST['menu_uuid'];
 		$menu_items = $_POST['menu_items'];
+		$group_uuid = $_POST['group_uuid'];
 	}
 
 //process the http post data by action
@@ -60,6 +61,18 @@
 				if (permission_exists('menu_item_delete')) {
 					$obj = new menu;
 					$obj->delete_items($menu_items);
+				}
+				break;
+			case 'group_items_add':
+				if (permission_exists('menu_item_edit')) {
+					$obj = new menu;
+					$obj->assign_items($menu_items, $menu_uuid, $group_uuid);
+				}
+				break;
+			case 'group_items_delete':
+				if (permission_exists('menu_item_delete')) {
+					$obj = new menu;
+					$obj->unassign_items($menu_items, $menu_uuid, $group_uuid);
 				}
 				break;
 		}
@@ -159,7 +172,7 @@
 				echo "<tr class='list-row' href='".$list_row_url."'>\n";
 				if (permission_exists('menu_item_edit') || permission_exists('menu_item_delete')) {
 					echo "	<td class='checkbox'>\n";
-					echo "		<input type='checkbox' name='menu_items[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+					echo "		<input type='checkbox' name='menu_items[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 					echo "		<input type='hidden' name='menu_items[$x][uuid]' value='".escape($menu_item_uuid)."' />\n";
 					echo "	</td>\n";
 				}
@@ -231,6 +244,12 @@
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+	//get the group list
+	$sql = "select group_uuid, group_name from v_groups ";
+	$database = new database;
+	$groups = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 //create token
 	$object = new token;
 	$token = $object->create('/core/menu/menu_item_list.php');
@@ -243,6 +262,24 @@
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
 	echo "	<div class='heading'><b id='heading_sub'>".$text['header-menu_items']."</b><div class='count'><span id='num_rows'></span></div></div>\n";
 	echo "	<div class='actions'>\n";
+	echo "	<select class='formfld revealed' id='group_uuid' name='group_uuid' style='display: none;'>\n";
+	echo "		<option value=''>Select Group</option>\n";
+	if (!empty($groups)) {
+		foreach ($groups as $row) {
+			echo "	<option value='".urlencode($row["group_uuid"])."'>".escape($row['group_name'])." ".escape($row['group_description'])."</option>\n";
+		}
+	}
+	echo "	</select>\n";
+
+	if (permission_exists('menu_item_add') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-assign'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_group_items_add','class' => 'btn btn-default revealed','collapse'=>'hide-xs','style'=>'display: none;','onclick'=>"list_action_set('group_items_add'); list_form_submit('form_list');"]);
+	}
+	if (permission_exists('menu_item_delete') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-unassign'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'name'=>'btn_group_items_delete','class' => 'btn btn-default revealed','style'=>'display: none; margin-right: 35px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+	}
+	if (permission_exists('menu_item_delete') && $result) {
+		echo modal::create(['id'=>'modal-delete','type'=>'unassign', 'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_group_items_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('group_items_delete'); list_form_submit('form_list');"])]);
+	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'menu.php']);
 	if (permission_exists('menu_item_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-xs','link'=>'menu_item_edit.php?id='.urlencode($menu_uuid)]);
@@ -347,7 +384,7 @@
 				echo "<tr class='list-row' href='".$list_row_url."'>\n";
 				if (permission_exists('menu_item_edit') || permission_exists('menu_item_delete')) {
 					echo "<td class='checkbox'>\n";
-					echo "	<input type='checkbox' name='menu_items[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+					echo "	<input type='checkbox' name='menu_items[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 					echo "	<input type='hidden' name='menu_items[$x][uuid]' value='".escape($menu_item_uuid)."' />\n";
 					echo "</td>\n";
 				}
