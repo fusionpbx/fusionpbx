@@ -54,6 +54,9 @@
 							$array['title'] = $text['modal_title-confirmation'];
 							$array['message'] = $text['confirm-delete'];
 							break;
+						case 'unassign':
+							$array['title'] = $text['modal_title-confirmation'];
+							$array['message'] = $text['confirm-unassign'];
 						default: //general
 							$array['title'] = !empty($array['title']) ? $array['title'] : $text['modal_title-confirmation'];
 					}

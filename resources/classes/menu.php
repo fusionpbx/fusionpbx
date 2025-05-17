@@ -362,6 +362,183 @@
 				unset($sql, $parameters);
 		}
 
+		public function assign_items($records, $menu_uuid, $group_uuid) {
+			//assign the variables
+				$this->name = 'menu_item';
+				$this->table = 'menu_items';
+
+			if (permission_exists($this->name.'_add')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/core/menu/menu_item_list.php')) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+					//assign multiple records
+					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
+
+						//define the group_name, group_uuid, menu_uuid
+							if (!empty($records) && @sizeof($records) != 0) {
+								$sql = "select group_name, group_uuid from v_groups	";
+								$sql .= "where group_uuid = :group_uuid	";
+								$parameters['group_uuid'] = $group_uuid;
+								$database = new database;
+								$group = $database->select($sql, $parameters, 'row');
+							}
+
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//build array
+										$uuids[] = "'".$record['uuid']."'";
+									//assign menu item groups
+											$array['menu_item_groups'][$x]['menu_item_group_uuid'] = uuid();
+											$array['menu_item_groups'][$x]['menu_uuid'] = $menu_uuid;
+											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $record['uuid'];
+											$array['menu_item_groups'][$x]['group_name'] = $group['group_name'];
+											$array['menu_item_groups'][$x]['group_uuid'] = $group['group_uuid'];
+									//increment
+											$x++;
+								}
+							}
+
+							unset($records);
+
+						//exlude exist rows
+						if (!empty($array) && @sizeof($array) != 0) {
+							$sql = "select menu_uuid, menu_item_uuid, ";
+							$sql .= "group_uuid from v_menu_item_groups ";
+							$database = new database;
+							$menu_item_groups = $database->select($sql, null, 'all');
+							$array['menu_item_groups'] = array_filter($array['menu_item_groups'], function($ar) use ($menu_item_groups) {
+								foreach ($menu_item_groups as $existingArrayItem) {
+									if ($ar['menu_uuid'] == $existingArrayItem['menu_uuid'] && $ar['menu_item_uuid'] == $existingArrayItem['menu_item_uuid'] && $ar['group_uuid'] == $existingArrayItem['group_uuid']) {
+										return false;
+									}
+								}
+								return true;
+							});
+							unset($menu_item_groups);
+						}
+
+						//add the checked rows fro group
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+								//execute save
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;				
+									$database->save($array);
+									unset($array);
+								//set message
+									message::add($text['message-add']);
+							}
+					}
+			}
+		}
+
+		public function unassign_items($records, $menu_uuid, $group_uuid) {
+			//assign the variables
+				$this->name = 'menu_item';
+				$this->table = 'menu_items';
+
+			if (permission_exists($this->name.'_add')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/core/menu/menu_item_list.php')) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+					//assign multiple records
+					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
+
+						//define the group_name, group_uuid, menu_uuid
+							if (!empty($records) && @sizeof($records) != 0) {
+								$sql = "select group_name, group_uuid from v_groups	";
+								$sql .= "where group_uuid = :group_uuid	";
+								$parameters['group_uuid'] = $group_uuid;
+								$database = new database;
+								$group = $database->select($sql, $parameters, 'row');
+							}
+
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//build array
+										$uuids[] = "'".$record['uuid']."'";
+									//assign menu item groups
+											$array['menu_item_groups'][$x]['menu_uuid'] = $menu_uuid;
+											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $record['uuid'];
+											$array['menu_item_groups'][$x]['group_name'] = $group['group_name'];
+											$array['menu_item_groups'][$x]['group_uuid'] = $group['group_uuid'];
+									//increment
+											$x++;
+								}
+							}
+
+							unset($records);
+
+						//include child menu items and their main_uuid too
+							if (!empty($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select menu_uuid, menu_item_uuid as uuid from v_".$this->table." ";
+								$sql .= "where menu_item_parent_uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, null, 'all');
+								if (!empty($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										//assign menu item groups
+											$array['menu_item_groups'][$x]['menu_uuid'] = $row['menu_uuid'];
+											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $row['uuid'];
+											$array['menu_item_groups'][$x]['group_name'] = $group['group_name'];
+											$array['menu_item_groups'][$x]['group_uuid'] = $group['group_uuid'];
+										//increment
+											$x++;
+									}
+								}
+							}
+
+							unset($uuids);
+
+						//add the checked rows fro group
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+							//grant temporary permissions
+								$p = new permissions;
+								$p->add('menu_language_delete', 'temp');
+								$p->add('menu_item_group_delete', 'temp');
+
+							//execute delete
+								$database = new database;
+								$database->app_name = $this->app_name;
+								$database->app_uuid = $this->app_uuid;
+								$database->delete($array);
+								unset($array);
+
+							//revoke temporary permissions
+								$p->delete('menu_language_delete', 'temp');
+								$p->delete('menu_item_group_delete', 'temp');
+
+							//set message
+								message::add($text['message-delete']);
+							}
+					}
+			}
+		}
+
 		/**
 		 * restore the menu
 		 */
