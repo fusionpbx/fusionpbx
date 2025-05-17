@@ -899,7 +899,7 @@
 			btn_toggle = document.getElementById("btn_toggle");
 			btn_delete = document.getElementById("btn_delete");
 			btn_download = document.getElementById("btn_download");
-			btn_transcribe = document.getElementById("btn_transcribe"); 
+			btn_transcribe = document.getElementById("btn_transcribe");
 			any_revealed = document.getElementsByClassName('revealed');
 			if (checked == true) {
 				if (btn_copy) { btn_copy.style.display = "inline"; }
