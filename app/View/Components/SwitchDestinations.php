@@ -5,6 +5,7 @@ namespace App\View\Components;
 use App\Models\Bridge;
 use App\Models\CallCenterQueue;
 use App\Models\ConferenceCenter;
+use App\Models\Dialplan;
 use Closure;
 use App\Models\Extension;
 use App\Models\IVRMenu;
@@ -18,7 +19,7 @@ class SwitchDestinations extends Component
     public $selected;
     public $options;
 
-    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterType = null, $conferenceCenterType = null, $extensionType = null, $ivrMenusType = null)
+    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterType = null, $conferenceCenterType = null, $extensionType = null, $ivrMenusType = null, $timeConditionsType = null)
     {
         $this->name = $name;
         $this->selected = $selected;
@@ -150,7 +151,7 @@ class SwitchDestinations extends Component
                         $name = "transfer:{$extension->extension} XML {$extension->user_context}";
                         break;
                     case "ivr":
-                        $id = "menu-exec-app:transfer {$extension->extension} XML \${$extension->user_context}";
+                        $id = "menu-exec-app:transfer {$extension->extension} XML {$extension->user_context}";
                         break;
                     case "simple":
                         $id = "{$extension->extension}";
@@ -185,7 +186,7 @@ class SwitchDestinations extends Component
                         $name = "transfer:{$ivr->ivr_menu_extension} XML {$ivr->ivr_menu_context}";
                         break;
                     case "ivr":
-                        $id = "menu-exec-app:transfer {$ivr->ivr_menu_extension} XML \${$ivr->ivr_menu_context}";
+                        $id = "menu-exec-app:transfer {$ivr->ivr_menu_extension} XML {$ivr->ivr_menu_context}";
                         break;
                     case "simple":
                         $id = "{$ivr->ivr_menu_extension}";
@@ -199,6 +200,43 @@ class SwitchDestinations extends Component
             }
 
             $this->setOptions("IVR Menus", $values);
+        }
+
+        if(!empty($timeConditionsType))
+        {
+            $dialplans = Dialplan::where(function ($query) {
+                    $query->where('domain_uuid', Session::get('domain_uuid'))->orWhereNull('domain_uuid');
+                })
+                ->where("app_uuid", "4b821450-926b-175a-af93-a03c441818b1")
+                ->orderBy("dialplan_number")
+                ->get();
+
+            $values = [];
+
+            foreach($dialplans as $dialplan)
+            {
+                $id = "";
+
+                switch($timeConditionsType)
+                {
+                    case "dialplan":
+                        $name = "transfer:{$dialplan->dialplan_number} XML {$dialplan->dialplan_context}";
+                        break;
+                    case "ivr":
+                        $id = "menu-exec-app:transfer {$dialplan->dialplan_number} XML {$ivr->dialplan_context}";
+                        break;
+                    case "simple":
+                        $id = "{$dialplan->dialplan_number}";
+                        break;
+                }
+
+                $values[] = [
+                    "id" => $id,
+                    "name" => "{$dialplan->dialplan_number} {$dialplan->dialplan_name} {$dialplan->dialplan_description}"
+                ];
+            }
+
+            $this->setOptions("Time Conditions", $values);
         }
 
         $this->options = json_decode(json_encode($this->options));
