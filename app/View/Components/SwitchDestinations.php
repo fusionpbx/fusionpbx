@@ -4,6 +4,7 @@ namespace App\View\Components;
 
 use App\Models\Bridge;
 use App\Models\CallCenterQueue;
+use App\Models\ConferenceCenter;
 use Closure;
 use App\Models\Extension;
 use Illuminate\Contracts\View\View;
@@ -16,7 +17,7 @@ class SwitchDestinations extends Component
     public $selected;
     public $options;
 
-    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterQueueType = null, $extensionType = null)
+    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterType = null, $conferenceCenterType = null, $extensionType = null)
     {
         $this->name = $name;
         $this->selected = $selected;
@@ -56,7 +57,7 @@ class SwitchDestinations extends Component
             $this->setOptions("Bridges", $values);
         }
 
-        if(!empty($callCenterQueueType))
+        if(!empty($callCenterType))
         {
             $callCenterQueues = CallCenterQueue::where("domain_uuid", Session::get("domain_uuid"))
                 ->orderBy("queue_name")
@@ -68,7 +69,7 @@ class SwitchDestinations extends Component
             {
                 $id = "";
 
-                switch($callCenterQueueType)
+                switch($callCenterType)
                 {
                     case "dialplan":
                         $name = "transfer:{$callCenterQueue->queue_extension} XML " . Session::get("domain_name");
@@ -88,6 +89,41 @@ class SwitchDestinations extends Component
             }
 
             $this->setOptions("Call Center", $values);
+        }
+
+        if(!empty($conferenceCenterType))
+        {
+            $conferenceCenters = ConferenceCenter::where("domain_uuid", Session::get("domain_uuid"))
+                ->where("conference_center_enabled", "true")
+                ->orderBy("conference_center_name")
+                ->get();
+
+            $values = [];
+
+            foreach($conferenceCenters as $conferenceCenter)
+            {
+                $id = "";
+
+                switch($conferenceCenterType)
+                {
+                    case "dialplan":
+                        $name = "transfer:{$conferenceCenter->conference_center_extension} XML " . Session::get("domain_name");
+                        break;
+                    case "ivr":
+                        $id = "menu-exec-app:transfer {$conferenceCenter->conference_center_extension} XML " . Session::get("domain_name");
+                        break;
+                    case "simple":
+                        $id = $conferenceCenter->conference_center_extension;
+                        break;
+                }
+
+                $values[] = [
+                    "id" => $id,
+                    "name" => "{$conferenceCenter->conference_center_extension} {$conferenceCenter->conference_center_name} {$conferenceCenter->conference_center_description}"
+                ];
+            }
+
+            $this->setOptions("Conference Centers", $values);
         }
 
         if(!empty($extensionType))
