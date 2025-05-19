@@ -7,6 +7,7 @@ use App\Models\CallCenterQueue;
 use App\Models\ConferenceCenter;
 use Closure;
 use App\Models\Extension;
+use App\Models\IVRMenu;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\Component;
@@ -17,7 +18,7 @@ class SwitchDestinations extends Component
     public $selected;
     public $options;
 
-    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterType = null, $conferenceCenterType = null, $extensionType = null)
+    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterType = null, $conferenceCenterType = null, $extensionType = null, $ivrMenusType = null)
     {
         $this->name = $name;
         $this->selected = $selected;
@@ -163,6 +164,41 @@ class SwitchDestinations extends Component
             }
 
             $this->setOptions("Extensions", $values);
+        }
+
+        if(!empty($ivrMenusType))
+        {
+            $ivrs = IVRMenu::where("domain_uuid", Session::get("domain_uuid"))
+                ->where("ivr_menu_enabled", "true")
+                ->orderBy("ivr_menu_extension")
+                ->get();
+
+            $values = [];
+
+            foreach($ivrs as $ivr)
+            {
+                $id = "";
+
+                switch($ivrMenusType)
+                {
+                    case "dialplan":
+                        $name = "transfer:{$ivr->ivr_menu_extension} XML {$ivr->ivr_menu_context}";
+                        break;
+                    case "ivr":
+                        $id = "menu-exec-app:transfer {$ivr->ivr_menu_extension} XML \${$ivr->ivr_menu_context}";
+                        break;
+                    case "simple":
+                        $id = "{$ivr->ivr_menu_extension}";
+                        break;
+                }
+
+                $values[] = [
+                    "id" => $id,
+                    "name" => "{$ivr->ivr_menu_extension} {$ivr->ivr_menu_name}"
+                ];
+            }
+
+            $this->setOptions("IVR Menus", $values);
         }
 
         $this->options = json_decode(json_encode($this->options));
