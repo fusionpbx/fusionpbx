@@ -57,7 +57,7 @@ Route::middleware(['auth','permission'])->group(function () {
     // DIALPLAN
     Route::resource('/dialplans', DialplanController::class)->name('dialplans', 'dialplans');
     Route::get('/dialplans/inbound/create', [DialplanController::class, 'createInbound'])->name('dialplans.inbound.create');
-    Route::get('/dialplans/inbound/store', [DialplanController::class, 'storeInbound'])->name('dialplans.inbound.store');
+    Route::post('/dialplans/inbound/store', [DialplanController::class, 'storeInbound'])->name('dialplans.inbound.store');
 
     // DOMAIN
     Route::resource('/domains', DomainController::class)->name('domains', 'domains');
