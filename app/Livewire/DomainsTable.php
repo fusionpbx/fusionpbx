@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Facades\DomainService;
 use App\Models\Domain;
 use App\Repositories\DomainRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -102,30 +104,45 @@ class DomainsTable extends DataTableComponent
         if (App::hasDebugModeEnabled()) {
              Log::debug('[DomainRepository:getForSelectControl] $selectedRows: ' . print_r($selectedRows, true));
         }
-	foreach ($selectedRows as $domain_uuid)
-	{
-		$trashedDomain = Domain::find($domain_uuid);
-		if (isset($trashedDomain))
-		{
-			$this->domainRepository = new DomainRepository($trashedDomain, null);
-			$this->domainRepository->delete($trashedDomain);
-		}
-	}
 
-	// NOTE: Don't know if this still necessary
-        try {
-            DB::beginTransaction();
+        if (in_array(auth()->user()->domain_uuid, $selectedRows))
+        {
+            session()->flash('error', 'You cannot delete your own tenant.');
+        }
+        else
+        {
+            foreach ($selectedRows as $domain_uuid)
+            {
+                $trashedDomain = Domain::find($domain_uuid);
+                if (isset($trashedDomain))
+                {
+                    $this->domainRepository = new DomainRepository($trashedDomain, null);
+                    $this->domainRepository->delete($trashedDomain);
+                }
+            }
 
-            Domain::whereIn('domain_uuid', $selectedRows)->delete();
+            // NOTE: Don't know if this still necessary
+            try {
+                DB::beginTransaction();
 
-            DB::commit();
+                Domain::whereIn('domain_uuid', $selectedRows)->delete();
 
-            $this->clearSelected();
-            $this->dispatch('refresh');
-            session()->flash('success', 'Domains successfully deleted.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->flash('error', 'There was a problem deleting the domains: ' . $e->getMessage());
+                DB::commit();
+
+                $this->clearSelected();
+                $this->dispatch('refresh');
+                session()->flash('success', 'Domains successfully deleted.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                session()->flash('error', 'There was a problem deleting the domains: ' . $e->getMessage());
+            }
+
+            // If we deleted our current domain
+            if (in_array(Session::get('domain_uuid'), $selectedRows))
+            {
+                DomainService::switchByUuid(auth()->user()->domain_uuid);
+                return redirect()->intended('/dashboard');
+            }
         }
     }
 
