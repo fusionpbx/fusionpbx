@@ -16,29 +16,30 @@
                 @method('PUT')
             @endif
 
-			<input type="text" name="app_uuid" value="{{ old('app_uuid', $dialplan->app_uuid ?? $app_uuid) }}">
+			<input type="hidden" name="app_uuid" value="{{ old('app_uuid', $dialplan->app_uuid ?? $app_uuid) }}">
 
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="inbound_name" class="form-label">Inbound Route Name</label>
+                            <label for="dialplan_name" class="form-label">Inbound Route Name</label>
                             <input
                                 type="text"
-                                class="form-control @error('inbound_name') is-invalid @enderror"
-                                id="inbound_name"
-                                name="inbound_name"
+                                class="form-control @error('dialplan_name') is-invalid @enderror"
+                                id="dialplan_name"
+                                name="dialplan_name"
                                 placeholder="Enter inbound name"
-                                value="{{ old('inbound_name', $inbound->inbound_name ?? '') }}"
+                                value="{{ old('dialplan_name', $inbound->dialplan_name ?? '') }}"
                                 required
                             >
-                            @error('inbound_name')
+                            @error('dialplan_name')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
                 </div>
+
 
                 <div class="row mt-3">
                     <div class="col-md-6">
@@ -48,6 +49,7 @@
                                 class="form-select @error('destination_uuid') is-invalid @enderror"
                                 id="destination_uuid"
                                 name="destination_uuid"
+                                required
                             >
                                 <option value=""></option>
                                 @foreach($destinations as $destination)
@@ -67,13 +69,25 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="inbound_name" class="form-label">Limit</label>
+                            <label for="action_1" class="form-label">Action</label>
+                            <x-switch-destinations name="action_1" bridgeType="dialplan" callCenterType="dialplan" conferenceCenterType="dialplan" extensionType="dialplan" ivrMenuType="dialplan" timeConditionType="dialplan" toneType="dialplan" voiceMailType="dialplan" />
+                            @error('action_1')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="limit" class="form-label">Limit</label>
                             <input
                                 type="text"
-                                class="form-control @error('inbound_name') is-invalid @enderror"
+                                class="form-control @error('limit') is-invalid @enderror"
                                 id="limit"
                                 name="limit"
-                                value="{{ old('limit', $inbound->inbound_name ?? '') }}"
+                                value="{{ old('limit', $inbound->limit ?? '') }}"
                                 required
                             >
                             @error('limit')
@@ -86,7 +100,7 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="inbound_name" class="form-label">Caller ID number prefix</label>
+                            <label for="caller_id_outbound_prefix" class="form-label">Caller ID number prefix</label>
                             <input
                                 type="text"
                                 class="form-control @error('caller_id_outbound_prefix') is-invalid @enderror"
@@ -110,8 +124,7 @@
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
-
-                            @error('inbound_enabled')
+                            @error('dialplan_order')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
@@ -123,10 +136,10 @@
                         <div class="form-group">
                             <label class="form-label d-block">Enabled</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="inbound_enabled" name="inbound_enabled" value="true" {{ old('inbound_enabled', $inbound->inbound_enabled ?? true) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="inbound_enabled">{{ __('Enabled') }}</label>
+                                <input class="form-check-input" type="checkbox" role="switch" id="dialplan_enabled" name="dialplan_enabled" value="true" {{ old('dialplan_enabled', $dialplan->dialplan_enabled ?? false) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="dialplan_enabled">{{ __('Enabled') }}</label>
                             </div>
-                            @error('inbound_enabled')
+                            @error('dialplan_enabled')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
@@ -136,15 +149,15 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="inbound_description" class="form-label">Inbound Route Description</label>
+                            <label for="dialplan_description" class="form-label">Inbound Route Description</label>
                             <textarea
-                                class="form-control @error('inbound_description') is-invalid @enderror"
-                                id="inbound_description"
-                                name="inbound_description"
+                                class="form-control @error('dialplan_description') is-invalid @enderror"
+                                id="dialplan_description"
+                                name="dialplan_description"
                                 rows="3"
                                 placeholder="Enter inbound description"
-                            >{{ old('inbound_description', $inbound->inbound_description ?? '') }}</textarea>
-                            @error('inbound_description')
+                            >{{ old('dialplan_description', $inbound->dialplan_description ?? '') }}</textarea>
+                            @error('dialplan_description')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>

@@ -23,9 +23,16 @@ class DialplanRequest extends FormRequest
 			"dialplan_destination" => "bail|nullable|bool",
 			"dialplan_continue" => "bail|nullable|bool",
 			"dialplan_order" => "bail|integer|min:0|max:999",
-			"dialplan_enabled" => "bail|nullable|bool",
+			"dialplan_enabled" => "bail|nullable|in:true,false",
 			"dialplan_description" => "bail|nullable|string|max:255",
 			"app_uuid" => 'nullable|uuid',
 		];
+	}
+
+	protected function prepareForValidation()
+	{
+		$this->merge([
+			"dialplan_context" => $this->dialplan_context ?? "public",
+		]);
 	}
 }

@@ -65,7 +65,7 @@ class Destination extends Model
         'currency',
         'destination_sell',
         'destination_buy',
-        'destination_carrier',
+        'carrier_uuid',
         'currency_buy',
 	];
 
@@ -87,5 +87,9 @@ class Destination extends Model
 
     public function group(): HasOne {
 		return $this->HasOne(Group::class, 'group_uuid', 'group_uuid');
+	}
+
+    public function carrier(): HasOne {
+		return $this->HasOne(Carrier::class, 'carrier_uuid', 'carrier_uuid');
 	}
 }
