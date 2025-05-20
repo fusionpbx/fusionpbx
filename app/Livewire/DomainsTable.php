@@ -116,7 +116,7 @@ class DomainsTable extends DataTableComponent
                 $trashedDomain = Domain::find($domain_uuid);
                 if (isset($trashedDomain))
                 {
-                    if ($trashedDomain->children()->isEmpty()){
+                    if ($trashedDomain->children->isEmpty()){
                         $this->domainRepository = new DomainRepository($trashedDomain, null);
                         $this->domainRepository->delete($trashedDomain);
                     }
