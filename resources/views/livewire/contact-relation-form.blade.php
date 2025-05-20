@@ -2,8 +2,7 @@
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h6>Relations</h6>
-            <button type="button" class="btn btn-sm btn-primary" wire:click="addRelation">Add
-                Relation</button>
+            <button type="button" class="btn btn-sm btn-primary" wire:click="addRelation"> <i class="fa fa-plus" aria-hidden="true"></i></button>
         </div>
         <div class="card-body">
             @foreach($relations as $index => $relation)
@@ -20,40 +19,25 @@
                         <option value="parent">Parent</option>
                     </select>
                 </div>
-                <div class="col-md-6">
-                    <label for="contact_search" class="form-label">Contact</label>
-                    <div class="position-relative">
-                        <input type="text"
-                               class="form-control"
-                               placeholder="Search contact..."
-                               wire:model.live.debounce.300ms="searchTerm"
-                               wire:click="$set('searchResults', [])"
-                               autocomplete="off">
-                        
-                        @if(!empty($relations[$index]['relation_contact_uuid']))
-                            <div class="selected-contact mt-2 p-2 border rounded bg-light">
-                                {{ $relations[$index]['contact_name'] }}
-                                <button type="button" class="btn btn-sm text-danger float-end" 
-                                        wire:click="$set('relations.{{ $index }}.relation_contact_uuid', '')">
-                                    <i class="bi bi-x"></i>
-                                </button>
-                            </div>
-                        @endif
-                        
-                        @if(count($searchResults) > 0 && empty($relations[$index]['relation_contact_uuid']))
-                            <div class="position-absolute start-0 end-0 mt-1 bg-white border rounded shadow-sm z-3 search-results" style="max-height: 200px; overflow-y: auto;">
-                                @foreach($searchResults as $result)
-                                    <div class="p-2 search-item border-bottom" 
-                                         wire:click="selectContact('{{ $result['id'] }}', '{{ $result['name'] }}', {{ $index }})">
-                                        {{ $result['name'] }}
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
+                <div class="col-md-5">
+                    <label for="contact_search_{{ $index }}" class="form-label">Contact</label>
+                    <div class="position-relative" wire:ignore>
+                        <select id="contact_search_{{ $index }}" 
+                               class="form-control select2-contact-search"
+                               data-index="{{ $index }}"
+                               data-value="{{ $relations[$index]['relation_contact_uuid'] ?? '' }}"
+                               data-placeholder="Search contact...">
+                            @if(!empty($relations[$index]['relation_contact_uuid']) && !empty($relations[$index]['contact_name']))
+                                <option value="{{ $relations[$index]['relation_contact_uuid'] }}" selected>
+                                    {{ $relations[$index]['contact_name'] }}
+                                </option>
+                            @endif
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" class="btn btn-sm btn-danger mb-2" wire:click="removeRelation({{ $index }})">
+                <div class="col-md-1 align-self-end">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="button" class="btn btn-danger ms-3" wire:click="removeRelation({{ $index }})">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
@@ -61,4 +45,20 @@
             @endforeach
         </div>
     </div>
+    
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof jQuery === 'undefined') {
+                console.error('jQuery is not loaded, required for Select2');
+                return;
+            }
+            
+            if (typeof jQuery.fn.select2 === 'undefined') {
+                console.error('Select2 is not loaded');
+                return;
+            }
+        });
+    </script>
+    @endpush
 </div>

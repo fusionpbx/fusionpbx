@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "elvanto/litemoji": "^4.3",
+        "jeroendesloovere/vcard": "^1.7",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "*",
         "laravel/socialite": "^5.18",

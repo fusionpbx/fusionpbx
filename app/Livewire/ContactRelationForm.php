@@ -11,8 +11,6 @@ class ContactRelationForm extends Component
 {
     public $contactUuid;
     public $relations = [];
-    public $searchTerm = '';
-    public $searchResults = [];
 
     public $listeners = [
         'relationsSaved' => 'save',
@@ -26,12 +24,28 @@ class ContactRelationForm extends Component
 
     public function loadRelations()
     {
-        $contact = Contact::with('relations')
-            ->where('contact_uuid', $this->contactUuid)
+        $contact = Contact::where('contact_uuid', $this->contactUuid)
             ->first();
 
-        if ($contact && $contact->relations->count() > 0) {
-            $this->relations = $contact->relations->toArray();
+        $relations = ContactRelation::where('contact_uuid', $this->contactUuid)
+            ->get();
+
+        if ($relations->count() > 0) {
+            $this->relations = $relations->map(function($relation) {
+                $relatedContact = Contact::where('contact_uuid', $relation->relation_contact_uuid)->first();
+                
+                $displayName = '';
+                if ($relatedContact) {
+                    $displayName = $relatedContact->contact_organization ?:
+                        trim($relatedContact->contact_name_given . ' ' . $relatedContact->contact_name_family);
+                }
+                
+                return [
+                    'relation_label' => $relation->relation_label,
+                    'relation_contact_uuid' => $relation->relation_contact_uuid,
+                    'contact_name' => $displayName
+                ];
+            })->toArray();
         } else {
             $this->addRelation();
         }
@@ -44,46 +58,21 @@ class ContactRelationForm extends Component
             'relation_contact_uuid' => '',
             'contact_name' => '', 
         ];
+        $this->dispatch('relation-added');
     }
 
     public function removeRelation($index)
     {
         unset($this->relations[$index]);
         $this->relations = array_values($this->relations);
-    }
 
-    public function updatedSearchTerm()
-    {
-        if (strlen($this->searchTerm) >= 2) {
-            $this->searchResults = Contact::where(function ($query) {
-                $query->where('contact_name_given', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('contact_name_family', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('contact_organization', 'like', '%' . $this->searchTerm . '%');
-            })
-                ->where('contact_uuid', '!=', $this->contactUuid) // Excluir el contacto actual
-                ->limit(10)
-                ->get()
-                ->map(function ($contact) {
-                    $displayName = $contact->contact_organization ?:
-                        trim($contact->contact_name_given . ' ' . $contact->contact_name_family);
-
-                    return [
-                        'id' => $contact->contact_uuid,
-                        'name' => $displayName
-                    ];
-                })
-                ->toArray();
-        } else {
-            $this->searchResults = [];
-        }
+        $this->dispatch('relation-removed');
     }
 
     public function selectContact($contactId, $contactName, $index)
     {
         $this->relations[$index]['relation_contact_uuid'] = $contactId;
         $this->relations[$index]['contact_name'] = $contactName;
-        $this->searchTerm = '';
-        $this->searchResults = [];
     }
 
     public function save()
@@ -92,20 +81,22 @@ class ContactRelationForm extends Component
             ContactRelation::where('contact_uuid', $this->contactUuid)->delete();
 
             foreach ($this->relations as $relation) {
-                if (!empty($relation['relation_contact_uuid'])) {
+                if (!empty($relation['relation_contact_uuid']) && !empty($relation['relation_label'])) {
                     ContactRelation::create([
                         'contact_uuid' => $this->contactUuid,
+                        'domain_uuid' => auth()->user()->domain_uuid,
                         'relation_label' => $relation['relation_label'],
                         'relation_contact_uuid' => $relation['relation_contact_uuid'],
                     ]);
                 }
             }
-
+            
             $this->dispatch('settingsSaved')->to(ContactSettingForm::class);
+            session()->flash('message', 'Relations saved successfully.');
+            
         } catch (\Throwable $e) {
-            throw $e;
-            session()->flash('message', 'Error: ' . $e->getMessage());
             DB::rollBack();
+            session()->flash('error', 'Error: ' . $e->getMessage());
         }
     }
 

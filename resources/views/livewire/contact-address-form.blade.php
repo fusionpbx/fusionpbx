@@ -2,8 +2,7 @@
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h6>Addresses</h6>
-            <button type="button" class="btn btn-sm btn-primary" wire:click="addAddress">Add
-                Address</button>
+            <button type="button" class="btn btn-sm btn-primary" wire:click="addAddress"> <i class="fa fa-plus" aria-hidden="true"></i></button>
         </div>
         <div class="card-body">
             @foreach ($addresses as $index => $address)
@@ -14,14 +13,14 @@
                             <div class="col-md-10 mb-2">
                                 <input type="text" wire:model="addresses.{{ $index }}.address_street"
                                     class="form-control" placeholder="Address 1">
-                                <input type="text" wire:model="addresses.{{ $index }}.address_street_2"
+                                <input type="text" wire:model="addresses.{{ $index }}.address_extended"
                                     class="form-control" placeholder="Address 2">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-2">
-                                <label for="address_city">City</label>
-                                <input type="text" wire:model="addresses.{{ $index }}.address_city"
+                                <label for="address_locality">City</label>
+                                <input type="text" wire:model="addresses.{{ $index }}.address_locality"
                                     class="form-control" placeholder="City">
                             </div>
                             <div class="col-md-6 mb-2">
@@ -42,6 +41,7 @@
                             <div class="col-md-6 mb-2">
                                 <label for="address_type">Type</label>
                                 <select wire:model="addresses.{{ $index }}.address_type" class="form-select">
+                                    <option value="">Select</option>
                                     <option value="work">Work</option>
                                     <option value="home">Home</option>
                                     <option value="domestic">Domestic</option>
@@ -54,6 +54,7 @@
                             <div class="col-md-6 mb-2">
                                 <label for="address_label">Label</label>
                                 <select wire:model="addresses.{{ $index }}.address_label" class="form-select">
+                                    <option value="">Select</option>
                                     <option value="work">Work</option>
                                     <option value="home">Home</option>
                                     <option value="mobile">Mobile</option>

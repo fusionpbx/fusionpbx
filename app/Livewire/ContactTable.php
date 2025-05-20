@@ -5,7 +5,13 @@ namespace App\Livewire;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Contact;
+use App\Models\ContactAddress;
+use App\Models\ContactEmail;
+use App\Models\ContactPhone;
+use App\Models\ContactRelation;
+use App\Models\ContactUrl;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ContactTable extends DataTableComponent
 {
@@ -84,7 +90,42 @@ class ContactTable extends DataTableComponent
     public function bulkActions(): array
     {
         $bulkActions = [];
-        $bulkActions['delete'] = 'Delete';
+        $bulkActions['bulkDelete'] = 'Delete';
         return $bulkActions;
     }
+
+    public function bulkDelete(): void
+    {
+        if(!auth()->user()->hasPermission('contact_delete')) {
+            session()->flash('error', 'You do not have permission to delete contacts.');
+            return;
+        }
+
+        $selectedRows = $this->getSelected();
+
+        try {
+            DB::beginTransaction();
+
+            Contact::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactEmail::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactPhone::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactAddress::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactUrl::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactRelation::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactRelation::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactRelation::whereIn('contact_uuid', $selectedRows)->delete();
+            
+            DB::commit();
+            $this->clearSelected();
+            $this->dispatch('refresh');
+            session()->flash('success', 'Contacts deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('error', 'An error occurred while deleting contacts: ' . $e->getMessage());
+            throw $e; 
+        }
+    }
+
+
+    
 }

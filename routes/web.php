@@ -136,7 +136,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('registrations', RegistrationsController::class)->name('registrations', 'registrations');
 
     Route::resource('/contacts', ContactController::class);
-
+    Route::get('/contacts/{uuid}/vcard', [ContactController::class, 'exportVCard'])->name('contacts.vcard');
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){

@@ -1,8 +1,8 @@
 <div>
     <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between ">
             <h6>Settings</h6>
-            <button type="button" class="btn btn-sm btn-primary" wire:click="addSetting">Add Setting</button>
+            <button type="button" class="btn btn-sm btn-primary" wire:click="addSetting"> <i class="fa fa-plus" aria-hidden="true"></i></button>
         </div>
         <div class="card-body">
             @foreach ($settings as $index => $setting)

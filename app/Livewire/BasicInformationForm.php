@@ -73,6 +73,7 @@ class BasicInformationForm extends Component
             $this->validate();
             $contact = Contact::where('contact_uuid', $this->contactUuid)->first();
             if ($contact) {
+                $contact->domain_uuid = auth()->user()->domain_uuid;
                 $contact->contact_type = $this->contactType;
                 $contact->contact_organization = $this->contactOrganization;
                 $contact->contact_name_prefix = $this->contactNamePrefix;
@@ -90,6 +91,7 @@ class BasicInformationForm extends Component
             } else {
                 Contact::create([
                     'contact_uuid' => Str::uuid(),
+                    'domain_uuid' => auth()->user()->domain_uuid,
                     'contact_type' => $this->contactType,
                     'contact_organization' => $this->contactOrganization,
                     'contact_name_prefix' => $this->contactNamePrefix,

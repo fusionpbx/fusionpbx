@@ -31,7 +31,14 @@ class ContactEmailForm extends Component
             ->first();
             
         if ($contact && $contact->emails->count() > 0) {
-            $this->emails = $contact->emails->toArray();
+            $this->emails = $contact->emails->map(function ($email) {
+                return [
+                    'email_address' => $email->email_address,
+                    'email_label' => $email->email_label,
+                    'email_primary' => (bool)$email->email_primary,
+                    'email_description' => $email->email_description,
+                ];
+            })->toArray();
         } else {
             $this->addEmail();
         }
@@ -42,7 +49,7 @@ class ContactEmailForm extends Component
         $this->emails[] = [
             'email_address' => '',
             'email_label' => '',
-            'email_primary' => false,
+            'email_primary' => '',
             'email_description' => '',
         ];
     }
@@ -62,9 +69,10 @@ class ContactEmailForm extends Component
             if (!empty($email['email_address'])) {
                 ContactEmail::create([
                     'contact_uuid' => $this->contactUuid,
+                    'domain_uuid' => auth()->user()->domain_uuid,
                     'email_address' => $email['email_address'] ?? '',
                     'email_label' => $email['email_label'] ?? '',
-                    'email_primary' => $email['email_primary'] ?? false,
+                    'email_primary' => $email['email_primary'] ? 1 : 0,
                     'email_description' => $email['email_description'] ?? '',
                 ]);
             }

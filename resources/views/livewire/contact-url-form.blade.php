@@ -1,9 +1,8 @@
 <div>
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h6>Urls</h6>
-            <button type="button" class="btn btn-sm btn-primary" wire:click="addUrl">Add
-                Url</button>
+            <h6 class="">Urls</h6>
+            <button type="button" class="btn btn-sm btn-primary" wire:click="addUrl"> <i class="fa fa-plus" aria-hidden="true"></i></button>
         </div>
         <div class="card-body">
             @foreach ($urls as $index => $url)
@@ -19,8 +18,8 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-2">
-                                <label for="url_address{{ $index }}" class="form-label"> Adress</label>
-                                <input type="text" wire:model="urls_address.{{ $index }}" class="form-control"
+                                <label for="url_address{{ $index }}" class="form-label">Adress</label>
+                                <input type="text" wire:model="urls.{{ $index }}.url_address" class="form-control"
                                     placeholder="http://...">
                             </div>
                         </div>

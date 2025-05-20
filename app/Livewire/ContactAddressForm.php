@@ -29,7 +29,21 @@ class ContactAddressForm extends Component
             ->first();
 
         if ($contact && $contact->addresses->count() > 0) {
-            $this->addresses = $contact->addresses->toArray();
+            $this->addresses = $contact->addresses->map(function ($address) {
+                return [
+                    'address_street' => $address->address_street,
+                    'address_primary' => (bool)$address->address_primary,
+                    'address_extended' => $address->address_extended,
+                    'address_region' => $address->address_region,
+                    'address_postal_code' => $address->address_postal_code,
+                    'address_locality' => $address->address_locality,
+                    'address_country' => $address->address_country,
+                    'address_type' => $address->address_type,
+                    'address_label' => $address->address_label,
+                    'address_description' => $address->address_description,
+                    'address_city' => $address->address_city,
+                ];
+            })->toArray();
         } else {
             $this->addAddress();
         }
@@ -39,11 +53,12 @@ class ContactAddressForm extends Component
     {
         $this->addresses[] = [
             'address_street' => '',
-            'address_primary' => false,
+            'address_primary' => '',
             'address_extended' => '',
             'address_region' => '',
             'address_postal_code' => '',
             'address_country' => '',
+            'address_locality' => '',
             'address_type' => '',
             'address_label' => '',
             'address_description' => '',
@@ -63,13 +78,15 @@ class ContactAddressForm extends Component
             ContactAddress::where('contact_uuid', $this->contactUuid)->delete();
 
             foreach ($this->addresses as $address) {
-                if (!empty($address['address_street']) || !empty($address['address_city'])) {
+                if (!empty($address['address_street']) || !empty($address['address_locality'])) {
                     ContactAddress::create([
                         'contact_uuid' => $this->contactUuid,
+                        'domain_uuid' => auth()->user()->domain_uuid,
                         'address_street' => $address['address_street'],
-                        'address_primary' => $address['address_primary'],
+                        'address_primary' => $address['address_primary'] ? 1 : 0,
                         'address_street' => $address['address_street'],
                         'address_extended' => $address['address_extended'],
+                        'address_locality' => $address['address_locality'],
                         'address_region' => $address['address_region'],
                         'address_postal_code' => $address['address_postal_code'],
                         'address_country' => $address['address_country'],

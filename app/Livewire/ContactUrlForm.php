@@ -31,7 +31,14 @@ class ContactUrlForm extends Component
             ->first();
 
         if ($contact && $contact->urls->count() > 0) {
-            $this->urls = $contact->urls->toArray();
+            $this->urls = $contact->urls->map(function ($url) {
+                return [
+                    'url_label' => $url->url_label,
+                    'url_address' => $url->url_address,
+                    'url_description' => $url->url_description,
+                    'url_primary' => (bool)$url->url_primary,
+                ];
+            })->toArray();
         } else {
             $this->addUrl();
         }
@@ -43,7 +50,7 @@ class ContactUrlForm extends Component
             'url_label' => '',
             'url_address' => '',
             'url_description' => '',
-            'url_primary' => false
+            'url_primary' => ''
         ];
     }
 
@@ -59,13 +66,14 @@ class ContactUrlForm extends Component
             ContactUrl::where('contact_uuid', $this->contactUuid)->delete();
 
             foreach ($this->urls as $url) {
-                if (!empty($url['url'])) {
+                if (!empty($url['url_address']) || !empty($url['url_label'])) {
                     ContactUrl::create([
                         'contact_uuid' => $this->contactUuid,
+                        'domain_uuid' => auth()->user()->domain_uuid,
                         'url_label' => $url['url_label'],
                         'url_address' => $url['url_address'],
                         'url_description' => $url['url_description'],
-                        'url_primary' => $url['url_primary'] ?? false,
+                        'url_primary' => $url['url_primary'] ? 1 : 0,
                     ]);
                 }
             }
