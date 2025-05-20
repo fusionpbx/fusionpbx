@@ -116,11 +116,16 @@ class DomainsTable extends DataTableComponent
                 $trashedDomain = Domain::find($domain_uuid);
                 if (isset($trashedDomain))
                 {
-                    $this->domainRepository = new DomainRepository($trashedDomain, null);
-                    $this->domainRepository->delete($trashedDomain);
+                    if ($trashedDomain->children()->isEmpty()){
+                        $this->domainRepository = new DomainRepository($trashedDomain, null);
+                        $this->domainRepository->delete($trashedDomain);
+                    }
+                    else{
+                        session()->flash('error', 'You cannot delete tenants with children.');
+                    }
                 }
             }
-
+/*
             // NOTE: Don't know if this still necessary
             try {
                 DB::beginTransaction();
@@ -136,7 +141,7 @@ class DomainsTable extends DataTableComponent
                 DB::rollBack();
                 session()->flash('error', 'There was a problem deleting the domains: ' . $e->getMessage());
             }
-
+*/
             // If we deleted our current domain
             if (in_array(Session::get('domain_uuid'), $selectedRows))
             {
