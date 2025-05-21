@@ -6,6 +6,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Contact;
 use App\Models\ContactAddress;
+use App\Models\ContactAttachment;
 use App\Models\ContactEmail;
 use App\Models\ContactPhone;
 use App\Models\ContactRelation;
@@ -112,8 +113,7 @@ class ContactTable extends DataTableComponent
             ContactAddress::whereIn('contact_uuid', $selectedRows)->delete();
             ContactUrl::whereIn('contact_uuid', $selectedRows)->delete();
             ContactRelation::whereIn('contact_uuid', $selectedRows)->delete();
-            ContactRelation::whereIn('contact_uuid', $selectedRows)->delete();
-            ContactRelation::whereIn('contact_uuid', $selectedRows)->delete();
+            ContactAttachment::whereIn('contact_uuid', $selectedRows)->delete();
             
             DB::commit();
             $this->clearSelected();
