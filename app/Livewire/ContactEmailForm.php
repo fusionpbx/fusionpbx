@@ -46,18 +46,26 @@ class ContactEmailForm extends Component
     
     public function addEmail()
     {
-        $this->emails[] = [
-            'email_address' => '',
-            'email_label' => '',
-            'email_primary' => '',
-            'email_description' => '',
-        ];
+        if(auth()->user()->hasPermission('contact_email_add')) {
+            $this->emails[] = [
+                'email_address' => '',
+                'email_label' => '',
+                'email_primary' => '',
+                'email_description' => '',
+            ];
+        } else {
+            session()->flash('message', 'You do not have permission to add email addresses.');
+        }
     }
     
     public function removeEmail($index)
     {
-        unset($this->emails[$index]);
-        $this->emails = array_values($this->emails);
+        if (auth()->user()->hasPermission('contact_email_delete')) {
+            unset($this->emails[$index]);
+            $this->emails = array_values($this->emails);
+        } else {
+            session()->flash('message', 'You do not have permission to remove email addresses.');
+        }
     }
     
     public function save()

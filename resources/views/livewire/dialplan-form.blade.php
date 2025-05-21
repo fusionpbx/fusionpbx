@@ -282,7 +282,7 @@
 												</td>
 												<td class="text-center">
 													@if (count($dialplanDetails) > 1)
-													<button type="button" class="btn btn-sm btn-danger" wire:click="removeDialplanDetail({{ $index }})"><i class="fas fa-times"></i> Remove</button>
+													<button type="button" class="btn btn-sm btn-danger" wire:click="removeDialplanDetail({{ $index }})"><i class="fas fa-times"></i> <i class="bi bi-trash"></i> </button>
 													@endif
 
 													@if ($index === count($dialplanDetails) - 1)

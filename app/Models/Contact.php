@@ -57,7 +57,7 @@ class Contact extends Model
 	}
 
 	public function attachments(): HasMany {
-		return $this->hasMany(ContactAttachment::class, 'contact_attachment_uuid', 'contact_attachment_uuid');
+		return $this->hasMany(ContactAttachment::class, 'contact_uuid', 'contact_uuid');
 	}
 
 	public function emails(): HasMany {

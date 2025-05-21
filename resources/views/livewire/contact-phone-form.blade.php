@@ -1,8 +1,10 @@
 <div>
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h6>Phones</h6>
+            <h6>Phones <i class="fa fa-phone" aria-hidden="true"></i></h6>
+            @can('contact_phone_add')
             <button type="button" class="btn btn-sm btn-primary" wire:click="addPhone"> <i class="fa fa-plus" aria-hidden="true"></i></button>
+            @endcan
         </div>
         <div class="card-body">
             @foreach ($phones as $index => $phone)
@@ -111,11 +113,12 @@
                             @enderror
                         </div>
 
-
+                        @can('contact_phone_delete')
                         <div class="col-md-2">
                             <button type="button" class="btn btn-sm btn-danger"
-                                wire:click="removePhone({{ $index }})">Remove</button>
+                                wire:click="removePhone({{ $index }})"><i class="bi bi-trash"></i> </button>
                         </div>
+                        @endcan
                     </div>
                 </div>
             @endforeach

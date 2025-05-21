@@ -1,8 +1,10 @@
 <div>
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h6>Relations</h6>
+            <h6>Relations <i class="fa fa-users" aria-hidden="true"></i></h6>
+            @can('contact_relation_add')
             <button type="button" class="btn btn-sm btn-primary" wire:click="addRelation"> <i class="fa fa-plus" aria-hidden="true"></i></button>
+            @endcan
         </div>
         <div class="card-body">
             @foreach($relations as $index => $relation)
@@ -35,12 +37,14 @@
                         </select>
                     </div>
                 </div>
+                @can('contact_relation_delete')
                 <div class="col-md-1 align-self-end">
                     <label class="form-label">&nbsp;</label>
                     <button type="button" class="btn btn-danger ms-3" wire:click="removeRelation({{ $index }})">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
+                @endcan
             </div>
             @endforeach
         </div>

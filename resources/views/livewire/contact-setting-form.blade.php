@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-sm btn-danger"
-                                    wire:click="removeSetting({{ $index }})">Remove</button>
+                                    wire:click="removeSetting({{ $index }})"><i class="bi bi-trash"></i> </button>
                             </div>
                         </div>
                     </div>

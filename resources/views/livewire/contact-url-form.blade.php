@@ -1,8 +1,10 @@
 <div>
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h6 class="">Urls</h6>
+            <h6 class="">Urls <i class="fa fa-link" aria-hidden="true"></i></h6>
+            @can('contact_url_add')
             <button type="button" class="btn btn-sm btn-primary" wire:click="addUrl"> <i class="fa fa-plus" aria-hidden="true"></i></button>
+            @endcan
         </div>
         <div class="card-body">
             @foreach ($urls as $index => $url)
@@ -44,10 +46,12 @@
                             </div>
 
                         </div>
+                        @can('contact_url_delete')
                         <div class="col-md-2">
                             <button type="button" class="btn btn-sm btn-danger"
-                                wire:click="removeUrl({{ $index }})">Remove</button>
+                                wire:click="removeUrl({{ $index }})"><i class="bi bi-trash"></i> </button>
                         </div>
+                        @endcan
                     </div>
                 </div>
             @endforeach

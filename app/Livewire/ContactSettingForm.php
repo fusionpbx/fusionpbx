@@ -42,6 +42,11 @@ class ContactSettingForm extends Component
     }
     public function addSetting()
     {
+        if(!auth()->user()->hasPermission('contact_setting_add')) {
+            session()->flash('message', 'You do not have permission to add settings.');
+            return;
+        }
+
         $this->settings[] = [
             'contact_setting_category' => '',
             'contact_setting_subcategory' => '',
@@ -55,6 +60,10 @@ class ContactSettingForm extends Component
     
     public function removeSetting($index)
     {
+        if (!auth()->user()->hasPermission('contact_setting_delete')) {
+            session()->flash('message', 'You do not have permission to remove settings.');
+            return;
+        }
         unset($this->settings[$index]);
         $this->settings = array_values($this->settings);
     }
@@ -78,7 +87,8 @@ class ContactSettingForm extends Component
                     ]);
                 }
             }
-            redirect()->route('contacts.edit', ['contact' => $this->contactUuid]);
+            $this->dispatch('saveAttachment')->to(ContactAttachmentForm::class);
+           session()->flash('message', 'Settings saved successfully.');
         } catch (\Throwable $e) {
             DB::rollBack();
             session()->flash('message', 'Error: ' . $e->getMessage());

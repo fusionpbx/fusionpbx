@@ -51,6 +51,10 @@ class ContactAddressForm extends Component
 
     public function addAddress()
     {
+        if (!auth()->user()->hasPermission('contact_address_add')) {
+            session()->flash('message', 'You do not have permission to add addresses.');
+            return;
+        }
         $this->addresses[] = [
             'address_street' => '',
             'address_primary' => '',

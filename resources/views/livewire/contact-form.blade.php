@@ -1,4 +1,5 @@
 <div>
+
     <div class= 'card card-primary mt-3 card-outline'>
         <form wire:submit.prevent="">
             <div class="card mb-4">
@@ -38,6 +39,7 @@
 
                     @livewire('contact-setting-form', ['contactUuid' => $contactUuid])
 
+                    @livewire('contact-attachment-form', ['contactUuid' => $contactUuid])
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('contacts.index') }}" class="btn btn-secondary">Cancel</a>
                         <button type="button" class="btn btn-primary"

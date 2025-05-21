@@ -16,6 +16,7 @@
         "okayinc/stateless-session": "^0.0.10",
         "rappasoft/laravel-livewire-tables": "^3.7",
         "socialiteproviders/okta": "^4.4",
+        "spatie/livewire-filepond": "^1.4",
         "staudenmeir/laravel-cte": "^1.12"
     },
     "require-dev": {

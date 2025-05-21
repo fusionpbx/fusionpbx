@@ -53,6 +53,11 @@ class ContactRelationForm extends Component
 
     public function addRelation()
     {
+        if(!auth()->user()->hasPermission('contact_relation_add')) {
+            session()->flash('message', 'You do not have permission to add relations.');
+            return;
+        }
+
         $this->relations[] = [
             'relation_label' => '',
             'relation_contact_uuid' => '',
@@ -63,6 +68,10 @@ class ContactRelationForm extends Component
 
     public function removeRelation($index)
     {
+        if(!auth()->user()->hasPermission('contact_relation_delete')) {
+            session()->flash('message', 'You do not have permission to remove relations.');
+            return;
+        }
         unset($this->relations[$index]);
         $this->relations = array_values($this->relations);
 
