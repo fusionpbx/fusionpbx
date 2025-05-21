@@ -412,6 +412,9 @@
 											$array['voicemail_greetings'][$x]['domain_uuid'] = $this->domain_uuid;
 										}
 										$x++;
+										$array['voicemail_destinations'][$x]['voicemail_uuid_copy'] = $voicemail_uuid;
+										$array['voicemail_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
+										$x++;
 								}
 							}
 
