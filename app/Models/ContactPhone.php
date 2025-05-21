@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class ContactPhone extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	use HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_contact_phones';
 	protected $primaryKey = 'contact_phone_uuid';
 	public $incrementing = false;
@@ -34,6 +34,7 @@ class ContactPhone extends Model
         'phone_type_voice',
         'phone_type_video',
         'phone_type_text',
+        'phone_type_fax',
         'phone_speed_dial',
         'phone_country_code',
         'phone_number',

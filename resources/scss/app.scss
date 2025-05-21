@@ -1,3 +1,62 @@
 @import '@adminlte/dist/css/adminlte.min.css';
 @import '@bootstrap-icons/font/bootstrap-icons.min.css';
 @import '@fortawesome/fontawesome-free/css/all.min.css';
+@import 'select2/dist/css/select2.min.css';
+
+/* Contenedor principal de Select2 */
+.select2-container--default .select2-selection--single {
+  display: block;
+  width: 100%;
+  padding: .375rem 2.25rem .375rem .75rem; /* Importante: deja espacio a la derecha para la flecha */
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  box-shadow: var(--bs-box-shadow-inset);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  height: auto;
+  
+  /* Agregar explícitamente la imagen de la flecha */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+  background-size: 16px 12px;
+}
+
+/* Ocultar la flecha nativa de Select2 */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  display: none;
+}
+
+/* Resto de los estilos para Select2 */
+.select2-container--default .select2-dropdown {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+}
+
+.select2-container--default .select2-results__option {
+  padding: .375rem .75rem;
+  font-size: 1rem;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--bs-primary);
+}
+
+.select2-container--default.select2-container--focus .select2-selection--single {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Ajuste para el texto dentro del select */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--bs-body-color);
+  line-height: 1.5;
+  padding-left: 0;
+  padding-right: 0;
+}

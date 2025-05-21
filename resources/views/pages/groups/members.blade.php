@@ -5,7 +5,7 @@
 @endpush
 
 @push('before-scripts')
-    @vite('resources/js/jquery.js')
+    @vite('resources/js/members-form-scripts.js')
     @vite('node_modules/bootstrap4-duallistbox/dist/jquery.bootstrap-duallistbox.min.js')
 @endpush
 
