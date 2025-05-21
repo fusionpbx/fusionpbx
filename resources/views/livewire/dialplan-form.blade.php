@@ -11,6 +11,9 @@
 
 			<div class="card-body">
 				<form wire:submit.prevent="save">
+
+					<input type="hidden" name="app_uuid" value="{{ old('app_uuid', $dialplan->app_uuid ?? '') }}">
+
 					<div class="card-body">
 						<div class="row">
 							<div class="col-md-6">

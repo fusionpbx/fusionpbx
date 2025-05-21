@@ -5,16 +5,13 @@
     <div class="card card-primary mt-3">
         <div class="card-header">
             <h3 class="card-title">
-                {{ isset($inbound) ? 'Edit Inbound Route' : 'Create Inbound Route' }}
+                {{ 'Create Inbound Route' }}
             </h3>
         </div>
 
-        <form action="{{ isset($inbound) ? route('dialplans.inbound.update', $inbound->inbound_uuid) : route('dialplans.inbound.store') }}"
+        <form action="{{ route('dialplans.inbound.store') }}"
               method="POST">
             @csrf
-            @if(isset($inbound))
-                @method('PUT')
-            @endif
 
 			<input type="hidden" name="app_uuid" value="{{ old('app_uuid', $dialplan->app_uuid ?? $app_uuid) }}">
 
@@ -29,7 +26,7 @@
                                 id="dialplan_name"
                                 name="dialplan_name"
                                 placeholder="Enter inbound name"
-                                value="{{ old('dialplan_name', $inbound->dialplan_name ?? '') }}"
+                                value="{{ old('dialplan_name') }}"
                                 required
                             >
                             @error('dialplan_name')
@@ -54,7 +51,7 @@
                                 <option value=""></option>
                                 @foreach($destinations as $destination)
                                     <option value="{{ $destination->destination_uuid }}"
-                                        {{ old('destination_uuid', (isset($inbound) ? $inbound->destination_uuid : Auth::user()->destination_uuid) ??  '') == $destination->destination_uuid ? 'selected' : '' }}>
+                                        {{ old('destination_uuid') == $destination->destination_uuid ? 'selected' : '' }}>
                                         {{ $destination->destination_number }} {{ $destination->destination_description }}
                                     </option>
                                 @endforeach
@@ -66,6 +63,45 @@
                     </div>
                 </div>
 
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="condition_field_1" class="form-label">Condition</label>
+                            <input name="condition_field_1" list="condition_list" class="form-control" placeholder="{{ __('Type') }}">
+                            <datalist id="condition_list">
+                                <option value="context">Context</option>
+                                <option value="username">Username</option>
+                                <option value="rdnis">RDNIS</option>
+                                <option value="destination_number">Destination Number</option>
+                                <option value="public">Public</option>
+                                <option value="caller_id_name">Caller ID Name</option>
+                                <option value="caller_id_number">Caller ID Number</option>
+                                <option value="ani">ANI</option>
+                                <option value="ani2">ANI2</option>
+                                <option value="uuid">UUID</option>
+                                <option value="source">Source</option>
+                                <option value="chan_name">Channel Name</option>
+                                <option value="network_addr">Network Address</option>
+                            </datalist>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">&nbsp;</label>
+                            <input
+                                type="text"
+                                class="form-control @error('condition_expression_1') is-invalid @enderror"
+                                id="condition_expression_1"
+                                name="condition_expression_1"
+                                value="{{ old('condition_expression_1') }}"
+                                placeholder="{{ __('Expression') }}"
+                            >
+                            @error('condition_expression_1')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -87,7 +123,7 @@
                                 class="form-control @error('limit') is-invalid @enderror"
                                 id="limit"
                                 name="limit"
-                                value="{{ old('limit', $inbound->limit ?? '') }}"
+                                value="{{ old('limit') }}"
                                 required
                             >
                             @error('limit')
@@ -105,7 +141,7 @@
                                 type="text"
                                 class="form-control @error('caller_id_outbound_prefix') is-invalid @enderror"
                                 name="caller_id_outbound_prefix"
-                                value="{{ old('caller_id_outbound_prefix', $inbound->caller_id_outbound_prefix ?? '') }}"
+                                value="{{ old('caller_id_outbound_prefix') }}"
                                 required
                             >
                             @error('caller_id_outbound_prefix')
@@ -156,7 +192,7 @@
                                 name="dialplan_description"
                                 rows="3"
                                 placeholder="Enter inbound description"
-                            >{{ old('dialplan_description', $inbound->dialplan_description ?? '') }}</textarea>
+                            >{{ old('dialplan_description') }}</textarea>
                             @error('dialplan_description')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -167,7 +203,7 @@
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 4px;">
-                    {{ isset($inbound) ? 'Update Inbound Route' : 'Create Inbound Route' }}
+                    {{ 'Create Inbound Route' }}
                 </button>
                 <a href="{{ route('dialplans.index', ['app_uuid' => $app_uuid]) }}" class="btn btn-secondary ml-2 px-4 py-2" style="border-radius: 4px;">
                     Cancel

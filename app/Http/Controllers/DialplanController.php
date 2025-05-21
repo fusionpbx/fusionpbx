@@ -141,8 +141,8 @@ class DialplanController extends Controller
 
 		$condition_field_1 = $request->input("condition_field_1");
 		$condition_expression_1 = $request->input("condition_expression_1");
-		$condition_field_2 = $request->input("condition_field_2");
-		$condition_expression_2 = $request->input("condition_expression_2");
+		// $condition_field_2 = $request->input("condition_field_2"); //TODO: remove?
+		// $condition_expression_2 = $request->input("condition_expression_2"); //TODO: remove?
 		$destination_accountcode = "";
 		$destination_carrier = "";
 		$limit = $request->input("limit");
@@ -159,20 +159,21 @@ class DialplanController extends Controller
 		}
 
 		$action_1 = $request->input("action_1");
-		$action_2 = $request->input("action_2");
+		// $action_2 = $request->input("action_2"); //TODO: remove?
 
 		list($action_application_1, $action_data_1) = $this->parseAction($action_1);
-		list($action_application_2, $action_data_2) = $this->parseAction($action_2);
+		// list($action_application_2, $action_data_2) = $this->parseAction($action_2); //TODO: remove?
 
 		if($condition_field_1 && $condition_expression_1)
 		{
 			$addDetail("condition", $condition_field_1, $condition_expression_1, $y * 10);
 		}
 
-		if($condition_field_2 && $condition_expression_2)
-		{
-			$addDetail("condition", $condition_field_2, $condition_expression_2, $y * 10);
-		}
+ 		//TODO: remove?
+		// if($condition_field_2 && $condition_expression_2)
+		// {
+		// 	$addDetail("condition", $condition_field_2, $condition_expression_2, $y * 10);
+		// }
 
 		if($destination_accountcode)
 		{
@@ -209,7 +210,8 @@ class DialplanController extends Controller
 			}
 		}
 
-		if(in_array($action_application_1, ["ivr", "conference"]) || in_array($action_application_2, ["ivr", "conference"]))
+		if(in_array($action_application_1, ["ivr", "conference"]))
+		// if(in_array($action_application_1, ["ivr", "conference"]) || in_array($action_application_2, ["ivr", "conference"]))  //TODO: remove?
 		{
 			$addDetail("action", "answer", "", $y * 10);
 		}
@@ -220,10 +222,11 @@ class DialplanController extends Controller
 			$addDetail("action", $action_application_1, $action_data_1, $y * 10);
 		}
 
-		if($action_application_2 && $action_data_2)
-		{
-			$addDetail("action", $action_application_2, $action_data_2, $y * 10);
-		}
+  		//TODO: remove?
+		// if($action_application_2 && $action_data_2)
+		// {
+		// 	$addDetail("action", $action_application_2, $action_data_2, $y * 10);
+		// }
 
 		return $dialplanDetails;
 	}
