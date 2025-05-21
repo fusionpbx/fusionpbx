@@ -343,6 +343,31 @@ class SwitchDestinations extends Component
             $this->setOptions("Voicemails", $values);
         }
 
+        //Other
+        $values = [];
+
+        $values[] = [
+            "id" => "transfer:*98 XML " . Session::get("domain_name"),
+            "name" => __("Check Voicemail")
+        ];
+
+        $values[] = [
+            "id" => "transfer:*411 XML " . Session::get("domain_name"),
+            "name" => __("Company Directory")
+        ];
+
+        $values[] = [
+            "id" => "transfer:hangup XML " . Session::get("domain_name"),
+            "name" => __("Hangup")
+        ];
+
+        $values[] = [
+            "id" => "transfer:*732 XML " . Session::get("domain_name"),
+            "name" => __("Record")
+        ];
+
+        $this->setOptions("Other", $values);
+
         $this->options = json_decode(json_encode($this->options));
     }
 
