@@ -87,7 +87,7 @@ class DialplanController extends Controller
 		return view("pages.dialplans.inbound.form", compact("app_uuid", "destinations"));
 	}
 
-	public function storeInbound(DialplanRequest $request)
+	public function storeInbound(InboundDialplanRequest $request)
 	{
 		$destination = Destination::where("domain_uuid", Session::get("domain_uuid"))->where("destination_uuid", $request->input("destination_uuid"))->first();
 
