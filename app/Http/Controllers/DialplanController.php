@@ -143,8 +143,9 @@ class DialplanController extends Controller
 		$condition_expression_1 = $request->input("condition_expression_1");
 		// $condition_field_2 = $request->input("condition_field_2"); //TODO: remove?
 		// $condition_expression_2 = $request->input("condition_expression_2"); //TODO: remove?
-		$destination_accountcode = "";
-		$destination_carrier = "";
+		$destination_accountcode = '';
+		$destination_carrier = '';
+        $destination_carrier_uuid = '';
 		$limit = $request->input("limit");
 		$caller_id_outbound_prefix = $request->input("caller_id_outbound_prefix");
 		$fax_uuid = null;
@@ -154,7 +155,8 @@ class DialplanController extends Controller
 		{
 			$condition_expression_1 = $destination->destination_number;
 			$fax_uuid = $destination->fax_uuid;
-			$destination_carrier = $destination->carrier->carrier_name;
+			$destination_carrier = $destination->carrier ? $destination->carrier->carrier_name : null;
+            $destination_carrier_uuid = $destination->carrier ? $destination->carrier->carrier_uuid : null;
 			$destination_accountcode = $destination->destination_accountcode;
 		}
 
@@ -183,6 +185,7 @@ class DialplanController extends Controller
 		if($destination_carrier)
 		{
 			$addDetail("action", "set", "carrier={$destination_carrier}", $y * 10);
+            $addDetail("action", "set", "carrier_uuid={$destination_carrier_uuid}", $y * 10);
 		}
 
 		if($limit)
@@ -203,7 +206,7 @@ class DialplanController extends Controller
 			{
 				$addDetail("action", "set", "codec_string=PCMU,PCMA", $y * 10);
 				$addDetail("action", "set", "tone_detect_hits=1", $y * 10);
-				$addDetail("action", "set", "execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("context"), $y * 10);
+				$addDetail("action", "set", "execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("domain_name"), $y * 10);
 				$addDetail("action", "tone_detect", "fax 1100 r +5000", $y * 10);
 				$addDetail("action", "sleep", "3000", $y * 10);
 				$addDetail("action", "export", "codec_string=\${ep_codec_string}", $y * 10);
