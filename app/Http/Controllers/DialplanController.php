@@ -98,6 +98,7 @@ class DialplanController extends Controller
             "dialplan_number" => $destination->destination_number,
             "dialplan_order" => $request->input("dialplan_order"),
             "dialplan_continue" => "false",
+            "dialplan_destination" => "false",
             "dialplan_context" => "public",
             "dialplan_enabled" => $request->input("dialplan_enabled") ?? "false",
             "dialplan_description" => $request->input("dialplan_description"),
@@ -123,9 +124,9 @@ class DialplanController extends Controller
 		$y = 0;
 
 		// Helper to add a dialplan detail
-		$addDetail = function(string $tag, string $type, string $data, int $order, int $group = 0) use (&$dialplanDetails, $dialplan, &$y)
+		$addDetail = function(string $tag, string $type, string $data, int $order, int $group = 0) use (&$dialplanDetails, $dialplan)
 		{
-			$dialplanDetails[] = [
+			return [
 				"dialplan_detail_uuid" => Str::uuid(),
 				"domain_uuid" => $dialplan->domain_uuid,
 				"dialplan_uuid" => $dialplan->dialplan_uuid,
@@ -135,8 +136,6 @@ class DialplanController extends Controller
 				"dialplan_detail_order" => $order,
 				"dialplan_detail_group" => $group,
 			];
-
-			$y++;
 		};
 
 		$condition_field_1 = $request->input("condition_field_1");
@@ -168,7 +167,8 @@ class DialplanController extends Controller
 
 		if($condition_field_1 && $condition_expression_1)
 		{
-			$addDetail("condition", $condition_field_1, $condition_expression_1, $y * 10);
+			$dialplanDetails[] = $addDetail("condition", $condition_field_1, $condition_expression_1, $y * 10);
+            $y++;
 		}
 
  		//TODO: remove?
@@ -179,23 +179,28 @@ class DialplanController extends Controller
 
 		if($destination_accountcode)
 		{
-			$addDetail("action", "set", "accountcode={$destination_accountcode}", $y * 10);
+			$dialplanDetails[] = $addDetail("action", "set", "accountcode={$destination_accountcode}", $y * 10);
+            $y++;
 		}
 
 		if($destination_carrier)
 		{
-			$addDetail("action", "set", "carrier={$destination_carrier}", $y * 10);
-            $addDetail("action", "set", "carrier_uuid={$destination_carrier_uuid}", $y * 10);
+			$dialplanDetails[] = $addDetail("action", "set", "carrier={$destination_carrier}", $y * 10);
+            $y++;
+            $dialplanDetails[] = $addDetail("action", "set", "carrier_uuid={$destination_carrier_uuid}", $y * 10);
+            $y++;
 		}
 
 		if($limit)
 		{
-			$addDetail("action", "limit", "hash {$domain_name} inbound {$limit} !USER_BUSY", $y * 10);
+			$dialplanDetails[] = $addDetail("action", "limit", "hash {$domain_name} inbound {$limit} !USER_BUSY", $y * 10);
+            $y++;
 		}
 
 		if($caller_id_outbound_prefix)
 		{
-			$addDetail("action", "set", "effective_caller_id_number={$caller_id_outbound_prefix}\${caller_id_number}", $y * 10);
+			$dialplanDetails[] = $addDetail("action", "set", "effective_caller_id_number={$caller_id_outbound_prefix}\${caller_id_number}", $y * 10);
+            $y++;
 		}
 
 		if(Str::isUuid($fax_uuid ?? null))
@@ -204,25 +209,33 @@ class DialplanController extends Controller
 
 			if($fax)
 			{
-				$addDetail("action", "set", "codec_string=PCMU,PCMA", $y * 10);
-				$addDetail("action", "set", "tone_detect_hits=1", $y * 10);
-				$addDetail("action", "set", "execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("domain_name"), $y * 10);
-				$addDetail("action", "tone_detect", "fax 1100 r +5000", $y * 10);
-				$addDetail("action", "sleep", "3000", $y * 10);
-				$addDetail("action", "export", "codec_string=\${ep_codec_string}", $y * 10);
+				$dialplanDetails[] = $addDetail("action", "set", "codec_string=PCMU,PCMA", $y * 10);
+                $y++;
+				$dialplanDetails[] = $addDetail("action", "set", "tone_detect_hits=1", $y * 10);
+                $y++;
+				$dialplanDetails[] = $addDetail("action", "set", "execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("domain_name"), $y * 10);
+                $y++;
+				$dialplanDetails[] = $addDetail("action", "tone_detect", "fax 1100 r +5000", $y * 10);
+                $y++;
+				$dialplanDetails[] = $addDetail("action", "sleep", "3000", $y * 10);
+                $y++;
+				$dialplanDetails[] = $addDetail("action", "export", "codec_string=\${ep_codec_string}", $y * 10);
+                $y++
 			}
 		}
 
 		if(in_array($action_application_1, ["ivr", "conference"]))
 		// if(in_array($action_application_1, ["ivr", "conference"]) || in_array($action_application_2, ["ivr", "conference"]))  //TODO: remove?
 		{
-			$addDetail("action", "answer", "", $y * 10);
+			$dialplanDetails[] = $addDetail("action", "answer", "", $y * 10);
+            $y++;
 		}
 
 		// Add final actions
 		if($action_application_1 && $action_data_1)
 		{
-			$addDetail("action", $action_application_1, $action_data_1, $y * 10);
+			$dialplanDetails[] = $addDetail("action", $action_application_1, $action_data_1, $y * 10);
+            $y++;
 		}
 
   		//TODO: remove?
