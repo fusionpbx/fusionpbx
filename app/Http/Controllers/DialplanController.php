@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Destination;
 use App\Models\Dialplan;
 use App\Models\Domain;
-use App\Http\Requests\DialplanRequest;
-use App\Models\Destination;
 use App\Models\Fax;
+use App\Http\Requests\DialplanRequest;
+use App\Http\Requests\InboundDialplanRequest;
 use App\Repositories\DialplanDetailRepository;
 use App\Repositories\DialplanRepository;
 use Illuminate\Http\Request;
@@ -95,7 +96,7 @@ class DialplanController extends Controller
             "domain_uuid" => Session::get("domain_uuid"),
             "app_uuid" => $request->input("app_uuid"),
             "dialplan_name" => $request->input("dialplan_name"),
-            "dialplan_number" => $destination->destination_number,
+            "dialplan_number" => isset($destination) ? $destination->destination_number : null,
             "dialplan_order" => $request->input("dialplan_order"),
             "dialplan_continue" => "false",
             "dialplan_destination" => "false",
@@ -117,7 +118,7 @@ class DialplanController extends Controller
 		return redirect()->to(route("dialplans.index") . "?app_uuid=" . urlencode($request->input("app_uuid")));
 	}
 
-	private function buildInboundRouteDetail(Dialplan $dialplan, Destination $destination, $request)
+	private function buildInboundRouteDetail(Dialplan $dialplan, ?Destination $destination, $request)
 	{
 		$dialplanDetails = [];
 
@@ -220,7 +221,7 @@ class DialplanController extends Controller
 				$dialplanDetails[] = $addDetail("action", "sleep", "3000", $y * 10);
                 $y++;
 				$dialplanDetails[] = $addDetail("action", "export", "codec_string=\${ep_codec_string}", $y * 10);
-                $y++
+                $y++;
 			}
 		}
 

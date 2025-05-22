@@ -46,7 +46,6 @@
                                 class="form-select @error('destination_uuid') is-invalid @enderror"
                                 id="destination_uuid"
                                 name="destination_uuid"
-                                required
                             >
                                 <option value=""></option>
                                 @foreach($destinations as $destination)
@@ -119,12 +118,12 @@
                         <div class="form-group">
                             <label for="limit" class="form-label">Limit</label>
                             <input
-                                type="text"
+                                type="number"
                                 class="form-control @error('limit') is-invalid @enderror"
                                 id="limit"
                                 name="limit"
                                 value="{{ old('limit') }}"
-                                required
+                                min="1"
                             >
                             @error('limit')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -142,7 +141,6 @@
                                 class="form-control @error('caller_id_outbound_prefix') is-invalid @enderror"
                                 name="caller_id_outbound_prefix"
                                 value="{{ old('caller_id_outbound_prefix') }}"
-                                required
                             >
                             @error('caller_id_outbound_prefix')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
