@@ -106,7 +106,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="action_1" class="form-label">Action</label>
-                            <x-switch-destinations name="action_1" bridgeType="dialplan" callCenterType="dialplan" conferenceCenterType="dialplan" extensionType="dialplan" ivrMenuType="dialplan" timeConditionType="dialplan" toneType="dialplan" voiceMailType="dialplan" />
+                            <x-switch-destinations name="action_1" bridgeType="dialplan" callCenterType="dialplan" conferenceCenterType="dialplan" extensionType="dialplan" ivrMenuType="dialplan" switchType="dialplan" timeConditionType="dialplan" toneType="dialplan" voiceMailType="dialplan" />
                             @error('action_1')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror

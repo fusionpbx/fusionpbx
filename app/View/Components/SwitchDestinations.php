@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Facades\Setting;
 use App\Models\Bridge;
 use App\Models\CallCenterQueue;
 use App\Models\ConferenceCenter;
@@ -22,7 +23,7 @@ class SwitchDestinations extends Component
     public $selected;
     public $options;
 
-    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterType = null, $conferenceCenterType = null, $extensionType = null, $ivrMenuType = null, $timeConditionType = null, $toneType = null, $ringGroupType = null, $voiceMailType = null)
+    public function __construct($name = "", $selected = null, $bridgeType = null, $callCenterType = null, $conferenceCenterType = null, $extensionType = null, $ivrMenuType = null, $switchType = null, $timeConditionType = null, $toneType = null, $ringGroupType = null, $voiceMailType = null)
     {
         $this->name = $name;
         $this->selected = $selected;
@@ -203,6 +204,46 @@ class SwitchDestinations extends Component
             }
 
             $this->setOptions("IVR Menus", $values);
+        }
+
+        if(!empty($switchType))
+        {
+            $values = [];
+
+            $switchSoundDir = Setting::getSetting("switch", "sounds", "dir");
+
+            $languages = array_filter(glob($switchSoundDir . "/*/*/*"), function ($dir) use ($switchSoundDir)
+            {
+                $relative = str_replace($switchSoundDir . "/", "", $dir);
+
+                $parts = explode("/", $relative);
+
+                return count($parts) === 3 && preg_match('/^[a-z]{2}$/i', $parts[0]) && preg_match('/^[a-z]{2}$/i', $parts[1]) && is_dir($dir);
+            });
+
+            foreach($languages as $key => $path)
+            {
+                $path = str_replace($switchSoundDir . "/", "", $path);
+
+                list($language, $dialect, $voice) = explode("/", $path);
+
+                switch($switchType)
+                {
+                    case "dialplan":
+                        $id = 'multiset:^^,sound_prefix=$${sounds_dir}' . "/{$language}/{$dialect}/{$voice},default_language={$language},default_dialect={$dialect},default_voice={$voice}";
+                        break;
+                    case "ivr":
+                        $id = 'menu-exec-app:multiset ^^,sound_prefix=$${sounds_dir}' . "/{$language}/{$dialect}/{$voice},default_language={$language},default_dialect={$dialect},default_voice={$voice}";
+                        break;
+                }
+
+                $values[] = [
+                    "id" => $id,
+                    "name" => str_replace("/", "_", $path)
+                ];
+            }
+
+            $this->setOptions("Languages", $values);
         }
 
         if(!empty($timeConditionType))
