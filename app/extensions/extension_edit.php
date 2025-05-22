@@ -1801,13 +1801,13 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='voicemail_enabled'>\n";
 		echo "    <option value=''></option>\n";
-		if ($voicemail_enabled == "true") {
+		if ($voicemail_enabled == true) {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "    <option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($voicemail_enabled == "false") {
+		if ($voicemail_enabled == false) {
 			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -1871,8 +1871,8 @@
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "    <select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-			echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			echo "    	<option value='true' ".(($voicemail_local_after_email == true) ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "    	<option value='false' ".(($voicemail_local_after_email == false) ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 			echo "    </select>\n";
 			echo "<br />\n";
 			echo $text['description-voicemail_local_after_email']."\n";
