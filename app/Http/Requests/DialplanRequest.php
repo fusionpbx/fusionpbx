@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ResolvableHostname;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DialplanRequest extends FormRequest
@@ -16,7 +17,7 @@ class DialplanRequest extends FormRequest
 		return [
 			"domain_uuid" => "bail|nullable|uuid|exists:App\Models\Domain,domain_uuid",
 			"dialplan_name" => "bail|required|string|max:255",
-			"hostname" => "bail|nullable|string|max:255",
+			"hostname" => ["bail","nullable","string","max:255", new ResolvableHostname()],
 			"dialplan_context" => "bail|required|string|max:255",
 			"dialplan_name" => "bail|required|string|max:255",
 			"dialplan_number" => "bail|nullable|string|max:255",
