@@ -12,6 +12,7 @@ export default defineConfig({
                 'node_modules/bootstrap4-duallistbox/dist/bootstrap-duallistbox.min.css',
                 'node_modules/select2/dist/js/select2.min.js',
                 'node_modules/select2/dist/css/select2.min.css',
+                'node_modules/jquery/dist/jquery.min.js',
             ],
             refresh: true,
         }),
@@ -22,7 +23,6 @@ export default defineConfig({
             '@bootstrap-icons': path.resolve(__dirname, 'node_modules/bootstrap-icons'),
             '@overlayscrollbars': path.resolve(__dirname, 'node_modules/overlayscrollbars'),
             '@popperjs': path.resolve(__dirname, 'node_modules/@popperjs'),
-            '@select2': path.resolve(__dirname, 'node_modules/select2'),
         }
     }
 });
