@@ -57,13 +57,9 @@ class DialplanController extends Controller
 	public function edit(Dialplan $dialplan)
 	{
 		$domains = Domain::all();
-
 		$dialplan->load("dialplanDetails");
-
 		$types = $this->dialplanRepository->getTypesList();
-
 		$dialplan_default_context = (request()->input('app_id') == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') ? 'public' : Session::get('domain_name');
-
 		return view("pages.dialplans.form", compact("dialplan", "domains", "types", "dialplan_default_context"));
 	}
 
@@ -75,16 +71,13 @@ class DialplanController extends Controller
 	public function destroy(Dialplan $dialplan)
 	{
 		$dialplan->delete();
-
 		return redirect()->route('dialplans.index');
 	}
 
 	public function createInbound(Request $request)
 	{
 		$app_uuid = $request->query("app_uuid");
-
 		$destinations = Destination::where("domain_uuid", Session::get("domain_uuid"))->get();
-
 		return view("pages.dialplans.inbound.form", compact("app_uuid", "destinations"));
 	}
 
@@ -108,11 +101,8 @@ class DialplanController extends Controller
         $dialplan = $this->dialplanRepository->create($dialplanData);
 
 		$dialplanDetailData = $this->buildInboundRouteDetail($dialplan, $destination, $request);
-
 		$this->dialplanDetailRepository->create($dialplan->dialplan_uuid, $dialplanDetailData);
-
 		$xml = $this->dialplanRepository->buildXML($dialplan);
-
 		$this->dialplanRepository->update($dialplan->dialplan_uuid, ["dialplan_xml" => $xml]);
 
 		return redirect()->to(route("dialplans.index") . "?app_uuid=" . urlencode($request->input("app_uuid")));
@@ -125,7 +115,7 @@ class DialplanController extends Controller
 		$y = 0;
 
 		// Helper to add a dialplan detail
-		$addDetail = function(string $tag, string $type, string $data, int $order, int $group = 0) use (&$dialplanDetails, $dialplan)
+		$addDetail = function(string $tag, string $type, ?string $data, int $order, int $group = 0) use (&$dialplanDetails, $dialplan)
 		{
 			return [
 				"dialplan_detail_uuid" => Str::uuid(),
@@ -133,7 +123,7 @@ class DialplanController extends Controller
 				"dialplan_uuid" => $dialplan->dialplan_uuid,
 				"dialplan_detail_tag" => $tag,
 				"dialplan_detail_type" => $type,
-				"dialplan_detail_data" => $data,
+				"dialplan_detail_data" => $data ?? '',
 				"dialplan_detail_order" => $order,
 				"dialplan_detail_group" => $group,
 			];
@@ -150,9 +140,14 @@ class DialplanController extends Controller
 		$caller_id_outbound_prefix = $request->input("caller_id_outbound_prefix");
 		$fax_uuid = null;
 		$domain_name = Session::get("domain_name");
+		$condition_expression_2 = null;
+		$condition_field_2 = null;
 
 		if($destination)
 		{
+			$condition_expression_2 = $condition_expression_1;
+			$condition_field_2 = $condition_field_1;
+			//TODO: review how to build condition_expression_1 properly
 			$condition_expression_1 = $destination->destination_number;
 			$fax_uuid = $destination->fax_uuid;
 			$destination_carrier = $destination->carrier ? $destination->carrier->carrier_name : null;
@@ -172,11 +167,11 @@ class DialplanController extends Controller
             $y++;
 		}
 
- 		//TODO: remove?
-		// if($condition_field_2 && $condition_expression_2)
-		// {
-		// 	$addDetail("condition", $condition_field_2, $condition_expression_2, $y * 10);
-		// }
+		if($condition_field_2)
+		{
+			$dialplanDetails[] = $addDetail("condition", $condition_field_2, $condition_expression_2, $y * 10);
+			$y++;
+		}
 
 		if($destination_accountcode)
 		{

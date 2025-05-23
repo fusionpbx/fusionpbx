@@ -46,6 +46,7 @@
                                 class="form-select @error('destination_uuid') is-invalid @enderror"
                                 id="destination_uuid"
                                 name="destination_uuid"
+				required
                             >
                                 <option value=""></option>
                                 @foreach($destinations as $destination)
@@ -65,7 +66,7 @@
                 <div class="row mt-3">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="condition_field_1" class="form-label">Condition</label>
+                            <label for="condition_field_1" class="form-label">Additional Condition</label>
                             <input name="condition_field_1" list="condition_list" class="form-control" placeholder="{{ __('Type') }}">
                             <datalist id="condition_list">
                                 <option value="context">Context</option>
@@ -153,7 +154,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label d-block">Order</label>
-                            <select class="form-select" name="dialplan_order">
+                            <select class="form-select" name="dialplan_order" required>
                                 @for ($i = 100; $i <= 990; $i += 10)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
