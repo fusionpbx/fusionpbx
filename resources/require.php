@@ -125,6 +125,14 @@
 		$autoload = new auto_loader();
 	}
 
+//connect to the database
+	global $database;
+	$database = database::new(['config' => $config]);
+
+//load settings
+	global $settings;
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
+
 //additional includes
 	if (!defined('STDIN')) {
 		require_once "resources/php.php";
