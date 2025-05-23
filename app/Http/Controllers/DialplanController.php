@@ -28,8 +28,10 @@ class DialplanController extends Controller
 	public function index(Request $request)
 	{
 		$app_uuid = $request->query("app_uuid");
+		$context = $request->query("context");
+		$show = $request->query("show");
 
-		return view("pages.dialplans.index", compact("app_uuid"));
+		return view("pages.dialplans.index", compact("app_uuid", "context", "show"));
 	}
 
 	public function create()

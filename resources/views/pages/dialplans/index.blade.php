@@ -28,7 +28,7 @@
         </div>
 
         <div class="card-body">
-            <livewire:dialplans-table/>
+            <livewire:dialplans-table :app_uuid="$app_uuid" :context="$context" :show="$show" />
         </div>
     </div>
 </div>
