@@ -298,7 +298,7 @@
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td class='right overflow hide-sm-dn shrink'>".escape(gmdate("G:i:s", $row['call_recording_length']))."</td>\n";
+			echo "	<td class='right hide-sm-dn shrink'>".escape(gmdate("G:i:s", $row['call_recording_length']))."</td>\n";
 			echo "	<td class='overflow center no-wrap'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
 			echo "	<td class='left hide-sm-dn shrink'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
 			if (permission_exists('xml_cdr_details')) {
