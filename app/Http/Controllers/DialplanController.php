@@ -158,40 +158,33 @@ class DialplanController extends Controller
 
 		if($condition_field_1 && $condition_expression_1)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("condition", $condition_field_1, $condition_expression_1, $y * 10);
-            $y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"condition", type:$condition_field_1, data:$condition_expression_1, order:$y++ * 10);
 		}
 
 		if($condition_field_2)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("condition", $condition_field_2, $condition_expression_2, $y * 10);
-			$y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"condition", type:$condition_field_2, data:$condition_expression_2, order:$y++ * 10);
 		}
 
 		if($destination_accountcode)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("action", "set", "accountcode={$destination_accountcode}", $y * 10);
-            $y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"accountcode={$destination_accountcode}", order:$y++ * 10);
 		}
 
 		if($destination_carrier)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("action", "set", "carrier={$destination_carrier}", $y * 10);
-            $y++;
-            $dialplanDetails[] = $this->buildDialplanDetail("action", "set", "carrier_uuid={$destination_carrier_uuid}", $y * 10);
-            $y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"carrier={$destination_carrier}", order:$y++ * 10);
+            $dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"carrier_uuid={$destination_carrier_uuid}", order:$y++ * 10);
 		}
 
 		if($limit)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("action", "limit", "hash {$domain_name} inbound {$limit} !USER_BUSY", $y * 10);
-            $y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"limit", data:"hash {$domain_name} inbound {$limit} !USER_BUSY", order:$y++ * 10);
 		}
 
 		if($caller_id_outbound_prefix)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("action", "set", "effective_caller_id_number={$caller_id_outbound_prefix}\${caller_id_number}", $y * 10);
-            $y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"effective_caller_id_number={$caller_id_outbound_prefix}\${caller_id_number}", order:$y++ * 10);
 		}
 
 		if(Str::isUuid($fax_uuid ?? null))
@@ -200,39 +193,31 @@ class DialplanController extends Controller
 
 			if($fax)
 			{
-				$dialplanDetails[] = $this->buildDialplanDetail("action", "set", "codec_string=PCMU,PCMA", $y * 10);
-                $y++;
-				$dialplanDetails[] = $this->buildDialplanDetail("action", "set", "tone_detect_hits=1", $y * 10);
-                $y++;
-				$dialplanDetails[] = $this->buildDialplanDetail("action", "set", "execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("domain_name"), $y * 10);
-                $y++;
-				$dialplanDetails[] = $this->buildDialplanDetail("action", "tone_detect", "fax 1100 r +5000", $y * 10);
-                $y++;
-				$dialplanDetails[] = $this->buildDialplanDetail("action", "sleep", "3000", $y * 10);
-                $y++;
-				$dialplanDetails[] = $this->buildDialplanDetail("action", "export", "codec_string=\${ep_codec_string}", $y * 10);
-                $y++;
+				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"codec_string=PCMU,PCMA", order:$y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"tone_detect_hits=1", order:$y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("domain_name"), order:$y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"tone_detect", data:"fax 1100 r +5000", order:$y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"sleep", data:"3000", order:$y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"export", data:"codec_string=\${ep_codec_string}", order:$y++ * 10);
 			}
 		}
 
 		if(in_array($action_application_1, ["ivr", "conference"]))
 		// if(in_array($action_application_1, ["ivr", "conference"]) || in_array($action_application_2, ["ivr", "conference"]))  //TODO: remove?
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("action", "answer", "", $y * 10);
-            $y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"answer", data:"", order:$y++ * 10);
 		}
 
 		// Add final actions
 		if($action_application_1 && $action_data_1)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail("action", $action_application_1, $action_data_1, $y * 10);
-            $y++;
+			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:$action_application_1, data:$action_data_1, order:$y++ * 10);
 		}
 
   		//TODO: remove?
 		// if($action_application_2 && $action_data_2)
 		// {
-		// 	$this->buildDialplanDetail("action", $action_application_2, $action_data_2, $y * 10);
+		// 	$this->buildDialplanDetail(tag:"action", type:$action_application_2, data:$action_data_2, order:$y++ * 10);
 		// }
 
 		return $dialplanDetails;
@@ -1008,14 +993,17 @@ class DialplanController extends Controller
 		return redirect()->to(route("dialplans.index") . "?app_uuid=" . urlencode($request->input("app_uuid")));
 	}
 
-	private function buildDialplanDetail(string $tag, string $type, ?string $data, int $order, int $group = 0)
+	private function buildDialplanDetail(string $tag, string $type, string $data, string $break = '', string $inline = '', int $order = 0, int $group = 0, string $enabled = 'false')
 	{
 		return [
 			"dialplan_detail_tag" => $tag,
 			"dialplan_detail_type" => $type,
-			"dialplan_detail_data" => $data ?? '',
-			"dialplan_detail_order" => $order,
+			"dialplan_detail_data" => $data,
+			"dialplan_detail_break" => $break,
+			"dialplan_detail_inline" => $inline,
 			"dialplan_detail_group" => $group,
+			"dialplan_detail_order" => $order,
+			"dialplan_detail_enabled" => $enabled,
 		];
 	}
 
