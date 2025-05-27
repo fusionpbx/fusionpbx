@@ -12,6 +12,7 @@
         "laravel/sanctum": "*",
         "laravel/socialite": "^5.18",
         "laravel/tinker": "^2.10.1",
+        "laravel/ui": "^4.6",
         "livewire/livewire": "*",
         "okayinc/stateless-session": "^0.0.10",
         "rappasoft/laravel-livewire-tables": "^3.7",

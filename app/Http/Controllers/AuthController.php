@@ -8,6 +8,7 @@ use App\Models\Domain;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,8 @@ use Socialite;
 
 class AuthController extends Controller
 {
+    use AuthenticatesUsers;
+
     public function index()
     {
         $userUnique = DefaultSetting::get('users', 'unique', 'text');
@@ -76,11 +79,6 @@ class AuthController extends Controller
 
         if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
             $user = $this->guard()->user();
-            $request->session()->regenerate();
-            $domain = Auth::user()->domain;
-            Session::put('domain_uuid', $domain->domain_uuid);
-            Session::put('domain_name', $domain->domain_name);
-            Session::put('domain_description', !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name);
             return response()->json([
                 'data' => $user->toResource(),
             ]);
