@@ -473,6 +473,9 @@
 			$x = 0;
 			foreach ($streams as $row) {
 
+				//hide global categories if not allowed
+					if (empty($row['domain_uuid']) && !permission_exists('music_on_hold_all')) { continue; }
+
 				//set the variables
 					$music_on_hold_name = $row['music_on_hold_name'];
 					$music_on_hold_rate = $row['music_on_hold_rate'];
