@@ -196,7 +196,7 @@ class DialplanForm extends Component
                 return;
             }
 
-            $this->dialplanDetailRepository->update($this->dialplan->dialplan_uuid, $filteredDialplanDetails);
+            $this->dialplanDetailRepository->update($this->dialplan, $filteredDialplanDetails);
 
             if (!empty($this->dialplanDetailsToDelete))
             {
@@ -217,7 +217,7 @@ class DialplanForm extends Component
             $dialplanData['dialplan_uuid'] = Str::uuid();
             $this->dialplan = $this->dialplanRepository->create($dialplanData);
 
-            $this->dialplanDetailRepository->create($this->dialplan->dialplan_uuid, $filteredDialplanDetails);
+            $this->dialplanDetailRepository->create($this->dialplan, $filteredDialplanDetails);
 
             $this->dialplan = $this->dialplanRepository->findByUuidWithDetails($this->dialplan->dialplan_uuid);
             $xml = $this->dialplanRepository->buildXML($this->dialplan);
