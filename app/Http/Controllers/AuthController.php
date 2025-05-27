@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\DefaultSetting;
+use App\Http\Resources\UserResource;
 use App\Models\Domain;
 use App\Models\Group;
 use App\Models\User;
@@ -21,7 +22,6 @@ class AuthController extends Controller
 {
     public function index()
     {
-
         $userUnique = DefaultSetting::get('users', 'unique', 'text');
         $defaultDomainUuid = DefaultSetting::get('openid', 'default_domain_uuid', 'uuid');
         $defaultGroupUuid = DefaultSetting::get('openid', 'default_group_uuid', 'uuid');
@@ -59,6 +59,34 @@ class AuthController extends Controller
         }
 
         return view('auth.login')->with('okta_enabled', $oktaEnabled);
+    }
+
+    public function apiLogin(Request $request)
+    {
+
+        $request->validate([
+            'user_email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $credentials = [
+            'user_email' => $request->user_email,
+            'password' => $request->password,
+        ];
+
+        if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
+            $user = $this->guard()->user();
+            $request->session()->regenerate();
+            $domain = Auth::user()->domain;
+            Session::put('domain_uuid', $domain->domain_uuid);
+            Session::put('domain_name', $domain->domain_name);
+            Session::put('domain_description', !empty($domain->domain_description) ? $domain->domain_description : $domain->domain_name);
+            return response()->json([
+                'data' => $user->toResource(),
+            ]);
+        }
+
+        return $this->sendFailedLoginResponse($request);
     }
 
     //TODO: add support for the non-global loging style from Fusion
