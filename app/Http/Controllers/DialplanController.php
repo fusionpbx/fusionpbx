@@ -158,33 +158,33 @@ class DialplanController extends Controller
 
 		if($condition_field_1 && $condition_expression_1)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"condition", type:$condition_field_1, data:$condition_expression_1, order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "condition", type: $condition_field_1, data: $condition_expression_1, order: $y++ * 10);
 		}
 
 		if($condition_field_2)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"condition", type:$condition_field_2, data:$condition_expression_2, order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "condition", type: $condition_field_2, data: $condition_expression_2, order: $y++ * 10);
 		}
 
 		if($destination_accountcode)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"accountcode={$destination_accountcode}", order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "set", data: "accountcode={$destination_accountcode}", order: $y++ * 10);
 		}
 
 		if($destination_carrier)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"carrier={$destination_carrier}", order:$y++ * 10);
-            $dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"carrier_uuid={$destination_carrier_uuid}", order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "set", data: "carrier={$destination_carrier}", order: $y++ * 10);
+            $dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "set", data: "carrier_uuid={$destination_carrier_uuid}", order: $y++ * 10);
 		}
 
 		if($limit)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"limit", data:"hash {$domain_name} inbound {$limit} !USER_BUSY", order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "limit", data: "hash {$domain_name} inbound {$limit} !USER_BUSY", order: $y++ * 10);
 		}
 
 		if($caller_id_outbound_prefix)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"effective_caller_id_number={$caller_id_outbound_prefix}\${caller_id_number}", order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "set", data: "effective_caller_id_number={$caller_id_outbound_prefix}\${caller_id_number}", order: $y++ * 10);
 		}
 
 		if(Str::isUuid($fax_uuid ?? null))
@@ -193,31 +193,31 @@ class DialplanController extends Controller
 
 			if($fax)
 			{
-				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"codec_string=PCMU,PCMA", order:$y++ * 10);
-				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"tone_detect_hits=1", order:$y++ * 10);
-				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"set", data:"execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("domain_name"), order:$y++ * 10);
-				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"tone_detect", data:"fax 1100 r +5000", order:$y++ * 10);
-				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"sleep", data:"3000", order:$y++ * 10);
-				$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"export", data:"codec_string=\${ep_codec_string}", order:$y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "set", data: "codec_string=PCMU,PCMA", order: $y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "set", data: "tone_detect_hits=1", order: $y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "set", data: "execute_on_tone_detect=transfer {$fax->fax_extension} XML " . Session::get("domain_name"), order: $y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "tone_detect", data: "fax 1100 r +5000", order: $y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "sleep", data: "3000", order: $y++ * 10);
+				$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "export", data: "codec_string=\${ep_codec_string}", order: $y++ * 10);
 			}
 		}
 
 		if(in_array($action_application_1, ["ivr", "conference"]))
 		// if(in_array($action_application_1, ["ivr", "conference"]) || in_array($action_application_2, ["ivr", "conference"]))  //TODO: remove?
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:"answer", data:"", order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: "answer", data: "", order: $y++ * 10);
 		}
 
 		// Add final actions
 		if($action_application_1 && $action_data_1)
 		{
-			$dialplanDetails[] = $this->buildDialplanDetail(tag:"action", type:$action_application_1, data:$action_data_1, order:$y++ * 10);
+			$dialplanDetails[] = $this->buildDialplanDetail(tag: "action", type: $action_application_1, data: $action_data_1, order: $y++ * 10);
 		}
 
   		//TODO: remove?
 		// if($action_application_2 && $action_data_2)
 		// {
-		// 	$this->buildDialplanDetail(tag:"action", type:$action_application_2, data:$action_data_2, order:$y++ * 10);
+		// 	$this->buildDialplanDetail(tag: "action", type:$action_application_2, data: $action_data_2, order: $y++ * 10);
 		// }
 
 		return $dialplanDetails;
@@ -657,42 +657,10 @@ class DialplanController extends Controller
 
 				$dialplanDetailData = [];
 
-				$dialplanDetailData[] = [
-					"dialplan_detail_tag" => 'condition',
-					"dialplan_detail_type" => '${user_exists}',
-					"dialplan_detail_data" => 'false',
-					"dialplan_detail_order" => $y++ * 10,
-					"dialplan_detail_group" => '0',
-					"dialplan_detail_enabled" => 'true',
-				];
-
-				$dialplanDetailData[] = [
-					"dialplan_detail_tag" => 'condition',
-					"dialplan_detail_type" => '${call_direction}',
-					"dialplan_detail_data" => '^$',
-					"dialplan_detail_order" => $y++ * 10,
-					"dialplan_detail_group" => '0',
-					"dialplan_detail_enabled" => 'true',
-				];
-
-				$dialplanDetailData[] = [
-					"dialplan_detail_tag" => 'condition',
-					"dialplan_detail_type" => 'destination_number',
-					"dialplan_detail_data" => $dialplan_expression,
-					"dialplan_detail_order" => $y++ * 10,
-					"dialplan_detail_group" => '0',
-					"dialplan_detail_enabled" => 'true',
-				];
-
-				$dialplanDetailData[] = [
-					"dialplan_detail_tag" => 'action',
-					"dialplan_detail_type" => 'export',
-					"dialplan_detail_data" => 'call_direction=outbound',
-					"dialplan_detail_order" => $y++ * 10,
-					"dialplan_detail_inline" => 'true',
-					"dialplan_detail_group" => '0',
-					"dialplan_detail_enabled" => 'true',
-				];
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'condition', type: '${user_exists}', data: 'false', order: $y++ * 10, group: 0, enabled: 'true');
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'condition', type: '${call_direction}', data: '^$', order: $y++ * 10, group: 0, enabled: 'true');
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'condition', type: 'destination_number', data: $dialplan_expression, order: $y++ * 10, group: 0, enabled: 'true');
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'export', data: 'call_direction=outbound', order: $y++ * 10, inline: 'true', group: 0, enabled: 'true');
 
 				$this->dialplanDetailRepository->create($dialplan, $dialplanDetailData);
 
@@ -718,226 +686,71 @@ class DialplanController extends Controller
 
 				$dialplanDetailData = [];
 
-				$dialplanDetailData[] = [
-					'dialplan_detail_tag' => 'condition',
-					'dialplan_detail_type' => '${user_exists}',
-					'dialplan_detail_data' => 'false',
-					'dialplan_detail_order' => $y * 10,
-					'dialplan_detail_group' => '0',
-					'dialplan_detail_enabled' => 'true',
-				];
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'condition', type: '${user_exists}', data: 'false', order: $y++ * 10, group: 0, enabled: 'true');
 
 				if(!empty($toll_allow))
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'condition',
-						'dialplan_detail_type' => '${toll_allow}',
-						'dialplan_detail_data' => $toll_allow,
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'condition', type: '${toll_allow}', data: $toll_allow, order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
-				$dialplanDetailData[] = [
-					'dialplan_detail_tag' => 'condition',
-					'dialplan_detail_type' => 'destination_number',
-					'dialplan_detail_data' => $dialplan_expression,
-					'dialplan_detail_order' => $y++ * 10,
-					'dialplan_detail_group' => '0',
-					'dialplan_detail_enabled' => 'true',
-				];
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'condition', type: 'destination_number', data: $dialplan_expression, order: $y++ * 10, group: 0, enabled: 'true');
 
 				if ($gateway_type != "transfer")
 				{
 					if (!empty($accountcode))
 					{
-						$dialplanDetailData[] = [
-							'dialplan_detail_tag' => 'action',
-							'dialplan_detail_type' => 'set',
-							'dialplan_detail_data' => 'sip_h_accountcode=' . $accountcode,
-							'dialplan_detail_order' => $y++ * 10,
-							'dialplan_detail_group' => '0',
-							'dialplan_detail_enabled' => 'false',
-						];
+						$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'sip_h_accountcode=' . $accountcode, order: $y++ * 10, group: 0, enabled: 'false');
 					}
 					else
 					{
-						$dialplanDetailData[] = [
-							'dialplan_detail_tag' => 'action',
-							'dialplan_detail_type' => 'set',
-							'dialplan_detail_data' => 'sip_h_accountcode=${accountcode}',
-							'dialplan_detail_order' => $y++ * 10,
-							'dialplan_detail_group' => '0',
-							'dialplan_detail_enabled' => 'false',
-						];
+						$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'sip_h_accountcode=${accountcode}', order: $y++ * 10, group: 0, enabled: 'false');
 					}
 				}
 
-				$dialplanDetailData[] = [
-					'dialplan_detail_tag' => 'action',
-					'dialplan_detail_type' => 'export',
-					'dialplan_detail_data' => 'call_direction=outbound',
-					'dialplan_detail_inline' => 'true',
-					'dialplan_detail_order' => $y++ * 10,
-					'dialplan_detail_group' => '0',
-					'dialplan_detail_enabled' => 'true',
-				];
-
-				$dialplanDetailData[] = [
-					'dialplan_detail_tag' => 'action',
-					'dialplan_detail_type' => 'unset',
-					'dialplan_detail_data' => 'call_timeout',
-					'dialplan_detail_order' => $y++ * 10,
-					'dialplan_detail_group' => '0',
-					'dialplan_detail_enabled' => 'true',
-				];
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'export', data: 'call_direction=outbound', inline: 'true', order: $y++ * 10, group: 0, enabled: 'true');
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'unset', data: 'call_timeout', order: $y++ * 10, group: 0, enabled: 'true');
 
 				if ($gateway_type != "transfer")
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'hangup_after_bridge=true',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
-
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => ($dialplan_expression == '(^911$|^933$)') ? 'effective_caller_id_name=${emergency_caller_id_name}' : 'effective_caller_id_name=${outbound_caller_id_name}',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
-
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => ($dialplan_expression == '(^911$|^933$)') ? 'effective_caller_id_number=${emergency_caller_id_number}' : 'effective_caller_id_number=${outbound_caller_id_number}',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'hangup_after_bridge=true', order: $y++ * 10, group: 0, enabled: 'true');
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: ($dialplan_expression == '(^911$|^933$)') ? 'effective_caller_id_name=${emergency_caller_id_name}' : 'effective_caller_id_name=${outbound_caller_id_name}', order: $y++ * 10, group: 0, enabled: 'true');
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: ($dialplan_expression == '(^911$|^933$)') ? 'effective_caller_id_number=${emergency_caller_id_number}' : 'effective_caller_id_number=${outbound_caller_id_number}', order: $y++ * 10, group: 0, enabled: 'true');
 
 					if ($dialplan_expression == '(^911$|^933$)')
 					{
-						$dialplanDetailData[] = [
-							'dialplan_detail_tag' => 'action',
-							'dialplan_detail_type' => 'lua',
-							'dialplan_detail_data' => "email.lua \${email_to} \${email_from} '' 'Emergency Call' '\${sip_from_user}@\${domain_name} has called 911 emergency'",
-							'dialplan_detail_order' => $y++ * 10,
-							'dialplan_detail_group' => '0',
-							'dialplan_detail_enabled' => 'false',
-						];
+						$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'lua', data: "email.lua \${email_to} \${email_from} '' 'Emergency Call' '\${sip_from_user}@\${domain_name} has called 911 emergency'", order: $y++ * 10, group: 0, enabled: 'false');
 					}
 
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'inherit_codec=true',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
-
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'ignore_display_updates=true',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
-
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'callee_id_number=$1',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
-
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'continue_on_fail=1,2,3,6,18,21,27,28,31,34,38,41,42,44,58,88,111,403,501,602,607',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'inherit_codec=true', order: $y++ * 10, group: 0, enabled: 'true');
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'ignore_display_updates=true', order: $y++ * 10, group: 0, enabled: 'true');
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'callee_id_number=$1', order: $y++ * 10, group: 0, enabled: 'true');
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'continue_on_fail=1,2,3,6,18,21,27,28,31,34,38,41,42,44,58,88,111,403,501,602,607', order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				if ($gateway_type == "enum" || $gateway_2_type == "enum")
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'enum',
-						'dialplan_detail_data' => $prefix_number."$1 e164.org",
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'enum', data: $prefix_number . "$1 e164.org", order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				if (!empty($limit))
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'limit',
-						'dialplan_detail_data' => "hash \${domain_name} outbound " . $limit . " !USER_BUSY",
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'limit', data: "hash \${domain_name} outbound " . $limit . " !USER_BUSY", order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				if (!empty($outbound_prefix))
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'outbound_prefix=' . $outbound_prefix,
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'outbound_prefix=' . $outbound_prefix, order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				if ($pin_numbers_enable == "true")
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'pin_number=database',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
-
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'lua',
-						'dialplan_detail_data' => 'pin_number.lua',
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'pin_number=database', order: $y++ * 10, group: 0, enabled: 'true');
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'lua', data: 'pin_number.lua', order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				if (strlen($prefix_number) > 2)
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'set',
-						'dialplan_detail_data' => 'provider_prefix=' . $prefix_number,
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'set', data: 'provider_prefix=' . $prefix_number, order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				if ($gateway_type == "transfer")
@@ -949,37 +762,16 @@ class DialplanController extends Controller
 					$dialplan_detail_type = 'bridge';
 				}
 
-				$dialplanDetailData[] = [
-					'dialplan_detail_tag' => 'action',
-					'dialplan_detail_type' => $dialplan_detail_type,
-					'dialplan_detail_data' => $bridge_data,
-					'dialplan_detail_order' => $y++ * 10,
-					'dialplan_detail_group' => '0',
-					'dialplan_detail_enabled' => 'true',
-				];
+				$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: $dialplan_detail_type, data: $bridge_data, order: $y++ * 10, group: 0, enabled: 'true');
 
 				if (!empty($bridge_2_data))
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'bridge',
-						'dialplan_detail_data' => $bridge_2_data,
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'bridge', data: $bridge_2_data, order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				if (!empty($bridge_3_data))
 				{
-					$dialplanDetailData[] = [
-						'dialplan_detail_tag' => 'action',
-						'dialplan_detail_type' => 'bridge',
-						'dialplan_detail_data' => $bridge_3_data,
-						'dialplan_detail_order' => $y++ * 10,
-						'dialplan_detail_group' => '0',
-						'dialplan_detail_enabled' => 'true',
-					];
+					$dialplanDetailData[] = $this->buildDialplanDetail(tag: 'action', type: 'bridge', data: $bridge_3_data, order: $y++ * 10, group: 0, enabled: 'true');
 				}
 
 				$this->dialplanDetailRepository->create($dialplan, $dialplanDetailData);
