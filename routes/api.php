@@ -29,15 +29,14 @@ Route::post('/activate-user', [UserActivationController::class, 'activateUser'])
 Route::get('/contacts/search', [ContactController::class, 'search']);
 
 Route::post('/authenticate', [AuthController::class, 'apiLogin']);
-Route::middleware(VerifyAuthenticationKey::class)->get('/my/extensions', function (Request $request) {
-	$extensions = Extension::all();
-	return response()->json($extensions);
-});
 
 Route::middleware(VerifyAuthenticationKey::class)->group(function () {
-     Route::get('/my/domains', [DomainAPIController::class, 'mine']);
+    Route::get('/my/domains', [DomainAPIController::class, 'mine']);
     Route::get('/my/extensions', function (Request $request) {
         $extensions = Extension::all();
         return response()->json($extensions);
-    });
+    });});
+
+Route::middleware([VerifyAuthenticationKey::class, 'permission'])->group(function () {
+    Route::get('/domains', [DomainAPIController::class, 'index'])->name('domains.all');
 });

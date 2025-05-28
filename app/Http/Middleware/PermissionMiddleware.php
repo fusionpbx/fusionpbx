@@ -14,7 +14,9 @@ class PermissionMiddleware
         $routeName = $request->route()->getName();
         $permissions = config('permissions');
 
+        //TODO: Review, this will allow if permission is not set
         if (!array_key_exists($routeName, $permissions)) {
+            // return abort(403);
             return $next($request);
         }
 

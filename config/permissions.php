@@ -12,6 +12,15 @@ return [
     'users.import' => 'user_import',
     'users.importAction' => 'user_import',
 
+    'domains.index' => 'domain_view',
+    'domains.store' => 'domain_add',
+    'domains.create' => 'domain_add',
+    'domains.show' => 'domains_view',
+    'domains.destroy' => 'domain_delete',
+    'groups.edit' => 'domain_edit',
+    'domains.all' => 'domain_all',
+//  '' => 'domain_select'
+
     'groups.index' => 'group_view',
     'groups.create' => 'group_add',
     'groups.store' => 'group_add',
@@ -25,7 +34,6 @@ return [
     'permissions.store' => 'permission_add',
     'permissions.edit' => 'permission_edit',
     'permissions.destroy' => 'permission_delete',
-
 
     'permissions.index' => 'group_permission_view',
     'permissions.update' => 'group_permission_add',
@@ -54,13 +62,12 @@ return [
     'sipprofiles.edit' => 'sip_profile_edit',
     'sipprofiles.update' => 'sip_profile_edit',
     'sipprofiles.destroy' => 'sip_profile_delete',
-    'sipprofiles.copy' => 'sip_profile_add',  
+    'sipprofiles.copy' => 'sip_profile_add',
 
     'sipprofiles.domains.create' => 'sip_profile_domain_add',
     'sipprofiles.domains.edit' => 'sip_profile_domain_edit',
     'sipprofiles.domains.destroy' => 'sip_profile_domain_delete',
     'sipprofiles.domains.view' => 'sip_profile_domain_view',
-    
 
     'sipprofiles.settings.create' => 'sip_profile_setting_add',
     'sipprofiles.settings.edit' => 'sip_profile_setting_edit',
