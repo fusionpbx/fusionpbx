@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ExtensionController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
@@ -137,6 +138,8 @@ Route::middleware(['auth','permission'])->group(function () {
 
     Route::resource('/contacts', ContactController::class);
     Route::get('/contacts/{uuid}/vcard', [ContactController::class, 'exportVCard'])->name('contacts.vcard');
+
+    Route::resource('/extensions', ExtensionController::class);
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){
