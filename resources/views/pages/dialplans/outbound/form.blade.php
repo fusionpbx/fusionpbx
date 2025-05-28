@@ -183,7 +183,7 @@
                         <div class="form-group">
                             <label class="form-label d-block">PIN numbers</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="pin_numbers_enabled" name="dialplan_enabled" value="true" {{ old('dialplan_enabled', $dialplan->dialplan_enabled ?? false) ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" role="switch" id="pin_numbers_enabled" name="pin_numbers_enabled" value="true">
                                 <label class="form-check-label" for="pin_numbers_enabled">{{ __('Enabled') }}</label>
                             </div>
                             @error('pin_numbers_enabled')
@@ -214,7 +214,7 @@
                         <div class="form-group">
                             <label class="form-label d-block">Enabled</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="dialplan_enabled" name="dialplan_enabled" value="true" {{ old('dialplan_enabled', $dialplan->dialplan_enabled ?? false) ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" role="switch" id="dialplan_enabled" name="dialplan_enabled" value="true">
                                 <label class="form-check-label" for="dialplan_enabled">{{ __('Enabled') }}</label>
                             </div>
                             @error('dialplan_enabled')
