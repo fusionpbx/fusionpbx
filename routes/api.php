@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\API\DomainAPIController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserActivationController;
 use App\Http\Middleware\VerifyAuthenticationKey;
@@ -31,4 +32,12 @@ Route::post('/authenticate', [AuthController::class, 'apiLogin']);
 Route::middleware(VerifyAuthenticationKey::class)->get('/my/extensions', function (Request $request) {
 	$extensions = Extension::all();
 	return response()->json($extensions);
+});
+
+Route::middleware(VerifyAuthenticationKey::class)->group(function () {
+     Route::get('/my/domains', [DomainAPIController::class, 'mine']);
+    Route::get('/my/extensions', function (Request $request) {
+        $extensions = Extension::all();
+        return response()->json($extensions);
+    });
 });
