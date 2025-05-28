@@ -27,20 +27,10 @@ class DomainRepository
         $this->dialplanRepository = $dialplanRepository;
     }
 
-    public function mine(): Collection
+    public function mine()
     {
         $user = auth()->user();
-        $allDomains = $user->hasPermission('domain_all') ?? false;
-        if ($allDomains)
-        {
-            return $this->all();
-        }
-        else {
-            $domain_uuid = $user->domain_uuid;
-            $query = $this->model->where('domain_uuid', $domain_uuid);
-            return $query->first();
-        }
-
+	return collect([$user->domain]);
     }
 
     public function all(): Collection

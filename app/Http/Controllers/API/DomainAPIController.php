@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Facades\DomainService;
+use App\Http\Controllers\Controller;
 use App\Models\Domain;
 use App\Http\Requests\DomainRequest;
 use App\Repositories\DomainRepository;
@@ -20,7 +21,7 @@ class DomainAPIController extends Controller
 
 	public function mine(){
         $domains = $this->domainRepository->mine();
-        return response()->json($domains);
+        return response()->json(["data" => $domains]);
     }
 
 	public function index()
