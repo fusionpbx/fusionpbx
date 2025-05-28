@@ -7,6 +7,8 @@ use App\Models\AccessControlNode;
 use App\Models\Bridge;
 use App\Models\Dialplan;
 use App\Models\Domain;
+use App\Models\Extension;
+use App\Models\ExtensionUser;
 use App\Models\Gateway;
 use App\Models\Group;
 use App\Models\Menu;
@@ -28,6 +30,7 @@ use App\Repositories\MenuRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\SipProfileRepository;
 use App\Repositories\StreamRepository;
+use App\Repositories\ExtensionRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -62,7 +65,15 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->app->bind(DomainRepository::class, function ($app) {
             return new DomainRepository(
-                $app->make(Domain::class)
+                $app->make(Domain::class),
+                $app->make(DialplanRepository::class),
+            );
+        });
+
+        $this->app->bind(ExtensionRepository::class, function ($app) {
+            return new ExtensionRepository(
+                $app->make(Extension::class),
+                $app->make(ExtensionUser::class)
             );
         });
 
