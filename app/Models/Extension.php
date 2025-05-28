@@ -25,14 +25,15 @@ class Extension extends Model
 	const CREATED_AT = 'insert_date';
 	const UPDATED_AT = 'update_date';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array<int, string>
+	 */
 	protected $fillable = [
 		'extension',
 		'number_alias',
+		'domain_uuid',
 		'password',
 		'accountcode',
 		'effective_caller_id_name',
@@ -85,39 +86,55 @@ class Extension extends Model
 		'force_ping',
 	];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-	protected $hidden = [
-	];
+	/**
+	 * The attributes that should be hidden for serialization.
+	 *
+	 * @var array<int, string>
+	 */
+	protected $hidden = [];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-	protected $casts = [
-	];
+	/**
+	 * The attributes that should be cast.
+	 *
+	 * @var array<string, string>
+	 */
+	protected $casts = [];
 
-	public function users(): BelongsToMany {
+	public function users(): BelongsToMany
+	{
 		return $this->belongsToMany(User::class, 'v_extension_users', 'extension_uuid', 'user_uuid')->withTimestamps();
-//		$this->belongsToMany(Group::class)->using(UserGroup::class);
+		//		$this->belongsToMany(Group::class)->using(UserGroup::class);
 	}
 
-	public function domain(): BelongsTo {
+	public function domain(): BelongsTo
+	{
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
 
-	public function xmlcdr(): HasMany {
+	public function xmlcdr(): HasMany
+	{
 		return $this->hasMany(XmlCdr::class, 'extension_uuid', 'extension_uuid');
 	}
 
-	public function settings(?bool $extension_setting_enabled = null): HasMany {
+	public function settings(?bool $extension_setting_enabled = null): HasMany
+	{
 		return $this->hasMany(ExtensionSetting::class, 'extension_uuid', 'extension_uuid')
-                ->when(is_bool($extension_setting_enabled), function($query) use($extension_setting_enabled){
-                    return $query->where('extension_setting_enabled', $extension_setting_enabled ? 'true' : 'false');
-                });
+			->when(is_bool($extension_setting_enabled), function ($query) use ($extension_setting_enabled) {
+				return $query->where('extension_setting_enabled', $extension_setting_enabled ? 'true' : 'false');
+			});
+	}
+
+	public function extensionUsers(): HasMany
+	{
+		return $this->hasMany(ExtensionUser::class, 'extension_uuid', 'extension_uuid');
+	}
+
+	public function getVoicemailAttribute()
+	{
+		return Voicemail::where(function ($query) {
+			$query->where('voicemail_id', $this->number_alias)
+				->orWhere('voicemail_id', $this->extension);
+		})
+			->first();
 	}
 }

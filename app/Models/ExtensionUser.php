@@ -21,7 +21,19 @@ class ExtensionUser extends Pivot
 	const CREATED_AT = 'insert_date';
 	const UPDATED_AT = 'update_date';
 
+	public $fillable = [
+		'extension_user_uuid',
+		'extension_uuid',
+		'domain_uuid',
+		'user_uuid',
+		'contact_uuid',
+	];
+
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
+	}
+
+	public function extension(): BelongsTo {
+		return $this->belongsTo(Extension::class, 'extension_uuid', 'extension_uuid');
 	}
 }
