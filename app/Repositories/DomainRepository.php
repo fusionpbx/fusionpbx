@@ -27,6 +27,22 @@ class DomainRepository
         $this->dialplanRepository = $dialplanRepository;
     }
 
+    public function mine(): Collection
+    {
+        $user = auth()->user();
+        $allDomains = $user->hasPermission('domain_all') ?? false;
+        if ($allDomains)
+        {
+            return $this->all();
+        }
+        else {
+            $domain_uuid = $user->domain_uuid;
+            $query = $this->model->where('domain_uuid', $domain_uuid);
+            return $query->first();
+        }
+
+    }
+
     public function all(): Collection
     {
         return $this->model->all();
