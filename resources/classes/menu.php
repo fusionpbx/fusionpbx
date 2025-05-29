@@ -315,9 +315,9 @@
 		}
 
 		/**
-		 * delete items in the menu
+		 * delete items in the menu used by restore default
 		 */
-		public function delete() {
+		public function restore_delete() {
 			//remove existing menu languages
 				$sql  = "delete from v_menu_languages ";
 				$sql .= "where menu_uuid = :menu_uuid ";
@@ -540,9 +540,9 @@
 		}
 
 		/**
-		 * restore the menu
+		 * restore the default menu
 		 */
-		public function restore() {
+		public function restore_default() {
 
 			//get the $apps array from the installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
