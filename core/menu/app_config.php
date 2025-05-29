@@ -193,10 +193,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_protected";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
+		//$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_protected";
+		//$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		//$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_order";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";

@@ -111,7 +111,7 @@
 				//set the db values as php variables
 				$menu_item_uuid = $row2['menu_item_uuid'];
 				$menu_item_category = $row2['menu_item_category'];
-				$menu_item_protected = $row2['menu_item_protected'];
+				//$menu_item_protected = $row2['menu_item_protected'];
 				$menu_item_parent_uuid = $row2['menu_item_parent_uuid'];
 				$menu_item_order = $row2['menu_item_order'];
 				$menu_item_title = $row2['menu_item_title'];
@@ -187,15 +187,15 @@
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
 				echo "<td class='no-wrap overflow hide-xs'>".$group_list."&nbsp;</td>";
 				echo "<td class='center'>".$menu_item_category."&nbsp;</td>";
-				if (permission_exists('menu_item_edit')) {
-					echo "	<td class='no-link center'>\n";
-					echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
-				}
-				else {
-					echo "	<td class='center'>\n";
-					echo $text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')];
-				}
-				echo "	</td>\n";
+				//if (permission_exists('menu_item_edit')) {
+				//	echo "	<td class='no-link center'>\n";
+				//	echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				//}
+				//else {
+				//	echo "	<td class='center'>\n";
+				//	echo $text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')];
+				//}
+				//echo "	</td>\n";
 				echo "<td class='center no-wrap'>&nbsp;</td>";
 
 				//echo "<td align='center'>";
@@ -313,7 +313,7 @@
 	echo "		<th class='no-wrap pct-35 hide-sm-dn'>".$text['label-link']."</th>";
 	echo "		<th class='no-wrap pct-35 hide-xs'>".$text['label-groups']."</th>";
 	echo "		<th class='no-wrap center shrink'>".$text['label-category']."</th>";
-	echo "		<th class='no-wrap center shrink'>".$text['label-protected']."</th>";
+	//echo "		<th class='no-wrap center shrink'>".$text['label-protected']."</th>";
 	echo "		<th class='no-wrap center shrink'>".$text['label-menu_order']."</th>";
 	if (permission_exists('menu_item_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -330,7 +330,7 @@
 				$menu_item_link = $row['menu_item_link'];
 				$menu_item_icon = $row['menu_item_icon'];
 				$menu_item_icon_color = $row['menu_item_icon_color'];
-				$menu_item_protected = $row['menu_item_protected'];
+				//$menu_item_protected = $row['menu_item_protected'];
 
 			//get the groups that have been assigned to the menu
 				$sql = "select ";
@@ -399,15 +399,15 @@
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
 				echo "<td class='no-wrap overflow hide-xs'>".($group_list ?? '')."&nbsp;</td>\n";
 				echo "<td class='center'>".$menu_item_category."&nbsp;</td>\n";
-				if (permission_exists('menu_item_edit')) {
-					echo "<td class='no-link center'>\n";
-					echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
-				}
-				else {
-					echo "<td class='center'>\n";
-					echo $text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')];
-				}
-				echo "</td>\n";
+				//if (permission_exists('menu_item_edit')) {
+				//	echo "<td class='no-link center'>\n";
+				//	echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				//}
+				//else {
+				//	echo "<td class='center'>\n";
+				//	echo $text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')];
+				//}
+				//echo "</td>\n";
 				echo "<td class='center'>".$row['menu_item_order']."&nbsp;</td>\n";
 
 				//echo "<td align='center' nowrap>";
