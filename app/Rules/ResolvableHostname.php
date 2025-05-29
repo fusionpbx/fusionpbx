@@ -29,7 +29,7 @@ class ResolvableHostname implements ValidationRule
                 if (!$c5)
                 {
                     // Not an IP, let's resolve
-                    $valid = dns_check_record($value, 'A') || dns_check_record($value, 'AAAA') dns_check_record($value, 'A6');
+                    $valid = dns_check_record($value, 'A') || dns_check_record($value, 'AAAA') || dns_check_record($value, 'A6');
                     if (!$valid)
                     {
                         $fail('The :attribute must be a valid IPv4/v6 value or a resolvable hostname.');

@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Domain;
 use App\Models\SipProfile;
 use App\Rules\IP46Port;
+use App\Rules\ResolvableHostname;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GatewayRequest extends FormRequest
@@ -47,8 +49,8 @@ class GatewayRequest extends FormRequest
             'ping_max' => 'bail|nullable|integer|min:1|max:65535|gte:ping_min',
             'contact_in_ping' => 'nullable|in:true,false',
             'channels' => 'bail|nullable|integer|min:0|max:65535',
-            'hostname' => 'nullable|max:255',
-            'domain_uuid' => 'nullable|uuid',
+            'hostname' => ['nullable','string','max:255', new ResolvableHostname()],
+            'domain_uuid' => "sometimes|uuid|exists:App\Models\Domain,domain_uuid",
             'description' => 'nullable|max:255',
             'gateway_uuid' => 'sometimes|uuid'
         ];
