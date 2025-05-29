@@ -34,7 +34,7 @@ class DomainRequest extends FormRequest
 		];
         if ($this->isMethod('post')){
             if(App::hasDebugModeEnabled()){
-                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] PUT');
+                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] POST');
             }
             $r['domain_name'][] = Rule::unique('App\Models\Domain','domain_name');
         }

@@ -73,7 +73,7 @@ class AuthController extends Controller
         ];
 
         $validator = Validator::make($credentials, [
-            'user_email' => 'required|string',
+            'user_email' => 'required|string|email:strict,spoof,dns',
             'password' => 'required|string',
         ]);
 
@@ -99,7 +99,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'user_email' => 'required|string',
+            'user_email' => 'required|string|email:strict,spoof,dns',
             'password' => 'required|string',
         ]);
 
