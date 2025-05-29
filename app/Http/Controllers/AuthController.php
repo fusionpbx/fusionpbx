@@ -80,7 +80,7 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'error' => $validator->messages(),
-            ],  400);
+            ],  422);
         }
 
         if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
