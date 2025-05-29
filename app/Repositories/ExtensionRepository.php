@@ -21,6 +21,12 @@ class ExtensionRepository
         $this->extensionUser = $extensionUser;
     }
 
+    public function mine()
+    {
+        $user = auth()->user();
+        return collect([$user->extensions]);
+    }
+
     public function all()
     {
         return $this->extension->all();
@@ -309,7 +315,7 @@ class ExtensionRepository
                 $this->updateVoicemail($extension, $extensionData);
             }
 
-            // 
+            //
             // if (!empty($extensionData['device_mac_addresses']) && is_array($extensionData['device_mac_addresses'])) {
             //     $this->assignDevicesToExtension($extension, $extensionData);
             // }

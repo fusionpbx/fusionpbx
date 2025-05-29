@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Socialite;
 
@@ -66,16 +67,21 @@ class AuthController extends Controller
 
     public function apiLogin(Request $request)
     {
-
-        $request->validate([
-            'user_email' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
         $credentials = [
             'user_email' => $request->user_email,
             'password' => $request->password,
         ];
+
+        $validator = Validator::make($credentials, [
+            'user_email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'error' => $validator->messages(),
+            ],  400);
+        }
 
         if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
             $user = $this->guard()->user();
@@ -84,7 +90,9 @@ class AuthController extends Controller
             ]);
         }
 
-        return $this->sendFailedLoginResponse($request);
+        return response()->json([
+                'error' => 'Authentication failed.',
+            ],  401);
     }
 
     //TODO: add support for the non-global loging style from Fusion

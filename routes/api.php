@@ -32,11 +32,10 @@ Route::post('/authenticate', [AuthController::class, 'apiLogin']);
 
 Route::middleware(VerifyAuthenticationKey::class)->group(function () {
     Route::get('/my/domains', [DomainAPIController::class, 'mine']);
-    Route::get('/my/extensions', function (Request $request) {
-        $extensions = Extension::all();
-        return response()->json($extensions);
-    });});
+    Route::get('/my/extensions', [ExtensionAPIController::class, 'mine']);
+});
 
 Route::middleware([VerifyAuthenticationKey::class, 'permission'])->group(function () {
     Route::get('/domains', [DomainAPIController::class, 'index'])->name('domains.all');
+    Route::get('/extensions', [ExtensionAPIController::class, 'index'])->name('extensions.all');
 });
