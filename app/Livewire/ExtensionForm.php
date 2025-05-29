@@ -19,7 +19,7 @@ class ExtensionForm extends Component
     public string $extension;
     public ?string $number_alias;
     public string $password;
-    public string $accountcode = 'hornblower.tel';
+    public string $accountcode;
     public $range = 1;
 
     //CALLED ID
@@ -37,13 +37,13 @@ class ExtensionForm extends Component
     public $directory_exten_visible = 'true';
 
     //Advanced Config
-    public $max_registrations = 1;
-    public $limit_max = 5;
-    public $limit_destination = '!USER_BUSY';
+    public $max_registrations;
+    public $limit_max;
+    public $limit_destination;
     public $user_context = '';
-    public $call_timeout = 30;
+    public $call_timeout;
     public $call_group = '';
-    public $call_screen_enabled = 'false';
+    public $call_screen_enabled;
     public $user_record = '';
     public $hold_music = '';
     public array $holdMusicOptions = [];
@@ -53,7 +53,8 @@ class ExtensionForm extends Component
     public $missed_call_data = '';
 
     //toll
-    public $toll_allow = 'all';
+    public $toll_allow = '';
+    public $tollAllowOptions = []; // Nueva propiedad para las opciones
 
     // advanced
     public $auth_acl = '';
@@ -70,13 +71,13 @@ class ExtensionForm extends Component
     public $description = '';
 
     public  $extensionUsers = [];
-    public $extensionDomains = [];
+    public $selectedDomain = '';
 
     public $usersToDelete = [];
     public $domainsToDelete = [];
 
     public $availableUsers = [];
-    public $availableDomains = [];
+    public $availableDomains = '';
 
     public $voicemail_enabled = false;
     public $voicemail_password;
@@ -89,6 +90,10 @@ class ExtensionForm extends Component
 
     public $destinations;
 
+    public $showCopyModal = false;
+    public $copyExtensionNumber = '';
+    public $copyNumberAlias = '';
+
 
     protected ExtensionRepository $extensionRepository;
 
@@ -96,6 +101,22 @@ class ExtensionForm extends Component
     public function boot(ExtensionRepository $extensionRepository)
     {
         $this->extensionRepository = $extensionRepository;
+    }
+
+    private function setDefaultValues()
+    {
+        $this->user_context ??= auth()->user()->domain->domain_name;
+        $this->max_registrations ??= Setting::getSetting('extension', 'max_registrations', 'numeric');
+        $this->accountcode ??= getAccountCode();
+        $this->limit_max ??= 5;
+        $this->limit_destination ??= '!USER_BUSY';
+        $this->call_timeout ??= 30;
+        $this->call_screen_enabled ??= false;
+        $this->user_record ??= Setting::getSetting('extension', 'user_record_default', 'text');
+        $this->voicemail_transcription_enabled ??= Setting::getSetting('extension', 'transcription_enabled_default', 'boolean');
+        $this->voicemail_enabled ??= Setting::getSetting('extension', 'enabled_default', 'boolean');
+        $this->enabled ??= true;
+        $this->toll_allow ??= 'all'; 
     }
 
     public function mount($extensions = null)
@@ -124,9 +145,10 @@ class ExtensionForm extends Component
             $this->user_context = $extensions->user_context;
             $this->call_timeout = $extensions->call_timeout;
             $this->call_group = $extensions->call_group;
-            $this->call_screen_enabled = $extensions->call_screen_enabled;
+            $this->call_screen_enabled = $extensions->call_screen_enabled ?? false;
             $this->user_record = $extensions->user_record;
             $this->hold_music = $extensions->hold_music;
+            $this->toll_allow = $extensions->toll_allow ?? 'all'; 
             $this->auth_acl = $extensions->auth_acl;
             $this->cidr = $extensions->cidr;
             $this->sip_force_contact = $extensions->sip_force_contact;
@@ -146,7 +168,6 @@ class ExtensionForm extends Component
             $this->voicemail_file = $extensions->voicemail?->voicemail_file;
             $this->voicemail_local_after_email = $extensions->voicemail?->voicemail_local_after_email;
 
-
             foreach ($extensions->extensionUsers as $user) {
                 $this->extensionUsers[] = [
                     'extension_user_uuid' => $user->extension_user_uuid,
@@ -157,14 +178,13 @@ class ExtensionForm extends Component
             }
 
             if ($extensions->domain) {
-                $this->extensionDomains[] = [
-                    'domain_uuid' => $extensions->domain->domain_uuid,
-                ];
+                $this->selectedDomain = $extensions->domain->domain_uuid;
+            } else {
+                $this->selectedDomain = auth()->user()->domain_uuid;
             }
         }
+        $this->setDefaultValues();
     }
-
-
 
     public function loadAvailableData()
     {
@@ -174,6 +194,10 @@ class ExtensionForm extends Component
             ->toArray();
 
         $this->availableDomains = Domain::select('domain_uuid', 'domain_name')->get()->toArray();
+
+        if(!$this->extensions) {
+            $this->selectedDomain = auth()->user()->domain_uuid;
+        }
     }
 
     public function emergencyDestination()
@@ -206,8 +230,6 @@ class ExtensionForm extends Component
         ];
     }
 
-
-
     public function removeUser($index)
     {
         if (isset($this->extensionUsers[$index]['extension_user_uuid']) && !empty($this->extensionUsers[$index]['extension_user_uuid'])) {
@@ -219,9 +241,8 @@ class ExtensionForm extends Component
 
     public function save()
     {
-
         if (auth()->user()->hasPermission('extension_domain')) {
-            $domainUuid = $this->extensionDomains[0]['domain_uuid'];
+            $domainUuid = $this->selectedDomain;
         } else {
             $domainUuid = auth()->user()->domain_uuid;
         }
@@ -236,7 +257,6 @@ class ExtensionForm extends Component
         }
 
         $toll_allow = str_replace(',', ':', $this->toll_allow);
-
 
         $extensionData = [
             'extension' => $this->extension,
@@ -303,6 +323,36 @@ class ExtensionForm extends Component
             redirect()->route('extensions.index');
         } catch (\Exception $e) {
             session()->flash('error', 'Error saving extension: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function showCopyModals()
+    {
+        $this->showCopyModal = true;
+        $this->copyExtensionNumber = '';
+        $this->copyNumberAlias = '';
+        $this->resetErrorBag(['copyExtensionNumber', 'copyNumberAlias']);
+    }
+
+    public function closeCopyModal()
+    {
+        $this->showCopyModal = false;
+        $this->copyExtensionNumber = '';
+        $this->copyNumberAlias = '';
+        $this->resetErrorBag(['copyExtensionNumber', 'copyNumberAlias']);
+    }
+
+
+    public function copy()
+    {
+        try {
+            $this->extensionRepository->copy($this->extensions->extension_uuid, $this->copyExtensionNumber, $this->copyNumberAlias);
+            $this->closeCopyModal();
+            session()->flash('success', 'Extension copied successfully');
+            redirect()->route('extensions.index');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error copying extension: ' . $e->getMessage());
             throw $e;
         }
     }

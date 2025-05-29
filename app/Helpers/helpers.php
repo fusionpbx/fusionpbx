@@ -93,7 +93,7 @@ if (!function_exists('getModels')) {
 				}
 			}
 			else {
-				$accountCode = auth()->user()->domain_name;
+				$accountCode = auth()->user()->domain->domain_name;
 			}
 			return $accountCode;
 		}

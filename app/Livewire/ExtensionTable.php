@@ -14,6 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 class ExtensionTable extends DataTableComponent
 {
     protected $model = Extension::class;
+    public bool $show_all = false;
 
     public function configure(): void
     {
@@ -24,7 +25,7 @@ class ExtensionTable extends DataTableComponent
                 'class' => 'table table-striped table-hover table-bordered'
             ])  
             ->setSearchEnabled()
-            ->setSearchPlaceholder('Search SIP Profiles')
+            ->setSearchPlaceholder('Search Extensions')
             ->setPerPageAccepted([10, 25, 50, 100])
             ->setPaginationEnabled();
 
@@ -32,6 +33,10 @@ class ExtensionTable extends DataTableComponent
             $tableConfig->setTableRowUrl(function ($row) use ($canEdit) {
                 return route('extensions.edit', $row->extension_uuid);
             });
+        }
+
+        if(request()->has('show_all')) {
+            $this->show_all = true;
         }
     }
 
@@ -125,7 +130,9 @@ class ExtensionTable extends DataTableComponent
 
     public function columns(): array
     {
-        return [
+        $showAll = request()->query('show') === 'all';
+        
+        $columns = [
             Column::make("Extension uuid", "extension_uuid")
                 ->sortable()
                 ->hideIf(true),
@@ -150,21 +157,32 @@ class ExtensionTable extends DataTableComponent
             Column::make("Description", "description")
                 ->sortable(),
         ];
+
+        if ($this->show_all) {
+            array_splice($columns, 3, 0, [
+                Column::make("Domain", "domain.domain_name")
+                    ->sortable()
+                    ->searchable()
+            ]);
+        }
+
+        return $columns;
     }
 
     public function builder(): Builder
     {
         $query = Extension::query();
 
-        $showAll = request()->query('show') === 'all';
-
-        if (!$showAll) {
+        if ($this->show_all) {
+            $query->leftJoin('v_domains', 'v_extensions.domain_uuid', '=', 'v_domains.domain_uuid')
+                  ->select('v_extensions.*', 'v_domains.domain_name');
+        } else {
             $query->where(function ($query) {
-                $query->where('domain_uuid', auth()->user()->domain_uuid)
-                    ->orWhereNull('domain_uuid');
+                $query->where('v_extensions.domain_uuid', auth()->user()->domain_uuid)
+                    ->orWhereNull('v_extensions.domain_uuid');
             });
         }
+                
         return $query;
     }
-
 }

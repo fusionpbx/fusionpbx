@@ -10,8 +10,16 @@
 
             <div class="card-tools">
                 <div class="d-flex gap-2 " role="group" aria-label="Group actions">
-                    <a href="{{ route('users.index') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-users mr-1"></i> {{__('Users')}}
+                    <a href="{{ route('extensions.import') }}" class="btn btn-primary btn-sm">
+                        <i class="fa fa-download" aria-hidden="true"></i> {{__('Import')}}
+                    </a>
+
+                    <a href="{{ route('extensions.export') }}" class="btn btn-primary btn-sm">
+                        <i class="fa fa-upload" aria-hidden="true"></i> {{__('Export')}}
+                    </a>
+
+                    <a href="{{ route('extensions.index', ['show_all' => 1]) }}" class="btn btn-primary btn-sm">
+                        <i class="fa fa-globe" aria-hidden="true"></i> {{ __('Show All') }}
                     </a>
 
                     <a href="{{ route('extensions.create') }}" class="btn btn-primary btn-sm">

@@ -70,4 +70,14 @@ class ExtensionController extends Controller
     {
         //
     }
+
+    public function import()
+    {
+        return view('pages.extension.import');
+    }
+
+    public function export()
+    {
+        return view('pages.extension.export');
+    }
 }
