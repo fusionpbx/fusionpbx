@@ -87,6 +87,9 @@
     <!-- # Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_firmware_upgrade_protocol) }
+    <P212>{$grandstream_firmware_upgrade_protocol}</P212>
+    {else}
     <P212>2</P212>
 
     <!-- Firmware Server Path -->

@@ -243,6 +243,10 @@
 				$array['recordings'][0]['recording_uuid'] = $recording_uuid;
 				$array['recordings'][0]['recording_filename'] = $recording_filename;
 				$array['recordings'][0]['recording_name'] = $recording_name;
+				if ($settings->get('recordings', 'storage_type', '') == 'base64' 
+					&& file_exists($recording_path.'/'.$recording_filename)) {
+					$array['recordings'][0]['recording_base64'] = base64_encode(file_get_contents($recording_path.'/'.$recording_filename));
+				}
 				if ($speech_enabled || $transcribe_enabled) {
 					$array['recordings'][0]['recording_voice'] = $recording_voice;
 					$array['recordings'][0]['recording_message'] = $recording_message;

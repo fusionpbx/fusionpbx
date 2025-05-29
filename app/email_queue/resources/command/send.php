@@ -186,9 +186,6 @@
 	if (empty($template_subcategory)) {
 		$message .= "template_subcategory\n";
 	}
-	if (empty($template_subcategory)) {
-		$message .= "template_subcategory\n";
-	}
 	if (empty($domain_name)) {
 		$message .= "domain_name\n";
 	}
