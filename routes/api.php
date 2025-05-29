@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\DomainAPIController;
+use App\Http\Controllers\API\ExtensionAPIController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserActivationController;
 use App\Http\Middleware\VerifyAuthenticationKey;
