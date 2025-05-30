@@ -448,10 +448,10 @@
 <Ring12 ua="na">n=Incoming_EQ;w=file://Incoming_EQ.rwb;c=1</Ring12>
 <Silent_Ring_Duration ua="na">60</Silent_Ring_Duration>
 <!--  Webex  -->
-<Webex_Onboard_Enable ua="na">Yes</Webex_Onboard_Enable>
+<Webex_Onboard_Enable ua="na">No</Webex_Onboard_Enable>
 <Webex_Directory_Enable ua="na">No</Webex_Directory_Enable>
 <Webex_Directory_Name ua="na"/>
-<Webex_Calendar_Enable ua="na">Yes</Webex_Calendar_Enable>
+<Webex_Calendar_Enable ua="na">No</Webex_Calendar_Enable>
 <Webex_Metrics_Enable ua="na">No</Webex_Metrics_Enable>
 <!--  XSI Phone Service  -->
 <XSI_Host_Server ua="na"/>
