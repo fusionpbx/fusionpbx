@@ -596,7 +596,7 @@
 <!--  SIP Settings  -->
 <SIP_Transport_1_ ua="na">{$account.1.sip_transport|upper}</SIP_Transport_1_>
 <!--  available options: UDP|TCP|TLS|AUTO  -->
-<SIP_Port_1_ ua="na">{$account.1.sip_port}<</SIP_Port_1_>
+<SIP_Port_1_ ua="na">{$account.1.sip_port}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ ua="na">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ ua="na">0</EXT_SIP_Port_1_>
 <Auth_Resync-Reboot_1_ ua="na">Yes</Auth_Resync-Reboot_1_>
