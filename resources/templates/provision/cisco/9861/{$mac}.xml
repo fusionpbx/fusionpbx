@@ -678,7 +678,7 @@
 <!--  Subscriber Information  -->
 <Display_Name_1_ ua="na">{$account.1.display_name}</Display_Name_1_>
 <User_ID_1_ ua="na">{$account.1.user_id}</User_ID_1_>
-<!--  <Password_1_ ua="na">{$account.1.password}</Password_1_>  -->
+<Password_1_ ua="na">{$account.1.password}</Password_1_>
 <Auth_ID_1_ ua="na">{$account.1.auth_id}</Auth_ID_1_>
 <Reversed_Auth_Realm_1_ ua="na"/>
 <SIP_URI_1_ ua="na"/>
