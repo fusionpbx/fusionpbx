@@ -326,6 +326,8 @@ class ExtensionRepository
             DB::beginTransaction();
             $extension = $this->findByUuid($uuid);
             $extension->delete();
+            $extension->extensionUsers->delete();
+            
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

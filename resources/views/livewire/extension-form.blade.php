@@ -9,15 +9,29 @@
                     <div>
                         @if (isset($extensions))
                             @can('extension_copy')
-                                {{-- <a href="{{ route('extensions.copy', $extensions->extension_uuid) }}"
-                                    class="btn btn-outline-primary btn-sm me-2">
-                                    <i class="fa fa-external-link-alt" aria-hidden="true"></i> {{ __('Copy (New Page)') }}
-                                </a> --}}
-
                                 <button type="button" class="btn btn-primary btn-sm" wire:click="showCopyModals">
-                                    <i class="fa fa-clone" aria-hidden="true"></i> {{ __('Quick Copy') }}
+                                    <i class="fa fa-clone" aria-hidden="true"></i> {{ __('Copy') }}
                                 </button>
                             @endcan
+
+                            @can('call_forward')
+                                <button type="button" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i> {{ __('Call forward') }}
+                                </button>
+                            @endcan
+                            
+                            @can('xml_cdr_view')
+                                <button type="button" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ __('CDR') }}
+                                </button>
+                            @endcan
+
+                            @can('extension_setting_view')
+                                <button type="button" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i> {{ __('Settings') }}
+                                </button>
+                            @endcan
+
                         @endif
                     </div>
                 </div>
@@ -45,7 +59,7 @@
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
                                     <label for="number_alias" class="form-label">Number Alias</label>
-                                    <input type="text" class="form-control @error('number_alias') is-invalid @enderror"
+                                    <input type="number" class="form-control @error('number_alias') is-invalid @enderror"
                                         id="number_alias" wire:model="number_alias" placeholder="Enter number alias">
                                     @error('number_alias')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -528,7 +542,7 @@
                                                 wire:model="user_record">
                                                 <option value="">Disabled</option>
                                                 <option value="local">Local</option>
-                                                <option value="all">All"></option>
+                                                <option value="all">All</option>
                                                 <option value="inbound">Inbound</option>
                                                 <option value="outbound">Outbound</option>
                                             </select>
@@ -945,4 +959,23 @@
             </div>
         </div>
     @endif
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleOnHover = (inputId) => {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+
+                input.addEventListener("mouseenter", () => {
+                    input.type = "text";
+                });
+
+                input.addEventListener("mouseleave", () => {
+                    input.type = "password";
+                });
+            };
+
+            toggleOnHover("password");
+            toggleOnHover("voicemail_password");
+        });
+    </script>
 </div>
