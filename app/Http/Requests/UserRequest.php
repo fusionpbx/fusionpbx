@@ -3,8 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Facades\DefaultSetting;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
@@ -62,24 +65,34 @@ class UserRequest extends FormRequest
         if ($reqSpecial)
             $rule["password"][] = 'regex:/(?=.*[\W])/';
 
+        if(App::hasDebugModeEnabled())
+        {
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '.print_r($request->toArray(), true));
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] user: '.print_r($this->user, true));
+        }
         if ($isCreating){
+            $rule["api_key"][] = Rule::unique('App\Models\User','api_key');
             $userUnique = DefaultSetting::get('users', 'unique', 'text');
             if (isset($userUnique) && ($userUnique == 'global'))
             {
                 $rule["username"][] = Rule::unique('App\Models\User','username');
-                $rule["api_key"][] = Rule::unique('App\Models\User','api_key');
             }
             else
             {
+                $users = User::all();
+                $currentUser = $users->findOrFail(request()->input('api_key'));
                 $rule["username"][] = Rule::unique('App\Models\User','username')
                     ->when(!$userUnique, function (Builder $query){
                         // if user is not unique, we only allow unique users within the same domain
                         $query->where('domain_uuid', Session::get('domain_uuid'))
                     });
-
-                $rule["api_key"][] = Rule::unique('App\Models\User','api_key')->ignore(request()->input('api_key'));
             }
         }
+        else
+        {
+            $rule["api_key"][] = Rule::unique('App\Models\User','api_key')->ignore(request()->input('api_key'));
+        }
+
         return $rule;
 	}
 }
