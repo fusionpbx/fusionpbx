@@ -9,7 +9,7 @@
             </h3>
 
             <div class="card-tools">
-                <div class="d-flex gap-2 " role="stream" aria-label="Domain actions">
+                <div class="d-flex gap-2 " role="stream" aria-label="Streams actions">
                     @can('stream_add')
                     <a href="{{ route('streams.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}

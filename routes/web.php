@@ -11,6 +11,7 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\BridgeController;
+use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
@@ -91,6 +92,9 @@ Route::middleware(['auth','permission'])->group(function () {
     // GETEWAY
     Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
     Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
+
+    // CARRIERS
+    Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
 
     // SIP PROFILE
     Route::resource('/sipprofiles', SipProfileController::class)->name('sipprofiles', 'sipprofiles');
