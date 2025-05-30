@@ -88,7 +88,7 @@ class UserRequest extends FormRequest
         }
         else
         {
-            $rule["api_key"][] = Rule::unique('App\Models\User','api_key')->ignore(request()->input('api_key'));
+            $rule["api_key"][] = Rule::unique('App\Models\User','api_key')->ignore($this->user->user_uuid, $this->user->getKeyName());
         }
 
         return $rule;
