@@ -67,7 +67,7 @@ class UserRequest extends FormRequest
 
         if(App::hasDebugModeEnabled())
         {
-            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '.print_r($request->toArray(), true));
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '.print_r(request()->toArray(), true));
             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] user: '.print_r($this->user, true));
         }
         if ($isCreating){
@@ -79,12 +79,10 @@ class UserRequest extends FormRequest
             }
             else
             {
-                $users = User::all();
-                $currentUser = $users->findOrFail(request()->input('api_key'));
                 $rule["username"][] = Rule::unique('App\Models\User','username')
                     ->when(!$userUnique, function (Builder $query){
                         // if user is not unique, we only allow unique users within the same domain
-                        $query->where('domain_uuid', Session::get('domain_uuid'))
+                        $query->where('domain_uuid', Session::get('domain_uuid'));
                     });
             }
         }
