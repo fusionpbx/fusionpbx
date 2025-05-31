@@ -60,4 +60,4 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${year}\${month_number}\${day}.\${time}.\${caller_id_number}.\${uuid}.mp3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recording download template. Options: \${uuid}, \${caller_id_name}, \${caller_id_number}, \${caller_destination}, \${destination_number}, \${destination_number}, \${date}, \${call_direction}, \${year}, \${month_name}, \${month_number}, \${day}, \${time}";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recording download template. Options: \${uuid}, \${caller_id_name}, \${caller_id_number}, \${caller_destination}, \${destination_number}, \${date}, \${call_direction}, \${year}, \${month_name}, \${month_number}, \${day}, \${time}";
