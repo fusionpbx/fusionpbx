@@ -519,7 +519,7 @@ class ExtensionRepository
         if ($voicemail) {
             $voicemail->update([
                 'voicemail_password' => $extensionData['voicemail_password'] ?? $voicemail->voicemail_password,
-                'voicemail_mail_to' => $extensionData['voicemail_mail_to'] ?? '',
+                'voicemail_mail_to' => $extensionData['voicemail_mail_to'] ,
                 'voicemail_transcription_enabled' => $extensionData['voicemail_transcription_enabled'] ?? false,
                 'voicemail_file' => $extensionData['voicemail_file'] ?? $voicemail->voicemail_file,
                 'voicemail_local_after_email' => $extensionData['voicemail_local_after_email'] ?? $voicemail->voicemail_local_after_email,

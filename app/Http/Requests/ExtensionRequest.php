@@ -8,6 +8,14 @@ use Illuminate\Validation\Rule;
 
 class ExtensionRequest extends FormRequest
 {
+
+    protected ?string $extensionUuid = null;
+
+    public function setExtensionUuid(?string $extensionUuid): void
+    {
+        $this->extensionUuid = $extensionUuid;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -23,23 +31,24 @@ class ExtensionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $extensionId = $this->route('extension');
+        $extensionUuid = $this->extensionUuid;
+
         return [
             'extension' => [
-                'required',
+                'nullable',
                 'string',
                 'max:50',
-                Rule::unique('extensions')->ignore($extensionId)
+                Rule::unique('v_extensions')->ignore($extensionUuid, 'extension_uuid')
             ],
             'number_alias' => 'nullable|numeric',
             'password' => 'nullable|string|min:6|max:100',
             'accountcode' => 'nullable|string|max:50',
-            'enabled' => 'boolean',
+            'enabled' => 'string',
             'description' => 'nullable|string|max:500',
             'effective_caller_id_name' => 'nullable|string|max:100',
             'effective_caller_id_number' => 'nullable|string|max:50',
             'outbound_caller_id_name' => 'nullable|string|max:100',
-            'outbound_caller_id_number' => 'nullable|string|max:50|regex:/^[\+0-9]*$/',
+            'outbound_caller_id_number' => 'nullable|string|max:50',
             'emergency_caller_id_name' => 'nullable|string|max:100',
             'emergency_caller_id_number' => 'nullable|string|max:50',
             'directory_first_name' => 'nullable|string|max:100',
@@ -56,14 +65,13 @@ class ExtensionRequest extends FormRequest
             'toll_allow' => 'nullable|string|max:200',
             'call_timeout' => 'nullable|integer|min:5|max:300',
             'call_group' => 'nullable|string|max:100',
-            'call_screen_enabled' => 'boolean',
+            'call_screen_enabled' => 'nullable|string',
             'user_record' => 'nullable|string|max:50',
             'hold_music' => 'nullable|string|max:100',
             'auth_acl' => 'nullable|string|max:100',
-            'cidr' => ['required', 'string', 'max:255', new ValidCidr()],
+            'cidr' => ['nullable', 'string', 'max:255', new ValidCidr()],
             'sip_force_contact' => 'nullable|string|max:100',
             'sip_force_expires' => 'nullable|integer|min:60|max:3600',
-            'nibble_account' => 'nullable|string|max:100',
             'mwi_account' => 'nullable|string|max:100',
             'sip_bypass_media' => 'nullable|string|max:50',
             'absolute_codec_string' => 'nullable|string|max:200',
@@ -72,18 +80,15 @@ class ExtensionRequest extends FormRequest
             'voicemail_password' => 'nullable|string|min:4|max:20',
             'voicemail_enabled' => 'string|nullable',
             'voicemail_mail_to' => 'nullable|email|max:200',
-            'voicemail_transcription_enabled' => 'boolean',
+            'voicemail_transcription_enabled' => 'string|nullable',
             'voicemail_file' => 'nullable|string|max:50',
-            'voicemail_local_after_email' => 'boolean',
-            'extension_users' => 'nullable|array',
-            'extension_users.*.user_uuid' => 'required_with:extension_users|uuid|exists:users,id',
-            
+            'voicemail_local_after_email' => 'string|nullable',
+
             // TODO: 
             // 'devices' => 'nullable|array',
             // 'devices.*.device_mac_address' => 'required_with:devices|string|regex:/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/',
             // 'devices.*.line_number' => 'required_with:devices|integer|min:1|max:10',
             // 'devices.*.device_template' => 'nullable|string|max:100',
-            'domain_uuid' => 'nullable|uuid|exists:domains,id',
 
         ];
     }
