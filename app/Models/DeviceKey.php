@@ -49,4 +49,22 @@ class DeviceKey extends Model
 	public function device(): BelongsTo {
 		return $this->belongsTo(Device::class, 'device_uuid', 'device_uuid');
 	}
+        
+        public function getCategorySortOrder(): int
+        {
+                $categoryOrder = [
+                        'line' => 1,
+                        'memory' => 2,
+                        'programmable' => 3,
+                        'expansion' => 4,
+                        'expansion-1' => 5,
+                        'expansion-2' => 6,
+                        'expansion-3' => 7,
+                        'expansion-4' => 8,
+                        'expansion-5' => 9,
+                        'expansion-6' => 10,
+                ];
+
+                return $categoryOrder[$this->device_key_category] ?? 100;
+        }
 }

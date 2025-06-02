@@ -45,4 +45,8 @@ class DeviceProfile extends Model
     public function settings(): HasMany {
         return $this->HasMany(DeviceProfileSetting::class, 'device_profile_uuid', 'device_profile_uuid');
     }
+
+    public function devices(): HasMany {
+        return $this->HasMany(Device::class, 'device_profile_uuid', 'device_profile_uuid');
+    }
 }

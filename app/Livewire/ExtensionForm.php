@@ -103,6 +103,8 @@ class ExtensionForm extends Component
         $this->extensionRepository = $extensionRepository;
     }
 
+    
+
     private function setDefaultValues()
     {
         $this->user_context ??= auth()->user()->domain->domain_name;
@@ -241,6 +243,7 @@ class ExtensionForm extends Component
 
     public function save()
     {
+        $this->validate();
         if (auth()->user()->hasPermission('extension_domain')) {
             $domainUuid = $this->selectedDomain;
         } else {

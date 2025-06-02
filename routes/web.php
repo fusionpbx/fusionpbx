@@ -14,6 +14,7 @@ use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExtensionController;
+use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
@@ -148,6 +149,9 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/extensions', ExtensionController::class)->except('show');
     Route::get('extensions/import', [ExtensionController::class, 'import'])->name('extensions.import');
     Route::get('extensions/export', [ExtensionController::class, 'export'])->name('extensions.export');
+
+    Route::resource('/devices', DeviceController::class);
+
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){

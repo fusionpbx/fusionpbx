@@ -22,7 +22,7 @@ use Socialite;
 
 class AuthController extends Controller
 {
-    use AuthenticatesUsers;
+    // use AuthenticatesUsers;
 
     public function index()
     {
