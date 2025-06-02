@@ -10,25 +10,34 @@
 
             <div class="card-tools">
                 <div class="d-flex gap-2 " role="dialplan" aria-label="Dialplan actions">
-	                @if($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4")
-                        @can('inbound_route_add')
-                        <a href="{{ route('dialplans.inbound.create', ['app_uuid' => $app_uuid]) }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus mr-1"></i> {{__('Add')}}
-                        </a>
-                        @endcan
-                    @else
-                        @can('dialplan_add')
-                        <a href="{{ route('dialplans.create') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus mr-1"></i> {{__('Add')}}
-                        </a>
-                        @endcan
-                    @endif
+	                @switch($app_uuid)
+                        @case("c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4")
+                            @can('inbound_route_add')
+                            <a href="{{ route('dialplans.inbound.create', ['app_uuid' => $app_uuid]) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus mr-1"></i> {{__('Add')}}
+                            </a>
+                            @endcan
+                            @break
+                        @case("8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3")
+                            @can('outbound_route_add')
+                            <a href="{{ route('dialplans.outbound.create', ['app_uuid' => $app_uuid]) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus mr-1"></i> {{__('Add')}}
+                            </a>
+                            @endcan
+                            @break
+                        @default
+                            @can('dialplan_add')
+                            <a href="{{ route('dialplans.create') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus mr-1"></i> {{__('Add')}}
+                            </a>
+                            @endcan
+                    @endswitch
                 </div>
             </div>
         </div>
 
         <div class="card-body">
-            <livewire:dialplans-table/>
+            <livewire:dialplans-table :app_uuid="$app_uuid" :context="$context" :show="$show" />
         </div>
     </div>
 </div>

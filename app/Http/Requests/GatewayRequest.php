@@ -2,9 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Domain;
+use App\Models\Gateway;
 use App\Models\SipProfile;
 use App\Rules\IP46Port;
+use App\Rules\ResolvableHostname;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class GatewayRequest extends FormRequest
 {
@@ -19,8 +23,9 @@ class GatewayRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'gateway' => 'required|max:255',
+        $isCreating = $this->isMethod("post");
+        $rule = [
+            'gateway' => ['required','string','max:255'],
             'username' => 'required_if:register,true|max:255',
             'password' => 'required_if:register,true|max:255',
             'proxy' => ['bail','required','max:255', new IP46Port()],
@@ -47,10 +52,23 @@ class GatewayRequest extends FormRequest
             'ping_max' => 'bail|nullable|integer|min:1|max:65535|gte:ping_min',
             'contact_in_ping' => 'nullable|in:true,false',
             'channels' => 'bail|nullable|integer|min:0|max:65535',
-            'hostname' => 'nullable|max:255',
-            'domain_uuid' => 'nullable|uuid',
+            'hostname' => ['nullable','string','max:255', new ResolvableHostname()],
+            'domain_uuid' => ['sometimes','uuid','exists:App\Models\Domain,domain_uuid'],
             'description' => 'nullable|max:255',
-            'gateway_uuid' => 'sometimes|uuid'
+            'gateway_uuid' => ['sometimes','uuid'],
         ];
+
+        if ($isCreating)
+        {
+            $rule["gateway_uuid"][] = Rule::unique('App\Models\Gateway','gateway_uuid');
+            $rule["gateway"][] = Rule::unique('App\Models\Gateway','gateway');
+        }
+        else
+        {
+            $rule["gateway_uuid"][] = Rule::unique('App\Models\Gateway','gateway_uuid')->ignore(request()->input('gateway_uuid'));
+            $rule["gateway"][] = Rule::unique('App\Models\Gateway','gateway')->ignore(request()->input('gateway'));
+        }
+
+        return $rule;
     }
 }

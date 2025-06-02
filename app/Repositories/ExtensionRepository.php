@@ -21,6 +21,12 @@ class ExtensionRepository
         $this->extensionUser = $extensionUser;
     }
 
+  public function mine()
+    {
+        $user = auth()->user();
+        return collect([$user->extensions]);
+    }
+  
     public function all()
     {
         return $this->extension->all();
@@ -307,12 +313,7 @@ class ExtensionRepository
             if (isset($extensionData['voicemail_enabled']) || isset($extensionData['voicemail_password'])) {
                 $this->updateVoicemail($extension, $extensionData);
             }
-
-            // 
-            // if (!empty($extensionData['device_mac_addresses']) && is_array($extensionData['device_mac_addresses'])) {
-            //     $this->assignDevicesToExtension($extension, $extensionData);
-            // }
-
+          
             DB::commit();
             return $extension->fresh();
         } catch (\Exception $e) {
@@ -327,7 +328,6 @@ class ExtensionRepository
             $extension = $this->findByUuid($uuid);
             $extension->delete();
             $extension->extensionUsers->delete();
-            
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -540,10 +540,9 @@ class ExtensionRepository
             mkdir($directory, 0770, true);
         }
     }
-
+    
     public function copy(string $uuid, string $extensionCopy, string $numberAliasCopy): Extension
     {
-
         try {
             DB::beginTransaction();
 

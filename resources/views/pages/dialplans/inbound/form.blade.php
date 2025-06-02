@@ -46,7 +46,7 @@
                                 class="form-select @error('destination_uuid') is-invalid @enderror"
                                 id="destination_uuid"
                                 name="destination_uuid"
-                                required
+				required
                             >
                                 <option value=""></option>
                                 @foreach($destinations as $destination)
@@ -66,7 +66,7 @@
                 <div class="row mt-3">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="condition_field_1" class="form-label">Condition</label>
+                            <label for="condition_field_1" class="form-label">Additional Condition</label>
                             <input name="condition_field_1" list="condition_list" class="form-control" placeholder="{{ __('Type') }}">
                             <datalist id="condition_list">
                                 <option value="context">Context</option>
@@ -106,7 +106,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="action_1" class="form-label">Action</label>
-                            <x-switch-destinations name="action_1" bridgeType="dialplan" callCenterType="dialplan" conferenceCenterType="dialplan" extensionType="dialplan" ivrMenuType="dialplan" timeConditionType="dialplan" toneType="dialplan" voiceMailType="dialplan" />
+                            <x-switch-destinations name="action_1" bridgeType="dialplan" callCenterType="dialplan" conferenceCenterType="dialplan" extensionType="dialplan" ivrMenuType="dialplan" switchType="dialplan" timeConditionType="dialplan" toneType="dialplan" voiceMailType="dialplan" />
                             @error('action_1')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -119,12 +119,12 @@
                         <div class="form-group">
                             <label for="limit" class="form-label">Limit</label>
                             <input
-                                type="text"
+                                type="number"
                                 class="form-control @error('limit') is-invalid @enderror"
                                 id="limit"
                                 name="limit"
                                 value="{{ old('limit') }}"
-                                required
+                                min="1"
                             >
                             @error('limit')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -142,7 +142,6 @@
                                 class="form-control @error('caller_id_outbound_prefix') is-invalid @enderror"
                                 name="caller_id_outbound_prefix"
                                 value="{{ old('caller_id_outbound_prefix') }}"
-                                required
                             >
                             @error('caller_id_outbound_prefix')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -155,7 +154,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label d-block">Order</label>
-                            <select class="form-select" name="dialplan_order">
+                            <select class="form-select" name="dialplan_order" required>
                                 @for ($i = 100; $i <= 990; $i += 10)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor

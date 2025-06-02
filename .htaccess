@@ -11,3 +11,4 @@ Redirect	301	/app/bridges/bridges.php			/bridges
 Redirect	301	/app/xml_cdr/xml_cdr.php			/xmlcdr
 Redirect	301	/core/dashboard					/dashboard
 Redirect	301	/app/streams/streams.php			/streams
+Redirect	301	/app/contacts/contacts.php			/contacts

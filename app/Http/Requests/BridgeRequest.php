@@ -33,6 +33,7 @@ class BridgeRequest extends FormRequest
 			$rule['bridge_name'][] = Rule::unique('App\Models\Bridge','bridge_name')
 							->where('domain_uuid', Session::get('domain_uuid'));
 		}
+
 		return $rule;
 	}
 }

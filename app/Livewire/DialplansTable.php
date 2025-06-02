@@ -17,6 +17,16 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 class DialplansTable extends DataTableComponent
 {
     //protected $model = Dialplan::class;
+    public $app_uuid;
+    public $context;
+    public $show;
+
+    public function mount($app_uuid = null, $context = null, $show = null)
+    {
+        $this->app_uuid = $app_uuid;
+        $this->context = $context;
+        $this->show = $show;
+    }
 
     public function configure(): void
     {
@@ -188,9 +198,9 @@ class DialplansTable extends DataTableComponent
 
     public function builder(): Builder
     {
-	$showAll = request()->query('show') === 'all';
-	$appUuid = request()->query('app_uuid') ?? '';
-	$context = request()->query('context') ?? '';
+	$showAll = $this->show === 'all';
+	$appUuid = $this->app_uuid;
+	$context = $this->context;
 	$query = Dialplan::query()
 		->when( $showAll && auth()->user()->hasPermission('dialplan_all'),
 			function($query){

@@ -27,6 +27,12 @@ class DomainRepository
         $this->dialplanRepository = $dialplanRepository;
     }
 
+    public function mine()
+    {
+        $user = auth()->user();
+	return collect([$user->domain]);
+    }
+
     public function all(): Collection
     {
         return $this->model->all();
