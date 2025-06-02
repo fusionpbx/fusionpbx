@@ -65,4 +65,13 @@ class Device extends Model
         return $this->belongsTo(DeviceProfile::class, 'device_profile_uuid', 'device_profile_uuid');
     }
 
+    public function keys(): HasMany {
+        return $this->hasMany(DeviceKey::class, 'device_uuid', 'device_uuid');
+    } 
+
+    public function lines(): HasMany {
+        return $this->hasMany(DeviceLine::class, 'device_uuid', 'device_uuid');
+    }
+
+
 }
