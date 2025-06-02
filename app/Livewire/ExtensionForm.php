@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Facades\Setting;
+use App\Http\Requests\ExtensionRequest;
 use App\Models\Destination;
 use App\Models\Extension;
 use App\Models\Domain;
@@ -103,7 +104,12 @@ class ExtensionForm extends Component
         $this->extensionRepository = $extensionRepository;
     }
 
-    
+    public function rules()
+    {
+        $request = new ExtensionRequest();
+        $request->setExtensionUuid($this->extensions->extension_uuid);
+        return $request->rules();
+    }
 
     private function setDefaultValues()
     {
@@ -244,6 +250,7 @@ class ExtensionForm extends Component
     public function save()
     {
         $this->validate();
+
         if (auth()->user()->hasPermission('extension_domain')) {
             $domainUuid = $this->selectedDomain;
         } else {
