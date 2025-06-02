@@ -21,12 +21,12 @@ class ExtensionRepository
         $this->extensionUser = $extensionUser;
     }
 
-    public function mine()
+  public function mine()
     {
         $user = auth()->user();
         return collect([$user->extensions]);
     }
-
+  
     public function all()
     {
         return $this->extension->all();
@@ -221,7 +221,6 @@ class ExtensionRepository
 
     public function create(array $extensionData, array $extensionUsers = []): array
     {
-        dd('extensionData', $extensionData, 'extensionUsers', $extensionUsers);
         $extensionData['extension_uuid'] = $extensionData['extension_uuid'] ?? Str::uuid();
         $range = intval($extensionData['range'] ?? 1);
         $baseExtension = $extensionData['extension'];
@@ -314,12 +313,7 @@ class ExtensionRepository
             if (isset($extensionData['voicemail_enabled']) || isset($extensionData['voicemail_password'])) {
                 $this->updateVoicemail($extension, $extensionData);
             }
-
-            //
-            // if (!empty($extensionData['device_mac_addresses']) && is_array($extensionData['device_mac_addresses'])) {
-            //     $this->assignDevicesToExtension($extension, $extensionData);
-            // }
-
+          
             DB::commit();
             return $extension->fresh();
         } catch (\Exception $e) {
@@ -333,6 +327,7 @@ class ExtensionRepository
             DB::beginTransaction();
             $extension = $this->findByUuid($uuid);
             $extension->delete();
+            $extension->extensionUsers->delete();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -342,7 +337,6 @@ class ExtensionRepository
 
     protected function syncExtensionUsers(string $extensionUuid, array $extensionUsers, ?string $defaultDomainUuid = null): void
     {
-        // dd('extensionUsers', $extensionUsers, 'defaultDomainUuid', $defaultDomainUuid);
         foreach ($extensionUsers as $userData) {
             if (empty($userData['user_uuid'])) {
                 continue;
@@ -465,7 +459,7 @@ class ExtensionRepository
         }
 
         if (strpos($mwiAccount, '@') === false) {
-            $mwiAccount .= "@" . auth()->user()->domain_name;
+            $mwiAccount .= "@" . auth()->user()->domain->domain_name;
         }
 
         if ($increment > 0) {
@@ -544,6 +538,37 @@ class ExtensionRepository
 
         if (!file_exists($directory)) {
             mkdir($directory, 0770, true);
+        }
+    }
+    
+    public function copy(string $uuid, string $extensionCopy, string $numberAliasCopy): Extension
+    {
+        try {
+            DB::beginTransaction();
+
+            $originalExtension = $this->findByUuid($uuid, true);
+            
+            $newExtension = $originalExtension->replicate();
+            $newExtension->extension_uuid = Str::uuid();
+            $newExtension->extension = $extensionCopy;
+            $newExtension->number_alias = $numberAliasCopy;
+            $newExtension->description = $originalExtension->description . ' (copy)';
+            $newExtension->save();
+
+            $originalVoicemail = $originalExtension->voicemail;
+
+            if ($originalVoicemail) {
+                $newVoicemail = $originalVoicemail->replicate();
+                $newVoicemail->voicemail_uuid = Str::uuid();
+                $newVoicemail->voicemail_id = $newExtension->number_alias ?? $newExtension->extension;
+                $newVoicemail->save();
+            }
+    
+            DB::commit();
+            return $newExtension;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
     }
 }

@@ -58,3 +58,4 @@ class ContactAttachment extends Model
 		return $this->belongsTo(Contact::class, 'contact_uuid', 'contact_uuid');
 	}
 }
+    
