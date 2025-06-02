@@ -3,8 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Facades\DefaultSetting;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
@@ -32,7 +35,7 @@ class UserRequest extends FormRequest
                 "string",
                 "max:255"
             ],
-			"user_email" => "bail|required|email|max:254",
+			"user_email" => "bail|required|max:254|email:strict,spoof,dns",
 			"password" => [
                 "bail",
                 ($isCreating ? "required" : "nullable"),
@@ -44,7 +47,7 @@ class UserRequest extends FormRequest
 			"timezone" => ["nullable", 'regex:/^\w+\/\w[\w\-]+\w$/i'],
             "contact_uuid" => "nullable|uuid",
 			"user_enabled" => "bail|nullable",
-			"api_key" => "nullable|min:30",
+			"api_key" => ["nullable","min:30"],
 		];
 
         if ($reqLength > 0)
@@ -62,12 +65,32 @@ class UserRequest extends FormRequest
         if ($reqSpecial)
             $rule["password"][] = 'regex:/(?=.*[\W])/';
 
-        if ($isCreating){
-            if (isset($userUnique) && ($userUnique == 'global'))
-                $rule["username"][] = Rule::unique('App\Models\User','username');
-            else
-                $rule["username"][] = Rule::unique('App\Models\User','username')->where(fn (Builder $query) => $query->where('domain_uuid', Session::get('domain_uuid')));
+        if(App::hasDebugModeEnabled())
+        {
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '.print_r(request()->toArray(), true));
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] user: '.print_r($this->user, true));
         }
+        if ($isCreating){
+            $rule["api_key"][] = Rule::unique('App\Models\User','api_key');
+            $userUnique = DefaultSetting::get('users', 'unique', 'text');
+            if (isset($userUnique) && ($userUnique == 'global'))
+            {
+                $rule["username"][] = Rule::unique('App\Models\User','username');
+            }
+            else
+            {
+                $rule["username"][] = Rule::unique('App\Models\User','username')
+                    ->when(!$userUnique, function (Builder $query){
+                        // if user is not unique, we only allow unique users within the same domain
+                        $query->where('domain_uuid', Session::get('domain_uuid'));
+                    });
+            }
+        }
+        else
+        {
+            $rule["api_key"][] = Rule::unique('App\Models\User','api_key')->ignore($this->user->user_uuid, $this->user->getKeyName());
+        }
+
         return $rule;
 	}
 }

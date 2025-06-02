@@ -10,7 +10,7 @@
         "axios": "^1.1.2",
         "laravel-vite-plugin": "^1.0.0",
         "sass": "^1.85.1",
-        "vite": "^5.0.0"
+        "vite": "^6.3.5"
     },
     "dependencies": {
         "@eonasdan/tempus-dominus": "^6.10.3",
@@ -21,7 +21,7 @@
         "bootstrap-icons": "^1.11.3",
         "bootstrap4-duallistbox": "^4.0.2",
         "install": "^0.13.0",
-        "jquery": "3.2.1",
+        "jquery": "^3.7.1",
         "overlayscrollbars": "^2.11.1",
         "prismjs": "^1.30.0",
         "select2": "^4.1.0-rc.0"

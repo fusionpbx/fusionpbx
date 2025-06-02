@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Dialplan;
 use App\Models\DialplanDetail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
@@ -25,24 +26,26 @@ class DialplanDetailRepository
         return $this->model->where('dialplan_detail_uuid', $dialplan_detail_uuid)->first();
     }
 
-	public function create(string $dialplan_uuid, array $dialplanDetails): void
+	public function create(Dialplan $dialplan, array $dialplanDetails): void
 	{
 		foreach ($dialplanDetails as $dialplanDetail)
 		{
-			$dialplanDetail['dialplan_uuid'] = $dialplan_uuid;
+			$dialplanDetail['domain_uuid'] = $dialplan->domain_uuid;
+			$dialplanDetail['dialplan_uuid'] = $dialplan->dialplan_uuid;
 			$dialplanDetail['dialplan_detail_uuid'] = Str::uuid();
 
 			$this->model->create($dialplanDetail);
 		}
 	}
 
-	public function update(string $dialplan_uuid, array $dialplanDetails): void
+	public function update(Dialplan $dialplan, array $dialplanDetails): void
 	{
 		foreach ($dialplanDetails as $dialplanDetail)
 		{
 			if (empty($dialplanDetail['dialplan_detail_uuid']))
 			{
-				$dialplanDetail['dialplan_uuid'] = $dialplan_uuid;
+				$dialplanDetail['domain_uuid'] = $dialplan->domain_uuid;
+				$dialplanDetail['dialplan_uuid'] = $dialplan->dialplan_uuid;
 				$dialplanDetail['dialplan_detail_uuid'] = Str::uuid();
 
 				$this->model->create($dialplanDetail);

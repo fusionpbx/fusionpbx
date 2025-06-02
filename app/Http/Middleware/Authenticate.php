@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
-use Closure;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class Authenticate extends Middleware
@@ -16,7 +17,7 @@ class Authenticate extends Middleware
     public function handle($request, Closure $next, ...$guards): Response
     {
         $authenticated = $request->session()->get('authenticated', 0);
-        \Log::debug('$authenticated: '.print_r($authenticated, true));
+        Log::debug('$authenticated: '.print_r($authenticated, true));
 
         if (!$authenticated){
             route('login');

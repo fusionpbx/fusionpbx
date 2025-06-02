@@ -19,7 +19,7 @@ class DomainRequest extends FormRequest
 	public function rules(): array
 	{
         //dd($this);
-		$r =  [
+		$rule =  [
 			"domain_name" => [
                                 "bail",
                                 "required",
@@ -34,10 +34,10 @@ class DomainRequest extends FormRequest
 		];
         if ($this->isMethod('post')){
             if(App::hasDebugModeEnabled()){
-                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] PUT');
+                Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] POST');
             }
-            $r['domain_name'][] = Rule::unique('App\Models\Domain','domain_name');
+            $rule['domain_name'][] = Rule::unique('App\Models\Domain','domain_name');
         }
-        return $r;
+        return $rule;
 	}
 }

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Facades\DefaultSetting;
+use App\Http\Resources\UserResource;
 use App\Models\Domain;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -14,14 +16,16 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Socialite;
 
 class AuthController extends Controller
 {
+    use AuthenticatesUsers;
+
     public function index()
     {
-
         $userUnique = DefaultSetting::get('users', 'unique', 'text');
         $defaultDomainUuid = DefaultSetting::get('openid', 'default_domain_uuid', 'uuid');
         $defaultGroupUuid = DefaultSetting::get('openid', 'default_group_uuid', 'uuid');
@@ -61,11 +65,41 @@ class AuthController extends Controller
         return view('auth.login')->with('okta_enabled', $oktaEnabled);
     }
 
+    public function apiLogin(Request $request)
+    {
+        $credentials = [
+            'user_email' => $request->user_email,
+            'password' => $request->password,
+        ];
+
+        $validator = Validator::make($credentials, [
+            'user_email' => 'required|string|email:strict,spoof,dns',
+            'password' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'error' => $validator->messages(),
+            ],  422);
+        }
+
+        if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
+            $user = $this->guard()->user();
+            return response()->json([
+                'data' => $user->toResource(),
+            ]);
+        }
+
+        return response()->json([
+                'error' => 'Authentication failed.',
+            ],  401);
+    }
+
     //TODO: add support for the non-global loging style from Fusion
     public function login(Request $request)
     {
         $request->validate([
-            'user_email' => 'required|string',
+            'user_email' => 'required|string|email:strict,spoof,dns',
             'password' => 'required|string',
         ]);
 

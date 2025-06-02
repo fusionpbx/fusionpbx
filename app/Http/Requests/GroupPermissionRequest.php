@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GroupPermissionRequest extends FormRequest
@@ -23,7 +24,7 @@ class GroupPermissionRequest extends FormRequest
     {
         return [
             'search' => 'nullable|string',
-            'group_uuid' => 'nullable|uuid',
+            'group_uuid' => 'nullable|uuid|exists:App\Models\Group,group_uuid',
             'filter' => 'nullable|string|in:all,assigned,not_assigned,protected',
         ];
     }
