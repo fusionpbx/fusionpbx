@@ -16,7 +16,7 @@ class OutboundDialplanRequest extends FormRequest
 	{
 		return [
 			"gateway" => "bail|required|string|max:255",
-			"gateway_2" => "bail|required|string|max:255",
+			"gateway_2" => "bail|required_with:gateway_3|string|max:255",
 			"gateway_3" => "bail|required|string|max:255",
             "dialplan_expression*" => "bail|required|string",
             "prefix_number" => "bail|nullable|numeric|integer|min:1",
