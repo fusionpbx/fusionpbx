@@ -42,7 +42,7 @@
 									placeholder="Enter carrier channel"
 									value="{{ old('carrier_channels', $carrier->carrier_channels ?? '') }}"
 									required
-									wire:model="dialplan_channels"
+									wire:model="carrier_channels"
 								>
 								@error('carrier_channels')
 									<div class="invalid-feedback d-block">{{ $message }}</div>
@@ -125,17 +125,18 @@
 
 					<div class="row mt-3">
 						<div class="col-md-6">
-							<div class="form-group">
+							<div class="form-group" wire:ignore>
 								<label for="lcr_tags" class="form-label">Tags</label>
 								<input
 									type="text"
-									class="form-control @error('lcr_tags') is-invalid @enderror"
+									class="form-control form-tags @error('lcr_tags') is-invalid @enderror"
 									id="lcr_tags"
 									name="lcr_tags"
 									placeholder="Enter lcr tags"
 									value="{{ old('lcr_tags', $carrier->lcr_tags ?? '') }}"
 									required
-									 wire:model="lcr_tags"
+									data-ub-tag-variant="primary"
+									wire:model="lcr_tags"
 								>
 								@error('lcr_tags')
 									<div class="invalid-feedback d-block">{{ $message }}</div>
