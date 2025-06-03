@@ -274,12 +274,20 @@
     <!-- # Enable SNMP. 0 - No, 1 - Yes, default value is 0. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($grandstream_snmp_enable)}
+    <P21896>{$grandstream_snmp_enable}</P21896>
+    {else}
     <P21896>0</P21896>
+{/if}
 
     <!-- # SNMP Version. 1 - Version 1, 2 - Version 2c, 3 - Version 3. Default value is 3. -->
     <!-- # Nmuber: 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P21904>3</P21904>
+{if isset($grandstream_snmp_version)}
+    <P21904>{$grandstream_snmp_version}</P21904>
+    {else}
+    <P21904>2</P21904>
+{/if}
 
     <!-- # SNMP Port. Default is port 162 -->
     <!-- # Number: 162 or 1025 to 65535 -->
@@ -305,7 +313,11 @@
 
     <!-- # SNMPv1/v2c Community -->
     <!-- # Max Character Number: 64 -->
-    <P21902></P21902>
+{if isset($grandstream_snmp_community)}
+    <P21902>{$grandstream_snmp_community}</P21902>
+    {else}
+    <P21902>public</P21902>
+{/if}
 
     <!-- # SNMP Trap Community -->
     <!-- # Max String Length: 64 -->
