@@ -170,6 +170,7 @@ class CarriersTable extends DataTableComponent
             Column::make("Carrier uuid", "carrier_uuid")->hideIf(true),
 
             Column::make("Carrier name", "carrier_name")
+                ->searchable()
                 ->sortable(),
 
             BooleanColumn::make("Carrier enabled", "enabled")

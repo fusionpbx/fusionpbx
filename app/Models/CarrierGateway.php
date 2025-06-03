@@ -12,20 +12,20 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class CarrierGateway extends Pivot
 {
-	use HasFactory, HasUniqueIdentifier, GetTableName;
-	protected $table = 'v_carrier_gateways';
-	protected $primaryKey = 'carrier_gateway_uuid';
-	public $incrementing = false;
-	protected $keyType = 'string';	// TODO, check if UUID is valid
-	const CREATED_AT = 'insert_date';
-	const UPDATED_AT = 'update_date';
+    use HasFactory, HasUniqueIdentifier, GetTableName;
+    protected $table = 'v_carrier_gateways';
+    protected $primaryKey = 'carrier_gateway_uuid';
+    public $incrementing = false;
+    protected $keyType = 'string';	// TODO, check if UUID is valid
+    const CREATED_AT = 'insert_date';
+    const UPDATED_AT = 'update_date';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-	protected $fillable = [
+    protected $fillable = [
         'carrier_uuid',
         'gateway_uuid',
         'prefix',
@@ -33,5 +33,13 @@ class CarrierGateway extends Pivot
         'codec',
         'enabled',
         'priority',
+    ];
+
+	protected static $stringBooleanFields = [
+		'enabled',
 	];
+
+    public function carrier(): BelongsTo {
+        return $this->belongsTo(Carrier::class, 'carrier_uuid', 'carrier_uuid');
+    }
 }
