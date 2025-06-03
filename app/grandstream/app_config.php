@@ -1208,5 +1208,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Use Random Port. 0 - No, 1 - Yes. Default is 0";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f1e8c4a5-9b2d-4f7e-8c3a-1d5e6f9a8b7c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_snmp_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable SNMP. 0 - No, 1 - Yes. Default is 0 (disabled).";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a2b3c4d5-6e7f-8a9b-0c1d-2e3f4a5b6c7d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_snmp_version";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SNMP Version. 1 - Version 1, 2 - Version 2c, 3 - Version 3. Default is 2 (Version 2c).";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b3c4d5e6-7f8a-9b0c-1d2e-3f4a5b6c7d8e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_snmp_community";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "public";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SNMPv1/v2c Community string. Default is 'public'.";
+		$y++;
 
 ?>
