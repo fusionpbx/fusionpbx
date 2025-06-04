@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class UserRequest extends FormRequest
 {
@@ -26,7 +27,6 @@ class UserRequest extends FormRequest
         $reqLowcase = DefaultSetting::get('users', 'password_lowercase', 'boolean') ?? false;
         $reqUpcase = DefaultSetting::get('users', 'password_uppercase', 'boolean') ?? false;
         $reqSpecial = DefaultSetting::get('users', 'password_special', 'boolean') ?? false;
-        $userUnique = DefaultSetting::get('users', 'unique', 'text');
 
 		$rule =  [
 			"username" => [
@@ -40,7 +40,8 @@ class UserRequest extends FormRequest
                 "bail",
                 ($isCreating ? "required" : "nullable"),
                 "string",
-                "confirmed"
+                "confirmed",
+                "Password::uncompromised()",
             ],
 			"domain_uuid" => "sometimes|uuid|exists:App\Models\Domain,domain_uuid",
 			"language" => ['bail', 'nullable','min:2','regex:/[a-z]{2,3}\-\w+/i'],   // TODO: Find a better rule
@@ -51,19 +52,37 @@ class UserRequest extends FormRequest
 		];
 
         if ($reqLength > 0)
-            $rule["password"][] = "min:".$reqLength;
+        {
+            //$rule["password"][] = "min:".$reqLength;
+            $rule["password"][] = "Password::min($reqLength)";
+        }
+        else
+        {
+            $rule["password"][] = "Password::min(1)";
+        }
+
 
         if ($reqNumber)
-            $rule["password"][] = 'regex:/(?=.*[\d])/';
+        {
+            //$rule["password"][] = 'regex:/(?=.*[\d])/';
+            $rule["password"][] = "Password::numbers()";
+        }
 
         if ($reqLowcase)
+        {
             $rule["password"][] = 'regex:/(?=.*[a-z])/';
+        }
 
         if ($reqUpcase)
+        {
             $rule["password"][] = 'regex:/(?=.*[A-Z])/';
+        }
 
         if ($reqSpecial)
-            $rule["password"][] = 'regex:/(?=.*[\W])/';
+        {
+            //$rule["password"][] = 'regex:/(?=.*[\W])/';
+            $rule["password"][] = "Password::symbols()";
+        }
 
         if(App::hasDebugModeEnabled())
         {

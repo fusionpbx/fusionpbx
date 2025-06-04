@@ -14,7 +14,12 @@ return [
     */
 
     'api_type' => env('FS_API_TYPE', 'XML_RPC'),
-    
-    
 
+    'CHECK_CALLCENTERS' => 1,
+    'CHECK_CONFERENCES' => 2,
+    'CHECK_CONFERENCECENTERS' => 4,
+    'CHECK_EXTENSIONS' => 8,
+    'CHECK_FAXES' => 16,
+    'CHECK_IVRS' => 32,
+    'CHECK_RINGGROUPS' => 64,
 ];
