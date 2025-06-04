@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Facades\DefaultSetting;
 use App\Models\Extension;
-ise App\Rules\UniqueFSDestination;
+use App\Rules\UniqueFSDestination;
 use App\Rules\ValidCidr;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
