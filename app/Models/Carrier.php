@@ -7,7 +7,6 @@ use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -38,6 +37,12 @@ class Carrier extends Model
         'lcr_tags',
 	];
 
+	protected static $stringBooleanFields = [
+		'fax_enabled',
+		'short_call_friendly',
+		'enabled',
+	];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -58,8 +63,7 @@ class Carrier extends Model
 		return $this->hasMany(Lcr::class, 'carrier_uuid', 'carrier_uuid');
 	}
 
-    public function gateways(): BelongsToMany {
-		return $this->belongsToMany(Gateway::class, 'v_carrier_gateways', 'carrier_uuid', 'gateway_uuid')->withTimestamps();
-//		$this->belongsToMany(Group::class)->using(UserGroup::class);
+    public function gateways(): HasMany {
+		return $this->hasMany(CarrierGateway::class, 'carrier_uuid', 'carrier_uuid');
 	}
 }
