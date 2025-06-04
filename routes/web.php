@@ -20,6 +20,7 @@ use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationsController;
 use App\Http\Controllers\MusicOnHoldController;
+use App\Http\Controllers\PhraseController;
 use App\Http\Controllers\XmlCDRController;
 use App\Http\Controllers\SipProfileController;
 use App\Http\Controllers\StreamController;
@@ -90,12 +91,15 @@ Route::middleware(['auth','permission'])->group(function () {
     //Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
     //Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
 
-    // GETEWAY
+    // GATEWAY
     Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
     Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
 
     // CARRIERS
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
+
+    // PHRASE
+    Route::resource('/phrases', PhraseController::class)->name('phrases', 'phrases');
 
     // SIP PROFILE
     Route::resource('/sipprofiles', SipProfileController::class)->name('sipprofiles', 'sipprofiles');
