@@ -14,10 +14,20 @@ class ExtensionRequest extends FormRequest
 {
 
     protected ?string $extensionUuid = null;
+    protected ?Extension $extension = null;
 
     public function setExtensionUuid(?string $extensionUuid): void
     {
         $this->extensionUuid = $extensionUuid;
+    }
+
+    public function setExtension(?Extension $extension): void
+    {
+        $this->extension = $extension;
+	if (isset($extension))
+	{
+		$this->setExtensionUuid($extension->extension_uuid);
+	}
     }
 
     /**
@@ -47,10 +57,8 @@ class ExtensionRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:50',
-                new UniqueFSDestination()
-
             ],
-            'number_alias' => ['nullable','numeric', new UniqueFSDestination()],
+            'number_alias' => ['nullable','numeric',],
             'password' => ['nullable','string'],
             'accountcode' => 'nullable|string|max:50',
             'enabled' => 'string',
@@ -69,7 +77,7 @@ class ExtensionRequest extends FormRequest
             'limit_max' => 'nullable|integer|min:1|max:100',
             'limit_destination' => 'nullable|string|max:100',
             'user_context' => 'nullable|string|max:100',
-            'range' => 'somtimes|nullable|integer|min:1',
+            'range' => 'sometimes|nullable|integer|min:1',
             'missed_call_app' => 'nullable|in:email,text',
             'missed_call_data' => 'nullable|string|max:500',
             'toll_allow' => 'nullable|string|max:200',
@@ -136,11 +144,14 @@ class ExtensionRequest extends FormRequest
 
         if ($extensionUuid)
         {
-            $rules['extension'][] = Rule::unique('App\Models\Extension','extension')->ignore($extensionUuid, $this->extension->getKeyName());
+		// TODO: fix UniqueFSDestination to accept ->ignore()
+            $rules['extension'][] = Rule::unique('App\Models\Extension','extension')->ignore($this->extension, $this->extension->getKeyName());
+            $rules['number_alias'][] = Rule::unique('App\Models\Extension','number_alias')->ignore($this->extension, $this->extension->getKeyName());
         }
         else
         {
-            $rules['extension'][] = Rule::unique('App\Models\Extension','extension');
+            $rules['extension'][] = new UniqueFSDestination();
+            $rules['number_alias'][] = new UniqueFSDestination();
         }
 
 

@@ -31,9 +31,9 @@ class ValidCidr implements ValidationRule
         ?int $ipv6minbits = null,
         ?int $ipv6maxbits = null
     ) {
-        $this->ipv4mixbits = $ipv4mixbits;
+        $this->ipv4minbits = $ipv4minbits;
         $this->ipv4maxbits = $ipv4maxbits;
-        $this->ipv6mixbits = $ipv6mixbits;
+        $this->ipv6minbits = $ipv6minbits;
         $this->ipv6maxbits = $ipv6maxbits;
         $this->has_bits = func_num_args() > 0;
     }

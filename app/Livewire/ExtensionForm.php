@@ -107,7 +107,7 @@ class ExtensionForm extends Component
     public function rules()
     {
         $request = new ExtensionRequest();
-        $request->setExtensionUuid($this->extensions->extension_uuid);
+        $request->setExtension($this->extensions);
         return $request->rules();
     }
 

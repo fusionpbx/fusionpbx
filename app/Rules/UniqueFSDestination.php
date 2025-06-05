@@ -73,7 +73,7 @@ class UniqueFSDestination implements ValidationRule
             $o = Extension::where('extension', $value)->where('domain_uuid', Session::get('domain_uuid'));
             if ($o->count() > 0)
             {
-                $fail('The :attribute is already used in a Extension.');
+                $fail('The :attribute is already used in an Extension.');
             }
 
             $o = Extension::where('number_alias', $value)->where('domain_uuid', Session::get('domain_uuid'));
