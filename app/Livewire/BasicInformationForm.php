@@ -23,10 +23,10 @@ class BasicInformationForm extends Component
     public $contactCategory;
     public $contactTimeZone;
     public $contactNote;
-    
+
     public $contactTypes = ['customer', 'contractor','friend', 'lead', 'member', 'family', 'subscriber', 'supplier', 'provider', 'user', 'volunteer'];
     public $timeZones = [];
-    
+
     protected $rules = [
         'contactType' => 'required',
         'contactOrganization' => 'nullable|string|max:255',
@@ -42,9 +42,9 @@ class BasicInformationForm extends Component
     {
         $this->contactUuid = $contactUuid;
         $this->loadTimeZones();
-        
+
         $contact = Contact::where('contact_uuid', $this->contactUuid)->first();
-        
+
         if ($contact) {
             $this->contactType = $contact->contact_type;
             $this->contactOrganization = $contact->contact_organization;
@@ -61,19 +61,19 @@ class BasicInformationForm extends Component
             $this->contactNote = $contact->contact_note;
         }
     }
-    
+
     public function loadTimeZones()
     {
         $this->timeZones = \DateTimeZone::listIdentifiers();
     }
-    
+
     public function save()
     {
         try {
             $this->validate();
             $contact = Contact::where('contact_uuid', $this->contactUuid)->first();
             if ($contact) {
-                $contact->domain_uuid = auth()->user()->domain_uuid;
+                $contact->domain_uuid = Session::get('domain_uuid');
                 $contact->contact_type = $this->contactType;
                 $contact->contact_organization = $this->contactOrganization;
                 $contact->contact_name_prefix = $this->contactNamePrefix;
@@ -90,8 +90,8 @@ class BasicInformationForm extends Component
                 $contact->save();
             } else {
                 Contact::create([
-                    'contact_uuid' => Str::uuid(),
-                    'domain_uuid' => auth()->user()->domain_uuid,
+//                    'contact_uuid' => Str::uuid(),
+                    'domain_uuid' => Session::get('domain_uuid'),
                     'contact_type' => $this->contactType,
                     'contact_organization' => $this->contactOrganization,
                     'contact_name_prefix' => $this->contactNamePrefix,

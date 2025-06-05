@@ -85,7 +85,7 @@ class ContactAddressForm extends Component
                 if (!empty($address['address_street']) || !empty($address['address_locality'])) {
                     ContactAddress::create([
                         'contact_uuid' => $this->contactUuid,
-                        'domain_uuid' => auth()->user()->domain_uuid,
+                        'domain_uuid' => Session::get('domain_uuid'),
                         'address_street' => $address['address_street'],
                         'address_primary' => $address['address_primary'] ? 1 : 0,
                         'address_street' => $address['address_street'],
