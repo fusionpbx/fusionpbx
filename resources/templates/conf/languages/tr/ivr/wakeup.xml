@@ -1,0 +1,145 @@
+<include>
+	<macro name="wakeup-greeting">
+		<input pattern="(.*)">
+			<match>
+				<!-- To schedule a wakeup call enter a 4 digit number  -->
+				<!-- For 6:30 am press 0630. Enter the digits now. -->
+				<action function="execute" data="sleep(1000)"/>
+				<action function="play-file" data="ivr/ivr-request_wakeup_call.wav"/>
+				<!--
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/0.wav"/>
+				<action function="play-file" data="digits/6.wav"/>
+				<action function="play-file" data="digits/3.wav"/>
+				<action function="play-file" data="digits/0.wav"/>
+
+				<action function="execute" data="sleep(750)"/>
+				<action function="play-file" data="ivr/ivr-for.wav"/>
+				<action function="play-file" data="digits/6.wav"/>
+				<action function="play-file" data="digits/30.wav"/>
+				<action function="play-file" data="time/a-m.wav"/>
+				-->
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-hours">
+		<input pattern="(.*)">
+			<match>
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-please_enter_the.wav"/>
+				<action function="play-file" data="time/hours.wav"/>
+				<!--<action function="play-file" data="misc/followed.wav"/>-->
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-minutes">
+		<input pattern="(.*)">
+			<match>
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-please_enter_the.wav"/>
+				<action function="play-file" data="time/minutes.wav"/>
+				<!--<action function="play-file" data="misc/followed.wav"/>-->
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-destination">
+		<input pattern="(.*)">
+			<match>
+				<!-- Enter the number followed by pound -->
+				<action function="execute" data="sleep(1000)"/>
+				<action function="play-file" data="ivr/ivr-please_enter_the.wav"/>
+				<action function="play-file" data="ivr/ivr-number.wav"/>
+				<action function="play-file" data="misc/followed.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-scheduled">
+		<input pattern="(.*)">
+			<match>
+				<!-- Your wakeup call has been scheduled for 0715 -->
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-requested_wakeup_call_for.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-accept">
+		<input pattern="(.*)">
+			<match>
+				<!-- To accept press 1 to cancel press 2 -->
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-to_accept_press.wav"/>
+				<action function="play-file" data="digits/1.wav"/>
+				<action function="play-file" data="ivr/ivr-to_reject.wav"/>
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/2.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-cancel">
+		<input pattern="(.*)">
+			<match>
+				<!-- To cancel the wakeup call press * -->
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-cancel_wakeup_call.wav"/>
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/2.wav"/>
+				<action function="play-file" data="misc/followed.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-cancelled">
+		<input pattern="(.*)">
+			<match>
+				<!-- wakeup call cancelled -->
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-wakeup_call_cancelled.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-call">
+		<input pattern="(.*)">
+			<match>
+				<!-- Say the current date and time -->
+				<action function="execute" data="sleep(1000)"/>
+				<action function="play-file" data="ivr/ivr-this_is_your_wakeup_call.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-call-exit" enabled="false">
+		<input pattern="(.*)">
+			<match>
+				<!-- This is your wakeup call to exit press 1 for 9 minutes press 2 -->
+				<action function="execute" data="sleep(500)"/>
+				<action function="play-file" data="ivr/ivr-this_is_your_wakeup_call.wav"/>
+				<action function="play-file" data="voicemail/vm-to_exit.wav"/>
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/star.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+	<macro name="wakeup-call-snooze" enabled="false">
+		<input pattern="(.*)">
+			<match>
+				<!-- This is your wakeup call to exit press 1 for 10 minutes press 2 -->
+				<action function="execute" data="sleep(1000)"/>
+				<action function="play-file" data="ivr/ivr-this_is_your_wakeup_call.wav"/>
+				<action function="play-file" data="voicemail/vm-to_exit.wav"/>
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/1.wav"/>
+				<action function="play-file" data="ivr/ivr-for.wav"/>
+				<action function="play-file" data="digits/10.wav"/>
+				<action function="play-file" data="time/minutes.wav"/>
+				<action function="play-file" data="voicemail/vm-press.wav"/>
+				<action function="play-file" data="digits/2.wav"/>
+				<action function="execute" data="sleep(100)"/>
+			</match>
+		</input>
+	</macro>
+</include>

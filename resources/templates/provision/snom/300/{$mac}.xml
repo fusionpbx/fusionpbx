@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+<phone-settings e="2">
+<display_method perm="">display_name_number</display_method>
+<keyboard_lock perm="">off</keyboard_lock>
+<enable_keyboard_lock perm="">off</enable_keyboard_lock>
+<transfer_on_hangup perm="">on</transfer_on_hangup>
+<update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
+<firmware_status>http://{$domain_name}{$project_path}/app/provision/?mac={$mac}&amp;filename_firmware-{$mac}.xml</firmware_status>
+<date_us_format>off</date_us_format>
+<time_24_format>on</time_24_format>
+<challenge_response>off</challenge_response>
+<filter_registrar>off</filter_registrar>
+<logon_wizard>off</logon_wizard>
+<message_led_other>off</message_led_other>
+<user_phone>off</user_phone>
+<intercom_enabled>on</intercom_enabled>
+{if isset($admin_password) }
+<http_user perm="">{$admin_name}</http_user>
+<http_pass perm="">{$admin_password}</http_pass>
+{/if}
+<web_logout_timer>5</web_logout_timer>
+{if isset($admin_password) }
+<admin_mode_login perm="">{$admin_name}</admin_mode_login>
+<admin_mode_password perm="">{$admin_password}</admin_mode_password>
+<admin_mode_password_confirm perm="">{$admin_password}</admin_mode_password_confirm>
+{else}
+<admin_mode_password>0000</admin_mode_password>
+<admin_mode_password_confirm>0000</admin_mode_password_confirm>
+{/if}
+<admin_mode>on</admin_mode>
+<language perm="">English</language>
+<utc_offset perm=""></utc_offset>
+<ntp_server perm="">192.53.103.104</ntp_server>
+<timezone>{$snom_time_zone}</timezone>
+<tone_scheme>GBR</tone_scheme>
+<redirect_event perm="">none</redirect_event>
+<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
+<subscribe_config perm="">off</subscribe_config>
+<ring_sound>Ringer6</ring_sound>
+<no_dnd>off</no_dnd>
+<pnp_config perm="">on</pnp_config>
+<call_waiting>on</call_waiting>
+<use_hidden_tags perm="">off</use_hidden_tags>
+<user_active idx="1" perm="">on</user_active>
+<user_active idx="2" perm="">off</user_active>
+<user_active idx="3" perm="">off</user_active>
+<user_active idx="4" perm="">off</user_active>
+<user_realname idx="1" perm="">{$user.1.display_name}</user_realname>
+<user_realname idx="2" perm=""></user_realname>
+<user_realname idx="3" perm=""></user_realname>
+<user_realname idx="4" perm=""></user_realname>
+<user_name idx="1" perm="">{$user.1.user_id}</user_name>
+<user_name idx="2" perm=""></user_name>
+<user_name idx="3" perm=""></user_name>
+<user_name idx="4" perm=""></user_name>
+<user_host idx="1" perm="">{$user.1.server_address}</user_host>
+<user_host idx="2" perm=""></user_host>
+<user_host idx="3" perm=""></user_host>
+<user_host idx="4" perm=""></user_host>
+<user_outbound idx="1" perm="">{$user.1.outbound_proxy}</user_outbound>
+<user_outbound idx="2" perm=""></user_outbound>
+<user_outbound idx="3" perm=""></user_outbound>
+<user_outbound idx="4" perm=""></user_outbound>
+<user_pname idx="1" perm=""></user_pname>
+<user_pname idx="2" perm=""></user_pname>
+<user_pname idx="3" perm=""></user_pname>
+<user_pname idx="4" perm=""></user_pname>
+<user_pass idx="1" perm="">{$user.1.password}</user_pass>
+<user_pass idx="2" perm="">*****</user_pass>
+<user_pass idx="3" perm="">*****</user_pass>
+<user_pass idx="4" perm="">*****</user_pass>
+<user_mailbox idx="1" perm="">{$voicemail_number}</user_mailbox>
+<user_mailbox idx="2" perm=""></user_mailbox>
+<user_mailbox idx="3" perm=""></user_mailbox>
+<user_mailbox idx="4" perm=""></user_mailbox> 
+<user_expiry idx="1" perm="">{$user.1.register_expires}</user_expiry>
+<user_expiry idx="2" perm="">{$user.2.register_expires}</user_expiry> 
+<user_expiry idx="3" perm="">{$user.3.register_expires}</user_expiry>
+<user_expiry idx="4" perm="">{$user.4.register_expires}</user_expiry> 
+<user_expiry idx="5" perm="">{$user.5.register_expires}</user_expiry> 
+<user_srtp idx="1" perm="">off</user_srtp>
+<user_realname idx="2" perm="">{$user.2.display_name}</user_realname>
+<user_name idx="2" perm="">{$user.2.user_id}</user_name>
+<user_host idx="2" perm="">{$user.2.server_address}</user_host>
+<user_pass idx="2" perm="">{$user.2.password}</user_pass>
+<user_mailbox idx="2" perm="">{$voicemail_number}</user_mailbox>
+<user_srtp idx="2" perm="">off</user_srtp>
+<user_realname idx="3" perm="">{$user.3.display_name}</user_realname>
+<user_name idx="3" perm="">{$user.3.user_id}</user_name>
+<user_host idx="3" perm="">{$user.3.server_address}</user_host>
+<user_pass idx="3" perm="">{$user.3.password}</user_pass>
+<user_mailbox idx="3" perm="">{$voicemail_number}</user_mailbox>
+<user_srtp idx="3" perm="">off</user_srtp>
+<user_realname idx="4" perm="">{$user.4.display_name}</user_realname>
+<user_name idx="4" perm="">{$user.4.user_id}</user_name>
+<user_host idx="4" perm="">{$user.4.server_address}</user_host>
+<user_pass idx="4" perm="">{$user.4.password}</user_pass>
+<user_mailbox idx="4" perm="">{$voicemail_number}</user_mailbox>
+<user_srtp idx="4" perm="">off</user_srtp>
+<user_realname idx="5" perm="">{$user.5.display_name}</user_realname>
+<user_name idx="5" perm="">{$user.5.user_id}</user_name>
+<user_pass idx="5" perm="">{$user.5.password}</user_pass>
+<user_host idx="5" perm="">{$user.5.server_address}</user_host>
+<user_mailbox idx="5" perm="">{$voicemail_number}</user_mailbox>
+<user_srtp idx="5" perm="">off</user_srtp>
+<user_srtp idx="4" perm="">off</user_srtp>
+<user_ringer idx="1">Ringer6</user_ringer>
+<user_ringer idx="2">Ringer9</user_ringer>
+<user_ringer idx="3">Ringer9</user_ringer>
+<user_ringer idx="4">Ringer9</user_ringer>
+<record_missed_calls idx="1" perm="">off</record_missed_calls>
+<record_missed_calls idx="2" perm="">off</record_missed_calls>
+<record_missed_calls idx="3" perm="">off</record_missed_calls>
+<record_missed_calls idx="4" perm="">off</record_missed_calls>
+<codec1_name idx="1" perm="">8</codec1_name>
+<codec1_name idx="2" perm="">8</codec1_name>
+<codec1_name idx="3" perm="">8</codec1_name>
+<codec1_name idx="4" perm="">8</codec1_name>
+<codec1_name idx="5" perm="">8</codec1_name>
+<codec1_name idx="6" perm="">8</codec1_name>
+<codec1_name idx="7" perm="">8</codec1_name>
+<codec1_name idx="8" perm="">8</codec1_name>
+<codec1_name idx="9" perm="">8</codec1_name>
+<codec1_name idx="10" perm="">8</codec1_name>
+<codec1_name idx="11" perm="">8</codec1_name>
+<codec1_name idx="12" perm="">8</codec1_name>
+<codec2_name idx="1" perm="">0</codec2_name>
+<codec2_name idx="2" perm="">0</codec2_name>
+<codec2_name idx="3" perm="">0</codec2_name>
+<codec2_name idx="4" perm="">0</codec2_name>
+<codec2_name idx="5" perm="">0</codec2_name>
+<codec2_name idx="6" perm="">0</codec2_name>
+<codec2_name idx="7" perm="">0</codec2_name>
+<codec2_name idx="8" perm="">0</codec2_name>
+<codec2_name idx="9" perm="">0</codec2_name>
+<codec2_name idx="10" perm="">0</codec2_name>
+<codec2_name idx="11" perm="">0</codec2_name>
+<codec2_name idx="12" perm="">0</codec2_name>
+<codec3_name idx="1" perm="">9</codec3_name>
+<codec3_name idx="2" perm="">9</codec3_name>
+<codec3_name idx="3" perm="">9</codec3_name>
+<codec3_name idx="4" perm="">9</codec3_name>
+<codec3_name idx="5" perm="">9</codec3_name>
+<codec3_name idx="6" perm="">9</codec3_name>
+<codec3_name idx="7" perm="">9</codec3_name>
+<codec3_name idx="8" perm="">9</codec3_name>
+<codec3_name idx="9" perm="">9</codec3_name>
+<codec3_name idx="10" perm="">9</codec3_name>
+<codec3_name idx="11" perm="">9</codec3_name>
+<codec3_name idx="12" perm="">9</codec3_name>
+<record_missed_calls idx="1" perm="">off</record_missed_calls>
+<record_missed_calls idx="2" perm="">on</record_missed_calls>
+<record_missed_calls idx="3" perm="">on</record_missed_calls>
+<record_missed_calls idx="4" perm="">on</record_missed_calls>
+</phone-settings>
+<firmware-settings e="2">
+<firmware perm=""></firmware>
+</firmware-settings>
+<functionKeys e="2">
+<fkey idx="0" context="active" perm="">line</fkey>
+<fkey idx="1" context="active" perm="">line</fkey>
+<fkey idx="2" context="active" perm="">keyevent F_REDIAL</fkey>
+<fkey idx="3" context="active" perm="">keyevent F_ADR_BOOK</fkey>
+<fkey idx="4" context="active" perm="">keyevent F_TRANSFER</fkey>
+<fkey idx="5" context="active" perm="">keyevent F_MUTE</fkey>
+</functionKeys>
+<tbook e="2">
+</tbook>
+<dialplan e="2">
+</dialplan>
+</settings>

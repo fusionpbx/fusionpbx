@@ -7,6 +7,8 @@ use App\Models\AccessControlNode;
 use App\Models\Bridge;
 use App\Models\Device;
 use App\Models\DeviceKey;
+use App\Models\DeviceLine;
+use App\Models\DeviceSetting;
 use App\Models\Dialplan;
 use App\Models\Domain;
 use App\Models\Extension;
@@ -83,6 +85,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(DeviceRepository::class, function ($app) {
             return new DeviceRepository(
                 $app->make(Device::class),
+                $app->make(DeviceKey::class),
+                $app->make(DeviceSetting::class),
+                $app->make(DeviceLine::class)
             );
         });
 

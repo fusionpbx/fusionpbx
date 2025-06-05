@@ -1,0 +1,2621 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Grandstream XML Provisioning Configuration -->
+<gs_provision version="1">
+<config version="1">
+
+<!-- ############################################################################################## -->
+<!-- ####            Configuration Template for Grandstream Wave                               #### -->
+<!-- ############################################################################################## -->
+
+<!-- ############################################################################# -->
+<!-- ##  Account 1 Settings                                                     ## -->
+<!-- ############################################################################# -->
+
+<!-- ###################################################################### -->
+<!-- ##  Account 1 General Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.1.password)}
+<P271>1</P271>
+{else}
+<P271>0</P271>
+{/if}
+
+<!-- Account Name -->
+<P270>{$account.1.display_name}</P270>
+
+<!-- SIP Server -->
+{if $account.1.sip_transport != 'dns srv'}
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+<P47>{$account.1.server_address}</P47>
+{/if}
+
+<!-- SIP User ID -->
+<P35>{$account.1.user_id}</P35>
+
+<!-- SIP Authentication ID -->
+<P36>{$account.1.auth_id}</P36>
+
+<!-- SIP Authentication Password -->
+<P34>{$account.1.password}</P34>
+
+<!-- Voice Mail UserID -->
+<P33>{$voicemail_number}</P33>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P3>{$account.1.display_name}</P3>
+
+<!-- ####################################################################### -->
+<!-- ##  Account 1 Call Settings                                          ## -->
+<!-- ####################################################################### -->
+
+<!-- Dial Plan. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2382>0</P2382>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P66></P66>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+<P290>{$grandstream_dial_plan}</P290>
+{else}
+<P290>{literal}{x+|\+x+|*x+|*xx*x+}{/literal}</P290>
+{/if}
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P90>0</P90>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P72>1</P72>
+
+<!-- No Answer Timeout (s). Default value is 30 -->
+<!-- Number: 1 - 120 -->
+<P139>30</P139>
+
+<!-- ###################################################################### -->
+<!-- ##  Account 1 SIP Settings                                          ## -->
+<!-- ###################################################################### -->
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P31>1</P31>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - All, 2 -  Instance . Default value is 2 -->
+<!-- Number: 0, 1, 2 -->
+<P81>2</P81>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P32>{$account.1.register_expires}</P32>
+
+<!-- Registration Retry Wait Time (s). In seconds. Default value is 40 -->
+<!-- Number: 1 - 3600 -->
+<P138>40</P138>
+
+<!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 50 -->
+<!-- # Number: 50, 100, 200 -->
+<P209>50</P209>
+
+<!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- # Number: 200, 400, 800 -->
+<P250>400</P250>
+
+<!-- Local SIP Port. Default value is 5060 -->
+<!-- Number: 5 - 65535 -->
+<P40>5060</P40>
+
+<!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+<!-- # Number: 0, 1, 2 -->
+<P2305>0</P2305>
+
+<!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P288>1</P288>
+
+<!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2319>0</P2319>
+
+<!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2324>0</P2324>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P99>1</P99>
+{else}
+<P99>0</P99>
+{/if}
+
+<!-- Enable Session Timer/ Session Expiration(s).  In seconds. Default value is 180 seconds. -->
+<!-- By default,  Session Timer is Enabled.  Session Timer is disabled if the value is 0. -->
+<!-- Number: 90 - 64800 -->
+<P260>180</P260>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P261>90</P261>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P266>0</P266>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P267>1</P267>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P265>0</P265>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P262>0</P262>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P263>0</P263>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P264>0</P264>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
+
+<!-- # Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- # 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2311>0</P2311>
+
+<!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2306>{$grandstream_validate_incoming_sip}</P2306>
+
+<!-- Only Accept SIP Requests from Known Servers. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2347>{$grandstream_sip_only_known_servers}</P2347>
+
+<!-- Check SIP User ID for Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P258>{$grandstream_check_sip_user_id}</P258>
+
+<!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2346>0</P2346>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P272>0</P272>
+
+<!-- ############################################################### -->
+<!-- ##  Account 1 SIP Settings/Custom SIP Headers                ## -->
+<!-- ############################################################### -->
+
+<!-- # Use Privacy Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2338>0</P2338>
+
+<!-- # Use P-Preferred-Identity Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2339>0</P2339>
+
+<!-- ############################################################### -->
+<!-- ## Account 1 SIP Settings/Advanced Features                  ## -->
+<!-- ############################################################### -->
+
+<!-- # Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- # Number: 15 - 60 -->
+<P2313>15</P2313>
+
+<!-- # Eventlist BLF URI -->
+<!-- # String -->
+<P134></P134>
+
+<!-- # Conference URI -->
+<!-- # String -->
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+
+<!-- # BLF Call-pickup Prefix. Default is ** -->
+<!-- # String -->
+<P1347>**</P1347>
+
+<!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+<!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+<!-- # Default is 100 -->
+<!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+<P198>100</P198>
+
+<!-- # Broadsoft -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2341>0</P2341>
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2342>0</P2342>
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2343>0</P2343>
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+{if isset($grandstream_feature_key_sync)}
+<P2325>{$grandstream_feature_key_sync}</P2325>
+{else}
+<P2325>0</P2325>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 1 Network Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Proxy-Require -->
+<!-- # String -->
+<P197></P197>
+
+<!-- Outbound Proxy -->
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
+<P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
+{else}
+<P48>{$account.1.outbound_proxy_primary}</P48>
+{/if}
+
+<!-- Secondary Outbound Proxy -->
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_secondary)}
+<P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
+{else}
+<P2333>{$account.1.outbound_proxy_secondary}</P2333>
+{/if}
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal)}
+<P52>{$grandstream_nat_traversal}</P52>
+{else}
+<P52>2</P52>
+{/if}
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_dns_mode)}
+<P103>{$grandstream_dns_mode}</P103>
+{else}
+<P103>0</P103>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 1 Codec Settings                                        ## -->
+<!-- ###################################################################### -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2301>0</P2301>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2302>1</P2302>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2303>0</P2303>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 0 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P57>9</P57>
+
+<!-- Second codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 8 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P58>0</P58>
+
+<!-- Third codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P59>-1</P59>
+
+<!-- Forth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P60>-1</P60>
+
+<!-- Fifth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P61>-1</P61>
+
+<!-- Sixth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P62>-1</P62>
+
+<!-- Seventh codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P63>-1</P63>
+
+<!-- H.264 Image Size. 9 - 720P, 1 - VGA, 5 - CIF, 0 - QVGA, 6 - QCIF. Default value is 1 -->
+<!-- Number: 9, 1, 5, 0, 6 -->
+<P2307>1</P2307>
+
+<!-- Video Bit Rate. 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+<!-- 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+<!-- 1024 - 1024 kbps. Default value is 512. -->
+<!-- Number: 32, 64, 96, 128, 160, 192, 210, 256, 384, 512, 640, 768, 1024. -->
+<P2315>512</P2315>
+
+<!-- SDP Bandwidth Attribute. Default value is 1 -->
+<!-- 0 - Standard, 1 - Media Level, 2 - Session Level, 3 - None -->
+<P2360>1</P2360>
+
+<!-- H.264 Payload Type -->
+<P293>105</P293>
+
+<!-- SRTP Mode. Default value is 0. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_srtp)}
+<P183>{$grandstream_srtp}</P183>
+{else}
+<P183>0</P183>
+{/if}
+
+<!-- Enable SRTP Key Lifetime. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2363>1</P2363>
+
+<!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P291>0</P291>
+
+<!-- # Silence Suppression. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P50>0</P50>
+
+<!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- # Number: 1 - 64 -->
+<P37>2</P37>
+
+<!-- # G723 Rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P49>1</P49>
+
+<!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P97>1</P97>
+
+<!-- # iLBC Payload Type. Default is 97 -->
+<!-- # Number: 96 - 127 -->
+<P96>97</P96>
+
+<!-- # DTMF Payload Type. Default is 101 -->
+<!-- # Number: 96 - 127 -->
+<P79>101</P79>
+
+<!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P133>1</P133>
+
+<!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 1 -->
+<!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<P132>1</P132>
+
+<!-- ############################################################################# -->
+<!-- ##  Account 2 Settings                                                     ## -->
+<!-- ############################################################################# -->
+
+<!-- ###################################################################### -->
+<!-- ##  Account 2 General Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.2.password)}
+<P401>1</P401>
+{else}
+<P401>0</P401>
+{/if}
+
+<!-- Account Name -->
+<P417>{$account.2.display_name}</P417>
+
+<!-- SIP Server -->
+{if $account.2.sip_transport != 'dns srv'}
+<P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
+{else}
+<P402>{$account.2.server_address}</P402>
+{/if}
+
+<!-- SIP User ID -->
+<P404>{$account.2.user_id}</P404>
+
+<!-- SIP Authentication ID -->
+<P405>{$account.2.auth_id}</P405>
+
+<!-- SIP Authentication Password -->
+<P406>{$account.2.password}</P406>
+
+<!-- Voice Mail UserID -->
+<P426>{$voicemail_number}</P426>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P407>{$account.2.display_name}</P407>
+
+<!-- ####################################################################### -->
+<!-- ##  Account 2 Call Settings                                          ## -->
+<!-- ####################################################################### -->
+
+<!-- Dial Plan. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2482>0</P2482>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P419></P419>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+<P459>{$grandstream_dial_plan}</P459>
+{else}
+<P459>{literal}{x+|\+x+|*x+|*xx*x+}{/literal}</P459>
+{/if}
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P425>0</P425>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P492>1</P492>
+
+<!-- No Answer Timeout (s). Default value is 30 -->
+<!-- Number: 1 - 120 -->
+<P470>30</P470>
+
+<!-- ###################################################################### -->
+<!-- ##  Account 2 SIP Settings                                          ## -->
+<!-- ###################################################################### -->
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P410>1</P410>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - All, 2 -  Instance . Default value is 2 -->
+<!-- Number: 0, 1, 2 -->
+<P411>2</P411>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P412>{$account.2.register_expires}</P412>
+
+<!-- Registration Retry Wait Time (s). In seconds. Default value is 40 -->
+<!-- Number: 1 - 3600 -->
+<P471>40</P471>
+
+<!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- # Number: 50, 100, 200 -->
+<P440>50</P440>
+
+<!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- # Number: 200, 400, 800 -->
+<P441>400</P441>
+
+<!-- Local SIP Port. Default value is 5062 -->
+<!-- Number: 5 - 65535 -->
+<P413>5062</P413>
+
+<!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+<!-- # Number: 0, 1, 2 -->
+<P2405>0</P2405>
+
+<!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P489>1</P489>
+
+<!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2419>0</P2419>
+
+<!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2424>0</P2424>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P415>1</P415>
+{else}
+<P415>0</P415>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P434>180</P434>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P427>90</P427>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P432>0</P432>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P433>1</P433>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P431>0</P431>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P428>0</P428>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P429>0</P429>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P430>0</P430>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P448>{$tp}</P448>
+
+<!-- # Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- # 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2411>0</P2411>
+
+<!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2406>{$grandstream_validate_incoming_sip}</P2406>
+
+<!-- Only Accept SIP Requests from Known Servers. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2447>{$grandstream_sip_only_known_servers}</P2447>
+
+<!-- Check SIP User ID for Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P449>{$grandstream_check_sip_user_id}</P449>
+
+<!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2446>0</P2446>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P435>0</P435>
+
+<!-- ############################################################### -->
+<!-- ##  Account 2 SIP Settings/Custom SIP Headers                ## -->
+<!-- ############################################################### -->
+
+<!-- # Use Privacy Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2438>0</P2438>
+
+<!-- # Use P-Preferred-Identity Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2439>0</P2439>
+
+<!-- ############################################################### -->
+<!-- ## Account 2 SIP Settings/Advanced Features                  ## -->
+<!-- ############################################################### -->
+
+<!-- # Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- # Number: 15 - 60 -->
+<P2413>15</P2413>
+
+<!-- # Eventlist BLF URI -->
+<!-- # String -->
+<P444></P444>
+
+<!-- # Conference URI -->
+<!-- # String -->
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+
+<!-- # BLF Call-pickup Prefix. Default is ** -->
+<!-- # String -->
+<P481>**</P481>
+
+<!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+<!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+<!-- # Default is 100 -->
+<!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+<P424>100</P424>
+
+<!-- # Broadsoft -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2441>0</P2441>
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2442>0</P2442>
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2443>0</P2443>
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0. -->
+<!-- # Number: 0, 1 -->
+{if isset($grandstream_feature_key_sync)}
+<P2425>{$grandstream_feature_key_sync}</P2425>
+{else}
+<P2425>0</P2425>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 2 Network Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Proxy-Require -->
+<!-- # String -->
+<P418></P418>
+
+<!-- Outbound Proxy -->
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
+<P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
+{else}
+<P403>{$account.2.outbound_proxy_primary}</P403>
+{/if}
+
+<!-- Secondary Outbound Proxy -->
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_secondary)}
+<P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
+{else}
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
+{/if}
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal)}
+<P414>{$grandstream_nat_traversal}</P414>
+{else}
+<P414>2</P414>
+{/if}
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_dns_mode)}
+<P408>{$grandstream_dns_mode}</P408>
+{else}
+<P408>0</P408>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 2 Codec Settings                                        ## -->
+<!-- ###################################################################### -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2401>0</P2401>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2402>1</P2402>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2403>0</P2403>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 0 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P451>9</P451>
+
+<!-- Second codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 8 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P452>0</P452>
+
+<!-- Third codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P453>-1</P453>
+
+<!-- Forth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P454>-1</P454>
+
+<!-- Fifth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P455>-1</P455>
+
+<!-- Sixth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P456>-1</P456>
+
+<!-- Seventh codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P457>-1</P457>
+
+<!-- H.264 Image Size. 9 - 720P, 1 - VGA, 5 - CIF, 0 - QVGA, 6 - QCIF. Default value is 1 -->
+<!-- Number: 9, 1, 5, 0, 6 -->
+<P2407>1</P2407>
+
+<!-- Video Bit Rate. 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+<!-- 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+<!-- 1024 - 1024 kbps. Default value is 512. -->
+<!-- Number: 32, 64, 96, 128, 160, 192, 210, 256, 384, 512, 640, 768, 1024. -->
+<P2415>512</P2415>
+
+<!-- SDP Bandwidth Attribute. Default value is 1 -->
+<!-- 0 - Standard, 1 - Media Level, 2 - Session Level, 3 - None -->
+<P2460>1</P2460>
+
+<!-- H.264 Payload Type -->
+<P462>105</P462>
+
+<!-- SRTP Mode. Default value is 0. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_srtp)}
+<P443>{$grandstream_srtp}</P443>
+{else}
+<P443>0</P443>
+{/if}
+
+<!-- Enable SRTP Key Lifetime. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2463>1</P2463>
+
+<!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P460>0</P460>
+
+<!-- # Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P485>0</P485>
+
+<!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- # Number: 1 - 64 -->
+<P486>2</P486>
+
+<!-- # G723 Rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P493>1</P493>
+
+<!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P495>1</P495>
+
+<!-- # iLBC Payload Type. Default is 97 -->
+<!-- # Number: 96 - 127 -->
+<P494>97</P494>
+
+<!-- # DTMF Payload Type. Default is 101 -->
+<!-- # Number: 96 - 127 -->
+<P496>101</P496>
+
+<!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P498>1</P498>
+
+<!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 1 -->
+<!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<P497>1</P497>
+
+<!-- ############################################################################# -->
+<!-- ##  Account 3 Settings                                                     ## -->
+<!-- ############################################################################# -->
+
+<!-- ###################################################################### -->
+<!-- ##  Account 3 General Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.3.password)}
+<P501>1</P501>
+{else}
+<P501>0</P501>
+{/if}
+
+<!-- Account Name -->
+<P517>{$account.3.display_name}</P517>
+
+<!-- SIP Server -->
+{if $account.3.sip_transport != 'dns srv'}
+<P502>{$account.3.server_address}:{$account.3.sip_port}</P502>
+{else}
+<P502>{$account.3.server_address}</P502>
+{/if}
+
+<!-- SIP User ID -->
+<P504>{$account.3.user_id}</P504>
+
+<!-- SIP Authentication ID -->
+<P505>{$account.3.auth_id}</P505>
+
+<!-- SIP Authentication Password -->
+<P506>{$account.3.password}</P506>
+
+<!-- Voice Mail UserID -->
+<P526>{$voicemail_number}</P526>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P507>{$account.3.display_name}</P507>
+
+<!-- ####################################################################### -->
+<!-- ##  Account 3 Call Settings                                          ## -->
+<!-- ####################################################################### -->
+
+<!-- Dial Plan. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2582>0</P2582>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P519></P519>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+<P559>{$grandstream_dial_plan}</P559>
+{else}
+<P559>{literal}{x+|\+x+|*x+|*xx*x+}{/literal}</P559>
+{/if}
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P525>0</P525>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P592>1</P592>
+
+<!-- No Answer Timeout (s). Default value is 30 -->
+<!-- Number: 1 - 120 -->
+<P570>30</P570>
+
+<!-- ###################################################################### -->
+<!-- ##  Account 3 SIP Settings                                          ## -->
+<!-- ###################################################################### -->
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P510>1</P510>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - All, 2 -  Instance . Default value is 2 -->
+<!-- Number: 0, 1, 2 -->
+<P511>2</P511>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P512>{$account.3.register_expires}</P512>
+
+<!-- Registration Retry Wait Time (s). In seconds. Default value is 40 -->
+<!-- Number: 1 - 3600 -->
+<P571>40</P571>
+
+<!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- # Number: 50, 100, 200 -->
+<P540>50</P540>
+
+<!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- # Number: 200, 400, 800 -->
+<P541>400</P541>
+
+<!-- Local SIP Port. Default value is 5064 -->
+<!-- Number: 5 - 65535 -->
+<P513>5064</P513>
+
+<!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+<!-- # Number: 0, 1, 2 -->
+<P2505>0</P2505>
+
+<!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P589>1</P589>
+
+<!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2519>0</P2519>
+
+<!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2524>0</P2524>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P515>1</P515>
+{else}
+<P515>0</P515>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P534>180</P534>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P527>90</P527>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P532>0</P532>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P533>1</P533>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P531>0</P531>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P528>0</P528>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P529>0</P529>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P530>0</P530>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P548>{$tp}</P548>
+
+<!-- # Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- # 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2511>0</P2511>
+
+<!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2506>{$grandstream_validate_incoming_sip}</P2506>
+
+<!-- Only Accept SIP Requests from Known Servers. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2547>{$grandstream_sip_only_known_servers}</P2547>
+
+<!-- Check SIP User ID for Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P549>{$grandstream_check_sip_user_id}</P549>
+
+<!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2546>0</P2546>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P535>0</P535>
+
+<!-- ############################################################### -->
+<!-- ##  Account 3 SIP Settings/Custom SIP Headers                ## -->
+<!-- ############################################################### -->
+
+<!-- # Use Privacy Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2538>0</P2538>
+
+<!-- # Use P-Preferred-Identity Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2539>0</P2539>
+
+<!-- ############################################################### -->
+<!-- ##  Account 3 SIP Settings/Advanced Features                 ## -->
+<!-- ############################################################### -->
+
+<!-- # Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- # Number: 15 - 60 -->
+<P2513>15</P2513>
+
+<!-- # Eventlist BLF URI -->
+<!-- # String -->
+<P544></P544>
+
+<!-- # Conference URI -->
+<!-- # String -->
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
+
+<!-- # BLF Call-pickup Prefix. Default is ** -->
+<!-- # String -->
+<P581>**</P581>
+
+<!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+<!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+<!-- # Default is 100 -->
+<!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+<P524>100</P524>
+
+<!-- # Broadsoft -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2541>0</P2541>
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2542>0</P2542>
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2543>0</P2543>
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+{if isset($grandstream_feature_key_sync)}
+<P2525>{$grandstream_feature_key_sync}</P2525>
+{else}
+<P2525>0</P2525>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 3 Network Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Proxy-Require -->
+<!-- # String -->
+<P518></P518>
+
+<!-- Outbound Proxy -->
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_primary)}
+<P503>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P503>
+{else}
+<P503>{$account.3.outbound_proxy_primary}</P503>
+{/if}
+
+<!-- Secondary Outbound Proxy -->
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_secondary)}
+<P2533>{$account.3.outbound_proxy_secondary}:{$account.3.sip_port}</P2533>
+{else}
+<P2533>{$account.3.outbound_proxy_secondary}</P2533>
+{/if}
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal)}
+<P514>{$grandstream_nat_traversal}</P514>
+{else}
+<P514>2</P514>
+{/if}
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_dns_mode)}
+<P508>{$grandstream_dns_mode}</P508>
+{else}
+<P508>0</P508>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 3 Codec Settings                                        ## -->
+<!-- ###################################################################### -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2501>0</P2501>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2502>1</P2502>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2503>0</P2503>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 0 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P551>9</P551>
+
+<!-- Second codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 8 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P552>0</P552>
+
+<!-- Third codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P553>-1</P553>
+
+<!-- Forth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P554>-1</P554>
+
+<!-- Fifth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P555>-1</P555>
+
+<!-- Sixth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P556>-1</P556>
+
+<!-- Seventh codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P557>-1</P557>
+
+<!-- H.264 Image Size. 9 - 720P, 1 - VGA, 5 - CIF, 0 - QVGA, 6 - QCIF. Default value is 1 -->
+<!-- Number: 9, 1, 5, 0, 6 -->
+<P2507>1</P2507>
+
+<!-- Video Bit Rate. 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+<!-- 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+<!-- 1024 - 1024 kbps. Default value is 512. -->
+<!-- Number: 32, 64, 96, 128, 160, 192, 210, 256, 384, 512, 640, 768, 1024. -->
+<P2515>512</P2515>
+
+<!-- SDP Bandwidth Attribute. Default value is 1 -->
+<!-- 0 - Standard, 1 - Media Level, 2 - Session Level, 3 - None -->
+<P2560>1</P2560>
+
+<!-- H.264 Payload Type -->
+<P562>105</P562>
+
+<!-- SRTP Mode. Default value is 0. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_srtp)}
+<P543>{$grandstream_srtp}</P543>
+{else}
+<P543>0</P543>
+{/if}
+
+<!-- Enable SRTP Key Lifetime. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2563>1</P2563>
+
+<!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P560>0</P560>
+
+<!-- # Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P585>0</P585>
+
+<!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- # Number: 1 - 64 -->
+<P586>2</P586>
+
+<!-- # G723 Rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P593>1</P593>
+
+<!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P595>1</P595>
+
+<!-- # iLBC Payload Type. Default is 97 -->
+<!-- # Number: 96 - 127 -->
+<P594>97</P594>
+
+<!-- # DTMF Payload Type. Default is 101 -->
+<!-- # Number: 96 - 127 -->
+<P596>101</P596>
+
+<!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P598>1</P598>
+
+<!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 1 -->
+<!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<P597>1</P597>
+
+<!-- ############################################################################# -->
+<!-- ##  Account 4 Settings                                                     ## -->
+<!-- ############################################################################# -->
+
+<!-- ###################################################################### -->
+<!-- ##  Account 4 General Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.4.password)}
+<P601>1</P601>
+{else}
+<P601>0</P601>
+{/if}
+
+<!-- Account Name -->
+<P617>{$account.4.display_name}</P617>
+
+<!-- SIP Server -->
+{if $account.4.sip_transport != 'dns srv'}
+<P602>{$account.4.server_address}:{$account.4.sip_port}</P602>
+{else}
+<P602>{$account.4.server_address}</P602>
+{/if}
+
+<!-- SIP User ID -->
+<P604>{$account.4.user_id}</P604>
+
+<!-- SIP Authentication ID -->
+<P605>{$account.4.auth_id}</P605>
+
+<!-- SIP Authentication Password -->
+<P606>{$account.4.password}</P606>
+
+<!-- Voice Mail UserID -->
+<P626>{$voicemail_number}</P626>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P607>{$account.4.display_name}</P607>
+
+<!-- ####################################################################### -->
+<!-- ##  Account 4 Call Settings                                          ## -->
+<!-- ####################################################################### -->
+
+<!-- Dial Plan. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2682>0</P2682>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P619></P619>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+<P659>{$grandstream_dial_plan}</P659>
+{else}
+<P659>{literal}{x+|\+x+|*x+|*xx*x+}{/literal}</P659>
+{/if}
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P625>0</P625>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P692>1</P692>
+
+<!-- No Answer Timeout (s). Default value is 30 -->
+<!-- Number: 1 - 120 -->
+<P670>30</P670>
+
+<!-- ###################################################################### -->
+<!-- ##  Account 4 SIP Settings                                          ## -->
+<!-- ###################################################################### -->
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P610>1</P610>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - All, 2 -  Instance . Default value is 2 -->
+<!-- Number: 0, 1, 2 -->
+<P611>2</P611>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P612>{$account.4.register_expires}</P612>
+
+<!-- Registration Retry Wait Time (s). In seconds. Default value is 40 -->
+<!-- Number: 1 - 3600 -->
+<P671>40</P671>
+
+<!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- # Number: 50, 100, 200 -->
+<P640>50</P640>
+
+<!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- # Number: 200, 400, 800 -->
+<P641>400</P641>
+
+<!-- Local SIP Port. Default value is 5066 -->
+<!-- Number: 5 - 65535 -->
+<P613>5066</P613>
+
+<!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+<!-- # Number: 0, 1, 2 -->
+<P2605>0</P2605>
+
+<!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P689>1</P689>
+
+<!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2619>0</P2619>
+
+<!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2624>0</P2624>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P615>1</P615>
+{else}
+<P615>0</P615>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P634>180</P634>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P627>90</P627>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P632>0</P632>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P633>1</P633>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P631>0</P631>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P628>0</P628>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P629>0</P629>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P630>0</P630>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P648>{$tp}</P648>
+
+<!-- # Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- # 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2611>0</P2611>
+
+<!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2606>{$grandstream_validate_incoming_sip}</P2606>
+
+<!-- Only Accept SIP Requests from Known Servers. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2647>{$grandstream_sip_only_known_servers}</P2647>
+
+<!-- Check SIP User ID for Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P649>{$grandstream_check_sip_user_id}</P649>
+
+<!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2646>0</P2646>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P635>0</P635>
+
+<!-- ############################################################### -->
+<!-- ##  Account 4 SIP Settings/Custom SIP Headers                ## -->
+<!-- ############################################################### -->
+
+<!-- # Use Privacy Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2638>0</P2638>
+
+<!-- # Use P-Preferred-Identity Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2639>0</P2639>
+
+<!-- ############################################################### -->
+<!-- ## Account 4 SIP Settings/Advanced Features                  ## -->
+<!-- ############################################################### -->
+
+<!-- # Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- # Number: 15 - 60 -->
+<P2613>15</P2613>
+
+<!-- # Eventlist BLF URI -->
+<!-- # String -->
+<P644></P644>
+
+<!-- # Conference URI -->
+<!-- # String -->
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
+
+<!-- # BLF Call-pickup Prefix. Default is ** -->
+<!-- # String -->
+<P681>**</P681>
+
+<!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+<!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+<!-- # Default is 100 -->
+<!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+<P624>100</P624>
+
+<!-- # Broadsoft -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2641>0</P2641>
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2642>0</P2642>
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2643>0</P2643>
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+{if isset($grandstream_feature_key_sync)}
+<P2625>{$grandstream_feature_key_sync}</P2625>
+{else}
+<P2625>0</P2625>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 4 Network Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Proxy-Require -->
+<!-- # String -->
+<P618></P618>
+
+<!-- Outbound Proxy -->
+{if $account.4.sip_transport != 'dns srv' && isset($account.4.outbound_proxy_primary)}
+<P603>{$account.4.outbound_proxy_primary}:{$account.4.sip_port}</P603>
+{else}
+<P603>{$account.4.outbound_proxy_primary}</P603>
+{/if}
+
+<!-- Secondary Outbound Proxy -->
+{if $account.4.sip_transport != 'dns srv' && isset($account.4.outbound_proxy_secondary)}
+<P2633>{$account.4.outbound_proxy_secondary}:{$account.4.sip_port}</P2633>
+{else}
+<P2633>{$account.4.outbound_proxy_secondary}</P2633>
+{/if}
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal)}
+<P614>{$grandstream_nat_traversal}</P614>
+{else}
+<P614>2</P614>
+{/if}
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_dns_mode)}
+<P608>{$grandstream_dns_mode}</P608>
+{else}
+<P608>0</P608>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 4 Codec Settings                                        ## -->
+<!-- ###################################################################### -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2601>0</P2601>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2602>1</P2602>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2603>0</P2603>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 0 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P651>9</P651>
+
+<!-- Second codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 8 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P652>0</P652>
+
+<!-- Third codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P653>-1</P653>
+
+<!-- Forth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P654>-1</P654>
+
+<!-- Fifth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P655>-1</P655>
+
+<!-- Sixth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P656>-1</P656>
+
+<!-- Seventh codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P657>-1</P657>
+
+<!-- H.264 Image Size. 9 - 720P, 1 - VGA, 5 - CIF, 0 - QVGA, 6 - QCIF. Default value is 1 -->
+<!-- Number: 9, 1, 5, 0, 6 -->
+<P2607>1</P2607>
+
+<!-- Video Bit Rate. 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+<!-- 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+<!-- 1024 - 1024 kbps. Default value is 512. -->
+<!-- Number: 32, 64, 96, 128, 160, 192, 210, 256, 384, 512, 640, 768, 1024. -->
+<P2615>512</P2615>
+
+<!-- SDP Bandwidth Attribute. Default value is 1 -->
+<!-- 0 - Standard, 1 - Media Level, 2 - Session Level, 3 - None -->
+<P2660>1</P2660>
+
+<!-- H.264 Payload Type -->
+<P662>105</P662>
+
+<!-- SRTP Mode. Default value is 0. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_srtp)}
+<P643>{$grandstream_srtp}</P643>
+{else}
+<P643>0</P643>
+{/if}
+
+<!-- Enable SRTP Key Lifetime. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2663>1</P2663>
+
+<!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P660>0</P660>
+
+<!-- # Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P685>0</P685>
+
+<!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- # Number: 1 - 64 -->
+<P686>2</P686>
+
+<!-- # G723 Rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P693>1</P693>
+
+<!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P695>1</P695>
+
+<!-- # iLBC Payload Type. Default is 97 -->
+<!-- # Number: 96 - 127 -->
+<P694>97</P694>
+
+<!-- # DTMF Payload Type. Default is 101 -->
+<!-- # Number: 96 - 127 -->
+<P696>101</P696>
+
+<!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P698>1</P698>
+
+<!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 1 -->
+<!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<P697>1</P697>
+
+<!-- ############################################################################# -->
+<!-- ##  Account 5 Settings                                                     ## -->
+<!-- ############################################################################# -->
+
+<!-- ###################################################################### -->
+<!-- ##  Account 5 General Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.5.password)}
+<P1701>1</P1701>
+{else}
+<P1701>0</P1701>
+{/if}
+
+<!-- Account Name -->
+<P1717>{$account.5.display_name}</P1717>
+
+<!-- SIP Server -->
+{if $account.5.sip_transport != 'dns srv'}
+<P1702>{$account.5.server_address}:{$account.5.sip_port}</P1702>
+{else}
+<P1702>{$account.5.server_address}</P1702>
+{/if}
+
+<!-- SIP User ID -->
+<P1704>{$account.5.user_id}</P1704>
+
+<!-- SIP Authentication ID -->
+<P1705>{$account.5.auth_id}</P1705>
+
+<!-- SIP Authentication Password -->
+<P1706>{$account.5.password}</P1706>
+
+<!-- Voice Mail UserID -->
+<P1726>{$voicemail_number}</P1726>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P1707>{$account.5.display_name}</P1707>
+
+<!-- ####################################################################### -->
+<!-- ##  Account 5 Call Settings                                          ## -->
+<!-- ####################################################################### -->
+
+<!-- Dial Plan. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2782>0</P2782>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P1719></P1719>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+<P1759>{$grandstream_dial_plan}</P1759>
+{else}
+<P1759>{literal}{x+|\+x+|*x+|*xx*x+}{/literal}</P1759>
+{/if}
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1725>0</P1725>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1792>1</P1792>
+
+<!-- No Answer Timeout (s). Default value is 30 -->
+<!-- Number: 1 - 120 -->
+<P1770>30</P1770>
+
+<!-- ###################################################################### -->
+<!-- ##  Account 5 SIP Settings                                          ## -->
+<!-- ###################################################################### -->
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1710>1</P1710>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - All, 2 -  Instance . Default value is 2 -->
+<!-- Number: 0, 1, 2 -->
+<P1711>2</P1711>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P1712>{$account.5.register_expires}</P1712>
+
+<!-- Registration Retry Wait Time (s). In seconds. Default value is 40 -->
+<!-- Number: 1 - 3600 -->
+<P1771>40</P1771>
+
+<!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- # Number: 50, 100, 200 -->
+<P1740>50</P1740>
+
+<!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- # Number: 200, 400, 800 -->
+<P1741>400</P1741>
+
+<!-- Local SIP Port. Default value is 5068 -->
+<!-- Number: 5 - 65535 -->
+<P1713>5068</P1713>
+
+<!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+<!-- # Number: 0, 1, 2 -->
+<P2705>0</P2705>
+
+<!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1789>1</P1789>
+
+<!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2719>0</P2719>
+
+<!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2724>0</P2724>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P1715>1</P1715>
+{else}
+<P1715>0</P1715>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P1734>180</P1734>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P1727>90</P1727>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1732>0</P1732>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P1733>1</P1733>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1731>0</P1731>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1728>0</P1728>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1729>0</P1729>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1730>0</P1730>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1748>{$tp}</P1748>
+
+<!-- # Check Domain Certificates. When set to Yes/Enabled, domain certificate will be checked as defined in RFC5922 -->
+<!-- # 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2711>0</P2711>
+
+<!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2706>{$grandstream_validate_incoming_sip}</P2706>
+
+<!-- Only Accept SIP Requests from Known Servers. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2747>{$grandstream_sip_only_known_servers}</P2747>
+
+<!-- Check SIP User ID for Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1749>{$grandstream_check_sip_user_id}</P1749>
+
+<!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2746>0</P2746>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1735>0</P1735>
+
+<!-- ############################################################### -->
+<!-- ##  Account 5 SIP Settings/Custom SIP Headers                ## -->
+<!-- ############################################################### -->
+
+<!-- # Use Privacy Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2738>0</P2738>
+
+<!-- # Use P-Preferred-Identity Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2739>0</P2739>
+
+<!-- ############################################################### -->
+<!-- ##  Account 5 SIP Settings/Advanced Features                 ## -->
+<!-- ############################################################### -->
+
+<!-- # Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- # Number: 15 - 60 -->
+<P2713>15</P2713>
+
+<!-- # Eventlist BLF URI -->
+<!-- # String -->
+<P1744></P1744>
+
+<!-- # Conference URI -->
+<!-- # String -->
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
+
+<!-- # BLF Call-pickup Prefix. Default is ** -->
+<!-- # String -->
+<P1781>**</P1781>
+
+<!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+<!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+<!-- # Default is 100 -->
+<!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+<P1724>100</P1724>
+
+<!-- # Broadsoft -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2741>0</P2741>
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2742>0</P2742>
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2743>0</P2743>
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+{if isset($grandstream_feature_key_sync)}
+<P2725>{$grandstream_feature_key_sync}</P2725>
+{else}
+<P2725>0</P2725>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 5 Network Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Proxy-Require -->
+<!-- # String -->
+<P1718></P1718>
+
+<!-- Outbound Proxy -->
+{if $account.5.sip_transport != 'dns srv' && isset($account.5.outbound_proxy_primary)}
+<P1703>{$account.5.outbound_proxy_primary}:{$account.5.sip_port}</P1703>
+{else}
+<P1703>{$account.5.outbound_proxy_primary}</P1703>
+{/if}
+
+<!-- Secondary Outbound Proxy -->
+{if $account.5.sip_transport != 'dns srv' && isset($account.5.outbound_proxy_secondary)}
+<P2733>{$account.5.outbound_proxy_secondary}:{$account.5.sip_port}</P2733>
+{else}
+<P2733>{$account.5.outbound_proxy_secondary}</P2733>
+{/if}
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal)}
+<P1714>{$grandstream_nat_traversal}</P1714>
+{else}
+<P1714>2</P1714>
+{/if}
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_dns_mode)}
+<P1708>{$grandstream_dns_mode}</P1708>
+{else}
+<P1708>0</P1708>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 5 Codec Settings                                        ## -->
+<!-- ###################################################################### -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2701>0</P2701>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2702>1</P2702>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2703>0</P2703>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 0 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1751>9</P1751>
+
+<!-- Second codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 8 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1752>0</P1752>
+
+<!-- Third codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1753>-1</P1753>
+
+<!-- Forth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1754>-1</P1754>
+
+<!-- Fifth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1755>-1</P1755>
+
+<!-- Sixth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1756>-1</P1756>
+
+<!-- Seventh codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1757>-1</P1757>
+
+<!-- H.264 Image Size. 9 - 720P, 1 - VGA, 5 - CIF, 0 - QVGA, 6 - QCIF. Default value is 1 -->
+<!-- Number: 9, 1, 5, 0, 6 -->
+<P2707>1</P2707>
+
+<!-- Video Bit Rate. 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+<!-- 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+<!-- 1024 - 1024 kbps. Default value is 512. -->
+<!-- Number: 32, 64, 96, 128, 160, 192, 210, 256, 384, 512, 640, 768, 1024. -->
+<P2715>512</P2715>
+
+<!-- SDP Bandwidth Attribute. Default value is 1 -->
+<!-- 0 - Standard, 1 - Media Level, 2 - Session Level, 3 - None -->
+<P2760>1</P2760>
+
+<!-- H.264 Payload Type -->
+<P1762>105</P1762>
+
+<!-- SRTP Mode. Default value is 0. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_srtp)}
+<P1743>{$grandstream_srtp}</P1743>
+{else}
+<P1743>0</P1743>
+{/if}
+
+<!-- Enable SRTP Key Lifetime. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2763>1</P2763>
+
+<!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P1760>0</P1760>
+
+<!-- # Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P1785>0</P1785>
+
+<!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- # Number: 1 - 64 -->
+<P1786>2</P1786>
+
+<!-- # G723 Rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1793>1</P1793>
+
+<!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1795>1</P1795>
+
+<!-- # iLBC Payload Type. Default is 97 -->
+<!-- # Number: 96 - 127 -->
+<P1794>97</P1794>
+
+<!-- # DTMF Payload Type. Default is 101 -->
+<!-- # Number: 96 - 127 -->
+<P1796>101</P1796>
+
+<!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1798>1</P1798>
+
+<!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 1 -->
+<!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<P1797>1</P1797>
+
+<!-- ############################################################################# -->
+<!-- ##  Account 6 Settings                                                     ## -->
+<!-- ############################################################################# -->
+
+<!-- ###################################################################### -->
+<!-- ##  Account 6 General Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.6.password)}
+<P1801>1</P1801>
+{else}
+<P1801>0</P1801>
+{/if}
+
+<!-- Account Name -->
+<P1817>{$account.6.display_name}</P1817>
+
+<!-- SIP Server -->
+{if $account.6.sip_transport != 'dns srv'}
+<P1802>{$account.6.server_address}:{$account.6.sip_port}</P1802>
+{else}
+<P1802>{$account.6.server_address}</P1802>
+{/if}
+
+<!-- SIP User ID -->
+<P1804>{$account.6.user_id}</P1804>
+
+<!-- SIP Authentication ID -->
+<P1805>{$account.6.auth_id}</P1805>
+
+<!-- SIP Authentication Password -->
+<P1806>{$account.6.password}</P1806>
+
+<!-- Voice Mail UserID -->
+<P1826>{$voicemail_number}</P1826>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P1807>{$account.6.display_name}</P1807>
+
+<!-- ####################################################################### -->
+<!-- ##  Account 6 Call Settings                                          ## -->
+<!-- ####################################################################### -->
+
+<!-- Dial Plan. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2882>0</P2882>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P1819></P1819>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+<P1859>{$grandstream_dial_plan}</P1859>
+{else}
+<P1859>{literal}{x+|\+x+|*x+|*xx*x+}{/literal}</P1859>
+{/if}
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1825>0</P1825>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1892>1</P1892>
+
+<!-- No Answer Timeout (s). Default value is 30 -->
+<!-- Number: 1 - 120 -->
+<P1870>30</P1870>
+
+<!-- ###################################################################### -->
+<!-- ##  Account 6 SIP Settings                                          ## -->
+<!-- ###################################################################### -->
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1810>1</P1810>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - All, 2 -  Instance . Default value is 2 -->
+<!-- Number: 0, 1, 2 -->
+<P1811>2</P1811>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P1812>{$account.6.register_expires}</P1812>
+
+<!-- Registration Retry Wait Time (s). In seconds. Default value is 40 -->
+<!-- Number: 1 - 3600 -->
+<P1871>40</P1871>
+
+<!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- # Number: 50, 100, 200 -->
+<P1840>50</P1840>
+
+<!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400. -->
+<!-- # Number: 200, 400, 800 -->
+<P1841>400</P1841>
+
+<!-- Local SIP Port. Default value is 5070 -->
+<!-- Number: 5 - 65535 -->
+<P1813>5070</P1813>
+
+<!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+<!-- # Number: 0, 1, 2 -->
+<P2805>0</P2805>
+
+<!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1889>1</P1889>
+
+<!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2819>0</P2819>
+
+<!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2824>0</P2824>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P1815>1</P1815>
+{else}
+<P1815>0</P1815>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P1834>180</P1834>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P1827>90</P1827>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1832>0</P1832>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P1833>1</P1833>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1831>0</P1831>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1828>0</P1828>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1829>0</P1829>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1830>0</P1830>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.6.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.6.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.6.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1848>{$tp}</P1848>
+
+<!-- # Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- # 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2811>0</P2811>
+
+<!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2806>{$grandstream_validate_incoming_sip}</P2806>
+
+<!-- Only Accept SIP Requests from Known Servers. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2847>{$grandstream_sip_only_known_servers}</P2847>
+
+<!-- Check SIP User ID for Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1849>{$grandstream_check_sip_user_id}</P1849>
+
+<!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2846>0</P2846>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1835>0</P1835>
+
+<!-- ############################################################### -->
+<!-- ##  Account 6 SIP Settings/Custom SIP Headers                ## -->
+<!-- ############################################################### -->
+
+<!-- # Use Privacy Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2838>0</P2838>
+
+<!-- # Use P-Preferred-Identity Header -->
+<!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<P2839>0</P2839>
+
+<!-- ############################################################### -->
+<!-- ##  Account 6 SIP Settings/Advanced Features                 ## -->
+<!-- ############################################################### -->
+
+<!-- # Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- # Number: 15 - 60 -->
+<P2813>15</P2813>
+
+<!-- # Eventlist BLF URI -->
+<!-- # String -->
+<P1844></P1844>
+
+<!-- # Conference URI -->
+<!-- # String -->
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
+
+<!-- # BLF Call-pickup Prefix. Default is ** -->
+<!-- # String -->
+<P1881>**</P1881>
+
+<!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+<!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+<!-- # Default is 100 -->
+<!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+<P1824>100</P1824>
+
+<!-- # Broadsoft -->
+<!-- # Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2841>0</P2841>
+
+<!-- # Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2842>0</P2842>
+
+<!-- # Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P2843>0</P2843>
+
+<!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- # Number: 0, 1 -->
+{if isset($grandstream_feature_key_sync)}
+<P2825>{$grandstream_feature_key_sync}</P2825>
+{else}
+<P2825>0</P2825>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 6 Network Settings                                      ## -->
+<!-- ###################################################################### -->
+
+<!-- Proxy-Require -->
+<!-- # String -->
+<P1818></P1818>
+
+<!-- Outbound Proxy -->
+{if $account.6.sip_transport != 'dns srv' && isset($account.6.outbound_proxy_primary)}
+<P1803>{$account.6.outbound_proxy_primary}:{$account.6.sip_port}</P1803>
+{else}
+<P1803>{$account.6.outbound_proxy_primary}</P1803>
+{/if}
+
+<!-- Secondary Outbound Proxy -->
+{if $account.6.sip_transport != 'dns srv' && isset($account.6.outbound_proxy_secondary)}
+<P2833>{$account.5.outbound_proxy_secondary}:{$account.6.sip_port}</P2833>
+{else}
+<P2833>{$account.6.outbound_proxy_secondary}</P2833>
+{/if}
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal)}
+<P1814>{$grandstream_nat_traversal}</P1814>
+{else}
+<P1814>2</P1814>
+{/if}
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_dns_mode)}
+<P1808>{$grandstream_dns_mode}</P1808>
+{else}
+<P1808>0</P1808>
+{/if}
+
+<!-- ###################################################################### -->
+<!-- ##  Account 6 Codec Settings                                        ## -->
+<!-- ###################################################################### -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2801>0</P2801>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2802>1</P2802>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2803>0</P2803>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 0 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1851>9</P1851>
+
+<!-- Second codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is 8 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1852>0</P1852>
+
+<!-- Third codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1853>-1</P1853>
+
+<!-- Forth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1854>-1</P1854>
+
+<!-- Fifth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1755>-1</P1755>
+
+<!-- Sixth codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1856>-1</P1856>
+
+<!-- Seventh codec. -1 - NONE, 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 97 - iLBC, 123 - Opus, 3 - GSM. Default value is -1 -->
+<!-- Number: -1, 0, 8, 9, 2, 97, 123, 3 -->
+<P1857>-1</P1857>
+
+<!-- H.264 Image Size. 9 - 720P, 1 - VGA, 5 - CIF, 0 - QVGA, 6 - QCIF. Default value is 1 -->
+<!-- Number: 9, 1, 5, 0, 6 -->
+<P2807>1</P2807>
+
+<!-- Video Bit Rate. 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+<!-- 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+<!-- 1024 - 1024 kbps. Default value is 512. -->
+<!-- Number: 32, 64, 96, 128, 160, 192, 210, 256, 384, 512, 640, 768, 1024. -->
+<P2815>512</P2815>
+
+<!-- SDP Bandwidth Attribute. Default value is 1 -->
+<!-- 0 - Standard, 1 - Media Level, 2 - Session Level, 3 - None -->
+<P2860>1</P2860>
+
+<!-- H.264 Payload Type -->
+<P1862>105</P1862>
+
+<!-- SRTP Mode. Default value is 0. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_srtp)}
+<P1843>{$grandstream_srtp}</P1843>
+{else}
+<P1843>0</P1843>
+{/if}
+
+<!-- Enable SRTP Key Lifetime. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2863>1</P2863>
+
+<!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P1860>0</P1860>
+
+<!-- # Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<P1885>0</P1885>
+
+<!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- # Number: 1 - 64 -->
+<P1886>2</P1886>
+
+<!-- # G723 Rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1893>1</P1893>
+
+<!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1895>1</P1895>
+
+<!-- # iLBC Payload Type. Default is 97 -->
+<!-- # Number: 96 - 127 -->
+<P1894>97</P1894>
+
+<!-- # DTMF Payload Type. Default is 101 -->
+<!-- # Number: 96 - 127 -->
+<P1896>101</P1896>
+
+<!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- # Number: 0, 1 -->
+<P1898>1</P1898>
+
+<!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 1 -->
+<!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<P1897>1</P1897>
+
+<!-- ############################################################################## -->
+<!-- ##  Advanced Settings                                                       ## -->
+<!-- ############################################################################## -->
+
+<!-- ####################################################################### -->
+<!-- ##  Advanced Settings -> General Settings                            ## -->
+<!-- ####################################################################### -->
+
+<!-- # Local RTP port. Default is 5004 -->
+<!-- # Number: 1024 - 65400. Must be even number -->
+<P39>5004</P39>
+
+<!-- Use Random Port. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P78>1</P78>
+
+<!-- ####################################################################### -->
+<!-- ##  Advanced Settings - Call Settings                                ## -->
+<!-- ####################################################################### -->
+
+<!-- Filter Characters -->
+<!-- # String -->
+<P22012>{literal}[()- ]{/literal}</P22012>
+
+<!-- ####################################################################### -->
+<!-- ##  Advanced Settings - Audio Settings                               ## -->
+<!-- ####################################################################### -->
+
+<!-- Noise Rduction Level. 0 - Low, 1 - Middle, 2 - High. Default value is 1. -->
+<!-- Number: 0, 1, 2 -->
+<P2358>1</P2358>
+
+<!-- ####################################################################### -->
+<!-- ##  Advanced Settings -> Network Settings                            ## -->
+<!-- ####################################################################### -->
+
+<!-- STUN Server Settings -->
+<!-- # String -->
+<!-- <P76>stun.ipvideotalk.com</P76> -->
+{if isset($grandstream_stun_server) }
+<P76>{$grandstream_stun_server}</P76>
+{else}
+<P76></P76>
+{/if}
+
+<!-- QoS Settings -->
+<!-- Layer 3 QoS for SIP. Default value is 48 -->
+<P1558>48</P1558>
+
+<!-- Layer 3 QoS for Audio. Default value is 48 -->
+<P1559>48</P1559>
+
+<!-- ####################################################################### -->
+<!-- ##  Advanced Settings - Additional Settings                          ## -->
+<!-- ####################################################################### -->
+
+<!-- LDAP Settings -->
+<!-- LDAP Lookup For Dial. 0 - No, 1 - Yes. Default is 0 -->
+<P8034>0</P8034>
+
+<!-- LDAP Lookup For Incoming Calls. 0 - No, 1 - Yes. Default is 0 -->
+<P8035>0</P8035>
+
+<!-- Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
+<!-- String -->
+<P8020>{$grandstream_ldap_server}</P8020>
+
+<!-- Port. Default value is 389 -->
+<!-- Number: 1 - 65535 -->
+<P8021>389</P8021>
+
+<!-- Base DN. The LDAP search base refers to the location in the directory where the search is requested to begin -->
+<!-- Example 1: dc=grandstream,dc=com -->
+<!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
+<!-- String -->
+<P8022>{$grandstream_ldap_base_dn}</P8022>
+
+<!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
+<!-- String -->
+<P8023>{$grandstream_ldap_username}</P8023>
+
+<!-- Password. The bind "Password" for querying LDAP servers. And the field can be left blank if the LDAP server allows anonymous binds -->
+<!-- String -->
+<P8024>{$grandstream_ldap_password}</P8024>
+
+<!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated name attributes -->
+<!-- String -->
+<P8028>{$grandstream_ldap_name_attr}</P8028>
+
+<!-- LDAP Number Attributes. This setting specifies the "number" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated number attributes -->
+<!-- String -->
+<P8029>{$grandstream_ldap_number_attr}</P8029>
+
+<!-- LDAP Number Filter -->
+<!-- LDAP name filter is the filter used for number look ups. Please refer to usermanual for examples -->
+<!-- P8025 and P8026 are reversed on gswave -->
+<!-- String -->
+<P8025>{$grandstream_ldap_number_filter}</P8025>
+
+<!-- LDAP Name Filter -->
+<!-- LDAP name filter is the filter used for name look ups. Please refer to usermanual for examples -->
+<!-- P8025 and P8026 are reversed on gswave -->
+<!-- String -->
+<P8026>{$grandstream_ldap_name_filter}</P8026>
+
+<!-- LDAP Displaying Name Attributes. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
+<!-- String -->
+<P8030>givenName sn title</P8030>
+
+<!-- Max Hits. The setting specifies the maximum number of results to be returned by the LDAP server -->
+<!-- If the value is set to 0, server will return all search results. Default is 100 -->
+<!-- P8031 and P8032 are reversed on gswave -->
+<!-- Number: 0 - 32000 -->
+<P8032>100</P8032>
+
+<!-- Search Timeout (in seconds). Default is 10 -->
+<!-- The setting specifies how long the server should process the request and client waits for server to return -->
+<!-- P8031 and P8032 are reversed on gswave -->
+<!-- Number: 0 - 180 -->
+<P8031>10</P8031>
+
+<!-- Connection Mode. 0 - LDAP, 1 - LDAPS. Default Value is 0 -->
+<!-- Number : 0, 1 -->
+<P8037>0</P8037>
+
+<!-- ############################################################################## -->
+<!-- ##  Provision Settings                                                      ## -->
+<!-- ############################################################################## -->
+
+<!-- #Config -->
+<!-- # Config Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS. Default is 1 -->
+<!-- # Number: 0, 1, 2 -->
+<P212>2</P212>
+
+<!-- # Config Server Path -->
+<!-- # String -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{elseif isset($domain_name)}
+<P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
+
+<!-- # HTTP/HTTPS User Name -->
+<!-- # String -->
+<P1360>{$http_auth_username}</P1360>
+
+<!-- # HTTP/HTTPS Password -->
+<!-- # String -->
+<P1361>{$http_auth_password}</P1361>
+
+
+</config>
+</gs_provision>

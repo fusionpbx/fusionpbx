@@ -7,6 +7,7 @@ use App\Models\DeviceLine;
 use App\Models\DeviceKey;
 use App\Models\DeviceSetting;
 use App\Facades\Setting;
+use App\Models\Domain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Exception;
@@ -17,8 +18,7 @@ class DeviceRepository
     protected $deviceLine;
     protected $deviceKey;
     protected $deviceSetting;
-    
-    // Tablas legacy para compatibilidad
+
     protected $table = 'v_devices';
     protected $deviceLinesTable = 'v_device_lines';
     protected $deviceKeysTable = 'v_device_keys';
@@ -106,7 +106,6 @@ class DeviceRepository
 
             DB::commit();
             return $device;
-
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -123,8 +122,10 @@ class DeviceRepository
                 throw new Exception("Device not found");
             }
 
+
             $filteredData = $this->applyDevicePermissions($deviceData, $device);
             $device->update($filteredData);
+            // dd('update');
 
             if (!empty($deviceLines)) {
                 $this->syncDeviceLines($device->device_uuid, $device->domain_uuid, $deviceLines);
@@ -140,7 +141,6 @@ class DeviceRepository
 
             DB::commit();
             return $device->fresh();
-
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -160,11 +160,10 @@ class DeviceRepository
             $device->lines()->delete();
             $device->keys()->delete();
             $device->settings()->delete();
-            
+
             $device->delete();
 
             DB::commit();
-
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -180,7 +179,7 @@ class DeviceRepository
             if (!$originalDevice) {
                 throw new Exception("Device not found");
             }
-            
+
             $newDevice = $originalDevice->replicate();
             $newDevice->device_uuid = Str::uuid();
             $newDevice->device_mac_address = $newMacAddress;
@@ -208,7 +207,7 @@ class DeviceRepository
                 $newSetting->device_uuid = $newDevice->device_uuid;
                 $newSetting->save();
             }
-    
+
             DB::commit();
             return $newDevice;
         } catch (Exception $e) {
@@ -223,7 +222,7 @@ class DeviceRepository
         $user = auth()->user();
 
         $filteredData['domain_uuid'] = $deviceData['domain_uuid'] ?? ($existingDevice->domain_uuid ?? null);
-        
+
         if (is_null($existingDevice)) {
             $filteredData['device_uuid'] = $deviceData['device_uuid'] ?? Str::uuid();
         }
@@ -250,6 +249,10 @@ class DeviceRepository
             }
         }
 
+        if($user->hasPermission('device_template')) {
+            $filteredData['device_template'] = $deviceData['device_template'] ?? ($existingDevice->device_template ?? null);
+        }
+
         if ($user->hasPermission('device_vendor')) {
             $filteredData['device_vendor'] = $deviceData['device_vendor'] ?? ($existingDevice->device_vendor ?? null);
         }
@@ -271,7 +274,7 @@ class DeviceRepository
 
         if ($user->hasPermission('device_enabled')) {
             $filteredData['device_enabled'] = $deviceData['device_enabled'] ?? ($existingDevice->device_enabled ?? 'true');
-            
+
             if (isset($deviceData['device_enabled']) && $deviceData['device_enabled']) {
                 $filteredData['device_enabled_date'] = now();
             }
@@ -315,9 +318,6 @@ class DeviceRepository
     protected function syncDeviceSettings(string $deviceUuid, string $domainUuid, array $settings): void
     {
         foreach ($settings as $settingData) {
-            if (empty($settingData['device_setting_subcategory'])) {
-                continue;
-            }
 
             if (empty($settingData['device_setting_uuid'])) {
                 $this->createDeviceSetting($deviceUuid, $domainUuid, $settingData);
@@ -329,19 +329,63 @@ class DeviceRepository
 
     protected function createDeviceLine(string $deviceUuid, string $domainUuid, array $lineData): DeviceLine
     {
-        $data = array_merge($lineData, [
-            'device_line_uuid' => Str::uuid(),
+        $defaultFields = [
             'device_uuid' => $deviceUuid,
             'domain_uuid' => $domainUuid,
-        ]);
+        ];
+
+        $optionalFields = [
+            'device_line_uuid',
+            'line_number',
+            'server_address',
+            'outbound_proxy_primary',
+            'outbound_proxy_secondary',
+            'server_address_primary',
+            'server_address_secondary',
+            'label',
+            'display_name',
+            'user_id',
+            'auth_id',
+            'password',
+            'shared_line',
+            'enabled',
+            'sip_port',
+            'sip_transport',
+            'register_expires',
+        ];
+
+        $filtered = collect($optionalFields)
+            ->filter(fn($field) => array_key_exists($field, $lineData))
+            ->mapWithKeys(fn($field) => [$field => $lineData[$field]])
+            ->toArray();
+
+        $defaults = [
+            'outbound_proxy_primary' => Setting::getSetting('provision', 'outbound_proxy_primary', 'text'),
+            'outbound_proxy_secondary' => Setting::getSetting('provision', 'outbound_proxy_secondary', 'text'),
+            'server_address_primary' => Setting::getSetting('provision', 'server_address_primary', 'text'),
+            'server_address_secondary' => Setting::getSetting('provision', 'server_address_secondary', 'text'),
+            'sip_port' => Setting::getSetting('provision', 'line_sip_port', 'numeric'),
+            'sip_transport' => Setting::getSetting('provision', 'line_sip_transport', 'text'),
+            'register_expires' => Setting::getSetting('provision', 'line_register_expires', 'numeric'),
+        ];
+
+        foreach ($defaults as $key => $value) {
+            if (!isset($filtered[$key])) {
+                $filtered[$key] = $value;
+            }
+        }
+
+        $data = array_merge($defaultFields, $filtered);
+
 
         return $this->deviceLine->create($data);
     }
 
     protected function updateDeviceLine(string $deviceLineUuid, array $lineData): DeviceLine
-    {
+    {  
         $deviceLine = $this->deviceLine->where('device_line_uuid', $deviceLineUuid)->firstOrFail();
         $deviceLine->update($lineData);
+
         return $deviceLine;
     }
 
@@ -432,7 +476,7 @@ class DeviceRepository
             ->get()
             ->toArray();
 
-        return array_map(function($vendor) {
+        return array_map(function ($vendor) {
             return (array) $vendor;
         }, $vendors);
     }
@@ -449,7 +493,7 @@ class DeviceRepository
             ->get()
             ->toArray();
 
-        return array_map(function($function) {
+        return array_map(function ($function) {
             return (array) $function;
         }, $functions);
     }
@@ -463,17 +507,24 @@ class DeviceRepository
             ->get()
             ->toArray();
 
-        return array_map(function($user) {
+        return array_map(function ($user) {
             return (array) $user;
         }, $users);
+    }
+
+    public function getDomain(): array
+    {
+        $domain = Domain::select('domain_uuid', 'domain_name')->get()->toArray();
+    
+        return $domain;
     }
 
     public function getAlternateDevice(string $domainUuid, string $alternateDeviceUuid): array
     {
         $devices = $this->device
-            ->where(function($query) use ($domainUuid) {
+            ->where(function ($query) use ($domainUuid) {
                 $query->where('domain_uuid', $domainUuid)
-                      ->orWhereNull('domain_uuid');
+                    ->orWhereNull('domain_uuid');
             })
             ->where('device_uuid', $alternateDeviceUuid)
             ->get()
@@ -485,16 +536,15 @@ class DeviceRepository
     public function getVendorByMac(string $macAddress): ?string
     {
         $macPrefix = strtoupper(substr(str_replace([':', '-'], '', $macAddress), 0, 6));
-        
-        $vendorMap = [
-        ];
-        
+
+        $vendorMap = [];
+
         return $vendorMap[$macPrefix] ?? null;
     }
 
     public function normalizeMacAddress(string $macAddress): string
     {
         $macAddress = strtolower($macAddress);
-        return preg_replace('/[^a-f0-9]/', '', $macAddress);
+        return preg_replace('#[^a-fA-F0-9./]#', '', $macAddress);
     }
 }

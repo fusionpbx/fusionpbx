@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Grandstream XML Provisioning Configuration -->
+<gs_provision version="1">
+<mac>{$mac|replace:'-':''}</mac>
+
+  <config version="1">
+    <!-- ################################################################################################ -->
+    <!-- ## Configuration template for firmware version 1.1.0.45 (HT486 REV.2, HT286 REV.3) -->
+    <!-- ################################################################################################ -->
+    <!--   -->
+    <!-- ########################################################################### -->
+    <!-- # Advanced Settings. You must change this section for the device. -->
+    <!-- ###########################################################################  -->
+
+    <!-- # Admin password for web interface -->
+    <P2>{$admin_password}</P2>
+
+    <!-- # SIP Server -->
+    <P47>{$account.1.server_address}</P47>
+
+    <!-- # Outbound Proxy -->
+    <P48>{$account.1.outbound_proxy_primary}</P48>
+
+    <!-- # SIP User ID -->
+    <P35>{$account.1.user_id}</P35>
+
+    <!-- # Authentication ID -->
+    <P36>{$account.1.auth_id}</P36>
+
+    <!-- # Authentication password -->
+    <P34>{$account.1.password}</P34>
+
+    <!-- # NAT Traversal. 0 - Yes, 1 - No. -->
+    <P52>1</P52>
+
+    <!-- # STUN server -->
+    <P76>$grandstream_stun_server</P76>
+
+    <!-- ################################################################################ -->
+    <!-- # Firmware Upgrade -->
+    <!-- ################################################################################ -->
+
+    <!-- # Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
+    <P212>2</P212>
+
+    <!-- # Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxp2170/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxp2170</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
+
+    <!-- # Config Server Path -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {elseif isset($domain_name)}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+
+
+    <!-- # Firmware File Prefix -->
+    <P232></P232>
+
+    <!-- # Firmware File Postfix -->
+    <P233></P233>
+
+    <!-- # Config File Prefix -->
+    <P234></P234>
+
+    <!-- # Config File Postfix -->
+    <P235></P235>
+
+    <!-- # Automatic Upgrade. 0 - No, 1 - Yes (checking every defined days). Default is No. -->
+    <!-- # For both Firmware and Configuration update. -->
+    <P194>1</P194>
+
+    <!-- # Check for new firmware every () minutes, unit is in minute, default is 7 days. -->
+    <P193>10080</P193>
+
+    <!-- # Use firmware pre/postfix to determine if f/w is required -->
+    <!-- # 0 = Always Check for New Firmware  -->
+    <!-- # 1 = Check New Firmware only when F/W pre/suffix changes  -->
+    <!-- # 2 = Always Skip the Firmware Check -->
+    <!-- # For Firmware only. -->
+    <P238>0</P238>
+
+    <!-- ################################################################################ -->
+    <!-- # Network Settings -->
+    <!-- ################################################################################ -->
+
+    <!-- # Allow incoming SIP messages from SIP proxy only. 0 - No, 1 - Yes. -->
+    <P243>1</P243>
+
+    <!-- # Use DNS SRV. 0 - No, 1 - Yes. -->
+    {$tp=0}
+    {if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+    <P103>{$tp=0}</P103>
+
+    <!-- # Use NAT IP.  This will enable our SIP client to use this IP in the SIP message.  -->
+    <!-- # Example 64.3.153.50. -->
+    <P101></P101>
+
+    <!-- # Use STUN keep-alive to detect networks connectivity. 0 - No, 1 - Yes. -->
+    <P474>0</P474>
+
+    <!-- # Total number of STUN response misses before DHCP restart. -->
+    <P475></P475>
+
+    <!-- # Proxy-Require (A SIP extension to enable firewall penetration) -->
+    <P197></P197>
+
+    <!-- # Use Random Port. 0 - No, 1 - Yes. -->
+    <P78>1</P78>
+
+    <!-- # Local SIP port (default 5060) -->
+    <P40>5060</P40>
+
+    <!-- # Local RTP port (1024-65535, default 5004) -->
+    <P39>5004 </P39>
+
+    <!-- # Preferred Vocoder -->
+    <!-- # 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B, 98 - iLBC, 9 - G.722 -->
+
+    <!-- # First codec.  -->
+    <P57>0</P57>
+
+    <!-- # Second codec.  -->
+    <P58>8</P58>
+
+    <!-- # Third codec.  -->
+    <P59>4</P59>
+
+    <!-- # Forth codec.  -->
+    <P60>18</P60>
+
+    <!-- # Fifth codec.  -->
+    <P61>2</P61>
+
+    <!-- # Sixth codec.  -->
+    <P62>0</P62>
+
+    <!-- # Seventh codec.  -->
+    <P46>98</P46>
+
+    <!-- # BudgeTone Specific -->
+    <!-- # Eighth codec.  -->
+    <P98>9</P98>
+
+    <!-- # G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+    <P49>0</P49>
+
+    <!-- # iLBC payload type. Between 96 and 127, default is 97. -->
+    <P96>97</P96>
+
+    <!-- # iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+    <P97>0</P97>
+
+    <!-- # Silence Suppression. 0 - No, 1 - Yes. -->
+    <P50>0</P50>
+
+    <!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively) -->
+    <P37>2</P37>
+
+    <!-- # Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
+    <P38>48</P38>
+
+    <!-- # VoIP Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+    <P51>0</P51>
+
+    <!-- # VoIP Layer 2 QoS. 802.1p priority value (0 - 7) -->
+    <P87>0</P87>
+
+    <!-- # PC Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+    <!-- # HT486 Rev.2 only -->
+    <P229>0</P229>
+
+    <!-- # PC Layer 2 QoS. 802.1p priority value (0 - 7) -->
+    <!-- # HT486 Rev.2 only -->
+    <P230>0</P230>
+
+    <!-- ################################################################################ -->
+    <!-- # Registration settings -->
+    <!-- ################################################################################ -->
+
+    <!-- # SIP Registration. 0 - No, 1 - Yes. -->
+    <P31>1</P31>
+
+    <!-- # Register Expiration (in seconds. default 1 hour, max 45 days)  -->
+    <P239>3600</P239>
+
+    <!-- # Unregister On Reboot. 0 - No, 1 - Yes. -->
+    <P81>1</P81>
+
+    <!-- # SIP Registration Failure Retry Wait Time. (in seconds. Between 1-3600, default is 20) -->
+    <P138>20</P138>
+
+    <!-- # Keep-alive interval (in seconds. default 20 seconds) -->
+    <P84>20</P84>
+
+    <!-- ################################################################################ -->
+    <!-- # DTMF settings -->
+    <!-- ################################################################################ -->
+
+    <!-- # Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO, 11 - In Audio & RTP & SIP INFO -->
+    <!-- # 9 - In Audio & RTP, 10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+    <P73>2</P73>
+
+    <!-- # DTMF Payload Type -->
+    <P79>101</P79>
+
+    <!-- # Send Flash Event (Flash will be sent as a DTMF event if set to Yes). 0 - No, 1 - Yes. -->
+    <P74>0</P74>
+
+    <!-- ################################################################################ -->
+    <!-- # Time settings -->
+    <!-- ################################################################################ -->
+
+    <!-- # NTP Server -->
+    {if isset($ntp_server_primary)}
+    <P30>{$ntp_server_primary}</P30>
+    {else}
+    <P30>pool.ntp.org</P30>
+    {/if}
+
+
+    <!-- ################################################################################ -->
+    <!-- # Misc settings -->
+    <!-- ################################################################################ -->
+
+    <!-- # User Caller Name (John Doe) -->
+    <P3>{$account.1.display_name}</P3>
+
+    <!-- # Home NPA (For AOL dial plan translation) -->
+    <!-- # HT486 Rev.2, HT286 Rev.3 only -->
+    <P259></P259>
+
+    <!-- # SIP User ID is phone number. 0 - No, 1 - Yes. -->
+    <P63>0</P63>
+
+    <!-- # Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. -->
+    <P29>0</P29>
+
+    <!-- # Allow outgoing call without Registration. 0 - No, 1 - Yes. -->
+    <P109>1</P109>
+
+    <!-- # Dial Plan Prefix (dial plan prefix string). -->
+    <P66></P66>
+
+    <!-- # No Key Entry Timeout. Default - 4 seconds. -->
+    <P85>4</P85>
+
+    <!-- # Use # as Dial Key (if set to Yes, "#" will function as the Dial key). -->
+    <!-- # 0 - No, 1 - Yes. -->
+    <P72>1</P72>
+
+    <!-- # Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+    <!-- # BT100 only -->
+    <P33>{$voicemail_number}</P33>
+
+    <!-- # SUBSCRIBE for MWI. Whether or not send SUBSCRIBE for Message Waiting Indication. -->
+    <!-- # 0 - No, 1 - Yes. -->
+    {if isset($subscribe_mwi)}
+    <P99>1</P99>
+    {else}
+    <P99>0</P99>
+    {/if}
+
+    <!-- # Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
+    <P71></P71>
+
+    <!-- # Enable Call Features.  0 - No, 1 - Yes. -->
+    <P191>0</P191>
+
+    <!-- # Use Bell-style 3-way Conference. 0 - No, 1 - Yes. -->
+    <!-- # For HT286/HT486 only -->
+    <P108>0</P108>
+
+    <!-- # Disable Call-Waiting. 0 - No, 1 - Yes. -->
+    <P91>{$grandstream_call_waiting}</P91>
+
+    <!-- # Disable Call-Waiting Caller-ID. 0 - No, 1 - Yes. -->
+    <P714>0</P714>
+
+    <!-- # Onhook Threshold. Default 800ms. -->
+    <!-- # <value=0>Hookflash OFF -->
+    <!-- # <value=2>200 ms -->
+    <!-- # <value=4>400 ms -->
+    <!-- # <value=6>600 ms -->
+    <!-- # <value=8>800 ms -->
+    <!-- # <value=10>1000 ms -->
+    <!-- # <value=12>1200 ms -->
+    <P245>8</P245>
+
+    <!-- # Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. -->
+    <P65>0</P65>
+
+    <!-- # Anonymous Method. 0 -Use From Header, 1 - Use Privacy Header. -->
+    <P268>0</P268>
+
+    <!-- # Time to ring. The length of ringing if it does not answer a call. Default 60 seconds. -->
+    <!-- # Valid values 30/60/90/120 in seconds. -->
+    <P185>60</P185>
+
+    <!-- # Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus ASX -->
+    <!-- # 106 - MediaRing, 107 - Level3, 108 - CBCOM, 109 - RNK -->
+    <!-- # BT100 Supports 100, 102, 106, 108, 109 only. -->
+    <P198></P198>
+
+    <!-- # Syslog Server (name of the server, max length is 64 charactors) -->
+    <P207>{$grandstream_syslog_server}</P207>
+
+    <!-- # Syslog Level (Default setting is NONE) -->
+    <!-- # 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+    {if isset($grandstream_syslog_level)}
+    <P208>{$grandstream_syslog_level}</P208>
+    {else}
+    <P208>0</P208>
+    {/if}
+
+
+    <!-- # Firmwae Key (AES 128, in Hexadecimal Representation)  -->
+    <P242></P242>
+
+    <!-- # Lock Keypad Update. (configuration update via keypad is disabled if set to Yes) -->
+    <!-- # 0 - No, 1 - Yes. -->
+    <P88>0</P88>
+
+    <!-- # Allow conf SIP Account in Basic Settings. 0 - No, 1 - Yes. -->
+    <P241>0</P241>
+
+    <!-- # Override MTU Size. -->
+    <P244>0</P244>
+
+    <!-- ################################################################################ -->
+    <!-- # BudgeTone Specific Settings -->
+    <!-- ################################################################################ -->
+
+    <!-- # Auto Answer. 0 - No, 1 - Yes. -->
+    <P90>0</P90>
+
+    <!-- # Default Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2 -->
+    <!-- # 3 - custom ring tone 3. -->
+    <P104>0</P104>
+
+    <!-- # Use custom ring tone 1 if incoming caller ID is the following: -->
+    <P105></P105>
+
+    <!-- # Use custom ring tone 2 if incoming caller ID is the following: -->
+    <P106></P106>
+
+    <!-- # Use custom ring tone 3 if incoming caller ID is the following: -->
+    <P107></P107>
+
+    <!-- ################################################################################ -->
+    <!-- # HandyTone Specific Settings -->
+    <!-- ################################################################################ -->
+
+    <!-- # FXS Impedence -->
+    <!-- # -->
+    <!-- # <value="0" > Default setting is "600 Ohm (North America)" -->
+    <!-- # <value=0>600 Ohm (North America) -->
+    <!-- # <value=1>900 Ohm -->
+    <!-- # <value=2>600 Ohm + 2.16uF -->
+    <!-- # <value=3>900 Ohm + 2.16uF -->
+    <!-- # <value=4>CTR21 (270 Ohm + 750 Ohm||150nF) -->
+    <!-- # <value=5>Australia/New Zealand #1 (220 Ohm + 820 Ohm||120nF) -->
+    <!-- # <value=6>Slovakia/Slovenia/South Africa (220 Ohm + 820 Ohm||115nF) -->
+    <!-- # <value=7>New Zealand #2 (370 Ohm + 620 Ohm||310nF) -->
+    <P86>0</P86>
+
+    <!-- # Caller ID Scheme -->
+    <!-- # -->
+    <!-- # <value="0">current setting is "Bellcore" -->
+    <!-- # <value=0>Bellcore (North America) -->
+    <!-- # <value=1>ETSI-FSK (France, Germany, Norway, Taiwan, UK-CCA) -->
+    <!-- # <value=2>ETSI-DTMF (Finland, Sweden) -->
+    <!-- # <value=3>DTMF-Denmark -->
+    <!-- # <value=4>CID-Canada -->
+    <!-- # <value=5>DTMF-Sweden -->
+    <!-- # <value=6>DTMF-Brazil -->
+    <P200>0</P200>
+
+    <!-- # Onhook Voltage -->
+    <!-- # -->
+    <!-- # <value="2">current setting is "36V (High Power)" -->
+    <!-- # <value=1>18V (High Power) -->
+    <!-- # <value=5>24V (High Power) -->
+    <!-- # <value=2>36V (High Power) -->
+    <!-- # <value=3>48V (High Power) -->
+    <!-- # <value=4>51V (High Power) -->
+    <!-- # <value=6>18V (Low Power) -->
+    <!-- # <value=10>24V(Low Power) -->
+    <!-- # <value=7>36V (Low Power) -->
+    <!-- # <value=8>48V (Low Power) -->
+    <!-- # <value=9>51V (Low Power) -->
+    <P206>2</P206>
+
+    <!-- # Polarity Reversal. 0 - No, 1 - Yes. -->
+    <P205>0</P205>
+
+    <!-- # FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through. -->
+    <P228>0</P228>
+
+    <!-- # Default Session Expires (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <P260>180</P260>
+
+    <!-- # Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <P261>90</P261>
+
+    <!-- # Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <P262>0</P262>
+
+    <!-- # Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <P263>0</P263>
+
+    <!-- # Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <P264>0</P264>
+
+    <!-- # UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <P266>0</P266>
+
+    <!-- # UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <P267>1</P267>
+
+    <!-- # Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <P265>0</P265>
+
+    <!-- # Volume Amplification -->
+    <!-- # TX  -->
+    <!-- # <value=1> +6dB -->
+    <!-- # <value=2> +4dB -->
+    <!-- # <value=3> +2dB -->
+    <!-- # <value=0> 0dB -->
+    <!-- # <value=4> -2dB -->
+    <!-- # <value=5> -4dB -->
+    <!-- # <value=6> -6dB -->
+    <P247>0 </P247>
+
+    <!-- # RX  -->
+    <!-- # <value=1> +6dB -->
+    <!-- # <value=2> +4dB -->
+    <!-- # <value=3> +2dB -->
+    <!-- # <value=0> 0dB -->
+    <!-- # <value=4> -2dB -->
+    <!-- # <value=5> -4dB -->
+    <!-- # <value=6> -6dB -->
+    <P249>0</P249>
+
+    <!-- # Powerline Ring Tone -->
+    <!-- # Frequency (Hz). Allowed: 15-100. Default 20Hz -->
+    <P1810>20</P1810>
+    <!-- # ON (x10ms). Allowed: 5-800. Default 200. -->
+    <P1811>200</P1811>
+    <!-- # OFF (x10ms). Allowed: 5-800. Default 400. -->
+    <P1812>400</P1812>
+
+    <!-- ##### Call Progress Tones ##### -->
+    <!-- # -->
+    <!-- ### Dial Tone ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1820>350</P1820>
+    <!-- # Frequency 2 (Hz) -->
+    <P1840>440</P1840>
+    <!-- # ON (x 10ms) -->
+    <P1860>0</P1860>
+    <!-- # OFF (x 10ms) -->
+    <P1880>0</P1880>
+
+    <!-- ### Recall Dial Tone ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1821>350</P1821>
+    <!-- # Frequency 2 (Hz) -->
+    <P1841>440</P1841>
+    <!-- # ON (x 10ms) -->
+    <P1861>10</P1861>
+    <!-- # OFF (x 10ms) -->
+    <P1881>10</P1881>
+
+    <!-- ### Message Waiting Tone ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1822>350</P1822>
+    <!-- # Frequency 2 (Hz) -->
+    <P1842>440</P1842>
+    <!-- # ON (x 10ms) -->
+    <P1862>10</P1862>
+    <!-- # OFF (x 10ms) -->
+    <P1882>10</P1882>
+
+    <!-- ### Confirmation Tone ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1823>350</P1823>
+    <!-- # Frequency 2 (Hz) -->
+    <P1843>440</P1843>
+    <!-- # ON (x 10ms) -->
+    <P1863>10</P1863>
+    <!-- # OFF (x 10ms) -->
+    <P1883>10</P1883>
+
+    <!-- ### Audiable Ringing ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1824>440</P1824>
+    <!-- # Frequency 2 (Hz) -->
+    <P1844>480</P1844>
+    <!-- # ON (x 10ms) -->
+    <P1864>200</P1864>
+    <!-- # OFF (x 10ms) -->
+    <P1884>400</P1884>
+
+    <!-- ### Busy Tone ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1825>480</P1825>
+    <!-- # Frequency 2 (Hz) -->
+    <P1845>620</P1845>
+    <!-- # ON (x 10ms) -->
+    <P1865>50</P1865>
+    <!-- # OFF (x 10ms) -->
+    <P1885>50</P1885>
+
+    <!-- ### Reorder Tone ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1826>480</P1826>
+    <!-- # Frequency 2 (Hz) -->
+    <P1846>620</P1846>
+    <!-- # ON (x 10ms) -->
+    <P1866>25</P1866>
+    <!-- # OFF (x 10ms) -->
+    <P1886>25</P1886>
+
+    <!-- ### Receiver offhook ### -->
+    <!-- # Frequency 1 (Hz) -->
+    <P1827>1400</P1827>
+    <!-- # Frequency 2 (Hz) -->
+    <P1847>2600</P1847>
+    <!-- # ON (x 10ms) -->
+    <P1867>10</P1867>
+    <!-- # OFF (x 10ms) -->
+    <P1887>10</P1887>
+
+    <!-- # Disable Line Echo Canceller (LEC). 0 - No, 1 - Yes. -->
+    <P824>0</P824>
+
+    <!-- # Disable Voice Prompt. 0 - No, 1 - Yes. -->
+    <P253>0</P253>
+
+    <!-- # Enable Toll Application. 0 - No, 1 - Yes.  -->
+    <!-- # Default No, set to Yes if connecting to toll pay device or phone -->
+    <P257>0</P257>
+
+    <!-- ############################################################################### -->
+    <!-- # End User Settings. Please do not edit this section. -->
+    <!-- ############################################################################### -->
+
+    <!-- # End User Password -->
+    <!-- #P196 = 123 -->
+
+    <!-- # Web Port. Device internal HTTP server port number. Default is 80. -->
+    <!-- # HT486 Rev.2, HT286 Rev.3 only -->
+    <P901>80</P901>
+
+    <!-- # The following 4 fields will show in Basic Settings if -->
+    <!-- # "Allow conf SIP Account in Basic Settings" is set to "Yes". (P241 = 1) -->
+    <!-- # SIP User ID -->
+    <!-- #P35 =  -->
+
+    <!-- # Authentication ID -->
+    <!-- #P36 = -->
+
+    <!-- # Authentication password -->
+    <!-- #P34 = 0000 -->
+
+    <!-- # User Caller Name (John Doe) -->
+    <!-- #P3 =  -->
+
+    <!-- # DHCP support. 0 - Yes, 1 - No. -->
+    <!-- #P8 = 0 -->
+
+    <!-- # Host name, DHCP option 12. Max length allowed is 32 bytes. -->
+    <P146></P146>
+
+    <!-- # Domain name, DHCP option 15. Max length allowed is 32 bytes. -->
+    <P147></P147>
+
+    <!-- # Vendor Class ID, DHCP option 60. Max length allowed is 32 bytes. -->
+    <P148></P148>
+
+    <!-- # PPPoE support. PPPoE user ID -->
+    <!-- #P82 = -->
+
+    <!-- # PPPoE password -->
+    <!-- #P83 = -->
+
+    <!-- # PPPoE Service Name -->
+    <!-- #P269 = -->
+
+    <!-- # IP Address. Ignore if DHCP or PPPoE is used -->
+    <!-- #P9 =  -->
+    <!-- #P10 =  -->
+    <!-- #P11 =  -->
+    <!-- #P12 =  -->
+
+    <!-- # Subnet mask. Ignore if DHCP or PPPoE is used -->
+    <!-- #P13 = 255 -->
+    <!-- #P14 = 255 -->
+    <!-- #P15 = 255 -->
+    <!-- #P16 = 0 -->
+
+    <!-- # Router. Ignore if DHCP or PPPoE is used -->
+    <!-- #P17 =  -->
+    <!-- #P18 =  -->
+    <!-- #P19 =  -->
+    <!-- #P20 =  -->
+
+    <!-- # Use this DNS server.  (if specified). -->
+    <!-- #P92 =  -->
+    <!-- #P93 =  -->
+    <!-- #P94 =  -->
+    <!-- #P95 =  -->
+
+    <!-- # DNS 1. Ignore if DHCP or PPPoE is used -->
+    <!-- #P21 =  -->
+    <!-- #P22 =  -->
+    <!-- #P23 =  -->
+    <!-- #P24 =  -->
+
+    <!-- # DNS 2. Ignore if DHCP or PPPoE is used -->
+    <!-- #P25 = 0 -->
+    <!-- #P26 = 0 -->
+    <!-- #P27 = 0 -->
+    <!-- #P28 = 0 -->
+
+    <!-- # Time Zone. Offset in minutes to GMT -->
+    <!-- #P64 = 420 -->
+
+    <!-- # Daylight Savings Time. 0 - No, 1 - Yes. -->
+    <!-- #P75 = 0 -->
+
+    <!-- # Optional Rule. Daylight Saving rule. -->
+    <!-- # HT486 Rev.2, HT286 Rev.3 only -->
+    <P246>4,1,7,2,0;10,-1,7,2,0;60</P246>
+
+    <!-- # Date Display Format. 0 - Year-Month-Day, 1 - Month-Day-Year, 2 - Day-Month-Year -->
+    <!-- # BT100 only -->
+    <P102>0</P102>
+
+    <!-- ######################################################################## -->
+    <!-- # HandyTone 486 Specific End User NAT Settings. Please do not edit. -->
+    <!-- ######################################################################## -->
+
+    <!-- # PSTN Access Code.   Default = *00 -->
+    <P195></P195>
+
+    <!-- # Device Mode. 0 - NAT Router, 1 - Bridge. Default is 0. -->
+    <P231>0</P231>
+
+    <!-- # WAN side http access.  0 - Disable(default), 1 - Yes. -->
+    <P190>0</P190>
+
+    <!-- # Reply to ICMP on WAN port (Unit will not respond to PING from WAN side if set to No) -->
+    <!-- # 0 - No, 1 - Yes. -->
+    <P189>1</P189>
+
+    <!-- #Cloned WAN MAC Address. -->
+    <P115></P115>
+    <P116></P116>
+    <P117></P117>
+    <P118></P118>
+    <P119></P119>
+    <P120></P120>
+
+    <!-- #LAN Subnet Mask.  Default is 255.255.255.0. -->
+    <P110></P110>
+
+    <!-- #LAN Base/Gateway/Router IP for the LAN port, default is 192.168.2.1. -->
+    <P111></P111>
+
+    <!-- #DHCP IP Lease Time, in units of hours, default is 120 hours or 5 days. -->
+    <P112></P112>
+
+    <!-- #DMZ IP. -->
+    <P113></P113>
+
+    <!-- ################################################################################ -->
+    <!-- # Port Forwarding. -->
+    <!-- ################################################################################ -->
+
+    <!-- #############  Choice 1 #################################### -->
+    <!-- # WAN Port -->
+    <P150></P150>
+    <!-- # LAN IP -->
+    <P158></P158>
+    <!-- # LAN Port -->
+    <P166></P166>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P174></P174>
+    <!-- #############  Choice 2 #################################### -->
+    <!-- # WAN Port -->
+    <P151></P151>
+    <!-- # LAN IP -->
+    <P159></P159>
+    <!-- # LAN Port -->
+    <P167></P167>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P175></P175>
+    <!-- #############  Choice 3 #################################### -->
+    <!-- # WAN Port -->
+    <P152></P152>
+    <!-- # LAN IP -->
+    <P160></P160>
+    <!-- # LAN Port -->
+    <P168></P168>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P176></P176>
+    <!-- #############  Choice 4 #################################### -->
+    <!-- # WAN Port -->
+    <P153></P153>
+    <!-- # LAN IP -->
+    <P161></P161>
+    <!-- # LAN Port -->
+    <P169></P169>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P177></P177>
+    <!-- #############  Choice 5 #################################### -->
+    <!-- # WAN Port -->
+    <P154></P154>
+    <!-- # LAN IP -->
+    <P162></P162>
+    <!-- # LAN Port -->
+    <P170></P170>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P178></P178>
+    <!-- #############  Choice 6 #################################### -->
+    <!-- # WAN Port -->
+    <P155></P155>
+    <!-- # LAN IP -->
+    <P163></P163>
+    <!-- # LAN Port -->
+    <P171></P171>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P179></P179>
+    <!-- #############  Choice 7 #################################### -->
+    <!-- # WAN Port -->
+    <P156></P156>
+    <!-- # LAN IP -->
+    <P164></P164>
+    <!-- # LAN Port -->
+    <P172></P172>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P180></P180>
+    <!-- #############  Choice 8 #################################### -->
+    <!-- # WAN Port -->
+    <P157></P157>
+    <!-- # LAN IP -->
+    <P165></P165>
+    <!-- # LAN Port -->
+    <P173></P173>
+    <!-- # Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <P181></P181>
+
+
+  </config>
+</gs_provision>

@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gs_provision version="1">
+  <config version="1">
+    <!-- Configuration template for GXW410x version 1.3.4.13 -->
+    <!-- Advanced/System-wide Options -->
+    <!--  Admin password for web interface, max. length is 30 -->
+    <P2>{$admin_password}</P2>
+    <!-- End User Password, MaxLength 32 -->
+    <P196>{$user_password}</P196>
+    <!--  G.723 rate: 0 - 6.3kbps encoding rate,  1 - 5.3kbps encoding rate -->
+    <P49>0</P49>
+    <!--  Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively) -->
+    <P37>2</P37>
+    <!--  Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
+    <P38>48</P38>
+    <!--  Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+    <P51>0</P51>
+    <!--  Layer 2 QoS. 802.1p priority value (0 - 7) -->
+    <P87>0</P87>
+    <!--  Local RTP port (1024-65535, default 5004) -->
+    <P39>5004</P39>
+    <!--  Use Random Port. 0 - no, 1 - yes -->
+    <P78>0</P78>
+    <!--  Keep-alive interval (in seconds. default 20 seconds) -->
+    <P84>20</P84>
+    <!--  Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+    <P101></P101>
+    <!--  STUN server -->
+    <P76></P76>
+    <!--  Firmware Upgrade -->
+    <!--  Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
+    <P212>1</P212>
+    <!-- Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxw410x/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxw410x</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
+    <!--  Config Server Path -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {elseif isset($domain_name)}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+    
+    <!--  Firmware File Prefix -->
+    <P232></P232>
+    <!--  Firmware File Postfix -->
+    <P233></P233>
+    <!--  Config File Prefix -->
+    <P234></P234>
+    <!--  Config File Postfix -->
+    <P235></P235>
+    <!--  Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
+    <!--  When set to Yes(1), it will override the configured provision path and method. -->
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+    <!--  Automatic Upgrade. 0 - No, 1 - Yes. Default is No. -->
+    <P194>0</P194>
+    <!--  Check for new firmware every () minutes, unit is in minute, minimnu 60 minutes, default is 7 days. -->
+    <P193>10080</P193>
+    <!--  Use firmware pre/postfix to determine if f/w is required -->
+    <!--  0 = Always Check for New Firmware -->
+    <!--  1 = Check New Firmware only when F/W pre/suffix changes -->
+    <!--  2 = Always Skip the Firmware Check -->
+    <P238>0</P238>
+    <!--  DTMF Payload Type -->
+    <P79>101</P79>
+    <!--  Syslog Server (name of the server, max length is 64 charactors) -->
+    <P207></P207>
+    <!--  Syslog Level (Default setting is NONE) -->
+    <!--  0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+    <P208>0</P208>
+    <!--  NTP Server -->
+    <P30>us.pool.ntp.org</P30>
+    <!--  Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
+    <!--  When set to Yes(1), it will override the configured NTP server. -->
+    <P144>0</P144>
+    <!--  Enable Video Surveillance -->
+    <!--  0 - No, 1 - Yes -->
+    <P928>0</P928>
+    <!--  RTSP Port -->
+    <P929>554</P929>
+    <!--  RTP Loopback. 0 - No, 1 - Yes. (No as default, Yes means no RTP if RTP streams between 2 internal ports) -->
+    <!--  P3598 = 0 -->
+    <!--  Profile 1 Settings -->
+    <!--  Activate Profile  0 - no, 1 - yes -->
+    <P271>1</P271>
+    <!--  Profile Name -->
+    <P270></P270>
+    <!--  SIP Server: max. length = 96 -->
+    <P47>{$account.1.server_address}</P47>
+    <!--  Outbound Proxy -->
+    <P48></P48>
+    <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
+    <P103>0</P103>
+    <!--  SIP User ID is phone number. 0 - no, 1 - yes -->
+    <P63>0</P63>
+    <!--  SIP Registration. 0 - no, 1 - yes -->
+    <P31>1</P31>
+    <!--  Unregister On Reboot. 0 - no, 1 - yes -->
+    <P81>0</P81>
+    <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <P32>{$account.1.register_expires}</P32>
+    <!--  Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
+    <P138>20</P138>
+    <!--  SIP Transport. 1 - UDP, 2 - TCP , (default is UDP) -->
+    <P130>1</P130>
+    <!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+    <P52>1</P52>
+    <!--  Proxy-Require (A SIP extension to enable firewall penetration) -->
+    <P197></P197>
+    <!--  Early Dial (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+    <P29>0</P29>
+    <!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <P260>180</P260>
+    <!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <P261>90</P261>
+    <!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <P262>0</P262>
+    <!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <P263>0</P263>
+    <!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <P264>0</P264>
+    <!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <P265>0</P265>
+    <!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <P266>0</P266>
+    <!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <P267>1</P267>
+    <!--  Enable 100rel . 0 - no, 1 - yes -->
+    <P272>0</P272>
+    <!--  Refer to Uses Target Contact -->
+    <!--  0 - No, 1 - Yes -->
+    <P135>0</P135>
+    <!-- INVITE Ring-no-anwser Timeout -->
+    <P3180>40</P3180>
+    <!--  Accept INVITE from Proxy Only (100 %u2013No; 101-YES, default YES) -->
+    <P743>101</P743>
+    <!--  Codec/Voice Quality settings -->
+    <!--  First codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P57>0</P57>
+    <!--  Second codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P58>3</P58>
+    <!--  Third codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P59>4</P59>
+    <!--  Forth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P60>8</P60>
+    <!--  Fifth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P61>18</P61>
+    <!--  Sixth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P62>0</P62>
+    <!--  Seventh codec. 0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P46>0</P46>
+    <!--  Eighth codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P98>0</P98>
+    <!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus, 108 - CBCOM, 109 - RNK -->
+    <P198>100</P198>
+    <!--  Profile 2 Settings -->
+    <!--  Activate Profile  0 - no, 1 - yes -->
+    <P401>0</P401>
+    <!--  Profile Name -->
+    <P417></P417>
+    <!--  SIP Server -->
+    <P402>{$account.2.server_address}</P402>
+    <!--  Outbound Proxy Server -->
+    <P403></P403>
+    <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
+    <P408>0</P408>
+    <!--  User ID is phone number; "user=phone". 0 - no, 1 - yes -->
+    <P409>0</P409>
+    <!--  SIP Registration. 0 - no, 1 - yes -->
+    <P410>1</P410>
+    <!--  Unregister on Reboot. 0 - no, 1 - yes -->
+    <P411>0</P411>
+    <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <P412>{$account.2.register_expires}</P412>
+    <!--  Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
+    <P471>20</P471>
+    <!--  SIP Transport. 1 - UDP, 2 - TCP , (default is UDP) -->
+    <P448>1</P448>
+    <!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+    <P414>1</P414>
+    <!--  Proxy Require -->
+    <P418></P418>
+    <!--  Early Dial. 0 - no, 1 - yes -->
+    <P422>0</P422>
+    <!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <P434>180</P434>
+    <!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <P427>90</P427>
+    <!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <P428>0</P428>
+    <!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <P429>0</P429>
+    <!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <P430>0</P430>
+    <!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <P431>0</P431>
+    <!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <P432>0</P432>
+    <!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <P433>1</P433>
+    <!--  Enable 100rel. 0 - no, 1 - yes -->
+    <P435>0</P435>
+    <!--  Refer to Uses Target Contact -->
+    <!--  0 - No, 1 - Yes -->
+    <P469>0</P469>
+    <!--  INVITE Ring-no-answer Timeout -->
+    <P3181>40</P3181>
+    <!--  Accept INVITE from Proxy Only (100 %u2013No; 101-YES, default YES) -->
+    <P4043>101</P4043>
+    <!--  First codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P451>0</P451>
+    <!--  Second codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P452>3</P452>
+    <!--  Third codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P453>4</P453>
+    <!--  Forth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P454>8</P454>
+    <!--  Fifth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P455>18</P455>
+    <!--  Sixth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P456>0</P456>
+    <!--  Seventh codec. 0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P457>0</P457>
+    <!--  Eighth codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P458>0</P458>
+    <!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus, 108 - CBCOM, 109 - RNK -->
+    <P424>100</P424>
+    <!--  Profile 3 Settings -->
+    <!--  Activate Profile  0 - no, 1 - yes -->
+    <P501>0</P501>
+    <!--  Profile Name -->
+    <P517></P517>
+    <!--  SIP Server -->
+    <P502>{$account.3.server_address}</P502>
+    <!--  Outbound Proxy Server -->
+    <P503></P503>
+    <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
+    <P508>0</P508>
+    <!--  User ID is phone. "user=phone". 0 - no, 1 - yes -->
+    <P509>0</P509>
+    <!--  SIP Registration. 0 - no, 1 - yes -->
+    <P510>1</P510>
+    <!--  Unregister on Reboot. 0 - no, 1 - yes -->
+    <P511>0</P511>
+    <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <P512>{$account.3.register_expires}</P512>
+    <!--  Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
+    <P571>20</P571>
+    <!--  SIP Transport. 1 - UDP, 2 - TCP , (default is UDP) -->
+    <P548>1</P548>
+    <!--  NAT Traversal. 0 - yes, 1 - no -->
+    <P514>1</P514>
+    <!--  Proxy Require -->
+    <P518></P518>
+    <!--  Early Dial. 0 - no, 1 - yes -->
+    <P522>0</P522>
+    <!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <P534>180</P534>
+    <!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <P527>90</P527>
+    <!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <P528>0</P528>
+    <!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <P529>0</P529>
+    <!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <P530>0</P530>
+    <!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <P531>0</P531>
+    <!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <P532>0</P532>
+    <!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <P533>1</P533>
+    <!--  Enable 100rel. 0 - no, 1 - yes -->
+    <P535>0</P535>
+    <!--  Refer to Uses Target Contact -->
+    <!--  0 - No, 1 - Yes -->
+    <P569>0</P569>
+    <!--  INVITE Ring-no-anwser Timeout -->
+    <P3182>40</P3182>
+    <!--  Accept INVITE from Proxy Only (100 %u2013No; 101-YES, default YES) -->
+    <P4044>101</P4044>
+    <!-- Codec/Voice Quality settings -->
+    <!--  First codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P551>0</P551>
+    <!--  Second codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P552>3</P552>
+    <!--  Third codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P553>4</P553>
+    <!--  Forth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P554>8</P554>
+    <!--  Fifth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P555>18</P555>
+    <!--  Sixth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P556>0</P556>
+    <!--  Seventh codec. 0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P557>0</P557>
+    <!--  Eighth codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
+    <P558>0</P558>
+    <!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus, 108 - CBCOM, 109 - RNK -->
+    <P524>100</P524>
+    <!--  FXO Lines Settings -->
+    <!--  FXO Termination -->
+    <!--  Enable Current Disconnect -->
+    <!--  N - No, Y - Yes -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3603 = ch1-4:Y; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3603 = ch1-8:Y; -->
+    <!--  Enable Current Disconnect Threshold. Default 100, normally 100 ~ 800ms. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3604 = ch1-4:100; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3604 = ch1-8:100; -->
+    <!--  Enable Tone Disconnect. N - No, Y - Yes. -->
+    <!--  If set yes, reorder tone is used as disconnect signal. Default No. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3605 = ch1-4:Y; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3605 = ch1-8:Y; -->
+    <!--  Enable Polarity Reversal. N - No, Y - Yes. -->
+    <!--  Default No. Check with your PSTN carrier before set to Yes -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3606 = ch1-4:N; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3606 = ch1-8:N; -->
+    <!--  Enable Call Answer Supervision.  N - No, Y - Yes. -->
+    <!--  Default No. Check with your PSTN carrier before set to Yes -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3629 = ch1-4:N; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3629 = ch1-8:N; -->
+    <!--  Silence Timeout. Default 60 seconds. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3202 = ch1-4:60; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3202 = ch1-8:60; -->
+    <!--  Incoming Call Ring Timeout. Allowed value: 2-10s, default 6s. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3630 = ch1-4:6; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3630 = ch1-8:6; -->
+    <!--  AC Termination Impedance -->
+    <!--  0 - 600 Ohm ( North American ) -->
+    <!--  1 - 900 Ohm -->
+    <!--  2 - 270 Ohm + (750 Ohm || 150nF) and 275 Ohm + (780 Ohm || 150nF) -->
+    <!--  3 - 220 Ohm + (820 Ohm || 120nF) and 220 Ohm + (820 Ohm || 115nF) -->
+    <!--  4 - 370 Ohm + (620 Ohm || 310nF) -->
+    <!--  5 - 320 Ohm + (1050 Ohm || 230nF) -->
+    <!--  6 - 370 Ohm + (820 Ohm || 110nF) -->
+    <!--  7 - 275 Ohm + (78 Ohm || 150 nF) -->
+    <!--  8 - 120 Ohm + (820 Ohm || 110 nF) -->
+    <!--  9 - 350 Ohm + (1000 Ohm || 210nF) -->
+    <!--  10 - 0 Ohm + (900 Ohm || 30nF) -->
+    <!--  11 - 600 Ohm + 2.16 uF -->
+    <!--  12 - 900 Ohm + 1 uF -->
+    <!--  13 - 900 Ohm + 2.16 uF -->
+    <!--  14 - 600 Ohm + 1 uF -->
+    <!--  15 - Global complex impedance -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3631 = ch1-4:0; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3631 = ch1-8:0; -->
+    <!--  Channel Dialing to PSTN -->
+    <!--  Wait for Dial Tone (Y/N). 0 - No, 1 - Yes. Default Yes - dial upon dial-tone -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3303 = ch1-4:N; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3303 = ch1-8:N; -->
+    <!--  Stage Method(1/2). Default 2 - 2 stage dialing. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3304 = ch1-4:2; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3304 = ch1-8:2; -->
+    <!--  Min Delay Before Dial PSTN. Default 500, range 50 ~ 6500ms. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3206 = ch1-4:500; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3206 = ch1-8:500; -->
+    <!--  Unconditional Call Forward to VOIP. -->
+    <!--  User ID -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3607 = ch1-4:; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3607 = ch1-8:; -->
+    <!--  SIP Server. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3306 = ch1-4:p1; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3306 = ch1-8:p1; -->
+    <!--  Sip Destination Port. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3307 = ch1-4:5060; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3307 = ch1-8:5060; -->
+    <!--  PSTN to VoIP Caller ID Setting -->
+    <!--  Number of Rings Before Pickup. Default 4. Allowed values: 1-50. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3599 = ch1-4:4; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3599 = ch1-8:4; -->
+    <!--  Caller ID Scheme -->
+    <!--  1:Bellcore/Telcordia, 2:ETSI-FSK during ringing, 3:ETSI-FSK prior to ringing with DTAS -->
+    <!--  4:ETSI-FSK prior to ringing with LR, 5:ETSI-FSK prior to ringing with RP, 6:ETSI-DTMF during ringing -->
+    <!--  7:ETSI-DTMF prior to ringing with DTAS, 8:ETSI-DTMF prior to ringing with LR -->
+    <!--  9:ETSI-DTMF prior to ringing with RP, 10:SIN 227 BT, 11: NTT -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3600 = ch1-4:1; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3600 = ch1-8:1; -->
+    <!--  Caller ID Transport Type. Default 1. -->
+    <!--  1:Relay via SIP From, 2:Disable, 3:Send Anonymous, 4:Relay via SIP P-Asserted-Identity -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3601 = ch1-4:1; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3601 = ch1-8:1; -->
+    <!--  T.38 Setting -->
+    <!--  Syntax: ch x-y: mode=val,rate=val,ecm=val;[...] -->
+    <!--  (mode: 1:Relay(default), 2:Passthough) -->
+    <!--  (rate: 2400, 4800, 7200, 9600(default), 12000, 14400) -->
+    <!--  (ecm: 1:Enable(default), 0:Disable) -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3602 = ch1-4:mode=1,rate=9600,ecm=1; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3602 = ch1-8:mode=1,rate=9600,ecm=1; -->
+    <!--  Channels Page -->
+    <!--  Phone Number Settings -->
+    <!--  FXO Port 1 -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <P3030></P3030>
+    <P3060>{$account.1.user_id}</P3060>
+    <P3090>{$account.1.user_id}</P3090>
+    <P3120>{$account.1.password}</P3120>
+    <P3150>3000</P3150>
+    <!--  FXO Port 2 -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <P3031></P3031>
+    <P3061>{$account.2.user_id}</P3061>
+    <P3091>{$account.2.user_id}</P3091>
+    <P3121>{$account.2.password}</P3121>
+    <P3151>3000</P3151>
+    <!--  FXO Port 3 -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <P3032></P3032>
+    <P3062>{$account.3.user_id}</P3062>
+    <P3092>{$account.3.user_id}</P3092>
+    <P3122>{$account.3.password}</P3122>
+    <P3152>3000</P3152>
+    <!--  FXO Port 4 -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <P3033></P3033>
+    <P3063>{$account.4.user_id}</P3063>
+    <P3093>{$account.4.user_id}</P3093>
+    <P3123>{$account.4.password}</P3123>
+    <P3153>3000</P3153>
+    <!--  FXO Port 5 (Uncomment the following P-values if using GXW4108) -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <!--  P3034 = -->
+    <!--  P3064 = -->
+    <!--  P3094 = -->
+    <!--  P3124 = -->
+    <!--  P3154 = -->
+    <!--  FXO Port 6 (Uncomment the following P-values if using GXW4108) -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <!--  P3035 = -->
+    <!--  P3065 = -->
+    <!--  P3095 = -->
+    <!--  P3125 = -->
+    <!--  P3155 = -->
+    <!--  FXO Port 7 (Uncomment the following P-values if using GXW4108) -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <!--  P3036 = -->
+    <!--  P3066 = -->
+    <!--  P3096 = -->
+    <!--  P3126 = -->
+    <!--  P3156 = -->
+    <!--  FXO Port 8 (Uncomment the following P-values if using GXW4108) -->
+    <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
+    <!--  P3037 = -->
+    <!--  P3067 = -->
+    <!--  P3097 = -->
+    <!--  P3127 = -->
+    <!--  P3157 = -->
+    <!--  Call Progress Tones -->
+    <!--  Dial Tone -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3000 = ch1-4:f1=350@-11,f2=440@-11,c=0/0; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3000 = ch1-8:f1=350@-11,f2=440@-11,c=0/0; -->
+    <!--  Ringback Tone -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3001 = ch1-4:f1=440@-11,f2=480@-11,c=200/400; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3001 = ch1-8:f1=440@-11,f2=480@-11,c=200/400; -->
+    <!--  Busy Tone -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3002 = ch1-4:f1=480@-11,f2=620@-11,c=50/50; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3002 = ch1-8:f1=480@-11,f2=620@-11,c=50/50; -->
+    <!--  Reorder Tone -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3003 = ch1-4:f1=480@-11,f2=620@-11,c=25/25; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3003 = ch1-8:f1=480@-11,f2=620@-11,c=25/25; -->
+    <!--  Channel Voice Settings -->
+    <!--  Tx to PSTN Audio Gain (dB). Default 1. Allowed values: -12-12. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3400 = ch1-4:1; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3400 = ch1-8:1; -->
+    <!--  Rx from PSTN Audio Gain (dB). Default 0. Allowed values: -12-12. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3401 = ch1-4:0; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3401 = ch1-8:0; -->
+    <!--  Silence Suppression. Default Yes. N - No, Y - Yes -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3402 = ch1-4:Y; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3402 = ch1-8:Y; -->
+    <!--  Echo Cancellation. Default Yes. N - No, Y - Yes -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3403 = ch1-4:Y; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3403 = ch1-8:Y; -->
+    <!--  Channel Specific Settings -->
+    <!--  DTMF Methods. Default 1. 1:in-audio, 2:RFC2833, 3:1+2, 4:SIP Info, 5:1+4, 6:2+4, 7:1+2+4 -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3404 = ch1-4:1; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3404 = ch1-8:1; -->
+    <!--  No Key Entry Timeot. Allowed Values: 1-9, default 4. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3405 = ch1-4:4; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3405 = ch1-8:4; -->
+    <!--  Local SIP Listen Port -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3406 = ch1-4:5060++; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3406 = ch1-8:5060++; -->
+    <!--  SRTP Mode(1-3). Default 1. -->
+    <!--  1:disabled, 2:enabled but not forced, 3:enabled and forced -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3409 = ch1-4:1; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3409 = ch1-8:1; -->
+    <!--  Port Scheduling Schema (Voip->PSTN) -->
+    <!--  Round-robin and/or Flexible -->
+    <!--  Syntax: rr: port_group; [...]), Default: rr:1-4; round-robin of all ports -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3407 = rr:1-4; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3407 = rr:1-8; -->
+    <!--  Prefix to Specify Port(1 stage dialing method) -->
+    <!--  Syntax: prefix #  + ch#  + dialing#  will request the ch#  per call) -->
+    <!--  Note that this code has to prefix dialplan number and prefix doesn't impact round-robin -->
+    <P3408></P3408>
+    <!--  Dial Plan -->
+    <!--  PSTN Outgoing calls. -->
+    
+    {if isset($grandstream_dial_plan) }
+    <P3331>{$grandstream_dial_plan}</P3331>
+    {else}
+    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P3331>
+    {/if}
+    
+    <!--  Hookflash Duration (X10ms). Default 60. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3308 = ch1-4:60; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3308 = ch1-4:60; -->
+    <!--  Use DTMF Parameter from RFC2833 or SIP Info . 0 -Yes, 1 - No. Default Yes. -->
+    <P3190>0</P3190>
+    <!--  DTMF Digit Length(X10ms). Default 10. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3300 = ch1-4:10; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3300 = ch1-8:10; -->
+    <!--  DTMF Digit Volume(dB). Default 11. -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3301 = ch1-4:-11; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3301 = ch1-4:-11; -->
+    <!--  DTMF Dial Pause Between Each Digit(X10ms) -->
+    <!--  For GXW4104 (uncomment the following line by removing #) -->
+    <!--  P3310 = ch1-4; -->
+    <!--  For GXW4108 (uncomment the following line by removing #) -->
+    <!--  P3310 = ch1-8; -->
+    <!--  End User Settings. Please do not edit this section. -->
+    <!--  Web Access. 0 - HTTP, 1 - HTTPS -->
+    <!--  P900 = 0 -->
+    <!--  Web Port: HTTP default is 80 and HTTPS default is 443 -->
+    <!--  P901 = 80 -->
+    <!--  End User Password -->
+    <!--  P196 = 123 -->
+    <!--  DHCP support. 0 - yes, 1 - no -->
+    <!--  P8 = 0 -->
+    <!--  DHCP hostname, alphabet, max. length is 32 -->
+    <!--  P146 = -->
+    <!--  DHCP domain, alphabet, max. length is 32 -->
+    <!--  P147 = -->
+    <!--  DHCP vendor class ID, alphabet, max. length is 32 -->
+    <!--  P148 = Grandstream GXW-410x -->
+    <!--  PPPoE support. PPPoE user ID -->
+    <!--  P82 = -->
+    <!--  PPPoE password -->
+    <!--  P83 = -->
+    <!--  PPPoE service name, max. length is 64 alpabit -->
+    <!--  P269 = -->
+    <!--  Preferred DNS server, four field, octet digits -->
+    <!--  P92 = -->
+    <!--  P93 = -->
+    <!--  P94 = -->
+    <!--  P95 = -->
+    <!--  IP Address. Ignore if DHCP or PPPoE is used -->
+    <!--  P9 = 192 -->
+    <!--  P10 = 168 -->
+    <!--  P11 = 0 -->
+    <!--  P12 = 1 -->
+    <!--  Subnet mask. Ignore if DHCP or PPPoE is used -->
+    <!--  P13 = 255 -->
+    <!--  P14 = 255 -->
+    <!--  P15 = 255 -->
+    <!--  P16 = 0 -->
+    <!--  Default Router. Ignore if DHCP or PPPoE is used -->
+    <!--  P17 = 192 -->
+    <!--  P18 = 168 -->
+    <!--  P19 = 1 -->
+    <!--  P20 = 1 -->
+    <!--  DNS 1. Ignore if DHCP or PPPoE is used -->
+    <!--  P21 = 192 -->
+    <!--  P22 = 168 -->
+    <!--  P23 = 0 -->
+    <!--  P24 = 1 -->
+    <!--  DNS 2. Ignore if DHCP or PPPoE is used -->
+    <!--  P25 = 0 -->
+    <!--  P26 = 0 -->
+    <!--  P27 = 0 -->
+    <!--  P28 = 0 -->
+    <!--  End User Time settings -->
+    <!--  Time Zone. Offset in minutes to GMT -->
+    <P64>420</P64>
+    <!--  Allow DHCP Option 2 to override Time Zone setting. 0 - No, 1 - Yes. -->
+    <!--  When set to Yes(1), it will override the configured Time Zone setting if available. -->
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+    <!--  Daylight Savings Time. 0 - no, 1 - yes -->
+    <P75>0</P75>
+    <!--  Optional Rule: -->
+    <!--  If Daylight Saving Time is selected (P75 = 1), optional rule will allow automatically time ajustment based on the configured rule -->
+    <!--  Maxlength = 33, default is North America or US Daylight Saving Time Schecule: value="3,2,7,2,0;11,1,7,2,0;60" -->
+    <P246>3,2,7,2,0;11,1,7,2,0;60</P246>
+  </config>
+</gs_provision>

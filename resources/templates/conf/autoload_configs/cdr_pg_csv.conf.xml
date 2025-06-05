@@ -1,0 +1,84 @@
+<configuration name="cdr_pg_csv.conf" description="CDR PG CSV Format">
+  <settings>
+    <!-- See parameters for PQconnectdb() at http://www.postgresql.org/docs/8.4/static/libpq-connect.html -->
+    <param name="db-info" value="host=localhost user=postgres password=nopassword dbname=fusionpbx connect_timeout=10" />
+    <!-- CDR table name -->
+    <param name="db-table" value="v_xml_cdr"/>
+
+    <!-- Log a-leg (a), b-leg (b) or both (ab) -->
+    <param name="legs" value="ab"/>
+
+    <!-- Directory in which to spool failed SQL inserts -->
+    <!-- <param name="spool-dir" value="$${base_dir}/log/cdr-pg-csv"/> -->
+    <!-- Disk spool format if DB connection/insert fails - csv (default) or sql -->
+    <param name="spool-format" value="csv"/>
+    <param name="rotate-on-hup" value="true"/>
+
+    <!-- This is like the info app but after the call is hung up -->
+    <!--<param name="debug" value="true"/>-->
+  </settings>
+  <schema>
+    <field var="uuid"/>
+    <field var="domain-uuid column=domain_uuid"/>
+    <field var="domain_name"/>
+    <field var="accountcode"/>
+    <field var="direction"/>
+    <field var="default_language"/>
+    <field var="context"/>
+    <field var="xml_cdr"/>
+
+    <!-- <field var="local_ip_v4"/> -->
+    <field var="caller_id_name"/>
+    <field var="caller_id_number"/>
+    <field var="destination_number"/>
+
+    <field var="start_epoch"/>
+    <field var="start_stamp"/>
+    <field var="answer_stamp"/>
+    <field var="answer_epoch"/>
+    <field var="end_epoch"/>
+    <field var="end_stamp"/>
+    <field var="duration"/>
+    <field var="mduration"/>
+    <field var="billsec"/>
+    <field var="billmsec"/>
+
+    <field var="bridge_uuid"/>
+    <!-- <field var="bleg_uuid"/> -->
+    <field var="read_codec"/>
+    <field var="read_rate"/>
+    <field var="write_codec"/>
+    <field var="write_rate"/>
+
+    <field var="remote_media_ip"/>
+    <field var="network_addr"/>
+    <field var="recording_file"/>
+    <field var="leg"/>
+
+    <field var="pdd_ms"/>
+    <field var="last_app"/>
+    <field var="last_arg"/>
+
+    <field var="cc_side"/>
+    <field var="cc_member_uuid"/>
+    <field var="cc_queue_joined_epoch"/>
+    <field var="cc_queue"/>
+    <field var="cc_member_session_uuid"/>
+    <field var="cc_agent"/>
+    <field var="cc_agent_type"/>
+
+    <field var="waitsec"/>
+
+    <field var="conference_name"/>
+    <field var="conference_uuid"/>
+    <field var="conference_member_id"/>
+    <field var="digits_dialed"/>
+
+    <field var="hangup_cause"/>
+    <field var="hangup_cause_q850"/>
+    <field var="sip_hangup_disposition"/>
+
+    <!-- <field var="sip_hangup_disposition"/> -->
+    <!-- <field var="ani"/> -->
+  </schema>
+</configuration>

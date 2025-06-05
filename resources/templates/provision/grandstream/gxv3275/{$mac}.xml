@@ -1,0 +1,6112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gs_provision version="1">
+<config version="1">
+
+
+<!-- Configuration Template for GXP2200 Firmware Version 1.0.3.24 -->
+
+
+<!-- Change Log -->
+
+<!-- P values Modified in 1.0.3.24 since 1.0.3.16 -->
+
+<!-- GXP2200EXT1/2/3/4 P values range is modified from 10000-10799 to 23000-23799 -->
+
+<!-- Removed P values P1524 - Disable PC Port, P229 - PC Port VLAN Tag, P230 - PC Port Priority Value -->
+
+<!-- Default value change from 1 to 0 for P78 - Use Random Port -->
+
+<!-- Web GUI option name change for P81/P411/P511/P611/P1711/P1811 -->
+<!-- Previous name: Unregister on Reboot -->
+<!-- Current name: Unregister Before New Registration -->
+
+<!-- P values Added in 1.0.3.16 since 1.0.3.6 -->
+
+<!-- Disable PC Port. P1524 -->
+
+<!-- PC Port VLAN Tag. P229 -->
+
+<!-- PC Port Priority Value. P230 -->
+
+<!-- Enable Local MOH. For account 1 to account 6. -->
+<!-- P2357, P2457, P2557, P2657, P2757, P2857 -->
+
+<!-- Send SIP Log. P1387 = 0 -->
+
+<!-- P values Added in 1.0.3.6 since 1.0.3.3 -->
+
+<!-- Disable DialPlan. P1687 -->
+
+<!-- Disable Missed Call Indicator. P1691 -->
+
+<!-- Disable MWI Indicator. P1692 -->
+
+<!-- Disable New Message Indicator. P1693 -->
+
+<!-- Disable Contact or Message Full Indicator. P1694 -->
+
+<!-- Disable Indicator When LCD is OFF. P1695 -->
+
+<!-- Contact Max Storage. P1688 -->
+
+<!-- Call History Max Storage. P1689 -->
+
+<!-- Message Max Storage. P1690 -->
+
+<!-- P values Added in 1.0.3.3 since 1.0.1.40 -->
+
+<!-- Use Privacy Header. For account 1 to account 6 -->
+<!-- P2338, P2438, P2538, P2628, P2738, P2838 -->
+
+<!-- Use P-Preferred-Identity Header. For account 1 to account 6 -->
+<!-- P2339, P2439, P2539, P2639, P2739, P2839 -->
+
+<!-- Enable SCA (Shared Call Appearance). For account 1 to account 6 -->
+<!-- P1363, P1365, P1367, P1369, P1371, P1373 -->
+
+<!-- Enable BargeIn. For account 1 to account 6 -->
+<!-- P2337, P2437, P2537, P2637, P2737, P2837 -->
+
+<!-- Auto-filling Pickup Feature code. For account 1 to account 6 -->
+<!-- P2335, P2435, P2535, P2635, P2735, P2835 -->
+
+<!-- Pickup Feature Code. For account 1 to account 6 -->
+<!-- P2336, P2436, P2536, P2636, P2736, P2836 -->
+
+<!-- Line-seize Timeout (in seconds). For account 1 to account 6 -->
+<!-- P2313, P2413, P2513, P2613, P2713, P2813 -->
+
+<!-- Enable RFC5168 support. For account 1 to account 6 -->
+<!-- P1331, P478, P578, P678, P1778, P1878 -->
+
+<!-- Video Bit Rate. For account 1 to account 6 -->
+<!-- P2315, P2415, P2515, P2615, P2715, P2815 -->
+
+<!-- H.264 Payload Type. For account 1 to account 6 -->
+<!-- P293, P462, P562, P662, P1762, P1862 -->
+
+<!-- Start Video Automatically. For account 1 to account 6 -->
+<!-- P2314, P2414, P2514, P2614, P2714, P2814 -->
+
+<!-- Remote Video Request. For account 1 to account 6 -->
+<!-- P2326, P2426, P2526, P2626, P2726, P2826 -->
+
+<!-- Dial Plan Prefix. For account 1 to account 6 -->
+<!-- P66, P419, P519, P619, P1719, P1819 -->
+
+<!-- Enable Call Features. For account 1 to account 6 -->
+<!-- P191, P420, P520, P620, P1720, P1820 -->
+
+<!-- Transfer on 3 way conference Hangup. For account 1 to account 6 -->
+<!-- P2304, P2404, P2504, P2604, P2704, P2804 -->
+
+<!-- Conference-URI. For account 1 to account 6 -->
+<!-- P2318, P2418, P2518, P2618, P2718, P2818 -->
+
+<!-- Broadsoft Call Center. For account 1 to account 6 -->
+<!-- P2341, P2441, P2541, P2641, P2741, P2841 -->
+
+<!-- Hoteling Event. For account 1 to account 6 -->
+<!-- P2342, P2442, P2542, P2642, P2742, P2842 -->
+
+<!-- Call Center Status. For account 1 to account 6 -->
+<!-- P2343, P2443, P2543, P2643, P2743, P2843 -->
+
+<!-- Matching Incoming Caller ID. Matching Rule 1. For account 1 to account 6 -->
+<!-- P1488, P1494, P1500, P1506, P1512, P1518, -->
+
+<!-- Matching Rule 1 Distinctive Ringtone. For account 1 to account 6 -->
+<!-- P1489, P1495, P1501, P1507, P1513, P1519, -->
+
+<!-- Matching Incoming Caller ID. Matching Rule 2. For account 1 to account 6 -->
+<!-- P1490, P1496, P1502, P1508, P1514, P1520, -->
+
+<!-- Matching Rule 2 Distinctive Ringtone. For account 1 to account 6 -->
+<!-- P1491, P1497, P1503, P1509, P1515, P1521 -->
+
+<!-- Matching Incoming Caller ID. Matching Rule 3. For account 1 to account 6 -->
+<!-- P1492, P1498, P1504, P1510, P1516, P1522, -->
+
+<!-- Matching Rule 3 Distinctive Ringtone. For account 1 to account 6 -->
+<!-- P1493, P1499, P1505, P1511, P1517, P1523 -->
+
+<!-- Auto Conference. P1682 -->
+
+<!-- Default Transfer Mode. P1685 -->
+
+<!-- Offhook Timeout (in seconds). P1485 -->
+
+<!-- Video Frame Rate. P904 -->
+
+<!-- BLF Call-Pickup Prefix. For account 1 to account 5 -->
+<!-- P1347, P481, P581, P681, P1781, P1881 -->
+
+<!-- Eventlist URI. For account 1 to account 5 -->
+<!-- P134, P444, P544, P644, P1744, P1844 -->
+
+<!-- mDNS Override Server. P1407 -->
+
+<!-- Clear The Old List. P1435 -->
+
+<!-- Replace Duplicate Items. P1436 -->
+
+<!-- Phonebook XML Download Mode. P330 -->
+
+<!-- Phonebook XML Server Path. P331 -->
+
+<!-- Phonebook XML File Encoding. P1681 -->
+
+<!-- Phonebook Download Interval (in minutes). P332 -->
+
+<!-- LDAP Directory/Server Port/Base/User Name/Password -->
+<!-- P8020/P8021/P8022/P8023/P8024 -->
+
+<!-- LDAP Name Attributes. P8028 -->
+
+<!-- LDAP Number Attributes. P8029 -->
+
+<!-- LDAP Mail Attributes. P8038 -->
+
+<!-- LDAP Name Filter. P8025 -->
+
+<!-- LDAP Number Filter. P8026 -->
+
+<!-- LDAP Mail Filter. P8039 -->
+
+<!-- LDAP Display Name. P8030 -->
+
+<!-- Max Hits. P8031 -->
+
+<!-- Search Timeout (in seconds). P8032 -->
+
+<!-- LDAP Lookup Dial For Outgoing Calls. P8034 -->
+
+<!-- LDAP Lookup For Incoming calls. P8035 -->
+
+<!-- MPK LCD Settings P values. In total (130 MPKs) x 4 = 520 P values added -->
+<!-- P301 - P321, P323 - P329, P353 - P396, P6001 - P6112, P6201 - P6312, P6401 - P6512, P6601 - P6712 -->
+
+<!-- MPK on GXP2200EXT P values. In total (160 MPKs) x 4 = 640 P values added -->
+<!-- P10000-P10003, P10005-P10008, ..., P10795-P10798 -->
+
+<!-- P values Options updated in 1.0.3.3 since 1.0.1.40 -->
+
+<!-- Ring Tone options updated. P104, P423, P523, P623, P1723, P1823 -->
+<!-- Time Zone options updated. P64 -->
+
+<!-- P values Options updated in 1.0.1.40 -->
+
+<!-- Time Display Format. 0 - 12 Hour, 1 - 24 Hour. Default value is 1 -->
+<!-- P122 = 1 -->
+
+<!-- Date Display Format. 0: YY-MM-DD, 1: MM-DD-YY, 2: DD-MM-YY, 3: Normal (M-D-YY). Default value is 1 -->
+<!-- P102 = 1 -->
+
+
+<!-- P values Options updated since 1.0.1.30 -->
+
+<!-- Account Ring Tone P value options updated for account 1 to account 6: -->
+<!-- 1. More ring tones are added -->
+<!-- 2. The value for each ring tone is changed -->
+<!-- P104, P423, P523, P623, P1723, P1823 -->
+
+
+<!-- P values added since 1.0.1.27 -->
+<!-- Always Ring Speaker. P1439 -->
+
+<!-- P values added since 1.0.1.22 -->
+<!-- Authenticate Incoming INVITE. For account 1 to account 6 -->
+<!-- P2346, P2446, P2546, P2646, P2746, P2846 -->
+
+<!-- Change Log End -->
+
+
+
+<!-- Account 1 Settings -->
+
+
+<!-- Account 1 General Settings -->
+
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+{if isset($account.1.password)}
+<P271>1</P271>
+{else}
+<P271>0</P271>
+{/if}
+
+<!-- Account Name -->
+<P270>{$account.1.display_name}</P270>
+
+<!-- SIP Server -->
+<P47>{$account.1.server_address}</P47>
+
+<!-- SIP User ID -->
+<P35>{$account.1.user_id}</P35>
+
+
+<!-- SIP Authenticate ID -->
+<P36>{$account.1.user_id}</P36>
+
+<!-- SIP Authenticate Password -->
+<P34>{$account.1.password}</P34>
+
+<!-- Voice Mail UserID -->
+<P33>{$voicemail_number}</P33>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P3>{$account.1.display_name}</P3>
+
+<!-- Tel URI. 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P63></P63>
+
+<!-- Account 1 Network Settings -->
+
+<!-- Outbound Proxy -->
+<P48>{$account.1.outbound_proxy_primary}</P48>
+
+<!-- Secondary Outbound Proxy -->
+<P2333>{$account.2.outbound_proxy_secondary}</P2333>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P103>0</P103>
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+{if isset($grandstream_nat_traversal_1)}
+<P52>{$grandstream_nat_traversal_1}</P52>
+{else}
+<P52>0</P52>
+{/if}
+
+<!-- Proxy-Require -->
+<P197></P197>
+
+<!-- Account 1 SIP Settings -->
+
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P31>1</P31>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P81>0</P81>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P32>{$account.1.register_expires}</P32>
+
+<!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
+<!-- Number: 1 - 3600 -->
+<P138>20</P138>
+
+<!-- Local SIP Port. Default value is 5060 -->
+<!-- Number: 5 - 65535 -->
+<P40>5060</P40>
+
+<!-- SUBSCRIBE For MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P99>1</P99>
+{else}
+<P99>0</P99>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P260>180</P260>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P261>90</P261>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P266>0</P266>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P267>1</P267>
+
+<!-- Force INVITE. Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P265>0</P265>
+
+<!-- Caller Request Timer. Request for timer when calling -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P262>0</P262>
+
+<!-- Callee Request Timer -->
+<!-- Request for timer when being called (i.e., if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P263>0</P263>
+
+<!-- Force Timer. Still use timer when remote party does not support timerV -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P264>0</P264>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P272>0</P272>
+
+<!-- Use Privacy Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2338>0</P2338>
+
+<!-- Use P-Preferred-Identity Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2339>0</P2339>
+
+<!-- SIP Transport -->
+<!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
+
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P291>0</P291>
+
+<!-- Support SIP Instance ID -->
+<!-- 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P288>1</P288>
+
+<!-- Validate Incoming SIP Messages -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($grandstream_validate_incoming_sip)}
+<P2306>1</P2306>
+{else}
+<P2306>0</P2306>
+{/if}
+
+<!-- Authenticate Incoming INVITE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2346>0</P2346>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default value is 50 -->
+<!-- Number: 50, 100, 200 -->
+<P209>50</P209>
+
+<!-- SIP T2 Interval. RFC 3261 T2 value -->
+<!-- The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default value is 400 -->
+<!-- Number: 200, 400, 800. -->
+<P250>400</P250>
+
+<!-- Remove OBP from route -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2305>0</P2305>
+
+<!-- Enable SCA (Shared Call Appearance) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1363>0</P1363>
+
+<!-- Enable BargeIn -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2337>0</P2337>
+
+<!-- Auto-filling Pickup Feature code -->
+<!-- 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2335>1</P2335>
+
+<!-- Pickup Feature Code -->
+<P2336></P2336>
+
+<!-- Line-seize Timeout (in seconds) -->
+<!-- Number: 15 - 60. Default value is 15 -->
+<P2313>15</P2313>
+
+<!-- Account 1 Codec Settings -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2301>0</P2301>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2302>1</P2302>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2303>0</P2303>
+
+<!-- DTMF Payload Type. Default value is 101 -->
+<!-- Number: 96 - 127 -->
+<P79>101</P79>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P57>0</P57>
+
+<!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P58>0</P58>
+
+<!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18. -->
+<P59>0</P59>
+
+<!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P60>0</P60>
+
+<!-- Enable RFC5168 support. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1331>0</P1331>
+
+<!-- Video Bit Rate. 250 - 250 kbps, 500 - 500 kbps, 750 - 750 kbps. Default value is 500 -->
+<!-- Number: 250, 500, 750 -->
+<P2315>500</P2315>
+
+<!-- H.264 Payload Type. Default value is 99 -->
+<!-- Number -->
+<P293>99</P293>
+
+<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P183>0</P183>
+
+<!-- Silence Suppression. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P50>0</P50>
+
+<!-- Voice Frames Per TX. Default value is 2 -->
+<!-- Number: 1 - 64. -->
+<P37>2</P37>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P133>1</P133>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P132>1</P132>
+
+<!-- Account 1 Call Settings -->
+
+<!-- Start Video Automatically. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2314>1</P2314>
+
+<!-- Remote Video Request. 0 - Prompt, 1 - Accept, 2 - Deny. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2326>0</P2326>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P66></P66>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+    <P290>{$grandstream_dial_plan}</P290>
+{else}
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
+{/if}
+
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P135>0</P135>
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P90>0</P90>
+
+<!-- Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes). Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P65>0</P65>
+
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P129>0</P129>
+
+<!-- Call Log -->
+<!-- 0 - Log All, 1 - Log Incoming/Outgoing only (Missed Calls Not Recorded), 2 - Disable All. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P182>0</P182>
+
+<!-- Special Feature. Default value is 100 -->
+<!-- 100 - Standard, 102 - Broadsoft, 108 - CBCOM, 109 - RNK, 113 - China Mobile -->
+<!-- 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS -->
+<!-- Number: 100, 102, 108, 109, 113, 114, 115, 116, 117 -->
+<P198>100</P198>
+
+<!-- Feature Key Synchronization. 0 - Disable,1 - Broadsoft. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2325>0</P2325>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P191>0</P191>
+
+<!-- No Key Entry Timeout (s). Default value is 4 -->
+<!-- Number: 1 - 15 -->
+<P85>4</P85>
+
+<!-- Ring Timeout (s). Default value is 60 -->
+<!-- Number: 10 - 300 -->
+<P1328>60</P1328>
+
+<!-- Transfer on 3 way conference Hangup. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2304>0</P2304>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P72>1</P72>
+
+<!-- Conference-URI -->
+<!-- String -->
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2341>0</P2341>
+
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2342>0</P2342>
+
+<!-- Call Center Status. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2343>0</P2343>
+
+<!-- Account Ring Tone. See ring tone options and value in the Ring Tone Value Table below -->
+{if isset($grandstream_account_ring_tone_1)||$grandstream_account_ring_tone_1==0}
+<P104>{$grandstream_account_ring_tone_1}</P104>
+{else}
+<P104>content://settings/system/ringtone</P104>
+{/if}
+
+<!-- No Answer Timeout (s). Default value is 20 -->
+<!-- Number: 1 - 120 -->
+<P139>20</P139>
+
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
+
+<!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
+<!-- String -->
+{if isset($grandstream_ring_tone_1_1)||$grandstream_ring_tone_1_1==0}
+<P1489>{$grandstream_ring_tone_1_1}</P1489>
+{/if}
+
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
+{if isset($grandstream_ring_tone_caller_id_2_1)}
+<P1490>{$grandstream_ring_tone_caller_id_2_1}</P1490>
+{/if}
+
+<!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
+<!-- String -->
+{if isset($grandstream_ring_tone_2_1)||$grandstream_ring_tone_2_1==0}
+<P1491>{$grandstream_ring_tone_2_1}</P1491>
+{/if}
+
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
+{if isset($grandstream_ring_tone_caller_id_3_1)}
+<P1492>{$grandstream_ring_tone_caller_id_3_1}</P1492>
+{/if}
+
+<!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
+<!-- String -->
+{if isset($grandstream_ring_tone_3_1)||$grandstream_ring_tone_2_1==0}
+<P1493>{$grandstream_ring_tone_3_1}</P1493>
+{/if}
+
+<!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2357>0</P2357>
+
+<!-- Ring Tone Value Table -->
+<!-- Web GUI OptionValue -->
+<!-- Use System Ring tone content://settings/system/ringtone-->
+<!-- Silentringtone_silence -->
+<!-- Ring2_OrganDub/system/media/audio/ringtones/Ring2_OrganDub.ogg -->
+<!-- Big_Easy /system/media/audio/ringtones/Big_Easy.ogg -->
+<!-- DonMessWivlt /system/media/audio/ringtones/DonMessWivIt.ogg -->
+<!-- Club_Cubano/system/media/audio/ringtones/Club_Cubano.ogg -->
+<!-- Growl/system/media/audio/ringtones/Growl.ogg -->
+<!-- CrayonRock /system/media/audio/ringtones/CrayonRock.ogg -->
+<!-- Ring9_Nairobi/system/media/audio/ringtones/Ring9_Nairobi.ogg -->
+<!-- Ring10_Nassau/system/media/audio/ringtones/Ring10_Nassau.ogg -->
+<!-- Third_Eye/system/media/audio/ringtones/Third_Eye.ogg -->
+<!-- Ring1_Ding /system/media/audio/ringtones/Ring1_Ding.ogg -->
+<!-- Road_Trip/system/media/audio/ringtones/Road_Trip.ogg -->
+<!-- bellcore-dr2 /system/media/audio/ringtones/bellcore-dr2.ogg -->
+<!-- Ring_Digital_02/system/media/audio/ringtones/Ring_Digital_02.ogg -->
+<!-- bellcore-dr3 /system/media/audio/ringtones/bellcore-dr3.ogg -->
+<!-- DancinFool /system/media/audio/ringtones/DancinFool.ogg -->
+<!-- Ring_Classic_02/system/media/audio/ringtones/Ring_Classic_02.ogg -->
+<!-- Ring5_FreeFlight /system/media/audio/ringtones/Ring5_FreeFlight.ogg -->
+<!-- Funk_Yall/system/media/audio/ringtones/Funk_Yall.ogg -->
+<!-- World/system/media/audio/ringtones/World.ogg -->
+<!-- Ring8_MidEvilJaunt /system/media/audio/ringtones/Ring8_MidEvilJaunt.ogg -->
+<!-- TwirlAway/system/media/audio/ringtones/TwirlAway.ogg -->
+<!-- bellcore-dr4 /system/media/audio/ringtones/bellcore-dr4.ogg -->
+<!-- Ring6_Glacial_Groove /system/media/audio/ringtones/Ring6_Glacial_Groove.ogg -->
+<!-- Shes_All_That/system/media/audio/ringtones/Shes_All_That.ogg -->
+<!-- Ring4_EtherShake /system/media/audio/ringtones/Ring4_EtherShake.ogg -->
+<!-- Seville/system/media/audio/ringtones/Seville.ogg -->
+<!-- BussaMove/system/media/audio/ringtones/BussaMove.ogg -->
+<!-- Default_ringtone /system/media/audio/ringtones/Default_ringtone.ogg -->
+<!-- BirdLoop /system/media/audio/ringtones/BirdLoop.ogg -->
+<!-- MildlyAlarming/system/media/audio/ringtones/MildlyAlarming.ogg -->
+<!-- Terminated /system/media/audio/ringtones/Terminated.ogg -->
+<!-- Calypso_Steel/system/media/audio/ringtones/Calypso_Steel.ogg -->
+<!-- Safari/system/media/audio/ringtones/Safari.ogg -->
+<!-- Ring_Synth_04/system/media/audio/ringtones/Ring_Synth_04.ogg -->
+<!-- Ring_Synth_02/system/media/audio/ringtones/Ring_Synth_02.ogg -->
+<!-- CurveBall/system/media/audio/ringtones/CurveBall.ogg -->
+<!-- Enter_the_Nexus/system/media/audio/ringtones/Enter_the_Nexus.ogg -->
+<!-- Bollywood/system/media/audio/ringtones/Bollywood.ogg -->
+<!-- Champagne_Edition/system/media/audio/ringtones/Champagne_Edition.ogg -->
+<!-- Steppin_Out/system/media/audio/ringtones/Steppin_Out.ogg -->
+<!-- Ring3_Paradise_Island/system/media/audio/ringtones/Ring3_Paradise_Island.ogg -->
+<!-- Playa/system/media/audio/ringtones/Playa.ogg -->
+<!-- No_Limits/system/media/audio/ringtones/No_Limits.ogg -->
+<!-- LoopyLounge/system/media/audio/ringtones/LoopyLounge.ogg -->
+<!-- Cairo/system/media/audio/ringtones/Cairo.ogg -->
+<!-- Ring7_HalfwayHome/system/media/audio/ringtones/Ring7_HalfwayHome.ogg -->
+<!-- SilkyWay /system/media/audio/ringtones/SilkyWay.ogg -->
+<!-- LoveFlute/system/media/audio/ringtones/LoveFlute.ogg -->
+<!-- Eastern_Sky/system/media/audio/ringtones/Eastern_Sky.ogg -->
+<!-- bellcore-dr5 /system/media/audio/ringtones/bellcore-dr5.ogg -->
+<!-- Gimme_Mo_Town/system/media/audio/ringtones/Gimme_Mo_Town.ogg -->
+<!-- bellcore-dr1 /system/media/audio/ringtones/bellcore-dr1.ogg -->
+<!-- Backroad /system/media/audio/ringtones/Backroad.ogg -->
+
+<!-- Account 2 Settings -->
+
+<!-- Account 2 General Settings -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.2.password)}
+<P401>1</P401>
+{else}
+<P401>0</P401>
+{/if}
+
+<!-- Account Name -->
+<P417>{$account.2.display_name}</P417>
+
+<!-- SIP Server -->
+<P402>{$account.2.server_address}</P402>
+
+<!-- SIP User ID -->
+<P404>{$account.2.user_id}</P404>
+
+<!-- SIP Authenticate ID -->
+<P405>{$account.2.user_id}</P405>
+
+<!-- SIP Authenticate Password -->
+<P406>{$account.2.password}</P406>
+
+<!-- Voice Mail UserID -->
+<P426>{$voicemail_number}</P426>
+
+<!-- Name (Display name, e.g., John Doe) -->
+<P407>{$account.2.display_name}</P407>
+
+<!-- Tel URL Support. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P409>0</P409>
+
+<!-- Account 2 Network Settings -->
+
+
+<!-- Outbound Proxy -->
+<P403>{$account.2.outbound_proxy_primary}</P403>
+
+<!-- Secondary Outbound Proxy -->
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P408>0</P408>
+
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<P414>2</P414>
+
+<!-- Proxy-Require -->
+<P418></P418>
+
+<!-- Account 2 SIP Settings -->
+
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P410>1</P410>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P411>0</P411>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P412>{$account.2.register_expires}</P412>
+
+<!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
+<!-- Number: 1 - 3600 -->
+<P471>20</P471>
+
+<!-- Local SIP Port. Default value is 5062 -->
+<!-- Number: 5 - 65535 -->
+<P413>5062</P413>
+
+<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1. -->
+{if isset($subscribe_mwi)}
+<P415>1</P415>
+{else}
+<P415>0</P415>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P434>180</P434>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P427>90</P427>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P432>0</P432>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P433>1</P433>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P431>0</P431>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P428>0</P428>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P429>0</P429>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P430>0</P430>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P435>0</P435>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2438>0</P2438>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2439>0</P2439>
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P448>{$tp}</P448>
+
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P460>0</P460>
+
+<!-- Support SIP Instance ID. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P489>1</P489>
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2406>0</P2406>
+
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2446>0</P2446>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate). 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default value is 50 -->
+<!-- Number: 50, 100, 200 -->
+<P440>50</P440>
+
+<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default value is 400 -->
+<!-- Number: 200, 400, 800 -->
+<P441>400</P441>
+
+<!-- Remove OBP from route. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2405>0</P2405>
+
+<!-- Enable SCA (Shared Call Appearance). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1365>0</P1365>
+
+<!-- Enable BargeIn. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2437>0</P2437>
+
+<!-- Auto-filling Pickup Feature code. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2435>1</P2435>
+
+<!-- Pickup Feature Code -->
+<P2436></P2436>
+
+<!-- Line-seize Timeout (in seconds). Number: 15 - 60. Default value is 15 -->
+<P2413>15</P2413>
+
+
+<!-- Account 2 Codec Settings -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2401>0</P2401>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2402>1</P2402>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2403>0</P2403>
+
+<!-- DTMF Payload Type. Default value is 101 -->
+<!-- Number: 96 - 127 -->
+<P496>101</P496>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P451>0</P451>
+
+<!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B -->
+<!-- Number: 0, 8, 9, 18 -->
+<P452>0</P452>
+
+<!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B -->
+<!-- Number: 0, 8, 9, 18 -->
+<P453>0</P453>
+
+<!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B -->
+<!-- Number: 0, 8, 9, 18 -->
+<P454>0</P454>
+
+<!-- Enable RFC5168 support. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P478>0</P478>
+
+<!-- Video Bit Rate. 250 - 250 kbps, 500 - 500 kbps, 750 - 750 kbps. Default value is 500 -->
+<!-- Number: 250, 500, 750 -->
+<P2415>500</P2415>
+
+<!-- H.264 Payload Type -->
+<P462>99</P462>
+
+<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P443>0</P443>
+
+<!-- Silence Suppression. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P485>0</P485>
+
+<!-- Voice Frames per TX. Default value is 2 -->
+<!-- Number: 1 - 64 -->
+<P486>2</P486>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P498>1</P498>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High. Default value is 1 -->
+<!-- Number: 0, 1, 2 -->
+<P497>1</P497>
+
+<!-- Account 2 Call Settings -->
+
+
+<!-- Start Video Automatically. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2414>1</P2414>
+
+<!-- Remote Video Request. 0 - Prompt, 1 - Accept, 2 - Deny. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2426>0</P2426>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P419></P419>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+    <P459>{$grandstream_dial_plan}</P459>
+{else}
+    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P459>
+{/if}
+
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P469>0</P469>
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P425>0</P425>
+
+<!-- Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes). Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P421>0</P421>
+
+<!-- Anonymous Call Rejection. 0 - No,1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P446>0</P446>
+
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing Only (Missed Calls Not Recorded), 2 - Disable All. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P442>0</P442>
+
+<!-- Special Feature. Default value is 100 -->
+<!-- 100 - Standard, 102 - Broadsoft, 108 - CBCOM, 109 - RNK, 113 - China Mobile -->
+<!-- 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS -->
+<!-- Number: 100, 102, 108, 109, 113, 114, 115, 116, 117 -->
+<P424>100</P424>
+
+<!-- Feature Key Synchronization. 0 - Disable, 1 - Broadsoft. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2425>0</P2425>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P420>0</P420>
+
+<!-- No Key Entry Timeout (s). Default value is 4 -->
+<!-- Number: 1 - 15 -->
+<P491>4</P491>
+
+<!-- Ring Timeout (s). Default value is 60 -->
+<!-- Number: 10 - 300 -->
+<P476>60</P476>
+
+<!-- Transfer on 3 way conference Hangup. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2404>0</P2404>
+
+<!-- Conference-URI -->
+<!-- String -->
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2441>0</P2441>
+
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2442>0</P2442>
+
+<!-- Call Center Status. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2443>0</P2443>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P492>1</P492>
+
+<!-- Account Ring Tone. See ring tone options and value in the Ring Tone Value Table below -->
+<P423>content://settings/system/ringtone</P423>
+
+<!-- No Answer Timeout (s). Default value is 20 -->
+<!-- Number: 1 - 120. -->
+<P470>20</P470>
+
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
+<P1494></P1494>
+
+<!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
+<!-- String -->
+<P1495>content://settings/system/ringtone</P1495>
+
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
+<P1496></P1496>
+
+<!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
+<!-- String -->
+<P1497>content://settings/system/ringtone</P1497>
+
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
+<P1498></P1498>
+
+<!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
+<!-- String -->
+<P1499>content://settings/system/ringtone</P1499>
+
+<!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2457>0</P2457>
+
+<!-- Ring Tone Value Table -->
+<!-- Web GUI OptionValue -->
+<!-- Use System Ring tone content://settings/system/ringtone -->
+<!-- Silentringtone_silence -->
+<!-- Ring2_OrganDub/system/media/audio/ringtones/Ring2_OrganDub.ogg -->
+<!-- Big_Easy /system/media/audio/ringtones/Big_Easy.ogg -->
+<!-- DonMessWivlt /system/media/audio/ringtones/DonMessWivIt.ogg -->
+<!-- Club_Cubano/system/media/audio/ringtones/Club_Cubano.ogg -->
+<!-- Growl/system/media/audio/ringtones/Growl.ogg -->
+<!-- CrayonRock /system/media/audio/ringtones/CrayonRock.ogg -->
+<!-- Ring9_Nairobi/system/media/audio/ringtones/Ring9_Nairobi.ogg -->
+<!-- Ring10_Nassau/system/media/audio/ringtones/Ring10_Nassau.ogg -->
+<!-- Third_Eye/system/media/audio/ringtones/Third_Eye.ogg -->
+<!-- Ring1_Ding /system/media/audio/ringtones/Ring1_Ding.ogg -->
+<!-- Road_Trip/system/media/audio/ringtones/Road_Trip.ogg -->
+<!-- bellcore-dr2 /system/media/audio/ringtones/bellcore-dr2.ogg -->
+<!-- Ring_Digital_02/system/media/audio/ringtones/Ring_Digital_02.ogg -->
+<!-- bellcore-dr3 /system/media/audio/ringtones/bellcore-dr3.ogg -->
+<!-- DancinFool /system/media/audio/ringtones/DancinFool.ogg -->
+<!-- Ring_Classic_02/system/media/audio/ringtones/Ring_Classic_02.ogg -->
+<!-- Ring5_FreeFlight /system/media/audio/ringtones/Ring5_FreeFlight.ogg -->
+<!-- Funk_Yall/system/media/audio/ringtones/Funk_Yall.ogg -->
+<!-- World/system/media/audio/ringtones/World.ogg -->
+<!-- Ring8_MidEvilJaunt /system/media/audio/ringtones/Ring8_MidEvilJaunt.ogg -->
+<!-- TwirlAway/system/media/audio/ringtones/TwirlAway.ogg -->
+<!-- bellcore-dr4 /system/media/audio/ringtones/bellcore-dr4.ogg -->
+<!-- Ring6_Glacial_Groove /system/media/audio/ringtones/Ring6_Glacial_Groove.ogg -->
+<!-- Shes_All_That/system/media/audio/ringtones/Shes_All_That.ogg -->
+<!-- Ring4_EtherShake /system/media/audio/ringtones/Ring4_EtherShake.ogg -->
+<!-- Seville/system/media/audio/ringtones/Seville.ogg -->
+<!-- BussaMove/system/media/audio/ringtones/BussaMove.ogg -->
+<!-- Default_ringtone /system/media/audio/ringtones/Default_ringtone.ogg -->
+<!-- BirdLoop /system/media/audio/ringtones/BirdLoop.ogg -->
+<!-- MildlyAlarming/system/media/audio/ringtones/MildlyAlarming.ogg -->
+<!-- Terminated /system/media/audio/ringtones/Terminated.ogg -->
+<!-- Calypso_Steel/system/media/audio/ringtones/Calypso_Steel.ogg -->
+<!-- Safari/system/media/audio/ringtones/Safari.ogg -->
+<!-- Ring_Synth_04/system/media/audio/ringtones/Ring_Synth_04.ogg -->
+<!-- Ring_Synth_02/system/media/audio/ringtones/Ring_Synth_02.ogg -->
+<!-- CurveBall/system/media/audio/ringtones/CurveBall.ogg -->
+<!-- Enter_the_Nexus/system/media/audio/ringtones/Enter_the_Nexus.ogg -->
+<!-- Bollywood/system/media/audio/ringtones/Bollywood.ogg -->
+<!-- Champagne_Edition/system/media/audio/ringtones/Champagne_Edition.ogg -->
+<!-- Steppin_Out/system/media/audio/ringtones/Steppin_Out.ogg -->
+<!-- Ring3_Paradise_Island/system/media/audio/ringtones/Ring3_Paradise_Island.ogg -->
+<!-- Playa/system/media/audio/ringtones/Playa.ogg -->
+<!-- No_Limits/system/media/audio/ringtones/No_Limits.ogg -->
+<!-- LoopyLounge/system/media/audio/ringtones/LoopyLounge.ogg -->
+<!-- Cairo/system/media/audio/ringtones/Cairo.ogg -->
+<!-- Ring7_HalfwayHome/system/media/audio/ringtones/Ring7_HalfwayHome.ogg -->
+<!-- SilkyWay /system/media/audio/ringtones/SilkyWay.ogg -->
+<!-- LoveFlute/system/media/audio/ringtones/LoveFlute.ogg -->
+<!-- Eastern_Sky/system/media/audio/ringtones/Eastern_Sky.ogg -->
+<!-- bellcore-dr5 /system/media/audio/ringtones/bellcore-dr5.ogg -->
+<!-- Gimme_Mo_Town/system/media/audio/ringtones/Gimme_Mo_Town.ogg -->
+<!-- bellcore-dr1 /system/media/audio/ringtones/bellcore-dr1.ogg -->
+<!-- Backroad /system/media/audio/ringtones/Backroad.ogg -->
+
+<!-- Account 3 Settings -->
+
+
+<!-- Account 3 General Settings -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.3.password)}
+<P501>1</P501>
+{else}
+<P501>0</P501>
+{/if}
+
+<!-- Account Name -->
+<P517>{$account.3.display_name}</P517>
+
+<!-- SIP Server -->
+<P502>{$account.3.server_address}</P502>
+
+<!-- SIP User ID -->
+<P504>{$account.3.user_id}</P504>
+
+<!-- SIP Authenticate ID -->
+<P505>{$account.3.user_id}</P505>
+
+<!-- SIP Authenticate Password -->
+<P506>{$account.3.password}</P506>
+
+<!-- Voice Mail UserID -->
+<P526>{$voicemail_number}</P526> =
+
+<!-- Name (Display name: John Doe) -->
+<P507>{$account.3.display_name}</P507>
+
+<!-- Tel URL Support. 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P509>0</P509>
+
+<!-- Account 3 Network Settings -->
+
+
+<!-- Outbound Proxy -->
+<P503>{$account.3.outbound_proxy_primary}</P503>
+
+
+<!-- Secondary Outbound Proxy -->
+<P2533>{$account.3.outbound_proxy_secondary}</P2533>
+
+<!-- DNS Mode0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
+<!-- VNumber: 0, 1, 2. -->
+<P508>0</P508>
+
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<P514>2</P514>
+
+<!-- Proxy-Require -->
+<P518></P518>
+
+<!-- Account 3 SIP Settings -->
+
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<P510>1</P510>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P511>0</P511>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P512>{$account.3.register_expires}</P512>
+
+<!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
+<!-- Number: 1 - 3600 -->
+<P571>20</P571>
+
+<!-- Local SIP Port. Default value is 5064 -->
+<!-- Number: 5 - 65535 -->
+<P513>5064</P513>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P515>1</P515>
+{else}
+<P515>0</P515>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P534>180</P534>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 5 - 65535 -->
+<P527>90</P527>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P532>0</P532>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P533>1</P533>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P531>0</P531>
+
+<!-- Caller Request Timer (Request for timer when calling) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1. -->
+<P528>0</P528>
+
+<!-- Callee Request Timer. Request for timer when called (i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P529>0</P529>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P530>0</P530>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P535>0</P535>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2538>0</P2538>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2539>0</P2539>
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P548>{$tp}</P548>
+
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P560>0</P560>
+
+<!-- Support SIP Instance ID. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P589>1</P589>
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2506>0</P2506>
+
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2546>0</P2546>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default value is 50 -->
+<!-- Number: 50, 100, 200 -->
+<P540>50</P540>
+
+<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400 -->
+<!-- Number: 200, 400, 800 -->
+<P541>400</P541>
+
+<!-- Remove OBP from route. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2505>0</P2505>
+
+<!-- Enable SCA (Shared Call Appearance). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1367>0</P1367>
+
+<!-- Enable BargeIn. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2537>0</P2537>
+
+<!-- Auto-filling Pickup Feature code. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2535>1</P2535>
+
+<!-- Pickup Feature Code -->
+<P2536></P2536>
+
+<!-- Line-seize Timeout (in seconds). Number: 15 - 60. Default value is 15 -->
+<P2513>15</P2513>
+
+<!-- Account 3 Codec Settings -->
+
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2501>0</P2501>
+
+<!-- DTMF: in RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2502>1</P2502>
+
+<!-- DTMF: in SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2503>0</P2503>
+
+<!-- DTMF Payload Type. Default value is 101 -->
+<!-- Number: 96 - 127 -->
+<P596>101</P596>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P551>0</P551>
+
+<!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P552>0</P552>
+
+<!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P553>0</P553>
+
+<!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P554>0</P554>
+
+<!-- Enable RFC5168 support. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P578>0</P578>
+
+<!-- Video Bit Rate. 250 - 250 kbps, 500 - 500 kbps, 750 - 750 kbps. Default value is 500 -->
+<!-- Number: 250, 500, 750 -->
+<P2515>500</P2515>
+
+<!-- H.264 Payload Type -->
+<P562>99</P562>
+
+<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P543>0</P543>
+
+<!-- Silence Suppression. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P585>0</P585>
+
+<!-- Voice Frames per TX. Default valule is 2 -->
+<!-- Number: 1 - 64 -->
+<P586>2</P586>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P598>1</P598>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High. Default value is 1 -->
+<!-- Number: 0, 1, 2 -->
+<P597>1</P597>
+
+
+<!-- Account 3 Call Settings -->
+
+<!-- Start Video Automatically. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2514>1</P2514>
+
+<!-- Remote Video Request. 0 - Prompt, 1 - Accept, 2 - Deny. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2526>0</P2526>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P519></P519>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+    <P559>{$grandstream_dial_plan}</P559>
+{else}
+    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P559>
+{/if}
+
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P569>0</P569>
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P525>0</P525>
+
+<!-- Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes). Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P521>0</P521>
+
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P546>0</P546>
+
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed Calls Not Recorded), 2 - Disable Call All. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P542>0</P542>
+
+<!-- Special Feature. Default value is 100 -->
+<!-- 100 - Standard, 102 - Broadsoft, 108 - CBCOM, 109 - RNK, 113 - China Mobile -->
+<!-- 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS -->
+<!-- Number: 100, 102, 108, 109, 113, 114, 115, 116, 117. -->
+<P524>100</P524>
+
+<!-- Feature Key Synchronization. 0 - Disable, 1 - Broadsoft. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2525>0</P2525>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P520>0</P520>
+
+<!-- No Key Entry Timeout (s). Default value is 4 -->
+<!-- Number: 1 - 15 -->
+<P591>4</P591>
+
+<!-- Ring Timeout. Default value is 60 seconds -->
+<!-- Number: 10 - 300 -->
+<P576>60</P576>
+
+<!-- Transfer on 3 way conference Hangup. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2504>0</P2504>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P592>1</P592>
+
+<!-- Conference-URI -->
+<!-- String -->
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
+
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2541></P2541>
+
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2542>0</P2542>
+
+<!-- Call Center Status. 0 - No, 1 - Yes. Default value is 0 -->
+
+<!-- Number: 0, 1 -->
+<P2543>0</P2543>
+
+<!-- Account Ring Tone. See ring tone options and value in the Ring Tone value table below -->
+<P523>content://settings/system/ringtone</P523>
+
+<!-- No Answer Timeout (s). Default value is 20 -->
+<!-- Number: 1 - 120 -->
+<P570>20</P570>
+
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
+<P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
+
+<!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1501>content://settings/system/ringtone</P1501>
+
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
+<P1502></P1502>
+
+<!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1503>content://settings/system/ringtone</P1503>
+
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
+<P1504></P1504>
+
+<!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1505>content://settings/system/ringtone</P1505>
+
+<!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2557>0</P2557>
+
+
+<!-- Ring Tone Value Table -->
+<!-- Web GUI OptionValue -->
+<!-- Use System Ring tone content://settings/system/ringtone-->
+<!-- Silentringtone_silence -->
+<!-- Ring2_OrganDub/system/media/audio/ringtones/Ring2_OrganDub.ogg -->
+<!-- Big_Easy /system/media/audio/ringtones/Big_Easy.ogg -->
+<!-- DonMessWivlt /system/media/audio/ringtones/DonMessWivIt.ogg -->
+<!-- Club_Cubano/system/media/audio/ringtones/Club_Cubano.ogg -->
+<!-- Growl/system/media/audio/ringtones/Growl.ogg -->
+<!-- CrayonRock /system/media/audio/ringtones/CrayonRock.ogg -->
+<!-- Ring9_Nairobi/system/media/audio/ringtones/Ring9_Nairobi.ogg -->
+<!-- Ring10_Nassau/system/media/audio/ringtones/Ring10_Nassau.ogg -->
+<!-- Third_Eye/system/media/audio/ringtones/Third_Eye.ogg -->
+<!-- Ring1_Ding /system/media/audio/ringtones/Ring1_Ding.ogg -->
+<!-- Road_Trip/system/media/audio/ringtones/Road_Trip.ogg -->
+<!-- bellcore-dr2 /system/media/audio/ringtones/bellcore-dr2.ogg -->
+<!-- Ring_Digital_02/system/media/audio/ringtones/Ring_Digital_02.ogg -->
+<!-- bellcore-dr3 /system/media/audio/ringtones/bellcore-dr3.ogg -->
+<!-- DancinFool /system/media/audio/ringtones/DancinFool.ogg -->
+<!-- Ring_Classic_02/system/media/audio/ringtones/Ring_Classic_02.ogg -->
+<!-- Ring5_FreeFlight /system/media/audio/ringtones/Ring5_FreeFlight.ogg -->
+<!-- Funk_Yall/system/media/audio/ringtones/Funk_Yall.ogg -->
+<!-- World/system/media/audio/ringtones/World.ogg -->
+<!-- Ring8_MidEvilJaunt /system/media/audio/ringtones/Ring8_MidEvilJaunt.ogg -->
+<!-- TwirlAway/system/media/audio/ringtones/TwirlAway.ogg -->
+<!-- bellcore-dr4 /system/media/audio/ringtones/bellcore-dr4.ogg -->
+<!-- Ring6_Glacial_Groove /system/media/audio/ringtones/Ring6_Glacial_Groove.ogg -->
+<!-- Shes_All_That/system/media/audio/ringtones/Shes_All_That.ogg -->
+<!-- Ring4_EtherShake /system/media/audio/ringtones/Ring4_EtherShake.ogg -->
+<!-- Seville/system/media/audio/ringtones/Seville.ogg -->
+<!-- BussaMove/system/media/audio/ringtones/BussaMove.ogg -->
+<!-- Default_ringtone /system/media/audio/ringtones/Default_ringtone.ogg -->
+<!-- BirdLoop /system/media/audio/ringtones/BirdLoop.ogg -->
+<!-- MildlyAlarming/system/media/audio/ringtones/MildlyAlarming.ogg -->
+<!-- Terminated /system/media/audio/ringtones/Terminated.ogg -->
+<!-- Calypso_Steel/system/media/audio/ringtones/Calypso_Steel.ogg -->
+<!-- Safari/system/media/audio/ringtones/Safari.ogg -->
+<!-- Ring_Synth_04/system/media/audio/ringtones/Ring_Synth_04.ogg -->
+<!-- Ring_Synth_02/system/media/audio/ringtones/Ring_Synth_02.ogg -->
+<!-- CurveBall/system/media/audio/ringtones/CurveBall.ogg -->
+<!-- Enter_the_Nexus/system/media/audio/ringtones/Enter_the_Nexus.ogg -->
+<!-- Bollywood/system/media/audio/ringtones/Bollywood.ogg -->
+<!-- Champagne_Edition/system/media/audio/ringtones/Champagne_Edition.ogg -->
+<!-- Steppin_Out/system/media/audio/ringtones/Steppin_Out.ogg -->
+<!-- Ring3_Paradise_Island/system/media/audio/ringtones/Ring3_Paradise_Island.ogg -->
+<!-- Playa/system/media/audio/ringtones/Playa.ogg -->
+<!-- No_Limits/system/media/audio/ringtones/No_Limits.ogg -->
+<!-- LoopyLounge/system/media/audio/ringtones/LoopyLounge.ogg -->
+<!-- Cairo/system/media/audio/ringtones/Cairo.ogg -->
+<!-- Ring7_HalfwayHome/system/media/audio/ringtones/Ring7_HalfwayHome.ogg -->
+<!-- SilkyWay /system/media/audio/ringtones/SilkyWay.ogg -->
+<!-- LoveFlute/system/media/audio/ringtones/LoveFlute.ogg -->
+<!-- Eastern_Sky/system/media/audio/ringtones/Eastern_Sky.ogg -->
+<!-- bellcore-dr5 /system/media/audio/ringtones/bellcore-dr5.ogg -->
+<!-- Gimme_Mo_Town/system/media/audio/ringtones/Gimme_Mo_Town.ogg -->
+<!-- bellcore-dr1 /system/media/audio/ringtones/bellcore-dr1.ogg -->
+<!-- Backroad /system/media/audio/ringtones/Backroad.ogg -->
+
+<!-- Account 4 Settings -->
+
+
+
+<!-- Account 4 General Settings -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.4.password)}
+<P601>1</P601>
+{else}
+<P601>0</P601>
+{/if}
+
+<!-- Account Name -->
+<P617></P617>
+
+<!-- SIP Server -->
+<P602>{$account.4.server_address}</P602>
+
+<!-- SIP User ID -->
+<P604>{$account.4.user_id}</P604>
+
+<!-- SIP Authenticate ID -->
+<P605>{$account.4.user_id}</P605>
+
+<!-- SIP Authenticate Password -->
+<P606>{$account.4.password}</P606>
+
+<!-- Voice Mail UserID -->
+<P606>{$voicemail_number}</P606>
+
+<!-- Name (Display Name, e.g., John Doe) -->
+<P606>{$account.4.display_name}</P606>
+
+<!-- Tel URI. 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P606>0</P606>
+
+
+<!-- Account 4 Network Settings -->
+
+
+<!-- Outbound Proxy -->
+<P606>{$account.4.outbound_proxy_primary}</P606>
+
+<!-- Secondary Outbound Proxy -->
+<P2633>{$account.4.outbound_proxy_secondary}</P2633>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P608>0</P608>
+
+<!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<P614>2</P614>
+
+<!-- Proxy-Require -->
+<P618></P618>
+
+<!-- Account 4 SIP Settings -->
+
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P610>1</P610>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P611>0</P611>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P612>{$account.4.register_expires}</P612>
+
+<!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
+<!-- Number: 1 - 3600 -->
+<P671>20</P671>
+
+<!-- Local SIP Port. Default value is 5066 -->
+<!-- Number: 5 - 65535 -->
+<P613>5066</P613>
+
+<!-- SUBSCRIBE For MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P615>1</P615>
+{else}
+<P615>0</P615>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P634>180</P634>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 90 - 64800 -->
+<P627>90</P627>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P632>0</P632>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P633>1</P633>
+
+<!-- Force INVITE. Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P631>0</P631>
+
+<!-- Caller Request Timer. Request for timer when calling. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P628>0</P628>
+
+<!-- Callee Request Timer. Request for timer when being called (i.e., if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P629>0</P629>
+
+<!-- Force Timer. Still use timer when remote party does not support timer -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P630>0</P630>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P635>0</P635>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2638>0</P2638>
+
+<!-- Use P-Preferred-Identity Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2639>0</P2639>
+
+<!-- SIP Transport. 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P648>{$tp}</P648>
+
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P660>0</P660>
+
+<!-- Support SIP Instance ID. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P689>1</P689>
+
+<!-- Validate Incoming SIP Messages. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2606>0</P2606>
+
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2646>0</P2646>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default value is 50 -->
+<!-- Number: 50, 100, 200 -->
+<P640>50</P640>
+
+<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default value is 400 -->
+<!-- Number: 200, 400, 800 -->
+<P641>400</P641>
+
+<!-- Remove OBP from route. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2605>0</P2605>
+
+<!-- Enable SCA (Shared Call Appearance). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1369>0</P1369>
+
+<!-- Enable BargeIn. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2637>0</P2637>
+
+<!-- Auto-filling Pickup Feature code. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2635>1</P2635>
+
+<!-- Pickup Feature Code -->
+<P2636></P2636>
+
+<!-- Line-seize Timeout (in seconds). Number: 15 - 60 -->
+<!-- Default value is 15 -->
+<P2613>15</P2613>
+
+<!-- Account 4 Codec Settings -->
+
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2601>0</P2601>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2602>1</P2602>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2603>0</P2603>
+
+<!-- DTMF Payload Type. Default value is 101 -->
+<!-- Number: 96 - 127 -->
+<P696>101</P696>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P651>0</P651>
+
+<!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P652>0</P652>
+
+<!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P653>0</P653>
+
+<!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P654>0</P654>
+
+<!-- Enable RFC5168 support. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P678>0</P678>
+
+<!-- Video Bit Rate. 250 - 250 kbps, 500 - 500 kbps, 750 - 750 kbps. Default value is 500 -->
+<!-- Number: 250, 500, 750 -->
+<P2615>500</P2615>
+
+<!-- H.264 Payload Type -->
+<P662>99</P662>
+
+<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P643>0</P643>
+
+<!-- Silence Suppression. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P685>0</P685>
+
+<!-- Voice Frames per TX. Default value is 2 -->
+<!-- Number: 1 - 64 -->
+<P686>2</P686>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P698>1</P698>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High. Default value is 1 -->
+<!-- Number: 0, 1, 2 -->
+<P697>1</P697>
+
+<!-- Account 4 Call Settings -->
+
+
+<!-- Start Video Automatically. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2614>1</P2614>
+
+<!-- Remote Video Request. 0 - Prompt, 1 - Accept, 2 - Deny. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2626>0</P2626>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P619></P619>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+    <P659>{$grandstream_dial_plan}</P659>
+{else}
+    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P659>
+{/if}
+
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P669>0</P669>
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P625>0</P625>
+
+<!-- Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes). Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P621>0</P621>
+
+<!-- Anonymous Call Rejection. 0 - No,1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P646>0</P646>
+
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed Calls Not Recorded), 2 - Disable All. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P642>0</P642>
+
+<!-- Special Feature. Default value is 100 -->
+<!-- 100 - Standard, 108 - CBCOM, 109 - RNK, 113 - China Mobile -->
+<!-- 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS -->
+<!-- Number: 100, 108, 109, 113, 114, 115, 116, 117 -->
+<P624>100</P624>
+
+<!-- Feature Key Synchronization. 0 - Disable,1 - Broadsoft. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2625>0</P2625>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P620>0</P620>
+
+<!-- No Key Entry Timeout (s). Default value is 4 -->
+<!-- Number: 1 - 15 -->
+<P691>4</P691>
+
+<!-- Ring Timeout (s). Default value is 60 -->
+<!-- Number: 10 - 300 -->
+<P676>60</P676>
+
+<!-- Transfer on 3 way conference Hangup. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2604>0</P2604>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P692>1</P692>
+
+<!-- Conference-URI -->
+<!-- String -->
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
+
+<!-- Account Ring Tone. See ring tone options and value in the Ring Tone value table below -->
+<P623>content://settings/system/ringtone</P623>
+
+<!-- No Answer Timeout (s). Default value is 20 -->
+<!-- Number: 1 - 120 -->
+<P670>20</P670>
+
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2641>0</P2641>
+
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2642>0</P2642>
+
+<!-- Call Center Status. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2643>0</P2643>
+
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
+<P1506></P1506>
+
+<!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1507>content://settings/system/ringtone</P1507>
+
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
+<P1508></P1508>
+
+<!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1509>content://settings/system/ringtone</P1509>
+
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
+<P1510></P1510>
+
+<!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1511>content://settings/system/ringtone</P1511>
+
+<!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2657>0</P2657>
+
+
+<!-- 	Ring Tone Value Table -->
+<!-- Web GUI OptionValue -->
+<!-- Use System Ring tone content://settings/system/ringtone -->
+<!-- Silentringtone_silence -->
+<!-- Ring2_OrganDub/system/media/audio/ringtones/Ring2_OrganDub.ogg -->
+<!-- Big_Easy /system/media/audio/ringtones/Big_Easy.ogg -->
+<!-- DonMessWivlt /system/media/audio/ringtones/DonMessWivIt.ogg -->
+<!-- Club_Cubano/system/media/audio/ringtones/Club_Cubano.ogg -->
+<!-- Growl/system/media/audio/ringtones/Growl.ogg -->
+<!-- CrayonRock /system/media/audio/ringtones/CrayonRock.ogg -->
+<!-- Ring9_Nairobi/system/media/audio/ringtones/Ring9_Nairobi.ogg -->
+<!-- Ring10_Nassau/system/media/audio/ringtones/Ring10_Nassau.ogg -->
+<!-- Third_Eye/system/media/audio/ringtones/Third_Eye.ogg -->
+<!-- Ring1_Ding /system/media/audio/ringtones/Ring1_Ding.ogg -->
+<!-- Road_Trip/system/media/audio/ringtones/Road_Trip.ogg -->
+<!-- bellcore-dr2 /system/media/audio/ringtones/bellcore-dr2.ogg -->
+<!-- Ring_Digital_02/system/media/audio/ringtones/Ring_Digital_02.ogg -->
+<!-- bellcore-dr3 /system/media/audio/ringtones/bellcore-dr3.ogg -->
+<!-- DancinFool /system/media/audio/ringtones/DancinFool.ogg -->
+<!-- Ring_Classic_02/system/media/audio/ringtones/Ring_Classic_02.ogg -->
+<!-- Ring5_FreeFlight /system/media/audio/ringtones/Ring5_FreeFlight.ogg -->
+<!-- Funk_Yall/system/media/audio/ringtones/Funk_Yall.ogg -->
+<!-- World/system/media/audio/ringtones/World.ogg -->
+<!-- Ring8_MidEvilJaunt /system/media/audio/ringtones/Ring8_MidEvilJaunt.ogg -->
+<!-- TwirlAway/system/media/audio/ringtones/TwirlAway.ogg -->
+<!-- bellcore-dr4 /system/media/audio/ringtones/bellcore-dr4.ogg -->
+<!-- Ring6_Glacial_Groove /system/media/audio/ringtones/Ring6_Glacial_Groove.ogg -->
+<!-- Shes_All_That/system/media/audio/ringtones/Shes_All_That.ogg -->
+<!-- Ring4_EtherShake /system/media/audio/ringtones/Ring4_EtherShake.ogg -->
+<!-- Seville/system/media/audio/ringtones/Seville.ogg -->
+<!-- BussaMove/system/media/audio/ringtones/BussaMove.ogg -->
+<!-- Default_ringtone /system/media/audio/ringtones/Default_ringtone.ogg -->
+<!-- BirdLoop /system/media/audio/ringtones/BirdLoop.ogg -->
+<!-- MildlyAlarming/system/media/audio/ringtones/MildlyAlarming.ogg -->
+<!-- Terminated /system/media/audio/ringtones/Terminated.ogg -->
+<!-- Calypso_Steel/system/media/audio/ringtones/Calypso_Steel.ogg -->
+<!-- Safari/system/media/audio/ringtones/Safari.ogg -->
+<!-- Ring_Synth_04/system/media/audio/ringtones/Ring_Synth_04.ogg -->
+<!-- Ring_Synth_02/system/media/audio/ringtones/Ring_Synth_02.ogg -->
+<!-- CurveBall/system/media/audio/ringtones/CurveBall.ogg -->
+<!-- Enter_the_Nexus/system/media/audio/ringtones/Enter_the_Nexus.ogg -->
+<!-- Bollywood/system/media/audio/ringtones/Bollywood.ogg -->
+<!-- Champagne_Edition/system/media/audio/ringtones/Champagne_Edition.ogg -->
+<!-- Steppin_Out/system/media/audio/ringtones/Steppin_Out.ogg -->
+<!-- Ring3_Paradise_Island/system/media/audio/ringtones/Ring3_Paradise_Island.ogg -->
+<!-- Playa/system/media/audio/ringtones/Playa.ogg -->
+<!-- No_Limits/system/media/audio/ringtones/No_Limits.ogg -->
+<!-- LoopyLounge/system/media/audio/ringtones/LoopyLounge.ogg -->
+<!-- Cairo/system/media/audio/ringtones/Cairo.ogg -->
+<!-- Ring7_HalfwayHome/system/media/audio/ringtones/Ring7_HalfwayHome.ogg -->
+<!-- SilkyWay /system/media/audio/ringtones/SilkyWay.ogg -->
+<!-- LoveFlute/system/media/audio/ringtones/LoveFlute.ogg -->
+<!-- Eastern_Sky/system/media/audio/ringtones/Eastern_Sky.ogg -->
+<!-- bellcore-dr5 /system/media/audio/ringtones/bellcore-dr5.ogg -->
+<!-- Gimme_Mo_Town/system/media/audio/ringtones/Gimme_Mo_Town.ogg -->
+<!-- bellcore-dr1 /system/media/audio/ringtones/bellcore-dr1.ogg -->
+<!-- Backroad /system/media/audio/ringtones/Backroad.ogg -->
+
+<!-- Account 5 Settings -->
+
+
+<!-- Account 5 General Settings -->
+
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.5.password)}
+<P1701>1</P1701>
+{else}
+<P1701>0</P1701>
+{/if}
+
+<!-- Account Name -->
+<P1717>{$account.5.display_name}</P1717>
+
+<!-- SIP Server -->
+<P1702>{$account.5.server_address}</P1702>
+
+<!-- SIP User ID -->
+<P1704>{$account.5.user_id}</P1704>
+
+<!-- SIP Authenticate ID -->
+<P1705>{$account.5.user_id}</P1705>
+
+<!-- SIP Authenticate Password -->
+<P1706>{$account.5.password}</P1706>
+
+<!-- Voice Mail UserID -->
+<P1726>{$voicemail_number}</P1726>
+
+<!-- Name (Display name, e.g., John Doe) -->
+<P1707>{$account.5.display_name}</P1707>
+
+<!-- Tel URL Support. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1709>0</P1709>
+
+<!-- Account 5 Network Settings -->
+
+
+<!-- Outbound Proxy -->
+<P1703>{$account.5.outbound_proxy_primary}</P1703>
+
+<!-- Secondary Outbound Proxy -->
+<P1703></P1703>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
+<!-- Number: 0, 1, 2. -->
+<P1703>0</P1703>
+
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<P1703>2</P1703>
+
+<!-- Proxy-Require -->
+<P1703></P1703>
+
+<!-- Account 5 SIP Settings -->
+
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1710>1</P1710>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1711>0</P1711>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P1712>{$account.5.register_expires}</P1712>
+
+<!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
+<!-- Number: 1 - 3600 -->
+<P1771>20</P1771>
+
+<!-- Local SIP Port. Default value is 5068 -->
+<!-- Number: 5 - 65535 -->
+<P1713>5068</P1713>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P1715>1</P1715>
+{else}
+<P1715>0</P1715>
+{/if}
+
+<!-- Session Expiration. In seconds. Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P1734>180</P1734>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number is 90 - 64800 -->
+<P1727>90</P1727>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1732>0</P1732>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, 2 -->
+<P1733>1</P1733>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1731>0</P1731>
+
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1728>0</P1728>
+
+<!-- Callee Request Timer (Request for timer when being called, i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1729>0</P1729>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1730>0</P1730>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1735>0</P1735>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2738>0</P2738>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2739>0</P2739>
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1748>{$tp}</P1748>
+
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1760>0</P1760>
+
+<!-- Support SIP Instance ID. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1789>1</P1789>
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default value is 0. -->
+<!-- Number: 0, 1 -->
+<P2706>0</P2706>
+
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2746>0</P2746>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate). 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default value is 50 -->
+<!-- Number: 50, 100, 200 -->
+<P1740>50</P1740>
+
+<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is value 400 -->
+<!-- Number: 200, 400, 800 -->
+<P1741>400</P1741>
+
+<!-- Remove OBP from route. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2705>0</P2705>
+
+<!-- Enable SCA (Shared Call Appearance). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1371>0</P1371>
+
+<!-- Enable BargeIn. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2737>0</P2737>
+
+<!-- Auto-filling Pickup Feature code. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2735>1</P2735>
+
+<!-- Pickup Feature Code -->
+<P2736></P2736>
+
+<!-- Line-seize Timeout (in seconds). Number: 15 - 60 -->
+<!-- Default value is 15 -->
+<P2713>15</P2713>
+
+
+<!-- Account 5 Codec Settings  -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2701>0</P2701>
+
+<!-- DTMF: via RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2702>1</P2702>
+
+<!-- DTMF: via SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2703>0</P2703>
+
+<!-- DTMF Payload Type. Default value is 101 -->
+<!-- Number: 96 - 127 -->
+<P1796>101</P1796>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1751>0</P1751>
+
+<!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1752>0</P1752>
+
+<!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1753>0</P1753>
+
+<!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1754>0</P1754>
+
+<!-- Enable RFC5168 support. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1778>0</P1778>
+
+<!-- Video Bit Rate. 250 - 250 kbps, 500 - 500 kbps, 750 - 750 kbps. Default value is 500 -->
+<!-- Number: 250, 500, 750 -->
+<P2715>500</P2715>
+
+<!-- H.264 Payload Type -->
+<P1762>99</P1762>
+
+<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2- Enabled and forced -->
+<!-- Number: 0, 1, 2 -->
+<P1743>0</P1743>
+
+<!-- Silence Suppression. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1785>0</P1785>
+
+<!-- Voice Frames per TX. Default value is 2 -->
+<!-- Number: 1 - 64 -->
+<P1786>2</P1786>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1798>1</P1798>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High. Default value is 1 -->
+<!-- Number: 0, 1, 2 -->
+<P1797>1</P1797>
+
+<!--	 Account 5 Call Settings  -->
+
+
+<!-- Start Video Automatically. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2714>1</P2714>
+
+<!-- Remote Video Request. 0 - Prompt, 1 - Accept, 2 - Deny. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2726>0</P2726>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P1719></P1719>
+
+<!-- Dial Plan Maxlength: unlimited, default is allow all { x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+    <P1759>{$grandstream_dial_plan}</P1759>
+{else}
+    <P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1759>
+{/if}
+
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1769>0</P1769>
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1725>0</P1725>
+
+<!-- Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes). Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1721>0</P1721>
+
+<!-- Anonymous Call Rejection. 0 - No,1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1746>0</P1746>
+
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing Only (Missed Calls Not Recorded), 2 - Disable All. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1742>0</P1742>
+
+<!-- Special Feature. Default value is 100 -->
+<!-- 100 - Standard, 102 - Broadsoft, 108 - CBCOM, 109 - RNK, 113 - China Mobile -->
+<!-- 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS -->
+<!-- Number: 100, 102, 108, 109, 113, 114, 115, 116, 117 -->
+<P1724>100</P1724>
+
+<!-- Feature Key Synchronization. 0 - Disable, 1 - Broadsoft. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2725>0</P2725>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1720>0</P1720>
+
+<!-- No Key Entry Timeout (s). Default value is 4 -->
+<!-- Number: 1 - 15 -->
+<P1791>4</P1791>
+
+<!-- Ring Timeout (s). Default value is 60 -->
+<!-- Number: 10 - 300 -->
+<P1776>60</P1776>
+
+<!-- Transfer on 3 way conference Hangup. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2704>0</P2704>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1792>1</P1792>
+
+<!-- Conference-URI -->
+<!-- String -->
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
+
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2741>0</P2741>
+
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2742>0</P2742>
+
+<!-- Call Center Status. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2743>0</P2743>
+
+<!-- Account Ring Tone. See ring tone options and value in the Ring Tone value table below -->
+<P1723>content://settings/system/ringtone</P1723>
+
+<!-- No Answer Timeout (s). Default value is 20 -->
+<!-- Number: 1 - 120 -->
+<P1770>20</P1770>
+
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
+<P1512></P1512>
+
+<!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1513>content://settings/system/ringtone</P1513>
+
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
+<P1514></P1514>
+
+<!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1515>content://settings/system/ringtone</P1515>
+
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
+<P1516></P1516>
+
+<!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
+<!-- String -->
+<P1517>content://settings/system/ringtone</P1517>
+
+<!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2757>0</P2757>
+
+
+<!-- 	Ring Tone Value Table -->
+<!-- Web GUI OptionValue -->
+<!-- Use System Ring tone content://settings/system/ringtone -->
+<!-- Silentringtone_silence -->
+<!-- Ring2_OrganDub/system/media/audio/ringtones/Ring2_OrganDub.ogg -->
+<!-- Big_Easy /system/media/audio/ringtones/Big_Easy.ogg -->
+<!-- DonMessWivlt /system/media/audio/ringtones/DonMessWivIt.ogg -->
+<!-- Club_Cubano/system/media/audio/ringtones/Club_Cubano.ogg -->
+<!-- Growl/system/media/audio/ringtones/Growl.ogg -->
+<!-- CrayonRock /system/media/audio/ringtones/CrayonRock.ogg -->
+<!-- Ring9_Nairobi/system/media/audio/ringtones/Ring9_Nairobi.ogg -->
+<!-- Ring10_Nassau/system/media/audio/ringtones/Ring10_Nassau.ogg -->
+<!-- Third_Eye/system/media/audio/ringtones/Third_Eye.ogg -->
+<!-- Ring1_Ding /system/media/audio/ringtones/Ring1_Ding.ogg -->
+<!-- Road_Trip/system/media/audio/ringtones/Road_Trip.ogg -->
+<!-- bellcore-dr2 /system/media/audio/ringtones/bellcore-dr2.ogg -->
+<!-- Ring_Digital_02/system/media/audio/ringtones/Ring_Digital_02.ogg -->
+<!-- bellcore-dr3 /system/media/audio/ringtones/bellcore-dr3.ogg -->
+<!-- DancinFool /system/media/audio/ringtones/DancinFool.ogg -->
+<!-- Ring_Classic_02/system/media/audio/ringtones/Ring_Classic_02.ogg -->
+<!-- Ring5_FreeFlight /system/media/audio/ringtones/Ring5_FreeFlight.ogg -->
+<!-- Funk_Yall/system/media/audio/ringtones/Funk_Yall.ogg -->
+<!-- World/system/media/audio/ringtones/World.ogg -->
+<!-- Ring8_MidEvilJaunt /system/media/audio/ringtones/Ring8_MidEvilJaunt.ogg -->
+<!-- TwirlAway/system/media/audio/ringtones/TwirlAway.ogg -->
+<!-- bellcore-dr4 /system/media/audio/ringtones/bellcore-dr4.ogg -->
+<!-- Ring6_Glacial_Groove /system/media/audio/ringtones/Ring6_Glacial_Groove.ogg -->
+<!-- Shes_All_That/system/media/audio/ringtones/Shes_All_That.ogg -->
+<!-- Ring4_EtherShake /system/media/audio/ringtones/Ring4_EtherShake.ogg -->
+<!-- Seville/system/media/audio/ringtones/Seville.ogg -->
+<!-- BussaMove/system/media/audio/ringtones/BussaMove.ogg -->
+<!-- Default_ringtone /system/media/audio/ringtones/Default_ringtone.ogg -->
+<!-- BirdLoop /system/media/audio/ringtones/BirdLoop.ogg -->
+<!-- MildlyAlarming/system/media/audio/ringtones/MildlyAlarming.ogg -->
+<!-- Terminated /system/media/audio/ringtones/Terminated.ogg -->
+<!-- Calypso_Steel/system/media/audio/ringtones/Calypso_Steel.ogg -->
+<!-- Safari/system/media/audio/ringtones/Safari.ogg -->
+<!-- Ring_Synth_04/system/media/audio/ringtones/Ring_Synth_04.ogg -->
+<!-- Ring_Synth_02/system/media/audio/ringtones/Ring_Synth_02.ogg -->
+<!-- CurveBall/system/media/audio/ringtones/CurveBall.ogg -->
+<!-- Enter_the_Nexus/system/media/audio/ringtones/Enter_the_Nexus.ogg -->
+<!-- Bollywood/system/media/audio/ringtones/Bollywood.ogg -->
+<!-- Champagne_Edition/system/media/audio/ringtones/Champagne_Edition.ogg -->
+<!-- Steppin_Out/system/media/audio/ringtones/Steppin_Out.ogg -->
+<!-- Ring3_Paradise_Island/system/media/audio/ringtones/Ring3_Paradise_Island.ogg -->
+<!-- Playa/system/media/audio/ringtones/Playa.ogg -->
+<!-- No_Limits/system/media/audio/ringtones/No_Limits.ogg -->
+<!-- LoopyLounge/system/media/audio/ringtones/LoopyLounge.ogg -->
+<!-- Cairo/system/media/audio/ringtones/Cairo.ogg -->
+<!-- Ring7_HalfwayHome/system/media/audio/ringtones/Ring7_HalfwayHome.ogg -->
+<!-- SilkyWay /system/media/audio/ringtones/SilkyWay.ogg -->
+<!-- LoveFlute/system/media/audio/ringtones/LoveFlute.ogg -->
+<!-- Eastern_Sky/system/media/audio/ringtones/Eastern_Sky.ogg -->
+<!-- bellcore-dr5 /system/media/audio/ringtones/bellcore-dr5.ogg -->
+<!-- Gimme_Mo_Town/system/media/audio/ringtones/Gimme_Mo_Town.ogg -->
+<!-- bellcore-dr1 /system/media/audio/ringtones/bellcore-dr1.ogg -->
+<!-- Backroad /system/media/audio/ringtones/Backroad.ogg -->
+
+
+<!--	 Account 6 Settings  -->
+
+
+<!--	Account 6 General Settings  -->
+
+
+<!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($account.6.password)}
+<P1801>1</P1801>
+{else}
+<P1801>0</P1801>
+{/if}
+
+<!-- Account Name -->
+<P1817>{$account.6.display_name}</P1817>
+
+<!-- SIP Server -->
+<P1802>{$account.6.server_address}</P1802>
+
+<!-- SIP User ID -->
+<P1804>{$account.6.user_id}</P1804>
+
+<!-- SIP Authenticate ID -->
+<P1805>{$account.6.user_id}</P1805>
+
+<!-- SIP Authenticate Password -->
+<P1806>{$account.6.password}</P1806>
+
+<!-- Voice Mail UserID -->
+<P1826>{$voicemail_number}</P1826>
+
+<!-- Name (Display name :John Doe) -->
+<P1807>{$account.6.display_name}</P1807>
+
+<!-- Tel URL Support. 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1809>0</P1809>
+
+<!-- Account 6 Network Settings -->
+
+
+<!-- Outbound Proxy -->
+<P1803>{$account.6.outbound_proxy_primary}</P1803>
+
+<!-- Secondary Outbound Proxy -->
+<P2833>{$account.6.outbound_proxy_secondary}</P2833>
+
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1808>0</P1808>
+
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<P1814>2</P1814>
+
+<!-- Proxy-Require -->
+<P1818></P1818>
+
+<!-- Account 6 SIP Settings -->
+
+
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<P1810>1</P1810>
+
+<!-- Unregister Before New Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P1811>0</P1811>
+
+<!-- Register Expiration (m). In minutes. Default value is 60 -->
+<!-- Number: 0 - 64800 -->
+<P1812>{$account.6.register_expires}</P1812>
+
+<!-- Wait Time Retry Registration (s). In seconds. Default value is 20 -->
+<!-- Number: 1 - 3600 -->
+<P1871>20</P1871>
+
+<!-- Local SIP Port. Default value is 5070 -->
+<!-- Number: 5-65535 -->
+<P1813>5070</P1813>
+
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P1815>1</P1815>
+{else}
+<P1815>0</P1815>
+{/if}
+
+<!-- Session Expiration (in seconds). Default value is 180 seconds -->
+<!-- Number: 90 - 64800 -->
+<P1834>180</P1834>
+
+<!-- Min-SE (s). Default value is 90 seconds -->
+<!-- Number: 5 - 65535 -->
+<P1827>90</P1827>
+
+<!-- UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1832>0</P1832>
+
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default value is 1 -->
+<!-- Number: 1, -->
+<P1833>1</P1833>
+
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1831>0</P1831>
+
+<!-- Caller Request Timer (Request for timer when calling) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1828>0</P1828>
+
+<!-- Callee Request Timer. Request for timer when called (i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1829>0</P1829>
+
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1830>0</P1830>
+
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1835>0</P1835>
+
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2838>0</P2838>
+
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2839>0</P2839>
+
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{$tp=0}
+{if $account.6.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.6.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.6.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1848>{$tp}</P1848>
+
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1860>0</P1860>
+
+<!-- Support SIP Instance ID. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1889>1</P1889>
+
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2806>0</P2806>
+
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2846>0</P2846>
+
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate). 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default value is 50 -->
+<!-- Number: 50, 100, 200 -->
+<P1840>50</P1840>
+
+<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400 -->
+<!-- Number: 200, 400, 800 -->
+<P1841>400</P1841>
+
+<!-- Remove OBP from route. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2805>0</P2805>
+
+<!-- Enable SCA (Shared Call Appearance). 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1373>0</P1373>
+
+<!-- Enable BargeIn. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2837>0</P2837>
+
+<!-- Auto-filling Pickup Feature code. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2835>1</P2835>
+
+<!-- Pickup Feature Code -->
+<P2836></P2836>
+
+<!-- Line-seize Timeout (in seconds). Number: 15 - 60 -->
+<!-- Default value is 15 -->
+<P2813>15</P2813>
+
+<!--	Account 6 Codec Settings  -->
+
+<!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2801>0</P2801>
+
+<!-- DTMF: in RFC2833. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2802>1</P2802>
+
+<!-- DTMF: in SIP INFO. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2803>0</P2803>
+
+<!-- DTMF Payload Type. Default value is 101 -->
+<!-- Number: 96 - 127 -->
+<P1896>101</P1896>
+
+<!-- Preferred Vocoder -->
+<!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1851>0</P1851>
+
+<!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1852>0</P1852>
+
+<!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1853>0</P1853>
+
+<!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
+<!-- Number: 0, 8, 9, 18 -->
+<P1854>0</P1854>
+
+<!-- Enable RFC5168 support. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1878>0</P1878>
+
+<!-- Video Bit Rate. 250 - 250 kbps, 500 - 500 kbps, 750 - 750 kbps. Default value is 500 -->
+<!-- Number: 250, 500, 750 -->
+<P2815>500</P2815>
+
+<!-- H.264 Payload Type -->
+<P1862>99</P1862>
+
+<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1843>0</P1843>
+
+<!-- Silence Suppression. 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<P1885>0</P1885>
+
+<!-- Voice Frames per TX. Default valule is 2 -->
+<!-- Number: 1 - 64 -->
+<P1886>2</P1886>
+
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1898>1</P1898>
+
+<!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High. Default value is 1 -->
+<!-- Number: 0, 1, 2 -->
+<P1897>1</P1897>
+
+<!-- Account 6 Call Settings-->
+
+
+<!-- Start Video Automatically. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P2814>1</P2814>
+
+<!-- Remote Video Request. 0 - Prompt, 1 - Accept, 2 - Deny. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P2826>0</P2826>
+
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P1819></P1819>
+
+<!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+{if isset($grandstream_dial_plan) }
+    <P1859>{$grandstream_dial_plan}</P1859>
+{else}
+    <P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1859>
+{/if}
+
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1869>0</P1869>
+
+<!-- Auto Answer. 0 - No, 1 - Yes, 2 - Enable Intercom/Paging. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1825>0</P1825>
+
+<!-- Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes). Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1821>0</P1821>
+
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1846>0</P1846>
+
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed Calls Not Recorded), 2 - Disable Call All. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P1842>0</P1842>
+
+<!-- Special Feature. Default value is 100 -->
+<!-- 100 - Standard, 102 - Broadsoft, 108 - CBCOM, 109 - RNK, 113 - China Mobile -->
+<!-- 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS -->
+<!-- Number: 100, 102, 108, 109, 113, 114, 115, 116, 117 -->
+<P1824>100</P1824>
+
+<!-- Feature Key Synchronization. 0 - Disable, 1 - Broadsoft. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2825>0</P2825>
+
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1820>0</P1820>
+
+<!-- No Key Entry Timeout (s). Default value is 4 -->
+<!-- Number: 1 - 15 -->
+<P1891>4</P1891>
+
+<!-- Ring Timeout. Default value is 60 seconds -->
+<!-- Number: 10 - 300 -->
+<P1876>60</P1876>
+
+<!-- Transfer on 3 way conference Hangup. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2804>0</P2804>
+
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1892>1</P1892>
+
+<!-- Conference-URI -->
+<!-- String -->
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
+
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2841>0</P2841>
+
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2842>0</P2842>
+
+<!-- Call Center Status. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2843>0</P2843>
+
+<!-- Account Ring Tone. See ring tone options and values in the Ring Tone value table below -->
+<P1823>content://settings/system/ringtone</P1823>
+
+<!-- No Answer Timeout (s). Default value is 20 -->
+<!-- Number: 1 - 120 -->
+<P1870>20</P1870>
+
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
+<P1518></P1518>
+
+<!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and values in the Ring Tone value table below -->
+<!-- String -->
+<P1519>content://settings/system/ringtone</P1519>
+
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
+<P1520></P1520>
+
+<!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and values in the Ring Tone value table below -->
+<!-- String -->
+<P1521>content://settings/system/ringtone</P1521>
+
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
+<P1522></P1522>
+
+<!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and values in the Ring Tone value table below -->
+<!-- String -->
+<P1523>content://settings/system/ringtone</P1523>
+
+<!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P2857>0</P2857>
+
+<!-- 	Ring Tone Value Table -->
+<!-- Web GUI OptionValue -->
+<!-- Use System Ring tone content://settings/system/ringtone -->
+<!-- Silentringtone_silence -->
+<!-- Ring2_OrganDub/system/media/audio/ringtones/Ring2_OrganDub.ogg -->
+<!-- Big_Easy /system/media/audio/ringtones/Big_Easy.ogg -->
+<!-- DonMessWivlt /system/media/audio/ringtones/DonMessWivIt.ogg -->
+<!-- Club_Cubano/system/media/audio/ringtones/Club_Cubano.ogg -->
+<!-- Growl/system/media/audio/ringtones/Growl.ogg -->
+<!-- CrayonRock /system/media/audio/ringtones/CrayonRock.ogg -->
+<!-- Ring9_Nairobi/system/media/audio/ringtones/Ring9_Nairobi.ogg -->
+<!-- Ring10_Nassau/system/media/audio/ringtones/Ring10_Nassau.ogg -->
+<!-- Third_Eye/system/media/audio/ringtones/Third_Eye.ogg -->
+<!-- Ring1_Ding /system/media/audio/ringtones/Ring1_Ding.ogg -->
+<!-- Road_Trip/system/media/audio/ringtones/Road_Trip.ogg -->
+<!-- bellcore-dr2 /system/media/audio/ringtones/bellcore-dr2.ogg -->
+<!-- Ring_Digital_02/system/media/audio/ringtones/Ring_Digital_02.ogg -->
+<!-- bellcore-dr3 /system/media/audio/ringtones/bellcore-dr3.ogg -->
+<!-- DancinFool /system/media/audio/ringtones/DancinFool.ogg -->
+<!-- Ring_Classic_02/system/media/audio/ringtones/Ring_Classic_02.ogg -->
+<!-- Ring5_FreeFlight /system/media/audio/ringtones/Ring5_FreeFlight.ogg -->
+<!-- Funk_Yall/system/media/audio/ringtones/Funk_Yall.ogg -->
+<!-- World/system/media/audio/ringtones/World.ogg -->
+<!-- Ring8_MidEvilJaunt /system/media/audio/ringtones/Ring8_MidEvilJaunt.ogg -->
+<!-- TwirlAway/system/media/audio/ringtones/TwirlAway.ogg -->
+<!-- bellcore-dr4 /system/media/audio/ringtones/bellcore-dr4.ogg -->
+<!-- Ring6_Glacial_Groove /system/media/audio/ringtones/Ring6_Glacial_Groove.ogg -->
+<!-- Shes_All_That/system/media/audio/ringtones/Shes_All_That.ogg -->
+<!-- Ring4_EtherShake /system/media/audio/ringtones/Ring4_EtherShake.ogg -->
+<!-- Seville/system/media/audio/ringtones/Seville.ogg -->
+<!-- BussaMove/system/media/audio/ringtones/BussaMove.ogg -->
+<!-- Default_ringtone /system/media/audio/ringtones/Default_ringtone.ogg -->
+<!-- BirdLoop /system/media/audio/ringtones/BirdLoop.ogg -->
+<!-- MildlyAlarming/system/media/audio/ringtones/MildlyAlarming.ogg -->
+<!-- Terminated /system/media/audio/ringtones/Terminated.ogg -->
+<!-- Calypso_Steel/system/media/audio/ringtones/Calypso_Steel.ogg -->
+<!-- Safari/system/media/audio/ringtones/Safari.ogg -->
+<!-- Ring_Synth_04/system/media/audio/ringtones/Ring_Synth_04.ogg -->
+<!-- Ring_Synth_02/system/media/audio/ringtones/Ring_Synth_02.ogg -->
+<!-- CurveBall/system/media/audio/ringtones/CurveBall.ogg -->
+<!-- Enter_the_Nexus/system/media/audio/ringtones/Enter_the_Nexus.ogg -->
+<!-- Bollywood/system/media/audio/ringtones/Bollywood.ogg -->
+<!-- Champagne_Edition/system/media/audio/ringtones/Champagne_Edition.ogg -->
+<!-- Steppin_Out/system/media/audio/ringtones/Steppin_Out.ogg -->
+<!-- Ring3_Paradise_Island/system/media/audio/ringtones/Ring3_Paradise_Island.ogg -->
+<!-- Playa/system/media/audio/ringtones/Playa.ogg -->
+<!-- No_Limits/system/media/audio/ringtones/No_Limits.ogg -->
+<!-- LoopyLounge/system/media/audio/ringtones/LoopyLounge.ogg -->
+<!-- Cairo/system/media/audio/ringtones/Cairo.ogg -->
+<!-- Ring7_HalfwayHome/system/media/audio/ringtones/Ring7_HalfwayHome.ogg -->
+<!-- SilkyWay /system/media/audio/ringtones/SilkyWay.ogg -->
+<!-- LoveFlute/system/media/audio/ringtones/LoveFlute.ogg -->
+<!-- Eastern_Sky/system/media/audio/ringtones/Eastern_Sky.ogg -->
+<!-- bellcore-dr5 /system/media/audio/ringtones/bellcore-dr5.ogg -->
+<!-- Gimme_Mo_Town/system/media/audio/ringtones/Gimme_Mo_Town.ogg -->
+<!-- bellcore-dr1 /system/media/audio/ringtones/bellcore-dr1.ogg -->
+<!-- Backroad /system/media/audio/ringtones/Backroad.ogg -->
+
+
+<!-- Advanced Settings-->
+
+<!-- Advanced Settings -> General Settings-->
+
+<!-- Local RTP Port. Default value is 5004 -->
+<!-- Number: 1024 - 65535 -->
+<P39>5004</P39>
+
+<!-- Use Random Port. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P78>0</P78>
+
+<!-- Disable in-call DTMF display.0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P338>0</P338>
+
+<!-- Keep-alive Interval (s). Default value is 20 seconds -->
+<!-- Number: 10 - 160 -->
+<P84>20</P84>
+
+<!-- STUN Server -->
+{if isset($grandstream_stun_server) }
+<P76>{$grandstream_stun_server}</P76>
+{else}
+<P76></P76>
+{/if}
+
+<!-- Use NAT IP. This will enable our SIP client to use this IP in the SIP message. -->
+<!-- Example 64.3.153.50 -->
+<P101></P101>
+
+<!-- SIP TLS Certificate -->
+<!-- P280 = -->
+
+<!-- SIP TLS Private Key -->
+<!-- P279 = -->
+
+<!-- SIP TLS Private Key Password -->
+<!-- P281 = -->
+
+<!-- Advanced Settings - Call Features -->
+
+<!-- Always Ring Speaker. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
+
+<!-- Auto Conference. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1682>0</P1682>
+
+<!-- Disable Call-Waiting. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P91>0</P91>
+
+<!-- Disable DialPlan. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1687>0</P1687>
+
+<!-- Disable Call-Waiting Tone. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P186>0</P186>
+
+<!-- Disable DND Reminder Ring. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1486>0</P1486>
+
+<!-- Disable Direct IP Call. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P277>0</P277>
+
+<!-- Use Quick IP-Call Mode. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P184>0</P184>
+
+<!-- Disable Conference. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1311>0</P1311>
+
+<!-- Disable Transfer. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1341>0</P1341>
+
+<!-- Default Transfer Mode. 0 - Blind Transfer, 1 - Attended Transfer. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1685>0</P1685>
+
+<!-- Escape '#' as %23 in SIP URI. 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<P1406>1</P1406>
+
+<!-- Offhook Auto Dial -->
+<P71></P71>
+
+<!-- Offhook Timeout (in seconds) -->
+<P1485></P1485>
+
+<!--	 Advanced Settings - Video Settings  -->
+
+<!-- Video Frame Rate. 15 - 15 frames/second, 30 - 30 frames/second. Default value is 15 -->
+<!-- Number: 15, 30 -->
+<P904>15</P904>
+
+<!-- Advanced Settings - Tone Generator -->
+
+
+<!-- Dial Tone -->
+<P4000>f1=350@-13,f2=440@-13,c=0/0;</P4000>
+
+<!-- Ring Back Tone -->
+<P4001>f1=440@-19,f2=480@-19,c=2000/4000;</P4001>
+
+<!-- Busy Tone -->
+<P4002>f1=480@-24,f2=620@-24,c=500/500;</P4002>
+
+<!-- Reorder Tone -->
+<P4003>f1=480@-24,f2=620@-24,c=250/250;</P4003>
+
+<!-- Confirmation Tone -->
+<P4004>f1=350@-11,f2=440@-11,c=100/100-100/100-100/100;</P4004>
+
+<!-- Call-Waiting Tone -->
+<P4005>f1=440@-13,c=300/10000-300/10000-0/0;</P4005>
+
+<!-- Call-Waiting Tone Gain. 0 - Low, 1 - Medium, 2 - High. Default value is 1 -->
+<P1555>1</P1555>
+
+<!-- PSTN Disconnect Tone -->
+<P841>f1=480@-32,f2=620@-32,c=500/500;</P841>
+
+<!-- Default Ring Cadence -->
+<P4040>c=2000/4000;</P4040>
+
+<!-- Advanced Settings - MPK General Settings -->
+
+
+<!-- Account 1 BLF Call-Pickup Prefix. Default value is ** -->
+<!-- String -->
+<P1347>**</P1347>
+
+<!-- Account 1 Eventlist URI -->
+<P134></P134>
+
+<!-- Account 2 BLF Call-Pickup Prefix. Default value is ** -->
+<!-- String -->
+<P481>**</P481>
+
+<!-- Account 2 Eventlist URI -->
+<P444></P444>
+
+<!-- Account 3 BLF Call-Pickup Prefix. Default value is ** -->
+<!-- String -->
+<P581>**</P581>
+
+<!-- Account 3 Eventlist URI -->
+<P544></P544>
+
+<!-- Account 4 BLF Call-Pickup Prefix. Default value is ** -->
+<!-- String -->
+<P681>**</P681>
+
+<!-- Account 4 Eventlist URI -->
+<P644></P644>
+
+<!-- Account 5 BLF Call-Pickup Prefix. Default value is ** -->
+<!-- String -->
+<P1781>**</P1781>
+
+<!-- Account 5 Eventlist URI -->
+<P1744></P1744>
+
+<!-- Account 6 BLF Call-Pickup Prefix. Default value is ** -->
+<!-- String -->
+<P1881>**</P1881>
+
+<!-- Account 6 Eventlist URI -->
+<P1844></P1844>
+
+<!-- Maintenance -->
+
+<!--Maintenance - Network Settings-->
+
+
+<!-- Address Type. 0 - DHCP, 1 - Static, 2 - PPPoE. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P8>0</P8>
+
+<!-- Host name (DHCP option 12) -->
+<P146></P146>
+
+<!-- Vendor Class ID (DHCP option 60) -->
+<P148>GXV3275</P148>
+
+<!-- Static IP. IP address -->
+<!-- P9 = 192 -->
+<!-- P10 = 168 -->
+<!-- P11 = 0 -->
+<!-- P12 = 160 -->
+
+<!-- Static IP. Subnet Mask -->
+<!-- P13 = 255 -->
+<!-- P14 = 255 -->
+<!-- P15 = 0 -->
+<!-- P16 = 0 -->
+
+<!-- Static IP. Default Gateway -->
+<!-- P17 = 0 -->
+<!-- P18 = 0 -->
+<!-- P19 = 0 -->
+<!-- P20 = 0 -->
+
+<!-- Static IP. DNS Server 1. Ignore if DHCP or PPPoE is used -->
+<!-- P21 = 0 -->
+<!-- P22 = 0 -->
+<!-- P23 = 0 -->
+<!-- P24 = 0 -->
+
+<!-- Static IP. DNS Server 2. Ignore if DHCP or PPPoE is used -->
+<!-- P25 = 0 -->
+<!-- P26 = 0 -->
+<!-- P27 = 0 -->
+<!-- P28 = 0 -->
+
+<!-- PPPoE Account ID -->
+<P82></P82>
+
+<!-- PPPoE Password -->
+<P82></P82>
+
+<!-- PPPoE Service Name -->
+<P269></P269>
+
+<!-- Layer 3 QoS for SIP. Default value is 48 -->
+<P1558>48</P1558>
+
+<!-- Layer 3 QoS for Audio. Default value is 48 -->
+<P1559>48</P1559>
+
+<!-- Layer 2 QoS. 802.1Q/VLAN Tag. Default value is 0 -->
+<!-- Number: 0 - 4095 -->
+{if isset($grandstream_lan_port_vlan) }
+<P51>{$grandstream_lan_port_vlan}</P51>
+{else}
+<P51>0</P51>
+{/if}
+
+<!-- Layer 2 QoS. 802.1p priority value. Default value is 0 -->
+<!-- Number: 0 - 7 -->
+<P87>0</P87>
+
+<!-- 802.1x Mode. 0 - Disable, 1 - EAP-MD5, 2 - EAP-TLS, 3-EAP-PEAP -->
+<!-- Number: 0, 1, 2, 3 -->
+<P7901>0</P7901>
+
+<!-- 802.1x Identity -->
+<P7902></P7902>
+
+<!-- MD5 Password -->
+<P7903></P7903>
+
+<!-- Maintenance - Time Settings -->
+
+
+<!-- Assign NTP Server Address -->
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
+
+<!-- DHCP Option 42 override NTP server. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- When set to Yes (1), it will override the configured NTP server -->
+<!-- Number: 0, 1 -->
+<P144>1</P144>
+
+<!-- DHCP Option 2 to Override Time Zone setting. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- When set to Yes (1), it will override the configured Time Zone setting if available -->
+<!-- Number: 0, 1 -->
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+
+<!-- Time Zone -->
+<!-- Web GUI Option P Value- -->
+<!-- GMT+12:00(Tuvalu Time) TZA+12 -->
+<!-- GMT+12:00(Marshall Islands) MHT-12 -->
+<!-- GMT-11:00(Midway Island) TZB+11 -->
+<!-- GMT-10:00(Hawaii)HAW10 -->
+<!-- GMT-8:00(Alaska) AKST9AKDT -->
+<!-- GMT-7:00(Pacific Time) PST8PDT -->
+<!-- GMT-7:00(Tijuana) PST8PDT,M4.1.0,M10.5.0 -->
+<!-- GMT-7:00(Arizona)	MST7 -->
+<!-- GMT-6:00(Chihuahua) MST7MDT,M4.1.0,M10.5.0 -->
+<!-- GMT-6:00(Mountain Time) MST7MDT -->
+<!-- GMT-6:00(Central America)CST+6 -->
+<!-- GMT-5:00(Central Time) CST6CDT -->
+<!-- GMT-5:00(Mexico City) CST6CDT,M4.1.0,M10.5.0 -->
+<!-- *GMT-6:00(Saskatchewan) -->
+<!-- GMT-5:00(Bogota)	COT5 -->
+<!-- GMT-5:00(Eastern Time without daylight saving) EST5 -->
+<!-- GMT-4:00(Eastern Time) EST5EDT -->
+<!-- GMT-4:30(Venezuela) TZf+4:30 -->
+<!-- GMT-4:00(Atlantic Time) AST4ADT -->
+<!-- GMT-4:00(Manaus) AMT4 -->
+<!-- GMT-3:00(Atlantic Time(New Brunswich)) AST4ADT,M4.1.0/00:01:00,M10.5.0/00:01:00 -->
+<!-- *GMT-4:00(Santiago) -->
+<!-- GMT-2:30(Newfoundland) NST+3:30NDT+2:30,M4.1.0/00:01:00,M10.5.0/00:01:00 -->
+<!-- GMT-3:00(Brasilia) BRST+3BRDT+2,M10.3.0,M2.3.0 -->
+<!-- GMT-3:00(Buenos Aires) UTC+3 -->
+<!-- GMT-2:00(Greenland) TZK+3 -->
+<!-- GMT-3:00(Montevideo) UYT3UYST,M10.1.0,M3.2.0 -->
+<!-- GMT-2:00(Mid-Atlantic) TZL+2 -->
+<!-- GMT+0:00(Azores) TZM+1 -->
+<!-- GMT-1:00(Cape Verde Islands) CVT1 -->
+<!-- GMT+0:00(Casablanca) TZN+0 -->
+<!-- GMT+1:00(London) GMT+0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+<!-- GMT+1:00(Dublin) GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+<!-- GMT+1:00(Lisbon, Western European Time) WET-0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+<!-- GMT+2:00(Roma, Paris, Madrid, Central European Time) CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!-- GMT+2:00(Belgrade)	CET-1CEST,M3.5.0,M10.5.0/3 -->
+<!-- GMT+2:00(Brussels)	TZO-1 -->
+<!-- GMT+2:00(Sarajevo)	CET-1CEST,M3.5.0,M10.5.0/3 -->
+<!-- GMT+1:00(Windhoek)	WAT-1WAST,M9.1.0,M4.1.0 -->
+<!-- *GMT+1:00(W. Africa Time) -->
+<!-- *GMT+3:00(Amman, Jordan) -->
+<!-- GMT+3:00(Athens, Istanbul)	TZP-2 -->
+<!-- GMT+3:00(Beirut, Lebanon)	EET-2EEST,M3.5.0/0,M10.5.0/0 -->
+<!-- GMT+2:00(Cairo)	TZP-2 -->
+<!-- GMT+3:00(Helsinki, Athens, Tallinn, Eastern European Time)	EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00 -->
+<!-- GMT+3:00(Jerusalem) TZP-2 -->
+<!-- GMT+3:00(Minsk)	EET-2EEST,M3.5.0,M10.5.0/3 -->
+<!-- GMT+3:00(Kyiv)EET-2EEST,M3.5.0/3,M10.5.0/4 -->
+<!-- GMT+2:00(Harare)	CAT-2 -->
+<!-- GMT+3:00(Baghdad)	TZQ-3 -->
+<!-- GMT+4:00(Moscow)	MST-3MDT,M3.5.0/2,M10.5.0/3 -->
+<!-- GMT+3:00(Kuwait)	TZQ-3 -->
+<!-- GMT+3:00(Nairobi)	TZQ-3 -->
+<!-- GMT+4:30(Tehran)	TZQ-3 -->
+<!-- GMT+5:00(Baku)	TZR-4 -->
+<!-- GMT+4:00(Tbilisi)	GET-4 -->
+<!-- GMT+4:00(Yerevan)	AMT-4AMST,M3.5.0,M10.5.0/3 -->
+<!-- GMT+4:00(Dubai)	GST-4 -->
+<!-- GMT+4:30(Kabul)	AFT-4:30 -->
+<!-- GMT+5:00(Islamabad, Karachi)TZS-5 -->
+<!-- GMT+5:00(Ural'sk)	ORAT-5 -->
+<!-- GMT+6:00(Yekaterinburg) YEKT-5YEKST,M3.5.0,M10.5.0/3 -->
+<!-- GMT+5:30(Kolkata)	IST-5:30 -->
+<!-- *GMT+5:30(Sri Lanka) -->
+<!-- GMT+5:45(Kathmandu)TZU-5:45 -->
+<!-- GMT+6:00(Astana)	TZV-6 -->
+<!-- GMT+6:30(Yangon)	TZW-6:30 -->
+<!-- GMT+8:00(Krasnoyarsk)TZX-7 -->
+<!-- GMT+7:00(Bangkok)	TZX-7 -->
+<!-- GMT+7:00(Jakarta)	WIB-7 -->
+<!-- GMT+8:00(Beijing)	TZY-8 -->
+<!-- GMT+8:00(Hong Kong)TZY-8 -->
+<!-- GMT+8:00(Singapore)SGT-8 -->
+<!-- GMT+8:00(Ulaanbaatar, Mongolia)ULAT-8 -->
+<!-- GMT+9:00(Irkutsk)TZY-8 -->
+<!-- GMT+8:00(Kuala Lumpur)TZY-8 -->
+<!-- GMT+8:00(Perth)	WST-8 -->
+<!-- GMT+8:00(Taipei)TZY-8 -->
+<!-- GMT+9:00(Seoul)	TZZ-9 -->
+<!-- GMT+9:00(Tokyo, Osaka)TZZ-9 -->
+<!-- GMT+10:00(Yakutsk)	TZZ-9 -->
+<!-- GMT+9:30(Adelaide)	CST-9:30CDT-10:30,M10.5.0/02:00:00,M3.5.0/03:00:00 -->
+<!-- GMT+9:30(Darwin)	CST-9:30 -->
+<!-- GMT+10:00(Brisbane)EST-10 -->
+<!-- GMT+10:00(Hobart)	EST-10EDT-11,M10.1.0/02:00:00,M3.5.0/03:00:00 -->
+<!-- GMT+10:00(Sydney, Canberra)EST-10EDT-11,M10.5.0/02:00:00,M3.5.0/03:00:00 -->
+<!-- GMT+11:00(Vladivostok)	VLAT-10VLAST,M3.5.0,M10.5.0/3 -->
+<!-- GMT+10:00(Guam)		TZb-10 -->
+<!-- GMT+12:00(Magadan)		TZc-11 -->
+<!-- GMT+12:00(Auckland)	NZST-12NZDT-13,M10.1.0/02:00:00,M3.3.0/03:00:00 -->
+<!-- GMT+12:00(Fiji)		TZd-12 -->
+<!-- GMT+13:00(Tonga) TZe-13 -->
+
+<!-- P64 = PST8PDT -->
+<P64>{$grandstream_gxp_time_zone}</P64>
+
+<!-- Time Display Format. 0 - 12 Hour, 1 - 24 Hour. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P122>{$grandstream_gxp_time_format}</P122>
+
+<!-- Date Display Format. Default value is 1 -->
+<!-- 0: YY-MM-DD -->
+<!-- 1: MM-DD-YY -->
+<!-- 2: DD-MM-YY -->
+<!-- 3: Normal (M-D-YY) -->
+<!-- Number: 0, 1, 2, 3 -->
+<P102>{$grandstream_gxp_date_format}</P102>
+
+<!-- Maintenance - Web/SSH Access -->
+
+
+<!-- Disable SSH. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P276>0</P276>
+
+<!-- Web Access Method. 0 - HTTP, 1 - HTTPS. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P900>0</P900>
+
+<!-- Web Port. HTTP default is 80, HTTPS default is 443 -->
+<!-- Number: 0 - 65535 -->
+<P901>80</P901>
+
+<!-- Admin password for web interface -->
+<P2>{$admin_password}</P2>
+
+<!-- End User Password -->
+<P196>{$user_password}</P196>
+
+<!--Maintenance - Upgrade-->
+
+
+<!-- Lock Keypad Update. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P88>0</P88>
+
+<!-- XML Config File Password -->
+<!-- String; between ascii values 33 and 126 -->
+<!-- Mandatory -->
+<P1359></P1359>
+
+<!--  HTTP/HTTPS User Name -->
+<!--  String; between ascii values 33 and 126 -->
+<P1360>{$http_auth_username}</P1360>
+
+<!--  HTTP/HTTPS Password -->
+<!--  String; between ascii values 33 and 126 -->
+<P1361>{$http_auth_password}</P1361>
+
+<!-- Upgrade Via. 0 - TFTP, 1 - HTTP, 2 - HTTPS, 3 - Manual Upload. Default value is 1 -->
+<!-- Number: 0, 1, 2, 3 -->
+<P212>2</P212>
+
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxv3275/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxv3275</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
+
+<!-- Config Server Path -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{elseif isset($domain_name)}
+<P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
+
+<!-- Firmware File Prefix -->
+<P232></P232>
+
+<!-- Firmware File Postfix -->
+<P233></P233>
+
+<!-- Config File Prefix -->
+<P234></P234>
+
+<!-- Config File Postfix -->
+<P235></P235>
+
+<!-- mDNS Override Server. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1407>1</P1407>
+
+<!-- DHCP Option 66 Override server. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- When set to Yes(1), it will override the configured provision path and method -->
+<!-- Number: 0, 1 -->
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+
+<!-- DHCP Option 120 Override SIP Server.0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}{/if}
+
+<!-- 3CX Auto Provision. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1414>1</P1414>
+
+<!-- Automatic Upgrade. 0 - No, 1 - Check Every Day, 2 - Check Every Week, 3 - Check at a Period Time. Default value is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+{if isset($grandstream_auto_upgrade)}
+<P194>{$grandstream_auto_upgrade}</P194>
+{else}
+<P194>0</P194>
+{/if}
+
+<!-- Automatic Upgrade Check Interval (m). Minimum 60 minutes. Default value is 10080 (7 days) -->
+<!-- Number: 60 - 5256000 -->
+<P193>10080</P193>
+
+<!-- Hour of the day (0-23) -->
+<!-- Number: 0 - 23 -->
+<P285>1</P285>
+
+<!-- Day of the week (0-6) -->
+<!-- Number: 0 - 6 -->
+<P286>1</P286>
+
+<!-- Automatic Upgrade Rule. Default value is 0 -->
+<!-- 0 - Always Check at Bootup -->
+<!-- 1 - When F/W pre/suffix changes -->
+<!-- 2 - Skip the Firmware Check -->
+<!-- Number: 0, 1, 2 -->
+<P238>0</P238>
+
+<!-- Auto Reboot to Upgrade Without Prompt. 0 - No, 1 - Yes. Default value is 1 -->
+<!-- Number: 0, 1 -->
+<P1549>1</P1549>
+
+<!-- Authenticate Conf File. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P240>0</P240>
+
+<!-- Maintenance - Syslog-->
+
+
+<!-- Syslog Server. Name of the server -->
+<P207>{$grandstream_syslog_server}</P207>
+
+<!-- Syslog Level -->
+<!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR. Default value is 0 -->
+<!-- Number: 0, 1, 2, 3, 4 -->
+{if isset($grandstream_syslog_level)}
+<P208>{$grandstream_syslog_level}</P208>
+{else}
+<P208>0</P208>
+{/if}
+
+<!-- Send SIP Log. 0 - No, 1 - Yes. Default value is 0 -->
+{if isset($grandstream_send_sip_log)}
+<P1387>{$grandstream_send_sip_log}</P1387>
+{else}
+<P1387>0</P1387>
+{/if}
+
+<!-- Maintenance - Language-->
+
+
+<!-- Language. Configure the language to be displayed on LCD -->
+<!-- Note: for some languages that have 2 codes avaiable, both are working -->
+<!-- ca_ES - Catala -->
+<!-- cs_CZ - Ce?tina -->
+<!-- da_DK - Dansk -->
+<!-- de_DE - Deutsch -->
+<!-- en_GB - English (United Kingdom) -->
+<!-- en_US - English (United States), en - English (United States) -->
+<!-- es_ES - Espanol (Espana) -->
+<!-- es_US - Espanol (Estados Unidos) -->
+<!-- fr_FR - Francais, fr - Francais -->
+<!-- iw_IL - Hebrew -->
+<!-- hr_HR - Hrvatski -->
+<!-- in_ID - Indonesian -->
+<!-- it_IT - Italiano, or it - Italiano -->
+<!-- lv_LV - Latvie?u -->
+<!-- lt_LT - Lietuviu -->
+<!-- hu_HU - Magyar, or hu - Magyar -->
+<!-- nl_NL - Nederlands, or nld - Nederlands -->
+<!-- nb_NO - Norsk bokmal -->
+<!-- pl_PL - Polski, or pl - Polski -->
+<!-- pt_BR - Portugues (Brasil) -->
+<!-- pt_PT - Portugues (Portugal) -->
+<!-- ro_RO - Romana -->
+<!-- rm_CH - Romansh -->
+<!-- sk_SK - Slovencina -->
+<!-- sl_SI - Sloven?cina -->
+<!-- fi_FI - Suomi, or fi -->
+<!-- sv_SE - Svenska, or sv - Svenska -->
+<!-- tl_PH - Tagalog -->
+<!-- vi_VN - Tieng Viet -->
+<!-- tr_TR - Turkce, or tr - Turkce -->
+<!-- el_GR - Greek -->
+<!-- bg_BG - Bulgarian -->
+<!-- ru_RU - Russian, or ru - Russian -->
+<!-- sr_RS - Serbian -->
+<!-- uk_UA - Ukrainian -->
+<!-- ko_KR - Korean, or kr - Korean -->
+<!-- zh_TW - Traditional Chinese, or zh-tw - Traditional Chinese -->
+<!-- zh_CN - Simplified Chinese, or zh - Simplified Chinese -->
+<!-- ja_JP - Japanese, or jp - Japanese -->
+
+<!-- P1362 = en -->
+
+<!-- Maintenance - TR-069 -->
+
+<!-- Enable TR-069. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1409>0</P1409>
+
+<!-- ACS URL -->
+<P4503></P4503>
+
+<!-- ACS Username -->
+<P4504></P4504>
+
+<!-- ACS Password -->
+<P4505></P4505>
+
+<!-- Periodic Inform Enable. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P4506>0</P4506>
+
+<!-- Periodic Inform Interval (s). Default value is 86400 -->
+<!-- Number: 1 - 4294967295 -->
+<P4507>86400</P4507>
+
+<!-- Connection Request Username -->
+<P4511></P4511>
+
+<!-- Connection Request Password -->
+<P4512></P4512>
+
+<!-- Connection Request Port -->
+<P4518></P4518>
+
+<!-- CPE Cert File -->
+<P8220></P8220>
+
+<!-- CPE Cert Key -->
+<P8221></P8221>
+
+<!-- Maintenance - Contacts/Phonebook Download -->
+
+
+<!-- Clear The Old List. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1435>0</P1435>
+
+<!-- Replace Duplicate Items. 0 - No, 1 - Yes. Default value is 0 -->
+<!-- Number: 0, 1 -->
+<P1436>0</P1436>
+
+<!-- Phonebook XML Download Mode. 0 - OFF, 1 - TFTP, 2 - HTTP. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+<P330>0</P330>
+
+<!-- Phonebook XML File Encoding. Default value is UTF-8 -->
+<!-- Number: UTF-8, GBK -->
+<P1681>UTF-8</P1681>
+
+<!-- Phonebook XML Server Path. It MUST be in the host/path format -->
+<!-- For example: directory.grandstream.com/engineering -->
+<!-- String -->
+{if isset($contact_grandstream)}
+<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{else}
+<P331></P331>
+{/if}
+
+<!-- Phonebook Download Interval (in minutes). Default is 0 for disabled -->
+<!-- Number: 0, 120, 240, 360, 480, 720 -->
+<P332>0</P332>
+
+<!-- Maintenance - LDAP Phonebook-->
+
+<!-- LDAP Directory -->
+<!-- LDAP Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
+<!-- String -->
+<P8020>{$grandstream_ldap_server}</P8020>
+
+<!-- LDAP Server Port -->
+<!-- Number: 1 - 65535 -->
+<P8021>389</P8021>
+
+<!-- Base. The LDAP search base refers to the location in the directory where the search is requested to begin -->
+<!-- Example 1: dc=grandstream,dc=com -->
+<!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
+<!-- String -->
+<P8022>{$grandstream_ldap_base_dn}</P8022>
+
+<!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
+<!-- String -->
+<P8023>{$ldap_username}</P8023>
+
+<!-- Password. The bind "Password" for querying LDAP servers. And the field can be left blank if the LDAP server allows anonymous binds -->
+<!-- String -->
+<P8024>{$ldap_password}</P8024>
+
+<!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated name attributes -->
+<!-- String -->
+<P8028>{$grandstream_ldap_name_attr}</P8028>
+
+<!-- LDAP Number Attributes. This setting specifies the "number" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated number attributes -->
+<!-- String -->
+<P8029>{$grandstream_ldap_number_attr}</P8029>
+
+<!-- LDAP Mail Attributes. This setting specifies the "mail" attributes of each record which are returned in the LDAP search result -->
+<!-- The setting allows the users to configure multiple space separated mail attributes -->
+<!-- String -->
+<P8038>{$grandstream_ldap_mail_attr}</P8038>
+
+<!-- LDAP Name Filter -->
+<!-- LDAP name filter is the filter used for name look ups. Please refer to usermanual for examples -->
+<!-- String -->
+<P8025>{$grandstream_ldap_number_filter}</P8025>
+
+<!-- LDAP Number Filter -->
+<!-- LDAP name filter is the filter used for number look ups. Please refer to usermanual for examples -->
+<!-- String -->
+<P8026>{$grandstream_ldap_name_filter}</P8026>
+
+<!-- LDAP Mail Filter -->
+<!-- LDAP mail filter is the filter used for mail look ups. Please refer to usermanual for examples -->
+<!-- String -->
+<P8039>{$grandstream_ldap_mail_filter}</P8039>
+
+<!-- LDAP Display Name. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
+<!-- String -->
+<P8030></P8030>
+
+<!-- Max Hits. The setting specifies the maximum number of results to be returned by the LDAP server -->
+<!-- If the value is set to 0, server will return all search results. Default is 50 -->
+<!-- Number: 0 - 32000 -->
+<P8031>50</P8031>
+
+<!-- Search Timeout (in seconds). Default is 30 -->
+<!-- The setting specifies how long the server should process the request and client waits for server to return -->
+<!-- Number: 0 - 180 -->
+<P8032>30</P8032>
+
+<!-- LDAP Lookup Dial For Outgoing Calls. 0 - No, 1 - Yes. Default is 0 -->
+<P8034>0</P8034>
+
+<!-- LDAP Lookup For Incoming calls. 0 - No, 1 - Yes. Default is 0 -->
+<P8035>0</P8035>
+
+
+<!--Maintenance - Device Manager -->
+
+<!-- Contact Max Storage. Default is 1000 -->
+<!-- Number: 10 - 10000 -->
+<P1688>1000</P1688>
+
+<!-- Call History Max Storage. Default is 500 -->
+<!-- Number: 10 - 10000 -->
+<P1689>500</P1689>
+
+<!-- Message Max Storage. Default is 1000 -->
+<!-- Number: 10 - 10000 -->
+<P1690>1000</P1690>
+
+<!-- Disable Missed Call Backlight. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P351>0</P351>
+
+<!-- Disable Missed Call Indicator. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P1691>0</P1691>
+
+<!-- Disable MWI Indicator. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P1692>0</P1692>
+
+<!-- Disable New Message Indicator. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P1693>0</P1693>
+
+<!-- Disable Contact or Message Full Indicator. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P1694>0</P1694>
+
+<!-- Disable Indicator When LCD is OFF. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<P1695>0</P1695>
+
+<!-- Headset TX Gain (dB). 0 - 0, 1 - -6, 2 - +6. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_headset_tx_gain)}
+<P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
+<P1301>0</P1301>
+{/if}
+
+<!-- Headset RX Gain (dB). 0 - 0, 1 - -6, 2 - +6. Default value is 0 -->
+<!-- Number: 0, 1, 2 -->
+{if isset($grandstream_headset_rx_gain)}
+<P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
+<P1302>0</P1302>
+{/if}
+
+<!-- Headset Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default value is 0 -->
+<!-- Number: 0, 1 -->
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
+
+    <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
+
+    <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
+
+<!-- Advanced Settings - MPK LCD Settings -->
+
+<!-- The MPKs in this section are for the MPK APP installed on GXP2200 -->
+
+<!-- 130 MPKs can be configured via MPK APP -->
+
+<!-- The P Values for the MPK in GXP2200EXT are assigned separately -->
+
+
+<!-- MPK 1 -->
+
+<!-- Key Mode -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P323>0</P323>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P301>0</P301>
+
+<!-- Name -->
+<!-- String -->
+<P302></P302>
+
+<!-- User ID -->
+<!-- String -->
+<P303></P303>
+
+
+<!-- MPK 2 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P324>0</P324>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P304>0</P304>
+
+<!-- Name -->
+<!-- String -->
+<P305></P305>
+
+<!-- User ID -->
+<!-- String -->
+<P306></P306>
+
+
+<!-- MPK 3 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P325>0</P325>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P307>0</P307>
+
+<!-- Name -->
+<!-- String -->
+<P308></P308>
+
+<!-- User ID -->
+<!-- String -->
+<P309></P309>
+
+<!-- MPK 4 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P326>0</P326>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P310>0</P310>
+
+<!-- Name -->
+<!-- String -->
+<P311></P311>
+
+
+<!-- User ID -->
+<!-- String -->
+<P312></P312>
+
+<!-- MPK 5 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P327>0</P327>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P313>0</P313>
+
+<!-- Name -->
+<!-- String -->
+<P314></P314>
+
+<!-- User ID -->
+<!-- String -->
+<P315></P315>
+
+<!-- MPK 6 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P328>0</P328>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P316>0</P316>
+
+<!-- Name -->
+<!-- String -->
+<P317></P317>
+
+<!-- User ID -->
+<!-- String -->
+<P318></P318>
+
+MPK 7
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P329>0</P329>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P319>0</P319>
+
+<!--Name -->
+<!-- String -->
+<P320></P320>
+
+<!-- User ID -->
+<!-- String -->
+<P321></P321>
+
+<!-- MPK 8 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P353>0</P353>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P354>0</P354>
+
+<!-- Name -->
+<!-- String -->
+<P355></P355>
+
+<!-- User ID -->
+<!-- String -->
+<P356></P356>
+
+<!-- MPK 9 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P357>0</P357>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P358>0</P358>
+
+<!-- Name -->
+<!-- String -->
+<P359></P359>
+
+<!-- User ID -->
+<!-- String -->
+<P360></P360>
+
+<!-- MPK 10 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P361>0</P361>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P362>0</P362>
+
+<!-- Name -->
+<!-- String -->
+<P363></P363>
+
+<!-- User ID -->
+<!-- String -->
+<P364></P364>
+
+<!-- MPK 11 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P365></P365>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P366>0</P366>
+
+<!-- Name -->
+<!-- String -->
+<P367></P367>
+
+<!-- User ID -->
+<!-- String -->
+<P368></P368>
+
+<!-- MPK 12 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P369>0</P369>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P370>0</P370>
+
+<!-- Name -->
+<!-- String -->
+<P371></P371>
+
+<!-- User ID -->
+<!-- String -->
+<P372></P372>
+
+<!-- MPK 13 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P373>0</P373>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P374>0</P374>
+
+<!-- Name -->
+<!-- String -->
+<P375></P375>
+
+<!-- User ID -->
+<!-- String -->
+<P376></P376>
+
+<!-- MPK 14 -->
+
+<!--Key Mode. -->
+<!--0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P377>0</P377>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P378>0</P378>
+
+<!-- Name -->
+<!-- String -->
+<P379></P379>
+
+<!-- User ID -->
+<!-- String -->
+<P380></P380>
+
+<!-- MPK 15 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P381>0</P381>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P382>0</P382>
+
+<!-- Name -->
+<!-- String -->
+<P383></P383>
+
+<!-- User ID -->
+<!-- String -->
+<P384></P384>
+
+<!-- MPK 16 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P385>0</P385>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P386>0</P386>
+
+<!-- Name -->
+<!-- String -->
+<P387></P387>
+
+<!-- User ID -->
+<!-- String -->
+<P388></P388>
+
+<!-- MPK 17 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P389>0</P389>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P390>0</P390>
+
+<!-- Name -->
+<!-- String -->
+<P391></P391>
+
+<!-- User ID -->
+<!-- String -->
+<P392></P392>
+
+<!-- MPK 18 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P393>0</P393>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P394>0</P394>
+
+<!-- Name -->
+<!-- String -->
+<P395></P395>
+
+<!-- User ID -->
+<!-- String -->
+<P396></P396>
+
+<!-- MPK 19 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6001>0</P6001>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6201>0</P6201>
+
+<!-- Name -->
+<!-- String -->
+<P6401></P6401>
+
+<!-- UserID -->
+<!-- String -->
+<P6601></P6601>
+
+<!-- MPK 20 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6002>0</P6002>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6202>0</P6202>
+
+<!-- Name -->
+<!-- String -->
+<P6402></P6402>
+
+<!-- UserID -->
+<!-- String -->
+<P6602></P6602>
+
+<!-- MPK 21 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6003>0</P6003>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6203>0</P6203>
+
+<!-- Name -->
+<!-- String -->
+<P6403></P6403>
+
+<!-- UserID -->
+<!-- String -->
+<P6603></P6603>
+
+<!-- MPK 22 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6004>0</P6004>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6204>0</P6204>
+
+<!-- Name -->
+<!-- String -->
+<P6404></P6404>
+
+<!-- UserID -->
+<!-- String -->
+<P6604></P6604>
+
+<!-- MPK 23 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6005>0</P6005>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6205>0</P6205>
+
+<!-- Name -->
+<!-- String -->
+<P6405></P6405>
+
+<!-- UserID -->
+<!-- String -->
+<P6605></P6605>
+
+<!-- MPK 24 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6006>0</P6006>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6206>0</P6206>
+
+<!-- Name -->
+<!-- String -->
+<P6406></P6406>
+
+<!-- UserID -->
+<!-- String -->
+<P6606></P6606>
+
+<!-- MPK 25 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6007>0</P6007>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6207>0</P6207>
+
+<!-- Name -->
+<!-- String -->
+<P6407></P6407>
+
+<!-- UserID -->
+<!-- String -->
+<P6607></P6607>
+
+<!-- MPK 26 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6008>0</P6008>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6208>0</P6208>
+
+<!-- Name -->
+<!-- String -->
+<P6408></P6408>
+
+<!-- UserID -->
+<!-- String -->
+<P6608></P6608>
+
+<!-- MPK 27 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6009>0</P6009>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!--Number: 0 - 5 -->
+<P6209>0</P6209>
+
+<!-- Name -->
+<!-- String -->
+<P6409></P6409>
+
+<!-- UserID -->
+<!-- String -->
+<P6609></P6609>
+
+<!-- MPK 28 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6010>0</P6010>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6210>0</P6210>
+
+<!-- Name -->
+<!-- String -->
+<P6410></P6410>
+
+<!-- UserID -->
+<!-- String -->
+<P6610></P6610>
+
+<!-- MPK 29 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6011>0</P6011>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6211>0</P6211>
+
+<!-- Name -->
+<!-- String -->
+<P6411></P6411>
+
+<!-- UserID -->
+<!-- String -->
+<P6611></P6611>
+
+<!-- MPK 30 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6012>0</P6012>
+
+<!--Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6212>0</P6212>
+
+<!-- Name -->
+<!-- String -->
+<P6412></P6412>
+
+<!-- UserID -->
+<!-- String -->
+<P6612></P6612>
+
+<!-- MPK 31 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6013>0</P6013>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6213>0</P6213>
+
+<!-- Name -->
+<!-- String -->
+<P6413></P6413>
+
+<!-- UserID -->
+<!-- String -->
+<P6613></P6613>
+
+<!-- MPK 32 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6014>0</P6014>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6214>0</P6214>
+
+<!-- Name -->
+<!-- String -->
+<P6414></P6414>
+
+<!-- UserID -->
+<!-- String -->
+<P6614></P6614>
+
+<!-- MPK 33 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6015>0</P6015>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6215>0</P6215>
+
+<!-- Name -->
+<!-- String -->
+<P6415></P6415>
+
+<!-- UserID -->
+<!-- String -->
+<P6615></P6615>
+
+<!-- MPK 34 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6016>0</P6016>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6216>0</P6216>
+
+<!-- Name -->
+<!-- String -->
+<P6416></P6416>
+
+<!-- UserID -->
+<!-- String -->
+<P6616></P6616>
+
+<!-- MPK 35 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6017>0</P6017>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6217>0</P6217>
+
+<!-- Name -->
+<!-- String -->
+<P6417></P6417>
+
+<!-- UserID -->
+<!-- String -->
+<P6617></P6617>
+
+<!-- MPK 36 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6018>0</P6018>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!--Number: 0 - 5 -->
+<P6218>0</P6218>
+
+<!-- Name -->
+<!-- String -->
+<P6418></P6418>
+
+<!-- UserID -->
+<!-- String -->
+<P6618></P6618>
+
+<!-- MPK 37 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6019>0</P6019>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6219>0</P6219>
+
+<!-- Name -->
+<!-- String -->
+<P6419></P6419>
+
+<!-- UserID -->
+<!-- String -->
+<P6619></P6619>
+
+<!-- MPK 38 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6020>0</P6020>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6220>0</P6220>
+
+<!-- Name -->
+<!-- String -->
+<P6420></P6420>
+
+<!-- UserID -->
+<!-- String -->
+<P6620></P6620>
+
+<!-- MPK 39 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6021>0</P6021>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6221>0</P6221>
+
+<!-- Name -->
+<!-- String -->
+<P6421></P6421>
+
+<!-- UserID -->
+<!-- String -->
+<P6621></P6621>
+
+<!-- MPK 40 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6022>0</P6022>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 Number: 0 - 5 -->
+<P6222>0</P6222>
+
+<!-- Name -->
+<!-- String -->
+<P6422></P6422>
+
+<!-- UserID -->
+<!-- String -->
+<P6622></P6622>
+
+<!-- MPK 41 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6023>0</P6023>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6223>0</P6223>
+
+<!-- Name -->
+<!-- String -->
+<P6423></P6423>
+
+<!-- UserID -->
+<!-- String -->
+<P6623></P6623>
+
+<!-- MPK 42 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6024>0</P6024>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6224>0</P6224>
+
+<!-- Name -->
+<!-- String -->
+<P6424></P6424>
+
+<!-- UserID -->
+<!-- String -->
+<P6624></P6624>
+
+<!-- MPK 43 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6025>0</P6025>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6225>0</P6225>
+
+<!-- Name -->
+<!-- String -->
+<P6425></P6425>
+
+<!-- UserID -->
+<!-- String -->
+<P6625></P6625>
+
+<!-- MPK 44 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6026>0</P6026>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6226>0</P6226>
+
+<!-- Name -->
+<!-- String -->
+<P6426></P6426>
+
+<!-- UserID -->
+<!-- String -->
+<P6626></P6626>
+
+<!-- MPK 45 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6027>0</P6027>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6227>0</P6227>
+
+<!-- Name -->
+<!-- String -->
+<P6427></P6427>
+
+<!-- UserID -->
+<!-- String -->
+<P6627></P6627>
+
+<!-- MPK 46 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6028>0</P6028>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6228>0</P6228>
+
+<!-- Name -->
+<!-- String -->
+<P6428></P6428>
+
+<!-- UserID -->
+<!-- String -->
+<P6628></P6628>
+
+<!-- MPK 47 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6029>0</P6029>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6229>0</P6229>
+
+<!-- Name -->
+<!-- String -->
+<P6429></P6429>
+
+<!-- UserID -->
+<!-- String -->
+<P6629></P6629>
+
+<!-- MPK 48 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6030>0</P6030>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6230>0</P6230>
+
+<!-- Name -->
+<!-- String -->
+<P6430></P6430>
+
+<!-- UserID -->
+<!-- String -->
+<P6630></P6630>
+
+<!-- MPK 49 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6031>0</P6031>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6231>0</P6231>
+
+<!-- Name -->
+<!-- String -->
+<P6431></P6431>
+
+<!-- UserID -->
+<!-- String -->
+<P6631></P6631>
+
+<!-- MPK 50 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6032>0</P6032>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6232>0</P6232>
+
+<!-- Name -->
+<!-- String -->
+<P6432></P6432>
+
+<!-- UserID -->
+<!-- String -->
+<P6632></P6632>
+
+<!-- MPK 51 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6033>0</P6033>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6233>0</P6233>
+
+<!-- Name -->
+<!-- String -->
+<P6433></P6433>
+
+<!--UserID -->
+<!-- String -->
+<P6633></P6633>
+
+<!-- MPK 52 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6034>0</P6034>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6234>0</P6234>
+
+<!-- Name -->
+<!-- String -->
+<P6434></P6434>
+
+<!-- UserID -->
+<!-- String -->
+<P6634></P6634>
+
+<!-- MPK 53 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6035>0</P6035>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6235>0</P6235>
+
+<!-- Name -->
+<!-- String -->
+<P6435></P6435>
+
+<!-- UserID -->
+<!-- String -->
+<P6635></P6635>
+
+<!-- MPK 54 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6036>0</P6036>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6236>0</P6236>
+
+<!-- Name -->
+<!-- String -->
+<P6436></P6436>
+
+<!-- UserID -->
+<!-- String -->
+<P6636></P6636>
+
+<!-- MPK 55 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6037>0</P6037>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6237>0</P6237>
+
+<!-- Name -->
+<!-- String -->
+<P6437></P6437>
+
+<!-- UserID -->
+<!-- String -->
+<P6637></P6637>
+
+<!-- MPK 56 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6038>0</P6038>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6238>0</P6238>
+
+<!-- Name -->
+<!-- String -->
+<P6438></P6438>
+
+<!-- UserID -->
+<!-- String -->
+<P6638></P6638>
+
+<!-- MPK 57 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6039>0</P6039>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6239>0</P6239>
+
+<!-- Name -->
+<!-- String -->
+<P6439></P6439>
+
+<!-- UserID -->
+<!-- String -->
+<P6639></P6639>
+
+<!-- MPK 58 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6040>0</P6040>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6240>0</P6240>
+
+<!-- Name -->
+<!-- String -->
+<P6440></P6440>
+
+<!-- UserID -->
+<!-- String -->
+<P6640></P6640>
+
+<!-- MPK 59 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6041>0</P6041>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6241>0</P6241>
+
+<!-- Name -->
+<!-- String -->
+<P6441></P6441>
+
+<!-- UserID -->
+<!-- String -->
+<P6641></P6641>
+
+<!-- MPK 60 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6042>0</P6042>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6242>0</P6242>
+
+<!-- Name -->
+<!-- String -->
+<P6442></P6442>
+
+<!-- UserID -->
+<!-- String -->
+<P6642></P6642>
+
+<!-- MPK 61 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6043>0</P6043>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!--Number: 0 - 5 -->
+<P6243>0</P6243>
+
+<!-- Name -->
+<!-- String -->
+<P6443></P6443>
+
+<!-- UserID -->
+<!-- String -->
+<P6643></P6643>
+
+<!-- MPK 62 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6044>0</P6044>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6244>0</P6244>
+
+<!-- Name -->
+<!-- String -->
+<P6444></P6444>
+
+<!-- UserID -->
+<!-- String -->
+<P6644></P6644>
+
+<!-- MPK 63 -->
+<!--Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6045>0</P6045>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6245>0</P6245>
+
+<!-- Name -->
+<!-- String -->
+<P6445></P6445>
+
+<!-- UserID -->
+<!-- String -->
+<P6645></P6645>
+
+<!-- MPK 64 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6046>0</P6046>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6246>0</P6246>
+
+<!-- Name -->
+<!-- String -->
+<P6446></P6446>
+
+<!-- UserID -->
+<!-- String -->
+<P6646></P6646>
+
+<!-- MPK 65 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6047>0</P6047>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6247>0</P6247>
+
+<!-- Name -->
+<!-- String -->
+<P6447></P6447>
+
+<!-- UserID -->
+<!-- String -->
+<P6647></P6647>
+
+<!-- MPK 66 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6048>0</P6048>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6248>0</P6248>
+
+<!-- Name -->
+<!-- String -->
+<P6448></P6448>
+
+<!-- UserID -->
+<!-- String -->
+<P6648></P6648>
+
+<!-- MPK 67 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6049>0</P6049>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6249>0</P6249>
+
+<!-- Name -->
+<!-- String -->
+<P6449></P6449>
+
+<!-- UserID -->
+<!-- String -->
+<P6649></P6649>
+
+<!-- MPK 68 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6050>0</P6050>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6250>0</P6250>
+
+<!-- Name -->
+<!-- String -->
+<P6450></P6450>
+
+<!-- UserID -->
+<!-- String -->
+<P6650></P6650>
+
+
+<!-- MPK 69 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6051>0</P6051>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6251>0</P6251>
+
+<!-- Name -->
+<!-- String -->
+<P6451></P6451>
+
+<!-- UserID -->
+<!-- String -->
+<P6651></P6651>
+
+<!-- MPK 70 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6052>0</P6052>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6252>0</P6252>
+
+<!-- Name -->
+<!-- String -->
+<P6452></P6452>
+
+<!-- UserID -->
+<!-- String -->
+<P6652></P6652>
+
+<!-- MPK 71 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6053>0</P6053>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6253>0</P6253>
+
+<!-- Name -->
+<!-- String -->
+<P6453></P6453>
+
+<!-- UserID -->
+<!-- String -->
+<P6653></P6653>
+
+<!-- MPK 72 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6054>0</P6054>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6254>0</P6254>
+
+<!-- Name -->
+<!-- String -->
+<P6454></P6454>
+
+<!-- UserID -->
+<!-- String -->
+<P6654></P6654>
+
+<!-- MPK 73 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6055>0</P6055>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6255>0</P6255>
+
+<!-- Name -->
+<!-- String -->
+<P6455></P6455>
+
+<!-- UserID -->
+<!-- String -->
+<P6655></P6655>
+
+<!-- MPK 74 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6056>0</P6056>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6256>0</P6256>
+
+<!-- Name -->
+<!-- String -->
+<P6456></P6456>
+
+<!-- UserID -->
+<!-- String -->
+<P6656></P6656>
+
+<!-- MPK 75 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6057>0</P6057>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6257>0</P6257>
+
+<!-- Name -->
+<!-- String -->
+<P6457></P6457>
+
+<!-- UserID -->
+<!-- String -->
+<P6657></P6657>
+
+<!-- MPK 76 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6058>0</P6058>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6258>0</P6258>
+
+<!-- Name -->
+<!-- String -->
+<P6458></P6458>
+
+<!-- UserID -->
+<!-- String -->
+<P6658></P6658>
+
+<!-- MPK 77 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6059>0</P6059>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6259>0</P6259>
+
+<!-- Name -->
+<!-- String -->
+<P6459></P6459>
+
+<!-- UserID -->
+<!-- String -->
+<P6659></P6659>
+
+<!-- MPK 78 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6060>0</P6060>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6260>0</P6260>
+
+<!-- Name -->
+<!-- String -->
+<P6460></P6460>
+
+<!-- UserID -->
+<!-- String -->
+<P6660></P6660>
+
+<!-- MPK 79 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6061>0</P6061>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6261>0</P6261>
+
+<!-- Name -->
+<!-- String -->
+<P6461></P6461>
+
+<!-- UserID -->
+<!-- String -->
+<P6661></P6661>
+
+<!-- MPK 80 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6062>0</P6062>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6262>0</P6262>
+
+<!-- Name -->
+<!-- String -->
+<P6462></P6462>
+
+<!-- UserID -->
+<!-- String -->
+<P6662></P6662>
+
+<!-- MPK 81 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6063>0</P6063>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6263>0</P6263>
+
+<!-- Name -->
+<!-- String -->
+<P6463></P6463>
+
+<!-- UserID -->
+<!-- String -->
+<P6663></P6663>
+
+<!-- MPK 82 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6064>0</P6064>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6264>0</P6264>
+
+<!-- Name -->
+<!-- String -->
+<P6464></P6464>
+
+<!-- UserID -->
+<!-- String -->
+<P6664></P6664>
+
+<!-- MPK 83 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6065>0</P6065>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6265>0</P6265>
+
+<!-- Name -->
+<!-- String -->
+<P6465></P6465>
+
+<!-- UserID -->
+<!-- String -->
+<P6665></P6665>
+
+<!-- MPK 84 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6066>0</P6066>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6266>0</P6266>
+
+<!-- Name -->
+<!-- String -->
+<P6466></P6466>
+
+<!-- UserID -->
+<!-- String -->
+<P6666></P6666>
+
+<!-- MPK 85 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6067>0</P6067>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6267>0</P6267>
+
+<!-- Name -->
+<!-- String -->
+<P6467></P6467>
+
+<!-- UserID -->
+<!-- String -->
+<P6667></P6667>
+
+<!-- MPK 86 -->
+<!--Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6068>0</P6068>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6268>0</P6268>
+
+<!-- Name -->
+<!-- String -->
+<P6468></P6468>
+
+<!-- UserID -->
+<!-- String -->
+<P6668></P6668>
+
+<!-- MPK 87 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6069>0</P6069>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6269>0</P6269>
+
+<!-- Name -->
+<!-- String -->
+<P6469></P6469>
+
+<!-- UserID -->
+<!-- String -->
+<P6669></P6669>
+
+<!-- MPK 88 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6070>0</P6070>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6270>0</P6270>
+
+<!-- Name -->
+<!-- String -->
+<P6470></P6470>
+
+<!-- UserID -->
+<!-- String -->
+<P6670></P6670>
+
+<!-- MPK 89 -->
+
+<!--Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6071>0</P6071>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6271>0</P6271>
+
+<!-- Name -->
+<!-- String -->
+<P6471></P6471>
+
+<!-- UserID -->
+<!-- String -->
+<P6671></P6671>
+
+
+<!-- MPK 90 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6072>0</P6072>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6272>0</P6272>
+
+<!-- Name -->
+<!-- String -->
+<P6472></P6472>
+
+<!-- UserID -->
+<!-- String -->
+<P6672></P6672>
+
+<!-- MPK 91 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6073>0</P6073>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6273>0</P6273>
+
+<!-- Name -->
+<!-- String -->
+<P6473></P6473>
+
+<!-- UserID -->
+<!-- String -->
+<P6673></P6673>
+
+<!-- MPK 92 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6074>0</P6074>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6274>0</P6274>
+
+<!-- Name -->
+<!-- String -->
+<P6474></P6474>
+
+<!-- UserID -->
+<!-- String -->
+<P6674></P6674>
+
+<!-- MPK 93 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6075>0</P6075>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6275>0</P6275>
+
+<!-- Name -->
+<!-- String -->
+<P6475></P6475>
+
+<!-- UserID -->
+<!-- String -->
+<P6675></P6675>
+
+<!-- MPK 94 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6076>0</P6076>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!--Number: 0 - 5 -->
+<P6276>0</P6276>
+
+<!-- Name -->
+<!-- String -->
+<P6476></P6476>
+
+<!-- UserID -->
+<!-- String -->
+<P6676></P6676>
+
+<!-- MPK 95 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6077>0</P6077>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6277>0</P6277>
+
+<!-- Name -->
+<!-- String -->
+<P6477></P6477>
+
+<!-- UserID -->
+<!-- String -->
+<P6677></P6677>
+
+<!-- MPK 96 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6078>0</P6078>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6278>0</P6278>
+
+<!-- Name -->
+<!-- String -->
+<P6478></P6478>
+
+<!-- UserID -->
+<!-- String -->
+<P6678></P6678>
+
+<!-- MPK 97 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6079>0</P6079>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6279>0</P6279>
+
+<!-- Name -->
+<!-- String -->
+<P6479></P6479>
+
+<!-- UserID -->
+<!-- String -->
+<P6679></P6679>
+
+<!-- MPK 98 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6080>0</P6080>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6280>0</P6280>
+
+<!-- Name -->
+<!-- String -->
+<P6480></P6480>
+
+<!-- UserID -->
+<!-- String -->
+<P6680></P6680>
+
+<!-- MPK 99 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6081>0</P6081>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6281>0</P6281>
+
+<!-- Name -->
+<!-- String -->
+<P6481></P6481>
+
+<!-- UserID -->
+<!-- String -->
+<P6681></P6681>
+
+<!-- MPK 100 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6082>0</P6082>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6282>0</P6282>
+
+<!--Name -->
+<!-- String -->
+<P6482></P6482>
+
+<!-- UserID -->
+<!-- String -->
+<P6682></P6682>
+
+<!-- MPK 101 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6083>0</P6083>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6283>0</P6283>
+
+<!-- Name -->
+<!-- String -->
+<P6483></P6483>
+
+<!-- UserID -->
+<!-- String -->
+<P6683></P6683>
+
+<!-- MPK 102 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6084>0</P6084>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6284>0</P6284>
+
+<!-- Name -->
+<!-- String -->
+<P6484></P6484>
+
+<!-- UserID -->
+<!-- String -->
+<P6684></P6684>
+
+<!-- MPK 103 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6085>0</P6085>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6285>0</P6285>
+
+<!-- Name -->
+<!-- String -->
+<P6485></P6485>
+
+<!-- UserID -->
+<!-- String -->
+<P6685></P6685>
+
+<!-- MPK 104 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6086>0</P6086>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6286>0</P6286>
+
+<!-- Name -->
+<!-- String -->
+<P6486></P6486>
+
+<!-- UserID -->
+<!-- String -->
+<P6686></P6686>
+
+<!-- MPK 105 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6087>0</P6087>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6287>0</P6287>
+
+<!-- Name -->
+<!-- String -->
+<P6487></P6487>
+
+<!-- UserID -->
+<!-- String -->
+<P6687></P6687>
+
+<!-- MPK 106 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6088>0</P6088>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6288>0</P6288>
+
+<!-- Name -->
+<!-- String -->
+<P6488></P6488>
+
+<!-- UserID -->
+<!-- String -->
+<P6688></P6688>
+
+<!-- MPK 107 -->
+
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6089>0</P6089>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6289>0</P6289>
+
+<!-- Name -->
+<!-- String -->
+<P6489></P6489>
+
+<!-- UserID -->
+<!-- String -->
+<P6689></P6689>
+
+<!-- MPK 108 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6090>0</P6090>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6290>0</P6290>
+
+<!-- Name -->
+<!-- String -->
+<P6490></P6490>
+
+<!-- UserID -->
+<!-- String -->
+<P6690></P6690>
+
+<!-- MPK 109 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6091>0</P6091>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6291>0</P6291>
+
+<!-- Name -->
+<!-- String -->
+<P6491></P6491>
+
+<!-- UserID -->
+<!-- String -->
+<P6691></P6691>
+
+<!-- MPK 110 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6092>0</P6092>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6292>0</P6292>
+
+<!-- Name -->
+<!-- String -->
+<P6492></P6492>
+
+<!-- UserID -->
+<!-- String -->
+<P6692></P6692>
+
+<!-- MPK 111 -->
+<!--Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6093>0</P6093>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6293>0</P6293>
+
+<!-- Name -->
+<!-- String -->
+<P6493></P6493>
+
+<!-- UserID -->
+<!-- String -->
+<P6693></P6693>
+
+<!-- MPK 112 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6094>0</P6094>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6294>0</P6294>
+
+<!-- Name -->
+<!-- String -->
+<P6494></P6494>
+
+<!-- UserID -->
+<!-- String -->
+<P6694></P6694>
+
+<!-- MPK 113 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6095>0</P6095>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 Number: 0 - 5 -->
+<P6295>0</P6295>
+
+<!-- Name -->
+<!-- String -->
+<P6495></P6495>
+
+<!-- UserID -->
+<!-- String -->
+<P6695></P6695>
+
+<!-- MPK 114 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6096>0</P6096>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6296>0</P6296>
+
+<!-- Name -->
+<!-- String -->
+<P6496></P6496>
+
+<!-- UserID -->
+<!-- String -->
+<P6696></P6696>
+
+<!-- MPK 115 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6097>0</P6097>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6297>0</P6297>
+
+<!-- Name -->
+<!-- String -->
+<P6497></P6497>
+
+<!-- UserID -->
+<!-- String -->
+<P6697></P6697>
+
+<!-- MPK 116 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6098>0</P6098>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6298>0</P6298>
+
+<!-- vName -->
+<!-- String -->
+<P6498></P6498>
+
+<!-- UserID -->
+<!-- String -->
+<P6698></P6698>
+
+<!-- MPK 117 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6099>0</P6099>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6299>0</P6299>
+
+<!-- Name -->
+<!-- String -->
+<P6499></P6499>
+
+<!-- UserID -->
+<!-- String -->
+<P6699></P6699>
+
+<!-- MPK 118 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6100>0</P6100>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6300>0</P6300>
+
+<!-- Name -->
+<!-- String -->
+<P6500></P6500>
+
+<!-- UserID -->
+<!-- String -->
+<P6700></P6700>
+
+<!-- MPK 119 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6101>0</P6101>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6301>0</P6301>
+
+<!-- Name -->
+<!-- String -->
+<P6501></P6501>
+
+<!-- UserID -->
+<!-- String -->
+<P6701></P6701>
+
+<!-- MPK 120 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6102>0</P6102>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6302>0</P6302>
+
+<!-- Name -->
+<!-- String -->
+<P6502></P6502>
+
+<!-- UserID -->
+<!-- String -->
+<P6702></P6702>
+
+<!-- MPK 121 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6103>0</P6103>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6303>0</P6303>
+
+<!-- Name -->
+<!-- String -->
+<P6503></P6503>
+
+<!-- UserID -->
+<!-- String -->
+<P6703></P6703>
+
+<!-- MPK 122 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6104>0</P6104>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6304>0</P6304>
+
+<!-- Name -->
+<!-- String -->
+<P6504></P6504>
+
+<!-- UserID -->
+<!-- String -->
+<P6704></P6704>
+
+<!-- MPK 123 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6105>0</P6105>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6305>0</P6305>
+
+<!-- Name -->
+<!-- String -->
+<P6505></P6505>
+
+<!-- UserID -->
+<!-- String -->
+<P6705></P6705>
+
+<!-- MPK 124 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6106>0</P6106>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6306>0</P6306>
+
+<!-- Name -->
+<!-- String -->
+<P6506></P6506>
+
+<!-- UserID -->
+<!-- String -->
+<P6706></P6706>
+
+<!-- MPK 125 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6107>0</P6107>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6307>0</P6307>
+
+<!-- Name -->
+<!-- String -->
+<P6507></P6507>
+
+<!-- UserID -->
+<!-- String -->
+<P6707></P6707>
+
+<!-- MPK 126 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6108>0</P6108>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6308>0</P6308>
+
+<!-- Name -->
+<!-- String -->
+<P6508></P6508>
+
+<!-- UserID -->
+<!-- String -->
+<P6708></P6708>
+
+<!-- MPK 127 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6109>0</P6109>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6309>0</P6309>
+
+<!--Name -->
+<!-- String -->
+<P6509></P6509>
+
+<!-- UserID -->
+<!-- String -->
+<P6709></P6709>
+
+<!-- MPK 128 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6110>0</P6110>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6310>0</P6310>
+
+<!-- Name -->
+<!-- String -->
+<P6510></P6510>
+
+<!-- UserID -->
+<!-- String -->
+<P6710></P6710>
+
+<!-- MPK 129 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6111>0</P6111>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6311>0</P6311>
+
+<!-- Name -->
+<!-- String -->
+<P6511></P6511>
+
+<!-- UserID -->
+<!-- String -->
+<P6711></P6711>
+
+<!-- MPK 130 -->
+<!-- Key Mode. -->
+<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
+<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
+<P6112>0</P6112>
+
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+<!-- Number: 0 - 5 -->
+<P6312>0</P6312>
+
+<!-- Name -->
+<!-- String -->
+<P6512></P6512>
+
+<!-- UserID -->
+<!-- String -->
+<P6712></P6712>
+
+<!-- Advanced Settings - MPK EXT 1 Settings -->
+
+<!-- The MPKs in this section are for the GXP2200EXT 1 -->
+
+{assign var=key_types value=["speed dial"=>0, "blf"=>1, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"transfer"=>8,"call park"=>9,"intercom"=>10,"multicast paging"=>13,"call log"=>15]}
+{$start_id=23000}
+{for $exp=1 to 160}
+{$pid=$exp*5-5}
+<!-- EXT MPK {$exp} -->
+{if isset($keys.expansion.$exp.device_key_category) && isset($keys.expansion.$exp.device_key_type) && $keys.expansion.$exp.device_key_type|in_array:$key_types}
+<P{$start_id+$pid}>{$key_types[$keys.expansion.$exp.device_key_type]}</P{$start_id+$pid}>
+<P{$start_id+$pid+1}>{$keys.expansion.$exp.device_key_line}</P{$start_id+$pid+1}>
+<P{$start_id+$pid+2}>{$keys.expansion.$exp.device_key_label}</P{$start_id+$pid+2}>
+<P{$start_id+$pid+3}>{$keys.expansion.$exp.device_key_value}</P{$start_id+$pid+3}>
+{else}
+<P{$start_id+$pid}>0</P{$start_id+$pid}>
+<P{$start_id+$pid+1}>0</P{$start_id+$pid+1}>
+<P{$start_id+$pid+2}></P{$start_id+$pid+2}>
+<P{$start_id+$pid+3}></P{$start_id+$pid+3}>
+{/if}
+
+{/for}
+
+</config>
+</gs_provision>

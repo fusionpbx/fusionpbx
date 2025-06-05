@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\DeviceRepository;
 use Illuminate\Http\Request;
 
 class DeviceController extends Controller
 {
+    protected $deviceRepository;
+
+    public function __construct(DeviceRepository $deviceRepository)
+    {
+        $this->deviceRepository = $deviceRepository;
+    }
+
+
     public function index()
     {
         return view('pages.devices.index');
@@ -16,9 +25,12 @@ class DeviceController extends Controller
         return view('pages.devices.form');
     }
 
-    public function edit()
+    public function edit(string $uuid)
     {
-        return view('pages.devices.form');
+        $device = $this->deviceRepository->findByUuid($uuid);
+        $deviceUuid = $device->device_uuid;
+        
+        return view('pages.devices.form', compact('deviceUuid'));
     }
 
     

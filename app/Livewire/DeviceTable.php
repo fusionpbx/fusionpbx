@@ -25,11 +25,11 @@ class DeviceTable extends DataTableComponent
             ->setPerPageAccepted([10, 25, 50, 100])
             ->setPaginationEnabled();
 
-        // if ($canEdit) {
-        //     $tableConfig->setTableRowUrl(function ($row) use ($canEdit) {
-        //         return route('devices.edit', $row->device_uuid);
-        //     });
-        // }
+        if ($canEdit) {
+            $tableConfig->setTableRowUrl(function ($row) use ($canEdit) {
+                return route('devices.edit', $row->device_uuid);
+            });
+        }
 
         if(request('show_all')) {
             $this->show_all = true;

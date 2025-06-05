@@ -1,0 +1,11 @@
+<DIALTEMPLATE>
+<TEMPLATE MATCH="011*" Timeout="5" User="Phone"/> <!-- Local operator-->
+<TEMPLATE MATCH="1..." Timeout="0" User="Phone"/> <!-- 4 digits intra-office -->
+<TEMPLATE MATCH=".11" Timeout="0" User="Phone"/> <!-- Service numbers -->
+<TEMPLATE MATCH="1.........." Timeout="0" User="Phone"/> <!-- Long Distance -->
+<TEMPLATE MATCH="*" Timeout="2"/>             <!-- Anything else -->
+<TEMPLATE MATCH="972......." Timeout="0" User="Phone"/> <!-- 10 digits -->
+<TEMPLATE MATCH="214......." Timeout="0" User="Phone"/> <!-- 10 digits -->
+<TEMPLATE MATCH="469......." Timeout="0" User="Phone"/> <!-- 10 digits -->
+<TEMPLATE MATCH="817......." Timeout="0" User="Phone"/> <!-- 10 digits -->
+</DIALTEMPLATE>

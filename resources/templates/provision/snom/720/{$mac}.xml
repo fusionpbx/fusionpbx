@@ -1,0 +1,1924 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+<phone-settings e="2">
+<language perm="">English</language>
+<redirect_number perm=""></redirect_number>
+<redirect_busy_number perm=""></redirect_busy_number>
+<redirect_time_number perm=""></redirect_time_number>
+<redirect_time perm=""></redirect_time>
+<redirect_time_on_code perm=""></redirect_time_on_code>
+<redirect_time_off_code perm=""></redirect_time_off_code>
+<redirect_always_on_code perm=""></redirect_always_on_code>
+<redirect_always_off_code perm=""></redirect_always_off_code>
+<redirect_busy_on_code perm=""></redirect_busy_on_code>
+<redirect_busy_off_code perm=""></redirect_busy_off_code>
+<dnd_on_code perm=""></dnd_on_code>
+<dnd_off_code perm=""></dnd_off_code>
+<phone_type perm="">snom720</phone_type>
+<codec_tos perm="">160</codec_tos>
+<setting_server perm="RW">http://{$domain_name}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
+<pnp_config perm="">on</pnp_config>
+<dst perm="">3600 03.05.07 02:00:00 10.05.07 03:00:00</dst>
+<timezone perm="">{$snom_time_zone}</timezone>
+<contrast perm="">8</contrast>
+<sip_retry_t1 perm="">500</sip_retry_t1>
+<timer_support perm="">on</timer_support>
+<session_timer perm="">3600</session_timer>
+<network_id_port perm=""></network_id_port>
+<max_forwards perm="">70</max_forwards>
+<user_phone perm="">on</user_phone>
+<active_line perm="">1</active_line>
+<challenge_response perm="">on</challenge_response>
+<refer_brackets perm="">off</refer_brackets>
+<sip_proxy perm=""></sip_proxy>
+<register_http_contact perm="">off</register_http_contact>
+<filter_registrar perm="">on</filter_registrar>
+<xml_notify perm="">on</xml_notify>
+<challenge_reboot perm="">off</challenge_reboot>
+<challenge_checksync perm="">off</challenge_checksync>
+<action_received_subscr_notify_url perm=""></action_received_subscr_notify_url>
+<action_dnd_on_url perm=""></action_dnd_on_url>
+<action_dnd_off_url perm=""></action_dnd_off_url>
+<action_redirection_on_url perm=""></action_redirection_on_url>
+<action_redirection_off_url perm=""></action_redirection_off_url>
+<action_incoming_url perm=""></action_incoming_url>
+<action_outgoing_url perm=""></action_outgoing_url>
+<action_setup_url perm=""></action_setup_url>
+<action_offhook_url perm=""></action_offhook_url>
+<action_onhook_url perm=""></action_onhook_url>
+<action_missed_url perm=""></action_missed_url>
+<action_connected_url perm=""></action_connected_url>
+<action_disconnected_url perm=""></action_disconnected_url>
+<aoc_amount_display perm="">off</aoc_amount_display>
+<aoc_pulse_currency perm="">$</aoc_pulse_currency>
+<aoc_cost_pulse perm="">1</aoc_cost_pulse>
+<rtp_port_start perm="">49152</rtp_port_start>
+<rtp_port_end perm="">65534</rtp_port_end>
+<preselection_nr perm=""></preselection_nr>
+<auto_dial perm="">off</auto_dial>
+<privacy_in perm="">off</privacy_in>
+<privacy_out perm="">off</privacy_out>
+{if isset($admin_password) }
+<http_user perm="">{$admin_name}</http_user>
+<http_pass perm="">{$admin_password}</http_pass>
+{/if}
+<web_logout_timer>5</web_logout_timer>
+{if isset($admin_password) }
+<admin_mode_login perm="">{$admin_name}</admin_mode_login>
+<admin_mode_password perm="">{$admin_password}</admin_mode_password>
+<admin_mode_password_confirm perm="">{$admin_password}</admin_mode_password_confirm>
+{else}
+<admin_mode_password>0000</admin_mode_password>
+<admin_mode_password_confirm>0000</admin_mode_password_confirm>
+{/if}
+<admin_mode perm="">on</admin_mode>
+<tone_scheme perm="">GBR</tone_scheme>
+<vol_headset perm="">7</vol_headset>
+<vol_speaker perm="">8</vol_speaker>
+<vol_ringer perm="">10</vol_ringer>
+<vol_handset perm="">13</vol_handset>
+<vol_speaker_mic perm="">7</vol_speaker_mic>
+<vol_handset_mic perm="">7</vol_handset_mic>
+<vol_headset_mic perm="">7</vol_headset_mic>
+<log_level perm="">5</log_level>
+<auto_connect_indication perm="">on</auto_connect_indication>
+<logon_wizard perm="">on</logon_wizard>
+<guess_number perm="">off</guess_number>
+<guess_start_length perm="">4</guess_start_length>
+<use_proxy_number_guessing perm="">off</use_proxy_number_guessing>
+<friends_ring_sound perm="">Ringer1</friends_ring_sound>
+<family_ring_sound perm="">Ringer1</family_ring_sound>
+<colleagues_ring_sound perm="">Ringer1</colleagues_ring_sound>
+<work_ring_sound perm="">Ringer1</work_ring_sound>
+<vip_ring_sound perm="">Ringer1</vip_ring_sound>
+<alert_internal_ring_text perm="">alert-internal</alert_internal_ring_text>
+<alert_external_ring_text perm="">alert-external</alert_external_ring_text>
+<alert_group_ring_text perm="">alert-group</alert_group_ring_text>
+<alert_internal_ring_sound perm="">Ringer1</alert_internal_ring_sound>
+<alert_external_ring_sound perm="">Ringer1</alert_external_ring_sound>
+<alert_group_ring_sound perm="">Ringer1</alert_group_ring_sound>
+<publish_presence perm="">off</publish_presence>
+<edit_alpha_mode perm="">false</edit_alpha_mode>
+<display_method perm="">display_name_number</display_method>
+<call_waiting perm="">on</call_waiting>
+<cw_dialtone perm="">on</cw_dialtone>
+<disable_speaker perm="">off</disable_speaker>
+<no_dnd perm="">off</no_dnd>
+<dirty_host_ttl perm=""></dirty_host_ttl>
+<headset_device perm="">headset_rj</headset_device>
+<update_policy perm="RW">settings_only</update_policy>
+<conf_hangup perm="">off</conf_hangup>
+<enum_suffix perm="">e164.arpa</enum_suffix>
+<mwi_notification perm="">silent</mwi_notification>
+<vlan_id perm=""></vlan_id>
+<vlan_qos perm=""></vlan_qos>
+<block_url_dialing perm="">off</block_url_dialing>
+<release_sound perm="">off</release_sound>
+<headset_rings_once perm="">off</headset_rings_once>
+<transfer_on_hangup perm="">on</transfer_on_hangup>
+<ethernet_replug perm="">reregister</ethernet_replug>
+<mwi_dialtone perm="">stutter</mwi_dialtone>
+<support_idna perm="">off</support_idna>
+<custom_melody_url perm=""></custom_melody_url>
+<ringer_headset_device perm="">speaker</ringer_headset_device>
+<dtmf_speaker_phone perm="">on</dtmf_speaker_phone>
+<presence_timeout perm="">15</presence_timeout>
+<require_prack perm="">on</require_prack>
+<offer_gruu perm="">on</offer_gruu>
+<offer_mpo perm="">off</offer_mpo>
+<firmware_status perm="RW">http://snom.provu.co.uk/firmware.py?version=8.7.3.7</firmware_status>
+<firmware_interval perm=""></firmware_interval>
+<firmware perm="RW"></firmware>
+<update_filename perm=""></update_filename>
+<update_host_f perm="RW"></update_host_f>
+<web_language perm="">English</web_language>
+<call_completion perm="">off</call_completion>
+<use_backlight perm="">on</use_backlight>
+<reset_settings perm=""></reset_settings>
+<date_us_format perm="">off</date_us_format>
+<time_24_format perm="">on</time_24_format>
+<call_join_xfer perm="">on</call_join_xfer>
+<alert_info_playback perm="">on</alert_info_playback>
+<ringing_time perm="">120</ringing_time>
+<syslog_server perm=""></syslog_server>
+<screen_saver_timeout perm="">60</screen_saver_timeout>
+<with_flash perm="">off</with_flash>
+<snmp_trusted_addresses perm=""></snmp_trusted_addresses>
+<snmp_port perm="">161</snmp_port>
+<multicast_listen perm="">off</multicast_listen>
+<short_form perm="">off</short_form>
+<audio_device_indicator perm="">on</audio_device_indicator>
+<holding_reminder perm="">on</holding_reminder>
+<ethernet_detect perm="">on</ethernet_detect>
+<support_rtcp perm="">on</support_rtcp>
+<partial_lookup perm="">off</partial_lookup>
+<signaling_tos perm="">160</signaling_tos>
+<eth_net perm="">auto</eth_net>
+<eth_pc perm="">auto</eth_pc>
+<answer_after_policy perm="">off</answer_after_policy>
+<ldap_server perm=""></ldap_server>
+<ldap_port perm=""></ldap_port>
+<ldap_base perm=""></ldap_base>
+<ldap_username perm=""></ldap_username>
+<ldap_password perm=""></ldap_password>
+<ldap_max_hits perm="">50</ldap_max_hits>
+<keyboard_lock perm="">off</keyboard_lock>
+<keyboard_lock_pw perm=""></keyboard_lock_pw>
+<keyboard_lock_timeout perm=""></keyboard_lock_timeout>
+<tcp_listen perm="">off</tcp_listen>
+<peer_to_peer_cc perm="">on</peer_to_peer_cc>
+<auto_logoff_time perm=""></auto_logoff_time>
+<text_softkey perm="">on</text_softkey>
+<ringer_animation perm="">off</ringer_animation>
+<speaker_dialer perm="">on</speaker_dialer>
+<idle_status_btn_index perm="">4</idle_status_btn_index>
+<idle_ok_key_action perm="">keyevent F_REDIAL</idle_ok_key_action>
+<idle_cancel_key_action perm="">keyevent none</idle_cancel_key_action>
+<idle_up_key_action perm="">keyevent F_PREV_ID</idle_up_key_action>
+<idle_down_key_action perm="">keyevent F_NEXT_ID</idle_down_key_action>
+<idle_left_key_action perm="">keyevent F_ACCEPTED_LIST</idle_left_key_action>
+<idle_right_key_action perm="">keyevent F_MISSED_LIST</idle_right_key_action>
+<dkey_retrieve perm="">keyevent F_RETRIEVE</dkey_retrieve>
+<dkey_dnd perm="">keyevent F_DND</dkey_dnd>
+<dkey_directory perm="">keyevent F_ADR_BOOK</dkey_directory>
+<dkey_menu perm="">keyevent F_SETTINGS</dkey_menu>
+<dkey_transfer perm="">keyevent F_TRANSFER</dkey_transfer>
+<dkey_hold perm="">keyevent F_HOLD</dkey_hold>
+<gui_fkey1 perm="">keyevent F_ADR_BOOK</gui_fkey1>
+<gui_fkey2 perm="">keyevent F_CALL_LIST</gui_fkey2>
+<gui_fkey3 perm="">keyevent F_REDIRECT</gui_fkey3>
+<gui_fkey4 perm="">keyevent F_SUPPORT</gui_fkey4>
+<overlap_dialing perm="">off</overlap_dialing>
+<show_redundant_context_keys perm="">off</show_redundant_context_keys>
+<web_logout_timer perm=""></web_logout_timer>
+<cancel_on_hold perm="">off</cancel_on_hold>
+<ntp_refresh_timer perm="">3600</ntp_refresh_timer>
+<reboot_after_nr perm="">0</reboot_after_nr>
+<calling_title perm="">lang_calling</calling_title>
+<connected_title perm="">lang_connected</connected_title>
+<ringing_title perm="">lang_ringing</ringing_title>
+<enter_number_title perm="">lang_enter_number</enter_number_title>
+<held_by_title perm="">lang_held_by</held_by_title>
+<disconnected_title perm="">lang_terminated_finished</disconnected_title>
+<flood_tracing perm="">on</flood_tracing>
+<sip_tracing perm="">on</sip_tracing>
+<keyboard_lock_emergency perm="">911 112 110 999 19222</keyboard_lock_emergency>
+<cancel_missed perm="">on</cancel_missed>
+<cancel_desktop perm="">off</cancel_desktop>
+<scroll_outgoing perm="">on</scroll_outgoing>
+<show_local_line perm="">off</show_local_line>
+<pickup_indication perm="">off</pickup_indication>
+<firmware_version perm="">snom720-SIP 8.7.3.17</firmware_version>
+<redirect_ringing perm="">on</redirect_ringing>
+<auto_redial perm="">off</auto_redial>
+<auto_redial_value perm="">10</auto_redial_value>
+<disable_blind_transfer perm="">off</disable_blind_transfer>
+<disable_deflection perm="">off</disable_deflection>
+<action_log_on_url perm=""></action_log_on_url>
+<action_log_off_url perm=""></action_log_off_url>
+<show_call_status perm="">off</show_call_status>
+<always_show_active_call perm="">off</always_show_active_call>
+<action_reg_failed perm=""></action_reg_failed>
+<max_boot_delay perm="">0</max_boot_delay>
+<http_client_user perm=""></http_client_user>
+<http_client_pass perm=""></http_client_pass>
+<mailbox_active perm="">off</mailbox_active>
+<vpn_on perm="">off</vpn_on>
+<vpn_tarball_url perm=""></vpn_tarball_url>
+<idle_offhook perm="">off</idle_offhook>
+<reject_calls_with_603 perm="">off</reject_calls_with_603>
+<ldap_sort_results perm="">off</ldap_sort_results>
+<enable_keyboard_lock perm="">off</enable_keyboard_lock>
+<presence_lookup_number perm="">off</presence_lookup_number>
+<vlan_port_tagging perm="">off</vlan_port_tagging>
+<vlan_net_id perm=""></vlan_net_id>
+<vlan_net_priority perm=""></vlan_net_priority>
+<vlan_pc_id perm=""></vlan_pc_id>
+<vlan_pc_priority perm=""></vlan_pc_priority>
+<emergency_proxy perm=""></emergency_proxy>
+<pbx_buttons perm="">off</pbx_buttons>
+<retry_after_failed_register perm="">300</retry_after_failed_register>
+<send_prack perm="">on</send_prack>
+<documentation_link perm="">http://wiki.snom.com/wiki/index.php/Settings/</documentation_link>
+<watchdog perm="">on</watchdog>
+<rtp_keepalive perm="">on</rtp_keepalive>
+<ldap_search_filter perm=""></ldap_search_filter>
+<ldap_number_filter perm=""></ldap_number_filter>
+<ldap_name_attributes perm=""></ldap_name_attributes>
+<ldap_number_attributes perm=""></ldap_number_attributes>
+<ldap_display_name perm=""></ldap_display_name>
+<country_code perm=""></country_code>
+<area_code perm=""></area_code>
+<vpn_netcatserver perm=""></vpn_netcatserver>
+<action_unhold perm=""></action_unhold>
+<action_hold perm=""></action_hold>
+<action_transfer perm=""></action_transfer>
+<ip_adr_vlan perm=""></ip_adr_vlan>
+<netmask_vlan perm=""></netmask_vlan>
+<gateway_vlan perm=""></gateway_vlan>
+<action_blind_transfer perm=""></action_blind_transfer>
+<action_attended_transfer perm=""></action_attended_transfer>
+<csta_control perm="">on</csta_control>
+<enable_e164_substitution perm="">on</enable_e164_substitution>
+<speaker_receive_call perm="">on</speaker_receive_call>
+<global_missed_counter perm="">on</global_missed_counter>
+<use_hidden_tags perm="">off</use_hidden_tags>
+<show_history_info perm="">on</show_history_info>
+<show_name_dialog perm="">off</show_name_dialog>
+<ignore_security_warning perm="">off</ignore_security_warning>
+<naptr_sip_uri perm="">off</naptr_sip_uri>
+<encode_display_name perm="">off</encode_display_name>
+<uboot_lock perm=""></uboot_lock>
+<auto_reboot_on_setting_change perm="">off</auto_reboot_on_setting_change>
+<show_diversion perm="">on</show_diversion>
+<offhook_dial_prompt perm="">on</offhook_dial_prompt>
+<fkey_delay_timeout perm="">5</fkey_delay_timeout>
+<uboot_version perm="">2010.06</uboot_version>
+<subscription_delay perm="">0</subscription_delay>
+<terminate_subscribers_on_reboot perm="">on</terminate_subscribers_on_reboot>
+<show_ivr_digits perm="">off</show_ivr_digits>
+<settings_refresh_timer perm="RW">7200</settings_refresh_timer>
+<settings_cyclic_store_timer perm="">0</settings_cyclic_store_timer>
+<redirect_allways perm="">off</redirect_allways>
+<redirect_on_busy perm="">off</redirect_on_busy>
+<redirect_on_timeout perm="">off</redirect_on_timeout>
+<ocip_server perm=""></ocip_server>
+<ocip_port perm="">2208</ocip_port>
+<ocip_username perm=""></ocip_username>
+<ocip_password perm=""></ocip_password>
+<ocip_max_hits perm="">50</ocip_max_hits>
+<dfks perm="">off</dfks>
+<ring_count perm="">5</ring_count>
+<backlight_idle perm="">8</backlight_idle>
+<ip_frag_enable perm="">off</ip_frag_enable>
+<advertisement perm="">on</advertisement>
+{literal}<advertisement_url perm="">http://www.snom.com/{web_lng_iso_code}/AddOn</advertisement_url>{/literal}
+<enable_rport_rfc3581 perm="">on</enable_rport_rfc3581>
+<wifi_auth_mode perm="">off</wifi_auth_mode>
+<wifi_wpapsk perm=""></wifi_wpapsk>
+<wifi_wpa_encryptype perm=""></wifi_wpa_encryptype>
+<wifi_essid perm=""></wifi_essid>
+<wifi_wep_key1 perm=""></wifi_wep_key1>
+<dim_timer perm="">20</dim_timer>
+<intercom_connect_type perm="">intercom_connect_type_handsfree</intercom_connect_type>
+<inactive_timeout perm="">15</inactive_timeout>
+<away_timeout perm="">40</away_timeout>
+<empty_tls_client_cert perm="">off</empty_tls_client_cert>
+<prioritise_pbx_number_lookup perm="">off</prioritise_pbx_number_lookup>
+<vq_report_collector perm=""></vq_report_collector>
+<action_firewall_test perm=""></action_firewall_test>
+<refuse_call_pickup_of_connected_calls perm="">off</refuse_call_pickup_of_connected_calls>
+<show_connected_call_in_monitor_view perm="">on</show_connected_call_in_monitor_view>
+<blink_very_fast perm="">off</blink_very_fast>
+<ms_before_returning_to_idle_xml perm="">10000</ms_before_returning_to_idle_xml>
+<tbook_sort perm="">0</tbook_sort>
+<goto_monitor_state_on_line_activity perm="">off</goto_monitor_state_on_line_activity>
+<upload_web perm=""></upload_web>
+<upload_font perm=""></upload_font>
+<upload_gui perm=""></upload_gui>
+<upload_license perm=""></upload_license>
+<ldap_predict_text perm="">off</ldap_predict_text>
+<prefer_saved_over_received_photo perm="">on</prefer_saved_over_received_photo>
+<lastexit perm="">0</lastexit>
+<laststate perm="">0</laststate>
+<lastmethod perm="">0</lastmethod>
+<lastkey perm="">0</lastkey>
+<lastsignal perm="">0</lastsignal>
+<ice_diagnostics perm="">0</ice_diagnostics>
+<http_proxy_user perm=""></http_proxy_user>
+<http_proxy_pass perm=""></http_proxy_pass>
+<xcap_tbook_sync_interval perm="">7200</xcap_tbook_sync_interval>
+<xcap_server_name perm=""></xcap_server_name>
+<xcap_server_port perm="">8080</xcap_server_port>
+<xcap_directory_auid perm="">services/resource-lists</xcap_directory_auid>
+<xcap_dir_doc_name perm="">contacts-resource-list.xml</xcap_dir_doc_name>
+<xcap_via_tls perm="">on</xcap_via_tls>
+<wifi_ether_bridge perm="">off</wifi_ether_bridge>
+<cancel_conference perm="">on</cancel_conference>
+<leftnav_hidden_user perm=""></leftnav_hidden_user>
+<leftnav_hidden_admin perm=""></leftnav_hidden_admin>
+<save_latest_callrecords_to_flash perm="">on</save_latest_callrecords_to_flash>
+<suppress_ringing_during_hold perm="">on</suppress_ringing_during_hold>
+<play_music_during_hold perm="">off</play_music_during_hold>
+<offer_outbound perm="">off</offer_outbound>
+<led_on perm="">ON BUSY IN_A_CALL CALLING IN_A_MEETING URGENT_INTERRUPTIONS_ONLY HOLDING DND ACTIVE INACTIVE BE_RIGHT_BACK AWAY UNAVAILABLE AVAILABLE PhoneHasCall PhoneHasMissedCalls CurrentIdentityHasVoiceMessages</led_on>
+<led_blink_slow perm="">PARKED HOLDING_BOSSADMIN Wrapping-UP</led_blink_slow>
+<led_blink_medium perm=""></led_blink_medium>
+<led_blink_fast perm="">RINGING PhoneHasCallInStateRinging</led_blink_fast>
+<led_red perm="">BUSY IN_A_CALL CALLING IN_A_MEETING URGENT_INTERRUPTIONS_ONLY HOLDING DND</led_red>
+<led_green perm="">AVAILABLE Wrapping-UP</led_green>
+<led_orange perm=""></led_orange>
+<led_blue perm=""></led_blue>
+<led_red_green perm=""></led_red_green>
+<led_red_orange perm=""></led_red_orange>
+<led_green_orange perm=""></led_green_orange>
+<led_call_indicator_usage perm="">PhoneHasCallInStateRinging PhoneHasCall PhoneHasMissedCalls</led_call_indicator_usage>
+<led_message_usage perm="">CurrentIdentityHasVoiceMessages</led_message_usage>
+<dialnumber_us_format perm="">on</dialnumber_us_format>
+<transfer_on_hangup_with_starcode perm="">off</transfer_on_hangup_with_starcode>
+<ignore_dhcp_findings perm=""></ignore_dhcp_findings>
+<dhcp_options_on_ip_aquire perm="">1 3 4 6 12 15 42 43 51 66 67 120 125 132 133</dhcp_options_on_ip_aquire>
+<dhcp_options_on_inform perm="">43 120 125</dhcp_options_on_inform>
+<use_NTLMv2 perm="">on</use_NTLMv2>
+<user_agent_string perm=""></user_agent_string>
+<suppress_sip_messages perm=""></suppress_sip_messages>
+<tr69_acs_url perm=""></tr69_acs_url>
+<tr69_acs_user perm=""></tr69_acs_user>
+<tr69_acs_passwd perm=""></tr69_acs_passwd>
+<tr69_use_acs perm="">off</tr69_use_acs>
+<tr69_events perm=""></tr69_events>
+<tr69_params perm=""></tr69_params>
+<tr69_cnr_user perm=""></tr69_cnr_user>
+<tr69_cnr_pass perm=""></tr69_cnr_pass>
+<tr69_bootstrap perm="">on</tr69_bootstrap>
+<tr69_log perm="">off</tr69_log>
+<tr69_download_status perm=""></tr69_download_status>
+<ignore_missed_calls_on_busy perm="">off</ignore_missed_calls_on_busy>
+<user_admin_mode perm=""></user_admin_mode>
+<action_received_attended_transfer perm=""></action_received_attended_transfer>
+<show_clock perm="">on</show_clock>
+<transfer_on_hangup_non_pots perm="">off</transfer_on_hangup_non_pots>
+<sdp_version_check perm="">on</sdp_version_check>
+<perform_initial_query_in_ldap_state perm="">on</perform_initial_query_in_ldap_state>
+<upd_sip_uri_with_contact_from_notifies perm="">on</upd_sip_uri_with_contact_from_notifies>
+<key_f1_remapped perm="">f1</key_f1_remapped>
+<key_f2_remapped perm="">f2</key_f2_remapped>
+<key_f3_remapped perm="">f3</key_f3_remapped>
+<key_f4_remapped perm="">f4</key_f4_remapped>
+<key_f5_remapped perm="">f5</key_f5_remapped>
+<key_cancel_remapped perm="">cancel</key_cancel_remapped>
+<key_enter_remapped perm="">enter</key_enter_remapped>
+<key_left_remapped perm="">left</key_left_remapped>
+<key_right_remapped perm="">right</key_right_remapped>
+<key_up_remapped perm="">up</key_up_remapped>
+<key_down_remapped perm="">down</key_down_remapped>
+<key_record_remapped perm="">record</key_record_remapped>
+<key_retrieve_remapped perm="">retrieve</key_retrieve_remapped>
+<key_mute_remapped perm="">mute</key_mute_remapped>
+<key_speaker_remapped perm="">speaker</key_speaker_remapped>
+<key_headset_remapped perm="">headset</key_headset_remapped>
+<key_redial_remapped perm="">redial</key_redial_remapped>
+<key_dnd_remapped perm="">dnd</key_dnd_remapped>
+<key_directory_remapped perm="">directory</key_directory_remapped>
+<key_help_remapped perm="">help</key_help_remapped>
+<key_menu_remapped perm="">menu</key_menu_remapped>
+<key_snom_remapped perm="">snom</key_snom_remapped>
+<key_transfer_remapped perm="">transfer</key_transfer_remapped>
+<key_settings_remapped perm="">settings</key_settings_remapped>
+<key_conference_remapped perm="">conference</key_conference_remapped>
+<key_hold_remapped perm="">hold</key_hold_remapped>
+<key_vol_up_remapped perm="">volume up</key_vol_up_remapped>
+<key_vol_down_remapped perm="">volume down</key_vol_down_remapped>
+<key_0_remapped perm="">0</key_0_remapped>
+<key_1_remapped perm="">1</key_1_remapped>
+<key_2_remapped perm="">2</key_2_remapped>
+<key_3_remapped perm="">3</key_3_remapped>
+<key_4_remapped perm="">4</key_4_remapped>
+<key_5_remapped perm="">5</key_5_remapped>
+<key_6_remapped perm="">6</key_6_remapped>
+<key_7_remapped perm="">7</key_7_remapped>
+<key_8_remapped perm="">8</key_8_remapped>
+<key_9_remapped perm="">9</key_9_remapped>
+<key_star_remapped perm="">*</key_star_remapped>
+<key_hash_remapped perm="">#</key_hash_remapped>
+<logoff_all_no_confirm perm="">off</logoff_all_no_confirm>
+<auto_connect_indication_tone perm=""></auto_connect_indication_tone>
+<tls_server_authentication perm="">off</tls_server_authentication>
+<dkey_fkey1 perm=""></dkey_fkey1>
+<dkey_fkey2 perm=""></dkey_fkey2>
+<dkey_fkey3 perm=""></dkey_fkey3>
+<dkey_fkey4 perm=""></dkey_fkey4>
+<sip_request_timeout perm="">64</sip_request_timeout>
+<sip_failover_response perm=""></sip_failover_response>
+<sip_failover_response_reg perm=""></sip_failover_response_reg>
+<rtcp_xr perm=""></rtcp_xr>
+<stutter_timeout perm="">1000</stutter_timeout>
+<dns_fallback_time perm="">65535</dns_fallback_time>
+<lid_core_dump perm="">off</lid_core_dump>
+<lcs_core_dump perm="">off</lcs_core_dump>
+<number_simultaneous_calls perm="">off</number_simultaneous_calls>
+<ieee8021x_eap_md5_username perm=""></ieee8021x_eap_md5_username>
+<ieee8021x_eap_md5_password perm=""></ieee8021x_eap_md5_password>
+<dialplan_count_failed_match_groups perm="">off</dialplan_count_failed_match_groups>
+<tftp_secret perm=""></tftp_secret>
+<sip_reconnect_on_rejected_refer perm=""></sip_reconnect_on_rejected_refer>
+<dns_cache_clear_timeout perm=""></dns_cache_clear_timeout>
+<dtmf_volume perm="">8</dtmf_volume>
+<dtmf_micro_delay perm="">0</dtmf_micro_delay>
+<restrict_uri_queries perm="">on</restrict_uri_queries>
+<allow_rtp_on_mute perm="">off</allow_rtp_on_mute>
+<send_starcodes_with_audio perm="">off</send_starcodes_with_audio>
+<short_cancel_denies_call perm="">on</short_cancel_denies_call>
+<disconnect_on_onhook perm="">on</disconnect_on_onhook>
+<sip_health_check perm="">off</sip_health_check>
+<sip_health_check_base_time perm="">30</sip_health_check_base_time>
+<sip_health_check_max_time perm="">600</sip_health_check_max_time>
+<sip_health_check_static_time perm="">300</sip_health_check_static_time>
+<sip_quarantine_max_time perm="">600</sip_quarantine_max_time>
+<sip_quarantine_static_time perm="">1800</sip_quarantine_static_time>
+<sip_shutdown_timeout perm="">1000</sip_shutdown_timeout>
+<dns_a_queries_only perm="">off</dns_a_queries_only>
+<http_client_save_credentials perm="">on</http_client_save_credentials>
+<http_proxy_save_credentials perm="">on</http_proxy_save_credentials>
+<action_vision_url perm=""></action_vision_url>
+<lldp_asset_id perm="">snom720</lldp_asset_id>
+<headset_cmd_pause perm="">700</headset_cmd_pause>
+<sip_max_challenges perm="">1</sip_max_challenges>
+<min_pin_length perm=""></min_pin_length>
+<max_pin_retry perm=""></max_pin_retry>
+<ignore_asserted_in_gui perm="">off</ignore_asserted_in_gui>
+<disable_storing_changes perm="">off</disable_storing_changes>
+<server_enforced_kb_lock perm="">on</server_enforced_kb_lock>
+<scroll_text_interval perm="">400</scroll_text_interval>
+<scroll_text_wait_multiplier perm="">4</scroll_text_wait_multiplier>
+<scroll_lcd_optimize_timer perm="">0</scroll_lcd_optimize_timer>
+<contactquery_start_length perm="">3</contactquery_start_length>
+<garbage_timeout perm="">300</garbage_timeout>
+<rtp_codec_type perm="">pcmu</rtp_codec_type>
+<rtp_codec_size perm="">20</rtp_codec_size>
+<http_client_hash perm=""></http_client_hash>
+<http_proxy_hash perm=""></http_proxy_hash>
+<call_states_when_knocking perm="">connected calling holding on_hold ringback</call_states_when_knocking>
+<call_states_with_local_party perm="">holding ringing calling ringback</call_states_with_local_party>
+<call_screen_fkeys_on_outgoing perm="">F_LEFT F_RIGHT F_CALL_COMPLETION</call_screen_fkeys_on_outgoing>
+<call_screen_fkeys_on_incoming perm="">F_LEFT F_RIGHT F_TRANSFER(not:Transfer) F_DIAL(Transfer) F_CONTACTPOOL(transfer)</call_screen_fkeys_on_incoming>
+<call_screen_fkeys_on_connected perm="">F_LEFT F_RIGHT F_DUAL_AUDIO(not:Conference) F_REC(not:Conference) F_DIALOG(not:Conference) F_CONF_ON</call_screen_fkeys_on_connected>
+<call_screen_fkeys_on_holding perm="">F_LEFT F_RIGHT F_CONF_ON(not:Transfer) F_DIAL(Transfer) F_CONTACTPOOL(Holding,Transfer)</call_screen_fkeys_on_holding>
+<vq_local_group perm=""></vq_local_group>
+<recording_mechanism perm="">SIP</recording_mechanism>
+<rtp_early_media_ring_fallback perm="">1000</rtp_early_media_ring_fallback>
+<attended_transfer_on_ringing perm="">on</attended_transfer_on_ringing>
+{literal}<location_template perm="">{NAM}\n{LOC}\n{HNO}{HNS} {PRD} {RD} {STS} {POD}\n{A3}, {A1} {PC}\n{country}</location_template>{/literal}
+<status_msgs_that_show_directly perm="">PhoneProvisioningStarting PhoneProvisioningInProgress PhoneProvisioningFailed PhoneHasIncomingPublicAnnouncement PhoneIsLocked EthernetUnplugged PhoneHasFirmwareUpdate FirmwareUpdateFailed PhoneWantsToUpdate PhoneWantsReboot PhoneHasDisabledSipStack PhoneHasVpnError PhoneHasLowMemory PhoneRefusedHugeXcapSync CurrentIdentityIsNotRegistered PhoneIsWaitingForCallCompletion PhoneKnowsCallCanBeCompleted CurrentIdentityIsDnd CurrentIdentityForewardsWhenBusy CurrentIdentityForewardsAfterTimeout CurrentIdentityForewardsAlways PhoneWaitsOnNtpServer PhoneCannotReachNtpServer PhoneHasNoHttpPassword PhoneHasNoAdminPassword ServerMessageToBeShownDirectly CurrentIdentityHasVoiceMessages PhoneHasMissedCalls CurrentIdentityHasTextMessages</status_msgs_that_show_directly>
+<status_msgs_that_are_essential perm="">PhoneHasIncomingPublicAnnouncement PhoneIsLocked PhoneHasDisabledSipStack CurrentIdentityIsNotRegistered PhoneIsWaitingForCallCompletion PhoneKnowsCallCanBeCompleted CurrentIdentityIsDnd CurrentIdentityForewardsAlways ServerMessageToBeShownDirectly IPv4Conflict</status_msgs_that_are_essential>
+<status_msgs_that_are_important perm="">PhoneProvisioningFailed EthernetUnplugged PhoneHasFirmwareUpdate PhoneWantsToUpdate PhoneWantsReboot PhoneHasDisabledSipStack PhoneHasVpnError PhoneHasLowMemory PhoneRefusedHugeXcapSync FirmwareUpdateFailed CurrentIdentityIsNotRegistered Identity01IsNotRegistered Identity02IsNotRegistered Identity03IsNotRegistered Identity04IsNotRegistered Identity05IsNotRegistered Identity06IsNotRegistered Identity07IsNotRegistered Identity08IsNotRegistered Identity09IsNotRegistered Identity10IsNotRegistered Identity11IsNotRegistered Identity12IsNotRegistered PhoneCannotReachNtpServer PhoneHasNoHttpPassword PhoneHasNoAdminPassword Identity01ExtendedRegInfo Identity02ExtendedRegInfo Identity03ExtendedRegInfo Identity04ExtendedRegInfo Identity05ExtendedRegInfo Identity06ExtendedRegInfo Identity07ExtendedRegInfo Identity08ExtendedRegInfo Identity09ExtendedRegInfo Identity10ExtendedRegInfo Identity11ExtendedRegInfo Identity12ExtendedRegInfo</status_msgs_that_are_important>
+<ipv4_conflict_detection perm="">detect_defend</ipv4_conflict_detection>
+<mb_trusted_hosts perm=""></mb_trusted_hosts>
+<sip_cancel_reasons_to_ignore_missed_call perm="">text='Call completed elsewhere' text='Call was replaced' cause&lt;300</sip_cancel_reasons_to_ignore_missed_call>
+<soundcard_event_map perm="">VID=0a12:PID=100d:HOOK=38/1</soundcard_event_map>
+<sip_stop_subscriptions_on_register_failure perm="">on</sip_stop_subscriptions_on_register_failure>
+<release_xferred_call_on perm="">180</release_xferred_call_on>
+<retrieve_xferred_call_on perm="">400</retrieve_xferred_call_on>
+<replace_header_fire_action_url perm=""></replace_header_fire_action_url>
+<keyboard_lock_accepted_keys perm="">F_HOLD,MUTE,VOLUME_UP,VOLUME_DOWN</keyboard_lock_accepted_keys>
+<allow_sip_settings perm="">off</allow_sip_settings>
+<csta_legacy_control perm="">2</csta_legacy_control>
+<emergency_accepted_callkeys perm="">OFFHOOK,ONHOOK,CANCEL,F_CANCEL,F_HOLD,VOLUME_UP,VOLUME_DOWN,SPEAKER,HEADSET,*,#,0,1,2,3,4,5,6,7,8,9</emergency_accepted_callkeys>
+<pnp_server perm=""></pnp_server>
+<provisioning_order perm="">redirection:stop pnp:stop dhcp:stop tr69:stop</provisioning_order>
+<swupd_failed perm=""></swupd_failed>
+<disconnected_url_on_reject perm="">off</disconnected_url_on_reject>
+<mute_is_dnd_in_idle perm="">off</mute_is_dnd_in_idle>
+<was_never_registered perm="">off</was_never_registered>
+<update_after_idle_timeout perm="">0</update_after_idle_timeout>
+<cert_provisioning_service perm=""></cert_provisioning_service>
+<always_delegate_forward perm="">off</always_delegate_forward>
+<max_cookies perm="">50</max_cookies>
+<keyboard_event_time_limit perm="">80</keyboard_event_time_limit>
+<offhook_accept_calls perm="">on</offhook_accept_calls>
+<data_submission_allowed perm="">ask</data_submission_allowed>
+<user_active idx="1" perm="">on</user_active>
+<user_active idx="2" perm="">on</user_active>
+<user_active idx="3" perm="">on</user_active>
+<user_active idx="4" perm="">on</user_active>
+<user_active idx="5" perm="">on</user_active>
+<user_active idx="6" perm="">on</user_active>
+<user_active idx="7" perm="">on</user_active>
+<user_active idx="8" perm="">on</user_active>
+<user_active idx="9" perm="">on</user_active>
+<user_active idx="10" perm="">on</user_active>
+<user_active idx="11" perm="">on</user_active>
+<user_active idx="12" perm="">on</user_active>
+<user_realname idx="1" perm="">{$display_name_1}</user_realname>
+<user_realname idx="2" perm="">{$display_name_2}</user_realname>
+<user_realname idx="3" perm=""></user_realname>
+<user_realname idx="4" perm=""></user_realname>
+<user_realname idx="5" perm=""></user_realname>
+<user_realname idx="6" perm=""></user_realname>
+<user_realname idx="7" perm=""></user_realname>
+<user_realname idx="8" perm=""></user_realname>
+<user_realname idx="9" perm=""></user_realname>
+<user_realname idx="10" perm=""></user_realname>
+<user_realname idx="11" perm=""></user_realname>
+<user_realname idx="12" perm=""></user_realname>
+<user_name idx="1" perm="">{$user_id_1}</user_name>
+<user_name idx="2" perm="">{$user_id_2}</user_name>
+<user_name idx="3" perm=""></user_name>
+<user_name idx="4" perm=""></user_name>
+<user_name idx="5" perm=""></user_name>
+<user_name idx="6" perm=""></user_name>
+<user_name idx="7" perm=""></user_name>
+<user_name idx="8" perm=""></user_name>
+<user_name idx="9" perm=""></user_name>
+<user_name idx="10" perm=""></user_name>
+<user_name idx="11" perm=""></user_name>
+<user_name idx="12" perm=""></user_name>
+<user_host idx="1" perm="">{$server_address_1}</user_host>
+<user_host idx="2" perm="">{$server_address_2}</user_host>
+<user_host idx="3" perm=""></user_host>
+<user_host idx="4" perm=""></user_host>
+<user_host idx="5" perm=""></user_host>
+<user_host idx="6" perm=""></user_host>
+<user_host idx="7" perm=""></user_host>
+<user_host idx="8" perm=""></user_host>
+<user_host idx="9" perm=""></user_host>
+<user_host idx="10" perm=""></user_host>
+<user_host idx="11" perm=""></user_host>
+<user_host idx="12" perm=""></user_host>
+<user_pname idx="1" perm=""></user_pname>
+<user_pname idx="2" perm=""></user_pname>
+<user_pname idx="3" perm=""></user_pname>
+<user_pname idx="4" perm=""></user_pname>
+<user_pname idx="5" perm=""></user_pname>
+<user_pname idx="6" perm=""></user_pname>
+<user_pname idx="7" perm=""></user_pname>
+<user_pname idx="8" perm=""></user_pname>
+<user_pname idx="9" perm=""></user_pname>
+<user_pname idx="10" perm=""></user_pname>
+<user_pname idx="11" perm=""></user_pname>
+<user_pname idx="12" perm=""></user_pname>
+<user_pass idx="1" perm="">{$user_password_1}</user_pass>
+<user_pass idx="2" perm="">{$user_password_2}</user_pass>
+<user_pass idx="3" perm=""></user_pass>
+<user_pass idx="4" perm=""></user_pass>
+<user_pass idx="5" perm=""></user_pass>
+<user_pass idx="6" perm=""></user_pass>
+<user_pass idx="7" perm=""></user_pass>
+<user_pass idx="8" perm=""></user_pass>
+<user_pass idx="9" perm=""></user_pass>
+<user_pass idx="10" perm=""></user_pass>
+<user_pass idx="11" perm=""></user_pass>
+<user_pass idx="12" perm=""></user_pass>
+<user_hash idx="1" perm=""></user_hash>
+<user_hash idx="2" perm=""></user_hash>
+<user_hash idx="3" perm=""></user_hash>
+<user_hash idx="4" perm=""></user_hash>
+<user_hash idx="5" perm=""></user_hash>
+<user_hash idx="6" perm=""></user_hash>
+<user_hash idx="7" perm=""></user_hash>
+<user_hash idx="8" perm=""></user_hash>
+<user_hash idx="9" perm=""></user_hash>
+<user_hash idx="10" perm=""></user_hash>
+<user_hash idx="11" perm=""></user_hash>
+<user_hash idx="12" perm=""></user_hash>
+<user_q idx="1" perm="">1.0</user_q>
+<user_q idx="2" perm="">1.0</user_q>
+<user_q idx="3" perm="">1.0</user_q>
+<user_q idx="4" perm="">1.0</user_q>
+<user_q idx="5" perm="">1.0</user_q>
+<user_q idx="6" perm="">1.0</user_q>
+<user_q idx="7" perm="">1.0</user_q>
+<user_q idx="8" perm="">1.0</user_q>
+<user_q idx="9" perm="">1.0</user_q>
+<user_q idx="10" perm="">1.0</user_q>
+<user_q idx="11" perm="">1.0</user_q>
+<user_q idx="12" perm="">1.0</user_q>
+<user_expiry idx="1" perm="">3600</user_expiry>
+<user_expiry idx="2" perm="">3600</user_expiry>
+<user_expiry idx="3" perm="">3600</user_expiry>
+<user_expiry idx="4" perm="">3600</user_expiry>
+<user_expiry idx="5" perm="">3600</user_expiry>
+<user_expiry idx="6" perm="">3600</user_expiry>
+<user_expiry idx="7" perm="">3600</user_expiry>
+<user_expiry idx="8" perm="">3600</user_expiry>
+<user_expiry idx="9" perm="">3600</user_expiry>
+<user_expiry idx="10" perm="">3600</user_expiry>
+<user_expiry idx="11" perm="">3600</user_expiry>
+<user_expiry idx="12" perm="">3600</user_expiry>
+<user_mailbox idx="1" perm="">{$voicemail_number}</user_mailbox>
+<user_mailbox idx="2" perm=""></user_mailbox>
+<user_mailbox idx="3" perm=""></user_mailbox>
+<user_mailbox idx="4" perm=""></user_mailbox>
+<user_mailbox idx="5" perm=""></user_mailbox>
+<user_mailbox idx="6" perm=""></user_mailbox>
+<user_mailbox idx="7" perm=""></user_mailbox>
+<user_mailbox idx="8" perm=""></user_mailbox>
+<user_mailbox idx="9" perm=""></user_mailbox>
+<user_mailbox idx="10" perm=""></user_mailbox>
+<user_mailbox idx="11" perm=""></user_mailbox>
+<user_mailbox idx="12" perm=""></user_mailbox>
+<user_srtp idx="1" perm="">off</user_srtp>
+<user_srtp idx="2" perm="">on</user_srtp>
+<user_srtp idx="3" perm="">on</user_srtp>
+<user_srtp idx="4" perm="">on</user_srtp>
+<user_srtp idx="5" perm="">on</user_srtp>
+<user_srtp idx="6" perm="">on</user_srtp>
+<user_srtp idx="7" perm="">on</user_srtp>
+<user_srtp idx="8" perm="">on</user_srtp>
+<user_srtp idx="9" perm="">on</user_srtp>
+<user_srtp idx="10" perm="">on</user_srtp>
+<user_srtp idx="11" perm="">on</user_srtp>
+<user_srtp idx="12" perm="">on</user_srtp>
+<user_symmetrical_rtp idx="1" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="2" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="3" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="4" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="5" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="6" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="7" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="8" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="9" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="10" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="11" perm="">off</user_symmetrical_rtp>
+<user_symmetrical_rtp idx="12" perm="">off</user_symmetrical_rtp>
+<user_ice idx="1" perm="">off</user_ice>
+<user_ice idx="2" perm="">off</user_ice>
+<user_ice idx="3" perm="">off</user_ice>
+<user_ice idx="4" perm="">off</user_ice>
+<user_ice idx="5" perm="">off</user_ice>
+<user_ice idx="6" perm="">off</user_ice>
+<user_ice idx="7" perm="">off</user_ice>
+<user_ice idx="8" perm="">off</user_ice>
+<user_ice idx="9" perm="">off</user_ice>
+<user_ice idx="10" perm="">off</user_ice>
+<user_ice idx="11" perm="">off</user_ice>
+<user_ice idx="12" perm="">off</user_ice>
+<user_moh idx="1" perm=""></user_moh>
+<user_moh idx="2" perm=""></user_moh>
+<user_moh idx="3" perm=""></user_moh>
+<user_moh idx="4" perm=""></user_moh>
+<user_moh idx="5" perm=""></user_moh>
+<user_moh idx="6" perm=""></user_moh>
+<user_moh idx="7" perm=""></user_moh>
+<user_moh idx="8" perm=""></user_moh>
+<user_moh idx="9" perm=""></user_moh>
+<user_moh idx="10" perm=""></user_moh>
+<user_moh idx="11" perm=""></user_moh>
+<user_moh idx="12" perm=""></user_moh>
+<user_stream idx="1" perm=""></user_stream>
+<user_stream idx="2" perm=""></user_stream>
+<user_stream idx="3" perm=""></user_stream>
+<user_stream idx="4" perm=""></user_stream>
+<user_stream idx="5" perm=""></user_stream>
+<user_stream idx="6" perm=""></user_stream>
+<user_stream idx="7" perm=""></user_stream>
+<user_stream idx="8" perm=""></user_stream>
+<user_stream idx="9" perm=""></user_stream>
+<user_stream idx="10" perm=""></user_stream>
+<user_stream idx="11" perm=""></user_stream>
+<user_stream idx="12" perm=""></user_stream>
+<user_idle_text idx="1" perm=""></user_idle_text>
+<user_idle_text idx="2" perm=""></user_idle_text>
+<user_idle_text idx="3" perm=""></user_idle_text>
+<user_idle_text idx="4" perm=""></user_idle_text>
+<user_idle_text idx="5" perm=""></user_idle_text>
+<user_idle_text idx="6" perm=""></user_idle_text>
+<user_idle_text idx="7" perm=""></user_idle_text>
+<user_idle_text idx="8" perm=""></user_idle_text>
+<user_idle_text idx="9" perm=""></user_idle_text>
+<user_idle_text idx="10" perm=""></user_idle_text>
+<user_idle_text idx="11" perm=""></user_idle_text>
+<user_idle_text idx="12" perm=""></user_idle_text>
+<user_alert_info idx="1" perm=""></user_alert_info>
+<user_alert_info idx="2" perm=""></user_alert_info>
+<user_alert_info idx="3" perm=""></user_alert_info>
+<user_alert_info idx="4" perm=""></user_alert_info>
+<user_alert_info idx="5" perm=""></user_alert_info>
+<user_alert_info idx="6" perm=""></user_alert_info>
+<user_alert_info idx="7" perm=""></user_alert_info>
+<user_alert_info idx="8" perm=""></user_alert_info>
+<user_alert_info idx="9" perm=""></user_alert_info>
+<user_alert_info idx="10" perm=""></user_alert_info>
+<user_alert_info idx="11" perm=""></user_alert_info>
+<user_alert_info idx="12" perm=""></user_alert_info>
+<user_pic idx="1" perm=""></user_pic>
+<user_pic idx="2" perm=""></user_pic>
+<user_pic idx="3" perm=""></user_pic>
+<user_pic idx="4" perm=""></user_pic>
+<user_pic idx="5" perm=""></user_pic>
+<user_pic idx="6" perm=""></user_pic>
+<user_pic idx="7" perm=""></user_pic>
+<user_pic idx="8" perm=""></user_pic>
+<user_pic idx="9" perm=""></user_pic>
+<user_pic idx="10" perm=""></user_pic>
+<user_pic idx="11" perm=""></user_pic>
+<user_pic idx="12" perm=""></user_pic>
+<user_auto_connect idx="1" perm="">off</user_auto_connect>
+<user_auto_connect idx="2" perm="">off</user_auto_connect>
+<user_auto_connect idx="3" perm="">off</user_auto_connect>
+<user_auto_connect idx="4" perm="">off</user_auto_connect>
+<user_auto_connect idx="5" perm="">off</user_auto_connect>
+<user_auto_connect idx="6" perm="">off</user_auto_connect>
+<user_auto_connect idx="7" perm="">off</user_auto_connect>
+<user_auto_connect idx="8" perm="">off</user_auto_connect>
+<user_auto_connect idx="9" perm="">off</user_auto_connect>
+<user_auto_connect idx="10" perm="">off</user_auto_connect>
+<user_auto_connect idx="11" perm="">off</user_auto_connect>
+<user_auto_connect idx="12" perm="">off</user_auto_connect>
+<user_descr_contact idx="1" perm="">on</user_descr_contact>
+<user_descr_contact idx="2" perm="">on</user_descr_contact>
+<user_descr_contact idx="3" perm="">on</user_descr_contact>
+<user_descr_contact idx="4" perm="">on</user_descr_contact>
+<user_descr_contact idx="5" perm="">on</user_descr_contact>
+<user_descr_contact idx="6" perm="">on</user_descr_contact>
+<user_descr_contact idx="7" perm="">on</user_descr_contact>
+<user_descr_contact idx="8" perm="">on</user_descr_contact>
+<user_descr_contact idx="9" perm="">on</user_descr_contact>
+<user_descr_contact idx="10" perm="">on</user_descr_contact>
+<user_descr_contact idx="11" perm="">on</user_descr_contact>
+<user_descr_contact idx="12" perm="">on</user_descr_contact>
+<cc_token idx="1" perm=""></cc_token>
+<cc_token idx="2" perm=""></cc_token>
+<cc_token idx="3" perm=""></cc_token>
+<cc_token idx="4" perm=""></cc_token>
+<cc_token idx="5" perm=""></cc_token>
+<cc_token idx="6" perm=""></cc_token>
+<cc_token idx="7" perm=""></cc_token>
+<cc_token idx="8" perm=""></cc_token>
+<cc_token idx="9" perm=""></cc_token>
+<cc_token idx="10" perm=""></cc_token>
+<cc_token idx="11" perm=""></cc_token>
+<cc_token idx="12" perm=""></cc_token>
+<user_uid idx="1" perm="">d9d584f6-3263-4513-8c3d-000413705EF1</user_uid>
+<user_uid idx="2" perm=""></user_uid>
+<user_uid idx="3" perm=""></user_uid>
+<user_uid idx="4" perm=""></user_uid>
+<user_uid idx="5" perm=""></user_uid>
+<user_uid idx="6" perm=""></user_uid>
+<user_uid idx="7" perm=""></user_uid>
+<user_uid idx="8" perm=""></user_uid>
+<user_uid idx="9" perm=""></user_uid>
+<user_uid idx="10" perm=""></user_uid>
+<user_uid idx="11" perm=""></user_uid>
+<user_uid idx="12" perm=""></user_uid>
+<user_sipusername_as_line idx="1" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="2" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="3" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="4" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="5" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="6" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="7" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="8" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="9" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="10" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="11" perm="">off</user_sipusername_as_line>
+<user_sipusername_as_line idx="12" perm="">off</user_sipusername_as_line>
+<user_proxy_require idx="1" perm=""></user_proxy_require>
+<user_proxy_require idx="2" perm=""></user_proxy_require>
+<user_proxy_require idx="3" perm=""></user_proxy_require>
+<user_proxy_require idx="4" perm=""></user_proxy_require>
+<user_proxy_require idx="5" perm=""></user_proxy_require>
+<user_proxy_require idx="6" perm=""></user_proxy_require>
+<user_proxy_require idx="7" perm=""></user_proxy_require>
+<user_proxy_require idx="8" perm=""></user_proxy_require>
+<user_proxy_require idx="9" perm=""></user_proxy_require>
+<user_proxy_require idx="10" perm=""></user_proxy_require>
+<user_proxy_require idx="11" perm=""></user_proxy_require>
+<user_proxy_require idx="12" perm=""></user_proxy_require>
+<user_shared_line idx="1" perm="">off</user_shared_line>
+<user_shared_line idx="2" perm="">off</user_shared_line>
+<user_shared_line idx="3" perm="">off</user_shared_line>
+<user_shared_line idx="4" perm="">off</user_shared_line>
+<user_shared_line idx="5" perm="">off</user_shared_line>
+<user_shared_line idx="6" perm="">off</user_shared_line>
+<user_shared_line idx="7" perm="">off</user_shared_line>
+<user_shared_line idx="8" perm="">off</user_shared_line>
+<user_shared_line idx="9" perm="">off</user_shared_line>
+<user_shared_line idx="10" perm="">off</user_shared_line>
+<user_shared_line idx="11" perm="">off</user_shared_line>
+<user_shared_line idx="12" perm="">off</user_shared_line>
+<user_send_local_name idx="1" perm="">off</user_send_local_name>
+<user_send_local_name idx="2" perm="">off</user_send_local_name>
+<user_send_local_name idx="3" perm="">off</user_send_local_name>
+<user_send_local_name idx="4" perm="">off</user_send_local_name>
+<user_send_local_name idx="5" perm="">off</user_send_local_name>
+<user_send_local_name idx="6" perm="">off</user_send_local_name>
+<user_send_local_name idx="7" perm="">off</user_send_local_name>
+<user_send_local_name idx="8" perm="">off</user_send_local_name>
+<user_send_local_name idx="9" perm="">off</user_send_local_name>
+<user_send_local_name idx="10" perm="">off</user_send_local_name>
+<user_send_local_name idx="11" perm="">off</user_send_local_name>
+<user_send_local_name idx="12" perm="">off</user_send_local_name>
+<user_dp_str idx="1" perm=""></user_dp_str>
+<user_dp_str idx="2" perm=""></user_dp_str>
+<user_dp_str idx="3" perm=""></user_dp_str>
+<user_dp_str idx="4" perm=""></user_dp_str>
+<user_dp_str idx="5" perm=""></user_dp_str>
+<user_dp_str idx="6" perm=""></user_dp_str>
+<user_dp_str idx="7" perm=""></user_dp_str>
+<user_dp_str idx="8" perm=""></user_dp_str>
+<user_dp_str idx="9" perm=""></user_dp_str>
+<user_dp_str idx="10" perm=""></user_dp_str>
+<user_dp_str idx="11" perm=""></user_dp_str>
+<user_dp_str idx="12" perm=""></user_dp_str>
+<user_dp_exp idx="1" perm=""></user_dp_exp>
+<user_dp_exp idx="2" perm=""></user_dp_exp>
+<user_dp_exp idx="3" perm=""></user_dp_exp>
+<user_dp_exp idx="4" perm=""></user_dp_exp>
+<user_dp_exp idx="5" perm=""></user_dp_exp>
+<user_dp_exp idx="6" perm=""></user_dp_exp>
+<user_dp_exp idx="7" perm=""></user_dp_exp>
+<user_dp_exp idx="8" perm=""></user_dp_exp>
+<user_dp_exp idx="9" perm=""></user_dp_exp>
+<user_dp_exp idx="10" perm=""></user_dp_exp>
+<user_dp_exp idx="11" perm=""></user_dp_exp>
+<user_dp_exp idx="12" perm=""></user_dp_exp>
+<user_ringer idx="1" perm="">Ringer6</user_ringer>
+<user_ringer idx="2" perm="">Ringer1</user_ringer>
+<user_ringer idx="3" perm="">Ringer1</user_ringer>
+<user_ringer idx="4" perm="">Ringer1</user_ringer>
+<user_ringer idx="5" perm="">Ringer1</user_ringer>
+<user_ringer idx="6" perm="">Ringer1</user_ringer>
+<user_ringer idx="7" perm="">Ringer1</user_ringer>
+<user_ringer idx="8" perm="">Ringer1</user_ringer>
+<user_ringer idx="9" perm="">Ringer1</user_ringer>
+<user_ringer idx="10" perm="">Ringer1</user_ringer>
+<user_ringer idx="11" perm="">Ringer1</user_ringer>
+<user_ringer idx="12" perm="">Ringer1</user_ringer>
+<user_custom idx="1" perm=""></user_custom>
+<user_custom idx="2" perm=""></user_custom>
+<user_custom idx="3" perm=""></user_custom>
+<user_custom idx="4" perm=""></user_custom>
+<user_custom idx="5" perm=""></user_custom>
+<user_custom idx="6" perm=""></user_custom>
+<user_custom idx="7" perm=""></user_custom>
+<user_custom idx="8" perm=""></user_custom>
+<user_custom idx="9" perm=""></user_custom>
+<user_custom idx="10" perm=""></user_custom>
+<user_custom idx="11" perm=""></user_custom>
+<user_custom idx="12" perm=""></user_custom>
+<user_outbound idx="1">{$user.1.outbound_proxy}</user_outbound>
+<user_outbound idx="2" perm="">{$user.2.outbound_proxy}</user_outbound>
+<user_outbound idx="3" perm=""></user_outbound>
+<user_outbound idx="4" perm=""></user_outbound>
+<user_outbound idx="5" perm=""></user_outbound>
+<user_outbound idx="6" perm=""></user_outbound>
+<user_outbound idx="7" perm=""></user_outbound>
+<user_outbound idx="8" perm=""></user_outbound>
+<user_outbound idx="9" perm=""></user_outbound>
+<user_outbound idx="10" perm=""></user_outbound>
+<user_outbound idx="11" perm=""></user_outbound>
+<user_outbound idx="12" perm=""></user_outbound>
+<codec_size idx="1" perm="">20</codec_size>
+<codec_size idx="2" perm="">20</codec_size>
+<codec_size idx="3" perm="">20</codec_size>
+<codec_size idx="4" perm="">20</codec_size>
+<codec_size idx="5" perm="">20</codec_size>
+<codec_size idx="6" perm="">20</codec_size>
+<codec_size idx="7" perm="">20</codec_size>
+<codec_size idx="8" perm="">20</codec_size>
+<codec_size idx="9" perm="">20</codec_size>
+<codec_size idx="10" perm="">20</codec_size>
+<codec_size idx="11" perm="">20</codec_size>
+<codec_size idx="12" perm="">20</codec_size>
+<stun_server idx="1" perm=""></stun_server>
+<stun_server idx="2" perm=""></stun_server>
+<stun_server idx="3" perm=""></stun_server>
+<stun_server idx="4" perm=""></stun_server>
+<stun_server idx="5" perm=""></stun_server>
+<stun_server idx="6" perm=""></stun_server>
+<stun_server idx="7" perm=""></stun_server>
+<stun_server idx="8" perm=""></stun_server>
+<stun_server idx="9" perm=""></stun_server>
+<stun_server idx="10" perm=""></stun_server>
+<stun_server idx="11" perm=""></stun_server>
+<stun_server idx="12" perm=""></stun_server>
+<stun_binding_interval idx="1" perm=""></stun_binding_interval>
+<stun_binding_interval idx="2" perm=""></stun_binding_interval>
+<stun_binding_interval idx="3" perm=""></stun_binding_interval>
+<stun_binding_interval idx="4" perm=""></stun_binding_interval>
+<stun_binding_interval idx="5" perm=""></stun_binding_interval>
+<stun_binding_interval idx="6" perm=""></stun_binding_interval>
+<stun_binding_interval idx="7" perm=""></stun_binding_interval>
+<stun_binding_interval idx="8" perm=""></stun_binding_interval>
+<stun_binding_interval idx="9" perm=""></stun_binding_interval>
+<stun_binding_interval idx="10" perm=""></stun_binding_interval>
+<stun_binding_interval idx="11" perm=""></stun_binding_interval>
+<stun_binding_interval idx="12" perm=""></stun_binding_interval>
+<keepalive_interval idx="1" perm=""></keepalive_interval>
+<keepalive_interval idx="2" perm=""></keepalive_interval>
+<keepalive_interval idx="3" perm=""></keepalive_interval>
+<keepalive_interval idx="4" perm=""></keepalive_interval>
+<keepalive_interval idx="5" perm=""></keepalive_interval>
+<keepalive_interval idx="6" perm=""></keepalive_interval>
+<keepalive_interval idx="7" perm=""></keepalive_interval>
+<keepalive_interval idx="8" perm=""></keepalive_interval>
+<keepalive_interval idx="9" perm=""></keepalive_interval>
+<keepalive_interval idx="10" perm=""></keepalive_interval>
+<keepalive_interval idx="11" perm=""></keepalive_interval>
+<keepalive_interval idx="12" perm=""></keepalive_interval>
+<record_missed_calls idx="1" perm="">off</record_missed_calls>
+<record_missed_calls idx="2" perm="">on</record_missed_calls>
+<record_missed_calls idx="3" perm="">on</record_missed_calls>
+<record_missed_calls idx="4" perm="">on</record_missed_calls>
+<record_missed_calls idx="5" perm="">on</record_missed_calls>
+<record_missed_calls idx="6" perm="">on</record_missed_calls>
+<record_missed_calls idx="7" perm="">on</record_missed_calls>
+<record_missed_calls idx="8" perm="">on</record_missed_calls>
+<record_missed_calls idx="9" perm="">on</record_missed_calls>
+<record_missed_calls idx="10" perm="">on</record_missed_calls>
+<record_missed_calls idx="11" perm="">on</record_missed_calls>
+<record_missed_calls idx="12" perm="">on</record_missed_calls>
+<ring_after_delay idx="1" perm=""></ring_after_delay>
+<ring_after_delay idx="2" perm=""></ring_after_delay>
+<ring_after_delay idx="3" perm=""></ring_after_delay>
+<ring_after_delay idx="4" perm=""></ring_after_delay>
+<ring_after_delay idx="5" perm=""></ring_after_delay>
+<ring_after_delay idx="6" perm=""></ring_after_delay>
+<ring_after_delay idx="7" perm=""></ring_after_delay>
+<ring_after_delay idx="8" perm=""></ring_after_delay>
+<ring_after_delay idx="9" perm=""></ring_after_delay>
+<ring_after_delay idx="10" perm=""></ring_after_delay>
+<ring_after_delay idx="11" perm=""></ring_after_delay>
+<ring_after_delay idx="12" perm=""></ring_after_delay>
+<speed idx="0" perm=""></speed>
+<speed idx="1" perm=""></speed>
+<speed idx="2" perm=""></speed>
+<speed idx="3" perm=""></speed>
+<speed idx="4" perm=""></speed>
+<speed idx="5" perm=""></speed>
+<speed idx="6" perm=""></speed>
+<speed idx="7" perm=""></speed>
+<speed idx="8" perm=""></speed>
+<speed idx="9" perm=""></speed>
+<speed idx="10" perm=""></speed>
+<speed idx="11" perm=""></speed>
+<speed idx="12" perm=""></speed>
+<speed idx="13" perm=""></speed>
+<speed idx="14" perm=""></speed>
+<speed idx="15" perm=""></speed>
+<speed idx="16" perm=""></speed>
+<speed idx="17" perm=""></speed>
+<speed idx="18" perm=""></speed>
+<speed idx="19" perm=""></speed>
+<speed idx="20" perm=""></speed>
+<speed idx="21" perm=""></speed>
+<speed idx="22" perm=""></speed>
+<speed idx="23" perm=""></speed>
+<speed idx="24" perm=""></speed>
+<speed idx="25" perm=""></speed>
+<speed idx="26" perm=""></speed>
+<speed idx="27" perm=""></speed>
+<speed idx="28" perm=""></speed>
+<speed idx="29" perm=""></speed>
+<speed idx="30" perm=""></speed>
+<speed idx="31" perm=""></speed>
+<speed idx="32" perm=""></speed>
+<auth_tmp_pass idx="1" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="2" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="3" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="4" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="5" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="6" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="7" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="8" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="9" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="10" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="11" perm=""></auth_tmp_pass>
+<auth_tmp_pass idx="12" perm=""></auth_tmp_pass>
+<auth_tmp_realm idx="1" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="2" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="3" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="4" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="5" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="6" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="7" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="8" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="9" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="10" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="11" perm=""></auth_tmp_realm>
+<auth_tmp_realm idx="12" perm=""></auth_tmp_realm>
+<user_dtmf_info idx="1" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="2" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="3" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="4" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="5" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="6" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="7" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="8" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="9" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="10" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="11" perm="">off</user_dtmf_info>
+<user_dtmf_info idx="12" perm="">off</user_dtmf_info>
+<user_dp idx="1" perm=""></user_dp>
+<user_dp idx="2" perm=""></user_dp>
+<user_dp idx="3" perm=""></user_dp>
+<user_dp idx="4" perm=""></user_dp>
+<user_dp idx="5" perm=""></user_dp>
+<user_dp idx="6" perm=""></user_dp>
+<user_dp idx="7" perm=""></user_dp>
+<user_dp idx="8" perm=""></user_dp>
+<user_dp idx="9" perm=""></user_dp>
+<user_dp idx="10" perm=""></user_dp>
+<user_dp idx="11" perm=""></user_dp>
+<user_dp idx="12" perm=""></user_dp>
+<user_event_list_uri idx="1" perm=""></user_event_list_uri>
+<user_event_list_uri idx="2" perm=""></user_event_list_uri>
+<user_event_list_uri idx="3" perm=""></user_event_list_uri>
+<user_event_list_uri idx="4" perm=""></user_event_list_uri>
+<user_event_list_uri idx="5" perm=""></user_event_list_uri>
+<user_event_list_uri idx="6" perm=""></user_event_list_uri>
+<user_event_list_uri idx="7" perm=""></user_event_list_uri>
+<user_event_list_uri idx="8" perm=""></user_event_list_uri>
+<user_event_list_uri idx="9" perm=""></user_event_list_uri>
+<user_event_list_uri idx="10" perm=""></user_event_list_uri>
+<user_event_list_uri idx="11" perm=""></user_event_list_uri>
+<user_event_list_uri idx="12" perm=""></user_event_list_uri>
+<user_presence_subscription idx="1" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="2" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="3" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="4" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="5" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="6" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="7" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="8" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="9" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="10" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="11" perm="">off</user_presence_subscription>
+<user_presence_subscription idx="12" perm="">off</user_presence_subscription>
+<user_presence_buddy_list_uri idx="1" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="2" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="3" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="4" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="5" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="6" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="7" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="8" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="9" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="10" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="11" perm=""></user_presence_buddy_list_uri>
+<user_presence_buddy_list_uri idx="12" perm=""></user_presence_buddy_list_uri>
+<user_full_sdp_answer idx="1" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="2" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="3" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="4" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="5" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="6" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="7" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="8" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="9" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="10" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="11" perm="">on</user_full_sdp_answer>
+<user_full_sdp_answer idx="12" perm="">on</user_full_sdp_answer>
+<user_server_type idx="1" perm="">default</user_server_type>
+<user_server_type idx="2" perm="">default</user_server_type>
+<user_server_type idx="3" perm="">default</user_server_type>
+<user_server_type idx="4" perm="">default</user_server_type>
+<user_server_type idx="5" perm="">default</user_server_type>
+<user_server_type idx="6" perm="">default</user_server_type>
+<user_server_type idx="7" perm="">default</user_server_type>
+<user_server_type idx="8" perm="">default</user_server_type>
+<user_server_type idx="9" perm="">default</user_server_type>
+<user_server_type idx="10" perm="">default</user_server_type>
+<user_server_type idx="11" perm="">default</user_server_type>
+<user_server_type idx="12" perm="">default</user_server_type>
+<presence_state idx="1" perm="">Available</presence_state>
+<presence_state idx="2" perm="">Available</presence_state>
+<presence_state idx="3" perm="">Available</presence_state>
+<presence_state idx="4" perm="">Available</presence_state>
+<presence_state idx="5" perm="">Available</presence_state>
+<presence_state idx="6" perm="">Available</presence_state>
+<presence_state idx="7" perm="">Available</presence_state>
+<presence_state idx="8" perm="">Available</presence_state>
+<presence_state idx="9" perm="">Available</presence_state>
+<presence_state idx="10" perm="">Available</presence_state>
+<presence_state idx="11" perm="">Available</presence_state>
+<presence_state idx="12" perm="">Available</presence_state>
+<user_remove_all_bindings idx="1" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="2" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="3" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="4" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="5" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="6" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="7" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="8" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="9" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="10" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="11" perm="">off</user_remove_all_bindings>
+<user_remove_all_bindings idx="12" perm="">off</user_remove_all_bindings>
+<user_failover_identity idx="1" perm="">none</user_failover_identity>
+<user_failover_identity idx="2" perm="">none</user_failover_identity>
+<user_failover_identity idx="3" perm="">none</user_failover_identity>
+<user_failover_identity idx="4" perm="">none</user_failover_identity>
+<user_failover_identity idx="5" perm="">none</user_failover_identity>
+<user_failover_identity idx="6" perm="">none</user_failover_identity>
+<user_failover_identity idx="7" perm="">none</user_failover_identity>
+<user_failover_identity idx="8" perm="">none</user_failover_identity>
+<user_failover_identity idx="9" perm="">none</user_failover_identity>
+<user_failover_identity idx="10" perm="">none</user_failover_identity>
+<user_failover_identity idx="11" perm="">none</user_failover_identity>
+<user_failover_identity idx="12" perm="">none</user_failover_identity>
+<record_dialed_calls idx="1" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="2" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="3" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="4" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="5" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="6" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="7" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="8" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="9" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="10" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="11" perm="">on</record_dialed_calls>
+<record_dialed_calls idx="12" perm="">on</record_dialed_calls>
+<record_received_calls idx="1" perm="">on</record_received_calls>
+<record_received_calls idx="2" perm="">on</record_received_calls>
+<record_received_calls idx="3" perm="">on</record_received_calls>
+<record_received_calls idx="4" perm="">on</record_received_calls>
+<record_received_calls idx="5" perm="">on</record_received_calls>
+<record_received_calls idx="6" perm="">on</record_received_calls>
+<record_received_calls idx="7" perm="">on</record_received_calls>
+<record_received_calls idx="8" perm="">on</record_received_calls>
+<record_received_calls idx="9" perm="">on</record_received_calls>
+<record_received_calls idx="10" perm="">on</record_received_calls>
+<record_received_calls idx="11" perm="">on</record_received_calls>
+<record_received_calls idx="12" perm="">on</record_received_calls>
+<user_presence_host idx="1" perm=""></user_presence_host>
+<user_presence_host idx="2" perm=""></user_presence_host>
+<user_presence_host idx="3" perm=""></user_presence_host>
+<user_presence_host idx="4" perm=""></user_presence_host>
+<user_presence_host idx="5" perm=""></user_presence_host>
+<user_presence_host idx="6" perm=""></user_presence_host>
+<user_presence_host idx="7" perm=""></user_presence_host>
+<user_presence_host idx="8" perm=""></user_presence_host>
+<user_presence_host idx="9" perm=""></user_presence_host>
+<user_presence_host idx="10" perm=""></user_presence_host>
+<user_presence_host idx="11" perm=""></user_presence_host>
+<user_presence_host idx="12" perm=""></user_presence_host>
+<user_subscription_expiry idx="1" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="2" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="3" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="4" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="5" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="6" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="7" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="8" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="9" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="10" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="11" perm="">3600</user_subscription_expiry>
+<user_subscription_expiry idx="12" perm="">3600</user_subscription_expiry>
+<user_presence_uri idx="1" perm=""></user_presence_uri>
+<user_presence_uri idx="2" perm=""></user_presence_uri>
+<user_presence_uri idx="3" perm=""></user_presence_uri>
+<user_presence_uri idx="4" perm=""></user_presence_uri>
+<user_presence_uri idx="5" perm=""></user_presence_uri>
+<user_presence_uri idx="6" perm=""></user_presence_uri>
+<user_presence_uri idx="7" perm=""></user_presence_uri>
+<user_presence_uri idx="8" perm=""></user_presence_uri>
+<user_presence_uri idx="9" perm=""></user_presence_uri>
+<user_presence_uri idx="10" perm=""></user_presence_uri>
+<user_presence_uri idx="11" perm=""></user_presence_uri>
+<user_presence_uri idx="12" perm=""></user_presence_uri>
+<user_enable_hookflash idx="1" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="2" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="3" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="4" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="5" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="6" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="7" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="8" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="9" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="10" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="11" perm="">off</user_enable_hookflash>
+<user_enable_hookflash idx="12" perm="">off</user_enable_hookflash>
+<internal_ringer_text idx="0" perm=""></internal_ringer_text>
+<internal_ringer_text idx="1" perm=""></internal_ringer_text>
+<internal_ringer_text idx="2" perm=""></internal_ringer_text>
+<internal_ringer_text idx="3" perm=""></internal_ringer_text>
+<internal_ringer_text idx="4" perm=""></internal_ringer_text>
+<internal_ringer_text idx="5" perm=""></internal_ringer_text>
+<internal_ringer_text idx="6" perm=""></internal_ringer_text>
+<internal_ringer_text idx="7" perm=""></internal_ringer_text>
+<internal_ringer_text idx="8" perm=""></internal_ringer_text>
+<internal_ringer_text idx="9" perm=""></internal_ringer_text>
+<internal_ringer_text idx="10" perm=""></internal_ringer_text>
+<internal_ringer_file idx="0" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="1" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="2" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="3" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="4" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="5" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="6" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="7" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="8" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="9" perm="">Ringer1</internal_ringer_file>
+<internal_ringer_file idx="10" perm="">Ringer1</internal_ringer_file>
+<user_savp idx="1" perm="">off</user_savp>
+<user_savp idx="2" perm="">off</user_savp>
+<user_savp idx="3" perm="">off</user_savp>
+<user_savp idx="4" perm="">off</user_savp>
+<user_savp idx="5" perm="">off</user_savp>
+<user_savp idx="6" perm="">off</user_savp>
+<user_savp idx="7" perm="">off</user_savp>
+<user_savp idx="8" perm="">off</user_savp>
+<user_savp idx="9" perm="">off</user_savp>
+<user_savp idx="10" perm="">off</user_savp>
+<user_savp idx="11" perm="">off</user_savp>
+<user_savp idx="12" perm="">off</user_savp>
+<user_auth_tag idx="1" perm="">on</user_auth_tag>
+<user_auth_tag idx="2" perm="">on</user_auth_tag>
+<user_auth_tag idx="3" perm="">on</user_auth_tag>
+<user_auth_tag idx="4" perm="">on</user_auth_tag>
+<user_auth_tag idx="5" perm="">on</user_auth_tag>
+<user_auth_tag idx="6" perm="">on</user_auth_tag>
+<user_auth_tag idx="7" perm="">on</user_auth_tag>
+<user_auth_tag idx="8" perm="">on</user_auth_tag>
+<user_auth_tag idx="9" perm="">on</user_auth_tag>
+<user_auth_tag idx="10" perm="">on</user_auth_tag>
+<user_auth_tag idx="11" perm="">on</user_auth_tag>
+<user_auth_tag idx="12" perm="">on</user_auth_tag>
+<user_report_machine_state idx="1" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="2" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="3" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="4" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="5" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="6" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="7" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="8" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="9" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="10" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="11" perm="">on</user_report_machine_state>
+<user_report_machine_state idx="12" perm="">on</user_report_machine_state>
+<user_report_phone_state idx="1" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="2" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="3" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="4" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="5" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="6" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="7" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="8" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="9" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="10" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="11" perm="">on</user_report_phone_state>
+<user_report_phone_state idx="12" perm="">on</user_report_phone_state>
+<user_dynamic_payload idx="1" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="2" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="3" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="4" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="5" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="6" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="7" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="8" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="9" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="10" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="11" perm="">on</user_dynamic_payload>
+<user_dynamic_payload idx="12" perm="">on</user_dynamic_payload>
+<user_publish_presence_bootup idx="1" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="2" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="3" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="4" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="5" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="6" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="7" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="8" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="9" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="10" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="11" perm="">on</user_publish_presence_bootup>
+<user_publish_presence_bootup idx="12" perm="">on</user_publish_presence_bootup>
+<tcp_keepidle idx="1" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="2" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="3" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="4" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="5" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="6" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="7" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="8" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="9" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="10" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="11" perm="">5</tcp_keepidle>
+<tcp_keepidle idx="12" perm="">5</tcp_keepidle>
+<tcp_keepcnt idx="1" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="2" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="3" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="4" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="5" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="6" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="7" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="8" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="9" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="10" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="11" perm="">5</tcp_keepcnt>
+<tcp_keepcnt idx="12" perm="">5</tcp_keepcnt>
+<tcp_keepintvl idx="1" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="2" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="3" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="4" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="5" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="6" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="7" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="8" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="9" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="10" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="11" perm="">5</tcp_keepintvl>
+<tcp_keepintvl idx="12" perm="">5</tcp_keepintvl>
+<tcp_failover idx="1" perm="">off</tcp_failover>
+<tcp_failover idx="2" perm="">off</tcp_failover>
+<tcp_failover idx="3" perm="">off</tcp_failover>
+<tcp_failover idx="4" perm="">off</tcp_failover>
+<tcp_failover idx="5" perm="">off</tcp_failover>
+<tcp_failover idx="6" perm="">off</tcp_failover>
+<tcp_failover idx="7" perm="">off</tcp_failover>
+<tcp_failover idx="8" perm="">off</tcp_failover>
+<tcp_failover idx="9" perm="">off</tcp_failover>
+<tcp_failover idx="10" perm="">off</tcp_failover>
+<tcp_failover idx="11" perm="">off</tcp_failover>
+<tcp_failover idx="12" perm="">off</tcp_failover>
+<user_additional_supported_header idx="1" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="2" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="3" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="4" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="5" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="6" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="7" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="8" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="9" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="10" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="11" perm=""></user_additional_supported_header>
+<user_additional_supported_header idx="12" perm=""></user_additional_supported_header>
+<mc_address idx="1" perm=""></mc_address>
+<mc_address idx="2" perm=""></mc_address>
+<mc_address idx="3" perm=""></mc_address>
+<mc_address idx="4" perm=""></mc_address>
+<mc_address idx="5" perm=""></mc_address>
+<mc_address idx="6" perm=""></mc_address>
+<mc_address idx="7" perm=""></mc_address>
+<mc_address idx="8" perm=""></mc_address>
+<mc_address idx="9" perm=""></mc_address>
+<mc_address idx="10" perm=""></mc_address>
+<user_g726_packing_order idx="1" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="2" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="3" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="4" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="5" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="6" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="7" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="8" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="9" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="10" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="11" perm="">on</user_g726_packing_order>
+<user_g726_packing_order idx="12" perm="">on</user_g726_packing_order>
+<user_pic_tie_to_tbook idx="1" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="2" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="3" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="4" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="5" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="6" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="7" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="8" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="9" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="10" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="11" perm="">off</user_pic_tie_to_tbook>
+<user_pic_tie_to_tbook idx="12" perm="">off</user_pic_tie_to_tbook>
+<user_media_setup_offer idx="1" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="2" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="3" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="4" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="5" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="6" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="7" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="8" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="9" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="10" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="11" perm="">active</user_media_setup_offer>
+<user_media_setup_offer idx="12" perm="">active</user_media_setup_offer>
+<user_media_transport_offer idx="1" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="2" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="3" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="4" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="5" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="6" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="7" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="8" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="9" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="10" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="11" perm="">udp</user_media_transport_offer>
+<user_media_transport_offer idx="12" perm="">udp</user_media_transport_offer>
+<is_voice_identity idx="1" perm="">on</is_voice_identity>
+<is_voice_identity idx="2" perm="">on</is_voice_identity>
+<is_voice_identity idx="3" perm="">on</is_voice_identity>
+<is_voice_identity idx="4" perm="">on</is_voice_identity>
+<is_voice_identity idx="5" perm="">on</is_voice_identity>
+<is_voice_identity idx="6" perm="">on</is_voice_identity>
+<is_voice_identity idx="7" perm="">on</is_voice_identity>
+<is_voice_identity idx="8" perm="">on</is_voice_identity>
+<is_voice_identity idx="9" perm="">on</is_voice_identity>
+<is_voice_identity idx="10" perm="">on</is_voice_identity>
+<is_voice_identity idx="11" perm="">on</is_voice_identity>
+<is_voice_identity idx="12" perm="">on</is_voice_identity>
+<hide_identity idx="1" perm="">false</hide_identity>
+<hide_identity idx="2" perm="">off</hide_identity>
+<hide_identity idx="3" perm="">off</hide_identity>
+<hide_identity idx="4" perm="">off</hide_identity>
+<hide_identity idx="5" perm="">off</hide_identity>
+<hide_identity idx="6" perm="">off</hide_identity>
+<hide_identity idx="7" perm="">off</hide_identity>
+<hide_identity idx="8" perm="">off</hide_identity>
+<hide_identity idx="9" perm="">off</hide_identity>
+<hide_identity idx="10" perm="">off</hide_identity>
+<hide_identity idx="11" perm="">off</hide_identity>
+<hide_identity idx="12" perm="">off</hide_identity>
+<user_presence_identity idx="1" perm="">none</user_presence_identity>
+<user_presence_identity idx="2" perm="">none</user_presence_identity>
+<user_presence_identity idx="3" perm="">none</user_presence_identity>
+<user_presence_identity idx="4" perm="">none</user_presence_identity>
+<user_presence_identity idx="5" perm="">none</user_presence_identity>
+<user_presence_identity idx="6" perm="">none</user_presence_identity>
+<user_presence_identity idx="7" perm="">none</user_presence_identity>
+<user_presence_identity idx="8" perm="">none</user_presence_identity>
+<user_presence_identity idx="9" perm="">none</user_presence_identity>
+<user_presence_identity idx="10" perm="">none</user_presence_identity>
+<user_presence_identity idx="11" perm="">none</user_presence_identity>
+<user_presence_identity idx="12" perm="">none</user_presence_identity>
+<user_default_contact_uri idx="1" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="2" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="3" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="4" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="5" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="6" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="7" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="8" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="9" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="10" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="11" perm="">none</user_default_contact_uri>
+<user_default_contact_uri idx="12" perm="">none</user_default_contact_uri>
+<remote_contact_header_field idx="1" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="2" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="3" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="4" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="5" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="6" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="7" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="8" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="9" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="10" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="11" perm="">from</remote_contact_header_field>
+<remote_contact_header_field idx="12" perm="">from</remote_contact_header_field>
+<cache_contact_details idx="1" perm="">on</cache_contact_details>
+<cache_contact_details idx="2" perm="">on</cache_contact_details>
+<cache_contact_details idx="3" perm="">on</cache_contact_details>
+<cache_contact_details idx="4" perm="">on</cache_contact_details>
+<cache_contact_details idx="5" perm="">on</cache_contact_details>
+<cache_contact_details idx="6" perm="">on</cache_contact_details>
+<cache_contact_details idx="7" perm="">on</cache_contact_details>
+<cache_contact_details idx="8" perm="">on</cache_contact_details>
+<cache_contact_details idx="9" perm="">on</cache_contact_details>
+<cache_contact_details idx="10" perm="">on</cache_contact_details>
+<cache_contact_details idx="11" perm="">on</cache_contact_details>
+<cache_contact_details idx="12" perm="">on</cache_contact_details>
+<using_server_managed_dnd idx="1" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="2" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="3" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="4" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="5" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="6" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="7" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="8" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="9" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="10" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="11" perm="">off</using_server_managed_dnd>
+<using_server_managed_dnd idx="12" perm="">off</using_server_managed_dnd>
+<using_server_managed_fwd_all idx="1" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="2" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="3" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="4" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="5" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="6" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="7" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="8" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="9" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="10" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="11" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_all idx="12" perm="">off</using_server_managed_fwd_all>
+<using_server_managed_fwd_busy idx="1" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="2" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="3" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="4" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="5" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="6" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="7" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="8" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="9" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="10" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="11" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_busy idx="12" perm="">off</using_server_managed_fwd_busy>
+<using_server_managed_fwd_time idx="1" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="2" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="3" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="4" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="5" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="6" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="7" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="8" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="9" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="10" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="11" perm="">off</using_server_managed_fwd_time>
+<using_server_managed_fwd_time idx="12" perm="">off</using_server_managed_fwd_time>
+<dnd_mode idx="1" perm="">off</dnd_mode>
+<dnd_mode idx="2" perm="">off</dnd_mode>
+<dnd_mode idx="3" perm="">off</dnd_mode>
+<dnd_mode idx="4" perm="">off</dnd_mode>
+<dnd_mode idx="5" perm="">off</dnd_mode>
+<dnd_mode idx="6" perm="">off</dnd_mode>
+<dnd_mode idx="7" perm="">off</dnd_mode>
+<dnd_mode idx="8" perm="">off</dnd_mode>
+<dnd_mode idx="9" perm="">off</dnd_mode>
+<dnd_mode idx="10" perm="">off</dnd_mode>
+<dnd_mode idx="11" perm="">off</dnd_mode>
+<dnd_mode idx="12" perm="">off</dnd_mode>
+<server_managed_fwd_all_state idx="1" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="2" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="3" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="4" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="5" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="6" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="7" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="8" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="9" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="10" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="11" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_state idx="12" perm="">off</server_managed_fwd_all_state>
+<server_managed_fwd_all_nr idx="1" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="2" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="3" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="4" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="5" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="6" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="7" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="8" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="9" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="10" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="11" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_all_nr idx="12" perm=""></server_managed_fwd_all_nr>
+<server_managed_fwd_busy_state idx="1" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="2" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="3" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="4" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="5" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="6" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="7" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="8" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="9" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="10" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="11" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_state idx="12" perm="">off</server_managed_fwd_busy_state>
+<server_managed_fwd_busy_nr idx="1" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="2" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="3" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="4" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="5" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="6" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="7" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="8" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="9" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="10" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="11" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_busy_nr idx="12" perm=""></server_managed_fwd_busy_nr>
+<server_managed_fwd_time_state idx="1" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="2" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="3" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="4" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="5" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="6" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="7" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="8" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="9" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="10" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="11" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_state idx="12" perm="">off</server_managed_fwd_time_state>
+<server_managed_fwd_time_nr idx="1" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="2" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="3" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="4" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="5" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="6" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="7" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="8" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="9" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="10" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="11" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_nr idx="12" perm=""></server_managed_fwd_time_nr>
+<server_managed_fwd_time_secs idx="1" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="2" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="3" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="4" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="5" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="6" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="7" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="8" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="9" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="10" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="11" perm="">off</server_managed_fwd_time_secs>
+<server_managed_fwd_time_secs idx="12" perm="">off</server_managed_fwd_time_secs>
+<record_missed_calls_cwi_off idx="1" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="2" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="3" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="4" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="5" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="6" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="7" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="8" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="9" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="10" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="11" perm="">on</record_missed_calls_cwi_off>
+<record_missed_calls_cwi_off idx="12" perm="">on</record_missed_calls_cwi_off>
+<redirect_identity_allways idx="1" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="2" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="3" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="4" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="5" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="6" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="7" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="8" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="9" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="10" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="11" perm=""></redirect_identity_allways>
+<redirect_identity_allways idx="12" perm=""></redirect_identity_allways>
+<user_hold_inactive idx="1" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="2" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="3" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="4" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="5" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="6" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="7" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="8" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="9" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="10" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="11" perm="">off</user_hold_inactive>
+<user_hold_inactive idx="12" perm="">off</user_hold_inactive>
+<codec_priority_list idx="1" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="2" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="3" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="4" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="5" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="6" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="7" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="8" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="9" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="10" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="11" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="12" perm="">g722,pcmu,pcma,gsm,g726-16,g726-24,g726-32,g726-40,aal2-g726-16,aal2-g726-24,aal2-g726-32,aal2-g726-40,amrwb-0,g729,telephone-event</codec_priority_list>
+<retry_after_failed_subscribe idx="1" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="2" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="3" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="4" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="5" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="6" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="7" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="8" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="9" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="10" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="11" perm="">600</retry_after_failed_subscribe>
+<retry_after_failed_subscribe idx="12" perm="">600</retry_after_failed_subscribe>
+<chars_in_lower_case idx="0" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="1" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="2" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="3" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="4" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="5" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="6" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="7" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="8" perm=""></chars_in_lower_case>
+<chars_in_lower_case idx="9" perm=""></chars_in_lower_case>
+<chars_in_upper_case idx="0" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="1" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="2" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="3" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="4" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="5" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="6" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="7" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="8" perm=""></chars_in_upper_case>
+<chars_in_upper_case idx="9" perm=""></chars_in_upper_case>
+<conferencing idx="1" perm=""></conferencing>
+<conferencing idx="2" perm=""></conferencing>
+<conferencing idx="3" perm=""></conferencing>
+<conferencing idx="4" perm=""></conferencing>
+<conferencing idx="5" perm=""></conferencing>
+<conferencing idx="6" perm=""></conferencing>
+<conferencing idx="7" perm=""></conferencing>
+<conferencing idx="8" perm=""></conferencing>
+<conferencing idx="9" perm=""></conferencing>
+<conferencing idx="10" perm=""></conferencing>
+<conferencing idx="11" perm=""></conferencing>
+<conferencing idx="12" perm=""></conferencing>
+<user_allow_inc_dialog_subscribe idx="1" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="2" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="3" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="4" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="5" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="6" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="7" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="8" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="9" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="10" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="11" perm="">on</user_allow_inc_dialog_subscribe>
+<user_allow_inc_dialog_subscribe idx="12" perm="">on</user_allow_inc_dialog_subscribe>
+<ack_repetition_idle_time idx="1" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="2" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="3" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="4" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="5" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="6" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="7" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="8" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="9" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="10" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="11" perm="">0</ack_repetition_idle_time>
+<ack_repetition_idle_time idx="12" perm="">0</ack_repetition_idle_time>
+<ack_before_reinvite_when_holding idx="1" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="2" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="3" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="4" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="5" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="6" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="7" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="8" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="9" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="10" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="11" perm="">off</ack_before_reinvite_when_holding>
+<ack_before_reinvite_when_holding idx="12" perm="">off</ack_before_reinvite_when_holding>
+<reciprocal_hold idx="1" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="2" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="3" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="4" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="5" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="6" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="7" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="8" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="9" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="10" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="11" perm="">off</reciprocal_hold>
+<reciprocal_hold idx="12" perm="">off</reciprocal_hold>
+<user_wait_for_ntp_before_register idx="1" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="2" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="3" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="4" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="5" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="6" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="7" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="8" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="9" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="10" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="11" perm="">off</user_wait_for_ntp_before_register>
+<user_wait_for_ntp_before_register idx="12" perm="">off</user_wait_for_ntp_before_register>
+<extension_monitoring_group idx="1" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="2" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="3" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="4" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="5" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="6" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="7" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="8" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="9" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="10" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="11" perm=""></extension_monitoring_group>
+<extension_monitoring_group idx="12" perm=""></extension_monitoring_group>
+<user_ringer_private_line idx="1" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="2" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="3" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="4" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="5" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="6" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="7" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="8" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="9" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="10" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="11" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_private_line idx="12" perm="">Ringer2</user_ringer_private_line>
+<user_ringer_forwarded_calls idx="1" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="2" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="3" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="4" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="5" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="6" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="7" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="8" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="9" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="10" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="11" perm="">Ringer3</user_ringer_forwarded_calls>
+<user_ringer_forwarded_calls idx="12" perm="">Ringer3</user_ringer_forwarded_calls>
+<general_purpose_xml_descriptions idx="0" perm=""></general_purpose_xml_descriptions>
+<general_purpose_xml_descriptions idx="1" perm=""></general_purpose_xml_descriptions>
+<general_purpose_xml_descriptions idx="2" perm=""></general_purpose_xml_descriptions>
+<general_purpose_xml_descriptions idx="3" perm=""></general_purpose_xml_descriptions>
+<general_purpose_xml_descriptions idx="4" perm=""></general_purpose_xml_descriptions>
+<general_purpose_xml_descriptions idx="5" perm=""></general_purpose_xml_descriptions>
+<general_purpose_xml_descriptions idx="6" perm=""></general_purpose_xml_descriptions>
+<user_tlsdsk_store idx="1" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="2" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="3" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="4" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="5" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="6" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="7" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="8" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="9" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="10" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="11" perm=""></user_tlsdsk_store>
+<user_tlsdsk_store idx="12" perm=""></user_tlsdsk_store>
+</phone-settings>
+<firmware-settings e="2">
+<firmware perm="RW"></firmware>
+</firmware-settings>
+<functionKeys e="2">
+<fkey idx="0" context="active" label="" perm="">line</fkey>
+<fkey idx="1" context="active" label="" perm="">line</fkey>
+<fkey idx="2" context="active" label="" perm="">line</fkey>
+<fkey idx="3" context="active" label="" perm="">line</fkey>
+<fkey idx="4" context="active" label="" perm="">line</fkey>
+<fkey idx="5" context="active" label="" perm="">line</fkey>
+<fkey idx="6" context="active" label="" perm="">line</fkey>
+<fkey idx="7" context="active" label="" perm="">line</fkey>
+<fkey idx="8" context="active" label="" perm="">line</fkey>
+<fkey idx="9" context="active" label="" perm="">line</fkey>
+<fkey idx="10" context="active" label="" perm="">line</fkey>
+<fkey idx="11" context="active" label="" perm="">line</fkey>
+<fkey idx="12" context="active" label="" perm="">line</fkey>
+<fkey idx="13" context="active" label="" perm="">line</fkey>
+<fkey idx="14" context="active" label="" perm="">line</fkey>
+<fkey idx="15" context="active" label="" perm="">line</fkey>
+<fkey idx="16" context="active" label="" perm="">line</fkey>
+<fkey idx="17" context="active" label="" perm="">line</fkey>
+<fkey idx="18" context="active" label="" perm="">line</fkey>
+<fkey idx="19" context="active" label="" perm="">line</fkey>
+<fkey idx="20" context="active" label="" perm="">line</fkey>
+<fkey idx="21" context="active" label="" perm="">line</fkey>
+<fkey idx="22" context="active" label="" perm="">line</fkey>
+<fkey idx="23" context="active" label="" perm="">line</fkey>
+<fkey idx="24" context="active" label="" perm="">line</fkey>
+<fkey idx="25" context="active" label="" perm="">line</fkey>
+<fkey idx="26" context="active" label="" perm="">line</fkey>
+<fkey idx="27" context="active" label="" perm="">line</fkey>
+<fkey idx="28" context="active" label="" perm="">line</fkey>
+<fkey idx="29" context="active" label="" perm="">line</fkey>
+<fkey idx="30" context="active" label="" perm="">line</fkey>
+<fkey idx="31" context="active" label="" perm="">line</fkey>
+<fkey idx="32" context="active" label="" perm="">line</fkey>
+<fkey idx="33" context="active" label="" perm="">line</fkey>
+<fkey idx="34" context="active" label="" perm="">line</fkey>
+<fkey idx="35" context="active" label="" perm="">line</fkey>
+<fkey idx="36" context="active" label="" perm="">line</fkey>
+<fkey idx="37" context="active" label="" perm="">line</fkey>
+<fkey idx="38" context="active" label="" perm="">line</fkey>
+<fkey idx="39" context="active" label="" perm="">line</fkey>
+<fkey idx="40" context="active" label="" perm="">line</fkey>
+<fkey idx="41" context="active" label="" perm="">line</fkey>
+<fkey idx="42" context="active" label="" perm="">line</fkey>
+<fkey idx="43" context="active" label="" perm="">line</fkey>
+<fkey idx="44" context="active" label="" perm="">line</fkey>
+<fkey idx="45" context="active" label="" perm="">line</fkey>
+<fkey idx="46" context="active" label="" perm="">line</fkey>
+<fkey idx="47" context="active" label="" perm="">line</fkey>
+<fkey idx="48" context="active" label="" perm="">line</fkey>
+<fkey idx="49" context="active" label="" perm="">line</fkey>
+<fkey idx="50" context="active" label="" perm="">line</fkey>
+<fkey idx="51" context="active" label="" perm="">line</fkey>
+<fkey idx="52" context="active" label="" perm="">line</fkey>
+<fkey idx="53" context="active" label="" perm="">line</fkey>
+<fkey idx="54" context="active" label="" perm="">line</fkey>
+<fkey idx="55" context="active" label="" perm="">line</fkey>
+<fkey idx="56" context="active" label="" perm="">line</fkey>
+<fkey idx="57" context="active" label="" perm="">line</fkey>
+<fkey idx="58" context="active" label="" perm="">line</fkey>
+<fkey idx="59" context="active" label="" perm="">line</fkey>
+<fkey idx="60" context="active" label="" perm="">line</fkey>
+<fkey idx="61" context="active" label="" perm="">line</fkey>
+<fkey idx="62" context="active" label="" perm="">line</fkey>
+<fkey idx="63" context="active" label="" perm="">line</fkey>
+<fkey idx="64" context="active" label="" perm="">line</fkey>
+<fkey idx="65" context="active" label="" perm="">line</fkey>
+</functionKeys>
+<tbook e="2">
+</tbook>
+<dialplan e="2">
+</dialplan>
+</settings>

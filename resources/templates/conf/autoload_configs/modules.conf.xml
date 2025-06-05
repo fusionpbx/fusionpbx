@@ -1,0 +1,82 @@
+<configuration name="modules.conf" description="Modules">
+	<modules>
+
+		<!-- Applications -->
+		<load module="mod_commands"/>
+		<load module="mod_memcache"/>
+
+		<!-- Languages -->
+		<load module="mod_lua"/>
+
+		<!-- Endpoints -->
+		<load module="mod_sofia"/>
+
+		<!-- Loggers -->
+		<load module="mod_logfile"/>
+		<load module="mod_console"/>
+
+		<!-- Applications -->
+		<load module="mod_callcenter"/>
+		<load module="mod_fifo"/>
+		<load module="mod_sms"/>
+		<load module="mod_fsv"/>
+		<load module="mod_esf"/>
+		<load module="mod_expr"/>
+		<load module="mod_dptools"/>
+		<load module="mod_enum"/>
+		<load module="mod_valet_parking"/>
+		<load module="mod_spandsp"/>
+		<load module="mod_db"/>
+		<load module="mod_hash"/>
+		<load module="mod_conference"/>
+
+		<!-- Auto -->
+
+		<!-- Codecs -->
+		<load module="mod_g729"/>
+		<load module="mod_g723_1"/>
+		<load module="mod_bv"/>
+		<load module="mod_amr"/>
+		<load module="mod_h26x"/>
+
+		<!-- Dialplan Interfaces -->
+		<load module="mod_dialplan_xml"/>
+
+		<!-- Endpoints -->
+		<load module="mod_loopback"/>
+
+		<!-- Event Handlers -->
+		<load module="mod_event_socket"/>
+
+		<!-- File Format Interfaces -->
+		<load module="mod_sndfile"/>
+		<load module="mod_native_file"/>
+
+		<!-- Say -->
+		<load module="mod_say_en"/>
+		<load module="mod_say_zh"/>
+		<load module="mod_say_ru"/>
+		<load module="mod_say_fr"/>
+		<load module="mod_say_th"/>
+		<load module="mod_say_he"/>
+		<load module="mod_say_pt"/>
+		<load module="mod_say_de"/>
+		<load module="mod_say_it"/>
+		<load module="mod_say_nl"/>
+		<load module="mod_say_es"/>
+		<load module="mod_say_hu"/>
+
+		<!-- Speech Recognition / Text to Speech -->
+		<load module="mod_flite"/>
+		<load module="mod_tts_commandline"/>
+
+		<!-- Streams / Files -->
+		<load module="mod_local_stream"/>
+		<load module="mod_tone_stream"/>
+		<load module="mod_shout"/>
+
+		<!-- XML Interfaces -->
+		<load module="mod_xml_cdr"/>
+
+	</modules>
+</configuration>

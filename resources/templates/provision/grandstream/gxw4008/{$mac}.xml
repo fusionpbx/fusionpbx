@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<gs_provision version="1">
+	<config version="1">
+
+	<!-- Advanced Settings -->
+		<!-- Admin password for web interface,String Max Length: 30; between ascii values 33 and 126, Mandatory -->
+		<P2>{$admin_password}</P2>
+
+		<!-- End User Password, MaxLength 32 -->
+		<P196>{$user_password}</P196>
+
+	<!-- Firmware Upgrade -->
+		<!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade., Number: 0 to 2. Mandatory -->
+		<P212>1</P212>
+		<!-- Firmware Server Path -->
+                {if isset($grandstream_firmware_path) && isset($firmware_version)}
+                <P192>{$grandstream_firmware_path}/gxw4008/{$firmware_version}</P192>
+                {elseif isset($grandstream_firmware_path)}
+                <P192>{$grandstream_firmware_path}/gxw4008</P192>
+                {else}
+                <P192>{$domain_name}{$project_path}/app/provision</P192>
+                {/if}
+		
+		<!-- Config Server Path , String: serveraddress -->
+                {if $grandstream_config_server_path=="none"}
+                <P237></P237>
+                {elseif isset($grandstream_config_server_path)}
+                <P237>{$grandstream_config_server_path}</P237>
+                {elseif isset($domain_name)}
+                <P237>{$domain_name}{$project_path}/app/provision</P237>
+                {/if}
+
+	<!-- Profile 1 Settings	-->
+		<!-- Profile Active.  0 - no, 1 - yes, Number: 0,1. -->
+		<P271>1</P271>
+		<!-- Primary SIP Server,String: serveraddress -->
+		<P47>{$account.1.server_address}</P47>
+		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+		<P4567>1</P4567>
+		<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
+		<P130>0</P130>
+		<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+		<P52>0</P52>
+		<!-- SIP Registration. 0 - no, 1 - yes -->
+		<P31>1</P31>
+		<!-- Register Expiration (in minutes. default 1 hour, max 45 days), Number: 1 to 64800 -->
+		<P32>{$account.1.register_expires}</P32>
+
+	<!--FXS Ports -->
+		<!-- FXS Port 1,SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 1 - Active, 2 - 2, 3 - 3, 4 -4, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+		<!-- Request URI Routing ID, Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4060>{$account.1.user_id}</P4060>
+		<P4090>{$account.1.user_id}</P4090>
+		<P4120>{$account.1.password}</P4120>
+		<P4180>{$account.1.display_name}</P4180>
+		<P4150>0</P4150>
+		<P4300>0</P4300>
+		<P4669></P4669>
+		<P4595>1</P4595>
+
+		<!-- FXS Port 2. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 2 - Active, 1 - 1, 3 - 3, 4 -4, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+		<!-- Request URI Routing ID.Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4061>{$account.2.user_id}</P4061>
+		<P4091>{$account.2.user_id}</P4091>
+		<P4121>{$account.2.password}</P4121>
+		<P4181>{$account.2.display_name}</P4181>
+		<P4151>0</P4151>
+		<P4301>0</P4301>
+		<P4670></P4670>
+		<P4596>1</P4596>
+
+		<!-- FXS Port 3. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 3 - Active, 1 - 1, 2 - 2, 4 -4, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4062>{$account.3.user_id}</P4062>
+		<P4092>{$account.3.user_id}</P4092>
+		<P4122>{$account.3.password}</P4122>
+		<P4182>{$account.3.display_name}</P4182>
+		<P4152>0</P4152>
+		<P4302>0</P4302>
+		<P4671></P4671>
+		<P4597>1</P4597>
+
+		<!-- FXS Port 4. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 4 - Active, 1 - 1, 2 - 2, 3 - 3, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4063>{$account.4.user_id}</P4063>
+		<P4093>{$account.4.user_id}</P4093>
+		<P4123>{$account.4.password}</P4123>
+		<P4183>{$account.4.display_name}</P4183>
+		<P4153>0</P4153>
+		<P4303>0</P4303>
+		<P4672></P4672>
+		<P4598>1</P4598>
+
+
+	<!-- The following ports (5 to 8) belong to GXW-4008/GXW-4024 only -->
+
+		<!-- FXS Port 5. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 5 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 6 - 6, 7 - 7, 8 - 8 ) -->
+		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4064>{$account.5.user_id}</P4064>
+		<P4094>{$account.5.user_id}</P4094>
+		<P4124>{$account.5.password}</P4124>
+		<P4184>{$account.5.display_name}</P4184>
+		<P4154>0</P4154>
+		<P4304>0</P4304>
+		<P4673></P4673>
+		<P4599>1</P4599>
+
+		<!-- FXS Port 6. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 6 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 5 - 5, 7 - 7, 8 - 8 ) -->
+		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4065>{$account.6.user_id}</P4065>
+		<P4095>{$account.6.user_id}</P4095>
+		<P4125>{$account.6.password}</P4125>
+		<P4185>{$account.6.display_name}</P4185>
+		<P4155>0</P4155>
+		<P4305>0</P4305>
+		<P4674></P4674>
+		<P4600>1</P4600>
+
+		<!-- FXS Port 7. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 7 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 5 - 5, 6 - 6, 8 - 8 ) -->
+		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4066>{$account.7.user_id}</P4066>
+		<P4096>{$account.7.user_id}</P4096>
+		<P4126>{$account.7.password}</P4126>
+		<P4186>{$account.7.display_name}</P4186>
+		<P4156>0</P4156>
+		<P4306>0</P4306>
+		<P4675></P4675>
+		<P4601>1</P4601>
+
+		<!-- FXS Port 8. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+		<!-- Hunting Group (0 - None, 8 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 5 - 5, 6 - 6, 7 - 7 ) -->
+		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
+		<P4067>{$account.8.user_id}</P4067>
+		<P4097>{$account.8.user_id}</P4097>
+		<P4127>{$account.8.password}</P4127>
+		<P4187>{$account.8.display_name}</P4187>
+		<P4157>0</P4157>
+		<P4307>0</P4307>
+		<P4676></P4676>
+		<P4602>1</P4602>
+
+	</config>
+</gs_provision>

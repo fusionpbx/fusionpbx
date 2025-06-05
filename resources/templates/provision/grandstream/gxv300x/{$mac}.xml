@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gs_provision version="1">
+  <config version="1">
+    <!-- Configuration template for GXV-300x firmware version 1.2.3.7 -->
+    <!-- Advanced/System-wide Options -->
+    <!-- Admin password for web interface, max. length is 30 -->
+    <P2>{$admin_password}</P2>
+    <!-- End User Password -->
+    <P196>{$user_password}</P196>
+    <!-- G.723 rate: 0 - 6.3kbps encoding rate,  1 - 5.3kbps encoding rate -->
+    <P49></P49>
+    <!-- Silence Suppression. 0 - no, 1 - yes -->
+    <P50>0</P50>
+    <!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively) -->
+    <P37>2</P37>
+    <!-- Video frame rate: default - 15 -->
+    <P904>15</P904>
+    <!-- Video bit rate (kbps): default is 128 -->
+    <P905>128</P905>
+    <!-- Video Packet Size: maxlength = 4, from 100~1400, default is 1400 -->
+    <P927>800</P927>
+    <!-- Video Rate Control. 0 - Frame, 1 - TMN8, 2 - GOP (default is 0) -->
+    <P924>0</P924>
+    <!-- Video Frame Skipping. 0 - no, 1 - yes -->
+    <P925>0</P925>
+    <!-- Sharpening Filter. (0-9, 0 means disabled, default is 5)  -->
+    <P938>5</P938>
+    <!-- Brightening Filter.  (0-9, 0 means disabled, default is 5) -->
+    <P939>5</P939>
+    <!-- Tone Remapping Filter. (0-255, 0 means disabled, default is 32) -->
+    <P948>32</P948>
+    <!-- Packetization-mode. 0 - 1, 1 - 1 -->
+    <P957>0</P957>
+    <!-- Enable Video Surveillance. Turn phone into video surveillance camera if set to 1, YES. Default=No, 0. -->
+    <P928>0</P928>
+    <!-- Surveillance RTSP Port.  Video Surveillance data stream port, default is 554. -->
+    <P929>554</P929>
+    <!-- Streaming RTSP Server -->
+    <P953></P953>
+    <!-- Streaming RTSP User ID -->
+    <P954></P954>
+    <!-- Streaming RTSP Password -->
+    <P955></P955>
+    <!-- Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
+    <P38>0</P38>
+    <!-- Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+    <P51>0</P51>
+    <!-- Layer 2 QoS. 802.1p priority value (0 - 7) -->
+    <P87>0</P87>
+    <!-- No Key Entry Timeout. Default - 4 seconds. -->
+    <P85>4</P85>
+    <!-- Use # as Dial Key. 0 - no, 1 - yes -->
+    <P72>1</P72>
+    <!-- Local RTP port (1024-65535, default 5004) -->
+    <P39>5004</P39>
+    <!-- Use Random Port. 0 - no, 1 - yes -->
+    <P78>0</P78>
+    <!-- Keep-alive interval (in seconds. default 20 seconds) -->
+    <P84>20</P84>
+    <!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+    <P101></P101>
+    <!-- STUN server -->
+    <P76></P76>
+    <!-- Firmware Upgrade -->
+    <!-- Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
+    <P212>1</P212>
+    <!-- Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxv300x/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxv300x</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
+
+    <!-- Config Server Path -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {elseif isset($domain_name)}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+    
+    <!-- Firmware File Prefix -->
+    <P232></P232>
+    <!-- Firmware File Postfix -->
+    <P233></P233>
+    <!-- Config File Prefix -->
+    <P234></P234>
+    <!-- Config File Postfix -->
+    <P235></P235>
+    <!-- Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
+    <!-- When set to Yes(1), it will override the configured provision path and method. -->
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+    <!-- Automatic Upgrade. 0 - No, 1 - Yes. Default is No. -->
+    <P194>0</P194>
+    <!-- Check for new firmware every () minutes, unit is in minute, minimnu 60 minutes, default is 7 days. -->
+    <P193>10080</P193>
+    <!-- Use firmware pre/postfix to determine if f/w is required -->
+    <!-- 0 = Always Check for New Firmware  -->
+    <!-- 1 = Check New Firmware only when F/W pre/suffix changes -->
+    <!-- 2 = Always Skip the Firmware Check -->
+    <P238>0</P238>
+    <!-- Enable Screen Saver Download -->
+    <!-- 0 = No -->
+    <!-- 1 = YES, HTTP -->
+    <!-- 2 = YES, TFTP -->
+    <P933>1</P933>
+    <!-- Screen Saver Download Server Path -->
+    <P934>fm.grandstream.com/gs</P934>
+    <!-- Enable Phonebook XML Download -->
+    <!-- 0 = No -->
+    <!-- 1 = YES, HTTP -->
+    <!-- 2 = YES, TFTP -->
+    <P330>0</P330>
+    <!-- Phonebook XML Server Path -->
+    <!-- This is a string of up to 128 characters that should contain a path to the XML file -->
+    <!-- It MUST be in the host/path format. For example: "directory.grandstream.com/engineering" -->
+    <P331></P331>
+    <!-- Remove Manually-edited entries on Download -->
+    <!-- 0 - No, 1 - Yes -->
+    <P333>0</P333>
+    <!-- Enable Network Screen Saver -->
+    <!-- 0 - No -->
+    <!-- 1 - YES, HTTP  -->
+    <P943>0</P943>
+    <!-- Network Screen Saver Server Path -->
+    <P942></P942>
+    <!-- Enable Weather Forecast -->
+    <!-- 0 - No -->
+    <!-- 1 - YES, HTTP -->
+    <P945>0</P945>
+    <!-- Weather Forecast Server Path -->
+    <P944></P944>
+    <!-- Enable Headline News -->
+    <!-- 0 - No -->
+    <!-- 1 - YES, HTTP -->
+    <P947>0</P947>
+    <!-- Headline News RSS Server Path -->
+    <P946></P946>
+    <!-- Offhook Auto Dial -->
+    <P71></P71>
+    <!-- DTMF Payload Type -->
+    <P79>101</P79>
+    <!-- Syslog Server (name of the server, max length is 64 charactors) -->
+    <P207></P207>
+    <!-- Syslog Level (Default setting is NONE) -->
+    <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+    <P208>0</P208>
+    <!-- NTP Server -->
+    <P30>us.pool.ntp.org</P30>
+    <!-- Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
+    <!-- When set to Yes(1), it will override the configured NTP server. -->
+    <P144>0</P144>
+    <!-- Distinctive Ring Tone -->
+    <!-- Use custom ring tone 1 if incoming caller ID is the following: -->
+    <P105></P105>
+    <!-- Use custom ring tone 2 if incoming caller ID is the following: -->
+    <P106></P106>
+    <!-- Use custom ring tone 3 if incoming caller ID is the following: -->
+    <P107></P107>
+    <!-- System Ring Tone:  input type = text, maxlength=64 size=30   -->
+    <P345>f1=440,f2=480,c=200/400;</P345>
+    <!--Call Progress Tones: input type=text, maxlength=64, size=30 -->
+    <!-- Dial Tone -->
+    <P343>f1=350,f2=440;</P343>
+    <!-- Message Waiting Tone -->
+    <P344>f1=350,f2=440,c=10/10;</P344>
+    <!-- Ring Back Tone -->
+    <P346>f1=440,f2=480,c=200/400;</P346>
+    <!-- Call-Waiting Tone -->
+    <P347>f1=440,f2=440,c=25/525;</P347>
+    <!-- Busy Tone -->
+    <P348>f1=480,f2=620,c=50/50;</P348>
+    <!-- Reorder Tone -->
+    <P349>f1=480,f2=620,c=25/25;</P349>
+    <!-- Start Browser On Boot:    0 - no (default), 1 - yes -->
+    <P950>0</P950>
+    <!-- Enable Browser Toolbar:   0 - no (default), 1 - yes -->
+    <P951>1</P951>
+    <!-- Browser Home Page, maxlength=64, default = about:/start.htm -->
+    <P952></P952>
+    <!-- Disable Call Waiting. 0 - no, 1 - yes -->
+    <P91>0</P91>
+    <!-- Disable Call Waiting Tone: 0 - no (default), 1 - yes -->
+    <P186>0</P186>
+    <!-- Disable Direct IP Call. 0 - no, 1 - yes -->
+    <P277>0</P277>
+    <!-- Use Quick IP-call mode: 0 - no, 1 - yes. Default is No. -->
+    <P184>0</P184>
+    <!-- Allow Media Loopback. 0 - no, 1 - yes -->
+    <P278>0</P278>
+    <!-- Lock Keypad Update. 0 - no, 1 - yes -->
+    <P88>0</P88>
+    <!-- Display Language. 0 - English, 1 - Downloaded Language, 2 - Chinese -->
+    <P342>0</P342>
+    <!-- language file postfix -->
+    <P399></P399>
+    <!--  Primary Account (Account 1) Settings -->
+    <!-- Account Active (In Use). 0 - no, 1 - yes -->
+    <P271>1</P271>
+    <!-- Account Name -->
+    <P270></P270>
+    <!-- SIP Server: max. length = 96 -->
+    <P47>{$account.1.server_address}</P47>
+    <!-- Outbound Proxy -->
+    <P48>{$account.1.outbound_proxy_primary}</P48>
+    <!-- SIP User ID -->
+    <P35>{$account.1.user_id}</P35>
+    <!-- Authenticate ID -->
+    <P36>{$account.1.user_id}</P36>
+    <!-- Authenticate password -->
+    <P34>{$account.1.password}</P34>
+    <!-- Display Name (John Doe) -->
+    <P3>{$account.1.display_name}</P3>
+    <!-- Use DNS SRV. 0 - No, 1 - Yes. -->
+    <P103>0</P103>
+    <!-- SIP User ID is phone number. 0 - no, 1 - yes -->
+    <P63>0</P63>
+    <!-- SIP Registration. 0 - no, 1 - yes -->
+    <P31>1</P31>
+    <!-- Unregister On Reboot. 0 - no, 1 - yes -->
+    <P81>0</P81>
+    <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <P32>{$account.1.register_expires}</P32>
+    <!-- SIP Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
+    <P138>20</P138>
+    <!-- Local SIP port (default 5060) -->
+    <!-- SIP Transport 1 - UDP(default), 2 - TCP -->
+    <P130>1</P130>
+    <!-- NAT Traversal (STUN). 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+    <P52>1</P52>
+    <!-- Keep-Alive Using SIP OPTIONS. 0 - no, 1 - yes -->
+    <P1309>0</P1309>
+    <!-- SUBSCRIBE for MWI. (Whether or not send SUBSCRIBE for Message Waiting Indication) 0 - No, 1 - Yes. -->
+    <P99>0</P99>
+    <!-- PUBLISH for Presence, 0 - no (default),  1 - yes  -->
+    <P188>0</P188>
+    <!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+    <P197></P197>
+    <!-- SIP Compact Header. 0 - no, 1 - yes -->
+    <P289>0</P289>
+    <!-- Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+    <P33></P33>
+    <!-- Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO, 11 - In Audio & RTP & SIP INFO -->
+    <!-- 9 - In Audio & RTP, 10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+    <P73>8</P73>
+    <!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+    <P29>0</P29>
+    <!-- Dial Plan Prefix (dial plan prefix string) -->
+    <P66></P66>
+    <!-- Dial Plan. Maxlength = 128 character. Defalut is allow all  -->
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
+    <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5  -->
+    <P139>20</P139>
+    <!-- Enable Call Features.  0 - no, 1 - yes -->
+    <P191>1</P191>
+    <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <P260>180</P260>
+    <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <P261>90</P261>
+    <!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <P262>0</P262>
+    <!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <P263>0</P263>
+    <!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <P264>0</P264>
+    <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <P266>0</P266>
+    <!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <P267>1</P267>
+    <!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <P265>0</P265>
+    <!-- Enable 100rel. 0 - no, 1 - yes -->
+    <P272>0</P272>
+    <!-- Audio Call Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. -->
+    <P104>0</P104>
+    <!-- Video Call Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. -->
+    <P1354>0</P1354>
+    <!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes)   -->
+    <P65>0</P65>
+    <!-- Anonymous Call Rejection:  0 - no (default),  1 - yes  -->
+    <P129>0</P129>
+    <!-- Check SIP User ID for incoming INVITE, 0 - no (default),  1 - yes  -->
+    <P258>0</P258>
+    <!-- Refer-To Uses Target Contact:  0 - no (default),  1 - yes  -->
+    <P135>0</P135>
+    <!-- Disable Multiple Media Attribute in SDP,  0 - no (default),  1 - yes -->
+    <P137>0</P137>
+    <!-- Auto Answer. 0 - no, 1 - yes, 2 - Intercom/Paging -->
+    <P90>0</P90>
+    <!-- Preferred Vocoder -->
+    <!-- 0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
+    <!-- 9 - G.722, 18 - G.729A/B -->
+    <!-- Currently only PCMU/PCMA, GSM, G.723, G.729 and G.726-32 supported, will add others in the future -->
+    <!-- First codec. -->
+    <P57>0</P57>
+    <!-- Second codec. -->
+    <P58>8</P58>
+    <!-- Third codec.  -->
+    <P59>4</P59>
+    <!-- Forth codec. -->
+    <P60>18</P60>
+    <!-- Fifth codec. -->
+    <P61>3</P61>
+    <!-- Sixth codec. -->
+    <P62>2</P62>
+    <!-- Seventh codec. -->
+    <P46>0</P46>
+    <!-- Eighth codec. -->
+    <P98>0</P98>
+    <!-- Preferred Video Coder:   99 - H.264, 34 - H.263, 103 - H.263+ (1998) -->
+    <!-- Choice 1 -->
+    <P295>99</P295>
+    <!-- Choice 2 -->
+    <P296>34</P296>
+    <!-- Choice 3 -->
+    <P1307>103</P1307>
+    <!-- Choose Video Codec By Local Preference. 0 - No, 1 - Yes -->
+    <P1308>0</P1308>
+    <!-- Jitter Delay: 0 - Medium, 1 - Low, 2 - High -->
+    <P300>0</P300>
+    <!-- Enable Video: 0 - No, 1 - Yes, 2 - No, but allow in-call enabling -->
+    <P292>1</P292>
+    <!-- H.264 payload type: between 96 ~ 127, default = 99 -->
+    <P293>99</P293>
+    <!-- H.263+ (1998) payload type: between 96 ~ 127, default = 103 -->
+    <P350>103</P350>
+    <!-- H.263 Default Resolution. 0 - CIF, 1 - QCIF -->
+    <P1330>0</P1330>
+    <!-- Enable RFC5168 Support. 0 - No, 1 - Yes -->
+    <P1331>0</P1331>
+    <!-- SRTP Mode: Disabled - 0, Enabled but not forced - 1, Enabled and forced - 2 -->
+    <P183>0</P183>
+    <!-- Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus, 108 - CBCOM, 109 - RNK -->
+    <P198>100</P198>
+    <!-- SIP Account 2 Settings -->
+    <!-- Account Active (In Use). 0 - no, 1 - yes -->
+    <P401>0</P401>
+    <!--Account Name -->
+    <P417>0</P417>
+    <!-- SIP Server -->
+    <P402>{$account.2.server_address}</P402>
+    <!-- Outbound Proxy Server -->
+    <P403></P403>
+    <!-- Account 2 SIP User ID -->
+    <P404>{$account.2.user_id}</P404>
+    <!-- Authenticate ID -->
+    <P405>{$account.2.user_id}</P405>
+    <!-- Authenticate Password -->
+    <P406>{$account.2.password}</P406>
+    <!-- Display Name (John Doe) -->
+    <P407>{$account.2.display_name}</P407>
+    <!-- Use DNS SRV. 0 - No, 1 - Yes -->
+    <P408>0</P408>
+    <!-- User ID is phone number; "user=phone". 0 - no, 1 - yes -->
+    <P409></P409>
+    <!-- SIP Registration. 0 - no, 1 - yes -->
+    <P410>1</P410>
+    <!-- Unregister on Reboot. 0 - no, 1 - yes -->
+    <P411>0</P411>
+    <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <P412>{$account.2.register_expires}</P412>
+    <!-- Registration Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
+    <P471>20</P471>
+    <!-- SIP Transport, 1 - UDP(default), 2 - TCP -->
+    <P448>1</P448>
+    <!-- Local SIP port (default 5062) -->
+    <P413>5062</P413>
+    <!-- NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+    <P414>1</P414>
+    <!-- Keep-Alive Using SIP OPTIONS. 0 - no, 1 - yes -->
+    <P490>0</P490>
+    <!-- Subscribe MWI. (Whether or not send SUBSCRIBE for Message Waiting Indication) 0 - No, 1 - Yes. -->
+    <P415>0</P415>
+    <!-- PUBLISH for Presence, 0 - no (default),  1 - yes  -->
+    <P488>0</P488>
+    <!-- Proxy Require -->
+    <P418></P418>
+    <!-- SIP Compact Header. 0 - no, 1 - yes -->
+    <P472>0</P472>
+    <!-- Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+    <P426></P426>
+    <!-- Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO, 11 - In Audio & RTP & SIP INFO -->
+    <!-- 9 - In Audio & RTP, 10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+    <P416>8</P416>
+    <!-- Early Dial. 0 - no, 1 - yes -->
+    <P422>0</P422>
+    <!-- Dial Plan Prefix -->
+    <P419></P419>
+    <!-- Dial Plan. Maxlength = 128, default is allow all -->
+    <P459>{literal}{x+|*x+}{/literal}</P459>
+    <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5 -->
+    <P470>20</P470>
+    <!-- Enable Call Features. 0 - no, 1 - yes.-->
+    <P420>1</P420>
+    <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <P434>180</P434>
+    <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <P427>90</P427>
+    <!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <P428>0</P428>
+    <!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <P429>0</P429>
+    <!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <P430>0</P430>
+    <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <P432>0</P432>
+    <!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <P433>1</P433>
+    <!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <P431>0</P431>
+    <!-- Enable 100rel. 0 - no, 1 - yes -->
+    <P435>0</P435>
+    <!-- Audio Call Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. -->
+    <P423>0</P423>
+    <!-- Video Call Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. -->
+    <P482>0</P482>
+    <!-- Send Anonymous. 0 - no, 1 - yes ((caller ID will be blocked if set to Yes) -->
+    <P421>0</P421>
+    <!-- Anonymous Call Rejection:     0 - no (default),  1 - yes -->
+    <P446>0</P446>
+    <!-- Check SIP User ID for incoming INVITE, 0 - no (default),  1 - yes -->
+    <P449>0</P449>
+    <!-- Refer-To Uses Target Contact:  0 - no (default),  1 - yes -->
+    <P469>0</P469>
+    <!-- Disable Multiple Media Attribute in SDP,  0 - no (default),  1 - yes -->
+    <P487>0</P487>
+    <!-- Auto Answer. 0 - no, 1 - yes, 2 - Intercom/Paging -->
+    <P425>0</P425>
+    <!-- Preferred Vocoder -->
+    <!-- 0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, -->
+    <!-- 9 - G.722, 18 - G.729A/B -->
+    <!-- Currently only PCMU/PCMA, GSM, G.723, G.729 and G.726-32 supported, will add others in the future -->
+    <!-- First codec. -->
+    <P451>0</P451>
+    <!-- Second codec. -->
+    <P452>8</P452>
+    <!-- Third codec -->
+    <P453>4</P453>
+    <!-- Forth codec.-->
+    <P454>18</P454>
+    <!-- Fifth codec.-->
+    <P455>3</P455>
+    <!-- Sixth codec. -->
+    <P456>2</P456>
+    <!-- Seventh codec. -->
+    <P457>0</P457>
+    <!-- Eighth codec. -->
+    <P458>0</P458>
+    <!-- Preferred Video Codec:   99 - H.264, 34 - H.263 103 - H.263+ (1998) -->
+    <!-- Choice 1 -->
+    <P464>99</P464>
+    <!-- Choice 2 -->
+    <P465>34</P465>
+    <!-- Choice 3 -->
+    <P475>103</P475>
+    <!-- Choose Video Codec By Local Preference. 0 - No, 1 - Yes -->
+    <P474>0</P474>
+    <!-- Jitter Delay: 0 - Medium, 1 - Low, 2 - High -->
+    <P467>0</P467>
+    <!-- Enable Video: 0 - No, 1 - Yes, 2 - No, but allow in-call enabling -->
+    <P461>1</P461>
+    <!-- H.264 payload type: between 96 ~ 127, default = 99 -->
+    <P462>99</P462>
+    <!-- H.263+ payload type: between 96 ~ 127, default = 103 -->
+    <P473>103</P473>
+    <!-- H.263 Default Resolution. 0 - CIF, 1 - QCIF -->
+    <P477>0</P477>
+    <!-- Enable RFC5168 Support. 0 - No, 1 - Yes -->
+    <P478>0</P478>
+    <!-- SRTP Mode: Disabled - 0, Enabled but not forced - 1, Enabled and forced - 2 -->
+    <P443>0</P443>
+    <!-- Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus, 108 - CBCOM, 109 - RNK -->
+    <P424>100</P424>
+    <!-- SIP Account 3 Settings -->
+    <!-- Account Active (In Use). 0 - no, 1 - yes -->
+    <P501>0</P501>
+    <!-- Account Name -->
+    <P517></P517>
+    <!-- SIP Server -->
+    <P502>{$account.3.server_address}</P502>
+    <!-- Outbound Proxy Server -->
+    <P503></P503>
+    <!-- SIP User ID -->
+    <P504>{$account.3.user_id}</P504>
+    <!-- Authenticate ID -->
+    <P505>{$account.3.user_id}</P505>
+    <!-- Authenticate Password -->
+    <P506>{$account.3.password}</P506>
+    <!-- Display Name (John Doe) -->
+    <P507>{$account.3.display_name}</P507>
+    <!-- Use DNS SRV. 0 - No, 1 - Yes. -->
+    <P508>0</P508>
+    <!-- User ID is phone. "user=phone". 0 - no, 1 - yes -->
+    <P509>0</P509>
+    <!-- SIP Registration. 0 - no, 1 - yes -->
+    <P510>1</P510>
+    <!-- Unregister on Reboot. 0 - no, 1 - yes -->
+    <P511>0</P511>
+    <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <P512>{$account.3.register_expires}</P512>
+    <!-- Registration Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
+    <P571>20</P571>
+    <!-- SIP Local port (default 5064) -->
+    <P513>5064</P513>
+    <!-- SIP Transport, 1 - UDP(default), 2 - TCP  -->
+    <P548>1</P548>
+    <!-- NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+    <P514>1</P514>
+    <!-- Keep-Alive Using SIP OPTIONS. 0 - no, 1 - yes -->
+    <P590>0</P590>
+    <!-- Subscribe MWI. (Whether or not send SUBSCRIBE for Message Waiting Indication) 0 - no, 1 - yes -->
+    <P515>0</P515>
+    <!-- PUBLISH for Presence, 0 - no (default),  1 - yes -->
+    <P588>0</P588>
+    <!-- Proxy Require -->
+    <P518></P518>
+    <!-- SIP Compact Header. 0 - no, 1 - yes -->
+    <P572>0</P572>
+    <!-- Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+    <P526></P526>
+    <!-- Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO, 11 - In Audio & RTP & SIP INFO -->
+    <!-- 9 - In Audio & RTP, 10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+    <P516>8</P516>
+    <!-- Early Dial. 0 - no, 1 - yes -->
+    <P522>0</P522>
+    <!-- Dial Plan Prefix -->
+    <P519></P519>
+    <!-- Dial Plan: Maxlength = 128, default is allow all  -->
+    <P559>{literal}{x+|*x+}{/literal}</P559>
+    <!-- Delayed Call Forward Wait Time. Default is 20 seconds, maxlength = 5  -->
+    <P570>20</P570>
+    <!-- Enable Call Features. 0 - no, 1 - yes. -->
+    <P520>1</P520>
+    <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <P534>180</P534>
+    <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <P527>90</P527>
+    <!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <P528></P528>
+    <!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <P529></P529>
+    <!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <P530></P530>
+    <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <P532>0</P532>
+    <!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <P533>1</P533>
+    <!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <P531></P531>
+    <!-- Enable 100rel. 0 - no, 1 - yes -->
+    <P535>0</P535>
+    <!-- Audio Call Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. -->
+    <P523>0</P523>
+    <!-- Video Call Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. -->
+    <P582>0</P582>
+    <!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - no, 1 - yes -->
+    <P521>0</P521>
+    <!-- Anonymous Call Rejection:     0 - no (default),  1 - yes  -->
+    <P546>0</P546>
+    <!-- Check SIP User ID for incoming INVITE, 0 - no (default),  1 - yes  -->
+    <P549>0</P549>
+    <!-- Refer-To Uses Target Contact:  0 - no (default),  1 - yes  -->
+    <P569>0</P569>
+    <!-- Disable Multiple Media Attribute in SDP,  0 - no (default),  1 - yes -->
+    <P587>0</P587>
+    <!-- Auto Answer. 0 - no, 1 - yes, 2 - Intercom/Paging -->
+    <P525>0</P525>
+    <!-- Preferred Vocoder -->
+    <!-- 0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, -->
+    <!-- 9 - G.722, 18 - G.729A/B -->
+    <!-- Currently only PCMU/PCMA, GSM, G.723, G.729 and G.726-32 supported, will add others in the future  -->
+    <!-- First codec. -->
+    <P551>0</P551>
+    <!-- Second codec. -->
+    <P552>8</P552>
+    <!-- Third codec. -->
+    <P553>4</P553>
+    <!-- Forth codec. -->
+    <P554>18</P554>
+    <!-- Fifth codec. -->
+    <P555>3</P555>
+    <!-- Sixth codec. -->
+    <P556>2</P556>
+    <!-- Seventh codec. -->
+    <P557>0</P557>
+    <!-- Eighth codec. -->
+    <P558>0</P558>
+    <!-- Preferred Video Codec:   99 - H.264, 34 - H.263, 103 - H.263+ (1998) -->
+    <!-- Choice 1 -->
+    <P564>99</P564>
+    <!-- Choice 2 -->
+    <P565>34</P565>
+    <!-- Choice 3 -->
+    <P575>103</P575>
+    <!-- Choose Video Codec By Local Preference. 0 - No, 1 - Yes -->
+    <P574>0</P574>
+    <!-- Jitter Delay: 0 - Medium, 1 - Low, 2 - High -->
+    <P567>0</P567>
+    <!-- Enable Video: 0 - No, 1 - Yes, 2 - No, but allow in-call enabling -->
+    <P561>1</P561>
+    <!-- H.264 payload type: between 96 ~ 127, default = 99 -->
+    <P562>99</P562>
+    <!-- H.263+ (1998) payload type: between 96 ~ 127, default = 103 -->
+    <P573>103</P573>
+    <!-- H.263 Default Resolution. 0 - CIF, 1 - QCIF -->
+    <P577>0</P577>
+    <!-- Enable RFC5168 Support. 0 - No, 1 - Yes -->
+    <P578>0</P578>
+    <!-- SRTP Mode: Disabled - 0, Enabled but not forced - 1, Enabled and forced - 2 -->
+    <P543>0</P543>
+    <!-- Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus, 108 - CBCOM, 109 - RNK -->
+    <P524>100</P524>
+    <!-- End User Settings. Please do not edit this section. -->
+    <!-- Web Access. 0 - HTTP, 1 - HTTPS -->
+    <!-- P900 = 0  -->
+    <!-- Web Port: HTTP default is 80 and HTTPS default is 443   -->
+    <!-- P901 = 80 -->
+    <!-- End User Password -->
+    <!-- P196 = 123 -->
+    <!-- DHCP/PPPoE support. 0 - yes, 1 - no -->
+    <!-- P8 = 0 -->
+    <!-- DHCP hostname, alphabet, max. length is 32 -->
+    <!-- P146 = -->
+    <!-- DHCP domain, alphabet, max. length is 32 -->
+    <!-- P147 = -->
+    <!-- DHCP vendor class ID, alphabet, max. length is 32 -->
+    <!-- P148 = Grandstream GXV-3000 -->
+    <!-- PPPoE support. PPPoE user ID -->
+    <!-- P82 = -->
+    <!-- PPPoE password -->
+    <!-- P83 = -->
+    <!-- PPPoE service name, max. length is 64 alpabit -->
+    <!-- P269 =  -->
+    <!-- Preferred DNS server, four field, octet digits -->
+    <!-- P92 = -->
+    <!-- P93 = -->
+    <!-- P94 = -->
+    <!-- P95 = -->
+    <!-- Static IP Address. Ignore if DHCP or PPPoE is used -->
+    <!--P9 = 192 -->
+    <!--P10 = 168 -->
+    <!--P11 = 0 -->
+    <!--P12 = 1 -->
+    <!-- Subnet mask. Ignore if DHCP or PPPoE is used -->
+    <!--P13 = 255 -->
+    <!--P14 = 255 -->
+    <!--P15 = 255 -->
+    <!--P16 = 0 -->
+    <!-- Default Router. Ignore if DHCP or PPPoE is used -->
+    <!--P17 = 192 -->
+    <!--P18 = 168 -->
+    <!--P19 = 1 -->
+    <!--P20 = 1 -->
+    <!-- DNS 1. Ignore if DHCP or PPPoE is used -->
+    <!--P21 = 192 -->
+    <!--P22 = 168 -->
+    <!--P23 = 0 -->
+    <!--P24 = 1 -->
+    <!-- DNS 2. Ignore if DHCP or PPPoE is used -->
+    <!--P25 = 0 -->
+    <!--P26 = 0 -->
+    <!--P27 = 0 -->
+    <!--P28 = 0 -->
+    <!-- End User Time settings -->
+    <!-- Time Zone. Offset in minutes to GMT. -->
+    <!-- option value = 0	    GMT-12:00 (International Date Line West) -->
+    <!-- option value = 60     GMT-11:00 (Midway Island, Samoa) -->
+    <!-- option value = 120    GMT-10:00 (US Hawaiian Time) -->
+    <!-- option value = 180    GMT-9:00  (US Alaska Time) -->
+    <!-- option value = 240    GMT-8:00  (US Pacific Time, Los Angeles) -->
+    <!-- option value = 300    GMT-7:00  (US Mountain Time, Denver) -->
+    <!-- option value = 360    GMT-6:00  (US Central Time, Chicago) -->
+    <!-- option value = 420    GMT-5:00  (US Eastern Time, New York),  Default  -->
+    <!-- option value = 450    GMT-4:30  (Venezuela) -->
+    <!-- option value = 480    GMT-4:00  (Atlantic Time, Quebec) -->
+    <!-- option value = 540    GMT-3:00  (Greenland) -->
+    <!-- option value = 600    GMT-2:00  (Mid-Atlantic) -->
+    <!-- option value = 660    GMT-1:00  (Azores, Cape Verdi Is.) -->
+    <!-- option value = 720    GMT 0:00  (London, Dublin, Edinburgh, Lisbon, Casablanca, Monrovia) -->
+    <!-- option value = 780    GMT+1:00  (Paris, Amsterdam, Berlin, Rome, Vienna, Madrid, Warsaw, Brussels) -->
+    <!-- option value = 840    GMT+2:00  (Israel, Cairo, Athens, Helsinki, Istanbul, Bucuresti) -->
+    <!-- option value = 900    GMT+3:00  (Moscow, Kuwait, Baghdad, Nairobi) -->
+    <!-- option value = 930    GMT+3:30  (Tehran) -->
+    <!-- option value = 960    GMT+4:00  (Abu Dhabi, Baku) -->
+    <!-- option value = 990    GMT+4:30  (Kabul) -->
+    <!-- option value = 1020   GMT+5:00  (Islamabad, Ekaterinburg, Karachi, Tashkent) -->
+    <!-- option value = 1050   GMT+5:30  (Calcutta, Chennai, Mumbai, New Delhi) -->
+    <!-- option value = 1065   GMT+5:45  (Kathmandu) -->
+    <!-- option value = 1080   GMT+6:00  (Almaty, Astana, Dhaka, Novosibirsk) -->
+    <!-- option value = 1110   GMT+6:30  (Rangoon) -->
+    <!-- option value = 1140   GMT+7:00  (Bankok, Jakarta, Hanoi, Krasnoyarsk) -->
+    <!-- option value = 1200   GMT+8:00  (Beijing, Singapore, Taipei, Kuala Lumpur, Irkutsk, Perth) -->
+    <!-- option value = 1260   GMT+9:00  (Japan, Korea, Yakutsk) -->
+    <!-- option value = 1290   GMT+9:30  (Adelaide, Darwin) -->
+    <!-- option value = 1320   GMT+10:00 (Brisbane, Sydney, Melbourne, Canberra, Guam, Hobart) -->
+    <!-- option value = 1380   GMT+11:00 (Magadan, Solomon Is., New Caledonia) -->
+    <!-- option value = 1440   GMT+12:00 (Auckland, Wellington, Fiji) -->
+    <!-- option value = 1500   GMT+13:00 (Nuku'alofa) -->
+    <P64>420</P64>
+    <!-- Allow DHCP Option 2 to override Time Zone setting. 0 - No, 1 - Yes. -->
+    <!-- When set to Yes(1), it will override the configured Time Zone setting if available.  -->
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+    <!-- Daylight Savings Time. 0 - no, 1 - yes -->
+    <P75>0</P75>
+    <!-- Optional Rule:  -->
+    <!-- If Daylight Saving Time is selected (P75 = 1), optional rule will allow automatically time ajustment based on the configured rule -->
+    <!-- Maxlength = 33, default is North America or US Daylight Saving Time Schecule: value="3,2,7,2,0;11,1,7,2,0;60" -->
+    <P246>3,2,7,2,0;11,1,7,2,0;60</P246>
+    <!-- Time Display Format. 0 - 12 Hour, 1 - 24 Hour -->
+    <P122>0</P122>
+    <!-- Date Display Format. 0 - Year-Month-Day, 1 - Month-Day-Year, 2 - Day-Month-Year -->
+    <P102>0</P102>
+    <!-- End User LCD settings -->
+    <!-- Disable SIP User Display:     0 - no (Default),  1 - yes -->
+    <P940>0</P940>
+    <!-- Disable IP Address Display:   0 - no (Default),  1 - yes -->
+    <P941>0</P941>
+    <!-- LCD Screen Saver Start Interval: in seconds, 0 means screen saver is off, max. length is 5 -->
+    <P913>60</P913>
+    <!-- LCD Screen Saver Refresh Interval: in seconds. from 1-3600, default is 10, controls the time of screensaver image displayed on LCD. -->
+    <P937>10</P937>
+    <!-- LCD Auto Power Off Interval: in seconds, 0 means LCD will be always on, max. length is 5 -->
+    <P909>0</P909>
+    <!-- LCD Backlight Brightness: max. length is 5, default is 128 -->
+    <P910>128</P910>
+    <!-- LCD Contrast: max. length is 5, default is 128 -->
+    <P911>128</P911>
+    <!-- LCD Chroma Saturation: max. length is 5, default is 128 -->
+    <P912>128</P912>
+    <!-- LCD Text Color:   maxlength=3 size=5 -->
+    <!-- Red (0-255) -->
+    <P930>255</P930>
+    <!-- Green (0-255) -->
+    <P931>255</P931>
+    <!-- Blue (0-255) -->
+    <P932>255</P932>
+    <!-- OSD Text Color:  -->
+    <!-- value = 1  Blue -->
+    <!-- value = 2  Black -->
+    <!-- value = 3  Purple -->
+    <!-- value = 4  Dark Blue -->
+    <!-- value = 5  Green -->
+    <!-- value = 6  Red -->
+    <!-- value = 7  Olive -->
+    <!-- value = 8  Light Grey -->
+    <!-- value = 12 Yellow -->
+    <!-- value = 15 White -->
+    <P922>15</P922>
+    <!-- PIP Position: -->
+    <!-- value=0  Top Left -->
+    <!-- value=1  Top Right -->
+    <!-- value=2  Bottom Left -->
+    <!-- value=3  Bottom Right -->
+    <P936>0</P936>
+    <!-- Starting Video OSD/PIP Mode -->
+    <!-- value=1 OSD On, PIP On -->
+    <!-- value=2 OSD On, PIP Reversed -->
+    <!-- value=3 OSD On, PIP Off -->
+    <!-- value=4 OSD Off, PIP Off -->
+    <!-- value=5 OSD Off, PIP On -->
+    <!-- value=6 OSD Off, PIP Reversed -->
+    <P1332>1</P1332>
+    <!-- Camera Zoom Mode: -->
+    <!-- value = 0   1.0:1 (wide and default) -->
+    <!-- value = 1   1.1:1 -->
+    <!-- value = 2   1.2:1 -->
+    <!-- value = 4   1.4:1 -->
+    <!-- value = 5   1.5:1 -->
+    <!-- value = 6   1.6:1 -->
+    <!-- value = 7   1.7:1 -->
+    <!-- value = 8   1.8:1 -->
+    <!-- value = 9   1.9:1 -->
+    <!-- value = 10  2.0:1 <optical tele) -->
+    <!-- value = 11  2.2:1 -->
+    <!-- value = 12  2.4:1 -->
+    <!-- value = 13  2.6:1 -->
+    <!-- value = 14  2.8:1 -->
+    <!-- value = 15  3.0:1 -->
+    <!-- value = 16  3.2:1 -->
+    <!-- value = 17  3.4:1 -->
+    <!-- value = 18  3.6:1 -->
+    <!-- value = 19  3.8:1 -->
+    <!-- value = 20  4.0:1 (digital tele) -->
+    <P914>0 </P914>
+    <!-- Camera Exposure:    Default: 0 = auto -->
+    <!-- value = 0   Auto -->
+    <!-- value = 5   Very Bright -->
+    <!-- value = 2   Bright -->
+    <!-- value = 6   Less Bright I -->
+    <!-- value = 7   Less Bright II -->
+    <!-- value = 8   Less Bright II -->
+    <!-- value = 1   Normal -->
+    <!-- value = 9   Less Dim I -->
+    <!-- value = 10  Less Dim II -->
+    <!-- value = 11  Less Dim III -->
+    <!-- value = 3   Dim -->
+    <!-- value = 12  Less Dark -->
+    <!-- value = 4   Dark -->
+    <!-- value = 13  Very Dark -->
+    <P915>0</P915>
+    <!-- Camera Color Mode:     0 = Color mode (Default), 1 = Monochrome -->
+    <P919>0</P919>
+    <!-- Camera White Balance:  0 = auto (Default), 1 = fixed -->
+    <P920>0</P920>
+    <!-- Camera Lens Correction: 0 = no, 1 = yes (Default) -->
+    <P926>1</P926>
+    <!-- TV Output:  0 = off (Default) -->
+    <!-- value = 0   Off -->
+    <!-- value = 1   NTSC -->
+    <!-- value = 2   PAL-BDGHI -->
+    <!-- value = 3   PAL-M/PALSA -->
+    <!-- value = 4   PAL-Nc/PALSA -->
+    <P926>0</P926>
+    <!-- FXO Settings. The following settings are only appliable on GXV3005 -->
+    <!-- Current Disconnect(0, 50 ~ 800ms, default is 100. Enter 0 to disable it.) -->
+    <P1313>100</P1313>
+    <!-- Enable Tone Disconnect 0 = No, 1 = Yes -->
+    <P1314>1</P1314>
+    <!-- AC Termination Impedance 		Default: 0 = 600 Ohm (North America) -->
+    <!-- value = 0   600 Ohm (North America) -->
+    <!-- value = 1   900 Ohm -->
+    <!-- value = 2   270 Ohm + (750 Ohm || 150 nF) and 275 Ohm + (780 Ohm || 150 nF) -->
+    <!-- value = 3   220 Ohm + (820 Ohm || 120 nF) and 220 Ohm + (820 Ohm || 115 nF) -->
+    <!-- value = 4   370 Ohm + (620 Ohm || 310 nF) -->
+    <!-- value = 5   320 Ohm + (1050 Ohm || 230 nF) -->
+    <!-- value = 6   370 Ohm + (820 Ohm || 110 nF) -->
+    <!-- value = 7   275 Ohm + (780 Ohm || 150 nF) -->
+    <!-- value = 8  120 Ohm + (820 Ohm || 110 nF) -->
+    <!-- value = 9  350 Ohm + (1000 Ohm || 210 nF) -->
+    <!-- value = 10   0   Ohm + (900 Ohm || 30 nF) -->
+    <!-- value = 11  600 Ohm + 2.16 uF -->
+    <!-- value = 12  900 Ohm + 1 uF -->
+    <!-- value = 13  900 Ohm + 2.16 uF -->
+    <!-- value = 14  600 Ohm + 1 uF -->
+    <!-- value = 15  Global complex impedance -->
+    <P1316>0</P1316>
+    <!-- Silence Timeout  (in seconds, default is 60) -->
+    <P1317>60</P1317>
+    <!-- Caller ID Scheme  (default is BELLCORE)  -->
+    <!-- value = 1   BELLCORE -->
+    <!-- value = 2   ETSI_PR -->
+    <!-- value = 3   ETSI_DTAS -->
+    <!-- value = 4   DTMF -->
+    <!-- value = 5   NTT -->
+    <P1318>1</P1318>
+    <!-- Call Progress Tone   -->
+    <!-- Dial Tone -->
+    <P1319>f1=350,f2=440;</P1319>
+    <!-- Ring Back Tone -->
+    <P1320>f1=440,f2=480,c=200/400;</P1320>
+    <!-- Busy Tone -->
+    <P1321>f1=450,f2=450,c=50/50;</P1321>
+    <!-- Reorder Tone -->
+    <P1322>f1=480,f2=620,c=25/25;</P1322>
+    <!-- Tx to PSTN Audio Gain(dB)   (-12 ~ 12, default is 1) -->
+    <P1323>1</P1323>
+    <!-- Rx to PSTN Audio Gain(dB)		(-12 ~ 12, default is 0) -->
+    <P1324>0</P1324>
+    <!--FXS Settings. The following settings are only appliable on GXV3006 -->
+    <!-- Onhook Threshold (Default is 800 ms) -->
+    <!-- value = 0   Hookflash OFF -->
+    <!-- value = 2   200 ms -->
+    <!-- value = 4   400 ms -->
+    <!-- value = 6   600 ms -->
+    <!-- value = 8   800 ms -->
+    <!-- value = 10  1000 ms -->
+    <!-- value = 12  1200 ms -->
+    <P245>8</P245>
+    <!-- Onhook Voltage (Default is 800 ms) -->
+    <!-- value = 0   48 V -->
+    <!-- value = 1   18 V -->
+    <!-- value = 2   24 V -->
+    <!-- value = 3   36 V -->
+    <!-- value = 4   51 V -->
+    <P206>0</P206>
+    <!-- Volume Amplification  -->
+    <!-- TX (Default is 0 dB) -->
+    <!-- value = 0   0dB -->
+    <!-- value = 1   +6dB -->
+    <!-- value = 2   +4dB -->
+    <!-- value = 3   +2dB -->
+    <!-- value = 4   -2dB -->
+    <!-- value = 5		-4dB -->
+    <!-- value = 6		-6dB -->
+    <P247>0</P247>
+    <!-- RX (Default is 0 dB) -->
+    <!-- value = 0   0dB -->
+    <!-- value = 1   +6dB -->
+    <!-- value = 2   +4dB -->
+    <!-- value = 3   +2dB -->
+    <!-- value = 4   -2dB -->
+    <!-- value = 5		-4dB -->
+    <!-- value = 6		-6dB -->
+    <P249>0</P249>
+    <!-- Caller ID Scheme  (default is BELLCORE)  -->
+    <!-- value = 0   BELLCORE -->
+    <!-- value = 5   SWEDEN_DTMF -->
+    <P853>0</P853>
+    <!-- Disable FXS Caller ID	 0 = No, 1 = Yes -->
+    <P1337>0</P1337>
+    <!-- Enable FXS Call Waiting Caller ID 	0 = No, 1 = Yes -->
+    <P1338>0</P1338>
+    <!-- Distinctive Ring Tone -->
+    <!-- system ring tone	(f1: 20-50 HZ) -->
+    <P1333>f1=25,c=200/400;</P1333>
+    <!-- custom ring tone 1 -->
+    <P1334>f1=25,c=100/400</P1334>
+    <!-- custom ring tone 2 -->
+    <P1335>f1=25,c=100/100-100/300;</P1335>
+    <!-- custom ring tone 3 -->
+    <P1336>f1=25,c=100/100-40/50;</P1336>
+    <!--Account1 -->
+    <!--audio call, 0=system ring tone(default), 1=custom ring tone 1, 2=custom ring tone 2, 3=custom ring tone 3 -->
+    <P1355>0</P1355>
+    <!--video call, , 0=system ring tone(default), 1=custom ring tone 1, 2=custom ring tone 2, 3=custom ring tone 3 -->
+    <P1356>0</P1356>
+    <!--Account2 -->
+    <!--audio call, 0=system ring tone(default), 1=custom ring tone 1, 2=custom ring tone 2, 3=custom ring tone 3 -->
+    <P483>0</P483>
+    <!--video call, , 0=system ring tone(default), 1=custom ring tone 1, 2=custom ring tone 2, 3=custom ring tone 3 -->
+    <P484>0</P484>
+    <!--Account3 -->
+    <!--audio call, 0=system ring tone(default), 1=custom ring tone 1, 2=custom ring tone 2, 3=custom ring tone 3 -->
+    <P484>0</P484>
+    <!--video call, , 0=system ring tone(default), 1=custom ring tone 1, 2=custom ring tone 2, 3=custom ring tone 3 -->
+    <P584>0</P584>
+  </config>
+</gs_provision>

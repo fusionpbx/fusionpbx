@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+        <context name="default">
+                <extension name="demo">
+                        <condition field="to" expression="^(.*)$">
+                                <!-- <action application="lua" data="test.lua"/> -->
+                                <!-- <action application="reply" data="Hello, you said: ${_body}"/> -->
+                        </condition>
+                </extension>
+        </context>   
+        <context name="public">
+                <extension name="demo">
+                        <condition field="to" expression="^(.*)$">
+                                <!-- <action application="lua" data="app.lua sms outbound"/> -->
+                        </condition>
+                </extension>
+        </context>
+</include>

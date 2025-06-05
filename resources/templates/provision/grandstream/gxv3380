@@ -1,0 +1,1711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gs_provision version="1">
+	<config version="2">
+		<!-- Configuration Template for GXV3380 Firmware Version 1.0.3.21 -->
+		<!-- Instruction -->
+		<!-- The new type of config template gives better understanding than P-value numbers to match the setting name from web UI or device, by using names that are similar from web UI. -->
+		<!-- 1. This config template includes settings for account 1 only. To update item name to "account.{i}...", where {i} is the account index. For example, to update Account 12 SIP server address, include the following in config template: -->
+		<!-- GXV3370 can support up to 16 SIP accounts and 160 MPKs -->
+		<!-- Example, <item name="account.12.sip.server.1.address">sipserver.net</item> -->
+		<!-- 2. The template uses alias name to represent drop-down options. For example, Tel URI uses "Disabled, UserIsPhone, Enabled". To update this setting to "User=Phone", include the following in config template: -->
+		<!-- Example, <item name="account.1.sip.telUri">UserIsPhone</item> -->
+		<!-- 3. For those settings without alias, numbers are informed to match drop-down options.  -->
+		<!-- End of Instruction -->
+
+		<!-- Known issue / Notes:  -->
+		<!-- MPK provision needs reboot to take effect -->
+
+		<!-- Account General Settings -->
+		{for $line=1 to 16}
+		{$row=$lines.$line}
+		<!-- Account Active -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.enable">{if filter_var($row.enabled, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
+
+		<!-- Account Name -->
+		<item name="account.{$line}.name">{$row.display_name}</item>
+
+		<!-- SIP Server -->
+		<item name="account.{$line}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
+
+		<!-- SIP User ID -->
+		<item name="account.{$line}.sip.userid">{$row.user_id}</item>
+
+		<!-- SIP Authentication ID -->
+		<item name="account.{$line}.sip.subscriber.userId">{$row.auth_id}</item>
+
+		<!-- SIP Authentication Password -->
+		<item name="account.{$line}.sip.subscriber.password">{$row.password}</item>
+		<!-- Voice Mail Access Number -->
+		<item name="account.{$line}.sip.voicemail.number">{$voicemail_number}</item>
+		<!-- Display Name -->
+		<item name="account.{$line}.sip.subscriber.name">{$row.display_name}</item>
+		<!-- Tel URI -->
+		<!-- Disabled, UserIsPhone, Enabled -->
+		<item name="account.{$line}.sip.telUri">Disabled</item>
+		<!-- Account 1 Network Settings -->
+		<!-- Outbound Proxy -->
+		<item name="account.{$line}.sip.outboundProxy.1.address">{$row.outbound_proxy_primary}</item>
+		<!-- Secondary Outbound Proxy -->
+		<item name="account.{$line}.sip.outboundProxy.2.address">{$row.outbound_proxy_secondary}</item>
+		<!-- DNS Mode -->
+		<!-- ARecord, SRV, NaptrOrSrv -->
+		<item name="account.{$line}.network.dnsMode">ARecord</item>
+		<!-- DNS SRV Failover Mode -->
+		<!-- Default, SavedOneUntilDNSTTL, SavedOneUntilNoResponse, SavedWhenFallback -->
+		<item name="account.{$line}.network.dnsSRVFailoverMode">Default</item>
+		<!-- Register Before DNS SRV Fail-over -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.network.dnsSRVRegisterBeforeFailover">No</item>
+		<!-- NAT Traversal -->
+		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
+		<item name="account.{$line}.network.natTraversal">Auto</item>
+		<!-- Proxy-Require -->
+		<item name="account.{$line}.network.proxyRequire"></item>
+		<!-- SIP Registration -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.registration">Yes</item>
+		<!-- Unregister Before New Registration -->
+		<!-- No, Yes - All, Instance -->
+		<item name="account.1.sip.unregisterOnReboot">Instance</item>
+		<!-- Register Expiration (m) -->
+		<item name="account.{$line}.sip.registerExpiration">{$row.register_expires}</item>
+		<!-- Subscribe Expiration (m) -->
+		<!-- NUmber: 0 - 64800 -->
+		<item name="account.{$line}.sip.subscribe.expiration">60</item>
+		<!-- Re-register before Expiration (s)  -->
+		<item name="account.{$line}.sip.registerBeforeExpiration">0</item>
+		<!-- Registration Retry Wait Time (s) -->
+		<item name="account.{$line}.sip.registrationFailureRetryWaitTime">20</item>
+		<!-- Add Auth Header On RE-REGISTER tobetested -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.header.authOnInitialRegister">Yes</item>
+		<!-- Enable SIP OPTIONS Keep Alive -->
+		<item name="account.{$line}.sip.keepAlive.enable">No</item>
+		<!-- SIP OPTIONS Keep Alive Interval (s)  -->
+		<item name="account.{$line}.sip.keepAlive.interval">30</item>
+		<!-- SIP OPTIONS Keep Alive Maximum Tries -->
+		<item name="account.{$line}.sip.keepAlive.maxLost">3</item>
+		<!-- Subscribe for MWI -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.subscribe.forMwi">No</item>
+		<!-- Use Privacy Header -->
+		<!-- Default, No, Yes -->
+		<item name="account.{$line}.sip.header.privacy">Default</item>
+		<!-- Use P-Preferred-Identity Header  -->
+		<!-- Default, No, Yes -->
+		<item name="account.{$line}.sip.header.ppi">Default</item>
+		<!-- SIP Transport -->
+		<!-- Use P-Access-Network-Info Header -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.header.pani">Yes</item>
+		<!-- Use P-Emergency-Info Header -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.header.pei">Yes</item>
+		<!-- Use Mac Header -->
+		<!-- No, YesForRegisterOnly, YesToAllSip -->
+		<item name="account.{$line}.sip.header.mac">No</item>
+		<!-- Add MAC in User-Agent -->
+		<!-- No, YesExceptRegister, YesToAllSip -->
+		<item name="account.{$line}.sip.useragent.mac">No</item>
+		<!-- UDP, TCP, TlsOrTcp -->
+		<item name="account.{$line}.sip.transport">{if $row.sip_transport=='tcp'}TCP{elseif $row.sip_transport=='tls'}TlsOrTcp{else}UDP{/if}</item>
+		<!-- Local SIP Port -->
+		<item name="account.{$line}.sip.localPort">{$row.sip_port}</item>
+		<!-- SIP URI Scheme When Using TLS -->
+		<!-- sip, sips -->
+		<item name="account.{$line}.sip.uriSchemeWhenUsingTls">sip</item>
+		<!-- Use Actual Ephemeral Port in Contact with TCP/TLS -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.sip.useActualEphemeralPortInContactWithTcpTls">No</item>
+		<!-- Support SIP Instance ID -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.sip.supportInstanceId">Yes</item>
+		<!-- SIP T1 Timeout -->
+		<!-- 0.5 sec - 0_5sec, 1 sec - 1sec, 2 sec - 2sec -->
+		<item name="account.{$line}.sip.timer.t1">0_5sec</item>
+		<!-- SIP T2 Interval -->
+		<!-- 2 sec - 2sec, 4 sec - 4sec, 8 sec - 8sec -->
+		<item name="account.{$line}.sip.timer.t2">4sec</item>
+		<!-- SIP Timer D Interval (Seconds) -->
+		<item name="account.{$line}.sip.timerd.interval">0</item>
+		<!-- Remove OBP from Route -->
+		<!-- Disable - InRoute, Enable - NotInRoute, Always - AlwaysSentTo -->
+		<item name="account.{$line}.sip.outboundProxy.mode">InRoute</item>
+		<!-- Enable 100rel -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.sip.header.100rel">No</item>
+		<!-- Enable Session Timer/Session Expiration (s) -->
+		<!-- Session Timer is disabled if the value is 0 -->
+		<item name="account.{$line}.sip.sessionTimer.expiration">180</item>
+		<!-- Min-SE(s) -->
+		<item name="account.{$line}.sip.minimumSE">90</item>
+		<!-- UAC Specify Refresher -->
+		<!-- Omit, UAC, UAS -->
+		<item name="account.{$line}.sip.sessionTimer.refresher.uacSpecify">Omit</item>
+		<!-- UAS Specify Refresher -->
+		<!--UAC, UAS -->
+		<item name="account.{$line}.sip.sessionTimer.refresher.uasSpecify">UAC</item>
+		<!-- Caller Request Timer -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.sip.sessionTimer.requestTimer.caller">No</item>
+		<!-- Callee Request Timer -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.sip.sessionTimer.requestTimer.callee">No</item>
+		<!-- Force Timer -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.sip.sessionTimer.force">No</item>
+		<!-- Force INVITE -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.sip.sessionTimer.forceInvite">No</item>
+		<!-- Codec Settings -->
+		<!-- Preferred Vocoder -->
+		<!-- PCMU, PCMA, G_726_32, G_722, G_729AOrB, iLBC, OPUS -->
+		<item name="account.{$line}.codec.choice.1">PCMU</item>
+		<item name="account.{$line}.codec.choice.2">PCMA</item>
+		<item name="account.{$line}.codec.choice.3">G_726_32</item>
+		<item name="account.{$line}.codec.choice.4">G_722</item>
+		<item name="account.{$line}.codec.choice.5">G_729AOrB</item>
+		<item name="account.{$line}.codec.choice.6">iLBC</item>
+		<item name="account.{$line}.codec.choice.7">OPUS</item>
+		<!-- Codec Negotiation Priority -->
+		<!-- Caller, Callee -->
+		<item name="account.{$line}.codec.negotiatePriority">Callee</item>
+		<!-- Use First Matching Vocoder in 200OK SDP -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.codec.useFirstMatch">No</item>
+		<!-- iLBC Frame Size -->
+		<!-- 20ms, 30ms -->
+		<item name="account.{$line}.codec.iLBC.frameSize">30ms</item>
+		<!-- G726-32 ITU Payload -->
+		<!-- 2 - 0, Dynamic - 1 -->
+		<item name="account.{$line}.codec.payloadType.g72632.ITU">1</item>
+		<!-- G726-32 Dynamic PT -->
+		<!-- Range: 96-126, default: 126 -->
+		<item name="account.{$line}.codec.payloadType.g72632">126</item>
+		<!-- Opus Payload Type -->
+		<item name="account.{$line}.codec.payloadType.opus">123</item>
+		<!-- DTMF -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.dtmf.sendInAudio">No</item>
+		<item name="account.{$line}.dtmf.sendInRtp">Yes</item>
+		<item name="account.{$line}.dtmf.sendInSip">No</item>
+		<!-- DTMF Payload Type -->
+		<item name="account.{$line}.codec.payoadType.dtmf">101</item>
+		<!-- Jitter Buffer Type -->
+		<!-- Fixed, Adaptive -->
+		<item name="account.{$line}.audio.jitterBufferType">Adaptive</item>
+		<!-- Enable Audio RED with FEC -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.audio.fec.enable">No</item>
+		<!-- Audio FEC Payload Type -->
+		<!-- Range: 96-126, default: 121 -->
+		<item name="account.{$line}.codec.payloadType.fec.audio">121</item>
+		<!-- Audio RED Payload Type -->
+		<!-- Range: 96-126, default: 124 -->
+		<item name="account.{$line}.codec.payloadType.red">124</item>
+		<!-- Silence Suppression -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.audio.silenceSuppression">No</item>
+		<!-- Voice Frames Per TX -->
+		<item name="account.{$line}.audio.voiceFramePerTX">2</item>
+		<!-- Enable Video FEC -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.video.fec.enable">Yes</item>
+		<!-- Enable RFC5168 Support -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.codec.rfc5168.enable">No</item>
+		<!-- FEC Payload Type -->
+		<!-- Range: 96-126, default: 120 -->
+		<item name="account.{$line}.codec.payloadType.fec.video">120</item>
+		<!-- Packetization mode -->
+		<!-- SingleNALUnit, Non-Interleaved -->
+		<!-- [Note] Prefer Non-Interleaved Mode is not supported yet -->
+		<item name="account.{$line}.codec.packetizationMode">Non-Interleaved</item>
+		<!-- H.264 Image Size -->
+		<!-- 720P, 4CIF, VGA, CIF, QVGA, QCIF -->
+		<item name="account.{$line}.video.h264.imagesize">720P</item>
+		<!-- Use H.264 Constrained Profiles -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.codec.h264.CBP.enable">No</item>
+		<!-- H.264 Profile Type -->
+		<!-- Baseline, Main, High, BP&amp;MP&amp;HP -->
+		<item name="account.{$line}.codec.H264ProfileType">BP&amp;MP&amp;HP</item>
+		<!-- Video Bit Rate -->
+		<!-- 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+		<!-- # 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+		<!-- # 1024 - 1024 kbps, 1280 - 1280 kbps, 1536 - 1536 kbps, 2048 - 2048 kbps. -->
+		<item name="account.{$line}.video.bitRate">2048</item>
+		<!-- SDP Bandwidth Attribute -->
+		<!-- Standard, MediaLevel, SessionLevel, None -->
+		<item name="account.{$line}.codec.SDPBandwidthAttr">MediaLevel</item>
+		<!-- H.264 Payload Type -->
+		<!-- Range: 96-126, default: 99 -->
+		<item name="account.{$line}.codec.payloadType.h264">99</item>
+		<!-- Disable BFCP -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.presentation.BFCP.enable">Yes</item>
+		<!-- Presentation H.264 Image Size -->
+		<!-- 1080P, 720P -->
+		<item name="account.{$line}.presentation.h264.imagesize">1080P</item>
+		<!-- Presentation H.264 Profile Type -->
+		<!-- Baseline, Main, High, BP&amp;MP&amp;HP -->
+		<item name="account.{$line}.presentation.H264ProfileType">BP&amp;MP&amp;HP</item>
+		<!-- Presentation Video Bit Rate -->
+		<!-- 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
+		<!-- # 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
+		<!-- # 1024 - 1024 kbps, 1280 - 1280 kbps, 1536 - 1536 kbps, 2048 - 2048 kbps. -->
+		<item name="account.{$line}.presentation.bitRate">1024</item>
+		<!-- Presentation Video Frame Rate -->
+		<!-- 5, 10, 15 -->
+		<item name="account.{$line}.presentation.frameRate">15</item>
+		<!-- BFCP Transport Protocol -->
+		<!-- Automatic, UDP, TCP -->
+		<item name="account.{$line}.presentation.BFCP.transportProtocol">UDP</item>
+		<!-- SRTP Mode -->
+		<!-- Disabled, EnabledButNotForced, EnabledAndForced -->
+		<item name="account.{$line}.audio.srtpMode">Disabled</item>
+		<!-- SRTP Key Length -->
+		<!-- AES128And256Bit, AES128Bit, AES256Bit -->
+		<item name="account.{$line}.audio.srtpKeyLength">AES128And256Bit</item>
+		<!-- Enable SRTP Key Life Time -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.audio.cryptoLifeTime">Yes</item>
+		<!-- RTCP Destination -->
+		<item name="account.{$line}.rtcp.destination"></item>
+		<!-- Symmetric RTP -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.audio.symmetricRTP">No</item>
+		<!-- RTP IP Filter -->
+		<!-- Disable, IPOnly, IPandPort -->
+		<item name="account.{$line}.rtp.filter">Disable</item>
+		<!-- RTP Timeout (s) -->
+		<!-- Range: 0 - 600 -->
+		<item name="account.{$line}.rtp.timeout">0</item>
+		<!-- Call Settings -->
+		<!-- Enable Video Call -->
+		<!-- Default, No, Yes -->
+		<item name="account.{$line}.call.video.enable">Default</item>
+		<!-- Start Video Automatically -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.video.startAuto.enable">Yes</item>
+		<!-- Remote Video Request -->
+		<!-- Prompt, Accept, Deny -->
+		<item name="account.{$line}.video.request">Prompt</item>
+		<!-- Video Layout -->
+		<!-- Default, Fullscreen, EqualSplitScreen, OnlyRemoteScreen -->
+		<item name="account.1.video.layout">Default</item>
+		<!-- Auto Answer -->
+		<!-- No, Yes, EnableIntercom/Paging -->
+		<item name="account.{$line}.call.autoAnswer">No</item>
+		<!-- Play Warning Tone for Auto Answer Intercom  -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.intercom.playWarningToneForAutoAnswer">Yes</item>
+		<!-- Intercom Barging -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.intercom.allowBargingByCallInfo">No</item>
+		<!-- Auto Preview -->
+		<!-- No, Yes, YeswithRinging -->
+		<item name="account.{$line}.call.autoPreview">Yes</item>
+		<!-- Send Anonymous -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.call.sendAnonymous">No</item>
+		<!-- Anonymous Call Rejection -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.call.rejectAnonymousCall">No</item>
+		<!-- Call Log -->
+		<!-- All, IncomingAndOutgoing, Disable, DonotPromptMissedCall -->
+		<item name="account.{$line}.call.callLog">All</item>
+		<!-- Enable Call Features -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.featureCodes.callFeatures">No</item>
+		<!-- Enable Call Waiting -->
+		<!-- Default, No, Yes -->
+		<item name="account.{$line}.call.callWaiting">Default</item>
+		<!-- Mute on Answer Intercom Call -->
+		<!-- No, Yes -->		
+		<item name="account.{$line}.intercom.muteOnAnswerIntercom">No</item>
+		<!-- Transfer on 3 Way Conference Hangup -->
+		<!-- No, Yes -->
+		<item name="account.{$line}.call.transferOnConferenceHangup">No</item>
+		<!-- Use # as Dial Key  -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.call.keyAsSend">Yes</item>
+		<!-- Use # as Redial Key  -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.call.poundAsRedial.enable">Yes</item>
+		<!-- DND Call Feature On -->
+		<item name="account.{$line}.featureCodes.dndOn"></item>
+		<!-- DND Call Feature Off  -->
+		<item name="account.{$line}.featureCodes.dndOff"></item>
+		<!-- No Key Entry Timeout (s) -->
+		<!-- Number: 4 - 15 -->
+		<item name="account.{$line}.call.noKeyEntryTimeout">4</item>
+		<!-- Ring Timeout -->
+		<!-- Number: 10 - 300 -->
+		<item name="account.{$line}.ring.timeout">60</item>
+		<!-- Refer-To Use Target Contact -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.call.referToUseTargetContact">No</item>
+		<!-- RFC2543 Hold -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.rfc2543Hold">Yes</item>
+		<!-- Dial Plan Prefix -->
+		<item name="account.{$line}.call.dialplanPrefix"></item>
+		<!-- Disable DialPlan -->
+		<!-- # Disable DialPlan. 0 - No Selection, 1 - Dial Page, 2 - Contact, 4 - Incoming Call History, 8 -  Outgoing Call History, 16 - MPK & Click2Dial.  -->
+		<!-- # If need to check multiple selections, add the specific values for each selections together. Default value is 0 -->
+		<item name="account.{$line}.call.dialplan.disableMode">0</item>
+		<!-- DialPlan -->
+		<item name="account.{$line}.call.dialplan">{$grandstream_dial_plan}</item>
+		<!-- Caller ID Display -->
+		<!-- Auto, Disabled, Header, PAIHeader -->
+		<!-- [Note] PAI Header is not supported yet -->
+		<item name="account.{$line}.sip.callerIdDisplay">Auto</item>
+		<!-- Account Ring Tone -->
+		<item name="account.{$line}.ring.ringtone">content://settings/system/ringtone</item>
+		<!-- Ignore Alert-Info Header -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.ring.ignoreSipAlertInfo">No</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.1.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.1.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.2.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.2.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.3.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.3.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.4.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.4.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.5.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.5.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.6.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.6.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.7.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.7.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.8.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.8.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.9.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.{$line}.ring.match.9.ringtone">content://settings/system/ringtone</item>
+		<!-- Match Incoming Caller ID -->
+		<item name="account.{$line}.ring.match.10.callerId"></item>
+		<!-- Distinctive Ring Tone -->
+		<item name="account.1{$line}.ring.match.10.ringtone">content://settings/system/ringtone</item>
+		<!-- ############Ring Tone Value Table###############
+				# Web GUI Option                            Value
+				# Use System Ring tone                      content://settings/system/ringtone 
+				# Andromeda					/system/media/audio/ringtones/ANDROMEDA.ogg
+				# Aquila					/system/media/audio/ringtones/Aquila.ogg
+				# Argo Navis					/system/media/audio/ringtones/ArgoNavis.ogg
+				# Atria					/system/media/audio/ringtones/Atria.ogg
+				# Backroad					/system/media/audio/ringtones/Backroad.ogg
+				# Beat Plucker					/system/media/audio/ringtones/BeatPlucker.ogg
+				# Bell Phone					/system/media/audio/ringtones/Ring_Classic_02.ogg
+				# Bentley Dubs					/system/media/audio/ringtones/BentleyDubs.ogg
+				# Big Easy					/system/media/audio/ringtones/Big_Easy.ogg
+				# Bird Loop					/system/media/audio/ringtones/BirdLoop.ogg
+				# Bollywood					/system/media/audio/ringtones/Bollywood.ogg
+				# Boötes					/system/media/audio/ringtones/BOOTES.ogg
+				# Bus' a Move					/system/media/audio/ringtones/BussaMove.ogg
+				# Cairo					/system/media/audio/ringtones/Cairo.ogg
+				# Calypso Steel					/system/media/audio/ringtones/Calypso_Steel.ogg
+				# Canis Major					/system/media/audio/ringtones/CANISMAJOR.ogg
+				# Caribbean Ice					/system/media/audio/ringtones/CaribbeanIce.ogg
+				# Carina					/system/media/audio/ringtones/Carina.ogg
+				# Cassiopeia					/system/media/audio/ringtones/CASSIOPEIA.ogg
+				# Centaurus					/system/media/audio/ringtones/Centaurus.ogg
+				# Champagne Edition					/system/media/audio/ringtones/Champagne_Edition.ogg
+				# Chimey Phone					/system/media/audio/ringtones/Ring_Synth_02.ogg
+				# Club Cubano					/system/media/audio/ringtones/Club_Cubano.ogg
+				# Crayon Rock					/system/media/audio/ringtones/CrayonRock.ogg
+				# Crazy Dream					/system/media/audio/ringtones/CrazyDream.ogg
+				# Curve Ball Blend					/system/media/audio/ringtones/CurveBall.ogg
+				# Cygnus					/system/media/audio/ringtones/Cygnus.ogg
+				# Dancin' Fool					/system/media/audio/ringtones/DancinFool.ogg
+				# Digital Phone					/system/media/audio/ringtones/Ring_Digital_02.ogg
+				# Ding					/system/media/audio/ringtones/Ding.ogg
+				# DingDong					/system/media/audio/ringtones/DingDong.wav
+				# Don' Mess Wiv It					/system/media/audio/ringtones/DonMessWivIt.ogg
+				# Draco					/system/media/audio/ringtones/Draco.ogg
+				# Dream Theme					/system/media/audio/ringtones/DreamTheme.ogg
+				# Eastern Sky					/system/media/audio/ringtones/Eastern_Sky.ogg
+				# Enter the Nexus					/system/media/audio/ringtones/Enter_the_Nexus.ogg
+				# Eridani					/system/media/audio/ringtones/Eridani.ogg
+				# Ether Shake					/system/media/audio/ringtones/EtherShake.ogg
+				# Flutey Phone					/system/media/audio/ringtones/Ring_Synth_04.ogg
+				# Free Flight					/system/media/audio/ringtones/FreeFlight.ogg
+				# Friendly Ghost					/system/media/audio/ringtones/FriendlyGhost.ogg
+				# Funk Y'all					/system/media/audio/ringtones/Funk_Yall.ogg
+				# Game Over Guitar					/system/media/audio/ringtones/GameOverGuitar.ogg
+				# Gimme Mo' Town					/system/media/audio/ringtones/Gimme_Mo_Town.ogg
+				# Girtab					/system/media/audio/ringtones/Girtab.ogg
+				# Glacial Groove					/system/media/audio/ringtones/Glacial_Groove.ogg
+				# Growl					/system/media/audio/ringtones/Growl.ogg
+				# Halfway Home					/system/media/audio/ringtones/HalfwayHome.ogg
+				# Hydra					/system/media/audio/ringtones/Hydra.ogg
+				# Insert Coin					/system/media/audio/ringtones/InsertCoin.ogg
+				# Kuma					/system/media/audio/ringtones/Kuma.ogg
+				# Loopy Lounge					/system/media/audio/ringtones/LoopyLounge.ogg
+				# Love Flute					/system/media/audio/ringtones/LoveFlute.ogg
+				# Lyra					/system/media/audio/ringtones/Lyra.ogg
+				# Machina					/system/media/audio/ringtones/Machina.ogg
+				# Medieval Jaunt					/system/media/audio/ringtones/MidEvilJaunt.ogg
+				# Mildly Alarming					/system/media/audio/ringtones/MildlyAlarming.ogg
+				# Nairobi					/system/media/audio/ringtones/Nairobi.ogg
+				# Nassau					/system/media/audio/ringtones/Nassau.ogg
+				# New Player					/system/media/audio/ringtones/NewPlayer.ogg
+				# No Limits					/system/media/audio/ringtones/No_Limits.ogg
+				# Noisey One					/system/media/audio/ringtones/Noises1.ogg
+				# Organ Dub					/system/media/audio/ringtones/OrganDub.ogg
+				# Orion					/system/media/audio/ringtones/Orion.ogg
+				# Paradise Island					/system/media/audio/ringtones/Paradise_Island.ogg
+				# Pegasus					/system/media/audio/ringtones/Pegasus.ogg
+				# Perseus					/system/media/audio/ringtones/PERSEUS.ogg
+				# Playa					/system/media/audio/ringtones/Playa.ogg
+				# Pyxis					/system/media/audio/ringtones/Pyxis.ogg
+				# Rasalas					/system/media/audio/ringtones/Rasalas.ogg
+				# Revelation					/system/media/audio/ringtones/Revelation.ogg
+				# Rigel					/system/media/audio/ringtones/Rigel.ogg
+				# Road Trip					/system/media/audio/ringtones/Road_Trip.ogg
+				# Romancing The Tone					/system/media/audio/ringtones/RomancingTheTone.ogg
+				# Safari					/system/media/audio/ringtones/Safari.ogg
+				# Savannah					/system/media/audio/ringtones/Savannah.ogg
+				# Scarabaeus					/system/media/audio/ringtones/Scarabaeus.ogg
+				# Sceptrum					/system/media/audio/ringtones/Sceptrum.ogg
+				# Seville					/system/media/audio/ringtones/Seville.ogg
+				# She's All That					/system/media/audio/ringtones/Shes_All_That.ogg
+				# Silky Way					/system/media/audio/ringtones/SilkyWay.ogg
+				# Sitar Versus Sitar					/system/media/audio/ringtones/SitarVsSitar.ogg
+				# Solarium					/system/media/audio/ringtones/Solarium.ogg
+				# Springy Jalopy					/system/media/audio/ringtones/SpringyJalopy.ogg
+				# Steppin' Out					/system/media/audio/ringtones/Steppin_Out.ogg
+				# Terminated					/system/media/audio/ringtones/Terminated.ogg
+				# Terrible Twos					/system/media/audio/ringtones/Noises2.ogg
+				# Testudo					/system/media/audio/ringtones/Testudo.ogg
+				# Themos					/system/media/audio/ringtones/Themos.ogg
+				# Third Eye					/system/media/audio/ringtones/Third_Eye.ogg
+				# Thriller Three					/system/media/audio/ringtones/Noises3.ogg
+				# Thunderfoot					/system/media/audio/ringtones/Thunderfoot.ogg
+				# Twirl Away					/system/media/audio/ringtones/TwirlAway.ogg
+				# Ursa Minor					/system/media/audio/ringtones/URSAMINOR.ogg
+				# UrsaMinor					/system/media/audio/ringtones/UrsaMinor.ogg
+				# Very Alarmed					/system/media/audio/ringtones/VeryAlarmed.ogg
+				# Vespa					/system/media/audio/ringtones/Vespa.ogg
+				# World					/system/media/audio/ringtones/World.ogg
+				# Zeta					/system/media/audio/ringtones/Zeta.ogg
+				# bellcore-dr1					/system/media/audio/ringtones/bellcore-dr1.ogg
+				# bellcore-dr2					/system/media/audio/ringtones/bellcore-dr2.ogg
+				# bellcore-dr3					/system/media/audio/ringtones/bellcore-dr3.ogg
+				# bellcore-dr4					/system/media/audio/ringtones/bellcore-dr4.ogg
+				# bellcore-dr5					/system/media/audio/ringtones/bellcore-dr5.ogg
+				# speaker					/system/media/audio/ringtones/speaker.wav -->
+		<!-- Account Advanced Settings -->
+		<!-- Check Domain Certificates		 -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.validate.domainCertificates">No</item>
+		<!-- Validate Certification Chain 	 -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.validate.certificationChain">No</item>
+		<!-- Validate Incoming SIP Messages -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.validate.incomingMessage">No</item>
+		<!-- Allow Unsolicited REFER -->
+		<!-- Disabled, Enabled, EnabledOrForceAuth -->
+		<item name="account.{$line}.sip.allowUnsolicitedRefer">Disabled</item>
+		<!-- Only Accept SIP Requests from Known Servers -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.validate.incomingServer">No</item>
+		<!-- Check SIP User ID for Incoming INVITE  -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.validate.userIdforInvite">No</item>
+		<!-- Allow SIP Reset  -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.allowSipReset">No</item>
+		<!-- Authenticate Incoming INVITE -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.authenticateIncomingInvite">No</item>
+		<!-- SIP Realm Used for Challenge INVITE & NOTIFY -->
+		<item name="account.{$line}.sipRealmForChallengeINVITE"></item>
+		<!-- Enable Local MOH -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.call.moh.enable">No</item>
+		<!-- Virtual Account Group -->
+		<!-- -1 - Default, 0 - 15 - Virtual Account Group 1 - 16 -->
+		<item name="account.{$line}.virtualGroup">-1</item>
+		<!-- Special Feature -->
+		<!-- 100 - Standard, 102 - Broadsoft, 113 - China Mobile, 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS, 123 - NEC, 125 - Worldstone -->
+		<item name="account.{$line}.sip.specialFeature">100</item>
+		<!-- Allow Sync Phonebook via SIP Notify -->
+		<!-- Yes, No -->
+		<item name="account.{$line}.sip.notify.phonebook">Yes</item>
+		{/for}
+		<!-- Phone Settings - General Settings -->
+		<!-- Local RTP Port -->
+		<!-- Number: 50040 - 65535 -->
+		<item name="network.rtp.local.port">50040</item>
+		<!-- Use Random Port -->
+		<!-- Yes, No -->
+		<item name="network.rtp.useRandomPort">No</item>
+		<!-- Disable In-call DTMF Display -->
+		<!-- Yes, No -->
+		<item name="call.display.dtmfInCall">Yes</item>
+		<!-- Enable Enterprise Contacts Timeout Auto Search -->
+		<!-- Yes, No -->
+		<item name="call.general.enterpriseContactsSearch">Yes</item>
+		<!-- Keep-alive Interval (s) -->
+		<!-- Number: 10 - 160 -->
+		<item name="sip.keepAliveInterval">20</item>
+		<!-- STUN Server -->
+		<item name="network.stunServer">stun.ipvideotalk.com</item>
+		<!-- TURN Server Username -->
+		<item name="network.stunUsername"></item>
+		<!-- TURN Server Password -->
+		<item name="network.stunPassword"></item>
+		<!-- Use NAT IP -->
+		<item name="sip.userNatIp"></item>
+		<!-- Phone Settings - Call Settings -->
+		<!-- Enable Video Call Feature -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.video.enable">Yes</item>
+		<!-- Use Direct IP Call Mode -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.ipcall.allowDirectDialing">Yes</item>
+		<!-- Use Paging Call Mode -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.pagingcall.enable">Yes</item>
+		<!-- Enable Call-Waiting -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.callWaiting.enable">Yes</item>
+		<!-- Enable Call-Waiting Tone -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.callWaiting.enableTone">Yes</item>
+		<!-- Enable DND Reminder Ring -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.dnd.reminder.enable">Yes</item>
+		<!-- Enable Transfer -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.transfer.enable">Yes</item>
+		<!-- Hold Call Before Completing Transfer -->
+		<item name="call.holdBeforeTransfer">Yes</item>
+		<!-- Default Transfer Mode -->
+		<!-- BlindTransfer, AttendedTransfer, AttendedTransferOnly -->
+		<item name="call.transfer.mode">BlindTransfer</item>
+		<!-- Enable transfer via non-Transfer Programmable Key.-->
+		<!-- Yes, No (default) -->
+		<item name="call.transfer.viampk.enable">No</item>
+		<!-- Enable Function for Incoming Call -->
+		<!-- None, Preview, CallTransfer -->
+		<item name="call.incomingcall.function">None</item>
+		<!-- Enable Conference -->
+		<!-- Yes - unchecked, No - checked -->
+		<item name="call.conference.enable">Yes</item>
+		<!-- Auto Conference -->
+		<!-- No, Yes -->
+		<item name="call.autoConf.enable">No</item>
+		<!-- Attended Conference -->
+		<!-- No, Yes -->
+		<item name="call.attendedconf.enable">No</item>
+		<!-- Auto Mute on Entry -->
+		<!-- Disable, Incoming, Outgoing, IncomingOutgoing -->
+		<item name="call.automute.mode">Disable</item>
+		<!-- Always Ring Speaker -->
+		<!-- Yes, No -->
+		<item name="audio.alwaysRingSpeaker">No</item>
+		<!-- Offhook Auto Dial -->
+		<item name="call.dial.offhook.autoDial.number"></item>
+		<!-- Offhook Auto Dial Delay (s) -->
+		<item name="call.dial.offhook.autoDial.delay"></item>
+		<!-- Offhook/Onhook Timeout (s) -->
+		<item name="call.dial.offhook.timeout">30</item>
+		<!-- Handset Option -->
+		<!-- Enable, Disable, Auto (default) -->
+		<item name="call.dial.offhook.timeout">Auto</item>
+		<!-- Auto Unhold When Pressing the Line Key -->
+		<!-- No, Yes -->
+		<item name="call.autoUnhold.enable">No</item>
+		<!-- Virtual Account Group Avaya Mode -->
+		<!-- No, Yes -->
+		<item name="call.virtualgroup.avayamode.enable">No</item>
+		<!-- Number Of Accounts The Virtual Account Group Register -->
+		<!-- Range: 1 - 4 -->
+		<item name="call.virtualgroup.mainregister.number">2</item>
+		<!-- Filter Characters -->
+		<item name="call.filter.character">[()- ]</item>
+		<!-- Escape '#' as %23 in SIP URI -->
+		<!-- No, Yes -->
+		<item name="sip.escapeUrl">No</item>
+		<!-- 3rd Party App Package Name issue -->
+		<item name="call.thirddialer.packagename"></item>
+		<!-- Record Mode -->
+		<!-- Local, PortaOne, UCM, BroadSoft -->
+		<item name="call.recording.local.enable">Local</item>
+		<!-- Enable Auto Record When Call Established -->
+		<!-- Yes, No -->
+		<item name="call.autoRecording.enable">No</item>
+		<!-- Rejected Call Notification -->
+		<!-- Yes, No -->
+		<item name="features.history.missedCallNotification">Yes</item>
+		<!-- Group Listen with Speaker -->
+		<!-- Yes, No -->
+		<item name="call.grouplistenwithspeaker.enable">No</item>
+		<!-- Phone Settings - Ring Tone -->
+		<!-- Auto Config CPT by Region -->
+		<!-- No, Yes -->
+		<item name="audio.tone.autoCPTbyRegion">No</item>
+		<!-- Dial Tone -->
+		<item name="audio.tone.dial">f1=350,f2=440,c=0/0;</item>
+		<!-- Second Dial Tone -->
+		<item name="audio.tone.secondDial">f1=350,f2=440,c=0/0;</item>
+		<!-- Ring Back Tone -->
+		<item name="audio.tone.ringBack">f1=440,f2=480,c=2000/4000;</item>
+		<!-- Busy Tone -->
+		<item name="audio.tone.busy">f1=480,f2=620,c=500/500;</item>
+		<!-- Reorder Tone -->
+		<item name="audio.tone.reorder">f1=480,f2=620,c=250/250;</item>
+		<!-- Confirmation Tone -->
+		<item name="audio.tone.confirmation">f1=350,f2=440,c=100/100-100/100-100/100;</item>
+		<!-- Call-Waiting Tone -->
+		<item name="audio.tone.callWaiting">f1=440,c=300/2000-300/2000-0/0;</item>
+		<!-- Call-Waiting Tone Gain -->
+		<!-- Low, Medium, High -->
+		<item name="audio.tone.callWaiting.gain">Low</item>
+		<!-- Default Ring Cadence -->
+		<item name="audio.tone.defaultRingCadence">c=2000/4000;</item>
+		<!-- Phone Settings - Video Settings -->
+		<!-- Video Frame Rate -->
+		<!-- 5, 15, 25, 30 -->
+		<item name="video.frameRate">15</item>
+		<!-- Video Display Mode -->
+		<!-- OriginalProportion, EqualProportionalCutting, ProportionalAddBlackEdge -->
+		<item name="video.displayMode">EqualProportionalCutting</item>
+		<!-- Enable Frame Skipping in Video Decoder -->
+		<!-- Yes, No -->
+		<item name="video.frameSkipping.enable">Yes</item>
+		<!-- Phone Settings - Multicast Paging - Multicast Paging -->
+		<!-- Paging Barge -->
+		<!-- Disable-0, priority1-1, priority2-2, priority3-3, priority4-4, priority5-5, priority6-6, priority7-7, priority8-8, priority9-9, priority10-10 -->
+		<item name="multicast.paginBarge">Disable</item>
+		<!-- Paging Priority Active -->
+		<!-- Yes, No -->
+		<item name="multicast.pagingPriorityActive">No</item>
+		<!-- Multicast Paging Codec -->
+		<!-- PCMU, PCMA, G_726_32, G_722, G_729AOrB, iLBC, OPUS -->
+		<item name="multicast.multicastPagingCodec">PCMU</item>
+		<!-- Enable Multicast Paging Video -->
+		<!-- No, Yes -->
+		<item name="multicast.multicastPagingVideo.enable">No</item>
+		<!-- Multicast Paging Video Codec -->
+		<!-- H.264 - H264 -->
+		<item name="multicast.multicastPagingVideo.codec">H264</item>
+		<!-- Multicast Paging Image Size -->
+		<!-- VGA, QVGA, 4CIF, CIF, QCIF, 720P -->
+		<item name="multicast.multicastPagingImageSize">VGA</item>
+		<!-- Multicast Paging Video Bit Rate -->
+		<!-- 32 - 32kbps, 64 - 64kbps, 96 - 96kbps, 128 - 128kbps, 160 - 160kbps -->
+		<!--  192 - 192kbps, 210 - 210kbps, 256 - 256kbps, 384 - 384kbps, 512 - 512kbps,  640 - 640kbps, 768 - 768kbps -->
+		<!--  1024 - 1024kbps, 1280 - 1280kbps, 1536 - 1536kbps, 2048 - 2048kbps. Default Value is 256 -->
+		<item name="multicast.multicastPagingVideoBitRate">256</item>
+		<!-- Multicast Paging Video Frame Rate -->
+		<!-- 15, 25, 30, Variable frame rate - 29 -->
+		<item name="multicast.multicastPagingVideoFrameRate">15</item>
+		<!-- Multicast Paging H.264 Profile Type -->
+		<!-- Baseline, Main, High -->
+		<item name="multicast.multicastPagingH264ProfileType">Baseline</item>
+		<!-- Multicast Paging H.264 Payload Type -->
+		<!-- Range: 96-127, Default: 99 -->
+		<item name="multicast.multicastPagingH264PayloadType">99</item>
+		<!-- Phone Settings - Multicast Paging - Multicast Listening -->
+		<item name="multicast.listening.1.address"></item>
+		<item name="multicast.listening.1.label"></item>
+		<item name="multicast.listening.2.address"></item>
+		<item name="multicast.listening.2.label"></item>
+		<item name="multicast.listening.3.address"></item>
+		<item name="multicast.listening.3.label"></item>
+		<item name="multicast.listening.4.address"></item>
+		<item name="multicast.listening.4.label"></item>
+		<item name="multicast.listening.5.address"></item>
+		<item name="multicast.listening.5.label"></item>
+		<item name="multicast.listening.6.address"></item>
+		<item name="multicast.listening.6.label"></item>
+		<item name="multicast.listening.7.address"></item>
+		<item name="multicast.listening.7.label"></item>
+		<item name="multicast.listening.8.address"></item>
+		<item name="multicast.listening.8.label"></item>
+		<item name="multicast.listening.9.address"></item>
+		<item name="multicast.listening.9.label"></item>
+		<item name="multicast.listening.10.address"></item>
+		<item name="multicast.listening.10.label"></item>
+
+		<!-- Ethernet Settings -->
+		<!-- Preferred Internet Protocol -->
+		<!-- BothAndPreferIPv4, BothAndPreferIPv6, IPv4Only, IPv6Only -->
+		<item name="network.internetProtocol">BothAndPreferIPv4</item>
+		<!-- Different Networks for Data and VoIP Calls -->
+		<!-- No, Yes -->
+		<item name="network.diffnetwork.voip.enable">No</item>
+		<!-- IPv4 Address Type -->
+		<!-- DHCP, StaticIP, PPPoE -->
+		<item name="network.port.eth.1.type">DHCP</item>
+		<!-- DHCP VLAN Override -->
+		<!-- Disable, DHCPOption132and133, EncapsulatedinDHCPOption43 -->
+		<item name="network.dhcp.enableVlan">Disable</item>
+		<!-- Host Name(Option 12) -->
+		<item name="network.dhcp.hostName"></item>
+		<!-- Vendor Class ID(Option 60) -->
+		<item name="network.dhcp.vendorID"></item>
+		<!-- IP Address -->
+		<item name="network.port.eth.1.address.1">0</item>
+		<item name="network.port.eth.1.address.2">0</item>
+		<item name="network.port.eth.1.address.3">0</item>
+		<item name="network.port.eth.1.address.4">0</item>
+		<!-- Subnet Mask -->
+		<item name="network.port.eth.1.mask.1">0</item>
+		<item name="network.port.eth.1.mask.2">0</item>
+		<item name="network.port.eth.1.mask.3">0</item>
+		<item name="network.port.eth.1.mask.4">0</item>
+		<!-- Default Gateway -->
+		<item name="network.port.eth.1.gateway.1">0</item>
+		<item name="network.port.eth.1.gateway.2">0</item>
+		<item name="network.port.eth.1.gateway.3">0</item>
+		<item name="network.port.eth.1.gateway.4">0</item>
+		<!-- DNS Server 1 -->
+		<item name="network.dns.1.ip.1">0</item>
+		<item name="network.dns.1.ip.2">0</item>
+		<item name="network.dns.1.ip.3">0</item>
+		<item name="network.dns.1.ip.4">0</item>
+		<!-- DNS Server 2 -->
+		<item name="network.dns.2.ip.1">0</item>
+		<item name="network.dns.2.ip.2">0</item>
+		<item name="network.dns.2.ip.3">0</item>
+		<item name="network.dns.2.ip.4">0</item>
+		<!-- PPPoE Account ID -->
+		<item name="network.port.eth.1.pppoe.account"></item>
+		<!-- PPPoE Password -->
+		<item name="network.port.eth.1.pppoe.password"></item>
+		<!-- Layer 2 QoS 802.1Q/VLAN Tag (Ethernet) -->
+		<!-- Number: 0 - 4095 -->
+		<item name="network.port.eth.1.vlan.tag">0</item>
+		<!-- Layer 2 QoS 802.1p Priority Value (Ethernet) -->
+		<!-- Number: 0 - 7 -->
+		<item name="network.port.eth.1.vlan.priorit">0</item>
+		<!-- IPv6 Address  -->
+		<!-- AutoConfigured, StaticallyConfigured -->
+		<item name="network.port.eth.1.ipv6.type">AutoConfigured</item>
+		<!-- Static IPv6 Address -->
+		<item name="network.port.eth.1.ipv6.static.address"></item>
+		<!-- IPv6 Prefix Length -->
+		<item name="network.port.eth.1.ipv6.static.prefixLength">64</item>
+		<!-- DNS Server 1 -->
+		<item name="network.dns.1.ipv6"></item>
+		<!-- DNS Server 2 -->
+		<item name="network.dns.2.ipv6"></item>
+		<!-- Preferred IPv6 DNS Server -->
+		<item name="network.dns.preferred.ipv6"></item>
+
+		<!-- Network Configuration of VoIP Calls -->
+		<!-- IPv4 Address Type -->
+		<!-- DHCP, StaticIP -->
+		<item name="network.voip.ipv4.type">DHCP</item>
+		<!-- IP Address -->
+		<item name="network.voip.ipv4.static.address"></item>
+		<!-- Subnet Mask -->
+		<item name="network.voip.ipv4.static.mask"></item>
+		<!-- Default Gateway -->
+		<item name="network.voip.ipv4.static.gateway"></item>
+		<!-- DNS Server 1 -->
+		<item name="network.voip.ipv4.static.dns1"></item>
+		<!-- DNS Server 2 -->
+		<item name="network.voip.ipv4.static.dns2"></item>
+		<!-- Layer 2 QoS 802.1Q/VLAN Tag (Ethernet) for VoIP Calls -->
+		<item name="network.voip.vlan.tag"></item>
+		<!-- Layer 2 QoS 802.1p Priority Value (Ethernet) for VoIP Calls -->
+		<item name="network.voip.vlan.priority"></item>
+		<!-- IPv6 Address Type -->
+		<!-- AutoConfigured, StaticallyConfigured -->
+		<item name="network.voip.ipv6.type">AutoConfigured</item>
+		<!-- IP Address -->
+		<item name="network.voip.ipv6.static.address"></item>
+		<!-- Subnet Mask -->
+		<item name="network.voip.ipv6.static.prefixLength"></item>
+		<!-- 802.1x Mode -->
+		<!-- Disable, EAP_MD5, EAP_TLS, EAP_PEAPv0OrMSCHAPv2 -->
+		<item name="network.802.1x.mode">Disable</item>
+		<!-- 802.1x Identity -->
+		<item name="network.802.1x.identity"></item>
+		<!-- 802.1x Secret -->
+		<item name="network.md5Password"></item>
+		<!-- CA Certificate -->
+		<item name="network.802.1x.cert.root"></item>
+		<!-- Client Certificate -->
+		<item name="network.802.1x.cert.client"></item>
+		<!-- Wi-Fi Settings -->
+		<!-- Wi-Fi Function -->
+		{if isset($grandstream_wifi_enable)}
+		<!-- No, Yes -->
+		<item name="wifi.enable">{if filter_var($grandstream_wifi_enable, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
+		<!-- Wi-Fi band -->
+		<!-- Yes, No -->
+		<item name="wifi.24G.enable">Yes</item>
+		<item name="wifi.5G.enable">Yes</item>
+		<!-- ESSID -->
+		{if isset($grandstream_wifi_essid)}
+		<item name="wifi.essidname">{$grandstream_wifi_essid}</item>
+		<!-- Password -->
+		<item name="wifi.essidpassword">{$grandstream_wifi_password}</item>
+		<!-- Security Mode for Hidden SSID -->
+		<!-- None, WEP, WPA/WPA2_PSK -->
+		<item name="wifi.hiddenessid.securitymode">{$grandstream_wifi_hidden_security}</item>
+		{/if}
+		<!-- Layer 2 QoS 802.1p Priority Value (Wi-Fi) -->
+		<item name="wifi.layer2qos.priority">0</item>
+		{/if}
+		<!-- OpenVPN Settings -->
+		<!-- Enable OpenVPN -->
+		<!-- Yes, No -->
+		<item name="network.openvpn.enable">No</item>
+		<!-- Enable OpenVPN® Comp-lzo -->
+		<!-- Yes, No -->
+		<item name="network.openvpn.complzo.enable">No</item>
+		<!-- OpenVPN Server Address -->
+		<item name="network.openvpn.server"></item>
+		<!-- OpenVPN Port -->
+		<item name="network.openvpn.port">1194</item>
+		<!-- OpenVPN Transport -->
+		<!-- UDP, TCP -->
+		<item name="network.openvpn.transport">UDP</item>
+		<!-- OpenVPN® CA -->
+		<item name="network.openvpn.ca"></item>
+		<!-- OpenVPN® Client Certificate -->
+		<item name="network.openvpn.cert"></item>
+		<!-- OpenVPN® Client Key -->
+		<item name="network.openvpn.clientKey"></item>
+		<!-- OpenVPN® Cipher Method -->
+		<!-- Blowfish, AES128, AES256, TripleDES -->
+		<item name="network.openvpn.ciperMethod">Blowfish</item>
+		<!-- OpenVPN® Username -->
+		<item name="network.openvpn.transport"></item>
+		<!-- OpenVPN® Password -->
+		<item name="network.openvpn.password"></item>
+		<!-- Advanced Network Settings -->
+		<!-- DNS Refresh Time (m). Default 0. -->
+		<!-- Number 0 - 1440 -->
+		<item name="network.dns.refreshTime">0</item>
+		<!-- DNS Failure Cache Duration (m).  Default 0. -->
+		<!-- Number 0 - 1440 -->
+		<item name="network.dns.failureCacheDuration">0</item>
+		<!-- Alternate DNS Server -->
+		<item name="network.dns.preferred.ip.1">0</item>
+		<item name="network.dns.preferred.ip.2">0</item>
+		<item name="network.dns.preferred.ip.3">0</item>
+		<item name="network.dns.preferred.ip.4">0</item>
+		<!-- Second Alternate DNS Server -->
+		<item name="network.dns.second.preferred.ip.1"></item>
+		<item name="network.dns.second.preferred.ip.2"></item>
+		<item name="network.dns.second.preferred.ip.3"></item>
+		<item name="network.dns.second.preferred.ip.4"></item>
+		<!-- Enable LLDP -->
+		<!-- Yes, No -->
+		<item name="network.lldp.enable">Yes</item>
+		<!-- LLDP TX Interval (s)  -->
+		<item name="network.lldp.txInterval">30</item>
+		<!-- Enable CDP -->
+		<!-- Yes, No -->
+		<item name="network.cdp">No</item>
+		<!-- Layer 3 QoS for SIP -->
+		<item name="network.qos.forSip">26</item>
+		<!-- Layer 3 QoS for Audio -->
+		<item name="network.qos.forRtp">46</item>
+		<!-- Layer 3 QoS for Video -->
+		<item name="network.qos.forVideo">34</item>
+		<!-- HTTP/HTTPS User-Agent -->
+		<item name="network.useragent.httporhttps"></item>
+		<!-- SIP User-Agent -->
+		<item name="network.useragent.sip">Grandstream GXV3370 $version</item>
+		<!-- PC Port Mode -->
+		<!-- Enabled, Disabled, Mirrored -->
+		<item name="network.port.pc.mode">Enabled</item>
+		<!-- PC Port VLAN Tag  -->
+		<item name="network.port.pc.vlan.tag">0</item>
+		<!-- PC Port Priority Value -->
+		<item name="network.port.pc.vlan.priority">0</item>
+		<!-- HTTP/HTTPS Proxy Hostname -->
+		<!-- Must include port number -->
+		<item name="network.proxy.httporhttps"></item>
+		 <!-- Bypass Proxy For -->
+		 <item name="network.proxy.bypassAddress"></item>
+		 <!-- CSTA Control -->
+		<!-- Yes, No -->
+		<item name="remoteControl.csta.enable">No</item>
+		<!-- Action URI Support -->
+		<!-- Yes, No -->
+		<item name="remoteControl.enable">Yes</item>
+		<!-- Remote Control Pop up Window Support -->
+		<!-- Yes, No -->
+		<item name="remoteControl.confirmWindow.enable">Yes</item>
+		<!-- Action URI Allow IP List -->
+		<!-- String -->
+		<item name="remoteControl.allowList"></item>
+		<!-- System Settings -->
+		<!-- Assign NTP Server Address -->
+		<item name="dateTime.ntp.server.1">pool.ntp.org</item>
+		<!-- DHCP Option 42 Override NTP Server -->
+		<!-- Yes, No -->
+		<item name="dateTime.override.dhcp.allowOption42">Yes</item>
+		<!-- DHCP Option 2 to Override Time Zone Setting -->
+		<!-- Yes, No -->
+		<item name="dateTime.override.dhcp.allowOption2">Yes</item>
+		<!-- Value                  Time Zone -->
+		<!-- # Pacific/Midway					Midway,GMT-11:00,                           
+		# Pacific/Honolulu					Honolulu,GMT-10:00,                         
+		# America/Anchorage					Alaska Daylight Time/Anchorage,GMT-08:00,        
+		# America/Los_Angeles				Pacific Daylight Time/Los Angeles,GMT-07:00,    
+		# America/Tijuana					Tijuana,GMT-07:00,                            
+		# America/Phoenix					Mountain Standard Time/Phoenix,GMT-07:00,  
+		# America/Chihuahua					Chihuahua,GMT-07:00,                        
+		# America/Denver					Mountain Daylight Time/Denver,GMT-06:00,                  
+		# America/Costa_Rica				Costa Rica,GMT-06:00,
+		# America/Mexico_City				Mexico City,GMT-06:00,   
+		# America/Regina					Regina,GMT-06:00,                       
+		# America/Chicago					Central Daylight Time/Chicago,GMT-05:00,            
+		# America/Bogota					Bogota,GMT-05:00,                              
+		# America/New_York					New York,GMT-04:00,             
+		# America/Caracas					Caracas,GMT-04:00,                            
+		# America/Barbados					Barbados,GMT-04:00,                             
+		# America/Manaus					Manaus,GMT-04:00, 
+		# America/Halifax					Halifax,GMT-03:00,               
+		# America/Santiago					Santiago,GMT-03:00,                            
+		# America/Recife					Recife,GMT-03:00,                                
+		# America/Sao_Paulo					Sao Paulo,GMT-03:00,                          
+		# America/Buenos_Aires				Buenos Aires,GMT-03:00,                    
+		# America/Godthab					Nuuk,GMT-03:00,                                  
+		# America/Montevideo				Montevideo,GMT-03:00, 
+		# America/St_Johns					St. John’s,GMT-02:30,                           
+		# Atlantic/South_Georgia			South Georgia,GMT-02:00,                  
+		# Atlantic/Azores					Azores,GMT-01:00,                                 
+		# Atlantic/Cape_Verde				Cape Verde,GMT-01:00,                         
+		# Africa/Casablanca					Casablanca,GMT+00:00,                           
+		# Europe/London						London,GMT+00:00,                                   
+		# Europe/Amsterdam					Amsterdam,GMT+01:00,                            
+		# Europe/Belgrade					Belgrade,GMT+01:00,                              
+		# Europe/Brussels					Brussels,GMT+01:00,                              
+		# Europe/Madrid						Madrid,GMT+01:00,                                  
+		# Europe/Sarajevo					Sarajevo,GMT+01:00,                              
+		# Africa/Brazzaville				Brazzaville,GMT+01:00,                       
+		# Africa/Windhoek					Windhoek,GMT+02:00,                              
+		# Asia/Amman						Amman,GMT+02:00,                                      
+		# Europe/Athens						Athens,GMT+02:00,                                  
+		# Asia/Beirut						Beirut,GMT+02:00,                                    
+		# Africa/Cairo						Cairo,GMT+02:00,                                   
+		# Europe/Helsinki					Helsinki,GMT+02:00,                            
+		# Asia/Jerusalem					Jerusalem,GMT+02:00,                            
+		# Africa/Harare						Harare,GMT+02:00,                                
+		# Europe/Istanbul					Istanbul,GMT+03:00,                         
+		# Europe/Minsk						Minsk,GMT+03:00,   
+		# Europe/Kiev                       Eastern European Summer Time
+		# Asia/Baghdad						Baghdad,GMT+03:00,                               
+		# Europe/Moscow						Moscow,GMT+03:00,                                
+		# Asia/Kuwait						Kuwait,GMT+03:00,                                 
+		# Africa/Nairobi					Nairobi,GMT+03:00,          
+		# Asia/Baku							Baku,GMT+04:00,                                     
+		# Asia/Tbilisi						Tbilisi,GMT+04:00,                               
+		# Asia/Yerevan						Yerevan,GMT+04:00,                               
+		# Asia/Dubai						Dubai,GMT+04:00, 
+		# Asia/Tehran						Tehran,GMT+04:30,                                   
+		# Asia/Kabul						Kabul,GMT+04:30,                                   
+		# Asia/Karachi						Karachi,GMT+05:00,                               
+		# Asia/Oral							Oral,GMT+05:00,                                     
+		# Asia/Yekaterinburg				Yekaterinburg,GMT+05:00,                   
+		# Asia/Calcutta						Kolkata,GMT+05:30,                              
+		# Asia/Colombo						Colombo,GMT+05:30,                               
+		# Asia/Katmandu						Kathmandu,GMT+05:45,                            
+		# Asia/Almaty						Almaty,GMT+06:00,                                 
+		# Asia/Rangoon						Rangoon,GMT+06:30,                               
+		# Asia/Krasnoyarsk					Krasnoyarsk,GMT+07:00,                       
+		# Asia/Bangkok						Bangkok,GMT+07:00,                               
+		# Asia/Jakarta						Jakarta,GMT+07:00,                               
+		# Asia/Shanghai						Shanghai,GMT+08:00,                             
+		# Asia/Hong_Kong					Hong Kong,GMT+08:00,                           
+		# Asia/Irkutsk						Irkutsk,GMT+08:00,                               
+		# Asia/Kuala_Lumpur					Kuala Lumpur,GMT+08:00,                     
+		# Australia/Perth					Perth,GMT+08:00,                              
+		# Asia/Taipei						Taipei,GMT+08:00,                                 
+		# Asia/Seoul						Seoul,GMT+09:00,                                   
+		# Asia/Tokyo						Tokyo,GMT+09:00,                                   
+		# Asia/Yakutsk						Yakutsk,GMT+09:00,                               
+		# Australia/Darwin					Darwin,GMT+09:30,                            
+		# Australia/Brisbane				Brisbane,GMT+10:00,                        
+		# Asia/Vladivostok					Vladivostok,GMT+10:00,                       
+		# Pacific/Guam						Guam,GMT+10:00,                                  
+		# Australia/Adelaide				Adelaide,GMT+10:30,                        
+		# Australia/Hobart					Hobart,GMT+11:00,                            
+		# Australia/Sydney					Sydney,GMT+11:00,                            
+		# Asia/Magadan						Magadan,GMT+11:00,                               
+		# Pacific/Noumea					Noumea,GMT+11:00,                              
+		# Pacific/Majuro					Majuro,GMT+12:00,                              
+		# Pacific/Fiji						Fiji,GMT+12:00,                                  
+		# Pacific/Auckland					Auckland,GMT+13:00,                          
+		# Pacific/Tongatapu					Tongatapu,GMT+13:00 -->
+		<item name="dateTime.timezone">PST8PDT</item>
+		<!-- Time Display Format -->
+		<!-- 12Hour, 24Hour -->
+		<item name="dateTime.format.time">24Hour</item>
+		<!-- Date Display Format -->
+		<!-- yyyy-mm-dd, mm-dd-yyyy, dd-mm-yyyy, Normal -->
+		<item name="dateTime.format.date">Normal</item>
+		<!-- Language -->
+		<!-- Arabic - ar, Czech - cz, Deutsh - de, English - en, Spanish - es, Francais - fr, Hebrew - he, Hrvatski - hr, Magyar - hu, Italiano - it, japanese - ja, korean - ko, latvian - lv, Dutch - nl, Polski - pl, Portugue - pt, Russian - ru, Slovenian - sl, Svenska - sv, Turkish - tr, Ukrainian - uk, traditional_chinese - zh-tw, simplified_chinese - zh -->
+		<item name="language.gui">en</item>
+		<!-- Screen Timeout -->
+		<!-- Never, 2Mins, 3Mins, 5Mins, 10Mins, 20Mins, 30Mins, 1Hour -->
+		<item name="lcd.blacklight.activeTimeout.sec">2Mins</item>
+		<!-- Screensaver Timeout -->
+		<!-- Never, 15Secs, 30Secs, 1Min, 2Mins, 5Mins, 10Mins, 20Mins, 30Mins -->
+		<item name="lcd.screensaver.timeout.sec">3Mins</item>
+		<!-- System settings - Security Settings -->
+		<!-- Disable SSH -->
+		<!-- No, Yes -->
+		<item name="security.ssh">No</item>
+		<!-- Disable SSH -->
+		<!-- No, Yes -->
+		<item name="security.ssh">No</item>
+		<!-- Access Method -->
+		<!-- HTTP, HTTPS -->
+		<item name="security.webAccessMode">HTTP</item>
+		<!-- Port -->
+		<!-- By default, HTTP uses port 80 and HTTPS uses port 443. This field is for customizing the web port -->
+		<item name="security.webAccess.port">80</item>
+		<!-- Configuration via Keypad Menu -->
+		<!-- Unrestricted, BasicSettingsOnly, ConstraintMode -->
+		<item name="security.configurationViaKeypadMenu">No</item>
+		<!-- Permission to Install/Uninstall Apps -->
+		<!-- Allow, RequireAdminPassword, RequireAdminPasswordIfSrcUnknown, NotAllow -->
+		<item name="security.installThirdApp.permission">Allow</item>
+		<!-- Admin Password -->
+		<item name="users.admin.password">{if isset($admin_password)}{$admin_password}{else}admin{/if}</item>
+		<!-- User Password -->
+		<item name="users.user.password">{if isset($device_password)}{$device_password}{else}user{/if}</item>
+		<!-- Minimum TLS Version -->
+		<!-- TLS1.0, TLS1.1, TLS1.2 -->
+		<item name="security.tls.minversion">TLS1.2</item> 
+		<!-- Maximum TLS Version -->
+		<!-- TLS1.0, TLS1.1, TLS1.2, NoLimit -->
+		<item name="security.tls.maxversion">NoLimit</item> 	
+		<!-- Enable Weak TLS Cipher Suites -->
+		<!-- Enable, Disable_RC4/DES/3DES -->
+		<item name="security.tls.weeksiphersuites">Disable_RC4/DES/3DES</item>
+		<!-- SIP TLS Certificate -->
+		<!-- <item name="security.certificate"></item> -->
+		<!-- SIP TLS Private Key  -->
+		<!-- <item name="security.key"></item> -->
+		<!-- SIP TLS Private Key Password -->
+		<!-- <item name="security.password">s1pphone</item> -->
+		<!-- Certificate Management - Trusted CA Certificates -->
+		<item name="CACertificates.1"></item>
+		<!-- Custom Certificate -->
+		<item name="security.customcertificate"></item>
+		<!-- Perferences - LCD & LED Management -->
+		<!-- Enable Missed Call Backlight -->
+		<item name="lcd.backlight.missedCall">No</item>
+		<!-- Enable Missed Call Indicator -->
+		<!-- Checked - No, Unchecked - Yes -->
+		<item name="ledControl.missedCall">No</item>
+		<!-- Enable MWI Indicator -->
+		<!-- Checked - No, Unchecked - Yes -->
+		<item name="ledControl.mwi">No</item>
+		<!-- Enable New Message Indicator -->
+		<!-- Checked - No, Unchecked - Yes -->
+		<item name="ledControl.newMessage">No</item>
+		<!-- Enable Contact Full Indicator -->
+		<!-- Checked - No, Unchecked - Yes -->
+		<item name="ledControl.contactFull">No</item>
+		<!-- Enable Indicator When LCD is Off -->
+		<!-- Checked - No, Unchecked - Yes -->
+		<item name="ledControl.LCDOff">No</item>
+		<!-- Font size -->
+		<!-- Small, Default, Large, Largest -->
+		<item name="lcd.font.size">Default</item>
+		<!-- Enable HDMI audio -->
+		<!-- Yes, No -->
+		<item name="audio.HDMI.enable">Yes</item>
+		<!-- Echo Delay -->
+		<!-- 0, 10, 20, ..., 190 -->
+		<item name="audio.HDMI.echoDelay">0</item>
+		<!-- RJ9 Headset TX Gain (dB) -->
+		<!-- -24, -18, -12, -6, 0, +6, +12, +18, +24 -->
+		<item name="audio.headset.txGain">0</item>
+		<!-- RJ9 Headset RX Gain (dB) -->
+		<!-- -9, -6, 0, +6, +9 -->
+		<item name="audio.headset.rxGain">0</item>
+		<!-- 3.5mm Earphone TX Gain (dB) -->
+		<!-- -24, -18, -12, -6, 0, +6, +12, +18, +24 -->
+		<item name="audio.3.5mmearphone.txGain">0</item>
+		<!-- 3.5mm Earphone RX Gain (dB) -->
+		<!-- -9, -6, 0, +6, +9 -->
+		<item name="audio.3.5mmearphone.rxGain">0</item>
+		<!-- Headset Type -->
+		<!-- PlantronicsEHS, Normal -->
+		<item name="audio.headset.ehs.ringtone">Normal</item>
+		<!-- Enable 3.5mm Headset Control -->
+		<!-- Yes, No -->
+		<item name="audio.3.5mheadsetControl.enable">No</item>
+		<!-- Handset TX Gain (dB) -->
+		<!-- 0, -6, 6 -->
+		<item name="audio.handset.txGain">-6</item>
+		<!-- Handset RX Gain (dB) -->
+		<!-- 0, -6, 6 -->
+		<item name="audio.handset.rxGain">-6</item>
+		<!-- Ringtone volume -->
+		<!-- 0 - 15 -->
+		<item name="audio.volume.ring">7</item>
+		<!-- Media volume -->
+		<!-- 0 - 15 -->
+		<item name="audio.volume.media">7</item>
+		<!-- Alarm volume -->
+		<!-- 0 - 15 -->
+		<item name="audio.volume.alarm">7</item>
+		<!-- Call volume -->
+		<!-- 1 - 8 -->
+		<item name="audio.volume.call">4</item>
+		<!-- Plug in RJ9/EHS headset no working yet-->
+		<!-- Yes, No -->
+		<item name="audio.headset.ehs.enable">No</item>
+		<!-- System Settings - TR069 -->
+		<!-- Enable TR-069 -->
+		<!-- Yes, No -->
+		<item name="tr069.enable">No</item>
+		<!-- ACS URL -->
+		<item name="tr069.url"></item>
+		<!-- ACS Username -->
+		<item name="tr069.username"></item>
+		<!-- ACS Password -->
+		<item name="tr069.password"></item>
+		<!-- Periodic Inform Enable -->
+		<!-- Yes, No -->
+		<item name="tr069.periodicInform">No</item>
+		<!-- Periodic Inform Interval (s) -->
+		<item name="tr069.periodicInformInterval">86400</item>
+		<!-- Connection Request Username -->
+		<item name="tr069.connectionRequestUsername"></item>
+		<!-- Connection Request Password -->
+		<item name="tr069.connectionRequestPassword"></item>
+		<!-- Connection Request Port -->
+		<item name="tr069.connectionRequestPort"></item>
+		<!-- CPE Cert File -->
+		<item name="tr069.ssl.certificate"></item>
+		<!-- CPE Cert Key -->
+		<item name="tr069.ssl.privateKey"></item>
+		<!-- Maintenance - Upgrade -->
+		<!-- Firmware Upgrade Mode -->
+		<!-- TFTP, HTTP, HTTPS -->
+		<item name="provisioning.firmware.protocol">HTTP</item>
+		<!-- Firmware Server Path -->
+		{if isset($grandstream_firmware_path) && isset($firmware_version)}
+		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>
+		{elseif isset($grandstream_firmware_path)}
+		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
+		{else}
+		<item name="provisioning.firmware.serverPath">{$domain_name}{$project_path}/app/provision/resources/firmware/</item>
+		{/if}
+		<!-- HTTP/HTTPS User Name -->
+		<item name="provisioning.firmware.username">{$http_auth_username}</item>
+		<!-- HTTP/HTTPS Password -->
+		<item name="provisioning.firmware.password">{$http_auth_password}</item>
+		<!-- Firmware File Prefix -->
+		<item name="provisioning.firmware.filePrefix"></item>
+		<!-- Firmware File Postfix -->
+		<item name="provisioning.firmware.filePostfix"></item>
+		<!-- Config Upgrade Via -->
+		<!-- TFTP, HTTP, HTTPS -->
+		<item name="provisioning.config.protocol">HTTP</item>
+		<!-- Config Server Path -->
+		{if $grandstream_config_server_path=="none"}
+		<item name="provisioning.config.serverPath"></item>
+		{elseif isset($grandstream_config_server_path)}
+		<item name="provisioning.config.serverPath">{$grandstream_config_server_path}</item>
+		{else}
+		<item name="provisioning.config.serverPath">{$domain_name}{$project_path}/app/provision</item>
+		{/if}
+		<!-- HTTP/HTTPS User Name -->
+		<item name="provisioning.config.username">{$http_auth_username}</item>
+		<!-- HTTP/HTTPS Password -->
+		<item name="provisioning.config.password">{$http_auth_password}</item>
+		<!-- Config File Prefix -->
+		<item name="provisioning.config.filePrefix"></item>
+		<!-- Config File Postfix -->
+		<item name="provisioning.config.filePostfix"></item>
+		<!-- Authenticate Conf File -->
+		<!-- Yes, No -->
+		<item name="provisioning.config.authenticateFile">No</item>
+		<!-- XML Config File Password -->
+		<item name="provisioning.config.filePassword"></item>
+		<!-- GUI Customization File Download Mode -->
+		<!-- TFTP, HTTP, HTTPS -->
+		<item name="provisioning.cust.protocol">TFTP</item>
+		<!-- GUI Customization File URL -->
+		<item name="provisioning.cust.serverPath"></item>
+		<!-- GUI Customization File HTTP/HTTPS Username -->
+		<item name="provisioning.cust.username"></item>
+		<!-- GUI Customization File HTTP/HTTPS Password -->
+		<item name="provisioning.cust.password"></item>
+		<!-- Use Configurations of Config File Server -->
+		<!-- 0 - No, 1 - Yes -->
+		<item name="provisioning.cust.sameasconfig">0</item>
+
+		<!-- Maintenance - Upgrade - Provision -->
+		<!-- Automatic Upgrade -->
+		<!-- No - No (default), Check Every Day - CheckEveryDay, Check Every Week - CheckEveryWeek, Check at a Period Time - CheckbyPeriod -->
+		<item name="provisioning.auto.mode">No</item>
+		<!-- Enable Randomized Automatic Upgrade -->
+		<item name="provisioning.randomized.enable">No</item>
+		<!-- Starting - Ending Hour of the Day (0-23) -->
+		<item name="provisioning.auto.hour">22</item>
+		<item name="provisioning.auto.endHour">23</item>
+		<!-- Day of the Week -->
+		<!-- 0, 1 (default), 2, 3, 4, 5, 6 -->
+		<!-- Multiple days example: 0/1/2/3/4 -->
+		<item name="provisioning.auto.day">1</item>
+		<!-- Automatic Upgrade Check Interval (m) -->
+		<!-- Number: 60 - 5256000. Default value is 10080 -->
+		<item name="provisioning.auto.minute">10080</item>
+		<!-- Firmware Upgrade and Provisioning -->
+		<!-- AlwaysCheck (default), CheckWhenChange, SkipCheck -->
+		<item name="provisioning.firmware.checkCondition">AlwaysCheck</item>
+		<!-- Upgrade Without Prompt -->
+		<!-- No (default), Yes -->
+		<item name="provisioning.prompt.enable">No</item>
+		<!-- Allow DHCP Option 43 and Option 66 to Override Server -->
+		<!-- No (default), Yes -->
+		<item name="provisioning.override.dhcp.allowCommonOptions">No</item>
+		<!-- DHCP Option 120 Override SIP Server -->
+		<!-- No, Yes (default) -->
+		<item name="sip.override.dhcp.allowOption120">Yes</item>
+		<!-- Allow DHCP Option 242 (Avaya IP Phones) -->
+		<!-- No, Yes (default) -->
+		<item name="provisioning.override.dhcp.allowOptions242">Yes</item>
+		<!-- Download and Process All Available Config Files -->
+		<!-- No (default), Yes -->
+		<item name="provisioning.config.processAll.enable">No</item>
+		<!-- Config Provision -->
+		<!-- Order1 - cfg.xml;cfg$mac;cfg$mac.xml;cfg$product.xml -->
+		<!-- Order2 - cfg.xml;cfg$mac;cfg$product.xml;cfg$mac.xml -->
+		<!-- Order3 - cfg.xml;cfg$mac.xml;cfg.xml;cfg$product.xml -->
+		<!-- Order4 - cfg.xml;cfg$mac.xml;cfg$product.xml;cfg.xml -->
+		<!-- Order5 - cfg.xml;cfg$product.xml;cfg.xml;cfg$mac.xml -->
+		<!-- Order6 - cfg.xml;cfg$product.xml;cfg$mac.xml;cfg.xml -->
+		<!-- Order7 - cfg$mac;cfg.xml;cfg$mac.xml;cfg$product.xml -->
+		<!-- Order8 - cfg$mac;cfg.xml;cfg$product.xml;cfg$mac.xml -->
+		<!-- Order9 - cfg$mac;cfg$mac.xml;cfg.xml;cfg$product.xml -->
+		<!-- Order10 - cfg$mac;cfg$mac.xml;cfg$product.xml;cfg.xml -->
+		<!-- Order11 - cfg$mac;cfg$product.xml;cfg$mac.xml;cfg.xml -->
+		<!-- Order12 - cfg$mac;cfg$product.xml;cfg.xml;cfg$mac.xml -->
+		<!-- Order13 - cfg$mac.xml;cfg.xml;cfg$mac;cfg$product.xml -->
+		<!-- Order14 - cfg$mac.xml;cfg.xml;cfg$product.xml;cfg$mac -->
+		<!-- Order15 - cfg$mac.xml;cfg$mac;cfg.xml;cfg$product.xml -->
+		<!-- Order16 - cfg$mac.xml;cfg$mac;cfg$product.xml;cfg.xml -->
+		<!-- Order17 - cfg$mac.xml;cfg$product.xml;cfg$mac;cfg.xml -->
+		<!-- Order18 - cfg$mac.xml;cfg$product.xml;cfg.xml;cfg$mac -->
+		<!-- Order19 - cfg$product.xml;cfg.xml;cfg$mac;cfg$mac.xml -->
+		<!-- Order20 - cfg$product.xml;cfg.xml;cfg$mac.xml;cfg$mac -->
+		<!-- Order21 - cfg$product.xml;cfg$mac;cfg.xml;cfg$mac.xml -->
+		<!-- Order22 - cfg$product.xml;cfg$mac;cfg$mac.xml;cfg.xml -->
+		<!-- Order23 - cfg$product.xml;cfg$mac.xml;cfg$mac;cfg.xml -->
+		<!-- Order24 - cfg$product.xml;cfg$mac.xml;cfg.xml;cfg$mac -->
+		<item name="provisioning.config.order">Order10</item>
+		<!-- Enable PNP Feature -->
+		<!-- No (default), Yes -->
+		<item name="provisioning.pnp.enable">No</item>
+		<!-- PNP URL -->
+		<item name="provisioning.pnp.url"></item>
+		<!-- PnP(3CX) Auto Provision -->
+		<item name="provisioning.3cxAutoProvision">Yes</item>
+		<!-- Enable SIP NOTIFY Authentication -->
+		<!-- Yes - No (default), No - Yes -->
+		<item name="sip.notify.challenge">No</item>
+		<!-- Validate Certification Chain -->
+		<!-- No (default), Yes -->
+		<item name="provisioning.validateCertificationChain.enable">No</item>
+		<!-- Enable EEE Mode -->
+		<!-- Yes, No (default) -->
+		<item name="EEE.mode.enable">No</item>
+		<!-- mDNS Override Server -->
+		<!-- Disable, UseTypeA, UseTypeSRV -->
+		<item name="provisioning.mDNSOverride.type">UseTypeA</item>
+		
+		<!-- Maintenance - System Diagnosis -->
+		<!-- Syslog Protocol -->
+		<!-- UDP, SSL_TLS -->
+		<item name="maintain.syslog.protocol">UDP</item>
+		<!-- Syslog Server -->
+		<item name="maintain.syslog.server">log.ipvideotalk.com</item>
+		<!-- Syslog Level -->
+		<!-- None, Debug, Info, Warning, Error -->
+		<item name="maintain.syslog.level">None</item>
+		<!-- Send SIP Log -->
+		<!-- Yes (default), No -->
+		<item name="maintain.syslog.sendSipLog">Yes</item>
+		<!-- Syslog Keyword Filter -->
+		<item name="maintain.syslog.keywrodFiltering"></item>
+		<!-- Enable Core Dump Generation -->
+		<!-- Yes, No (default) -->
+		<item name="debug.coredump.enable">No</item>
+
+		<!-- Applications - MPK Settings -->
+		<!-- Display Format -->
+		<!-- Name, UserID, NameUserID, NameUserIDKeymode -->
+		<item name="pks.mpk.displayFormat">NameUserIDKeymode</item>
+		<!-- Show Display Name from Server -->
+		<!-- Yes, No -->
+		<item name="pks.mpk.showNamefromServer.enable">No</item>
+		<!-- BLF Call-pickup Prefix  -->
+		<!-- Yes, No -->
+		<item name="account.1.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.2.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.3.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.4.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.5.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.6.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.7.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.8.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.9.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.10.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.11.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.12.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.13.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.14.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.15.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.16.sip.blf.callPickup.forcePrefix">No</item>
+		<!-- EventList BLF URI -->
+		<item name="account.1.sip.blf.eventlist.uri"></item>
+		<item name="account.2.sip.blf.eventlist.uri"></item>
+		<item name="account.3.sip.blf.eventlist.uri"></item>
+		<item name="account.4.sip.blf.eventlist.uri"></item>
+		<item name="account.5.sip.blf.eventlist.uri"></item>
+		<item name="account.6.sip.blf.eventlist.uri"></item>
+		<item name="account.7.sip.blf.eventlist.uri"></item>
+		<item name="account.8.sip.blf.eventlist.uri"></item>
+		<item name="account.9.sip.blf.eventlist.uri"></item>
+		<item name="account.10.sip.blf.eventlist.uri"></item>
+		<item name="account.11.sip.blf.eventlist.uri"></item>
+		<item name="account.12.sip.blf.eventlist.uri"></item>
+		<item name="account.13.sip.blf.eventlist.uri"></item>
+		<item name="account.14.sip.blf.eventlist.uri"></item>
+		<item name="account.15.sip.blf.eventlist.uri"></item>
+		<item name="account.16.sip.blf.eventlist.uri"></item>
+		<!-- Force BLF Call-pickup by Prefix -->
+		<item name="account.1.sip.blf.callPickup.prefix">**</item>
+		<item name="account.2.sip.blf.callPickup.prefix">**</item>
+		<item name="account.3.sip.blf.callPickup.prefix">**</item>
+		<item name="account.4.sip.blf.callPickup.prefix">**</item>
+		<item name="account.5.sip.blf.callPickup.prefix">**</item>
+		<item name="account.6.sip.blf.callPickup.prefix">**</item>
+		<item name="account.7.sip.blf.callPickup.prefix">**</item>
+		<item name="account.8.sip.blf.callPickup.prefix">**</item>
+		<item name="account.9.sip.blf.callPickup.prefix">**</item>
+		<item name="account.10.sip.blf.callPickup.prefix">**</item>
+		<item name="account.11.sip.blf.callPickup.prefix">**</item>
+		<item name="account.12.sip.blf.callPickup.prefix">**</item>
+		<item name="account.13.sip.blf.callPickup.prefix">**</item>
+		<item name="account.14.sip.blf.callPickup.prefix">**</item>
+		<item name="account.15.sip.blf.callPickup.prefix">**</item>
+		<item name="account.16.sip.blf.callPickup.prefix">**</item>
+		<!-- Applications - Contacts - General settings -->
+		<!-- Sort Phonebook by -->
+		<!-- 1 - LastName, 0 - FirstName -->
+		<item name="phonebook.sortBy">1</item>
+		<!-- Default Contacts Tab -->
+		<!-- Default, LDAPSearch, LocalPhonebook, LocalGroup, BroadsoftPhonebook, 5 - Keep -->
+		<item name="phonebook.keyFunction">Default</item>
+		<!-- Emergency Call Numbers -->
+		<!-- Example for multiple numbers: 911,999,110 -->
+		<item name="phonebook.emergencyCallNumber">911</item>
+		<!-- Applications - Contacts - Download Contacts -->
+		<!-- Clear The Old List -->
+		<!-- No, Yes option missing???? -->
+		<item name="phonebook.clearOld.enable">No</item>
+		<!-- Replace Duplicate Items -->
+		<!-- No, Yes option missing???? -->
+		<item name="phonebook.removeDuplicate.enable">Yes</item>
+		<!-- Download Mode -->
+		<!-- Disabled, EnabledUseHTTP, EnabledUseTFTP, EnabledUseHTTPS -->
+		<item name="phonebook.download.mode">Disabled</item>
+		<!-- File Encoding -->
+		<!-- GBK, UTF-8, UTF-16, UTF-32, Big5, Big5-HKSCS,  Shift-JIS, ISO 2022-JP, KOI8-R, ISO8859-1, ISO8859-15, Windows-1251, EUC-KR  -->
+		<item name="phonebook.download.encode">UTF</item>
+		<!-- Download Server -->
+		<item name="phonebook.download.server"></item>
+		<!-- HTTP/HTTPS User Name  -->
+		<item name="phonebook.download.username"></item>
+		<!-- HTTP/HTTPS Password  -->
+		<item name="phonebook.download.password"></item>
+		<!-- Automatic Download Interval  -->
+		<!-- 0, 120, 240, 360, 480, 720 -->
+		<item name="phonebook.download.interval">0</item>
+		<!-- Applications - LDAP Book -->
+		<!-- Connection Mode -->
+		<!-- LDAP, LDAPS -->
+		<item name="ldap.protocol">LDAP</item>
+		<!-- Server Address -->
+		<item name="ldap.server"></item>
+		<!-- Port -->
+		<item name="ldap.port">389</item>
+		<!-- Base DN -->
+		<!-- # Example 1: dc=grandstream,dc=com -->
+		<!-- # Example 2: ou=Boston, dc=grandstream,dc=com -->
+		<item name="ldap.base"></item>
+		<!-- User Name -->
+		<item name="ldap.username"></item>
+		<!-- Password -->
+		<item name="ldap.password"></item>
+		<!-- LDAP Name Attributes  -->
+		<item name="ldap.ldapNameAttributes"></item>
+		<!-- LDAP Number Attributes -->
+		<item name="ldap.ldapNumberAttributes"></item>
+		<!-- LDAP Mail Attributes -->
+		<item name="ldap.ldapMailAttributes"></item>
+		<!-- LDAP Name Filter -->
+		<item name="ldap.ldapNameFilter"></item>
+		<!-- LDAP Number Filter -->
+		<item name="ldap.ldapNumberFilter"></item>
+		<!-- LDAP Mail Filter -->
+		<item name="ldap.ldapMailFilter"></item>
+		<!-- LDAP Displaying Name Attributes -->
+		<item name="ldap.ldapDisplayName"></item>
+		<!-- Max Hits -->
+		<item name="ldap.maxHits">50</item>
+		<!-- Search Timeout (s) -->
+		<item name="ldap.searchTimeout">4</item>
+		<!-- LDAP Lookup For Dial -->
+		<!-- Yes, No -->
+		<item name="ldap.outgoingCalls">No</item>
+		<!-- LDAP Lookup For Incoming Call -->
+		<!-- Yes, No -->
+		<item name="ldap.ldapLookup">No</item>
+		<!-- LDAP Dialing Default Account -->
+		<!-- Default - 0, Account 1 - 1, Account 2 - 2 ... -->
+		<item name="ldap.defalutAccount">0</item>
+
+		<!-- Value-added Service - Value-added Service -->
+		<!-- Service Type -->
+		<!-- 0 - Door System, 1 - DTMF -->
+		<item name="externalService.1.type">0</item>
+		<!-- Door System Type -->
+		<!-- 0 - GDS, 1 - Others, 2 - Baudisch -->
+		<item name="externalService.1.account">0</item>
+		<!-- Display Name -->
+		<item name="externalService.1.systemId"></item>
+		<!-- System Number -->
+		<item name="externalService.1.systemNumber"></item>
+		<!-- Access Password / DTMF Content -->
+		<item name="externalService.1.password"></item>
+		<!-- System Ringtone -->
+		<item name="externalService.1.ringtone">/system/media/audio/ringtones/DingDong.wav</item>
+		<!-- Display Open Door Button when Calling -->
+		<!-- Yes, No -->
+		<item name="externalService.general.doorButton.display">Yes</item>
+		<!-- Enable Preview -->
+		<!-- Yes, No -->
+		<item name="externalService.general.preview.enable">Yes</item>
+
+		<!-- Value-added Service - Broadsoft Settings - Braodsoft Call Features -->
+		<!-- Feature Key Synchronization -->
+		<!-- No - Disable, Yes - Broadsoft -->
+		<item name="account.1.broadsoft.syncFeatureKey">No</item>
+		<!-- Enable BroadSoft Call Park -->
+		<!-- Yes, No -->
+		<item name="account.1.broadsoft.callPark">No</item>
+		<!-- Conference URI -->
+		<item name="account.1.sip.conferenceUri"></item>
+		<!-- BroadSoft Call Center -->
+		<!-- Yes, No -->
+		<item name="account.1.broadsoft.callCenter">No</item>
+		
+		<!-- Hoteling Event -->
+		<!-- Yes, No -->
+		<item name="account.1.broadsoft.hoteling">No</item>
+
+		<!-- Call Center Status -->
+		<!-- Yes, No -->
+		<item name="account.1.broadsoft.callCenterStatus">No</item>
+
+		<!-- Value-added Service - Broadsoft Settings - SCA -->
+		<!-- Enable SCA (Shared Call Appearance) -->
+		<!-- Yes, No -->
+		<item name="account.1.sca.enable">No</item>
+
+		<!-- Enable BargeIn -->
+		<!-- Yes, No -->
+		<item name="account.1.sca.bargein.enable">No</item>
+		<!-- Auto-filling Pickup Feature Code -->
+		<!-- Yes, No -->
+		<item name="account.1.sca.autoPickup.enable">Yes</item>
+		<!-- Pickup Feature Code -->
+		<item name="account.1.sca.pickupFeatureCode"></item>
+		<!-- Line-seize Timeout -->
+		<!-- Range: 15 - 60. Default: 15 -->
+		<item name="account.1.sip.lineSeizeTimeout">15</item>
+		
+		<!-- Value-added Service - BroadSoft Directories -->
+		<!-- Authentication Type. -->
+		<!-- SIPCredentials, LoginCredentials -->
+		<item name="broadsoftXsi.authenticationType">SIPCredentials</item>
+
+		<!-- Server -->
+		<item name="broadsoftXsi.server"></item>
+
+		<!-- Port -->
+		<item name="broadsoftXsi.port"></item>
+
+		<!-- Action Path.  -->
+		<item name="broadsoftXsi.actionsPath"></item>
+
+		<!-- BroadWorks User ID.  -->
+		<item name="broadsoftXsi.sip.userId"></item>
+
+		<!-- SIP Authentication ID (for SIP credentials) -->
+		<item name="broadsoftXsi.credential.username"></item>
+
+		<!-- SIP Authentication Password (for SIP credentials) -->
+		<item name="broadsoftXsi.credential.password"></item>
+
+		<!-- Login Password (for login credential P22103) -->
+
+		<!-- BroadSoft Directory Hits -->
+		<!-- Range: 1 - 1000 -->
+		<item name="broadsoftXsi.directory.maxHits"></item>
+
+		<!-- Network Directories -->
+		<!-- Group Directory -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.groupDirectory">Yes</item>
+
+		<!-- Group Directory Name -->
+		<item name="broadsoftXsi.directory.groupDirectoryName"></item>
+
+		<!-- Enterprise Directory  -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.enterpriseDirectory">Yes</item>
+
+		<!-- Enterprise Directory Name -->
+		<item name="broadsoftXsi.directory.enterpriseDirectoryName"></item>
+
+		<!-- Group Common -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.groupCommon">Yes</item>
+
+		<!-- Group Common Name -->
+		<item name="broadsoftXsi.directory.groupCommonName"></item>
+
+		<!-- Enterprise Common -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.enterpriseCommon">Yes</item>
+
+		<!-- Enterprise Common Name -->
+		<item name="broadsoftXsi.directory.enterpriseCommonName"></item>
+
+		<!-- Personal Directory -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.personalDirectory">Yes</item>
+
+		<!-- Personal Directory Name -->
+		<item name="broadsoftXsi.directory.personalDirectoryName"></item>
+
+		<!-- Polycom Phonebook -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.polycomPhonebook">Yes</item>
+
+		<!-- Polycome Phonebook Name -->
+		<item name="broadsoftXsi.directory.polycomPhonebookName"></item>
+
+		<!-- Missed Call Log -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.missedCallLog">Yes</item>
+
+		<!-- Missed Call Log Name -->
+		<item name="broadsoftXsi.directory.missedCallLogName"></item>
+
+		<!-- Placed Call Log -->
+		<!-- Yes, No -->
+		<item name="bbroadsoftXsi.directory.placedCallLog">Yes</item>
+
+		<!-- Placed Call Log Name -->
+		<item name="broadsoftXsi.directory.placedCallLogName"></item>
+
+		<!-- Received Call Log -->
+		<!-- Yes, No -->
+		<item name="broadsoftXsi.directory.receivedCallLog">Yes</item>
+
+		<!-- Received Call Log Name -->
+		<item name="broadsoftXsi.directory.receivedCallLogName"></item>
+
+		<!-- Value-added Service - BroadSoft IM&P -->
+		<!-- Server -->
+		<item name="broadsoftIMP.server"></item>
+
+		<!-- Port -->
+		<item name="broadsoftIMP.port"></item>
+
+		<!-- User Name -->
+		<item name="broadsoftIMP.username"></item>
+
+		<!-- Password -->
+		<item name="broadsoftIMP.password"></item>
+
+		<!-- Enable Broadsoft IM&P -->
+		<!-- Yes, No -->
+		<item name="broadsoftIMP.enable">No</item>
+
+		<!-- Associated Broadsoft Account -->
+		<!-- Account1, Account2, ... , Account16 -->
+		<item name="broadsoftIMP.associatedAccount"></item>
+
+		<!-- Auto Login -->
+		<!-- Yes, No -->
+		<item name="broadsoftIMP.autoLogin">No</item>
+
+		<!-- Display Non-XMPP Contacts -->
+		<!-- Yes, No -->
+		<item name="broadbroadsoftIMP.displayNonXMPPContacts">No</item>
+
+		<!--#############################################-->
+		<!--# 160 MPKs can be configured via MPK APP    #-->
+		<!--#############################################-->
+		<!-- [Note] MPK provision needs reboot to take effect -->
+		{$keyIndex=1}
+		<!-- MPK Key Mode -->
+		<!-- SpeedDial, BLF, SpeedDialViaActiveAccount, DialDTMF, Intercom, Transfer, CallPark, MulticastPaging, Conference, DialPrefix -->
+		{$key_types=["none"=>"","speed dial"=>"SpeedDial","blf"=>"BLF","speed dial active"=>"SpeedDialViaActiveAccount","dial dtmf"=>"DialDTMF","intercom"=>"Intercom","transfer"=>"Transfer","call park"=>"CallPark","multicast paging"=>"MulticastPaging","conference"=>"Conference"]}
+		{foreach $keys as $category => $rows}
+		{foreach $rows as $row}
+		{if isset($row.device_key_type)}
+		<item name="pks.mpk.{$keyIndex}.mode">{$key_types[$row.device_key_type]}</item>
+		<!-- MPK Account -->
+		<!-- Account1, Account2, ... , Account16 -->
+		<item name="pks.mpk.{$keyIndex}.account">Account{$row.device_key_line}</item>
+		<!-- MPK Display Name -->
+		<item name="pks.mpk.{$keyIndex}.description">{$row.device_key_label}</item>
+		<!-- MPK User ID -->
+		<!-- extendValue may be used based on MPK mode -->
+		<item name="pks.mpk.{$keyIndex}.value">{$row.device_key_value}</item>
+		<item name="pks.mpk.{$keyIndex}.extendValue">device_key_extension</item>
+		{$keyIndex=$keyIndex+1}
+		{/if}
+		{/foreach}
+		{/foreach}
+	</config>
+</gs_provision>

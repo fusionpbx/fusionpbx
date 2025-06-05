@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<directory>
+<DIR_GROUP>
+{foreach $contacts as $contact}
+{if $contact.contact_name_given != "" && $contact.contact_type == "contact"}
+<DIR_ENTRY>
+<DIR_ENTRY_NAME_FIRST>{$contact.contact_name_given}</DIR_ENTRY_NAME_FIRST>
+<DIR_ENTRY_NAME_LAST>{$contact.contact_name_family}</DIR_ENTRY_NAME_LAST>
+<DIR_ENTRY_NUMBER_WORK>{$contact.contact_work}</DIR_ENTRY_NUMBER_WORK>
+{if $contact.contact_cell != "" }
+<DIR_ENTRY_NUMBER_MOBILE>{$contact.contact_cell}</DIR_ENTRY_NUMBER_MOBILE>
+{/if}
+{if $contact.contact_home != "" }
+<DIR_ENTRY_NUMBER_OTHER>{$contact.contact_home}</DIR_ENTRY_NUMBER_OTHER>
+{/if}
+<DIR_ENTRY_LINE_NUMBER>0</DIR_ENTRY_LINE_NUMBER>
+<DIR_ENTRY_BLOCK>0</DIR_ENTRY_BLOCK>
+<DIR_ENTRY_RINGER>0</DIR_ENTRY_RINGER>
+</DIR_ENTRY>
+{/if}
+{/foreach}
+</DIR_GROUP>
+</directory>

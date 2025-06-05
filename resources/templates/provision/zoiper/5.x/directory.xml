@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Contacts>
+	{foreach $contacts as $row}
+	{if $smarty.get.contacts == "extensions" && $row.category == "extensions"}
+	<Contact id="{$row.phone_number}">
+		<Name>
+			<First>{$row.contact_name_given}</First>
+			<Middle></Middle>
+			<Last>{$row.contact_name_family}</Last>
+			<Display>{$row.contact_name_given} {$row.contact_name_family}</Display>
+		</Name>
+		<Phone>
+			<Type>Work</Type>
+			<!-- Possible value one of the following: Work or Home -->
+			<Type>IPPhone</Type>
+			<!-- Possible value one the following:  Phone, Cell, Pager, IPPhone, -->
+			<!-- Fax, Pager or Custom -->
+			<Phone>{$row.phone_number}</Phone>
+			<!-- The value is the actual phone number of the contact. -->
+			<!-- For the contact to show in zoiper5 at least one phone field should -->
+			<!-- be present -->
+			<Account>{$account.1.auth_id}</Account>
+			<!-- The value is the ident value of the account that will be used for dialing,it is found in the config.xml file -->
+			<!-- If not provided Zoiper will use the XML contact service account (by default it’s the default account) -->
+			<Presence>{$account.1.auth_id}</Presence>
+			<!-- The ident value of the account that will be used for presence, it is found in the config.xml file -->
+			<!-- By default it’s do not use unless it is an IPPhone type -->
+			<AccountMappingType>Service</AccountMappingType>
+			<!-- Possible value one of the following: -->
+			<!-- None = do not use  -->
+			<!-- Default = the default account used by zoiper5 -->
+			<!-- Service = the account used by XML contact service -->
+			<!-- Custom = when this is used, the ident value of the account should be provided in <Account></Account>, it is found in the config.xml -->
+			<PresenceMappingType>Service</PresenceMappingType>
+			<!-- Possible value one of the following: -->
+			<!-- None = do not use -->
+			<!-- Service = the account used by XML contact service. -->
+			<!-- Custom = when this is used, the ident valueof the account should be provided in <presence></Presence>, it is found in the config.xml -->
+		</Phone>
+		<!-- If required more than one phone for a contact a new phone tag should be added that includes at least the two types tags and phone tag -->
+	</Contact>
+	{/if}
+	{/foreach}
+</Contacts>

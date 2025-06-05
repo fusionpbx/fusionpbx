@@ -1,0 +1,30 @@
+<CiscoIPPhoneRingList>
+	<Ring>
+		<DisplayName>Chirp 3</DisplayName>
+		<FileName>ringer3.pcm</FileName>
+	</Ring>
+	<Ring>
+		<DisplayName>Old Style</DisplayName>
+		<FileName>ringer1.pcm</FileName>
+	</Ring>
+	<Ring>
+		<DisplayName>Door Chime</DisplayName>
+		<FileName>doorchime.pcm</FileName>
+	</Ring>
+	<Ring>
+		<DisplayName>Red Alert</DisplayName>
+		<FileName>redalert.pcm</FileName>
+	</Ring>
+	<Ring>
+		<DisplayName>Terri</DisplayName>
+		<FileName>terri.pcm</FileName>
+	</Ring>
+	<Ring>
+		<DisplayName>Door Chime 2</DisplayName>
+		<FileName>chime2.pcm</FileName>
+	</Ring>
+	<Ring>
+		<DisplayName>Silence</DisplayName>
+		<FileName>silence.pcm</FileName>
+	</Ring>
+</CiscoIPPhoneRingList>

@@ -1,0 +1,1362 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gs_provision version="1">
+	<config version="1">
+
+<!-- Configuration template for GXV-3504 firmware version 1.0.4.39 -->
+<!--  Home -->
+<!-- Basic Settings -->
+<!-- Basic Settings/System  -->
+
+<!-- TimeZone -->
+<!--		"GMT-12", -->
+<!--		"GMT-11", -->
+<!--		"GMT-10", -->
+<!--		"GMT-09", -->
+<!--		"GMT-08", -->
+<!--		"GMT-07", -->
+<!--		"GMT-06", -->
+<!--		"GMT-05", -->
+<!--		"GMT-05", -->
+<!--		"GMT-04", -->
+<!--		"GMT-04", -->
+<!--		"GMT-04", -->
+<!--		"GMT-03", -->
+<!--		"GMT-02", -->
+<!--		"GMT-01", -->
+<!--		"GMT+00", -->
+<!--		"GMT+01", -->
+<!--		"GMT+02", -->
+<!--		"GMT+02", -->
+<!--		"GMT+02", -->
+<!--		"GMT+02", -->
+<!--		"GMT+02", -->
+<!--		"GMT+03", -->
+<!--		"GMT+03", -->
+<!--		"GMT+03:30",-->
+<!--		"GMT+04", -->
+<!--		"GMT+04:30", -->
+<!--		"GMT+05", -->
+<!--		"GMT+05:30", -->
+<!--		"GMT+06", -->
+<!--		"GMT+07", -->
+<!--		"GMT+08", -->
+<!--		"GMT+09", -->
+<!--		"GMT+09:30" -->
+<!--		"GMT+10", -->
+<!--		"GMT+10" -->
+<!--		"GMT+11",-->
+<!--		"GMT+12", 	// 38 -->
+<!--		/* daylight saving time */-->
+<!--		"AKST9AKDT", -->
+<!--		"PST8PDT,M3.2.0/02:00:00,M11.1.0/02:00:00", // 40-->
+<!--		"MST7MDT",-->
+<!--		"GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00", // 42 -->
+<!--		"WET-0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00", -->
+<!--		"GMT+0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00", // 44 -->
+<!--		"CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00", -->
+<!--		"CFT-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00",// 46 -->
+<!--		"EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00", -->
+<!--		"MSK-3MSD,M3.5.0/2,M10.5.0/3", 		 // 48 -->
+<!--		"MST-3MDT,M3.5.0/2,M10.5.0/3",-->
+<!--		"CST-9:30CDT-10:30,M10.5.0/02:00:00,M3.5.0/03:00:00", // 50 -->
+<!--		"EST-10EDT-11,M10.5.0/02:00:00,M3.5.0/03:00:00", 	-->
+<!--		"EST-10EDT-11,M10.1.0/02:00:00,M3.5.0/03:00:00", 	// 52 -->
+<!--		"NZST-12NZDT-13,M10.1.0/02:00:00,M3.3.0/03:00:00",-->
+<P64>GMT+08</P64>
+
+<!-- it's usefull when selfdefined time zone enable-->
+<P246>MTZ+6MDT+5,M4.1.0,M11.1.1</P246>
+
+<!-- Enable NTP Server 1- enable 0- disable -->
+<P5006>1</P5006>
+
+<!-- NTP Server -->
+<P30>time.nist.gov</P30>
+
+<!-- OSD date format. 1- Y_M_D, 2- M_D_Y, 3- D_M_Y  -->
+<P102>10001</P102>
+
+<!-- Device name  -->
+<P10000>gxv3504</P10000>
+
+<!-- Alarm output/input setting  -->
+<!-- Chn0 input -->
+<P10010>0</P10010>
+
+<!-- Chn0 output -->
+<P10011>1</P10011>
+
+<!-- Chn0 output time 0:always,5,15,30,60,180,300,600,900,1800 second -->
+<P10012>1600</P10012>
+
+<!-- Chn1 input -->
+<P10013>1</P10013>
+
+<!-- Chn1 output -->
+<P10014>1</P10014>
+
+<!-- Chn1 output time 0:always,5,15,30,60,180,300,600,900,1800 second -->
+<P10015>150</P10015>
+
+<!-- Chn2 input -->
+<P10016>0</P10016>
+
+<!-- Chn2 output -->
+<P10017>0</P10017>
+
+<!-- Chn2 output time 0:always,5,15,30,60,180,300,600,900,1800 second -->
+<P10018>700</P10018>
+
+<!-- Chn3 input -->
+<P10019>1</P10019>
+
+<!-- Chn3 output -->
+<P10020>1</P10020>
+
+<!-- Chn3 output time 0:always,5,15,30,60,180,300,600,900,1800 second -->
+<P10021>15</P10021>
+
+<!-- Expansion Port Mode Select ,0- PTZ(via RS485) Mode ,1-DI/DO Mode -->
+<P10002>0</P10002>
+
+
+<!--  Basic Settings/Video & Audio -->
+
+<!-- Chno0-3 Primary Stream Settings and Secondary Stream Settings -->
+<!-- Video encode type  -->
+<!-- 26 MJPEG    96  H264 -->
+<P12306>96</P12306>
+<P12406>96</P12406>
+<P12506>96</P12506>
+<P12606>96</P12606>
+
+<P12706>96</P12706>
+<P12806>96</P12806>
+<P12906>96</P12906>
+<P13006>96</P13006>
+
+<!-- Video reselution -->
+<!-- Reselution = -->
+<!-- {* this is a comment {2560,1920}- 1027 *} -->
+<!-- {*  {2048,1536}- 1026 *} -->
+<!-- {*  {1920,1088}- 1025 *} -->
+<!-- {*  {1600,1200}- 1024 *} -->
+<!-- {*  {1280,960}-  1023 *} -->
+<!-- {*  {1280,720}-  1022 *} -->
+<!-- {*  {1024,768}-  1021 *} -->
+<!-- {*  {800,592}-   1020 *} -->
+<!-- {*  {800,480}-   1019 *} -->
+<!-- {*  {720,576}-   1018 *} -->
+<!-- {*  {720,480}-   1017 *} -->
+<!-- {*  {704,576}-   1016 *} -->
+<!-- {*  {704,480}-   1015 *} -->
+<!-- {*  {704,288}-   1014 *} -->
+<!-- {*  {704,240}-   1013 *} -->
+<!-- {*  {640,480}-   VGA - 1(Follow phone) *} -->
+<!-- {*  {640,368}-   1012 *} -->
+<!-- {*  {480,368}-   1011 *} -->
+<!-- {*  {480,272}-   1010 *} -->
+<!-- {*  {352,288}-   1009 *} -->
+<!-- {*  {352,240}-   1008 *} -->
+<!-- {*  {320,240}-   QVGA - 0(Follow phone) *} -->
+<!-- {*  {320,239}-   1007 *} -->
+<!-- {*  {320,176}-   1006 *} -->
+<!-- {*  {256,192}-   1005 *} -->
+<!-- {*  {256,144}-   1004 *} -->
+<!-- {*  {176,144}-   1003 *} -->
+<!-- {*  {176,112}-   1002 *} -->
+<!-- {*  {160,144}-   1001 *} -->
+<!-- {*  {160,112}-   1000 *} -->
+
+<P2307>1016</P2307>
+<P2407>1016</P2407>
+<P2507>1016</P2507>
+<P2607>1016</P2607>
+
+<P2707>0</P2707>
+<P2807>0</P2807>
+<P12907>0</P12907>
+<P13007>0</P13007>
+
+<!-- Video bit rate 16,32,64,128,256,384,512,768,1024,1280,1536,1792,2048 -->
+<P2315>1024</P2315>
+<P12408>1024</P12408>
+<P12508>1024</P12508>
+<P12608>1024</P12608>
+
+<P12708>256</P12708>
+<P12808>256</P12808>
+<P12908>256</P12908>
+<P13008>256</P13008>
+
+<!-- Video frame rate 1,2,3,4,5,10,13,15,20,25,30 -->
+<P904>25</P904>
+<P12409>25</P12409>
+<P12509>25</P12509>
+<P12609>25</P12609>
+<P12709>25</P12709>
+<P12809>25</P12809>
+<P12909>25</P12909>
+<P13009>25</P13009>
+
+<!-- Video bit rate control 1=CBR  0=VBR -->
+<P924>1</P924>
+<P12410>1</P12410>
+<P12510>1</P12510>
+<P12610>1</P12610>
+
+<P12710>1</P12710>
+<P12810>1</P12810>
+<P12910>1</P12910>
+<P13010>1</P13010>
+
+<!-- Video image quality 1 very high 2 high 3 normal 4 low 5 very low -->
+<P12311>3</P12311>
+<P12411>3</P12411>
+<P12511>3</P12511>
+<P12611>3</P12611>
+
+<P12711>3</P12711>
+<P12811>3</P12811>
+<P12911>3</P12911>
+<P13011>3</P13011>
+
+<!-- Video i-frame interval 0-100 -->
+<P12312>30</P12312>
+<P12412>30</P12412>
+<P12512>30</P12512>
+<P12612>30</P12612>
+
+<P12712>30</P12712>
+<P12812>30</P12812>
+<P12912>30</P12912>
+<P13012>30</P13012>
+
+<!-- Profile,0- Baseline 1- Main Profile 2- High Profile -->
+<P12313>0</P12313>
+<P12413>0</P12413>
+<P12513>0</P12513>
+<P12613>0</P12613>
+
+<P12713>0</P12713>
+<P12813>0</P12813>
+<P12913>0</P12913>
+<P13013>0</P13013>
+
+
+<!-- Power frequency,0- indoor 50 ,1- indoor 60 ,2- outdoor -->
+<P12314>0</P12314>
+<P12414>0</P12414>
+<P12514>0</P12514>
+<P12614>0</P12614>
+
+<!-- Flip Setting, 0-stand, 1- overturn -->
+<P12315>0</P12315>
+<P12415>0</P12415>
+<P12515>0</P12515>
+<P12615>0</P12615>
+
+<!-- Audeo type 0 PCMU 1 PUMA 2 G726 3 Disbled -->
+<P14000>0</P14000>
+<P14010>0</P14010>
+<P14020>0</P14020>
+<P14030>0</P14030>
+
+<!-- Audio bit rate  16,24,32,40 -->
+<P14001>32</P14001>
+<P14011>32</P14011>
+<P14021>32</P14021>
+<P14031>32</P14031>
+
+<!-- Audio_mic_volume HIS:1-10 TI:1-5 -->
+<P14002>3</P14002>
+
+<!-- Audio_speaker_volume HIS:1-10 TI:0-31 -->
+<P14003>10</P14003>
+
+<!-- Audio line in  0 inside ,1 outside -->
+<P14004>0</P14004>
+
+<!-- Audio line out  0 inside ,1 outside -->
+<P14005>0</P14005>
+
+<!-- Chno0-3 osd text -->
+<P10040>CHN1</P10040>
+<P10050>CHN2</P10050>
+<P10060>CHN3</P10060>
+<P10070>CHN4</P10070>
+
+<!-- Chno0-3  osd position  0 top,1 bottom -->
+<P10041>0</P10041>
+<P10051>0</P10051>
+<P10061>0</P10061>
+<P10071>0</P10071>
+
+<!-- Chno0-3 osd transparency  20 = 20% -->
+<P10042>10</P10042>
+<P10052>10</P10052>
+<P10062>10</P10062>
+<P10072>10</P10072>
+
+<!-- Chno0-3 OSD Color HIS -->
+<P10043>0xFFFFFF</P10043>
+<P10053>0xFFFFFF</P10053>
+<P10063>0xFFFFFF</P10063>
+<P10073>0xFFFFFF</P10073>
+
+<!-- Chno0-3 osd time show enable 0 disable 1 show -->
+<P10044>1</P10044>
+<P10054>1</P10054>
+<P10064>1</P10064>
+<P10074>1</P10074>
+
+<!-- Chno0-3 osd text show enable  0 disable 1 show -->
+<P10045>1</P10045>
+<P10055>1</P10055>
+<P10065>1</P10065>
+<P10075>1</P10075>
+
+<!-- 4 D1 option -->
+<!-- 1:H264 4*704*480, 2048kbps@15fps + no secondary stream -->
+<!-- 2:H264 4*704*480, 1536kbps@19fps + no secondary stream -->
+<!-- 3:H264 4*704*480, 1536kbps@15fps + secondary stream 4*QCIF     (176*112) 128kbps@10fps -->
+<!-- 4:H264 4*704*576, 2048kbps@13fps + no secondary stream -->
+<!-- 5:H264 4*704*576, 1536kbps@16fps + no secondary stream -->
+<!-- 6:H264 4*704*576, 1536kbps@10fps + secondary stream 4*QCIF (176*144) 128kbps@10fps -->
+<!-- 7:MJPEG 4*704*480, 4096kbps@15fps + no secondary stream -->
+<!-- 8:MJPEG 4*704*576, 4096kbps@13fps + no secondary stream -->
+<P10030>1</P10030>
+
+<!-- 4 D1 enable, 0- disable 1- enable -->
+<P10031>0</P10031>
+
+
+<!--  Basic Settings/CMOS setting -->
+
+<!-- Flip -->
+<P10500>0</P10500>
+
+<!-- Iris Setting, 0- Mech Manual 1- DC Auto 2- DC Manual -->
+<P10501>0</P10501>
+
+<!-- Iris Open, 0- 100% 1- 80% 2- 60% 3- 40% 4 -20% -->
+<P10502>0</P10502>
+
+<!-- Shutter Speed, 0- Auto  1- 1/30 2- 1/60 3- 1/125 4- 1/250 5- 1/500 6- 1/1000 -->
+<P10503>0</P10503>
+
+<!-- IR CUT Setting, 0- Manual 1- Automatic -->
+<P10504>0</P10504>
+
+<!-- Daytime/Night Model, 0- Daytime 1- Night -->
+<P10505>0</P10505>
+
+<!-- Color Model, 0- Color 1- B/W 2- Auto -->
+<P10506>0</P10506>
+
+<!-- IR CUT Sensitivity,1,2,3,4,5 -->
+<P10507>1</P10507>
+
+
+<!-- Basic Settings/Networking         -->
+
+<!-- Address Type. 0 - DHCP, 1 - Static IP -->
+<P8>0</P8>
+<!-- Static IP. IP address, Ignore if DHCP is used -->
+<P9>192</P9>
+<P10>168</P10>
+<P11>1</P11>
+<P12>168</P12>
+
+<!-- Static IP. Subnet Mask,Ignore if DHCP is used -->
+<P13>255</P13>
+<P14>255</P14>
+<P15>255</P15>
+<P16>0</P16>
+
+<!-- Static IP. Default Gateway, Ignore if DHCP is used -->
+<P17>192</P17>
+<P18>168</P18>
+<P19>1</P19>
+<P20>168</P20>
+
+<!-- Static IP. DNS Server 1, Ignore if DHCP is used -->
+<P21>0</P21>
+<P22>0</P22>
+<P23>0</P23>
+<P24>0</P24>
+
+<!-- Static IP. DNS Server 2 , Ignore if DHCP is used -->
+<P25>0</P25>
+<P26>0</P26>
+<P27>0</P27>
+<P28>0</P28>
+<!-- HTTP port -->
+<P901>0</P901>
+
+
+<!-- Basic Settings/PPPoE  -->
+
+<!-- PPPoE Account ID -->
+<P82></P82>
+
+<!-- PPPoE Password -->
+<P83></P83>
+
+
+<!-- Basic Settings/Wifi  -->
+
+<!-- Wifi webs value : p_value value -->
+<!-- Authentication Mode: 0-open,1-share,2-wepauto,3-wpa psk,4-wpa2 psk,5-wpa none -->
+<!-- Encryption    : 0-none,1-wep,2-tkip,3-aes -->
+<!-- IE SELECT           p_value Authentication Mode       p_value  Encryption -->
+<!-- 0(NONE)                           0                        0 -->
+<!-- 1(WEP/Shared)                     1                        1 -->
+<!-- 2(WEP/Open)                       0                        1 -->
+<!-- 3(WPA PSK TKIP)                   3                        2 -->
+<!-- 4(WPA PSK AES)                    3                        3 -->
+<!-- 5(WPA2 PSK TKIP)                  4                        2 -->
+<!-- 6(WPA2 PSK AES)                   4                        3 -->
+
+<!-- Enable wifi: 0-disenabled, 1-enabled -->
+<P7800>0</P7800>
+
+<!-- SSID -->
+<P7812></P7812>
+
+<!-- Authentication Mode: 0- Open, 1- Shared, 2- WEPAUTO, 3- WPAPSK, 4- WPA2PSK, 5- WPANONE -->
+<P7814></P7814>
+
+<!-- Encryption: 0- None, 1- WEP, 2- TKIP, 3- AES -->
+<P7815></P7815>
+
+<!-- WEP KEY INDEX: 0-Not selected, 1-Selected; Four only one selected, if you select more than one, first check the effect -->
+<P7821></P7821>
+<P7822></P7822>
+<P7823></P7823>
+<P7824></P7824>
+
+<!-- Key(For SSID password) -->
+<P7829></P7829>
+
+
+<!--   Basic Settings/DDNS -->
+
+<!-- Enable ddns: 0-disenabled, 1-enabled -->
+<P10100>0</P10100>
+<!-- isp type: 0-dyndns.org, 1-noip.com,2-ActiveDNS,3-cn99.com,4-ipkan.net,5-ipkan.cn,6-ipkan.com.cn -->
+<P10101>2</P10101>
+
+<!-- Self-Define DDNS Address -->
+<P10102></P10102>
+
+<!-- Site Name -->
+<P10103></P10103>
+
+<!-- DDNS Account -->
+<P10104></P10104>
+
+<!-- DDNS Password  -->
+<P10105></P10105>
+
+<!-- STUN Server -->
+<P10106></P10106>
+
+
+<!--  Basic Settings/SIP -->
+
+<!-- SIP state 0- off-line   1- on-line-->
+<P271>0</P271>
+
+<!-- SIP unregister 0- unregister 1- register-->
+<P81>0</P81>
+
+<!-- SIP account name-->
+<P270></P270>
+
+<!-- SIP server -->
+<P47>{$account.1.server_address}</P47>
+
+<!-- SIP proxy server-->
+<P48></P48>
+
+<!-- SIP password-->
+<P34>{$account.1.password}</P34>
+
+<!-- SIP user id-->
+<P35>{$account.1.user_id}</P35>
+
+<!-- SIP authenticate id-->
+<P36>{$account.1.user_id}</P36>
+
+<!-- SIP stun server -->
+<P76></P76>
+
+<!-- SIP stream-->
+<P10450></P10450>
+
+<!-- SIP preferred Vocoder-->
+<!-- 0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,-->
+<!-- 9 - G.722, 18 - G.729A/B, 98 - L16-256-->
+<!-- Inherit sip phone(3000 phone)-->
+<P57>0</P57>
+
+<!-- SIP regexpiration -->
+<P32>{$account.1.register_expires}</P32>
+
+<!-- SIP local port-->
+<P40></P40>
+
+<!-- SIP local rtp port-->
+<P39></P39>
+
+<!-- SIP auto on Hook Timer -->
+<P10451></P10451>
+
+<!-- SIP disable Audio in SIP Call-->
+<P10452></P10452>
+
+<!-- SIP enable Keep Alive -->
+<P1309></P1309>
+
+<!-- SIP accept Direct IP Call -->
+<P10453></P10453>
+
+<!-- SIP enable White List Number Filter -->
+<P10454></P10454>
+
+<!-- SIP enable Dual-way Audio Warning Mode -->
+<P10455></P10455>
+
+<!-- SIP open door -->
+<P10456></P10456>
+
+<!-- SIP open door password -->
+<P10457></P10457>
+
+<!-- SIP locked delay time -->
+<P10458></P10458>
+
+<!-- Phoneconf.namephone@conf.com   @ the sign of partition between num and the phoneconf.name -->
+<P10459>13788888888@liming,13788888888@liming1,13788888888@liming2</P10459>
+
+<!-- White list -->
+<P10460>13788888888,13788888889,13788888810</P10460>
+
+
+
+<!--  Basic Settings/Status -->
+
+
+
+
+<!-- Advanced Settings -->
+
+
+
+<!--Advanced Settings/User Management -->
+
+
+
+
+
+<!-- Advanced Settings/Maintenance -->
+
+<!--UPGRADE -->
+<!-- Upgrade via. 1- TFTP, 2- HTTP, 3- HTTPS -->
+<P212>2</P212>
+
+<!-- Firmware Server Path -->
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxv3504/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxv3504</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
+
+<!-- Config Server Path  -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{elseif isset($domain_name)}
+<P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
+
+<!-- XML Config File Password -->
+<!-- String; between ascii values 33 and 126 -->
+<!-- Mandatory -->
+<P1359></P1359>
+
+<!--  HTTP/HTTPS User Name -->
+<!--  String; between ascii values 33 and 126 -->
+<P1360>{$http_auth_username}</P1360>
+
+<!--  HTTP/HTTPS Password -->
+<!--  String; between ascii values 33 and 126 -->
+<P1361>{$http_auth_password}</P1361>
+
+<!-- Automatic Upgrade Interval(Minutes):60-525600  -->
+<P193>1080</P193>
+
+<!-- Automatic Upgrade: 0- disenabled, 1- enabled  -->
+<P194>1</P194>
+
+
+<!--  Advanced Settings/SMTP -->
+
+<!-- Enable smtp. 0- disenabled, 1- enabled -->
+<P10120>0</P10120>
+
+<!-- SMTP Server  -->
+<P10121></P10121>
+
+<!-- SMTP Server Port -->
+<P10122></P10122>
+
+<!-- From E-Mail address  -->
+<P10123></P10123>
+
+<!-- To E-Mail address 1  -->
+<P10124></P10124>
+
+<!-- To E-Mail address 2  -->
+<P10125></P10125>
+
+<!-- To E-Mail address 3 -->
+<P10126></P10126>
+
+<!-- User Name -->
+<P10127></P10127>
+
+<!-- Password -->
+<P10128></P10128>
+
+<!-- SSL. 0- disenabled, 1- enabled -->
+<P10129></P10129>
+
+
+<!-- Advanced Settings/FTP  -->
+
+<!-- Enable FTP. 0- disenabled, 1- enabled -->
+<P10140>0</P10140>
+
+<!-- FTP Server  -->
+<P10141></P10141>
+
+<!-- FTP Server Port -->
+<P10142></P10142>
+
+<!-- FTP User Name -->
+<P10143></P10143>
+
+<!-- FTP Password -->
+<P10144></P10144>
+
+<!-- FTP Path -->
+<P10145></P10145>
+
+
+<!--  Advanced Settings/PTZ -->
+
+<!-- PTZ procotol: 0-Pelco-P, 1-Pelco-D-->
+<P10150>0</P10150>
+
+<!-- PTZ baudrate: 2400/4800/9600/19200-->
+<P10151>4800</P10151>
+
+
+<!--  Advanced Settings/Alarm Servers-->
+
+<!-- Server Name-->
+<P10162></P10162>
+
+<!-- URL -->
+<P10163></P10163>
+
+<!-- User Name -->
+<P10162></P10162>
+
+<!-- Password -->
+<P10163></P10163>
+
+
+<!-- 	Advanced Settings/Alarm Event-->
+
+
+<!-- 	Alarm Event Channel 1-->
+
+<!-- Channel 1 Alarm Action -->
+<!-- Record Video time: pre_time@end_time-->
+<P10170>0@15</P10170>
+
+<!-- Enable alarm storage 0- disable 1:enable //sd card 2:usbdisk //3:harddisk -->
+<P10171>0</P10171>
+
+<!-- Enable sip alarm 1- enable 0- disable -->
+<P10172>0</P10172>
+
+<!-- Enable alarm output 1- enable 0- disable -->
+<P10173>0</P10173>
+
+<!-- Enable Upload to Alarm Center 1- enable 0- disable -->
+<P10174>1</P10174>
+
+<!-- Enable Upload to Alarm HTTP Server 1- enable 0- disable -->
+<P10175>0</P10175>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10176>0</P10176>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive 1- enable 0- disable -->
+<P10177>0</P10177>
+
+<!-- Channel 1 Alarm Event Time Schedule -->
+<!-- Probe chn1 alarm time week@start_time@end_time week(0-7 7=everyday) time(00:00)  -->
+<P10180>1@07:24@09:55;7@10:24@13:55;2@13:24@16:55</P10180>
+
+
+<!--  Alarm Event Channel 2 	-->
+
+<!-- Channel 2 Alarm Action -->
+<!-- Record Video time: pre_time@end_time  -->
+<P10190>0@15</P10190>
+
+<!-- Enable alarm storage 0- disable 1:enable //sd card 2:usbdisk //3:harddisk -->
+<P10191>0</P10191>
+
+<!-- Enable sip alarm 1- enable 0- disable -->
+<P10192>0</P10192>
+
+<!-- Enable alarm output 1- enable 0- disable -->
+<P10193>0</P10193>
+
+<!-- Enable Upload to Alarm Center 1- enable 0- disable -->
+<P10194>1</P10194>
+
+<!-- Enable Upload to Alarm HTTP Server 1- enable 0- disable -->
+<P10195>0</P10195>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10196>0</P10196>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive 1- enable 0- disable -->
+<P10197>0</P10197>
+
+<!-- Channel 2 Alarm Event Time Schedule  -->
+<!-- Probe chn2 alarm time week@start_time@end_time week(0-7 7=everyday) time(00:00)  -->
+<P10200></P10200>
+
+	<!-- Alarm Event Channel 3  -->
+
+<!-- Channel 3 Alarm Action  -->
+<!-- Record Video time: pre_time@end_time -->
+<P10210>0@15</P10210>
+
+<!-- Enable alarm storage 0- disable 1:enable //sd card 2:usbdisk //3:harddisk -->
+<P10211>0</P10211>
+
+<!-- Enable sip alarm 1- enable 0- disable -->
+<P10212>0</P10212>
+
+<!-- Enable alarm output 1- enable 0- disable -->
+<P10213>0</P10213>
+
+<!-- Enable Upload to Alarm Center 1- enable 0- disable -->
+<P10214>1</P10214>
+
+<!-- Enable Upload to Alarm HTTP Server 1- enable 0- disable -->
+<P10215>0</P10215>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10216>0</P10216>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive 1- enable 0- disable -->
+<P10217>0</P10217>
+
+<!-- Channel 3 Alarm Event Time Schedule## -->
+<!-- Probe chn3 alarm time week@start_time@end_time week(0-7 7=everyday) time(00:00) -->
+<P10220></P10220>
+
+
+<!-- Alarm Event Channel 4 	      -->
+
+<!--  Channel 4 Alarm Action ## -->
+<!-- Record Video time: pre_time@end_time -->
+<P10230>0@15</P10230>
+
+<!-- Enable alarm storage 0- disable 1:enable //sd card 2:usbdisk //3:harddisk -->
+<P10231>0</P10231>
+
+<!-- Enable sip alarm 1- enable 0- disable -->
+<P10232>0</P10232>
+
+<!-- Enable alarm output 1- enable 0- disable -->
+<P10233>0</P10233>
+
+<!-- Enable Upload to Alarm Center 1- enable 0- disable -->
+<P10234>1</P10234>
+
+<!-- Enable Upload to Alarm HTTP Server 1- enable 0- disable -->
+<P10235>0</P10235>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10236>0</P10236>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive 1- enable 0- disable -->
+<P10237>0</P10237>
+
+<!--Channel 4 Alarm Event Time Schedule ## -->
+<!-- Probe chn3 alarm time week@start_time@end_time week(0-7 7=everyday) time(00:00) -->
+<P10240></P10240>
+
+
+<!--Advanced Settings/Motion Detection -->
+
+
+<!-- Motion Detection Channel 1  -->
+
+<!--  Channel 1 Motion Detection Region Settings ## -->
+<!-- Enable Motion Detection. 0- disable, 1- enable -->
+<P10250>1</P10250>
+
+<!-- Region1 coordinate and sensitivity. Format:start_coordinate(x1*y1)@end_coordinate(x2*y2)@sensitivity(0-100) -->
+<P10251>0*0@704*576@50</P10251>
+
+<!-- Region2 coordinate and sensitivity -->
+<P10252></P10252>
+
+<!-- Region3 coordinate and sensitivity -->
+<P10253></P10253>
+
+<!-- Region4 coordinate and sensitivity -->
+<P10254></P10254>
+
+<!-- Region5 coordinate and sensitivity -->
+<P10255></P10255>
+
+<!-- Region6 coordinate and sensitivity -->
+<P10256></P10256>
+
+<!-- Region7 coordinate and sensitivity -->
+<P10257></P10257>
+
+<!-- Region8 coordinate and sensitivity -->
+<P10258></P10258>
+
+<!-- Region9 coordinate and sensitivity -->
+<P10259></P10259>
+
+<!-- Region10 coordinate and sensitivity -->
+<P10260></P10260>
+
+<!-- Region11 coordinate and sensitivity -->
+<P10261></P10261>
+
+<!-- Region12 coordinate and sensitivity -->
+<P10262></P10262>
+
+<!-- Region13 coordinate and sensitivity -->
+<P10263></P10263>
+
+<!-- Region14 coordinate and sensitivity -->
+<P10264></P10264>
+
+<!-- Region15 coordinate and sensitivity -->
+<P10265></P10265>
+
+<!-- Region16 coordinate and sensitivity -->
+<P10266></P10266>
+
+<!-- Channel 1 Alarm Action ## -->
+<!-- Record Video time =  pre_time@end_time -->
+<P10270>0@15</P10270>
+
+<!-- Enable alarm storage. 0- disable, 1- enable //sd card, 2- usbdisk, //3- harddisk -->
+<P10271>0</P10271>
+
+<!-- Enable sip alarm. 1- enable, 0- disable -->
+<P10272>0</P10272>
+
+<!-- Enable alarm output. 1- enable, 0- disable -->
+<P10273>0</P10273>
+
+<!-- Enable Upload to Alarm Center. 1- enable, 0- disable -->
+<P10274>1</P10274>
+
+<!-- Enable Upload to Alarm HTTP Server. 1- enable, 0- disable -->
+<P10275>0</P10275>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10276>0</P10276>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive. 1- enable, 0- disable -->
+<P10277>0</P10277>
+
+<!-- Channel 1 Motion Detection Time Schedule ## -->
+<!-- Md chn1 alarm time -->
+<!-- Region1 alarm time. Format:week@start_time@end_time week(0-7 7=everyday) time(00:00) -->
+<P10280>7@02:30@16:25</P10280>
+
+<!-- Region2 alarm time -->
+<P10281></P10281>
+
+<!-- Region3 alarm time -->
+<P10282></P10282>
+
+<!-- Region4 alarm time -->
+<P10283></P10283>
+
+<!-- Region5 alarm time -->
+<P10284></P10284>
+
+<!-- Region6 alarm time -->
+<P10285></P10285>
+
+<!-- Region7 alarm time -->
+<P10286></P10286>
+
+<!-- Region8 alarm time -->
+<P10287></P10287>
+
+<!-- Region9 alarm time -->
+<P10288></P10288>
+
+<!-- Region10 alarm time -->
+<P10289></P10289>
+
+<!-- Region11 alarm time -->
+<P10290></P10290>
+
+<!-- Region12 alarm time -->
+<P10291></P10291>
+
+<!-- Region13 alarm time -->
+<P10292></P10292>
+
+<!-- Region14 alarm time -->
+<P10293></P10293>
+
+<!-- Region15 alarm time -->
+<P10294></P10294>
+
+<!-- Region16 alarm time -->
+<P10295></P10295>
+
+
+<!-- Motion Detection Channel 2 	 -->
+
+<!-- Channel 2 Motion Detection Region Settings ## -->
+<!-- Enable Motion Detection. 0- disable, 1- enable -->
+<P10300>0</P10300>
+
+<!-- Region1 coordinate and sensitivity. Format:start_coordinate(x1*y1)@end_coordinate(x2*y2)@sensitivity(0-100) -->
+<P10301>0*0@704*576@50</P10301>
+
+<!-- Region2 coordinate and sensitivity -->
+<P10302></P10302>
+
+<!-- Region3 coordinate and sensitivity -->
+<P10303></P10303>
+
+<!-- Region4 coordinate and sensitivity -->
+<P10304></P10304>
+
+<!-- Region5 coordinate and sensitivity -->
+<P10305></P10305>
+
+<!-- Region6 coordinate and sensitivity -->
+<P10306></P10306>
+
+<!-- Region7 coordinate and sensitivity -->
+<P10307></P10307>
+
+<!-- Region8 coordinate and sensitivity -->
+<P10308></P10308>
+
+<!-- Region9 coordinate and sensitivity -->
+<P10309></P10309>
+
+<!-- Region10 coordinate and sensitivity -->
+<P10310></P10310>
+
+<!-- Region11 coordinate and sensitivity -->
+<P10311></P10311>
+
+<!-- Region12 coordinate and sensitivity -->
+<P10312></P10312>
+
+<!-- Region13 coordinate and sensitivity -->
+<P10313></P10313>
+
+<!-- Region14 coordinate and sensitivity -->
+<P10314></P10314>
+
+<!-- Region15 coordinate and sensitivity -->
+<P10315></P10315>
+
+<!-- Region16 coordinate and sensitivity -->
+<P10316></P10316>
+
+<!-- Channel 2 Alarm Action  -->
+<!-- Record Video time =  pre_time@end_time -->
+<P10320>30@60</P10320>
+
+<!-- Enable alarm storage. 0- disable, 1- enable //sd card, 2- usbdisk, //3- harddisk -->
+<P10321>0</P10321>
+
+<!-- Enable sip alarm. 1- enable, 0- disable -->
+<P10322>0</P10322>
+
+<!-- Enable alarm output. 1- enable, 0- disable -->
+<P10323>0</P10323>
+
+<!-- Enable Upload to Alarm Center. 1- enable, 0- disable -->
+<P10324>0</P10324>
+
+<!-- Enable Upload to Alarm HTTP Server. 1- enable, 0- disable -->
+<P10325>0</P10325>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10326>0</P10326>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive. 1- enable, 0- disable -->
+<P10327>0</P10327>
+
+<!-- Channel 2 Motion Detection Time Schedule ## -->
+<!-- Md chn2 alarm time -->
+<!-- Region1 alarm time. Format:week@start_time@end_time week(0-7 7=everyday) time(00:00) -->
+<P10330>7@02:30@16:25</P10330>
+
+<!-- Region2 alarm time -->
+<P10331></P10331>
+
+<!-- Region3 alarm time -->
+<P10332></P10332>
+
+<!-- Region4 alarm time -->
+<P10333></P10333>
+
+<!-- Region5 alarm time -->
+<P10334></P10334>
+
+<!-- Region6 alarm time -->
+<P10335></P10335>
+
+<!-- Region7 alarm time -->
+<P10336></P10336>
+
+<!-- Region8 alarm time -->
+<P10337></P10337>
+
+<!-- Region9 alarm time -->
+<P10338></P10338>
+
+<!-- Region10 alarm time -->
+<P10339></P10339>
+
+<!-- Region11 alarm time -->
+<P10340></P10340>
+
+<!-- Region12 alarm time -->
+<P10341></P10341>
+
+<!-- Region13 alarm time -->
+<P10342></P10342>
+
+<!-- Region14 alarm time -->
+<P10343></P10343>
+
+<!-- Region15 alarm time -->
+<P10344></P10344>
+
+<!-- Region16 alarm time -->
+<P10345></P10345>
+
+
+<!-- Motion Detection Channel 3 	   -->
+
+<!-- Channel 3 Motion Detection Region Settings ## -->
+<!-- Enable Motion Detection. 0- disable, 1- enable -->
+<P10350>0</P10350>
+
+<!-- Region1 coordinate and sensitivity. Format:start_coordinate(x1*y1)@end_coordinate(x2*y2)@sensitivity(0-100) -->
+<P10351>0*0@704*576@50</P10351>
+
+<!-- Region2 coordinate and sensitivity -->
+<P10352></P10352>
+
+<!-- Region3 coordinate and sensitivity -->
+<P10353></P10353>
+
+<!-- Region4 coordinate and sensitivity -->
+<P10354></P10354>
+
+<!-- Region5 coordinate and sensitivity -->
+<P10355></P10355>
+
+<!-- Region6 coordinate and sensitivity -->
+<P10356></P10356>
+
+<!-- Region7 coordinate and sensitivity -->
+<P10357></P10357>
+
+<!-- Region8 coordinate and sensitivity -->
+<P10358></P10358>
+
+<!-- Region9 coordinate and sensitivity -->
+<P10359></P10359>
+
+<!-- Region10 coordinate and sensitivity -->
+<P10360></P10360>
+
+<!-- Region11 coordinate and sensitivity -->
+<P10361></P10361>
+
+<!-- Region12 coordinate and sensitivity -->
+<P10362></P10362>
+
+<!-- Region13 coordinate and sensitivity -->
+<P10363></P10363>
+
+<!-- Region14 coordinate and sensitivity -->
+<P10364></P10364>
+
+<!-- Region15 coordinate and sensitivity -->
+<P10365></P10365>
+
+<!-- Region16 coordinate and sensitivity -->
+<P10366></P10366>
+
+<!--  Channel 3 Alarm Action ## -->
+<!-- Record Video time =  pre_time@end_time -->
+<P10370>30@60</P10370>
+
+<!-- Enable alarm storage. 0- disable, 1- enable //sd card, 2- usbdisk, //3- harddisk -->
+<P10371>1</P10371>
+
+<!-- Enable sip alarm. 1- enable, 0- disable -->
+<P10372>1</P10372>
+
+<!-- Enable alarm output. 1- enable, 0- disable -->
+<P10373>1</P10373>
+
+<!-- Enable Upload to Alarm Center. 1- enable, 0- disable -->
+<P10374>1</P10374>
+
+<!-- Enable Upload to Alarm HTTP Server. 1- enable, 0- disable -->
+<P10375>1</P10375>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10376>1</P10376>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive. 1- enable, 0- disable -->
+<P10377>1</P10377>
+
+<!-- Channel 3 Motion Detection Time Schedule ## -->
+<!-- Md chn3 alarm time -->
+<!-- Region1 alarm time. Format:week@start_time@end_time week(0-7 7=everyday) time(00:00) -->
+<P10380>7@02:30@16:25</P10380>
+
+<!-- Region2 alarm time -->
+<P10381></P10381>
+
+<!-- Region3 alarm time -->
+<P10382></P10382>
+
+<!-- Region4 alarm time -->
+<P10383></P10383>
+
+<!-- Region5 alarm time -->
+<P10384></P10384>
+
+<!-- Region6 alarm time -->
+<P10385></P10385>
+
+<!-- Region7 alarm time -->
+<P10386></P10386>
+
+<!-- Region8 alarm time -->
+<P10387></P10387>
+
+<!-- Region9 alarm time -->
+<P10388></P10388>
+
+<!-- Region10 alarm time -->
+<P10389></P10389>
+
+<!-- Region11 alarm time -->
+<P10390></P10390>
+
+<!-- Region12 alarm time -->
+<P10391></P10391>
+
+<!-- Region13 alarm time -->
+<P10392></P10392>
+
+<!-- Region14 alarm time -->
+<P10393></P10393>
+
+<!-- Region15 alarm time -->
+<P10394></P10394>
+
+<!-- Region16 alarm time -->
+<P10395></P10395>
+
+
+<!--Motion Detection Channel 4 -->
+<!-- Channel 4 Motion Detection Region Settings ## -->
+<!-- Enable Motion Detection. 0- disable, 1- enable -->
+<P10400>0</P10400>
+
+<!-- Region1 coordinate and sensitivity. Format:start_coordinate(x1*y1)@end_coordinate(x2*y2)@sensitivity(0-100) -->
+<P10401>0*0@704*576@50</P10401>
+
+<!-- Region2 coordinate and sensitivity -->
+<P10402></P10402>
+
+<!-- Region3 coordinate and sensitivity -->
+<P10403></P10403>
+
+<!-- Region4 coordinate and sensitivity -->
+<P10404></P10404>
+
+<!-- Region5 coordinate and sensitivity -->
+<P10405></P10405>
+
+<!-- Region6 coordinate and sensitivity -->
+<P10406></P10406>
+
+<!-- Region7 coordinate and sensitivity -->
+<P10407></P10407>
+
+<!-- Region8 coordinate and sensitivity -->
+<P10408></P10408>
+
+<!-- Region9 coordinate and sensitivity -->
+<P10409></P10409>
+
+<!-- Region10 coordinate and sensitivity -->
+<P10410></P10410>
+
+<!-- Region11 coordinate and sensitivity -->
+<P10411></P10411>
+
+<!-- Region12 coordinate and sensitivity -->
+<P10412></P10412>
+
+<!-- Region13 coordinate and sensitivity -->
+<P10413></P10413>
+
+<!-- Region14 coordinate and sensitivity -->
+<P10414></P10414>
+
+<!-- Region15 coordinate and sensitivity -->
+<P10415></P10415>
+
+<!-- Region16 coordinate and sensitivity -->
+<P10416></P10416>
+
+<!-- Channel 4 Alarm Action ## -->
+<!-- Record Video time =  pre_time@end_time -->
+<P10420>30@60</P10420>
+
+<!-- Enable alarm storage. 0- disable, 1- enable //sd card, 2- usbdisk, //3- harddisk -->
+<P10421>0</P10421>
+
+<!-- Enable sip alarm. 1- enable, 0- disable -->
+<P10422>0</P10422>
+
+<!-- Enable alarm output. 1- enable, 0- disable -->
+<P10423>0</P10423>
+
+<!-- Enable Upload to Alarm Center. 1- enable, 0- disable -->
+<P10424>0</P10424>
+
+<!-- Enable Upload to Alarm HTTP Server. 1- enable, 0- disable -->
+<P10425>0</P10425>
+
+<!-- Enable Record Video and Upload to FTP Server 1- enable 0- disable -->
+<P10426>0</P10426>
+
+<!-- Enable Email and FTP upload JPEG and Store it to USB card or SD drive. 1- enable, 0- disable -->
+<P10427>0</P10427>
+
+<!-- Channel 4 Motion Detection Time Schedule ## -->
+
+<!-- Md chn4 alarm time -->
+<!-- Region1 alarm time. Format:week@start_time@end_time week(0-7 7=everyday) time(00:00) -->
+<P10430>7@02:30@16:25</P10430>
+
+<!-- Region2 alarm time -->
+<P10431></P10431>
+
+<!-- Region3 alarm time -->
+<P10432></P10432>
+
+<!-- Region4 alarm time -->
+<P10433></P10433>
+
+<!-- Region5 alarm time -->
+<P10434></P10434>
+
+<!-- Region6 alarm time -->
+<P10435></P10435>
+
+<!-- Region7 alarm time -->
+<P10436></P10436>
+
+<!-- Region8 alarm time -->
+<P10437></P10437>
+<!-- Region9 alarm time -->
+<P10438></P10438>
+
+<!-- Region10 alarm time -->
+<P10439></P10439>
+
+<!-- Region11 alarm time -->
+<P10440></P10440>
+
+<!-- Region12 alarm time -->
+<P10441></P10441>
+
+<!-- Region13 alarm time -->
+<P10442></P10442>
+
+<!-- Region14 alarm time -->
+<P10443></P10443>
+
+<!-- Region15 alarm time -->
+<P10444></P10444>
+
+<!-- Region16 alarm time -->
+<P10445></P10445>
+
+
+<!-- Advanced Settings/Syslog -->
+
+<!-- Syslog Server -->
+<P207></P207>
+
+<!-- Syslog Level. 0- None, 1- Debug, 2- Info, 3- Warning, 4- Error -->
+<P208>0</P208>
+
+
+<!-- Advanced Settings/Record -->
+
+<!-- Enable Record Schedule. 0- disable, 1- enable -->
+<P10480>1</P10480>
+
+<!-- Record Time Table,week1@start_tm1@end_tm1;week2@start_tm2@end_tm2;...; -->
+<P10481></P10481>
+
+
+<!-- Advanced  Settings/Live Storage -->
+
+<!-- On Disk Full.1- Delete the earliest video or image files, 2- Stop storing video and image files -->
+<P10490>1</P10490>
+
+
+</config>
+</gs_provision>

@@ -16,6 +16,12 @@
                 </a>
                 @endcan
 
+                @can('device_import')
+                <a href="" class="btn btn-primary btn-sm">
+                    <i class="fa fa-clone" aria-hidden="true"></i> {{__('Perfiles')}}
+                </a>
+                @endcan
+
                 <div class="d-flex gap-2 " role="menu" aria-label="Menu actions">
                     <a href="{{ route('devices.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}

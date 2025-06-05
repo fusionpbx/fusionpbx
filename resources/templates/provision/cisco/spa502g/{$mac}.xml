@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flat-profile>
+
+<Restricted_Access_Domains group="System/System_Configuration" />
+<Enable_Web_Server group="System/System_Configuration">Yes</Enable_Web_Server>
+<Web_Server_Port group="System/System_Configuration">80</Web_Server_Port>
+<Enable_Web_Admin_Access group="System/System_Configuration">Yes</Enable_Web_Admin_Access>
+<Admin_Passwd group="System/System_Configuration">{$admin_password}</Admin_Passwd>
+<User_Password group="System/System_Configuration"></User_Password>
+<Signaling_Protocol group="System/System_Configuration">SIP</Signaling_Protocol>
+<SPCP_Auto-detect group="System/System_Configuration">Yes</SPCP_Auto-detect>
+<Phone-UI-readonly group="System/System_Configuration">No</Phone-UI-readonly>
+<Phone-UI-user-mode group="System/System_Configuration">No</Phone-UI-user-mode>
+
+<!-- System/Power_Setting -->
+<PoE_Power_Required group="System/Power_Setting">Normal</PoE_Power_Required>
+
+<!-- System/Internet_Connection -->
+<Connection_Type group="System/Internet_Connection_Type_">DHCP</Connection_Type>
+
+<!-- System/_Static_IP_Settings -->
+<Static_IP group="System/_Static_IP_Settings" />
+<NetMask group="System/_Static_IP_Settings" />
+<Gateway group="System/_Static_IP_Settings" />
+
+<!-- System/Optional_Network_Configuration -->
+<HostName group="System/Optional_Network_Configuration" />
+<Domain group="System/Optional_Network_Configuration" />
+<Primary_DNS group="System/Optional_Network_Configuration" />
+<Secondary_DNS group="System/Optional_Network_Configuration" />
+<DNS_Server_Order group="System/Optional_Network_Configuration">Manual</DNS_Server_Order>
+<DNS_Query_Mode group="System/Optional_Network_Configuration">Parallel</DNS_Query_Mode>
+<DNS_Query_TTL_Ignore group="System/Optional_Network_Configuration">No</DNS_Query_TTL_Ignore>
+<Syslog_Server group="System/Optional_Network_Configuration" />
+<Debug_Server group="System/Optional_Network_Configuration" />
+<Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
+<Layer_2_Logging group="System/Optional_Network_Configuration">No</Layer_2_Logging>
+<NTP_Enable group="System/Optional_Network_Configuration">Yes</NTP_Enable>
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
+
+<!-- System/VLAN_Settings -->
+<Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
+<Enable_CDP group="System/VLAN_Settings">Yes</Enable_CDP>
+<Enable_LLDP-MED group="System/VLAN_Settings">Yes</Enable_LLDP-MED>
+<Network_Startup_Delay group="System/VLAN_Settings">3</Network_Startup_Delay>
+<VLAN_ID group="System/VLAN_Settings">1</VLAN_ID>
+<PC_Port_VLAN_Highest_Priority group="System/VLAN_Settings">No Limit</PC_Port_VLAN_Highest_Priority>
+<Enable_PC_Port_VLAN_Tagging group="System/VLAN_Settings">No</Enable_PC_Port_VLAN_Tagging>
+<PC_Port_VLAN_ID group="System/VLAN_Settings">1</PC_Port_VLAN_ID>
+
+<!-- System/Inventory_Settings -->
+<Asset_ID group="System/Inventory_Settings" />
+
+<!-- SIP/SIP_Parameters-->
+<Max_Forward group="SIP/SIP_Parameters">70</Max_Forward>
+<Max_Redirection group="SIP/SIP_Parameters">5</Max_Redirection>
+<Max_Auth group="SIP/SIP_Parameters">2</Max_Auth>
+<SIP_User_Agent_Name group="SIP/SIP_Parameters">$VERSION</SIP_User_Agent_Name>
+<SIP_Server_Name group="SIP/SIP_Parameters">$VERSION</SIP_Server_Name>
+<SIP_Reg_User_Agent_Name group="SIP/SIP_Parameters" />
+<SIP_Accept_Language group="SIP/SIP_Parameters" />
+<DTMF_Relay_MIME_Type group="SIP/SIP_Parameters">application/dtmf-relay</DTMF_Relay_MIME_Type>
+<Hook_Flash_MIME_Type group="SIP/SIP_Parameters">application/hook-flash</Hook_Flash_MIME_Type>
+<Remove_Last_Reg group="SIP/SIP_Parameters">No</Remove_Last_Reg>
+<Use_Compact_Header group="SIP/SIP_Parameters">No</Use_Compact_Header>
+<Escape_Display_Name group="SIP/SIP_Parameters">No</Escape_Display_Name>
+<SIP-B_Enable group="SIP/SIP_Parameters">No</SIP-B_Enable>
+<Talk_Package group="SIP/SIP_Parameters">No</Talk_Package>
+<Hold_Package group="SIP/SIP_Parameters">No</Hold_Package>
+<Conference_Package group="SIP/SIP_Parameters">No</Conference_Package>
+<Notify_Conference group="SIP/SIP_Parameters">No</Notify_Conference>
+<RFC_2543_Call_Hold group="SIP/SIP_Parameters">Yes</RFC_2543_Call_Hold>
+<Random_REG_CID_On_Reboot group="SIP/SIP_Parameters">No</Random_REG_CID_On_Reboot>
+<Mark_All_AVT_Packets group="SIP/SIP_Parameters">Yes</Mark_All_AVT_Packets>
+<SIP_TCP_Port_Min group="SIP/SIP_Parameters">5060</SIP_TCP_Port_Min>
+<SIP_TCP_Port_Max group="SIP/SIP_Parameters">15080</SIP_TCP_Port_Max>
+<CTI_Enable group="SIP/SIP_Parameters">No</CTI_Enable>
+<Caller_ID_Header group="SIP/SIP_Parameters">PAID-RPID-FROM</Caller_ID_Header>
+<SRTP_Method group="SIP/SIP_Parameters">x-sipura</SRTP_Method>
+<Hold_Target_Before_REFER group="SIP/SIP_Parameters">No</Hold_Target_Before_REFER>
+<Dialog_SDP_Enable group="SIP/SIP_Parameters">No</Dialog_SDP_Enable>
+<Keep_Referee_When_REFER_Failed group="SIP/SIP_Parameters">No</Keep_Referee_When_REFER_Failed>
+<Display_Diversion_Info group="SIP/SIP_Parameters">No</Display_Diversion_Info>
+
+<!-- SIP/SIP_Timer_Values__sec -->
+<SIP_T1 group="SIP/SIP_Timer_Values__sec_">.5</SIP_T1>
+<SIP_T2 group="SIP/SIP_Timer_Values__sec_">4</SIP_T2>
+<SIP_T4 group="SIP/SIP_Timer_Values__sec_">5</SIP_T4>
+<SIP_Timer_B group="SIP/SIP_Timer_Values__sec_">16</SIP_Timer_B>
+<SIP_Timer_F group="SIP/SIP_Timer_Values__sec_">16</SIP_Timer_F>
+<SIP_Timer_H group="SIP/SIP_Timer_Values__sec_">16</SIP_Timer_H>
+<SIP_Timer_D group="SIP/SIP_Timer_Values__sec_">16</SIP_Timer_D>
+<SIP_Timer_J group="SIP/SIP_Timer_Values__sec_">16</SIP_Timer_J>
+<INVITE_Expires group="SIP/SIP_Timer_Values__sec_">240</INVITE_Expires>
+<ReINVITE_Expires group="SIP/SIP_Timer_Values__sec_">30</ReINVITE_Expires>
+<Reg_Min_Expires group="SIP/SIP_Timer_Values__sec_">1</Reg_Min_Expires>
+<Reg_Max_Expires group="SIP/SIP_Timer_Values__sec_">7200</Reg_Max_Expires>
+<Reg_Retry_Intvl group="SIP/SIP_Timer_Values__sec_">30</Reg_Retry_Intvl>
+<Reg_Retry_Long_Intvl group="SIP/SIP_Timer_Values__sec_">1200</Reg_Retry_Long_Intvl>
+<Reg_Retry_Random_Delay group="SIP/SIP_Timer_Values__sec_" />
+<Reg_Retry_Long_Random_Delay group="SIP/SIP_Timer_Values__sec_" />
+<Reg_Retry_Intvl_Cap group="SIP/SIP_Timer_Values__sec_" />
+<Sub_Min_Expires group="SIP/SIP_Timer_Values__sec_">10</Sub_Min_Expires>
+<Sub_Max_Expires group="SIP/SIP_Timer_Values__sec_">7200</Sub_Max_Expires>
+<Sub_Retry_Intvl group="SIP/SIP_Timer_Values__sec_">10</Sub_Retry_Intvl>
+
+<!-- SIP/Response_Status_Code_Handling -->
+<SIT1_RSC group="SIP/Response_Status_Code_Handling" />
+<SIT2_RSC group="SIP/Response_Status_Code_Handling" />
+<SIT3_RSC group="SIP/Response_Status_Code_Handling" />
+<SIT4_RSC group="SIP/Response_Status_Code_Handling" />
+<Try_Backup_RSC group="SIP/Response_Status_Code_Handling" />
+<Retry_Reg_RSC group="SIP/Response_Status_Code_Handling" />
+
+<!-- SIP/RTP_Parameters -->
+<RTP_Port_Min group="SIP/RTP_Parameters">16384</RTP_Port_Min>
+<RTP_Port_Max group="SIP/RTP_Parameters">32768</RTP_Port_Max>
+<RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size>
+<Max_RTP_ICMP_Err group="SIP/RTP_Parameters">0</Max_RTP_ICMP_Err>
+<RTCP_Tx_Interval group="SIP/RTP_Parameters">0</RTCP_Tx_Interval>
+<No_UDP_Checksum group="SIP/RTP_Parameters">No</No_UDP_Checksum>
+<Symmetric_RTP group="SIP/RTP_Parameters">No</Symmetric_RTP>
+<Stats_In_BYE group="SIP/RTP_Parameters">No</Stats_In_BYE>
+
+<!-- SIP/SDP_Payload_Types -->
+<AVT_Dynamic_Payload group="SIP/SDP_Payload_Types">101</AVT_Dynamic_Payload>
+<INFOREQ_Dynamic_Payload group="SIP/SDP_Payload_Types" />
+<G726r16_Dynamic_Payload group="SIP/SDP_Payload_Types">98</G726r16_Dynamic_Payload>
+<G726r24_Dynamic_Payload group="SIP/SDP_Payload_Types">97</G726r24_Dynamic_Payload>
+<G726r32_Dynamic_Payload group="SIP/SDP_Payload_Types">2</G726r32_Dynamic_Payload>
+<G726r40_Dynamic_Payload group="SIP/SDP_Payload_Types">96</G726r40_Dynamic_Payload>
+<G729b_Dynamic_Payload group="SIP/SDP_Payload_Types">99</G729b_Dynamic_Payload>
+<EncapRTP_Dynamic_Payload group="SIP/SDP_Payload_Types">112</EncapRTP_Dynamic_Payload>
+<RTP-Start-Loopback_Dynamic_Payload group="SIP/SDP_Payload_Types">113</RTP-Start-Loopback_Dynamic_Payload>
+<RTP-Start-Loopback_Codec group="SIP/SDP_Payload_Types">G711u</RTP-Start-Loopback_Codec>
+<AVT_Codec_Name group="SIP/SDP_Payload_Types">telephone-event</AVT_Codec_Name>
+<G711u_Codec_Name group="SIP/SDP_Payload_Types">PCMU</G711u_Codec_Name>
+<G711a_Codec_Name group="SIP/SDP_Payload_Types">PCMA</G711a_Codec_Name>
+<G726r16_Codec_Name group="SIP/SDP_Payload_Types">G726-16</G726r16_Codec_Name>
+<G726r24_Codec_Name group="SIP/SDP_Payload_Types">G726-24</G726r24_Codec_Name>
+<G726r32_Codec_Name group="SIP/SDP_Payload_Types">G726-32</G726r32_Codec_Name>
+<G726r40_Codec_Name group="SIP/SDP_Payload_Types">G726-40</G726r40_Codec_Name>
+<G729a_Codec_Name group="SIP/SDP_Payload_Types">G729a</G729a_Codec_Name>
+<G729b_Codec_Name group="SIP/SDP_Payload_Types">G729ab</G729b_Codec_Name>
+<G722_Codec_Name group="SIP/SDP_Payload_Types">G722</G722_Codec_Name>
+<EncapRTP_Codec_Name group="SIP/SDP_Payload_Types">encaprtp</EncapRTP_Codec_Name>
+
+<!-- SIP/NAT_Support_Parameters -->
+<Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_handle_via_rport}</Handle_VIA_rport>
+<Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
+<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
+<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
+<STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
+<STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
+<STUN_Server group="SIP/NAT_Support_Parameters" />
+<EXT_IP group="SIP/NAT_Support_Parameters" />
+<EXT_RTP_Port_Min group="SIP/NAT_Support_Parameters" />
+<NAT_Keep_Alive_Intvl group="SIP/NAT_Support_Parameters">15</NAT_Keep_Alive_Intvl>
+<Redirect_Keep_Alive group="SIP/NAT_Support_Parameters">No</Redirect_Keep_Alive>
+
+<!-- SIP/Linksys_Key_System_Parameters -->
+<Linksys_Key_System group="SIP/Linksys_Key_System_Parameters">No</Linksys_Key_System>
+<Multicast_Address group="SIP/Linksys_Key_System_Parameters">224.168.168.168:6061</Multicast_Address>
+<Key_System_Auto_Discovery group="SIP/Linksys_Key_System_Parameters">Yes</Key_System_Auto_Discovery>
+<Key_System_IP_Address group="SIP/Linksys_Key_System_Parameters" />
+<Force_LAN_Codec group="SIP/Linksys_Key_System_Parameters">none</Force_LAN_Codec>
+<Auto_Ans_GrPage_On_Active_Call group="SIP/Linksys_Key_System_Parameters">Yes</Auto_Ans_GrPage_On_Active_Call>
+
+<!-- Provisioning/Configuration_Profile -->
+<Provision_Enable group="Provisioning/Configuration_Profile">Yes</Provision_Enable>
+<Resync_On_Reset group="Provisioning/Configuration_Profile">Yes</Resync_On_Reset>
+<Resync_Random_Delay group="Provisioning/Configuration_Profile">2</Resync_Random_Delay>
+<Resync_At__HHmm_ group="Provisioning/Configuration_Profile" />
+<Resync_At_Random_Delay group="Provisioning/Configuration_Profile">600</Resync_At_Random_Delay>
+<Resync_Periodic group="Provisioning/Configuration_Profile">0</Resync_Periodic>
+<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay group="Provisioning/Configuration_Profile">30</Forced_Resync_Delay>
+<Resync_From_SIP group="Provisioning/Configuration_Profile">Yes</Resync_From_SIP>
+<Resync_After_Upgrade_Attempt group="Provisioning/Configuration_Profile">Yes</Resync_After_Upgrade_Attempt>
+<Resync_Trigger_1 group="Provisioning/Configuration_Profile" />
+<Resync_Trigger_2 group="Provisioning/Configuration_Profile" />
+<Resync_Fails_On_FNF group="Provisioning/Configuration_Profile">Yes</Resync_Fails_On_FNF>
+{if isset ($http_auth_username)}
+<Profile_Rule group="Provisioning/Configuration_Profile">[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{else}
+<Profile_Rule group="Provisioning/Configuration_Profile">http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
+<Profile_Rule_B group="Provisioning/Configuration_Profile" />
+<Profile_Rule_C group="Provisioning/Configuration_Profile" />
+<Profile_Rule_D group="Provisioning/Configuration_Profile" />
+<DHCP_Option_To_Use group="Provisioning/Configuration_Profile">66,160,159,150,60,43,125</DHCP_Option_To_Use>
+<Transport_Protocol group="Provisioning/Configuration_Profile">http</Transport_Protocol>
+<Log_Resync_Request_Msg group="Provisioning/Configuration_Profile">$PN $MAC -- Requesting resync $SCHEME://$SERVIP:$PORT$PATH</Log_Resync_Request_Msg>
+<Log_Resync_Success_Msg group="Provisioning/Configuration_Profile">$PN $MAC -- Successful resync $SCHEME://$SERVIP:$PORT$PATH</Log_Resync_Success_Msg>
+<Log_Resync_Failure_Msg group="Provisioning/Configuration_Profile">$PN $MAC -- Resync failed: $ERR</Log_Resync_Failure_Msg>
+<Report_Rule group="Provisioning/Configuration_Profile" />
+<User_Configurable_Resync group="Provisioning/Configuration_Profile">Yes</User_Configurable_Resync>
+
+<!-- Provisioning/Firmware_Upgrade -->
+<Upgrade_Enable group="Provisioning/Firmware_Upgrade">{$spa_upgrade_enable}</Upgrade_Enable>
+<Upgrade_Error_Retry_Delay group="Provisioning/Firmware_Upgrade">3600</Upgrade_Error_Retry_Delay>
+<Downgrade_Rev_Limit group="Provisioning/Firmware_Upgrade" />
+<Upgrade_Rule group="Provisioning/Firmware_Upgrade">{$cisco_spa50x_firmware_rule}</Upgrade_Rule>
+<Log_Upgrade_Request_Msg group="Provisioning/Firmware_Upgrade">$PN $MAC -- Requesting upgrade $SCHEME://$SERVIP:$PORT$PATH</Log_Upgrade_Request_Msg>
+<Log_Upgrade_Success_Msg group="Provisioning/Firmware_Upgrade">$PN $MAC -- Successful upgrade $SCHEME://$SERVIP:$PORT$PATH -- $ERR</Log_Upgrade_Success_Msg>
+<Log_Upgrade_Failure_Msg group="Provisioning/Firmware_Upgrade">$PN $MAC -- Upgrade failed: $ERR</Log_Upgrade_Failure_Msg>
+<License_Keys group="Provisioning/Firmware_Upgrade" />
+
+<!-- Provisioning/CA_Settings -->
+<Custom_CA_RULE group="Provisioning/CA_Settings" />
+
+<!-- Provisioning/General_Purpose_Parameters -->
+<GPP_A group="Provisioning/General_Purpose_Parameters" />
+<GPP_B group="Provisioning/General_Purpose_Parameters" />
+<GPP_C group="Provisioning/General_Purpose_Parameters" />
+<GPP_D group="Provisioning/General_Purpose_Parameters" />
+<GPP_E group="Provisioning/General_Purpose_Parameters" />
+<GPP_F group="Provisioning/General_Purpose_Parameters" />
+<GPP_G group="Provisioning/General_Purpose_Parameters" />
+<GPP_H group="Provisioning/General_Purpose_Parameters" />
+<GPP_I group="Provisioning/General_Purpose_Parameters" />
+<GPP_J group="Provisioning/General_Purpose_Parameters" />
+<GPP_K group="Provisioning/General_Purpose_Parameters" />
+<GPP_L group="Provisioning/General_Purpose_Parameters" />
+<GPP_M group="Provisioning/General_Purpose_Parameters" />
+<GPP_N group="Provisioning/General_Purpose_Parameters" />
+<GPP_O group="Provisioning/General_Purpose_Parameters" />
+<GPP_P group="Provisioning/General_Purpose_Parameters" />
+
+<!-- Regional/Call_Progress_Tones -->
+<Dial_Tone group="Regional/Call_Progress_Tones">350@-19,440@-19;10(*/0/1+2)</Dial_Tone>
+<Outside_Dial_Tone group="Regional/Call_Progress_Tones">420@-16;10(*/0/1)</Outside_Dial_Tone>
+<Prompt_Tone group="Regional/Call_Progress_Tones">520@-19,620@-19;10(*/0/1+2)</Prompt_Tone>
+<Busy_Tone group="Regional/Call_Progress_Tones">480@-19,620@-19;10(.5/.5/1+2)</Busy_Tone>
+<Reorder_Tone group="Regional/Call_Progress_Tones">480@-19,620@-19;10(.25/.25/1+2)</Reorder_Tone>
+<Off_Hook_Warning_Tone group="Regional/Call_Progress_Tones">480@-10,620@0;10(.125/.125/1+2)</Off_Hook_Warning_Tone>
+<Ring_Back_Tone group="Regional/Call_Progress_Tones">440@-19,480@-19;*(2/4/1+2)</Ring_Back_Tone>
+<Call_Waiting_Tone group="Regional/Call_Progress_Tones">440@-10;30(.3/9.7/1)</Call_Waiting_Tone>
+<Confirm_Tone group="Regional/Call_Progress_Tones">600@-16;1(.25/.25/1)</Confirm_Tone>
+<SIT1_Tone group="Regional/Call_Progress_Tones">985@-16,1428@-16,1777@-16;20(.380/0/1,.380/0/2,.380/0/3,0/4/0)</SIT1_Tone>
+<SIT2_Tone group="Regional/Call_Progress_Tones">914@-16,1371@-16,1777@-16;20(.274/0/1,.274/0/2,.380/0/3,0/4/0)</SIT2_Tone>
+<SIT3_Tone group="Regional/Call_Progress_Tones">914@-16,1371@-16,1777@-16;20(.380/0/1,.380/0/2,.380/0/3,0/4/0)</SIT3_Tone>
+<SIT4_Tone group="Regional/Call_Progress_Tones">985@-16,1371@-16,1777@-16;20(.380/0/1,.274/0/2,.380/0/3,0/4/0)</SIT4_Tone>
+<MWI_Dial_Tone group="Regional/Call_Progress_Tones">350@-19,440@-19;2(.1/.1/1+2);10(*/0/1+2)</MWI_Dial_Tone>
+<Cfwd_Dial_Tone group="Regional/Call_Progress_Tones">350@-19,440@-19;2(.2/.2/1+2);10(*/0/1+2)</Cfwd_Dial_Tone>
+<Holding_Tone group="Regional/Call_Progress_Tones">600@-19;25(.1/.1/1,.1/.1/1,.1/9.5/1)</Holding_Tone>
+<Conference_Tone group="Regional/Call_Progress_Tones">350@-19;20(.1/.1/1,.1/9.7/1)</Conference_Tone>
+<Secure_Call_Indication_Tone group="Regional/Call_Progress_Tones">397@-19,507@-19;15(0/2/0,.2/.1/1,.1/2.1/2)</Secure_Call_Indication_Tone>
+<Page_Tone group="Regional/Call_Progress_Tones">600@-16;.3(.05/0.05/1)</Page_Tone>
+<Alert_Tone group="Regional/Call_Progress_Tones">600@-19;.2(.05/0.05/1)</Alert_Tone>
+<Call_Pickup_Tone group="Regional/Call_Progress_Tones">440@-10;30(.3/9.7/1)</Call_Pickup_Tone>
+
+<!-- Regional/Distinctive_Ring_Patterns -->
+<Cadence_1 group="Regional/Distinctive_Ring_Patterns">60(2/4)</Cadence_1>
+<Cadence_2 group="Regional/Distinctive_Ring_Patterns">60(.3/.2,1/.2,.3/4)</Cadence_2>
+<Cadence_3 group="Regional/Distinctive_Ring_Patterns">60(.8/.4,.8/4)</Cadence_3>
+<Cadence_4 group="Regional/Distinctive_Ring_Patterns">60(.4/.2,.3/.2,.8/4)</Cadence_4>
+<Cadence_5 group="Regional/Distinctive_Ring_Patterns">60(.2/.2,.2/.2,.2/.2,1/4)</Cadence_5>
+<Cadence_6 group="Regional/Distinctive_Ring_Patterns">60(.2/.4,.2/.4,.2/4)</Cadence_6>
+<Cadence_7 group="Regional/Distinctive_Ring_Patterns">60(4.5/4)</Cadence_7>
+<Cadence_8 group="Regional/Distinctive_Ring_Patterns">60(0.25/9.75)</Cadence_8>
+<Cadence_9 group="Regional/Distinctive_Ring_Patterns">60(.4/.2,.4/2)</Cadence_9>
+
+<!-- Regional/Control_Timer_Values__sec -->
+<Reorder_Delay group="Regional/Control_Timer_Values__sec_">255</Reorder_Delay>
+<Call_Back_Expires group="Regional/Control_Timer_Values__sec_">1800</Call_Back_Expires>
+<Call_Back_Retry_Intvl group="Regional/Control_Timer_Values__sec_">30</Call_Back_Retry_Intvl>
+<Call_Back_Delay group="Regional/Control_Timer_Values__sec_">.5</Call_Back_Delay>
+<Interdigit_Long_Timer group="Regional/Control_Timer_Values__sec_">10</Interdigit_Long_Timer>
+<Interdigit_Short_Timer group="Regional/Control_Timer_Values__sec_">3</Interdigit_Short_Timer>
+
+<!-- Regional/Vertical_Service_Activation_Codes -->
+<Call_Return_Code group="Regional/Vertical_Service_Activation_Codes">*69</Call_Return_Code>
+<Blind_Transfer_Code group="Regional/Vertical_Service_Activation_Codes">*98</Blind_Transfer_Code>
+<Call_Back_Act_Code group="Regional/Vertical_Service_Activation_Codes">*66</Call_Back_Act_Code>
+<Call_Back_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*86</Call_Back_Deact_Code>
+<Cfwd_All_Act_Code group="Regional/Vertical_Service_Activation_Codes">*72</Cfwd_All_Act_Code>
+<Cfwd_All_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*73</Cfwd_All_Deact_Code>
+<Cfwd_Busy_Act_Code group="Regional/Vertical_Service_Activation_Codes">*90</Cfwd_Busy_Act_Code>
+<Cfwd_Busy_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*91</Cfwd_Busy_Deact_Code>
+<Cfwd_No_Ans_Act_Code group="Regional/Vertical_Service_Activation_Codes">*92</Cfwd_No_Ans_Act_Code>
+<Cfwd_No_Ans_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*93</Cfwd_No_Ans_Deact_Code>
+<CW_Act_Code group="Regional/Vertical_Service_Activation_Codes">*56</CW_Act_Code>
+<CW_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*57</CW_Deact_Code>
+<CW_Per_Call_Act_Code group="Regional/Vertical_Service_Activation_Codes">*71</CW_Per_Call_Act_Code>
+<CW_Per_Call_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*70</CW_Per_Call_Deact_Code>
+<Block_CID_Act_Code group="Regional/Vertical_Service_Activation_Codes">*67</Block_CID_Act_Code>
+<Block_CID_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*68</Block_CID_Deact_Code>
+<Block_CID_Per_Call_Act_Code group="Regional/Vertical_Service_Activation_Codes">*81</Block_CID_Per_Call_Act_Code>
+<Block_CID_Per_Call_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*82</Block_CID_Per_Call_Deact_Code>
+<Block_ANC_Act_Code group="Regional/Vertical_Service_Activation_Codes">*77</Block_ANC_Act_Code>
+<Block_ANC_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*87</Block_ANC_Deact_Code>
+<DND_Act_Code group="Regional/Vertical_Service_Activation_Codes">*78</DND_Act_Code>
+<DND_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*79</DND_Deact_Code>
+<Secure_All_Call_Act_Code group="Regional/Vertical_Service_Activation_Codes">*16</Secure_All_Call_Act_Code>
+<Secure_No_Call_Act_Code group="Regional/Vertical_Service_Activation_Codes">*17</Secure_No_Call_Act_Code>
+<Secure_One_Call_Act_Code group="Regional/Vertical_Service_Activation_Codes">*18</Secure_One_Call_Act_Code>
+<Secure_One_Call_Deact_Code group="Regional/Vertical_Service_Activation_Codes">*19</Secure_One_Call_Deact_Code>
+<Paging_Code group="Regional/Vertical_Service_Activation_Codes">*96</Paging_Code>
+<Call_Park_Code group="Regional/Vertical_Service_Activation_Codes">*38</Call_Park_Code>
+<Call_Pickup_Code group="Regional/Vertical_Service_Activation_Codes">*36</Call_Pickup_Code>
+<Call_UnPark_Code group="Regional/Vertical_Service_Activation_Codes">*39</Call_UnPark_Code>
+<Group_Call_Pickup_Code group="Regional/Vertical_Service_Activation_Codes">*37</Group_Call_Pickup_Code>
+<Media_Loopback_Code group="Regional/Vertical_Service_Activation_Codes">*03</Media_Loopback_Code>
+<Referral_Services_Codes group="Regional/Vertical_Service_Activation_Codes" />
+<Feature_Dial_Services_Codes group="Regional/Vertical_Service_Activation_Codes" />
+
+<!-- Regional/Vertical_Service_Announcement_Codes -->
+<Service_Annc_Base_Number group="Regional/Vertical_Service_Announcement_Codes" />
+<Service_Annc_Extension_Codes group="Regional/Vertical_Service_Announcement_Codes" />
+
+<!-- Regional/Outbound_Call_Codec_Selection_Codes -->
+<Prefer_G711u_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*017110</Prefer_G711u_Code>
+<Force_G711u_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*027110</Force_G711u_Code>
+<Prefer_G711a_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*017111</Prefer_G711a_Code>
+<Force_G711a_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*027111</Force_G711a_Code>
+<Prefer_G722_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*01722</Prefer_G722_Code>
+<Force_G722_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*02722</Force_G722_Code>
+<Prefer_G726r16_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0172616</Prefer_G726r16_Code>
+<Force_G726r16_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0272616</Force_G726r16_Code>
+<Prefer_G726r24_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0172624</Prefer_G726r24_Code>
+<Force_G726r24_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0272624</Force_G726r24_Code>
+<Prefer_G726r32_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0172632</Prefer_G726r32_Code>
+<Force_G726r32_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0272632</Force_G726r32_Code>
+<Prefer_G726r40_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0172640</Prefer_G726r40_Code>
+<Force_G726r40_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*0272640</Force_G726r40_Code>
+<Prefer_G729a_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*01729</Prefer_G729a_Code>
+<Force_G729a_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*02729</Force_G729a_Code>
+
+<!-- Regional/Miscellaneous -->
+<Set_Local_Date__mm_dd_ group="Regional/Miscellaneous" />
+<Set_Local_Time__HH_mm_ group="Regional/Miscellaneous" />
+<Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
+<Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
+<Ignore_DHCP_Time_Offset group="Regional/Miscellaneous">Yes</Ignore_DHCP_Time_Offset>
+<Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
+<Daylight_Saving_Time_Enable group="Regional/Miscellaneous">Yes</Daylight_Saving_Time_Enable>
+<DTMF_Playback_Level group="Regional/Miscellaneous">-16</DTMF_Playback_Level>
+<DTMF_Playback_Length group="Regional/Miscellaneous">.1</DTMF_Playback_Length>
+<Inband_DTMF_Boost group="Regional/Miscellaneous">12dB</Inband_DTMF_Boost>
+<Dictionary_Server_Script group="Regional/Miscellaneous" />
+<Language_Selection group="Regional/Miscellaneous" />
+<Default_Character_Encoding group="Regional/Miscellaneous">ISO-8859-1</Default_Character_Encoding>
+<Locale group="Regional/Miscellaneous">en-US</Locale>
+
+<!-- Phone/General -->
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
+<Station_Display_Name group="Phone/General">{$account.1.display_name}</Station_Display_Name>
+<Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
+<Text_Logo group="Phone/General" />
+<BMP_Picture_Download_URL group="Phone/General" />
+<Select_Logo group="Phone/General">Default</Select_Logo>
+<Select_Background_Picture group="Phone/General">None</Select_Background_Picture>
+<Softkey_Labels_Font group="Phone/General">Auto</Softkey_Labels_Font>
+<Screen_Saver_Enable group="Phone/General">No</Screen_Saver_Enable>
+<Screen_Saver_Wait group="Phone/General">300</Screen_Saver_Wait>
+<Screen_Saver_Icon group="Phone/General">Background Picture</Screen_Saver_Icon>
+
+{foreach $keys["line"] as $row}
+{if $row.device_key_category == "line"}
+<!-- Phone/Line_Key_{$row.device_key_id} -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
+
+{/if}
+{/foreach}
+
+<!-- Phone/Miscellaneous_Line_Key_Settings -->
+<Call_Appearance_Per_Line group="Phone/Miscellaneous_Line_Key_Settings">2</Call_Appearance_Per_Line>
+<Softkey_Navigation_Style group="Phone/Miscellaneous_Line_Key_Settings">Scrollable</Softkey_Navigation_Style>
+
+<!-- Phone/Supplementary_Services -->
+<Conference_Serv group="Phone/Supplementary_Services">Yes</Conference_Serv>
+<Attn_Transfer_Serv group="Phone/Supplementary_Services">Yes</Attn_Transfer_Serv>
+<Blind_Transfer_Serv group="Phone/Supplementary_Services">Yes</Blind_Transfer_Serv>
+<DND_Serv group="Phone/Supplementary_Services">Yes</DND_Serv>
+<Block_ANC_Serv group="Phone/Supplementary_Services">Yes</Block_ANC_Serv>
+<Call_Back_Serv group="Phone/Supplementary_Services">Yes</Call_Back_Serv>
+<Block_CID_Serv group="Phone/Supplementary_Services">Yes</Block_CID_Serv>
+<Secure_Call_Serv group="Phone/Supplementary_Services">Yes</Secure_Call_Serv>
+<Cfwd_All_Serv group="Phone/Supplementary_Services">Yes</Cfwd_All_Serv>
+<Cfwd_Busy_Serv group="Phone/Supplementary_Services">Yes</Cfwd_Busy_Serv>
+<Cfwd_No_Ans_Serv group="Phone/Supplementary_Services">Yes</Cfwd_No_Ans_Serv>
+<Paging_Serv group="Phone/Supplementary_Services">Yes</Paging_Serv>
+<Call_Park_Serv group="Phone/Supplementary_Services">Yes</Call_Park_Serv>
+<Call_Pick_Up_Serv group="Phone/Supplementary_Services">Yes</Call_Pick_Up_Serv>
+<ACD_Login_Serv group="Phone/Supplementary_Services">No</ACD_Login_Serv>
+<Group_Call_Pick_Up_Serv group="Phone/Supplementary_Services">Yes</Group_Call_Pick_Up_Serv>
+<ACD_Ext group="Phone/Supplementary_Services">1</ACD_Ext>
+<Service_Annc_Serv group="Phone/Supplementary_Services">No</Service_Annc_Serv>
+
+<!-- Phone/Ring_Tone -->
+<Ring1 group="Phone/Ring_Tone">n=Classic-1;w=3;c=1</Ring1>
+<Ring2 group="Phone/Ring_Tone">n=Classic-2;w=3;c=2</Ring2>
+<Ring3 group="Phone/Ring_Tone">n=Classic-3;w=3;c=3</Ring3>
+<Ring4 group="Phone/Ring_Tone">n=Classic-4;w=3;c=4</Ring4>
+<Ring5 group="Phone/Ring_Tone">n=Simple-1;w=2;c=1</Ring5>
+<Ring6 group="Phone/Ring_Tone">n=Simple-2;w=2;c=2</Ring6>
+<Ring7 group="Phone/Ring_Tone">n=Simple-3;w=2;c=3</Ring7>
+<Ring8 group="Phone/Ring_Tone">n=Simple-4;w=2;c=4</Ring8>
+<Ring9 group="Phone/Ring_Tone">n=Simple-5;w=2;c=5</Ring9>
+<Ring10 group="Phone/Ring_Tone">n=Office;w=4;c=1</Ring10>
+<Ring11 group="Phone/Ring_Tone">n=Pulse;w=5;c=1</Ring11>
+<Ring12 group="Phone/Ring_Tone">n=Du-dut;w=6;c=1</Ring12>
+
+<!-- Phone/Audio_Input_Gain__dB_ -->
+<Handset_Input_Gain group="Phone/Audio_Input_Gain__dB_">0</Handset_Input_Gain>
+<Headset_Input_Gain group="Phone/Audio_Input_Gain__dB_">0</Headset_Input_Gain>
+<Speakerphone_Input_Gain group="Phone/Audio_Input_Gain__dB_">0</Speakerphone_Input_Gain>
+<Handset_Additional_Input_Gain group="Phone/Audio_Input_Gain__dB_">0</Handset_Additional_Input_Gain>
+<Headset_Additional_Input_Gain group="Phone/Audio_Input_Gain__dB_">0</Headset_Additional_Input_Gain>
+<Speakerphone_Additional_Input_Gain group="Phone/Audio_Input_Gain__dB_">0</Speakerphone_Additional_Input_Gain>
+
+<!-- Phone/Multiple_Paging_Group_Parameters -->
+<!-- <Group_Paging_Script group="Phone/Multiple_Paging_Group_Parameters">pggrp=224.168.168.168:34560;name=All;num=800;listen=yes;</Group_Paging_Script> -->
+<Group_Paging_Script group="Phone/Multiple_Paging_Group_Parameters"></Group_Paging_Script>
+
+<!-- Phone/Broadsoft_Settings -->
+<Directory_Enable group="Phone/Broadsoft_Settings">No</Directory_Enable>
+<XSI_Host_Server group="Phone/Broadsoft_Settings" />
+<Directory_Name group="Phone/Broadsoft_Settings" />
+<Directory_Type group="Phone/Broadsoft_Settings">Enterprise</Directory_Type>
+<Directory_UserID group="Phone/Broadsoft_Settings" />
+<Directory_Password group="Phone/Broadsoft_Settings" />
+
+<!-- Phone/LDAP_Corporate_Directory_Search -->
+<LDAP_Dir_Enable group="Phone/LDAP_Corporate_Directory_Search">No</LDAP_Dir_Enable>
+<LDAP_Corp_Dir_Name group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Server group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Auth_Method group="Phone/LDAP_Corporate_Directory_Search">None</LDAP_Auth_Method>
+<LDAP_Client_DN group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Username group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Password group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Search_Base group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Last_Name_Filter group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_First_Name_Filter group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Search_Item_3 group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Item_3_Filter group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Search_Item_4 group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_item_4_Filter group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Display_Attrs group="Phone/LDAP_Corporate_Directory_Search" />
+<LDAP_Number_Mapping group="Phone/LDAP_Corporate_Directory_Search" />
+
+<!-- Phone/XML_Service -->
+<XML_Directory_Service_Name group="Phone/XML_Service" />
+<XML_Directory_Service_URL group="Phone/XML_Service" />
+<XML_Application_Service_Name group="Phone/XML_Service" />
+<XML_Application_Service_URL group="Phone/XML_Service" />
+<XML_User_Name group="Phone/XML_Service" />
+<XML_Password group="Phone/XML_Service" />
+<CISCO_XML_EXE_Auth_Mode group="Phone/XML_Service">Trusted</CISCO_XML_EXE_Auth_Mode>
+
+<!-- Phone/Extension_Mobility -->
+<EM_Enable group="Phone/Extension_Mobility">No</EM_Enable>
+<EM_User_Domain group="Phone/Extension_Mobility" />
+
+<!-- Phone/Programmable_Softkey -->
+<Programmable_Softkey_Enable group="Phone/Programmable_Softkeys">No</Programmable_Softkey_Enable>
+<Idle_Key_List group="Phone/Programmable_Softkeys">em_login|1;acd_login|1;acd_logout|1;astate|2;avail|3;unavail|3;redial|5;dir|6;cfwd|7;dnd|8;lcr|9;pickup|10;gpickup|11;unpark|12;em_logout</Idle_Key_List>
+<Missed_Call_Key_List group="Phone/Programmable_Softkeys">lcr|1;miss|4</Missed_Call_Key_List>
+<Off_Hook_Key_List group="Phone/Programmable_Softkeys">redial|1;dir|2;cfwd|3;dnd|4;lcr|5;unpark|6;pickup|7;gpickup|8;starcode|11;alpha|12</Off_Hook_Key_List>
+<Dialing_Input_Key_List group="Phone/Programmable_Softkeys">dial|1;delchar|2;clear|3;cancel|4;left|5;right|6;starcode|7;alpha|8;dir</Dialing_Input_Key_List>
+<Progressing_Key_List group="Phone/Programmable_Softkeys">endcall|2</Progressing_Key_List>
+<Connected_Key_List group="Phone/Programmable_Softkeys">hold|1;endcall|2;conf|3;xfer|4;toggle;bxfer;confLx;xferLx;park;phold;flash;</Connected_Key_List>
+<Start-Xfer_Key_List group="Phone/Programmable_Softkeys">hold|1;endcall|2;xfer|4;toggle;</Start-Xfer_Key_List>
+<Start-Conf_Key_List group="Phone/Programmable_Softkeys">hold|1;endcall|2;conf|3;toggle;</Start-Conf_Key_List>
+<Conferencing_Key_List group="Phone/Programmable_Softkeys">hold|1;endcall|2;join|4</Conferencing_Key_List>
+<Releasing_Key_List group="Phone/Programmable_Softkeys">endcall|2;</Releasing_Key_List>
+<Hold_Key_List group="Phone/Programmable_Softkeys">resume|1;endcall|2;newcall|3;redial;dir;cfwd;dnd</Hold_Key_List>
+<Ringing_Key_List group="Phone/Programmable_Softkeys">answer|1;ignore|2;toggle|4</Ringing_Key_List>
+<Shared_Active_Key_List group="Phone/Programmable_Softkeys">newcall|1;barge|2;cfwd|3;dnd|4</Shared_Active_Key_List>
+<Shared_Held_Key_List group="Phone/Programmable_Softkeys">resume|1;barge|2;cfwd|3;dnd|4</Shared_Held_Key_List>
+<PSK_1 group="Phone/Programmable_Softkeys" />
+<PSK_2 group="Phone/Programmable_Softkeys" />
+<PSK_3 group="Phone/Programmable_Softkeys" />
+<PSK_4 group="Phone/Programmable_Softkeys" />
+<PSK_5 group="Phone/Programmable_Softkeys" />
+<PSK_6 group="Phone/Programmable_Softkeys" />
+<PSK_7 group="Phone/Programmable_Softkeys" />
+<PSK_8 group="Phone/Programmable_Softkeys" />
+<PSK_9 group="Phone/Programmable_Softkeys" />
+<PSK_10 group="Phone/Programmable_Softkeys" />
+<PSK_11 group="Phone/Programmable_Softkeys" />
+<PSK_12 group="Phone/Programmable_Softkeys" />
+<PSK_13 group="Phone/Programmable_Softkeys" />
+<PSK_14 group="Phone/Programmable_Softkeys" />
+<PSK_15 group="Phone/Programmable_Softkeys" />
+<PSK_16 group="Phone/Programmable_Softkeys" />
+
+<!-- Ext_1/General -->
+<Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
+
+<!-- Ext_1/Share_Line_Appearance -->
+<Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $account.1.shared_line == "shared"}shared{else}private{/if}</Share_Ext_1_>
+<Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
+<Subscription_Expires_1_ group="Ext_1/Share_Line_Appearance">3600</Subscription_Expires_1_>
+<Restrict_MWI_1_ group="Ext_1/Share_Line_Appearance">No</Restrict_MWI_1_>
+<Monitor_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
+
+<!-- Ext_1/NAT_Settings -->
+<NAT_Mapping_Enable_1_ group="Ext_1/NAT_Settings">No</NAT_Mapping_Enable_1_>
+<NAT_Keep_Alive_Enable_1_ group="Ext_1/NAT_Settings">No</NAT_Keep_Alive_Enable_1_>
+<NAT_Keep_Alive_Msg_1_ group="Ext_1/NAT_Settings">$NOTIFY</NAT_Keep_Alive_Msg_1_>
+<NAT_Keep_Alive_Dest_1_ group="Ext_1/NAT_Settings">$PROXY</NAT_Keep_Alive_Dest_1_>
+
+<!-- Ext_1/Network_Settings -->
+<SIP_TOS_DiffServ_Value_1_ group="Ext_1/Network_Settings">0x68</SIP_TOS_DiffServ_Value_1_>
+<SIP_CoS_Value_1_ group="Ext_1/Network_Settings">3</SIP_CoS_Value_1_>
+<RTP_TOS_DiffServ_Value_1_ group="Ext_1/Network_Settings">0xb8</RTP_TOS_DiffServ_Value_1_>
+<RTP_CoS_Value_1_ group="Ext_1/Network_Settings">6</RTP_CoS_Value_1_>
+<Network_Jitter_Level_1_ group="Ext_1/Network_Settings">high</Network_Jitter_Level_1_>
+<Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
+
+<!-- Ext_1/SIP_Settings -->
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$account.1.sip_transport|upper}</SIP_Transport_1_>
+<SIP_Port_1_ group="Ext_1/SIP_Settings">{$account.1.sip_port}</SIP_Port_1_>
+<SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
+<EXT_SIP_Port_1_ group="Ext_1/SIP_Settings" />
+<Auth_Resync-Reboot_1_ group="Ext_1/SIP_Settings">Yes</Auth_Resync-Reboot_1_>
+<SIP_Proxy-Require_1_ group="Ext_1/SIP_Settings" />
+<SIP_Remote-Party-ID_1_ group="Ext_1/SIP_Settings">No</SIP_Remote-Party-ID_1_>
+<Referor_Bye_Delay_1_ group="Ext_1/SIP_Settings">4</Referor_Bye_Delay_1_>
+<Refer-To_Target_Contact_1_ group="Ext_1/SIP_Settings">No</Refer-To_Target_Contact_1_>
+<Referee_Bye_Delay_1_ group="Ext_1/SIP_Settings">0</Referee_Bye_Delay_1_>
+<SIP_Debug_Option_1_ group="Ext_1/SIP_Settings">none</SIP_Debug_Option_1_>
+<Refer_Target_Bye_Delay_1_ group="Ext_1/SIP_Settings">0</Refer_Target_Bye_Delay_1_>
+<Sticky_183_1_ group="Ext_1/SIP_Settings">No</Sticky_183_1_>
+<Auth_INVITE_1_ group="Ext_1/SIP_Settings">No</Auth_INVITE_1_>
+<Ntfy_Refer_On_1xx-To-Inv_1_ group="Ext_1/SIP_Settings">Yes</Ntfy_Refer_On_1xx-To-Inv_1_>
+<Use_Anonymous_With_RPID_1_ group="Ext_1/SIP_Settings">Yes</Use_Anonymous_With_RPID_1_>
+<Set_G729_annexb_1_ group="Ext_1/SIP_Settings">none</Set_G729_annexb_1_>
+<Voice_Quality_Report_Address_1_ group="Ext_1/SIP_Settings" />
+<User_Equal_Phone_1_ group="Ext_1/SIP_Settings">No</User_Equal_Phone_1_>
+
+<!-- Ext_1/Call_Feature_Settings -->
+<Blind_Attn-Xfer_Enable_1_ group="Ext_1/Call_Feature_Settings">No</Blind_Attn-Xfer_Enable_1_>
+<MOH_Server_1_ group="Ext_1/Call_Feature_Settings" />
+<Message_Waiting_1_ group="Ext_1/Call_Feature_Settings">No</Message_Waiting_1_>
+<Auth_Page_1_ group="Ext_1/Call_Feature_Settings">No</Auth_Page_1_>
+<Default_Ring__1__ group="Ext_1/Call_Feature_Settings">1</Default_Ring__1__>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
+<Auth_Page_Realm_1_ group="Ext_1/Call_Feature_Settings" />
+<Conference_Bridge_URL_1_ group="Ext_1/Call_Feature_Settings" />
+<Auth_Page_Password_1_ group="Ext_1/Call_Feature_Settings" />
+<Mailbox_ID_1_ group="Ext_1/Call_Feature_Settings" />
+<Voice_Mail_Server_1_ group="Ext_1/Call_Feature_Settings" />
+<Voice_Mail_Subscribe_Interval_1_ group="Ext_1/Call_Feature_Settings">86400</Voice_Mail_Subscribe_Interval_1_>
+<State_Agent_1_ group="Ext_1/Call_Feature_Settings" />
+<CFWD_Notify_Serv_1_ group="Ext_1/Call_Feature_Settings">No</CFWD_Notify_Serv_1_>
+<CFWD_Notifier_1_ group="Ext_1/Call_Feature_Settings" />
+<User_ID_with_Domain_1_ group="Ext_1/Call_Feature_Settings">No</User_ID_with_Domain_1_>
+<Broadsoft_ACD_1_ group="Ext_1/Call_Feature_Settings">No</Broadsoft_ACD_1_>
+<Auto_Ans_Page_On_Active_Call_1_ group="Ext_1/Call_Feature_Settings">Yes</Auto_Ans_Page_On_Active_Call_1_>
+<Feature_Key_Sync_1_ group="Ext_1/Call_Feature_Settings">{$spa_feature_key_sync}</Feature_Key_Sync_1_>
+<Call_Park_Monitor_Enable_1_ group="Ext_1/Call_Feature_Settings">No</Call_Park_Monitor_Enable_1_>
+
+<!-- Ext_1/Proxy_and_Registration -->
+<Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Proxy_1_>
+<Use_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{if isset($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Alternate_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.server_address}</Alternate_Proxy_1_>
+<Alternate_Outbound_Proxy_1_ group="Ext_1/Proxy_and_Registration">{$account.1.outbound_proxy_secondary}</Alternate_Outbound_Proxy_1_>
+<Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
+<Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
+<Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$account.1.register_expires}</Register_Expires_1_>
+<Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
+{if $account.1.sip_transport == 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_DNS_SRV_1_>{/if}
+{if $account.1.sip_transport != 'dns srv'}<Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>{/if}
+<DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
+<Proxy_Fallback_Intvl_1_ group="Ext_1/Proxy_and_Registration">600</Proxy_Fallback_Intvl_1_>
+<Proxy_Redundancy_Method_1_ group="Ext_1/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_1_>
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">No</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">No</Auto_Register_When_Failover_1_>
+
+<!-- Ext_1/Subscriber_Information -->
+<Dual_Registration_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_dual_registration)}Yes{else}No{/if}</Dual_Registration_1_>
+<Auto_Register_When_Failover_1_ group="Ext_1/Proxy_and_Registration">{if isset($spa_register_when_failover)}Yes{else}No{/if}</Auto_Register_When_Failover_1_>
+<Display_Name_1_ group="Ext_1/Subscriber_Information">{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_ group="Ext_1/Subscriber_Information">{$account.1.user_id}</User_ID_1_>
+<Password_1_ group="Ext_1/Subscriber_Information">{$account.1.password}</Password_1_>
+<Use_Auth_ID_1_ group="Ext_1/Subscriber_Information">No</Use_Auth_ID_1_>
+<Auth_ID_1_ group="Ext_1/Subscriber_Information" />
+<Reversed_Auth_Realm_1_ group="Ext_1/Subscriber_Information" />
+<Mini_Certificate_1_ group="Ext_1/Subscriber_Information" />
+<SRTP_Private_Key_1_ group="Ext_1/Subscriber_Information" />
+<Resident_Online_Number_1_ group="Ext_1/Subscriber_Information" />
+<SIP_URI_1_ group="Ext_1/Subscriber_Information" />
+
+<!-- Ext_1/Audio_Configuration -->
+<Preferred_Codec_1_ group="Ext_1/Audio_Configuration">G711u</Preferred_Codec_1_>
+<Use_Pref_Codec_Only_1_ group="Ext_1/Audio_Configuration">No</Use_Pref_Codec_Only_1_>
+<Second_Preferred_Codec_1_ group="Ext_1/Audio_Configuration">Unspecified</Second_Preferred_Codec_1_>
+<Third_Preferred_Codec_1_ group="Ext_1/Audio_Configuration">Unspecified</Third_Preferred_Codec_1_>
+<G729a_Enable_1_ group="Ext_1/Audio_Configuration">Yes</G729a_Enable_1_>
+<G722_Enable_1_ group="Ext_1/Audio_Configuration">Yes</G722_Enable_1_>
+<G726-16_Enable_1_ group="Ext_1/Audio_Configuration">Yes</G726-16_Enable_1_>
+<G726-24_Enable_1_ group="Ext_1/Audio_Configuration">Yes</G726-24_Enable_1_>
+<G726-32_Enable_1_ group="Ext_1/Audio_Configuration">Yes</G726-32_Enable_1_>
+<G726-40_Enable_1_ group="Ext_1/Audio_Configuration">Yes</G726-40_Enable_1_>
+<Release_Unused_Codec_1_ group="Ext_1/Audio_Configuration">Yes</Release_Unused_Codec_1_>
+<DTMF_Process_AVT_1_ group="Ext_1/Audio_Configuration">Yes</DTMF_Process_AVT_1_>
+<Silence_Supp_Enable_1_ group="Ext_1/Audio_Configuration">No</Silence_Supp_Enable_1_>
+<DTMF_Tx_Method_1_ group="Ext_1/Audio_Configuration">Auto</DTMF_Tx_Method_1_>
+<DTMF_Tx_Volume_for_AVT_Packet_1_ group="Ext_1/Audio_Configuration">0</DTMF_Tx_Volume_for_AVT_Packet_1_>
+<DTMF_AVT_Packet_Interval_1_ group="Ext_1/Audio_Configuration">0</DTMF_AVT_Packet_Interval_1_>
+<Use_Remote_Pref_Codec_1_ group="Ext_1/Audio_Configuration">No</Use_Remote_Pref_Codec_1_>
+<Codec_Negotiation_1_ group="Ext_1/Audio_Configuration">Default</Codec_Negotiation_1_>
+
+<!-- Ext_1/Dial_Plan -->
+<Dial_Plan_1_ group="Ext_1/Dial_Plan">{$spa_dial_plan}</Dial_Plan_1_>
+<Caller_ID_Map_1_ group="Ext_1/Dial_Plan" />
+<Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
+<Emergency_Number_1_ group="Ext_1/Dial_Plan" />
+
+<!-- User/Call_Forward -->
+<Cfwd_Setting group="User/Call_Forward">Yes</Cfwd_Setting>
+<Cfwd_All_Dest group="User/Call_Forward" />
+<Cfwd_Busy_Dest group="User/Call_Forward" />
+<Cfwd_No_Ans_Dest group="User/Call_Forward" />
+<Cfwd_No_Ans_Delay group="User/Call_Forward">20</Cfwd_No_Ans_Delay>
+
+<!-- User/Speed_Dial -->
+<Speed_Dial_2 group="User/Speed_Dial" />
+<Speed_Dial_3 group="User/Speed_Dial" />
+<Speed_Dial_4 group="User/Speed_Dial" />
+<Speed_Dial_5 group="User/Speed_Dial" />
+<Speed_Dial_6 group="User/Speed_Dial" />
+<Speed_Dial_7 group="User/Speed_Dial" />
+<Speed_Dial_8 group="User/Speed_Dial" />
+<Speed_Dial_9 group="User/Speed_Dial" />
+
+<!-- User/Supplementary_Services -->
+<CW_Setting group="User/Supplementary_Services">{$spa_call_waiting}</CW_Setting>
+<Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
+<Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
+<DND_Setting group="User/Supplementary_Services">No</DND_Setting>
+<Secure_Call_Setting group="User/Supplementary_Services">No</Secure_Call_Setting>
+<Dial_Assistance group="User/Supplementary_Services">No</Dial_Assistance>
+<Auto_Answer_Page group="User/Supplementary_Services">Yes</Auto_Answer_Page>
+<Preferred_Audio_Device group="User/Supplementary_Services">Speaker</Preferred_Audio_Device>
+<Send_Audio_To_Speaker group="User/Supplementary_Services">No</Send_Audio_To_Speaker>
+<Time_Format group="User/Supplementary_Services">{$spa_time_format}</Time_Format>
+<Date_Format group="User/Supplementary_Services">{$spa_date_format}</Date_Format>
+<Miss_Call_Shortcut group="User/Supplementary_Services">Yes</Miss_Call_Shortcut>
+<Miss_Call_Banner group="User/Supplementary_Services">Yes</Miss_Call_Banner>
+<Accept_Media_Loopback_Request group="User/Supplementary_Services">automatic</Accept_Media_Loopback_Request>
+<Media_Loopback_Mode group="User/Supplementary_Services">source</Media_Loopback_Mode>
+<Media_Loopback_Type group="User/Supplementary_Services">media</Media_Loopback_Type>
+<Text_Message group="User/Supplementary_Services">Yes</Text_Message>
+<Text_Message_From_3rd_Party group="User/Supplementary_Services">No</Text_Message_From_3rd_Party>
+<Alert_Tone_Off group="User/Supplementary_Services">No</Alert_Tone_Off>
+<Log_Missed_Calls_for_EXT_1 group="User/Supplementary_Services">Yes</Log_Missed_Calls_for_EXT_1>
+<Shared_Line_DND_Cfwd_Enable group="User/Supplementary_Services">Yes</Shared_Line_DND_Cfwd_Enable>
+
+<!-- User/Audio -->
+<Ringer_Volume group="User/Audio">8</Ringer_Volume>
+<Speaker_Volume group="User/Audio">8</Speaker_Volume>
+<Handset_Volume group="User/Audio">10</Handset_Volume>
+<Headset_Volume group="User/Audio">10</Headset_Volume>
+<Handset_Version group="User/Audio">Auto</Handset_Version>
+<Deep_Bass group="User/Audio">Default</Deep_Bass>
+<Speakerphone_Enable group="User/Audio">Yes</Speakerphone_Enable>
+
+<!-- User/LCD -->
+<LCD_Contrast group="User/LCD">8</LCD_Contrast>
+<Back_Light_Timer group="User/LCD">10 s</Back_Light_Timer>
+
+<!-- Attendant_Console/General -->
+<Subscribe_Expires group="Attendant_Console/General">1800</Subscribe_Expires>
+<Subscribe_Retry_Interval group="Attendant_Console/General">30</Subscribe_Retry_Interval>
+<Unit_1_Enable group="Attendant_Console/General">Yes</Unit_1_Enable>
+<Subscribe_Delay group="Attendant_Console/General">1</Subscribe_Delay>
+<Unit_2_Enable group="Attendant_Console/General">Yes</Unit_2_Enable>
+<Server_Type group="Attendant_Console/General">Asterisk</Server_Type>
+<Test_Mode_Enable group="Attendant_Console/General">No</Test_Mode_Enable>
+<Attendant_Console_Call_Pickup_Code group="Attendant_Console/General">**#</Attendant_Console_Call_Pickup_Code>
+<Attendant_Console_Call_Park_Code group="Attendant_Console/General">*68</Attendant_Console_Call_Park_Code>
+<Attendant_Console_Call_unPark_Code group="Attendant_Console/General">*88</Attendant_Console_Call_unPark_Code>
+<BLF_List_URI group="Attendant_Console/General" />
+<Call_Pickup_Audio_Notification group="Attendant_Console/General">No</Call_Pickup_Audio_Notification>
+<Attendant_Console_Font_Size group="Attendant_Console/General">10</Attendant_Console_Font_Size>
+<Attendant_Console_LCD_Contrast group="Attendant_Console/General">7</Attendant_Console_LCD_Contrast>
+
+<!-- Attendant_Console/Attendant_Key_LED_Pattern -->
+<Application_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<Serv_Subscribe_Failed_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<Serv_Subscribing_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<SNRM_Day_Mode_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<SNRM_Night_Mode_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<Parking_Lot_Idle_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<Parking_Lot_Busy_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<BLF_Idle_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<BLF_Ringing_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<BLF_Busy_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+<BLF_Held_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
+
+<!-- Attendant_Console/Unit_x -->
+{foreach $keys["expansion"] as $row}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/foreach}
+{foreach $keys["expansion-1"] as $row}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/foreach}
+{foreach $keys["expansion-2"] as $row}
+<Unit_2_Key_{$row.device_key_id} group="Attendant_Console/Unit_2">{$row.device_key_value}</Unit_2_Key_{$row.device_key_id}>
+{/foreach}
+
+</flat-profile>

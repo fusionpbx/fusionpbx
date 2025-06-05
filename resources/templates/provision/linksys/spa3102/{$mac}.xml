@@ -1,0 +1,90 @@
+<!--
+  NOTE: The XML below is not complete.  For now it's just to get
+  you started with provisioning an SPA3102 and *not* intended as
+  a complete, ready-to-run provisioning configuration.
+
+  Provisioning reference documenation is at:
+    https://supportforums.cisco.com/docs/DOC-9894/
+    http://www.cisco.com/en/US/docs/voice_ip_comm/csbpvga/ata/provisioning/guide/Cisco_Small_Business_IP_Telephony_Provisioning_Guide.pdf
+
+  Additional XML examples in sipXecs source code at:
+    http://github.com/dhubler/sipxecs/blob/master/sipXconfig/plugins/linksys/test/org/sipfoundry/sipxconfig/phone/linksys/spa3102.cfg
+  Or see git commit 9c60c0a3:
+    http://github.com/dhubler/sipxecs/commit/9c60c0a32c54a245dde3dff9916ccd65620fdd65
+
+  Using IVR menu to change phone settings, reboot, etc.:
+    http://www.cisco.com/en/US/products/ps10024/products_qanda_item09186a0080a359dd.shtml
+
+  Note there is a "ua" attribute that can be set on the XML elements
+  below.  Valid values are:
+   * ua="na" - no access for *users* via web interface
+   * ua="ro" - read-only access for *users* via web interface
+   * ua="rw" - read/write access for *users* via web interface
+
+  The "ua" element *does not* affect access by admin users of the web
+  interface.  That means if you do not set an admin password using the
+  "Admin_Passwd" element below, setting the "ua" attribute values is
+  probably pointless.
+-->
+<flat-profile>
+  <!-- provisioning config -->
+  <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+  <Resync_Periodic>0</Resync_Periodic>
+  <Resync_On_Reset>yes</Resync_On_Reset>
+  <Resync_Error_Retry_Delay>10</Resync_Error_Retry_Delay>
+
+  <!-- network config -->
+  <DHCP>yes</DHCP> <!-- for WAN port -->
+
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
+
+  <!-- remote logging - valid debug levels are 0, 1, 2 and 3
+  <Syslog_Server>{$domain_name}</Syslog_Server>
+  <Debug_Server>{$domain_name}</Debug_Server>
+  <Debug_Level>2</Debug_Level>
+  -->
+
+  <!-- WAN web interface -->
+  <!-- WARNING: Passwords are set empty below.  Take appropriate security measures when enabling web interface on WAN.
+  <Enable_WAN_Web_Server>yes</Enable_WAN_Web_Server>
+  <WAN_Web_Server_Port>80</WAN_Web_Server_Port>
+  -->
+
+  <!-- LAN web interface -->
+  <!-- WARNING: Passwords are set empty below.  Take appropriate security measures when enabling web interface on LAN.
+  <Enable_Web_Server>yes</Enable_Web_Server>
+  <Web_Server_Port>80</Web_Server_Port>
+  -->
+
+  <!-- general web interface settings
+  <Enable_Web_Admin_Access>yes</Enable_Web_Admin_Access>
+  <Admin_Passwd/>
+  <User_Password/>
+  -->
+  <Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
+
+  <!-- SIP settings -->
+  <Proxy_1_>{$account.1.server_address}</Proxy_1_>
+  <SIP_Port_1_>{$account.1.sip_port}</SIP_Port_1_>
+  <Use_Outbound_Proxy_1_>no</Use_Outbound_Proxy_1_>
+  <!-- only allow proxy IP to connect
+  <Restrict_Source_IP_1_>yes</Restrict_Source_IP_1_>
+  -->
+
+  <!-- SIP debugging - probably need to set Debug_Server option above for this to work
+  <SIP_Debug_Option_1_>full</SIP_Debug_Option_1_>
+  -->
+
+  <!-- FXS port aka "Line 1" in web interface -->
+  <Register_1_>yes</Register_1_>
+  <User_ID_1_>{$account.1.user_id}</User_ID_1_>
+  <Password_1_>{$account.1.password}</Password_1_>
+  <Display_Name_1_>{$account.1.display_name}</Display_Name_1_>
+  <Use_Auth_ID_1_>no</Use_Auth_ID_1_> <!-- Use authentication ID instead of user ID for SIP registration -->
+
+  <Line_Enable_1_>yes</Line_Enable_1_>
+
+  <!-- IVR -->
+  <Protect_IVR_FactoryReset>no</Protect_IVR_FactoryReset>
+</flat-profile>
