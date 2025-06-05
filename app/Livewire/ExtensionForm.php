@@ -10,6 +10,7 @@ use App\Models\Domain;
 use App\Models\User;
 use App\Repositories\ExtensionRepository;
 use Livewire\Component;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -124,7 +125,7 @@ class ExtensionForm extends Component
         $this->voicemail_transcription_enabled ??= Setting::getSetting('extension', 'transcription_enabled_default', 'boolean');
         $this->voicemail_enabled ??= Setting::getSetting('extension', 'enabled_default', 'boolean');
         $this->enabled ??= true;
-        $this->toll_allow ??= 'all'; 
+        $this->toll_allow ??= 'all';
     }
 
     public function mount($extensions = null)
@@ -156,7 +157,7 @@ class ExtensionForm extends Component
             $this->call_screen_enabled = $extensions->call_screen_enabled ?? false;
             $this->user_record = $extensions->user_record;
             $this->hold_music = $extensions->hold_music;
-            $this->toll_allow = $extensions->toll_allow ?? 'all'; 
+            $this->toll_allow = $extensions->toll_allow ?? 'all';
             $this->auth_acl = $extensions->auth_acl;
             $this->cidr = $extensions->cidr;
             $this->sip_force_contact = $extensions->sip_force_contact;
@@ -188,7 +189,7 @@ class ExtensionForm extends Component
             if ($extensions->domain) {
                 $this->selectedDomain = $extensions->domain->domain_uuid;
             } else {
-                $this->selectedDomain = auth()->user()->domain_uuid;
+                $this->selectedDomain = Session::get('domain_uuid');
             }
         }
         $this->setDefaultValues();
@@ -204,14 +205,14 @@ class ExtensionForm extends Component
         $this->availableDomains = Domain::select('domain_uuid', 'domain_name')->get()->toArray();
 
         if(!$this->extensions) {
-            $this->selectedDomain = auth()->user()->domain_uuid;
+            $this->selectedDomain = Session::get('domain_uuid');
         }
     }
 
     public function emergencyDestination()
     {
         if (auth()->user()->hasPermission('emergency_caller_id_select')) {
-            $this->emergency_destination = Destination::where('domain_uuid', auth()->user()->domain_uuid)
+            $this->emergency_destination = Destination::where('domain_uuid', Session::get('domain_uuid'))
                 ->where('destination_type', 'inbound')
                 ->where('destination_type_emergency', 1)
                 ->get()
@@ -222,7 +223,7 @@ class ExtensionForm extends Component
 
     public function getDestinations()
     {
-        $this->destinations = Destination::where('domain_uuid', auth()->user()->domain_uuid)
+        $this->destinations = Destination::where('domain_uuid', Session::get('domain_uuid'))
             ->where('destination_type', 'inbound')
             ->orderBy('destination_number', 'asc')
             ->get();
@@ -254,7 +255,7 @@ class ExtensionForm extends Component
         if (auth()->user()->hasPermission('extension_domain')) {
             $domainUuid = $this->selectedDomain;
         } else {
-            $domainUuid = auth()->user()->domain_uuid;
+            $domainUuid = Session::get('domain_uuid');
         }
 
         $passwordLegth = Setting::getSetting('extension', 'password_length', 'numeric');
@@ -272,7 +273,7 @@ class ExtensionForm extends Component
             'extension' => $this->extension,
             'number_alias' => $this->number_alias ?? 0,
             'domain_uuid' =>  $domainUuid,
-            'domain_name' => auth()->user()->domain->domain_name,
+            'domain_name' => Session::get('domain_name'),
             'password' => $this->password,
             'range' => $this->range,
             'accountcode' => $this->accountcode ?? '',
