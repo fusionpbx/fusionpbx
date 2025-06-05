@@ -79,7 +79,7 @@ class UniqueFSDestination implements ValidationRule
             $o = Extension::where('number_alias', $value)->where('domain_uuid', Session::get('domain_uuid'));
             if ($o->count() > 0)
             {
-                $fail('The :attribute is already used in a Extension (Alias).');
+                $fail('The :attribute is already used in an Extension (Alias).');
             }
         }
 
@@ -97,7 +97,7 @@ class UniqueFSDestination implements ValidationRule
             $o = IVRMenu::where('ivr_menu_extension', $value)->where('domain_uuid', Session::get('domain_uuid'));
             if ($o->count() > 0)
             {
-                $fail('The :attribute is already used in a IVR Menu (auto-attendant).');
+                $fail('The :attribute is already used in an IVR Menu (auto-attendant).');
             }
         }
 
@@ -106,7 +106,7 @@ class UniqueFSDestination implements ValidationRule
             $o = RingGroup::where('ring_group_extension', $value)->where('domain_uuid', Session::get('domain_uuid'));
             if ($o->count() > 0)
             {
-                $fail('The :attribute is already used in a IVR Menu (auto-attendant).');
+                $fail('The :attribute is already used in a Ring Group.');
             }
         }
     }
