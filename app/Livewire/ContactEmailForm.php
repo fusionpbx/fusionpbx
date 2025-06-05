@@ -21,15 +21,15 @@ class ContactEmailForm extends Component
     {
         $this->contactUuid = $contactUuid;
         $this->loadEmails();
-            
+
     }
-    
+
     public function loadEmails()
     {
         $contact = Contact::with('emails')
             ->where('contact_uuid', $this->contactUuid)
             ->first();
-            
+
         if ($contact && $contact->emails->count() > 0) {
             $this->emails = $contact->emails->map(function ($email) {
                 return [
@@ -43,7 +43,7 @@ class ContactEmailForm extends Component
             $this->addEmail();
         }
     }
-    
+
     public function addEmail()
     {
         if(auth()->user()->hasPermission('contact_email_add')) {
@@ -57,7 +57,7 @@ class ContactEmailForm extends Component
             session()->flash('message', 'You do not have permission to add email addresses.');
         }
     }
-    
+
     public function removeEmail($index)
     {
         if (auth()->user()->hasPermission('contact_email_delete')) {
@@ -67,17 +67,17 @@ class ContactEmailForm extends Component
             session()->flash('message', 'You do not have permission to remove email addresses.');
         }
     }
-    
+
     public function save()
     {
         try {
         ContactEmail::where('contact_uuid', $this->contactUuid)->delete();
-        
+
         foreach ($this->emails as $email) {
             if (!empty($email['email_address'])) {
                 ContactEmail::create([
                     'contact_uuid' => $this->contactUuid,
-                    'domain_uuid' => auth()->user()->domain_uuid,
+                    'domain_uuid' => Session::get('domain_uuid'),
                     'email_address' => $email['email_address'] ?? '',
                     'email_label' => $email['email_label'] ?? '',
                     'email_primary' => $email['email_primary'] ? 1 : 0,
@@ -93,7 +93,7 @@ class ContactEmailForm extends Component
             throw $e;
         }
     }
-    
+
     public function render()
     {
         return view('livewire.contact-email-form');
