@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Contact;
 use App\Models\ContactPhone;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -82,7 +83,7 @@ class ContactPhoneForm extends Component
                 if (!empty($phone['phone_number'])) {
                     ContactPhone::create([
                         'contact_uuid' => $this->contactUuid,
-                        'domain_uuid' => auth()->user()->domain_uuid,
+                        'domain_uuid' => Session::get('domain_uuid'),
                         'phone_number' => $phone['phone_number'] ?? '',
                         'phone_label' => $phone['phone_label'] ?? '',
                         'phone_type_voice' => $phone['phone_type_voice'] ? 1 : 0,

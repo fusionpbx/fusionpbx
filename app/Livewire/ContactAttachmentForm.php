@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\ContactAttachment;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -18,7 +19,7 @@ class ContactAttachmentForm extends Component
     public $removedAttachments = [];
 
     protected $listeners = [
-        'saveAttachment' => 'save', 
+        'saveAttachment' => 'save',
     ];
 
     public function mount($contactUuid)
@@ -109,12 +110,12 @@ class ContactAttachmentForm extends Component
             }
 
             $contactAttachment->save();
-        }        
+        }
 
         session()->flash('message', 'Attachment saved successfully.');
         redirect()->route('contacts.edit', ['contact' => $this->contactUuid]);
     }
-    
+
     public function render()
     {
         return view('livewire.contact-attachment-form');

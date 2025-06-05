@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Contact;
 use App\Models\ContactRelation;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -33,13 +34,13 @@ class ContactRelationForm extends Component
         if ($relations->count() > 0) {
             $this->relations = $relations->map(function($relation) {
                 $relatedContact = Contact::where('contact_uuid', $relation->relation_contact_uuid)->first();
-                
+
                 $displayName = '';
                 if ($relatedContact) {
                     $displayName = $relatedContact->contact_organization ?:
                         trim($relatedContact->contact_name_given . ' ' . $relatedContact->contact_name_family);
                 }
-                
+
                 return [
                     'relation_label' => $relation->relation_label,
                     'relation_contact_uuid' => $relation->relation_contact_uuid,
@@ -61,7 +62,7 @@ class ContactRelationForm extends Component
         $this->relations[] = [
             'relation_label' => '',
             'relation_contact_uuid' => '',
-            'contact_name' => '', 
+            'contact_name' => '',
         ];
         $this->dispatch('relation-added');
     }
@@ -93,16 +94,16 @@ class ContactRelationForm extends Component
                 if (!empty($relation['relation_contact_uuid']) && !empty($relation['relation_label'])) {
                     ContactRelation::create([
                         'contact_uuid' => $this->contactUuid,
-                        'domain_uuid' => auth()->user()->domain_uuid,
+                        'domain_uuid' => Session::get('domain_uuid'),
                         'relation_label' => $relation['relation_label'],
                         'relation_contact_uuid' => $relation['relation_contact_uuid'],
                     ]);
                 }
             }
-            
+
             $this->dispatch('settingsSaved')->to(ContactSettingForm::class);
             session()->flash('message', 'Relations saved successfully.');
-            
+
         } catch (\Throwable $e) {
             DB::rollBack();
             session()->flash('error', 'Error: ' . $e->getMessage());
