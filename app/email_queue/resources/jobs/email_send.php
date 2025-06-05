@@ -41,38 +41,30 @@
 	}
 
 //define the process id file
-	$pid_file = "/var/run/fusionpbx/email_send".".".$email_queue_uuid.".pid";
+	$pid_file = '/var/run/fusionpbx/email_send.'.$email_queue_uuid.'.pid';
 	//echo "pid_file: ".$pid_file."\n";
 
 //function to check if the process exists
-	function process_exists($file = false) {
-
-		//set the default exists to false
-		$exists = false;
-
-		//check to see if the process is running
-		if (file_exists($file)) {
-			$pid = file_get_contents($file);
-			if (function_exists('posix_getsid')) {
-				//check if the process is running
-				$pid = posix_getsid($pid);
-				if ($pid === null || $pid === 0) {
-					//process is not running
-					$exists = false;
-				}
-				else {
-					//process is running
-					$exists = true;
-				}
-			}
-			else {
-				//file exists assume the pid is running
-				$exists = true;
-			}
+	function process_exists($file = '') {
+		//check if the file exists return false if not found
+		if (!file_exists($file)) {
+			return false;
 		}
 
-		//return the result
-		return $exists;
+		//check to see if the process id is valid
+		$pid = file_get_contents($file);
+		if (filter_var($pid, FILTER_VALIDATE_INT) === false) {
+			return false;
+		}
+
+		//check if the process is running
+		exec('ps -p '.$pid, $output);
+		if (count($output) > 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 //check to see if the process exists
