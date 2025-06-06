@@ -23,7 +23,7 @@ class ExtensionTable extends DataTableComponent
         $tableConfig = $this->setPrimaryKey('extension_uuid')
                     ->setTableAttributes([
                 'class' => 'table table-striped table-hover table-bordered'
-            ])  
+            ])
             ->setSearchEnabled()
             ->setSearchPlaceholder('Search Extensions')
             ->setPerPageAccepted([10, 25, 50, 100])
@@ -111,7 +111,7 @@ class ExtensionTable extends DataTableComponent
 
             Extension::whereIn('extension_uuid', $selectRows)->delete();
 
-            
+
             ExtensionUser::whereIn('extension_uuid', $selectRows)->delete();
 
             $extensions = Extension::whereIn('extension_uuid', $selectRows)->get();
@@ -131,7 +131,7 @@ class ExtensionTable extends DataTableComponent
     public function columns(): array
     {
         $showAll = request()->query('show') === 'all';
-        
+
         $columns = [
             Column::make("Extension uuid", "extension_uuid")
                 ->sortable()
@@ -151,7 +151,8 @@ class ExtensionTable extends DataTableComponent
             Column::make("Call Group", "call_group")
                 ->sortable(),
             Column::make("Account code", "accountcode")
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
             BooleanColumn::make("Enabled", "enabled")
                 ->sortable(),
             Column::make("Description", "description")
@@ -182,7 +183,7 @@ class ExtensionTable extends DataTableComponent
                     ->orWhereNull('v_extensions.domain_uuid');
             });
         }
-                
+
         return $query;
     }
 }

@@ -17,7 +17,7 @@ class CarriersTable extends DataTableComponent
 
     public function configure(): void
     {
-        $canEdit = auth()->user()->hasPermission('carrier_edit');
+        $canEdit = auth()->user()->hasPermission('lcr_edit');
         $this->setPrimaryKey('carrier_uuid')
             ->setTableAttributes([
                 'class' => 'table table-striped table-hover table-bordered'
@@ -39,18 +39,18 @@ class CarriersTable extends DataTableComponent
     {
         $bulkActions = [];
 
-        if (auth()->user()->hasPermission('carrier_edit'))
+        if (auth()->user()->hasPermission('lcr_edit'))
         {
             $bulkActions['markEnabled'] = 'Mark as Enabled';
             $bulkActions['markDisabled'] = 'Mark as Disabled';
         }
 
-        if (auth()->user()->hasPermission('carrier_delete'))
+        if (auth()->user()->hasPermission('lcr_delete'))
         {
             $bulkActions['bulkDelete'] = 'Delete';
         }
 
-        if (auth()->user()->hasPermission('carrier_add'))
+        if (auth()->user()->hasPermission('lcr_add'))
         {
             $bulkActions['bulkCopy'] = 'Copy';
         }
@@ -60,7 +60,7 @@ class CarriersTable extends DataTableComponent
 
     public function markEnabled()
     {
-        if (!auth()->user()->hasPermission('carrier_edit'))
+        if (!auth()->user()->hasPermission('lcr_edit'))
         {
             session()->flash('error', 'You do not have permission to mark carriers as enabled.');
             return;
@@ -77,7 +77,7 @@ class CarriersTable extends DataTableComponent
 
     public function markDisabled()
     {
-        if (!auth()->user()->hasPermission('carrier_edit'))
+        if (!auth()->user()->hasPermission('lcr_edit'))
         {
             session()->flash('error', 'You do not have permission to mark carriers as disabled.');
             return;
@@ -95,7 +95,7 @@ class CarriersTable extends DataTableComponent
 
     public function bulkDelete()
     {
-        if (!auth()->user()->hasPermission('carrier_delete'))
+        if (!auth()->user()->hasPermission('lcr_delete'))
         {
             session()->flash('error', 'You do not have permission to delete carriers.');
             return;
@@ -124,7 +124,7 @@ class CarriersTable extends DataTableComponent
 
     public function bulkCopy()
     {
-        if (!auth()->user()->hasPermission('carrier_add'))
+        if (!auth()->user()->hasPermission('lcr_add'))
         {
             session()->flash('error', 'You do not have permission to copy carriers.');
             return;
@@ -170,6 +170,7 @@ class CarriersTable extends DataTableComponent
             Column::make("Carrier uuid", "carrier_uuid")->hideIf(true),
 
             Column::make("Carrier name", "carrier_name")
+                ->searchable()
                 ->sortable(),
 
             BooleanColumn::make("Carrier enabled", "enabled")

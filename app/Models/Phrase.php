@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Phrase extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	use HasApiTokens, HasFactory, Notifiable, HandlesStringBooleans, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_phrases';
 	protected $primaryKey = 'phrase_uuid';
 	public $incrementing = false;
@@ -38,11 +39,16 @@ class Phrase extends Model
         'phrase_description',
 	];
 
+	protected static $stringBooleanFields = [
+		'phrase_enabled',
+	];
+
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
 
     public function details(): HasMany {
-		return $this->hasMany(PhraseDetail::class, 'phrase_uuid', 'phrase_uuid');
+		return $this->hasMany(PhraseDetail::class, 'phrase_uuid', 'phrase_uuid')
+			->orderBy('phrase_detail_order', 'asc');
 	}
 }

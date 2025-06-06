@@ -30,7 +30,8 @@ class ExtensionAPIController extends Controller
         return response()->json($extensions);
 	}
 
-	public function store(Request $request)
+// TODO:
+    public function store(ExtensionRequest $request)
 	{
 		$newExtension = $this->extensionRepository->create($request->validated());
         return response()->json($newExtension);

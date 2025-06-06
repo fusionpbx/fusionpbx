@@ -1,9 +1,12 @@
+import $ from "jquery";
+import select2 from 'select2';
 window.$ = window.jQuery= $;
+select2($);
 
 document.addEventListener('livewire:init', () => {
     console.log('livewire:init');
     initSelect2();
-    
+
     Livewire.on('relation-added', () => {
         console.log('relation-added');
         setTimeout(() => {
@@ -18,21 +21,21 @@ document.addEventListener('livewire:init', () => {
             initSelect2();
         }, 100);
     });
-    
+
     function initSelect2(root = document) {
         console.log('initSelect2');
         const elements = root.querySelectorAll('.select2-contact-search');
-        
+
         elements.forEach(element => {
             if (element.hasAttribute('data-select2-initialized')) {
                 return;
             }
-            
+
             const index = element.getAttribute('data-index');
             const componentId = element.closest('[wire\\:id]')?.getAttribute('wire:id');
-            
+
             if (!componentId) return;
-            
+
             $(element).select2({
                 placeholder: 'Search contact...',
                 allowClear: true,
@@ -64,7 +67,7 @@ document.addEventListener('livewire:init', () => {
             }).on('select2:unselect', function () {
                 Livewire.find(componentId).$set(`relations.${index}.relation_contact_uuid`, '');
             });
-            
+
             element.setAttribute('data-select2-initialized', 'true');
         });
     }

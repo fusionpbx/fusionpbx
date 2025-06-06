@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Contact;
 use App\Models\ContactSetting;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class ContactSettingForm extends Component
@@ -57,7 +58,7 @@ class ContactSettingForm extends Component
             'contact_setting_description' => '',
         ];
     }
-    
+
     public function removeSetting($index)
     {
         if (!auth()->user()->hasPermission('contact_setting_delete')) {
@@ -76,7 +77,7 @@ class ContactSettingForm extends Component
                 if (!empty($setting['contact_setting_name'])) {
                     ContactSetting::create([
                         'contact_uuid' => $this->contactUuid,
-                        'domain_uuid' => auth()->user()->domain_uuid,
+                        'domain_uuid' => Session::get('domain_uuid'),
                         'contact_setting_category' => $setting['contact_setting_category'],
                         'contact_setting_subcategory' => $setting['contact_setting_subcategory'],
                         'contact_setting_name' => $setting['contact_setting_name'],

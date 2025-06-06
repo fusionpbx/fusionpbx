@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CarrierRequest;
 use App\Models\Carrier;
+use App\Models\Gateway;
 use App\Repositories\CarrierRepository;
 
 class CarrierController extends Controller
@@ -20,7 +21,9 @@ class CarrierController extends Controller
 
 	public function create()
 	{
-		return view("pages.carriers.form");
+		$gateways = Gateway::all();
+
+		return view("pages.carriers.form", compact("gateways"));
 	}
 
 	public function store(CarrierRequest $request)
@@ -37,7 +40,9 @@ class CarrierController extends Controller
 
 	public function edit(Carrier $carrier)
 	{
-		return view("pages.carriers.form", compact("carrier"));
+		$gateways = Gateway::all();
+
+		return view("pages.carriers.form", compact("carrier", "gateways"));
 	}
 
 	public function update(CarrierRequest $request, Carrier $carrier)

@@ -7,6 +7,8 @@ import 'prismjs/components/prism-xml-doc';
 import 'prismjs/themes/prism.css';
 import { TempusDominus } from '@eonasdan/tempus-dominus';
 import '@eonasdan/tempus-dominus/dist/css/tempus-dominus.min.css'
+import UseBootstrapTag from 'use-bootstrap-tag'
+import 'use-bootstrap-tag/dist/use-bootstrap-tag.css'
 
 const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
 const Default = {
@@ -122,6 +124,28 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.classList.remove('fa-pause');
             icon.classList.add('fa-play');
             progressBar.style.width = `0%`;
+        });
+    });
+
+    const formTags = document.querySelectorAll(".form-tags");
+
+    formTags.forEach(function(element)
+    {
+        UseBootstrapTag(element);
+
+        element.addEventListener("change", function()
+        {
+            const wrapper = element.closest("[wire\\:id]");
+
+            if(wrapper)
+            {
+                const livewireComponent = Livewire.find(wrapper.getAttribute("wire:id"));
+
+                if(livewireComponent)
+                {
+                    livewireComponent.set(element.getAttribute("wire:model"), element.value);
+                }
+            }
         });
     });
 });

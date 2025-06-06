@@ -8,6 +8,8 @@ export default defineConfig({
             input: [
                 'resources/scss/app.scss',
                 'resources/js/app.js',
+                'resources/js/members-form-scripts.js',
+                'resources/js/select2-contacts-form.js',
                 'node_modules/bootstrap4-duallistbox/dist/jquery.bootstrap-duallistbox.min.js',
                 'node_modules/bootstrap4-duallistbox/dist/bootstrap-duallistbox.min.css',
                 'node_modules/select2/dist/js/select2.min.js',

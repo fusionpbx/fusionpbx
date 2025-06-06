@@ -1,6 +1,5 @@
 <?php
 
-use App\Facades\DefaultSetting;
 use App\Facades\Setting;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +7,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
-if (!function_exists('can')) {
+if (!function_exists('can'))
+{
 	function can(string $permission): bool
 	{
 		if (!Auth::check()) return false;
@@ -24,7 +24,8 @@ if (!function_exists('can')) {
 	}
 }
 
-if (!function_exists('getModels')) {
+if (!function_exists('getModels'))
+{
 	function getModels(): Collection
 	{
 		$models = collect(File::allFiles(app_path()))
@@ -52,50 +53,51 @@ if (!function_exists('getModels')) {
 
 		return $models->values();
 	}
+}
 
-	if (!function_exists('generatePassword')) {
-		function generatePassword($length = 0, $strength = 0)
-		{
-			$password = '';
-			$chars = '';
-			if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-				$length = is_numeric(Setting::getSetting('users', 'password_length', 'numeric')) ? Setting::getSetting('users', 'password_length', 'numeric') : 20;
-				$strength = is_numeric(Setting::getSetting('users', 'password_strength', 'numeric')) ? Setting::getSetting('users', 'password_strength', 'numeric') : 4;
-			}
-			if ($strength >= 1) {
-				$chars .= "0123456789";
-			}
-			if ($strength >= 2) {
-				$chars .= "abcdefghijkmnopqrstuvwxyz";
-			}
-			if ($strength >= 3) {
-				$chars .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
-			}
-			if ($strength >= 4) {
-				$chars .= "!^$%*?.";
-			}
-			for ($i = 0; $i < $length; $i++) {
-				$password .= $chars[random_int(0, strlen($chars) - 1)];
-			}
-			return $password;
-		}
-	}
+if (!function_exists('generatePassword'))
+{
+    function generatePassword($length = 0, $strength = 0)
+    {
+        $password = '';
+        $chars = '';
+        if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
+            $length = is_numeric(Setting::getSetting('users', 'password_length', 'numeric')) ? Setting::getSetting('users', 'password_length', 'numeric') : 20;
+            $strength = is_numeric(Setting::getSetting('users', 'password_strength', 'numeric')) ? Setting::getSetting('users', 'password_strength', 'numeric') : 4;
+        }
+        if ($strength >= 1) {
+            $chars .= "0123456789";
+        }
+        if ($strength >= 2) {
+            $chars .= "abcdefghijkmnopqrstuvwxyz";
+        }
+        if ($strength >= 3) {
+            $chars .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
+        }
+        if ($strength >= 4) {
+            $chars .= "!^$%*?.()";
+        }
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+        return $password;
+    }
+}
 
-	if(!function_exists('getAccountCode'))
-	{
-		function getAccountCode()
-		{
-			$accountCode = Setting::getSetting('domain', 'accountcode', 'text');
-			if (!empty($accountCode) ?? '' ) {
-				if($accountCode === 'none')
-				{
-					return;
-				}
-			}
-			else {
-				$accountCode = auth()->user()->domain->domain_name;
-			}
-			return $accountCode;
-		}
-	}
+if(!function_exists('getAccountCode'))
+{
+    function getAccountCode(): ?string
+    {
+        $accountCode = Setting::getSetting('domain', 'accountcode', 'text');
+        if (!empty($accountCode)) {
+            if($accountCode === 'none')
+            {
+                $accountCode = null;
+            }
+        }
+        else {
+            $accountCode = auth()->user()->domain->domain_name;
+        }
+        return $accountCode;
+    }
 }

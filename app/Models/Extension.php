@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\XmlCDR;
 use App\Models\ExtensionSetting;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
@@ -113,7 +114,7 @@ class Extension extends Model
 
 	public function xmlcdr(): HasMany
 	{
-		return $this->hasMany(XmlCdr::class, 'extension_uuid', 'extension_uuid');
+		return $this->hasMany(XmlCDR::class, 'extension_uuid', 'extension_uuid');
 	}
 
 	public function settings(?bool $extension_setting_enabled = null): HasMany

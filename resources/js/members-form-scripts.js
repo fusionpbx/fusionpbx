@@ -1,5 +1,7 @@
 import $ from "jquery";
+import dualListbox from 'bootstrap4-duallistbox';
 window.$ = window.jQuery = $;
+dualListbox($);
 
 $(function () {
 

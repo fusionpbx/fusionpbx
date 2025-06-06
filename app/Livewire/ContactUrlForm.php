@@ -4,8 +4,9 @@ namespace App\Livewire;
 
 use App\Models\Contact;
 use App\Models\ContactUrl;
-use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Livewire\Component;
 use Throwable;
 
 class ContactUrlForm extends Component
@@ -69,7 +70,7 @@ class ContactUrlForm extends Component
                 if (!empty($url['url_address']) || !empty($url['url_label'])) {
                     ContactUrl::create([
                         'contact_uuid' => $this->contactUuid,
-                        'domain_uuid' => auth()->user()->domain_uuid,
+                        'domain_uuid' => Session::get('domain_uuid'),
                         'url_label' => $url['url_label'],
                         'url_address' => $url['url_address'],
                         'url_description' => $url['url_description'],

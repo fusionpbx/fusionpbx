@@ -24,6 +24,7 @@
         "jquery": "^3.7.1",
         "overlayscrollbars": "^2.11.1",
         "prismjs": "^1.30.0",
-        "select2": "^4.1.0-rc.0"
+        "select2": "^4.1.0-rc.0",
+        "use-bootstrap-tag": "^2.2.2"
     }
 }

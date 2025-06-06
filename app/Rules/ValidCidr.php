@@ -14,6 +14,10 @@ class ValidCidr implements ValidationRule
 {
     /** @var bool whether or not the rule has been called with network constraints */
     private bool $has_bits;
+    public ?int $ipv4minbits = null;
+    public ?int $ipv4maxbits = null;
+    public ?int $ipv6minbits = null;
+    public ?int $ipv6maxbits = null;
 
     /**
      * @param int|null $ipv4minbits The minimum number of bits allowed in an IPv4 network
@@ -22,11 +26,15 @@ class ValidCidr implements ValidationRule
      * @param int|null $ipv6maxbits The maximum number of bits allowed in an IPv6 network
      */
     public function __construct(
-        public ?int $ipv4minbits = null,
-        public ?int $ipv4maxbits = null,
-        public ?int $ipv6minbits = null,
-        public ?int $ipv6maxbits = null,
+        ?int $ipv4minbits = null,
+        ?int $ipv4maxbits = null,
+        ?int $ipv6minbits = null,
+        ?int $ipv6maxbits = null
     ) {
+        $this->ipv4minbits = $ipv4minbits;
+        $this->ipv4maxbits = $ipv4maxbits;
+        $this->ipv6minbits = $ipv6minbits;
+        $this->ipv6maxbits = $ipv6maxbits;
         $this->has_bits = func_num_args() > 0;
     }
 

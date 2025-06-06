@@ -2,18 +2,32 @@
 
 namespace App\Http\Requests;
 
+use App\Facades\DefaultSetting;
+use App\Models\Extension;
+use App\Rules\UniqueFSDestination;
 use App\Rules\ValidCidr;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class ExtensionRequest extends FormRequest
 {
 
     protected ?string $extensionUuid = null;
+    protected ?Extension $extension = null;
 
     public function setExtensionUuid(?string $extensionUuid): void
     {
         $this->extensionUuid = $extensionUuid;
+    }
+
+    public function setExtension(?Extension $extension): void
+    {
+        $this->extension = $extension;
+	if (isset($extension))
+	{
+		$this->setExtensionUuid($extension->extension_uuid);
+	}
     }
 
     /**
@@ -32,16 +46,20 @@ class ExtensionRequest extends FormRequest
     public function rules(): array
     {
         $extensionUuid = $this->extensionUuid;
+        $reqLength = DefaultSetting::get('users', 'password_length', 'numeric') ?? 0;
+        $reqNumber = DefaultSetting::get('users', 'password_number', 'boolean') ?? false;
+        $reqLowcase = DefaultSetting::get('users', 'password_lowercase', 'boolean') ?? false;
+        $reqUpcase = DefaultSetting::get('users', 'password_uppercase', 'boolean') ?? false;
+        $reqSpecial = DefaultSetting::get('users', 'password_special', 'boolean') ?? false;
 
-        return [
+        $rules = [
             'extension' => [
                 'nullable',
                 'string',
                 'max:50',
-                Rule::unique('v_extensions')->ignore($extensionUuid, 'extension_uuid')
             ],
-            'number_alias' => 'nullable|numeric',
-            'password' => 'nullable|string|min:6|max:100',
+            'number_alias' => ['nullable','numeric',],
+            'password' => ['nullable','string'],
             'accountcode' => 'nullable|string|max:50',
             'enabled' => 'string',
             'description' => 'nullable|string|max:500',
@@ -59,7 +77,7 @@ class ExtensionRequest extends FormRequest
             'limit_max' => 'nullable|integer|min:1|max:100',
             'limit_destination' => 'nullable|string|max:100',
             'user_context' => 'nullable|string|max:100',
-            'range' => 'nullable|integer|min:1',
+            'range' => 'sometimes|nullable|integer|min:1',
             'missed_call_app' => 'nullable|in:email,text',
             'missed_call_data' => 'nullable|string|max:500',
             'toll_allow' => 'nullable|string|max:200',
@@ -84,12 +102,59 @@ class ExtensionRequest extends FormRequest
             'voicemail_file' => 'nullable|string|max:50',
             'voicemail_local_after_email' => 'string|nullable',
 
-            // TODO: 
+            // TODO:
             // 'devices' => 'nullable|array',
             // 'devices.*.device_mac_address' => 'required_with:devices|string|regex:/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/',
             // 'devices.*.line_number' => 'required_with:devices|integer|min:1|max:10',
             // 'devices.*.device_template' => 'nullable|string|max:100',
 
         ];
+
+        if ($reqLength > 0)
+        {
+            //$rule["password"][] = "min:".$reqLength;
+            $rule["password"][] = "Password::min($reqLength)";
+        }
+        else
+        {
+            $rule["password"][] = "Password::min(1)";
+        }
+
+        if ($reqNumber)
+        {
+            //$rule["password"][] = 'regex:/(?=.*[\d])/';
+            $rule["password"][] = "Password::numbers()";
+        }
+
+        if ($reqLowcase)
+        {
+            $rule["password"][] = 'regex:/(?=.*[a-z])/';
+        }
+
+        if ($reqUpcase)
+        {
+            $rule["password"][] = 'regex:/(?=.*[A-Z])/';
+        }
+
+        if ($reqSpecial)
+        {
+            //$rule["password"][] = 'regex:/(?=.*[\W])/';
+            $rule["password"][] = "Password::symbols()";
+        }
+
+        if ($extensionUuid)
+        {
+		// TODO: fix UniqueFSDestination to accept ->ignore()
+            $rules['extension'][] = Rule::unique('App\Models\Extension','extension')->ignore($this->extension, $this->extension->getKeyName());
+            $rules['number_alias'][] = Rule::unique('App\Models\Extension','number_alias')->ignore($this->extension, $this->extension->getKeyName());
+        }
+        else
+        {
+            $rules['extension'][] = new UniqueFSDestination();
+            $rules['number_alias'][] = new UniqueFSDestination();
+        }
+
+
+        return $rules;
     }
 }
