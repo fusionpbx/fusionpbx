@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Models\Carrier;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
@@ -27,6 +29,12 @@ class CarrierRequest extends FormRequest
 			"cancellation_ratio" => "bail|nullable|integer|min:0|max:100",
 			"lcr_tags" => "bail|nullable|string|max:255",
 		];
+	if(App::hasDebugModeEnabled())
+        {
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '.print_r(request()->toArray(), true));
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] method: '.$this->getMethod());
+        }
+
         if ($this->isMethod('post'))
         {
             $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name');
