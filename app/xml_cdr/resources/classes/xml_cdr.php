@@ -789,6 +789,7 @@
 							$parameters['domain_uuid'] = $domain_uuid;
 							$parameters['agent_id'] = $xml->variables->cc_agent;
 							$extension_uuid = $this->database->select($sql, $parameters, 'column');
+							$this->array[$key][0]['extension_uuid'] = $extension_uuid;
 							unset($parameters);
 						}
 						if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
