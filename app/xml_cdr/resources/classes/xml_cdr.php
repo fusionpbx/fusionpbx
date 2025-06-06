@@ -628,6 +628,43 @@ if (!class_exists('xml_cdr')) {
 						$caller_id_name = preg_replace('#[^a-zA-Z0-9\-.\#*@ ]#', '', $caller_id_name);
 						$caller_id_number = preg_replace('#[^0-9\-\#\*]#', '', $caller_id_number);
 
+					//get the extension_uuid and then add it to the database fields array
+						if (isset($xml->variables->extension_uuid)) {
+							$this->array[$key][0]['extension_uuid'] = urldecode($xml->variables->extension_uuid);
+						}
+						else {
+							if (isset($domain_uuid) && isset($xml->variables->dialed_user)) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['dialed_user'] = $xml->variables->dialed_user;
+								$extension_uuid = $this->database->select($sql, $parameters, 'column');
+								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+							if (isset($domain_uuid) && isset($xml->variables->referred_by_user)) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :referred_by_user or number_alias = :referred_by_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['referred_by_user'] = $xml->variables->referred_by_user;
+								$extension_uuid = $this->database->select($sql, $parameters, 'column');
+								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+							if (isset($domain_uuid) && isset($xml->variables->last_sent_callee_id_number)) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :last_sent_callee_id_number or number_alias = :last_sent_callee_id_number) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['last_sent_callee_id_number'] = $xml->variables->last_sent_callee_id_number;
+								$extension_uuid = $this->database->select($sql, $parameters, 'column');
+								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+						}
+
 					//misc
 						$this->array[$key][0]['xml_cdr_uuid'] = $uuid;
 						$this->array[$key][0]['destination_number'] = $destination_number;
@@ -707,6 +744,19 @@ if (!class_exists('xml_cdr')) {
 							$parameters['domain_uuid'] = $domain_uuid;
 							$parameters['queue_extension'] = explode("@", $xml->variables->cc_queue)[0];
 							$call_center_queue_uuid = $this->database->select($sql, $parameters, 'column');
+							unset($parameters);
+						}
+						if (empty($extension_uuid) && !empty($xml->variables->cc_agent)) {
+							//use the agent_id as an alternative way to get the extension_uuid
+							$sql = "select extension_uuid from v_extensions ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and extension in ( ";
+							$sql .= "  select agent_id from v_call_center_agents where call_center_agent_uuid = :agent_id ";
+							$sql .= ") ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$parameters['agent_id'] = $xml->variables->cc_agent;
+							$extension_uuid = $this->database->select($sql, $parameters, 'column');
+							$this->array[$key][0]['extension_uuid'] = $extension_uuid;
 							unset($parameters);
 						}
 						if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
@@ -972,43 +1022,6 @@ if (!class_exists('xml_cdr')) {
 
 					//build the call detail array with json decode
 						$this->call_details = json_decode($this->json, true);
-
-					//get the extension_uuid and then add it to the database fields array
-						if (isset($xml->variables->extension_uuid)) {
-							$this->array[$key][0]['extension_uuid'] = urldecode($xml->variables->extension_uuid);
-						}
-						else {
-							if (isset($domain_uuid) && isset($xml->variables->dialed_user)) {
-								$sql = "select extension_uuid from v_extensions ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
-								$parameters['domain_uuid'] = $domain_uuid;
-								$parameters['dialed_user'] = $xml->variables->dialed_user;
-								$extension_uuid = $this->database->select($sql, $parameters, 'column');
-								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
-								unset($parameters);
-							}
-							if (isset($domain_uuid) && isset($xml->variables->referred_by_user)) {
-								$sql = "select extension_uuid from v_extensions ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and (extension = :referred_by_user or number_alias = :referred_by_user) ";
-								$parameters['domain_uuid'] = $domain_uuid;
-								$parameters['referred_by_user'] = $xml->variables->referred_by_user;
-								$extension_uuid = $this->database->select($sql, $parameters, 'column');
-								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
-								unset($parameters);
-							}
-							if (isset($domain_uuid) && isset($xml->variables->last_sent_callee_id_number)) {
-								$sql = "select extension_uuid from v_extensions ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and (extension = :last_sent_callee_id_number or number_alias = :last_sent_callee_id_number) ";
-								$parameters['domain_uuid'] = $domain_uuid;
-								$parameters['last_sent_callee_id_number'] = $xml->variables->last_sent_callee_id_number;
-								$extension_uuid = $this->database->select($sql, $parameters, 'column');
-								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
-								unset($parameters);
-							}
-						}
 
 					//save the call flow json
 						$key = 'xml_cdr_flow';
