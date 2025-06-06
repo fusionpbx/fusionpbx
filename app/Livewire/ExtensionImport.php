@@ -3,20 +3,21 @@
 namespace App\Livewire;
 
 use App\Facades\Setting;
+use App\Models\Extension;
+use App\Models\ExtensionUser;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use App\Models\Extension;
-use App\Models\User;
-use App\Models\ExtensionUser;
 
 class ExtensionImport extends Component
 {
     use WithFileUploads;
 
-    public $step = 1; 
+    public $step = 1;
     public $data = '';
     public $uploadedFile;
     public $fromRow = 2;
@@ -24,7 +25,7 @@ class ExtensionImport extends Component
     public $enclosure = '"';
     public $csvData = [];
     public $headers = [];
-    public $fieldMappings = []; 
+    public $fieldMappings = [];
     public $availableFields = [];
     public $importResults = [];
 
@@ -120,11 +121,11 @@ class ExtensionImport extends Component
 
             $filename = 'extensions-import-' . Str::random(10) . '.csv';
             Storage::disk('local')->put('temp/' . $filename, $csvContent);
-            
+
             $this->processCsvData($csvContent);
-            
+
             $this->step = 2;
-            
+
         } catch (\Exception $e) {
             session()->flash('error', 'Error al procesar el archivo: ' . $e->getMessage());
         }
@@ -134,24 +135,24 @@ class ExtensionImport extends Component
     {
         $delimiter = $this->getDelimiterChar();
         $enclosure = $this->getEnclosureChar();
-        
+
         $lines = explode("\n", $csvContent);
         $this->csvData = [];
-        
+
         foreach ($lines as $index => $line) {
             if ($index >= ($this->fromRow - 1) && !empty(trim($line))) {
                 $this->csvData[] = str_getcsv($line, $delimiter, $enclosure);
             }
         }
-        
+
         if (!empty($lines)) {
             $this->headers = str_getcsv($lines[0], $delimiter, $enclosure);
             $this->headers = array_map(function($header) {
                 return preg_replace('/[^a-zA-Z0-9_]/', '', trim($header));
             }, $this->headers);
         }
-        
-        
+
+
         $this->initializeFieldMappings();
     }
 
@@ -165,7 +166,7 @@ class ExtensionImport extends Component
     private function suggestFieldMapping($header)
     {
         $header = strtolower($header);
-        
+
         $mappings = [
             'extension' => 'extensions.extension',
             'password' => 'extensions.password',
@@ -175,7 +176,7 @@ class ExtensionImport extends Component
             'enabled' => 'extensions.enabled',
             'description' => 'extensions.description',
         ];
-        
+
         return $mappings[$header] ?? '';
     }
 
@@ -187,7 +188,7 @@ class ExtensionImport extends Component
             'semicolon' => ';',
             'tab' => "\t"
         ];
-        
+
         return $delimiters[$this->delimiter] ?? ',';
     }
 
@@ -200,25 +201,25 @@ class ExtensionImport extends Component
     {
         try {
             DB::beginTransaction();
-            
+
             $importCount = 0;
             $errors = [];
             $users = User::where('domain_uuid', auth()->user()->domain_uuid)->get()->keyBy('username');
-            
+
             foreach ($this->csvData as $rowIndex => $row) {
                 try {
                     $extensionData = [];
                     $extensionUsers = [];
-                    
-                    
+
+
                     foreach ($this->fieldMappings as $csvIndex => $mapping) {
                         if (empty($mapping) || !isset($row[$csvIndex])) {
                             continue;
                         }
-                        
+
                         [$table, $field] = explode('.', $mapping);
                         $value = trim($row[$csvIndex]);
-                        
+
                         if ($table === 'extensions') {
                             $extensionData[$field] = $this->processFieldValue($field, $value);
                         } elseif ($table === 'extension_users' && $field === 'username') {
@@ -227,42 +228,42 @@ class ExtensionImport extends Component
                             }
                         }
                     }
-                    
+
                     if (!empty($extensionData)) {
-                        $extensionData['domain_uuid'] = auth()->user()->domain_uuid;
-                        $extensionData['extension_uuid'] = Str::uuid();
+                        $extensionData['domain_uuid'] = Session::get('domain_uuid');
+                        //$extensionData['extension_uuid'] = Str::uuid();
                         $passwordLength = Setting::getSetting('extension', 'password_length', 'numeric');
                         $passwordStrength = Setting::getSetting('extension', 'password_strength', 'numeric');
                         $extensionData['password'] = generatePassword($passwordLength, $passwordStrength);
-                        
+
                         $extension = Extension::create($extensionData);
-                        
+
                         foreach ($extensionUsers as $userUuid) {
                             ExtensionUser::create([
                                 'extension_user_uuid' => Str::uuid(),
-                                'domain_uuid' => auth()->user()->domain_uuid,
+                                'domain_uuid' => Session::get('domain_uuid'),
                                 'extension_uuid' => $extension->extension_uuid,
                                 'user_uuid' => $userUuid
                             ]);
                         }
-                        
+
                         $importCount++;
                     }
-                    
+
                 } catch (\Exception $e) {
                     $errors[] = "Fila " . ($rowIndex + $this->fromRow) . ": " . $e->getMessage();
                 }
             }
-            
+
             DB::commit();
-            
+
             $this->importResults = [
                 'success' => $importCount,
                 'errors' => $errors
             ];
-            
+
             $this->step = 3;
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', 'Error durante la importación: ' . $e->getMessage());

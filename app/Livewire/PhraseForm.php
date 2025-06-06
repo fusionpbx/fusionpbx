@@ -3,11 +3,12 @@
 namespace App\Livewire;
 
 use App\Http\Requests\PhraseRequest;
-use App\Repositories\PhraseRepository;
-use Livewire\Component;
-use Illuminate\Support\Str;
 use App\Repositories\PhraseDetailRepository;
+use App\Repositories\PhraseRepository;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+use Livewire\Component;
 
 class PhraseForm extends Component
 {
@@ -178,7 +179,7 @@ class PhraseForm extends Component
         }
         else
         {
-            $phraseData['phrase_uuid'] = Str::uuid();
+            //$phraseData['phrase_uuid'] = Str::uuid();
             $this->phrase = $this->phraseRepository->create($phraseData);
 
             // $this->phraseDetailRepository->create($this->phrase, $filteredPhraseDetails);
