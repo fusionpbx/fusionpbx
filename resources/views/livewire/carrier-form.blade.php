@@ -78,7 +78,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="cancellation_ratio" class="form-label">Cancellation ratio</label>
-								<input
+								0 <input
 									type="range"
                                     min="0"
                                     max="100"
@@ -89,7 +89,7 @@
 									value="{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}"
 									required
 									wire:model="cancellation_ratio"
-								>
+								> 100
 								@error('cancellation_ratio')
 									<div class="invalid-feedback d-block">{{ $message }}</div>
 								@enderror
