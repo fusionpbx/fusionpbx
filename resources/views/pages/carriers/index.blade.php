@@ -10,7 +10,7 @@
 
             <div class="card-tools">
                 <div class="d-flex gap-2" role="carrier" aria-label="Carriers actions">
-                    @can('carrier_add')
+                    @can('lcr_add')
                     <a href="{{ route('carriers.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
                     </a>
