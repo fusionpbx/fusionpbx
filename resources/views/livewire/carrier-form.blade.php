@@ -36,6 +36,7 @@
 								<label for="carrier_channels" class="form-label">Channels</label>
 								<input
 									type="number"
+                                    min="1"
 									class="form-control @error('carrier_channels') is-invalid @enderror"
 									id="carrier_channels"
 									name="carrier_channels"
@@ -57,11 +58,12 @@
 								<label for="priority" class="form-label">Priority</label>
 								<input
 									type="number"
+                                    min="0"
 									class="form-control @error('priority') is-invalid @enderror"
 									id="priority"
 									name="priority"
 									placeholder="Enter carrier priority"
-									value="{{ old('priority', $carrier->priority ?? '') }}"
+									value="{{ old('priority', $carrier->priority ?? '5') }}"
 									required
 									wire:model="priority"
 								>
@@ -77,12 +79,14 @@
 							<div class="form-group">
 								<label for="cancellation_ratio" class="form-label">Cancellation ratio</label>
 								<input
-									type="text"
+									type="range"
+                                    min="0"
+                                    max="100"
 									class="form-control @error('cancellation_ratio') is-invalid @enderror"
 									id="cancellation_ratio"
 									name="cancellation_ratio"
 									placeholder="Enter carrier cancellation ratio"
-									value="{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '') }}"
+									value="{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}"
 									required
 									wire:model="cancellation_ratio"
 								>
