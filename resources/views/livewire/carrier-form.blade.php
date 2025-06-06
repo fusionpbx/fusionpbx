@@ -78,7 +78,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="cancellation_ratio" class="form-label">Cancellation ratio</label>
-<div>
+<div style="display:flex">
 								<input
 									type="range"
                                     min="0"
@@ -92,7 +92,7 @@
 									required
 									wire:model="cancellation_ratio"
 									oninput="this.nextElementSibling.value = this.value"
-								><output>{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}</output>
+								>&nbsp<output>{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}</output>
 </div>
 								@error('cancellation_ratio')
 									<div class="invalid-feedback d-block">{{ $message }}</div>
