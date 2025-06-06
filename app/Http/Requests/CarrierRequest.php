@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Carrier;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Session;
@@ -16,15 +17,26 @@ class CarrierRequest extends FormRequest
 
 	public function rules(): array
 	{
-		return [
-			"carrier_name" => "bail|required|string|max:255",
+		$rules = [
+			"carrier_name" => ["bail","required","string","max:255"],
 			"enabled" => "bail|nullable|bool",
-			"carrier_channels" => "bail|nullable|numeric",
-			"priority" => "bail|nullable|numeric",
+			"carrier_channels" => "bail|nullable|numeric|integer|min:1",
+			"priority" => "bail|nullable|numeric|integer|min:0",
 			"fax_enabled" => "bail|nullable|bool",
 			"short_call_friendly" => "bail|nullable|bool",
-			"cancellation_ratio" => "bail|nullable|decimal:0,2",
+			"cancellation_ratio" => "bail|nullable|integer|min:0|max:100",
 			"lcr_tags" => "bail|nullable|string|max:255",
 		];
+        if ($this->isMethod('post'))
+        {
+            $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name');
+        }
+        else
+        {
+            $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name')->ignore($this->carrier->carrier_uuid, $this->carrier->getKeyName());
+        }
+
+
+        return $rules;
 	}
 }

@@ -168,6 +168,7 @@
 						</div>
 					</div>
 
+					@if (isset($carrier))
 					<h5 class="mt-4 mb-3">Gateways</h5>
 					<div class="card mb-4">
 						<div class="card-body">
@@ -232,6 +233,7 @@
 							</div>
 						</div>
 					</div>
+					@endif
 				</div>
 
 				<div class="card-footer">
