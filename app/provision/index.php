@@ -104,8 +104,8 @@
 		//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
 		//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4";
 
-		//Aastra: $_SERVER['HTTP_USER_AGENT'] = "Aastra6731i MAC:00-08-5D-29-4C-6B V:3.3.1.4365-SIP"
-		if (substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
+		//Mitel: HTTP_USER_AGENT 'Mitel6940 MAC:14-00-E9-29-4C-6B V:6.4.0.4006-SIP' or Aastra: 'Aastra6731i MAC:00-08-5D-29-4C-6B V:3.3.1.4365-SIP'
+		if (substr($_SERVER['HTTP_USER_AGENT'],0,5) == "Mitel" || substr($_SERVER['HTTP_USER_AGENT'],0,6) == "Aastra") {
 			preg_match("/MAC:([A-F0-9-]{17})/", $_SERVER['HTTP_USER_AGENT'], $matches);
 			$device_address = $matches[1];
 			$device_address = preg_replace("#[^a-fA-F0-9./]#", "", $device_address);
