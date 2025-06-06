@@ -13,3 +13,4 @@ Redirect	301	/core/dashboard					/dashboard
 Redirect	301	/app/streams/streams.php			/streams
 Redirect	301	/app/contacts/contacts.php			/contacts
 Redirect	301	/app/extensions/extensions.php			/extensions
+Redirect	301	/app/lcr/carriers.php				/carriers
