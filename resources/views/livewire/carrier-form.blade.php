@@ -78,7 +78,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="cancellation_ratio" class="form-label">Cancellation ratio</label>
-<div>
+<div class="d-flex">
 								<input
 									type="range"
                                     min="0"
@@ -92,7 +92,7 @@
 									required
 									wire:model="cancellation_ratio"
 									oninput="this.nextElementSibling.value = this.value"
-								><output>{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}</output>
+								>&nbsp<output>{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}</output>%
 </div>
 								@error('cancellation_ratio')
 									<div class="invalid-feedback d-block">{{ $message }}</div>
@@ -142,7 +142,6 @@
 									name="lcr_tags"
 									placeholder="Enter lcr tags"
 									value="{{ old('lcr_tags', $carrier->lcr_tags ?? '') }}"
-									required
 									data-ub-tag-variant="primary"
 									wire:model="lcr_tags"
 								>
@@ -168,6 +167,7 @@
 						</div>
 					</div>
 
+					@if (isset($carrier))
 					<h5 class="mt-4 mb-3">Gateways</h5>
 					<div class="card mb-4">
 						<div class="card-body">
@@ -232,6 +232,7 @@
 							</div>
 						</div>
 					</div>
+					@endif
 				</div>
 
 				<div class="card-footer">
