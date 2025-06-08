@@ -784,7 +784,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the security to use when connecting to a hidden SSID. Valid values: None, WEP, WPA/WPA2_PSK, 802.1X_EAP";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c1d2e3f4-5a6b-7c8d-9e0f-1a2b3c4d5e6f";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e7420e5d-c25d-49f4-aa0c-52117a7a1ffa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_ap1_ssid";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -792,7 +792,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "WiFi Access Point 1 SSID (network name).";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d2e3f4g5-6b7c-8d9e-0f1g-2b3c4d5e6f7g";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "07dcbef2-aca0-4105-b2a8-f8016e652978";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_ap1_password";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -800,7 +800,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "WiFi Access Point 1 password.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e3f4g5h6-7c8d-9e0f-1g2h-3c4d5e6f7g8h";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "62ce7934-c140-454c-9792-6273d5fe1895";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_ap1_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -808,7 +808,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "WiFi Access Point 1 security type. Valid values: None, WEP, WPA_PSK, WPA_WPA2_PSK, WPA_WPA2_EAP, Auto.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f4g5h6i7-8d9e-0f1g-2h3i-4d5e6f7g8h9i";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fb939c09-8caa-4a7e-a2c6-b9b0fed3e871";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_ap2_ssid";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -816,7 +816,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "WiFi Access Point 2 SSID (network name).";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "g5h6i7j8-9e0f-1g2h-3i4j-5e6f7g8h9i0j";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "92cee123-a6e0-4047-bc19-757f6e80ec62";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_ap2_password";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -824,7 +824,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "WiFi Access Point 2 password.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "h6i7j8k9-0f1g-2h3i-4j5k-6f7g8h9i0j1k";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bb3de46b-bc6f-48d2-8ca5-e9df895fafa9";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wifi_ap2_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
