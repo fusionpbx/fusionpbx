@@ -25,7 +25,7 @@
 --      POSSIBILITY OF SUCH DAMAGE.
 
 --include functions
-require "resources.functions.format_ringback"
+	require "resources.functions.format_ringback"
 
 --include xml library
 	local Xml = require "resources.functions.xml";
@@ -102,6 +102,9 @@ require "resources.functions.format_ringback"
 					domain_name = row.domain_name;
 					queue_name = row.queue_name;
 					queue_extension = row.queue_extension;
+					queue_language = row.queue_language;
+					queue_dialect = row.queue_dialect;
+					queue_voice = row.queue_voice;
 					queue_strategy = row.queue_strategy;
 					queue_moh_sound = row.queue_moh_sound;
 					queue_record_template = row.queue_record_template;
@@ -132,7 +135,6 @@ require "resources.functions.format_ringback"
 					queue_record_template = string.gsub(queue_record_template, "{sip_from_user}", "${sip_from_user}");
 					queue_record_template = string.gsub(queue_record_template, "{sip_to_user}", "${sip_to_user}");
 					queue_record_template = string.gsub(queue_record_template, "{sip_req_user}", "${sip_req_user}");
-					
 
 				--start the xml
 					xml:append([[                            <queue name="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" label="]] .. xml.sanitize(queue_name) .. [[@]] .. xml.sanitize(domain_name) .. [[">]]);
@@ -232,8 +234,15 @@ require "resources.functions.format_ringback"
 								--add the call_timeout
 								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}"..record.."}"..agent_contact;
 							else
+								--set the language, voice and dialect
+								if (queue_language ~= nil and queue_language ~= nil and queue_language ~= nil) then
+									language = "default_language="..queue_language..",queue_voice="..queue_voice..",queue_dialect="..queue_dialect;
+								else
+									language = '';
+								end
+
 								--add the call_timeout and confirm
-								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..","..language..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
 							end
 						else
 							--found
