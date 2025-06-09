@@ -220,10 +220,17 @@
 					agent_busy_delay_time = row.agent_busy_delay_time;
 					agent_record = row.agent_record;
 
+				--set the language, voice and dialect
+					if (queue_language ~= nil and queue_dialect ~= nil and queue_voice ~= nil) then
+						sound_prefix = "sound_prefix="..sounds_dir.."/"..queue_language.."/"..queue_dialect .."/"..queue_voice;
+					else
+						sound_prefix = sounds_dir.."/en/us/callie";
+					end
+
 				--get and then set the complete agent_contact with the call_timeout and when necessary confirm
 						--confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
 						--if you change this variable also change app/call_center/call_center_agent_edit.php
-						confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
+						confirm = ""..sound_prefix..",group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
 						local record = "";
 						if (agent_record == "true") then
 							record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)
@@ -234,15 +241,8 @@
 								--add the call_timeout
 								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}"..record.."}"..agent_contact;
 							else
-								--set the language, voice and dialect
-								if (queue_language ~= nil and queue_language ~= nil and queue_language ~= nil) then
-									language = "default_language="..queue_language..",queue_voice="..queue_voice..",queue_dialect="..queue_dialect;
-								else
-									language = '';
-								end
-
 								--add the call_timeout and confirm
-								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..","..language..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
 							end
 						else
 							--found
