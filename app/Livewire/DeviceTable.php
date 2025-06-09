@@ -5,8 +5,13 @@ namespace App\Livewire;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Device;
+use App\Models\DeviceKey;
+use App\Models\DeviceLine;
+use App\Models\DeviceSetting;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
+use Illuminate\Support\Str;
 
 class DeviceTable extends DataTableComponent
 {
@@ -75,6 +80,119 @@ class DeviceTable extends DataTableComponent
         }
 
         return $columns;
+    }
+
+    public function bulkActions(): array
+    {
+        $bulkActions = [];
+
+        if (auth()->user()->hasPermission('device_profile_edit')) {
+            $bulkActions['toogleDevice'] = 'Toggle';
+        }
+
+        if (auth()->user()->hasPermission('device_profile_delete')) {
+            $bulkActions['bulkDelete'] = 'Delete';
+        }
+
+        if (auth()->user()->hasPermission('device_profile_add')) {
+            $bulkActions['bulkCopy'] = 'Copy';
+        }
+
+        return $bulkActions;
+    }
+
+    public function tooggleDevice() 
+    {
+        $selectRows = $this->getSelected();
+
+        Device::whereIn('device_uuid', $selectRows)
+            ->update([
+                'device_enabled' => DB::raw("CASE WHEN device_enabled = 'true' THEN 'false' ELSE 'true' END")
+            ]);
+
+        $this->clearSelected();
+        $this->dispatch('refresh');
+
+        session()->flash('message', 'Device status toggled successfully');
+        
+    }
+
+    public function bulkDelete() 
+    {
+        $selectRows = $this->getSelected();
+
+        try {
+            DB::beginTransaction();
+
+            Device::whereIn('device_uuid', $selectRows)->delete();
+            DeviceLine::whereIn('device_uuid', $selectRows)->delete();
+            DeviceKey::whereIn('device_uuid', $selectRows)->delete();
+            DeviceSetting::whereIn('device_uuid', $selectRows)->delete();
+
+            DB::commit();
+
+            $this->clearSelected();
+            $this->dispatch('refresh');
+
+            session()->flash('message', 'Devices deleted successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    public function bulkCopy() 
+    {
+        $selectRows = $this->getSelected();
+
+        try {
+            DB::beginTransaction();
+
+            $devices = Device::whereIn('device_uuid', $selectRows)->get();
+
+            foreach ($devices as $device) {
+                $newDevice = $device->replicate();
+                $newDevice->device_uuid = Str::uuid();
+                $newDevice->device_description .= ' (Copy)';
+                $newDevice->save();
+
+                $deviceKeys = DeviceKey::where('device_uuid', $device->device_uuid)->get();
+                foreach ($deviceKeys as $deviceKey) {
+                    $newKey = $deviceKey->replicate();
+                    $newKey->device_key_uuid = Str::uuid();
+                    $newKey->device_uuid = $newDevice->device_uuid;
+                    $newKey->save();
+                }
+
+                $deviceLines = DeviceLine::where('device_uuid', $device->device_uuid)->get();
+                foreach ($deviceLines as $deviceLine) {
+                    $newLine = $deviceLine->replicate();
+                    $newLine->device_line_uuid = Str::uuid();
+                    $newLine->device_uuid = $newDevice->device_uuid;
+                    $newLine->save();
+                }
+
+
+                $deviceSettings = DeviceSetting::where('device_uuid', $device->device_uuid)->get();
+                foreach ($deviceSettings as $deviceSetting) {
+                    $newSetting = $deviceSetting->replicate();
+                    $newSetting->device_setting_uuid = Str::uuid();
+                    $newSetting->device_uuid = $newDevice->device_uuid;
+                    $newSetting->save();
+                }
+            }
+
+            DB::commit();
+
+            $this->clearSelected();
+            $this->dispatch('refresh');
+
+            session()->flash('message', 'Devices copied successfully');
+        }
+         catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     public function builder(): Builder

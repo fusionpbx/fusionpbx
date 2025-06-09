@@ -125,8 +125,7 @@ class DeviceRepository
 
             $filteredData = $this->applyDevicePermissions($deviceData, $device);
             $device->update($filteredData);
-            // dd('update');
-
+            
             if (!empty($deviceLines)) {
                 $this->syncDeviceLines($device->device_uuid, $device->domain_uuid, $deviceLines);
             }

@@ -156,7 +156,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('extensions/import', [ExtensionController::class, 'import'])->name('extensions.import');
     Route::get('extensions/export', [ExtensionController::class, 'export'])->name('extensions.export');
 
-    Route::resource('/devices', DeviceController::class);
+    Route::resource('/devices', DeviceController::class)->except('show');
     Route::resource('/devices/devices_profiles', DeviceProfileController::class);
 
 

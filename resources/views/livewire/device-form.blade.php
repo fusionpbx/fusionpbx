@@ -599,7 +599,6 @@
                                                                     @foreach ($vendorFunctions as $vendor => $vendorData)
                                                                         <optgroup
                                                                             label="{{ $vendorData['vendor_name'] }}">
-                                                                            //TODO PREGUNTARLE A AGU
                                                                             <option value="{{ $template['value'] }}">
                                                                                 {{ $template['value'] }}
                                                                             </option>
