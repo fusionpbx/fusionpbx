@@ -12,7 +12,7 @@ use Illuminate\Contracts\View\View;
 class CarrierForm extends Component
 {
     public $carrier;
-    public string $carrier_uuid;
+    public ?string $carrier_uuid = null;
     public string $carrier_name = '';
     public ?int $carrier_channels = 0;
     public ?int $priority = 0;
@@ -91,10 +91,10 @@ class CarrierForm extends Component
     {
         $user = auth()->user();
 
-        $this->canViewCarrierGateways = $user->hasPermission('carrier_gateway_view');
-        $this->canAddCarrierGateways = $user->hasPermission('carrier_gateway_add');
-        $this->canEditCarrierGateways = $user->hasPermission('carrier_gateway_edit');
-        $this->canDeleteCarrierGateways = $user->hasPermission('carrier_gateway_delete');
+        $this->canViewCarrierGateways = $user->hasPermission('lcr_view');
+        $this->canAddCarrierGateways = $user->hasPermission('lcr_add');
+        $this->canEditCarrierGateways = $user->hasPermission('lcr_edit');
+        $this->canDeleteCarrierGateways = $user->hasPermission('lcr_delete');
     }
 
     public function addCarrierGateway(): void

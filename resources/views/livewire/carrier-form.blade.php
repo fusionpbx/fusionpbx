@@ -8,7 +8,7 @@
 			</div>
 
 			<div class="card-body">
-				<form wire:submit.prevent="save">
+				<form wire:submit.prevent="save" method="POST">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
@@ -206,7 +206,7 @@
 													<input type="number" class="form-control @error('carrierGateways.' . $index . '.priority') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.priority" required>
 												</td>
 												<td>
-													<input type="number" class="form-control @error('carrierGateways.' . $index . '.codec') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.codec" required>
+													<input type="text" class="form-control @error('carrierGateways.' . $index . '.codec') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.codec" required>
 												</td>
 												<td>
 													<select class="form-select @error('carrierGateways.' . $index . '.enabled') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.enabled">

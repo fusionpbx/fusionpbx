@@ -35,13 +35,14 @@ class CarrierRequest extends FormRequest
             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] method: '.$this->getMethod());
         }
 
-        if ($this->isMethod('post') || $carrier_uuid || $this->route('id'))
+        if ($carrier_uuid || $this->route('id'))
         {
-            $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name');
+   	    $this->carrier = Carrier::find($carrier_uuid ?? $this->route('id'));
+            $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name')->ignore($this->carrier->carrier_uuid, $this->carrier->getKeyName());
         }
         else
         {
-            $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name')->ignore($this->carrier->carrier_uuid, $this->carrier->getKeyName());
+            $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name');
         }
 
 
