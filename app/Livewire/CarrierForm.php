@@ -45,7 +45,7 @@ class CarrierForm extends Component
     public function rules()
     {
         $request = new CarrierRequest();
-        return $request->rules();
+        return $request->rules($this->carrier_uuid);
     }
 
     public function mount($carrier = null, $gateways = []): void

@@ -17,7 +17,7 @@ class CarrierRequest extends FormRequest
 		return true;
 	}
 
-	public function rules(): array
+	public function rules(?string $carrier_uuid = null): array
 	{
 		$rules = [
 			"carrier_name" => ["bail","required","string","max:255"],
@@ -29,13 +29,13 @@ class CarrierRequest extends FormRequest
 			"cancellation_ratio" => "bail|nullable|integer|min:0|max:100",
 			"lcr_tags" => "bail|nullable|string|max:255",
 		];
-	if(App::hasDebugModeEnabled())
+        if(App::hasDebugModeEnabled())
         {
             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '.print_r(request()->toArray(), true));
             Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] method: '.$this->getMethod());
         }
 
-        if ($this->isMethod('post'))
+        if ($this->isMethod('post') || $carrier_uuid || $this->route('id'))
         {
             $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name');
         }
