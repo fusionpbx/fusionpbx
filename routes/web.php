@@ -16,6 +16,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExtensionController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceProfileController;
+use App\Http\Controllers\DeviceVendorController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModXMLCURLController;
@@ -157,7 +158,8 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('extensions/export', [ExtensionController::class, 'export'])->name('extensions.export');
 
     Route::resource('/devices', DeviceController::class)->except('show');
-    Route::resource('/devices/devices_profiles', DeviceProfileController::class);
+    Route::resource('/devices/devices_profiles', DeviceProfileController::class)->except('show');
+    Route::resource('/devices/devices_vendors', DeviceVendorController::class);
 
 
 });

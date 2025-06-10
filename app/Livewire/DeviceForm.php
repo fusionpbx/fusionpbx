@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Repositories\DeviceRepository;
 use App\Models\Device;
 use App\Facades\Setting;
+use App\Http\Requests\DeviceRequest;
 use App\Models\DeviceLine;
 use App\Services\DeviceService;
 use Illuminate\Support\Str;
@@ -62,6 +63,13 @@ class DeviceForm extends Component
     {
         $this->deviceRepository = $deviceRepository;
         $this->deviceService = $deviceService;
+    }
+
+    public function rules()
+    {
+        $request = new DeviceRequest();
+        $request->setVendorUuid($this->deviceUuid);
+        return $request->rules();
     }
 
     public function mount($deviceUuid = null)
@@ -330,13 +338,14 @@ class DeviceForm extends Component
             session()->flash('success', 'Device copied successfully.');
             return redirect()->route('devices.edit', $copiedDevice->device_uuid);
         } catch (\Exception $e) {
+            throw $e;
             session()->flash('error', 'Error copying device: ' . $e->getMessage());
         }
     }
 
     public function save()
     {
-        // $this->validate();
+        $this->validate();
 
         try {
             $deviceData = [
@@ -398,28 +407,7 @@ class DeviceForm extends Component
         }
     }
 
-    // protected function rules()
-    // {
-    //     return [
-    //         'device_mac_address' => [
-    //             'required',
-    //             'string',
-    //             'max:17',
-    //             Rule::unique('v_devices', 'device_mac_address')
-    //                 ->ignore($this->deviceUuid, 'device_uuid')
-    //         ],
-    //         'device_label' => 'nullable|string|max:255',
-    //         'device_vendor' => 'nullable|string|max:255',
-    //         'device_location' => 'nullable|string|max:255',
-    //         'device_model' => 'nullable|string|max:255',
-    //         'device_firmware_version' => 'nullable|string|max:255',
-    //         'device_enabled' => 'nullable|in:true,false',
-    //         'device_description' => 'nullable|string',
-    //         'deviceLines.*.line_number' => 'nullable|integer|min:1',
-    //         'deviceKeys.*.device_key_category' => 'nullable|string',
-    //         'deviceSettings.*.device_setting_subcategory' => 'nullable|string',
-    //     ];
-    // }
+
 
     protected function formatMacAddress($mac)
     {

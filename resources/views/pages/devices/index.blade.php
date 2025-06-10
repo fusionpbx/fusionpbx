@@ -16,9 +16,25 @@
                 </a>
                 @endcan
 
-                @can('device_import')
+                <a href="{{ route('devices_vendors.index') }}" class="btn btn-primary btn-sm">
+                    <i class="fa fa-fax" aria-hidden="true"></i> {{__('Vendors')}}
+                </a>
+
+                @can('')
                 <a href="{{route('devices_profiles.index')}}" class="btn btn-primary btn-sm">
                     <i class="fa fa-clone" aria-hidden="true"></i> {{__('Perfiles')}}
+                </a>
+                @endcan
+
+                @can('')
+                <a href="{{ route('devices.import') }}" class="btn btn-primary btn-sm">
+                    <i class="fa fa-download" aria-hidden="true"></i> {{__('Import')}}
+                </a>
+                @endcan
+
+                @can('')
+                <a href="{{ route('devices.export') }}" class="btn btn-primary btn-sm">
+                    <i class="fa fa-upload" aria-hidden="true"></i> {{__('Export')}}    
                 </a>
                 @endcan
 

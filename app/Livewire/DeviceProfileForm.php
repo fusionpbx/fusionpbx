@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Repositories\DeviceProfileRepository;
 use App\Models\DeviceProfile;
 use App\Facades\Setting;
+use App\Http\Requests\DeviceProfileRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -39,6 +40,12 @@ class DeviceProfileForm extends Component
     public function boot(DeviceProfileRepository $deviceProfileRepository)
     {
         $this->deviceProfileRepository = $deviceProfileRepository;
+    }
+
+    public function rules()
+    {
+        $request = new DeviceProfileRequest();
+        return $request->rules();
     }
 
     public function mount($deviceProfileUuid = null)
@@ -81,7 +88,6 @@ class DeviceProfileForm extends Component
         $this->domain_uuid = $user->domain_uuid;
         $this->device_profile_enabled = 'true';
 
-        // Add empty rows for keys and settings
         $this->addEmptyKeysRows(5);
         $this->addEmptySettingsRow();
     }
@@ -311,38 +317,6 @@ class DeviceProfileForm extends Component
         } catch (\Exception $e) {
             session()->flash('error', 'Error deleting profile: ' . $e->getMessage());
         }
-    }
-
-    protected function rules()
-    {
-        return [
-            'device_profile_name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('v_device_profiles', 'device_profile_name')
-                    ->where('domain_uuid', $this->domain_uuid)
-                    ->ignore($this->deviceProfileUuid, 'device_profile_uuid')
-            ],
-            'device_profile_enabled' => 'required|in:true,false',
-            'device_profile_description' => 'nullable|string',
-            'domain_uuid' => 'required|exists:v_domains,domain_uuid',
-            'profileKeys.*.profile_key_vendor' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_id' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_category' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_type' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_subtype' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_line' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_value' => 'nullable|string',
-            'profileKeys.*.profile_key_extension' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_protected' => 'nullable|in:true,false',
-            'profileKeys.*.profile_key_label' => 'nullable|string|max:255',
-            'profileKeys.*.profile_key_icon' => 'nullable|string|max:255',
-            'profileSettings.*.profile_setting_name' => 'nullable|string|max:255',
-            'profileSettings.*.profile_setting_value' => 'nullable|string',
-            'profileSettings.*.profile_setting_enabled' => 'nullable|in:true,false',
-            'profileSettings.*.profile_setting_description' => 'nullable|string',
-        ];
     }
 
     public function render()

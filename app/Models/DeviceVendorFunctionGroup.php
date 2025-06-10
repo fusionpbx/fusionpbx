@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class DeviceVendorFunctionGroup extends Pivot
 {
 	use HasFactory, HasUniqueIdentifier, GetTableName;
-	protected $table = 'v_device_vendor_functions';
-	protected $primaryKey = 'device_vendor_function_uuid';
+	protected $table = 'v_device_vendor_function_groups';
+	protected $primaryKey = 'device_vendor_function_group_uuid';
 	public $incrementing = false;
 	protected $keyType = 'string';	// TODO, check if UUID is valid
 	const CREATED_AT = 'insert_date';
@@ -33,4 +33,9 @@ class DeviceVendorFunctionGroup extends Pivot
         'group_name',
         'group_uuid',       // FIXME: Fusion does not use the uuid, instead it uses the name
     ];
+
+    public function devicevendorfunction(): BelongsToMany 
+    {
+        return $this->BelongsToMany (DeviceVendorFunction::class, 'device_vendor_function_uuid', 'device_vendor_function_uuid');
+    }
 }
