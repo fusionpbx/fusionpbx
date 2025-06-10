@@ -348,10 +348,14 @@
 
 		public static function get_vendor_by_agent($agent){
 			if ($agent) {
+				//set the user agent string to lower case
 					$agent = strtolower($agent);
 				//get the vendor
 					if (preg_replace('/^.*?(aastra).*$/i', '$1', $agent) == "aastra") {
 						return "aastra";
+					}
+					if (preg_replace('/^.*?(algo).*$/i', '$1', $agent) == "algo") {
+						return "algo";
 					}
 					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
 						return "cisco-spa";
@@ -360,8 +364,8 @@
 						return "cisco";
 					}
 					if (preg_replace('/^.*?(digium).*$/i', '$1', $agent) == "digium") {
-                                                return "digium";
-                                        }
+						return "digium";
+					}
 					if (preg_replace('/^.*?(grandstream).*$/i', '$1', $agent) == "grandstream") {
 						return "grandstream";
 					}
