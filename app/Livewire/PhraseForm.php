@@ -30,6 +30,7 @@ class PhraseForm extends Component
     public bool $canDeletePhraseDetail = false;
 
     public $domains = [];
+    public $sounds = [];
 
     protected $phraseRepository;
     protected $phraseDetailRepository;
@@ -46,9 +47,10 @@ class PhraseForm extends Component
         return $request->rules();
     }
 
-    public function mount($phrase = null, $domains = []): void
+    public function mount($phrase = null, $domains = [], $sounds = []): void
     {
         $this->domains = $domains;
+        $this->sounds = $sounds;
 
         if ($phrase)
         {
@@ -108,6 +110,8 @@ class PhraseForm extends Component
             'phrase_detail_data' => '',
             'phrase_detail_order' => '',
         ];
+
+        $this->dispatch('newRow');
     }
 
     public function removePhraseDetail($index): void
@@ -131,12 +135,17 @@ class PhraseForm extends Component
     {
         $this->validate();
 
-        $filteredPhraseDetails = collect($this->phraseDetails)->filter(function ($phraseDetail)
+        $oldPhraseDetails = collect($this->phraseDetails)->filter(function ($phraseDetail)
         {
-            return !empty($phraseDetail['phrase_detail_function']);
+            return !empty($phraseDetail['phrase_detail_uuid']);
         })->toArray();
 
-        $hasNewPhraseDetails = collect($filteredPhraseDetails)->filter(fn($d) => empty($d['phrase_detail_uuid']))->count() > 0;
+        $newPhraseDetails = collect($this->phraseDetails)->filter(function ($phraseDetail)
+        {
+            return empty($phraseDetail['phrase_detail_uuid']);
+        })->toArray();
+
+        $hasNewPhraseDetails = collect($newPhraseDetails)->count() > 0;
 
         if ($hasNewPhraseDetails && !$this->canAddPhraseDetail)
         {
@@ -168,23 +177,28 @@ class PhraseForm extends Component
                 return;
             }
 
-            // $this->phraseDetailRepository->update($this->phrase, $filteredPhraseDetails);
-
-            // if (!empty($this->phraseDetailsToDelete))
-            // {
-            //     $this->phraseDetailRepository->delete($this->phraseDetailsToDelete);
-            // }
-
             session()->flash('message', 'Phrase updated successfully.');
         }
         else
         {
-            //$phraseData['phrase_uuid'] = Str::uuid();
             $this->phrase = $this->phraseRepository->create($phraseData);
 
-            // $this->phraseDetailRepository->create($this->phrase, $filteredPhraseDetails);
-
             session()->flash('message', 'Phrase created successfully.');
+        }
+
+        if($newPhraseDetails)
+        {
+            $this->phraseDetailRepository->create($this->phrase, $newPhraseDetails);
+        }
+
+        if($oldPhraseDetails)
+        {
+            $this->phraseDetailRepository->update($this->phrase, $oldPhraseDetails);
+        }
+
+        if(!empty($this->phraseDetailsToDelete))
+        {
+            $this->phraseDetailRepository->delete($this->phraseDetailsToDelete);
         }
 
         redirect()->route('phrases.edit', $this->phrase->phrase_uuid);

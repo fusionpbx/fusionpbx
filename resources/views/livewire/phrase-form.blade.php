@@ -121,7 +121,7 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered phrase-detail">
 									<thead>
 										<tr>
 											<th>{{ __('Function') }}</th>
@@ -135,12 +135,52 @@
 											@foreach($phraseDetails as $index => $detail)
 											<tr>
 												<td>
-													<select class="form-select @error('phraseDetails.' . $index . '.phrase_detail_function') is-invalid @enderror" wire:model="phraseDetails.{{ $index }}.phrase_detail_function" required>
-														<option value=""></option>
+													<select class="form-select form-select-function @error('phraseDetails.' . $index . '.phrase_detail_function') is-invalid @enderror" wire:model="phraseDetails.{{ $index }}.phrase_detail_function" required>
+														<option value="play-file" @selected($phraseDetails[$index]['phrase_detail_function'] == 'play-file')>Play</option>
+														<option value="pause-file" @selected($phraseDetails[$index]['phrase_detail_function'] == 'pause-file')>Pause</option>
+														@if(auth()->user()->hasGroup('superadmin'))
+														<option value="execute" @selected($phraseDetails[$index]['phrase_detail_function'] == 'execute')>Execute</option>
+														@endif
 													</select>
 												</td>
 												<td>
-													<input type="text" class="form-control @error('phraseDetails.' . $index . '.phrase_detail_action') is-invalid @enderror" wire:model="phraseDetails.{{ $index }}.phrase_detail_action">
+													<input list="sounds_play" type="{{ auth()->user()->hasGroup('superadmin') ? 'text' : 'hidden' }}" class="form-control form-control-action @error('phraseDetails.' . $index . '.phrase_detail_data') is-invalid @enderror" wire:model="phraseDetails.{{ $index }}.phrase_detail_data" />
+
+													@if(auth()->user()->hasGroup('superadmin'))
+													<datalist id="sounds_play">
+													@else
+													<select class="form-select sounds_play @if(in_array($detail['phrase_detail_function'], ['pause-file', 'execute'])) d-none @endif">
+													@endif
+														<option value=""></option>
+														<optgroup label="Sounds">
+															@foreach($sounds as $sound)
+																<option value="{{ $sound }}" @selected($sound == $phraseDetails[$index]['phrase_detail_data'])>{{ $sound }}</option>
+															@endforeach
+														</optgroup>
+													@if(auth()->user()->hasGroup('superadmin'))
+													</datalist>
+													@else
+													</select>
+													@endif
+
+													@if(auth()->user()->hasGroup('superadmin'))
+													<datalist id="sounds_pause">
+													@else
+													<select class="form-select sounds_pause @if(in_array($detail['phrase_detail_function'], ['play-file', 'execute'])) d-none @endif">
+													@endif
+
+													@for($s = 0.1; $s <= 5; $s = $s + 0.1)
+														@php
+															$sleep = "sleep(" . ($s * 1000) . ")";
+														@endphp
+														<option value="{{ $sleep }}" @selected($sleep == $phraseDetails[$index]['phrase_detail_data'])>{{ number_format($s, 1) }}</option>
+													@endfor
+
+													@if(auth()->user()->hasGroup('superadmin'))
+													</datalist>
+													@else
+													</select>
+													@endif
 												</td>
 												<td>
 													<input type="number" step="1" min="0" max="1000" class="form-control @error('phraseDetails.' . $index . '.phrase_detail_order') is-invalid @enderror" wire:model="phraseDetails.{{ $index }}.phrase_detail_order" required>
@@ -176,3 +216,60 @@
 		</div>
 	</div>
 </div>
+
+
+@push("scripts")
+<script>
+
+document.addEventListener('DOMContentLoaded', function()
+{
+	document.addEventListener("change", function(e)
+	{
+  		if(e.target && e.target.classList.contains('form-select-function'))
+		{
+    		const select = e.target;
+			const row = select.closest("tr");
+			const input = row.querySelector(".form-control-action");
+			const sounds_play = row.querySelector(".sounds_play");
+			const sounds_pause = row.querySelector(".sounds_pause");
+
+			input.value = "";
+
+			let list = null;
+
+			switch(select.selectedIndex)
+			{
+				case 0:
+					list = "sounds_play";
+					if(sounds_play) sounds_play.classList.remove("d-none");
+					if(sounds_pause) sounds_pause.classList.add("d-none");
+					break;
+				case 1:
+					list = "sounds_pause";
+					if(sounds_play) sounds_play.classList.add("d-none");
+					if(sounds_pause) sounds_pause.classList.remove("d-none");
+					break;
+				case 2:
+					list = null;
+					break;
+			}
+
+			input.setAttribute("list", list);
+		}
+	});
+
+    window.addEventListener('newRow', function(e)
+	{
+		setTimeout(function()
+		{
+			const row = document.querySelector(".phrase-detail tbody").lastElementChild;
+
+			row.querySelector(".sounds_pause").classList.add("d-none");
+		}, 0);
+    });
+});
+
+</script>
+
+@endpush
+
