@@ -178,56 +178,69 @@ class active_calls_service extends service {
 		$this->on_topic('eavesdrop',    [$this, 'on_eavesdrop']   );
 		$this->on_topic('authenticate', [$this, 'on_authenticate']);
 
-		$sleep_time = 1;
-		$this->info("Staring ws_active_calls service");
+		$this->info("Staring " . self::class . " service");
+		// Suppress the WebSocket Server Error Message so it doesn't flood the system logs
+		$suppress_ws_message = false;
+		// Suppress the Event Socket Error Message so it doesn't flood the system logs
+		$suppress_es_message = false;
 		while ($this->running) {
+			$read = [];
 			// reconnect to event_socket
 			if ($this->event_socket === null || !$this->event_socket->is_connected()) {
-				$this->error("Unable to connect to switch event server");
-				while (!$this->connect_to_event_socket()) {
-					sleep(1);
+				if (!$this->connect_to_event_socket()) {
+					if (!$suppress_es_message) $this->error("Unable to connect to switch event server");
+					$suppress_es_message = true;
+				} else {
+					$this->register_event_socket_filters();
 				}
-				$this->register_event_socket_filters();
 			}
 
 			// reconnect to websocket server
 			if ($this->ws_client === null || !$this->ws_client->is_connected()) {
-				$this->warn("Web socket disconnected");
-				while (!$this->connect_to_ws_server()) {
-					$this->error("Unable to connect to websocket server. Re-trying in {$sleep_time}s");
-					//wait
-					sleep($sleep_time++);
-					if ($sleep_time > 30)
-						$sleep_time = 30;
+				//$this->warn("Web socket disconnected");
+				if (!$this->connect_to_ws_server()) {
+					if (!$suppress_ws_message) $this->error("Unable to connect to websocket server.");
+					$suppress_ws_message = true;
 				}
 			}
 
-			while ($this->event_socket->is_connected() && $this->ws_client->is_connected()) {
-				$sleep_time = 1;
-				$this->debug("Waiting on event");
+			// The switch _socket_ is used to read the 'data ready' on the stream
+			if ($this->event_socket !== null && $this->event_socket->is_connected()) {
+				$read[] = $this->switch_socket;
+				$suppress_es_message = false;
+			}
 
-				$read = [$this->ws_client->socket(), $this->switch_socket];
+			if ($this->ws_server !== null && $this->ws_server->is_connected()) {
+				$read[] = $this->ws_server->socket();
+				$suppress_ws_message = false;
+			}
+
+			if (!empty($read)) {
 				$write = $except = [];
-				if (false === stream_select($read, $write, $except, null)) {
+				// Wait for an event and timeout at 1/3 of a second so we can re-check all connections
+				if (false === stream_select($read, $write, $except, 0, 333333)) {
 					// severe error encountered so exit
 					$this->running = false;
 					// Exit with non-zero exit code
 					return 1;
 				}
 
-				// Iterate over each socket event
-				foreach ($read as $resource) {
-					// Switch event
-					if ($resource === $this->switch_socket) {
-						$this->handle_switch_event();
-						// No need to process more in the loop
-						continue;
-					}
+				if (!empty($read)) {
+					$this->debug("Received event");
+					// Iterate over each socket event
+					foreach ($read as $resource) {
+						// Switch event
+						if ($resource === $this->switch_socket) {
+							$this->handle_switch_event();
+							// No need to process more in the loop
+							continue;
+						}
 
-					// Web socket event
-					if ($resource === $this->ws_client->socket()) {
-						$this->handle_websocket_event($this->ws_client);
-						continue;
+						// Web socket event
+						if ($resource === $this->ws_client->socket()) {
+							$this->handle_websocket_event($this->ws_client);
+							continue;
+						}
 					}
 				}
 			}
@@ -264,7 +277,7 @@ class active_calls_service extends service {
 
 	private function on_in_progress(websocket_message $websocket_message) {
 		// Check permission
-		if (!$websocket_message->has_permission('call_active_show')) {
+		if (!$websocket_message->has_permission('call_active_view')) {
 			$this->warn("Permission 'call_active_show' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
 		}
@@ -277,15 +290,17 @@ class active_calls_service extends service {
 		// Set up the response array
 		$response = [];
 		$response['service_name'] = SERVICE_NAME;
-		$response['topic'] = $websocket_message->topic;
 		$response['request_id'] = $websocket_message->request_id;
 
 		// Get the active calls from the helper function
 		$calls = $this->get_active_calls($this->event_socket, $this->ws_client);
-		$response['payload'] = $calls;
 		$count = count($calls);
 		$this->debug("Sending calls in progress ($count)");
-		websocket_client::send($this->ws_client->socket(), new websocket_message($response));
+		foreach ($calls as $event) {
+			$response['payload'] = $event;
+			$response['topic'] = $event->name;
+			websocket_client::send($this->ws_client->socket(), new websocket_message($response));
+		}
 	}
 
 	private function on_hangup(websocket_message $websocket_message) {
@@ -393,7 +408,7 @@ class active_calls_service extends service {
 			// Disable the stream blocking
 			$this->ws_client->set_blocking(false);
 
-			$this->debug("WS_ACTIVE_CALLS RESOURCE ID: " . $this->ws_client->socket());
+			$this->debug(self::class . " RESOURCE ID: " . $this->ws_client->socket());
 		} catch (\RuntimeException $re) {
 			//unable to connect
 			return false;
@@ -418,28 +433,28 @@ class active_calls_service extends service {
 		$port = parent::$config->get('switch.event_socket.port', 8021);
 		$password = parent::$config->get('switch.event_socket.password', 'ClueCon');
 
-		// Force a wait until we are connected to the switch for events
-		while (!$this->switch_socket) {
-			try {
-				//set up the socket away from the event_socket object so we have control over blocking
-				$this->switch_socket = stream_socket_client("tcp://$host:$port", $errno, $errstr, 5);
-				//wait until we do have a connection
-				sleep(1);
-				$this->switch_socket = stream_socket_client("tcp://$host:$port", $errno, $errstr, 5);
-				$this->info("Connected to event socket");
-			} catch (\RuntimeException $re) {
-				$this->warn('Unable to connect to event socket');
-			}
+		try {
+			//set up the socket away from the event_socket object so we have control over blocking
+			$this->switch_socket = stream_socket_client("tcp://$host:$port", $errno, $errstr, 5);
+		} catch (\RuntimeException $re) {
+			$this->warn('Unable to connect to event socket');
 		}
 
-		//wait for responses so we can authenticate
+		// If we didn't connect then return back false
+		if (!$this->switch_socket) {
+			return false;
+		}
+
+		// Block (wait) for responses so we can authenticate
 		stream_set_blocking($this->switch_socket, true);
 
+		// Create the event_socket object using the connected socket
 		$this->event_socket = new event_socket($this->switch_socket);
 
+		// The host and port are already provided when we connect the socket so just provide password
 		$this->event_socket->connect(null, null, $password);
 
-		//no longer need to wait for events
+		// No longer need to wait for events
 		stream_set_blocking($this->switch_socket, false);
 
 		return $this->event_socket->is_connected();
@@ -486,53 +501,67 @@ class active_calls_service extends service {
 	private function get_active_calls(): array {
 		$calls = [];
 
-		//make sure we are still connected
-		if ($this->event_socket->is_connected()) {
+		//
+		// We use a new socket connection to get the response because the switch
+		// can be firing events while we are processing so we need only this
+		// request answered
+		//
+		$event_socket = new event_socket();
+		$event_socket->connect();
 
-			$json = trim($this->event_socket->request('api show channels as json'));
-
-			$json_array = json_decode($json, true);
-			if (empty($json_array["rows"])) {
-				return $calls;
-			}
-			foreach ($json_array["rows"] as $call) {
-				$message = new event_message($call);
-				$this->debug("MESSAGE: $message");
-				// adjust basic info to match an event setting the callstate to ringing
-				// so that a row can be created for it
-				$message->event_name = 'CHANNEL_CALLSTATE';
-				$message->answer_state = 'ringing';
-				$message->channel_call_state = 'ACTIVE';
-				$message->unique_id = $call['uuid'];
-				$message->call_direction = $call['direction'];
-
-				//set the codecs
-				$message->caller_channel_created_time = intval($call['created_epoch']) * 1000000;
-				$message->channel_read_codec_name = $call['read_codec'];
-				$message->channel_read_codec_rate = $call['read_rate'];
-				$message->channel_write_codec_name = $call['write_codec'];
-				$message->channel_write_codec_rate = $call['write_rate'];
-
-				//get the profile name
-				$message->caller_channel_name = $call['name'];
-
-				//domain or context
-				$message->caller_context = $call['context'];
-				$message->caller_caller_id_name = $call['initial_cid_name'];
-				$message->caller_caller_id_number = $call['initial_cid_num'];
-				$message->caller_destination_number = $call['initial_dest'];
-				$message->application = $call['application'] ?? '';
-				$message->secure = $call['secure'] ?? '';
-
-				if (true) {
-					$this->debug("-------- ACTIVE CALL ----------");
-					$this->debug($message);
-					$this->debug("In Progress: '$message->name', $message->unique_id");
-					$this->debug("-------------------------------");
-				}
-				$calls[] = $message;
-			}
+		// Make sure we are connected
+		if (!$event_socket->is_connected()) {
+			return $calls;
 		}
+
+		// Send the command on a new channel
+		$json = trim($event_socket->request('api show channels as json'));
+		$event_socket->close();
+
+		$json_array = json_decode($json, true);
+		if (empty($json_array["rows"])) {
+			return $calls;
+		}
+
+		// Map the rows returned to the active call format
+		foreach ($json_array["rows"] as $call) {
+			$message = new event_message($call, $this->event_filter);
+			$this->debug("MESSAGE: $message");
+			// adjust basic info to match an event setting the callstate to ringing
+			// so that a row can be created for it
+			$message->event_name = 'CHANNEL_CALLSTATE';
+			$message->answer_state = 'ringing';
+			$message->channel_call_state = 'ACTIVE';
+			$message->unique_id = $call['uuid'];
+			$message->call_direction = $call['direction'];
+
+			//set the codecs
+			$message->caller_channel_created_time = intval($call['created_epoch']) * 1000000;
+			$message->channel_read_codec_name = $call['read_codec'];
+			$message->channel_read_codec_rate = $call['read_rate'];
+			$message->channel_write_codec_name = $call['write_codec'];
+			$message->channel_write_codec_rate = $call['write_rate'];
+
+			//get the profile name
+			$message->caller_channel_name = $call['name'];
+
+			//domain or context
+			$message->caller_context = $call['context'];
+			$message->caller_caller_id_name = $call['initial_cid_name'];
+			$message->caller_caller_id_number = $call['initial_cid_num'];
+			$message->caller_destination_number = $call['initial_dest'];
+			$message->application = $call['application'] ?? '';
+			$message->secure = $call['secure'] ?? '';
+
+			if (true) {
+				$this->debug("-------- ACTIVE CALL ----------");
+				$this->debug($message);
+				$this->debug("In Progress: '$message->name', $message->unique_id");
+				$this->debug("-------------------------------");
+			}
+			$calls[] = $message;
+		}
+
 		return $calls;
 	}
 
@@ -612,6 +641,11 @@ class active_calls_service extends service {
 		// Log the event
 		$this->debug("EVENT: '" . $event->name . "'");
 
+		if (!$this->ws_client->is_connected()) {
+			$this->debug('Not connected to websocket host. Terminating Event');
+			return;
+		}
+
 		// Ensure it is an event that we are looking for
 		if (active_calls_service::event_exists($event->name)) {
 			// Create a message to send on websocket
@@ -627,7 +661,7 @@ class active_calls_service extends service {
 			$message->payload($event->to_array());
 
 			// Notify system log of the message and event name
-			$this->debug("Sending Event: '$event->event_name' from service '$message->service'");
+			$this->debug("Sending Event: '$event->event_name'");
 
 			//send event to the web socket routing service
 			websocket_client::send($this->ws_client->socket(), $message);

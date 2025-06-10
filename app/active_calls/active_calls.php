@@ -381,6 +381,8 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		client.ws.addEventListener("open", async () => {
 			try {
 				console.log('Connected');
+				console.log('Requesting authentication');
+				await client.request('authentication');
 				reconnectAttempts = 0;
 				const status = document.getElementById('calls_active_count');
 				status.style.backgroundColor = colors.INACTIVE;

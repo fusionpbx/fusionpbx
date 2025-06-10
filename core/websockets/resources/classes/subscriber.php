@@ -366,6 +366,10 @@ class subscriber {
 		return $valid;
 	}
 
+	public function is_authenticated(): bool {
+		return $this->authenticated;
+	}
+
 	public function is_service(): bool {
 		return $this->service;
 	}
@@ -406,19 +410,10 @@ class subscriber {
 	 * @throws subscriber_token_expired_exception Thrown when the time limit set in the token has expired
 	 */
 	public function send(string $json) {
-		//check that we are authenticated
-		if (!$this->authenticated) {
-			//self::$logger->warn('Subscriber not authenticated');
-			call_user_func($this->callback, $this->socket, websocket_message::request_authentication());
-			return;
-		}
 		//ensure the token is still valid
 		if (!$this->token_time_exceeded()) {
-			//self::$logger->debug("SENDING '$json'");
 			call_user_func($this->callback, $this->socket, $json);
-			//self::$logger->debug("SENT " . strlen($json) . " bytes");
 		} else {
-			//self::$logger->debug("Token expired on resource $this->socket_id");
 			throw new subscriber_token_expired_exception($this->id);
 		}
 	}

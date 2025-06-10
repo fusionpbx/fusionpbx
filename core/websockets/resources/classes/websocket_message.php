@@ -290,14 +290,7 @@ class websocket_message extends base_message {
 	 * @return type
 	 */
 	public static function connected($request_id = '') {
-		$class = static::class;
-		return (new $class())
-			->request_id($request_id)
-			->service_name('authentication')
-			->status_code(407)
-			->status_string('Authentication Required')
-			->__toString()
-		;
+		return static::request_authentication($request_id);
 	}
 
 	/**

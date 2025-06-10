@@ -179,6 +179,11 @@ class websocket_service extends service {
 	private function authenticate_subscriber(subscriber $subscriber, websocket_message $message) {
 		$this->info("Authenticating client: $subscriber->id");
 
+		// Already authenticated
+		if ($subscriber->is_authenticated()) {
+			return true;
+		}
+
 		// Authenticate their token
 		if ($subscriber->authenticate_token($message->token)) {
 			$subscriber->send(websocket_message::request_authenticated($message->request_id, $message->service));
@@ -209,16 +214,14 @@ class websocket_service extends service {
 			// Get the service name from the message
 			$service_name = $message->service_name;
 
-			// There is a broadcast event so respond to all clients subscribed to the event
-			$this->debug("Received message from service: '$service_name'");
-
 			// Filter subscribers to only the ones subscribed to the service name
 			$send_to = $this->filter_subscribers($message, $service_name);
 
 			// Send the message to the filtered subscribers
 			foreach ($send_to as $subscriber) {
 				try {
-					$this->debug("Sending event $message->topic to subscriber $subscriber->id");
+					// Notify of the message we are broadcasting
+					$this->debug("Broadcasting message '" . $message->payload['event_name'] . "' for service '" . $message->service_name . "' to subscriber $subscriber->id");
 					$subscriber->send_message($message);
 				} catch (subscriber_token_expired_exception $ste) {
 					$this->info("Subscriber $ste->id token expired");
@@ -321,25 +324,26 @@ class websocket_service extends service {
 					return;
 				}
 
+				// Reject subscribers that do not have not validated
+				if (!$subscriber->is_authenticated()) {
+					$subscriber->send(websocket_message::request_authentication($message->request_id()));
+					return;
+				}
+
 				// If the message comes from a service, broadcast it to anyone subscribed to that service
 				if ($subscriber->is_service()) {
-					$this->debug("Broadcasting message '" . $message->payload['event_name'] . "' for service '" . $message->service_name . "'");
+if ($message->topic !== 'HEARTBEAT') {
+	var_dump($message);
+	exit();
+}
+					$this->debug("Message is from service");
 					$this->broadcast_service_message($message);
 					return;
 				}
 
-				// Message is from the client
+				// Message is from the client so check the service_name that needs to get the message
 				if (!empty($message->service_name())) {
-					//attach the current subscriber permissions so the service can verify
-					$message->permissions($subscriber->get_permissions());
-					//attach the domain name
-					$message->domain_name($subscriber->get_domain_name());
-					//attach the client id so we can track the request
-					$message->resource_id = $subscriber->id;
-					//set the payload to the original payload
-					//$message->payload($json_array['payload'] ?? null);
-
-					$this->handle_client_message($this->subscribers, $subscriber, $message);
+					$this->handle_client_message($subscriber, $message);
 				} else {
 					// Message does not have a service name
 					$this->warning("The message does not have a service name. All messages must have a service name to direct their query to.");
@@ -351,11 +355,20 @@ class websocket_service extends service {
 			}
 	}
 
-	private function handle_client_message(array $services, subscriber $subscriber, websocket_message $message) {
+	private function handle_client_message(subscriber $subscriber, websocket_message $message) {
 		//find the service with that name
-		foreach ($services as $service) {
+		foreach ($this->subscribers as $service) {
 			//when we find the service send the request
 			if ($service->service_equals($message->service_name())) {
+				//attach the current subscriber permissions so the service can verify
+				$message->permissions($subscriber->get_permissions());
+
+				//attach the domain name
+				$message->domain_name($subscriber->get_domain_name());
+
+				//attach the client id so we can track the request
+				$message->resource_id = $subscriber->id;
+
 				//send the modified web socket message to the service
 				$service->send((string)$message);
 				//continue searching for service providers

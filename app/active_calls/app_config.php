@@ -53,13 +53,56 @@
 	$apps[$x]['description']['ru-ru'] = "";
 	$apps[$x]['description']['sv-se'] = "";
 	$apps[$x]['description']['uk-ua'] = "";
+	//permission details
+	$y=0;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_view";
+	$apps[$x]['permissions'][$y]['menu']['uuid'] = "eba3d07f-dd5c-6b7b-6880-493b44113ade";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	//$y++;
+	//$apps[$x]['permissions'][$y]['name'] = "call_active_transfer";
+	//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_eavesdrop";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_hangup";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	//$y++;
+	//$apps[$x]['permissions'][$y]['name'] = "call_active_park";
+	//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	//$y++;
+	//$apps[$x]['permissions'][$y]['name'] = "call_active_rec";
+	//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_all";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_profile";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_application";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_codec";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_secure";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
 
+/////////////////////////////////////////////////////////////////////////
+// Permissions that could be implemented on a per switch event capture //
+/////////////////////////////////////////////////////////////////////////
+
+/*
 	//
 	// The following permissions relate to the switch event socket events that are emitted
 	// Each of the permissions can be assigned to the subscriber so they can receive the
 	// event when it arrives on the web socket server instance.
 	//
-	$y=0;
 	$apps[$x]['permissions'][$y]['name'] = "event_all";
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$y++;
@@ -443,4 +486,4 @@
 	$apps[$x]['permissions'][$y]['name'] = "event_valet_parking::info";
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$apps[$x]['permissions'][$y]['groups'][] = "admin";
-
+*/

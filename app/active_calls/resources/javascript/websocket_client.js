@@ -18,8 +18,7 @@ class ws_client {
 			message = JSON.parse(ev.data);
 			// check for authentication request
 			if (message.status_code === 407) {
-				console.log('Authenticating');
-				this.request('authentication');
+				console.log('Authentication Required');
 				return;
 			}
 			switch_event = message.payload;
