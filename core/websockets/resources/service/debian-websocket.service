@@ -1,0 +1,18 @@
+#
+# Install with:
+#
+#   cp debian-websocket.service /etc/systemd/system/websocket.service
+#   systemctl daemon-reload
+#   systemctl enable --now websocket.service
+#
+[Unit]
+Description=Websocket Router Service
+
+[Service]
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/websockets/resources/service/websocket_service.php --no-fork
+Restart=on-failure
+User=www-data
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target
