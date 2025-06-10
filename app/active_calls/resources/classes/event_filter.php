@@ -35,7 +35,7 @@ class event_filter implements filter {
 	private $filters;
 
 	public function __construct(array $filters = []) {
-		$this->filters = $filters;
+		$this->add_filters($filters);
 	}
 
 	public function __invoke(string $key): bool {

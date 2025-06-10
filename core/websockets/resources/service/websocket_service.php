@@ -71,11 +71,11 @@ try {
 	//
 	// Show user the details
 	//
-	$logger->error("FATAL ERROR: $message ($code) FROM $file (line: $line)", LOG_CRIT);
-	$logger->error($ex->getTraceAsString(), LOG_CRIT);
+	echo "FATAL ERROR: $message ($code) FROM $file (line: $line)\n";
+	echo $ex->getTraceAsString() . "\n";
 
 	//
 	// Exit with non-zero status code
 	//
-	exit(1);
+	exit($ex->getCode());
 }

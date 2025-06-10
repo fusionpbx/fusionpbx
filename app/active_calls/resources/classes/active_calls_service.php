@@ -87,6 +87,7 @@ class active_calls_service extends service {
 		'variable_call_direction',
 		'other_leg_rdnis',
 		'other_leg_unique_id',
+		'content_type',
 	];
 
 	private $event_socket;
@@ -586,8 +587,7 @@ class active_calls_service extends service {
 
 		// Nothing to do
 		if (empty($message->topic())) {
-			$this->warn("Message received does not have topic");
-			die();
+			$this->error("Message received does not have topic");
 			return;
 		}
 

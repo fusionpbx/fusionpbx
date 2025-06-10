@@ -119,15 +119,6 @@ class base_message {
 			// is so the property of the child message or base message can be set.
 			//
 			$this->{$name} = $value;
-		} else {
-			//
-			// The message or child message does not have the property trying to be set from
-			// an outside caller. This means that there is a bug and should not be silent
-			// because it could mean data loss. When setting the error message, we notify the
-			// name of the property that was attempting to be set and the child class that it
-			// was trying to be set on.
-			//
-			throw new \InvalidArgumentException("Property or function '$name' does not exist in '" . static::class . "'");
 		}
 	}
 
