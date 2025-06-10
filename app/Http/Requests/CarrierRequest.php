@@ -37,14 +37,14 @@ class CarrierRequest extends FormRequest
 
         if ($carrier_uuid || $this->route('id'))
         {
-   	    $this->carrier = Carrier::find($carrier_uuid ?? $this->route('id'));
-            $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name')->ignore($this->carrier->carrier_uuid, $this->carrier->getKeyName());
+   	    	$carrier = Carrier::find($carrier_uuid ?? $this->route('id'));
+
+			$rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name')->ignore($carrier->carrier_uuid, $carrier->getKeyName());
         }
         else
         {
             $rule['domain_name'][] = Rule::unique('App\Models\Carrier','carrier_name');
         }
-
 
         return $rules;
 	}

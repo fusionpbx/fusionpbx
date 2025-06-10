@@ -2,12 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\CarrierGatewayRequest;
 use App\Http\Requests\CarrierRequest;
 use App\Repositories\CarrierRepository;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Repositories\CarrierGatewayRepository;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class CarrierForm extends Component
 {
@@ -136,6 +139,29 @@ class CarrierForm extends Component
     public function save(): void
     {
         $this->validate();
+
+        $gatewayRules = CarrierGatewayRequest::rules();
+
+        foreach ($this->carrierGateways as $index => $carrierGateway)
+        {
+            $validator = Validator::make($carrierGateway, $gatewayRules);
+
+            try
+            {
+                $validator->validate();
+            }
+            catch (ValidationException $e)
+            {
+                $errors = [];
+
+                foreach ($e->errors() as $field => $messages)
+                {
+                    $errors["carrierGateways.{$index}.{$field}"] = $messages;
+                }
+
+                throw ValidationException::withMessages($errors);
+            }
+        }
 
         $filteredCarrierGateways = collect($this->carrierGateways)->filter(function ($carrierGateway)
         {
