@@ -22,7 +22,7 @@
 
                 @can('device_import')
                 <a href="{{route('devices_profiles.index')}}" class="btn btn-primary btn-sm">
-                    <i class="fa fa-clone" aria-hidden="true"></i> {{__('Perfiles')}}
+                    <i class="fa fa-clone" aria-hidden="true"></i> {{__('Profiles')}}
                 </a>
                 @endcan
 

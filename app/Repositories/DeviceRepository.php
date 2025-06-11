@@ -256,6 +256,10 @@ class DeviceRepository
             $filteredData['device_template'] = $deviceData['device_template'] ?? ($existingDevice->device_template ?? null);
         }
 
+        if($user->hasPermission('device_profile_edit')) {
+            $filteredData['device_profile_uuid'] = $deviceData['device_profile_uuid'] ?? ($existingDevice->device_profile_uuid ?? null);
+        }
+
         if ($user->hasPermission('device_vendor')) {
             $filteredData['device_vendor'] = $deviceData['device_vendor'] ?? ($existingDevice->device_vendor ?? null);
         }

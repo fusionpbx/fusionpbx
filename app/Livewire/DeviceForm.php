@@ -374,6 +374,7 @@ class DeviceForm extends Component
                 'device_description' => $this->device_description,
             ];
 
+
             if ($this->isEditing) {
                 $device = $this->deviceRepository->update(
                     $this->deviceUuid,
