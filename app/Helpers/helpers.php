@@ -96,6 +96,66 @@ if (!function_exists('getAccountCode')) {
     }
 }
 
+if(!function_exists('findInDirectory'))
+{
+	function findInDirectory($dir, $recursive)
+	{
+		$files = [];
+
+		$tree = glob(rtrim($dir, '/') . '/*');
+
+		if (is_array($tree))
+		{
+			foreach ($tree as $file)
+			{
+				if (is_dir($file) && $recursive)
+				{
+					$files = array_merge($files, findInDirectory($file, $recursive));
+				}
+				elseif (is_file($file))
+				{
+					$files[] = $file;
+				}
+			}
+		}
+
+		return $files;
+	}
+}
+
+if(!function_exists('getSounds'))
+{
+	function getSounds($language = 'en', $dialect = 'us', $voice = 'callie', $rate = '8000'): array
+	{
+		//define an empty array
+		$array = [];
+
+		//set the variables
+		$switchSoundsDir = Setting::getSetting('switch', 'sounds', 'dir');
+
+		if (!empty($switchSoundsDir) && file_exists($switchSoundsDir))
+		{
+			$dir = $switchSoundsDir . '/' . $language . '/' . $dialect . '/' . $voice;
+
+			$files = findInDirectory($dir . '/*/' . $rate, true);
+		}
+
+		//loop through the languages
+		if (!empty($files))
+		{
+			foreach ($files as $file)
+			{
+				$file = substr($file, strlen($dir) + 1);
+				$file = str_replace("/" . $rate, "", $file);
+				$array[] = $file;
+			}
+		}
+
+		//return the list of sounds
+		return $array;
+	}
+}
+
 if (!function_exists('is_mac')) {
     function is_mac($str)
     {

@@ -8,7 +8,7 @@
 			</div>
 
 			<div class="card-body">
-				<form wire:submit.prevent="save">
+				<form wire:submit.prevent="save" method="POST">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
@@ -195,25 +195,43 @@
 														<option value="{{ $gateway->gateway_uuid }}">{{ $gateway->gateway }}</option>
 														@endforeach
 													</select>
+													@error('carrierGateways.' . $index . '.gateway_uuid')
+														<div class="invalid-feedback d-block">{{ $message }}</div>
+													@enderror
 												</td>
 												<td>
 													<input type="text" class="form-control @error('carrierGateways.' . $index . '.prefix') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.prefix">
+													@error('carrierGateways.' . $index . '.prefix')
+														<div class="invalid-feedback d-block">{{ $message }}</div>
+													@enderror
 												</td>
 												<td>
-													<input type="number" class="form-control @error('carrierGateways.' . $index . '.suffix') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.suffix" required>
+													<input type="number" class="form-control @error('carrierGateways.' . $index . '.suffix') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.suffix">
+													@error('carrierGateways.' . $index . '.suffix')
+														<div class="invalid-feedback d-block">{{ $message }}</div>
+													@enderror
 												</td>
 												<td>
-													<input type="number" class="form-control @error('carrierGateways.' . $index . '.priority') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.priority" required>
+													<input type="number" class="form-control @error('carrierGateways.' . $index . '.priority') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.priority" required min="0">
+													@error('carrierGateways.' . $index . '.priority')
+														<div class="invalid-feedback d-block">{{ $message }}</div>
+													@enderror
 												</td>
 												<td>
-													<input type="number" class="form-control @error('carrierGateways.' . $index . '.codec') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.codec" required>
+													<input type="text" class="form-control @error('carrierGateways.' . $index . '.codec') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.codec">
+													@error('carrierGateways.' . $index . '.codec')
+														<div class="invalid-feedback d-block">{{ $message }}</div>
+													@enderror
 												</td>
 												<td>
-													<select class="form-select @error('carrierGateways.' . $index . '.enabled') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.enabled">
+													<select class="form-select @error('carrierGateways.' . $index . '.enabled') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.enabled" required>
 														<option value=""></option>
 														<option value="true">True</option>
 														<option value="false">False</option>
 													</select>
+													@error('carrierGateways.' . $index . '.enabled')
+														<div class="invalid-feedback d-block">{{ $message }}</div>
+													@enderror
 												</td>
 												<td class="text-center">
 													@if (count($carrierGateways) > 1)

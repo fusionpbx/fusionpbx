@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\ContactUrlRequest;
 use App\Models\Contact;
 use App\Models\ContactUrl;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,12 @@ class ContactUrlForm extends Component
     public $listeners = [
         'urlsSaved' => 'save'
     ];
+
+    public function rules()
+    {
+        $request = new ContactUrlRequest();
+        return $request->rules();
+    }
 
     public function mount($contactUuid)
     {
@@ -63,6 +70,7 @@ class ContactUrlForm extends Component
 
     public function save()
     {
+        $this->validate();
         try {
             ContactUrl::where('contact_uuid', $this->contactUuid)->delete();
 

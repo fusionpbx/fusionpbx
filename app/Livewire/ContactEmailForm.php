@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\ContactEmailRequest;
 use App\Models\Contact;
 use App\Models\ContactEmail;
 use App\Models\ContactPhone;
@@ -13,6 +14,13 @@ class ContactEmailForm extends Component
 {
     public $contactUuid;
     public $emails = [];
+
+    public function rules()
+    {
+        $request = new ContactEmailRequest();
+        return $request->rules();
+    }
+
 
     public $listeners = [
         'emailsSaved'=> 'save'
@@ -71,6 +79,7 @@ class ContactEmailForm extends Component
 
     public function save()
     {
+        $this->validate();
         try {
         ContactEmail::where('contact_uuid', $this->contactUuid)->delete();
 

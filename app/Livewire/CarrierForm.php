@@ -2,17 +2,20 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\CarrierGatewayRequest;
 use App\Http\Requests\CarrierRequest;
 use App\Repositories\CarrierRepository;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Repositories\CarrierGatewayRepository;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class CarrierForm extends Component
 {
     public $carrier;
-    public string $carrier_uuid;
+    public ?string $carrier_uuid = null;
     public string $carrier_name = '';
     public ?int $carrier_channels = 0;
     public ?int $priority = 0;
@@ -45,7 +48,7 @@ class CarrierForm extends Component
     public function rules()
     {
         $request = new CarrierRequest();
-        return $request->rules();
+        return $request->rules($this->carrier_uuid);
     }
 
     public function mount($carrier = null, $gateways = []): void
@@ -91,10 +94,10 @@ class CarrierForm extends Component
     {
         $user = auth()->user();
 
-        $this->canViewCarrierGateways = $user->hasPermission('carrier_gateway_view');
-        $this->canAddCarrierGateways = $user->hasPermission('carrier_gateway_add');
-        $this->canEditCarrierGateways = $user->hasPermission('carrier_gateway_edit');
-        $this->canDeleteCarrierGateways = $user->hasPermission('carrier_gateway_delete');
+        $this->canViewCarrierGateways = $user->hasPermission('lcr_view');
+        $this->canAddCarrierGateways = $user->hasPermission('lcr_add');
+        $this->canEditCarrierGateways = $user->hasPermission('lcr_edit');
+        $this->canDeleteCarrierGateways = $user->hasPermission('lcr_delete');
     }
 
     public function addCarrierGateway(): void
@@ -136,6 +139,29 @@ class CarrierForm extends Component
     public function save(): void
     {
         $this->validate();
+
+        $gatewayRules = CarrierGatewayRequest::rules();
+
+        foreach ($this->carrierGateways as $index => $carrierGateway)
+        {
+            $validator = Validator::make($carrierGateway, $gatewayRules);
+
+            try
+            {
+                $validator->validate();
+            }
+            catch (ValidationException $e)
+            {
+                $errors = [];
+
+                foreach ($e->errors() as $field => $messages)
+                {
+                    $errors["carrierGateways.{$index}.{$field}"] = $messages;
+                }
+
+                throw ValidationException::withMessages($errors);
+            }
+        }
 
         $filteredCarrierGateways = collect($this->carrierGateways)->filter(function ($carrierGateway)
         {

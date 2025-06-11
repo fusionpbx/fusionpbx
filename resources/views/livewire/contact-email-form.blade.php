@@ -15,6 +15,11 @@
                                 <label for="email_address_{{ $index }}" class="form-label">Address</label>
                                 <input type="email" wire:model="emails.{{ $index }}.email_address"
                                     class="form-control" placeholder="Email">
+                                @error('emails.{{ $index }}.email_address')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="col-md-4">
                                 <label for="emails.{{ $index }}.email_label" class="form-label">Label</label>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<livewire:phrase-form :phrase="$phrase ?? null" :domains="$domains" />
+<livewire:phrase-form :phrase="$phrase ?? null" :domains="$domains" :sounds="$sounds" />
 @endsection

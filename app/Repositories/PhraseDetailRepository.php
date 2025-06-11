@@ -30,9 +30,17 @@ class PhraseDetailRepository
 	{
 		foreach ($phraseDetails as $phraseDetail)
 		{
+			// TODO: handle pause-file/execute?
+			// if($phraseDetail['phrase_detail_function'] == 'pause-file')
+			// {
+			// 	$phraseDetail['phrase_detail_function'] = 'execute';
+			// }
+
 			$phraseDetail['domain_uuid'] = $phrase->domain_uuid;
 			$phraseDetail['phrase_uuid'] = $phrase->phrase_uuid;
 			$phraseDetail['phrase_detail_uuid'] = Str::uuid();
+			$phraseDetail['phrase_detail_tag'] = 'action'; // default, for now
+			$phraseDetail['phrase_detail_group'] = 0; // default, for now
 
 			$this->model->create($phraseDetail);
 		}
@@ -42,11 +50,19 @@ class PhraseDetailRepository
 	{
 		foreach ($phraseDetails as $phraseDetail)
 		{
+			// TODO: handle pause-file/execute?
+			// if($phraseDetail['phrase_detail_function'] == 'pause-file')
+			// {
+			// 	$phraseDetail['phrase_detail_function'] = 'execute';
+			// }
+
 			if (empty($phraseDetail['phrase_detail_uuid']))
 			{
 				$phraseDetail['domain_uuid'] = $phrase->domain_uuid;
 				$phraseDetail['phrase_uuid'] = $phrase->phrase_uuid;
 				$phraseDetail['phrase_detail_uuid'] = Str::uuid();
+				$phraseDetail['phrase_detail_tag'] = 'action'; // default, for now
+				$phraseDetail['phrase_detail_group'] = 0; // default, for now
 
 				$this->model->create($phraseDetail);
 			}

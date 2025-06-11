@@ -23,7 +23,9 @@ class PhraseController extends Controller
 	{
 		$domains = Domain::all();
 
-		return view("pages.phrases.form", compact("domains"));
+		$sounds = getSounds();
+
+		return view("pages.phrases.form", compact("domains", "sounds"));
 	}
 
 	public function store(PhraseRequest $request)
@@ -42,7 +44,9 @@ class PhraseController extends Controller
 	{
 		$domains = Domain::all();
 
-		return view("pages.phrases.form", compact("phrase", "domains"));
+		$sounds = getSounds();
+
+		return view("pages.phrases.form", compact("phrase", "domains", "sounds"));
 	}
 
 	public function update(PhraseRequest $request, Phrase $phrase)
