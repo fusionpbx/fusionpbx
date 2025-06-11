@@ -1,30 +1,6 @@
 <?php
-
-/*
- * FusionPBX
- * Version: MPL 1.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is FusionPBX
- *
- * The Initial Developer of the Original Code is
- * Mark J Crane <markjcrane@fusionpbx.com>
- * Portions created by the Initial Developer are Copyright (C) 2008-2025
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- * Mark J Crane <markjcrane@fusionpbx.com>
- * Tim Fry <tim@fusionpbx.com>
- */
+	
+	//application details
 	$apps[$x]['name'] = "Websockets Service";
 	$apps[$x]['uuid'] = "c43e956a-cd38-4b27-838b-db43dc3f3204";
 	$apps[$x]['category'] = "";
@@ -53,6 +29,7 @@
 	$apps[$x]['description']['ru-ru'] = "";
 	$apps[$x]['description']['sv-se'] = "";
 	$apps[$x]['description']['uk-ua'] = "";
+
 	//permission details
 	$y=0;
 	$apps[$x]['permissions'][$y]['name'] = "call_active_view";
@@ -93,11 +70,10 @@
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$y++;
 
-/////////////////////////////////////////////////////////////////////////
-// Permissions that could be implemented on a per switch event capture //
-/////////////////////////////////////////////////////////////////////////
-
-/*
+	/////////////////////////////////////////////////////////////////////////
+	// Permissions that could be implemented on a per switch event capture //
+	/////////////////////////////////////////////////////////////////////////
+	/*
 	//
 	// The following permissions relate to the switch event socket events that are emitted
 	// Each of the permissions can be assigned to the subscriber so they can receive the
