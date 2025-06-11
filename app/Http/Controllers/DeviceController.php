@@ -33,5 +33,15 @@ class DeviceController extends Controller
         return view('pages.devices.form', compact('deviceUuid'));
     }
 
+    public function import()
+    {
+        return view('pages.devices.import');
+    }
+
+    public function export()
+    {
+        return view('pages.devices.export');
+    }
+
     
 }

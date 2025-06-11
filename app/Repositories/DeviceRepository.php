@@ -7,6 +7,7 @@ use App\Models\DeviceLine;
 use App\Models\DeviceKey;
 use App\Models\DeviceSetting;
 use App\Facades\Setting;
+use App\Models\DeviceProfile;
 use App\Models\Domain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -18,6 +19,7 @@ class DeviceRepository
     protected $deviceLine;
     protected $deviceKey;
     protected $deviceSetting;
+    protected $deviceProfile;
 
     protected $table = 'v_devices';
     protected $deviceLinesTable = 'v_device_lines';
@@ -32,12 +34,14 @@ class DeviceRepository
         Device $device,
         DeviceLine $deviceLine,
         DeviceKey $deviceKey,
-        DeviceSetting $deviceSetting
+        DeviceSetting $deviceSetting,
+        DeviceProfile $deviceProfile
     ) {
         $this->device = $device;
         $this->deviceLine = $deviceLine;
         $this->deviceKey = $deviceKey;
         $this->deviceSetting = $deviceSetting;
+        $this->deviceProfile = $deviceProfile;
     }
 
     public function all()
@@ -125,7 +129,7 @@ class DeviceRepository
 
             $filteredData = $this->applyDevicePermissions($deviceData, $device);
             $device->update($filteredData);
-            
+
             if (!empty($deviceLines)) {
                 $this->syncDeviceLines($device->device_uuid, $device->domain_uuid, $deviceLines);
             }
@@ -248,7 +252,7 @@ class DeviceRepository
             }
         }
 
-        if($user->hasPermission('device_template')) {
+        if ($user->hasPermission('device_template')) {
             $filteredData['device_template'] = $deviceData['device_template'] ?? ($existingDevice->device_template ?? null);
         }
 
@@ -381,7 +385,7 @@ class DeviceRepository
     }
 
     protected function updateDeviceLine(string $deviceLineUuid, array $lineData): DeviceLine
-    {  
+    {
         $deviceLine = $this->deviceLine->where('device_line_uuid', $deviceLineUuid)->firstOrFail();
         $deviceLine->update($lineData);
 
@@ -514,7 +518,7 @@ class DeviceRepository
     public function getDomain(): array
     {
         $domain = Domain::select('domain_uuid', 'domain_name')->get()->toArray();
-    
+
         return $domain;
     }
 
@@ -545,5 +549,30 @@ class DeviceRepository
     {
         $macAddress = strtolower($macAddress);
         return preg_replace('#[^a-fA-F0-9./]#', '', $macAddress);
+    }
+
+    public function getDeviceProfiles($domainUuid = null)
+    {
+        $query = DeviceProfile::query();
+
+        if ($domainUuid) {
+            $query->where('domain_uuid', $domainUuid);
+        }
+
+        return $query->select('device_profile_uuid', 'device_profile_name', 'device_profile_description')
+            ->where('device_profile_enabled', 'true')
+            ->orderBy('device_profile_name')
+            ->get();
+    }
+
+    public function hasDeviceProfiles($domainUuid = null)
+    {
+        $query = DeviceProfile::query();
+
+        if ($domainUuid) {
+            $query->where('domain_uuid', $domainUuid);
+        }
+
+        return $query->where('device_profile_enabled', 'true')->exists();
     }
 }

@@ -38,7 +38,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" wire:model.lazy="device_mac_address"
                                     class="form-control @error('device_mac_address') is-invalid @enderror"
-                                    id="device_mac_address" placeholder="AA:BB:CC:DD:EE:FF">
+                                    id="device_mac_address" placeholder="">
                                 @error('device_mac_address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -62,39 +62,39 @@
                             </div>
 
                             @can('device_model')
-                            <div class="col-md-6 mb-3">
-                                <label for="device_model" class="form-label">Model</label>
-                                <input type="text" wire:model="device_model"
-                                    class="form-control @error('device_model') is-invalid @enderror" id="device_model"
-                                    placeholder="Device model">
-                                @error('device_model')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="device_model" class="form-label">Model</label>
+                                    <input type="text" wire:model="device_model"
+                                        class="form-control @error('device_model') is-invalid @enderror" id="device_model"
+                                        placeholder="Device model">
+                                    @error('device_model')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             @endcan
 
                             @can('device_location')
-                            <div class="col-md-6 mb-3">
-                                <label for="device_location" class="form-label">Location</label>
-                                <input type="text" wire:model="device_location"
-                                    class="form-control @error('device_location') is-invalid @enderror"
-                                    id="device_location" placeholder="Physical location">
-                                @error('device_location')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="device_location" class="form-label">Location</label>
+                                    <input type="text" wire:model="device_location"
+                                        class="form-control @error('device_location') is-invalid @enderror"
+                                        id="device_location" placeholder="Physical location">
+                                    @error('device_location')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             @endcan
 
                             @can('device_firmware')
-                            <div class="col-md-6 mb-3">
-                                <label for="device_firmware_version" class="form-label">Firmware Version</label>
-                                <input type="text" wire:model="device_firmware_version"
-                                    class="form-control @error('device_firmware_version') is-invalid @enderror"
-                                    id="device_firmware_version" placeholder="Firmware version">
-                                @error('device_firmware_version')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="device_firmware_version" class="form-label">Firmware Version</label>
+                                    <input type="text" wire:model="device_firmware_version"
+                                        class="form-control @error('device_firmware_version') is-invalid @enderror"
+                                        id="device_firmware_version" placeholder="Firmware version">
+                                    @error('device_firmware_version')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             @endcan
 
                             <div class="col-md-6 mb-3">
@@ -130,6 +130,69 @@
                                 </div>
                             @endif
 
+                            @if ($hasProfiles)
+                                <div class="col-md-6 mb-3">
+                                    <label for="device_profile_uuid" class="form-label">Device Profile</label>
+                                    <div class="input-group">
+                                        <select wire:model="device_profile_uuid"
+                                            class="form-select @error('device_profile_uuid') is-invalid @enderror"
+                                            id="device_profile_uuid">
+                                            <option value="">Select a profile...</option>
+                                            @foreach ($deviceProfiles as $profile)
+                                                <option value="{{ $profile->device_profile_uuid }}">
+                                                    {{ $profile->device_profile_name }}
+                                                    @if ($profile->device_profile_description)
+                                                        - {{ $profile->device_profile_description }}
+                                                    @endif
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        <a href="{{route('device_profiles.create')}}"></a>
+                                        <button type="button" wire:click="redirectToCreateProfile"
+                                            class="btn btn-outline-success btn-sm" title="Create new profile">
+                                            <i class="bi bi-plus-circle"></i>
+                                        </button>
+
+                                        <a href="{{route('device_profiles.edit', ['device_profile_uuid' => $device_profile_uuid])}}">
+                                            <button type="button" wire:click="redirectToEditProfile"
+                                                class="btn btn-outline-primary btn-sm" title="Edit selected profile"
+                                                @if (!$device_profile_uuid) disabled @endif>
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        </a>
+                                    </div>
+
+                                    @error('device_profile_uuid')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+
+                                    @if ($device_profile_uuid)
+                                        <div class="form-text text-info">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Profile selected. Device will inherit profile settings.
+                                        </div>
+                                    @endif
+                                </div>
+                            @else
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Device Profile</label>
+                                    <div
+                                        class="alert alert-info d-flex justify-content-between align-items-center p-2">
+                                        <div>
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            <small>No profiles available.</small>
+                                        </div>
+                                        <a href="{{route('device_profiles.create')}}">
+                                            <button type="button"
+                                                class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-circle me-1"></i>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="col-md-6 mb-3">
                                 <label for="device_user_uuid" class="form-label">Assigned User</label>
                                 <select wire:model="device_user_uuid" class="form-select" id="device_user_uuid">
@@ -141,39 +204,41 @@
                             </div>
 
                             @can('device_alternate')
-                            @if( !empty($device_uuid_alternate))
-                            <div class="col-md-6 mb-3">
-                                <label for="device_uuid_alternate" class="form-label">Alternate Device</label>
-                                <input type="text" wire:model.lazy="device_uuid_alternate" class="form-control"
-                                    id="device_uuid_alternate" placeholder="Alternate device UUID">
-                                @if (count($alternateDevices) > 0)
-                                    <div class="form-text text-info">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        Devices found: {{ count($alternateDevices) }}
+                                @if (!empty($device_uuid_alternate))
+                                    <div class="col-md-6 mb-3">
+                                        <label for="device_uuid_alternate" class="form-label">Alternate Device</label>
+                                        <input type="text" wire:model.lazy="device_uuid_alternate"
+                                            class="form-control" id="device_uuid_alternate"
+                                            placeholder="Alternate device UUID">
+                                        @if (count($alternateDevices) > 0)
+                                            <div class="form-text text-info">
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                Devices found: {{ count($alternateDevices) }}
+                                            </div>
+                                        @endif
                                     </div>
                                 @endif
-                            </div>
-                            @endif
                             @endcan
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-check form-switch">
-                                    <input type="checkbox" wire:model="device_enabled" value="true" {{ $device_enabled === 'true' ? 'checked' : '' }}
-                                        rol="switch" class="form-check-input" id="device_enabled">
+                                    <input type="checkbox" wire:model="device_enabled" value="true"
+                                        {{ $device_enabled === 'true' ? 'checked' : '' }} rol="switch"
+                                        class="form-check-input" id="device_enabled">
                                     <label class="form-check-label" for="device_enabled">Device Enabled</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="domain_uuid" class="form-label">{{ __('Domain') }}</label>
-                                    <select class="form-select @error('domain_uuid') is-invalid @enderror"
-                                        id="domain_uuid" wire:model="domain_uuid">
-                                        @foreach ($availableDomains as $availableDomain)
-                                            <option value="{{ $availableDomain['domain_uuid'] }}">
-                                                {{ $availableDomain['domain_name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                <select class="form-select @error('domain_uuid') is-invalid @enderror"
+                                    id="domain_uuid" wire:model="domain_uuid">
+                                    @foreach ($availableDomains as $availableDomain)
+                                        <option value="{{ $availableDomain['domain_uuid'] }}">
+                                            {{ $availableDomain['domain_name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 @error('domain_uuid')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -217,10 +282,6 @@
                                 <div class="input-group">
                                     <input type="password" wire:model="device_password" class="form-control"
                                         id="device_password" placeholder="Password">
-                                    <button type="button" wire:click="generatePassword"
-                                        class="btn btn-outline-secondary">
-                                        <i class="bi bi-arrow-clockwise me-1"></i>Generate
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -452,7 +513,6 @@
                             </div>
                         </div>
 
-                        <!-- Device Keys -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -680,7 +740,6 @@
                             </div>
                         </div>
 
-                        <!-- Device Settings -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -754,7 +813,6 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between">

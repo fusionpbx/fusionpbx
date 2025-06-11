@@ -160,6 +160,8 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/devices', DeviceController::class)->except('show');
     Route::resource('/devices/devices_profiles', DeviceProfileController::class)->except('show');
     Route::resource('/devices/devices_vendors', DeviceVendorController::class);
+    Route::get('devices/import', [DeviceController::class, 'import'])->name('devices.import');
+    Route::get('devices/export', [DeviceController::class, 'export'])->name('devices.export');
 
 
 });

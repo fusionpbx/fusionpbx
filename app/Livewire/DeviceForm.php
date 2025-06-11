@@ -9,12 +9,13 @@ use App\Facades\Setting;
 use App\Http\Requests\DeviceRequest;
 use App\Models\DeviceLine;
 use App\Services\DeviceService;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class DeviceForm extends Component
 {
-    public $deviceUuid;
+    public  $deviceUuid;
     public $device;
     public $isEditing = false;
 
@@ -51,13 +52,14 @@ class DeviceForm extends Component
     public $outboundProxyPrimary = '';
     public $outboundProxySecondary = '';
 
-
     public $showAdvanced = false;
     public $duplicateMacDomain = null;
 
     protected $deviceRepository;
     protected $deviceService;
-    
+    public $deviceProfiles = [];
+    public $hasProfiles = false;
+
 
     public function boot(DeviceRepository $deviceRepository, DeviceService $deviceService)
     {
@@ -76,7 +78,7 @@ class DeviceForm extends Component
     {
         $this->deviceUuid = $deviceUuid;
         $this->isEditing = !is_null($deviceUuid);
-        if($this->device_vendor == 'fanvil') {
+        if ($this->device_vendor == 'fanvil') {
             $this->showKeySubtype = true;
         }
 
@@ -128,7 +130,7 @@ class DeviceForm extends Component
         if ($user->hasPermission('device_password')) {
             $passwordLength = Setting::getSetting('device', 'password_length', 'numeric');
             $this->device_password = generatePassword($passwordLength, 1);
-        }   
+        }
     }
 
     protected function loadDropdownData()
@@ -138,29 +140,40 @@ class DeviceForm extends Component
         $this->vendors = $this->deviceRepository->getDeviceVendors();
         $this->users = $this->deviceRepository->getUsersForDomain($user->domain_uuid);
         $this->vendorFunctions = $this->deviceRepository->getVendorFunctions();
-        
+
         $this->deviceTemplates = $this->deviceService->getDeviceTemplates();
-        
+
         $this->availableDomains = $this->deviceRepository->getDomain();
 
-        if(!$this->isEditing) {
-             $this->domain_uuid = auth()->user()->domain_uuid;
+        $this->loadDeviceProfiles($user->domain_uuid);
+
+        if (!$this->isEditing) {
+            $this->domain_uuid = Session::get('domain_uuid');
+        }
+    }
+
+    protected function loadDeviceProfiles($domainUuid)
+    {
+        $this->hasProfiles = $this->deviceRepository->hasDeviceProfiles($domainUuid);
+
+        if ($this->hasProfiles) {
+            $this->deviceProfiles = $this->deviceRepository->getDeviceProfiles($domainUuid);
         }
     }
 
     public function LoadDeviceLines()
     {
         if (null !== Setting::getSetting('provision', 'server_address_primary') && null !== Setting::getSetting('provision', 'server_address_primary', 'text')) {
-            $this->deviceLinesServerPrimary = DeviceLine::select('server_address_primary')->get();     
+            $this->deviceLinesServerPrimary = DeviceLine::select('server_address_primary')->get();
         }
-        if(null !== Setting::getSetting('provision', 'server_address_secondary') && null !== Setting::getSetting('provision', 'server_address_secondary', 'text')) {
+        if (null !== Setting::getSetting('provision', 'server_address_secondary') && null !== Setting::getSetting('provision', 'server_address_secondary', 'text')) {
             $this->deviceLinesServerSecondary = DeviceLine::select('server_address_secondary')->get();
         }
 
-        if(null !== Setting::getSetting('provision', 'outbound_proxy_primary') && null !== Setting::getSetting('provision', 'outbound_proxy_primary', 'text')) {
+        if (null !== Setting::getSetting('provision', 'outbound_proxy_primary') && null !== Setting::getSetting('provision', 'outbound_proxy_primary', 'text')) {
             $this->outboundProxyPrimary = DeviceLine::select('outbound_proxy_primary')->get();
         }
-        if(null !== Setting::getSetting('provision', 'outbound_proxy_secondary') && null !== Setting::getSetting('provision', 'outbound_proxy_secondary', 'text')) {
+        if (null !== Setting::getSetting('provision', 'outbound_proxy_secondary') && null !== Setting::getSetting('provision', 'outbound_proxy_secondary', 'text')) {
             $this->outboundProxySecondary = DeviceLine::select('outbound_proxy_secondary')->get();
         }
     }
@@ -169,7 +182,8 @@ class DeviceForm extends Component
     {
         if ($this->device_mac_address) {
             $normalizedMac = $this->deviceRepository->normalizeMacAddress($this->device_mac_address);
-            $this->device_mac_address = $this->formatMacAddress($normalizedMac);
+
+            $this->device_mac_address = format_mac($normalizedMac, ':', 'upper');
 
             $this->duplicateMacDomain = $this->deviceRepository->checkDuplicateMacAddress(
                 $this->device_mac_address,
@@ -197,7 +211,7 @@ class DeviceForm extends Component
 
     public function updatedDeviceTemplate()
     {
-        
+
         if (empty($this->device_vendor) && !empty($this->device_template)) {
             $templateParts = explode('/', $this->device_template);
             if (count($templateParts) >= 1) {
@@ -206,11 +220,6 @@ class DeviceForm extends Component
         }
     }
 
-    public function generatePassword()
-    {
-        $passwordLength = Setting::getSetting('device', 'password_length', 'numeric');
-        $this->device_password = generatePassword($passwordLength, 1);
-    }
 
     public function addDeviceLine()
     {
@@ -299,7 +308,6 @@ class DeviceForm extends Component
             'device_setting_enabled' => 'true',
             'device_setting_description' => '',
         ];
-
     }
 
     public function removeDeviceSetting($index)
@@ -408,12 +416,6 @@ class DeviceForm extends Component
     }
 
 
-
-    protected function formatMacAddress($mac)
-    {
-        return strtoupper(implode(':', str_split($mac, 2)));
-    }
-
     protected function generateNewMacAddress()
     {
         $originalMac = $this->device_mac_address;
@@ -422,7 +424,7 @@ class DeviceForm extends Component
         $lastByte = hexdec(substr(str_replace(':', '', $originalMac), 10, 2));
         $newLastByte = str_pad(dechex(($lastByte + 1) % 256), 2, '0', STR_PAD_LEFT);
 
-        return $this->formatMacAddress($baseMac . $newLastByte);
+        return format_mac($baseMac . $newLastByte, ':', 'upper');
     }
 
     public function render()
