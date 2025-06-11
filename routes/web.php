@@ -16,6 +16,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExtensionController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModXMLCURLController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationsController;
@@ -97,6 +98,9 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // CARRIERS
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
+
+    // MODULES
+    Route::resource('/modules', ModuleController::class)->name('modules', 'modules');
 
     // PHRASE
     Route::resource('/phrases', PhraseController::class)->name('phrases', 'phrases');
