@@ -206,25 +206,25 @@
 													@enderror
 												</td>
 												<td>
-													<input type="number" class="form-control @error('carrierGateways.' . $index . '.suffix') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.suffix" required>
+													<input type="number" class="form-control @error('carrierGateways.' . $index . '.suffix') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.suffix">
 													@error('carrierGateways.' . $index . '.suffix')
 														<div class="invalid-feedback d-block">{{ $message }}</div>
 													@enderror
 												</td>
 												<td>
-													<input type="number" class="form-control @error('carrierGateways.' . $index . '.priority') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.priority" required>
+													<input type="number" class="form-control @error('carrierGateways.' . $index . '.priority') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.priority" required min="0">
 													@error('carrierGateways.' . $index . '.priority')
 														<div class="invalid-feedback d-block">{{ $message }}</div>
 													@enderror
 												</td>
 												<td>
-													<input type="text" class="form-control @error('carrierGateways.' . $index . '.codec') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.codec" required>
+													<input type="text" class="form-control @error('carrierGateways.' . $index . '.codec') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.codec">
 													@error('carrierGateways.' . $index . '.codec')
 														<div class="invalid-feedback d-block">{{ $message }}</div>
 													@enderror
 												</td>
 												<td>
-													<select class="form-select @error('carrierGateways.' . $index . '.enabled') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.enabled">
+													<select class="form-select @error('carrierGateways.' . $index . '.enabled') is-invalid @enderror" wire:model="carrierGateways.{{ $index }}.enabled" required>
 														<option value=""></option>
 														<option value="true">True</option>
 														<option value="false">False</option>
