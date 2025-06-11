@@ -788,7 +788,7 @@ class websocket_service extends service {
 		$written = @fwrite($resource, $frame);
 		if ($written === false) {
 			self::log("fwrite() failed for socket " . (int) $resource, LOG_ERR);
-			throw new socket_exception($resource);
+			throw new socket_disconnected_exception($resource);
 		}
 
 		if ($written < strlen($frame)) {

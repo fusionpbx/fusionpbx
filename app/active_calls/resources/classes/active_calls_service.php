@@ -90,8 +90,22 @@ class active_calls_service extends service {
 		'content_type',
 	];
 
+	/**
+	 * Switch Event Socket
+	 * @var event_socket
+	 */
 	private $event_socket;
+
+	/**
+	 * Web Socket Client
+	 * @var websocket_client
+	 */
 	private $ws_client;
+
+	/**
+	 * Resource for the Switch Event Socket used to control blocking
+	 * @var resource
+	 */
 	private $switch_socket;
 	private $topics;
 
@@ -210,8 +224,8 @@ class active_calls_service extends service {
 				$suppress_es_message = false;
 			}
 
-			if ($this->ws_server !== null && $this->ws_server->is_connected()) {
-				$read[] = $this->ws_server->socket();
+			if ($this->ws_client !== null && $this->ws_client->is_connected()) {
+				$read[] = $this->ws_client->socket();
 				$suppress_ws_message = false;
 			}
 
@@ -409,6 +423,7 @@ class active_calls_service extends service {
 			$this->ws_client->set_blocking(false);
 
 			$this->debug(self::class . " RESOURCE ID: " . $this->ws_client->socket());
+			$this->authenticate();
 		} catch (\RuntimeException $re) {
 			//unable to connect
 			return false;
@@ -692,5 +707,9 @@ class active_calls_service extends service {
 	 */
 	private static function get_domain_uuid_by_name(database $database, string $domain_name): string {
 		return $database->execute("select domain_uuid from v_domains where domain_enabled='true' and domain_name = :domain_name limit 1", ['domain_name' => $domain_name], 'column') ?: '';
+	}
+
+	public function authenticate() {
+		
 	}
 }
