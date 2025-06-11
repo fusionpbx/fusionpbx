@@ -21,10 +21,10 @@ class CarrierGatewayRequest extends FormRequest
     {
         return [
             'gateway_uuid' => 'bail|required|uuid|exists:App\Models\Gateway,gateway_uuid',
-            'prefix' => 'bail|required|integer|min:1|max:100',
-            'suffix' => 'bail|required|integer|min:1|max:100',
-            'priority' => 'bail|required|integer|min:1|max:100',
-            'codec' => 'bail|required|integer|min:1|max:100',
+            'prefix' => ['bail','nullable','string','min:1',"regex:/(?:[a-z0-9\*#])/i"],
+            'suffix' => ['bail','nullable','string','min:1',"regex:/(?:[a-z0-9\*#])/i"],
+            'priority' => 'bail|required|integer|min:0',
+            'codec' => ['bail','nullable','string','min:1'],
             'enabled' => 'bail|required|in:true,false',
         ];
     }
