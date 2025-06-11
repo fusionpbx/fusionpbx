@@ -122,7 +122,7 @@
 		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?:\=#\n]/';
 
 		//sanitize the data
-		$dashboard_name = trim(preg_replace('/[^a-zA-Z0-9 _\-\/.#]/', '', $dashboard_name));
+		$dashboard_name = trim($dashboard_name);
 		$dashboard_path = preg_replace($text_pattern, '', strtolower($dashboard_path));
 		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
 		$dashboard_icon_color = preg_replace($text_pattern, '', $dashboard_icon_color);
@@ -130,7 +130,7 @@
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
 		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
 		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
-		$dashboard_content = trim(preg_replace($text_pattern, '', $dashboard_content));
+		$dashboard_content = trim($dashboard_content);
 		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
 		$dashboard_content_details = trim(preg_replace($text_pattern, '', $dashboard_content_details));
 		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
