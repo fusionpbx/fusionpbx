@@ -332,10 +332,6 @@ class websocket_service extends service {
 
 				// If the message comes from a service, broadcast it to anyone subscribed to that service
 				if ($subscriber->is_service()) {
-if ($message->topic !== 'HEARTBEAT') {
-	var_dump($message);
-	exit();
-}
 					$this->debug("Message is from service");
 					$this->broadcast_service_message($message);
 					return;
