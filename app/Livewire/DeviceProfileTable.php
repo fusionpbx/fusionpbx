@@ -112,7 +112,7 @@ class DeviceProfileTable extends DataTableComponent
         try {
             DB::beginTransaction();
 
-            $deviceProfiles = DeviceProfile::whereIn('device_profile_uuid', $selectedRows)->get();
+            $deviceProfiles = DeviceProfile::where('device_profile_uuid', $selectedRows)->with('keys', 'settings')->get();
             foreach ($deviceProfiles as $deviceProfile) {
                 $originalUuid = $deviceProfile->device_profile_uuid;
                 $newUuid = Str::uuid(); 
@@ -123,18 +123,18 @@ class DeviceProfileTable extends DataTableComponent
                 $newProfile->save();
 
                 $deviceProfileKeys = DeviceProfileKey::where('device_profile_uuid', $originalUuid)->get();
-                foreach ($deviceProfileKeys as $deviceProfileKey) {
+                foreach ($deviceProfile->keys as $deviceProfileKey) {
                     $newKey = $deviceProfileKey->replicate();
                     $newKey->device_profile_key_uuid = Str::uuid();
-                    $newKey->device_profile_uuid = $newUuid;
+                    $newKey->device_profile_uuid = $newProfile->device_profile_uuid;
                     $newKey->save();
                 }
 
                 $deviceProfileSettings = DeviceProfileSetting::where('device_profile_uuid', $originalUuid)->get();
-                foreach ($deviceProfileSettings as $deviceProfileSetting) {
+                foreach ($deviceProfile->settings as $deviceProfileSetting) {
                     $newSetting = $deviceProfileSetting->replicate();
                     $newSetting->device_profile_setting_uuid = Str::uuid();
-                    $newSetting->device_profile_uuid = $newUuid;
+                    $newSetting->device_profile_uuid =  $newProfile->device_profile_uuid;
                     $newSetting->save();
                 }
             }

@@ -49,7 +49,7 @@ class DeviceProfileRequest extends FormRequest
             'profileSettings' => 'nullable|array',
             'profileSettings.*.profile_setting_name' => 'nullable|string|max:255',
             'profileSettings.*.profile_setting_value' => 'nullable|string',
-            'profileSettings.*.profile_setting_enabled' => 'nullable|in:true,false',
+            'profileSettings.*.profile_setting_enabled' => 'nullable',
             'profileSettings.*.profile_setting_description' => 'nullable|string',
         ];
     }

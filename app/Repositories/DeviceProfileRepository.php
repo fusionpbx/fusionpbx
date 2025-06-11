@@ -180,7 +180,6 @@ class DeviceProfileRepository
         $filteredData = [];
         $user = auth()->user();
 
-        // Asignar domain_uuid
         if ($user->hasPermission('device_profile_domain')) {
             $filteredData['domain_uuid'] = $profileData['domain_uuid'] ?? ($existingProfile->domain_uuid ?? $user->domain_uuid);
         } else {
@@ -191,7 +190,6 @@ class DeviceProfileRepository
             $filteredData['device_profile_uuid'] = $profileData['device_profile_uuid'] ?? Str::uuid();
         }
 
-        // Campos básicos con permisos
         if ($user->hasPermission('device_profile_add') || $user->hasPermission('device_profile_edit')) {
             $filteredData['device_profile_name'] = $profileData['device_profile_name'] ?? ($existingProfile->device_profile_name ?? null);
             $filteredData['device_profile_enabled'] = $profileData['device_profile_enabled'] ?? ($existingProfile->device_profile_enabled ?? 'true');
@@ -204,7 +202,6 @@ class DeviceProfileRepository
     protected function syncProfileKeys(string $deviceProfileUuid, string $domainUuid, array $keys): void
     {
         foreach ($keys as $keyData) {
-            // Validar campos requeridos
             if (empty($keyData['profile_key_vendor']) || empty($keyData['profile_key_id'])) {
                 continue;
             }
@@ -220,8 +217,7 @@ class DeviceProfileRepository
     protected function syncProfileSettings(string $deviceProfileUuid, string $domainUuid, array $settings): void
     {
         foreach ($settings as $settingData) {
-            // Validar campos requeridos
-            if (empty($settingData['profile_setting_name']) || empty($settingData['profile_setting_enabled'])) {
+            if (empty($settingData['profile_setting_name']) ) {
                 continue;
             }
 
@@ -258,6 +254,7 @@ class DeviceProfileRepository
             'device_profile_uuid' => $deviceProfileUuid,
             'domain_uuid' => $domainUuid,
         ]);
+
 
         return $this->deviceProfileSetting->create($data);
     }

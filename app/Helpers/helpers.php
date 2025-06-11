@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 
 if (!function_exists('can')) {
     function can(string $permission): bool
@@ -90,7 +91,7 @@ if (!function_exists('getAccountCode')) {
                 $accountCode = null;
             }
         } else {
-            $accountCode = auth()->user()->domain->domain_name;
+            $accountCode = Session::get('domain_name');
         }
         return $accountCode;
     }

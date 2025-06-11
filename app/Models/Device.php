@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Device extends Model
 {
-	use HasFactory, HasUniqueIdentifier, GetTableName;
+	use HasFactory, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
 	protected $table = 'v_devices';
 	protected $primaryKey = 'device_uuid';
 	public $incrementing = false;
@@ -47,6 +48,10 @@ class Device extends Model
         'device_provisioned_method',
         'device_provisioned_ip',
         'device_provisioned_agent',
+	];
+
+    protected static $stringBooleanFields = [
+		'device_enabled'
 	];
 
 	public function domain(): BelongsTo {

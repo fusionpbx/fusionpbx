@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DeviceSetting extends Model
 {
-	use HasFactory, HasUniqueIdentifier, GetTableName;
+	use HasFactory, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
 	protected $table = 'v_device_settings';
 	protected $primaryKey = 'device_setting_uuid';
 	public $incrementing = false;
@@ -21,6 +22,10 @@ class DeviceSetting extends Model
 	const CREATED_AT = 'insert_date';
 	const UPDATED_AT = 'update_date';
 
+	protected static $stringBooleanFields = [
+		'device_setting_enabled'
+	];
+	
 	/**
      * The attributes that are mass assignable.
      *

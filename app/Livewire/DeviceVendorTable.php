@@ -5,6 +5,8 @@ namespace App\Livewire;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\DeviceVendor;
+use App\Models\DeviceVendorFunction;
+use Illuminate\Support\Facades\DB;
 
 class DeviceVendorTable extends DataTableComponent
 {
@@ -43,6 +45,39 @@ class DeviceVendorTable extends DataTableComponent
         }
 
         return $bulkActions;
+    }
+
+    public function bulkToggle()
+    {
+        $selectedRows = $this->getSelected();
+
+        DeviceVendor::whereIn('device_vendor_uuid', $selectedRows)->update([
+            'enabled' => DB::raw("CASE WHEN enabled = 'true' THEN 'false' ELSE 'true' END")
+        ]);
+
+        $this->clearSelected();
+        $this->dispatch('refresh');
+        session()->flash('message', 'Device vendors status toggled successfully');
+    }
+
+    public function bulkDelete()
+    {
+        $selectedRows = $this->getSelected();
+
+        try {
+            DB::beginTransaction();
+
+            DeviceVendor::whereIn('device_vendor_uuid', $selectedRows)->delete();
+            DeviceVendorFunction::whereIn('device_vendor_uuid', $selectedRows)->delete();
+
+            $this->clearSelected();
+            $this->dispatch('refresh');
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     public function columns(): array

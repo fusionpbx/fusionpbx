@@ -15,44 +15,44 @@ use Illuminate\Validation\Rule;
 
 class DeviceForm extends Component
 {
-    public  $deviceUuid;
+    public ?string $deviceUuid = null;
     public $device;
     public $isEditing = false;
 
-    public $domain_uuid;
-    public $device_mac_address;
-    public $device_label;
-    public $device_user_uuid;
-    public $device_username;
-    public $device_password;
-    public $device_vendor;
-    public $device_location;
-    public $device_uuid_alternate;
-    public $device_model;
-    public $device_firmware_version;
-    public $device_template;
-    public $device_profile_uuid;
-    public $device_enabled = 'true';
-    public $device_description;
+    public string $domain_uuid;
+    public string $device_mac_address;
+    public string $device_label;
+    public ?string $device_user_uuid = null;
+    public ?string $device_username = '';
+    public ?string $device_password = '';
+    public ?string $device_vendor = '';
+    public ?string $device_location = '';
+    public ?string $device_uuid_alternate = null;
+    public ?string $device_model = '';
+    public ?string $device_firmware_version = '';
+    public ?string $device_template = '';
+    public ?string $device_profile_uuid = null;
+    public bool  $device_enabled = true;
+    public ?string $device_description = '';
 
-    public $deviceLines = [];
-    public $deviceKeys = [];
-    public $showKeySubtype = false;
-    public $deviceSettings = [];
+    public array $deviceLines = [];
+    public array $deviceKeys = [];
+    public bool $showKeySubtype = false;
+    public array $deviceSettings = [];
 
-    public $vendors = [];
-    public $users = [];
-    public $availableDomains = [];
-    public $deviceTemplates = [];
-    public $alternateDevices = [];
-    public $vendorFunctions = [];
+    public array $vendors = [];
+    public array $users = [];
+    public array $availableDomains = [];
+    public array $deviceTemplates = [];
+    public array $alternateDevices = [];
+    public array $vendorFunctions = [];
 
-    public $deviceLinesServerPrimary = '';
-    public $deviceLinesServerSecondary = '';
-    public $outboundProxyPrimary = '';
-    public $outboundProxySecondary = '';
+    public string $deviceLinesServerPrimary = '';
+    public string $deviceLinesServerSecondary = '';
+    public string $outboundProxyPrimary = '';
+    public string $outboundProxySecondary = '';
 
-    public $showAdvanced = false;
+    public bool $showAdvanced = false;
     public $duplicateMacDomain = null;
 
     protected $deviceRepository;
@@ -113,7 +113,7 @@ class DeviceForm extends Component
         $this->device_firmware_version = $this->device->device_firmware_version;
         $this->device_template = $this->device->device_template;
         $this->device_profile_uuid = $this->device->device_profile_uuid;
-        $this->device_enabled = $this->device->device_enabled ?? 'true';
+        $this->device_enabled = $this->device->device_enabled;
         $this->device_description = $this->device->device_description;
 
         $this->deviceLines = $this->device->lines->toArray();
@@ -125,7 +125,7 @@ class DeviceForm extends Component
     {
         $user = auth()->user();
         $this->domain_uuid = $user->domain_uuid;
-        $this->device_enabled = 'true';
+        $this->device_enabled = true;
 
         if ($user->hasPermission('device_password')) {
             $passwordLength = Setting::getSetting('device', 'password_length', 'numeric');

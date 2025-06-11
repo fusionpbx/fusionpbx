@@ -87,7 +87,7 @@ class DeviceTable extends DataTableComponent
         $bulkActions = [];
 
         if (auth()->user()->hasPermission('device_profile_edit')) {
-            $bulkActions['toogleDevice'] = 'Toggle';
+            $bulkActions['toggleDevice'] = 'Toggle';
         }
 
         if (auth()->user()->hasPermission('device_profile_delete')) {
@@ -101,7 +101,7 @@ class DeviceTable extends DataTableComponent
         return $bulkActions;
     }
 
-    public function tooggleDevice() 
+    public function toggleDevice() 
     {
         $selectRows = $this->getSelected();
 

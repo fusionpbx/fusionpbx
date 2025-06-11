@@ -39,7 +39,7 @@ class DeviceProfile extends Model
 	}
 
 	public function keys(): HasMany {
-        return $this->HasMany(DeviceProfileKey::class, 'device_profile_key_uuid', 'device_profile_key_uuid');
+        return $this->HasMany(DeviceProfileKey::class, 'device_profile_uuid', 'device_profile_uuid');
     }
 
     public function settings(): HasMany {

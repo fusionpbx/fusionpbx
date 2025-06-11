@@ -49,7 +49,7 @@ class DeviceVendorRequest extends FormRequest
             'functions.*.selected_groups' => 'nullable|array',
             'functions.*.selected_groups.*' => [
                 'string',
-                'exists:groups,group_uuid'
+                'exists:v_groups,group_uuid'
             ],
 
             'tempFunction.type' => 'nullable|string|max:100',
@@ -60,7 +60,7 @@ class DeviceVendorRequest extends FormRequest
             'tempFunction.groups' => 'nullable|array',
             'tempFunction.groups.*' => [
                 'string',
-                'exists:groups,group_uuid'
+                'exists:v_groups,group_uuid'
             ],
         ];
 

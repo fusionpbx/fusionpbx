@@ -276,11 +276,12 @@
                                                                             wire:model="profileSettings.{{ $index }}.profile_setting_value">
                                                                     </td>
                                                                     <td>
-                                                                        <select class="form-control form-control-sm"
-                                                                            wire:model="profileSettings.{{ $index }}.profile_setting_enabled">
-                                                                            <option value="true">True</option>
-                                                                            <option value="false">False</option>
-                                                                        </select>
+                                                                        <div class="form-check form-switch">
+                                                                            <input type="checkbox" role="switch" id="profile_setting_enabled"
+                                                                                wire:model="profileSettings.{{ $index }}.profile_setting_enabled"
+                                                                                value="true" class="form-check-input"                                                    
+                                                                                {{ $profileSettings[$index]['profile_setting_enabled'] == 'true' ? 'checked' : '' }}>
+                                                                        </div>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text"

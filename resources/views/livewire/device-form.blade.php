@@ -148,13 +148,13 @@
                                             @endforeach
                                         </select>
 
-                                        <a href="{{route('device_profiles.create')}}"></a>
+                                        <a href="{{route('devices_profiles.create')}}"></a>
                                         <button type="button" wire:click="redirectToCreateProfile"
                                             class="btn btn-outline-success btn-sm" title="Create new profile">
                                             <i class="bi bi-plus-circle"></i>
                                         </button>
 
-                                        <a href="{{route('device_profiles.edit', ['device_profile_uuid' => $device_profile_uuid])}}">
+                                        <a href="{{route('devices_profiles.edit', ['device_profile_uuid' => $device_profile_uuid])}}">
                                             <button type="button" wire:click="redirectToEditProfile"
                                                 class="btn btn-outline-primary btn-sm" title="Edit selected profile"
                                                 @if (!$device_profile_uuid) disabled @endif>
@@ -183,7 +183,7 @@
                                             <i class="bi bi-info-circle me-2"></i>
                                             <small>No profiles available.</small>
                                         </div>
-                                        <a href="{{route('device_profiles.create')}}">
+                                        <a href="{{route('devices_profiles.create')}}">
                                             <button type="button"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="bi bi-plus-circle me-1"></i>
@@ -222,9 +222,8 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-check form-switch">
-                                    <input type="checkbox" wire:model="device_enabled" value="true"
-                                        {{ $device_enabled === 'true' ? 'checked' : '' }} rol="switch"
-                                        class="form-check-input" id="device_enabled">
+                                    <input class="form-check-input" type="checkbox" rol="switch"  id="device_enabled"  wire:model="device_enabled" value="true" 
+                                        {{ $device_enabled ? 'checked' : '' }}>
                                     <label class="form-check-label" for="device_enabled">Device Enabled</label>
                                 </div>
                             </div>
@@ -485,11 +484,13 @@
                                                                     class="form-control form-control-sm">
                                                             </td>
                                                         @endcan
+
                                                         <td>
                                                             <div class="form-check form-switch">
-                                                                <input type="checkbox"
+                                                                <input type="checkbox" role="switch"
                                                                     wire:model="deviceLines.{{ $index }}.enabled"
-                                                                    value="true" class="form-check-input">
+                                                                    value="true" class="form-check-input" id="deviceLines.{{ $index }}.enabled"
+                                                                    {{ $deviceLines[$index]['enabled'] == 'true' ? 'checked' : '' }}>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -781,9 +782,10 @@
                                                         </td>
                                                         <td>
                                                             <div class="form-check form-switch">
-                                                                <input type="checkbox"
+                                                                <input type="checkbox" role="switch" id="device_setting_enabled"
                                                                     wire:model="deviceSettings.{{ $index }}.device_setting_enabled"
-                                                                    value="true" class="form-check-input">
+                                                                    value="true" class="form-check-input"
+                                                                    {{ $deviceSettings[$index]['device_setting_enabled'] == 'true' ? 'checked' : '' }}>
                                                             </div>
                                                         </td>
                                                         <td>

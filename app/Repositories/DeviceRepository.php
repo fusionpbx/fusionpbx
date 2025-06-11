@@ -275,9 +275,8 @@ class DeviceRepository
             $filteredData['device_profile_uuid'] = $deviceData['device_profile_uuid'] ?? ($existingDevice->device_profile_uuid ?? null);
         }
 
-        if ($user->hasPermission('device_enabled')) {
+        if ($user->hasPermission('device_enable')) {
             $filteredData['device_enabled'] = $deviceData['device_enabled'] ?? ($existingDevice->device_enabled ?? 'true');
-
             if (isset($deviceData['device_enabled']) && $deviceData['device_enabled']) {
                 $filteredData['device_enabled_date'] = now();
             }

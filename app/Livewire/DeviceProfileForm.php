@@ -16,23 +16,19 @@ class DeviceProfileForm extends Component
     public $deviceProfile;
     public $isEditing = false;
 
-    // Device Profile properties
     public $domain_uuid;
     public $device_profile_name;
     public $device_profile_enabled = 'true';
     public $device_profile_description;
 
-    // Related data
     public $profileKeys = [];
     public $profileSettings = [];
     public $showKeySubtype = false;
 
-    // Dropdown data
     public $availableDomains = [];
     public $vendors = [];
     public $vendorFunctions = [];
 
-    // UI state
     public $showAdvanced = false;
 
     protected $deviceProfileRepository;
@@ -147,6 +143,7 @@ class DeviceProfileForm extends Component
             'profile_setting_enabled' => 'true',
             'profile_setting_description' => '',
         ];
+
     }
 
     public function removeProfileSetting($index)
