@@ -102,7 +102,7 @@ class ContactAttachmentForm extends Component
             $contactAttachment->attachment_description = $attachment['attachment_description'];
             $contactAttachment->domain_uuid = auth()->user()->domain_uuid;
 
-            if (!isset($attachment['contact_attachment_uuid'])) {
+            if (!isset($attachment['contact_attachment_uuid']) && isset($attachment['file']) && is_object($attachment['file'])) {
                 $contactAttachment->attachment_uploaded_date = now();
                 $contactAttachment->attachment_uploaded_user_uuid = auth()->user()->uuid;
                 $contactAttachment->attachment_filename = Str::uuid() . '_' . $attachment['file']->getClientOriginalName();

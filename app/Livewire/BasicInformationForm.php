@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\BasicInformationRequest;
 use App\Models\Contact;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -27,12 +29,11 @@ class BasicInformationForm extends Component
     public $contactTypes = ['customer', 'contractor','friend', 'lead', 'member', 'family', 'subscriber', 'supplier', 'provider', 'user', 'volunteer'];
     public $timeZones = [];
 
-    protected $rules = [
-        'contactType' => 'required',
-        'contactOrganization' => 'nullable|string|max:255',
-        'contactNameGiven' => 'nullable|string|max:255',
-        'contactNameFamily' => 'nullable|string|max:255',
-    ];
+    public function rules()
+    {
+        $request = new BasicInformationRequest();
+        return $request->rules();
+    }
 
     public $listeners = [
         'saveBasicInfo' => 'save'
@@ -69,6 +70,7 @@ class BasicInformationForm extends Component
 
     public function save()
     {
+        $this->validate();
         try {
             $this->validate();
             $contact = Contact::where('contact_uuid', $this->contactUuid)->first();

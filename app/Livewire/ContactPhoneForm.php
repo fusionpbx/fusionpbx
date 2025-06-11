@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\ContactPhoneRequest;
 use App\Models\Contact;
 use App\Models\ContactPhone;
 use Illuminate\Support\Facades\Session;
@@ -16,6 +17,12 @@ class ContactPhoneForm extends Component
     public $listeners = [
         'phonesSaved' => 'save'
     ];
+
+    public function rules()
+    {
+        $request = new ContactPhoneRequest();
+        return $request->rules();
+    }
 
     public function mount($contactUuid)
     {
@@ -76,6 +83,7 @@ class ContactPhoneForm extends Component
 
     public function save()
     {
+        $this->validate();
         try {
             ContactPhone::where('contact_uuid', $this->contactUuid)->delete();
 

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\ContactSettingRequest;
 use App\Models\Contact;
 use App\Models\ContactSetting;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,12 @@ class ContactSettingForm extends Component
     public $listeners = [
         'settingsSaved' => 'save',
     ];
+
+    public function rules()
+    {
+        $request = new ContactSettingRequest();
+        return $request->rules();
+    }
 
     public function mount($contactUuid)
     {
@@ -70,7 +77,7 @@ class ContactSettingForm extends Component
     }
     public function save()
     {
-
+        $this->validate();
         try {
             ContactSetting::where('contact_uuid', $this->contactUuid)->delete();
             foreach ($this->settings as $setting) {
