@@ -65,6 +65,6 @@ class Carrier extends Model
 	}
 
     public function gateways(): HasMany {
-		return $this->hasMany(CarrierGateway::class, 'carrier_uuid', 'carrier_uuid');
+		return $this->hasMany(CarrierGateway::class, 'carrier_uuid', 'carrier_uuid')->orderBy('priority','ASC');
 	}
 }
