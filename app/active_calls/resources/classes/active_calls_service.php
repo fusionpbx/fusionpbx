@@ -192,7 +192,7 @@ class active_calls_service extends service {
 		$this->on_topic('eavesdrop',    [$this, 'on_eavesdrop']   );
 		$this->on_topic('authenticate', [$this, 'on_authenticate']);
 
-		$this->info("Staring " . self::class . " service");
+		$this->info("Starting " . self::class . " service");
 		// Suppress the WebSocket Server Error Message so it doesn't flood the system logs
 		$suppress_ws_message = false;
 		// Suppress the Event Socket Error Message so it doesn't flood the system logs
@@ -707,9 +707,5 @@ class active_calls_service extends service {
 	 */
 	private static function get_domain_uuid_by_name(database $database, string $domain_name): string {
 		return $database->execute("select domain_uuid from v_domains where domain_enabled='true' and domain_name = :domain_name limit 1", ['domain_name' => $domain_name], 'column') ?: '';
-	}
-
-	public function authenticate() {
-		
 	}
 }
