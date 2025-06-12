@@ -9,14 +9,14 @@
                             {{ $isEditing ? 'Edit Device' : 'New Device' }}
                         </h4>
                         @if ($isEditing)
-                            <div class="btn-group">
-                                <button type="button" wire:click="copyDevice" class="btn btn-outline-light btn-sm">
-                                    <i class="bi bi-copy me-1"></i>Copy
+                            <div class="card-tools">
+                                <button type="button" wire:click="copyDevice" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-clone" aria-hidden="true"></i>{{ __('Copy') }}
                                 </button>
                                 <button type="button" wire:click="delete"
                                     wire:confirm="Are you sure you want to delete this device?"
-                                    class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-trash me-1"></i>Delete
+                                    class="btn btn-primary btn-sm">
+                                     <i class="fa fa-trash" aria-hidden="true"></i>{{ __('Delete') }}
                                 </button>
                             </div>
                         @endif
@@ -25,7 +25,6 @@
 
                 <div class="card-body">
                     <form wire:submit.prevent="save">
-                        <!-- General Information -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="border-bottom pb-2 mb-3">
@@ -273,7 +272,6 @@
                             </div>
                         </div>
 
-                        <!-- Authentication -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h5 class="border-bottom pb-2 mb-3">
@@ -296,7 +294,6 @@
                             </div>
                         </div>
 
-                        <!-- Device Lines -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
