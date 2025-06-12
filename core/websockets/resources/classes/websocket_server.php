@@ -92,15 +92,12 @@ class websocket_server {
 	 */
 	private $listeners;
 
-	private static $logger = null;
-
 	/**
 	 * Creates a websocket_server instance
 	 * @param string $address IP to bind (default 0.0.0.0)
 	 * @param int    $port    TCP port (default 8080)
-	 * @param logger $logger  Logging facility
 	 */
-	public function __construct(string $address = '0.0.0.0', int $port = 8080, logger $logger = null) {
+	public function __construct(string $address = '127.0.0.1', int $port = 8080) {
 		$this->running = false;
 		$this->address = $address;
 		$this->port = $port;
@@ -111,11 +108,22 @@ class websocket_server {
 		$this->message_callbacks = [];
 		$this->connect_callbacks = [];
 		$this->disconnect_callbacks = [];
+	}
 
-		// Initialize logging facility
-		if (empty(self::$logger)) {
-			self::$logger = new logger(self::class);
-		}
+	private function debug(string $message) {
+		self::log($message, LOG_DEBUG);
+	}
+
+	private function warn(string $message) {
+		self::log($message, LOG_WARNING);
+	}
+
+	private function error(string $message) {
+		self::log($message, LOG_ERR);
+	}
+
+	private function info(string $message) {
+		self::log($message, LOG_INFO);
 	}
 
 	/**
@@ -169,7 +177,7 @@ class websocket_server {
 						//send the switch event to the registered callback function
 						call_user_func($this->listeners[$index][1], $client_socket);
 					} catch (\socket_disconnected_exception $s) {
-						self::$logger->info("[INFO] Removed client $s->id from list");
+						$this->info("[INFO] Removed client $s->id from list");
 						$success = $this->disconnect_client($client_socket);
 						// By attaching the socket_disconnect error message to \socket_exception we can see where something went wrong
 						if (!$success)
@@ -422,7 +430,7 @@ class websocket_server {
 			// Read payload
 			$payload = $this->read_bytes($socket, $payload_len);
 			if ($payload === null) {
-				self::$logger->error("[ERROR] Incomplete payload received");
+				$this->error("[ERROR] Incomplete payload received");
 				return null;
 			}
 
@@ -440,30 +448,30 @@ class websocket_server {
 				case 0x9: // PING
 					// Respond with PONG using same payload
 					$this->send_control_frame(0xA, $payload);
-					self::$logger->info("Received PING, sent PONG");
+					$this->info("Received PING, sent PONG");
 					continue; // Skip returning PING
 				case 0x8: // CLOSE frame
-					self::$logger->info("Received CLOSE frame, connection will be closed.");
+					$this->info("Received CLOSE frame, connection will be closed.");
 					$this->disconnect_client($socket);
 					return null;
 				case 0xA: // PONG
-					self::$logger->info("Received PONG");
+					$this->info("Received PONG");
 					$reason = $this->read_bytes($socket, 2);
-					self::$logger->info("Reason: $reason");
+					$this->info("Reason: $reason");
 					continue; // Skip returning PONG
 				case 0x1: // TEXT frame
 				case 0x0: // Continuation frame
 					$payload_data .= $payload;
 					break;
 				default:
-					self::$logger->warn("Unsupported opcode: $opcode");
+					$this->warn("Unsupported opcode: $opcode");
 					return null;
 			}
 		}
 
 		$meta = stream_get_meta_data($socket);
 		if ($meta['unread_bytes'] > 0) {
-			self::$logger->warn("{$meta['unread_bytes']} bytes left in socket after read");
+			$this->warn("{$meta['unread_bytes']} bytes left in socket after read");
 		}
 
 		return $payload_data;
