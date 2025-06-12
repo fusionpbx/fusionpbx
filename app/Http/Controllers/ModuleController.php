@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Facades\FreeSwitchModule;
 use App\Http\Requests\ModuleRequest;
 use App\Models\Module;
 use App\Repositories\ModuleRepository;
@@ -13,9 +14,17 @@ class ModuleController extends Controller
 	{
 		$this->moduleRepository = $moduleRepository;
 	}
+
 	public function index()
 	{
-		return view('pages.modules.index');
+		$modules = Module::orderBy("module_category")->orderBy("module_label")->get();
+
+		foreach($modules as $module)
+		{
+			$module->module_status = FreeSwitchModule::getModuleStatus($module->module_name);
+		}
+
+		return view("pages.modules.index", compact("modules"));
 	}
 
 	public function create()
