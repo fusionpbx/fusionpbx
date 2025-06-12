@@ -1,9 +1,9 @@
 #
 # Install with:
 #
-#   cp debian-websocket.service /etc/systemd/system/websocket.service
+#   cp debian-websockets.service /etc/systemd/system/websockets.service
 #   systemctl daemon-reload
-#   systemctl enable --now websocket.service
+#   systemctl enable --now websockets.service
 #
 [Unit]
 Description=Websocket Router Service
