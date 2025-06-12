@@ -203,9 +203,17 @@ class websocket_service extends service {
 
 	private function broadcast_service_message(?websocket_message $message = null) {
 
+		$this->debug("Processing broadcast request");
+
 		// Ensure we have something to do
-		if ($message === null) return;
-		if (empty($this->subscribers)) return;
+		if ($message === null) {
+			$this->warn("Unable to broadcast empty message");
+			return;
+		}
+		if (empty($this->subscribers)) {
+			$this->debug("No subscribers to broadcast message to");
+			return;
+		}
 
 		// Ensure the service is not responding to a specific request
 		$request_id = $message->request_id;
@@ -228,6 +236,19 @@ class websocket_service extends service {
 					//Subscriber token has expired so disconnect them
 					$subscriber->disconnect();
 				}
+			}
+		}
+		// Route a specific request from a service back to a subscriber
+		else {
+			// Get the subscriber object hash
+			$object_id = $message->resource_id;
+			if (isset($this->subscribers[$object_id])) {
+				$subscriber = $this->subscribers[$object_id];
+				// Remove the resource_id from the message
+				$message->resource_id('');
+				$message->request_id('');
+				// Return the requested results back to the subscriber
+				$subscriber->send_message($message);
 			}
 		}
 		return;

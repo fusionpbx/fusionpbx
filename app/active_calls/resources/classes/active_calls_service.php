@@ -304,7 +304,11 @@ class active_calls_service extends service {
 		// Set up the response array
 		$response = [];
 		$response['service_name'] = SERVICE_NAME;
+		// Attach the original request ID and subscriber ID given from websocket server so it can route it back
 		$response['request_id'] = $websocket_message->request_id;
+		$response['resource_id'] = $websocket_message->resource_id;
+		$response['status_string'] = 'ok';
+		$response['status_code'] = 200;
 
 		// Get the active calls from the helper function
 		$calls = $this->get_active_calls($this->event_socket, $this->ws_client);
@@ -313,7 +317,8 @@ class active_calls_service extends service {
 		foreach ($calls as $event) {
 			$response['payload'] = $event;
 			$response['topic'] = $event->name;
-			websocket_client::send($this->ws_client->socket(), new websocket_message($response));
+			$websocket_response = new websocket_message($response);
+			websocket_client::send($this->ws_client->socket(), $websocket_response);
 		}
 	}
 
@@ -545,7 +550,7 @@ class active_calls_service extends service {
 			// so that a row can be created for it
 			$message->event_name = 'CHANNEL_CALLSTATE';
 			$message->answer_state = 'ringing';
-			$message->channel_call_state = 'ACTIVE';
+			$message->channel_call_state = 'RINGING';
 			$message->unique_id = $call['uuid'];
 			$message->call_direction = $call['direction'];
 
