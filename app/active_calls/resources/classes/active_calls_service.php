@@ -423,7 +423,6 @@ class active_calls_service extends service {
 			$this->ws_client->set_blocking(false);
 
 			$this->debug(self::class . " RESOURCE ID: " . $this->ws_client->socket());
-			$this->authenticate();
 		} catch (\RuntimeException $re) {
 			//unable to connect
 			return false;
