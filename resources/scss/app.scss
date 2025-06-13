@@ -19,7 +19,7 @@
   box-shadow: var(--bs-box-shadow-inset);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
   height: auto;
-  
+
   /* Agregar explícitamente la imagen de la flecha */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
@@ -59,4 +59,9 @@
   line-height: 1.5;
   padding-left: 0;
   padding-right: 0;
+}
+
+.sidebar-wrapper
+{
+  overflow-y: auto;
 }
