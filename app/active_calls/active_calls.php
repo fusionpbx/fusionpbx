@@ -177,7 +177,7 @@ if (permission_exists('call_active_all')) {
 	]);
 }
 
-if ($settings->get('active_calls', 'remove_completed_calls', true)) {
+if (!$settings->get('active_calls', 'remove_completed_calls', true)) {
 	// Clear rows (development)
 	echo button::create([
 		'id' => 'btn_clear',
@@ -328,6 +328,9 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		INACTIVE: 'black'
 	}
 
+	const truncate_application_data_length = <?php echo $settings->get('active_calls', 'truncate_application_data_length', 80); ?>;
+	const truncate_application_data = truncate_application_data_length > 0;
+
 	const overlay = document.getElementById('overlay');
 
 	// pre-cache arrows
@@ -405,12 +408,14 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			// reconnect to web socket server
 			reconnectAttempts++;
 
-			// progressive delay timer up to 30 seconds
-			const delay = 3;
-			console.log(`Reloading in ${delay}s...`);
+			// delay timer to reload page
+			const auto_reload_seconds = <?php echo $settings->get('active_calls', 'auto_reload_seconds', 0); ?>;
+			if (auto_reload_seconds > 0) {
+				console.log(`Reloading in ${auto_reload_seconds}s...`);
 
-			// after waiting, reconnect
-//			setTimeout(() => {window.location.reload()}, delay);
+				// after waiting, reconnect
+				setTimeout(() => {window.location.reload()}, auto_reload_seconds * 1000);
+			}
 		})
 
 		// wire up “select all” checkbox
@@ -481,7 +486,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		client.onEvent("CHANNEL_APPLICATION", channel_application_event);
 		client.onEvent("valet_parking::info", valet_parking_info_event);
 		client.onEvent("HEARTBEAT", heartbeat_event);
-//		client.onEvent("CHANNEL_STATE", channel_state_event);
+//		client.onEvent("CHANNEL_STATE", channel_state_event);	//Too many events
 	}
 
 	// Ringing, Answer, Hangup
@@ -603,11 +608,8 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			const file_basename = basename(file);
 			const play_string = `play:${file_basename}`;
 
-			//update application
-			const application = document.getElementById(`application_${uuid}`);
-			if (application.textContent !== play_string) {
-				application.textContent = play_string;
-			}
+			//update application cell
+			update_call_element(`application_${uuid}`, play_string);
 
 		}
 	}
@@ -618,9 +620,8 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		if (callsMap.has(call.unique_id)) {
 			const uuid = call.unique_id;
 
-			//update application
-			const application = document.getElementById(`application_${uuid}`);
-			application.textContent = `play:stopped`;
+			//update application cell
+			update_call_element(`application_${uuid}`, 'play:stopped');
 		}
 	}
 
@@ -951,6 +952,10 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	function update_call_element(element_name, value) {
 		if (typeof value === 'undefined')
 			return;
+		// Check if we need to truncate the application data length
+		if (truncate_application_data && element_name.startsWith('application_') && value.length > truncate_application_data_length) {
+			value = value.substring(0, truncate_application_data_length);
+		}
 		const element = document.getElementById(element_name);
 		if (element !== null && value !== null, value.length > 0 && element.textContent !== value) {
 			element.textContent = value;

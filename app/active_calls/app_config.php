@@ -30,6 +30,32 @@
 	$apps[$x]['description']['sv-se'] = "";
 	$apps[$x]['description']['uk-ua'] = "";
 
+	//default settings
+	$y=0;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7d404f6-7184-4eef-9487-7b2ec213c1fc";
+	$apps[$x]['default_settings'][$y]['default_setting_category'] = "active_calls";
+	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "auto_reload_seconds";
+	$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of seconds before refreshing the active calls page. Use 0 to disable or set to false (default).";
+	$y++;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bfa7aa18-2e66-429d-8756-216f84de2667";
+	$apps[$x]['default_settings'][$y]['default_setting_category'] = "active_calls";
+	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "remove_completed_calls";
+	$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remove calls when they are completed. Default is True";
+	$y++;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ac1afb07-6b46-43de-8fa0-d30e5868a7fb";
+	$apps[$x]['default_settings'][$y]['default_setting_category'] = "active_calls";
+	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "truncate_application_data_length";
+	$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "80";
+	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of characters to show in the application column data. Default value is 80. To disable truncating use 0.";
+
 	//permission details
 	$y=0;
 	$apps[$x]['permissions'][$y]['name'] = "call_active_view";
