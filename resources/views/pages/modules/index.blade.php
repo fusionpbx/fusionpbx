@@ -10,6 +10,19 @@
 
             <div class="card-tools">
                 <div class="d-flex gap-2" role="module" aria-label="Modules actions">
+
+                    @can('module_edit')
+                        @if($modules)
+                            <a href="" class="btn btn-primary btn-sm">
+                                <i class="fa fa-play" aria-hidden="true"></i> {{__('Start')}}
+                            </a>
+
+                            <a href="" class="btn btn-primary btn-sm">
+                                <i class="fa fa-stop" aria-hidden="true"></i> {{__('Stop')}}
+                            </a>
+                        @endif
+                    @endcan
+
                     @can('module_add')
                     <a href="{{ route('modules.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
@@ -43,7 +56,13 @@
                     <tr>
                         <td>{{ $module->module_label }}</td>
                         <td>@if($module->module_status) {{ __('Running') }} @else {{ __('Stopped') }} @endif</td>
-                        <td></td>
+                        <td>
+                            @if($module->module_status)
+                            <a href="" class="btn btn-primary btn-sm"><i class="fa fa-stop" aria-hidden="true"></i> Stop</a>
+                            @else
+                            <a href="" class="btn btn-primary btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Start</a>
+                            @endif
+                        </td>
                         <td>
                             <svg class="d-inline-block @if($module->module_enabled) text-success @else text-danger @endif laravel-livewire-tables-btn-small" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
                                 @if($module->module_enabled)
