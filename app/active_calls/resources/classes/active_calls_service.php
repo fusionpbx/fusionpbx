@@ -90,6 +90,15 @@ class active_calls_service extends service {
 		'content_type',
 	];
 
+	const PERMISSION_MAP = [
+		'channel_read_codec_name'   => 'call_active_codec',
+		'channel_read_codec_rate'   => 'call_active_codec',
+		'channel_write_codec_name'  => 'call_active_codec',
+		'channel_write_codec_rate'  => 'call_active_codec',
+		'caller_channel_name'       => 'call_active_profile',
+		'secure'                    => 'call_active_secure',
+	];
+
 	/**
 	 * Switch Event Socket
 	 * @var event_socket
@@ -314,7 +323,14 @@ class active_calls_service extends service {
 		$calls = $this->get_active_calls($this->event_socket, $this->ws_client);
 		$count = count($calls);
 		$this->debug("Sending calls in progress ($count)");
+
+		// Use the subscribers permissions to filter out the event keys not permitted
+		$filter = filter_chain::link([new permission_filter(self::PERMISSION_MAP, $websocket_message->permissions())]);
+
+		/** @var event_message $event */
 		foreach ($calls as $event) {
+			// Remove keys that are not permitted by filter
+			$event->apply_filter($filter);
 			$response['payload'] = $event;
 			$response['topic'] = $event->name;
 			$websocket_response = new websocket_message($response);
