@@ -86,7 +86,7 @@ class event_message {
 		self::sanitize_event_key($name);
 
 		// Use the filter chain to ensure the key is allowed
-		if (($this->event_filter)($name)) {
+		if ($this->event_filter === null || ($this->event_filter)($name)) {
 			$this->event[$name] = $value;
 		}
 	}
@@ -112,6 +112,15 @@ class event_message {
 
 	public function to_array(): array {
 		return $this->__toArray();
+	}
+
+	public function apply_filter(filter $filter) {
+		foreach (array_keys($this->event) as $key) {
+			if (!($filter)($key)) {
+				unset($this->event[$key]);
+			}
+		}
+		return $this;
 	}
 
 	public static function parse_active_calls($json_string): array {
@@ -169,7 +178,7 @@ class event_message {
 		return null;
 	}
 
-	public static function create_from_switch_event($raw_event, filter $filter, $flags = 3): self {
+	public static function create_from_switch_event($raw_event, filter $filter = null, $flags = 3): self {
 
 		// Set the options from the flags passed
 		$swap_api_name_with_event_name = ($flags & self::EVENT_SWAP_API) !== 0;
