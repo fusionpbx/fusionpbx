@@ -79,7 +79,7 @@ class ModuleController extends Controller
 
 			if(!empty($response))
 			{
-				$message .= "<br><strong>" . $response['module'] . "</strong>: " . $response['message'];
+				$message .= "<br><strong>" . $response . "</strong>";
 			}
 		}
 
@@ -103,7 +103,7 @@ class ModuleController extends Controller
 
 			if(!empty($response))
 			{
-				$message .= "<br><strong>" . $response['module'] . "</strong>: " . $response['message'];
+				$message .= "<br><strong>" . $response . "</strong>";
 			}
 		}
 
