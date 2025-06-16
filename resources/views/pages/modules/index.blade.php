@@ -55,7 +55,7 @@
 					</tr>
                     @endif
                     <tr>
-                        <td>{{ $module->module_label }}</td>
+                        <td><a href="{{ route('modules.edit', [$module->module_uuid]) }}">{{ $module->module_label }}</a></td>
                         <td>@if($module->module_status) {{ __('Running') }} @else {{ __('Stopped') }} @endif</td>
                         <td>
                             @if($module->module_status)
