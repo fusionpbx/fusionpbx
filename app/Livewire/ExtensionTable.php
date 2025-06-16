@@ -2,18 +2,18 @@
 
 namespace App\Livewire;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Extension;
 use App\Models\ExtensionUser;
 use App\Models\Voicemail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
-
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 class ExtensionTable extends DataTableComponent
 {
-    protected $model = Extension::class;
+    //protected $model = Extension::class;
     public bool $show_all = false;
 
     public function configure(): void
@@ -179,7 +179,7 @@ class ExtensionTable extends DataTableComponent
                   ->select('v_extensions.*', 'v_domains.domain_name');
         } else {
             $query->where(function ($query) {
-                $query->where('v_extensions.domain_uuid', auth()->user()->domain_uuid)
+                $query->where('v_extensions.domain_uuid', Session::get('domain_uuid'))
                     ->orWhereNull('v_extensions.domain_uuid');
             });
         }
