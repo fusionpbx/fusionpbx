@@ -207,7 +207,7 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
         $auth_pass = DefaultSetting::get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
 
         // Parse command and params
-        $line = trim($command).' '.trim($param??' ');
+        $line = trim($command) . (!empty($param))?(' '.trim($param??' ')):'';
         list($command, $param) = explode(' ', $line, 2);
 
         $url = 'http://' . $host . ':' . $http_port . '/txtapi/' . $command . '?' . (isset($param) ? rawurlencode($param) : '');
@@ -232,7 +232,7 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
                 ])
                 ->withOptions($options)
                 ->get($url);
-                
+
         } catch (ConnectionException $e) {
             if (App::hasDebugModeEnabled()) {
                 Log::error('[' . __CLASS__ . '][' . __METHOD__ . '] Error: ' . $e->getMessage());
