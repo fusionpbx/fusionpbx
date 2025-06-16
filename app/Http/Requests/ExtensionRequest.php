@@ -83,7 +83,7 @@ class ExtensionRequest extends FormRequest
             'toll_allow' => 'nullable|string|max:200',
             'call_timeout' => 'nullable|integer|min:5|max:300',
             'call_group' => 'nullable|string|max:100',
-            'call_screen_enabled' => 'nullable|string',
+            'call_screen_enabled' => 'nullable|in:true,false',
             'user_record' => 'nullable|string|max:50',
             'hold_music' => 'nullable|string|max:100',
             'auth_acl' => 'nullable|string|max:100',
