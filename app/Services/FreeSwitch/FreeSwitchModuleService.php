@@ -46,7 +46,7 @@ class FreeSwitchModuleService
     {
         $response = null;
 
-		$command = "api load " . $module_name;
+		$command = "load " . $module_name;
 
         try
         {
@@ -71,7 +71,7 @@ class FreeSwitchModuleService
     {
         $response = null;
 
-		$command = "api unload " . $module_name;
+		$command = "unload " . $module_name;
 
         try
         {
