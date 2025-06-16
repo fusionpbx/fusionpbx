@@ -207,7 +207,11 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
         $auth_pass = DefaultSetting::get('config', 'xml_rpc.auth_pass', 'text') ?? 'works';
 
         // Parse command and params
-        $line = trim($command) . (!empty($param))?(' '.trim($param??' ')):'';
+        $line = trim($command);
+        if (!empty($param))
+        {
+            $line .= ' '.trim($param);
+        }
         list($command, $param) = explode(' ', $line, 2);
 
         $url = 'http://' . $host . ':' . $http_port . '/txtapi/' . $command . '?' . (isset($param) ? rawurlencode($param) : '');
