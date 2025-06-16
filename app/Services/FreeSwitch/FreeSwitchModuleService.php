@@ -44,13 +44,15 @@ class FreeSwitchModuleService
 
     public function startModule(string $module_name): mixed
     {
-        $response = null;
+        $status = false;
 
 		$command = "load " . $module_name;
 
         try
         {
 		    $response = FreeSwitch::execute($command);
+
+            $status = ($response == "+OK");
         }
         catch(\Exception $e)
         {
@@ -63,19 +65,21 @@ class FreeSwitchModuleService
         }
         finally
         {
-            return $response;
+            return $status;
         }
 	}
 
     public function stopModule(string $module_name): mixed
     {
-        $response = null;
+        $status = false;
 
 		$command = "unload " . $module_name;
 
         try
         {
 		    $response = FreeSwitch::execute($command);
+
+            $status = ($response == "+OK");
         }
         catch(\Exception $e)
         {
@@ -88,7 +92,7 @@ class FreeSwitchModuleService
         }
         finally
         {
-            return $response;
+            return $status;
         }
 	}
 }

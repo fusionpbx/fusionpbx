@@ -69,7 +69,7 @@ class ModuleController extends Controller
 
     public function start(?Module $module = null)
     {
-		$message = "";
+		$message = "Modules started: <br>";
 
 		$modules = $module ? collect([$module]) : Module::all();
 
@@ -77,10 +77,7 @@ class ModuleController extends Controller
 		{
 			$response = FreeSwitchModule::startModule($module->module_name);
 
-			if(!empty($response))
-			{
-				$message .= "<br><strong>" . $response . "</strong>";
-			}
+			$message .= "<br>" . $module->module_name . ": " . ($response) ? "success" : "failed";
 		}
 
 		if(!empty($message))
@@ -93,7 +90,7 @@ class ModuleController extends Controller
 
     public function stop(?Module $module = null)
     {
-		$message = "";
+		$message = "Modules stopped: <br>";
 
 		$modules = $module ? collect([$module]) : Module::all();
 
@@ -103,7 +100,7 @@ class ModuleController extends Controller
 
 			if(!empty($response))
 			{
-				$message .= "<br><strong>" . $response . "</strong>";
+				$message .= "<br>" . $module->module_name . ": " . ($response) ? "success" : "failed";
 			}
 		}
 
