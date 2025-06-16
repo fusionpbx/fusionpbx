@@ -196,7 +196,11 @@ class FreeSwitchConnectionManager implements FreeSwitchConnectionManagerInterfac
             return null;
         }
 
-        $cmd = 'api ' . $command . ' ' . $param;
+        $cmd = 'api ' . $command;
+        if (!empty($param))
+        {
+            $cmd .= ' '.trim($param);
+        }
         return $this->es_request($cmd);
     }
 
