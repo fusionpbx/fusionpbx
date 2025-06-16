@@ -19,7 +19,7 @@ class FreeSwitchModuleService
     {
         $status = false;
 
-		$command = "api module_exists " . $module_name;
+		$command = "module_exists " . $module_name;
 
         try
         {
