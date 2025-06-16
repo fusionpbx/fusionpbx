@@ -243,7 +243,7 @@
 	$provision = $settings->get('provision', null, []);
 
 //check for a valid match
-	if (empty($device_uuid) && $settings->get('provision', 'auto_insert_enabled', false)) {
+	if (empty($device_uuid) && !$settings->get('provision', 'auto_insert_enabled', false)) {
 		http_error(403);
 	}
 
