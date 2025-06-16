@@ -21,7 +21,7 @@ class ModuleController extends Controller
 
 		foreach($modules as $module)
 		{
-			$module->module_status = FreeSwitchModule::getModuleStatus($module->module_name);
+			$module->module_status = FreeSwitchModule::getModuleStatus(trim($module->module_name));
 		}
 
 		return view("pages.modules.index", compact("modules"));
