@@ -13,11 +13,11 @@
 
                     @can('module_edit')
                         @if($modules)
-                            <a href="" class="btn btn-primary btn-sm">
+                            <a href="" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#start_modules" >
                                 <i class="fa fa-play" aria-hidden="true"></i> {{__('Start')}}
                             </a>
 
-                            <a href="" class="btn btn-primary btn-sm">
+                            <a href="" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#stop_modules" >
                                 <i class="fa fa-stop" aria-hidden="true"></i> {{__('Stop')}}
                             </a>
                         @endif
@@ -44,13 +44,14 @@
                         $category = $module->module_category;
                         @endphp
 					<tr>
-						<td colspan="4" style="background-color:#f0f0f0; color: #0d6efd;">{{ $module->module_category }}</td>
+						<td colspan="5" style="background-color:#f0f0f0; color: #0d6efd;">{{ $module->module_category }}</td>
 					</tr>
 					<tr>
 						<td style="font-weight: bold;">{{ __('Label') }}</td>
 						<td style="font-weight: bold;">{{ __('Status') }}</td>
 						<td style="font-weight: bold;">{{ __('Action') }}</td>
 						<td style="font-weight: bold;">{{ __('Enabled') }}</td>
+						<td style="font-weight: bold;">{{ __('Description') }}</td>
 					</tr>
                     @endif
                     <tr>
@@ -58,9 +59,9 @@
                         <td>@if($module->module_status) {{ __('Running') }} @else {{ __('Stopped') }} @endif</td>
                         <td>
                             @if($module->module_status)
-                            <a href="" class="btn btn-primary btn-sm"><i class="fa fa-stop" aria-hidden="true"></i> Stop</a>
+                            <a href="{{ route('modules.stop', [$module->module_uuid]) }}" class="btn btn-primary btn-sm"><i class="fa fa-stop" aria-hidden="true"></i> Stop</a>
                             @else
-                            <a href="" class="btn btn-primary btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Start</a>
+                            <a href="{{ route('modules.start', [$module->module_uuid]) }}" class="btn btn-primary btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Start</a>
                             @endif
                         </td>
                         <td>
@@ -72,10 +73,51 @@
                                 @endif
                             </svg>
                         </td>
+                        <td>{{ $module->module_description }}</td>
                     </tr>
 				@endforeach
 				</tbody>
 			</table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="start_modules" tabindex="-1" aria-labelledby="start_modules" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you wish to START these modules?</p>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ route('modules.start') }}" class="btn btn-primary">
+                    {{ __('Continue') }}
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('Cancel')}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="stop_modules" tabindex="-1" aria-labelledby="stop_modules" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you wish to STOP these modules?</p>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ route('modules.stop') }}" class="btn btn-primary">
+                    {{ __('Continue') }}
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('Cancel')}}</button>
+            </div>
         </div>
     </div>
 </div>

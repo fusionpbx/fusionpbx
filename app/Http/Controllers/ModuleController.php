@@ -66,4 +66,52 @@ class ModuleController extends Controller
 
         return redirect()->route('modules.index');
     }
+
+    public function start(?Module $module = null)
+    {
+		$message = "";
+
+		$modules = $module ? collect([$module]) : Module::all();
+
+		foreach($modules as $module)
+		{
+			$response = FreeSwitchModule::startModule($module->module_name);
+
+			if(!empty($response))
+			{
+				$message .= "<br><strong>" . $response['module'] . "</strong>: " . $response['message'];
+			}
+		}
+
+		if(!empty($message))
+		{
+			session()->flash('success', $message);
+		}
+
+		return redirect()->route('modules.index');
+    }
+
+    public function stop(?Module $module = null)
+    {
+		$message = "";
+
+		$modules = $module ? collect([$module]) : Module::all();
+
+		foreach($modules as $module)
+		{
+			$response = FreeSwitchModule::stopModule($module->module_name);
+
+			if(!empty($response))
+			{
+				$message .= "<br><strong>" . $response['module'] . "</strong>: " . $response['message'];
+			}
+		}
+
+		if(!empty($message))
+		{
+			session()->flash('success', $message);
+		}
+
+		return redirect()->route('modules.index');
+    }
 }

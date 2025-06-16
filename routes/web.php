@@ -100,6 +100,8 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
 
     // MODULES
+    Route::get('/modules/start/{module?}', [ModuleController::class, 'start'])->name('modules.start');
+    Route::get('/modules/stop/{module?}', [ModuleController::class, 'stop'])->name('modules.stop');
     Route::resource('/modules', ModuleController::class)->name('modules', 'modules');
 
     // PHRASE
