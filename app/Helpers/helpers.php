@@ -96,7 +96,7 @@ if(!function_exists('getAccountCode'))
             }
         }
         else {
-            $accountCode = auth()->user()->domain->domain_name;
+            $accountCode = Session::get('domain_name');
         }
         return $accountCode;
     }
