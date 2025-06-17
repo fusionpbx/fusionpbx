@@ -42,7 +42,16 @@ class subscriber {
 	 */
 	private $id;
 	private $socket;
+
+	/**
+	 * Stores the original socket ID used when the subscriber object was created.
+	 * The resource is cast to an integer and then saved in order to match the
+	 * a resource to the original socket. This is primarily used in the equals
+	 * method to test for equality.
+	 * @var int
+	 */
 	private $socket_id;
+
 	private $remote_ip;
 	private $remote_port;
 	private $services;
@@ -55,6 +64,9 @@ class subscriber {
 	private $token_limit;
 	private $enable_token_time_limit;
 	private $service;
+	private $service_class;
+	private $service_name;
+	private $filter;
 
 	/**
 	 * Function or method name to call when sending information through the socket
@@ -63,7 +75,6 @@ class subscriber {
 	private $callback;
 	private $send_all;
 	private $subscriptions;
-	private $service_name;
 	private $authenticated;
 
 	/**
@@ -85,7 +96,7 @@ class subscriber {
 		// set object identifiers
 		$this->id = md5(spl_object_hash($this)); // PHP unique object hash is similar to 000000000000000f0000000000000000 so we use md5
 		$this->socket = $socket;
-		$this->socket_id = (int)$socket;
+		$this->socket_id = (int) $socket;
 
 		$this->domain_name = '';
 		$this->domain_uuid = '';
@@ -106,6 +117,38 @@ class subscriber {
 		// Save the websocket frame wrapper used to communicate to this subscriber
 		$this->callback = $frame_wrapper;
 
+		// No filter initially
+		$this->filter = null;
+	}
+
+	/**
+	 * Gets or sets the subscribed to services
+	 * @param array $services
+	 * @return $this|array
+	 */
+	public function subscribed_to($services = []) {
+		if (func_num_args() > 0) {
+			$this->services = array_flip($services);
+			return $this;
+		}
+		return array_keys($this->services);
+	}
+
+	public function service_class($service_class = null) {
+		if (func_num_args() > 0) {
+			$this->service_class = $service_class;
+			return $this;
+		}
+		return $this->service_class;
+	}
+
+	public function set_filter(filter $filter) {
+		$this->filter = $filter;
+		return $this;
+	}
+
+	public function get_filter() {
+		return $this->filter;
 	}
 
 	/**
@@ -133,25 +176,25 @@ class subscriber {
 
 	/**
 	 * Compares the current object with another object to see if they are exactly the same object
-	 * @param subscriber|resource $object_or_resource
+	 * @param subscriber|resource $object_or_resource_or_id
 	 * @return bool
 	 */
-	public function equals($object_or_resource): bool {
+	public function equals($object_or_resource_or_id): bool {
 		// Compare by resource
-		if (is_resource($object_or_resource)) {
-			return $object_or_resource === $this->socket;
+		if (is_resource($object_or_resource_or_id)) {
+			return $object_or_resource_or_id === $this->socket;
 		}
 		// Compare by spl_object_id or spl_object_hash
-		if (gettype($object_or_resource) === 'integer' || gettype($object_or_resource) === 'string') {
-			return $object_or_resource === $this->id;
+		if (gettype($object_or_resource_or_id) === 'integer' || gettype($object_or_resource_or_id) === 'string') {
+			return $object_or_resource_or_id === $this->id;
 		}
 		// Ensure it is the same type of object
-		if (!($object_or_resource instanceof subscriber)) {
+		if (!($object_or_resource_or_id instanceof subscriber)) {
 			// Not a subscriber object
 			return false;
 		}
 		// Compare by object using the spl_object_id to match
-		return $object_or_resource->id() === $this->id;
+		return $object_or_resource_or_id->id() === $this->id;
 	}
 
 	public function not_equals($object_or_resource): bool {
@@ -221,6 +264,14 @@ class subscriber {
 	}
 
 	/**
+	 * Returns the socket ID that was cast to an integer when the object was
+	 * created
+	 */
+	public function socket_id(): int {
+		return $this->socket_id;
+	}
+
+	/**
 	 * Validates the given token against the loaded token in the this subscriber
 	 * @param array $token Must be an associative array with name and hash as the keys.
 	 * @return bool
@@ -277,7 +328,7 @@ class subscriber {
 
 		// Check for required fields
 		if (empty($request_token)) {
-			$date = date('Y/m/d H:i:s',time());
+			$date = date('Y/m/d H:i:s', time());
 			//self::$logger->warn("Empty token given for $this->id");
 			return false;
 		}
@@ -289,7 +340,6 @@ class subscriber {
 		$valid = false;
 
 		//self::$logger->debug("Using file: $token_file");
-
 		// Ensure the file is there
 		if (file_exists($token_file)) {
 			//self::$logger->debug("Using $token_file for token");
@@ -333,7 +383,6 @@ class subscriber {
 				$this->token_time = $token_time;
 				$this->enable_token_time_limit = $token_limit > 0;
 				$this->token_limit = $token_limit * 60; // convert to seconds for time() comparison
-
 				// Add the domain
 				$this->domain_name = $array['domain']['name'] ?? '';
 				$this->domain_uuid = $array['domain']['uuid'] ?? '';
@@ -344,14 +393,29 @@ class subscriber {
 					$this->subscribe($service);
 				}
 
-				// Check for service
-				if (isset($array['service'])) {
-					$this->service = true;
-					$this->service_name = "" . $array['service_name'];
-				}
-
 				// Store the permissions
 				$this->permissions = $array['permissions'] ?? [];
+
+				// Check for service
+				if (isset($array['service'])) {
+					//
+					// Set the service information in the object
+					//
+					$this->service_name = "" . ($array['service_name'] ?? '');
+					$this->service_class = "" . ($array['service_class'] ?? '');
+
+					//
+					// Ensure we can call the method we need by checking for the interface.
+					// Using the interface instead of calling method_exists means we only have to check once
+					// for the interface instead of checking for each individual method required for it to be
+					// considered a service. We can also adjust the interface with new methods and this code
+					// remains the same. It is also possbile for us to use the 'instanceof' operator to check
+					// that the object is what we require. However, using the instanceof operator requires anc
+					// object first. Here we only check that the class has implemented the interface allowing
+					// us to call static methods without first creating an object.
+					//
+					$this->service = is_a($this->service_class, 'websocket_service_interface', true);
+				}
 
 				//self::$logger->debug("Permission count(".count($this->permissions) . ")");
 			}
@@ -370,11 +434,34 @@ class subscriber {
 		return $this->authenticated;
 	}
 
+	public function set_authenticated(bool $authenticated): self {
+		return $this;
+	}
+
+	public function set_domain(string $uuid, string $name): self {
+		if (is_uuid($uuid)) {
+			$this->uuid = $uuid;
+		} else {
+			throw new invalid_uuid_exception("UUID is not valid");
+		}
+		$this->domain_name = $name;
+		return $this;
+	}
+
 	public function is_service(): bool {
 		return $this->service;
 	}
 
-	public function service_name(): string {
+	/**
+	 * Get or set the service_name
+	 * @param string|null $service_name
+	 * @return string|$this
+	 */
+	public function service_name($service_name = null) { /* : string|self */
+		if (func_num_args() > 0) {
+			$this->service_name = $service_name;
+			return $this;
+		}
 		return $this->service_name;
 	}
 
@@ -391,6 +478,14 @@ class subscriber {
 	}
 
 	/**
+	 * Returns true if the subscriber is no longer connected
+	 * @return bool Returns true if the subscriber is no longer connected
+	 */
+	public function is_not_connected(): bool {
+		return !$this->is_connected();
+	}
+
+	/**
 	 * Checks if this subscriber is subscribed to the given service name
 	 * @param string $service_name The service name ie. active.calls
 	 * @return bool
@@ -400,8 +495,9 @@ class subscriber {
 		return isset($this->services[$service_name]);
 	}
 
-	public function subscribe(string $service_name) {
+	public function subscribe(string $service_name): self {
 		$this->services[$service_name] = true;
+		return $this;
 	}
 
 	/**
@@ -425,14 +521,14 @@ class subscriber {
 	 */
 	public function send_message(websocket_message $message) {
 
-		if (empty($message->service_name())) {
-//			print_r($message);
-//			die();
-			//self::$logger->error("Service name is empty in message");
-			return;
+		// Filter the message
+		if ($this->filter !== null) {
+			$message->apply_filter($this->filter);
 		}
 
-//		print_r($message);
+		if (empty($message->service_name())) {
+			return;
+		}
 
 		// Check that we are subscribed to the event
 		if (!$this->has_subscribed_to($message->service_name())) {
@@ -445,7 +541,7 @@ class subscriber {
 			throw new \socket_disconnected_exception($this->id);
 		}
 
-		$this->send((string)$message);
+		$this->send((string) $message);
 
 		return;
 	}
@@ -538,7 +634,8 @@ class subscriber {
 	}
 
 	public function token_time_exceeded(): bool {
-		if (!$this->enable_token_time_limit) return false;
+		if (!$this->enable_token_time_limit)
+			return false;
 
 		//self::$logger->debug("------------- TOKEN TIME LIMIT -------------");
 		//self::$logger->debug("    Token Limit: $this->token_limit");
@@ -547,7 +644,6 @@ class subscriber {
 		//self::$logger->debug("time-token_time: " . (time() - $this->token_time));
 		//self::$logger->debug("  Time Exceeded: " . ((time() - $this->token_time) > $this->token_limit ? 'Yes' : 'No'));
 		//self::$logger->debug("--------------------------------------------");
-
 		//test the time on the token to ensure it is valid
 		return (time() - $this->token_time) > $this->token_limit;
 	}
