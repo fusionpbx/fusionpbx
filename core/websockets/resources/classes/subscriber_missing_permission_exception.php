@@ -32,7 +32,7 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class subscriber_missing_permission_exception extends \subscriber_exception {
-	public function __construct($resource_id, string $message = "Subscriber is missing required permission", int $code = 0, ?\Throwable $previous = null): \Exception {
-		return parent::__construct($resource_id, $message, $code, $previous);
+	public function __construct($subscriber_id, string $message = "Subscriber is missing required permission", int $code = 0, ?\Throwable $previous = null): \Exception {
+		return parent::__construct($subscriber_id, $message, $code, $previous);
 	}
 }

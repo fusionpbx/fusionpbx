@@ -32,7 +32,7 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class subscriber_token_expired_exception extends \subscriber_exception {
-	public function __construct($resource_id = null, string $message = "Subscriber token expired", int $code = 0, ?\Throwable $previous = null) {
-		return parent::__construct($resource_id, $message, $code, $previous);
+	public function __construct($subscriber_id = null, string $message = "Subscriber token expired", int $code = 0, ?\Throwable $previous = null) {
+		return parent::__construct($subscriber_id, $message, $code, $previous);
 	}
 }

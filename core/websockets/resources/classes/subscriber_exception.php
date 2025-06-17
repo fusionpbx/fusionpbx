@@ -32,11 +32,11 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class subscriber_exception extends \Exception {
-	public $resource_id;
-	public function __construct($resource_id, string $message = "", int $code = 0, ?\Throwable $previous = null) {
+	public $subscriber_id;
+	public function __construct($subscriber_id, string $message = "", int $code = 0, ?\Throwable $previous = null) {
 		parent::__construct($message, $code, $previous);
-		$this->resource_id = $resource_id;
+		$this->subscriber_id = $subscriber_id;
 	}
 
-	public function getResourceId() { return $this->resource_id; }
+	public function getSubscriberId() { return $this->subscriber_id; }
 }

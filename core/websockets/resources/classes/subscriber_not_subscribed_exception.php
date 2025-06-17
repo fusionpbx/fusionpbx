@@ -32,7 +32,7 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class subscriber_not_subscribed_exception extends subscriber_exception {
-	public function __construct($resource_id, string $message = "Subscriber is not subscribed", int $code = 0, ?\Throwable $previous = null) {
-		parent::__construct($resource_id, $message, $code, $previous);
+	public function __construct($subscriber_id, string $message = "Subscriber is not subscribed", int $code = 0, ?\Throwable $previous = null) {
+		parent::__construct($subscriber_id, $message, $code, $previous);
 	}
 }
