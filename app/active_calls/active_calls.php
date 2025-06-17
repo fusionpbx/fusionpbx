@@ -481,9 +481,11 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	function bindEventHandlers(client) {
 		client.onEvent("CHANNEL_CALLSTATE", channel_callstate_event);
 		client.onEvent("CHANNEL_EXECUTE", channel_execute_event);
+<?php if (permission_exists('call_active_application')): ?>
 		client.onEvent("PLAYBACK_START", playback_start_event);
 		client.onEvent("PLAYBACK_STOP", playback_stop_event);
 		client.onEvent("CHANNEL_APPLICATION", channel_application_event);
+<?php endif; ?>
 		client.onEvent("valet_parking::info", valet_parking_info_event);
 		client.onEvent("HEARTBEAT", heartbeat_event);
 //		client.onEvent("CHANNEL_STATE", channel_state_event);	//Too many events
@@ -549,6 +551,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		const direction = call.variable_call_direction ?? '';
 
 		// use application field to help determine arrows
+		<?php if (permission_exists('call_active_application')): ?>
 		const application = call.application ?? null;
 		if (application !== null) {
 			const application_data = call.application_data ?? application;
@@ -596,8 +599,10 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			console.log('application', uuid, application_data);
 			update_call_element(`application_${uuid}`, application_data);
 		}
+		<?php endif; ?>
 	}
 
+<?php if (permission_exists('call_active_application')): ?>
 	// react to capture the playback to update application
 	function playback_start_event(call) {
 		console.log(call.event_name, call.unique_id, call);
@@ -633,6 +638,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			update_call_element(`application_${uuid}`, call.application_name);
 		}
 	}
+<?php endif; ?>
 
 	// CALL PARK
 	// This is possible because we have promoted the Event-Subclass name
@@ -741,15 +747,18 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			const uuid = call.unique_id;
 
 			//set the profile
+<?php if (permission_exists('call_active_profile')): ?>
 			const profile = call?.caller_channel_name.split('/')[1] ?? '';
+<?php endif; ?>
 
+<?php if (permission_exists('call_active_codec')): ?>
 			//set the codec
 			const read_codec = call.channel_read_codec_name ?? '';
 			const read_rate = call.channel_read_codec_rate ?? '';
 			const write_codec = call.channel_write_codec_name ?? '';
 			const write_rate = call.channel_write_codec_rate ?? '';
 			const codec = `${read_codec}:${read_rate} / ${write_codec}:${write_rate}`
-
+<?php endif; ?>
 			//set the domain context when it is 'default' to be current domain
 			if (call.caller_context === 'default') {
 				call.caller_context = '<?= $_SESSION['domain_name'] ?>';
@@ -763,39 +772,46 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			row.id = uuid;
 			row.dataset.color = colors.RINGING;
 			// start string block
-			row.innerHTML = `
-<?php if (permission_exists('call_active_hangup')): ?>
-					<td id="checkbox_${uuid}" class="checkbox">
-						<input type="checkbox" data-uuid="${uuid}">
-					</td>
-<?php endif; ?>
-				<td id="direction_${uuid}" style="text-align: center; vertical-align: middle;"><span id="arrow_${uuid}"></span></td>
-<?php if (permission_exists('call_active_profile')): ?>
-						<td id="profile_${uuid}" class="hide-small">${profile}</td>
-<?php endif; ?>
-				<td id="duration_${uuid}"></td>
-<?php if (permission_exists('call_active_all')): ?>
-						<td id="caller_context_${uuid}" style='display: none;'>${call.caller_context}</td>
-<?php endif; ?>
-				<td id="caller_id_name_${uuid}" class="hide-small">${call.caller_caller_id_name}</td>
-				<td id="caller_id_number_${uuid}">${call.caller_caller_id_number}</td>
-				<td id="destination_${uuid}">${call.caller_destination_number}</td>
-				<td id="application_${uuid}">${call.caller_destination_number}</td>
-				<td id="codec_${uuid}">${codec}</td>
-				<td id="secure_${uuid}">&nbsp;</td>
-<?php if (permission_exists('call_active_hangup') || permission_exists('call_active_eavesdrop')): ?>
-					<td id="commands_${uuid}" class="button right">
-						<span>
-	<?php if (permission_exists('call_active_hangup')): ?>
-								<span id='span_hangup_${uuid}'></span>
-	<?php endif; ?>
-	<?php if (permission_exists('call_active_eavesdrop')): ?>
-								<span id='span_eavesdrop_${uuid}'></span>
-	<?php endif; ?>
-						</span>
-					</td>`; //end string block
-<?php endif; ?>
-
+			row.innerHTML = `<?php
+	if (permission_exists('call_active_hangup')) {
+		echo '<td id="checkbox_${uuid}" class="checkbox">'.PHP_EOL;
+		echo '	<input type="checkbox" data-uuid="${uuid}">'.PHP_EOL;
+		echo '</td>'.PHP_EOL;
+	}
+		echo '<td id="direction_${uuid}" style="text-align: center; vertical-align: middle;"><span id="arrow_${uuid}"></span></td>'.PHP_EOL;
+	if (permission_exists('call_active_profile')) {
+		echo '<td id="profile_${uuid}" class="hide-small">${profile}</td>'.PHP_EOL;
+	}
+		echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
+	if (permission_exists('call_active_all')) {
+		echo '<td id="caller_context_${uuid}" style="display: none;">${call.caller_context}</td>'.PHP_EOL;
+	}
+		echo '<td id="caller_id_name_${uuid}" class="hide-small">${call.caller_caller_id_name}</td>'.PHP_EOL;
+		echo '<td id="caller_id_number_${uuid}">${call.caller_caller_id_number}</td>'.PHP_EOL;
+		echo '<td id="destination_${uuid}">${call.caller_destination_number}</td>'.PHP_EOL;
+	if (permission_exists('call_active_application')) {
+		echo '<td id="application_${uuid}">${call.caller_destination_number}</td>'.PHP_EOL;
+	}
+	if (permission_exists('call_active_codec')) {
+		echo '<td id="codec_${uuid}">${codec}</td>'.PHP_EOL;
+	}
+	if (permission_exists('call_active_secure')) {
+		echo '<td id="secure_${uuid}">&nbsp;</td>'.PHP_EOL;
+	}
+	if (permission_exists('call_active_hangup') || permission_exists('call_active_eavesdrop')) {
+		echo '<td id="commands_${uuid}" class="button right">'.PHP_EOL;
+			echo '<span>'.PHP_EOL;
+			if (permission_exists('call_active_hangup')) {
+				echo '<span id="span_hangup_${uuid}"></span>'.PHP_EOL;
+			}
+			if (permission_exists('call_active_eavesdrop')) {
+				echo '<span id="span_eavesdrop_${uuid}"></span>'.PHP_EOL;
+			}
+			echo '</span>'.PHP_EOL;
+		echo '</td>'.PHP_EOL;
+	}
+?>`;
+//end string block
 			if (websockets_domain_name === call.caller_context || showAll || call.caller_context === 'public') {
 				row.style.display = 'table-row';
 			} else {
@@ -871,30 +887,48 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 			//set values
 			const uuid = call.unique_id;
-			const caller_channel_name = call?.caller_channel_name.split('/')[1] ?? '';
-			const caller_context = call.caller_context ?? '';
+			<?php if (permission_exists('call_active_profile')): ?>
+				const caller_channel_name = call?.caller_channel_name.split('/')[1] ?? '';
+			<?php endif; ?>
+			<?php if (permission_exists('call_active_all')): ?>
+				const caller_context = call.caller_context ?? '';
+			<?php endif; ?>
 			const caller_caller_id_name = call.caller_caller_id_name ?? '';
 			const caller_caller_id_number = call.caller_caller_id_number ?? '';
 			const caller_destination_number = call.caller_destination_number ?? '';
-			const application_name = call.application_name ?? '';
-			const read_codec_name = call.channel_read_codec_name ?? '';
-			const read_codec_rate = call.channel_read_codec_rate ?? '';
-			const write_codec_name = call.channel_write_codec_name ?? '';
-			const write_codec_rate = call.channel_write_codec_rate ?? '';
-			const codec = `${read_codec_name}:${read_codec_rate} / ${write_codec_name}:${write_codec_rate}`
-			const secure = call.secure ?? '';
+			<?php if (permission_exists('call_active_application')): ?>
+				const application_name = call.application_name ?? '';
+			<?php endif; ?>
+			<?php if (permission_exists('call_active_codec')): ?>
+				const read_codec_name = call.channel_read_codec_name ?? '';
+				const read_codec_rate = call.channel_read_codec_rate ?? '';
+				const write_codec_name = call.channel_write_codec_name ?? '';
+				const write_codec_rate = call.channel_write_codec_rate ?? '';
+				const codec = `${read_codec_name}:${read_codec_rate} / ${write_codec_name}:${write_codec_rate}`
+			<?php endif; ?>
+			<?php if (permission_exists('call_active_secure')): ?>
+				const secure = call.secure ?? '';
+			<?php endif; ?>
 
 			//update table cells
-			update_call_element(`profile_${uuid}`, caller_channel_name);
-			update_call_element(`caller_context_${uuid}`, caller_context);
-			update_call_element(`caller_id_name_${uuid}`, caller_caller_id_name);
-			update_call_element(`caller_id_number_${uuid}`, caller_caller_id_number);
-			update_call_element(`destination_${uuid}`, caller_destination_number);
-
-			update_call_element(`application_${uuid}`, application_name);
-			update_call_element(`codec_${uuid}`, codec);
-			update_call_element(`secure_${uuid}`, secure);
-
+			<?php if (permission_exists('call_active_profile')): ?>
+				update_call_element(`profile_${uuid}`, caller_channel_name);
+			<?php endif; ?>
+			<?php if (permission_exists('call_active_all')): ?>
+				update_call_element(`caller_context_${uuid}`, caller_context);
+			<?php endif; ?>
+				update_call_element(`caller_id_name_${uuid}`, caller_caller_id_name);
+				update_call_element(`caller_id_number_${uuid}`, caller_caller_id_number);
+				update_call_element(`destination_${uuid}`, caller_destination_number);
+			<?php if (permission_exists('call_active_application')): ?>
+				update_call_element(`application_${uuid}`, application_name);
+			<?php endif; ?>
+			<?php if (permission_exists('call_active_codec')): ?>
+				update_call_element(`codec_${uuid}`, codec);
+			<?php endif; ?>
+			<?php if (permission_exists('call_active_secure')): ?>
+				update_call_element(`secure_${uuid}`, secure);
+			<?php endif; ?>
 		}
 
 	}
@@ -905,10 +939,12 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			const uuid = call.unique_id;
 			remove_button_by_id(`span_hangup_${uuid}`);
 			remove_button_by_id(`span_eavesdrop_${uuid}`);
-			const codec = document.getElementById(`codec_${uuid}`) ?? null;
-			if (codec.textContent === ': / :') {
-				replace_arrow_icon(uuid, 'missed');
-			}
+			<?php if (permission_exists('call_active_codec')): ?>
+				const codec = document.getElementById(`codec_${uuid}`) ?? null;
+				if (codec.textContent === ': / :') {
+					replace_arrow_icon(uuid, 'missed');
+				}
+			<?php endif; ?>
 			if (<?php /* DEBUGGING OPTION */ echo $settings->get('active_calls','remove_completed_calls', true) ? 'true': 'false'; ?>) {
 				row.remove();
 			}
