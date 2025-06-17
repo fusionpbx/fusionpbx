@@ -350,7 +350,15 @@ class websocket_client {
 		return self::send($this->resource, json_encode(['service' => 'authentication', 'token' => ['name' => $token_name, 'hash' => $token_hash]]));
 	}
 
-	public static function create_service_token(string $service_name, array $permissions = [], int $time_limit_in_minutes = 0) {
+	/**
+	 * Create a token for a service that can broadcast a message
+	 * @param string $service_name
+	 * @param string $service_class
+	 * @param array $permissions
+	 * @param int $time_limit_in_minutes
+	 * @return array
+	 */
+	public static function create_service_token(string $service_name, string $service_class, array $permissions = [], int $time_limit_in_minutes = 0) {
 
 		//
 		// Create a service token
@@ -376,10 +384,12 @@ class websocket_client {
 		$array['token']['limit'] = $time_limit_in_minutes;
 
 		//
-		// Store the service name
+		// Store the service name used by web browser to subscribe
+		// and store the class name of this service
 		//
 		$array['service'] = true;
 		$array['service_name'] = $service_name;
+		$array['service_class'] = $service_class;
 
 		//
 		// Get the full path and file name for storing the token
