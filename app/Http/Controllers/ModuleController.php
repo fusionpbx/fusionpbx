@@ -87,7 +87,7 @@ class ModuleController extends Controller
 			session()->flash('success', $message);
 		}
 
-		$this->saveXML();
+		$this->moduleRepository->saveXML();
 
 		return redirect()->route('modules.index');
     }
@@ -113,64 +113,8 @@ class ModuleController extends Controller
 			session()->flash('success', $message);
 		}
 
-		$this->saveXML();
+		$this->moduleRepository->saveXML();
 
 		return redirect()->route('modules.index');
     }
-
-	private function saveXML()
-	{
-		$switchConfDir = Setting::getSetting("switch", "conf", "dir");
-
-		if(!file_exists($switchConfDir . "/autoload_configs"))
-		{
-			return;
-		}
-
-		$modules = Module::orderBy("module_order")
-			->orderBy("module_category")
-			->orderBy("module_label")
-			->get();
-
-		$filePath = $switchConfDir . "/autoload_configs/modules.conf.xml";
-
-		$xml = new \XMLWriter();
-		$xml->openURI($filePath);
-		$xml->setIndent(true);
-		$xml->setIndentString("    ");
-		$xml->startDocument('1.0', 'UTF-8');
-		$xml->startElement('configuration');
-		$xml->writeAttribute('name', 'modules.conf');
-		$xml->writeAttribute('description', 'Modules');
-
-		$xml->startElement('modules');
-
-		$prevModuleCategory = null;
-
-		foreach($modules as $module)
-		{
-			if($prevModuleCategory !== $module->module_category)
-			{
-				$xml->text("\n");
-				$xml->writeComment(" " . $module->module_category . " ");
-			}
-
-			if($module->module_enabled == "true")
-			{
-				$xml->startElement("load");
-				$xml->writeAttribute("module", $module->module_name);
-				$xml->endElement();
-			}
-
-			$prevModuleCategory = $module->module_category;
-		}
-
-		$xml->endElement();
-		$xml->endElement();
-		$xml->endDocument();
-
-		$xml->flush();
-
-		Session::put("reload_xml", true);
-	}
 }
