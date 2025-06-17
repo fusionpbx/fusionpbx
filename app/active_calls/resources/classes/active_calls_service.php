@@ -170,6 +170,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 */
 	public static function create_filter_chain_for(subscriber $subscriber): filter {
 		return filter_chain::and_link([
+			new event_filter(self::SWITCH_EVENTS),
 			new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
 			new event_key_filter(self::EVENT_KEYS),
 		]);
