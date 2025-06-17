@@ -122,6 +122,28 @@ class websocket_message extends base_message {
 	}
 
 	/**
+	 * Applies a filter to the payload of this message.
+	 * When a filter returns null then the payload is set to null
+	 * @param filter $filter
+	 */
+	public function apply_filter(?filter $filter) {
+		if ($filter !== null && is_array($this->payload)) {
+			foreach ($this->payload as $key => $value) {
+				$result = ($filter)($key, $value);
+				// Check if a filter requires dropping the payload
+				if ($result === null) {
+					$this->payload = null;
+					return;
+				}
+				// Remove a key if filter does not pass
+				elseif(!$result) {
+					unset($this->payload[$key]);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Gets or sets the domain UUID
 	 * @param string $domain_uuid
 	 * @return $this or $domain_uuid
