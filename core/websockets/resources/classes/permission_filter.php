@@ -41,7 +41,7 @@ class permission_filter implements filter {
 		$this->add_permissions($permissions);
 	}
 
-	public function __invoke(string $key): bool {
+	public function __invoke(string $key, $value): ?bool {
 		$permission = $this->field_map[$key] ?? null;
 		if ($permission === null || $this->has_permission($permission)) {
 			return true;
