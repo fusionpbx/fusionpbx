@@ -55,7 +55,7 @@ try {
 	// Exit with status code given by run return value
 	//
 	exit($ws_server->run());
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
 
 	////////////////////////////////////////////////////
 	// Here we catch all exceptions and log the error //
@@ -71,7 +71,7 @@ try {
 	//
 	// Show user the details
 	//
-	echo "FATAL ERROR: $message ($code) FROM $file (line: $line)\n";
+	echo "FATAL ERROR: '$message' (ERROR CODE: $code) FROM $file (Line: $line)\n";
 	echo $ex->getTraceAsString() . "\n";
 
 	//
