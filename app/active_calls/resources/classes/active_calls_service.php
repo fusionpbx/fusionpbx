@@ -31,7 +31,7 @@
  *
  * @author Tim Fry <tim@fusionpbx.com>
  */
-class active_calls_service extends service {
+class active_calls_service extends service implements websocket_service_interface {
 
 	const SWITCH_EVENTS = [
 		['Event-Name' => 'CHANNEL_CREATE'],
@@ -47,7 +47,7 @@ class active_calls_service extends service {
 		['Event-Subclass' => 'valet_parking::info'],
 	];
 
-	const EVENT_FILTERS = [
+	const EVENT_KEYS = [
 		// Event name: CHANNEL_EXECUTE, CHANNEL_DESTROY, NEW_CALL...
 		'event_name',
 		// Unique Call Identifier to determine new/existing calls
@@ -90,6 +90,9 @@ class active_calls_service extends service {
 		'content_type',
 	];
 
+	//
+	// Maps the event key to the permission name
+	//
 	const PERMISSION_MAP = [
 		'channel_read_codec_name'   => 'call_active_codec',
 		'channel_read_codec_rate'   => 'call_active_codec',
@@ -97,6 +100,9 @@ class active_calls_service extends service {
 		'channel_write_codec_rate'  => 'call_active_codec',
 		'caller_channel_name'       => 'call_active_profile',
 		'secure'                    => 'call_active_secure',
+		'application'               => 'call_active_application',
+		'playback_file_path'        => 'call_active_application',
+		'variable_current_application'=> 'call_active_application',
 	];
 
 	/**
@@ -157,6 +163,27 @@ class active_calls_service extends service {
 		return false;
 	}
 
+	/**
+	 * Builds a filter for the subscriber
+	 * @param subscriber $subscriber
+	 * @return filter
+	 */
+	public static function create_filter_chain_for(subscriber $subscriber): filter {
+		return filter_chain::and_link([
+			new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
+			new event_key_filter(self::EVENT_KEYS),
+		]);
+	}
+
+	/**
+	 * Returns the service name for this service that is used when the web browser clients subscriber
+	 * to this service for updates
+	 * @return string
+	 */
+	public static function get_service_name(): string {
+		return "active.calls";
+	}
+
 	public static function get_hangup_command(string $uuid): string {
 		return "bgapi uuid_kill $uuid";
 	}
@@ -193,7 +220,7 @@ class active_calls_service extends service {
 		}, $this->ws_client);
 
 		// Create an active call filter using filter objects to create an 'OR' chain
-		$this->event_filter = filter_chain::link([new event_filter(active_calls_service::EVENT_FILTERS)]);
+		$this->event_filter = filter_chain::or_link([new event_key_filter(active_calls_service::EVENT_KEYS)]);
 
 		// Register callbacks for the topics
 		$this->on_topic('in.progress',  [$this, 'on_in_progress'] );
@@ -292,7 +319,7 @@ class active_calls_service extends service {
 	private function on_authenticate(websocket_message $websocket_message) {
 		$this->info("Authenticating with websocket server");
 		// Create a service token
-		[$token_name, $token_hash] = websocket_client::create_service_token(SERVICE_NAME);
+		[$token_name, $token_hash] = websocket_client::create_service_token(active_calls_service::get_service_name(), static::class);
 
 		// Request authentication as a service
 		$this->ws_client->authenticate($token_name, $token_hash);
@@ -325,7 +352,7 @@ class active_calls_service extends service {
 		$this->debug("Sending calls in progress ($count)");
 
 		// Use the subscribers permissions to filter out the event keys not permitted
-		$filter = filter_chain::link([new permission_filter(self::PERMISSION_MAP, $websocket_message->permissions())]);
+		$filter = filter_chain::or_link([new permission_filter(self::PERMISSION_MAP, $websocket_message->permissions())]);
 
 		/** @var event_message $event */
 		foreach ($calls as $event) {
@@ -677,7 +704,7 @@ class active_calls_service extends service {
 		$this->debug("EVENT: '" . $event->name . "'");
 
 		if (!$this->ws_client->is_connected()) {
-			$this->debug('Not connected to websocket host. Terminating Event');
+			$this->debug('Not connected to websocket host. Dropping Event');
 			return;
 		}
 
