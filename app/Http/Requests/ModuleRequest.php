@@ -22,7 +22,7 @@ class ModuleRequest extends FormRequest
 		return [
 			"module_label" => "bail|required|string|max:255",
 			"module_name" => "bail|required|string|max:255",
-			"module_order" => "bail|nullable|integer|max:100",
+			"module_order" => "bail|nullable|integer|min:0",
 			"module_category" => "bail|required|string|max:255",
 			"module_enabled" => "bail|nullable|in:true,false",
 			"module_default_enabled" => "bail|nullable|in:true,false",
