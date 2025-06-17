@@ -50,9 +50,9 @@ if (version_compare(PHP_VERSION, '7.1.0', '<')) {
 	die("This script requires PHP 7.1.0 or higher. You are running " . PHP_VERSION . "\n");
 }
 
-define('SERVICE_NAME', 'active.calls');
-
 require_once dirname(__DIR__, 4) . '/resources/require.php';
+
+define('SERVICE_NAME', active_calls_service::get_service_name());
 
 try {
 	$active_calls_service = active_calls_service::create();
