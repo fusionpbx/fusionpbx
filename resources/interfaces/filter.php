@@ -31,5 +31,15 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 interface filter {
-	public function __invoke(string $key): bool;
+	/**
+	 * Uses the __invoke magic method to create a filter
+	 * There are three possible return values for a filter:
+	 *   1. True - Passed
+	 *   2. False - Failed
+	 *   3. null - Invalid
+	 * @param string $key
+	 * @param mixed $value
+	 * @return bool|null
+	 */
+	public function __invoke(string $key, $value): ?bool;
 }
