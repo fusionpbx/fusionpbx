@@ -27,67 +27,59 @@
  */
 
 /**
- * Active call filter class definition
+ * Filter an event based on event name or event subclass or event command
+ *
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class event_filter implements filter {
 
-	private $filters;
+	private $event_names;
 
-	public function __construct(array $filters = []) {
-		$this->add_filters($filters);
+	public function __construct(array $event_names) {
+		$this->add_event_names($event_names);
 	}
 
-	public function __invoke(string $key): bool {
-		if ($this->has_filter_key($key)) {
+	public function __invoke(string $key, $value): ?bool {
+		if ($key !== 'event_name') {
 			return true;
 		}
-		return false;
+		return $this->has_event_name($value);
 	}
 
 	/**
-	 * Adds a single filter
-	 * @param string $key
+	 * Adds a single event name filter
+	 * @param string $name
 	 */
-	public function add_filter(string $key) {
-		$this->filters[$key] = $key;
-	}
-
-	/**
-	 * Returns the current list of filters
-	 * @return array
-	 */
-	public function get_filters(): array {
-		return array_values($this->filters);
-	}
-
-	/**
-	 * Removes a single list of filters
-	 * @param string $key
-	 */
-	public function remove_filter(string $key) {
-		unset($this->filters[$key]);
-	}
-
-	/**
-	 * Clears all filters
-	 */
-	public function clear_filters() {
-		$this->filters = [];
+	public function add_event_name(string $name) {
+		$this->event_names[$name] = $name;
 	}
 
 	/**
 	 * Adds the array list to the filters.
-	 * @param array $list_of_keys
+	 * @param array $event_names
 	 */
-	public function add_filters(array $list_of_keys) {
+	public function add_event_names(array $event_names) {
 		// Add all event key filters passed
-		foreach ($list_of_keys as $key) {
-			$this->filters[$key] = $key;
+		foreach ($event_names as $event_name) {
+			if (is_array($event_name)) {
+				$this->add_event_names($event_name);
+			} else {
+				$this->add_event_name($event_name);
+			}
 		}
 	}
 
-	public function has_filter_key(string $key): bool {
-		return isset($this->filters[$key]);
+	public function has_event_name(string $name): ?bool {
+		if (isset($this->event_names[$name]))
+			return true;
+		//
+		// If the event name is not allowed by the permissions given in
+		// this object, then the entire event must be dropped. I could
+		// not figure out a better way to do this except to throw an
+		// exception so that the caller can drop the message.
+		//
+		// TODO: Find another way not so expensive to reject the payload
+		//
+		return null;
 	}
 }
