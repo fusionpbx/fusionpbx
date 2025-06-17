@@ -38,12 +38,12 @@ final class filter_chain {
 	 * @param array $filters Array of filter objects
 	 * @return filter
 	 */
-	public static function link(array $filters): filter {
+	public static function or_link(array $filters): filter {
 
 		// Create an anonymous object to end the filter
 		$final = new class implements filter {
 
-			public function __invoke(string $key): bool {
+			public function __invoke(string $key, $value): bool {
 				return false;
 			}
 		};
@@ -69,16 +69,42 @@ final class filter_chain {
 					$this->next = $next;
 				}
 
-				public function __invoke(string $key): bool {
-					if (($this->current)($key)) {
+				public function __invoke(string $key, $value): ?bool {
+					if (($this->current)($key, $value)) {
+						// Any filter passed so return true
 						return true;
 					}
-					return ($this->next)($key);
+					// Filter did not pass so we check the next one
+					return ($this->next)($key, $value);
 				}
 			};
 		}
 
 		// Return the completed filter chain
 		return $chain;
+	}
+
+	public static function and_link(array $filters): filter {
+		return new class($filters) implements filter {
+			private $filters;
+
+			public function __construct(array $filters) {
+				$this->filters = $filters;
+			}
+
+			public function __invoke(string $key, $value): ?bool {
+				foreach ($this->filters as $filter) {
+					$result = ($filter)($key, $value);
+					// Check if a filter requires a null to be returned
+					if ($result === null) {
+						return null;
+					} elseif(!$result) {
+						return false;
+					}
+				}
+				// All filters passed so return true
+				return true;
+			}
+		};
 	}
 }
