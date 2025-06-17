@@ -31,7 +31,7 @@
  *
  * @author Tim Fry <tim@fusionpbx.com>
  */
-class event_message {
+class event_message implements filterable_payload {
 
 	const BODY_ARRAY_KEY = '_body';
 
@@ -86,7 +86,7 @@ class event_message {
 		self::sanitize_event_key($name);
 
 		// Use the filter chain to ensure the key is allowed
-		if ($this->event_filter === null || ($this->event_filter)($name)) {
+		if ($this->event_filter === null || ($this->event_filter)($name, $value)) {
 			$this->event[$name] = $value;
 		}
 	}
@@ -115,8 +115,11 @@ class event_message {
 	}
 
 	public function apply_filter(filter $filter) {
-		foreach (array_keys($this->event) as $key) {
-			if (!($filter)($key)) {
+		foreach ($this->event as $key => $value) {
+			$result = ($filter)($key, $value);
+			if ($result === null) {
+				$this->event = [];
+			} elseif (!$result) {
 				unset($this->event[$key]);
 			}
 		}
