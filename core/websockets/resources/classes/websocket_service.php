@@ -88,6 +88,12 @@ class websocket_service extends service {
 	 */
 	protected $subscribers;
 
+	/**
+	 * Array of registered services
+	 * @var array
+	 */
+	private $services;
+
 	public function is_debug_enabled(): bool {
 		return parent::$log_level === LOG_DEBUG;
 	}
@@ -189,28 +195,44 @@ class websocket_service extends service {
 			$subscriber->send(websocket_message::request_authenticated($message->request_id, $message->service));
 			if ($subscriber->is_service()) {
 				$this->info("Service $subscriber->id authenticated");
+				$this->services[$subscriber->service_name()] = $subscriber;
 			} else {
 				$this->info("Client $subscriber->id authenticated");
+				$this->info("Setting permissions on $subscriber->id");
+				$subscriptions = $subscriber->subscribed_to();
+				foreach ($subscriber->subscribed_to() as $subscribed_to) {
+					if (isset($this->services[$subscribed_to])) {
+						$service = $this->services[$subscribed_to];
+						$class = $service->service_class();
+						$filter = $class::create_filter_chain_for($subscriber);
+						$subscriber->set_filter($filter);
+						$this->info("Set permissions for $subscriber->id for service " . $service->service_name());
+					}
+				}
 			}
 		} else {
 			$subscriber->send(websocket_message::request_unauthorized($message->request_id, $message->service));
 			// Disconnect them
-			$this->info("Removed client: $subscriber->id");
-			$subscriber->disconnect();
+			$this->handle_disconnect($subscriber->socket_id());
 		}
 		return;
 	}
 
-	private function broadcast_service_message(?websocket_message $message = null) {
+	private function broadcast_service_message(subscriber $broadcaster, ?websocket_message $message = null) {
 
-		$this->debug("Processing broadcast request");
+		$this->debug("Processing Broadcast");
 
 		// Ensure we have something to do
 		if ($message === null) {
 			$this->warn("Unable to broadcast empty message");
 			return;
 		}
-		if (empty($this->subscribers)) {
+
+		$subscribers = array_filter($this->subscribers, function ($subscriber) use ($broadcaster) {
+			return $subscriber->not_equals($broadcaster);
+		});
+
+		if (empty($subscribers)) {
 			$this->debug("No subscribers to broadcast message to");
 			return;
 		}
@@ -223,18 +245,19 @@ class websocket_service extends service {
 			$service_name = $message->service_name;
 
 			// Filter subscribers to only the ones subscribed to the service name
-			$send_to = $this->filter_subscribers($message, $service_name);
+			$send_to = $this->filter_subscribers($subscribers, $message, $service_name);
 
 			// Send the message to the filtered subscribers
 			foreach ($send_to as $subscriber) {
 				try {
 					// Notify of the message we are broadcasting
 					$this->debug("Broadcasting message '" . $message->payload['event_name'] . "' for service '" . $message->service_name . "' to subscriber $subscriber->id");
+					$message->apply_filter($subscriber->get_filter());
 					$subscriber->send_message($message);
 				} catch (subscriber_token_expired_exception $ste) {
 					$this->info("Subscriber $ste->id token expired");
-					//Subscriber token has expired so disconnect them
-					$subscriber->disconnect();
+					// Subscriber token has expired so disconnect them
+					$this->handle_disconnect($subscriber->socket_id());
 				}
 			}
 		}
@@ -246,6 +269,7 @@ class websocket_service extends service {
 				$subscriber = $this->subscribers[$object_id];
 				// Remove the resource_id from the message
 				$message->resource_id('');
+				// TODO: Fix removal of request_id
 				$message->request_id('');
 				// Return the requested results back to the subscriber
 				$subscriber->send_message($message);
@@ -254,25 +278,28 @@ class websocket_service extends service {
 		return;
 	}
 
-	private function filter_subscribers(websocket_message $message, string $service_name): array {
+	/**
+	 * Filters subscribers based on the service name given
+	 * @param array $subscribers
+	 * @param websocket_message $message
+	 * @param string $service_name
+	 * @return array List of subscriber objects or an empty array if there are no subscribers to that service name
+	 */
+	private function filter_subscribers(array $subscribers, websocket_message $message, string $service_name): array {
 		$filtered = [];
-		if (!empty($this->subscribers)) {
-			foreach ($this->subscribers as $subscriber) {
-				$caller_context = strtolower($message->caller_context ?? '');
-				if (!empty($caller_context)
-							&& $subscriber->has_subscribed_to($service_name)
-							&& ($subscriber->show_all
-								|| $caller_context === $subscriber->domain_name
-								|| $caller_context === 'public'
-								|| $caller_context === 'default'
-							)
-				) {
+
+		foreach ($subscribers as $subscriber) {
+			$caller_context = strtolower($message->caller_context ?? '');
+			if (!empty($caller_context) && $subscriber->has_subscribed_to($service_name) && ($subscriber->show_all || $caller_context === $subscriber->domain_name || $caller_context === 'public' || $caller_context === 'default'
+					)
+			) {
+				$filtered[] = $subscriber;
+			} else {
+				if ($subscriber->has_subscribed_to($service_name))
 					$filtered[] = $subscriber;
-				} else {
-					if ($subscriber->has_subscribed_to($service_name)) $filtered[] = $subscriber;
-				}
 			}
 		}
+
 		return $filtered;
 	}
 
@@ -290,25 +317,53 @@ class websocket_service extends service {
 		} catch (\socket_disconnected_exception $sde) {
 			$this->warning("Client $sde->id disconnected during connection");
 			// remove the connected client
-			unset($this->subscribers[$sde->id]);
+			$this->handle_disconnect($sde->id);
 		}
 		return;
 	}
 
 	/**
-	 * Web socket client disconnected from the server
-	 * @param resource $socket
+	 * Web socket client disconnected from the server or this service has requested a disconnect from the subscriber
+	 * @param subscriber|resource|int|string $object_or_resource_or_id
 	 */
-	private function handle_disconnect($socket) {
+	private function handle_disconnect($object_or_resource_or_id) {
 		//
-		// The $socket is no longer a valid resource so we
-		// filter out disconnected clients from the list
-		// instead of searching for the socket
+		// Notify user
 		//
-		$this->info("Disconnecting: " . $socket);
-		array_filter($this->subscribers, function ($subscriber) {
-			!$subscriber->is_connected();
-		});
+		$this->info("Disconnecting subscriber: '$object_or_resource_or_id'");
+
+		//
+		// Search for the socket using the equals method in subscriber
+		//
+		$subscriber = null;
+
+		/* PHP 8 syntax: $subscriber = array_find($this->subscribers, fn ($subscriber) => $subscriber->equals($socket_id)); */
+
+		// Find the subscriber in our array
+		foreach ($this->subscribers as $s) {
+			if ($s->equals($object_or_resource_or_id)) {
+				$subscriber = $s;
+			}
+		}
+
+		// We have found our subscriber to be disconnected
+		if ($subscriber !== null) {
+			// If they are still connected then disconnect them with the proper disconnect
+			if ($subscriber->is_connected()) {
+				$subscriber->disconnect();
+			}
+
+			// remove from the subscribers list
+			unset($this->subscribers[$subscriber->id]);
+
+			// remove from services
+			unset($this->services[$subscriber->service_name()]);
+
+			// notify user
+			$this->info("Disconnected subscriber: '$subscriber->id'");
+		}
+
+		// show the list for debugging
 		$this->debug("Current Subscribers: " . implode(', ', array_keys($this->subscribers)));
 	}
 
@@ -320,11 +375,11 @@ class websocket_service extends service {
 	private function handle_message($socket, $data) {
 		$subscriber = $this->get_subscriber_from_socket_id($socket);
 
-		$this->debug("Received message from " . $subscriber->id);
-
 		// Ensure we have someone to talk to
 		if ($subscriber === null)
 			return;
+
+		$this->debug("Received message from " . $subscriber->id);
 
 		// Convert the message from json string to a message array
 		$json_array = json_decode($data, true);
@@ -351,10 +406,10 @@ class websocket_service extends service {
 					return;
 				}
 
-				// If the message comes from a service, broadcast it to anyone subscribed to that service
+				// If the message comes from a service, broadcast it to all subscribers subscribed to that service
 				if ($subscriber->is_service()) {
 					$this->debug("Message is from service");
-					$this->broadcast_service_message($message);
+					$this->broadcast_service_message($subscriber, $message);
 					return;
 				}
 
@@ -367,8 +422,7 @@ class websocket_service extends service {
 					$subscriber->send(websocket_message::request_is_bad($message->id, 'INVALID', $message->topic));
 				}
 			} catch (socket_disconnected_exception $sde) {
-				$this->info("Disconnected client $sde->id");
-				unset($this->subscribers[$sde->id]);
+				$this->handle_disconnect($sde->id);
 			}
 	}
 
@@ -387,7 +441,7 @@ class websocket_service extends service {
 				$message->resource_id = $subscriber->id;
 
 				//send the modified web socket message to the service
-				$service->send((string)$message);
+				$service->send((string) $message);
 				//continue searching for service providers
 				continue;
 			}
@@ -491,7 +545,34 @@ class websocket_service extends service {
 					die();
 				}
 
-				$this->trigger_message($client_socket, $message);
+				try {
+					$this->trigger_message($client_socket, $message);
+				} catch (subscriber_exception $se) {
+					//
+					// Here we are catching any type of subscriber exception and displaying the error in the log.
+					// This will disconnect the subscriber as we no longer know the state of the object.
+					//
+
+					//
+					// Get the error details
+					//
+					$subscriber_id = $se->getSubscriberId();
+					$message = $se->getMessage();
+					$code = $se->getCode();
+					$file = $se->getFile();
+					$line = $se->getLine();
+
+					//
+					// Dump the details in the log
+					//
+					$this->err("ERROR FROM $subscriber_id: $message ($code) IN FILE $file (Line: $line)");
+					$this->err($se->getTraceAsString());
+					//
+					// Disconnect the subscriber
+					//
+					$subscriber = $this->subscribers[$subscriber_id] ?? null;
+					if ($subscriber !== null) $this->disconnect_client($subscriber->socket());
+				}
 			}
 		}
 	}
@@ -610,7 +691,7 @@ class websocket_service extends service {
 	 * @return bool Returns true on client disconnect and false when the client is not found in the tracking array
 	 * @access protected
 	 */
-	protected function disconnect_client($resource, $error = null): bool {
+	protected function disconnect_client($resource): bool {
 		// Close the socket
 		if (is_resource($resource)) {
 			@fwrite($resource, chr(0x88) . chr(0x00)); // 0x88 = close frame, no reason
@@ -829,5 +910,4 @@ class websocket_service extends service {
 		[$remote_ip, $remote_port] = explode(':', stream_socket_get_name($resource, true), 2);
 		return ['remote_ip' => $remote_ip, 'remote_port' => $remote_port];
 	}
-
 }
