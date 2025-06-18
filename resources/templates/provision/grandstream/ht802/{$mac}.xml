@@ -91,6 +91,7 @@
     <P212>{$grandstream_firmware_upgrade_protocol}</P212>
     {else}
     <P212>2</P212>
+    {/if}
 
     <!-- Firmware Server Path -->
     <!-- Server address -->
