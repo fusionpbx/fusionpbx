@@ -3,10 +3,12 @@
 namespace App\Repositories;
 
 use App\Facades\FreeSwitch;
+use App\Facades\Setting;
 use App\Models\Module;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use XMLWriter;
 
 class ModuleRepository
@@ -30,6 +32,11 @@ class ModuleRepository
 
     public function create(array $data): Module
     {
+        if(!isset($data['module_uuid']))
+        {
+            $data['module_uuid'] = Str::uuid();
+        }
+
         return $this->model->create($data);
     }
 
