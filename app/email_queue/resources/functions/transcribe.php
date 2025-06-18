@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('transcribe')) {
-	function transcribe ($file_path, $file_name, $file_extension) {
+	function transcribe ($file_path, $file_name, $file_extension, $domain_uuid=null) {
 
 		//get the email queue settings
 			$setting = new settings(['category' => 'voicemail']);
@@ -313,6 +313,45 @@ if (!function_exists('transcribe')) {
 				$array['message'] = $message;
 				return $array;
 			}
+
+            // transcribe - Open AI
+			// It uses FS PBX transcription service 
+            if ($transcribe_provider === 'openai') {
+                $audio_file = "{$file_path}/{$file_name}";
+                $artisan_path = '/var/www/fspbx/artisan';
+            
+                echo "Sending voicemail recording to FS PBX for transcription\n";
+            
+                // Build the command string
+                $cmd = sprintf(
+                    'php %s voicemail:transcribe %s --provider=%s --domain_uuid=%s',
+                    escapeshellarg($artisan_path),
+                    escapeshellarg($audio_file),
+                    escapeshellarg($transcribe_provider),
+                    escapeshellarg($domain_uuid),
+                    // add --language=xx if you want
+                );
+            
+                // Run the command and capture output
+                $output = [];
+                $return_var = 0;
+                exec($cmd . ' 2>&1', $output, $return_var);
+            
+                $output_text = implode("\n", $output);
+            
+                if ($return_var !== 0) {
+                    echo "Transcription failed. Output: $output_text\n";
+                    return false;
+                }
+            
+                // Optionally parse or return the output
+                return [
+                    'provider' => $transcribe_provider,
+                    'message'  => trim($output_text),
+                ];
+            }
+            
+            
 
 	}
 }

@@ -224,7 +224,7 @@
 			if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled == 'true') {
 				//transcribe the attachment
 				if ($email_attachment_type == 'wav' || $email_attachment_type == 'mp3') {
-					$field = transcribe($email_attachment_path, $email_attachment_name, $email_attachment_type);
+					$field = transcribe($email_attachment_path, $email_attachment_name, $email_attachment_type, $domain_uuid);
 					echo "transcribe path: ".$email_attachment_path."\n";
 					echo "transcribe name: ".$email_attachment_name."\n";
 					echo "transcribe type: ".$email_attachment_type."\n";
