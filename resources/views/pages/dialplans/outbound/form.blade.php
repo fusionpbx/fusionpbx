@@ -214,7 +214,7 @@
                         <div class="form-group">
                             <label class="form-label d-block">Enabled</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="dialplan_enabled" name="dialplan_enabled" value="true">
+                                <input class="form-check-input" type="checkbox" role="switch" id="dialplan_enabled" name="dialplan_enabled" value="true" checked>
                                 <label class="form-check-label" for="dialplan_enabled">{{ __('Enabled') }}</label>
                             </div>
                             @error('dialplan_enabled')

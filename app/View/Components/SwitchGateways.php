@@ -25,12 +25,16 @@ class SwitchGateways extends Component
 
 		$bridges =  Bridge::where("domain_uuid", Session::get("domain_uuid"))->where("bridge_enabled", "true")->get();
 		$domains =  Domain::where("domain_enabled", "true")->get();
-		$gateways = Gateway::where("domain_uuid", Session::get("domain_uuid"))->get();
-
+        $gateways = Gateway::where("enabled", "true")
+                    ->when(!auth()->user()->hasPermission('outbound_route_any_gateway'), function($query){
+                        return $query->where("domain_uuid", Session::get("domain_uuid"));
+                    })
+                    ->get();
 		$previous_domain_uuid = '';
 		$domain_name = '';
 
 		$this->setOptions("Gateways", $values);
+        $domain_groups = [];
 
 		foreach($gateways as $gateway)
 		{
