@@ -31,6 +31,7 @@ class SwitchGateways extends Component
 		$domain_name = '';
 
 		$this->setOptions("Gateways", $values);
+        $domain_groups = [];
 
 		foreach($gateways as $gateway)
 		{
