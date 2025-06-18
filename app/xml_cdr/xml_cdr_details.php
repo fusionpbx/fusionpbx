@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -434,6 +434,7 @@
 	if ($summary_style == 'horizontal') {
 		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<th></th>\n";
 		echo "<th>".$text['label-direction']."</th>\n";
 		//echo "<th>Language</th>\n";
 		//echo "<th>Context</th>\n";
@@ -449,6 +450,16 @@
 		echo "<th align='center'>".$text['label-status']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr >\n";
+		echo "	<td style='width: 0' valign='top' class='".$row_style[$c]."'>\n";
+		if (!empty($call_direction)) {
+			$image_name = "icon_cdr_" . $call_direction . "_" . $status;
+			if ($row['leg'] == 'b') {
+				$image_name .= '_b';
+			}
+			$image_name .= ".png";
+			echo "		<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+		}
+		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
 		//echo "	<td valign='top' class='".$row_style[$c]."'>".$language."</td>\n";
 		//echo "	<td valign='top' class='".$row_style[$c]."'>".$context."</td>\n";
@@ -499,6 +510,7 @@
 	echo "<div class='card'>\n";
 	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
+	echo "		<th></th>\n";
 	echo "		<th>".$text['label-application']."</th>\n";
 	if ($call_direction == 'local' || $call_direction == 'outbound') {
 		echo "		<th>".$text['label-source']."</th>\n";
@@ -512,7 +524,8 @@
 	echo "	</tr>\n";
 	$i = 1;
 	foreach ($call_flow_summary as $row) {
-		echo "	<tr >\n";
+		echo "	<tr>\n";
+		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".$row["application_icon"][$row["application_name"]]."' style='opacity: 0.8;'></span></td>";
 		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
 		if ($call_direction == 'local' || $call_direction == 'outbound') {
 			echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";
