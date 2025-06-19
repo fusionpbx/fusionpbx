@@ -130,6 +130,13 @@ class active_calls_service extends service implements websocket_service_interfac
 	 */
 	private $event_filter;
 
+	private static $switch_port = null;
+	private static $switch_host = null;
+	private static $switch_password = null;
+
+	private static $websocket_port = null;
+	private static $websocket_host = null;
+
 	/**
 	 * Checks if an event exists in the SWITCH_EVENTS.
 	 * @param string $event_name The value to search for.
@@ -185,13 +192,25 @@ class active_calls_service extends service implements websocket_service_interfac
 		return "active.calls";
 	}
 
+	/**
+	 * Returns a string used to execute a hangup command
+	 * @param string $uuid
+	 * @return string
+	 */
 	public static function get_hangup_command(string $uuid): string {
 		return "bgapi uuid_kill $uuid";
 	}
 
+	/**
+	 * Reloads the settings for the service so the service does not have to be restarted
+	 * @return void
+	 */
 	protected function reload_settings(): void {
-		//re-read the config file to get any possible changes
+		// re-read the config file to get any possible changes
 		parent::$config->read();
+
+		// use the connection information in the config file
+
 		// re-connect to the event socket
 		if ($this->connect_to_event_socket()) {
 			$this->register_event_socket_filters();
@@ -200,12 +219,84 @@ class active_calls_service extends service implements websocket_service_interfac
 		$this->connect_to_ws_server();
 	}
 
+	/**
+	 * Displays the version of the active calls service in the console
+	 * @return void
+	 */
 	protected static function display_version(): void {
 		echo "Active Calls Service 1.0\n";
 	}
 
+	/**
+	 * Sets the command line options
+	 */
 	protected static function set_command_options() {
-		//TODO: IP and port for websocket server connection
+		parent::append_command_option(
+			command_option::new()
+				->description('Set the Port to connect to the switch')
+				->short_option('p')
+				->short_description('-p <port>')
+				->long_option('switch-port')
+				->long_description('--switch-port <port>')
+				->callback('set_switch_port')
+		);
+		parent::append_command_option(
+			command_option::new()
+				->description('Set the IP address for the switch')
+				->short_option('i')
+				->short_description('-i <ip_addr>')
+				->long_option('switch-ip')
+				->long_description('--switch-ip <ip_addr>')
+				->callback('set_switch_host_address')
+		);
+		parent::append_command_option(
+			command_option::new()
+				->description('Set the password to be used with switch')
+				->short_option('o')
+				->short_description('-o <password>')
+				->long_option('switch-password')
+				->long_description('--switch-password <password>')
+				->callback('set_switch_password')
+		);
+		parent::append_command_option(
+			command_option::new()
+				->description('Set the Port to connect to the websockets service')
+				->short_option('w')
+				->short_description('-w <port>')
+				->long_option('websockets-port')
+				->long_description('--websockets-port <port>')
+				->callback('set_websockets_port')
+		);
+		parent::append_command_option(
+			command_option::new()
+				->description('Set the IP address for the websocket')
+				->short_option('k')
+				->short_description('-k <ip_addr>')
+				->long_option('websockets-address')
+				->long_description('--websockets-address <ip_addr>')
+				->callback('set_websockets_host_address')
+		);
+
+	}
+
+	protected static function set_websockets_port($port): void {
+		self::$websocket_port = $port;
+	}
+
+	protected static function set_websockets_host_address($host): void {
+		self::$websocket_host = $host;
+	}
+
+	protected static function set_switch_host_address($host): void {
+		self::$switch_host = $host;
+	}
+
+	protected static function set_switch_port($port): void {
+		self::$switch_port = $port;
+	}
+
+	protected static function set_switch_password($password): void {
+		self::$switch_password = $password;
 	}
 
 	/**
@@ -458,9 +549,11 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return bool
 	 */
 	private function connect_to_ws_server(): bool {
+		$host = self::$websocket_host ?? self::$config->get('websocket.host', '127.0.0.1');
+		$port = self::$websocket_port ?? self::$config->get('websocket.port', 8080);
 		try {
 			// Create a websocket client
-			$this->ws_client = new websocket_client('ws://127.0.0.1:8080');
+			$this->ws_client = new websocket_client("ws://$host:$port");
 
 			// Block stream for handshake and authentication
 			$this->ws_client->set_blocking(true);
@@ -491,10 +584,11 @@ class active_calls_service extends service implements websocket_service_interfac
 			$this->switch_socket = false;
 		}
 
-		//not all installs have these values in their config so we must provide defaults
-		$host = parent::$config->get('switch.event_socket.host', '127.0.0.1');
-		$port = parent::$config->get('switch.event_socket.port', 8021);
-		$password = parent::$config->get('switch.event_socket.password', 'ClueCon');
+		// When no command line option is used to set the switch host, port, or password, get it from
+		// the config file. If it is not in the config file, then set a default value
+		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');
+		$port = self::$switch_port ?? parent::$config->get('switch.event_socket.port', 8021);
+		$password = self::$switch_password ?? parent::$config->get('switch.event_socket.password', 'ClueCon');
 
 		try {
 			//set up the socket away from the event_socket object so we have control over blocking
