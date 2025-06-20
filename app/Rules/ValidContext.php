@@ -33,13 +33,14 @@ class ValidContext implements ValidationRule
                     })
                     ->when(!$this->allowGlobal, function ($q){
                         return $q->whereNotIn('dialplan_context',['global','${domain_name}']);
-                    });
-        $contexts = $contexts_query->get();
+                    })
+                    ->where('dialplan_context','=', $value);
+        $contexts_count = $contexts_query->count();
         if(App::hasDebugModeEnabled()){
             Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $contexts_query: '.$contexts_query->toRawSql());
         }
-        $found = array_search($value, $contexts);
-        if ($found === false)
+
+        if ($contexts_count == 0)
         {
             $fail('The :attribute does not have a valid ISO639 value.');
         }
