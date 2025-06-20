@@ -6,6 +6,7 @@ use App\Facades\DefaultSetting;
 use App\Models\Extension;
 use App\Rules\UniqueFSDestination;
 use App\Rules\ValidCidr;
+use App\Rules\ValidContext;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -158,8 +159,13 @@ class ExtensionRequest extends FormRequest
         $user = auth()->user();
         if ($user->hasPermission('extension_user_context'))
         {
-
+            $rules['user_context'][] = new ValidContext(config('freeswitch.ALLOW_PUBLIC_CONTEXT'));
         }
+        else {
+            $rules['user_context'][] = new ValidContext();
+        }
+
+
 
         return $rules;
     }
