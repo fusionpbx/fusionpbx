@@ -174,3 +174,15 @@ if (!function_exists('format_mac')) {
         return $str;
     }
 }
+
+if(!function_exists('array_find')) {
+    function array_find(array $array, callable $callback): mixed
+    {
+        foreach ($array as $key => $value) {
+            if ($callback($value, $key)) {
+                return $value;
+            }
+        }
+        return null;
+    }
+}
