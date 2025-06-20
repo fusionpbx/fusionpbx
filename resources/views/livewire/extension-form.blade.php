@@ -19,7 +19,7 @@
                                     <i class="fa fa-share-alt" aria-hidden="true"></i> {{ __('Call forward') }}
                                 </button>
                             @endcan
-                            
+
                             @can('xml_cdr_view')
                                 <button type="button" class="btn btn-primary btn-sm">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ __('CDR') }}

@@ -27,7 +27,7 @@ class ContactEmailRequest extends FormRequest
             'emails' => 'nullable|array',
             'emails.*.email_address' => [
                 'nullable',
-                'email',
+                'email:rfc,dns,spoof,filter',
                 'max:255',
             ],
             'emails.*.email_label' => 'nullable|string|max:100',

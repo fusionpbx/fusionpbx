@@ -174,7 +174,8 @@ return [
         App\Providers\FreeSwitchServiceProvider::class,
         App\Providers\DefaultSettingServiceProvider::class,
         App\Providers\DomainServiceProvider::class,
-        App\Providers\FreeSwitchRegistrationServiceProvider::class,     
+        App\Providers\FreeSwitchModuleServiceProvider::class,
+        App\Providers\FreeSwitchRegistrationServiceProvider::class,
         App\Providers\SettingServiceProvider::class,
     ])->toArray(),
 

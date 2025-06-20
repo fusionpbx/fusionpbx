@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Module extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, HasUniqueIdentifier, GetTableName;
+	use HasApiTokens, HasFactory, Notifiable, HandlesStringBooleans, HasUniqueIdentifier, GetTableName;
 	protected $table = 'v_modules';
 	protected $primaryKey = 'module_uuid';
 	public $incrementing = false;
@@ -36,6 +38,11 @@ class Module extends Model
         'module_description',
 	];
 
+	protected static $stringBooleanFields = [
+		'module_enabled',
+		'module_default_enabled',
+	];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -52,4 +59,11 @@ class Module extends Model
 	protected $casts = [
 	];
 
+    public static function categories(): Collection
+    {
+        return self::select('module_category')
+            ->distinct()
+            ->orderBy('module_category')
+            ->pluck('module_category');
+    }
 }

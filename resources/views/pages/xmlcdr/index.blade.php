@@ -5,7 +5,7 @@
     <div class="mt-3 card card-primary card-outline">
         <div class="card-header">
             <h3 class="card-title mb-0">
-                <i class="fas fa-layer-domain mr-2"></i> {{__('Call Detail Records Table')}}
+                <i class="fas fa-layer-group mr-2"></i> {{__('Call Detail Records Table')}}
             </h3>
         </div>
 

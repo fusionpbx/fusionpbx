@@ -12,6 +12,8 @@ use App\Http\Requests\OutboundDialplanRequest;
 use App\Repositories\DialplanDetailRepository;
 use App\Repositories\DialplanRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -397,6 +399,10 @@ class DialplanController extends Controller
 			$gateway_3_name = '';
 		}
 
+        if(App::hasDebugModeEnabled())
+        {
+            Log::notice('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] request: '.print_r(request()->toArray(), true));
+        }
 		//set additional variables
 		$dialplan_enabled = $request->input("dialplan_enabled") ?? 'false';
 		$dialplan_description = $request->input("dialplan_description");

@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class ContactGroupForm extends Component
 {
-        public $contactUuid;
+    public $contactUuid;
     public $selectedGroups = [];
     public $availableGroups = [];
 

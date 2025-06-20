@@ -16,10 +16,10 @@ class OutboundDialplanRequest extends FormRequest
 	{
 		return [
 			"gateway" => "bail|required|string|max:255",
-			"gateway_2" => "bail|required_with:gateway_3|string|max:255",
-			"gateway_3" => "bail|string|max:255",
+			"gateway_2" => "bail|required_with:gateway_3|nullable|max:255",
+			"gateway_3" => "bail|nullable|string|max:255",
             "dialplan_expression*" => "bail|required|string",
-            "prefix_number" => "bail|nullable|numeric|integer|min:1",
+            "prefix_number" => "bail|nullable|string",
             "limit" => "bail|nullable|numeric|integer|min:1",
             "accountcode" => "bail|nullable|string|max:255",
             "toll_allow" => "bail|nullable|string|max:255",

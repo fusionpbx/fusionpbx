@@ -5,7 +5,7 @@
     <div class="mt-3 card card-primary card-outline">
         <div class="card-header">
             <h3 class="card-title mb-0">
-                <i class="fas fa-layer-phrase mr-2"></i> {{__('Phrases Table')}}
+                <i class="fas fa-layer-group mr-2"></i> {{__('Phrases Table')}}
             </h3>
 
             <div class="card-tools">
