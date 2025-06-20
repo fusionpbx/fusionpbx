@@ -5,6 +5,10 @@ namespace App\Providers;
 use App\Models\AccessControl;
 use App\Models\AccessControlNode;
 use App\Models\Bridge;
+use App\Models\Device;
+use App\Models\DeviceKey;
+use App\Models\DeviceLine;
+use App\Models\DeviceSetting;
 use App\Models\Dialplan;
 use App\Models\Domain;
 use App\Models\Extension;
@@ -21,6 +25,7 @@ use App\Models\SipProfileSetting;
 use App\Models\Stream;
 use App\Repositories\AccessControlRepository;
 use App\Repositories\BridgeRepository;
+use App\Repositories\DeviceRepository;
 use App\Repositories\DialplanRepository;
 use App\Repositories\DomainRepository;
 use App\Repositories\GatewayRepository;
@@ -74,6 +79,15 @@ class RepositoryServiceProvider extends ServiceProvider
             return new ExtensionRepository(
                 $app->make(Extension::class),
                 $app->make(ExtensionUser::class)
+            );
+        });
+
+        $this->app->bind(DeviceRepository::class, function ($app) {
+            return new DeviceRepository(
+                $app->make(Device::class),
+                $app->make(DeviceKey::class),
+                $app->make(DeviceSetting::class),
+                $app->make(DeviceLine::class)
             );
         });
 

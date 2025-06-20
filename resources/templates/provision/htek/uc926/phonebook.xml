@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PhoneDirectory>
+{foreach $contacts as $row}
+{if $row.category == "users"}
+	<DirectoryEntry>
+	{if $row.contact_name_given != ""}
+		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+	{else}
+		<Name>{$row.effective_caller_id_name}</Name>
+	{/if}
+
+	{foreach $row.numbers as $number}
+		{if $number.phone_number != ""}
+			<Telephone>{$number.phone_number}</Telephone>
+		{else}		
+			<Telephone>{$number.phone_extension}</Telephone>
+		{/if}
+	{/foreach}
+	</DirectoryEntry>
+{elseif $row.category == "groups"}
+	<DirectoryEntry>
+	{if $row.contact_name_given != ""}
+		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+	{else}
+		<Name>{$row.effective_caller_id_name}</Name>
+	{/if}
+	
+	{foreach $row.numbers as $number}
+		{if $number.phone_number != ""}
+			<Telephone>{$number.phone_number}</Telephone>
+		{else}		
+			<Telephone>{$number.phone_extension}</Telephone>
+		{/if}
+	{/foreach}
+	</DirectoryEntry>
+{elseif $row.category == "extensions"}
+	<DirectoryEntry>
+	{if $row.contact_name_given != ""}
+		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+	{else}
+		<Name>{$row.effective_caller_id_name}</Name>
+	{/if}
+	{if $row.phone_number != ""}
+		<Telephone>{$row.phone_number}</Telephone>
+	{else}
+		<Telephone>{$row.phone_extension}</Telephone>
+	{/if}
+	</DirectoryEntry>
+{else}
+	<DirectoryEntry>
+	{if $row.contact_name_given != ""}
+		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+	{else}
+		<Name>{$row.effective_caller_id_name}</Name>
+	{/if}
+	
+	{if $row.category == "extensions"}
+		{if $row.phone_number != ""}
+			<Telephone>{$row.phone_number}</Telephone>
+		{else}
+			<Telephone>{$row.phone_extension}</Telephone>
+		{/if}
+	{else}
+	{foreach $row.numbers as $number}
+		{if $number.phone_number != ""}
+			<Telephone>{$number.phone_number}</Telephone>
+		{else}		
+			<Telephone>{$number.phone_extension}</Telephone>
+		{/if}
+	{/foreach}
+	{/if}
+	</DirectoryEntry>
+{/if}
+{/foreach}
+</PhoneDirectory>
+

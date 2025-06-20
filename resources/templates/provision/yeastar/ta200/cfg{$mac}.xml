@@ -1,0 +1,199 @@
+<ta>
+<system>
+<lansettings>
+  <dhcp>yes</dhcp>
+  <hostname>TA200</hostname>
+  <ipaddress></ipaddress>
+  <subnetmask></subnetmask>
+  <gateway></gateway>
+  <primarydns></primarydns>
+  <secondarydns></secondarydns>
+  <ipaddress2></ipaddress2>
+  <subnetmask2></subnetmask2>
+  <pppoe>no</pppoe>
+  <pppoemaxfail>0</pppoemaxfail>
+  <pppoeholdoff>10</pppoeholdoff>
+</lansettings>
+<autopsettings>
+  <enablepnp>yes</enablepnp>
+  <enabledhcp>no</enabledhcp>
+  <serverurl>{$yeastar_provision_url}</serverurl>
+  <urlusername>{$http_auth_username}</urlusername>
+  <urlpassword>{$http_auth_password}</urlpassword>
+  <key></key>
+  <autoupflag>0</autoupflag>
+  <autoupintertime>180</autoupintertime>
+  <zero_active>no</zero_active>
+  <enableserverurl>no</enableserverurl>
+  <selectnode>lansettings,autopsettings,fxsport,voiptrunktemplate,dialpatterntemplate</selectnode>
+</autopsettings>
+<administratorsettings itemcount="1">
+  <administratorsettings0>
+    <idx>1</idx>
+    <type>0</type>
+    <name>{$admin_name}</name>
+    <password>{$admin_password}</password>
+    <enable>yes</enable>
+  </administratorsettings0>
+</administratorsettings>
+<dateandtime>
+  <timezone>{$yeastar_time_zone}</timezone>
+  <timezonename>{$yeastar_time_zone_name}</timezonename>
+  <enabledst>yes</enabledst>
+  <enablentpserver>yes</enablentpserver>
+  <ntpserver>{$ntp_server_primary}</ntpserver>
+</dateandtime>
+</system>
+<gateway>
+<fxsport itemcount="{count($lines)}">
+{assign var=x value=0}
+{foreach $lines as $row}
+  <fxsport{$x}>
+    <idx>{$x+1}</idx>
+    <modulestatus>up</modulestatus>
+    <channel>1</channel>
+    <name></name>
+    <rxflash>1000</rxflash>
+    <maxcallduration>6000</maxcallduration>
+    <callwaiting>yes</callwaiting>
+    <dnd>no</dnd>
+    <ringout>30</ringout>
+    <alwaysforward>no</alwaysforward>
+    <noanswerforward>yes</noanswerforward>
+    <busyforward>yes</busyforward>
+    <forwarddesttype>number</forwarddesttype>
+    <forwarddest></forwarddest>
+    <rxgain>40</rxgain>
+    <txgain>40</txgain>
+    <voiptemplate>1</voiptemplate>
+    <failovervoiptemplate></failovervoiptemplate>
+    <registerusername>{$row.user_id}</registerusername>
+    <registerauthname>{$row.auth_id}</registerauthname>
+    <registerfromuser></registerfromuser>
+    <registeronlinenumber></registeronlinenumber>
+    <registerauthpassword>{$row.password}</registerauthpassword>
+    <isfax>no</isfax>
+    <forwardmoh>none</forwardmoh>
+    <dialpatternidx>1</dialpatternidx>
+    <enableforwardprompt>no</enableforwardprompt>
+    <didnumber></didnumber>
+    <enablehotline>no</enablehotline>
+    <hotlinenum></hotlinenum>
+    <hotlinedialdelay>2</hotlinedialdelay>
+    <mwisendtype>disable</mwisendtype>
+    <cidsignalling>bell</cidsignalling>
+    <ciddtmflength>120</ciddtmflength>
+    <ciddtmfinterval>120</ciddtmfinterval>
+    <answeronpolarityswitch>no</answeronpolarityswitch>
+    <hanguponpolarityswitch>no</hanguponpolarityswitch>
+    <enablemwi>yes</enablemwi>
+    <minrxflash>300</minrxflash>
+    <cidmode>default</cidmode>
+    <cidsendingmode>ring</cidsendingmode>
+    <cidtype>bell</cidtype>
+    <enablemeteringpluse>no</enablemeteringpluse>
+    <meteringfreqency>12khz</meteringfreqency>
+    <cadenceactivetime>2000</cadenceactivetime>
+    <cadenceinactivetime>2000</cadenceinactivetime>
+    <meteringamplitude>500</meteringamplitude>
+    <number></number>
+    <enableechotraining>yes</enableechotraining>
+    <sendflash>no</sendflash>
+  </fxsport{$x}>
+  {assign var=x value=$x+1}
+{/foreach}
+</fxsport>
+<voiptrunktemplate itemcount="2">
+  <voiptrunktemplate0>
+    <idx>1</idx>
+    <type>SIP</type>
+    <templatename>VoIPServer1</templatename>
+    <domain></domain>
+    <host>{$account.1.server_address}</host>
+    <port>{$account.1.sip_port}</port>
+    <transport>udp</transport>
+    <enableregister>portregister</enableregister>
+    <enablesrtp>no</enablesrtp>
+    <enableproxyserver>no</enableproxyserver>
+    <proxyserver_host></proxyserver_host>
+    <proxyserver_port>5060</proxyserver_port>
+    <callerid></callerid>
+    <codec1>ulaw</codec1>
+    <codec2>alaw</codec2>
+    <codec3></codec3>
+    <codec4></codec4>
+    <codec5></codec5>
+    <maxchannel>0</maxchannel>
+    <qualify>yes</qualify>
+    <dtmfmode>rfc2833</dtmfmode>
+    <krdiversion></krdiversion>
+    <realm></realm>
+    <authinvite>no</authinvite>
+    <failoverhost></failoverhost>
+    <failoverport>5060</failoverport>
+    <registerusername></registerusername>
+    <registerauthname></registerauthname>
+    <registerfromuser></registerfromuser>
+    <registeronlinenumber></registeronlinenumber>
+    <registerauthpassword></registerauthpassword>
+    <qualifyfreq>30</qualifyfreq>
+    <enablefailoverproxyserver>no</enablefailoverproxyserver>
+    <failoverproxyserver_host></failoverproxyserver_host>
+    <failoverproxyserver_port>5060</failoverproxyserver_port>
+    <randport>yes</randport>
+    <flashsignal>hf</flashsignal>
+  </voiptrunktemplate0>
+  <voiptrunktemplate1>
+    <idx>2</idx>
+    <type>SIP</type>
+    <templatename>VoIPServer2</templatename>
+    <domain></domain>
+    <host>{$account.2.server_address}</host>
+    <port>{$account.2.sip_port}</port>
+    <transport>udp</transport>
+    <enableregister>portregister</enableregister>
+    <enablesrtp>no</enablesrtp>
+    <enableproxyserver>no</enableproxyserver>
+    <proxyserver_host></proxyserver_host>
+    <proxyserver_port>5060</proxyserver_port>
+    <callerid></callerid>
+    <codec1>ulaw</codec1>
+    <codec2>alaw</codec2>
+    <codec3></codec3>
+    <codec4></codec4>
+    <codec5></codec5>
+    <maxchannel>0</maxchannel>
+    <qualify>yes</qualify>
+    <dtmfmode>rfc2833</dtmfmode>
+    <krdiversion></krdiversion>
+    <realm></realm>
+    <authinvite>no</authinvite>
+    <failoverhost></failoverhost>
+    <failoverport>5060</failoverport>
+    <registerusername></registerusername>
+    <registerauthname></registerauthname>
+    <registerfromuser></registerfromuser>
+    <registeronlinenumber></registeronlinenumber>
+    <registerauthpassword></registerauthpassword>
+    <qualifyfreq>30</qualifyfreq>
+    <enablefailoverproxyserver>no</enablefailoverproxyserver>
+    <failoverproxyserver_host></failoverproxyserver_host>
+    <failoverproxyserver_port>5060</failoverproxyserver_port>
+    <randport>yes</randport>
+    <flashsignal>hf</flashsignal>
+  </voiptrunktemplate1>
+</voiptrunktemplate>
+<dialpatterntemplate itemcount="2">
+  <dialpatterntemplate0>
+    <idx>1</idx>
+    <templatename>DialPatternTemplate1</templatename>
+    <dialpatterns>.,,</dialpatterns>
+  </dialpatterntemplate0>
+  <dialpatterntemplate1>
+    <idx>2</idx>
+    <templatename>DialPatternTemplate2</templatename>
+    <dialpatterns>.,,</dialpatterns>
+  </dialpatterntemplate1>
+</dialpatterntemplate>
+</gateway>
+</ta>

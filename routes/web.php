@@ -14,6 +14,9 @@ use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExtensionController;
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\DeviceProfileController;
+use App\Http\Controllers\DeviceVendorController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModuleController;
@@ -28,6 +31,7 @@ use App\Http\Controllers\StreamController;
 use App\Http\Controllers\UserActivationController;
 use App\Http\Middleware\Authenticate;
 use App\Models\AccessControl;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -159,6 +163,14 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/extensions', ExtensionController::class)->except('show');
     Route::get('extensions/import', [ExtensionController::class, 'import'])->name('extensions.import');
     Route::get('extensions/export', [ExtensionController::class, 'export'])->name('extensions.export');
+
+    Route::resource('/devices', DeviceController::class)->except('show');
+    Route::resource('/devices/devices_profiles', DeviceProfileController::class)->except('show');
+    Route::resource('/devices/devices_vendors', DeviceVendorController::class);
+    Route::get('devices/import', [DeviceController::class, 'import'])->name('devices.import');
+    Route::get('devices/export', [DeviceController::class, 'export'])->name('devices.export');
+
+
 });
 
 Route::post('/switch/xml_handler/{binding}', function (Request $request, string $binding){

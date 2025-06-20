@@ -1,0 +1,43 @@
+<configuration name="http_cache.conf" description="HTTP GET cache">
+	<settings>
+		<!-- set to true if you want to enable http:// and https:// formats.  Do not use if mod_httapi is also loaded -->
+		<param name="enable-file-formats" value="false"/>
+		<!-- maximum size of cache -->
+		<param name="max-urls" value="10000"/>
+		<!-- location of cached files -->
+		<param name="location" value="$${base_dir}/http_cache"/>
+		<!-- if not specified by cache-control max-age directive, this value will be used
+			 to expire cached files -->
+		<param name="default-max-age" value="86400"/>
+		<!-- size of the prefetch thread pool -->
+		<param name="prefetch-thread-count" value="8"/>
+		<!-- size of the prefetch request queue -->
+		<param name="prefetch-queue-size" value="100"/>
+		<!-- absolute path to CA bundle file -->
+		<param name="ssl-cacert" value="$${base_dir}/conf/cacert.pem"/>
+		<!-- verify certificates -->
+		<param name="ssl-verifypeer" value="true"/>
+		<!-- verify host name matches certificate -->
+		<param name="ssl-verifyhost" value="true"/>
+	</settings>
+
+	<profiles>
+		<!-- amazon s3 security credentials -->
+		<profile name="s3">
+			<aws-s3>
+				<!-- 20 character key identifier -->
+				<access-key-id><![CDATA[AKIAIOSFODNN7EXAMPLE]]></access-key-id>
+				<!-- 40 character secret -->
+				<secret-access-key><![CDATA[wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY]]></secret-access-key>
+			</aws-s3>
+			<!-- optional list of domains that this profile will automatically be applied to -->
+			<!-- if you wish to apply the s3 credentials to a domain not listed here, then use
+				{profile=s3}http://foo.s3... -->
+			<domains>
+				<domain name="bucket.s3.amazonaws.com"/>
+			</domains>
+		</profile>
+	</profiles>
+
+</configuration>
+

@@ -1,0 +1,3000 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gs_provision version="1">
+  <config version="1">
+    <!-- Configuration template for GXW40XX firmware version 1.0.10.9 -->
+    <!--  Advanced Settings. -->
+    <!-- Admin password for web interface -->
+    <!-- String Max Length: 30; between ascii values 33 and 126 -->
+    <!-- Mandatory -->
+    <P2>{$admin_password}</P2>
+    <!-- End User Password, MaxLength 32 -->
+    <P196>{$user_password}</P196>
+    <!-- Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
+    <!-- Number: 0 to 63 -->
+    <!-- Mandatory -->
+    <!-- Reboot required  -->
+    <P38>12</P38>
+    <!-- Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+    <!-- Number: 0 to 4095 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P51>0</P51>
+    <!-- Layer 2 QoS. 802.1p priority value (0 - 7) -->
+    <!-- Number: 0 to 7 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P87>0</P87>
+    <!-- 802.1p priority value (NATed traffic) ** This doesn't apply to the GXW4024 -->
+    <!-- Number: 0 to 7 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P230>0</P230>
+    <!-- STUN server -->
+    <!-- String: serveraddress -->
+    <P76></P76>
+    <!-- Keep-alive interval (in seconds. default 20 seconds) -->
+    <!-- Number: 10 to 160 -->
+    <!-- Mandatory -->
+    <P84>20</P84>
+    <!-- Use STUN to detect network connectivity. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P474>0</P474>
+    <!-- Total STUN response misses to restart DHCP (mininum=3 default=5) -->
+    <!-- Number: 3 to 15 -->
+    <!-- Mandatory -->
+    <P475>5</P475>
+    <!-- Firmware Upgrade -->
+    <!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
+    <!-- Number: 0 to 2 -->
+    <!-- Mandatory -->
+    <P212>2</P212>
+    <!-- Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxw40xx/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxw40xx</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
+    <!-- Config Server Path -->
+    <!-- String: serveraddress  -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {elseif isset($domain_name)}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+    
+    <!-- XML Config File Password -->
+    <!-- String Max Length: 40 -->
+    <!-- XML Config File Password -->
+    <!-- String; between ascii values 33 and 126 -->
+    <!-- Mandatory -->
+    <P1359></P1359>
+
+    <!--  HTTP/HTTPS User Name -->
+    <!--  String; between ascii values 33 and 126 -->
+    <P1360>{$http_auth_username}</P1360>
+
+    <!--  HTTP/HTTPS Password -->
+    <!--  String; between ascii values 33 and 126 -->
+    <P1361>{$http_auth_password}</P1361>
+    <!-- Firmware File Prefix -->
+    <!-- String Max Length: 32; between ascii values 33 and 126 -->
+    <P232></P232>
+    <!-- Firmware File Postfix -->
+    <!-- String Max Length: 32; between ascii values 33 and 126 -->
+    <P233></P233>
+    <!-- Config File Prefix -->
+    <!-- String Max Length: 32; between ascii values 33 and 126 -->
+    <P234></P234>
+    <!-- Config File Postfix -->
+    <!-- String Max Length: 32; between ascii values 33 and 126 -->
+    <P235></P235>
+    <!-- Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
+    <!-- When set to Yes(1), it will override the configured provision path and method. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+    <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
+    <!-- Number: 0,1,2,3 -->
+    <!-- Mandatory -->
+    <P194>0</P194>
+    <!-- Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. P194 = 3 -->
+    <!-- Number: 60 to 5256000 -->
+    <!-- Mandatory -->
+    <P193>10080</P193>
+    <!-- Automatic Upgrade. Daily at hour(0-23). P194 = 1 -->
+    <!-- Number: 0 to 23 -->
+    <!-- Mandatory -->
+    <P285>1</P285>
+    <!-- Automatic Upgrade. Weekly on day (0-6). P194 = 2 -->
+    <!-- Number: 0 to 6 -->
+    <!-- Mandatory -->
+    <P286>1</P286>
+    <!-- Use firmware pre/postfix to determine if f/w is required -->
+    <!-- 0 = Always Check for New Firmware -->
+    <!-- 1 = Check New Firmware only when F/W pre/suffix changes -->
+    <!-- 2 = Always Skip the Firmware Check -->
+    <!-- For Firmware only. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P238>0</P238>
+    <!-- Disable SIP NOTIFY Authentication -->
+    <!-- Number: 0 No, 1 Yes  (Device will not challenge NOTIFY with 401 when set to Yes) -->
+    <!-- Mandatory -->
+    <P4428>0</P4428>
+    <!-- Authenticate Conf File -->
+    <!-- Number: 0 No, 1 Yes  (cfg file would be authenticated before acceptance if set to Yes) -->
+    <!-- Mandatory -->
+    <P240>0</P240>
+    <!-- Firmware Key (AES 128, in Hexadecimal Representation) -->
+    <!-- String Max Length: 32 0-9,A-Z,a-z -->
+    <P242></P242>
+    <!-- SIP TLS Certificate -->
+    <!-- String -->
+    <!--P280 = -->
+    <!-- SIP TLS Private Key -->
+    <!-- String -->
+    <!--P279 = -->
+    <!-- SIP TLS Private Key Password -->
+    <!-- String -->
+    <!-- Max Length: 64 characters -->
+    <!--P281 = -->
+    <!-- ACS URL -->
+    <!-- P4503 = -->
+    <!-- ACS Username -->
+    <!-- String Max Length: 64 -->
+    <P4504></P4504>
+    <!-- ACS Password -->
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4505></P4505>
+    <!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4506>0</P4506>
+    <!-- Periodic Inform Interval (default is 300) -->
+    <!-- String Max Length: 5 -->
+    <P4507>300</P4507>
+    <!-- Conncetion Request Username -->
+    <!-- String Max Length: 64 -->
+    <P4511></P4511>
+    <!-- Connection Request Password -->
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4512></P4512>
+    <!-- Connection Request Port (default is 7547) -->
+    <!-- String -->
+    <!-- Max Length: 5 characters -->
+    <P4518>7547</P4518>
+    <!-- CPE SSL Certificate -->
+    <!-- String -->
+    <P8220></P8220>
+    <!-- CPE SSL Private Key -->
+    <!-- String -->
+    <P8221></P8221>
+    <!-- System Ring Cadence -->
+    <!-- String Max Length: 256 -->
+    <P4040>c=2000/4000;</P4040>
+    <!-- Call Progress Tones -->
+    <!-- Dial Tone -->
+    <!-- String Max Length: 256 -->
+    <P4000>f1=350@-13,f2=440@-13,c=0/0;</P4000>
+    <!-- Ringback Tone -->
+    <!-- String Max Length: 256 -->
+    <P4001>f1=440@-19,f2=480@-19,c=2000/4000;</P4001>
+    <!-- Busy Tone -->
+    <!-- String Max Length: 256 -->
+    <P4002>f1=480@-24,f2=680@-24,c=500/500;</P4002>
+    <!-- Reorder Tone -->
+    <!-- String Max Length: 256  -->
+    <P4003>f1=480@-24,f2=620@-24,c=250/250;</P4003>
+    <!-- Confirmation Tone -->
+    <!-- String Max Length: 256 -->
+    <P4004>f1=350@-11,f2=440@-11,c=100/100-100/100-100/100;</P4004>
+    <!-- Call Waiting tone -->
+    <!-- String Max Length: 256 -->
+    <P4005>f1=440@-13,c=300/10000-300/10000-0/0;</P4005>
+    <!-- Prompt Tone -->
+    <!-- String Max Length: 256 -->
+    <P4041>f1=350@-13,f2=440@-13,c=0/0;</P4041>
+    <!-- Prompt Tone Access Code(Key pattern to get Prompt Tone. Maximum 20 digits. No default.) -->
+    <!-- String Max Length: 20 -->
+    <P4042></P4042>
+    <!-- Lock keypad update.  0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P88>0</P88>
+    <!-- Disable voice prompt. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P253>0</P253>
+    <!-- Disable Direct IP Call. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P277>0</P277>
+    <!-- Life line mode. 0 - Auto, 1 - Always disconnected, 2 - Always connected -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P891>0</P891>
+    <!-- Failover to FXO Gateway. 0 - Disable, 1 - Enable -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4205>0</P4205>
+    <!-- FXO Gateway. URI or IP address. -->
+    <!-- String: serveraddress -->
+    <P4206></P4206>
+    <!-- NTP Server -->
+    <!-- String: serveraddress -->
+    <P30>us.pool.ntp.org</P30>
+    <!-- NTP Update Interval in minutes(5-1440)(Default is set to 60 minutes) -->
+    <!-- Number: 5 to 1440 -->
+    <!-- Mandatory -->
+    <P5005>1440</P5005>
+    <!-- Syslog Server (name of the server, max length is 64 charactors) -->
+    <!-- String: serveraddress -->
+    <!-- Reboot required -->
+    <P207></P207>
+    <!-- Syslog Level (Default setting is NONE) -->
+    <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+    <!-- Number: 0,1,2,3,4 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P208>0</P208>
+    <!-- Send SIP Log (0 - No, 1 - Yes, Default set to No) -->
+    <!-- Number: 0,1 -->
+    <!-- Reboot required -->
+    <P1387>0</P1387>
+    <!-- Primary RADIUS Server -->
+    <!--P4550 = -->
+    <!-- Primary RADIUS Auth Port (default 1812). -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P4551>1812</P4551>
+    <!-- Primary RADIUS Acct Port (default 1813). -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P4552>1813</P4552>
+    <!-- Primary RADIUS Server Secret -->
+    <!-- String Max Length: 32 -->
+    <!-- Mandatory -->
+    <P4553></P4553>
+    <!-- Secondary RADIUS Server -->
+    <!-- P4554 = -->
+    <!-- Secondary RADIUS Auth Port (default 1812). -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P4555>1812</P4555>
+    <!-- Secondary RADIUS Acct Port (default 1813). -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P4556>1813</P4556>
+    <!-- Secondary RADIUS Server Secret -->
+    <!-- String Max Length: 32 -->
+    <!-- Mandatory -->
+    <P4557></P4557>
+    <!-- RADIUS Timeout (default 2). -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P4558>2</P4558>
+    <!-- RADIUS Retry (default 3). -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P4559>3</P4559>
+    <!--  Profile 1 Settings -->
+    <!-- Profile Active.  0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P271>1</P271>
+    <!-- Primary SIP Server -->
+    <!-- String: serveraddress  -->
+    <P47>{$account.1.server_address}</P47>
+    <!-- Failover SIP Server -->
+    <!-- String: serveraddress -->
+    <P967></P967>
+    <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4567>1</P4567>
+    <!-- Outbound Proxy -->
+    <!-- String: serveraddress -->
+    <P48>proxy.mycompany.com</P48>
+    <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P130>0</P130>
+    <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P52>0</P52>
+    <!-- Visual MWI type: 0 - FSK, 1 - Neon -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P4371>0</P4371>
+    <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
+    <!-- Number: 0,1,2,3 -->
+    <!-- Mandatory -->
+    <P103>0</P103>
+    <!-- Primary IP -->
+    <!-- IP address -->
+    <P2308></P2308>
+    <!-- Backup IP1 -->
+    <!-- IP address -->
+    <P2309></P2309>
+    <!-- Backup IP2 -->
+    <!-- IP address -->
+    <P2310></P2310>
+    <!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P63>0</P63>
+    <!-- Use Request Routing ID in SIP INVITE Header. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <P4891>0</P4891>
+    <!-- SIP Registration. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P31>1</P31>
+    <!-- Unregister On Reboot. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P81>0</P81>
+    <!-- Outgoing call without Registration. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P109>1</P109>
+    <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <!-- Number: 1 to 64800 -->
+    <!-- Mandatory -->
+    <P32>{$account.1.register_expires}</P32>
+    <!-- Reregister before Expiration -->
+    <!-- Number -->
+    <!-- Mandatory -->
+    <P2330>0</P2330>
+    <!-- Registration Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
+    <!-- Number: 1 to 3600 -->
+    <!-- Mandatory -->
+    <P138>30</P138>
+    <!-- Local SIP port (default 5060) -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P40>5060</P40>
+    <!-- Local RTP port (1024-65535, default 5004) -->
+    <!-- Number: 1024-65535 -->
+    <!-- Mandatory -->
+    <P39>5004</P39>
+    <!-- Use Random Port. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P78>0</P78>
+    <!-- Refer-To Use Target Contact. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P135></P135>
+    <!-- Transfer on Conference Hangup. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4560>0</P4560>
+    <!-- Disable Bellcore Style 3-Way Conference. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4830>0</P4830>
+    <!-- Remove OBP from Route Header. 0 - no, 1 - yes -->
+    <!-- NUmber: 0,1 -->
+    <!-- Mandatory -->
+    <P4562>0</P4562>
+    <!-- Support SIP Instance ID. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P288>1</P288>
+    <!-- Validate Incoming Message. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4340>0</P4340>
+    <!-- Check SIP Incoming UserID. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P258>0</P258>
+    <!-- Allow Incoming SIP Messages from SIP Proxy Only: -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P243>0</P243>
+    <!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+    <!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 100. -->
+    <!-- Number: 50,100,200,400,800 -->
+    <!-- Mandatory -->
+    <P209>100</P209>
+    <!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+    <!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+    <!-- Number: 1600,3200,200,400,800 -->
+    <!-- Mandatory -->
+    <P250>400</P250>
+    <!-- DTMF Payload Type -->
+    <!-- Number: 96 to 127 -->
+    <P79>101</P79>
+    <!-- Preferred DTMF method. -->
+    <!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+    <!-- Priority 1 -->
+    <!-- Number: 100 to 102 -->
+    <!-- Mandatory -->
+    <P850>100</P850>
+    <!-- Priority 2 -->
+    <!-- Number: 100 to 102 -->
+    <!-- Mandatory -->
+    <P851>100</P851>
+    <!-- Priority 3 -->
+    <!-- Number: 100 to 102 -->
+    <!-- Mandatory -->
+    <P852>100</P852>
+    <!-- Disable DTMF Negotiation. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4825>0</P4825>
+    <!-- Send Flash Event. 0 - no, 1 - yes -->
+    <!-- Number: 0 to 1 -->
+    <!-- Mandatory -->
+    <P74>0</P74>
+    <!-- Enable Call Features.  0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P191>1</P191>
+    <!-- Offhook Auto-Dial Delay (default is 0) -->
+    <!-- String: 0 to 60 -->
+    <P4045>0</P4045>
+    <!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+    <!-- String: ipaddress -->
+    <P197></P197>
+    <!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+    <!-- String: ipaddress -->
+    <P101></P101>
+    <!-- Use SIP User-Agent Header for Profile 1 -->
+    <!-- String Max Length: 1024 32 to 127 -->
+    <P4834></P4834>
+    <!-- Distinctive Ring Tone -->
+    <!-- 0 - Ring Tone 1, 1 - Ring Tone 2, 2 - Ring Tone 3, 3 - Ring Tone 4, 4 - Ring Tone 5, -->
+    <!-- 5 - Ring Tone 6, 6 - Ring Tone 7, 7 - Ring Tone 8, 8 - Ring Tone 9, 9 - Ring Tone 10 -->
+    <!-- Distinctive Ring Tone Choice 1 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P870>0</P870>
+    <!-- Choice 1 incoming caller ID -->
+    <!-- String Max Length: 64 -->
+    <P871></P871>
+    <!-- Distinctive Ring Tone Choice 2 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P872>0</P872>
+    <!-- Choice 2 incoming caller ID -->
+    <!-- String Max Length: 64 -->
+    <P873></P873>
+    <!-- Distinctive Ring Tone Choice 3 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P874>0</P874>
+    <!-- Choice 3 incoming caller ID -->
+    <!-- String Max Length: 64 -->
+    <P875></P875>
+    <!-- Disable Call Waiting. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P91>0</P91>
+    <!-- Disable Call-Waiting Caller ID. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P714>0</P714>
+    <!-- Disable Call-Waiting Tone. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P186>0</P186>
+    <!-- Disable Receiver Offhook Tone. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4793>0</P4793>
+    <!-- Disable Reminder Ring for On-Hold Call: -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4360>0</P4360>
+    <!-- Disable Visual MWI. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P855>0</P855>
+    <!-- Ring Timeout. (10-300, default is 60 seconds) -->
+    <!-- Number: 10 to 300 -->
+    <!-- Mandatory -->
+    <P185>60</P185>
+    <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+    <!-- Number: 5 to 300 -->
+    <!-- Mandatory -->
+    <P4330>20</P4330>
+    <!-- Hunting Group Type. 0 - Circular, 1 - Linear -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4395>0</P4395>
+    <!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
+    <!-- Number: 1 to 120 -->
+    <!-- Mandatory -->
+    <P139>20</P139>
+    <!-- No Key Entry Timeout. Default - 4 seconds. -->
+    <!-- Number: 1 to 15 -->
+    <!-- Mandatory -->
+    <P85>4</P85>
+    <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P29>0</P29>
+    <!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+    <!-- String Max Length: 32 -->
+    <P66></P66>
+    <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P72>1</P72>
+    <!-- Dial Plan -->
+    <!-- String Max Length: 1024 -->
+    
+    {if isset($grandstream_dial_plan) }
+    <P4200>{$grandstream_dial_plan}</P4200>
+    {else}
+    <P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
+    {/if}
+    
+    <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P99>0</P99>
+    <!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
+    <!-- Number: 0 to 1 -->
+    <!-- Mandatory -->
+    <P65>0</P65>
+    <!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+    <!-- Number: 0 to 1 -->
+    <!-- Mandatory -->
+    <P129>0</P129>
+    <!-- Special Feature -->
+    <!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
+    <!-- Number: 100, 102, 108, 109, 111, 114, 119, 120 -->
+    <!-- Mandatory -->
+    <P198>100</P198>
+    <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <!-- Number: 90 to 64800 -->
+    <!-- Mandatory -->
+    <P260>180</P260>
+    <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <!-- Number 90 to 64800 -->
+    <!-- Mandatory -->
+    <P261>90</P261>
+    <!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P262>0</P262>
+    <!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P263>0</P263>
+    <!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P264>0</P264>
+    <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P266>0</P266>
+    <!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <!-- Number: 1,2 -->
+    <!-- Mandatory -->
+    <P267>1</P267>
+    <!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P265>0</P265>
+    <!-- Send Re-INVITE After Fax. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4367>0</P4367>
+    <!-- Enable Silence Detection for Fax Disconnect. 0 - No, 1 - Yes -->
+    <!-- Number: 0 to 1 -->
+    <!-- Mandatory -->
+    <P4406>1</P4406>
+    <!-- Enable 100rel. 0 - No, 1 - Yes -->
+    <!-- Number: 0 to 1 -->
+    <!-- Mandatory -->
+    <P272>0</P272>
+    <!-- Codec/Voice Quality settings -->
+    <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4363>0</P4363>
+    <!-- Preferred Vocoder -->
+    <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 100 - AAL2-G.726-16, -->
+    <!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 99 - G.729E -->
+    <!-- Choice 1. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P57>0</P57>
+    <!-- Choice 2. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P58>8</P58>
+    <!-- Choice 3. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P59>4</P59>
+    <!-- Choice 4. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P60>18</P60>
+    <!-- Choice 5. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P61>2</P61>
+    <!-- Choice 6. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P62>98</P62>
+    <!-- Choice 7. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P46>103</P46>
+    <!-- Choice 8. -->
+    <!-- Number: 0,2,4,8,18,98,100,102,104 -->
+    <!-- Mandatory -->
+    <P98>99</P98>
+    <!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
+    <!-- Number: 1 to 4 -->
+    <P37>2</P37>
+    <!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P49>0</P49>
+    <!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P97>0</P97>
+    <!-- iLBC payload type. Between 96 and 127, default is 97. -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P96>97</P96>
+    <!-- AAL2-G.726-16 Payload type. (between 96 and 127, default is 100) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P125>100</P125>
+    <!-- AAL2-G.726-24 Payload type. (between 96 and 127, default is 99) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P126>99</P126>
+    <!-- AAL2-G726-32 payload type. (between 96 and 127, default is 104) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P127>104</P127>
+    <!-- AAL2-G.726-40 Payload type. (between 96 and 127, default is 103) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P128>103</P128>
+    <!-- G.729E Payload type. (between 96 and 127, default is 102) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P124>102</P124>
+    <!-- VAD. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P50>0</P50>
+    <!-- Symmetric RTP. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P29>0</P29>
+    <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P228>0</P228>
+    <!-- Fax Tone Detection Mode. 1 - Caller, 0 - Callee, 2 - Caller or Callee -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P894>0</P894>
+    <!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P133>1</P133>
+    <!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P132>1</P132>
+    <!-- SRTP Mode -->
+    <!-- 0 = Disabled -->
+    <!-- 1 = Enabled but not forced -->
+    <!-- 2 = Enabled and forced -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P183>0</P183>
+    <!-- SLIC Setting -->
+    <!-- 0 - USA, 1 - AUSTRIA, 2 - BELGIUM, 3 - FINLAND, 4 - FRANCE, 5 - GERMANY -->
+    <!-- 6 - GREECE, 7 -ITALY, 8 - JAPAN, 9 - NORWAY, 10 - SPAIN, 11 - SWEDEN, -->
+    <!-- 12 - UK, 13 - AUSTRALIA/NEW ZEALAND, 14 - CHINA -->
+    <!-- Number: 0 to 14 -->
+    <!-- Mandatory -->
+    <P854>0</P854>
+    <!-- Caller ID Scheme -->
+    <!-- 0  - Bellcore/Telcordia -->
+    <!-- 1  - ETSI-FSK during ringing -->
+    <!-- 2  - ETSI-FSK prior to ringing with DTAS -->
+    <!-- 3  - ETSI-FSK prior to ringing with LR -->
+    <!-- 4  - ETSI-FSK prior to ringing with RP -->
+    <!-- 5  - ETSI-DTMF during ringing -->
+    <!-- 6  - ETSI-DTMF prior to ringing with DTAS -->
+    <!-- 7  - ETSI-DTMF prior to ringing with LR -->
+    <!-- 8  - ETSI-DTMF prior to ringing with RP -->
+    <!-- 9  - SIN 227 - BT -->
+    <!-- 10 - NTT Japan -->
+    <!-- Number: 0 to 10 -->
+    <!-- Mandatory -->
+    <P853>0</P853>
+    <!-- Polarity Reversal.  0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P205>0</P205>
+    <!-- Loop Current Disconnect. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P892>0</P892>
+    <!-- Loop Current Disconnect Duration. In 100 - 10000 milliseconds range, default is 200. -->
+    <!-- Number: 100 to 10000 -->
+    <!-- Mandatory -->
+    <P856>200</P856>
+    <!-- Enable Hook Flash -->
+    <!-- Number: 0, 1 -->
+    <!-- Mandatory -->
+    <P4424>1</P4424>
+    <!-- Hook Flash Timing. In 40-2000 milliseconds range -->
+    <!-- minimum -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P251>300</P251>
+    <!-- maximum -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P252>1100</P252>
+    <!-- On Hook Timing. (In 40-2000 milliseconds range, default is 400) -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P833>400</P833>
+    <!-- Gain: -->
+    <!-- TX -->
+    <!-- <value=1> +6dB -->
+    <!-- <value=2> +4dB -->
+    <!-- <value=3> +2dB -->
+    <!-- <value=0> 0dB -->
+    <!-- <value=4> -2dB -->
+    <!-- <value=5> -4dB -->
+    <!-- <value=6> -6dB -->
+    <!-- Number: 0 to 6 -->
+    <!-- Mandatory -->
+    <P247>0</P247>
+    <!-- RX -->
+    <!-- <value=1> +6dB -->
+    <!-- <value=2> +4dB -->
+    <!-- <value=3> +2dB -->
+    <!-- <value=0> 0dB -->
+    <!-- <value=4> -2dB -->
+    <!-- <value=5> -4dB -->
+    <!-- <value=6> -6dB -->
+    <!-- Number: 0 to 6 -->
+    <!-- Mandatory -->
+    <P249>0</P249>
+    <!-- Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P824>0</P824>
+    <!-- Ring Tone 1 -->
+    <!-- String Max Length: 256 -->
+    <P4010>c=2000/4000;</P4010>
+    <!-- Ring Tone 2 -->
+    <!-- String Max Length: 256 -->
+    <P4011>c=2000/4000;</P4011>
+    <!-- Ring Tone 3 -->
+    <!-- String Max Length: 256 -->
+    <P4012>c=2000/4000;</P4012>
+    <!-- Ring Tone 4 -->
+    <!-- String Max Length: 256 -->
+    <P4013>c=2000/4000;</P4013>
+    <!-- Ring Tone 5 -->
+    <!-- String Max Length: 256 -->
+    <P4014>c=2000/4000;</P4014>
+    <!-- Ring Tone 6 -->
+    <!-- String Max Length: 256 -->
+    <P4015>c=2000/4000;</P4015>
+    <!-- Ring Tone 7 -->
+    <!-- String Max Length: 256 -->
+    <P4016>c=2000/4000;</P4016>
+    <!-- Ring Tone 8 -->
+    <!-- String Max Length: 256 -->
+    <P4017>c=2000/4000;</P4017>
+    <!-- Ring Tone 9 -->
+    <!-- String Max Length: 256 -->
+    <P4018>c=2000/4000;</P4018>
+    <!-- Ring Tone 10 -->
+    <!-- String Max Length: 256 -->
+    <P4019>c=2000/4000;</P4019>
+    <!--  Profile 2 Settings -->
+    <!-- Profile Active.  0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P401>1</P401>
+    <!-- Primary SIP Server -->
+    <!-- String: serveraddress -->
+    <P747>{$account.2.server_address}</P747>
+    <!-- Failover SIP Server -->
+    <!-- String: serveraddress -->
+    <P987></P987>
+    <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4568>1</P4568>
+    <!-- Outbound Proxy -->
+    <!-- String: serveraddress -->
+    <P748></P748>
+    <!-- SIP Transport -->
+    <!-- 0 - UDP, 1 - TCP, 2 - TLS -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P830>0</P830>
+    <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P730>0</P730>
+    <!-- Visual MWI type: 0 - FSK, 1 - Neon -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4372>0</P4372>
+    <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
+    <!-- Number: 0, 1, 2, 3 -->
+    <!-- Mandatory Min Value: 0 Max Value: 2 -->
+    <P702>0</P702>
+    <!-- Primary IP -->
+    <!-- IP address -->
+    <P2408></P2408>
+    <!-- Backup IP1 -->
+    <!-- IP address -->
+    <P2409></P2409>
+    <!-- Backup IP2 -->
+    <!-- IP address -->
+    <P2410></P2410>
+    <!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P763>0</P763>
+    <!-- Use Request Routing ID in SIP INVITE Header. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <P4892>0</P4892>
+    <!-- SIP Registration. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P731>1</P731>
+    <!-- Unregister On Reboot. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P752>0</P752>
+    <!-- Outgoing call without Registration. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P813>1</P813>
+    <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <!-- Number: 1 to 64800 -->
+    <!-- Mandatory -->
+    <P732>{$account.2.register_expires}</P732>
+    <!-- Reregister before Expiration -->
+    <!-- Number -->
+    <!-- Mandatory -->
+    <P2430>0</P2430>
+    <!-- Registration Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
+    <!-- Number: 1 to 3600 -->
+    <!-- Mandatory -->
+    <P471>30</P471>
+    <!-- Local SIP port (default 6060) -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P740>6060</P740>
+    <!-- Local RTP port (1024-65535, default 6004) -->
+    <!-- Number: 1024 to 65535 -->
+    <!-- Mandatory -->
+    <P739>6004</P739>
+    <!-- Use Random Port. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P778>0</P778>
+    <!-- Refer-To Use Target Contact. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P469>0</P469>
+    <!-- Transfer on Conference Hangup. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4561>0</P4561>
+    <!-- Disable Bellcore Style 3-Way Conference. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4831>0</P4831>
+    <!-- Remove OBP from Route Header. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4563>0</P4563>
+    <!-- Support SIP Instance ID. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P489>1</P489>
+    <!-- Validate Incoming Message. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4341>0</P4341>
+    <!-- Check SIP Incoming UserID. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P449>0</P449>
+    <!-- Allow Incoming SIP Messages from SIP Proxy Only: -->
+    <!-- Comment: The pvalue below is not in the pvalue validation file -->
+    <P742>0</P742>
+    <!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+    <!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 100. -->
+    <!-- Number: 50,100,200,400,800 -->
+    <!-- Mandatory -->
+    <P440>100</P440>
+    <!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+    <!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+    <!-- Number: 1600,3200,200,400,800 -->
+    <!-- Mandatory -->
+    <P441>400</P441>
+    <!-- DTMF Payload Type -->
+    <!-- Number: 96 to 127 -->
+    <P779>101</P779>
+    <!-- Preferred DTMF method. -->
+    <!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+    <!-- Priority 1 -->
+    <!-- Number: 100,101,102 -->
+    <!-- Mandatory -->
+    <P860>100</P860>
+    <!-- Priority 2 -->
+    <!-- Number: 100 to 102 -->
+    <!-- Mandatory -->
+    <P861>100</P861>
+    <!-- Priority 3 -->
+    <!-- Number: 100 to 102 -->
+    <!-- Mandatory -->
+    <P862>100</P862>
+    <!-- Disable DTMF Negotiation. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4826>0</P4826>
+    <!-- Send Flash Event. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P774>0</P774>
+    <!-- Enable Call Features.  0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P751>1</P751>
+    <!-- Offhook Auto-Dial Delay (default is 0) -->
+    <!-- String: 0 to 60 -->
+    <P4046>0</P4046>
+    <!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+    <!-- String: ipaddress -->
+    <P792></P792>
+    <!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+    <!-- String: ipaddress -->
+    <P866></P866>
+    <!-- Use SIP User-Agent Header for Profile 2 -->
+    <!-- String: string Max Length: 1024 -->
+    <P4835></P4835>
+    <!-- Distinctive Ring Tone -->
+    <!-- 0 - Ring Tone 1, 1 - Ring Tone 2, 2 - Ring Tone 3, 3 - Ring Tone 4, 4 - Ring Tone 5, -->
+    <!-- 5 - Ring Tone 6, 6 - Ring Tone 7, 7 - Ring Tone 8, 8 - Ring Tone 9, 9 - Ring Tone 10 -->
+    <!-- Distinctive Ring Tone Choice 1 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P880>0</P880>
+    <!-- Choice 1 incoming caller ID -->
+    <!-- String: string Max Length: 64 Range0: Min=00 Max=127 -->
+    <P881></P881>
+    <!-- Distinctive Ring Tone Choice 2 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P882>0</P882>
+    <!-- Choice 2 incoming caller ID -->
+    <!-- String: string Max Length: 64 -->
+    <P883></P883>
+    <!-- Distinctive Ring Tone Choice 3 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P884>0</P884>
+    <!-- Choice 3 incoming caller ID -->
+    <!-- String: string Max Length: 64 -->
+    <P885></P885>
+    <!-- Disable Call Waiting. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P791>0</P791>
+    <!-- Disable Call-Waiting Caller ID. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P823>0</P823>
+    <!-- Disable Call-Waiting Tone. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P817>0</P817>
+    <!-- Disable Receiver Offhook Tone. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4794>0</P4794>
+    <!-- Disable Reminder Ring for On-Hold Call: -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4361>0</P4361>
+    <!-- Disable Visual MWI. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P869>0</P869>
+    <!-- Ring Timeout. (10-300, default is 60 seconds) -->
+    <!-- Number: 10 to 300 -->
+    <!-- Mandatory -->
+    <P816>60</P816>
+    <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+    <!-- Number: 5 to 300 -->
+    <!-- Mandatory -->
+    <P4331>20</P4331>
+    <!-- Hunting Group Type. 0 - Circular, 1 - Linear -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4396>0</P4396>
+    <!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
+    <!-- Number: 1 to 120 -->
+    <!-- Mandatory -->
+    <P470>20</P470>
+    <!-- No Key Entry Timeout. Default - 4 seconds. -->
+    <!-- Number: 1 to 15 -->
+    <!-- Mandatory -->
+    <P292>4</P292>
+    <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P729>0</P729>
+    <!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+    <!-- String: string Max Length: 32 -->
+    <P766></P766>
+    <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P772>1</P772>
+    <!-- Dial Plan -->
+    <!-- String: string Max Length: 1024 -->
+    <P4201>{ x+ | *x+ }</P4201>
+    <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P709>0</P709>
+    <!-- Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P765>0</P765>
+    <!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P446>0</P446>
+    <!-- Special Feature -->
+    <!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
+    <!-- Number: 100, 102, 108, 109, 111, 114, 119, 120 -->
+    <!-- Mandatory -->
+    <P767>100</P767>
+    <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <!-- Number: 90 to 64800 -->
+    <!-- Mandatory -->
+    <P434>180</P434>
+    <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <!-- Number: 90 to 64800 -->
+    <!-- Mandatory -->
+    <P427>90</P427>
+    <!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P428>0</P428>
+    <!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P429>0</P429>
+    <!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P430>0</P430>
+    <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P432>0</P432>
+    <!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <!-- Number: 1,2 -->
+    <!-- Mandatory -->
+    <!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P431>0</P431>
+    <!-- Send Re-INVITE After Fax. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4368>0</P4368>
+    <!-- Enable 100rel. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P435>0</P435>
+    <!-- Codec/Voice Quality settings -->
+    <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4364>0</P4364>
+    <!-- Preferred Vocoder -->
+    <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 100 - AAL2-G.726-16, -->
+    <!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 99 - G.729E -->
+    <!-- Choice 1. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P757>0</P757>
+    <!-- Choice 2. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P758>8</P758>
+    <!-- Choice 3. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P759>4</P759>
+    <!-- Choice 4. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P760>18</P760>
+    <!-- Choice 5. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P761>2</P761>
+    <!-- Choice 6. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P762>98</P762>
+    <!-- Choice 7. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P814>103</P814>
+    <!-- Choice 8. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,104 -->
+    <!-- Mandatory -->
+    <P815>99</P815>
+    <!-- Enable Silence Detection for Fax Disconnect. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4407>1</P4407>
+    <!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
+    <!-- Number: 1,2,3,4 -->
+    <P737>2</P737>
+    <!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P749>0</P749>
+    <!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P705>0</P705>
+    <!-- iLBC payload type. Between 96 and 127, default is 97. -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P704>97</P704>
+    <!-- AAL2-G726-16 payload type. (between 96 and 127, default is 100) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P819>100</P819>
+    <!-- AAL2-G726-24 payload type. (between 96 and 127, default is 99) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P820>99</P820>
+    <!-- AAL2-G726-32 payload type. (between 96 and 127, default is 104) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P821>104</P821>
+    <!-- AAL2-G726-40 payload type. (between 96 and 127, default is 103) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P822>103</P822>
+    <!-- G729E payload type. (between 96 and 127, default is 102) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P818>102</P818>
+    <!-- VAD. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P750>0</P750>
+    <!-- Symmetric RTP. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P460>0</P460>
+    <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P710>0</P710>
+    <!-- Fax Tone Detection Mode. 1 - Caller, 0 - Callee, 2 - Caller or Callee -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P895>0</P895>
+    <!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P831>1</P831>
+    <!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P832>1</P832>
+    <!-- SRTP Mode -->
+    <!-- 0 = Disabled -->
+    <!-- 1 = Enabled but not forced -->
+    <!-- 2 = Enabled and forced -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P443>0</P443>
+    <!-- SLIC Setting -->
+    <!-- 0 - USA, 1 - AUSTRIA, 2 - BELGIUM, 3 - FINLAND, 4 - FRANCE, 5 - GERMANY -->
+    <!-- 6 - GREECE, 7 -ITALY, 8 - JAPAN, 9 - NORWAY, 10 - SPAIN, 11 - SWEDEN -->
+    <!-- 12 - UK, 13 - AUSTRALIA/NEW ZEALAND -->
+    <!-- Number: 0 to 14 -->
+    <!-- Mandatory -->
+    <P864>0</P864>
+    <!-- Caller ID Scheme -->
+    <!-- 0  - Bellcore/Telcordia -->
+    <!-- 1  - ETSI-FSK during ringing -->
+    <!-- 2  - ETSI-FSK prior to ringing with DTAS -->
+    <!-- 3  - ETSI-FSK prior to ringing with LR -->
+    <!-- 4  - ETSI-FSK prior to ringing with RP -->
+    <!-- 5  - ETSI-DTMF during ringing -->
+    <!-- 6  - ETSI-DTMF prior to ringing with DTAS -->
+    <!-- 7  - ETSI-DTMF prior to ringing with LR -->
+    <!-- 8  - ETSI-DTMF prior to ringing with RP -->
+    <!-- 9  - SIN 227 - BT -->
+    <!-- 10 - NTT Japan -->
+    <!-- Number: 0 to 10 -->
+    <!-- Mandatory -->
+    <P863>0</P863>
+    <!-- Polarity Reversal.  0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P865>0</P865>
+    <!-- Loop Current Disconnect. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P893>0</P893>
+    <!-- Loop Current Disconnect Duration. In 100 - 10000 milliseconds range, default is 200. -->
+    <!-- Number: 100 to 10000 -->
+    <!-- Mandatory -->
+    <P857>200</P857>
+    <!-- Enable Hook Flash -->
+    <!-- Number: 0, 1 -->
+    <!-- Mandatory -->
+    <P4425>1</P4425>
+    <!-- Hook Flash Timing. In 40-2000 milliseconds range. -->
+    <!-- minimum -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P811>300</P811>
+    <!-- maximum -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P812>1100</P812>
+    <!-- On Hook Timing. (In 40-2000 milliseconds range, default is 400) -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P834>400</P834>
+    <!-- Gain: -->
+    <!-- TX -->
+    <!-- <value=1> +6dB -->
+    <!-- <value=2> +4dB -->
+    <!-- <value=3> +2dB -->
+    <!-- <value=0> 0dB -->
+    <!-- <value=4> -2dB -->
+    <!-- <value=5> -4dB -->
+    <!-- <value=6> -6dB -->
+    <!-- Number: 0 to 6 -->
+    <!-- Mandatory -->
+    <P248>0</P248>
+    <!-- RX -->
+    <!-- <value=1> +6dB -->
+    <!-- <value=2> +4dB -->
+    <!-- <value=3> +2dB -->
+    <!-- <value=0> 0dB -->
+    <!-- <value=4> -2dB -->
+    <!-- <value=5> -4dB -->
+    <!-- <value=6> -6dB -->
+    <!-- Number: 0 to 6 -->
+    <!-- Mandatory -->
+    <P283>0</P283>
+    <!-- Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P825>0</P825>
+    <!-- Ring Tone 1 -->
+    <!-- String Max Length: 256 -->
+    <P4030>c=2000/4000;</P4030>
+    <!-- Ring Tone 2 -->
+    <!-- String Max Length: 256 -->
+    <P4031>c=2000/4000;</P4031>
+    <!-- Ring Tone 3 -->
+    <!-- String Max Length: 256 -->
+    <P4032>c=2000/4000;</P4032>
+    <!-- Ring Tone 4 -->
+    <!-- String Max Length: 256 -->
+    <P4033>c=2000/4000;</P4033>
+    <!-- Ring Tone 5 -->
+    <!-- String Max Length: 256 -->
+    <P4034>c=2000/4000;</P4034>
+    <!-- Ring Tone 6 -->
+    <!-- String Max Length: 256 -->
+    <P4035>c=2000/4000;</P4035>
+    <!-- Ring Tone 7 -->
+    <!-- String Max Length: 256 -->
+    <P4036>c=2000/4000;</P4036>
+    <!-- Ring Tone 8 -->
+    <!-- String Max Length: 256 -->
+    <P4037>c=2000/4000;</P4037>
+    <!-- Ring Tone 9 -->
+    <!-- String Max Length: 256 -->
+    <P4038>c=2000/4000;</P4038>
+    <!-- Ring Tone 10 -->
+    <!-- String Max Length: 256 -->
+    <P4039>c=2000/4000;</P4039>
+    <!--  Profile 3 Settings -->
+    <!-- Profile Active.  0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P501>1</P501>
+    <!-- Primary SIP Server -->
+    <!-- String: serveraddress -->
+    <P547>{$server_address_3}</P547>
+    <!-- Failover SIP Server -->
+    <!-- String: serveraddress -->
+    <P997></P997>
+    <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4569>1</P4569>
+    <!-- Outbound Proxy -->
+    <!-- String: serveraddress -->
+    <P548>proxy.mycompany.com</P548>
+    <!-- SIP Transport -->
+    <!-- 0 - UDP, 1 - TCP, 2 - TLS -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P530>0</P530>
+    <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P630>0</P630>
+    <!-- Visual MWI type: 0 - FSK, 1 - Neon -->
+    <!-- Number: 1,2 -->
+    <!-- Mandatory -->
+    <P4373>0</P4373>
+    <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. -->
+    <!-- Number: 0,1,2,3 -->
+    <!-- Mandatory -->
+    <P502>0</P502>
+    <!-- Primary IP -->
+    <!-- IP address -->
+    <P2508></P2508>
+    <!-- Backup IP1 -->
+    <!-- IP address -->
+    <P2509></P2509>
+    <!-- Backup IP2 -->
+    <!-- IP address -->
+    <P2510></P2510>
+    <!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P563>0</P563>
+    <!-- Use Request Routing ID in SIP INVITE Header. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <P4893>0</P4893>
+    <!-- SIP Registration. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P531>1</P531>
+    <!-- Unregister On Reboot. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P552>0</P552>
+    <!-- Outgoing calls without registration. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P513>1</P513>
+    <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+    <!-- Number: 1 to 64800 -->
+    <!-- Mandatory -->
+    <P532>{$account.3.register_expires}</P532>
+    <!-- Reregister before Expiration -->
+    <!-- Number -->
+    <!-- Mandatory -->
+    <P2530>0</P2530>
+    <!-- Registration Retry Wait Time (in seconds. Between 1-3600, default is 30) -->
+    <!-- Number: 1 to 3600 -->
+    <!-- Mandatory -->
+    <P571>30</P571>
+    <!-- Local SIP port (default 6060) -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <P640>6060</P640>
+    <!-- Local RTP port (1024-65535, default 6004) -->
+    <!-- Number: 1024 to 65535 -->
+    <!-- Mandatory -->
+    <P539>6004</P539>
+    <!-- Use Random Port. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P578>0</P578>
+    <!-- Refer to Use Target Contact. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P569>0</P569>
+    <!-- Transfer on Conference Hangup. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4565>0</P4565>
+    <!-- Disable Bellcore Style 3-Way Conference. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4832>0</P4832>
+    <!-- Remove OBP from Route Header. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4564>0</P4564>
+    <!-- Support SIP Instance ID. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P589>1</P589>
+    <!-- Validate Incoming Message. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4342>0</P4342>
+    <!-- Check SIP Incoming UserID. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P549>0</P549>
+    <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4043>0</P4043>
+    <!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+    <!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 100. -->
+    <!-- Number: 50,100,200,400,800 -->
+    <!-- Mandatory -->
+    <!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+    <!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+    <!-- Number: 1600,3200,200,400,800 -->
+    <!-- Mandatory -->
+    <P541>400</P541>
+    <!-- DTMF Payload Type -->
+    <!-- Number: 96 to 127 -->
+    <P579>101</P579>
+    <!-- Preferred DTMF method. -->
+    <!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+    <!-- Priority 1 -->
+    <!-- Number: 100,101,102 -->
+    <!-- Mandatory -->
+    <P560>100</P560>
+    <!-- Priority 2 -->
+    <!-- Number: 100,101,102 -->
+    <!-- Mandatory -->
+    <P561>100</P561>
+    <!-- Priority 3 -->
+    <!-- Number: 100,101,102 -->
+    <!-- Mandatory -->
+    <P562>100</P562>
+    <!-- Disable DTMF Negotiation. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4827>0</P4827>
+    <!-- Send FLASH event. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P574>0</P574>
+    <!-- Enable Call Features.  0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P551>1</P551>
+    <!-- Offhook Auto-Dial Delay (default is 0) -->
+    <!-- String: 0 to 60 -->
+    <P4047>0</P4047>
+    <!-- Proxy-Require (A SIP extension to enable firewall penetration) -->
+    <!-- String: ipaddress -->
+    <P592></P592>
+    <!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
+    <!-- String: ipaddress -->
+    <P566></P566>
+    <!-- Use SIP User-Agent Header for Profile 3 -->
+    <!-- String Max Length: 1024 32 to 127 -->
+    <!-- Distinctive Ring Tone -->
+    <!-- 0 - Ring Tone 1, 1 - Ring Tone 2, 2 - Ring Tone 3, 3 - Ring Tone 4, 4 - Ring Tone 5, -->
+    <!-- 5 - Ring Tone 6, 6 - Ring Tone 7, 7 - Ring Tone 8, 8 - Ring Tone 9, 9 - Ring Tone 10 -->
+    <!-- Distinctive Ring Tone Choice 1 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P580>0</P580>
+    <!-- Choice 1 incoming caller ID -->
+    <!-- String Max Length: 64 -->
+    <P581></P581>
+    <!-- Distinctive Ring Tone Choice 2 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P582>0</P582>
+    <!-- Choice 2 incoming caller ID -->
+    <!-- String Max Length: 64 -->
+    <P583></P583>
+    <!-- Distinctive Ring Tone Choice 3 -->
+    <!-- Number: 0 to 9 -->
+    <!-- Mandatory -->
+    <P584>0</P584>
+    <!-- Choice 3 incoming caller ID -->
+    <!-- String Max Length: 64 -->
+    <P585></P585>
+    <!-- Disable Call Waiting. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P591>0</P591>
+    <!-- Disable Call-Waiting Caller ID. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P523>0</P523>
+    <!-- Disable Call-Waiting Tone. 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P517>0</P517>
+    <!-- Disable Receiver Offhook Tone. 0 - No, 1 - Yes.  -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4795>0</P4795>
+    <!-- Disable Reminder Ring for On-Hold Call: -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4362>0</P4362>
+    <!-- Disable Visual MWI. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P669>0</P669>
+    <!-- Ring Timeout. (10-300, default is 60 seconds) -->
+    <!-- Number: 10 to 300 -->
+    <!-- Mandatory -->
+    <P516>60</P516>
+    <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+    <!-- Number: 5 to 300 -->
+    <!-- Mandatory -->
+    <P4332>20</P4332>
+    <!-- Hunting Group Type. 0 - Circular, 1 - Linear -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4397>0</P4397>
+    <!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
+    <!-- Number: 1 to 120 -->
+    <!-- Mandatory -->
+    <P570>20</P570>
+    <!-- No Key Entry Timeout. Default - 4 seconds. -->
+    <!-- Number: 1 to 15 -->
+    <!-- Mandatory -->
+    <P492>4</P492>
+    <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P529>0</P529>
+    <!-- Dial Plan Prefix (dial plan prefix string). -->
+    <!-- String Max Length: 32 -->
+    <P666></P666>
+    <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P572>1</P572>
+    <!-- Dial Plan -->
+    <!-- String Max Length: 1024 -->
+    <P4202>{ x+ | *x+ }</P4202>
+    <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P509>0</P509>
+    <!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P565>0</P565>
+    <!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P546>0</P546>
+    <!-- Special Feature -->
+    <!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
+    <!-- Number: 100, 102, 108, 109, 111, 114, 119, 120 -->
+    <!-- Mandatory -->
+    <P567>100</P567>
+    <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+    <!-- Number: 90 to 64800 -->
+    <!-- Mandatory -->
+    <P534>180</P534>
+    <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+    <!-- Number: 90 to 64800 -->
+    <!-- Mandatory -->
+    <P527>90</P527>
+    <!-- Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P528>0</P528>
+    <!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P629>0</P629>
+    <!-- Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P664>0</P664>
+    <!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P365>0</P365>
+    <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P632>0</P632>
+    <!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+    <!-- Number: 1,2 -->
+    <!-- Mandatory -->
+    <P533>1</P533>
+    <!-- Send Re-INVITE After Fax. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4369>0</P4369>
+    <!-- Enable 100rel. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P535>0</P535>
+    <!-- Codec/Voice Quality settings -->
+    <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4365>0</P4365>
+    <!-- Preferred Vocoder -->
+    <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 100 - AAL2-G.726-16, -->
+    <!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 99 - G.729E -->
+    <!-- Choice 1. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P557>0</P557>
+    <!-- Choice 2. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P558>8</P558>
+    <!-- Choice 3. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P559>4</P559>
+    <!-- Choice 4. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P660>18</P660>
+    <!-- Choice 5. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P661>2</P661>
+    <!-- Choice 6. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P662>98</P662>
+    <!-- Choice 7. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P514>103</P514>
+    <!-- Choice 8. -->
+    <!-- Number: 0,2,4,8,18,98,99,100,102,103,104 -->
+    <!-- Mandatory -->
+    <P515>99</P515>
+    <!-- Enable Silence Detection for Fax Disconnect. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4408>1</P4408>
+    <!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
+    <!-- Number: 1,2,3,4 -->
+    <P4593>2</P4593>
+    <!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4350>0</P4350>
+    <!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P505>0</P505>
+    <!-- iLBC payload type. Between 96 and 127, default is 97. -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P504>97</P504>
+    <!-- AAL2-G726-16 payload type. (between 96 and 127, default is 100) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P519>100</P519>
+    <!-- AAL2-G726-24 payload type. (between 96 and 127, default is 99) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P520>99</P520>
+    <!-- AAL2-G726-32 payload type. (between 96 and 127, default is 104) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P521>104</P521>
+    <!-- AAL2-G726-40 payload type. (between 96 and 127, default is 103) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P522>103</P522>
+    <!-- G729E payload type. (between 96 and 127, default is 102) -->
+    <!-- Number: 96 to 127 -->
+    <!-- Mandatory -->
+    <P518>102</P518>
+    <!-- VAD. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P550>0</P550>
+    <!-- Symmetric RTP. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P691>0</P691>
+    <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P510>0</P510>
+    <!-- Fax Tone Detection Mode. 1 - Caller, 0 - Callee, 2 - Caller or Callee -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P595>0</P595>
+    <!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P631>1</P631>
+    <!-- Jitter Buffer Length. 0 - Low, 1 - Medium, 2 - High -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P835>1</P835>
+    <!-- SRTP Mode -->
+    <!-- 0 = Disabled -->
+    <!-- 1 = Enabled but not forced -->
+    <!-- 2 = Enabled and forced -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P543>0</P543>
+    <!-- SLIC Setting -->
+    <!-- 0 - USA, 1 - AUSTRIA, 2 - BELGIUM, 3 - FINLAND, 4 - FRANCE, 5 - GERMANY -->
+    <!-- 6 - GREECE, 7 -ITALY, 8 - JAPAN, 9 - NORWAY, 10 - SPAIN, 11 - SWEDEN -->
+    <!-- 12 - UK, 13 - AUSTRALIA/NEW ZEALAND -->
+    <!-- Number: 0 to 14 -->
+    <!-- Mandatory -->
+    <P564>0</P564>
+    <!-- Caller ID Scheme -->
+    <!-- 0  - Bellcore/Telcordia -->
+    <!-- 1  - ETSI-FSK during ringing -->
+    <!-- 2  - ETSI-FSK prior to ringing with DTAS -->
+    <!-- 3  - ETSI-FSK prior to ringing with LR -->
+    <!-- 4  - ETSI-FSK prior to ringing with RP -->
+    <!-- 5  - ETSI-DTMF during ringing -->
+    <!-- 6  - ETSI-DTMF prior to ringing with DTAS -->
+    <!-- 7  - ETSI-DTMF prior to ringing with LR -->
+    <!-- 8  - ETSI-DTMF prior to ringing with RP -->
+    <!-- 9  - SIN 227 - BT -->
+    <!-- 10 - NTT Japan -->
+    <!-- Number: 0 to 10 -->
+    <!-- Mandatory -->
+    <P663>0</P663>
+    <!-- Polarity Reversal.  0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P665>0</P665>
+    <!-- Loop Current Disconnect. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P593>0</P593>
+    <!-- Loop Current Disconnect Duration. In 100 - 10000 milliseconds range, default is 200. -->
+    <!-- Number: 100 to 10000 -->
+    <!-- Mandatory -->
+    <P657>200</P657>
+    <!-- Enable Hook Flash -->
+    <!-- Number: 0, 1 -->
+    <!-- Mandatory -->
+    <P4426>1</P4426>
+    <!-- Hook Flash Timing. In 40-2000 milliseconds range. -->
+    <!-- minimum -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P511>300</P511>
+    <!-- maximum -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P512>1100</P512>
+    <!-- On Hook Timing. (In 40-2000 milliseconds range, default is 400) -->
+    <!-- Number: 40 to 2000 -->
+    <!-- Mandatory -->
+    <P634>400</P634>
+    <!-- Gain: -->
+    <!-- TX -->
+    <!-- <value=1> +6dB -->
+    <!-- <value=2> +4dB -->
+    <!-- <value=3> +2dB -->
+    <!-- <value=0> 0dB -->
+    <!-- <value=4> -2dB -->
+    <!-- <value=5> -4dB -->
+    <!-- <value=6> -6dB -->
+    <!-- Number: 0 to 6 -->
+    <!-- Mandatory -->
+    <P648>0</P648>
+    <!-- RX -->
+    <!-- <value=1> +6dB -->
+    <!-- <value=2> +4dB -->
+    <!-- <value=3> +2dB -->
+    <!-- <value=0> 0dB -->
+    <!-- <value=4> -2dB -->
+    <!-- <value=5> -4dB -->
+    <!-- <value=6> -6dB -->
+    <!-- Number: 0 to 6 -->
+    <!-- Mandatory -->
+    <P683>0</P683>
+    <!-- Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4366>0</P4366>
+    <!-- Ring Tone 1 -->
+    <!-- String Max Length: 256 -->
+    <P4020>c=2000/4000;</P4020>
+    <!-- Ring Tone 2 -->
+    <!-- String Max Length: 256 -->
+    <P4021>c=2000/4000;</P4021>
+    <!-- Ring Tone 3 -->
+    <!-- String Max Length: 256 -->
+    <P4022>c=2000/4000;</P4022>
+    <!-- Ring Tone 4 -->
+    <!-- String Max Length: 256 -->
+    <P4023>c=2000/4000;</P4023>
+    <!-- Ring Tone 5 -->
+    <!-- String Max Length: 256 -->
+    <P4024>c=2000/4000;</P4024>
+    <!-- Ring Tone 6 -->
+    <!-- String Max Length: 256 -->
+    <P4025>c=2000/4000;</P4025>
+    <!-- Ring Tone 7 -->
+    <!-- String Max Length: 256 -->
+    <P4026>c=2000/4000;</P4026>
+    <!-- Ring Tone 8 -->
+    <!-- String Max Length: 256 -->
+    <P4027>c=2000/4000;</P4027>
+    <!-- Ring Tone 9 -->
+    <!-- String Max Length: 256 -->
+    <P4028>c=2000/4000;</P4028>
+    <!-- Ring Tone 10 -->
+    <!-- String Max Length: 256 -->
+    <P4029>c=2000/4000;</P4029>
+    <!--FXS Ports -->
+    <!-- FXS Port 1 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 1 - Active, 2 - 2, 3 - 3, 4 -4, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4060>{$account.1.user_id}</P4060>
+    <!-- String Max Length: 64 -->
+    <P4090>{$account.1.user_id}</P4090>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4120>{$account.1.password}</P4120>
+    <!-- String Max Length: 64 -->
+    <P4180>{$account.1.display_name}</P4180>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4150>0</P4150>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4300></P4300>
+    <!-- String Max Length: 64 -->
+    <P4669></P4669>
+    <!-- Number: 0,1 -->
+    <P4595>1</P4595>
+    <!-- FXS Port 2 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 2 - Active, 1 - 1, 3 - 3, 4 -4, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4061>{$account.2.user_id}</P4061>
+    <!-- String Max Length: 64 -->
+    <P4091>{$account.2.user_id}</P4091>
+    <!-- String Max Length: 64 -->
+    <P4121>{$account.2.password}</P4121>
+    <!-- String Max Length: 64 -->
+    <P4181>{$account.2.display_name}</P4181>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4151>0</P4151>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4301></P4301>
+    <!-- String Max Length: 64 -->
+    <P4670></P4670>
+    <!-- Number: 0,1 -->
+    <P4596>1</P4596>
+    <!-- FXS Port 3 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 3 - Active, 1 - 1, 2 - 2, 4 -4, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4062>{$account.3.user_id}</P4062>
+    <!-- String Max Length: 64 -->
+    <P4092>{$account.3.user_id}</P4092>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4122>{$account.3.password}</P4122>
+    <!-- String Max Length: 64 -->
+    <P4182>{$account.3.display_name}</P4182>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4152>0</P4152>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4302></P4302>
+    <!-- String Max Length: 64 -->
+    <P4671></P4671>
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P4597>1</P4597>
+    <!-- FXS Port 4 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 4 - Active, 1 - 1, 2 - 2, 3 - 3, 5 - 5, 6 - 6, 7 - 7, 8 - 8 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4063>{$account.4.user_id}</P4063>
+    <!-- String Max Length: 64 -->
+    <P4093>{$account.4.user_id}</P4093>
+    <!-- String Max Length: 64 -->
+    <P4123>{$account.4.password}</P4123>
+    <!-- String Max Length: 64 -->
+    <P4183>{$account.4.display_name}</P4183>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4153>0</P4153>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4303></P4303>
+    <!-- String Max Length: 64 -->
+    <P4672></P4672>
+    <!-- Number: 0,l -->
+    <P4598>1</P4598>
+    <!-- The following ports (5 to 8) belong to GXW-4008/GXW-4024 only -->
+    <!-- FXS Port 5 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 5 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 6 - 6, 7 - 7, 8 - 8 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4064>{$account.5.user_id}</P4064>
+    <!-- String Max Length: 64 -->
+    <P4094>{$account.5.user_id}</P4094>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4124>{$account.5.password}</P4124>
+    <!-- String Max Length: 64 -->
+    <P4184>{$account.5.display_name}</P4184>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4154>0</P4154>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4304></P4304>
+    <!-- String Max Length: 64 -->
+    <P4673></P4673>
+    <!-- Number: 0,1 -->
+    <P4599>1</P4599>
+    <!-- FXS Port 6 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 6 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 5 - 5, 7 - 7, 8 - 8 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4065>{$account.6.user_id}</P4065>
+    <!-- String Max Length: 64  -->
+    <P4095>{$account.6.user_id}</P4095>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4125>{$account.6.password}</P4125>
+    <!-- String Max Length: 64 -->
+    <P4185>{$account.6.display_name}</P4185>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4155>0</P4155>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4305></P4305>
+    <!-- String Max Length: 64 -->
+    <P4674></P4674>
+    <!-- Number: 0,1 -->
+    <P4600>1</P4600>
+    <!-- FXS Port 7 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 7 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 5 - 5, 6 - 6, 8 - 8 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4066>{$account.7.user_id}</P4066>
+    <!-- String Max Length: 64 -->
+    <P4096>{$account.7.user_id}</P4096>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4126>{$account.7.password}</P4126>
+    <!-- String Max Length: 64 -->
+    <P4186>{$account.7.display_name}</P4186>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4156>0</P4156>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4306></P4306>
+    <!-- String Max Length: 64 -->
+    <P4675></P4675>
+    <!-- Number: 0,1 -->
+    <P4601>1</P4601>
+    <!-- FXS Port 8 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 8 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 5 - 5, 6 - 6, 7 - 7 ) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4067>{$account.8.user_id}</P4067>
+    <!-- String Max Length: 64 -->
+    <P4097>{$account.8.user_id}</P4097>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4127>{$account.8.password}</P4127>
+    <!-- String Max Length: 64 -->
+    <P4187>{$account.8.display_name}</P4187>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4157>0</P4157>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4307></P4307>
+    <!-- String Max Length: 64 -->
+    <P4676></P4676>
+    <!-- Number: 0,1 -->
+    <P4602>1</P4602>
+    <!-- The following ports (9 to 24) belong to GXW-4024 only -->
+    <!-- FXS Port 9 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 9 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4068>{$account.9.user_id}</P4068>
+    <!-- String Max Length: 64 -->
+    <P4098>{$account.9.user_id}</P4098>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4128>{$account.9.password}</P4128>
+    <!-- String Max Length: 64 -->
+    <P4188>{$account.9.display_name}</P4188>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4158>0</P4158>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4308></P4308>
+    <!-- String Max Length: 64 -->
+    <P4677></P4677>
+    <!-- Number: 0,1 -->
+    <P4603>1</P4603>
+    <!-- FXS Port 10 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 10 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4069>{$account.10.user_id}</P4069>
+    <!-- String Max Length: 64 -->
+    <P4099>{$account.10.user_id}</P4099>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4129>{$account.10.password}</P4129>
+    <!-- String Max Length: 64 -->
+    <P4189>{$account.10.display_name}</P4189>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4159>0</P4159>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4309></P4309>
+    <!-- String Max Length: 64 -->
+    <P4678></P4678>
+    <!-- Number: 0,1 -->
+    <P4604>1</P4604>
+    <!-- FXS Port 11 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 11 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4070>{$account.11.user_id}</P4070>
+    <!-- String Max Length: 64 -->
+    <P4100>{$account.11.user_id}</P4100>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4130>{$account.11.password}</P4130>
+    <!-- String Max Length: 64 -->
+    <P4190>{$account.11.display_name}</P4190>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4160>0</P4160>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4310></P4310>
+    <!-- String Max Length: 64 -->
+    <P4679></P4679>
+    <!-- Number: 0,1 -->
+    <P4605>1</P4605>
+    <!-- FXS Port 12 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 12 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - , 10 - 10, 11 - 11, -->
+    <!-- 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4071>{$account.12.user_id}</P4071>
+    <!-- String Max Length: 64 -->
+    <P4101>{$account.12.user_id}</P4101>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4131>{$account.12.password}</P4131>
+    <!-- String Max Length: 64 -->
+    <P4191>{$account.12.display_name}</P4191>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4161>0</P4161>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4311></P4311>
+    <!-- String Max Length: 64 -->
+    <P4680></P4680>
+    <!-- Number: 0,1 -->
+    <P4606>1</P4606>
+    <!-- FXS Port 13 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 13 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4072>{$account.13.user_id}</P4072>
+    <!-- String Max Length: 64 -->
+    <P4102>{$account.13.user_id}</P4102>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4132>{$account.13.password}</P4132>
+    <!-- String Max Length: 64 -->
+    <P4192>{$account.13.display_name}</P4192>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4162>0</P4162>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4312></P4312>
+    <!-- String Max Length: 64 -->
+    <P4681></P4681>
+    <!-- Number: 0,1 -->
+    <P4607>1</P4607>
+    <!-- FXS Port 14 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 14 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - , 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4073>{$account.14.user_id}</P4073>
+    <!-- String Max Length: 64 -->
+    <P4103>{$account.14.user_id}</P4103>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4133>{$account.14.password}</P4133>
+    <!-- String Max Length: 64 -->
+    <P4193>{$account.14.display_name}</P4193>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4163>0</P4163>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4313></P4313>
+    <!-- String Max Length: 64 -->
+    <P4682></P4682>
+    <!-- Number: 0,1 -->
+    <P4608>1</P4608>
+    <!-- FXS Port 15 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 15 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4074>{$account.15.user_id}</P4074>
+    <!-- String Max Length: 64 -->
+    <P4104>{$account.15.user_id}</P4104>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4134>{$account.15.password}</P4134>
+    <!-- String Max Length: 64 -->
+    <P4194>{$account.15.display_name}</P4194>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4164>0</P4164>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4314></P4314>
+    <!-- String Max Length: 64 -->
+    <P4683></P4683>
+    <!-- Number: 0,1 -->
+    <P4609>1</P4609>
+    <!-- FXS Port 16 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 16 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - , 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4075>{$account.16.user_id}</P4075>
+    <!-- String Max Length: 64 -->
+    <P4105>{$account.16.user_id}</P4105>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4135>{$account.16.password}</P4135>
+    <!-- String Max Length: 64 -->
+    <P4195>{$account.16.display_name}</P4195>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4165>0</P4165>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4315></P4315>
+    <!-- String Max Length: 64 -->
+    <P4684></P4684>
+    <!-- Number: 0,1 -->
+    <P4610>1</P4610>
+    <!-- FXS Port 17 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 17 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - , 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4076>{$account.17.user_id}</P4076>
+    <!-- String Max Length: 64 -->
+    <P4106>{$account.17.user_id}</P4106>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4136>{$account.17.password}</P4136>
+    <!-- String Max Length: 64 -->
+    <P4196>{$account.17.display_name}</P4196>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4166>0</P4166>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4316></P4316>
+    <!-- String Max Length: 64 -->
+    <P4685></P4685>
+    <!-- Number: 0,1 -->
+    <P4611>1</P4611>
+    <!-- FXS Port 18 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 18 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4077>{$account.18.user_id}</P4077>
+    <!-- String Max Length: 64 -->
+    <P4107>{$account.18.user_id}</P4107>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4137>{$account.18.user_password}</P4137>
+    <!-- String Max Length: 64 -->
+    <P4197>{$account.18.display_name}</P4197>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4167>0</P4167>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4317></P4317>
+    <!-- String Max Length: 64 -->
+    <P4686></P4686>
+    <!-- Number: 0,1 -->
+    <P4612>1</P4612>
+    <!-- FXS Port 19 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 19 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - , 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 20 - 20, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4078>{$account.19.user_id}</P4078>
+    <!-- String Max Length: 64 -->
+    <P4108>{$account.19.user_id}</P4108>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4138>{$account.19.password}</P4138>
+    <!-- String Max Length: 64 -->
+    <P4198>{$account.19.display_name}</P4198>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4168>0</P4168>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4318></P4318>
+    <!-- String Max Length: 64 -->
+    <P4687></P4687>
+    <!-- Number: 0,1 -->
+    <P4613>1</P4613>
+    <!-- FXS Port 20 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 20 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 21 - 21, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4079>{$account.20.user_id}</P4079>
+    <!-- String Max Length: 64 -->
+    <P4109>{$account.20.user_id}</P4109>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4139>{$account.20.password}</P4139>
+    <!-- String Max Length: 64 -->
+    <P4199>{$account.20.display_name}</P4199>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4169>0</P4169>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4319></P4319>
+    <!-- String Max Length: 64 -->
+    <P4688></P4688>
+    <!-- Number: 0,1 -->
+    <P4614>1</P4614>
+    <!-- FXS Port 21 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 21 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 22 - 22, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4080>{$account.21.user_id}</P4080>
+    <!-- String Max Length: 64 -->
+    <P4110>{$account.21.user_id}</P4110>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4140>{$account.21.password}</P4140>
+    <!-- String Max Length: 64 -->
+    <P4252>{$account.21.display_name}</P4252>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4170>0</P4170>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4320></P4320>
+    <!-- String Max Length: 64 -->
+    <P4689></P4689>
+    <!-- Number: 0,1 -->
+    <P4615>1</P4615>
+    <!-- FXS Port 22 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 22 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 23 - 23, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4081>{$account.22.user_id}</P4081>
+    <!-- String Max Length: 64 -->
+    <P4111>{$account.22.user_id}</P4111>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4141>{$account.22.password}</P4141>
+    <!-- String Max Length: 64 -->
+    <P4253>{$account.22.display_name}</P4253>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4171>0</P4171>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4321></P4321>
+    <!-- String Max Length: 64 -->
+    <P4690></P4690>
+    <!-- Number: 0,1 -->
+    <P4616>1</P4616>
+    <!-- FXS Port 23 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 23 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 24 - 24) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4082>{$account.23.user_id}</P4082>
+    <!-- String Max Length: 64 -->
+    <P4112>{$account.23.user_id}</P4112>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4142>{$account.23.password}</P4142>
+    <!-- String Max Length: 64 -->
+    <P4254>{$account.23.display_name}</P4254>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4172>0</P4172>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4322></P4322>
+    <!-- String Max Length: 64 -->
+    <P4691></P4691>
+    <!-- Number: 0,1 -->
+    <P4617>1</P4617>
+    <!-- FXS Port 24 -->
+    <!-- SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
+    <!-- Hunting Group (0 - None, 24 - Active, 1 - 1, 2 - 2, 3 - 3, 4 - 4, 5 - 5, 6 - 6, 7 - 7, 8 - 8, 9 - 9, 10 - 10, 11 - 11, -->
+    <!-- 12 - 12, 13 - 13, 14 - 14, 15 - 15, 16- 16, 17 -17, 18 - 18, 19 - 19, 20 - 20, 21 - 21, 22 - 22, 23 - 23) -->
+    <!-- Request URI Routing ID -->
+    <!-- Enable Port(0 - No, 1 - Yes, default is Yes) -->
+    <!-- String Max Length: 64 -->
+    <P4083>{$account.24.user_id}</P4083>
+    <!-- String Max Length: 64 -->
+    <P4113>{$account.24.user_id}</P4113>
+    <!-- String Max Length: 64 -->
+    <!-- Mandatory -->
+    <P4143>{$account.24.password}</P4143>
+    <!-- String Max Length: 64 -->
+    <P4255>{$account.24.display_name}</P4255>
+    <!-- Number: 0 to 3 -->
+    <!-- Mandatory -->
+    <P4173>0</P4173>
+    <!-- Number: 0 to 32 -->
+    <!-- Mandatory -->
+    <P4323></P4323>
+    <!-- String Max Length: 64 -->
+    <P4692></P4692>
+    <!-- Number: 0,1 -->
+    <P4618>1</P4618>
+    <!-- Offhook Auto-dial -->
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4210></P4210>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4211></P4211>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4212></P4212>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4213></P4213>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4214></P4214>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4215></P4215>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4216></P4216>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4217></P4217>
+    <!-- Map to FXO Port# -->
+    <P4521>1</P4521>
+    <P4522>1</P4522>
+    <P4523>1</P4523>
+    <P4524>1</P4524>
+    <P4525>1</P4525>
+    <P4526>1</P4526>
+    <P4527>1</P4527>
+    <P4528>1</P4528>
+    <!-- Map to FXO Gateway IP -->
+    <!-- String: ipaddress -->
+    <P4264></P4264>
+    <!-- String: ipaddress -->
+    <P4265></P4265>
+    <!-- String: ipaddress -->
+    <P4266></P4266>
+    <!-- String: ipaddress -->
+    <P4267></P4267>
+    <!-- String: ipaddress -->
+    <P4268></P4268>
+    <!-- String: ipaddress -->
+    <P4269></P4269>
+    <!-- String: ipaddress -->
+    <P4270></P4270>
+    <!-- String: ipaddress -->
+    <P4271></P4271>
+    <!-- and Port (Local sip port) -->
+    <!-- Number: 1 to 65535 -->
+    <P4858></P4858>
+    <!-- Number: 1 to 65535 -->
+    <P4859></P4859>
+    <!-- Number: 1 to 65535 -->
+    <P4860></P4860>
+    <!-- Number: 1 to 65535 -->
+    <P4861></P4861>
+    <!-- Number: 1 to 65535 -->
+    <P4862></P4862>
+    <!-- Number: 1 to 65535 -->
+    <P4863></P4863>
+    <!-- Number: 1 to 65535 -->
+    <P4864></P4864>
+    <!-- Number: 1 to 65535 -->
+    <P4865></P4865>
+    <!-- The following is for GXW-4024 only -->
+    <!-- Offhook Auto-dial -->
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4218></P4218>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4219></P4219>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4220></P4220>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4221></P4221>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4222></P4222>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4223></P4223>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4224></P4224>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4225></P4225>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4226></P4226>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4227></P4227>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4228></P4228>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4229></P4229>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4230></P4230>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4231></P4231>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4232></P4232>
+    <!-- String Max Length: 64 0 to 9,#* -->
+    <P4233></P4233>
+    <!-- Map to FXO Port# -->
+    <P4529></P4529>
+    <P4530></P4530>
+    <P4531></P4531>
+    <P4532></P4532>
+    <P4533></P4533>
+    <P4534></P4534>
+    <P4535></P4535>
+    <P4536></P4536>
+    <P4537></P4537>
+    <P4538></P4538>
+    <P4539></P4539>
+    <P4540></P4540>
+    <P4541></P4541>
+    <P4542></P4542>
+    <P4543></P4543>
+    <P4544></P4544>
+    <!-- Map to FXO Gateway IP -->
+    <!-- String: ipaddress -->
+    <P4272></P4272>
+    <!-- String: ipaddress -->
+    <P4273></P4273>
+    <!-- String: ipaddress -->
+    <P4274></P4274>
+    <!-- String: ipaddress -->
+    <P4275></P4275>
+    <!-- String: ipaddress -->
+    <P4276></P4276>
+    <!-- String: ipaddress -->
+    <P4277></P4277>
+    <!-- String: ipaddress -->
+    <P4278></P4278>
+    <!-- String: ipaddress -->
+    <P4279></P4279>
+    <!-- String: ipaddress -->
+    <P4280></P4280>
+    <!-- String: ipaddress -->
+    <P4281></P4281>
+    <!-- String: ipaddress -->
+    <P4282></P4282>
+    <!-- String: ipaddress -->
+    <P4283></P4283>
+    <!-- String: ipaddress -->
+    <P4284></P4284>
+    <!-- String: ipaddress -->
+    <P4285></P4285>
+    <!-- String: ipaddress -->
+    <P4286></P4286>
+    <!-- String: ipaddress -->
+    <P4287></P4287>
+    <!-- and Port (Local sip port) -->
+    <!-- Number: 1 to 65535 -->
+    <P4866></P4866>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4867></P4867>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4868></P4868>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4869></P4869>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4870></P4870>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4871></P4871>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4872></P4872>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4873></P4873>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4874></P4874>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4875></P4875>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4876></P4876>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4877></P4877>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4878></P4878>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4879></P4879>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4880></P4880>
+    <!-- Min Value: 1 Max Value: 65535 -->
+    <!-- Number: 1 to 65535 -->
+    <P4881></P4881>
+    <!-- Basic Settings Page -->
+    <!-- End User Password -->
+    <!-- P196 = 123 -->
+    <!-- Web Port. Default HTTP is 80. -->
+    <!-- Number: 1 to 65535 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P901>80</P901>
+    <!-- Telnet Server. 1 - No, 0 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P276>0</P276>
+    <!-- IP Address. 0 - DHCP, 2 - PPPoE, 1 - Static IP -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P8>0</P8>
+    <!-- DHCP -->
+    <!-- DHCP Hostname, DHCP option 12. Max length allowed is 32 bytes. -->
+    <!-- String: address -->
+    <!-- Reboot required -->
+    <P146></P146>
+    <!-- DHCP Vendor Class ID, DHCP option 60. Max length allowed is 32 bytes. -->
+    <!-- String Max Length: 32 -->
+    <!-- Reboot required -->
+    <P148>GXW40xx</P148>
+    <!-- PPPoE -->
+    <!-- PPPoE account ID -->
+    <!-- P82 = -->
+    <!-- PPPoE password -->
+    <!-- P83 = -->
+    <!-- PPPoE Service Name -->
+    <!-- String Max Length: 64 -->
+    <!-- Reboot required -->
+    <P269></P269>
+    <!-- Preferred DNS server -->
+    <!-- P92 = 0 -->
+    <!-- P93 = 0 -->
+    <!-- P94 = 0 -->
+    <!-- P95 = 0 -->
+    <!-- Static IP -->
+    <!-- IP Address. Ignore if DHCP or PPPoE is used -->
+    <!-- P9 = 192 -->
+    <!-- P10 = 168 -->
+    <!-- P11 = 0 -->
+    <!-- P12 = 160 -->
+    <!-- Subnet mask. Ignore if DHCP or PPPoE is used -->
+    <!-- P13 = 255 -->
+    <!-- P14 = 255 -->
+    <!-- P15 = 255 -->
+    <!-- P16 = 0 -->
+    <!-- Router. Ignore if DHCP or PPPoE is used -->
+    <!-- P17 = 192 -->
+    <!-- P18 = 168 -->
+    <!-- P19 = 1 -->
+    <!-- P20 = 1 -->
+    <!-- DNS 1. Ignore if DHCP or PPPoE is used -->
+    <!-- P21 = 192 -->
+    <!-- P22 = 168 -->
+    <!-- P23 = 0 -->
+    <!-- P24 = 1 -->
+    <!-- DNS 2. Ignore if DHCP or PPPoE is used -->
+    <!-- P25 = 0 -->
+    <!-- P26 = 0 -->
+    <!-- P27 = 0 -->
+    <!-- P28 = 0 -->
+    <!-- Time Zone. Offset in minutes to GMT -->
+    <!-- <value=TZA+12> GMT-12:00 (International Date Line West) -->
+    <!-- <value=TZB+11> GMT-11:00 (Midway Island, Samoa) -->
+    <!-- <value=HAW10> GMT-10:00 (US Hawaiian Time) -->
+    <!-- <value=AKST9AKDT> GMT-09:00 (US Alaska Time) -->
+    <!-- <value=PST8PDT> GMT-08:00 (US Pacific Time, Los Angeles) -->
+    <!-- <value=PST8PDT,M4.1.0,M10.5.0> GMT-08:00 (Baja California) -->
+    <!-- <value=MST7MDT> GMT-07:00 (US Mountain Time, Denver) -->
+    <!-- <value=MST7> GMT-07:00 (Mountain Time (Arizona, no DST)) -->
+    <!-- <value=MST7MDT,M4.1.0,M10.5.0> GMT-07:00 (Chihuahua, La Paz, Mazatlan) -->
+    <!-- <value=CST6CDT> GMT-06:00 (Central Time) -->
+    <!-- <value=CST+6> GMT-06:00 (Central America) -->
+    <!-- <value=CST6CDT,M4.1.0,M10.5.0> GMT-06:00 (Guadalajara, Mexico City, Monterrey) -->
+    <!-- <value=EST5EDT> GMT-05:00 (Eastern Time) -->
+    <!-- <value=EST5> GMT-05:00 (Eastern Time without daylight saving) -->
+    <!-- <value=TZf+4:30> GMT-04:30 (Caracas) -->
+    <!-- <value=AST4ADT> GMT-04:00 (Atlantic Time) -->
+    <!-- <value=AST4ADT,M4.1.0/00:01:00,M10.5.0/00:01:00> GMT-04:00 (Atlantic Time (New Brunswick)) -->
+    <!-- <value=NST+3:30NDT+2:30,M4.1.0/00:01:00,M10.5.0/00:01:00> GMT-03:30 (Newfoundland Time) -->
+    <!-- <value=TZK+3> GMT-03:00 (Greenland) -->
+    <!-- <value=BRST+3BRDT+2,M10.3.0,M2.3.0> GMT-03:00 (Brazil, Sao Paulo) -->
+    <!-- <value=UTC+3> GMT-02:00 (Argentina) -->
+    <!-- <value=TZL+2> GMT-02:00 (Mid-Atlantic) -->
+    <!-- <value=TZM+1> GMT-01:00 (Azores, Cape Verde Is.) -->
+    <!-- <value=TZN+0> GMT (Edinburgh, Casablanca, Monrovia) -->
+    <!-- <value=GMT+0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00> GMT (London, Great Britain) -->
+    <!-- <value=WET-0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00> GMT (Lisbon, Portugal) -->
+    <!-- <value=GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00> GMT (Dublin, Ireland) -->
+    <!-- <value=TZO-1> GMT+01:00 (Paris, Vienna, Warsaw) -->
+    <!-- <value=CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00> GMT+01:00 (Roma, Paris, Madrid, Prague, Berlin, Budapest, Amsterdam, Barcelona) -->
+    <!-- <value=TZO-1> GMT+01:00 (Brussels, Belgium) -->
+    <!-- <value=TZP-2> GMT+02:00 (Israel, Cairo, Athens, Istanbul, Bucharest) -->
+    <!-- <value=EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00> GMT+02:00 (Helsinki, Athens, Tallinn) -->
+    <!-- <value=EET-2EEST,M3.5.0/3,M10.5.0/4> GMT+02:00 (Kyiv, Ukraine) -->
+    <!-- <value=TZQ-3> GMT+03:00 (Kuwait, Baghdad, Tehran, Nairobi) -->
+    <!-- <value=MSK-3MSD,M3.5.0/2,M10.5.0/3> GMT+03:00 (Moscow, Russia) -->
+    <!-- <value=MST-3MDT,M3.5.0/2,M10.5.0/3> GMT+03:00 (St.Petersburg, Russia) -->
+    <!-- <value=TZR-4> GMT+04:00 (Abu Dhabi, Baku) -->
+    <!-- <value=TZS-5> GMT+05:00 (Islamabad, Ekaterinburg, Karachi, Tashkent) -->
+    <!-- <value=TZT-5:30> GMT+05:30 (Chennai, New Delhi, Mumbai) -->
+    <!-- <value=TZU-5:45> GMT+05:45 (Kathmandu) -->
+    <!-- <value=TZV-6> GMT+06:00 (Almaty, Astana, Dhaka, Novosibirsk) -->
+    <!-- <value=TZW-6:30> GMT+06:30 (Rangoon) -->
+    <!-- <value=TZX-7> GMT+07:00 (Bankok, Hanoi, Krasnoyarsk) -->
+    <!-- <value=WIB-7> GMT+07:00 (Jakarta) -->
+    <!-- <value=TZY-8> GMT+08:00 (Beijing, Taipei, Kuala Lumpur, Irkutsk) -->
+    <!-- <value=SGT-8> GMT+08:00 (Singapore) -->
+    <!-- <value=ULAT-8> GMT+08:00 (Ulaanbaatar, Mongolia) -->
+    <!-- <value=WST-8> GMT+08:00 (Perth) -->
+    <!-- <value=TZZ-9> GMT+09:00 (Japan, Korea, Yakutsk) -->
+    <!-- <value=CST-9:30CDT-10:30,M10.5.0/02:00:00,M3.5.0/03:00:00> GMT+09:30 (Adelaide) -->
+    <!-- <value=CST-9:30> GMT+09:30 (Darwin) -->
+    <!-- <value=TZb-10> GMT+10:00 (Guam) -->
+    <!-- <value=EST-10EDT-11,M10.1.0/02:00:00,M3.5.0/03:00:00> GMT+10:00 (Hobart) -->
+    <!-- <value=EST-10EDT-11,M10.5.0/02:00:00,M3.5.0/03:00:00> GMT+10:00 (Sydney, Melbourne, Canberra) -->
+    <!-- <value=EST-10> GMT+10:00 (Brisbane) -->
+    <!-- <value=TZc-11> GMT+11:00 (Magadan, Solomon Is., New Caledonia) -->
+    <!-- <value=NZST-12NZDT-13,M10.1.0/02:00:00,M3.3.0/03:00:00> GMT+12:00 (Auckland, Wellington) -->
+    <!-- <value=TZd-12> GMT+12:00 (Fiji) -->
+    <!-- <value=TZe-13> GMT+13:00 (Nuku'alofa) -->
+    <!-- <value=customize> Using self-defined Time Zone -->
+    <!-- Mandatory Category: string Max Length: 9 Range0: Min=a Max=z Range1: Min=A Max=Z Range2: Min=+ Max=: Reboot required -->
+    <P64>customize</P64>
+    <!-- Self-Defined Time Zone -->
+    <!-- String Max Length: 32 a-z, A-Z, +,: -->
+    <!-- Reboot required -->
+    <P246>MTZ+6MDT+5,M3.2.0,M11.1.0</P246>
+    <!-- Language. 0 - English, 4 - Chinese, 10 - Spanish IVR -->
+    <!-- Number: 0,4,10 -->
+    <!-- Mandatory -->
+    <P342>0</P342>
+    <!-- NAT/DHCP Server Information & Configuration -->
+    <!-- For GXW4004/GXW4008 only -->
+    <!-- Device Mode. 0 -NAT Router, 1 - Bridge -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P231>0</P231>
+    <!-- NAT maximum ports. range: 0 - 4096, default is 1024 -->
+    <!-- Number: 0 to 4096 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P896>1024</P896>
+    <!-- NAT TCP timeout. range: 0 - 3600, default is 3600 -->
+    <!-- Number: 0 to 3600 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P897>3600</P897>
+    <!-- NAT UDP timeout. range: 0 - 3600, default is 300 -->
+    <!-- Number: 0 to 3600 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P898>300</P898>
+    <!-- Uplink bandwidth. -->
+    <!--<value=0> Disabled -->
+    <!--<value=2> 128k -->
+    <!--<value=3> 256k -->
+    <!--<value=4> 512k -->
+    <!--<value=5> 1M -->
+    <!--<value=8> 2M -->
+    <!--<value=9> 3M -->
+    <!--<value=6> 4M -->
+    <!--<value=10> 5M -->
+    <!--<value=7> 10M -->
+    <!--<value=11> 15M -->
+    <!-- Number: 0, 2-11 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P867>0</P867>
+    <!-- Downlink bandwidth. -->
+    <!-- <value=0> Disabled -->
+    <!-- <value=2> 128k -->
+    <!-- <value=3> 256k -->
+    <!-- <value=4> 512k -->
+    <!-- <value=5> 1M -->
+    <!-- <value=8> 2M -->
+    <!-- <value=9> 3M -->
+    <!-- <value=6> 4M -->
+    <!-- <value=10> 5M -->
+    <!-- <value=7> 10M -->
+    <!-- <value=11> 15M -->
+    <!-- Number: 0, 2-11 -->
+    <!-- Mandatory -->
+    <!-- Reboot required -->
+    <P868>0</P868>
+    <!-- Enable UPnP support. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P890>0</P890>
+    <!-- Reply to ICMP on WAN port. 0 - No, 1 - Yes. Unit will not respond to PING from WAN side if set to No. -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P189>0</P189>
+    <!-- WAN side HTTP/Telnet access. 0 - No, 1 - Yes (WAN side access will be rejected if set to No) -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P190>0</P190>
+    <!-- Cloned WAN MAC Addr (in hex format) -->
+    <!-- P115 = -->
+    <!-- P116 = -->
+    <!-- P117 = -->
+    <!-- P118 = -->
+    <!-- P119 = -->
+    <!-- P120 = -->
+    <!-- Enable LAN DHCP. 0 - No, 1 - Yes -->
+    <!-- Number: 0,1 -->
+    <!-- Mandatory -->
+    <P5001>1</P5001>
+    <!-- LAN DHCP Base IP. (base IP for the LAN port, default is 192.168.2.1) -->
+    <!-- P111 = 192.168.2.1 -->
+    <!-- LAN DHCP Start IP. (default is 100) -->
+    <!-- Number: 0 to 255 -->
+    <!-- Mandatory -->
+    <P5002>100</P5002>
+    <!-- LAN DHCP End IP. (default is 199) -->
+    <!-- Number: 0 to 255 -->
+    <!-- Mandatory -->
+    <P5003>199</P5003>
+    <!-- LAN Subnet Mask.  Default is 255.255.255.0. -->
+    <!-- P110 = -->
+    <!-- DHCP IP Lease Time, in units of hours, default is 120 hours or 5 days. -->
+    <!-- P112 = 120 -->
+    <!-- DMZ IP. -->
+    <!-- P113 = -->
+    <!-- Port Forwarding Settings. -->
+    <!-- Choice 1 -->
+    <!-- WAN Port -->
+    <!-- Number: 0 to 65535 -->
+    <P150></P150>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P158></P158>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P166></P166>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P174></P174>
+    <!--  Choice 2 -->
+    <!-- WAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P151></P151>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P159></P159>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P167></P167>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P175></P175>
+    <!--  Choice 3 -->
+    <!-- WAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P152></P152>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P160></P160>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P168></P168>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P176></P176>
+    <!--  Choice 4 -->
+    <!-- WAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P153></P153>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P161></P161>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P169></P169>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P177></P177>
+    <!--  Choice 5 -->
+    <!-- WAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P154></P154>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P162></P162>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P170></P170>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P178></P178>
+    <!--  Choice 6 -->
+    <!-- WAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P155></P155>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P163></P163>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P171></P171>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P179></P179>
+    <!--  Choice 7 -->
+    <!-- WAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P156></P156>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P164></P164>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P172></P172>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P180></P180>
+    <!--  Choice 8 -->
+    <!-- WAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P157></P157>
+    <!-- LAN IP -->
+    <!-- String: ipaddress -->
+    <P165></P165>
+    <!-- LAN Port -->
+    <!-- Number: 1 to 65535 -->
+    <P173></P173>
+    <!-- Protocol.  0 - UDP Only, 1 - TCP Only, 2 - TCP and UDP. -->
+    <!-- Number: 0,1,2 -->
+    <!-- Mandatory -->
+    <P181></P181>
+  </config>
+</gs_provision>

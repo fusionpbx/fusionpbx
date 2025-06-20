@@ -1,0 +1,3396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gs_provision version="1">
+<config version="1">
+
+<!-- Configuration template for GXP2000/GXP2020/GXP1200/GXP2010/GXP280/GXP285 firmware version 1.2.5.3 -->
+
+<!-- Advanced/System-wide Options -->
+
+<!--  Admin password for web interface -->
+<P2>{$admin_password}</P2>
+
+<!--  G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+<P49>0</P49>
+
+<!--  iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+<P97>0</P97>
+
+<!--  iLBC payload type. Between 96 and 127, default is 97. -->
+<P96>97</P96>
+
+<!--  Silence Suppression. 0 - no, 1 - yes -->
+<P50>0</P50>
+
+<!--  Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively) -->
+<P37>2</P37>
+
+<!--  Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
+<P38>48</P38>
+
+<!--  Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+<P51>0</P51>
+
+<!--  Layer 2 QoS. 802.1p priority value (0 - 7) -->
+<P87>0</P87>
+
+<!--  Data VLAN Tag1; default is 0 -->
+<P1351>0</P1351>
+
+<!--  Data VLAN Tag2; default is 0 -->
+<P1352>0</P1352>
+
+<!--  Data VLAN Tag3; default is 0 -->
+<P1353>0</P1353>
+
+<!--  No Key Entry Timeout. Default - 4 seconds. -->
+<P85>4</P85>
+
+<!--  Use as Dial Key. 0 - no, 1 - yes -->
+<P72>1</P72>
+
+<!--  Local RTP port (1024-65535, default 5004) -->
+<P39>5004</P39>
+
+<!--  Use Random Port. 0 - no, 1 - yes -->
+<P78>0</P78>
+
+<!--  Keep-alive interval (in seconds. default 20 seconds) -->
+<P84>20</P84>
+
+<!--  Use NAT IP.  This will enable our SIP client to use this IP in the SIP/SDP message. Example 64.3.153.50. -->
+<P101></P101>
+
+<!--  STUN server -->
+<P76></P76>
+
+
+<!--  Firmware Upgrade -->
+
+
+<!--  Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
+<P212>1</P212>
+
+<!--  Firmware Server Path -->
+
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxp20xx/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxp20xx</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
+
+<!--  Config Server Path -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{elseif isset($domain_name)}
+<P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
+
+<!--  XML Config File Password   (for GXP280/GXP285/GXP1200 only) -->
+<P1359></P1359>
+
+<!--  Firmware File Prefix -->
+<P232></P232>
+
+<!--  Firmware File Postfix -->
+<P233></P233>
+
+<!--  Config File Prefix -->
+<P234></P234>
+
+<!--  Config File Postfix -->
+<P235></P235>
+
+<!--  Allow DHCP Option43 and Option 66 to override server: 0 - No, 1 - Yes. Default is Yes. -->
+<!--  When set to Yes(1), it will override the configured provision path and method. -->
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+
+<!--  Automatic Upgrade. 0 - No, 1 - Yes. Default is No. -->
+<P194>0</P194>
+
+<!--  Check for new firmware every () minutes, unit is in minute, minimnu 60 minutes, default is 7 days. -->
+<P193>10080</P193>
+
+<!--  Use firmware pre/postfix to determine if f/w is required -->
+<!--  0 = Always Check for New Firmware  -->
+<!--  1 = Check New Firmware only when F/W pre/suffix changes -->
+<!--  2 = Always Skip the Firmware Check -->
+<P238>0</P238>
+
+
+<!--  XML Phonebook -->
+
+<!--  Enable Phonebook XML Download -->
+<!--  0 = No -->
+<!--  1 = YES, HTTP -->
+<!--  2 = YES, TFTP -->
+<P330>2</P330>
+
+<!--  Phonebook XML Server Path -->
+<!--  This is a string of up to 128 characters that should contain a path to the XML file. -->
+<!--  It MUST be in the host/path format. For example: "directory.grandstream.com/engineering" -->
+
+{if isset($contact_grandstream)}
+<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{else}
+<P331></P331>
+{/if}
+
+<!--  Phonebook Download Interval -->
+<!--  This is an integer variable in hours.  -->
+<!--  Valid value range is 0-720 (default 0), and greater values will default to 720 -->
+<P332>0</P332>
+
+<!--  Remove Manually-edited entries on Download -->
+<!--  0 - No, 1 - Yes, other values ignored -->
+<P333>0</P333>
+
+<!--  LDAP Script Server Path -->
+<P1304></P1304>
+
+
+<!--  XML Idle Screen  -->
+<!--  N/A for GXP1200 and GXP280 -->
+
+<!--  Enable Idle Screen XML Download -->
+<!--  0 = No -->
+<!--  1 = YES, HTTP -->
+<!--  2 = YES, TFTP -->
+<P340>0</P340>
+
+<!--  Download Screen XML At Boot-up. 0 - no, 1 - yes -->
+<P1349>0</P1349>
+
+<!--  Use Custom File Name. 0 - no, 1 - yes  -->
+<!--  GXP20x0 only -->
+<P1343>0</P1343>
+
+<!--  Idle Screen XML Server Path -->
+<!--  This is a string of up to 128 characters that should contain a path to the XML file.  -->
+<!--  It MUST be in the host/path format.  For example: "directory.grandstream.com/engineering" -->
+<P341></P341>
+
+
+<!--  XML Application -->
+<!--  GXP2020 and GXP2010 -->
+
+<!--  Server Path -->
+<P337></P337>
+
+<!--  Softkey Label -->
+<P352></P352>
+
+<!--  Offhook Auto Dial -->
+<P71></P71>
+
+<!--  DTMF Payload Type -->
+<P79>101</P79>
+
+<!--  Onhook Threshold. Default 800ms. -->
+<!--  <value=0>Hookflash OFF -->
+<!--  <value=2>200 ms -->
+<!--  <value=4>400 ms -->
+<!--  <value=6>600 ms -->
+<!--  <value=8>800 ms -->
+<!--  <value=10>1000 ms -->
+<!--  <value=12>1200 ms -->
+<!--  GXP280 Only -->
+<P245>8</P245>
+
+<!--  Syslog Server (name of the server, max length is 64 charactors) -->
+<P207></P207>
+
+<!--  Syslog Level (Default setting is NONE) -->
+<!--  0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+<P208>0</P208>
+
+<!--  NTP Server -->
+<P30>us.pool.ntp.org</P30>
+
+<!--  Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
+<!--  When set to Yes(1), it will override the configured NTP server. -->
+<P144>0</P144>
+
+<!-- Public Mode (Support for Call Queue on GXP1200, GXP2010, and GXP2020) 0 - No, 1 - Yes. Default is No -->
+<P1345>0</P1345>
+
+<!--  Distinctive Ring Tone -->
+<!--  Use custom ring tone 1 if incoming caller ID is the following: -->
+<P105></P105>
+
+<!--  Use custom ring tone 2 if incoming caller ID is the following: -->
+<P106></P106>
+
+<!--  Use custom ring tone 3 if incoming caller ID is the following: -->
+<P107></P107>
+
+<!--  System Ring Tone -->
+<P345>f1=440,f2=480,c=200/400;</P345>
+
+<!--  Call Progress Tones# # # -->
+<!--  Syntax: f1=val,f2=val[,c=on1/off1[-on2/off2[-on3/off3]]];  -->
+<!--  (Frequencies are in Hz and cadence on and off are in 10ms)  -->
+
+<!--  Dial Tone -->
+<P343>f1=350,f2=440;</P343>
+
+<!--  Message Waiting -->
+<P344>f1=350,f2=440,c=10/10;</P344>
+
+<!--  Ring Back Tone -->
+<P346>f1=440,f2=480,c=200/400;</P346>
+
+<!--  Call-Waiting Tone -->
+<P347>f1=440,f2=440,c=25/525;</P347>
+
+<!--  Busy Tone -->
+<P348>f1=480,f2=620,c=50/50;</P348>
+
+<!--  Reorder Tone -->
+<P349>f1=480,f2=620,c=25/25;</P349>
+
+<!--  Intercom User ID. (Account 1) -->
+<!--  For GXP-2010/2020 -->
+<P1303></P1303>
+
+<!--  Disable Call Waiting. 0 - no, 1 - yes -->
+<P91>0</P91>
+
+<!--  Disable Call-Waiting Tone. 0 - no, 1 - yes -->
+<P186>0</P186>
+
+<!--  Disable Direct IP Call. 0 - no, 1 - yes -->
+<P1310>0</P1310>
+
+<!--  Use Quick IP-call mode. 0 - no, 1 - yes -->
+<P184>0</P184>
+
+<!--  Disable Conference. 0 - no, 1 - yes -->
+<P1311>0</P1311>
+
+<!--  Lock Keypad Update. 0 - no, 1 - yes -->
+<P88>0</P88>
+
+<!--  Enable Muliti-Purpose-Key sending DTMF, 0 - no, 1 - yes -->
+<!--  For GXP2000/2010/2020 only -->
+<P1339>0</P1339>
+
+<!--  Disable DND Button. 0 - no, 1 - yes -->
+<P1340>0</P1340>
+
+<!--  Disable Transfer. 0 - no, 1 - yes -->
+<P1341>0</P1341>
+
+<!--  Disable Multicast Filter; 0 - no, 1 - yes -->
+<P1350>0</P1350>
+
+<!--  Send Flash Event. 0 - no, 1 - yes -->
+<!--  GXP280 Only -->
+<P74>0</P74>
+
+<!--  Display CID instead of Name. 0 - no, 1 - yes -->
+<!--  GXP280 only -->
+<P1344>0</P1344>
+
+<!--  Enable Constraint Mode. 0 - no, 1 - yes -->
+<P1357>0</P1357>
+
+<!--  Auto-Attended Transfer. 0 - no, 1 - yes -->
+<!--  For GXP1200 only -->
+<P1376>0</P1376>
+
+<!--  Semi-attended Transfer Mode. 0 - RFC5589, 1 - Send REFER with early dialog  -->
+<P1358>0</P1358>
+
+<!--  Disable Headset Button. Default 0 - no, 1 - yes -->
+<P1375>0</P1375>
+
+<!--  Headset Port Type. 0 - 2.5mm, 1 - RJ22 -->
+<!--  Not applicable for GXP-1200 and GXP2000 -->
+<P1300>0</P1300>
+
+<!--  Headset TX gain (dB). 0 - 0 dB, 1 - -6 dB, 2 - +6 dB. -->
+{if isset($grandstream_headset_tx_gain)}
+<P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
+<P1301>0</P1301>
+{/if}
+
+<!--  Headset RX gain (dB). 0 - 0 dB, 1 - -6 dB, 2 - +6 dB. -->
+{if isset($grandstream_headset_rx_gain)}
+<P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
+<P1302>0</P1302>
+{/if}
+
+<!--  Display Language. 0 - English, 3 - Secondary Language, 2 - Chinese -->
+<P342>0</P342>
+
+<!--  language file postfix -->
+<P399></P399>
+
+
+<!--  Primary Account (Account 1) Settings -->
+
+
+<!--  Account Active (In Use). 0 - no, 1 - yes -->
+<P271>1</P271>
+
+<!--  Account Name -->
+<P270>{$account.1.display_name}</P270>
+
+<!--  SIP Server -->
+<P47>{$account.1.server_address}</P47>
+
+<!--  Outbound Proxy -->
+<!--  String -->
+<P48>{$account.1.outbound_proxy}</P48>
+
+<!--  Backup Outbound Proxy -->
+<!--  String -->
+<!-- <P2333>{$outbound_proxy_secondary_1}</P2333> -->
+
+<!--  SIP User ID -->
+<P35>{$account.1.user_id}</P35>
+
+<!--  Authenticate ID -->
+<P36>{$account.1.auth_id}</P36>
+
+<!--  Authenticate password -->
+<P34>{$account.1.password}</P34>
+
+<!--  Display Name (John Doe) -->
+<P3>{$account.1.display_name}</P3>
+
+<!--  Use DNS SRV. 0 - No, 1 - Yes. -->
+<P103>0</P103>
+
+<!--  SIP User ID is phone number. 0 - no, 1 - yes -->
+<P63>0</P63>
+
+<!--  SIP Registration. 0 - no, 1 - yes -->
+<P31>1</P31>
+
+<!--  Unregister On Reboot. 0 - no, 1 - yes -->
+<P81>0</P81>
+
+<!--  Support SIP Instance ID. 0 - no, 1 - yes -->
+<P288>0</P288>
+
+<!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<P32>{$account.1.register_expires}</P32>
+
+<!--  Local SIP port (default 5060) -->
+<P40>5060</P40>
+
+<!--  SIP Registration Failure Retry Wait Time. In seconds. Between 1-3600, default is 20. -->
+<P138>20</P138>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default 100. -->
+<P209>100</P209>
+
+<!--  SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P250>400</P250>
+
+<!--  SIP Transport. 1 - UDP, 2 - TCP. -->
+<P130>1</P130>
+
+<!--  Use RFC3581 Symmetric Routing. 0 - no, 1 - yes -->
+<P131>0</P131>
+
+<!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+<P52>1</P52>
+
+<!--  SUBSCRIBE for MWI. (Whether or not send SUBSCRIBE for Message Waiting Indication) 0 - No, 1 - Yes. -->
+<P99>0</P99>
+
+<!-- SUBSCRIBE for Registration Event 0 - No, 1 - Yes -->
+<P1346>0</P1346>
+
+<!--  PUBLISH for Presence. 0 - no, 1 - yes -->
+<P188>0</P188>
+
+<!--  Proxy-Require (A SIP extension to enable firewall penetration) -->
+<P197></P197>
+
+<!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+<P33>{$voicemail_number}</P33>
+
+<!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
+<!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
+<!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+<P73>8</P73>
+
+<!--  Early Dial (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
+<P29>0</P29>
+
+<!-- BLF Call-pickup Prefix ( %u201C**%u201D prefix prepended when answering call with BLF key): -->
+<P1347>**</P1347>
+
+<!--  Dial Plan Prefix (dial plan prefix string). -->
+<P66></P66>
+
+<!--  Delayed Call Forward Wait Time. 1 to 120 seconds. Default 20 seconds. -->
+<P139>20</P139>
+
+<!--  Enable Call Features.  0 - no, 1 - yes -->
+<P191>1</P191>
+
+<!--  Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log -->
+<P182>0</P182>
+
+<!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<P260>180</P260>
+
+<!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<P261>90</P261>
+
+<!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<P262>0</P262>
+
+<!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<P263>0</P263>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<P264>0</P264>
+
+<!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<P265>0</P265>
+
+<!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<P266>0</P266>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P267>1</P267>
+
+<!--  Enable 100rel. 0 - no, 1 - yes -->
+<P272>0</P272>
+
+<!--  Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2 -->
+<!--  3 - custom ring tone 3. -->
+<P104>0</P104>
+
+<!--  Ring Timeout.  (in seconds. Between 30-3600, default is 60) -->
+<P1328>60</P1328>
+
+<!--  Send Anonymous (caller ID will be blocked if set to Yes). 0 - no, 1 - yes -->
+<P65>0</P65>
+
+<!--  Anonymous Method. 0 - Use From Header, 1 - Use Privacy Header. -->
+<P268>0</P268>
+
+<!--  Anonymous Call Rejection. 0 - no, 1 - yes -->
+<P129>0</P129>
+
+<!--  Auto Answer. 0 - no, 1 - yes -->
+<P90>0</P90>
+
+<!--  Allow Auto Answer by Call-Info. 0 - no, 1 - yes -->
+<P298>0</P298>
+
+<!--  Turn off speaker on remote disconnect. 0 - no, 1 - yes -->
+<P299>0</P299>
+
+<!--  Check SIP User ID for incoming INVITE. 0 - no, 1 - yes -->
+<P258>0</P258>
+
+<!--  Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<P135>0</P135>
+
+<!--  Disable Multiple Media Attribute in SDP. 0 - no, 1 - yes -->
+<P137>0</P137>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+
+<!--  choice 1.  -->
+<P57>0</P57>
+
+<!--  choice 2.   -->
+<P58>8</P58>
+
+<!--  choice 3.   -->
+<P59>4</P59>
+
+<!--  choice 4.    -->
+<P60>18</P60>
+
+<!--  choice 5.   -->
+<P61>2</P61>
+
+<!--  choice 6.   -->
+<P62>98</P62>
+
+<!--  choice 7.  -->
+<P46>9</P46>
+
+<!--  choice 8.   -->
+<P98>3</P98>
+
+<!--  SRTP Mode -->
+<!--  0 = Disabled -->
+<!--  1 = Enabled but not forced -->
+<!--  2 = Enabled and forced -->
+<!--  3 = Optional -->
+<P183>0</P183>
+
+<!--  eventlist BLF URI -->
+<!--  N/A for GXP1200 and GXP280 -->
+<P134></P134>
+
+<!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK -->
+<!--  110 - Sylantro, 111 - Huawei, 114 - ZTE, 112 - PT Prime (GXP280 only), 118 - Philips (GXP2000 only) -->
+<P198>100</P198>
+
+
+<!--  SIP Account 2 Settings -->
+
+
+<!--  Account Active (In Use). 0 - no, 1 - yes -->
+<P401>0</P401>
+
+<!-- Account Name -->
+<P417>{$account.2.display_name}</P417>
+
+<!--  SIP Server -->
+<P402>{$account.2.server_address}</P402>
+
+<!--  Outbound Proxy Server -->
+<P403></P403>
+
+<!--  Account 2 SIP User ID -->
+<P404>{$account.2.user_id}</P404>
+
+<!--  Authenticate ID -->
+<P405>{$account.2.auth_id}</P405>
+
+<!--  Authenticate Password -->
+<P406>{$account.2.password}</P406>
+
+<!--  Display Name (John Doe) -->
+<P407>{$account.2.display_name}</P407>
+
+<!--  Use DNS SRV. 0 - No, 1 - Yes. -->
+<P408>0</P408>
+
+<!--  User ID is phone number; "user=phone". 0 - no, 1 - yes -->
+<P409>0</P409>
+
+<!--  SIP Registration. 0 - no, 1 - yes -->
+<P410>1</P410>
+
+<!--  Unregister on Reboot. 0 - no, 1 - yes -->
+<P411>0</P411>
+
+<!--  Support SIP Instance ID. 0 - no, 1 - yes -->
+<P489>0</P489>
+
+<!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<P412>{$account.2.register_expires}</P412>
+
+<!--  Local SIP port (default 5062) -->
+<P413>5062</P413>
+
+<!--  SIP Registration Failure Retry Wait Time. In seconds. Between 1-3600, default is 20. -->
+<P471>20</P471>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default 100. -->
+<P440>100</P440>
+
+<!--  SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P441>400</P441>
+
+<!--  SIP Transport. 1 - UDP, 2 - TCP. -->
+<P448>1</P448>
+
+<!--  Use RFC3581 Symmetric Routing. 0 - no, 1 - yes -->
+<P447>0</P447>
+
+<!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+<P414>1</P414>
+
+<!--  Subscribe MWI. (Whether or not send SUBSCRIBE for Message Waiting Indication) 0 - No, 1 - Yes. -->
+<P415>0</P415>
+
+<!-- SUBSCRIBE for Registration Event 0 - No, 1 - Yes -->
+<P480>0</P480>
+
+<!--  PUBLISH for Presence. 0 - no, 1 - yes -->
+<P488>0</P488>
+
+<!--  Proxy Require -->
+<P418></P418>
+
+<!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+<P426>{$voicemail_number}</P426>
+
+<!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
+<!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
+<!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+<P416>8</P416>
+
+<!--  Early Dial. 0 - no, 1 - yes -->
+<P422>0</P422>
+
+<!-- BLF Call-pickup Prefix ( %u201C**%u201D prefix prepended when answering call with BLF key): -->
+<P481>**</P481>
+
+<!--  Dial Plan Prefix -->
+<P419></P419>
+
+<!--  Delayed Call Forward Wait Time. 1 to 120 seconds. Default 20 seconds. -->
+<P470>20</P470>
+
+<!--  Enable Call Features. 0 - no, 1 - yes. -->
+<P420>1</P420>
+
+<!--  Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log -->
+<P442>0</P442>
+
+<!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<P434>180</P434>
+
+<!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<P427>90</P427>
+
+<!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<P428>0</P428>
+
+<!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<P429>0</P429>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<P430>0</P430>
+
+<!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<P431>0</P431>
+
+<!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<P432>0</P432>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P433>1</P433>
+
+<!--  Enable 100rel. 0 - no, 1 - yes -->
+<P435>0</P435>
+
+<!--  Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2 -->
+<!--  3 - custom ring tone 3. -->
+<P423>0</P423>
+
+<!--  Ring Timeout. in seconds. Between 30-3600, default is 60 -->
+<P476>60</P476>
+
+<!--  Send Anonymous. 0 - no, 1 - yes -->
+<P421>0</P421>
+
+<!--  Anonymous Method. 0 - Use From Header, 1 - Use Privacy Header. -->
+<P468>0</P468>
+
+<!--  Anonymous Call Rejection. 0 - no, 1 - yes -->
+<P446>0</P446>
+
+<!--  Auto Answer. 0 - no, 1 - yes. -->
+<P425>0</P425>
+
+<!--  Allow Auto Answer by Call-Info. 0 - no, 1 - yes -->
+<P438>0</P438>
+
+<!--  Turn off speaker on remote disconnect. 0 - no, 1 - yes -->
+<P439>0</P439>
+
+<!--  Check SIP User ID for incoming INVITE. 0 - no, 1 - yes -->
+<P449>0</P449>
+
+<!--  Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<P469>0</P469>
+
+<!--  Disable Multiple Media Attribute in SDP. 0 - no, 1 - yes -->
+<P487>0</P487>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+
+<!--  choice 1.  -->
+<P451>0</P451>
+
+<!--  choice 2.  -->
+<P452>8</P452>
+
+<!--  choice 3   -->
+<P453>4</P453>
+
+<!--  choice 4.  -->
+<P454>18</P454>
+
+<!--  choice 5.  -->
+<P455>2</P455>
+
+<!--  choice 6.  -->
+<P456>98</P456>
+
+<!--  choice 7.  -->
+<P457>9</P457>
+
+<!--  choice 8. -->
+<P458>3</P458>
+
+<!--  SRTP Mode -->
+<!--  0 = Disabled -->
+<!--  1 = Enabled but not forced -->
+<!--  2 = Enabled and forced -->
+<!--  3 = Optional -->
+<P443>0</P443>
+
+<!--  eventlist BLF URI -->
+<!--  N/A for GXP1200 and GXP280 -->
+<P444></P444>
+
+<!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK,  -->
+<!--  110 - Sylantro, 111 - Huawei, 114 - ZTE, 118 - Philips (GXP2000 only)  -->
+<P424>100</P424>
+
+
+<!--  SIP Account 3 Settings (GXP2000/2020/2010) -->
+
+
+<!--  Account Active (In Use). 0 - no, 1 - yes -->
+<P501>1</P501>
+
+<!--  Account Name -->
+<P517>{$account.3.display_name}</P517>
+
+<!--  SIP Server -->
+<P502>{$account.3.server_address}</P502>
+
+<!--  Outbound Proxy Server -->
+<P503></P503>
+
+<!--  SIP User ID -->
+<P504>{$account.3.user_id}</P504>
+
+<!--  Authenticate ID -->
+<P505>{$account.3.auth_id}</P505>
+
+<!--  Authenticate Password -->
+<P506>{$account.3.password}</P506>
+
+<!--  Display Name (John Doe) -->
+<P507>{$account.3.display_name}</P507>
+
+<!--  Use DNS SRV. 0 - No, 1 - Yes. -->
+<P508>0</P508>
+
+<!--  User ID is phone. "user=phone". 0 - no, 1 - yes -->
+<P509>0</P509>
+
+<!--  SIP Registration. 0 - no, 1 - yes -->
+<P510>1</P510>
+
+<!--  Unregister on Reboot. 0 - no, 1 - yes -->
+<P511>0</P511>
+
+<!--  Support SIP Instance ID. 0 - no, 1 - yes -->
+<P589>0</P589>
+
+<!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<P512>{$account.3.register_expires}</P512>
+
+<!--  Local SIP port (default 5064) -->
+<P513>5064</P513>
+
+<!--  SIP Registration Failure Retry Wait Time. In seconds. Between 1-3600, default is 20. -->
+<P571>20</P571>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default 100. -->
+<P540>100</P540>
+
+<!--  SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P541>400</P541>
+
+<!--  SIP Transport. 1 - UDP, 2 - TCP. -->
+<P548>1</P548>
+
+<!--  Use RFC3581 Symmetric Routing. 0 - no, 1 - yes -->
+<P547>0</P547>
+
+<!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+<P514>1</P514>
+
+<!--  Subscribe MWI. (Whether or not send SUBSCRIBE for Message Waiting Indication) 0 - no, 1 - yes -->
+<P515>0</P515>
+
+<!-- SUBSCRIBE for Registration Event 0 - No, 1 - Yes -->
+<P580>0</P580>
+
+<!--  PUBLISH for Presence. 0 - no, 1 - yes -->
+<P588>0</P588>
+
+<!--  Proxy Require -->
+<P518></P518>
+
+<!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+<P526>{$voicemail_number}</P526>
+
+<!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
+<!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
+<!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+<P516>8</P516>
+
+<!--  Early Dial. 0 - no, 1 - yes -->
+<P522>0</P522>
+
+
+<!-- BLF Call-pickup Prefix ( %u201C**%u201D prefix prepended when answering call with BLF key): -->
+<P581>**</P581>
+
+<!--  Dial Plan Prefix -->
+<P519></P519>
+
+<!--  Delayed Call Forward Wait Time. 1 to 120 seconds. Default 20 seconds. -->
+<P570>20</P570>
+
+<!--  Enable Call Features. 0 - no, 1 - yes. -->
+<P520>1</P520>
+
+<!--  Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log -->
+<P542>0</P542>
+
+<!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<P534>180</P534>
+
+<!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<P527>90</P527>
+
+<!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<P528>0</P528>
+
+<!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<P529>0</P529>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<P530>0</P530>
+
+<!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<P531>0</P531>
+
+<!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<P532>0</P532>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P533>1</P533>
+
+<!--  Enable 100rel. 0 - no, 1 - yes -->
+<P535>0</P535>
+
+<!--  Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2 -->
+<!--  3 - custom ring tone 3. -->
+<P523>0</P523>
+
+<!--  Ring Timeout. in seconds. Between 30-3600, default is 60 -->
+<P576>60</P576>
+
+<!--  Send Anonymous. 0 - no, 1 - yes -->
+<P521>0</P521>
+
+<!--  Anonymous Method. 0 - Use From Header, 1 - Use Privacy Header -->
+<P568>0</P568>
+
+<!--  Anonymous Call Rejection. 0 - no, 1 - yes -->
+<P546>0</P546>
+
+<!--  Auto Answer. 0 - no, 1 - yes -->
+<P525>0</P525>
+
+<!--  Allow Auto Answer by Call-Info. 0 - no, 1 - yes -->
+<P538>0</P538>
+
+<!--  Turn off speaker on remote disconnect. 0 - no, 1 - yes -->
+<P539>0</P539>
+
+<!--  Check SIP User ID for incoming INVITE. 0 - no, 1 - yes -->
+<P549>0</P549>
+
+<!--  Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<P569>0</P569>
+
+<!--  Disable Multiple Media Attribute in SDP. 0 - no, 1 - yes -->
+<P587>0</P587>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+
+<!--  choice 1.  -->
+<P551>0</P551>
+
+<!--  choice 2.  -->
+<P552>8</P552>
+
+<!--  choice 3.   -->
+<P553>4</P553>
+
+<!--  choice 4.   -->
+<P554>18</P554>
+
+<!--  choice 5.  -->
+<P555>2</P555>
+
+<!--  choice 6.  -->
+<P556>98</P556>
+
+<!--  choice 7.  -->
+<P557>9</P557>
+
+<!--  choice 8.   -->
+<P558>3</P558>
+
+<!--  SRTP Mode -->
+<!--  0 = Disabled -->
+<!--  1 = Enabled but not forced -->
+<!--  2 = Enabled and forced -->
+<!--  3 = Optional -->
+<P543>0</P543>
+
+<!--  eventlist BLF URI  -->
+<!--  N/A for GXP1200 and GXP280 -->
+<P544></P544>
+
+<!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, -->
+<!--  110 - Sylantro, 111 - Huawei, 114 - ZTE, 118 - Philips (GXP2000 only) -->
+<P524>100</P524>
+
+
+<!--  SIP Account 4 Settings (GXP2000/2020/2010) -->
+
+
+<!--  Account Active (In Use). 0 - no, 1 - yes -->
+<P601>1</P601>
+
+<!-- Account Name -->
+<P617>{$account.4.display_name}</P617>
+
+<!--  SIP Server -->
+<P602>{$account.4.server_address}</P602>
+
+<!--  Outbound Proxy Server -->
+<P603></P603>
+
+<!--  SIP User ID -->
+<P604>{$account.4.user_id}</P604>
+
+<!--  Authenticate ID -->
+<P605>{$account.4.auth_id}</P605>
+
+<!--  Authenticate Password -->
+<P606>{$account.4.password}</P606>
+
+<!--  Display Name (John Doe) -->
+<P607>{$account.4.display_name}</P607>
+
+<!--  Use DNS SRV. 0 - no, 1 - yes. -->
+<P608>0</P608>
+
+<!--  User ID is phone number. "user=phone". 0 - no, 1 - yes -->
+<P609>0</P609>
+
+<!--  SIP Registration. 0 - no, 1 - yes -->
+<P610>1</P610>
+
+<!--  Unregister on Reboot. 0 - no, 1 - yes -->
+<P611>0</P611>
+
+<!--  Support SIP Instance ID. 0 - no, 1 - yes -->
+<P689>0</P689>
+
+<!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<P612>{$account.4.register_expires}</P612>
+
+<!--  Local SIP port (default 5066) -->
+<P613>5066</P613>
+
+<!--  SIP Registration Failure Retry Wait Time. In seconds. Between 1-3600, default is 20. -->
+<P671>20</P671>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default 100. -->
+<P640>100</P640>
+
+<!--  SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P641>400</P641>
+
+<!--  SIP Transport. 1 - UDP, 2 - TCP. -->
+<P648>1</P648>
+
+<!--  Use RFC3581 Symmetric Routing. 0 - no, 1 - yes -->
+<P647>0</P647>
+
+<!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+<P614>1</P614>
+
+<!--  Subscribe MWI. Whether or not send SUBSCRIBE for Message Waiting Indication.  0 - no, 1 - yes -->
+<P615>0</P615>
+
+<!-- SUBSCRIBE for Registration Event 0 - No, 1 - Yes -->
+<P680>0</P680>
+
+<!--  PUBLISH for Presence. 0 - no, 1 - yes -->
+<P688>0</P688>
+
+<!--  Proxy Require -->
+<P618></P618>
+
+<!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+<P626>{$voicemail_number}</P626>
+
+<!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
+<!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
+<!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+<P616>8</P616>
+
+<!--  Early Dial. 0 - no, 1 - yes -->
+<P622>0</P622>
+
+<!-- BLF Call-pickup Prefix ( %u201C**%u201D prefix prepended when answering call with BLF key): -->
+<P681>**</P681>
+
+<!--  Dial Plan Prefix -->
+<P619></P619>
+
+<!--  Delayed Call Forward Wait Time. 1 to 120 seconds. Default 20 seconds. -->
+<P670>20</P670>
+
+<!--  Enable Call Features. 0 - no, 1 - yes. -->
+<P620>1</P620>
+
+<!--  Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log -->
+<P642>0</P642>
+
+<!--  Default Session Expires (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<P634>180</P634>
+
+<!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<P627>90</P627>
+
+<!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<P628>0</P628>
+
+<!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<P629>0</P629>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<P630>0</P630>
+
+<!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<P631>0</P631>
+
+<!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<P632>0</P632>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P633>1</P633>
+
+<!--  Enable 100rel. 0 - no, 1 - yes -->
+<P635>0</P635>
+
+<!--  Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2 -->
+<!--  3 - custom ring tone 3. -->
+<P623>0</P623>
+
+<!--  Ring Timeout. in seconds. Between 30-3600, default is 60 -->
+<P676>60</P676>
+
+<!--  Send Anonymous. 0 - no, 1 - yes -->
+<P621>0</P621>
+
+<!--  Anonymous Method. 0 - Use From Header, 1 - Use Privacy Header -->
+<P668>0</P668>
+
+<!--  Anonymous Call Rejection. 0 - no, 1 - yes -->
+<P646>0</P646>
+
+<!--  Auto Answer. 0 - no, 1 - yes. -->
+<P625>0</P625>
+
+<!--  Allow Auto Answer by Call-Info. 0 - no, 1 - yes -->
+<P638>0</P638>
+
+<!--  Turn off speaker on remote disconnect. 0 - no, 1 - yes -->
+<P639>0</P639>
+
+<!--  Check SIP User ID for incoming INVITE. 0 - no, 1 - yes -->
+<P649>0</P649>
+
+<!--  Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<P669>0</P669>
+
+<!--  Disable Multiple Media Attribute in SDP. 0 - no, 1 - yes -->
+<P687>0</P687>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+
+<!--  choice 1. -->
+<P651>0</P651>
+
+<!--  choice 2.  -->
+<P652>8</P652>
+
+<!--  choice 3.   -->
+<P653>4</P653>
+
+<!--  choice 4. -->
+<P654>18</P654>
+
+<!--  choice 5.  -->
+<P655>2</P655>
+
+<!--  choice 6. -->
+<P656>98</P656>
+
+<!--  choice 7.  -->
+<P657>9</P657>
+
+<!--  choice 8.   -->
+<P658>3</P658>
+<!--  SRTP Mode -->
+<!--  0 = Disabled -->
+<!--  1 = Enabled but not forced -->
+<!--  2 = Enabled and forced -->
+<!--  3 = Optional -->
+<P643>0</P643>
+
+<!--  eventlist BLF URI -->
+<!--  Not for GXP1200 and GXP280 -->
+
+<P644></P644>
+
+<!--  Special Feature.  100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK,  -->
+<!--  110 - Sylantro, 111 - Huawei, 114 - ZTE, 118 - Philips (GXP2000 only) -->
+<P624>100</P624>
+
+
+<!--  SIP Account 5 Settings.   (GXP2020 only) -->
+
+
+<!--  Account Active (In Use). 0 - no, 1 - yes -->
+<P1701>1</P1701>
+
+<!-- Account Name -->
+<P1717>{$account.5.display_name}</P1717>
+
+<!--  SIP Server -->
+<P1702>{$account.5.server_address}</P1702>
+
+<!--  Outbound Proxy Server -->
+<P1703></P1703>
+
+<!--  SIP User ID -->
+<P1704>{$account.5.user_id}</P1704>
+
+<!--  Authenticate ID -->
+<P1705>{$account.5.auth_id}</P1705>
+
+<!--  Authenticate Password -->
+<P1706>{$account.5.password}</P1706>
+
+<!--  Display Name (John Doe) -->
+<P1707>{$account.5.display_name}</P1707>
+
+<!--  Use DNS SRV. 0 - no, 1 - yes. -->
+<P1708>0</P1708>
+
+<!--  User ID is phone number. "user=phone". 0 - no, 1 - yes -->
+<P1709>0</P1709>
+
+<!--  SIP Registration. 0 - no, 1 - yes -->
+<P1710>1</P1710>
+
+<!--  Unregister on Reboot. 0 - no, 1 - yes -->
+<P1711>0</P1711>
+
+<!--  Support SIP Instance ID. 0 - no, 1 - yes -->
+<P1789>0</P1789>
+
+<!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<P1712>{$account.5.register_expires}</P1712>
+
+<!--  Local SIP port (default 5066) -->
+<P1713>5068</P1713>
+
+<!--  SIP Registration Failure Retry Wait Time. In seconds. Between 1-3600, default is 20. -->
+<P1771>20</P1771>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default 100. -->
+<P1740>100</P1740>
+
+<!--  SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P1741>400</P1741>
+
+<!--  SIP Transport. 1 - UDP, 2 - TCP. -->
+<P1748>1</P1748>
+
+<!--  Use RFC3581 Symmetric Routing. 0 - no, 1 - yes -->
+<P1747>0</P1747>
+
+<!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+<P1714>1</P1714>
+
+<!--  Subscribe MWI. Whether or not send SUBSCRIBE for Message Waiting Indication.  0 - no, 1 - yes -->
+<P1715>0</P1715>
+
+<!-- SUBSCRIBE for Registration Event 0 - No, 1 - Yes -->
+<P1780>0</P1780>
+
+<!--  PUBLISH for Presence. 0 - no, 1 - yes -->
+<P1788>0</P1788>
+
+<!--  Proxy Require -->
+<P1718></P1718>
+
+<!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+<P1726>{$voicemail_number}</P1726>
+
+<!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
+<!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
+<!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+<P1716>8</P1716>
+
+<!--  Early Dial. 0 - no, 1 - yes -->
+<P1722>0</P1722>
+
+<!-- BLF Call-pickup Prefix ( %u201C**%u201D prefix prepended when answering call with BLF key): -->
+<P1781>**</P1781>
+
+<!--  Dial Plan Prefix -->
+<P1719></P1719>
+
+<!--  Delayed Call Forward Wait Time. 1 to 120 seconds. Default 20 seconds. -->
+<P1770>20</P1770>
+
+<!--  Enable Call Features. 0 - no, 1 - yes. -->
+<P1720>1</P1720>
+
+<!--  Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log -->
+<P1742>0</P1742>
+
+<!--  Default Session Expires (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<P1734>180</P1734>
+
+<!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<P1727>90</P1727>
+
+<!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<P1728>0</P1728>
+
+<!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<P1729>0</P1729>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<P1730>0</P1730>
+
+<!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<P1731>0</P1731>
+
+<!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<P1732>0</P1732>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P1733>1</P1733>
+
+<!--  Enable 100rel. 0 - no, 1 - yes -->
+<P1735>0</P1735>
+
+<!--  Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2 -->
+<!--  3 - custom ring tone 3. -->
+<P1723>0</P1723>
+
+<!--  Ring Timeout. in seconds. Between 30-3600, default is 60 -->
+<P1776>60</P1776>
+
+<!--  Send Anonymous. 0 - no, 1 - yes -->
+<P1721>0</P1721>
+
+<!--  Anonymous Method. 0 - Use From Header, 1 - Use Privacy Header -->
+<P1768>0</P1768>
+
+<!--  Anonymous Call Rejection. 0 - no, 1 - yes -->
+<P1746>0</P1746>
+
+<!--  Auto Answer. 0 - no, 1 - yes. -->
+<P1725>0</P1725>
+
+<!--  Allow Auto Answer by Call-Info. 0 - no, 1 - yes -->
+<P1738>0</P1738>
+
+<!--  Turn off speaker on remote disconnect. 0 - no, 1 - yes -->
+<P1739>0</P1739>
+
+<!--  Check SIP User ID for incoming INVITE. 0 - no, 1 - yes -->
+<P1749>0</P1749>
+
+<!--  Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<P1769>0</P1769>
+
+<!--  Disable Multiple Media Attribute in SDP. 0 - no, 1 - yes -->
+<P1787>0</P1787>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+
+<!--  choice 1.  -->
+<P1751>0</P1751>
+
+<!--  choice 2.   -->
+<P1752>8</P1752>
+
+<!--  choice 3.  -->
+<P1753>4</P1753>
+
+<!--  choice 4.   -->
+<P1754>18</P1754>
+
+<!--  choice 5. -->
+<P1755>2</P1755>
+
+<!--  choice 6. -->
+<P1756>98</P1756>
+
+<!--  choice 7. -->
+<P1757>9</P1757>
+
+<!--  choice 8. -->
+<P1758>3</P1758>
+
+<!--  SRTP Mode -->
+<!--  0 = Disabled -->
+<!--  1 = Enabled but not forced -->
+<!--  2 = Enabled and forced -->
+<!--  3 = Optional -->
+<P1743>0</P1743>
+
+<!--  eventlist BLF URI -->
+<P1744> </P1744>
+
+<!--  Special Feature.  100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro. -->
+<P1724>100</P1724>
+
+
+<!--  SIP Account 6 Settings.  (GXP2020 only) -->
+
+
+<!--  Account Active (In Use). 0 - no, 1 - yes -->
+<P1801>1</P1801>
+
+<!-- Account Name -->
+<P1817>{$account.6.display_name}</P1817>
+
+<!--  SIP Server -->
+<P1802>{$account.6.server_address}</P1802>
+
+<!--  Outbound Proxy Server -->
+<P1803></P1803>
+
+<!--  SIP User ID -->
+<P1804>{$account.6.user_id}</P1804>
+
+<!--  Authenticate ID -->
+<P1805>{$account.6.auth_id}</P1805>
+
+<!--  Authenticate Password -->
+<P1806>{$account.6.password}</P1806>
+
+<!--  Display Name (John Doe) -->
+<P1807>{$account.6.display_name}</P1807>
+
+<!--  Use DNS SRV. 0 - no, 1 - yes. -->
+<P1808>0</P1808>
+
+<!--  User ID is phone number. "user=phone". 0 - no, 1 - yes -->
+<P1809>0</P1809>
+
+<!--  SIP Registration. 0 - no, 1 - yes -->
+<P1810>1</P1810>
+
+<!--  Unregister on Reboot. 0 - no, 1 - yes -->
+<P1811>0</P1811>
+
+<!--  Support SIP Instance ID. 0 - no, 1 - yes -->
+<P1889>0</P1889>
+
+<!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<P1812>{$account.6.register_expires}</P1812>
+
+<!--  Local SIP port (default 5066) -->
+<P1813>5070</P1813>
+
+<!--  SIP Registration Failure Retry Wait Time. In seconds. Between 1-3600, default is 20. -->
+<P1871>20</P1871>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default 100. -->
+<P1840>100</P1840>
+
+<!--  SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P1841>400</P1841>
+
+<!--  SIP Transport. 1 - UDP, 2 - TCP. -->
+<P1848>1</P1848>
+
+<!--  Use RFC3581 Symmetric Routing. 0 - no, 1 - yes -->
+<P1847>0</P1847>
+
+<!--  NAT Traversal. 0 - yes, 1 - no, 2 - No, but send keep-alive -->
+<P1814>1</P1814>
+
+<!--  Subscribe MWI. Whether or not send SUBSCRIBE for Message Waiting Indication.  0 - no, 1 - yes -->
+<P1815>0</P1815>
+
+<!-- SUBSCRIBE for Registration Event 0 - No, 1 - Yes -->
+<P1880>0</P1880>
+
+<!--  PUBLISH for Presence. 0 - no, 1 - yes -->
+<P1888>0</P1888>
+
+<!--  Proxy Require -->
+<P1818></P1818>
+
+<!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
+<P1826>{$voicemail_number}</P1826>
+
+<!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
+<!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
+<!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
+<P1816>8</P1816>
+
+<!--  Early Dial. 0 - no, 1 - yes -->
+<P1822>0</P1822>
+
+<!-- BLF Call-pickup Prefix ( %u201C**%u201D prefix prepended when answering call with BLF key): -->
+<P1881>**</P1881>
+
+<!--  Dial Plan Prefix -->
+<P1819></P1819>
+
+<!--  Delayed Call Forward Wait Time. 1 to 120 seconds. Default 20 seconds. -->
+<P1870>20</P1870>
+
+<!--  Enable Call Features. 0 - no, 1 - yes. -->
+<P1820>1</P1820>
+
+<!--  Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log -->
+<P1842>0</P1842>
+
+<!--  Default Session Expires (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+<P1834>180</P1834>
+
+<!--  Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+<P1827>90</P1827>
+
+<!--  Caller Request Timer (Request for timer when calling) 0 - no, 1 - yes -->
+<P1828>0</P1828>
+
+<!--  Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - no, 1 - yes -->
+<P1829>0</P1829>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) 0 - no, 1 - yes -->
+<P1830>0</P1830>
+
+<!--  Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - no, 1 - yes -->
+<P1831>0</P1831>
+
+<!--  UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+<P1832>0</P1832>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P1833>1</P1833>
+
+<!--  Enable 100rel. 0 - no, 1 - yes -->
+<P1835>0</P1835>
+
+<!--  Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2 -->
+<!--  3 - custom ring tone 3. -->
+<P1823>0</P1823>
+
+<!--  Ring Timeout. in seconds. Between 30-3600, default is 60 -->
+<P1876>60</P1876>
+
+<!--  Send Anonymous. 0 - no, 1 - yes -->
+<P1821>0</P1821>
+
+<!--  Anonymous Method. 0 - Use From Header, 1 - Use Privacy Header -->
+<P1868>0</P1868>
+
+<!--  Anonymous Call Rejection. 0 - no, 1 - yes -->
+<P1846>0</P1846>
+
+<!--  Auto Answer. 0 - no, 1 - yes. -->
+<P1825>0</P1825>
+
+<!--  Allow Auto Answer by Call-Info. 0 - no, 1 - yes -->
+<P1838>0</P1838>
+
+<!--  Turn off speaker on remote disconnect. 0 - no, 1 - yes -->
+<P1839>0</P1839>
+
+<!--  Check SIP User ID for incoming INVITE. 0 - no, 1 - yes -->
+<P1849>0</P1849>
+
+<!--  Refer-To Use Target Contact. 0 - no, 1 - yes -->
+<P1869>0</P1869>
+
+<!--  Disable Multiple Media Attribute in SDP. 0 - no, 1 - yes -->
+<P1887>0</P1887>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+
+<!--  choice 1.   -->
+<P1851>0</P1851>
+
+<!--  choice 2. -->
+<P1852>8</P1852>
+
+<!--  choice 3.  -->
+<P1853>4</P1853>
+
+<!--  choice 4. -->
+<P1854>18</P1854>
+
+<!--  choice 5. -->
+<P1855>2</P1855>
+
+<!--  choice 6.  -->
+<P1856>98</P1856>
+
+<!--  choice 7.  -->
+<P1857>9</P1857>
+
+<!--  choice 8.1858  -->
+<P1858>3</P1858>
+
+<!--  SRTP Mode -->
+<!--  0 = Disabled -->
+<!--  1 = Enabled but not forced -->
+<!--  2 = Enabled and forced -->
+<!--  3 = Optional -->
+<P1843>0</P1843>
+
+<!--  eventlist BLF URI -->
+<P1844></P1844>
+
+<!--  Special Feature.  100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro. -->
+<P1824>100</P1824>
+
+
+<!--  End User Settings. Please do not edit this section. -->
+
+
+<!--  End User Password -->
+<P196>{$user_password}</P196>
+
+<!--  DHCP support. 0 - yes, 1 - no -->
+<!-- P8 = 0 -->
+
+<!--  PPPoE support. PPPoE user ID -->
+<!-- P82 = -->
+
+<!--  PPPoE password -->
+<!-- P83 = -->
+
+<!--  Host name, DHCP option 12. Max length allowed is 32 bytes. -->
+<P146></P146>
+
+<!--  Domain name, DHCP option 15. Max length allowed is 32 bytes. -->
+<P147></P147>
+
+<!--  Vendor Class ID, DHCP option 60. Max length allowed is 32 bytes. -->
+<P148>Grandstream GXP2000</P148>
+
+<!--  Preferred DNS server.  (if specified). -->
+<!-- P92 = 0 -->
+<!-- P93 = 0 -->
+<!-- P94 = 0 -->
+<!-- P95 = 0 -->
+
+<!--  IP Address. Ignore if DHCP or PPPoE is used -->
+<!-- P9 = 192 -->
+<!-- P10 = 168 -->
+<!-- P11 = 0 -->
+<!-- P12 = 160 -->
+
+<!--  Subnet mask. Ignore if DHCP or PPPoE is used -->
+<!-- P13 = 0 -->
+<!-- P14 = 0 -->
+<!-- P15 = 0 -->
+<!-- P16 = 0 -->
+
+<!--  Router. Ignore if DHCP or PPPoE is used -->
+<!-- P17 = 0 -->
+<!-- P18 = 0 -->
+<!-- P19 = 0 -->
+<!-- P20 = 0 -->
+
+<!--  DNS 1. Ignore if DHCP or PPPoE is used -->
+<!-- P21 = 0 -->
+<!-- P22 = 0 -->
+<!-- P23 = 0 -->
+<!-- P24 = 0 -->
+
+<!--  DNS 2. Ignore if DHCP or PPPoE is used -->
+<!-- P25 = 0 -->
+<!-- P26 = 0 -->
+<!-- P27 = 0 -->
+<!-- P28 = 0 -->
+
+
+<!--  End User Multi Purpose Keys  (GXP2000/2020/2010) -->
+
+
+<!--  Multi Purpose Key 1  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P323></P323>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P301></P301>
+
+<!--  Name -->
+<P302></P302>
+
+<!--  UserID -->
+<P303></P303>
+
+<!--  Multi Purpose Key 2 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P324></P324>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P304></P304>
+
+<!--  Name -->
+<P305></P305>
+
+<!--  UserID -->
+<P306></P306>
+
+<!--  Multi Purpose Key 3 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P325></P325>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P307></P307>
+
+<!--  Name -->
+<P308></P308>
+
+<!--  UserID -->
+<P309></P309>
+
+<!--  Multi Purpose Key 4 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P326></P326>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P310></P310>
+
+<!--  Name -->
+<P311></P311>
+
+<!--  UserID -->
+<P312></P312>
+
+<!--  Multi Purpose Key 5 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P327></P327>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P313></P313>
+
+<!--  Name -->
+<P314></P314>
+
+<!--  UserID -->
+<P315></P315>
+
+<!--  Multi Purpose Key 6 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P328></P328>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P316></P316>
+
+<!--  Name -->
+<P317></P317>
+
+<!--  UserID -->
+<P318></P318>
+
+<!--  Multi Purpose Key 7 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P329></P329>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P319></P319>
+
+<!--  Name -->
+<P320></P320>
+
+<!--  UserID -->
+<P321></P321>
+
+<!--  The following are for GXP-2010 only -->
+
+<!--  Multi Purpose Key 8 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P353></P353>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P354></P354>
+
+<!--  Name -->
+<P355></P355>
+
+<!--  UserID -->
+<P356></P356>
+
+<!--  Multi Purpose Key 9 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P357></P357>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P358></P358>
+
+<!--  Name -->
+<P359></P359>
+
+<!--  UserID -->
+<P360></P360>
+
+<!--  Multi Purpose Key 10 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P361></P361>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P362></P362>
+
+<!--  Name -->
+<P363></P363>
+
+<!--  UserID -->
+<P364></P364>
+
+<!--  Multi Purpose Key 11 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P365></P365>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P366></P366>
+
+<!--  Name -->
+<P367></P367>
+
+<!--  UserID -->
+<P368></P368>
+
+<!--  Multi Purpose Key 12 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P369></P369>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P370></P370>
+
+<!--  Name -->
+<P371></P371>
+
+<!--  UserID -->
+<P372></P372>
+
+<!--  Multi Purpose Key 13 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P373></P373>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P374></P374>
+
+<!--  Name -->
+<P375></P375>
+
+<!--  UserID -->
+<P376></P376>
+
+<!--  Multi Purpose Key 14 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P377></P377>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P378></P378>
+
+<!--  Name -->
+<P379></P379>
+
+<!--  UserID -->
+<P380></P380>
+
+<!--  Multi Purpose Key 15 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P381></P381>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P382></P382>
+
+<!--  Name -->
+<P383></P383>
+
+<!--  UserID -->
+<P384></P384>
+
+<!--  Multi Purpose Key 16 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P385></P385>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P386></P386>
+
+<!--  Name -->
+<P387></P387>
+
+<!--  UserID -->
+<P388></P388>
+
+<!--  Multi Purpose Key 17 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P389></P389>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P390></P390>
+
+<!--  Name -->
+<P391></P391>
+
+<!--  UserID -->
+<P392></P392>
+
+<!--  Multi Purpose Key 18 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P393></P393>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
+<P394></P394>
+
+<!--  Name -->
+<P395></P395>
+
+<!--  UserID -->
+<P396></P396>
+
+<!--  End User Time settings -->
+
+
+<!--  Time Zone. Offset in minutes to GMT -->
+<P64>420</P64>
+
+<!--  Allow DHCP Option 2 to override Time Zone setting. 0 - No, 1 - Yes. -->
+<!--  When set to Yes(1), it will override the configured Time Zone setting if available.  -->
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+
+<!--  Daylight Savings Time. 0 - no, 1 - yes -->
+<P75>0</P75>
+
+<!--  Optional Rule. Daylight Saving rule. -->
+<P246>3,2,7,2,0;11,1,7,2,0;60</P246>
+
+<!--  LCD Backlight Always On. 0 - no, 1 - yes -->
+<!--  For GXP2000/1200 Only -->
+<P322>0</P322>
+
+<!--  LCD Backlight Brightness. (0-8, where 0 is off and 8 is brightest) -->
+<!--  For GXP2020/2010 Only -->
+<P334>4</P334>
+<P335>0</P335>
+
+<!--  LCD Contrast (0-20) -->
+<!--  For GXP2020/2010/2000/1200 -->
+<P1329>10</P1329>
+
+<!--  Time Display Format. 0 - 12 Hour, 1 - 24 Hour -->
+<P122>0</P122>
+
+<!--  Date Display Format. 0 - Year-Month-Day, 1 - Month-Day-Year, 2 - Day-Month-Year -->
+<!--  For GXP2000/1200/280 Only -->
+<P102>0</P102>
+
+<!--  Display Clock instead of Date. 0 - no, 1 - yes -->
+<!--  For GXP2000/1200/280 Only -->
+<P123>0</P123>
+
+<!--  Disable in-call DTMF display. 0 - no, 1 - yes -->
+<P338>0</P338>
+
+<!--  Mute Speaker Ringer in Headset Mode. 0 - no, 1 - yes -->
+<P336>0</P336>
+
+<!--  Disable Missed Call Backlight. 0 - no, 1 - yes -->
+<!--  Not avaliable for GXP280 -->
+<P351>0</P351>
+
+<!--  Headset keymode. 0 - Default Mode, 1 - Toggle Speaker(default)/Headset, 2 - Toggle Speaker/Headset(default)   -->
+<!--  Not avaliable for GXP2000 -->
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
+
+<!--  For GXP1200 and GXP280 Only; 0 = Switch, 1 = Hub -->
+<P1348>0</P1348>
+
+
+
+<!--  Extension Board 1 Settings.   For GXP2000/GXP2010/GXP2020 -->
+
+<!--  EXT Key 1 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6001></P6001>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6201></P6201>
+
+<!--  Name -->
+<P6401></P6401>
+
+<!--  UserID -->
+<P6601></P6601>
+
+<!--  EXT Key 2 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6002></P6002>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6202></P6202>
+
+<!--  Name -->
+<P6402></P6402>
+
+<!--  UserID -->
+<P6602></P6602>
+
+<!--  EXT Key 3 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6003></P6003>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6203></P6203>
+
+<!--  Name -->
+<P6403></P6403>
+
+<!--  UserID -->
+<P6603></P6603>
+
+<!--  EXT Key 4 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6004></P6004>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6204></P6204>
+
+<!--  Name -->
+<P6404></P6404>
+
+<!--  UserID -->
+<P6604></P6604>
+
+<!--  EXT Key 5 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6005></P6005>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6205></P6205>
+
+<!--  Name -->
+<P6405></P6405>
+
+<!--  UserID -->
+<P6605></P6605>
+
+<!--  EXT Key 6 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6006></P6006>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6206></P6206>
+
+<!--  Name -->
+<P6406></P6406>
+
+<!--  UserID -->
+<P6606></P6606>
+
+<!--  EXT Key 7 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6007></P6007>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6207></P6207>
+
+<!--  Name -->
+<P6407></P6407>
+
+<!--  UserID -->
+<P6607></P6607>
+
+<!--  EXT Key 8 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6008></P6008>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6208></P6208>
+
+<!--  Name -->
+<P6408></P6408>
+
+<!--  UserID -->
+<P6608></P6608>
+
+<!--  EXT Key 9 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6009></P6009>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6209></P6209>
+
+<!--  Name -->
+<P6409></P6409>
+
+<!--  UserID -->
+<P6609></P6609>
+
+<!--  EXT Key 10 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6010></P6010>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6210></P6210>
+
+<!--  Name -->
+<P6410></P6410>
+
+<!--  UserID -->
+<P6610></P6610>
+
+<!--  EXT Key 11 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6011></P6011>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6211></P6211>
+
+<!--  Name -->
+<P6411></P6411>
+
+<!--  UserID -->
+<P6611></P6611>
+
+<!--  EXT Key 12 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6012></P6012>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6212></P6212>
+
+<!--  Name -->
+<P6412></P6412>
+
+<!--  UserID -->
+<P6612></P6612>
+
+<!--  EXT Key 13 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6013></P6013>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<P6213></P6213>
+
+<!--  Name -->
+<P6413></P6413>
+
+<!--  UserID -->
+<P6613></P6613>
+
+<!--  EXT Key 14 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6014></P6014>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6214></P6214>
+
+<!--  Name -->
+<P6414></P6414>
+
+<!--  UserID -->
+<P6614></P6614>
+
+<!--  EXT Key 15 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6015></P6015>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6215></P6215>
+
+<!--  Name -->
+<P6415></P6415>
+
+<!--  UserID -->
+<P6615></P6615>
+
+<!--  EXT Key 16 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6016></P6016>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6216></P6216>
+
+<!--  Name -->
+<P6416></P6416>
+
+<!--  UserID -->
+<P6616></P6616>
+
+<!--  EXT Key 17 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6017></P6017>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6217></P6217>
+
+<!--  Name -->
+<P6417></P6417>
+
+<!--  UserID -->
+<P6617></P6617>
+
+<!--  EXT Key 18 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6018></P6018>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6218></P6218>
+
+<!--  Name -->
+<P6418></P6418>
+
+<!--  UserID -->
+<P6618></P6618>
+
+<!--  EXT Key 19 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6019></P6019>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6219></P6219>
+
+<!--  Name -->
+<P6419></P6419>
+
+<!--  UserID -->
+<P6619></P6619>
+
+<!--  EXT Key 20 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6020></P6020>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6220></P6220>
+
+<!--  Name -->
+<P6420></P6420>
+
+<!--  UserID -->
+<P6620></P6620>
+
+<!--  EXT Key 21 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6021></P6021>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6221></P6221>
+
+<!--  Name -->
+<P6421></P6421>
+
+<!--  UserID -->
+<P6621></P6621>
+
+<!--  EXT Key 22 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6022></P6022>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6222></P6222>
+
+<!--  Name -->
+<P6422></P6422>
+
+<!--  UserID -->
+<P6622></P6622>
+
+<!--  EXT Key 23 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6023></P6023>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<P6223></P6223>
+
+<!--  Name -->
+<P6423></P6423>
+
+<!--  UserID -->
+<P6623></P6623>
+
+<!--  EXT Key 24 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6024></P6024>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6224></P6224>
+
+<!--  Name -->
+<P6424></P6424>
+
+<!--  UserID -->
+<P6624></P6624>
+
+<!--  EXT Key 25 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6025></P6025>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6225></P6225>
+
+<!--  Name -->
+<P6425></P6425>
+
+<!--  UserID -->
+<P6625></P6625>
+
+<!--  EXT Key 26 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6026></P6026>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6226></P6226>
+
+<!--  Name -->
+<P6426></P6426>
+
+<!--  UserID -->
+<P6626></P6626>
+
+<!--  EXT Key 27 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6027></P6027>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6227></P6227>
+
+<!--  Name -->
+<P6427></P6427>
+
+<!--  UserID -->
+<P6627></P6627>
+
+<!--  EXT Key 28 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6028></P6028>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6228></P6228>
+
+<!--  Name -->
+<P6428></P6428>
+
+<!--  UserID -->
+<P6628></P6628>
+
+<!--  EXT Key 29 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6029></P6029>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6229></P6229>
+
+<!--  Name -->
+<P6429></P6429>
+
+<!--  UserID -->
+<P6629></P6629>
+
+<!--  EXT Key 30 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6030></P6030>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6230></P6230>
+
+<!--  Name -->
+<P6430></P6430>
+
+<!--  UserID -->
+<P6630></P6630>
+
+<!--  EXT Key 31 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6031></P6031>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6231></P6231>
+
+<!--  Name -->
+<P6431></P6431>
+
+<!--  UserID -->
+<P6631></P6631>
+
+<!--  EXT Key 32 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6032></P6032>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6232></P6232>
+
+<!--  Name -->
+<P6432></P6432>
+
+<!--  UserID -->
+<P6632></P6632>
+
+<!--  EXT Key 33 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6033></P6033>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6233></P6233>
+
+<!--  Name -->
+<P6433></P6433>
+
+<!--  UserID -->
+<P6633></P6633>
+
+<!--  EXT Key 34 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6034></P6034>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6234></P6234>
+
+<!--  Name -->
+<P6434></P6434>
+
+<!--  UserID -->
+<P6634></P6634>
+
+<!--  EXT Key 35 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6035></P6035>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6235></P6235>
+
+<!--  Name -->
+<P6435></P6435>
+
+<!--  UserID -->
+<P6635></P6635>
+
+<!--  EXT Key 36 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6036></P6036>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6236></P6236>
+
+<!--  Name -->
+<P6436></P6436>
+
+<!--  UserID -->
+<P6636></P6636>
+
+<!--  EXT Key 37 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6037></P6037>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6237></P6237>
+
+<!--  Name -->
+<P6437></P6437>
+
+<!--  UserID -->
+<P6637></P6637>
+
+<!--  EXT Key 38 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6038></P6038>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6238></P6238>
+
+<!--  Name -->
+<P6438></P6438>
+
+<!--  UserID -->
+<P6638></P6638>
+
+<!--  EXT Key 39 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6039></P6039>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6239></P6239>
+
+<!--  Name -->
+<P6439></P6439>
+
+<!--  UserID -->
+<P6639></P6639>
+
+<!--  EXT Key 40 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6040></P6040>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6240></P6240>
+
+<!--  Name -->
+<P6440></P6440>
+
+<!--  UserID -->
+<P6640></P6640>
+
+<!--  EXT Key 41 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6041></P6041>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6241></P6241>
+
+<!--  Name -->
+<P6441></P6441>
+
+<!--  UserID -->
+<P6641></P6641>
+
+<!--  EXT Key 42 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6042></P6042>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6242></P6242>
+
+<!--  Name -->
+<P6442></P6442>
+
+<!--  UserID -->
+<P6642></P6642>
+
+<!--  EXT Key 43 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6043></P6043>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6243></P6243>
+
+<!--  Name -->
+<P6443></P6443>
+
+<!--  UserID -->
+<P6643></P6643>
+
+<!--  EXT Key 44 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6044></P6044>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6244></P6244>
+
+<!--  Name -->
+<P6444></P6444>
+
+<!--  UserID -->
+<P6644></P6644>
+
+<!--  EXT Key 45 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6045></P6045>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6245></P6245>
+
+<!--  Name -->
+<P6445></P6445>
+
+<!--  UserID -->
+<P6645></P6645>
+
+<!--  EXT Key 46 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6046></P6046>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6246></P6246>
+
+<!--  Name -->
+<P6446></P6446>
+
+<!--  UserID -->
+<P6646></P6646>
+
+<!--  EXT Key 47 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6047></P6047>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6247></P6247>
+
+<!--  Name -->
+<P6447></P6447>
+
+<!--  UserID -->
+<P6647></P6647>
+
+<!--  EXT Key 48 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6048></P6048>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6248></P6248>
+
+<!--  Name -->
+<P6448></P6448>
+
+<!--  UserID -->
+<P6648></P6648>
+
+<!--  EXT Key 49 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6049></P6049>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6249></P6249>
+
+<!--  Name -->
+<P6449></P6449>
+
+<!--  UserID -->
+<P6649></P6649>
+
+<!--  EXT Key 50 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6050></P6050>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6250></P6250>
+
+<!--  Name -->
+<P6450></P6450>
+
+<!--  UserID -->
+<P6650></P6650>
+
+<!--  EXT Key 51 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6051></P6051>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<P6251></P6251>
+
+<!--  Name -->
+<P6451></P6451>
+
+<!--  UserID -->
+<P6651></P6651>
+
+<!--  EXT Key 52 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6052></P6052>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6252></P6252>
+
+<!--  Name -->
+<P6452></P6452>
+
+<!--  UserID -->
+<P6652></P6652>
+
+<!--  EXT Key 53 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6053></P6053>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6253></P6253>
+
+<!--  Name -->
+<P6453></P6453>
+
+<!--  UserID -->
+<P6653></P6653>
+
+<!--  EXT Key 54 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6054></P6054>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6254></P6254>
+
+<!--  Name -->
+<P6454></P6454>
+
+<!--  UserID -->
+<P6654></P6654>
+
+<!--  EXT Key 55 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6055></P6055>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6255></P6255>
+
+<!--  Name -->
+<P6455></P6455>
+
+<!--  UserID -->
+<P6655></P6655>
+
+<!--  EXT Key 56 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6056></P6056>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
+<P6256></P6256>
+
+<!--  Name -->
+<P6456></P6456>
+
+<!--  UserID -->
+<P6656></P6656>
+
+
+<!--  Extension Board 2 Settings. -->
+
+
+<!--  EXT Key 57 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6057></P6057>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6257></P6257>
+
+<!--  Name -->
+<P6457></P6457>
+
+<!--  UserID -->
+<P6657></P6657>
+
+<!--  EXT Key 58 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6058></P6058>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6258></P6258>
+
+<!--  Name -->
+<P6458></P6458>
+
+<!--  UserID -->
+<P6658></P6658>
+
+<!--  EXT Key 59 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6059></P6059>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6259></P6259>
+
+<!--  Name -->
+<P6459></P6459>
+
+<!--  UserID -->
+<P6659></P6659>
+
+<!--  EXT Key 60 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6060></P6060>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6260></P6260>
+
+<!--  Name -->
+<P6460></P6460>
+
+<!--  UserID -->
+<P6660></P6660>
+
+<!--  EXT Key 61 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6061></P6061>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6261></P6261>
+
+<!--  Name -->
+<P6461></P6461>
+
+<!--  UserID -->
+<P6661></P6661>
+
+<!--  EXT Key 62 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6062></P6062>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6262></P6262>
+
+<!--  Name -->
+<P6462></P6462>
+
+<!--  UserID -->
+<P6662></P6662>
+
+<!--  EXT Key 63 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6063></P6063>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6263></P6263>
+
+<!--  Name -->
+<P6463></P6463>
+
+<!--  UserID -->
+<P6663></P6663>
+
+<!--  EXT Key 64 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6064></P6064>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6264></P6264>
+
+<!--  Name -->
+<P6464></P6464>
+
+<!--  UserID -->
+<P6664></P6664>
+
+<!--  EXT Key 65 -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
+<P6065></P6065>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6265></P6265>
+
+<!--  Name  -->
+<P6465></P6465>
+
+<!--  UserID  -->
+<P6665></P6665>
+
+<!--  EXT Key 66  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6066></P6066>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6266></P6266>
+
+<!--  Name  -->
+<P6466></P6466>
+
+<!--  UserID  -->
+<P6666></P6666>
+
+<!--  EXT Key 67  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6067></P6067>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6267></P6267>
+
+<!--  Name  -->
+<P6467></P6467>
+
+<!--  UserID  -->
+<P6667></P6667>
+
+<!--  EXT Key 68  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6068></P6068>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6268></P6268>
+
+<!--  Name  -->
+<P6468></P6468>
+
+<!--  UserID  -->
+<P6668></P6668>
+
+<!--  EXT Key 69  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6069></P6069>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6269></P6269>
+
+<!--  Name  -->
+<P6469></P6469>
+
+<!--  UserID  -->
+<P6669></P6669>
+
+<!--  EXT Key 70  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6070></P6070>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6270></P6270>
+
+<!--  Name  -->
+<P6470></P6470>
+
+<!--  UserID  -->
+<P6670></P6670>
+
+<!--  EXT Key 71  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6071></P6071>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6271></P6271>
+
+<!--  Name  -->
+<P6471></P6471>
+
+<!--  UserID  -->
+<P6671></P6671>
+
+<!--  EXT Key 72  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6072></P6072>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6272></P6272>
+
+<!--  Name  -->
+<P6472></P6472>
+
+<!--  UserID  -->
+<P6672></P6672>
+
+<!--  EXT Key 73  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6073></P6073>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6273></P6273>
+
+<!--  Name  -->
+<P6473></P6473>
+
+<!--  UserID  -->
+<P6673></P6673>
+
+<!--  EXT Key 74  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6074></P6074>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6274></P6274>
+
+<!--  Name  -->
+<P6474></P6474>
+
+<!--  UserID  -->
+<P6674></P6674>
+
+<!--  EXT Key 75  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6075></P6075>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6275></P6275>
+
+<!--  Name  -->
+<P6475></P6475>
+
+<!--  UserID  -->
+<P6675></P6675>
+
+<!--  EXT Key 76  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6076></P6076>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6276></P6276>
+
+<!--  Name  -->
+<P6476></P6476>
+
+<!--  UserID  -->
+<P6676></P6676>
+
+<!--  EXT Key 77  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6077></P6077>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6277></P6277>
+
+<!--  Name  -->
+<P6477></P6477>
+
+<!--  UserID  -->
+<P6677></P6677>
+
+<!--  EXT Key 78  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6078></P6078>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6278></P6278>
+
+<!--  Name  -->
+<P6478></P6478>
+
+<!--  UserID  -->
+<P6678></P6678>
+
+<!--  EXT Key 79  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6079></P6079>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6279></P6279>
+
+<!--  Name  -->
+<P6479></P6479>
+
+<!--  UserID  -->
+<P6679></P6679>
+
+<!--  EXT Key 80  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6080></P6080>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
+<P6280></P6280>
+
+<!--  Name  -->
+<P6480></P6480>
+
+<!--  UserID  -->
+<P6680></P6680>
+
+<!--  EXT Key 81  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6081></P6081>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6281></P6281>
+
+<!--  Name  -->
+<P6481></P6481>
+
+<!--  UserID  -->
+<P6681></P6681>
+
+<!--  EXT Key 82  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6082></P6082>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6282></P6282>
+
+<!--  Name  -->
+<P6482></P6482>
+
+<!--  UserID  -->
+<P6682></P6682>
+
+<!--  EXT Key 83  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6083></P6083>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6283></P6283>
+
+<!--  Name  -->
+<P6483></P6483>
+
+<!--  UserID  -->
+<P6683></P6683>
+
+<!--  EXT Key 84  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6084></P6084>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6284></P6284>
+
+<!--  Name  -->
+<P6484></P6484>
+
+<!--  UserID  -->
+<P6684></P6684>
+
+<!--  EXT Key 85  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6085></P6085>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6285></P6285>
+
+<!--  Name  -->
+<P6485></P6485>
+
+<!--  UserID  -->
+<P6685></P6685>
+
+<!--  EXT Key 86  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6086></P6086>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6286></P6286>
+
+<!--  Name  -->
+<P6486></P6486>
+
+<!--  UserID  -->
+<P6686></P6686>
+
+<!--  EXT Key 87  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6087></P6087>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6287></P6287>
+
+<!--  Name  -->
+<P6487></P6487>
+
+<!--  UserID  -->
+<P6687></P6687>
+
+<!--  EXT Key 88  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6088></P6088>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6288></P6288>
+
+<!--  Name  -->
+<P6488></P6488>
+
+<!--  UserID  -->
+<P6688></P6688>
+
+<!--  EXT Key 89  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6089></P6089>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6289></P6289>
+
+<!--  Name  -->
+<P6489></P6489>
+
+<!--  UserID  -->
+<P6689></P6689>
+
+<!--  EXT Key 90  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6090></P6090>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6290></P6290>
+
+<!--  Name  -->
+<P6490></P6490>
+
+<!--  UserID  -->
+<P6690></P6690>
+
+<!--  EXT Key 91  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6091></P6091>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6291></P6291>
+
+<!--  Name  -->
+<P6491></P6491>
+
+<!--  UserID  -->
+<P6691></P6691>
+
+<!--  EXT Key 92  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6092></P6092>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6292></P6292>
+
+<!--  Name  -->
+<P6492></P6492>
+
+<!--  UserID  -->
+<P6692></P6692>
+
+<!--  EXT Key 93  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6093></P6093>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6293></P6293>
+
+<!--  Name  -->
+<P6493></P6493>
+
+<!--  UserID  -->
+<P6693></P6693>
+
+<!--  EXT Key 94  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6094></P6094>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6294></P6294>
+
+<!--  Name  -->
+<P6494></P6494>
+
+<!--  UserID  -->
+<P6694></P6694>
+
+<!--  EXT Key 95  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6095></P6095>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6295></P6295>
+
+<!--  Name  -->
+<P6495></P6495>
+
+<!--  UserID  -->
+<P6695></P6695>
+
+<!--  EXT Key 96  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6096></P6096>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6296></P6296>
+
+<!--  Name  -->
+<P6496></P6496>
+
+<!--  UserID  -->
+<P6696></P6696>
+
+<!--  EXT Key 97  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6097></P6097>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6297></P6297>
+
+<!--  Name  -->
+<P6497></P6497>
+
+<!--  UserID  -->
+<P6697></P6697>
+
+<!--  EXT Key 98  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6098></P6098>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6298></P6298>
+
+<!--  Name  -->
+<P6498></P6498>
+
+<!--  UserID  -->
+<P6698></P6698>
+
+<!--  EXT Key 99  -->
+
+<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
+<P6099></P6099>
+
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
+<P6299></P6299>
+
+<!--  Name  -->
+<P6499></P6499>
+
+<!--  UserID  -->
+<P6699></P6699>
+
+</config>
+</gs_provision>

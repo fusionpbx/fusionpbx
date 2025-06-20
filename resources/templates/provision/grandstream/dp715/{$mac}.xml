@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gs_provision version="1">
+<config version="1">
+
+	<!-- Advanced Settings. -->
+		<!-- Password for configuration file authentication -->
+		<P1></P1>
+		<!-- Admin password for web interface -->
+		<P2>{$admin_password}</P2>
+		<!-- Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
+		<P38>48</P38>
+		<!-- Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+		<P51>0</P51>
+		<!-- Layer 2 QoS. 802.1p priority value (0 - 7) -->
+		<P87>0</P87>
+		<!-- 802.1p priority value (NATed traffic) -->
+		<P230>0</P230>
+		<!-- STUN server -->
+		<P76></P76>
+		<!-- Keep-alive interval (in seconds. default 20 seconds) -->
+		<P84>20</P84>
+		<!-- Use STUN to detect network connectivity. 0 - No, 1 - Yes.  -->
+		<P474>0</P474>
+		<!-- Total STUN response misses to restart DHCP (mininum=3 default=3) -->
+		<P475>3</P475>
+
+	<!-- Firmware Upgrade -->
+		<!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
+		<P212>1</P212>
+		<!-- Firmware Server Path -->
+	
+              {if isset($grandstream_firmware_path) && isset($firmware_version)}
+		<P192>{$grandstream_firmware_path}/dp715/{$firmware_version}</P192>
+		{elseif isset($grandstream_firmware_path)}
+		<P192>{$grandstream_firmware_path}/dp715</P192>
+		{else}
+		<P192>{$domain_name}{$project_path}/app/provision</P192>
+		{/if}
+
+		<!-- Config Server Path -->
+                {if $grandstream_config_server_path=="none"}
+                <P237></P237>
+                {elseif isset($grandstream_config_server_path)}
+                <P237>{$grandstream_config_server_path}</P237>
+                {elseif isset($domain_name)}
+                <P237>{$domain_name}{$project_path}/app/provision</P237>
+                {/if}
+	
+		<!-- XML Config File Password -->
+		<P1359></P1359>
+		<!-- HTTP/HTTPS User Name -->
+		<P1360>{$http_auth_username}</P1360>
+		<!-- HTTP/HTTPS Password -->
+		<P1361>{$http_auth_password}</P1361>
+		<!-- Firmware File Prefix -->
+		<P232></P232>
+		<!-- Firmware File Postfix -->
+		<P233></P233>
+		<!-- Config File Prefix -->
+		<P234></P234>
+		<!-- Config File Postfix -->
+		<P235></P235>
+		<!-- Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
+		<!-- When set to Yes(1), it will override the configured provision path and method. -->
+		{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+		<!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
+		<P194>0</P194>
+		<!-- Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. -->
+		<P193>10080</P193>
+		<!-- Automatic Upgrade. Daily at hour(0-23) -->
+		<P285>1</P285>
+		<!-- Automatic Upgrade. Weekly on day (0-6) -->
+		<P286>1</P286>
+		<!-- 0 = Always Check for New Firmware  -->
+		<!-- 1 = Check New Firmware only when F/W pre/suffix changes  -->
+		<!-- 2 = Always Skip the Firmware Check -->
+		<P238>0</P238>
+		<!-- Authenticate Config File. 0 - No, 1 - Yes. -->
+		<P240>0</P240>
+		<!-- Firmware Key (AES 128, in Hexadecimal Representation) -->
+		<P242></P242>
+		<!-- SSL Certificate -->
+		<!-- P280= -->
+		<!-- SSL Private Key -->
+		<!-- P279= -->
+		<!-- SSL Private Key Password -->
+		<!-- P281= -->
+		<!-- ACS URL -->
+		<!-- P4503= -->
+		<!-- ACS Username -->
+		<P4504></P4504>
+		<!-- ACS Password -->
+		<P4505></P4505>
+		<!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
+		<P4506>0</P4506>
+		<!-- Periodic Inform Interval (default is 300) -->
+		<P4507>300</P4507>
+		<!-- Connection Request Username -->
+		<P4511></P4511>
+		<!-- Connection Request Password -->
+		<P4512></P4512>
+		<!-- CPE SSL Certificate -->
+		<!-- P8220= -->
+		<!-- CPE SSL Private Key -->
+		<!-- P8221= -->
+		<!-- Call Progress Tones  -->
+		<!-- Dial Tone -->
+		<P4000>f1=350@-13,f2=440@-13,c=0/0;</P4000> -->
+		<!-- Ringback Tone -->
+		<P4001>f1=440@-19,f2=480@-19,c=2000/4000;</P4001>
+		<!-- Busy Tone -->
+		<P4002>f1=480@-24,f2=620@-24,c=500/500;</P4002>
+		<!-- Reorder Tone -->
+		<P4003>f1=480@-24,f2=620@-24,c=250/250;</P4003>
+		<!-- Confirmation Tone -->
+		<P4004>f1=350@-11,f2=440@-11,c=100/100-100/100-100/100;</P4004>
+		<!-- Call Waiting tone -->
+		<P4005>f1=440@-13,c=300/300-300/10000;</P4005>
+		<!-- Lock keypad update.  0 - No, 1 - Yes. (configuration update via keypad is disabled if set to Yes) -->
+		<P88>0</P88>
+		<!-- Disable voice prompt. 0 - No, 1 - Yes.
+		<P253>0</P253> -->
+		<!-- Disable Direct IP Call. 0 - No, 1 - Yes. -->
+		<P277>0</P277>
+		<!-- NTP Server -->
+		<P30>us.pool.ntp.org</P30>
+		<!-- Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
+		<!-- When set to Yes(1), it will override the configured NTP server. -->
+		<P144>0</P144>
+		<!-- Syslog Server (name of the server, max length is 64 characters) -->
+		<P207></P207>
+		<!-- Syslog Level (Default setting is NONE) -->
+		<!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+		<P208>0</P208>
+		<!-- Send SIP Log. 0 - No, 1 - Yes. (If set to yes, The unit will replicate the received and send SIP packets on the syslog) -->
+		<P1387>0</P1387>
+		<!-- Update Handset Time -->
+		<!-- 0 - Skip when reboot due to provisioning, 1 - Never, 2 - Always -->
+		<P20000>0</P20000>
+		<!-- MWI LED Blinking -->
+		<!-- 0 - diable, 1 - enable -->
+		<P20001>1</P20001>
+
+	<!-- Profile 1 Settings  -->
+		<!-- Profile Active. 0 - No, 1 - Yes. -->
+		<P271>1</P271>
+		<!-- Primary SIP Server -->
+		<P47>{$account.1.server_address}</P47>
+		<!-- Failover SIP Server -->
+		<P967></P967>
+		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+		<P4567>1</P4567>
+		<!-- Outbound Proxy -->
+		<P48></P48>
+		<!-- SIP Transport 0 - UDP, 1 - TCP, 2 - TLS -->
+		<P130>0</P130>
+		<!-- NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+		<P52>0</P52>
+		<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
+		<P103>0</P103>
+		<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+		<P63>0</P63>
+		<!-- SIP Registration. 0 - No, 1 - Yes -->
+		<P31>1</P31>
+		<!-- Unregister On Reboot. 0 - No, 1 - Yes -->
+		<P81>0</P81>
+		<!-- Outgoing call without Registration. 0 - No, 1 - Yes -->
+		<P109>1</P109>
+		<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+		<P32>{$account.1.register_expires}</P32>
+		<!-- SIP Registration Failure Retry Wait Time, in seconds. Between 1-3600, default is 20
+		<P138>20</P138> -->
+		<!-- Local SIP port (default 5060) -->
+		<P40>5060</P40>
+		<!-- Local RTP port (1024-65535, default 5004) -->
+		<P39>5004</P39>
+		<!-- Use Random Port. 0 - No, 1 - Yes -->
+		<P78>0</P78>
+		<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
+		<P135>0</P135>
+		<!-- Transfer on Conference Hangup. 0 - No, 1 - Yes
+		<P4560>0</P4560> -->
+		<!-- Disable Bellcore Style 3-Way Conference. 0 - No, 1 - Yes. -->
+		<P4830>0</P4830>
+		<!-- Remove OBP from Route Header. 0 - No, 1 - Yes -->
+		<P4562>0</P4562>
+		<!-- Support SIP Instance ID. 0 - No, 1 - Yes -->
+		<P288>1</P288>
+		<!-- Validate Incoming SIP Message . 0 - No, 1 - Yes -->
+		<P4340>0</P4340>
+		<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
+		<P258>0</P258>
+		<!-- Authenticate incoming INVITE. 0 - No, 1 - Yes -->
+		<P2346>0</P2346>
+		<!-- Allow Incoming SIP Messages from SIP Proxy Only. 0 - No, 1 - Yes -->
+		<P243>0</P243>
+		<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+		<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 50. -->
+		<P209>50</P209>
+		<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+		<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+		<P250>400</P250>
+		<!-- DTMF Payload Type -->
+		<P79>101</P79>
+		<!-- Preferred DTMF method.  -->
+		<!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+		<!-- Priority 1 -->
+		<P850>101</P850>
+		<!-- Priority 2 -->
+		<P851>102</P851>
+		<!-- Priority 3 -->
+		<P852>100</P852>
+		<!-- Disable DTMF Negotiation. 0 - No, 1 - Yes -->
+		<P4825>0</P4825>
+		<!-- Send Hook Flash Event. 0 - No, 1 - Yes -->
+		<P74>0</P74>
+		<!-- Enable Call Features. 0 - No, 1 - Yes -->
+		<P191>1</P191>
+		<!-- Proxy-Require  -->
+		<P197></P197>
+		<!-- Use NAT IP (used in SIP/SDP message if specified) -->
+		<P101></P101>
+		<!-- Use SIP User-Agent Header -->
+		<P4834></P4834>
+		<!-- Ring Timeout. (10-300, default is 60 seconds) -->
+		<P185>60</P185>
+		<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+		<P4330>300</P4330>
+		<!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared line -->
+		<P4395>1</P4395>
+		<!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
+		<P139>20</P139>
+		<!-- No Key Entry Timeout. Default - 4 seconds. -->
+		<P85>4</P85>
+		<!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response) -->
+		<P29>0</P29>
+		<!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+		<P66></P66>
+		<!-- Use as Dial Key. 0 - No, 1 - Yes (if set to Yes, "#" will function as the "(Re-)Dial" key) -->
+		<P72>1</P72>
+		<!-- Dial Plan -->
+	
+		{if isset($grandstream_dial_plan) }
+		<P4200>{$grandstream_dial_plan}</P4200>
+		{else}
+		<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
+		{/if}
+		
+		<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
+		<P99>0</P99>
+		<!-- Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
+		<P65>0</P65>
+		<!-- Disable Call-Waiting. 0 - No, 1 - Yes -->
+		<P91>0</P91>
+		<!-- Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
+		<P714>0</P714>
+		<!-- Disable Reminder Ring for On-Hold Call. 0- No, 1 - Yes -->
+		<P4360>0</P4360>
+		<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+		<P129>0</P129>
+		<!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+		<P260>180</P260>
+		<!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+		<P261>90</P261>
+		<!-- Caller Request Timer (Request for timer when calling) 0 - No, 1 - Yes -->
+		<P262>0</P262>
+		<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - No, 1 - Yes -->
+		<P263>0</P263>
+		<!-- Force Timer (Still use timer when remote party does not support timer) 0 - No, 1 - Yes -->
+		<P264>0</P264>
+		<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+		<P266>0</P266>
+		<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+		<P267>1</P267>
+		<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - No, 1 - Yes -->
+		<P265>0</P265>
+		<!-- Enable 100rel. 0 - No, 1 - Yes -->
+		<P272>0</P272>
+
+	<!-- Codec/Voice Quality settings  -->
+		<!-- Preferred Vocoder -->
+		<!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 98 - iLBC -->
+		<!-- Choice 1.  -->
+		<P57>0</P57>
+		<!-- Choice 2. -->
+		<P58>8</P58>
+		<!-- Choice 3. -->
+		<P59>4</P59>
+		<!-- Choice 4. -->
+		<P60>18</P60>
+		<!-- Choice 5. -->
+		<P61>2</P61>
+		<!-- Choice 6. -->
+		<P62>98</P62>
+		<!-- VAD. 0 - No, 1 - Yes -->
+		<P50>0</P50>
+		<!-- Jitter buffer type.  0 - Fixed, 1 - Adaptive -->
+		<P133>1</P133>
+		<!-- Jitter buffer length. 0 - Low, 1 - Medium, 2 - High -->
+		<P132>1</P132>
+		<!-- SRTP Mode -->
+		<!-- 0 = Disabled -->
+		<!-- 1 = Enabled but not forced -->
+		<!-- 2 = Enabled and forced -->
+		<P183>0</P183>
+		<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+		<P49>0</P49>
+		<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+		<P4363>0</P4363>
+		<!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+		<P97>0</P97>
+		<!-- iLBC payload type. (between 96 and 127, default is 97). -->
+		<P96>97</P96>
+		<!-- Voice Frames per Packet. (up to 10/20/32/64 for G711/G726/G723/other codecs respectively)  -->
+		<P37>2</P37>
+		<!-- Symmetric RTP. 0 - No, 1 - Yes -->
+		<P291>0</P291>
+
+	<!-- Profile 2 Settings. -->
+		<!-- Profile Active. 0 - No, 1 - Yes. -->
+		<P401>1</P401>
+		<!-- Primary SIP Server -->
+		<P747>{$account.2.server_address}</P747>
+		<!-- Failover SIP Server -->
+		<P987></P987>
+		<!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
+		<P4568>1</P4568>
+		<!-- Outbound Proxy -->
+		<P748></P748>
+		<!-- SIP Transport 0 - UDP, 1 - TCP, 2 - TLS -->
+		<P830>0</P830>
+		<!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
+		<P730>0</P730>
+		<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
+		<P702>0</P702>
+		<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+		<P763>0</P763>
+		<!-- SIP Registration. 0 - No, 1 - Yes -->
+		<P731>1</P731>
+		<!-- Unregister On Reboot. 0 - No, 1 - Yes -->
+		<P752>0</P752>
+		<!-- Outgoing call without Registration. 0 - No, 1 - Yes -->
+		<P813>1</P813>
+		<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+		<P732>{$account.2.register_expires}</P732>
+		<!-- SIP Registration Failure Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
+		<P471>20</P471>
+		<!-- Local SIP port (default 6060) -->
+		<P740>6060</P740>
+		<!-- Local RTP port (1024-65535, default 6004) -->
+		<P739>6004</P739>
+		<!-- Use Random Port. 0 - No, 1 - Yes -->
+		<P778>0</P778>
+		<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
+		<P469>0</P469>
+		<!-- Transfer on Conference Hangup. 0 - No, 1 - Yes -->
+		<P4561>0</P4561>
+		<!-- Disable Bellcore Style 3-Way Conference. 0 - No, 1 - Yes. -->
+		<P4831>0</P4831>
+		<!-- Remove OBP from Route Header. 0 - No, 1 - Yes -->
+		<P4563>0</P4563>
+		<!-- Support SIP Instance ID. 0 - No, 1 - Yes -->
+		<P489>1</P489>
+		<!-- Validate Incoming SIP Message. 0 - No, 1 - Yes -->
+		<P4341>0</P4341>
+		<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes -->
+		<P449>0</P449>
+		<!-- Authenticate incoming INVITE. 0 - No, 1 - Yes -->
+		<P2446>0</P2446>
+		<!-- Allow Incoming SIP Messages from SIP Proxy Only. 0 - No, 1 - Yes -->
+		<P743>0</P743>
+		<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+		<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 50. -->
+		<P440>50</P440>
+		<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+		<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
+		<P441>400</P441>
+		<!-- DTMF Payload Type -->
+		<P779>101</P779>
+		<!-- Preferred DTMF method.  -->
+		<!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
+		<!-- Priority 1 -->
+		<P860>100</P860>
+		<!-- Priority 2 -->
+		<P861>100</P861>
+		<!-- Priority 3 -->
+		<P862>100</P862>
+		<!-- Disable DTMF Negotiation. 0 - No, 1 - Yes  -->
+		<P4826>0</P4826>
+		<!-- Send Hook Flash Event. 0 - No, 1 - Yes  -->
+		<P774>0</P774>
+		<!-- Enable Call Features. 0 - No, 1 - Yes  -->
+		<P751>1</P751>
+		<!-- Proxy-Require -->
+		<P792></P792>
+		<!-- Use NAT IP (used in SIP/SDP message if specified) -->
+		<P866></P866>
+		<!-- Use SIP User-Agent Header -->
+		<P4835></P4835>
+		<!-- Ring Timeout. (10-300, default is 60 seconds) -->
+		<P816>60</P816>
+		<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
+		<P4331>300</P4331>
+		<!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared Line -->
+		<P4396>1</P4396>
+		<!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
+		<P470>20</P470>
+		<!-- No Key Entry Timeout. Default - 4 seconds. -->
+		<P292>4</P292>
+		<!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response) -->
+		<P729>0</P729>
+		<!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
+		<P766></P766>
+		<!-- Use # as Dial Key. 0 - No, 1 - Yes (if set to Yes, "#" will function as the "(Re-)Dial" key) -->
+		<P772>1</P772>
+		<!-- Dial Plan  -->
+		<P4201>{ x+ | *x+ | *xx*x+}</P4201>
+		<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
+		<P709>0</P709>
+		<!-- Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
+		<P765>0</P765>
+		<!-- Disable Call-Waiting. 0 - No, 1 - Yes -->
+		<P791>0</P791>
+		<!-- Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
+		<P823>0</P823>
+		<!-- Disable Reminder Ring for On-Hold Call. 0 - No, 1 - Yes -->
+		<P4361>0</P4361>
+		<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
+		<P446>0</P446>
+		<!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-65535) -->
+		<P434>180</P434>
+		<!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
+		<P427>90</P427>
+		<!-- Caller Request Timer (Request for timer when calling) 0 - No, 1 - Yes -->
+		<P428>0</P428>
+		<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - No, 1 - Yes -->
+		<P429>0</P429>
+		<!-- Force Timer (Still use timer when remote party does not support timer) 0 - No, 1 - Yes -->
+		<P430>0</P430>
+		<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
+		<P432>0</P432>
+		<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+		<P433>1</P433>
+		<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - No, 1 - Yes -->
+		<P431>0</P431>
+		<!-- Enable 100rel. 0 - No, 1 - Yes -->
+		<P435>0</P435>
+
+	<!-- Codec/Voice Quality settings  -->
+		<!-- Preferred Vocoder -->
+		<!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 98 - iLBC -->
+		<!-- Choice 1. -->
+		<P757>0</P757>
+		<!-- Choice 2. -->
+		<P758>8</P758>
+		<!-- Choice 3. -->
+		<P759>4</P759>
+		<!-- Choice 4. -->
+		<P760>18</P760>
+		<!-- Choice 5. -->
+		<P761>2</P761>
+		<!-- Choice 6. -->
+		<P762>98</P762>
+		<!-- VAD. 0 - No, 1 - Yes  -->
+		<P750>0</P750>
+		<!-- Jitter buffer type.  0 - Fixed, 1 - Adaptive -->
+		<P831>1</P831>
+		<!-- Jitter buffer length. 0 - Low, 1 - Medium, 2 - High -->
+		<P832>1</P832>
+		<!-- SRTP Mode -->
+		<!-- 0 = Disabled -->
+		<!-- 1 = Enabled but not forced -->
+		<!-- 2 = Enabled and forced -->
+		<P443>0</P443>
+		<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
+		<P749>0</P749>
+		<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
+		<P4364>0</P4364>
+		<!-- iLBC Frame Size. 0 - 20ms(default), 1 - 30ms. -->
+		<P705>0</P705>
+		<!-- iLBC payload type. (between 96 and 127, default is 97). -->
+		<P704>97</P704>
+		<!--Voice Frames per Packet. (up to 10/20/32/64 for G711/G726/G723/other codecs respectively) -->
+		<P737>2</P737>
+		<!-- Symmetric RTP. 0 - No, 1 - Yes -->
+		<P460>0</P460>
+
+	<!--Handsets -->
+	<!-- Handset 1 -->
+		<!-- Enable Handset -->
+		<P4595>1</P4595>
+		<!-- Hunting Group (0 - None, 1 - Active, 2 - 2, 3 - 3, 4 -4, 5 -5) -->
+		<P4300>0</P4300>
+		<!--SIP User ID -->
+		<P4060>{$account.1.user_id}</P4060>
+		<!--Authenticate ID -->
+		<P4090>{$account.1.auth_id}</P4090>
+		<!--Authenticate Password -->
+		<P4120>{$account.1.password}</P4120>
+		<!--Name -->
+		<P4180>{$account.1.display_name}</P4180>
+		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
+		<P4150>0</P4150>
+	<!-- Handset 2 -->
+		<!-- Enable Handset -->
+		<P4596>1</P4596>
+		<!-- Hunting Group (0 - None, 2 - Active, 1 - 1, 3 - 3, 4 -4, 5 -5) -->
+		<P4301>0</P4301>
+		<!--SIP User ID -->
+		<P4061>{$account.2.user_id}</P4061>
+		<!--Authenticate ID -->
+		<P4091>{$account.2.auth_id}</P4091>
+		<!--Authenticate Password -->
+		<P4121>{$account.2.password}</P4121>
+		<!--Name -->
+		<P4181>{$account.2.display_name}</P4181>
+		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
+		<P4151>0</P4151>
+	<!-- Handset 3 -->
+		<!-- Enable Handset -->
+		<P4597>1</P4597>
+		<!-- Hunting Group (0 - None, 3 - Active, 1 - 1, 2 - 2, 4 -4, 5 -5) -->
+		<P4302>0</P4302>
+		<!--SIP User ID -->
+		<P4062>{$account.3.user_id}</P4062>
+		<!--Authenticate ID -->
+		<P4092>{$account.3.auth_id}</P4092>
+		<!--Authenticate Password -->
+		<P4122>{$account.3.password}</P4122>
+		<!--Name -->
+		<P4182>{$account.3.display_name}</P4182>
+		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
+		<P4152>0</P4152>
+	<!-- Handset 4 -->
+		<!-- Enable Handset -->
+		<P45958>1</P45958>
+		<!-- Hunting Group (0 - None, 4 - Active, 1 -1, 2 -2, 3 -3, 5 -5) -->
+		<P4303>0</P4303>
+		<!--SIP User ID -->
+		<P4063>{$account.4.user_id}</P4063>
+		<!--Authenticate ID -->
+		<P4093>{$account.4.auth_id}</P4093>
+		<!--Authenticate Password -->
+		<P4123>{$account.4.password}</P4123>
+		<!-- Name -->
+		<P4183>{$account.4.display_name}</P4183>
+		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
+		<P4153>0</P4153>
+	<!-- Handset 5 -->
+		<!-- Enable Handset -->
+		<P4599>1</P4599>
+		<!-- Hunting Group (0 - None, 5 - Active, 1 -1, 2 -2, 3 -3, 4 -4) -->
+		<P4304>0</P4304>
+		<!--SIP User ID -->
+		<P4064>{$account.5.user_id}</P4064>
+		<!--Authenticate ID -->
+		<P4094>{$account.5.auth_id}</P4094>
+		<!--Authenticate Password -->
+		<P4124>{$account.5.password}</P4124>
+		<!--Name -->
+		<P4184>{$account.5.display_name}</P4184>
+		<!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
+		<P4154>0</P4154>
+
+	<!--  Basic Settings. -->
+		<!-- End User Password, MaxLength 32 -->
+		<P196>{$user_password}</P196>
+		<!-- Web Port. Default HTTP is 80. -->
+		<P901>80</P901>
+		<!-- Telnet Server. 1 - No, 0 - Yes -->
+		<P276>0</P276>
+		<!-- IP Address. 0 - DHCP, 2 - PPPoE, 1 - Static IP -->
+		<P8>0</P8>
+	<!-- DHCP -->
+		<!-- DHCP Hostname, DHCP option 12. Max length allowed is 32 bytes. -->
+		<P146></P146>
+		<!-- DHCP Domain Name, DHCP option 15. Max length allowed is 32 bytes. -->
+		<P147></P147>
+		<!-- DHCP Vendor Class ID, DHCP option 60. Max length allowed is 32 bytes. -->
+		<P148>DP7XX</P148>
+	<!-- PPPoE -->
+		<!-- PPPoE account ID -->
+		<!--P82= -->
+		<!-- PPPoE password -->
+		<!--P83= -->
+		<!-- PPPoE Service Name -->
+		<!--P269= -->
+		<!-- Preferred DNS server -->
+		<!--P92=0 -->
+		<!--P93=0 -->
+		<!--P94=0 -->
+		<!--P95=0 -->
+	<!-- Static IP -->
+		<!-- IP Address. Ignore if DHCP or PPPoE is used -->
+		<!--P9=192 -->
+		<!--P10=168 -->
+		<!--P11=0 -->
+		<!--P12=160 -->
+		<!-- Subnet mask. Ignore if DHCP or PPPoE is used -->
+		<!--P13=255 -->
+		<!--P14=255 -->
+		<!--P15=255 -->
+		<!--P16=0 -->
+		<!-- Default Router. Ignore if DHCP or PPPoE is used -->
+		<!--P17=0 -->
+		<!--P18=0 -->
+		<!--P19=0 -->
+		<!--P20=0 -->
+		<!-- DNS 1. Ignore if DHCP or PPPoE is used -->
+		<!--P21=0 -->
+		<!--P22=0 -->
+		<!--P23=0 -->
+		<!--P24=0 -->
+		<!-- DNS 2. Ignore if DHCP or PPPoE is used -->
+		<!--P25=0 -->
+		<!--P26=0 -->
+		<!--P27=0 -->
+		<!--P28=0 -->
+
+	<!--Time Zone. Offset in minutes to GMT -->
+		<!-- <value="TZA+12"> GMT-12:00 (International Date Line West) -->
+		<!-- <value="TZB+11"> GMT-11:00 (Midway Island, Samoa) -->
+		<!-- <value="HAW10"> GMT-10:00 (US Hawaiian Time) -->
+		<!-- <value="AKST9AKDT"> GMT-09:00 (US Alaska Time) -->
+		<!-- <value="PST8PDT"> Geles) -->
+		<!-- <value="PST8PDT,M4.1.0,M10.5.0"> GMT-08:00 (Baja California) -->
+		<!-- <value="MST7MDT"> GMT-07:00 (US Mountain Time, Denver) -->
+		<!-- <value="MST7"> GMT-07:00 (Mountain Time (Arizona, no DST)) -->
+		<!-- <value="MST7MDT,M4.1.0,M10.5.0"> GMT-07:00 (Chihuahua, La Paz, Mazatlan) -->
+		<!-- <value="CST6CDT"> GMT-06:00 (Central Time) -->
+		<!-- <value="CST+6"> GMT-06:00 (Central America) -->
+		<!-- <value="CST6CDT,M4.1.0,M10.5.0"> Guadalajara, Mexico City, Monterrey) -->
+		<!-- <value="EST5EDT"> GMT-05:00 (Eastern Time) -->
+		<!-- <value="EST5"> G) -->
+		<!-- <value="TZf+4:30"> GMT-04:30 (Caracas) -->
+		<!-- <value="AST4ADT"> GMT-04:00 (Atlantic Time) -->
+		<!-- <value="AST4ADT,M4.1.0/00:01:00,M10.5.0/00:01:00"> GMT-04:00 (Atlantic Time (New Brunswick)) -->
+		<!-- <value="NST+3:30NDT+2:30,M4.1.0/00:01:00,M10.5.0/00:01:00"> GMT-03:30 (Newfoundland Time) -->
+		<!-- <value="TZK+3"> Greenland) -->
+		<!-- <value="BRST+3BRDT+2,M10.3.0,M2.3.0"> GMT-03:00 (Brazil, Sao Paulo) -->
+		<!-- <value="UTC+3"> Gentina) -->
+		<!-- <value="TZL+2"> GMT-02:00 (Mid-Atlantic) -->
+		<!-- <value="TZM+1"> GMT-01:00 (Azores, Cape Verde Is.) -->
+		<!-- <value="TZN+0"> Gh, Casablanca, Monrovia) -->
+		<!-- <value="GMT+0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"> Great Britain) -->
+		<!-- <value="WET-0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"> Gal) -->
+		<!-- <value="GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"> GMT (Dublin, Ireland) -->
+		<!-- <value="TZO-1"> Gium, Brussels, Paris, Vienna, Warsaw) -->
+		<!-- <value="CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"> Gue, Berlin, Budapest, Amsterdam, Barcelona) -->
+		<!-- <value="TZP-2"> GMT+02:00 (Israel, Cairo, Athens, Istanbul, Bucharest) -->
+		<!-- <value="EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00"> GMT+02:00 (Helsinki, Athens, Tallinn) -->
+		<!-- <value="EET-2EEST,M3.5.0/3,M10.5.0/4"> GMT+02:00 (Kyiv, Ukraine) -->
+		<!-- <value="TZQ-3"> Ghdad, Tehran, Nairobi) -->
+		<!-- <value="MSK-3MSD,M3.5.0/2,M10.5.0/3"> GMT+03:00 (Moscow, Russia) -->
+		<!-- <value="MST-3MDT,M3.5.0/2,M10.5.0/3"> G, Russia) -->
+		<!-- <value="TZR-4"> GMT+04:00 (Abu Dhabi, Baku) -->
+		<!-- <value="TZS-5"> G, Karachi, Tashkent) -->
+		<!-- <value="TZT-5:30"> GMT+05:30 (Chennai, New Delhi, Mumbai) -->
+		<!-- <value="TZU-5:45"> GMT+05:45 (Kathmandu) -->
+		<!-- <value="TZV-6"> GMT+06:00 (Almaty, Astana, Dhaka, Novosibirsk) -->
+		<!-- <value="TZW-6:30"> Goon) -->
+		<!-- <value="TZX-7"> GMT+07:00 (Bankok, Hanoi, Krasnoyarsk) -->
+		<!-- <value="WIB-7"> GMT+07:00 (Jakarta) -->
+		<!-- <value="TZY-8"> G, Taipei, Kuala Lumpur, Irkutsk) -->
+		<!-- <value="SGT-8"> Gapore) -->
+		<!-- <value="ULAT-8"> Golia) -->
+		<!-- <value="WST-8"> GMT+08:00 (Perth) -->
+		<!-- <value="TZZ-9"> GMT+09:00 (Japan, Korea, Yakutsk) -->
+		<!-- <value="CST-9:30CDT-10:30,M10.5.0/02:00:00,M3.5.0/03:00:00"> GMT+09:30 (Adelaide) -->
+		<!-- <value="CST-9:30"> GMT+09:30 (Darwin) -->
+		<!-- <value="TZb-10"> Guam) -->
+		<!-- <value="EST-10EDT-11,M10.1.0/02:00:00,M3.5.0/03:00:00"> GMT+10:00 (Hobart) -->
+		<!-- <value="EST-10EDT-11,M10.5.0/02:00:00,M3.5.0/03:00:00"> GMT+10:00 (Sydney, Melbourne, Canberra) -->
+		<!-- <value="EST-10"> GMT+10:00 (Brisbane) -->
+		<!-- <value="TZc-11"> Gadan, Solomon Is., New Caledonia) -->
+		<!-- <value="NZST-12NZDT-13,M10.1.0/02:00:00,M3.3.0/03:00:00"> Gton) -->
+		<!-- <value="TZd-12"> GMT+12:00 (Fiji) -->
+		<!-- <value="TZe-13"> GMT+13:00 (Nuku'alofa) -->
+		<!-- <value="customize" selected=""> G self-defined Time Zone -->
+		<P64>customize</P64> -->
+		<!-- Self-Defined Time Zone -->
+		<P246>MTZ+6MDT+5,M3.2.0,M11.1.0</P246>
+		<!-- Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
+		{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+
+		<!-- Language. 0 - English, 10 - Spanish IVR -->
+		<P342>0</P342>
+
+	</config>
+</gs_provision>

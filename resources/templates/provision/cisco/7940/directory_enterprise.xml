@@ -1,0 +1,20 @@
+<CiscoIPPhoneDirectory>
+	<Title>Enterprise</Title>
+	<Prompt>Please choose...</Prompt>
+{foreach $contacts as $row}{if $row.contact_category == "enterprise"}
+<DirectoryEntry>
+{if $row.contact_name_given != ""}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{else}
+	<Name>{$row.contact_organization}</Name>
+{/if}
+{if $row.phone_number != ""}
+	<Telephone>{$row.phone_number}</Telephone>
+{else}
+	<Telephone>{$row.phone_extension}</Telephone>
+{/if}
+</DirectoryEntry>
+{/if}
+{/foreach}
+</CiscoIPPhoneDirectory>
+

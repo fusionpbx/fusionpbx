@@ -1,0 +1,1603 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gs_provision version="1">
+	<config version="1">
+<!--  Configuration template for GXV-3140 firmware version 1.0.7.76 -->
+<!--   Change Log -->
+<!--  P values added since 1.0.7.60           # -->
+
+
+<!--  P2349, P2449, P2549 %u2013 Customized User ID display for account 1, 2 and 3 -->
+
+<!--  P1558 %u2013 Layer 3 QoS for SIP -->
+<!--  P1559 %u2013 Layer 3 QoS for audio RTP -->
+<!--  P1560 %u2013 Layer 3 QoS for video RTP -->
+
+<!--  P258,  P449,  P549  -  Check SIP User ID for Incoming INVITE (0 - No, 1 - Yes) for acccount 1, 2 and 3 -->
+<!--  P2346, P2446, P2546 -  Authenticate Incoming INVITE (0 - No, 1 - Yes) for acccount 1, 2 and 3 -->
+<!--  P2347, P2447, P2547 %u2013  Accept SIP requests from known servers only for acccount 1, 2 and 3 -->
+
+<!--  Remote Video Request.  0 - Prompt (Default), 1 - Accept Automatically, 2 - Deny Automatically -->
+<!-- P2326 = 0 -->
+
+<!--  Remote Video Request.  0 - Prompt (Default), 1 - Accept Automatically, 2 - Deny Automatically -->
+<!-- P2426 = 0 -->
+
+<!--  Remote Video Request.  0 - Prompt (Default), 1 - Accept Automatically, 2 - Deny Automatically -->
+<!-- P2526 = 0 -->
+
+<!--  Secondary Outbound Proxy -->
+<!-- P2333 = -->
+
+<!--  Secondary Outbound Proxy -->
+<!-- P2433 = -->
+
+<!--  Secondary Outbound Proxy -->
+<!-- P2533 = -->
+
+<!--  Added Hebrew language support -->
+
+
+<!--    P Values Removed since 1.0.7.60      # -->
+
+
+<!--  Layer 3 QoS (IP Diff-Serv or Precedence value for RTP) -->
+<!--  Allowed value: 0-63 -->
+<P38>0</P38>
+
+<!--  Enable Video (0 - No, 1 - Yes, 2 - Enable/Disable during dialing) -->
+<!-- P292 = 1 -->
+
+<!--  Enable Video (0 - No, 1 - Yes, 2 - Enable/Disable during dialing) -->
+<!-- P461 = 1 -->
+
+<!--  Enable Video (0- No, 1 -Yes, 2 - Enable/Disable during dialing) -->
+<!-- P561 = 1 -->
+
+<!--   Change Log End -->
+
+<!--  Account Settings -->
+<!--  Account used for Line 1. 0- Account 1, 1- Account 2, 2- Account 3. -->
+<!-- P7045 = 0 -->
+
+<!--  Account used for Line 2. 0- Account 1, 1- Account 2, 2- Account 3. -->
+<!-- P7046 = 1 -->
+
+<!--  Account used for Line 3. 0- Account 1, 1- Account 2, 2- Account 3. -->
+<!-- P7047 = 2 -->
+<!--   Account1 Settings -->
+
+
+<!--   Account1 General Settings -->
+
+
+<!--  Account Active. 0- No, 1- Yes -->
+<P271>1</P271>
+
+<!--  Account Name, MaxLength 64 characters -->
+<P270></P270>
+
+<!--  SIP Server, MaxLength 64 characters -->
+<P47>{$account.1.server_address}</P47>
+
+<!--  SIP User ID, MaxLength 64 characters -->
+<P35>{$account.1.user_id}</P35>
+
+<!--  Authenticate ID, MaxLength 64 characters -->
+<P36>{$account.1.user_id}</P36>
+
+<!--  Authenticate Password, MaxLength unlimited -->
+<P34>{$account.1.password}</P34>
+
+<!--  Voicemail UserID (User ID/extension for 3rd party voice mail system) -->
+<!--  MaxLength 64 characters -->
+<P33>{$voicemail_number}</P33>
+
+<!--  Name (Display name :John Doe), MaxLength 64 characters -->
+<P3>{$account.1.display_name}</P3>
+
+<!--  Tel URI support. 0 - disabled, 1 - User is phone, 2 - Tel URI. Default value is 0 -->
+<P63>0</P63>
+
+<!--  Customized User ID Display for Account 1 -->
+<P2349></P2349>
+
+<!--   Account1 Network Settings -->
+
+
+<!--  Outbound Proxy, MaxLength 32 characters -->
+<P48></P48>
+
+<!--  Secondary Outbound Proxy -->
+<P2333></P2333>
+
+<!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
+<P103>0</P103>
+
+<!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN -->
+<P52>2</P52>
+
+<!--  Proxy-Require, MaxLength 32 characters -->
+<P197></P197>
+
+<!--   Account1 SIP Settings -->
+
+
+<!--  SIP Registration. 0 - No, 1 - Yes. -->
+<P31>1</P31>
+
+<!--  Unregister On Reboot.0 - No, 1 - Yes. -->
+<P81>0</P81>
+
+<!--  Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
+<P32>{$account.1.register_expires}</P32>
+
+<!--  Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
+<P138>20</P138>
+
+<!--  Local SIP Port (Allowed value: 5-65535, default 5060) -->
+<P40>5060</P40>
+
+<!--  SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication) -->
+<!--  0 - No, 1 - Yes. -->
+<P99>0</P99>
+
+<!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-64800) -->
+<P260>180</P260>
+
+<!--  Min-SE (s)(Allowed value: 90-64800, default 90 seconds) -->
+<P261>90</P261>
+
+<!--  UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS -->
+<P266>0</P266>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P267>1</P267>
+
+<!--  Force INVITE(Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!--  0 - no, 1 - yes -->
+<P265>0</P265>
+
+<!--  Caller Request Timer(Request for timer when calling). 0 - no, 1 - yes -->
+<P262>0</P262>
+
+<!--  Callee Request Timer(Request for timer when called. -->
+<!--  i.e. if remote party supports timer but did not request for one). 0 - No, 1 - Yes -->
+<P263>0</P263>
+
+<!--  Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes -->
+<P264>0</P264>
+
+<!--  Enable 100rel. 0 - No, 1 - Yes -->
+<P272>0</P272>
+
+<!--  SIP Transport (0- UDP , 1- TCP, 2 -TLS) -->
+<P130>0</P130>
+
+<!--  Symmetric RTP (0 - No, 1 - Yes) -->
+<P291>0</P291>
+
+<!--  Support SIP Instance ID (0 - No, 1 - Yes) -->
+<P288>1</P288>
+
+<!--  Validate Incoming Messages (0 - No, 1 - Yes) -->
+<P2306>0</P2306>
+
+<!--  Check SIP User ID for Incoming INVITE (0 - No, 1 - Yes) -->
+<P258>0</P258>
+
+<!--  Authenticate Incoming INVITE (0 - No, 1 - Yes) -->
+<P2346>0</P2346>
+
+<!--  Accept SIP Requests from Known Servers (0 - No, 1 - Yes) -->
+<P2347>0</P2347>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. -->
+<P209>50</P209>
+
+<!--  SIP T2 Timeout. RFC 3261 T2 value. -->
+<!--  The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P250>400</P250>
+
+<!--  Remove OBP from route (0 - No, 1 - Yes) -->
+<P2305>0</P2305>
+
+
+<!--   Account1 Codec Settings -->
+
+
+<!--  Start video automatically. 0 - No, 1 - Yes. Default value is 1 -->
+<P2314>1</P2314>
+
+<!--  Remote Video Request.  0 - Prompt (Default), 1 - Accept Automatically, 2 - Deny Automatically -->
+<P2326>0</P2326>
+
+<!--  DTMF in audio (0 - No, 1 - Yes) -->
+<P2301>0</P2301>
+
+<!--  DTMF via RFC2833 (0 - No, 1 - Yes) -->
+<P2302>1</P2302>
+
+<!--  DTMF via SIP INFO (0 - No, 1 - Yes) -->
+<P2303>0</P2303>
+
+<!--  DTMF Payload Type, Allowed value: 96-127 -->
+<P79>101</P79>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - L16-256 -->
+
+<!--  First codec. -->
+<P57>0</P57>
+
+<!--  Second codec. -->
+<P58>8</P58>
+
+<!--  Third codec. -->
+<P59>4</P59>
+
+<!--  Forth codec. -->
+<P60>18</P60>
+
+<!--  Fifth codec. -->
+<P61>9</P61>
+
+<!--  Sixth codec. -->
+<P62>3</P62>
+
+<!--  Seventh codec. -->
+<P46>0</P46>
+
+<!--  Eighth codec. -->
+<P98>0</P98>
+
+<!--  Preferred Video Codec:   99 - H.264, 34 - H.263, 100 - H.263+ (1998) -->
+<!--  Choice 1 -->
+<P295>99</P295>
+
+<!--  Choice 2 -->
+<P296>99</P296>
+
+<!--  Choice 3 -->
+<P1307>99</P1307>
+
+<!--  Enable RFC5168 support: 0 - Disabled, 1 - Enabled -->
+<P1331>0</P1331>
+
+<!--  H.264 image size selection: 0 - QVGA (Default), 2 - WQVGA, 3 - QQVGA, 5- CIF, 6 - QCIF. Default value is 0 -->
+<P2307>0</P2307>
+
+<!--  H.264 Payload Type, Allowed value: 96-127 -->
+<P293>99</P293>
+
+<!--  H.263+ Paylod Type, Allowed value: 96-127 -->
+<P350>100</P350>
+
+<!--  L16-256 Paylod Type, Allowed value: 96-127 -->
+<P2300>98</P2300>
+
+<!--  H.263 Encoder Resolution. 0 - CIF, 1 - QCIF. -->
+<P1330>0</P1330>
+
+<!--  SRTP Mode 0- Disabled. 1- Enabled but not forced. 2- Enabled and forced. -->
+<P183>0</P183>
+
+<!--  Silence Suppression. 0 - No, 1 - Yes. -->
+<P50>0</P50>
+
+<!--  Voice Frames per TX. -->
+<!--  Allowed value: 1-64 -->
+<P37>2</P37>
+
+<!--  G723 Rate (0- 6.3 kbps, 1- 5.3kbps) -->
+<P49>1</P49>
+
+<!--  Jitter Buffer Type (0-Fixed , 1 -Adaptive) -->
+<P133>1</P133>
+
+<!--  Jitter Buffer Length (0-Low, 1-Medium, 2- High) -->
+<P132>1</P132>
+
+<!--  Send Silent RTP Packets on Mute. 0 - No (Default), 1 - Yes. -->
+<P2328>0</P2328>
+
+
+<!--   Account1 Call Settings -->
+
+
+<!--  Dial Plan Prefix, MaxLength 32 -->
+<P66></P66>
+
+<!--  Dial Plan Maxlength: unlimited, default is allow all { x+ | *x+ | *xx*x+ } -->
+<P290>{$grandstream_dial_plan}</P290>
+
+<!--  Early Dial. 0 - No, 1 - Yes -->
+<P29>0</P29>
+
+<!--  Refer-To Use Target Contact. 0 - No, 1 - Yes -->
+<P135>0</P135>
+
+<!--  Auto Answer.0 - No, 1 - Yes, 2 - Intercom/Paging -->
+<P90>0</P90>
+
+<!--  Send Anonymous. 0 - No, 1 - Yes ((caller ID will be blocked if set to Yes) -->
+<P65>0</P65>
+
+<!--  Anonymous Call Rejection.  0 - No (default),  1 - Yes -->
+<P129>0</P129>
+
+<!--  Special Feature.  100-Standard, 108-CBCOM, 109-RNK, 113-China Mobile, 114-ZTE IMS, 115-Mobotix, 116-ZTE NGN, 117-Huawei IMS. -->
+<P198>100</P198>
+
+<!--  Feature Key Synchronization.   0 - Disable (default),  1 - Broadsoft. -->
+<P2325>0</P2325>
+
+<!--  Enable Call Features. 0 - No, 1 - Yes. -->
+<P191>1</P191>
+
+<!--  Delayed Call Forward Wait Time (s). Default is 20 seconds, maxlength = 5 -->
+<P139>20</P139>
+
+<!--  No Key Entry Timeout (s), Allowed value: 1-15 -->
+<P85>4</P85>
+
+<!--  Ring Timeout. (10-300, default is 60 seconds) -->
+<P1328>60</P1328>
+
+<!--  Transfer on Conference Hangup. 0 - No, 1 - Yes -->
+<P2304>0</P2304>
+
+<!--  Use #  as Dial Key. 0 - No, 1 - Yes. -->
+<P72>1</P72>
+
+<!--  Account Ring Tone, Maxlength = 128 -->
+<!-- P104 = -->
+
+<!--  Match Incoming Caller ID1 -->
+<!-- P871 = -->
+
+<!--  Distinctive Ring Tone1, Maxlength = 128 -->
+<!-- P870 = -->
+
+<!--  Match Incoming Caller ID2 -->
+<!-- P873 = -->
+
+<!--  Distinctive Ring Tone2, Maxlength = 128 -->
+<!-- P872 = -->
+
+<!--  Match Incoming Caller ID3 -->
+<!-- P875 = -->
+
+<!--  Distinctive Ring Tone3, Maxlength = 128 -->
+<!-- P874 = -->
+
+
+<!--   Account2 Settings -->
+
+
+
+<!--   Account2 General Settings -->
+
+
+<!--  Account Active. 0 - No, 1 - Yes -->
+<P401>1</P401>
+
+<!--  Account Name , MaxLength 64 characters -->
+<P417></P417>
+
+<!--  SIP Server , MaxLength 64 characters -->
+<P402></P402>
+
+<!--  SIP User ID, MaxLength 64 characters -->
+<P404></P404>
+
+<!--  Authenticate ID, MaxLength 64 characters -->
+<P405></P405>
+
+<!--  Authenticate Password, MaxLength: unlimited -->
+<P406></P406>
+
+<!--  Voicemail UserID (User ID/extension for 3rd party voice mail system) -->
+<!--  MaxLength 64 characters -->
+<P426></P426>
+
+<!--  Name (Display name :John Doe), MaxLength 64 characters -->
+<P407></P407>
+
+<!--  Tel URL Support. 0 - disabled, 1 - User is phone, 2 - Tel URI. Default value is 0 -->
+<P409>0</P409>
+
+<!--  Customized User ID Display for Account 2 -->
+<P2449></P2449>
+
+
+<!--   Account2 Network Settings -->
+
+
+<!--  Outbound Proxy, MaxLength 32 characters -->
+<P403></P403>
+
+<!--  Secondary Outbound Proxy -->
+<P2433></P2433>
+
+<!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
+<P408>0</P408>
+
+<!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep-alive, 3- UPnP, 4- Auto, 5- VPN -->
+<P414>2</P414>
+
+<!--  Proxy-Require, MaxLength 32 characters -->
+<P418></P418>
+
+
+<!--   Account2 SIP Settings -->
+
+
+<!--  SIP Registration. 0 - No, 1 - Yes. -->
+<P410>1</P410>
+
+<!--  Unregister On Reboot. 0 - No, 1 - Yes. -->
+<P411>0</P411>
+
+<!--  Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
+<P412>{$account.2.register_expires}</P412>
+
+<!--  Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
+<P471>20</P471>
+
+<!--  Local SIP Port (Allowed value: 5-65535, default 5062) -->
+<P413>5062</P413>
+
+<!--  SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication) -->
+<!--  0 - No, 1 - Yes. -->
+<P415>0</P415>
+
+<!--  Session Expiration (in seconds. Allowed value: 90-64800, default 180 seconds) -->
+<P434>180</P434>
+
+<!--  Min-SE (s)(Allowed value: 90-64800, default 90 seconds) -->
+<P427>90</P427>
+
+<!--  UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS -->
+<P432>0</P432>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P433>1</P433>
+
+<!--  Force INVITE(Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!--  0 - No, 1 - Yes -->
+<P431>0</P431>
+
+<!--  Caller Request Timer(Request for timer when calling). 0 - No, 1 - Yes -->
+<P428>0</P428>
+
+<!--  Callee Request Timer(Request for timer when called. -->
+<!--  i.e. if remote party supports timer but did not request for one). 0 - No, 1 - Yes -->
+<P429>0</P429>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) -->
+<!--  0 - No, 1 - Yes -->
+<P430>0</P430>
+
+<!--  Enable 100rel. 0 - No, 1 - Yes -->
+<P435>0</P435>
+
+<!--  SIP Transport (0- UDP , 1- TCP, 2 -TLS) -->
+<P448>0</P448>
+
+<!--  Symmetric RTP (0 - No, 1 - Yes) -->
+<P460>0</P460>
+
+<!--  Support SIP Instance ID (0 - No, 1 - Yes) -->
+<P489>1</P489>
+
+<!--  Validate Incoming Messages (0 - No, 1 - Yes) -->
+<P2406>0</P2406>
+
+<!--  Check SIP User ID for Incoming INVITE (0 - No, 1 - Yes) -->
+<P449>0</P449>
+
+<!--  Authenticate Incoming INVITE (0 - No, 1 - Yes) -->
+<P2446>0</P2446>
+
+<!--  Accept SIP Requests from Known Servers (0- no, 1 -yes) -->
+<P2447>0</P2447>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. -->
+<P440>50</P440>
+
+<!--  SIP T2 Timeout. RFC 3261 T2 value. -->
+<!--  The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P441>400</P441>
+
+<!--  Remove OBP from route (0 - No, 1 - Yes) -->
+<P2405>0</P2405>
+
+
+<!--   Account2 Codec Settings -->
+
+
+<!--  Start video automatically. 0 - No, 1 - Yes. Default value is 1. -->
+<P2414>1</P2414>
+
+<!--  Remote Video Request.  0 - Prompt (Default), 1 - Accept Automatically, 2 - Deny Automatically -->
+<P2426>0</P2426>
+
+<!--  DTMF in audio (0 - No, 1 - Yes) -->
+<P2401>0</P2401>
+
+<!--  DTMF via RFC2833 (0 - No, 1 - Yes) -->
+<P2402>1</P2402>
+
+<!--  DTMF via SIP INFO (0 - No, 1 - Yes) -->
+<P2403>0</P2403>
+
+<!--  DTMF Payload Type, Allowed value: 96-127 -->
+<P496>101</P496>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - L16-256 -->
+
+<!--  First codec. -->
+<P451>0</P451>
+
+<!--  Second codec. -->
+<P452>8</P452>
+
+<!--  Third codec. -->
+<P453>4</P453>
+
+<!--  Forth codec. -->
+<P454>18</P454>
+
+<!--  Fifth codec. -->
+<P455>9</P455>
+
+<!--  Sixth codec. -->
+<P456>3</P456>
+
+<!--  Seventh codec. -->
+<P457>0</P457>
+
+<!--  Eighth codec. -->
+<P458>0</P458>
+
+<!--  Preferred Video Codec:   99 - H.264, 34 - H.263, 100 - H.263+ (1998) -->
+<!--  Choice 1 -->
+<P464>99</P464>
+
+<!--  Choice 2 -->
+<P465>99</P465>
+
+<!--  Choice 3 -->
+<P475>99</P475>
+
+<!--  Enable RFC5168 support: 0 - Disabled, 1 - Enabled -->
+<P478>0</P478>
+
+<!--  H.264 image size selection: 0 - QVGA (Default), 2 - WQVGA, 3 - QQVGA, 5- CIF, 6 - QCIF. Default value is 0 -->
+<P2407>0</P2407>
+
+<!--  H.264 Payload Type, Allowed value: 96-127 -->
+<P462>99</P462>
+
+<!--  H.263+ Payload Type, Allowed value: 96-127 -->
+<P473>100</P473>
+
+<!--  L16-256 Payload Type, Allowed value: 96-127 -->
+<P2400>98</P2400>
+
+<!--  H.263 Encoder Resolution. 0- CIF, 1-QCIF. -->
+<P477>0</P477>
+
+<!--  SRTP Mode. 0- Disabled. 1- Enabled but not forced. 2- Enabled and forced. -->
+<P443>0 </P443>
+
+<!--  Silence Suppression. 0-No, 1 -Yes. -->
+<P485>0</P485>
+
+<!--  Voice Frames per TX. -->
+<!--  Allowed value: 1-64 -->
+<P486>2</P486>
+
+<!--  G723 Rate (0- 6.3 kbps, 1- 5.3kbps) -->
+<P493>1</P493>
+
+<!--  Jitter Buffer Type (0-Fixed , 1 -Adaptive) -->
+<P498>1</P498>
+
+<!--  Jitter Buffer Length (0-Low, 1-Medium, 2- High) -->
+<P497>1</P497>
+
+<!--  Send Silent RTP Packets on Mute. 0 - No (Default), 1 - Yes. -->
+<P2428>0</P2428>
+
+
+<!--   Account2 Call Settings -->
+
+
+<!--  Dial Plan Prefix, MaxLength 32 -->
+<P419></P419>
+
+<!--  Dial Plan Maxlength: unlimited, default is allow all { x+ | *x+ | *xx*x+ } -->
+<P459>{ x+ | *x+ | *xx*x+ }</P459>
+
+<!--  Early Dial. 0 - No, 1 - Yes -->
+<P422>0</P422>
+
+<!--  Refer-To Use Target Contact. 0 - No, 1 - Yes -->
+<P469>0</P469>
+
+<!--  Auto Answer.0 - No, 1 - Yes, 2 - Intercom/Paging -->
+<P425>0</P425>
+
+<!--  Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes) -->
+<P421>0</P421>
+
+<!--  Anonymous Call Rejection.  0 - No (default),  1 - Yes -->
+<P446>0</P446>
+
+<!--  Special Feature.  100-Standard, 108-CBCOM, 109-RNK, 113-China Mobile, 114-ZTE IMS, 115-Mobotix, 116-ZTE NGN, 117-Huawei IMS. -->
+<P424>100</P424>
+
+<!--  Enable Call Features. 0 - No, 1 - Yes. -->
+<P420>1</P420>
+
+<!--  Feature Key Synchronization.   0 - Disable (default),  1 - Broadsoft. -->
+<P2425>0</P2425>
+
+<!--  Delayed Call Forward Wait Time (s). Default is 20 seconds, maxlength = 5 -->
+<P470>20</P470>
+
+<!--  No Key Entry Timeout (s), Allowed value: 1-15 -->
+<P491>4</P491>
+
+<!--  Ring Timeout. (10-300, default is 60 seconds) -->
+<P476>60</P476>
+
+<!--  Transfer on Conference Hangup. 0 - No, 1 - Yes -->
+<P2404>0</P2404>
+
+<!--  Use #  as Dial Key. 0 - No, 1 - Yes. -->
+<P492>1</P492>
+
+<!--  Account Ring Tone, Maxlength = 128 -->
+<!-- P423 = -->
+
+<!--  Match Incoming Caller ID1 -->
+<!-- P881 = -->
+
+<!--  Distinctive Ring Tone1, Maxlength = 128 -->
+<!-- P880 = -->
+
+<!--  Match Incoming Caller ID2 -->
+<!-- P883 = -->
+
+<!--  Distinctive Ring Tone2, Maxlength = 128 -->
+<!-- P882 = -->
+
+<!--  Match Incoming Caller ID3 -->
+<!-- P885 = -->
+
+<!--  Distinctive Ring Tone3, Maxlength = 128 -->
+<!-- P884 = -->
+
+
+<!--   Account3 Settings -->
+
+
+
+<!--   Account3 Settings/ General Settings -->
+
+<!--  Account Active. 0 - No, 1 - Yes -->
+<P501>1</P501>
+
+<!--  Account Name, MaxLength 64 characters -->
+<P517></P517>
+
+<!--  SIP Server, MaxLength 64 characters -->
+<P502></P502>
+
+<!--  SIP User ID, MaxLength 64 characters -->
+<P504></P504>
+
+<!--  Authenticate ID, MaxLength 64 characters -->
+<P505></P505>
+
+<!--  Authenticate Password, MaxLength: unlimited -->
+<P506></P506>
+
+<!--  Voicemail UserID (User ID/extension for 3rd party voice mail system) -->
+<!--  MaxLength 64 characters -->
+<P526></P526>
+
+<!--  Name (Display name :John Doe, MaxLength 64 characters) -->
+<P507></P507>
+
+<!--  Tel URL Support. 0 - Disabled, 1 - User is phone, 2 - Tel URI. Default value is 0 -->
+<P509>0</P509>
+
+<!--  Customized User ID Display for Account 3 -->
+<P2549></P2549>
+
+
+<!--   Account3 Network Settings -->
+
+
+<!--  Outbound Proxy, MaxLength 32 characters -->
+<P503></P503>
+
+<!--  Secondary Outbound Proxy -->
+<P2533></P2533>
+
+<!--  DNS Mode  0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
+<P508>0</P508>
+
+<!--  NAT Traversal. 0 - No, 1 - STUN, 2 - keep-alive, 3- UPnP, 4- Auto, 5- VPN -->
+<P514>2</P514>
+
+<!--  Proxy-Require, MaxLength 32 characters -->
+<P518></P518>
+
+<!--   Account3 SIP Settings -->
+
+
+<!--  SIP Registration. 0 - No, 1 - Yes. -->
+<P510>1</P510>
+
+<!--  Unregister On Reboot. 0 - No, 1 - Yes. -->
+<P511>0</P511>
+
+<!--  Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
+<P512>{$account.3.register_expires}</P512>
+
+<!--  Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
+<P571>20</P571>
+
+<!--  Local SIP Port (Allowed value: 5-65535, default 5064) -->
+<P513>5064</P513>
+
+<!--  SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication) -->
+<!--  0 - No, 1 - Yes. -->
+<P515>0</P515>
+
+<!--  Session Expiration (in seconds. default 180 seconds. Allowed value: 90-64800) -->
+<P534>180</P534>
+
+<!--  Min-SE (s)(Allowed value: 5-65535, default 90 seconds) -->
+<P527>90</P527>
+
+<!--  UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS -->
+<P532>0</P532>
+
+<!--  UAS Specify Refresher. 1 - UAC, 2 - UAS -->
+<P533>1</P533>
+
+<!--  Force INVITE(Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!--  0 - No, 1 - Yes -->
+<P531>0</P531>
+
+<!--  Caller Request Timer(Request for timer when calling) 0 - No, 1 - Yes -->
+<P528>0</P528>
+
+<!--  Callee Request Timer(Request for timer when called. -->
+<!--  i.e. if remote party supports timer but did not request for one) 0 - No, 1 - Yes -->
+<P529>0</P529>
+
+<!--  Force Timer (Still use timer when remote party does not support timer) 0 - No, 1 - Yes -->
+<P530>0</P530>
+
+<!--  Enable 100rel. 0 - No, 1 - Yes -->
+<P535>0</P535>
+
+<!--  SIP Transport (0- UDP , 1- TCP, 2 -TLS) -->
+<P548>0</P548>
+
+<!--  Symmetric RTP (0 - No, 1 - Yes) -->
+<P560>0</P560>
+
+<!--  Support SIP Instance ID (0 - No, 1 - Yes) -->
+<P589>1</P589>
+
+<!--  Validate Incoming Messages (0 - No, 1 - Yes) -->
+<P2506>0</P2506>
+
+<!--  Check SIP User ID for Incoming INVITE (0 - No, 1 - Yes) -->
+<P549>0</P549>
+
+<!--  Authenticate Incoming INVITE (0 - No, 1 - Yes) -->
+<P2546>0</P2546>
+
+<!--  Accept SIP Requests from Known Servers (0 - No, 1 - Yes) -->
+<P2547>0</P2547>
+
+<!--  SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!--  50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. -->
+<P540>50</P540>
+
+<!--  SIP T2 Timeout. RFC 3261 T2 value. -->
+<!--  The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!--  200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 400. -->
+<P541>400</P541>
+
+<!--  Remove OBP from route (0 - No, 1 - Yes) -->
+<P2505>0</P2505>
+
+
+<!--   Account3 Codec Settings -->
+
+
+<!--  Start video automatically. 0 - No, 1 - Yes. Default value is 1. -->
+<P2514>1</P2514>
+
+<!--  Remote Video Request.  0 - Prompt (Default), 1 - Accept Automatically, 2 - Deny Automatically -->
+<P2526>0</P2526>
+
+<!--  DTMF - in audio (method to send DTMF)  0 - No, 1 - Yes. -->
+<P2501>0</P2501>
+
+<!--  DTMF- in RFC2833 (method to send DTMF)  0 - No, 1 - Yes -->
+<P2502>1</P2502>
+
+<!--  DTMF- in SIP INFO (method to send DTMF)  0 - No, 1 - Yes -->
+<P2503>0</P2503>
+
+<!--  DTMF Payload Type, Allowed value: 96-127 -->
+<P596>101</P596>
+
+<!--  Preferred Vocoder -->
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - L16-256 -->
+
+<!--  First codec. -->
+<P551>0</P551>
+
+<!--  Second codec. -->
+<P552>8</P552>
+
+<!--  Third codec. -->
+<P553>4</P553>
+
+<!--  Forth codec. -->
+<P554>18</P554>
+
+<!--  Fifth codec. -->
+<P555>9</P555>
+
+<!--  Sixth codec. -->
+<P556>3</P556>
+
+<!--  Seventh codec. -->
+<P557>0</P557>
+
+<!--  Eighth codec. -->
+<P558>0</P558>
+
+<!--  Preferred Video Codec:   99 - H.264, 34 - H.263, 100 - H.263+ (1998) -->
+<!--  Choice 1 -->
+<P564>99</P564>
+
+<!--  Choice 2 -->
+<P565>99</P565>
+
+<!--  Choice 3 -->
+<P575>99</P575>
+
+<!--  Enable RFC5168 support: 0 - Disabled, 1 - Enabled -->
+<P578>0</P578>
+
+<!--  H.264 image size selection: 0 - QVGA (Default), 2 - WQVGA, 3 - QQVGA, 5- CIF, 6 - QCIF. Default value is 0 -->
+<P2507>0</P2507>
+
+<!--  H.264 Payload Type, Allowed value: 96-127 -->
+<P562>99</P562>
+
+<!--  H.263+ Payload Type, Allowed value: 96-127 -->
+<P573>100</P573>
+
+<!--  L15-256 Payload Type, Allowed value: 96-127 -->
+<P2500>98</P2500>
+
+<!--  H.263 Encoder Resolution. 0- CIF, 1- QCIF. -->
+<P577>0</P577>
+
+<!--  SRTP Mode. 0- Disabled. 1- Enabled but not forced. 2- Enabled and forced. -->
+<P543>0</P543>
+
+<!--  Silence Suppression. 0 - No, 1 - Yes. -->
+<P585>0</P585>
+
+<!--  Voice Frames per TX. -->
+<!--  Allowed value: 1-64 -->
+<P586>2</P586>
+
+<!--  G723 Rate (0- 6.3 kbps, 1- 5.3kbps) -->
+<P593>1</P593>
+
+<!--  Jitter Buffer Type (0-Fixed , 1 -Adaptive) -->
+<P598>1</P598>
+
+<!--  Jitter Buffer Length (0-Low, 1-Medium, 2- High) -->
+<P597>1</P597>
+
+<!--  Send Silent RTP Packets on Mute.  0 - No, 1 - Yes. -->
+<P2528>0</P2528>
+
+
+<!--   Account3 Call Settings -->
+
+
+<!--  Dial Plan Prefix, MaxLength 32 -->
+<P519></P519>
+
+<!--  Dial Plan Maxlength: unlimited, default is allow all { x+ | *x+ | *xx*x+ } -->
+<P559>{ x+ | *x+ | *xx*x+ }</P559>
+
+<!--  Early Dial. 0 - No, 1 - Yes -->
+<P522>0</P522>
+
+<!--  Refer-To Use Target Contact. 0 - No, 1 - Yes -->
+<P569>0</P569>
+
+<!--  Auto Answer.0 - No, 1 - Yes, 2 - Intercom/Paging -->
+<P525>0</P525>
+
+<!--  Send Anonymous. 0 - No, 1 - Yes (caller ID will be blocked if set to Yes) -->
+<P521>0</P521>
+
+<!--  Anonymous Call Rejection.  0 - No (default),  1 - Yes -->
+<P546>0</P546>
+
+<!--  Special Feature  100-Standard, 108-CBCOM, 109-RNK, 113-China Mobile, 114-ZTE IMS, 115-Mobotix, 116-ZTE NGN, 117-Huawei IMS. -->
+<P524>100</P524>
+
+<!--  Feature Key Synchronization.   0 - Disable (default),  1 - Broadsoft. -->
+<P2525>0</P2525>
+
+<!--  Enable Call Features. 0 - No, 1 - Yes. -->
+<P520>1</P520>
+
+<!--  Delayed Call Forward Wait Time (s). Default is 20 seconds, maxlength = 5 -->
+<P570>20</P570>
+
+<!--  No Key Entry Timeout (s), Allowed value: 1-15 -->
+<P591>4</P591>
+
+<!--  Ring Timeout. (10-300, default is 60 seconds) -->
+<P576>60</P576>
+
+<!--  Transfer on Conference Hangup. 0 - No, 1 - Yes -->
+<P2504>0</P2504>
+
+<!--  Use #  as Dial Key. 0 - No, 1 - Yes. -->
+<P592>1</P592>
+
+<!--  Account Ring Tone, Maxlength = 128 -->
+<!-- P523 = -->
+
+<!--  Match Incoming Caller ID1 -->
+<!-- P7061 = -->
+
+<!--  Distinctive Ring Tone1, Maxlength = 128 -->
+<!-- P7060 = -->
+
+<!--  Match Incoming Caller ID2 -->
+<!-- P7063 = -->
+
+<!--  Distinctive Ring Tone2, Maxlength = 128 -->
+<!-- P7062 = -->
+
+<!--  Match Incoming Caller ID3 -->
+<!-- P7065 = -->
+
+<!--  Distinctive Ring Tone3, Maxlength = 128 -->
+<!-- P7064 = -->
+
+
+<!--   Advanced Settings -->
+
+
+
+<!--   Advanced Settings/ General Settings -->
+
+
+<!--  Local RTP Port, Allowed value: 5-65535 -->
+<P39>5004</P39>
+
+<!--  Use Random Port. 0 - No, 1 - Yes -->
+<P78>0</P78>
+
+<!--  Disable in-call DTMF display.  0 - No, 1 - Yes -->
+<P338>0</P338>
+
+<!--  Keep-alive Interval (s)(in seconds. Allowed value: 10-160, default 20 seconds) -->
+<P84>20</P84>
+
+<!--  STUN Server, MaxLength 32 characters -->
+<!-- P76 = stun.ipvideotalk.com -->
+
+<!--  Use NAT IP  This will enable our SIP client to use this IP in the SIP message. -->
+<!--  Example 64.3.153.50. -->
+<P101></P101>
+
+<!--  SIP SSL Certificate -->
+<!-- P280 = -->
+
+<!--  SIP SSL Private Key -->
+<!-- P279 = -->
+
+<!--  SIP SSL Private Key Password -->
+<!-- P281 = -->
+
+
+<!--   Advanced Settings/ Call Features -->
+<!--  Disable Call-Waiting. 0 - No, 1 - Yes -->
+<P91>0</P91>
+
+<!--  Disable Call-Waiting Tone. 0 - No (Default), 1 - Yes -->
+<P186>0</P186>
+
+<!--  Disable DND Reminder Ring.  0 - No (Default), 1 - Yes -->
+<P1486>0</P1486>
+
+<!--  Disable Direct IP Call. 0 - No, 1 - Yes -->
+<P277>0</P277>
+
+<!--  Escape '# ' as %23 in SIP URI.  0 - No, 1 - Yes -->
+<P1406>1</P1406>
+
+<!--  Offhook Auto Dial -->
+<P71></P71>
+
+<!--   Advanced Settings/ Video Settings -->
+
+
+<!--  Enable Motion Detection. 0 - No, 1- Yes -->
+<P7044>1</P7044>
+
+<!--  Video Frame Rate: default - 15 ( 5, 10, 12, 15, 20, 25, 30 frames/second). -->
+<P904>15</P904>
+
+<!--  Video Bit Rate(kbps): default is 128 ( 32, 64, 128, 160, 192, 224, 256, 320, 384, 512, 768, 1024 kbps). -->
+<P905>128</P905>
+
+<!--  Video Packet Size: maxlength = 4, from 300~1400, default is 1400 -->
+<P927>1400</P927>
+
+<!--  Video Rate Control. 0 - Frame, 1 - TMN8, 2 - GOP -->
+<P924>0</P924>
+
+<!--  Video Frame Skipping. 0 - No, 1 - Yes -->
+<P925>0</P925>
+
+<!--  I-Frame Reference Only. 0 - No, 1- Yes -->
+<P949>0</P949>
+
+<!--  Packetization Mode. 0- for 0, 1- for 1. -->
+<P957>0</P957>
+
+<!--  Redundant P-frame. 0 - No, 1- Yes -->
+<P956>0</P956>
+
+<!--  Adaptive MB Intra Refresh. 0 - No, 1- Yes -->
+<P958>0</P958>
+
+<!--  Video Packet Loss Rate. 0 - Less Than 5%, 1 - Less than 10%, 2 - Less than 15% -->
+<!--  3 - Less than 20%, 4 - Less than 25% -->
+<P959>1</P959>
+
+
+<!--   Maintenance -->
+
+
+
+<!--   Maintenance/ Network Settings -->
+
+
+<!--  Address Type. 0 - DHCP (default), 1 - Static, 2 - PPPoE -->
+<!-- P8 = 0 -->
+
+<!--  PPPoE Account ID, MaxLength 32 -->
+<!--  P82 = -->
+
+<!--  PPPoE password, MaxLength 32 -->
+<!--  P83 = -->
+
+<!--  PPPoE service name, MaxLength 32 -->
+<!--  P269 = -->
+
+<!--  Host name, DHCP option 12. Maxlength: unlimited -->
+<P146></P146>
+
+<!--  Domain name, DHCP option 15. Maxlength is 64 characters -->
+<P147></P147>
+
+<!--  Vendor Class ID, DHCP option 60. Maxlength: unlimited -->
+<P148>GXV</P148>
+
+<!--  Static IP. IP address -->
+<!-- P9 = 192 -->
+<!-- P10 = 168 -->
+<!-- P11 = 0 -->
+<!-- P12 = 160 -->
+
+<!--  Static IP. Subnet Mask -->
+<!-- P13 = 255 -->
+<!-- P14 = 255 -->
+<!-- P15 = 0 -->
+<!-- P16 = 0 -->
+
+<!--  Static IP. Default Gateway -->
+<!-- P17 = 0 -->
+<!-- P18 = 0 -->
+<!-- P19 = 0 -->
+<!-- P20 = 0 -->
+
+<!--  Static IP. DNS Server 1. Ignore if DHCP or PPPoE is used -->
+<!-- P21 = 0 -->
+<!-- P22 = 0 -->
+<!-- P23 = 0 -->
+<!-- P24 = 0 -->
+
+<!--  Static IP. DNS Server 2. Ignore if DHCP or PPPoE is used -->
+<!-- P25 = 0 -->
+<!-- P26 = 0 -->
+<!-- P27 = 0 -->
+<!-- P28 = 0 -->
+
+<!--  Preferred DNS server, four field, octet digits -->
+<P92>0</P92>
+<P93>0</P93>
+<P94>0</P94>
+<P95>0</P95>
+
+<!--  Layer 3 QoS for SIP -->
+<P1558>46</P1558>
+
+<!--  Layer 3 QoS for Audio -->
+<P1559>46</P1559>
+
+<!--  Layer 3 QoS for Video -->
+<P1560>46</P1560>
+
+<!--  Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP) -->
+<!--  Allowed value: 0-4095 -->
+<P51>0</P51>
+
+<!--  Layer 2 QoS. 802.1p priority value -->
+<!--  Allowed value: 0-7 -->
+<P87>0</P87>
+
+<!--  802.1x Mode: 0- 802.1x disabled (Default), 1- EAP/MD5 -->
+<P7901>0</P7901>
+
+<!--  802.1x Identity, MaxLength 64 -->
+<!--  P7902 = -->
+
+<!--  MD5 Password, MaxLength 64 -->
+<!--  P7903 = -->
+
+<!--  User Agent.  Customized HTTP User-Agent header. -->
+<!--  MaxLength 64 -->
+<P1541></P1541>
+
+
+<!--   Maintenance/ Wifi Settings -->
+
+
+<!--  Wifi Function. 0- Disable, 1- Enable -->
+<!-- P7800 = 0 -->
+
+<!--  Wireless-Mode.  (0-10) -->
+
+<!-- 0 - legacy 11b/g mixed -->
+<!-- 1 - legacy 11B onlyP7802 = 0 -->
+<!-- 2 - legacy 11A only -->
+<!-- 3 - legacy 11a/b/g mixed -->
+<!-- 4 - legacy 11G only * -->
+<!-- 5 - 11ABGN mixed * -->
+<!-- 6 - 11N only * -->
+<!-- 7 - 11GN mixed * -->
+<!-- 8 - 11AN mixed *  -->
+<!-- 9 - 11BGN mixed *  (Default) -->
+<!-- 10 - 11AGN mixed * -->
+
+<!-- P7802 = 9 -->
+
+<!--  Wifi Network Type. Infra, Adhoc -->
+<!-- P7811 = Infra -->
+
+<!--  Channel (different options depends on CountryRegion) -->
+<!--  Default is Auto - 0 ( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 channel). -->
+<!-- P7813 = 0 -->
+
+<!--  ESSID -->
+<!-- P7812 = -->
+
+<!--  Authentication Mode. OPEN, SHARED, WEPAUTO, WPAPSK, WPA2PSK, WPANONE -->
+<!-- P7814 = OPEN -->
+
+<!--  Encryption.    AES, TKIP, WEP, NONE. -->
+<!-- P7815 = NONE -->
+
+<!--  WEP Default Key ID. (1 to 4) -->
+<!-- P7820 = 1 -->
+
+<!--  WEP Default Key, MaxLength 64 -->
+<!-- P7821 = -->
+<!-- P7822 = -->
+<!-- P7823 = -->
+<!-- P7824 = -->
+
+<!--  WPAPSK key, MaxLength 64 -->
+<!-- P7829 = -->
+
+
+<!--   Maintenance/ Time Settings -->
+
+
+<!--  NTP Server, MaxLength 32 -->
+<!-- P30 = ntp.ipvideotalk.com -->
+
+<!--  DHCP Option 42 override NTP server. 0 - No, 1 - Yes. Default is Yes. -->
+<!--  When set to Yes(1), it will override the configured NTP server. -->
+<P144>1</P144>
+
+<!--  DHCP Option 2 to Override Time Zone setting. 0 - No, 1 - Yes. -->
+<!--  When set to Yes(1), it will override the configured Time Zone setting if available. -->
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+
+<!--  Time Zone -->
+
+<!--  Australia -->
+<!--    Melbourne,Canberra,Sydney EST-10EDT-11,M10.5.0/02:00:00,M3.5.0/03:00:00 -->
+<!--    Perth                     WST-8 -->
+<!--    Brisbane                  EST-10 -->
+<!--    Adelaide                  CST-9:30CDT-10:30,M10.5.0/02:00:00,M3.5.0/03:00:00 -->
+<!--    Darwin                    CST-9:30 -->
+<!--    Hobart                    EST-10EDT-11,M10.1.0/02:00:00,M3.5.0/03:00:00 -->
+
+<!--  Europe -->
+<!--    Amsterdam, Netherlands    CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Athens, Greece            EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00 -->
+<!--    Barcelona, Spain          CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Berlin, Germany           CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Brussels, Belgium         CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Budapest, Hungary         CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Copenhagen, Denmark       CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Dublin, Ireland           GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+<!--    Geneva, Switzerland       CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Helsinki, Finland         EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00 -->
+<!--    Kyiv, Ukraine             EET-2EEST,M3.5.0/3,M10.5.0/4 -->
+<!--    Lisbon, Portugal          WET-0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+<!--    London, Great Britain     GMT+0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+<!--    Madrid, Spain             CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Oslo, Norway              CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Paris, France             CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Prague, Czech Republic    CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Roma, Italy               CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Moscow, Russia            MSK-3MSD,M3.5.0/2,M10.5.0/3 -->
+<!--    St.Petersburg, Russia     MST-3MDT,M3.5.0/2,M10.5.0/3 -->
+<!--    Stockholm, Sweden         CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+<!--    Tallinn, Estonia          EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00 -->
+
+<!--  New Zealand -->
+<!--    Auckland, Wellington      NZST-12NZDT-13,M10.1.0/02:00:00,M3.3.0/03:00:00 -->
+
+<!--  USA & Canada1 -->
+<!--    Hawaii Time               HAW10 -->
+<!--    Alaska Time               AKST9AKDT -->
+<!--    Pacific Time              PST8PDT -->
+<!--    Mountain Time             MST7MDT -->
+<!--    Mountain Time (Arizona)   MST7 -->
+<!--    Central Time              CST6CDT -->
+<!--    Eastern Time              EST5EDT -->
+<!--    Atlantic Time             AST4ADT -->
+<!--    New Brunswick             AST4ADT,M4.1.0/00:01:00,M10.5.0/00:01:00 -->
+<!--    Newfoundland              NST+3:30NDT+2:30,M4.1.0/00:01:00,M10.5.0/00:01:00 -->
+
+<!--  Asia -->
+<!--    Jakarta                   WIB-7 -->
+<!--    Singapore                 SGT-8 -->
+<!--    Beijing, Taipei           TZY-8 -->
+<!--    Ulaanbaatar, Mongolia     ULAT-8ULAST,M3.5.0/2,M9.5.0/2 -->
+<!--    Japan, Korea, Yakutsk     TZY-9 -->
+
+<!--  Central and South America -->
+<!--    Brazil, Sao Paulo         BRST+3BRDT+2,M10.3.0,M2.3.0 -->
+<!--    Argentina                 UTC+3 -->
+<!--    Central America           CST+6 -->
+
+<!--  customize -->
+
+<!-- P64 = EST5EDT -->
+
+<!--  Self-Defined Time Zone, MaxLength 32 -->
+<!-- P246 = MTZ+6MDT+5,M4.1.0,M11.1.0 -->
+
+<!--  Time Display Format. 12hr - 0, 24hr - 1 (Default). -->
+<P122>1</P122>
+
+<!--  Date Display Format. YY-MM-DD - 0, MM-DD-YY - 1 (Default), DD-MM-YY - 2. -->
+<P102>1</P102>
+
+
+<!--   Maintenance/ Web/Telnet Access -->
+
+
+<!--  Disable Telnet. 0 - No, 1 - Yes -->
+<P276>0</P276>
+
+<!--  Web Access Method. 0 - HTTP, 1 - HTTPS -->
+<P900>0</P900>
+
+<!--  Web Port: HTTP default is 80 and HTTPS default is 443 -->
+<P901>80</P901>
+
+<!--  Admin password for web interface, max. length is 32 -->
+<P2>{$admin_password}</P2>
+
+<!--  End User Password, MaxLength 32 -->
+<!-- P196 = 123 -->
+<P196>{$user_password}</P196>
+
+<!--  Maintenance/ Upgrade and Provisioning -->
+
+
+<!--  Enable IP2Location auto config service. 0 - No, 1 - Yes. -->
+<P7070>1</P7070>
+
+<!--  Lock Keypad Update. 0 - No, 1 - Yes -->
+<P88>0</P88>
+
+<!--  Upgrade Via: (0 - TFTP,1 - HTTP and 2- HTTPS) -->
+<P212>2</P212>
+
+<!-- XML Config File Password -->
+<!-- String; between ascii values 33 and 126 -->
+<!-- Mandatory -->
+<P1359></P1359>
+
+<!--  HTTP/HTTPS User Name -->
+<!--  String; between ascii values 33 and 126 -->
+<P1360>{$http_auth_username}</P1360>
+
+<!--  HTTP/HTTPS Password -->
+<!--  String; between ascii values 33 and 126 -->
+<P1361>{$http_auth_password}</P1361>
+
+<!--  Firmware Server Path, MaxLength 128 -->
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+<P192>{$grandstream_firmware_path}/gxv3140/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}/gxv3140</P192>
+{else}
+<P192>{$domain_name}{$project_path}/app/provision</P192>
+{/if}
+
+<!--  Config Server Path, MaxLength 128 -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{elseif isset($domain_name)}
+<P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
+
+<!--  Firmware File Prefix, MaxLength 128 -->
+<P232></P232>
+
+<!--  Firmware File Postfix, MaxLength 128 -->
+<P233></P233>
+
+<!--  Config File Prefix, MaxLength 128 -->
+<P234></P234>
+
+<!--  Config File Postfix, MaxLength 128 -->
+<P235></P235>
+
+<!--  DHCP Option 66 Override server. 0 - No, 1 - Yes. Default is  Yes. -->
+<!--  When set to Yes(1), it will override the configured provision path and method. -->
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+
+<!--  DHCP Option 120 Override SIP Server.  0 - No, 1 - Yes. Default is  Yes. -->
+{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}{/if}
+
+<!--  Automatic Upgrade. 0 - No, 1 - Check every day, 2 - Check every week, 3 - Check at a Period Time. Default is 0. -->
+<P194>0</P194>
+
+<!--  Period time of upgrade checking. Unit is in minute, minimum 60 minutes, default is 7 days. -->
+<P193>10080</P193>
+
+<!--  Hour of the day (0-23) -->
+<P285>1</P285>
+
+<!--  Day of the week (0-6) -->
+<P286>1</P286>
+
+<!--  Automatic Upgrade Rule -->
+<!--  Use firmware pre/postfix to determine if f/w is required -->
+<!--  0 = Always Check for New Firmware -->
+<!--  1 = Check New Firmware only when F/W pre/suffix changes -->
+<!--  2 = Always Skip the Firmware Check -->
+<P238>0</P238>
+
+
+<!--   Maintenance/ Syslog -->
+
+
+<!--  Syslog Server- name of the server, max length is 32 charactors) -->
+<!-- P207 = log.ipvideotalk.com -->
+
+<!--  Syslog Level (Default setting is NONE) -->
+<!--  0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR -->
+<P208>0</P208>
+
+<!--  Send SIP Log. 0 - No, 1 - Yes -->
+<P1387>0</P1387>
+
+
+<!--   Maintenance/ Language -->
+
+
+<!--  Language Selection: cs - CZECH, de - DEUTSCH, dk - DANSK,  en - ENGLISH(default), es - ESPANOL, -->
+<!--  fr - FRANCAIS, he - Hebrew, it - ITALIANO, jp - JAPANESE, kr - KOREAN, -->
+<!--  nld - Dutch, ru - PYCCKNN, zh-tw  - Traditional CHINESE, zh - Simplified CHINESE. -->
+<!-- P1362 = en -->
+
+
+
+<!--   Maintenance/ TR-069 -->
+
+
+<!--  ACS URL - (Use a valid URL). -->
+<!--  MaxLength 64 -->
+<!-- P4503 = -->
+
+<!--  ACS Username, MaxLength 64 -->
+<!-- P4504 = -->
+
+<!--  ACS password, MaxLength 30 -->
+<!-- P4505 = -->
+
+<!--  Periodic Inform Enable. 0 - No (Default), 1 - Yes. -->
+<!-- P4506 = 0 -->
+
+<!--  Periodic Inform Interval (s) : -->
+<!-- P4507 = 300 -->
+
+<!--  Connection Request Username, MaxLength 64 -->
+<!-- P4511 = -->
+
+<!--  Connection Request Password, MaxLength 30 -->
+<!-- P4512 = -->
+
+<!--  Connection Request Auth Mode. 0 - No, 1 - Basic, 2 - Digest. Default is No. -->
+<P4519>2</P4519>
+
+<!--  Connection Request Port. 7547 - Default. -->
+<P4518>7547</P4518>
+
+
+<!--   Maintenance/OpenVPN Settings -->
+
+
+<!--  Enable OpenVPN, 0 - No, 1 - Yes -->
+<!-- P7050 = 0 -->
+
+<!--  OpenVPN Server Address, MaxLength 300 -->
+<!-- P7051 = -->
+
+<!--  OpenVPN Server Port, Allowed value: 5-65535 -->
+<!-- P7052 = -->
+
+
+<!--   Maintenance/ Device Manager -->
+
+
+<!--  Headset TX Gain (dB), Allowed value: -6, 0, 6 -->
+{if isset($grandstream_headset_tx_gain)}
+<P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
+<P1301>0</P1301>
+{/if}
+
+<!--  Headset RX Gain (dB), Allowed value: -6, 0, 6 -->
+{if isset($grandstream_headset_rx_gain)}
+<P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
+<P1302>0</P1302>
+{/if}
+
+<!--  Camera Zoom Mode -->
+<!--  value = 0   1.0:1 (wide and default) -->
+<!--  value = 1   1.1:1 -->
+<!--  value = 2   1.2:1 -->
+<!--  value = 3   1.3:1 -->
+<!--  value = 4   1.4:1 -->
+<!--  value = 5   1.5:1 -->
+<!--  value = 6   1.6:1 -->
+<!--  value = 7   1.7:1 -->
+<!--  value = 8   1.8:1 -->
+<!--  value = 9   1.9:1 -->
+<!--  value = 10  2.0:1 <optical tele) -->
+<!--  value = 11  2.2:1 -->
+<!--  value = 12  2.4:1 -->
+<!--  value = 13  2.6:1 -->
+<!--  value = 14  2.8:1 -->
+<!--  value = 15  3.0:1 -->
+<!--  value = 16  3.2:1 -->
+<!--  value = 17  3.4:1 -->
+<!--  value = 18  3.6:1 -->
+<!--  value = 19  3.8:1 -->
+<!--  value = 20  4.0:1 (digital tele) -->
+<P914>0</P914>
+
+<!--  Camera Exposure:    0 - 19 -->
+<P915>8</P915>
+
+<!--  Camera Color Mode:     0 = Color mode (Default), 1 = Monochrome -->
+<P919>0</P919>
+
+<!--  Camera White Balance:  0 = auto (Default), 1 = fixed -->
+<P920>0</P920>
+
+<!--  Camera Lens Correction: 0 = no, 1 = yes (Default) -->
+<P926>1</P926>
+
+<!--  Flicker Control: 0- auto, 1 - 60Hz, 2 - 50Hz -->
+<P7042>0</P7042>
+
+<!--  TV Output:  0 = off (Default) -->
+<!--  value = 0   Off -->
+<!--  value = 1   NTSC (4:3) -->
+<!--  value = 2   NTSC (16:9) -->
+<!--  value = 3   PAL (4:3) -->
+<!--  value = 4   PAL (16:9) -->
+<P916>0</P916>
+
+
+<!--   Application Setting/Phonebook -->
+
+
+<!--  Clear The Old List.  0 - No, 1 - Yes. -->
+<P1435>0</P1435>
+
+<!--  Replace Duplicate Items.  0 - No, 1 - Yes. -->
+<P1436>0</P1436>
+
+<!--  Download Mode.  0 - Off,  1 - TFTP, 2 - HTTP -->
+<P330>2</P330>
+
+<!--  Download Server URL. -->
+<P331></P331>
+
+<!--  Download Interval.  Default is 60 minutes. -->
+<!--  Allowed values: 0 - 720 -->
+<P332>60</P332>
+
+
+<!--   Application Setting/Browser Settings -->
+
+
+<!--  Start Browser on Boot. 0 - No (default), 1 - Yes -->
+<P950>0</P950>
+
+<!--  Browser Home Page.  maxlength=64 -->
+<!-- P952 = -->
+
+
+<!--   Application Setting/Skype -->
+
+<!--  Skype Maximum Video Bitrate: 256 (Default) -->
+<!--  Allowed value: 32 - 512 -->
+<!-- P8001 = 256 -->
+
+
+</config>
+</gs_provision>

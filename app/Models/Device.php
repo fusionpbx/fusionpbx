@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
+use App\Traits\HandlesStringBooleans;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Device extends Model
 {
-	use HasFactory, HasUniqueIdentifier, GetTableName;
+	use HasFactory, HasUniqueIdentifier, GetTableName, HandlesStringBooleans;
 	protected $table = 'v_devices';
 	protected $primaryKey = 'device_uuid';
 	public $incrementing = false;
@@ -49,6 +50,10 @@ class Device extends Model
         'device_provisioned_agent',
 	];
 
+    protected static $stringBooleanFields = [
+		'device_enabled'
+	];
+
 	public function domain(): BelongsTo {
 		return $this->belongsTo(Domain::class, 'domain_uuid', 'domain_uuid');
 	}
@@ -60,4 +65,18 @@ class Device extends Model
 	 public function settings(): HasMany {
         return $this->HasMany(DeviceSetting::class, 'device_uuid', 'device_uuid');
     }
+
+    public function profile(): BelongsTo {
+        return $this->belongsTo(DeviceProfile::class, 'device_profile_uuid', 'device_profile_uuid');
+    }
+
+    public function keys(): HasMany {
+        return $this->hasMany(DeviceKey::class, 'device_uuid', 'device_uuid');
+    } 
+
+    public function lines(): HasMany {
+        return $this->hasMany(DeviceLine::class, 'device_uuid', 'device_uuid');
+    }
+
+
 }

@@ -35,7 +35,11 @@ class DeviceVendorFunction extends Model
         'description',
     ];
 
+    public function groups(): BelongsToMany {
+        return $this->belongsToMany(DeviceVendorFunctionGroup::class, 'v_device_vendor_function_groups', 'device_vendor_function_uuid', 'group_uuid');
+    }
+
 	 public function devicevendor(): BelongsTo {
-        return $this->HasMany(DeviceVendor::class, 'device_vendor_uuid', 'device_vendor_uuid');
+        return $this->belongsTo(DeviceVendor::class, 'device_vendor_uuid', 'device_vendor_uuid');
     }
 }

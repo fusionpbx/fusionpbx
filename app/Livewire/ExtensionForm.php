@@ -56,8 +56,7 @@ class ExtensionForm extends Component
 
     //toll
     public $toll_allow = '';
-    public $tollAllowOptions = []; // Nueva propiedad para las opciones
-
+    public $tollAllowOptions = []; 
     // advanced
     public $auth_acl = '';
     public $cidr = '';

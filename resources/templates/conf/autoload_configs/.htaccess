@@ -1,0 +1,3 @@
+<FilesMatch "\.(xml)$">
+	Deny from all
+</FilesMatch>

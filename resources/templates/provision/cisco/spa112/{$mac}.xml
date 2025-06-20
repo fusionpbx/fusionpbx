@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flat-profile>
+<Enable_Web_Admin_Access>Yes</Enable_Web_Admin_Access>
+<Provision_Enable>Yes</Provision_Enable>
+<Resync_On_Reset>Yes</Resync_On_Reset>
+<Resync_Random_Delay>2</Resync_Random_Delay>
+<Resync_Periodic>0</Resync_Periodic>
+<Resync_At_Random_Delay>0</Resync_At_Random_Delay>
+<Resync_Error_Retry_Delay>300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay>30</Forced_Resync_Delay>
+<Resync_From_SIP>Yes</Resync_From_SIP>
+<Resync_After_Upgrade_Attempt>Yes</Resync_After_Upgrade_Attempt>
+<Resync_At__HHmm_>{$spa_resync_time}</Resync_At__HHmm_>
+{if isset ($spa_provision_url)}
+<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$spa_provision_url}</Profile_Rule>
+{else}
+<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
+<Upgrade_Enable>{$spa_upgrade_enable}</Upgrade_Enable>
+<Upgrade_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/cisco/resources/firmware/spa112-1.4.1.bin</Upgrade_Rule>
+<RTP_Packet_Size>0.020</RTP_Packet_Size>
+<Line_Enable_1_>Yes</Line_Enable_1_>
+<Mailbox_ID_1_>{$voicemail_number}</Mailbox_ID_1_>
+<Proxy_1_>{$server_address_1}</Proxy_1_>
+<Outbound_Proxy_1_>{$account.1.outbound_proxy_primary}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_>{if isset ($account.1.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$account.1.sip_transport|upper}</SIP_Transport_1_>
+<SIP_Port_1_ group="Ext_1/SIP_Settings">{$account.1.sip_port}</SIP_Port_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$account.1.register_expires}</Register_Expires_1_>
+<Register_1_>Yes</Register_1_>
+<Display_Name_1_>{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_>{$account.1.user_id}</User_ID_1_>
+<Password_1_>{$account.1.password}</Password_1_>
+<Use_Auth_ID_1_>No</Use_Auth_ID_1_>
+<Auth_ID_1_></Auth_ID_1_>
+<Call_Waiting_Serv_1_>{$spa_call_waiting}</Call_Waiting_Serv_1_>  
+<Dial_Plan_1_>{$spa_dial_plan}</Dial_Plan_1_>
+<Line_Enable_2_>Yes</Line_Enable_2_>
+<Mailbox_ID_2_>{$voicemail_number}</Mailbox_ID_2_>
+<Proxy_2_>{$account.2.server_address}</Proxy_2_>
+<Outbound_Proxy_2_>{$account.2.outbound_proxy_primary}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_>{if isset ($account.2.outbound_proxy_primary)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
+<Register_2_>Yes</Register_2_>
+<SIP_Transport_2_ group="Ext_1/SIP_Settings">{$account.2.sip_transport|upper}</SIP_Transport_2_>
+<SIP_Port_2_ group="Ext_1/SIP_Settings">{$account.2.sip_port}</SIP_Port_2_>
+<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$account.2.register_expires}</Register_Expires_2_>
+<Display_Name_2_>{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_>{$account.2.user_id}</User_ID_2_>
+<Password_2_>{$account.2.password}</Password_2_>
+<Use_Auth_ID_2_>No</Use_Auth_ID_2_>
+<Auth_ID_2_></Auth_ID_2_>
+<Call_Waiting_Serv_2_>{$spa_call_waiting}</Call_Waiting_Serv_2_>  
+<Dial_Plan_2_>{$spa_dial_plan}</Dial_Plan_2_>
+<Handle_VIA_rport>{$spa_handle_via_rport}</Handle_VIA_rport>
+<Insert_VIA_received>No</Insert_VIA_received>
+<Insert_VIA_rport>{$spa_insert_via_rport}</Insert_VIA_rport>
+<router-configuration>
+<Reset_Button_Enable>1</Reset_Button_Enable>
+<Web_Utility_Access_HTTP>1</Web_Utility_Access_HTTP>
+<Web_Utility_Access_HTTPS>0</Web_Utility_Access_HTTPS>
+<Time_Setup>
+<Time_Zone>{$spa_time_zone}</Time_Zone>
+<Time_Server>{$ntp_server_primary}</Time_Server>
+<Time_Server_Mode>manual</Time_Server_Mode>
+<Resync_Timer>60</Resync_Timer>
+<Auto_Recovery_System_Time>1</Auto_Recovery_System_Time>
+<Time_Mode>1</Time_Mode>
+</Time_Setup>
+{if isset ($admin_name)}<Web_Login_Admin_Name>{$admin_name}</Web_Login_Admin_Name>{/if}
+{if isset ($admin_password)}<Web_Login_Admin_Password>{$admin_password}</Web_Login_Admin_Password>{/if}
+</router-configuration>
+
+</flat-profile>

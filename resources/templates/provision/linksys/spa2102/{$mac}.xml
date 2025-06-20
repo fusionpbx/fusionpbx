@@ -1,0 +1,72 @@
+<flat-profile>
+<Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA&amp;password={$password}</Profile_Rule>
+<Resync_Periodic>0</Resync_Periodic>
+
+<!--<GPP_B>{$v_agent}</GPP_B>-->
+<!--Sets the time. Dunno what else.-->
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
+
+<Upgrade_Rule></Upgrade_Rule>
+<Voice_Mail_Number>{$voicemail_number}</Voice_Mail_Number>
+<Time_Zone>{$spa_time_zone}</Time_Zone>
+<!--
+<Daylight_Saving_Time_Rule>start=9/27/0/2;end=4/4/0/3;save=1</Daylight_Saving_Time_Rule>-->
+<!--<Blind_Attn-Xfer_Enable_1_>No</Blind_Attn-Xfer_Enable_1_>-->
+
+<Line_Enable_1_>yes</Line_Enable_1_>
+<Proxy_1_>{$account.1.server_address}</Proxy_1_>
+<Display_Name_1_>{$account.1.display_name}</Display_Name_1_>
+<User_ID_1_>{$account.1.user_id}</User_ID_1_>
+<Password_1_>{$account.1.password}</Password_1_>
+<Use_Auth_ID_1_>No</Use_Auth_ID_1_>
+<Preferred_Codec_1_>G729a</Preferred_Codec_1_>
+<Register_Expires_1_>{$account.1.register_expires}</Register_Expires_1_><!--*9 will perform intercom and call the other line on the box. There is no other way, from my testing to call from jack to jack on the box, without without the media being proxied.-->
+<Dial_Plan_1_>
+(1xxx[2-9]xxxxxxS0|[*#x]x.)
+</Dial_Plan_1_>
+<!--|&lt;*9:{$user_id_2}@127.0.0.1:5061&gt;-->
+<Line_Enable_2_>yes</Line_Enable_2_>
+<Proxy_2_>{$account.2.server_address}</Proxy_2_>
+<Display_Name_2_>{$account.2.display_name}</Display_Name_2_>
+<User_ID_2_>{$account.2.user_id}</User_ID_2_>
+<Password_2_>{$account.2.password}</Password_2_>
+<Use_Auth_ID_2_>No</Use_Auth_ID_2_>
+<Preferred_Codec_2_>G729a</Preferred_Codec_2_>
+<Register_Expires_2_>{$account.2.register_expires}</Register_Expires_2_>
+<Dial_Plan_2_>
+(1xxx[2-9]xxxxxxS0|[*#x]x.)
+</Dial_Plan_2_><!--|&lt;*9:{$user_id_1}@127.0.0.1:5061&gt;-->
+
+<RTP_Packet_Size>0.020</RTP_Packet_Size> <!--the default of .030 throws errors.-->
+<G711u_Codec_Name>PCMU</G711u_Codec_Name> <!--Supposed to be the default?-->
+<G711a_Codec_Name>PCMA</G711a_Codec_Name> <!--Supposed to be the default?-->
+<G729a_Codec_Name>G729</G729a_Codec_Name> <!--suggestion by Callcentric.-->
+<G729b_Codec_Name>G729</G729b_Codec_Name> <!--suggestion by Callcentric.-->
+
+<!-- NAT_Settings
+<NAT_Mapping_Enable_1_>yes</NAT_Mapping_Enable_1_>
+<NAT_Keep_Alive_Enable_1_>yes</NAT_Keep_Alive_Enable_1_>
+<NAT_Keep_Alive_Msg_1_>$NOTIFY</NAT_Keep_Alive_Msg_1_>
+<NAT_Keep_Alive_Dest_1_>$PROXY</NAT_Keep_Alive_Dest_1_>-->
+
+<!-- Speed_Dial_Settings --><!--Empty - no overwrite. - <Speed_Dial_2_2_ ua=”rw”/>-->
+<!--<Speed_Dial_2_1_ ua="rw"></Speed_Dial_2_1_>
+<Speed_Dial_3_1_ ua="rw"></Speed_Dial_3_1_>
+<Speed_Dial_4_1_ ua="rw"></Speed_Dial_4_1_>
+<Speed_Dial_5_1_ ua="rw"></Speed_Dial_5_1_>
+<Speed_Dial_6_1_ ua="rw"></Speed_Dial_6_1_>
+<Speed_Dial_7_1_ ua="rw"></Speed_Dial_7_1_>
+<Speed_Dial_8_1_ ua="rw"></Speed_Dial_8_1_>
+<Speed_Dial_9_1_ ua="rw"></Speed_Dial_9_1_>
+
+<Speed_Dial_2_2_ ua="rw"></Speed_Dial_2_2_>
+<Speed_Dial_3_2_ ua="rw"></Speed_Dial_3_2_>
+<Speed_Dial_4_2_ ua="rw"></Speed_Dial_4_2_>
+<Speed_Dial_5_2_ ua="rw"></Speed_Dial_5_2_>
+<Speed_Dial_6_2_ ua="rw"></Speed_Dial_6_2_>
+<Speed_Dial_7_2_ ua="rw"></Speed_Dial_7_2_>
+<Speed_Dial_8_2_ ua="rw"></Speed_Dial_8_2_>
+<Speed_Dial_9_2_ ua="rw"></Speed_Dial_9_2_>-->
+
+</flat-profile>

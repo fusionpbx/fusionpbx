@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gs_provision version="1">
+<mac>{$mac|replace:'-':''}</mac>
+<config version="1">
+<!-- ########################################################################################## -->
+<!-- ## Base template sets telephony related options only. to configure all options, copy to ## -->
+<!-- ## a new template and remove "ignore" blocks                                            ## -->
+<!-- ########################################################################################## -->
+<?ignore
+  <!-- Door Base -->
+    <!-- Delay before Unlock Action(s) (value: 0-20) -->
+    <P14100>0</P14100>
+    <!-- Unlock Action Holding Time(s) (value: 1-20) -->
+    <P14101>5</P14101>
+    <!-- Min. Interval of Swiping Card(ms) (value: 0-2000) -->
+    <P14829>300</P14829>
+
+    <!-- Call Mode (0:Virtual Number  1:SIP Number) -->
+    <P14856>0</P14856>
+    <!-- Doorbell Mode (0:Call Doorbell Number  1:Control Doorbell Output  2:Both Of Above) -->
+    <P14827>0</P14827>
+    <!-- Doorbell Call Out Account (value: 0-4) -->
+    <P10470>0</P10470>
+    <!-- Door Bell Call Mode(value: 0:Serial Hunting 1:Parallel Hunting) -->
+    <P15434>0</P15434>
+    <!-- Number Called When Door Bell Pressed -->
+    <P10462></P10462>
+    <!-- Remote PIN to Open the Door -->
+    <P10457></P10457>
+    <!-- Local PIN Type (0: Private Card PIN  1: Unified PIN  2: Card + Private PIN) -->
+    <P10464>1</P10464>
+    <!-- Local PIN to Open the Door (Digital and max length is 8) -->
+    <P10463></P10463>
+    <!-- Enable DTMF Open Door (0:Disable  1:Enable) -->
+    <P14858>0</P14858>
+    <!-- Enable Guest PIN (0:Disable  1:Enable) -->
+    <P14850>0</P14850>
+    <!-- Guest PIN (Digital and max length is 8) -->
+    <P14851></P14851>
+    <!-- Guest PIN Duration Start Time . Example: 20170228023156 => 2017-02-28 02:31:56 -->
+    <P14852></P14852>
+    <!-- Guest PIN Duration End Time . Example: 20170228023156 => 2017-02-28 02:31:56 -->
+    <P14853></P14853>
+    <!-- Disable Auto Answer (0:Disable  1:Enable) -->
+    <P14580>0</P14580>
+    <!-- Enable Doorbell Button to Hang Up Call. (0:Disable  1:Enable (default)) -->
+    <P14582>1</P14582>
+    <!-- Disable Keypad (except Doorbell Button). (0:Disable(default)  1:Enable) -->
+    <P15421>0</P15421>
+    <!-- Enable On Hook After Remote Unlock. (0:Disable(default)  1:Enable) -->
+    <P15422>0</P15422>
+    <!-- Card Issuing State Expire Time(m) (1-1440) -->
+    <P15423>5</P15423>
+    <!-- Enable HTTP API Remote Open Door (0:Disable  1:Enable) -->
+    <P15424>0</P15424>
+    <!-- Enable Key Blue Light (0:Disable  1:Enable) -->
+    <P14800>1</P14800>
+    <!-- Enable Blue Doorbell Light (0:Disable 1:enable) -->
+    <P14562>0</P14562>
+    <!-- Press Doorbell Schedule (value: 0-10) -->
+    <P15418>0</P15418>
+    <!-- Maximum Number of Dialed Digits (value: 0-20) -->
+    <P15419>0</P15419>
+    <!-- Blue Doorbell Light Lighting Start TIME(string exmaple: 125900) -->
+    <P14560>000000</P14560>
+    <!-- Blue Doorbell Light Lighting End TIME(string exmaple: 145930) -->
+    <P14561>000000</P14561>
+    <!-- Central Mode (0:disable 1:Enable) -->
+    <P15301>0</P15301>
+    <!-- Key Tone Type (0:Default  1:DTMF  2:Mute) -->
+    <P14340>0</P14340>
+    <!-- Wiegand Input Enable (0:Disable  1:Enable) -->
+    <P14120>0</P14120>
+    <!-- Wiegand Output (0:Disabled  1:Relay and  Local Authentication  2:Relay and Bypass Local) -->
+    <P14121>0</P14121>
+
+  <!-- Module_Forced_Opening -->
+    <!-- Forced Opening (0: Disable  1: Forced Opening(Invalid)  2: Scheduled Door Opening) -->
+    <P15429>0</P15429>
+    <!-- Forced Opening Time (5 -- 480 min) -->
+    <P15430>5</P15430>
+    <!-- Schedule Valid Start Time (Example: 20180322110506 -> Year:2018 Month:03 Date:22 Hour:11 Min:05 Second:06) -->
+    <P15211></P15211>
+    <!-- Schedule Valid End Time (Example: 20180322110506 -> Year:2018 Month:03 Date:22 Hour:11 Min:05 Second:06) -->
+    <P15212></P15212>
+    <!-- Schedule (Example: door_sch,0@0000@1259  The first '0' is 'Sun', '0000' start and '2359' end) -->
+    <P15213>door_sch,0@0000@2359,</P15213>
+
+  <!-- Group -->
+    <!-- Group string. Format:index@scheduleX@name. Example:1@1@info,2@1@test, -->
+    <P15300></P15300>
+
+  <!-- Schedule -->
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15200>schedule1@0,0@0000@0000,</P15200>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15201>schedule2@0,0@0000@0000,</P15201>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15202>schedule3@0,0@0000@0000,</P15202>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15203>schedule4@0,0@0000@0000,</P15203>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15204>schedule5@0,0@0000@0000,</P15204>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15205>schedule6@0,0@0000@0000,</P15205>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15206>schedule7@0,0@0000@0000,</P15206>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15207>schedule8@0,0@0000@0000,</P15207>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15208>schedule9@0,0@0000@0000,</P15208>
+    <!-- Schedule String. Format: name@holiday_mode,weekday@start_time@end_time,weekday@start_time@end_time, -->
+    <P15209>schedule10@0,0@0000@0000,</P15209>
+
+  <!-- Holiday -->
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15250>holiday1,</P15250>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15251>holiday2,</P15251>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15252>holiday3,</P15252>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15253>holiday4,</P15253>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15254>holiday5,</P15254>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15255>holiday6,</P15255>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15256>holiday7,</P15256>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15257>holiday8,</P15257>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15258>holiday9,</P15258>
+    <!-- Holiday string. Format: name,start_date@end_date, Example: hahaha,20170708@20170910, -->
+    <P15259>holiday10,</P15259>
+<!-- ########################################################################################## -->
+<!-- ##             End of ignored block 1                                                   ## -->
+<!-- ########################################################################################## -->
+?>
+    <!-- Time Zone -->
+    {if isset($grandstream_timezone) }
+    <P64>{$grandstream_timezone}</P64>
+    {elseif isset($grandstream_gxp_time_zone) }
+    <P64>{$grandstream_gxp_time_zone}</P64>
+    {else}
+    <P64>16</P64>
+    {/if}
+
+    <!-- Enable Daylight Saving Time (0:Disable  1:Enable) -->
+    <P10004>0</P10004>
+
+    <!-- Enable NTP (0:Disable  1:Enable) -->
+    <P5006>1</P5006>
+    <!-- NTP Server (type:string maxlength:255) -->
+    {if isset($ntp_server_primary)}
+    <P30>{$ntp_server_primary}</P30>
+    {else}
+    <P30>pool.ntp.org</P30>
+    {/if}
+
+    <!-- DST -->
+    <P10005></P10005>
+    <!-- Update Interval(m) (value:60~1440) -->
+    <P10006>1440</P10006>
+
+  <!-- Network Settings -->
+    <!-- IP Address Mode (0:DHCP  1:Static IP) -->
+    <P8>0</P8>
+    <!-- IP Address segment1 (value: 0~255) -->
+    <P9>192</P9>
+    <!-- IP Address segment2 (value: 0~255) -->
+    <P10>168</P10>
+    <!-- IP Address segment3 (value: 0~255) -->
+    <P11>1</P11>
+    <!-- IP Address segment4 (value: 0~255) -->
+    <P12>168</P12>
+    <!-- Subnet Mask segment1 (value: 0~255) -->
+    <P13>255</P13>
+    <!-- Subnet Mask segment2 (value: 0~255) -->
+    <P14>255</P14>
+    <!-- Subnet Mask segment3 (value: 0~255) -->
+    <P15>255</P15>
+    <!-- Subnet Mask segment4 (value: 0~255, if segment1,segment2,segment3 equal 255,then segment4 limited 0 - 240) -->
+    <P16>0</P16>
+    <!-- Gateway segment1 (value: 0~255) -->
+    <P17>192</P17>
+    <!-- Gateway segment2 (value: 0~255) -->
+    <P18>168</P18>
+    <!-- Gateway segment3 (value: 0~255) -->
+    <P19>1</P19>
+    <!-- Gateway segment4 (value: 0~255) -->
+    <P20>1</P20>
+
+    <!-- DNS Address Type (0:Dynamic  1:Static DNS) -->
+    <P10107>0</P10107>
+    <!-- DNS Server 1 segment1 (value: 0~255) -->
+    <P21>0</P21>
+    <!-- DNS Server 1 segment2 (value: 0~255) -->
+    <P22>0</P22>
+    <!-- DNS Server 1 segment3 (value: 0~255) -->
+    <P23>0</P23>
+    <!-- DNS Server 1 segment4 (value: 0~255) -->
+    <P24>0</P24>
+    <!-- DNS Server 2 segment1 (value: 0~255)   -->
+    <P25>0</P25>
+    <!-- DNS Server 2 segment2 (value: 0~255) -->
+    <P26>0</P26>
+    <!-- DNS Server 2 segment3 (value: 0~255) -->
+    <P27>0</P27>
+    <!-- DNS Server 2 segment4 (value: 0~255) -->
+    <P28>0</P28>
+
+    <!-- LLDP Enable(0:Disable 1:Enable) -->
+    <P1684>1</P1684>
+    <!-- Enable VLAN(0:Disable 1:Enable) -->
+    <P27004>0</P27004>
+    <!-- Layer 2 QoS 802.1Q/VLAN Tag(0~4094) -->
+    <P51>0</P51>
+    <!-- Layer 2 QoS 802.1p Priority Value for SIP signaling(0~7) -->
+    <P5038>0</P5038>
+    <!-- Layer 2 QoS 802.1p Priority Value for RTP media(0~7) -->
+    <P5042>0</P5042>
+
+  <!-- Access Settings -->
+  <!-- P15600=Web Login Authentication (0:Challenge+Response  1:Basic)-->
+    <!-- Web Connection Mode (0:HTTP  1:HTTPS) -->
+    <P12054>1</P12054>
+    <!-- Web Access Port (value: HTTP 80~65535  HTTPS 443~65535) -->
+    <P901>443</P901>
+    <!-- User Login Timeout(min) (value: 3~60) -->
+    <P12056>5</P12056>
+    <!-- Max Times Consecutively Login Error (value: 3~10) -->
+    <P14832>5</P14832>
+    <!-- Login Error Lock Time (value: 5~60) -->
+    <P14834>5</P14834>
+    <!-- Enable UPnP Discovery (0:Disable  1:Enable) -->
+    <P12053>1</P12053>
+    <!-- Enable SSH (0:Disable  1:Enable) -->
+    <P276>1</P276>
+    <!-- SSH Port(value: 22 or 444-65535, default 22) -->
+    <P27006>22</P27006>
+
+    <!-- Admin Password (Type: string, Max length is 32) -->
+    <P2>{$admin_password}</P2>
+  <!-- Account 1 Settings -->
+    <!-- Account Active (0:No  1:Yes) -->
+    <P271>1</P271>
+    <!-- Account Name (type:string maxlength=64) -->
+    <P3>{$account.1.display_name}</P3>
+    <!-- SIP Server (type:string) -->
+    <P47>{$account.1.server_address}</P47>
+    <!-- Secondary SIP Server (type:string) -->
+    <P2312>{$account.1.server_address_secondary}</P2312>
+    <!-- Outbound Proxy (type:string) -->
+    <P48>{$account.1.outbound_proxy_primary}</P48>
+    <!-- Backup Outbound Proxy (type:string) -->
+    <P2333>{$account.1.outbound_proxy_secondary}</P2333>
+    <!-- DNS Mode(0:A Record  1:SRV  2:NAPTR/SRV) -->
+    {if isset($grandstream_dns_mode)}
+    <P103>{$grandstream_dns_mode}</P103>
+    {else}
+    <P103>0</P103>
+    {/if}
+    <!-- SIP User ID (type:string) -->
+    <P35>{$account.1.user_id}</P35>
+    <!-- Authenticate ID (type:string) -->
+    <P36>{$account.1.auth_id}</P36>
+    <!-- SIP Authenticate Password (type:string) -->
+    <P34>{$account.1.password}</P34>
+    <!-- TEL URI (0:Disabled 1:User=phone 2:Enabled) -->
+    <P63>0</P63>
+    <!-- Register Expiration(m) (value:60~64800 default:3600) -->
+    <P32>{$account.1.register_expires}</P32>
+    <!-- Local SIP Port (value:1~65535 && != 6789 && no conflict others) -->
+    <P40>5060</P40>
+    <!-- SIP Transport (0:UDP  1:TCP  2:TLS/TCP) -->
+    {$tp=0}
+    {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+    {if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+    {if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+    {if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+    <P130>{$tp}</P130>
+    <!-- RFC2833 (0:Disable  1:Enable) -->
+    <P2302>1</P2302>
+    <!-- SIP INFO (0:Disable  1:Enable) -->
+    <P2303>0</P2303>
+    <!-- Enable Keep Alive (0:Disable  1:Enable) -->
+    <P490>1</P490>
+    <!-- Unregister On Reboot (0:Disable  1:Enable) -->
+    <P81>1</P81>
+    <!-- NAT Traversal (0:no  1:STUN) -->
+    <P52>0</P52>
+    <!-- Enable SRTP (0:Disable  1:Enable) -->
+    {if isset($grandstream_srtp)}
+    <P183>{$grandstream_srtp}</P183>
+    {else}
+    <P183>0</P183>
+    {/if}
+
+    <!-- Special Feature (100:Standard  102:Broadsoft) -->
+    <P100>100</P100>
+
+  <!-- Account 2 Settings -->
+    <!-- Account Active (0:No  1:Yes) -->
+    {if isset($account.2.password)}
+    <P401>1</P401>
+    {else}
+    <P401>0</P401>
+    {/if}
+    <!-- Account Name (type:string maxlength=64) -->
+    <P407>{$account.2.display_name}</P407>
+    <!-- SIP Server (type:string) -->
+    <P402>{$account.2.server_address}</P402>
+    <!-- Secondary SIP Server (type:string) -->
+    <P2412>{$account.2.server_address_secondary}</P2412>
+    <!-- Outbound Proxy (type:string) -->
+    <P403>{$account.2.outbound_proxy}</P403>
+    <!-- Backup Outbound Proxy (type:string) -->
+    <P2433>{$account.2.outbound_proxy_secondary}</P2433>
+    <!-- DNS Mode(0:A Record  1:SRV  2:NAPTR/SRV) -->
+    <P408>0</P408>
+    <!-- SIP User ID (type:string) -->
+    <P404>{$account.2.user_id}</P404>
+    <!-- Authenticate ID (type:string) -->
+    <P405>{$account.2.auth_id}</P405>
+    <!-- SIP Authenticate Password (type:string) -->
+    <P406>{$account.2.password}</P406>
+    <!-- TEL URI (0:Disabled 1:User=phone 2:Enabled) -->
+    <P409>0</P409>
+
+    <!-- Register Expiration(m) (value:60~64800 default:3600) -->
+    <P412>{$account.2.register_expires}</P412>
+    <!-- Local SIP Port (value:1~65535 && != 6789 && no conflict others) -->
+    <P413>5062</P413>
+    <!-- SIP Transport (0:UDP  1:TCP  2:TLS/TCP) -->
+    {$tp=0}
+    {if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+    {if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+    {if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+    {if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+    <P448>{$tp}</P448>
+    <!-- RFC2833 (0:Disable  1:Enable) -->
+    <P2402>1</P2402>
+    <!-- SIP INFO (0:Disable  1:Enable) -->
+    <P2403>0</P2403>
+    <!-- Enable Keep Alive (0:Disable  1:Enable) -->
+    <P1309>1</P1309>
+    <!-- Unregister On Reboot (0:Disable  1:Enable) -->
+    <P411>1</P411>
+    <!-- NAT Traversal (0:no  1:STUN) -->
+    <P414>0</P414>
+    <!-- Enable SRTP (0:Disable  1:Enable) -->
+    {if isset($grandstream_srtp)}
+    <P443>{$grandstream_srtp}</P443>
+    {else}
+    <P443>0</P443>
+    {/if}
+    <!-- Special Feature (100:Standard  102:Broadsoft) -->
+    <P424>100</P424>
+
+  <!-- Account 3 Settings -->
+    <!-- Account Active (0:No  1:Yes) -->
+    {if isset($account.3.password)}
+    <P501>1</P501>
+    {else}
+    <P501>0</P501>
+    {/if}
+    <!-- Account Name (type:string maxlength=64) -->
+    <P507>{$account.3.display_name}</P507>
+    <!-- SIP Server (type:string) -->
+    <P502>{$account.3.server_address}</P502>
+    <!-- Secondary SIP Server (type:string) -->
+    <P2512>{$account.3.server_address_secondary}</P2512>
+    <!-- Outbound Proxy (type:string) -->
+    <P503>{$account.3.outbound_proxy}</P503>
+    <!-- Backup Outbound Proxy (type:string) -->
+    <P2533>{$account.3.outbound_proxy_secondary}</P2533>
+    <!-- DNS Mode(0:A Record  1:SRV  2:NAPTR/SRV) -->
+    {if isset($grandstream_dns_mode)}
+    <P508>{$grandstream_dns_mode}</P508>
+    {else}
+    <P508>0</P508>
+    {/if}
+    <!-- SIP User ID (type:string) -->
+    <P504>{$account.3.user_id}</P504>
+    <!-- Authenticate ID (type:string) -->
+    <P505>{$account.3.auth_id}</P505>
+    <!-- SIP Authenticate Password (type:string) -->
+    <P506>{$account.3.password}</P506>
+    <!-- TEL URI (0:Disabled 1:User=phone 2:Enabled) -->
+    <P509>0</P509>
+
+    <!-- Register Expiration(m) (value:60~64800 default:3600) -->
+    <P512>{$account.3.register_expires}</P512>
+    <!-- Local SIP Port (value:1~65535 && != 6789 && no conflict others) -->
+    <P513>5064</P513>
+    <!-- SIP Transport (0:UDP  1:TCP  2:TLS/TCP) -->
+    
+    {$tp=0}
+    {if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+    {if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+    {if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+    <P548>{$tp}</P548>
+    
+    <!-- RFC2833 (0:Disable  1:Enable) -->
+    <P2502>1</P2502>
+    <!-- SIP INFO (0:Disable  1:Enable) -->
+    <P2503>0</P2503>
+    <!-- Enable Keep Alive (0:Disable  1:Enable) -->
+    <P590>1</P590>
+    <!-- Unregister On Reboot (0:Disable  1:Enable) -->
+    <P511>1</P511>
+    <!-- NAT Traversal (0:no  1:STUN) -->
+    <P514>0</P514>
+    <!-- Enable SRTP (0:Disable  1:Enable) -->
+    {if isset($grandstream_srtp)}
+    <P543>{$grandstream_srtp}</P543>
+    {else}
+    <P543>0</P543>
+    {/if}
+    <!-- Special Feature (100:Standard  102:Broadsoft) -->
+    <P524>100</P524>
+
+  <!-- Account 4 Settings -->
+    <!-- Account Active (0:No  1:Yes) -->
+    {if isset($account.4.password)}
+    <P601>1</P601>
+    {else}
+    <P601>0</P601>
+    {/if}
+    <!-- Account Name (type:string maxlength=64) -->
+    <P607>{$account.4.display_name}</P607>
+    <!-- SIP Server (type:string) -->
+    <P602>{$account.4.server_address}</P602>
+    <!-- Secondary SIP Server (type:string) -->
+    <P2612>{$account.4.server_address_secondary}</P2612>
+    <!-- Outbound Proxy (type:string) -->
+    <P603>{$account.4.outbound_proxy}</P603>
+    <!-- Backup Outbound Proxy (type:string) -->
+    <P2633>{$account.4.outbound_proxy_secondary}</P2633>
+    <!-- DNS Mode(0:A Record  1:SRV  2:NAPTR/SRV) -->
+    {if isset($grandstream_dns_mode)}
+    <P608>{$grandstream_dns_mode}</P608>
+    {else}
+    <P608>0</P608>
+    {/if}
+    <!-- SIP User ID (type:string) -->
+    <P604>{$account.4.user_id}</P604>
+    <!-- Authenticate ID (type:string) -->
+    <P605>{$account.4.auth_id}</P605>
+    <!-- SIP Authenticate Password (type:string) -->
+    <P606>{$account.4.password}</P606>
+    <!-- TEL URI (0:Disabled 1:User=phone 2:Enabled) -->
+    <P609>0</P609>
+
+    <!-- Register Expiration(m) (value:60~64800 default:3600) -->
+    <P612>{$account.4.register_expires}</P612>
+    <!-- Local SIP Port (value:1~65535 && != 6789 && no conflict others) -->
+    <P613>5066</P613>
+    <!-- SIP Transport (0:UDP  1:TCP  2:TLS/TCP) -->
+    {$tp=0}
+    {if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+    {if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+    {if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+    
+    <P648>{$tp}</P648>
+    
+    <!--RFC2833 (0:Disable  1:Enable) -->
+    
+    <P2602>1</P2602>
+    <!-- SIP INFO (0:Disable  1:Enable) -->
+    <P2603>0</P2603>
+    <!-- Enable Keep Alive (0:Disable  1:Enable) -->
+    <P690>1</P690>
+    <!-- Unregister On Reboot (0:Disable  1:Enable) -->
+    <P611>1</P611>
+    <!-- NAT Traversal (0:no  1:STUN) -->
+    <P614>0</P614>
+    <!-- Enable SRTP (0:Disable  1:Enable) -->
+    {if isset($grandstream_srtp)}
+    <P643>{$grandstream_srtp}</P643>
+    {else}
+    <P643>0</P643>
+    {/if}
+    <!-- Special Feature (100:Standard  102:Broadsoft) -->
+    <P624>100</P624>
+
+  <!-- Phone Settings -->
+    <!-- STUN Server (type:string) -->
+    <P76></P76>
+    <!-- Local RTP Port (value:1024~65400 && != 6789 && no conflict others) -->
+    <P39>5004</P39>
+    <!-- Local RTP Port Range (value:48~10000) -->
+    <P29610>200</P29610>
+    <!-- Use Random Port (0:Disable  1:Enable) -->
+    <P78>1</P78>
+    <!-- Auto On-Hook Timer(s) (value: 0~65535) -->
+    <P10451>300</P10451>
+    <!-- Ring Timeout(s) (value: 0~90) -->
+    <P14847>30</P14847>
+    <!-- SIP TLS Certificate (type:string) -->
+    <P280></P280>
+    <!-- SIP TLS Private Key (type:string) -->
+    <P279></P279>
+    <!-- SIP TLS Private Key Password (type:string) -->
+    <P281></P281>
+    <!-- Enable Direct IP Call (0:Disable  1:Enable) -->
+    <P10453>1</P10453>
+    <!-- Enable two-way SIP Calling (0:Enable  1:Disable) -->
+    <P8001>1</P8001>
+    <!-- SIP Proxy Compatibility Mode (0:Enable  1:Disable) -->
+    <P8003>1</P8003>
+
+  <!-- Account 1 White List -->
+    <!-- Enable White Number List (0:Disable  1:Enable) -->
+    <P10410>0</P10410>
+    <!-- sip white phone number list (Format:123,4567,)  -->
+    <P10411></P10411>
+
+  <!-- Account 2 White List -->
+    <!-- Enable White Number List (0:Disable  1:Enable) -->
+    <P10454>0</P10454>
+    <!-- sip white phone number list (Format:123,4567,)  -->
+    <P10460></P10460>
+
+  <!-- Account 3 White List -->
+    <!-- Enable White Number List (0:Disable  1:Enable) -->
+    <P10420>0</P10420>
+    <!-- sip white phone number list (Format:123,4567,)  -->
+    <P10421></P10421>
+
+  <!-- Account 4 White List -->
+    <!-- Enable White Number List (0:Disable  1:Enable) -->
+    <P10430>0</P10430>
+    <!-- sip white phone number list (Format:123,4567,)  -->
+    <P10431></P10431>
+
+  <!-- Audio Settings -->
+    <!-- Preferred Audio Codec (1:PCMU 2:PCMA 4:G722) -->
+    <P14000>1</P14000>
+  <!-- P14010=Mic (0:Mic1 1:Mic2 2:Mic1+Mic2)-->
+    <!-- Speaker Volume (Volume level: 1,2,3,4,5,6,7) -->
+    <P14003>5</P14003>
+    <!-- Doorbell Volume (Volume level: 0,1,2,3,4,5,6,7) -->
+    <P14835>5</P14835>
+<!-- #################################################################### -->
+<!-- #      Ignore Block 2        See info at top of template          ## -->
+<!-- #################################################################### -->
+<?ignore
+
+  <!-- Alarm Event Config -->
+    <!-- Digital Input 1 (0:Disable 1:Alarm Input 2:Open Door) -->
+    <P14320>0</P14320>
+    <!-- Digital Input 1 State (0:Normal Open 1:Normal Close) -->
+    <P15431>0</P15431>
+    <!-- Select Alarm Schdeule 1 (value: 0~10) -->
+    <P14321>0</P14321>
+    <!-- Select Alarm Action Profile 1 (value: 1~10) -->
+    <P14322>1</P14322>
+    <!-- Digital Input 2 (0:Disable 1:Alarm Input 2:Open Door) -->
+    <P14325>0</P14325>
+    <!-- Digital Input 2 State (0:Normal Open 1:Normal Close) -->
+    <P15432>0</P15432>
+    <!-- Select Alarm Schdeule 2 (value: 0~10) -->
+    <P14326>0</P14326>
+    <!-- Select Alarm Action Profile 2 (value: 1~10) -->
+    <P14327>1</P14327>
+
+    <!-- Alarm Output Duration(s) (value: 5/10/15/20/25/30) -->
+    <P14341>5</P14341>
+
+    <!-- Alarm Mute Mode (String Format:enable@DI@MD@Tamper@Passwd_Err   Exmaple: 0@1@1@0@1) -->
+    <P14568>0@0@0@0@0</P14568>
+    <!-- Enable Hostage Code (0:Disable  1:Enable) -->
+    <P10467>0</P10467>
+    <!-- Hostage Code (Digital and max length is 8) -->
+    <P10466></P10466>
+    <!-- Hostage Code Alarm Action Profile (value: 1~10) -->
+    <P10468>1</P10468>
+    <!-- Enable Tamper Alarm (0:Disable  1:Enable) -->
+    <P14350>0</P14350>
+    <!-- Tamper Alarm Action Profile (value: 1~10) -->
+    <P14355>1</P14355>
+    <!-- Enable Keypad Input Error Alarm (0:Disable  1:Enable  default:1) -->
+    <P14825>1</P14825>
+    <!-- Keypad Input Error Alarm profile. (value:1-10) -->
+    <P14826>1</P14826>
+    <!-- Enable Non-scheduled Access Alarm (0:Disable  1:Enable  default:0) -->
+    <P15407>0</P15407>
+    <!-- Non-scheduled Access Alarm profile. (value:1-10) -->
+    <P15408>1</P15408>
+
+  <!-- Alarm Schedule -->
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14200>schedule1,0@0000@2359,</P14200>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14201>schedule2,0@0000@2359,</P14201>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14202>schedule3,0@0000@2359,</P14202>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14203>schedule4,0@0000@2359,</P14203>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14204>schedule5,0@0000@2359,</P14204>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14205>schedule6,0@0000@2359,</P14205>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14206>schedule7,0@0000@2359,</P14206>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14207>schedule8,0@0000@2359,</P14207>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14208>schedule9,0@0000@2359,</P14208>
+    <!-- schedule1. Format:name,Date@start_time@end_time. example:schedule1,0@0000@1011,0@1100@2300 -->
+    <P14209>schedule10,0@0000@2359,</P14209>
+
+  <!-- Alarm Action -->
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14300>profile1@0,0,0,0,0,0,</P14300>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14301>profile2@0,0,0,0,0,0,</P14301>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14302>profile3@0,0,0,0,0,0,</P14302>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14303>profile4@0,0,0,0,0,0,</P14303>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14304>profile5@0,0,0,0,0,0,</P14304>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14305>profile6@0,0,0,0,0,0,</P14305>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14306>profile7@0,0,0,0,0,0,</P14306>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14307>profile8@0,0,0,0,0,0,</P14307>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14308>profile9@0,0,0,0,0,0,</P14308>
+    <!-- Alarm Action Profile. Format:profileName@Alarm-Center,Sound,Sip,Output,Email,Reserved, example:night@1,1,1,0,1,0, -->
+    <P14309>profile10@0,0,0,0,0,0,</P14309>
+
+  <!-- Alarm Phone List -->
+    <!-- Alarm Call Out Account (value: 0-4) -->
+    <P10471>0</P10471>
+    <!-- Alarm Phone List.Example:1122,3344,5566, Don't forget the last ',' -->
+    <P10459></P10459>
+
+  <!-- Email Settings -->
+    <!-- SMTP Server (type:string) -->
+    <P10121></P10121>
+    <!-- SMTP Server Port (value: 0~65535 && no conflict others) -->
+    <P10122>25</P10122>
+    <!-- From E-Mail Address (type:string) -->
+    <P10123></P10123>
+    <!-- Sender User Name (type:string) -->
+    <P10127></P10127>
+    <!-- Sender Password (type:string) -->
+    <P10128></P10128>
+    <!-- Password Recovery Email (type:string) -->
+    <P10124></P10124>
+    <!-- Alarm Receive Email 1 (type:string) -->
+    <P14348></P14348>
+    <!-- Alarm Receive Email 2 (type:string) -->
+    <P14349></P14349>
+    <!-- SSL (0:Unselected  1:Selected) -->
+    <P10129>0</P10129>
+<!-- ########################################################################################## -->
+<!-- ##             End of ignored block 1                                                   ## -->
+<!-- ########################################################################################## -->
+?>
+
+  <!-- Upgrade -->
+    <!-- Firmware Upgrade Via (0:TFTP 1:HTTP 2:HTTPS) -->
+    <P6767>2</P6767>
+    <!-- Firmware Server Path -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/gxp2170/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/gxp2170</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
+    <!-- Firmware HTTP/HTTPS User Name -->
+    <P6768></P6768>
+    <!-- Firmware HTTP/HTTPS Password -->
+    <P6769></P6769>
+    <!-- Firmware File Prefix -->
+    <P232></P232>
+    <!-- Firmware File Postfix -->
+    <P233></P233>
+    <!-- Upgrade Via (0:TFTP 1:HTTP 2:HTTPS) -->
+    <P212>1</P212>
+    <!-- Config Server Path -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {elseif isset($domain_name)}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+    <!-- HTTP/HTTPS User Name -->
+    <P1360>{$http_auth_username}</P1360>
+    <!-- HTTP/HTTPS Password -->
+    <P1361>{$http_auth_password}</P1361>
+    <!-- Config File Prefix -->
+    <P234></P234>
+    <!-- Config File Postfix -->
+    <P235></P235>
+    <!-- XML Config File Password (type:string) -->
+    <P1359></P1359>
+    <!-- Validate Server Certificates (0:Disable  1:Enable)	 -->
+    <P8463>0</P8463>
+    <!-- Automatic Upgrade Interval(m) (value:60~525600) -->
+    <P193>10080</P193>
+    <!-- DHCP Option 66 Override Server (0:Disable  1:Enable) -->
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+    <!-- Zero Config (0:Disable  1:Enable) -->
+    <P1414>0</P1414>
+    <!-- Automatic Upgrade (0:Disable  1:Enable) -->
+    <P194>1</P194>
+
+  <!--Trusted CA-->
+    <!-- CA Certificate1 (type:string) -->
+    <P8433></P8433>
+    <!-- CA Certificate2 (type:string) -->
+    <P8434></P8434>
+    <!-- CA Certificate3 (type:string) -->
+    <P8435></P8435>
+    <!-- CA Certificate4 (type:string) -->
+    <P8436></P8436>
+    <!-- CA Certificate5 (type:string) -->
+    <P8437></P8437>
+    <!-- CA Certificate6 (type:string) -->
+    <P8438></P8438>
+	<!--Custom Certificate (type:string) -->
+    <P8475></P8475>
+  <!-- Debug Log -->
+    <!-- Debug Log Server (type:string) -->
+    <P207>{$grandstream_syslog_server}</P207>
+    <!-- Debug Log Level (0:None 1:Debug 2:Info 3:Warning 4:Error) -->
+    <P208>{$grandstream_syslog_level}</P208>
+    
+
+  <!-- Event Notification -->
+    <!-- Enable Log Reporting (0:Disable 1:Enable) -->
+    <P15410>0</P15410>
+    <!-- Event Notification Type (1:HTTP 2:HTTPS) -->
+    <P15417>1</P15417>
+    <!-- HTTP/HTTPS Server(Type:string. Example:192.168.1.2 Max.length=256) -->
+    <P15413></P15413>
+    <!-- HTTP/HTTPS Server Username (Type:string. Max.length=128) -->
+    <P15414></P15414>
+    <!-- HTTP/HTTPS Server Password (Type:string. Max.length=128) -->
+    <P15415></P15415>
+    <!-- URL Template (Type:string. Max.length=1024) -->
+    <P15416></P15416>
+
+</config>
+</gs_provision>

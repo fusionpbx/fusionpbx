@@ -1,0 +1,323 @@
+<all>
+	{if $smarty.server.HTTPS == "on"}{$https=true}{else}{$https=false}{/if}
+	<SipDSPs>
+		<!-- JITTERBUFFER 0 - adjust, 1 - fixed -->
+		<dsp
+			EchoSuppression="0"
+			CodecType="0"
+			CodecType1="1"
+			CodecType2="255"
+			CodecType3="255"
+			CodecType4="255"
+			CodecType5="255"
+			CodecType6="255"
+			CodecType7="255"
+			CodecType8="255"
+			HandInputVoice="5"
+			HandOutputVoice="3"
+			EarphoneInputVoice="5"
+			EarphoneOutputVoice="3"
+			RingTypeVoice="3"
+			DiallingTone="1"
+			RTPsize="1"
+			HandFreeInputVoice="5"
+			HandFreeOutputVoice="3"
+			VoEnableAEC="0"
+			VoEnableAGC="0"
+			HighG723="1"
+			VoEnableVAD="0"
+			ringfileName0=""
+			ringfileName1=""
+			ringfileName2=""
+			ringfileName3=""
+			ringfileName4=""
+			ringfileName5=""
+			ringfileName6=""
+			ringfileName7=""
+			ringfileName8=""
+			ringfileName9=""
+			CurrentRingName="Ring1"
+			enableCode0="G711A"
+			enableCode1="G711U"
+			enableCode2=""
+			enableCode3=""
+			enableCode4=""
+			enableCode5=""
+			enableCode6=""
+			enableCode7=""
+			enableCode8=""
+			disableCode0="iLBC"
+			disableCode1="G726_32"
+			disableCode2="G729"
+			disableCode3="G722"
+			disableCode4="G723"
+			disableCode5=""
+			disableCode6=""
+			disableCode7=""
+			disableCode8=""
+			disableCode9=""
+			ToneCountry="1"
+			JITTERBUFFER="1"
+			MinDelay="60"
+			MaxDelay="500"
+			NormalDelay="120"
+			SideTone="0"
+			InternalRingerText0=""
+			InternalRingerFile0="Ring1"
+			InternalRingerText1=""
+			InternalRingerFile1="Ring1"
+			InternalRingerText2=""
+			InternalRingerFile2="Ring1"
+			InternalRingerText3=""
+			InternalRingerFile3="Ring1"
+			InternalRingerText4=""
+			InternalRingerFile4="Ring1"
+			InternalRingerText5=""
+			InternalRingerFile5="Ring1"
+			InternalRingerText6=""
+			InternalRingerFile6="Ring1"
+			InternalRingerText7=""
+			InternalRingerFile7="Ring1"
+			InternalRingerText8=""
+			InternalRingerFile8="Ring1"
+			InternalRingerText9=""
+			InternalRingerFile9="Ring1"
+			CustomTone_Dial=""
+			CustomTone_RingBack=""
+			CustomTone_Busy=""
+		/>
+	</SipDSPs>
+	<Privisions>
+		<!-- protocol
+			0 - tftp
+			1 - http
+			2 - ftp
+			3 - https
+		-->
+		<!-- BootingcheckedMode - 'Disable the phone while booting' -->
+		<!-- DownloadFilename 
+			0 - default
+			1 - upper case
+			2 - lower case
+		-->
+		<privision
+			PNP="1"
+			PNPPIN=""
+			PNPInterval="60"
+			AutoPrivisionFlag="1"
+			DHCPOptionFlag="1"
+			DHCPOptionValue="66"
+			protocol={if $https}"3"{else}"1"{/if}
+			Firmware="{$domain_name}{$project_path}/app/provision"
+			username=""
+			password=""
+			DownloadBroadsoft="0"
+			DownloadFirmwar="0"
+			DownloadKernel="0"
+			Downloadconfig="1"
+			Download3CXconfig="0"
+			DownloadExtension="1"
+			DownloadPhonebook="0"
+			DownloadPersonPhonebook="1"
+			Bootingchecked="1"
+			ZeroActive="0"
+			WaitTime="10"
+			BootingcheckedMode="0"
+			Freqency="168"
+			time="24"
+			DownloadFilename="0"
+			ExtensionNumber=""
+		/>
+	</Privisions>
+	<calls>
+		<!-- BLFTransferEnable - during call you can just press BLF key to do transfer
+			BLFTransferMode - 0: blind transfer; 1: attended transfer
+		-->
+		<call
+			AutoRedial="0"
+			AutoRedial_Interval="10"
+			AutoRedial_Times="10"
+			PrefixPSTNNum=""
+			PrefixVOIPNum=""
+			AutoAnswerNum="**"
+			CallLeaveMessageNum="{$voicemail_number}"
+			callwaiting="1"
+			PlaycallwaitingTone="1"
+			AfterTurnType="0"
+			ShowPhonelist="1"
+			ShowPhonelistWay="0"
+			AutoAnswerEnableFlag="0"
+			AutoAnswerEnableGroupName=""
+			AutoAnswerMode="0"
+			CallBusyTone="1"
+			MisscallDisEnable="1"
+			DNDSoftkeyEnable="1"
+			CallListSaveEnable="1"
+			BLFTransferEnable="0"
+			BLFTransferMode="0"
+			AvoidDisturbEnableFlag="0"
+			SIPQos="26"
+			RTPQos="46"
+			forkEnableFlag="1"
+			forktime="500"
+			Unconditional="0"
+			UnconditionalNum=""
+			busytransfer="0"
+			busytransferNum=""
+			UnAnswer="0"
+			UnAnswerNum=""
+			RingFrequency="15"
+			PickupEnable="1"
+			ConfEndMethod="0"
+			PlaycallwaitingToneFreqency="10"
+			ReturnCodeWhenRefuse="0"
+			ReturnCodeWhenDND="0"
+			FlashHookEnable="0"
+			FlashHookTime="500"
+			HoldPlayToneEnable="1"
+			HoldPlayToneFreqency="30"
+			SuppressDTMFDisplay="0"
+			SIP100RelEnable="1"
+			CallerIDSource="1"
+			LLDP="1"
+			LLDPInterval="60"
+		/>
+	</calls>
+	<SysTimes>
+		<!-- SNTPEnableFlag 0 - use sntp server -->
+		<!-- TimeZoneType - see timezone.txt -->
+		<systime
+			SNTPAddress="{$ntp_server_primary}"
+			SNTPAddressBackup="{$ntp_server_secondary}"
+			DaylightSaveingFlag="0"
+			SNTPEnableFlag="0"
+			TimeZoneType="{if $escene_time_zone == ""}12{else}{$escene_time_zone}{/if}"
+			DaySet="24"
+			HourSet="0"
+			MinuteSet="0"
+			SecondSet="17"
+			YearSet="2014"
+			MouthSet="10"
+			AutoAddress="0"
+			AutoAddressBackup="0"
+			DSTtype="0"
+			DSTStartMonth="1"
+			DSTStartDay="1"
+			DSTStartHour="0"
+			DSTEndMonth="12"
+			DSTEndDay="31"
+			DSTEndHour="23"
+			DSTWeekStartMonth="1"
+			DSTWeekStartWeek="0"
+			DSTWeekStartInMonth="1"
+			DSTWeekStartHour="0"
+			DSTWeekEndMonth="12"
+			DSTWeekEndWeek="6"
+			DSTWeekEndInMonth="5"
+			DSTWeekEndHour="23"
+			Offset="60"
+			UpdateInterval="600"
+		/>
+	</SysTimes>
+	<lcds>
+		<!-- DateFormat
+			0 - DD MM WWW
+			1 - MM DD WWW
+			2 - WWW MMM DD
+			3 - DD-MMM-YY
+			4 - YYYY-MM-DD
+			5 - DD/MM/YYYY
+			6 - MM/DD/YY
+			7 - DD MMM YYYY
+			8 - WWW DD MMM
+		-->
+		<lcd
+			Password=""
+			AvoidDisturbEnableFlag="0"
+			Language="1"
+			WebLanguage="1"
+			Light="3"
+			NoSoundEnableFlag="0"
+			ScreenLightEnableFlag="1"
+			BackLightEnableFlag="0"
+			DateFormat="{if $escene_date_format == ""}0{else}{$escene_date_format}{/if}"
+			TimeFormat="{if $escene_time_format == ""}0{else}{$escene_time_format}{/if}"
+			TimeListSeparator="0"
+			TouchScreen="0"
+			CloseLightTime="60"
+			ScreenTime="60"
+			Contrast="3"
+			ScreenSaverEnable="0"
+			lockScreenPassword="1234"
+			LockScreenEnable="0"
+			LockScreenMode="0"
+			LockScreenTime="60"
+			LockKeys="0"
+			PhoneLockTimeOut="0"
+		/>
+	</lcds>
+	<hotlineBLFs>
+		<hotlineBLF BLF="1" />
+	</hotlineBLFs>
+	<sipUsers>
+	{foreach $lines as $row}
+		{if $row.line_number neq ""}
+			{$line_subscribe_tmp=$line_subscribe_{$row.line_number}}
+			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$line_subscribe} {/if}
+			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$row.register_expires}  {/if}
+			{if $line_subscribe_tmp<"120"} {$line_subscribe_tmp="120"} {/if}
+			{if $line_label_{$row.line_number}== ""}{$line_label=$label}{else}{$line_label=$line_label_{$row.line_number}}{/if}
+
+		<sipUser id="{$row.line_number-1}"
+			EnableAccount="{($row.enabled=='true')?'1':'0'}"
+			Describe="{$line_label}"
+			DomainName="{$row.server_address}"
+			UserName="{$row.display_name}"
+			UserNumber="{$row.user_id}"
+			approveName="{$row.auth_id}"
+			Password="{$row.password}"
+			ProxyServerAddress="{if $row.outbound_proxy neq ''}{$row.outbound_proxy}{else}{$row.server_address}{/if}{if $row.sip_port neq '5060'}:{$row.sip_port}{/if}"
+			LinkUse="{if $row.sip_transport=='tcp'}1{elseif $row.sip_transport=='tls'}2{else}0{/if}"
+			PossessNumber="1"
+			SecondProxyServerAddress=""
+			PollingRegistrationTime="32"
+			RefreshTime="{$row.register_expires}"
+			Subscribe="{$line_subscribe_tmp}"
+			RPortEnable="1"
+			CallLeaveMessageNum="{$voicemail_number}"
+			SecondDomainName=""
+			STUNAddress=""
+			STUNEnableFlag="0"
+			flag="0"
+			SupportNumber="8"
+			RTPBegin="10000" RTPEND="10128"
+			AccountMode="0"
+			RegisterMethod="0"
+			BLAEnableFlag="0"
+			BLANum=""
+			AnonymousCall="0"
+			UserSessionTimerEnable="0"
+			SessionTimer="300"
+			AllowEventsEnable="0"
+			DNSSRVEnable="{if $row.sip_transport=='dns srv'}1{else}0{/if}"
+			RegisteredNAT="1"
+			RingFilename=""
+			KeepaliveEnable="1"
+			KeepaliveInterval="30"
+			AnonymousCallReject="0"
+			ProxyEnableFlag="0"
+			AutoAnsEnableFlag="0"
+			SessionTimerRefresher="0"
+			UserphoneEnable="0"
+			UserSessionTimerRefresher="0"
+			ServerType="0"
+			ConferenceWay="0"
+			ConferenceNum=""
+			EPPOutcodeEnable="0"
+			EPPOutcode=""
+			EPPOutcodeLength="" 
+		/>
+		{/if}
+	{/foreach}
+	</sipUsers>
+</all>
