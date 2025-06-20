@@ -54,7 +54,6 @@ class ExtensionRequest extends FormRequest
         $reqSpecial = DefaultSetting::get('users', 'password_special', 'boolean') ?? false;
 
         $rules = [
-            "domain_uuid" => "sometimes|uuid|exists:App\Models\Domain,domain_uuid",
             'extension' => [
                 'nullable',
                 'string',
