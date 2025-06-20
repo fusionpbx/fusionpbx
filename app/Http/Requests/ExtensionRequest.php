@@ -65,7 +65,7 @@ class ExtensionRequest extends FormRequest
             'enabled' => 'nullable|string|in:true,false',
             'description' => 'nullable|string|max:500',
             'effective_caller_id_name' => 'nullable|string|max:100',
-            'effective_caller_id_number' => 'nullable|numeric|integer|max:50',
+            'effective_caller_id_number' => 'nullable|numeric|integer|min:0',
             'outbound_caller_id_name' => 'nullable|string|max:100',
             'outbound_caller_id_number' => 'nullable|string|max:20',    // Longest DID number
             'emergency_caller_id_name' => 'nullable|string|max:100',
