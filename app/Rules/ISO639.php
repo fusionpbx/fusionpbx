@@ -22,13 +22,16 @@ class ISO639 implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $countryData = config('iso639');
+        $languageData = config('iso639');
         if(App::hasDebugModeEnabled()){
-            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $countryData: '.print_r($countryData, true));
+            Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] $languageData: '.print_r($languageData, true));
         }
-        if (isset($countryData))
+        if (isset($languageData))
         {
-            $filtered_data = array_column($countryData, $this->index);
+            $filtered_data = array_column($languageData, $this->index);
+            $filtered_data = array_filter($filtered_data, function ($v) {
+                return !empty($v);
+            })
             if(App::hasDebugModeEnabled()){
                 Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] filtered_data: '.print_r($filtered_data, true));
             }
