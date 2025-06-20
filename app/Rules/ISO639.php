@@ -31,7 +31,8 @@ class ISO639 implements ValidationRule
             $filtered_data = array_column($languageData, $this->index);
             $filtered_data = array_filter($filtered_data, function ($v) {
                 return !empty($v);
-            })
+            });
+
             if(App::hasDebugModeEnabled()){
                 Log::debug('['.__FILE__.':'.__LINE__.']['.__CLASS__.']['.__METHOD__.'] filtered_data: '.print_r($filtered_data, true));
             }
