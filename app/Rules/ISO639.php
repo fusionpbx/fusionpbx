@@ -24,7 +24,7 @@ class ISO639 implements ValidationRule
         $filtered_data = array_column($data, $this->index);
         $element = array_find($filtered_data, function (string $v) use ($value){
             return ($value == $v);
-        })
+        });
 
         if (is_null($element))
         {
