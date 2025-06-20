@@ -25,7 +25,7 @@ class ContactUrlRequest extends FormRequest
         return [
             'urls' => 'nullable|array',
             'urls.*.url_label' => 'nullable|string|max:100',
-            'urls.*.url_address' => ['nullable','string','url:http,https','max:255', new ValidURL()],
+            'urls.*.url_address' => ['nullable','string','url:http,https','max:255', 'active_url', new ValidURL()],
             'urls.*.url_description' => 'nullable|string|max:255',
             'urls.*.url_primary' => 'boolean',
         ];

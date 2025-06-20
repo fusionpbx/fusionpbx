@@ -22,4 +22,7 @@ return [
     'CHECK_FAXES' => 16,
     'CHECK_IVRS' => 32,
     'CHECK_RINGGROUPS' => 64,
+
+    'ALLOW_PUBLIC_CONTEXT' => 1,
+    'ALLOW_GLOBAL_CONTEXT' => 2,
 ];

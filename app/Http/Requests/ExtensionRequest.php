@@ -53,6 +53,7 @@ class ExtensionRequest extends FormRequest
         $reqSpecial = DefaultSetting::get('users', 'password_special', 'boolean') ?? false;
 
         $rules = [
+            "domain_uuid" => "sometimes|uuid|exists:App\Models\Domain,domain_uuid",
             'extension' => [
                 'nullable',
                 'string',
@@ -61,22 +62,22 @@ class ExtensionRequest extends FormRequest
             'number_alias' => ['nullable','numeric',],
             'password' => ['nullable','string'],
             'accountcode' => 'nullable|string|max:50',
-            'enabled' => 'string',
+            'enabled' => 'nullable|string|in:true,false',
             'description' => 'nullable|string|max:500',
             'effective_caller_id_name' => 'nullable|string|max:100',
             'effective_caller_id_number' => 'nullable|numeric|integer|max:50',
             'outbound_caller_id_name' => 'nullable|string|max:100',
-            'outbound_caller_id_number' => 'nullable|string|max:50',
+            'outbound_caller_id_number' => 'nullable|string|max:20',    // Longest DID number
             'emergency_caller_id_name' => 'nullable|string|max:100',
-            'emergency_caller_id_number' => 'nullable|string|max:50',
+            'emergency_caller_id_number' => 'nullable|string|max:20',
             'directory_first_name' => 'nullable|string|max:100',
             'directory_last_name' => 'nullable|string|max:100',
             'directory_visible' => 'string|nullable',
             'directory_exten_visible' => 'string|nullable',
-            'max_registrations' => 'nullable|integer|min:1|max:10',
-            'limit_max' => 'nullable|integer|min:1|max:100',
+            'max_registrations' => 'nullable|integer|min:1',
+            'limit_max' => 'nullable|integer|min:1',
             'limit_destination' => 'nullable|string|max:100',
-            'user_context' => 'nullable|string|max:100',
+            'user_context' => ['nullable','string','max:253'],
             'range' => 'sometimes|nullable|integer|min:1',
             'missed_call_app' => 'nullable|in:email,text',
             'missed_call_data' => 'nullable|string|max:500',
@@ -86,7 +87,7 @@ class ExtensionRequest extends FormRequest
             'call_screen_enabled' => 'nullable|in:true,false',
             'user_record' => 'nullable|string|max:50',
             'hold_music' => 'nullable|string|max:100',
-            'auth_acl' => 'nullable|string|max:100',
+            'auth_acl' => 'nullable|string|max:100|exists:App\Models\AccessControl,access_control_name',
             'cidr' => ['nullable', 'string', 'max:255', new ValidCidr()],
             'sip_force_contact' => 'nullable|string|max:100',
             'sip_force_expires' => 'nullable|integer|min:60|max:3600',
@@ -154,6 +155,11 @@ class ExtensionRequest extends FormRequest
             $rules['number_alias'][] = new UniqueFSDestination();
         }
 
+        $user = auth()->user();
+        if ($user->hasPermission('extension_user_context'))
+        {
+
+        }
 
         return $rules;
     }

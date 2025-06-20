@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Voicemail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class ExtensionRepository
 {
@@ -26,7 +27,7 @@ class ExtensionRepository
         $user = auth()->user();
         return collect([$user->extensions]);
     }
-  
+
     public function all()
     {
         return $this->extension->all();
@@ -127,7 +128,7 @@ class ExtensionRepository
             $filteredData['user_context'] = $extensionData['user_context'] ?? ($existingExtension->user_context ?? null);
         } else {
             if (is_null($existingExtension)) {
-                $filteredData['user_context'] = $user->domain_name ?? $extensionData['domain_uuid'];
+                $filteredData['user_context'] = Session::get('domain_name') ?? $extensionData['domain_uuid'];
             }
         }
 
@@ -313,7 +314,7 @@ class ExtensionRepository
             if (isset($extensionData['voicemail_enabled']) || isset($extensionData['voicemail_password'])) {
                 $this->updateVoicemail($extension, $extensionData);
             }
-          
+
             DB::commit();
             return $extension->fresh();
         } catch (\Exception $e) {
@@ -540,14 +541,14 @@ class ExtensionRepository
             mkdir($directory, 0770, true);
         }
     }
-    
+
     public function copy(string $uuid, string $extensionCopy, string $numberAliasCopy): Extension
     {
         try {
             DB::beginTransaction();
 
             $originalExtension = $this->findByUuid($uuid, true);
-            
+
             $newExtension = $originalExtension->replicate();
             $newExtension->extension_uuid = Str::uuid();
             $newExtension->extension = $extensionCopy;
@@ -563,7 +564,7 @@ class ExtensionRepository
                 $newVoicemail->voicemail_id = $newExtension->number_alias ?? $newExtension->extension;
                 $newVoicemail->save();
             }
-    
+
             DB::commit();
             return $newExtension;
         } catch (\Exception $e) {
