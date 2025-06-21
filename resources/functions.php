@@ -2044,6 +2044,17 @@
 		return false;
 	}
 
+/**
+ * Escape the user data for a textarea
+ * <p>Escapes & " ' < and > characters</p>
+ * @param string $string the value to escape
+ * @return string
+ * @link https://www.php.net/htmlspecialchars
+ */
+function escape_textarea($string) {
+	return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}
+
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
 
