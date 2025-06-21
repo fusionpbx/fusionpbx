@@ -2068,7 +2068,7 @@
 
 /**
  * Escape the user data
- * <p>Escapes all characters which have HTML character entity
+ * <p>Escapes all characters that have HTML character entity
  * @param string $string the value to escape
  * @return string
  * @link https://www.php.net/htmlentities
