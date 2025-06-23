@@ -2,7 +2,7 @@
 Description=Active Calls Websocket Service
 
 [Service]
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/websockets/resources/service/active_calls.php
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/active_calls/resources/service/active_calls.php
 Restart=on-failure
 User=www-data
 Group=www-data
