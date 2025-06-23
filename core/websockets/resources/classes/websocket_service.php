@@ -203,9 +203,13 @@ class websocket_service extends service {
 				foreach ($subscriber->subscribed_to() as $subscribed_to) {
 					if (isset($this->services[$subscribed_to])) {
 						$service = $this->services[$subscribed_to];
-						$class = $service->service_class();
-						$filter = $class::create_filter_chain_for($subscriber);
-						$subscriber->set_filter($filter);
+						if (is_a($service, 'websocket_service_interface', true)) {
+							$class = $service->get_service_name();
+							$filter = $class::create_filter_chain_for($subscriber);
+							if ($filter !== null) {
+								$subscriber->set_filter($filter);
+							}
+						}
 						$this->info("Set permissions for $subscriber->id for service " . $service->service_name());
 					}
 				}
