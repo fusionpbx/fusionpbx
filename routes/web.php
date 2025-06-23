@@ -11,6 +11,7 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\BridgeController;
+use App\Http\Controllers\CallBlockController;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExtensionController;
@@ -99,6 +100,9 @@ Route::middleware(['auth','permission'])->group(function () {
     // GATEWAY
     Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
     Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
+
+    // CALL BLOCKS
+    Route::resource('/callblocks', CallBlockController::class)->name('callblocks', 'callblocks');
 
     // CARRIERS
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
