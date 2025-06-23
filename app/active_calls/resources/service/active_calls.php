@@ -27,7 +27,6 @@
  * Tim Fry <tim@fusionpbx.com>
  */
 
-
 /**
  * The purpose of this file is to subscribe to the switch events and then notify the web socket service of the event.
  *
