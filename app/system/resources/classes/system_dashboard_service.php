@@ -1,0 +1,173 @@
+<?php
+
+class system_dashboard_service extends base_websocket_system_service {
+
+	const PERMISSIONS = [
+		'system_view_cpu',
+		'system_view_backup',
+		'system_view_database',
+		'system_view_hdd',
+		'system_view_info',
+		'system_view_memcache',
+		'system_view_ram',
+		'system_view_support',
+	];
+
+	// Override parent class
+	protected $next_cpu_check = 3;
+
+	/**
+	 *
+	 * @var system_information $system_information
+	 */
+	protected static $system_information;
+
+	protected function reload_settings(): void {
+		static::set_system_information();
+
+		// re-read the config file to get any possible changes
+		parent::$config->read();
+
+		// re-connect to the websocket server if required
+		$this->connect_to_ws_server();
+	}
+
+	/**
+	 * @override base_websocket_system_service
+	 * @return void
+	 */
+	protected function on_timer(): void {
+		// Send the CPU status
+		$this->on_cpu_status();
+	}
+
+	/**
+	 * Executes once
+	 * @return void
+	 */
+	protected function register_topics(): void {
+		// Create a system information object that can tell us the cpu regardless of OS
+		self::$system_information = system_information::new();
+
+		// Register the call back to respond to cpu_status requests
+		$this->on_topic('cpu_status', [$this, 'on_cpu_status']);
+
+		// Set a timer
+		$this->set_timer(3);
+	}
+
+	public function on_cpu_status($message = null): void {
+		// Get the CPU status
+		$cpu_percent = self::$system_information->get_cpu_percent();
+
+		// Send the response
+		$response = new websocket_message();
+		$response->payload(['cpu' => $cpu_percent]);
+		$response->service_name(self::get_service_name());
+
+		// Check if we are responding
+		if ($message !== null && $message instanceof websocket_message) {
+			$response->id($message->id());
+			$response->topic($message->topic());
+		}
+
+		// Send to subscribers
+		$this->respond($response);
+	}
+
+	public static function get_service_name(): string {
+		return "system.dashboard";
+	}
+
+	public static function create_filter_chain_for(subscriber $subscriber): ?filter {
+		// Get the subscriber permissions
+		$permissions = $subscriber->get_permissions();
+
+		// Create a filter
+		$filter = filter_chain::and_link([new permission_filter()]);
+
+		// Match them to create a filter
+		foreach (self::PERMISSIONS as $permission) {
+			if (in_array($permission, $permissions)) {
+				$filter->add_permission($permission);
+			}
+		}
+
+		// Return the filter with user permissions to ensure they can't receive information they shouldn't
+		return $filter;
+	}
+
+	public static function set_system_information(): ?system_information {
+		self::$system_information = system_information::new();
+	}
+}
+
+abstract class system_information {
+
+	abstract public function get_cpu_cores(): int;
+	abstract public function get_uptime();
+	abstract public function get_cpu_percent(): float;
+
+	public function get_load_average() {
+		return sys_getloadavg();
+	}
+
+	public static function new(): ?system_information {
+		if (stristr(PHP_OS, 'BSD')) {
+			return new bsd_system_information();
+		}
+		if (stristr(PHP_OS, 'Linux')) {
+			return new linux_system_information();
+		}
+		return null;
+	}
+}
+
+class bsd_system_information extends system_information {
+
+	public function get_cpu_cores(): int {
+		$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
+		$cpu_cores = trim($result);
+		return $cpu_cores;
+	}
+
+	//get the CPU details
+	public function get_cpu_percent(): float {
+		$result = shell_exec('ps -A -o pcpu');
+		$percent_cpu = 0;
+		foreach (explode("\n", $result) as $value) {
+			if (is_numeric($value)) {
+				$percent_cpu = $percent_cpu + $value;
+			}
+		}
+		return $percent_cpu;
+	}
+
+	public function get_uptime() {
+		return shell_exec('uptime');
+	}
+}
+
+class linux_system_information extends system_information {
+
+	public function get_cpu_cores(): int {
+		$result = @trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
+		$cpu_cores = count(explode("\n", $result));
+		return $cpu_cores;
+	}
+
+	//get the CPU details
+	public function get_cpu_percent(): float {
+		$result = shell_exec('ps -A -o pcpu');
+		$percent_cpu = 0;
+		foreach (explode("\n", $result) as $value) {
+			if (is_numeric($value)) {
+				$percent_cpu = $percent_cpu + $value;
+			}
+		}
+		return $percent_cpu;
+	}
+	public function get_uptime() {
+		return shell_exec('uptime');
+	}
+}
