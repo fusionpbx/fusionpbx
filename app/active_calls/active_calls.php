@@ -770,6 +770,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				row = document.createElement("tr");
 			}
 			row.id = uuid;
+			row.className = 'list-row';
 			row.dataset.color = colors.RINGING;
 			// start string block
 			row.innerHTML = `<?php
