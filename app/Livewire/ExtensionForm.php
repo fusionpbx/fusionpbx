@@ -56,7 +56,7 @@ class ExtensionForm extends Component
 
     //toll
     public $toll_allow = '';
-    public $tollAllowOptions = []; 
+    public $tollAllowOptions = [];
     // advanced
     public $auth_acl = '';
     public $cidr = '';
@@ -357,9 +357,15 @@ class ExtensionForm extends Component
     public function copy()
     {
         try {
-            $this->extensionRepository->copy($this->extensions->extension_uuid, $this->copyExtensionNumber, $this->copyNumberAlias);
+            $newExtension = $this->extensionRepository->copy($this->extensions->extension_uuid, $this->copyExtensionNumber, $this->copyNumberAlias);
             $this->closeCopyModal();
-            session()->flash('success', 'Extension copied successfully');
+            if ($newExtension === false)
+            {
+                session()->flash('error', 'The extension or the alias number are not unique.');
+            }
+            else {
+                session()->flash('success', 'Extension copied successfully');
+            }
             redirect()->route('extensions.index');
         } catch (\Exception $e) {
             session()->flash('error', 'Error copying extension: ' . $e->getMessage());

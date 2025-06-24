@@ -7,6 +7,7 @@ use App\Models\Extension;
 use App\Models\ExtensionUser;
 use App\Models\User;
 use App\Models\Voicemail;
+use App\Rules\UniqueFSDestination;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -542,13 +543,20 @@ class ExtensionRepository
         }
     }
 
-    public function copy(string $uuid, string $extensionCopy, string $numberAliasCopy): Extension
+    public function copy(string $uuid, string $extensionCopy, string $numberAliasCopy): mixed
     {
         try {
             DB::beginTransaction();
 
             $originalExtension = $this->findByUuid($uuid, true);
-
+            $rules = [
+                'extension' => ['required', 'string', 'max:50', new UniqueFSDestination(),],
+                'number_alias' => ['nullable','numeric', new UniqueFSDestination(),],
+            ];
+            $validator = Validar::make ($request->all(), $rules);
+            if ($validator->fails()){
+                return false;
+            }
             $newExtension = $originalExtension->replicate();
             $newExtension->extension_uuid = Str::uuid();
             $newExtension->extension = $extensionCopy;

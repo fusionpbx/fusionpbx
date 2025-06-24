@@ -489,6 +489,7 @@
                                         @enderror
                                     </div>
                                 </div>
+                                @can('extension_user_context')
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="user_context" class="form-label">User Context</label>
@@ -501,6 +502,7 @@
                                         @enderror
                                     </div>
                                 </div>
+                                @endcan
                             </div>
                             <div class="row">
                                 @can('extension_call_group')
