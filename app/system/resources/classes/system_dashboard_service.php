@@ -66,6 +66,10 @@ class system_dashboard_service extends base_websocket_system_service {
 	 * @return void
 	 */
 	protected function register_topics(): void {
+
+		// get the settings from the global defaults
+		$this->reload_settings();
+
 		// Create a system information object that can tell us the cpu regardless of OS
 		self::$system_information = system_information::new();
 
@@ -74,6 +78,9 @@ class system_dashboard_service extends base_websocket_system_service {
 
 		// Set a timer
 		$this->set_timer($this->cpu_status_refresh_interval);
+
+		// Notify the user of the interval
+		$this->info("Broadcasting CPU Status every {$this->cpu_status_refresh_interval}s");
 	}
 
 	public function on_cpu_status($message = null): void {
@@ -91,6 +98,9 @@ class system_dashboard_service extends base_websocket_system_service {
 		if ($message !== null && $message instanceof websocket_message) {
 			$response->id($message->id());
 		}
+
+		// Log the broadcast
+		$this->debug("Broadcasting CPU percent '$cpu_percent'");
 
 		// Send to subscribers
 		$this->respond($response);
@@ -118,7 +128,7 @@ class system_dashboard_service extends base_websocket_system_service {
 		return $filter;
 	}
 
-	public static function set_system_information(): ?system_information {
+	public static function set_system_information(): void {
 		self::$system_information = system_information::new();
 	}
 }
