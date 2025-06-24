@@ -957,7 +957,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			value = value.substring(0, truncate_application_data_length);
 		}
 		const element = document.getElementById(element_name);
-		if (element !== null && value !== null, value.length > 0 && element.textContent !== value) {
+		if (element !== null && value !== null && value.length > 0 && element.textContent !== value) {
 			element.textContent = value;
 		}
 	}
