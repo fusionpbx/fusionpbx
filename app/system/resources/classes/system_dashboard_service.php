@@ -13,6 +13,8 @@ class system_dashboard_service extends base_websocket_system_service {
 		'system_view_support',
 	];
 
+	const CPU_STATUS_TOPIC = 'cpu_status';
+
 	// Override parent class
 	protected $next_cpu_check = 3;
 
@@ -62,13 +64,14 @@ class system_dashboard_service extends base_websocket_system_service {
 
 		// Send the response
 		$response = new websocket_message();
-		$response->payload(['cpu' => $cpu_percent]);
-		$response->service_name(self::get_service_name());
+		$response
+			->payload([self::CPU_STATUS_TOPIC => $cpu_percent])
+			->service_name(self::get_service_name())
+			->topic(self::CPU_STATUS_TOPIC);
 
 		// Check if we are responding
 		if ($message !== null && $message instanceof websocket_message) {
 			$response->id($message->id());
-			$response->topic($message->topic());
 		}
 
 		// Send to subscribers
@@ -76,7 +79,7 @@ class system_dashboard_service extends base_websocket_system_service {
 	}
 
 	public static function get_service_name(): string {
-		return "system.dashboard";
+		return "dashboard.system.information";
 	}
 
 	public static function create_filter_chain_for(subscriber $subscriber): ?filter {
@@ -99,75 +102,5 @@ class system_dashboard_service extends base_websocket_system_service {
 
 	public static function set_system_information(): ?system_information {
 		self::$system_information = system_information::new();
-	}
-}
-
-abstract class system_information {
-
-	abstract public function get_cpu_cores(): int;
-	abstract public function get_uptime();
-	abstract public function get_cpu_percent(): float;
-
-	public function get_load_average() {
-		return sys_getloadavg();
-	}
-
-	public static function new(): ?system_information {
-		if (stristr(PHP_OS, 'BSD')) {
-			return new bsd_system_information();
-		}
-		if (stristr(PHP_OS, 'Linux')) {
-			return new linux_system_information();
-		}
-		return null;
-	}
-}
-
-class bsd_system_information extends system_information {
-
-	public function get_cpu_cores(): int {
-		$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
-		$cpu_cores = trim($result);
-		return $cpu_cores;
-	}
-
-	//get the CPU details
-	public function get_cpu_percent(): float {
-		$result = shell_exec('ps -A -o pcpu');
-		$percent_cpu = 0;
-		foreach (explode("\n", $result) as $value) {
-			if (is_numeric($value)) {
-				$percent_cpu = $percent_cpu + $value;
-			}
-		}
-		return $percent_cpu;
-	}
-
-	public function get_uptime() {
-		return shell_exec('uptime');
-	}
-}
-
-class linux_system_information extends system_information {
-
-	public function get_cpu_cores(): int {
-		$result = @trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
-		$cpu_cores = count(explode("\n", $result));
-		return $cpu_cores;
-	}
-
-	//get the CPU details
-	public function get_cpu_percent(): float {
-		$result = shell_exec('ps -A -o pcpu');
-		$percent_cpu = 0;
-		foreach (explode("\n", $result) as $value) {
-			if (is_numeric($value)) {
-				$percent_cpu = $percent_cpu + $value;
-			}
-		}
-		return $percent_cpu;
-	}
-	public function get_uptime() {
-		return shell_exec('uptime');
 	}
 }
