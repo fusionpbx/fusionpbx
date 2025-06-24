@@ -74,32 +74,8 @@ $token = (new token())->create($_SERVER['PHP_SELF']);
 $document['title'] = $text['title'];
 require_once dirname(__DIR__, 2) . "/resources/header.php";
 
-echo "<style>";
-/* wrap the table so it cannot exceed viewport width */
-echo "		.table_wrapper {";
-echo "			max-width: 100vw;";
-echo "			overflow-x: auto;";
-echo "		}";
-/* force the columns to share the available width */
-echo "		table {";
-echo "			width: 100%;";
-echo "			table-layout: fixed;";
-echo "			border-collapse: collapse;";
-echo "		}";
-echo "		th, td {";
-echo "			padding: 4px 8px;";
-echo "			text-align: left;";
-/* wrap long text instead of widening the column past the viewport */
-echo "			white-space: normal;";
-echo "			word-wrap: break-word;";
-echo "		}";
-echo "		tr {";
-echo "			transition: background-color 1s ease, opacity 1s ease;";
-echo "		}";
-echo "		tr.removing {";
-//	echo "			background-color: #ff5555;	/* light red background */";
-echo "			opacity: 0;";
-echo "		}";
+//add the style
+echo "<style>\n";
 echo "	/* Small screens: Hide columns with class 'hide-small' */\n";
 echo "	@media (max-width: 600px) {\n";
 echo "		.hide-small {\n";
@@ -108,43 +84,18 @@ echo "		}\n";
 echo "	}\n";
 echo "\n";
 echo "	/* Medium screens: Hide columns with class 'hide-medium' */\n";
-echo "@media (max-width: 1023px) and (min-width: 601px) {\n";
+echo	"@media (max-width: 1023px) and (min-width: 601px) {\n";
 echo "		.hide-medium {\n";
 echo "			display: none;\n";
 echo "		}\n";
 echo "	}\n";
 echo "\n";
-echo "#overlay {\n";
-echo "    position: fixed;\n";
-echo "    top: 5%;\n";
-echo "    left: 450px;\n";
-echo "    width: 60%;\n";
-echo "    height: 90%;\n";
-echo "    background-color: rgba(0,0,0,0.33);\n";
-echo "    display: flex;\n";
-echo "    justify-content: center;\n";
-echo "    align-items: center;\n";
-echo "    overflow-y: auto;\n";
-echo "    z-index: 999;\n";
+echo "th {\n";
+echo "	white-space: nowrap; /* Prevents text from wrapping */\n";
+echo "	overflow: hidden;    /* Hides any content that overflows the element's box */\n";
+echo "	text-overflow: ellipsis; /* Shows an ellipsis (...) for clipped text */\n";
 echo "}\n";
-echo "\n";
-echo "#overlay.hidden {\n";
-echo "    display: none;\n";
-echo "}\n";
-echo "\n";
-echo "#overlay-content {\n";
-echo "    background-color: #fff;\n";
-echo "    padding: 20px;\n";
-echo "    border-radius: 5px;\n";
-echo "    overflow-y: auto;\n";
-echo "    max-height: 80%;\n";
-echo "    width: 80%;\n";
-echo "}\n";
-echo "\n";
-echo "#overlay-content h1 {\n";
-echo "    margin-top: 0;\n";
-echo "}\n";
-echo "	</style>";
+echo "</style>\n";
 
 //	if (permission_exists('call_active_details')) {
 if (true) {
@@ -220,12 +171,12 @@ if (permission_exists('call_active_hangup')) {
 	echo "						<input type='checkbox' id='checkbox_all' name='checkbox_all'>\n";
 	echo "					</th>\n";
 }
-echo "						<th style='width: 85px; text-align: center;'>" . $text['label-direction'] . "</th>\n";
+echo "						<th class='hide-small'>" . $text['label-direction'] . "</th>\n";
 if (permission_exists('call_active_profile')) {
 	echo "						<th class='hide-small'>" . $text['label-profile'] . "</th>\n";
 }
-echo "						<th class='hide-small hide-medium hide-large'>" . $text['label-duration'] . "</th>\n";
-echo "						<th id='th_domain' class='hide-small hide-medium' style='width: 185px; display: none;'>" . $text['label-domain'] . "</th>\n";
+echo "						<th>" . $text['label-duration'] . "</th>\n";
+echo "						<th id='th_domain' style='width: 185px; display: none;'>" . $text['label-domain'] . "</th>\n";
 echo "						<th class='hide-small'>" . $text['label-cid-name'] . "</th>\n";
 echo "						<th>" . $text['label-cid-number'] . "</th>\n";
 echo "						<th>" . $text['label-destination'] . "</th>\n";
@@ -779,7 +730,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		echo '	<input type="checkbox" data-uuid="${uuid}">'.PHP_EOL;
 		echo '</td>'.PHP_EOL;
 	}
-		echo '<td id="direction_${uuid}" style="text-align: center; vertical-align: middle;"><span id="arrow_${uuid}"></span></td>'.PHP_EOL;
+		echo '<td id="direction_${uuid}" class="hide-small"><span id="arrow_${uuid}"></span></td>'.PHP_EOL;
 	if (permission_exists('call_active_profile')) {
 		echo '<td id="profile_${uuid}" class="hide-small">${profile}</td>'.PHP_EOL;
 	}
@@ -791,13 +742,13 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		echo '<td id="caller_id_number_${uuid}">${call.caller_caller_id_number}</td>'.PHP_EOL;
 		echo '<td id="destination_${uuid}">${call.caller_destination_number}</td>'.PHP_EOL;
 	if (permission_exists('call_active_application')) {
-		echo '<td id="application_${uuid}">${call.caller_destination_number}</td>'.PHP_EOL;
+		echo '<td id="application_${uuid}" class="hide-small hide-medium">${call.caller_destination_number}</td>'.PHP_EOL;
 	}
 	if (permission_exists('call_active_codec')) {
-		echo '<td id="codec_${uuid}">${codec}</td>'.PHP_EOL;
+		echo '<td id="codec_${uuid}" class="hide-small hide-medium">${codec}</td>'.PHP_EOL;
 	}
 	if (permission_exists('call_active_secure')) {
-		echo '<td id="secure_${uuid}">&nbsp;</td>'.PHP_EOL;
+		echo '<td id="secure_${uuid}" class="hide-small hide-medium">&nbsp;</td>'.PHP_EOL;
 	}
 	if (permission_exists('call_active_hangup') || permission_exists('call_active_eavesdrop')) {
 		echo '<td id="commands_${uuid}" class="button right">'.PHP_EOL;
