@@ -164,11 +164,12 @@ abstract class base_websocket_system_service extends service implements websocke
 	protected function info(string $message) {
 		self::log($message, LOG_INFO);
 	}
+
 	/**
 	 * Connects to the web socket server using a websocket_client object
 	 * @return bool
 	 */
-	private function connect_to_ws_server(): bool {
+	protected function connect_to_ws_server(): bool {
 		if ($this->ws_client !== null && $this->ws_client->is_connected()) return true;
 
 		$host = self::$websocket_host ?? self::$config->get('websocket.host', '127.0.0.1');
