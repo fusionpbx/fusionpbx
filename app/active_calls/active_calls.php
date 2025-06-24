@@ -616,6 +616,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			update_call_element(`caller_id_name_${uuid}`, origin_name);
 			//remove the call arrow
 			const span = document.getElementById(`arrow_${uuid}`);
+			if (!span) { return; }
 			span.removeChild(span.firstChild);
 		}
 		if (call.topic === 'exit') {
