@@ -11,6 +11,7 @@ use App\Rules\UniqueFSDestination;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class ExtensionRepository
 {
@@ -553,10 +554,15 @@ class ExtensionRepository
                 'extension' => ['required', 'string', 'max:50', new UniqueFSDestination(),],
                 'number_alias' => ['nullable','numeric', new UniqueFSDestination(),],
             ];
-            $validator = Validar::make ($request->all(), $rules);
+            $payload = [
+                'extension' => $extensionCopy,
+                'number_alias' => $numberAliasCopy,
+            ];
+            $validator = Validator::make ($payload, $rules);
             if ($validator->fails()){
                 return false;
             }
+            unset($payload);
             $newExtension = $originalExtension->replicate();
             $newExtension->extension_uuid = Str::uuid();
             $newExtension->extension = $extensionCopy;
