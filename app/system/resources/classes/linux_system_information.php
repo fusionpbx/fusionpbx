@@ -39,15 +39,39 @@ class linux_system_information extends system_information {
 
 	//get the CPU details
 	public function get_cpu_percent(): float {
-		$result = shell_exec('ps -A -o pcpu');
+		$stat1 = file_get_contents('/proc/stat');
+		usleep(500000);
+		$stat2 = file_get_contents('/proc/stat');
+
+		$lines1 = explode("\n", trim($stat1));
+		$lines2 = explode("\n", trim($stat2));
+
 		$percent_cpu = 0;
-		foreach (explode("\n", $result) as $value) {
-			if (is_numeric($value)) {
-				$percent_cpu = $percent_cpu + $value;
-			}
+		$core_count = 0;
+
+		foreach ($lines1 as $i => $line1) {
+			if (strpos($line1, 'cpu') !== 0 || $line1 === 'cpu') continue;
+
+			$parts1 = preg_split('/\s+/', $line1);
+			$parts2 = preg_split('/\s+/', $lines2[$i]);
+
+			$total1 = array_sum(array_slice($parts1, 1));
+			$total2 = array_sum(array_slice($parts2, 1));
+
+			$idle1 = $parts1[4];
+			$idle2 = $parts2[4];
+
+			$total_delta = $total2 - $total1;
+			$idle_delta = $idle2 - $idle1;
+
+			$cpu_usage = ($total_delta - $idle_delta) / $total_delta * 100;
+			$percent_cpu += $cpu_usage;
+			$core_count++;
 		}
-		return $percent_cpu;
+
+		return round($percent_cpu / $core_count, 2);
 	}
+
 	public function get_uptime() {
 		return shell_exec('uptime');
 	}
