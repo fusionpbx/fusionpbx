@@ -143,6 +143,7 @@ class CallBlockTable extends DataTableComponent
                 $newCallBlock = $originalCallBlock->replicate();
                 $newCallBlock->call_block_uuid = Str::uuid();
                 $newCallBlock->call_block_name = $newCallBlock->call_block_name . ' (Copy)';
+                $newCallBlock->save();
             }
 
             DB::commit();
@@ -163,7 +164,27 @@ class CallBlockTable extends DataTableComponent
         return [
             Column::make("CallBlock uuid", "call_block_uuid")->hideIf(true),
 
-            Column::make("CallBlock name", "call_block_name")
+            Column::make("Direction", "call_block_direction")
+                ->searchable()
+                ->sortable(),
+
+            Column::make("Extension", "extension.extension")
+                ->searchable()
+                ->sortable(),
+
+            Column::make("Name", "call_block_name")
+                ->searchable()
+                ->sortable(),
+
+            Column::make("Country code", "call_block_country_code")
+                ->searchable()
+                ->sortable(),
+
+            Column::make("Number", "call_block_number")
+                ->searchable()
+                ->sortable(),
+
+            Column::make("Action", "call_block_action")
                 ->searchable()
                 ->sortable(),
 
