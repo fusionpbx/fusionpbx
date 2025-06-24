@@ -31,6 +31,6 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 interface websocket_service_interface {
-	public static function create_filter_chain_for(subscriber $subscriber): filter;
+	public static function create_filter_chain_for(subscriber $subscriber): ?filter;
 	public static function get_service_name(): string;
 }
