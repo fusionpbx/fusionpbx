@@ -500,47 +500,6 @@
 		echo "<br /><br />\n";
 	}
 
-//call recording
-	if (permission_exists('xml_cdr_recording') && permission_exists('xml_cdr_recording_play')) {
-		//recording properties
-		if (!empty($record_path) && !empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
-			$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
-			switch ($record_extension) {
-				case "wav" : $record_type = "audio/wav"; break;
-				case "mp3" : $record_type = "audio/mpeg"; break;
-				case "ogg" : $record_type = "audio/ogg"; break;
-			}
-		}
-
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "	<td align='left'><b>".$text['label-recording']."</b>&nbsp;</td>\n";
-		echo "	<td align='right'>\n";
-		//controls
-		if (!empty($record_path) || !empty($record_name)) {
-			echo "<audio id='recording_audio_".escape($xml_cdr_uuid)."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($xml_cdr_uuid)."')\" onended=\"recording_reset('".escape($xml_cdr_uuid)."');\" src=\"download.php?id=".escape($xml_cdr_uuid)."\" type='".escape($record_type)."'></audio>";
-			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'label'=>$text['label-play'],'id'=>'recording_button_'.escape($xml_cdr_uuid),'onclick'=>"recording_play('".escape($xml_cdr_uuid)."', null, null, 'true')",'style'=>'margin-bottom: 8px; margin-top: -8px;']);
-			if (permission_exists('xml_cdr_recording_download')) {
-				echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'label'=>$text['label-download'],'onclick'=>"window.location.href='download.php?id=".urlencode($xml_cdr_uuid)."&t=bin';",'style'=>'margin-bottom: 8px; margin-top: -8px;']);
-			}
-		}
-		echo "	</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "<div class='card'>\n";
-		//progress bar
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr class='list-row' id='recording_progress_bar_".$xml_cdr_uuid."' onclick=\"recording_seek(event,'".escape($xml_cdr_uuid)."')\">\n";
-				echo "<td id='playback_progress_bar_background_".escape($xml_cdr_uuid)."' class='playback_progress_bar_background' style='padding: 0; background-size: 100% 100% !important;'>\n";
-					echo "<span class='playback_progress_bar' id='recording_progress_".$xml_cdr_uuid."'></span>\n";
-				echo "</td>\n";
-			echo "</tr>\n";
-		echo "</table>\n";
-		echo "</div>\n";
-		echo "<br /><br />\n";
-		echo "<script>recording_load('".escape($xml_cdr_uuid)."');</script>\n";
-	}
-
 //show the call flow summary
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -588,6 +547,47 @@
 	echo "	</table>";
 	echo "</div>\n";
 	echo "<br /><br />\n";
+
+//call recording
+	if (permission_exists('xml_cdr_recording') && permission_exists('xml_cdr_recording_play')) {
+		//recording properties
+		if (!empty($record_path) && !empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
+			$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
+			switch ($record_extension) {
+				case "wav" : $record_type = "audio/wav"; break;
+				case "mp3" : $record_type = "audio/mpeg"; break;
+				case "ogg" : $record_type = "audio/ogg"; break;
+			}
+		}
+
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "	<td align='left'><b>".$text['label-recording']."</b>&nbsp;</td>\n";
+		echo "	<td align='right'>\n";
+		//controls
+		if (!empty($record_path) || !empty($record_name)) {
+			echo "<audio id='recording_audio_".escape($xml_cdr_uuid)."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($xml_cdr_uuid)."')\" onended=\"recording_reset('".escape($xml_cdr_uuid)."');\" src=\"download.php?id=".escape($xml_cdr_uuid)."\" type='".escape($record_type)."'></audio>";
+			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'label'=>$text['label-play'],'id'=>'recording_button_'.escape($xml_cdr_uuid),'onclick'=>"recording_play('".escape($xml_cdr_uuid)."', null, null, 'true')",'style'=>'margin-bottom: 8px; margin-top: -8px;']);
+			if (permission_exists('xml_cdr_recording_download')) {
+				echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'label'=>$text['label-download'],'onclick'=>"window.location.href='download.php?id=".urlencode($xml_cdr_uuid)."&t=bin';",'style'=>'margin-bottom: 8px; margin-top: -8px;']);
+			}
+		}
+		echo "	</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "<div class='card'>\n";
+		//progress bar
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			echo "<tr class='list-row' id='recording_progress_bar_".$xml_cdr_uuid."' onclick=\"recording_seek(event,'".escape($xml_cdr_uuid)."')\">\n";
+				echo "<td id='playback_progress_bar_background_".escape($xml_cdr_uuid)."' class='playback_progress_bar_background' style='padding: 0; background-size: 100% 100% !important;'>\n";
+					echo "<span class='playback_progress_bar' id='recording_progress_".$xml_cdr_uuid."'></span>\n";
+				echo "</td>\n";
+			echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
+		echo "<br /><br />\n";
+		echo "<script>recording_load('".escape($xml_cdr_uuid)."');</script>\n";
+	}
 
 //transcription, if enabled
 	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
