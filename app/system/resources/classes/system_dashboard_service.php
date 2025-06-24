@@ -15,14 +15,23 @@ class system_dashboard_service extends base_websocket_system_service {
 
 	const CPU_STATUS_TOPIC = 'cpu_status';
 
-	// Override parent class
-	protected $next_cpu_check = 3;
-
 	/**
 	 *
 	 * @var system_information $system_information
 	 */
 	protected static $system_information;
+
+	/**
+	 * Settings object
+	 * @var settings
+	 */
+	private $settings;
+
+	/**
+	 * Integer representing the number of seconds to broadcast the CPU usage
+	 * @var int
+	 */
+	private $cpu_status_refresh_interval;
 
 	protected function reload_settings(): void {
 		static::set_system_information();
@@ -32,6 +41,15 @@ class system_dashboard_service extends base_websocket_system_service {
 
 		// re-connect to the websocket server if required
 		$this->connect_to_ws_server();
+
+		// Connect to the database
+		$database = new database(['config' => parent::$config]);
+
+		// get the interval
+		$this->settings = new settings(['database' => $database]);
+
+		// get the settings from the global defaults
+		$this->cpu_status_refresh_interval = $this->settings->get('dashboard', 'cpu_status_refresh_interval', 3);
 	}
 
 	/**
@@ -55,7 +73,7 @@ class system_dashboard_service extends base_websocket_system_service {
 		$this->on_topic('cpu_status', [$this, 'on_cpu_status']);
 
 		// Set a timer
-		$this->set_timer(3);
+		$this->set_timer($this->cpu_status_refresh_interval);
 	}
 
 	public function on_cpu_status($message = null): void {
