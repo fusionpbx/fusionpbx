@@ -37,6 +37,9 @@ if (permission_exists('call_active_view')) {
 	exit;
 }
 
+//set a default value
+$debug = false;
+
 global $domain_uuid, $user_uuid, $settings, $database, $config;
 
 if (empty($domain_uuid)) {
@@ -90,15 +93,15 @@ echo "			display: none;\n";
 echo "		}\n";
 echo "	}\n";
 echo "\n";
-echo "th {\n";
-echo "	white-space: nowrap; /* Prevents text from wrapping */\n";
-echo "	overflow: hidden;    /* Hides any content that overflows the element's box */\n";
-echo "	text-overflow: ellipsis; /* Shows an ellipsis (...) for clipped text */\n";
-echo "}\n";
+echo "	th {\n";
+echo "		white-space: nowrap; /* Prevents text from wrapping */\n";
+echo "		overflow: hidden;    /* Hides any content that overflows the element's box */\n";
+echo "		text-overflow: ellipsis; /* Shows an ellipsis (...) for clipped text */\n";
+echo "	}\n";
 echo "</style>\n";
 
 //	if (permission_exists('call_active_details')) {
-if (true) {
+if ($debug) {
 	echo "<div id='overlay' class='hidden'>\n";
 	echo "  <div id='overlay-content'>\n";
 	echo "  </div>\n";
@@ -106,7 +109,7 @@ if (true) {
 }
 echo "<div class='action_bar' id='action_bar'>\n";
 if (permission_exists('call_active_all')) {
-	echo "	<div class='heading'><b>" . $text['title'] . "</b><div id='calls_active_count' class='count' style='background: red;'>0 / 0</div></div>";
+	echo "	<div class='heading'><b>" . $text['title'] . "</b><div id='calls_active_count' class='count' style='background: red;'>0</div></div>";
 } else {
 	echo "	<div class='heading'><b>" . $text['title'] . "</b><div id='calls_active_count' class='count' style='background: red;'>0</div></div>";
 }
@@ -171,7 +174,9 @@ if (permission_exists('call_active_hangup')) {
 	echo "						<input type='checkbox' id='checkbox_all' name='checkbox_all'>\n";
 	echo "					</th>\n";
 }
-echo "						<th class='hide-small'>" . $text['label-direction'] . "</th>\n";
+if (permission_exists('call_active_direction')) {
+	echo "						<th class='hide-small'>" . $text['label-direction'] . "</th>\n";
+}
 if (permission_exists('call_active_profile')) {
 	echo "						<th class='hide-small'>" . $text['label-profile'] . "</th>\n";
 }
@@ -447,7 +452,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		const state = call.answer_state;
 		//update color
 		const uuid = call.unique_id;
-		console.log(call.event_name, call.unique_id, state, call);
+		//console.log(call.event_name, call.unique_id, state, call);
 		let row = document.getElementById(uuid) || null;
 		//create a row for the call
 		if (row === null) {
@@ -480,7 +485,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				break;
 			case 'answered':
 				update_call(call);
-				console.log('ANSWERED', call);
+				//console.log('ANSWERED', call);
 				if (row !== null) {
 					replace_arrow_color(uuid, colors.CONNECTED);
 				}
@@ -494,7 +499,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	function channel_execute_event(call) {
-		console.log(call.event_name, call.unique_id, call);
+		//console.log(call.event_name, call.unique_id, call);
 
 		// Set some values that we will use
 		const uuid = call.unique_id;
@@ -521,7 +526,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 			//detect public calls coming to this domain when not showing all calls
 			if (!showAll && call.variable_domain_uuid === '<?= $_SESSION['domain_uuid'] ?>' && call.answer_state === 'ringing') {
-				console.log('public call', uuid, call);
+				//console.log('public call', uuid, call);
 				row.style.display = 'table-row';
 				//if direction is not set then set it as inbound
 				if (direction === '') {
@@ -556,7 +561,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 <?php if (permission_exists('call_active_application')): ?>
 	// react to capture the playback to update application
 	function playback_start_event(call) {
-		console.log(call.event_name, call.unique_id, call);
+		//console.log(call.event_name, call.unique_id, call);
 		const tbody = document.getElementById("calls_active_body")
 		if (callsMap.has(call.unique_id)) {
 			const uuid = call.unique_id;
@@ -571,7 +576,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	function playback_stop_event(call) {
-		console.log(call.event_name, call.unique_id, call);
+		//console.log(call.event_name, call.unique_id, call);
 		const tbody = document.getElementById("calls_active_body")
 		if (callsMap.has(call.unique_id)) {
 			const uuid = call.unique_id;
@@ -583,7 +588,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 	//update the application cell
 	function channel_application_event(call) {
-		console.log(call.event_name, call.unique_id, call);
+		//console.log(call.event_name, call.unique_id, call);
 		const tbody = document.getElementById("calls_active_body");
 		if (!callsMap.has(call.unique_id)) {
 			update_call_element(`application_${uuid}`, call.application_name);
@@ -597,7 +602,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	// This can be disabled with the -b command line option
 	function valet_parking_info_event(call) {
 		const state = call.answer_state;
-		console.log(call.event_name, call.unique_id, state, call);
+		//console.log(call.event_name, call.unique_id, state, call);
 		if (call.action === 'hold') {
 			//get the call park info
 			const uuid = call.unique_id;
@@ -606,7 +611,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			const parked_by = call.variable_referred_by_user;
 			const origin_name = call.variable_pre_transfer_caller_id_name;
 			const parking_timeout = call.variable_valet_parking_timeout;
-			update_call_element(`caller_id_number_${uuid}`, `${parked_by}->${valet_extension}`);
+			update_call_element(`caller_id_number_${uuid}`, `${parked_by} -> ${valet_extension}`);
 			update_call_element(`caller_id_name_${uuid}`, origin_name);
 			//remove the call arrow
 			const span = document.getElementById(`arrow_${uuid}`);
@@ -622,7 +627,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	function channel_state_event(call) {
-		console.log(call.event_name, call.channel_state, call.unique_id, call);
+		//console.log(call.event_name, call.channel_state, call.unique_id, call);
 	}
 
 	//////////////////////
@@ -631,16 +636,17 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 	function replace_arrow_color(uuid, color) {
 		const row = document.getElementById(uuid);
-		if (!row)
-			return;
+		if (!row) { return; }
 
 		//get the table cell
 		const span = document.getElementById(`arrow_${uuid}`) ?? null;
+		if (!span) { return; }
 		const icon = span.dataset.icon ?? 'local';
 
 		//nothing to do
-		if (color === span.dataset.color)
+		if (color === span.dataset.color) {
 			return;
+		}
 
 		span.dataset.icon = icon;
 		span.dataset.color = color;
@@ -659,21 +665,24 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	function replace_arrow_icon(uuid, icon) {
+
 		const row = document.getElementById(uuid);
-		if (!row)
-			return;
+		if (!row) {	return; }
 
 		//get the table cell
 		const span = document.getElementById(`arrow_${uuid}`) ?? null;
+		if (!span) { return; }
 		const color = span.dataset.color ?? colors.RINGING;
+
 
 		if (span.dataset.icon === null) {
 			throw Exception('icon empty');
 		}
 
 		//nothing to do
-		if (icon === span.dataset.icon)
+		if (icon === span.dataset.icon) {
 			return;
+		}
 
 		span.dataset.icon = icon;
 		span.dataset.color = color;
@@ -723,45 +732,48 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			row.id = uuid;
 			row.className = 'list-row';
 			row.dataset.color = colors.RINGING;
+
 			// start string block
 			row.innerHTML = `<?php
-	if (permission_exists('call_active_hangup')) {
-		echo '<td id="checkbox_${uuid}" class="checkbox">'.PHP_EOL;
-		echo '	<input type="checkbox" data-uuid="${uuid}">'.PHP_EOL;
-		echo '</td>'.PHP_EOL;
-	}
-		echo '<td id="direction_${uuid}" class="hide-small"><span id="arrow_${uuid}"></span></td>'.PHP_EOL;
-	if (permission_exists('call_active_profile')) {
-		echo '<td id="profile_${uuid}" class="hide-small">${profile}</td>'.PHP_EOL;
-	}
-		echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
-	if (permission_exists('call_active_all')) {
-		echo '<td id="caller_context_${uuid}" style="display: none;">${call.caller_context}</td>'.PHP_EOL;
-	}
-		echo '<td id="caller_id_name_${uuid}" class="hide-small">${call.caller_caller_id_name}</td>'.PHP_EOL;
-		echo '<td id="caller_id_number_${uuid}">${call.caller_caller_id_number}</td>'.PHP_EOL;
-		echo '<td id="destination_${uuid}">${call.caller_destination_number}</td>'.PHP_EOL;
-	if (permission_exists('call_active_application')) {
-		echo '<td id="application_${uuid}" class="hide-small hide-medium">${call.caller_destination_number}</td>'.PHP_EOL;
-	}
-	if (permission_exists('call_active_codec')) {
-		echo '<td id="codec_${uuid}" class="hide-small hide-medium">${codec}</td>'.PHP_EOL;
-	}
-	if (permission_exists('call_active_secure')) {
-		echo '<td id="secure_${uuid}" class="hide-small hide-medium">&nbsp;</td>'.PHP_EOL;
-	}
-	if (permission_exists('call_active_hangup') || permission_exists('call_active_eavesdrop')) {
-		echo '<td id="commands_${uuid}" class="button right">'.PHP_EOL;
-			echo '<span>'.PHP_EOL;
 			if (permission_exists('call_active_hangup')) {
-				echo '<span id="span_hangup_${uuid}"></span>'.PHP_EOL;
+				echo '<td id="checkbox_${uuid}" class="checkbox">'.PHP_EOL;
+				echo '	<input type="checkbox" data-uuid="${uuid}">'.PHP_EOL;
+				echo '</td>'.PHP_EOL;
 			}
-			if (permission_exists('call_active_eavesdrop')) {
-				echo '<span id="span_eavesdrop_${uuid}"></span>'.PHP_EOL;
+			if (permission_exists('call_active_direction')) {
+				echo '<td id="direction_${uuid}" class="hide-small"><span id="arrow_${uuid}"></span></td>'.PHP_EOL;
 			}
-			echo '</span>'.PHP_EOL;
-		echo '</td>'.PHP_EOL;
-	}
+			if (permission_exists('call_active_profile')) {
+				echo '<td id="profile_${uuid}" class="hide-small">${profile}</td>'.PHP_EOL;
+			}
+			echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
+			if (permission_exists('call_active_all')) {
+				echo '<td id="caller_context_${uuid}" style="display: none;">${call.caller_context}</td>'.PHP_EOL;
+			}
+			echo '<td id="caller_id_name_${uuid}" class="hide-small">${call.caller_caller_id_name}</td>'.PHP_EOL;
+			echo '<td id="caller_id_number_${uuid}">${call.caller_caller_id_number}</td>'.PHP_EOL;
+			echo '<td id="destination_${uuid}">${call.caller_destination_number}</td>'.PHP_EOL;
+			if (permission_exists('call_active_application')) {
+				echo '<td id="application_${uuid}" class="hide-small hide-medium">${call.caller_destination_number}</td>'.PHP_EOL;
+			}
+			if (permission_exists('call_active_codec')) {
+				echo '<td id="codec_${uuid}" class="hide-small hide-medium">${codec}</td>'.PHP_EOL;
+			}
+			if (permission_exists('call_active_secure')) {
+				echo '<td id="secure_${uuid}" class="hide-small hide-medium">&nbsp;</td>'.PHP_EOL;
+			}
+			if (permission_exists('call_active_hangup') || permission_exists('call_active_eavesdrop')) {
+				echo '<td id="commands_${uuid}" class="button right">'.PHP_EOL;
+					echo '<span>'.PHP_EOL;
+					if (permission_exists('call_active_hangup')) {
+						echo '<span id="span_hangup_${uuid}"></span>'.PHP_EOL;
+					}
+					if (permission_exists('call_active_eavesdrop')) {
+						echo '<span id="span_eavesdrop_${uuid}"></span>'.PHP_EOL;
+					}
+					echo '</span>'.PHP_EOL;
+				echo '</td>'.PHP_EOL;
+			}
 ?>`;
 //end string block
 			if (websockets_domain_name === call.caller_context || showAll || call.caller_context === 'public') {
@@ -812,7 +824,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 					eavesdrop.style.display = 'inline-block';
 					eavesdrop.addEventListener('click', async e => {
 						//send command to server to eavesdrop on call
-						console.log('eavesdrop:', call);
+						//console.log('eavesdrop:', call);
 						client.request('active.calls', 'eavesdrop', {
 							unique_id: call.unique_id, //$channnel_uuid
 							origination_caller_id_name: '<?= $text['label-eavesdrop'] ?>', //origination_caller_id_name=
@@ -965,7 +977,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		});
 
 		const totalCount = callsMap.size;
-		calls_active_count.textContent = `${visibleCount} / ${totalCount}`;
+		calls_active_count.textContent = `${visibleCount}`;
 	}
 
 	function start_duration_timer(uuid, start_time) {
