@@ -19,14 +19,27 @@ class ModuleRequest extends FormRequest
 
 	public function rules(): array
 	{
-		return [
+        $isCreating = $this->isMethod("post");
+		$rules = [
 			"module_label" => "bail|required|string|max:255",
-			"module_name" => "bail|required|string|max:255",
+			"module_name" => ["bail","required","string","max:255","starts_with:mod_"],
 			"module_order" => "bail|nullable|integer|min:0",
 			"module_category" => "bail|required|string|max:255",
 			"module_enabled" => "bail|nullable|in:true,false",
 			"module_default_enabled" => "bail|nullable|in:true,false",
 			"module_description" => "bail|nullable|string|max:255",
 		];
+         if ($isCreating)
+         {
+             $rule["module_name"][] = Rule::unique('App\Models\Module','module_name');
+         }
+         else
+         {
+             $rule["module_name"][] = Rule::unique('App\Models\Module','module_name')->ignore($this->module->module_uuid, $this->module->getKeyName());
+
+         }
+
+
+        return $rules;
 	}
 }
