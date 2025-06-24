@@ -374,7 +374,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		const maxReconnectDelay = 30000; // 30 seconds
 		const baseReconnectDelay = 1000; // 1 second
 
-		client = new ws_client(`wss://${window.location.hostname}/websocket/`, authToken);
+		client = new ws_client(`wss://${window.location.hostname}/websockets/`, authToken);
 
 		if (!client) {
 			console.error('Unable to connect to web socket server');
