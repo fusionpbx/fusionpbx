@@ -9,7 +9,7 @@
 Description=Websocket Router Service
 
 [Service]
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/websockets/resources/service/websockets.php --no-fork
+ExecStart=/usr/bin/php /var/www/fusionpbx/core/websockets/resources/service/websockets.php --no-fork
 Restart=on-failure
 User=www-data
 Group=www-data
