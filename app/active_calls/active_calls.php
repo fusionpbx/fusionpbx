@@ -504,6 +504,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		// Set some values that we will use
 		const uuid = call.unique_id;
 		const row = document.getElementById(uuid);
+		if (!row) { return; }
 		const direction = call.variable_call_direction ?? '';
 
 		// use application field to help determine arrows
