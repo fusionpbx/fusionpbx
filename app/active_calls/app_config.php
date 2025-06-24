@@ -83,6 +83,9 @@
 	$apps[$x]['permissions'][$y]['name'] = "call_active_all";
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "call_active_direction";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$y++;
 	$apps[$x]['permissions'][$y]['name'] = "call_active_profile";
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$y++;
