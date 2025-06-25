@@ -142,22 +142,20 @@ if (!$settings->get('active_calls', 'remove_completed_calls', true)) {
 	]);
 }
 
-if (permission_exists('call_active_hangup')) {
-	if (permission_exists('call_active_hangup')) {
-		// Hangup selected calls
-		echo button::create([
-			'id' => 'btn_hangup',
-			'type' => 'button',
-			'label' => $text['label-hangup'],
-			'icon' => 'phone-slash',
-			'onclick' => "if (confirm('" . $text['confirm-hangup'] . "')) { "
-			. "hangup_selected();"
-			. "} else { "
-			. "this.blur(); "
-			. "return false; "
-			. "}",
-		]) . "\n";
-	}
+if (permission_exists('call_active_hangup_disabled')) {
+	// Hangup selected calls
+	echo button::create([
+		'id' => 'btn_hangup',
+		'type' => 'button',
+		'label' => $text['label-hangup'],
+		'icon' => 'phone-slash',
+		'onclick' => "if (confirm('" . $text['confirm-hangup'] . "')) { "
+		. "hangup_selected();"
+		. "} else { "
+		. "this.blur(); "
+		. "return false; "
+		. "}",
+	]) . "\n";
 }
 echo "	</div>\n";
 echo "	<div style='clear: both;'></div>\n";
