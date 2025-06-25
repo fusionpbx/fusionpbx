@@ -849,6 +849,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 			//set values
 			const uuid = call.unique_id;
+			const row = document.getElementById(uuid);
 			<?php if (permission_exists('call_active_profile')): ?>
 				const caller_channel_name = call?.caller_channel_name.split('/')[1] ?? '';
 			<?php endif; ?>
@@ -878,6 +879,10 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			<?php endif; ?>
 			<?php if (permission_exists('call_active_all')): ?>
 				update_call_element(`caller_context_${uuid}`, caller_context);
+				//check if the context changes to this domain
+				if (caller_context === '<?= $_SESSION['domain_name'] ?>') {
+					row.style.display = 'table-row';
+				}
 			<?php endif; ?>
 				update_call_element(`caller_id_name_${uuid}`, caller_caller_id_name);
 				update_call_element(`caller_id_number_${uuid}`, caller_caller_id_number);
