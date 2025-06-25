@@ -424,11 +424,6 @@ class active_calls_service extends service implements websocket_service_interfac
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
 		}
 
-		// Make sure we are connected
-		if (!$this->event_socket->is_connected()) {
-			return;
-		}
-
 		// Set up the response array
 		$response = [];
 		$response['service_name'] = SERVICE_NAME;
@@ -464,11 +459,43 @@ class active_calls_service extends service implements websocket_service_interfac
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
 		}
 
+		// Get the payload
+		$payload = $websocket_message->payload();
+
+		// Get the request ID so we can route it back
+		$request_id = $websocket_message->request_id() ?? '';
+
+		// Get the UUID from the payload
+		$uuid = $payload['unique_id'] ?? '';
+
+		// Respond with bad command
+		if (empty($uuid)) {
+			websocket_client::send(websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
+		}
+
+		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');
+		$port = self::$switch_port ?? parent::$config->get('switch.event_socket.port', 8021);
+		$password = self::$switch_password ?? parent::$config->get('switch.event_socket.password', 'ClueCon');
+
+		//
+		// We use a new socket connection to get the response because the switch
+		// can be firing events while we are processing so we need only this
+		// request answered
+		//
+		$event_socket = new event_socket();
+		$event_socket->connect($host, $port, $password);
+
 		// Make sure we are connected
-		if (!$this->event_socket->is_connected()) {
-			$this->warn("Failed to hangup call because event socket no longer connected");
+		if (!$event_socket->is_connected()) {
+			$this->warn("Unable to connect to event socket");
 			return;
 		}
+
+		// Send the command on a new channel that does not have events
+		$reply = trim($event_socket->request("api uuid_kill $uuid"));
+
+		// Close the connection
+		$event_socket->close();
 
 		// Set up the response array
 		$response = [];
@@ -476,17 +503,11 @@ class active_calls_service extends service implements websocket_service_interfac
 		$response['topic'] = $websocket_message->topic;
 		$response['request_id'] = $websocket_message->request_id;
 
-		// Get the payload
-		$payload = $websocket_message->payload;
-
-		// Get the UUID from the payloadc
-		$uuid = $payload['unique_id'] ?? '';
-
 		$response['status_message'] = 'success';
 		$response['status_code'] = 200;
 
-		//Notify switch to hangup and ignore the response
-		$response = $this->event_socket->request("bgapi uuid_kill $uuid");
+		// Set the response payload to the reply received from the switch
+		$response['payload'] = $reply;
 
 		// Notify websocket server of the result
 		websocket_client::send($this->ws_client->socket(), new websocket_message($response));
@@ -658,13 +679,17 @@ class active_calls_service extends service implements websocket_service_interfac
 	private function get_active_calls(): array {
 		$calls = [];
 
+		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');
+		$port = self::$switch_port ?? parent::$config->get('switch.event_socket.port', 8021);
+		$password = self::$switch_password ?? parent::$config->get('switch.event_socket.password', 'ClueCon');
+
 		//
 		// We use a new socket connection to get the response because the switch
 		// can be firing events while we are processing so we need only this
 		// request answered
 		//
 		$event_socket = new event_socket();
-		$event_socket->connect();
+		$event_socket->connect($host, $port, $password);
 
 		// Make sure we are connected
 		if (!$event_socket->is_connected()) {
