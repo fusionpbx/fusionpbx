@@ -223,7 +223,7 @@ Parametersfor ProvisioningTab
 
 <!--Proxyand Registration-->
 <Proxy_1_ ua="na">{$domain_name}</Proxy_1_>
-<Outbound_Proxy_1_ ua="na">portal.us.nemerald.net:{$sip_port_1}</Outbound_Proxy_1_>
+<Outbound_Proxy_1_ ua="na">{$cisco_outbound_proxy_1}:{$sip_port_1}</Outbound_Proxy_1_>
 <Use_Outbound_Proxy_1_ ua="na">Yes</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Registrar_Server_1_ ua="na"/>
@@ -380,7 +380,7 @@ Parametersfor ProvisioningTab
 
 <!--Proxyand Registration-->
 <Proxy_2_ ua="na">{$domain_name}</Proxy_2_>
-<Outbound_Proxy_2_ ua="na">portal.us.nemerald.net:{$sip_port_2}</Outbound_Proxy_2_>
+<Outbound_Proxy_2_ ua="na">{$cisco_outbound_proxy_1}:{$sip_port_1}</Outbound_Proxy_2_>
 <Use_Outbound_Proxy_2_ ua="na">Yes</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Registrar_Server_2_ ua="na"/>
