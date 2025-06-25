@@ -84,9 +84,17 @@ class AuthController extends Controller
         }
 
         if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
-            $user = $this->guard()->user();
+            $user = Auth::user();
+            $extension = $user->extensions()->first();
             return response()->json([
                 'data' => $user->toResource(),
+                'available_extensions' => [
+                    'api_key' => $user->api_key,
+                    'extension_uuid' => $extension->extension_uuid,
+                    'domain_uuid' => $extension->domain_uuid,
+                    'extension' => $extension->extension,
+                    'password' => $extension->password,
+                ],
             ]);
         }
 
