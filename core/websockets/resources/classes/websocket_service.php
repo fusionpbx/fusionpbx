@@ -401,6 +401,7 @@ class websocket_service extends service {
 				$message = websocket_message::create_from_json_message($json_array);
 
 				if ($message === null) {
+					$this->warn("Message is empty");
 					return;
 				}
 
@@ -419,6 +420,7 @@ class websocket_service extends service {
 
 				// Message is from the client so check the service_name that needs to get the message
 				if (!empty($message->service_name())) {
+					$this->debug("Message is from subscriber");
 					$this->handle_client_message($subscriber, $message);
 				} else {
 					// Message does not have a service name
@@ -435,6 +437,9 @@ class websocket_service extends service {
 		foreach ($this->subscribers as $service) {
 			//when we find the service send the request
 			if ($service->service_equals($message->service_name())) {
+				//notify we found the service
+				$this->debug("Routing message to service '" . $message->service_name() . "' for topic '" . $message->topic() . "'");
+
 				//attach the current subscriber permissions so the service can verify
 				$message->permissions($subscriber->get_permissions());
 
@@ -446,6 +451,7 @@ class websocket_service extends service {
 
 				//send the modified web socket message to the service
 				$service->send((string) $message);
+
 				//continue searching for service providers
 				continue;
 			}
