@@ -10,9 +10,11 @@ Description=Websocket Router Service
 
 [Service]
 ExecStart=/usr/bin/php /var/www/fusionpbx/core/websockets/resources/service/websockets.php --no-fork
-Restart=on-failure
 User=www-data
 Group=www-data
+Restart=always
+RestartSec=5
+StartLimitInterval=0
 
 [Install]
 WantedBy=multi-user.target
