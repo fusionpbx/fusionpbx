@@ -140,7 +140,7 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="call_block_description" class="form-label">CallBlock Description</label>
+                            <label for="call_block_description" class="form-label">Description</label>
                             <textarea
                                 class="form-control @error('call_block_description') is-invalid @enderror"
                                 id="call_block_description"
@@ -165,6 +165,166 @@
                 </a>
             </div>
         </form>
+
+        @if(!isset($callblock))
+        <form id='form_list' method='post'>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type='hidden' id='action' name='action' value='add'>
+
+                            <label class="form-label">{{ __("Recent calls") }}</label>
+
+                            <select class='form-select' id='recent_calls_direction'>
+                                <option value='' disabled='disabled'>{{ __("Direction") }}</option>
+                                <option value='inbound'>{{ __("Inbound") }}</option>
+                                <option value='outbound'>{{ __("Outbound") }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4"></div>
+
+                    @if(isset($xmlCDR))
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="form-label"></label>
+                                @can('call_block_all')
+                                    <select class='form-select' name='extension_uuid'>
+                                        <option value='' disabled='disabled'>{{ __("Extension") }}</option>
+                                        <option value='' selected='selected'>{{ __("All") }}</option>
+                                        @if(!$extensions->isEmpty())
+                                            @foreach($extensions as $extension)
+                                                <option value="{{ $extension->extension_uuid }}">{{ $extension->extension }} {{ $extension->description }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                @endcan
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="form-label"></label>
+                            <x-switch-call-block-action name="call_block_action" selected="$callblock->call_block_app" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="form-label"></label><br>
+                            <button type="submit" class="btn btn-danger px-4 py-2" style="border-radius: 4px;">{{ __("Block") }}</button>
+                        </div>
+                    </div>
+                    @endif
+
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        @foreach(['inbound','outbound'] as $direction)
+                            <table class="laravel-livewire-table table table-striped table-hover table-bordered" id="list_{{ $direction }}" @if($direction == 'outbound') style="display: none;" @endif>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <input type='checkbox' id='checkbox_all_".$direction."' name='checkbox_all' class="form-check-input">
+                                        </th>
+                                        <th style='width: 1%;'></th>
+                                        <th>{{ __("Name") }}</th>
+                                        <th>{{ __("Number") }}</th>
+                                        <th>{{ __("Destination") }}</th>
+                                        <th>{{ __("Called") }}</th>
+                                        <th>{{ __("Duration") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                @if(!$xmlCDR->isEmpty())
+                                    @foreach($xmlCDR as $key => $row)
+                                        @if($row->direction == $direction)
+                                            @if(strlen($row->caller_id_number) >= 7)
+                                                @php
+                                                    $time_format = Setting::getSetting('domain', 'time_format', 'text');
+                                                    $tmp_start_epoch = date('j M Y', $row->start_epoch);
+                                                    $tmp_start_time = date('H:i:s', $row->start_epoch);
+                                                    $seconds = ($row->hangup_cause == "ORIGINATOR_CANCEL") ? $row->duration : $row->billsec;
+                                                    $title_mod = '';
+                                                    $file_mod = '';
+                                                    $icon_prefix = '';
+                                                    $title_prefix = '';
+                                                @endphp
+
+                                                @switch ($row->direction)
+                                                    @case('inbound')
+                                                        @php
+                                                            $icon_prefix = 'icon_cdr_inbound';
+                                                            $title_prefix = __('Inbound');
+                                                            $file_mod = $row->billsec == 0 ? '_voicemail' : '_answered';
+                                                            $title_mod = $row->billsec == 0 ? ' ' . __('Missed') : '';
+                                                        @endphp
+                                                        @break
+
+                                                    @case('outbound')
+                                                        @php
+                                                            $icon_prefix = 'icon_cdr_outbound';
+                                                            $title_prefix = __('Outbound');
+                                                            $file_mod = $row->billsec == 0 ? '_failed' : '_answered';
+                                                            $title_mod = $row->billsec == 0 ? ' ' . __('Failed') : '';
+                                                        @endphp
+                                                        @break
+                                                @endswitch
+
+                                                @php
+                                                    $icon_path = asset("assets/icons/xml_cdr/{$icon_prefix}{$file_mod}.png");
+                                                    $icon_title = $title_prefix . $title_mod;
+                                                @endphp
+
+                                                <tr class='list-row row_".$row->direction."' href=''>
+                                                    <td class='checkbox'>
+                                                        <input type='checkbox' class='form-check-input checkbox_".$row->direction."' name='xml_cdrs[{{$key}}][checked]' id='checkbox_".$key."' value='true'>
+                                                        <input type='hidden' name='xml_cdrs[{{$key}}][uuid]' value="{{ $row->xml_cdr_uuid }}">
+                                                    </td>
+                                                    <td>
+                                                        <img src="{{ $icon_path }}" style="border: none;" title="{{ $icon_title }}">
+                                                    </td>
+                                                    <td>{{ $row->caller_id_name }}</td>
+                                                    <td>{{ $row->caller_id_number }}</td>
+                                                    <td>{{ $row->caller_destination }}</td>
+                                                    <td>{{ $tmp_start_epoch }}</td>
+                                                    <td>{{ gmdate('G:i:s', $seconds) }}</td>
+                                                </tr>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                @endif
+                                </tbody>
+                            </table>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </form>
+        @endif
+
     </div>
 </div>
 @endsection
+
+@push("scripts")
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const selector = document.getElementById('recent_calls_direction');
+    const inboundTable = document.getElementById('list_inbound');
+    const outboundTable = document.getElementById('list_outbound');
+
+    selector.addEventListener('change', function()
+    {
+        inboundTable.style.display = this.value === 'inbound' ? '' : 'none';
+        outboundTable.style.display = this.value === 'outbound' ? '' : 'none';
+    });
+});
+
+</script>
+@endpush
