@@ -721,10 +721,6 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			const write_rate = call.channel_write_codec_rate ?? '';
 			const codec = `${read_codec}:${read_rate} / ${write_codec}:${write_rate}`
 <?php endif; ?>
-			//set the domain context when it is 'default' to be current domain
-			if (call.caller_context === 'default') {
-				call.caller_context = '<?= $_SESSION['domain_name'] ?>';
-			}
 
 			//create or get the row
 			let row = document.getElementById(uuid);
@@ -778,7 +774,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			}
 ?>`;
 //end string block
-			if (websockets_domain_name === call.caller_context || showAll || call.caller_context === 'public') {
+			if (websockets_domain_name === call.caller_context || showAll) {
 				row.style.display = 'table-row';
 			} else {
 				row.style.display = 'none';
