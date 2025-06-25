@@ -551,8 +551,7 @@ class websocket_service extends service {
 						$this->disconnect_client($client_socket);
 						continue;
 					}
-					$this->debug("UNKNOWN CONTROL FRAME: '$value'", LOG_ERR);
-					die();
+					$this->err("UNKNOWN CONTROL FRAME: '$value'");
 				}
 
 				try {
