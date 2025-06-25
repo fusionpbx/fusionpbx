@@ -336,14 +336,35 @@ class websocket_client {
 	// Helper function to fully read N bytes
 	private function read_bytes(int $length): ?string {
 		$data = '';
+		$max_chunk_size = stream_get_chunk_size($this->resource);
+
 		while (strlen($data) < $length) {
-			$chunk = fread($this->resource, $length - strlen($data));
-			if ($chunk === false || $chunk === '') {
-				break;
+			$remaining = $length - strlen($data);
+			$read_size = min($max_chunk_size, $remaining);
+
+			// Read maximum chunk size or what is remaining
+			$chunk = fread($this->resource, $read_size);
+
+			if ($chunk === false) {
+				echo "[ERROR] fread() failed to read stream\n";
+				return null;
+			}
+
+			if ($chunk === '') {
+				$meta = stream_get_meta_data($this->resource);
+				if (!empty($meta['timed_out'])) {
+					echo "[ERROR] Socket timed out after reading " . strlen($data) . " of $length bytes\n";
+					return null;
+				}
+				// Jitter or other read issues on the socket so wait 10 ms
+				usleep(10000);
+
+				// Try again
+				continue;
 			}
 			$data .= $chunk;
 		}
-		return strlen($data) === $length ? $data : null;
+		return $data;
 	}
 
 	public function authenticate($token_name, $token_hash) {
@@ -406,6 +427,14 @@ class websocket_client {
 		file_put_contents($token_file, $file_contents);
 
 		return [$array['token']['name'], $array['token']['hash']];
+	}
+}
+
+// PHP <=7.4 compatibility - Replaced in PHP 8.0+
+if (!function_exists('stream_get_chunk_size')) {
+	function stream_get_chunk_size($stream): int {
+		// For PHP versions lower then 8 we send the maximum size defined from https://php.net/stream_get_chunk_size
+		return 8192;
 	}
 }
 
