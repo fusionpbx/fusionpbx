@@ -192,7 +192,7 @@
 		//send the help message to the console
 		echo "Usage:\n";
 		echo "  upgrade.php [-hvnostdmpgfui] [--menu [default|list]] [--services [update|restart]]\n";
-		echo "  A terminal based upgrade tool used to simplify or automate the upgrade.\n";
+		echo "  A terminal-based upgrade tool used to simplify or automate the upgrade.\n";
 		echo "\n";
 		echo "Options:\n";
 		echo "  -h --help                         Show this help message.\n";
@@ -206,7 +206,7 @@
 		echo "  -p --permissions                  Restore default file and group permissions.\n";
 		echo "  -g --group                        Restore default group permissions.\n";
 		echo "  -f --file                         Update the file permissions.\n";
-		echo "  -u --service [update|restart]    Update and restart services.\n";
+		echo "  -u --service [update|restart]     Update and restart services.\n";
 		echo "  -i --interactive                  Show the interactive menu.\n";
 		echo "\n";
 
