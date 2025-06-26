@@ -218,24 +218,7 @@
 
 		//database table exists
 		private function db_table_exists($db_type, $db_name, $table_name) {
-			$sql = "";
-			if ($db_type == "sqlite") {
-				$sql .= "SELECT * FROM sqlite_master WHERE type='table' and name='$table_name' ";
-			}
-			if ($db_type == "pgsql") {
-				$sql .= "select * from pg_tables where schemaname='public' and tablename = '$table_name' ";
-			}
-			if ($db_type == "mysql") {
-				$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
-			}
-			$prep_statement = $this->database->db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) > 0) {
-				return true; //table exists
-			} else {
-				return false; //table doesn't exist
-			}
+			return $this->database->table_exists($table_name);
 		}
 
 		//database table information
@@ -304,33 +287,7 @@
 
 		//database column exists
 		private function db_column_exists($db_type, $db_name, $table_name, $column_name) {
-
-			if ($db_type == "sqlite") {
-				$table_info = $this->db_table_info($db_name, $db_type, $table_name);
-				if ($this->db_sqlite_column_exists($table_info, $column_name)) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-			if ($db_type == "pgsql") {
-				$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name' limit 1) AND attname = '$column_name'; ";
-			}
-			if ($db_type == "mysql") {
-				//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
-				$sql = "show columns from $table_name where field = '$column_name' ";
-			}
-			if ($sql) {
-				$prep_statement = $this->database->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (!empty($result)) {
-					return true;
-				} else {
-					return false;
-				}
-				unset($prep_statement);
-			}
+			return $this->database->column_exists($table_name, $column_name);
 		}
 
 		//database column data type
