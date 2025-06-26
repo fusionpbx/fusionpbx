@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Portions created by the Initial Developer are Copyright (C) 2008-2022
+	  Portions created by the Initial Developer are Copyright (C) 2008-2025
 	  the Initial Developer. All Rights Reserved.
 
 	  Contributor(s):
@@ -2414,17 +2414,42 @@ function escape_textarea($string) {
 if (!function_exists('git_pull')) {
 	function git_pull($path) {
 
+		//set the realpath
+		$path = realpath($path);
+
+		//return false if the path is invalid or inaccessible
+		if ($path === false) {
+			return false;
+		}
+
+		//add the safe.directory
+		if (is_git_safe_directory($path)) {
+			$command = 'git config --global --add safe.directory '.escapeshellarg($path);
+			exec($command);
+		}
+
+		//set the original working directory
 		$cwd = getcwd();
+
+		//set the new working directory
 		chdir($path);
+
+		//specify how to reconcile divergent branches
+		exec('git config pull.rebase true');
+
+		//git pull
 		exec("GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git pull 2>&1", $response_source_update);
 
+		//set the default update status
 		$update_status = false;
 
+		//return false
 		if (sizeof($response_source_update) == 0) {
 			chdir($cwd);
 			return array('result' => false, 'message' => null);
 		}
 
+		//set the update_status boolean value
 		foreach ($response_source_update as $response_line) {
 			if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up to date.") > 0) {
 				$update_status = true;
@@ -2435,26 +2460,73 @@ if (!function_exists('git_pull')) {
 				break;
 			}
 		}
+
+		//set the original working directory
 		chdir($cwd);
 
+		//return the array
 		return array('result' => $update_status,
 				'message' => $response_source_update);
 
 	}
 }
 
-//git is repository
+/**
+ * Check if the given directory is in the array of git safe directories.
+ *
+ * @param string $directory The directory to check.
+ * @return bool Returns true if the directory is safe, false otherwise.
+ */
+function is_git_safe_directory($directory) {
+
+	// Set the project root
+	$project_root = dirname(__DIR__, 1);
+	//echo "project_root $project_root\n";
+
+	// Define an array of safe directories
+	$safe_directories = [];
+	$safe_directories[] = $project_root.'/app/bulk_account_settings';
+	$safe_directories[] = $project_root.'/app/call_center_summary';
+	$safe_directories[] = $project_root.'/app/conference_cdr';
+	$safe_directories[] = $project_root.'/app/device_logs';
+	$safe_directories[] = $project_root.'/app/dialplan_tools';
+	$safe_directories[] = $project_root.'/app/edit';
+	$safe_directories[] = $project_root.'/app/invoices';
+	$safe_directories[] = $project_root.'/app/maintenance';
+	$safe_directories[] = $project_root.'/app/messages';
+	$safe_directories[] = $project_root.'/app/providers';
+	$safe_directories[] = $project_root.'/app/speech';
+	$safe_directories[] = $project_root.'/app/sql_query';
+	$safe_directories[] = $project_root.'/app/transcribe';
+
+	// Normalize the directory path
+	$normalized_directory = realpath($directory);
+
+	// Check if the normalized directory is in the list of safe directories
+	return in_array($normalized_directory, $safe_directories);
+}
+
+//git repo validation
 if (!function_exists('is_git_repo')) {
 	function is_git_repo($path) {
-		if(!is_dir($path)) {return false;}
-		$cwd = $_SERVER["PROJECT_ROOT"];
-		chdir($path);
-		exec("git rev-parse --show-toplevel", $git_repo, $git_repo_response);
-		chdir($cwd);
-		if ((is_array($git_repo) && count($git_repo) > 0) && ($git_repo[0] != $cwd) && $git_repo_response == 0) {
-			return $git_repo[0];
+		//normalize the path
+		$path = realpath($path);
+
+		//return false if the path is invalid or inaccessible
+		if ($path === false) {
+			return false;
 		}
-		return false;
+
+		//check if the .git directory exists in the given path
+		$result = is_dir($path . '/.git');
+
+		//return false if not a git repo
+		if ($result === false) {
+			return false;
+		}
+
+		//return the path if it is a repo
+		return is_dir($path . '/.git');
 	}
 }
 
@@ -2462,31 +2534,38 @@ if (!function_exists('is_git_repo')) {
 if (!function_exists('git_repo_info')) {
 	function git_repo_info($path) {
 
+		//return false if the path is invalid or inaccessible
 		if(!is_dir($path)) {
 			return false;
 		}
 
+		//get the current working directory
 		$cwd = getcwd();
+
+		//set the new working directory
 		chdir($path);
 
-		//get current branch
+		//get the current branch
 		exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_branch, $git_branch_return);
 		$repo['branch'] = $git_branch[0];
 
-		//get current commit id
+		//get the current commit id
 		exec("git log --pretty=format:'%H' -n 1 2>&1", $git_commit, $git_commit_return);
 		$repo['commit'] = $git_commit[0];
 
-		//get remote origin url for updates
+		//get the remote origin url for updates
 		exec("git config --get remote.origin.url", $git_url);
 		$repo['url'] = preg_replace('/\.git$/', '', $git_url[0] );
 
+		//add the path to the repo array
 		$repo['path'] = $path;
 
 		//to-do detect remote over ssh and reformat to equivalent https url
 
+		//set the working directory to the original directory
 		chdir($cwd);
 
+		//return the result
 		if (!$git_branch_return && !$git_commit_return && $git_url) {
 			return $repo;
 		}
@@ -2500,15 +2579,27 @@ if (!function_exists('git_repo_info')) {
 //git locate app repositories
 if (!function_exists('git_find_repos')) {
 	function git_find_repos($path) {
+
+		//scan the directories
 		$apps = scandir($path);
+
+		//prepare the array
 		$git_repos = array();
+
+		//loop through the applicaitons
 		foreach ($apps as $app) {
-			$git_repo_name = is_git_repo($path."/".$app);
-			if ($git_repo_name != false && !empty($git_repo_name)) {
-				$git_repos[$git_repo_name][] = $app;
+			//skip this iteration of the loop
+			if ($app == '.' or $app == '..') {
+				continue;
 			}
-			unset($git_repo_name);
+
+			//build the git_repos array
+			if (is_git_repo($path."/".$app)) {
+				$git_repos[$path."/".$app][] = $app;
+			}
 		}
+
+		//return the array
 		return $git_repos;
 	}
 }
