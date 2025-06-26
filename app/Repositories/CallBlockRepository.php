@@ -27,7 +27,7 @@ class CallBlockRepository
 
     private function setAppData(array &$data)
     {
-		list($call_block_app, $call_block_data) = explode(":", $data["call_block_action"]);
+		list($call_block_app, $call_block_data) = explode(":", $data["call_block_action"] ?? "") + [null, null];
 
 		$data["call_block_app"] = $call_block_app;
 		$data["call_block_data"] = $call_block_data;

@@ -164,15 +164,18 @@
                     Cancel
                 </a>
             </div>
+        </form>
 
-            @if(!isset($callblock))
+        @if(!isset($callblock))
+        <form action="{{ route('callblocks.block') }}" method="POST">
+            @csrf
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
                             <label class="form-label">{{ __("Recent calls") }}</label>
 
-                            <select class='form-select' id='recent_calls_direction' name='recent_calls_direction'>
+                            <select class='form-select' id='recent_calls_direction' name='call_block_direction' required>
                                 <option value='' disabled='disabled'>{{ __("Direction") }}</option>
                                 <option value='inbound'>{{ __("Inbound") }}</option>
                                 <option value='outbound'>{{ __("Outbound") }}</option>
@@ -187,7 +190,7 @@
                         <div class="form-group">
                             <label class="form-label"></label>
                                 @can('call_block_all')
-                                    <select class='form-select' name='recent_calls_extension_uuid'>
+                                    <select class='form-select' name='extension_uuid' required>
                                         <option value='' disabled='disabled'>{{ __("Extension") }}</option>
                                         <option value='' selected='selected'>{{ __("All") }}</option>
                                         @if(!$extensions->isEmpty())
@@ -203,7 +206,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label class="form-label"></label>
-                            <x-switch-call-block-action name="recent_calls_action" selected="$callblock->call_block_app" />
+                            <x-switch-call-block-action name="call_block_action" required />
                         </div>
                     </div>
 
@@ -237,7 +240,7 @@
                                 <tbody>
 
                                 @if(!$xmlCDR->isEmpty())
-                                    @foreach($xmlCDR as $key => $row)
+                                    @foreach($xmlCDR as $row)
                                         @if($row->direction == $direction)
                                             @if(strlen($row->caller_id_number) >= 7)
                                                 @php
@@ -276,10 +279,9 @@
                                                     $icon_title = $title_prefix . $title_mod;
                                                 @endphp
 
-                                                <tr class='list-row row_".$row->direction."' href=''>
-                                                    <td class='checkbox'>
-                                                        <input type='checkbox' class='form-check-input checkbox_".$row->direction."' name='xml_cdrs[{{$key}}][checked]' value='true'>
-                                                        <input type='hidden' name='xml_cdrs[{{$key}}][uuid]' value="{{ $row->xml_cdr_uuid }}">
+                                                <tr class='list-row row_{{ $row->direction }}'>
+                                                    <td>
+                                                        <input type='checkbox' class='form-check-input checkbox_{{ $row->direction }}' name='selected_xml_cdrs[]' value='{{ $row->xml_cdr_uuid }}'>
                                                     </td>
                                                     <td>
                                                         <img src="{{ $icon_path }}" style="border: none;" title="{{ $icon_title }}">
@@ -287,7 +289,7 @@
                                                     <td>{{ $row->caller_id_name }}</td>
                                                     <td>{{ $row->caller_id_number }}</td>
                                                     <td>{{ $row->caller_destination }}</td>
-                                                    <td>{{ $tmp_start_epoch }}</td>
+                                                    <td>{{ $tmp_start_epoch }} {{ $tmp_start_time }}</td>
                                                     <td>{{ gmdate('G:i:s', $seconds) }}</td>
                                                 </tr>
                                             @endif
@@ -318,8 +320,8 @@
                     </div>
                 </div>
             </div>
-            @endif
         </form>
+        @endif
     </div>
 </div>
 @endsection

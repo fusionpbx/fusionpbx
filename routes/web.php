@@ -103,6 +103,7 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // CALL BLOCKS
     Route::resource('/callblocks', CallBlockController::class)->name('callblocks', 'callblocks');
+    Route::post('/callblocks/block', [CallBlockController::class, 'block'])->name('callblocks.block', 'callblocks.block');
 
     // CARRIERS
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');

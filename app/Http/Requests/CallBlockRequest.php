@@ -15,8 +15,8 @@ class CallBlockRequest extends FormRequest
 	{
 		return [
 			"call_block_direction" => "bail|required|string|in:inbound,outbound",
-			'extension_uuid' => "bail|required|uuid|exists:App\Models\Extension,extension_uuid",
-			"call_block_name" => "bail|required|string|max:255",
+			"extension_uuid" => "bail|sometimes|nullable|uuid|exists:App\Models\Extension,extension_uuid",
+			"call_block_name" => "bail|sometimes|string|max:255",
 			"call_block_country_code" => "bail|nullable|string|max:3",
 			"call_block_number" => "bail|nullable|string",
 			"call_block_action" => "bail|nullable|string",
