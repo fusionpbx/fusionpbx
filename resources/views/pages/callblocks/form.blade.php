@@ -164,19 +164,15 @@
                     Cancel
                 </a>
             </div>
-        </form>
 
-        @if(!isset($callblock))
-        <form id='form_list' method='post'>
+            @if(!isset($callblock))
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <input type='hidden' id='action' name='action' value='add'>
-
                             <label class="form-label">{{ __("Recent calls") }}</label>
 
-                            <select class='form-select' id='recent_calls_direction'>
+                            <select class='form-select' id='recent_calls_direction' name='recent_calls_direction'>
                                 <option value='' disabled='disabled'>{{ __("Direction") }}</option>
                                 <option value='inbound'>{{ __("Inbound") }}</option>
                                 <option value='outbound'>{{ __("Outbound") }}</option>
@@ -191,7 +187,7 @@
                         <div class="form-group">
                             <label class="form-label"></label>
                                 @can('call_block_all')
-                                    <select class='form-select' name='extension_uuid'>
+                                    <select class='form-select' name='recent_calls_extension_uuid'>
                                         <option value='' disabled='disabled'>{{ __("Extension") }}</option>
                                         <option value='' selected='selected'>{{ __("All") }}</option>
                                         @if(!$extensions->isEmpty())
@@ -207,14 +203,14 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label class="form-label"></label>
-                            <x-switch-call-block-action name="call_block_action" selected="$callblock->call_block_app" />
+                            <x-switch-call-block-action name="recent_calls_action" selected="$callblock->call_block_app" />
                         </div>
                     </div>
 
                     <div class="col-md-2">
                         <div class="form-group">
                             <label class="form-label"></label><br>
-                            <button type="submit" class="btn btn-danger px-4 py-2" style="border-radius: 4px;">{{ __("Block") }}</button>
+                            <button type="button" class="btn btn-danger px-4 py-2" data-bs-toggle="modal" data-bs-target="#block" style="border-radius: 4px;"><i class="fa-solid fa-ban"></i> {{ __("Block") }}</button>
                         </div>
                     </div>
                     @endif
@@ -227,8 +223,8 @@
                             <table class="laravel-livewire-table table table-striped table-hover table-bordered" id="list_{{ $direction }}" @if($direction == 'outbound') style="display: none;" @endif>
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <input type='checkbox' id='checkbox_all_".$direction."' name='checkbox_all' class="form-check-input">
+                                        <th style='width: 1%;'>
+                                            <input type='checkbox' class="form-check-input select-group">
                                         </th>
                                         <th style='width: 1%;'></th>
                                         <th>{{ __("Name") }}</th>
@@ -282,7 +278,7 @@
 
                                                 <tr class='list-row row_".$row->direction."' href=''>
                                                     <td class='checkbox'>
-                                                        <input type='checkbox' class='form-check-input checkbox_".$row->direction."' name='xml_cdrs[{{$key}}][checked]' id='checkbox_".$key."' value='true'>
+                                                        <input type='checkbox' class='form-check-input checkbox_".$row->direction."' name='xml_cdrs[{{$key}}][checked]' value='true'>
                                                         <input type='hidden' name='xml_cdrs[{{$key}}][uuid]' value="{{ $row->xml_cdr_uuid }}">
                                                     </td>
                                                     <td>
@@ -304,9 +300,26 @@
                     </div>
                 </div>
             </div>
-        </form>
-        @endif
 
+            <div class="modal fade" id="block" tabindex="-1" aria-labelledby="block" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to block this?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name="action" value="block" class="btn btn-primary">{{ __('Continue') }}</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('Cancel')}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </form>
     </div>
 </div>
 @endsection
@@ -323,6 +336,16 @@ document.addEventListener('DOMContentLoaded', function () {
     {
         inboundTable.style.display = this.value === 'inbound' ? '' : 'none';
         outboundTable.style.display = this.value === 'outbound' ? '' : 'none';
+    });
+
+    document.querySelectorAll('.select-group').forEach(groupCheckbox => {
+        groupCheckbox.addEventListener('change', function()
+        {
+            const table = this.closest("table");
+            const checkboxes = table.querySelectorAll('tbody input[type="checkbox"]');
+
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
     });
 });
 
