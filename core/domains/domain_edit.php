@@ -702,49 +702,48 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	
-if ($action == 'add' && count($main_domains) > 0) {
+	if ($action == 'add' && count($main_domains) > 0 && $settings->get('domain', 'use_domain_dropdown') == 'true') {
 
-	// sub-domain  /  full-domain textbox
-	echo "	<input class='formfld' id='sub_domain' type='text' name='sub_domain' ";
-	echo "placeholder='".escape($text['label-sub_domain'])."' maxlength='255'>\n";
+		// sub-domain  /  full-domain textbox
+		echo "	<input class='formfld' id='sub_domain' type='text' name='sub_domain' ";
+		echo "placeholder='".escape($text['label-sub_domain'])."' maxlength='255'>\n";
 
-	// main-domain dropdown  (first option = manual)
-	echo "	<select class='formfld' id='main_domain' name='main_domain' style='width: auto;'>\n";
-	echo "		<option value=''>-- manual entry --</option>\n";   // <— new
-	foreach ($main_domains as $md) {
-		echo "		<option value='".escape($md)."'>".escape($md)."</option>\n";
+		// main-domain dropdown  (first option = manual)
+		echo "	<select class='formfld' id='main_domain' name='main_domain' style='width: auto;'>\n";
+		echo "		<option value=''>-- manual entry --</option>\n";   // <— new
+		foreach ($main_domains as $md) {
+			echo "		<option value='".escape($md)."'>".escape($md)."</option>\n";
+		}
+		echo "	</select>\n";
+
+		// hidden field the legacy save code expects
+		echo "	<input type='hidden' id='domain_name' name='domain_name' value=''>\n";
+
+		// JS: build FQDN or pass-through
+		echo "	<script>\n";
+		echo "	 function bakeDomain(){\n";
+		echo "	  var sub  = document.getElementById('sub_domain').value.trim();\n";
+		echo "	  var main = document.getElementById('main_domain').value.trim();\n";
+		echo "	  if (main === '') {\n";
+		echo "	   // manual mode – textbox already holds full domain\n";
+		echo "	   document.getElementById('domain_name').value = sub;\n";
+		echo "	  }\n";
+		echo "	  else {\n";
+		echo "	   document.getElementById('domain_name').value = sub ? sub + '.' + main : main;\n";
+		echo "	  }\n";
+		echo "	 }\n";
+		echo "	 document.getElementById('sub_domain').addEventListener('keyup',  bakeDomain);\n";
+		echo "	 document.getElementById('main_domain').addEventListener('change', bakeDomain);\n";
+		echo "	 document.getElementById('frm').addEventListener('submit',         bakeDomain);\n";
+		echo "	</script>\n";
+
+		echo "	<br />\n";
+		echo escape($text['description-name'])."\n";
 	}
-	echo "	</select>\n";
-
-	// hidden field the legacy save code expects
-	echo "	<input type='hidden' id='domain_name' name='domain_name' value=''>\n";
-
-	// JS: build FQDN or pass-through
-	echo "	<script>\n";
-	echo "	 function bakeDomain(){\n";
-	echo "	  var sub  = document.getElementById('sub_domain').value.trim();\n";
-	echo "	  var main = document.getElementById('main_domain').value.trim();\n";
-	echo "	  if (main === '') {\n";
-	echo "	   // manual mode – textbox already holds full domain\n";
-	echo "	   document.getElementById('domain_name').value = sub;\n";
-	echo "	  }\n";
-	echo "	  else {\n";
-	echo "	   document.getElementById('domain_name').value = sub ? sub + '.' + main : main;\n";
-	echo "	  }\n";
-	echo "	 }\n";
-	echo "	 document.getElementById('sub_domain').addEventListener('keyup',  bakeDomain);\n";
-	echo "	 document.getElementById('main_domain').addEventListener('change', bakeDomain);\n";
-	echo "	 document.getElementById('frm').addEventListener('submit',         bakeDomain);\n";
-	echo "	</script>\n";
-
-	echo "	<br />\n";
-	echo escape($text['description-name'])."\n";
-}
 	// ── otherwise keep original single input (update mode or selector off)
 	else {
 
-		echo "	<input class='formfld' type='text' name='domain_name' ";
-		echo "maxlength='255' value=\"".escape($domain_name)."\">\n";
+		echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".escape($domain_name)."\">\n";
 		echo "	<br />\n";
 		echo $text['description-name']."\n";
 
