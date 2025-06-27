@@ -49,6 +49,40 @@
 	$domain_name = '';
 	$domain_description = '';
 
+	$main_domains = [];
+	$sql  = "SELECT domain_name FROM v_domains WHERE domain_enabled = 't'";
+	$rows = $database->select($sql, null, 'all');
+
+	$auto_roots = [];
+	foreach ($rows as $row) {
+		$dn = trim($row['domain_name']);
+
+		// skip pure IPv4 like 1.1.1.1
+		if (preg_match('/^\\d{1,3}(?:\\.\\d{1,3}){3}$/', $dn)) continue;
+
+		$parts = explode('.', $dn);
+		$cnt   = count($parts);
+		if ($cnt >= 2) {
+			// Find the part with the highest numerical value
+			$max_value = max(array_map('intval', $parts));
+			$filtered_parts = array_filter($parts, function($part) use ($max_value) {
+				return intval($part) !== $max_value;
+			});
+			if (!empty($filtered_parts)) {
+				$auto_roots[] = implode('.', $filtered_parts);
+			}
+		}
+	}
+	$main_domains = array_unique(array_merge($main_domains, $auto_roots), SORT_REGULAR);
+	unset($sql, $rows, $auto_roots);
+
+	// This is for test
+	// $domain_selector_active = true;   
+	// $main_domains = [
+	// 	'pbx-east.testnet',
+	// 	'pbx-west.testnet'
+	// ];
+
 //action add or update
 	if (!permission_exists('domain_add') || (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_all'))) {
 		//admin editing own domain/settings
@@ -666,9 +700,53 @@
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".escape($domain_name)."\">\n";
-	echo "<br />\n";
-	echo $text['description-name']."\n";
+	
+	if ($action == 'add' && count($main_domains) > 0 && $settings->get('domain', 'use_domain_dropdown') == 'true') {
+
+		// sub-domain  /  full-domain textbox
+		echo "	<input class='formfld' id='sub_domain' type='text' name='sub_domain' ";
+		echo "placeholder='".escape($text['label-sub_domain'])."' maxlength='255'>\n";
+
+		// main-domain dropdown  (first option = manual)
+		echo "	<select class='formfld' id='main_domain' name='main_domain' style='width: auto;'>\n";
+		echo "		<option value=''>-- manual entry --</option>\n";   // <— new
+		foreach ($main_domains as $md) {
+			echo "		<option value='".escape($md)."'>".escape($md)."</option>\n";
+		}
+		echo "	</select>\n";
+
+		// hidden field the legacy save code expects
+		echo "	<input type='hidden' id='domain_name' name='domain_name' value=''>\n";
+
+		// JS: build FQDN or pass-through
+		echo "	<script>\n";
+		echo "	 function bakeDomain(){\n";
+		echo "	  var sub  = document.getElementById('sub_domain').value.trim();\n";
+		echo "	  var main = document.getElementById('main_domain').value.trim();\n";
+		echo "	  if (main === '') {\n";
+		echo "	   // manual mode – textbox already holds full domain\n";
+		echo "	   document.getElementById('domain_name').value = sub;\n";
+		echo "	  }\n";
+		echo "	  else {\n";
+		echo "	   document.getElementById('domain_name').value = sub ? sub + '.' + main : main;\n";
+		echo "	  }\n";
+		echo "	 }\n";
+		echo "	 document.getElementById('sub_domain').addEventListener('keyup',  bakeDomain);\n";
+		echo "	 document.getElementById('main_domain').addEventListener('change', bakeDomain);\n";
+		echo "	 document.getElementById('frm').addEventListener('submit',         bakeDomain);\n";
+		echo "	</script>\n";
+
+		echo "	<br />\n";
+		echo escape($text['description-name'])."\n";
+	}
+	// ── otherwise keep original single input (update mode or selector off)
+	else {
+
+		echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".escape($domain_name)."\">\n";
+		echo "	<br />\n";
+		echo $text['description-name']."\n";
+
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
