@@ -3,21 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Facades\DefaultSetting;
-use App\Http\Resources\UserResource;
 use App\Models\Domain;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Socialite;
 
 class AuthController extends Controller
@@ -83,18 +78,21 @@ class AuthController extends Controller
             ],  422);
         }
 
-        if (Auth::attemptWhen($credentials, function (User $user){ return ($user->user_enabled == 'true');}, $request->filled('remember'))) {
+        if (Auth::attemptWhen(
+            $credentials,
+            fn(User $user) => $user->user_enabled == 'true',
+            $request->filled('remember')
+        )) {
             $user = Auth::user();
-            $extension = $user->extensions()->first();
+
+            if (empty($user->api_key)) {
+                return response()->json([
+                    'error' => 'Authentication failed.',
+                ],  401);
+            }
+
             return response()->json([
                 'data' => $user->toResource(),
-                'available_extensions' => [
-                    'api_key' => $user->api_key,
-                    'extension_uuid' => $extension->extension_uuid,
-                    'domain_uuid' => $extension->domain_uuid,
-                    'extension' => $extension->extension,
-                    'password' => $extension->password,
-                ],
             ]);
         }
 
