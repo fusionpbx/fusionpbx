@@ -60,39 +60,38 @@
 
 	subscriber::save_token($token, [system_dashboard_service::get_service_name()]);
 
-	//break the caching with version
-	$version = md5(file_get_contents(__DIR__, '/resources/javascript/websocket_client.js'));
-
-	//set script source
-	echo "<script src='/app/system/resources/javascript/websocket_client.js?v=$version'></script>\n";
-
 	//add half doughnut chart
 	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut"): ?>
 		<div class='hud_chart' style='width: 175px;'><canvas id='system_cpu_status_chart'></canvas></div>
 
 		<script>
-			const authToken = {
+			const cpu_status_auth_token = {
 				name: "<?= $token['name']; ?>",
 				hash: "<?= $token['hash']; ?>"
 			}
 
-			const serviceName = '<?php echo system_dashboard_service::get_service_name(); ?>'
-			const cpuStatusTopic = '<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>';
+			const cpu_status_subject = '<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>';
 			const dashboard_cpu_usage_chart_main_color = [
 				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>',
 				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>',
 				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>'
 			];
 
-			function connectWebsocket() {
-				client = new ws_client(`wss://${window.location.hostname}/websockets/`, authToken);
+			function connect_cpu_status_websocket() {
+				client = new ws_client(`wss://${window.location.hostname}/websockets/`, cpu_status_auth_token);
 				client.ws.addEventListener("open", async () => {
 					try {
 						console.log('Connected');
 						console.log('Requesting authentication');
+
+						// Wait until we are authenticated
 						await client.request('authentication');
-						client.onEvent(cpuStatusTopic, updateCpuChart);
-						client.request(serviceName, cpuStatusTopic);
+						console.log('authenticated');
+
+						// Bind event handler so websocket_client.js can call the function when it
+						// receives the cpu_status event
+						client.onEvent(cpu_status_subject, update_cpu_chart);
+
 					} catch (err) {
 						console.error("WS setup failed: ", err);
 						return;
@@ -104,31 +103,33 @@
 				});
 			}
 
-			function bindEventHandlers(client) {
-				client.onEvent(cpuStatusTopic, updateCpuChart);
-			}
-
-			function updateCpuChart(payload) {
-				let cpuPercent = payload.cpu_status;
+			// Function is called automatically by the websocket_client.js when there is a CPU status update
+			function update_cpu_chart(payload) {
+				let cpu_status = payload.cpu_status;
 				const chart = window.system_cpu_status_chart;
 
 				if (!chart) return;
 
 				// Update chart data
-				cpuPercent = Math.round(cpuPercent);
-				chart.data.datasets[0].data = [cpuPercent, 100 - cpuPercent];
+				cpu_rounded = Math.round(cpu_status);
+				chart.data.datasets[0].data = [cpu_rounded, 100 - cpu_rounded];
 
 				// Update color based on threshold
-				if (cpuPercent <= 60) {
-					chart.data.datasets[0].backgroundColor[0] = dashboard_cpu_usage_chart_main_color[0];
-				} else if (cpuPercent <= 80) {
-					chart.data.datasets[0].backgroundColor[0] = dashboard_cpu_usage_chart_main_color[1];
+				if (cpu_rounded <= 60) {
+					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>';
+				} else if (cpu_rounded <= 80) {
+					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>';
 				} else {
-					chart.data.datasets[0].backgroundColor[0] = dashboard_cpu_usage_chart_main_color[2];
+					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>';
 				}
 
-				chart.options.plugins.chart_number_2.text = cpuPercent;
+				chart.options.plugins.chart_number_2.text = cpu_rounded;
 				chart.update();
+
+				// Update the row data
+				const td_cpu_status = document.getElementById('td_system_cpu_status_chart');
+				if (!td_cpu_status) { return; }
+				td_cpu_status.textContent = `${payload.cpu_status}%`;
 			}
 
 			window.system_cpu_status_chart = new Chart(
@@ -182,7 +183,7 @@
 				}
 			);
 
-			connectWebsocket();
+			connect_cpu_status_websocket();
 		</script>
 <?php endif; ?>
 	<?php
@@ -203,7 +204,7 @@
 			if (!empty($percent_cpu)) {
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-cpu_usage']."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
+				echo "<td id='td_system_cpu_status_chart' valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
 				echo "</tr>\n";
 				$c = ($c) ? 0 : 1;
 			}
