@@ -142,8 +142,6 @@ abstract class base_websocket_system_service extends service implements websocke
 			// Timers can be set by child classes
 			if ($this->timer_expire_time !== null && time() >= $this->timer_expire_time) {
 				$this->on_timer();
-				// Set another timer to fire again
-				$this->set_timer(3);
 			}
 		}
 		return 0;
