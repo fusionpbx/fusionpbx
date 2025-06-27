@@ -2,14 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Http\Requests\BasicInformationRequest;
+use App\Http\Requests\ContactBasicInformationRequest;
 use App\Models\Contact;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
 use Livewire\Component;
 
-class BasicInformationForm extends Component
+class ContactBasicInformationForm extends Component
 {
     public $contactUuid;
     public $contactType;
@@ -31,7 +29,7 @@ class BasicInformationForm extends Component
 
     public function rules()
     {
-        $request = new BasicInformationRequest();
+        $request = new ContactBasicInformationRequest();
         return $request->rules();
     }
 
