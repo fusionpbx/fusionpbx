@@ -38,7 +38,7 @@ class ContactForm extends Component
 
     public function saveTest()
     {
-        $this->dispatch('saveBasicInfo')->to(BasicInformationForm::class);
+        $this->dispatch('saveBasicInfo')->to(ContactBasicInformationForm::class);
     }
 
     public function handleContactSaved()
