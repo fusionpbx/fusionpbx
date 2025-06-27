@@ -217,7 +217,7 @@
 		}
 
 		//database table exists
-		private function db_table_exists($db_type, $db_name, $table_name) {
+		private function db_table_exists($table_name) {
 			return $this->database->table_exists($table_name);
 		}
 
@@ -494,7 +494,7 @@
 						if (!empty($table_name)) {
 
 							//check if the table exists
-							if ($this->db_table_exists($db_type, $db_name, $table_name)) {
+							if ($this->db_table_exists($table_name)) {
 								$this->apps[$x]['db'][$y]['exists'] = 'true';
 							} else {
 								$this->apps[$x]['db'][$y]['exists'] = 'false';
@@ -536,7 +536,7 @@
 					foreach ($app['db'] as $y => $row) {
 						if (is_array($row['table']['name'])) {
 							$table_name = $row['table']['name']['text'];
-							if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
+							if ($this->db_table_exists($row['table']['name']['deprecated'])) {
 								$row['exists'] = "false"; //testing
 								if ($db_type == "pgsql") {
 									$sql_update .= "ALTER TABLE " . $row['table']['name']['deprecated'] . " RENAME TO " . $row['table']['name']['text'] . ";\n";
@@ -548,7 +548,7 @@
 									$sql_update .= "ALTER TABLE " . $row['table']['name']['deprecated'] . " RENAME TO " . $row['table']['name']['text'] . ";\n";
 								}
 							} else {
-								if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
+								if ($this->db_table_exists($row['table']['name']['text'])) {
 									$row['exists'] = "true";
 								} else {
 									$row['exists'] = "false";
@@ -556,7 +556,7 @@
 								}
 							}
 						} else {
-							if ($this->db_table_exists($db_type, $db_name, $row['table']['name'])) {
+							if ($this->db_table_exists($row['table']['name'])) {
 								$row['exists'] = "true";
 							} else {
 								$row['exists'] = "false";
