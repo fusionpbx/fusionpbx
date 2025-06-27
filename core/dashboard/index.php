@@ -171,6 +171,10 @@
 	$document['title'] = $text['title-dashboard'];
 	require_once "resources/header.php";
 
+//include websockets
+	$version = md5(file_get_contents(__DIR__, '/resources/javascript/ws_client.js'));
+	echo "<script src='/core/dashboard/resources/javascript/ws_client.js?v=$version'></script>\n";
+
 //include sortablejs
 	echo "<script src='/resources/sortablejs/sortable.min.js'></script>";
 
