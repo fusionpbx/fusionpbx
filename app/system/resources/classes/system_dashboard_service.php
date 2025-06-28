@@ -59,6 +59,9 @@ class system_dashboard_service extends base_websocket_system_service {
 	protected function on_timer(): void {
 		// Send the CPU status
 		$this->on_cpu_status();
+
+		// Reset the timer
+		$this->set_timer($this->cpu_status_refresh_interval);
 	}
 
 	/**
