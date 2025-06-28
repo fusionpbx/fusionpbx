@@ -255,8 +255,8 @@
 		}
 	}
 
-//run all app_defaults.php files
-	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--default') {
+//run all application defaults - more about looking missing not defaults, this not a factory reset
+	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--defaults') {
 		//send a message to the console
 		if ($display_type === 'text') {
 			echo "[ Update ] Restore application defaults.\n";
