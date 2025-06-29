@@ -105,81 +105,95 @@
 
 			// Function is called automatically by the websocket_client.js when there is a CPU status update
 			function update_cpu_chart(payload) {
-				let cpu_status = payload.cpu_status;
-				const chart = window.system_cpu_status_chart;
+				const cores = payload.cpu_status?.per_core;
+				if (!Array.isArray(cores) || cores.length !== num_cores) return;
 
+				const chart = window.system_cpu_status_chart;
 				if (!chart) return;
 
-				// Update chart data
-				cpu_rounded = Math.round(cpu_status);
-				chart.data.datasets[0].data = [cpu_rounded, 100 - cpu_rounded];
+				// Store into ring buffer
+				cores.forEach((val, i) => {
+					cpu_history[i][cpu_index] = Math.round(val);
+				});
 
-				// Update color based on threshold
-				if (cpu_rounded <= 60) {
-					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>';
-				} else if (cpu_rounded <= 80) {
-					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>';
-				} else {
-					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>';
-				}
+				cpu_index = (cpu_index + 1) % max_points;
 
-				chart.options.plugins.chart_number_2.text = cpu_rounded;
+				// Rotate each dataset's ring buffer to match chart order
+				chart.data.datasets.forEach((dataset, i) => {
+					const rotated = cpu_history[i].slice(cpu_index).concat(cpu_history[i].slice(0, cpu_index));
+					dataset.data = rotated;
+				});
+
 				chart.update();
 
-				// Update the row data
+				// Optional: update total CPU %
 				const td_cpu_status = document.getElementById('td_system_cpu_status_chart');
-				if (!td_cpu_status) { return; }
-				td_cpu_status.textContent = `${payload.cpu_status}%`;
+				if (td_cpu_status && payload.cpu_status?.total !== undefined) {
+					td_cpu_status.textContent = `${Math.round(payload.cpu_status.total)}%`;
+				}
 			}
 
+			// Set chart options
+			const max_points = 60;
+			const num_cores = <?= $cpu_cores ?>;
+
+			let cpu_history = Array.from({ length: num_cores }, () => new Array(max_points).fill(null));
+			let cpu_index = 0;
+
+			// Color palette (distinct and visually stacked)
+			const cpu_colors = ['#00bcd4', '#8bc34a', '#ffc107', '#e91e63'];
+
+			// Initialize the chart
 			window.system_cpu_status_chart = new Chart(
 				document.getElementById('system_cpu_status_chart').getContext('2d'),
 				{
-					type: 'doughnut',
+					type: 'line',
 					data: {
-						datasets: [{
-							data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
-							backgroundColor: [
-								<?php
-								if ($percent_cpu <= 60) {
-									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a')."',\n";
-								} else if ($percent_cpu <= 80) {
-									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933')."',\n";
-								} else if ($percent_cpu > 80) {
-									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46')."',\n";
-								}
-								?>
-								'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4'); ?>'
-							],
-							borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
-							borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>'
-						}]
+						labels: Array.from({ length: max_points }, (_, i) => i + 1),
+						datasets: Array.from({ length: num_cores }, (_, i) => ({
+							label: `CPU ${i}`,
+							data: [...cpu_history[i]],
+							fill: true,
+							borderColor: cpu_colors[i % cpu_colors.length],
+							backgroundColor: cpu_colors[i % cpu_colors.length],
+							tension: 0.3,
+							pointRadius: 0
+						}))
 					},
 					options: {
-						circumference: 180,
-						rotation: 270,
-						plugins: {
-							chart_number_2: {
-								text: '<?php echo round($percent_cpu); ?>'
+						animation: false,
+						scales: {
+							y: {
+								beginAtZero: true,
+								stacked: true,
+								min: 0,
+								max: num_cores * 100,
+								ticks: {
+									stepSize: 100
+								}
 							},
+							x: {
+								ticks: {
+									autoSkip: true,
+									callback: function (val, index) {
+										return (index % 100 === 0 ? ' ' : ' ');
+									}
+								},
+								grid: {
+									drawOnChartArea: false
+								}
+							}
+						},
+						plugins: {
 							tooltip: {
-								yAlign: 'bottom',
-								displayColors: false
+								mode: 'index',
+								intersect: false
+							},
+							legend: {
+								display: false
 							}
 						}
-					},
-					plugins: [{
-						id: 'chart_number_2',
-						beforeDraw(chart, args, options){
-							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-							ctx.font = chart_text_size + ' ' + chart_text_font;
-							ctx.textBaseline = 'middle';
-							ctx.textAlign = 'center';
-							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
-							ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
-							ctx.save();
-						}
-					}]
+					}
 				}
 			);
 
