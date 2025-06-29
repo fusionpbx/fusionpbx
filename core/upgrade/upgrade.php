@@ -199,7 +199,7 @@
 		echo "  -v --version                      Show the version.\n";
 		echo "  -n --main                         Update the main application.\n";
 		echo "  -o --optional                     Update the optional applications.\n";
-		echo "  -s --schemas                      Check the table and field structure.\n";
+		echo "  -s --schema                       Check the table and field structure.\n";
 		echo "  -t --types                        Updates field data types as needed.\n";
 		echo "  -d --defaults                     Restore application defaults.\n";
 		echo "  -m --menu [default|list]          Restore menu default or show the menu list\n";
