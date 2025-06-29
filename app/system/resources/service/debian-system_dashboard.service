@@ -1,7 +1,7 @@
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
-; cp /var/www/fusionpbx/app/system/resources/service/debian.service /etc/systemd/system/system_dashboard.service
+; cp /var/www/fusionpbx/app/system/resources/service/debian.service /etc/systemd/system/system_status.service
 ; systemctl daemon-reload
-; systemctl enable --now system_dashboard
+; systemctl enable --now system_status
 
 [Unit]
 Description=FusionPBX System Dashboard Information Service
@@ -15,14 +15,14 @@ StartLimitIntervalSec=0
 [Service]
 Type=simple
 ;Type=forking
-PIDFile=/var/run/fusionpbx/system_dashboard.pid
+PIDFile=/var/run/fusionpbx/system_status.pid
 WorkingDirectory=/var/www/fusionpbx
 ;Environment="USER=www-data"
 ;Environment="GROUP=www-data"
 ;EnvironmentFile=-/etc/default/fusionpbx
 ExecStartPre=/bin/mkdir -p /var/run/fusionpbx
 ;ExecStartPre=/bin/chown -R ${USER}:${GROUP} /var/www/fusionpbx
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/system/resources/service/system.php --no-fork
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/system/resources/service/system_status.php --no-fork
 User=www-data
 Group=www-data
 TimeoutSec=55s
