@@ -59,6 +59,9 @@ class system_dashboard_service extends base_websocket_system_service {
 	protected function on_timer(): void {
 		// Send the CPU status
 		$this->on_cpu_status();
+
+		// Reset the timer
+		$this->set_timer($this->cpu_status_refresh_interval);
 	}
 
 	/**
@@ -83,38 +86,38 @@ class system_dashboard_service extends base_websocket_system_service {
 		$this->info("Broadcasting CPU Status every {$this->cpu_status_refresh_interval}s");
 	}
 
-public function on_cpu_status($message = null): void {
-	// Get total and per-core CPU usage
-	$cpu_percent_total = self::$system_information->get_cpu_percent();
-	$cpu_percent_per_core = self::$system_information->get_cpu_percent_per_core();
+	public function on_cpu_status($message = null): void {
+		// Get total and per-core CPU usage
+		$cpu_percent_total = self::$system_information->get_cpu_percent();
+		$cpu_percent_per_core = self::$system_information->get_cpu_percent_per_core();
 
-	// Prepare response
-	$response = new websocket_message();
-	$response
-		->payload([
-			self::CPU_STATUS_TOPIC => [
-				'total' => $cpu_percent_total,
-				'per_core' => array_values($cpu_percent_per_core)
-			]
-		])
-		->service_name(self::get_service_name())
-		->topic(self::CPU_STATUS_TOPIC);
+		// Prepare response
+		$response = new websocket_message();
+		$response
+			->payload([
+				self::CPU_STATUS_TOPIC => [
+					'total' => $cpu_percent_total,
+					'per_core' => array_values($cpu_percent_per_core)
+				]
+			])
+			->service_name(self::get_service_name())
+			->topic(self::CPU_STATUS_TOPIC);
 
-	// Include message ID if responding to a request
-	if ($message !== null && $message instanceof websocket_message) {
-		$response->id($message->id());
+		// Include message ID if responding to a request
+		if ($message !== null && $message instanceof websocket_message) {
+			$response->id($message->id());
+		}
+
+		// Log for debugging
+		$this->debug(sprintf(
+			"Broadcasting CPU total %.2f%% with %d cores",
+			$cpu_percent_total,
+			count($cpu_percent_per_core)
+		));
+
+		// Send the broadcast
+		$this->respond($response);
 	}
-
-	// Log for debugging
-	$this->debug(sprintf(
-		"Broadcasting CPU total %.2f%% with %d cores",
-		$cpu_percent_total,
-		count($cpu_percent_per_core)
-	));
-
-	// Send the broadcast
-	$this->respond($response);
-}
 
 
 

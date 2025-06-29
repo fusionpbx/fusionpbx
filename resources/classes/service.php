@@ -645,7 +645,7 @@ abstract class service {
 	 * Set to not fork when started
 	 */
 	public static function set_no_fork() {
-		echo "Running in forground\n";
+		echo "Running in foreground";
 		self::$forking_enabled = false;
 	}
 

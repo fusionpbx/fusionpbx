@@ -199,7 +199,7 @@
 		echo "  -v --version                      Show the version.\n";
 		echo "  -n --main                         Update the main application.\n";
 		echo "  -o --optional                     Update the optional applications.\n";
-		echo "  -s --schemas                      Check the table and field structure.\n";
+		echo "  -s --schema                       Check the table and field structure.\n";
 		echo "  -t --types                        Updates field data types as needed.\n";
 		echo "  -d --defaults                     Restore application defaults.\n";
 		echo "  -m --menu [default|list]          Restore menu default or show the menu list\n";
@@ -232,7 +232,7 @@
 		$response = $obj->schema($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
-				echo "           ".trim($row)."\n";
+				echo "        ".trim($row)."\n";
 			}
 		}
 	}
@@ -250,19 +250,73 @@
 		$response = $obj->schema($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
-				echo "           ".trim($row)."\n";
+				echo "        ".trim($row)."\n";
 			}
 		}
 	}
 
-//run all app_defaults.php files
-	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--default') {
+//run all application defaults - more about looking missing not defaults, this not a factory reset
+	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--defaults') {
 		//send a message to the console
 		if ($display_type === 'text') {
 			echo "[ Update ] Restore application defaults.\n";
 		}
 
-		//upgrade application defaults
+		//run for command line only
+		if (defined('STDIN')) {
+			$nginx_path = '/etc/nginx/sites-enabled/fusionpbx';
+			if (file_exists($nginx_path)) {
+				//get the nginx configuration
+				$nginx_config = file_get_contents($nginx_path);
+
+				// define the location block to add if it doesn't exist
+				$websocket_settings = "        #redirect websockets to port 8080\n";
+				$websocket_settings .= "                location /websockets/ {\n";
+				$websocket_settings .= "                proxy_pass http://127.0.0.1:8080;\n";
+				$websocket_settings .= "                proxy_http_version 1.1;\n";
+				$websocket_settings .= "                proxy_set_header Upgrade \$http_upgrade;\n";
+				$websocket_settings .= "                proxy_set_header Connection \"upgrade\";\n";
+				$websocket_settings .= "                proxy_set_header Host \$host;\n";
+				$websocket_settings .= "        }\n";
+				$websocket_settings .= "\n";
+
+				// search array
+				$search_array['0'] = 'listen 443 ssl;';
+				$search_array['1'] = '#redirect letsencrypt to dehydrated';
+
+				// add the websocket settings if it is not in the config
+				if (strpos($nginx_config, '/websockets/') === false) {
+
+					// find the position where websockets string should be added.
+					$ssl_found = false;
+					$character_count = 0;
+					$i = 1;
+					foreach(explode("\n", $nginx_config) as $line) {
+						// count each line and add an additional character for the line feed
+						$character_count += strlen($line) + 1;
+
+						// find the section for ssl on port 443
+						if (trim($line) == $search_array[0]) {
+							$ssl_found = true;
+						}
+
+						// find the second search string inside the ssl section
+						if ($ssl_found && trim($line) == $search_array[1]) {
+							// use substr_replace to add the string at the correct position
+							$new_config = substr_replace($nginx_config, $websocket_settings, $character_count - strlen($line."\n"), 0);
+
+							// write the updated configuration back to the file
+							if (file_put_contents($nginx_path, $new_config) !== false) {
+								echo "Websockets configuration updated.\n";
+							}
+						}
+						$i++;
+					}
+				}
+			}
+		}
+
+		// upgrade application defaults
 		$domain = new domains;
 		$domain->display_type = $display_type;
 		$domain->upgrade();
@@ -308,7 +362,7 @@
 //restore the default permissions
 	if ($upgrade_type == 'permissions' or $upgrade_type == '-p' or $upgrade_type == '--permissions') {
 
-if (empty($argv[2]) || $argv[2] == 'default') {
+		if (empty($argv[2]) || $argv[2] == 'default') {
 			//send a message to the console
 			echo "[ Update ] Restore the file permissions\n";
 
@@ -316,7 +370,7 @@ if (empty($argv[2]) || $argv[2] == 'default') {
 			update_file_permissions($text, $settings);
 		}
 
-if (empty($argv[2]) || $argv[2] == 'default') {
+		if (empty($argv[2]) || $argv[2] == 'default') {
 			//send a message to the console
 			echo "[ Update ] Restore the group permissions\n";
 
@@ -384,7 +438,7 @@ if (empty($argv[2]) || $argv[2] == 'default') {
 			$response = $obj->schema("text");
 			if ($display_type === 'text') {
 				foreach(explode("\n", $response) as $row) {
-					echo "           ".trim($row)."\n";
+					echo "        ".trim($row)."\n";
 				}
 			}
 
@@ -454,8 +508,6 @@ if (empty($argv[2]) || $argv[2] == 'default') {
 		require __DIR__ . '/upgrade_menu.php';
 		exit();
 	}
-
-
 
 //update main software source
 	if ($upgrade_type == 'main' or $upgrade_type == '-n'  or $upgrade_type == '--main') {
@@ -575,7 +627,7 @@ function upgrade_services($text, settings $settings) {
 	$service_files = array_merge($core_files, $app_files);
 	foreach($service_files as $file) {
 		$service_name = find_service_name($file);
-		echo "    Name: ".$service_name."\n";
+		echo "	Name: ".$service_name."\n";
 		system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
 		system("systemctl daemon-reload");
 		system("systemctl enable --now " . escapeshellarg($service_name));
@@ -592,7 +644,7 @@ function restart_services($text, settings $settings) {
 	$service_files = array_merge($core_files, $app_files);
 	foreach($service_files as $file) {
 		$service_name = find_service_name($file);
-		echo "    Name: ".$service_name."\n";
+		echo "	Name: ".$service_name."\n";
 		system("systemctl restart ".$service_name);
 	}
 }
