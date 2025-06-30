@@ -61,7 +61,7 @@
 	subscriber::save_token($token, [system_dashboard_service::get_service_name()]);
 
 	if ($dashboard_chart_type === 'line') { ?>
-		<div class='hud_chart' style='width: 175px;'><canvas id='system_cpu_status_chart'></canvas></div>
+		<div class='hud_chart' style='width: 90%;'><canvas id='system_cpu_status_chart'></canvas></div>
 
 		<script>
 			const cpu_status_auth_token = {
