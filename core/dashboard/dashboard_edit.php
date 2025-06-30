@@ -828,6 +828,11 @@
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
 		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
+		if ($dashboard_chart_type === 'line') {
+			echo "		<option value='line' selected='selected'>".$text['label-line']."</option>\n";
+		} else {
+			echo "		<option value='line'>".$text['label-line']."</option>\n";
+		}
 		if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
 			echo "		<option value='icon' ".($dashboard_chart_type == "icon" ? "selected='selected'" : null).">".$text['label-icon']."</option>\n";
 		}

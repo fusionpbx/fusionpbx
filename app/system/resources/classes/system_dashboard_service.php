@@ -87,27 +87,39 @@ class system_dashboard_service extends base_websocket_system_service {
 	}
 
 	public function on_cpu_status($message = null): void {
-		// Get the CPU status
-		$cpu_percent = self::$system_information->get_cpu_percent();
+		// Get total and per-core CPU usage
+		$cpu_percent_total = self::$system_information->get_cpu_percent();
+		$cpu_percent_per_core = self::$system_information->get_cpu_percent_per_core();
 
-		// Send the response
+		// Prepare response
 		$response = new websocket_message();
 		$response
-			->payload([self::CPU_STATUS_TOPIC => $cpu_percent])
+			->payload([
+				self::CPU_STATUS_TOPIC => [
+					'total' => $cpu_percent_total,
+					'per_core' => array_values($cpu_percent_per_core)
+				]
+			])
 			->service_name(self::get_service_name())
 			->topic(self::CPU_STATUS_TOPIC);
 
-		// Check if we are responding
+		// Include message ID if responding to a request
 		if ($message !== null && $message instanceof websocket_message) {
 			$response->id($message->id());
 		}
 
-		// Log the broadcast
-		$this->debug("Broadcasting CPU percent '$cpu_percent'");
+		// Log for debugging
+		$this->debug(sprintf(
+			"Broadcasting CPU total %.2f%% with %d cores",
+			$cpu_percent_total,
+			count($cpu_percent_per_core)
+		));
 
-		// Send to subscribers
+		// Send the broadcast
 		$this->respond($response);
 	}
+
+
 
 	public static function get_service_name(): string {
 		return "dashboard.system.information";

@@ -110,7 +110,7 @@
 				if (!progress) return;
 
 				// Update progress bar
-				cpu_percent = Math.round(payload.cpu_status);
+				cpu_percent = Math.round(payload.cpu_status.total);
 				progress.style.width = `${cpu_percent}%`;
 				progress.innerHTML = `${cpu_percent}%`;
 			}
