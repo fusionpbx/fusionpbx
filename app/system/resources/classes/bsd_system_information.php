@@ -54,7 +54,43 @@ class bsd_system_information extends system_information {
 	}
 
 	public function get_cpu_percent_per_core(): array {
+		static $last = [];
+		$results = [];
 
+		// Read the raw CPU time ticks from sysctl (returns flat array of cores)
+		$raw = trim(shell_exec('sysctl -n kern.cp_times'));
+		if (!$raw)
+			return [];
+
+		$parts = array_map('intval', preg_split('/\s+/', $raw));
+		$num_cores = count($parts) / 5;
+
+		for ($core = 0; $core < $num_cores; $core++) {
+			$offset = $core * 5;
+			$user = $parts[$offset];
+			$nice = $parts[$offset + 1];
+			$sys = $parts[$offset + 2];
+			$intr = $parts[$offset + 3];
+			$idle = $parts[$offset + 4];
+
+			$total = $user + $nice + $sys + $intr + $idle;
+
+			if (!isset($last[$core])) {
+				$last[$core] = ['total' => $total, 'idle' => $idle];
+				$results[$core] = 0;
+				continue;
+			}
+
+			$delta_total = $total - $last[$core]['total'];
+			$delta_idle = $idle - $last[$core]['idle'];
+
+			$usage = $delta_total > 0 ? (1 - ($delta_idle / $delta_total)) * 100 : 0;
+			$results[$core] = round($usage, 2);
+
+			$last[$core] = ['total' => $total, 'idle' => $idle];
+		}
+
+		return $results;
 	}
 
 	/**
