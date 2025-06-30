@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\E164;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ContactPhoneRequest extends FormRequest
@@ -30,8 +31,8 @@ class ContactPhoneRequest extends FormRequest
             'phones.*.phone_type_text' => 'boolean',
             'phones.*.phone_type_fax' => 'boolean',
             'phones.*.phone_speed_dial' => 'nullable|numeric|integer|max:10',
-            'phones.*.phone_country_code' => 'nullable|numeric|integer|min_digits:1|max_digits:3|min:1',
-            'phones.*.phone_extension' => 'nullable|numeric|integer|max:10',
+            'phones.*.phone_country_code' => ['nullable','numeric','integer','min_digits:1','max_digits:3','min:1', new E164(config('freeswitch.CHECK_COUNTRY_CODE'), '*')],
+            'phones.*.phone_extension' => 'nullable|numeric|integer|min:0|max:10',
             'phones.*.phone_primary' => 'boolean',
             'phones.*.phone_description' => 'nullable|string|max:255',
         ];
