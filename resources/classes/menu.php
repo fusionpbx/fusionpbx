@@ -1098,7 +1098,7 @@
 						$p->delete('menu_add', 'temp');
 
 					//add the menu items
-						$this->restore();
+						$this->restore_default();
 				}
 		}
 
