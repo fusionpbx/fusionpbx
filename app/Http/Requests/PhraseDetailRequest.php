@@ -18,7 +18,7 @@ class PhraseDetailRequest extends FormRequest
 			"phraseDetails" => "nullable|array",
 			"phraseDetails.*.phrase_detail_function" => "nullable|string|in:play-file,pause-file,execute",
 			"phraseDetails.*.phrase_detail_data" => "nullable|string|max:255",
-			"phraseDetails.*.phrase_detail_order" => "nullable|integer|min:0|max:1000",
+			"phraseDetails.*.phrase_detail_order" => ["nullable","string","min:0","max:3","regex:/(?:[0-9]){1,3}/i",]
 		];
 	}
 }
