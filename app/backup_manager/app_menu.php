@@ -10,6 +10,6 @@ $apps[$x]['menu'][$y]['icon'] = "";
 $apps[$x]['menu'][$y]['path'] = "/app/backup_manager/backup.php";
 $apps[$x]['menu'][$y]['order'] = "";
 $apps[$x]['menu'][$y]['groups'][] = "superadmin";    
-$y++
+$y++;
 
 ?>
