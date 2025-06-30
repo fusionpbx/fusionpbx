@@ -549,9 +549,9 @@
 	echo "<br /><br />\n";
 
 //call recording
-	if (permission_exists('xml_cdr_recording') && permission_exists('xml_cdr_recording_play')) {
+	if (permission_exists('xml_cdr_recording') && !empty($record_path)) {
 		//recording properties
-		if (!empty($record_path) && !empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
+		if (!empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
 			$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
 			switch ($record_extension) {
 				case "wav" : $record_type = "audio/wav"; break;
