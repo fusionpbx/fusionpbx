@@ -606,7 +606,7 @@
                                     <div class="form-group mb-3">
                                         <label for="toll_allow" class="form-label">Toll Allow</label>
                                         <input type="text"
-                                            class="form-control @error('toll_allow') is-invalid @enderror"
+                                            class="form-control form-tags @error('toll_allow') is-invalid @enderror"
                                             id="toll_allow" wire:model="toll_allow" placeholder="Enter toll allow">
                                         @error('toll_allow')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
