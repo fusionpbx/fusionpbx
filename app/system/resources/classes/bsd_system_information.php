@@ -52,4 +52,85 @@ class bsd_system_information extends system_information {
 	public function get_uptime() {
 		return shell_exec('uptime');
 	}
+
+	public function get_cpu_percent_per_core(): array {
+		static $last = [];
+		$results = [];
+
+		// Read the raw CPU time ticks from sysctl (returns flat array of cores)
+		$raw = trim(shell_exec('sysctl -n kern.cp_times'));
+		if (!$raw)
+			return [];
+
+		$parts = array_map('intval', preg_split('/\s+/', $raw));
+		$num_cores = count($parts) / 5;
+
+		for ($core = 0; $core < $num_cores; $core++) {
+			$offset = $core * 5;
+			$user = $parts[$offset];
+			$nice = $parts[$offset + 1];
+			$sys = $parts[$offset + 2];
+			$intr = $parts[$offset + 3];
+			$idle = $parts[$offset + 4];
+
+			$total = $user + $nice + $sys + $intr + $idle;
+
+			if (!isset($last[$core])) {
+				$last[$core] = ['total' => $total, 'idle' => $idle];
+				$results[$core] = 0;
+				continue;
+			}
+
+			$delta_total = $total - $last[$core]['total'];
+			$delta_idle = $idle - $last[$core]['idle'];
+
+			$usage = $delta_total > 0 ? (1 - ($delta_idle / $delta_total)) * 100 : 0;
+			$results[$core] = round($usage, 2);
+
+			$last[$core] = ['total' => $total, 'idle' => $idle];
+		}
+
+		return $results;
+	}
+
+	/**
+	 *
+	 * @staticvar array $last
+	 * @param string $interface
+	 * @return array
+	 * @depends FreeBSD Version 12
+	 */
+	public function get_network_speed(string $interface = 'em0'): array {
+		static $last = [];
+
+		// Run netstat for the interface
+		$output = shell_exec("netstat -bI {$interface} 2>/dev/null");
+		if (!$output)
+			return ['rx_bps' => 0, 'tx_bps' => 0];
+
+		$lines = explode("\n", trim($output));
+		if (count($lines) < 2)
+			return ['rx_bps' => 0, 'tx_bps' => 0];
+
+		$cols = preg_split('/\s+/', $lines[1]);
+		$rx_bytes = (int) $cols[6]; // Ibytes
+		$tx_bytes = (int) $cols[9]; // Obytes
+		$now = microtime(true);
+
+		if (!isset($last[$interface])) {
+			$last[$interface] = ['rx' => $rx_bytes, 'tx' => $tx_bytes, 'time' => $now];
+			return ['rx_bps' => 0, 'tx_bps' => 0];
+		}
+
+		$delta_time = $now - $last[$interface]['time'];
+		$delta_rx = $rx_bytes - $last[$interface]['rx'];
+		$delta_tx = $tx_bytes - $last[$interface]['tx'];
+
+		$last[$interface] = ['rx' => $rx_bytes, 'tx' => $tx_bytes, 'time' => $now];
+
+		return [
+			'rx_bps' => $delta_rx / $delta_time,
+			'tx_bps' => $delta_tx / $delta_time
+		];
+	}
 }
