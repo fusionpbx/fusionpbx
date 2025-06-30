@@ -560,7 +560,7 @@
 
 		<!-- On Hold Reminder Tone -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.call.onHoldReminderTone">Yes</item>
+		<item name="account.{$row.line_number}.call.onHoldReminderTone">No</item>
 
 		<!-- RFC2543 Hold -->
 		<!-- Yes, No -->
@@ -578,7 +578,7 @@
 		<item name="account.{$row.line_number}.call.callWaiting">{$grandstream_call_waiting}</item>
 
 		<!-- Account Ringtone -->
-		<item name="account.{$row.line_number}.ring.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.ringtone">{$grandstream_account_ring_tone_1}</item>
 
 		<!-- Matching Incoming Caller ID. Matching Rule 1 -->
 		<item name="account.{$row.line_number}.ring.match.1.callerId">{$grandstream_distinctive_ringtone_name_1}</item>
