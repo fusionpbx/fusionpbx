@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\PhraseDetailRequest;
 use App\Http\Requests\PhraseRequest;
 use App\Repositories\PhraseDetailRepository;
 use App\Repositories\PhraseRepository;
@@ -43,8 +44,13 @@ class PhraseForm extends Component
 
     public function rules()
     {
-        $request = new PhraseRequest();
-        return $request->rules();
+        $PhraseRequest = new PhraseRequest();
+        $phraseRules = $PhraseRequest->rules();
+
+        $PhraseRequestDetail = new PhraseDetailRequest();
+        $phraseDetailRules = $PhraseRequestDetail->rules();
+
+        return array_merge($phraseRules, $phraseDetailRules);
     }
 
     public function mount($phrase = null, $domains = [], $sounds = []): void
