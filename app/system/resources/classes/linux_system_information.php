@@ -107,7 +107,7 @@ class linux_system_information extends system_information {
 		return $results;
 	}
 
-	function get_network_speed(string $interface = 'eth0'): array {
+	public function get_network_speed(string $interface = 'eth0'): array {
 		static $last = [];
 
 		// Read network stats
