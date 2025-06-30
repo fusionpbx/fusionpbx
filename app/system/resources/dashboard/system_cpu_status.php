@@ -60,8 +60,7 @@
 
 	subscriber::save_token($token, [system_dashboard_service::get_service_name()]);
 
-	//add half doughnut chart
-	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut"): ?>
+	if ($dashboard_chart_type === 'line') { ?>
 		<div class='hud_chart' style='width: 175px;'><canvas id='system_cpu_status_chart'></canvas></div>
 
 		<script>
@@ -199,8 +198,134 @@
 
 			connect_cpu_status_websocket();
 		</script>
-<?php endif; ?>
-	<?php
+
+	<?php }
+	//add half doughnut chart
+	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") { ?>
+		<div class='hud_chart' style='width: 175px;'><canvas id='system_cpu_status_chart'></canvas></div>
+
+		<script>
+			const cpu_status_auth_token = {
+				name: "<?= $token['name']; ?>",
+				hash: "<?= $token['hash']; ?>"
+			}
+
+			const cpu_status_subject = '<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>';
+			const dashboard_cpu_usage_chart_main_color = [
+				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>',
+				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>',
+				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>'
+			];
+
+			function connect_cpu_status_websocket() {
+				client = new ws_client(`wss://${window.location.hostname}/websockets/`, cpu_status_auth_token);
+				client.ws.addEventListener("open", async () => {
+					try {
+						console.log('Connected');
+						console.log('Requesting authentication');
+
+						// Wait until we are authenticated
+						await client.request('authentication');
+						console.log('authenticated');
+
+						// Bind event handler so websocket_client.js can call the function when it
+						// receives the cpu_status event
+						client.onEvent(cpu_status_subject, update_cpu_chart);
+
+					} catch (err) {
+						console.error("WS setup failed: ", err);
+						return;
+					}
+				});
+
+				client.ws.addEventListener("close", async () => {
+					console.warn("Websocket Disconnected");
+				});
+			}
+
+			// Function is called automatically by the websocket_client.js when there is a CPU status update
+			function update_cpu_chart(payload) {
+				let cpu_status = Math.round(payload.cpu_status.total);
+				const chart = window.system_cpu_status_chart;
+
+				if (!chart) return;
+
+				// Update chart data
+				cpu_rounded = Math.round(cpu_status);
+				chart.data.datasets[0].data = [cpu_rounded, 100 - cpu_rounded];
+
+				// Update color based on threshold
+				if (cpu_rounded <= 60) {
+					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>';
+				} else if (cpu_rounded <= 80) {
+					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>';
+				} else {
+					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>';
+				}
+
+				chart.options.plugins.chart_number_2.text = cpu_rounded;
+				chart.update();
+
+				// Update the row data
+				const td_cpu_status = document.getElementById('td_system_cpu_status_chart');
+				if (!td_cpu_status) { return; }
+				td_cpu_status.textContent = `${payload.cpu_status}%`;
+			}
+
+			window.system_cpu_status_chart = new Chart(
+				document.getElementById('system_cpu_status_chart').getContext('2d'),
+				{
+					type: 'doughnut',
+					data: {
+						datasets: [{
+							data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
+							backgroundColor: [
+								<?php
+								if ($percent_cpu <= 60) {
+									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a')."',\n";
+								} else if ($percent_cpu <= 80) {
+									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933')."',\n";
+								} else if ($percent_cpu > 80) {
+									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46')."',\n";
+								}
+								?>
+								'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4'); ?>'
+							],
+							borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
+							borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>'
+						}]
+					},
+					options: {
+						circumference: 180,
+						rotation: 270,
+						plugins: {
+							chart_number_2: {
+								text: '<?php echo round($percent_cpu); ?>'
+							},
+							tooltip: {
+								yAlign: 'bottom',
+								displayColors: false
+							}
+						}
+					},
+					plugins: [{
+						id: 'chart_number_2',
+						beforeDraw(chart, args, options){
+							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+							ctx.font = chart_text_size + ' ' + chart_text_font;
+							ctx.textBaseline = 'middle';
+							ctx.textAlign = 'center';
+							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
+							ctx.save();
+						}
+					}]
+				}
+			);
+
+			connect_cpu_status_websocket();
+		</script>
+	<?php }
 	if ($dashboard_chart_type == "number") {
 		echo "<span class='hud_stat'>".round($percent_cpu)."%</span>";
 	}
