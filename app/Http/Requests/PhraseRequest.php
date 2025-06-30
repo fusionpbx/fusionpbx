@@ -29,7 +29,7 @@ class PhraseRequest extends FormRequest
 	protected function prepareForValidation(): void
     {
         $this->merge([
-            'slug' => strtolower($this->phrase_language),
+            'phrase_language' => strtolower($this->phrase_language),
         ]);
     }
 }
