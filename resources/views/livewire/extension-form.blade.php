@@ -603,7 +603,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="form-group mb-3">
+                                    <div class="form-group mb-3" wire:ignore>
                                         <label for="toll_allow" class="form-label">Toll Allow</label>
                                         <input type="text"
                                             class="form-control form-tags @error('toll_allow') is-invalid @enderror"
