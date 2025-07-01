@@ -576,12 +576,15 @@
 function update_file_permissions($text, settings $settings) {
 
 	if (is_root()) {
-
+		//initialize the array
 		$directories = [];
+
 		//get the fusionpbx folder
 		$project_root = dirname(__DIR__, 2);
+
 		//adjust the project root
 		$directories[] = $project_root;
+
 		//adjust the /etc/freeswitch
 		$directories[] = $settings->get('switch', 'conf', null);
 		$directories[] = $settings->get('switch', 'call_center', null); //normally in conf but can be different
@@ -589,25 +592,35 @@ function update_file_permissions($text, settings $settings) {
 		$directories[] = $settings->get('switch', 'directory', null); //normally in conf but can be different
 		$directories[] = $settings->get('switch', 'languages', null); //normally in conf but can be different
 		$directories[] = $settings->get('switch', 'sip_profiles', null); //normally in conf but can be different
+
 		//adjust the /usr/share/freeswitch/{scripts,sounds}
 		$directories[] = $settings->get('switch', 'scripts', null);
 		$directories[] = $settings->get('switch', 'sounds', null);
+
 		//adjust the /var/lib/freeswitch/{db,recordings,storage,voicemail}
 		$directories[] = $settings->get('switch', 'db', null);
 		$directories[] = $settings->get('switch', 'recordings', null);
 		$directories[] = $settings->get('switch', 'storage', null);
 		$directories[] = $settings->get('switch', 'voicemail', null); //normally included in storage but can be different
+
 		//only set the xml_cdr directory permissions
 		$log_directory = $settings->get('switch', 'log', null);
 		if ($log_directory !== null) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
+
 		//update the auto_loader cache permissions file
 		$directories[] = sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE;
+
 		//execute chown command for each directory
 		foreach ($directories as $dir) {
-			//skip the empty directories
+			//skip empty directories
 			if (empty($dir)) { continue; }
+
+			//skip /dev/shm directory
+			if (strpos($dir, '/dev/shm') !== false) {
+				continue; 
+			}
 
 			//execute
 			exec("chown -R www-data:www-data $dir");
@@ -674,4 +687,3 @@ function is_root(): bool {
 	return posix_getuid() === 0;
 }
 
-?>
