@@ -18,6 +18,7 @@ use App\Http\Controllers\ExtensionController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceProfileController;
 use App\Http\Controllers\DeviceVendorController;
+use App\Http\Controllers\LcrController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModuleController;
@@ -107,6 +108,9 @@ Route::middleware(['auth','permission'])->group(function () {
 
     // CARRIERS
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
+
+    //LCR
+    Route::resource('/lcr', LcrController::class)->name('lcr', 'lcr');
 
     // MODULES
     Route::get('/modules/{module}/start', [ModuleController::class, 'start'])->name('modules.start');
