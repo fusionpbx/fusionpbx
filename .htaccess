@@ -17,3 +17,4 @@ Redirect	301	/app/lcr/carriers.php				/carriers
 Redirect	301	/app/phrases/phrases.php			/phrases
 Redirect	301	/app/modules/modules.php			/modules
 Redirect	301	/app/devices/devices.php			/devices
+Redirect	301	/app/call_block/call_block.php			/callblocks
