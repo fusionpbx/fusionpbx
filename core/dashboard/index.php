@@ -46,7 +46,7 @@
 	require_once "resources/check_auth.php";
 
 //initialize the database
-	$database = new database;
+	$database = database::new();
 
 //disable login message
 	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {

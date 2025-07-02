@@ -10,3 +10,5 @@ secure/*.sqlite
 *.php~
 
 app/yealink/resources/firmware/*
+/nbproject/private/
+/.stfolder/

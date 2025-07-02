@@ -34,6 +34,8 @@ abstract class system_information {
 	abstract public function get_cpu_cores(): int;
 	abstract public function get_uptime();
 	abstract public function get_cpu_percent(): float;
+	abstract public function get_cpu_percent_per_core(): array;
+	abstract public function get_network_speed(string $interface = 'eth0'): array;
 	abstract public function get_disk_usage(): array;
 	abstract public function get_memory_details(): array;
 
