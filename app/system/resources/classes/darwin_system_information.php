@@ -25,37 +25,49 @@
  */
 
 /**
- * Description of bsd_system_information
+ * Description of darwin_system_information
  *
  * @author Tim Fry <tim@fusionpbx.com>
  */
-class bsd_system_information extends system_information {
+class darwin_system_information extends system_information {
 
 	public function get_disk_usage(): array {
-		return disk_free_space("/") !== false ? [
+		return [
 			'total' => disk_total_space("/"),
 			'free' => disk_free_space("/"),
 			'used' => disk_total_space("/") - disk_free_space("/")
-				] : [];
+		];
 	}
 
 	public function get_memory_details(): array {
-		$total = (int) shell_exec("sysctl -n hw.physmem");
-		$free = (int) shell_exec("sysctl -n vm.stats.vm.v_free_count") * getpagesize();
+		$total = (int) shell_exec("sysctl -n hw.memsize");
+		$vm_stat = shell_exec("vm_stat");
+		preg_match('/Pages free:\s+(\d+)\./', $vm_stat, $free);
+		preg_match('/Pages inactive:\s+(\d+)\./', $vm_stat, $inactive);
+		preg_match('/Page size of (\d+) bytes/', $vm_stat, $pagesize);
+
+		$page_size = (int) ($pagesize[1] ?? 4096);
+		$free_pages = (int) ($free[1] ?? 0);
+		$inactive_pages = (int) ($inactive[1] ?? 0);
+
+		$available = ($free_pages + $inactive_pages) * $page_size;
+		$used = $total - $available;
+
 		return [
 			'total' => $total,
-			'available' => $free,
-			'used' => $total - $free
+			'available' => $available,
+			'used' => $used
 		];
 	}
 
 	public function get_uptime(): string {
-		$boot = trim(shell_exec("sysctl -n kern.boottime"));
-		if (preg_match('/sec\s*=\s*(\d+)/', $boot, $matches)) {
-			$uptime = time() - (int) $matches[1];
+		$boot_time = (int) shell_exec("sysctl -n kern.boottime | awk '{print $4}' | sed 's/,//'");
+
+		if ($boot_time > 0) {
+			$uptime = time() - $boot_time;
 			return gmdate("H:i:s", $uptime);
 		}
-		return "unknown";
+		return 'unknown';
 	}
 
 	public function get_cpu_cores(): int {
@@ -63,100 +75,64 @@ class bsd_system_information extends system_information {
 	}
 
 	public function get_cpu_percent(): float {
-		$times = explode(' ', trim(shell_exec("sysctl -n kern.cp_time")));
-		$total = array_sum($times);
-		$idle = (int) $times[4];
-		static $last = null;
-		if ($last) {
-			[$last_total, $last_idle] = $last;
-			$delta_total = $total - $last_total;
-			$delta_idle = $idle - $last_idle;
-			$usage = (1 - ($delta_idle / $delta_total)) * 100;
-		} else {
-			$usage = 0;
+		$output = shell_exec("top -l 2 | grep 'CPU usage' | tail -n 1");
+		if (preg_match('/(\d+\.\d+)% user, (\d+\.\d+)% sys, (\d+\.\d+)% idle/', $output, $matches)) {
+			$user = (float) $matches[1];
+			$sys = (float) $matches[2];
+			return round($user + $sys, 2);
 		}
-		$last = [$total, $idle];
-		return round($usage, 2);
+		return 0.0;
 	}
 
 	public function get_cpu_percent_per_core(): array {
 		static $last = [];
-		$results = [];
-
-		// Read the raw CPU time ticks from sysctl (returns flat array of cores)
-		$raw = trim(shell_exec('sysctl -n kern.cp_times'));
-		if (!$raw)
-			return [];
-
-		$parts = array_map('intval', preg_split('/\s+/', $raw));
+		$output = shell_exec('sysctl -n kern.cp_times');
+		$parts = array_map('intval', preg_split('/\s+/', trim($output)));
 		$num_cores = count($parts) / 5;
+		$results = [];
 
 		for ($core = 0; $core < $num_cores; $core++) {
 			$offset = $core * 5;
-			$user = $parts[$offset];
-			$nice = $parts[$offset + 1];
-			$sys = $parts[$offset + 2];
-			$intr = $parts[$offset + 3];
+			$total = array_sum(array_slice($parts, $offset, 5));
 			$idle = $parts[$offset + 4];
-
-			$total = $user + $nice + $sys + $intr + $idle;
 
 			if (!isset($last[$core])) {
 				$last[$core] = ['total' => $total, 'idle' => $idle];
 				$results[$core] = 0;
-				continue;
+			} else {
+				$dt = $total - $last[$core]['total'];
+				$di = $idle - $last[$core]['idle'];
+				$results[$core] = $dt > 0 ? round((1 - $di / $dt) * 100, 2) : 0;
+				$last[$core] = ['total' => $total, 'idle' => $idle];
 			}
-
-			$delta_total = $total - $last[$core]['total'];
-			$delta_idle = $idle - $last[$core]['idle'];
-
-			$usage = $delta_total > 0 ? (1 - ($delta_idle / $delta_total)) * 100 : 0;
-			$results[$core] = round($usage, 2);
-
-			$last[$core] = ['total' => $total, 'idle' => $idle];
 		}
 
 		return $results;
 	}
 
-	/**
-	 *
-	 * @staticvar array $last
-	 * @param string $interface
-	 * @return array
-	 * @depends FreeBSD Version 12
-	 */
 	public function get_network_speed(string $interface = 'em0'): array {
 		static $last = [];
 
-		// Run netstat for the interface
 		$output = shell_exec("netstat -bI {$interface} 2>/dev/null");
-		if (!$output)
-			return ['rx_bps' => 0, 'tx_bps' => 0];
-
 		$lines = explode("\n", trim($output));
 		if (count($lines) < 2)
 			return ['rx_bps' => 0, 'tx_bps' => 0];
 
 		$cols = preg_split('/\s+/', $lines[1]);
-		$rx_bytes = (int) $cols[6]; // Ibytes
-		$tx_bytes = (int) $cols[9]; // Obytes
+		$rx = (int) $cols[6];
+		$tx = (int) $cols[9];
 		$now = microtime(true);
 
 		if (!isset($last[$interface])) {
-			$last[$interface] = ['rx' => $rx_bytes, 'tx' => $tx_bytes, 'time' => $now];
+			$last[$interface] = ['rx' => $rx, 'tx' => $tx, 'time' => $now];
 			return ['rx_bps' => 0, 'tx_bps' => 0];
 		}
 
-		$delta_time = $now - $last[$interface]['time'];
-		$delta_rx = $rx_bytes - $last[$interface]['rx'];
-		$delta_tx = $tx_bytes - $last[$interface]['tx'];
+		$dt = $now - $last[$interface]['time'];
+		$drx = $rx - $last[$interface]['rx'];
+		$dtx = $tx - $last[$interface]['tx'];
+		$last[$interface] = ['rx' => $rx, 'tx' => $tx, 'time' => $now];
 
-		$last[$interface] = ['rx' => $rx_bytes, 'tx' => $tx_bytes, 'time' => $now];
-
-		return [
-			'rx_bps' => $delta_rx / $delta_time,
-			'tx_bps' => $delta_tx / $delta_time
-		];
+		return ['rx_bps' => $drx / $dt, 'tx_bps' => $dtx / $dt];
 	}
 }
