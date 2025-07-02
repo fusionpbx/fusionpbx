@@ -19,6 +19,7 @@ class LcrRequest extends FormRequest
             'digits'             => 'bail|required|string|max:255',
             'lcr_direction'      => 'bail|required|in:inbound,outbound,local',
             'rate'               => 'bail|nullable|numeric|min:0',
+            'currency'           => 'bail|nullable|string|min:3|max:3',
             'connect_rate'       => 'bail|nullable|numeric|min:0',
             'connect_increment'  => 'bail|nullable|integer|min:0',
             'talk_increment'     => 'bail|nullable|integer|min:0',
@@ -36,6 +37,7 @@ class LcrRequest extends FormRequest
             'cid'                => 'bail|nullable|string|max:255',
             'enabled'            => 'bail|nullable|string|in:true,false',
             'description'        => 'bail|nullable|string|max:500',
+            'carrier_uuid'       => 'bail|required|uuid|exists:App\Models\Carrier,carrier_uuid',
         ];
     }
 }

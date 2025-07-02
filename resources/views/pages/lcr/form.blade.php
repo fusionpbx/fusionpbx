@@ -16,6 +16,8 @@
                 @method('PUT')
             @endif
 
+            <input type="hidden" name="carrier_uuid" value="{{ old('carrier_uuid', $lcr->carrier_uuid ?? $carrier_uuid) }}">
+
             <div class="card-body">
 
                 <div class="row">
@@ -59,12 +61,21 @@
                 </div>
 
                 <div class="row mt-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label">Rate</label>
                             <input type="number" step="0.000001" class="form-control" name="rate" value="{{ old('rate', $lcr->rate ?? '') }}">
                         </div>
                         @error('rate')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="form-label">Currency</label>
+                            {{ currency_select($lcr->currency ?? '') }}
+                        </div>
+                        @error('currency')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>

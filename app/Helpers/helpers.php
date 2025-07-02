@@ -186,3 +186,45 @@ if(!function_exists('array_find')) {
         return null;
     }
 }
+
+if (!function_exists('currency_select')) {
+	function currency_select($currency = '', $p100 = 0, $name='currency'){
+
+        $billingCurrency = Setting::getSetting('billing', 'currency', 'text');
+
+		if (strlen(trim($currency))== 0){
+			$currency = (strlen($billingCurrency) ? $billingCurrency : 'USD');
+		}
+
+       	echo "  <select class='form-select' name=\"$name\" id=\"$name\" >";
+		echo "    <option value=\"AUD\" ".($currency=='AUD'? " selected=\"selected\" ":" ").">AUD</option>";
+		echo "    <option value=\"ARS\" ".($currency=='ARS'? " selected=\"selected\" ":" ").">ARS</option>";
+		echo "    <option value=\"CAD\" ".($currency=='CAD'? " selected=\"selected\" ":" ").">CAD</option>";
+		echo "    <option value=\"CHF\" ".($currency=='CHF'? " selected=\"selected\" ":" ").">CHF</option>";
+		echo "    <option value=\"CZK\" ".($currency=='CZK'? " selected=\"selected\" ":" ").">CZK</option>";
+		echo "    <option value=\"DKK\" ".($currency=='DKK'? " selected=\"selected\" ":" ").">DKK</option>";
+		echo "    <option value=\"EUR\" ".($currency=='EUR'? " selected=\"selected\" ":" ").">EUR</option>";
+		echo "    <option value=\"GBP\" ".($currency=='GBP'? " selected=\"selected\" ":" ").">GBP</option>";
+		echo "    <option value=\"HKD\" ".($currency=='HKD'? " selected=\"selected\" ":" ").">HKD</option>";
+		echo "    <option value=\"HUF\" ".($currency=='HUF'? " selected=\"selected\" ":" ").">HUF</option>";
+		echo "    <option value=\"IDR\" ".($currency=='IDR'? " selected=\"selected\" ":" ").">IDR</option>";
+		echo "    <option value=\"ILS\" ".($currency=='ILS'? " selected=\"selected\" ":" ").">ILS</option>";
+		echo "    <option value=\"JPY\" ".($currency=='JPY'? " selected=\"selected\" ":" ").">JPY</option>";
+		echo "    <option value=\"MXN\" ".($currency=='MXN'? " selected=\"selected\" ":" ").">MXN</option>";
+		echo "    <option value=\"NOK\" ".($currency=='NOK'? " selected=\"selected\" ":" ").">NOK</option>";
+		echo "    <option value=\"NZD\" ".($currency=='NZD'? " selected=\"selected\" ":" ").">NZD</option>";
+		echo "    <option value=\"PHP\" ".($currency=='PHP'? " selected=\"selected\" ":" ").">PHP</option>";
+		echo "    <option value=\"PLN\" ".($currency=='PLN'? " selected=\"selected\" ":" ").">PLN</option>";
+		echo "    <option value=\"RUB\" ".($currency=='RUB'? " selected=\"selected\" ":" ").">RUB</option>";
+		echo "    <option value=\"SEK\" ".($currency=='SEK'? " selected=\"selected\" ":" ").">SEK</option>";
+		echo "    <option value=\"SGD\" ".($currency=='SGD'? " selected=\"selected\" ":" ").">SGD</option>";
+		echo "    <option value=\"THB\" ".($currency=='THB'? " selected=\"selected\" ":" ").">THB</option>";
+		echo "    <option value=\"TWD\" ".($currency=='TWD'? " selected=\"selected\" ":" ").">TWD</option>";
+		echo "    <option value=\"USD\" ".($currency=='USD'? " selected=\"selected\" ":" ").">USD</option>";
+		echo "    <option value=\"ZAR\" ".($currency=='ZAR'? " selected=\"selected\" ":" ").">ZAR</option>";
+		if ($p100){
+			echo "    <option value=\"%\" ".($currency=='%'? " selected=\"selected\" ":" ").">%</option>";
+		}
+		echo '  </select>';
+	}
+}
