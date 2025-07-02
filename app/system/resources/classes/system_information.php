@@ -43,7 +43,60 @@ abstract class system_information {
 		return sys_getloadavg();
 	}
 
-	public static function get_os_name(): string {
+	public function get_disk_used_terabytes() {
+		return $this->get_disk_used_gigabytes() / 1024;
+	}
+
+	public function get_disk_used_gigabytes() {
+		return $this->get_disk_used_megabytes() / 1024;
+	}
+
+	public function get_disk_used_megabytes() {
+		return $this->get_disk_used_kilobytes() / 1024;
+	}
+
+	public function get_disk_used_kilobytes() {
+		return ($this->get_disk_usage())['used'] / 1024;
+	}
+
+	public function get_disk_free_terabytes() {
+		return $this->get_disk_free_gigabytes() / 1024;
+	}
+
+	public function get_disk_free_gigabytes() {
+		return $this->get_disk_free_megabytes() / 1024;
+	}
+
+	public function get_disk_free_megabytes() {
+		return $this->get_disk_free_kilobytes() / 1024;
+	}
+
+	public function get_disk_free_kilobytes() {
+		return ($this->get_disk_usage())['free'] / 1024;
+	}
+
+	public function get_disk_total_terabytes() {
+		return $this->get_disk_total_gigabytes() / 1024;
+	}
+
+	public function get_disk_total_gigabytes() {
+		return $this->get_disk_total_megabytes() / 1024;
+	}
+
+	public function get_disk_total_megabytes() {
+		return $this->get_disk_total_kilobytes() / 1024;
+	}
+
+	public function get_disk_total_kilobytes() {
+		return ($this->get_disk_usage())['total'] / 1024;
+	}
+
+	/**
+	 * Returns the OS family as a lowercase string independent of the PHP version
+	 * @return string Lowercase name of the detected family
+	 * @final
+	 */
+	public static final function get_os_family(): string {
 		// PHP 7.2+
 		if (defined(PHP_OS_FAMILY)) {
 			return strtolower(PHP_OS_FAMILY);
@@ -57,12 +110,24 @@ abstract class system_information {
 		return '';
 	}
 
+	/**
+	 * Returns a new system information object based on the current OS
+	 * @return system_information|null
+	 */
 	public static function new(): ?system_information {
-		$os = self::get_os_name();
-		if(!empty($os)) {
-			$class = "{$os}_system_information";
-			return new $class();
+
+		// Get OS family as a lowercase string independent of the PHP version
+		$os = self::get_os_family();
+
+		// Ensure we have the OS family
+		if(empty($os)) {
+			return null;
 		}
-		return null;
+
+		// Set the class name based on the OS
+		$class = "{$os}_system_information";
+
+		// Create an instance of the system information object matching the current OS
+		return new $class();
 	}
 }
