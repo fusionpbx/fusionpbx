@@ -42,7 +42,7 @@ class LcrController extends Controller
 
 	public function edit(Request $request, Lcr $lcr)
 	{
-		$carrier_uuid = $request->query("carrier_uuid");
+		$carrier_uuid = $lcr->carrier_uuid;
 
 		return view("pages.lcr.form", compact("lcr", "carrier_uuid"));
 	}

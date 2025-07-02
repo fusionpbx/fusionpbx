@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueLcrDigitsDateRange;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,7 +17,6 @@ class LcrRequest extends FormRequest
     {
         return [
             'origination_digits' => 'bail|nullable|string|max:255',
-            'digits'             => 'bail|required|string|max:255',
             'lcr_direction'      => 'bail|required|in:inbound,outbound,local',
             'rate'               => 'bail|nullable|numeric|min:0',
             'currency'           => 'bail|nullable|string|min:3|max:3',
@@ -38,6 +38,13 @@ class LcrRequest extends FormRequest
             'enabled'            => 'bail|nullable|string|in:true,false',
             'description'        => 'bail|nullable|string|max:500',
             'carrier_uuid'       => 'bail|required|uuid|exists:App\Models\Carrier,carrier_uuid',
+            'digits' => [
+                'bail',
+                'required',
+                'string',
+                'max:255',
+                new UniqueLcrDigitsDateRange($this->route('lcr_uuid') ?? null), // if editing, pass current record ID
+            ],
         ];
     }
 }
