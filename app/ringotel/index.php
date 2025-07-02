@@ -67,14 +67,6 @@ echo "<script language='JavaScript' type='text/javascript' src='" . PROJECT_PATH
 echo "<script language='JavaScript' type='text/javascript' src='" . PROJECT_PATH . "/resources/javascript/html-to-image.min.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='" . PROJECT_PATH . "/resources/javascript/multiselect-dropdown.js'></script>\n";
 
-// echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-// echo "<form method='post' action=''>";
-// echo "<tr>\n";
-// echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>Ringotel</b></td>\n";
-// echo "</tr>\n";
-// echo "</form>";
-// echo "</table>";
-
 // ORG INIT ERROR
 echo '	<div id="not_exist_organization_note" class="alert alert-warning alert-dismissible fade show" style="display: none;" role="alert">	';
 echo '	  <strong>You don\'t have an organization account.</strong> You should check it. If you already have, just try refresh page.';
@@ -91,8 +83,7 @@ echo '	</div>	';
 
 // ORGANIZATION INIT ERROR
 echo '	<div id="not_exist_organization" class="jumbotron" style="display: none;background-color: white; border: 0px solid #b5b5b5;">	';
-// echo '	  <h4 class="display-4">Flagman GO</h4>	';
-// echo '	  <p class="lead">Create Organization</p>	';
+
 echo '	  <p class="lead">Organization</p>	';
 echo '	  <hr>	';
 echo '	  <p>Use Admin Shell to create your own connection for organization.</p>	';
@@ -324,10 +315,10 @@ echo '			<div class="input-group mb-3" style="flex-direction: row;">';
 echo '			  <div class="input-group-prepend">';
 echo '			    <span class="input-group-text" id="basic-addon1">Domain name</span>';
 echo '			  </div>';
-$default_domain_unique_name = getLessThan30(explode('.', $_SESSION['domain_name'])[0], '-flagman');
+$default_domain_unique_name = getLessThan30(explode('.', $_SESSION['domain_name'])[0], isset($_SESSION['ringotel']['domain_name_postfix']['text']) ? ('-'.$_SESSION['ringotel']['domain_name_postfix']['text']) : '-ringotel');
 echo '			  <input type="text" class="form-control" id="domain_unique_name" placeholder="Unique Organization Domain" aria-label="Unique Organization Domain" value=' . $default_domain_unique_name . '>';
 echo '			  <div class="input-group-append">';
-echo '			    <span class="input-group-text" id="basic-addon2">-flagman</span>';
+echo '			    <span class="input-group-text" id="basic-addon2">'.(isset($_SESSION['ringotel']['domain_name_postfix']['text']) ? ('-'.$_SESSION['ringotel']['domain_name_postfix']['text']) : '-ringotel').'</span>';
 echo '			</div>';
 echo '	      </div>';
 echo '	      <div class="modal-footer">';
@@ -651,6 +642,8 @@ echo '	  </div>';
 echo '	</div>';
 /////////////////////////////////////
 
+include "resources/footer.php";
+
 echo '<style>';
 echo '	.card-body-p {';
 echo '		padding: 0.65rem 1rem 0.25rem 1rem !important;';
@@ -951,9 +944,83 @@ echo '	.edit_user:hover, .delete_user:hover {';
 echo '	    box-shadow: inset rgb(63 63 63 / 20%) 0px 0px 15px 15px;';
 echo '	    z-index: 1;';
 echo '	}';
+echo '	div.card {';
+echo '		position: relative;';
+echo '    	display: -ms-flexbox;';
+echo '    	display: flex;';
+echo '    	-ms-flex-direction: column;';
+echo '    	flex-direction: column;';
+echo '    	min-width: 0;';
+echo '    	word-wrap: break-word;';
+echo '    	background-color: #fff;';
+echo '    	background-clip: border-box;';
+echo '    	border: 1px solid rgba(0, 0, 0, .125);';
+echo '    	border-radius: .25rem;';
+echo '		overflow-x: unset;';
+echo '	}';
+echo "	.switch { /* container */";
+echo "		position: relative;";
+echo "		display: inline-block;";
+echo "		width: 50px;";
+echo "		height: 28px;";
+echo "		margin: 1px;";
+echo "		-moz-border-radius: 3px 3px 3px 3px;";
+echo "		-webkit-border-radius: 3px 3px 3px 3px;";
+echo "		-khtml-border-radius: 3px 3px 3px 3px;";
+echo "		border-radius: 3px 3px 3px 3px;";
+echo "	}";
+echo "	.switch > input {";
+echo "		display: none;";
+echo "	}";
+echo "	.slider {";
+echo "		position: absolute;";
+echo "		cursor: pointer;";
+echo "		top: 0;";
+echo "		left: 0;";
+echo "		right: 0;";
+echo "		bottom: 0;";
+echo "		background: #c0c0c0;";
+echo "		-moz-border-radius: 3px 3px 3px 3px;";
+echo "		-webkit-border-radius: 3px 3px 3px 3px;";
+echo "		-khtml-border-radius: 3px 3px 3px 3px;";
+echo "		border-radius: 3px 3px 3px 3px;";
+echo "		-webkit-transition: .2s;";
+echo "		transition: .2s;";
+echo "		}";
+echo "	.slider:before {";
+echo "		position: absolute;";
+echo "		text-align: center;";
+echo "		padding-top: 3px;";
+echo "		content: 'O';";
+echo "		color: #c0c0c0;";
+echo "		height: 24px;";
+echo "		width: 24px;";
+echo "		top: 2px;";
+echo "		left: 2px;";
+echo "		bottom: 2px;";
+echo "		background: #ffffff;";
+echo "		-moz-border-radius: 3px 3px 3px 3px;";
+echo "		-webkit-border-radius: 3px 3px 3px 3px;";
+echo "		-khtml-border-radius: 3px 3px 3px 3px;";
+echo "		border-radius: 3px 3px 3px 3px;";
+echo "		-webkit-transition: .2s;";
+echo "		transition: .2s;";
+echo "	}";
+echo "	input:checked + .slider {";
+echo "		background: #2e82d0;";
+echo "	}";
+echo "	input:focus + .slider {";
+echo "	}";
+echo "	input:checked + .slider:before {";
+echo "		text-align: center;";
+echo "		padding-top: 2px;";
+echo "		content: '|';";
+echo "		color: #2e82d0;";
+echo "		-webkit-transform: translateX(22px);";
+echo "		-ms-transform: translateX(22px);";
+echo "		transform: translateX(22px);";
+echo "	}";
 echo '</style>';
-
-include "resources/footer.php";
 
 ?>
 
@@ -3829,7 +3896,7 @@ include "resources/footer.php";
 									username: result.username,
 									password: result.password
 								}),
-								image: "<?php echo PROJECT_PATH . "/themes/FlagmanTelecom/images/180x180.svg" ?>",
+								image: "<?php echo PROJECT_PATH . "/app/ringotel/assets/images/180x180.svg" ?>",
 								imageOptions: {
 									crossOrigin: "anonymous",
 									margin: 30,

@@ -36,9 +36,13 @@ class RingotelApiFunctions
 {
 
     public $config;
+    public $domain_name_postfix;
+    public $default_connection_regexpires;
 
     public function __construct($baseUrl)
     {
+        $this->domain_name_postfix = isset($_SESSION['ringotel']['domain_name_postfix']['text']) ? ('-'.$_SESSION['ringotel']['domain_name_postfix']['text']) : '-ringotel';
+        $this->default_connection_regexpires = isset($_SESSION['ringotel']['default_connection_regexpires']['text']) ? intval($_SESSION['ringotel']['default_connection_regexpires']['text']) : 120;
         $this->baseUrl = $baseUrl;
     }
 
@@ -77,7 +81,7 @@ class RingotelApiFunctions
             "params" => array(
                 "name" => $_SESSION['domain_name'],
                 "region" => $param['region'],
-                "domain" => isset($param['domain']) ? $param['domain'] : explode(".", $name)[0] . '-flagman',
+                "domain" => isset($param['domain']) ? $param['domain'] : explode(".", $name)[0] . $this->domain_name_postfix,
             )
         );
         // adminlogin [optional]
@@ -88,7 +92,7 @@ class RingotelApiFunctions
         if (isset($param['adminpassw'])) {
             $parameters['adminpassw'] = $param['adminpassw'];
         }
-        ;
+
         $headers = array(
             'Authorization: Bearer ' . $_SESSION['ringotel']['ringotel_token']['text'],
             'Content-Type: application/json'
@@ -154,7 +158,7 @@ class RingotelApiFunctions
                     "private" => false,
                     "multitenant" => false,
                     "dtmfmode" => "rfc2833",
-                    "regexpires" => 120,
+                    "regexpires" => $this->default_connection_regexpires, 
                     "codecs" => array(
                         0 => array(
                             "codec" => "G.711 Alaw",

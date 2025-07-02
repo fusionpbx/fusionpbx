@@ -38,9 +38,15 @@ class RingotelClass
 {
     private $api;
     private $repository;
+    public $domain_name_postfix;
+    public $max_registration;
+    public $default_connection_protocol;
 
     function __construct($mode)
     {
+        $this->domain_name_postfix = isset($_SESSION['ringotel']['domain_name_postfix']['text']) ? ('-'.$_SESSION['ringotel']['domain_name_postfix']['text']) : '-ringotel';
+        $this->max_registration = isset($_SESSION['ringotel']['max_registration']['text']) ? intval($_SESSION['ringotel']['max_registration']['text']) : 1;
+        $this->default_connection_protocol = isset($_SESSION['ringotel']['default_connection_protocol']['text']) ? $_SESSION['ringotel']['default_connection_protocol']['text'] : 'sip-tcp';
         $ringotel_api = $mode !== 'INTEGRATION' ? $_SESSION['ringotel']['ringotel_api']['text'] : $_SESSION['ringotel']['ringotel_integration_api']['text'];
         $this->api = new RingotelApiFunctions($ringotel_api);
         $this->error = new RingotelErrorService();
@@ -78,7 +84,7 @@ class RingotelClass
         // HERE the filter functional
         $domain_name = isset($_REQUEST['domain_name']) ? $_REQUEST['domain_name'] : $_SESSION['domain_name'];
 
-        $DomainNameLessThan30 = $this->lessThan30(explode(".", $domain_name)[0], '-flagman');
+        $DomainNameLessThan30 = $this->lessThan30(explode(".", $domain_name)[0], $this->domain_name_postfix);
 
         // var_dump($DomainNameLessThan30);
         $filtered_organization = array_filter(
@@ -107,11 +113,11 @@ class RingotelClass
     // CREATE ORGANIZATION
     public function createOrganization()
     {
-        $DomainNameLessThan30 = $this->lessThan30(explode(".", $_SESSION['domain_name'])[0], '-flagman');
+        $DomainNameLessThan30 = $this->lessThan30(explode(".", $_SESSION['domain_name'])[0], $this->domain_name_postfix);
 
         //default param
         $param['name'] = $_REQUEST['name'];	                                                                                                    # string	org name
-        $param['domain'] = isset($_REQUEST['domain']) ? ($_REQUEST['domain'] . '-flagman') : $DomainNameLessThan30;                             # string	org domain
+        $param['domain'] = isset($_REQUEST['domain']) ? ($_REQUEST['domain'] . $this->domain_name_postfix) : $DomainNameLessThan30;                             # string	org domain
         $param['region'] = isset($_REQUEST['region']) ? $_REQUEST['region'] : $_SESSION['ringotel']['ringotel_organization_region']['text'];    # string	region ID (see below)
         $param['adminlogin'] = $_REQUEST['adminlogin'];                                                                                         # string	(optional) org admin login
         $param['adminpassw'] = $_REQUEST['adminpassw'];                                                                                         # string	(optional) org admin password
@@ -159,10 +165,10 @@ class RingotelClass
 
         //default param
         $param['orgid'] = $_REQUEST['orgid'];
-        $param['maxregs'] = isset($_REQUEST['maxregs']) ? $_REQUEST['maxregs'] : 1;
+        $param['maxregs'] = isset($_REQUEST['maxregs']) ? $_REQUEST['maxregs'] : $this->max_registration;
         $param['name'] = isset($_REQUEST['connection_name']) ? $_REQUEST['connection_name'] : $_SESSION['domain_name'];             # string	Connection name
         $param['address'] = isset($_REQUEST['connection_domain']) ? $_REQUEST['connection_domain'] : $_SESSION['domain_name'];      # string	Domain or IP address
-        $param['protocol'] = isset($_REQUEST['protocol']) ? $_REQUEST['protocol'] : "sip-tcp";
+        $param['protocol'] = isset($_REQUEST['protocol']) ? $_REQUEST['protocol'] : $this->default_connection_protocol;
         //main
         $server_output = $this->api->createBranch($param);
         unset($param);
@@ -504,7 +510,7 @@ class RingotelClass
                 "novideo" => false,
                 "noptions" => true,
                 "nologae" => false,
-                "maxregs" => 1,
+                "maxregs" => $this->max_registration,
                 "beta_updates" => false,
                 "sms" => 3,
                 "paging" => 0,
@@ -662,7 +668,7 @@ class RingotelClass
                     "park" => "park+*"
                 ),
                 // required
-                "maxregs" => 1,
+                "maxregs" => $this->max_registration,
             );
 
             unset($id, $slots);
