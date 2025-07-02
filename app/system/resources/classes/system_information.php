@@ -34,17 +34,32 @@ abstract class system_information {
 	abstract public function get_cpu_cores(): int;
 	abstract public function get_uptime();
 	abstract public function get_cpu_percent(): float;
+	abstract public function get_disk_usage(): array;
+	abstract public function get_memory_details(): array;
 
 	public function get_load_average() {
 		return sys_getloadavg();
 	}
 
-	public static function new(): ?system_information {
-		if (stristr(PHP_OS, 'BSD')) {
-			return new bsd_system_information();
+	public static function get_os_name(): string {
+		// PHP 7.2+
+		if (defined(PHP_OS_FAMILY)) {
+			return strtolower(PHP_OS_FAMILY);
 		}
-		if (stristr(PHP_OS, 'Linux')) {
-			return new linux_system_information();
+		// PHP < 7.2
+		if (stripos(PHP_OS, 'LINUX') !== false) return 'linux';
+		if (stripos(PHP_OS, 'BSD') !== false) return 'bsd';
+		if (stripos(PHP_OS, 'DARWIN') !== false) return 'darwin';
+		if (stripos(PHP_OS, 'WIN') !== false) return 'windows';
+		if (stripos(PHP_OS, 'SUNOS') !== false || stripos(PHP_OS, 'SOLARIS') !== false) return 'solaris';
+		return '';
+	}
+
+	public static function new(): ?system_information {
+		$os = self::get_os_name();
+		if(!empty($os)) {
+			$class = "{$os}_system_information";
+			return new $class();
 		}
 		return null;
 	}

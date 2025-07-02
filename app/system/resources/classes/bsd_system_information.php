@@ -31,25 +31,51 @@
  */
 class bsd_system_information extends system_information {
 
-	public function get_cpu_cores(): int {
-		$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
-		$cpu_cores = trim($result);
-		return $cpu_cores;
+	public function get_disk_usage(): array {
+		return disk_free_space("/") !== false ? [
+			'total' => disk_total_space("/"),
+			'free' => disk_free_space("/"),
+			'used' => disk_total_space("/") - disk_free_space("/")
+				] : [];
 	}
 
-	//get the CPU details
-	public function get_cpu_percent(): float {
-		$result = shell_exec('ps -A -o pcpu');
-		$percent_cpu = 0;
-		foreach (explode("\n", $result) as $value) {
-			if (is_numeric($value)) {
-				$percent_cpu = $percent_cpu + $value;
-			}
+	public function get_memory_details(): array {
+		$total = (int) shell_exec("sysctl -n hw.physmem");
+		$free = (int) shell_exec("sysctl -n vm.stats.vm.v_free_count") * getpagesize();
+		return [
+			'total' => $total,
+			'available' => $free,
+			'used' => $total - $free
+		];
+	}
+
+	public function get_uptime(): string {
+		$boot = trim(shell_exec("sysctl -n kern.boottime"));
+		if (preg_match('/sec\s*=\s*(\d+)/', $boot, $matches)) {
+			$uptime = time() - (int) $matches[1];
+			return gmdate("H:i:s", $uptime);
 		}
-		return $percent_cpu;
+		return "unknown";
 	}
 
-	public function get_uptime() {
-		return shell_exec('uptime');
+	public function get_cpu_cores(): int {
+		return (int) shell_exec("sysctl -n hw.ncpu");
+	}
+
+	public function get_cpu_percent(): float {
+		$times = explode(' ', trim(shell_exec("sysctl -n kern.cp_time")));
+		$total = array_sum($times);
+		$idle = (int) $times[4];
+		static $last = null;
+		if ($last) {
+			[$last_total, $last_idle] = $last;
+			$delta_total = $total - $last_total;
+			$delta_idle = $idle - $last_idle;
+			$usage = (1 - ($delta_idle / $delta_total)) * 100;
+		} else {
+			$usage = 0;
+		}
+		$last = [$total, $idle];
+		return round($usage, 2);
 	}
 }
