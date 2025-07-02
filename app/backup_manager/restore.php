@@ -13,6 +13,7 @@ if (!permission_exists('backup_manager_restore')) {
 }
 
 $message = '';
+$selected_file = $_GET['file'] ?? '';
 if (!empty($_POST['action']) && $_POST['action'] === 'restore') {
     $backup_file = escapeshellarg('/var/backups/fusionpbx/' . $_POST['backup_file']);
     $options     = $_POST['restore_options'] ?? [];
@@ -37,7 +38,8 @@ echo '<input type="hidden" name="action" value="restore" />';
 echo '<label>Select Backup File:</label><br/>';
 echo '<select name="backup_file">';
 foreach (array_filter(scandir('/var/backups/fusionpbx', SCANDIR_SORT_DESCENDING), function($f){return preg_match('/\.tgz$/', $f);} ) as $file) {
-    echo '<option>' . htmlspecialchars($file) . '</option>';
+    $sel = $selected_file === $file ? 'selected' : '';
+    echo '<option value="' . htmlspecialchars($file) . '" ' . $sel . '>' . htmlspecialchars($file) . '</option>';
 }
 echo '</select><br/><br/>';
 
