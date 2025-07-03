@@ -42,7 +42,10 @@
     $y++;
 	$apps[$x]['permissions'][$y]['name'] = "ringotel_superadmin";
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-    $y++;
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "extension_ringotel";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
     //default settings
     $y=0;

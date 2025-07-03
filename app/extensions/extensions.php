@@ -450,5 +450,6 @@
 //show the footer
 	require_once "resources/footer.php";
 
+//include the ringotel extension list
+require_once  dirname(__DIR__, 2)."/app/ringotel/ringotel_extension_list.php";
 ?>
-
