@@ -1,4 +1,4 @@
-<?php
+www<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -323,12 +323,13 @@
 					$this->domain_uuid = $params['domain_uuid'];
 				}
 
-				//allow passed user_uuid in the constructor to override the session user_uuid
+				//set the user_uuid
 				if (isset($params['user_uuid'])) {
+					//allow passed user_uuid in the constructor to override the session user_uuid
 					$this->user_uuid = $params['user_uuid'];
-				} else {
+				} elseif (!empty($_SESSION['user_uuid'])) {
 					//try to determine the current user_uuid using the session
-					$this->user_uuid = (!empty($_SESSION['user_uuid']) ? $_SESSION['user_uuid'] : null);
+					$this->user_uuid = $_SESSION['user_uuid'];
 				}
 			}
 
@@ -3280,12 +3281,24 @@
 		 * @see database::connect()
 		 */
 		public static function new(array $params = []) {
+
+			//re-use the database connection
 			if (self::$database === null) {
 				self::$database = new database($params);
 				if (!self::$database->is_connected()) {
 					self::$database->connect();
 				}
 			}
+
+			//set the user_uuid
+			if (isset($params['user_uuid'])) {
+				//allow passed user_uuid in the constructor to override the session user_uuid
+				self::$database->user_uuid = $params['user_uuid'];
+			} elseif (!empty($_SESSION['user_uuid'])) {
+				//try to determine the current user_uuid using the session
+				self::$database->user_uuid = $_SESSION['user_uuid'];
+			}
+
 			return self::$database;
 		}
 
