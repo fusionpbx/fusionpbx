@@ -23,7 +23,7 @@ class UniqueLcrDigitsDateRange implements ValidationRule
 
         $conflict = Lcr::where('digits', $digits)
             ->when($this->currentUuid, function ($query) {
-                $query->where('uuid', '!=', $this->currentUuid);
+                $query->where('lcr_uuid', '!=', $this->currentUuid);
             })
             ->where(function ($query) use ($dateStart, $dateEnd) {
                 $query->where(function ($q) use ($dateStart, $dateEnd) {

@@ -15,6 +15,10 @@ class LcrRequest extends FormRequest
 
     public function rules(): array
     {
+        $lcr = $this->route('lcr');
+
+        $lcrUuid = $lcr instanceof \App\Models\Lcr ? $lcr->lcr_uuid : null;
+
         return [
             'origination_digits' => 'bail|nullable|string|max:255',
             'lcr_direction'      => 'bail|required|in:inbound,outbound,local',
@@ -42,7 +46,7 @@ class LcrRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                new UniqueLcrDigitsDateRange($this->route('lcr_uuid') ?? null), // if editing, pass current record ID
+                new UniqueLcrDigitsDateRange($lcrUuid),
             ],
             'currency' => [
                 'bail',
