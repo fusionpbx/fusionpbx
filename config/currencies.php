@@ -1,0 +1,29 @@
+<?php
+
+return [
+	'AUD',
+	'ARS',
+	'CAD',
+	'CHF',
+	'CZK',
+	'DKK',
+	'EUR',
+	'GBP',
+	'HKD',
+	'HUF',
+	'IDR',
+	'ILS',
+	'JPY',
+	'MXN',
+	'NOK',
+	'NZD',
+	'PHP',
+	'PLN',
+	'RUB',
+	'SEK',
+	'SGD',
+	'THB',
+	'TWD',
+	'USD',
+	'ZAR'
+];

@@ -19,7 +19,6 @@ class LcrRequest extends FormRequest
             'origination_digits' => 'bail|nullable|string|max:255',
             'lcr_direction'      => 'bail|required|in:inbound,outbound,local',
             'rate'               => 'bail|nullable|numeric|min:0',
-            'currency'           => 'bail|nullable|string|min:3|max:3',
             'connect_rate'       => 'bail|nullable|numeric|min:0',
             'connect_increment'  => 'bail|nullable|integer|min:0',
             'talk_increment'     => 'bail|nullable|integer|min:0',
@@ -44,6 +43,12 @@ class LcrRequest extends FormRequest
                 'string',
                 'max:255',
                 new UniqueLcrDigitsDateRange($this->route('lcr_uuid') ?? null), // if editing, pass current record ID
+            ],
+            'currency' => [
+                'bail',
+                'nullable',
+                'string',
+                Rule::in(array_merge(config('currencies'), ['%']))
             ],
         ];
     }
