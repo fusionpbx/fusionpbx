@@ -108,7 +108,7 @@
 			//link
 				if (!empty($array['link'])) {
 					$anchor = "<a ";
-					$anchor .= "href='".$array['link']."' ";
+					$anchor .= "href='" . self::escape_href($array['link']) . "' ";
 					$anchor .= "target='".(!empty($array['target']) ? $array['target'] : '_self')."' ";
 					//ensure only margin* styles are applied to the anchor element
 					if (!empty($array['style']) && is_array($array['style']) && @sizeof($array['style']) != 0) {
@@ -132,6 +132,12 @@
 			return substr_count($value, "'") ? '"'.$value.'"' : "'".$value."'";
 		}
 
+		private static function escape_href(string $url): string {
+			// clear whitespace
+			$url = trim($url);
+
+			return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+		}
 	}
 
 /*
