@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of system_dashboard_service
+ * Description of base_websocket_system_service 
  *
  * @author Tim Fry <tim@fusionpbx.com>
  */
@@ -22,7 +22,7 @@ abstract class base_websocket_system_service extends service implements websocke
 	 */
 	protected $ws_client;
 
-	abstract protected function reload_settings(): void;
+	//abstract protected function reload_settings(): void;
 
 	protected static function display_version(): void {
 		echo "System Dashboard Service 1.0\n";
