@@ -45,6 +45,9 @@ if (!isset($database)) {
 	$database = database::new();
 }
 
+//set the dashboard icon to a solid color phone
+$dashboard_icon = 'fa-solid fa-phone';
+
 //add multi-lingual support
 $text = (new text)->get($_SESSION['domain']['language']['code'], 'app/active_calls');
 
@@ -70,7 +73,7 @@ echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onc
 	echo "<div class='hud_content'>\n";
 		echo "<div style='position: relative; display: inline-block;'>\n";
 			echo "<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
-			echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#417ed3')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$num_rows."</span>\n";
+			echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#03c04a')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
 		echo "</div>\n";
 	echo "</div>\n";
 echo "</div>\n";
