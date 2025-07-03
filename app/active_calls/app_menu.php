@@ -1,6 +1,5 @@
 <?php
 
-/*
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Active Calls";
 	$apps[$x]['menu'][$y]['title']['en-gb'] = "Active Calls";
@@ -35,4 +34,3 @@
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$y++;
-*/
