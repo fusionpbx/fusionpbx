@@ -25,7 +25,7 @@
 --      POSSIBILITY OF SUCH DAMAGE.
 
 --include functions
-require "resources.functions.format_ringback"
+	require "resources.functions.format_ringback"
 
 --include xml library
 	local Xml = require "resources.functions.xml";
@@ -102,6 +102,9 @@ require "resources.functions.format_ringback"
 					domain_name = row.domain_name;
 					queue_name = row.queue_name;
 					queue_extension = row.queue_extension;
+					queue_language = row.queue_language;
+					queue_dialect = row.queue_dialect;
+					queue_voice = row.queue_voice;
 					queue_strategy = row.queue_strategy;
 					queue_moh_sound = row.queue_moh_sound;
 					queue_record_template = row.queue_record_template;
@@ -132,7 +135,6 @@ require "resources.functions.format_ringback"
 					queue_record_template = string.gsub(queue_record_template, "{sip_from_user}", "${sip_from_user}");
 					queue_record_template = string.gsub(queue_record_template, "{sip_to_user}", "${sip_to_user}");
 					queue_record_template = string.gsub(queue_record_template, "{sip_req_user}", "${sip_req_user}");
-					
 
 				--start the xml
 					xml:append([[                            <queue name="]] .. xml.sanitize(queue_extension) .. [[@]] .. xml.sanitize(domain_name) .. [[" label="]] .. xml.sanitize(queue_name) .. [[@]] .. xml.sanitize(domain_name) .. [[">]]);
@@ -218,10 +220,17 @@ require "resources.functions.format_ringback"
 					agent_busy_delay_time = row.agent_busy_delay_time;
 					agent_record = row.agent_record;
 
+				--set the language, voice and dialect
+					if (queue_language ~= nil and queue_dialect ~= nil and queue_voice ~= nil) then
+						sound_prefix = "sound_prefix="..sounds_dir.."/"..queue_language.."/"..queue_dialect .."/"..queue_voice;
+					else
+						sound_prefix = sounds_dir.."/en/us/callie";
+					end
+
 				--get and then set the complete agent_contact with the call_timeout and when necessary confirm
 						--confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
 						--if you change this variable also change app/call_center/call_center_agent_edit.php
-						confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
+						confirm = ""..sound_prefix..",group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
 						local record = "";
 						if (agent_record == "true") then
 							record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)

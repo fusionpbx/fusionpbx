@@ -315,9 +315,9 @@
 		}
 
 		/**
-		 * delete items in the menu that are not protected
+		 * delete items in the menu used by restore default
 		 */
-		public function delete_unprotected() {
+		public function restore_delete() {
 			//remove existing menu languages
 				$sql  = "delete from v_menu_languages ";
 				$sql .= "where menu_uuid = :menu_uuid ";
@@ -325,47 +325,224 @@
 				$sql .= "	select menu_item_uuid ";
 				$sql .= "	from v_menu_items ";
 				$sql .= "	where menu_uuid = :menu_uuid ";
-				$sql .= "	and ( ";
-				$sql .= " 		menu_item_protected <> 'true' ";
-				$sql .= "		or menu_item_protected is null ";
-				$sql .= "	) ";
+				//$sql .= "	and ( ";
+				//$sql .= " 		menu_item_protected <> 'true' ";
+				//$sql .= "		or menu_item_protected is null ";
+				//$sql .= "	) ";
 				$sql .= ") ";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$this->database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
-			//remove existing unprotected menu item groups
+			//remove existing menu item groups
 				$sql = "delete from v_menu_item_groups ";
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$sql .= "and menu_item_uuid in ( ";
 				$sql .= "	select menu_item_uuid ";
 				$sql .= "	from v_menu_items ";
 				$sql .= "	where menu_uuid = :menu_uuid ";
-				$sql .= "	and ( ";
-				$sql .= " 		menu_item_protected <> 'true' ";
-				$sql .= "		or menu_item_protected is null ";
-				$sql .= "	) ";
+				//$sql .= "	and ( ";
+				//$sql .= " 		menu_item_protected <> 'true' ";
+				//$sql .= "		or menu_item_protected is null ";
+				//$sql .= "	) ";
 				$sql .= ") ";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$this->database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
-			//remove existing unprotected menu items
+			//remove existing menu items
 				$sql  = "delete from v_menu_items ";
 				$sql .= "where menu_uuid = :menu_uuid ";
-				$sql .= "and ( ";
-				$sql .= "	menu_item_protected <> 'true' ";
-				$sql .= "	or menu_item_protected is null ";
-				$sql .= ") ";
+				//$sql .= "and ( ";
+				//$sql .= "	menu_item_protected <> 'true' ";
+				//$sql .= "	or menu_item_protected is null ";
+				//$sql .= ") ";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$this->database->execute($sql, $parameters);
 				unset($sql, $parameters);
 		}
 
+		public function assign_items($records, $menu_uuid, $group_uuid) {
+			//assign the variables
+				$this->name = 'menu_item';
+				$this->table = 'menu_items';
+
+			if (permission_exists($this->name.'_add')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/core/menu/menu_item_list.php')) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+					//assign multiple records
+					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
+
+						//define the group_name, group_uuid, menu_uuid
+							if (!empty($records) && @sizeof($records) != 0) {
+								$sql = "select group_name, group_uuid from v_groups	";
+								$sql .= "where group_uuid = :group_uuid	";
+								$parameters['group_uuid'] = $group_uuid;
+								$database = new database;
+								$group = $database->select($sql, $parameters, 'row');
+							}
+
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//build array
+										$uuids[] = "'".$record['uuid']."'";
+									//assign menu item groups
+											$array['menu_item_groups'][$x]['menu_item_group_uuid'] = uuid();
+											$array['menu_item_groups'][$x]['menu_uuid'] = $menu_uuid;
+											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $record['uuid'];
+											$array['menu_item_groups'][$x]['group_name'] = $group['group_name'];
+											$array['menu_item_groups'][$x]['group_uuid'] = $group['group_uuid'];
+									//increment
+											$x++;
+								}
+							}
+
+							unset($records);
+
+						//exlude exist rows
+						if (!empty($array) && @sizeof($array) != 0) {
+							$sql = "select menu_uuid, menu_item_uuid, ";
+							$sql .= "group_uuid from v_menu_item_groups ";
+							$database = new database;
+							$menu_item_groups = $database->select($sql, null, 'all');
+							$array['menu_item_groups'] = array_filter($array['menu_item_groups'], function($ar) use ($menu_item_groups) {
+								foreach ($menu_item_groups as $existingArrayItem) {
+									if ($ar['menu_uuid'] == $existingArrayItem['menu_uuid'] && $ar['menu_item_uuid'] == $existingArrayItem['menu_item_uuid'] && $ar['group_uuid'] == $existingArrayItem['group_uuid']) {
+										return false;
+									}
+								}
+								return true;
+							});
+							unset($menu_item_groups);
+						}
+
+						//add the checked rows fro group
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+								//execute save
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+								//set message
+									message::add($text['message-add']);
+							}
+					}
+			}
+		}
+
+		public function unassign_items($records, $menu_uuid, $group_uuid) {
+			//assign the variables
+				$this->name = 'menu_item';
+				$this->table = 'menu_items';
+
+			if (permission_exists($this->name.'_add')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/core/menu/menu_item_list.php')) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+					//assign multiple records
+					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
+
+						//define the group_name, group_uuid, menu_uuid
+							if (!empty($records) && @sizeof($records) != 0) {
+								$sql = "select group_name, group_uuid from v_groups	";
+								$sql .= "where group_uuid = :group_uuid	";
+								$parameters['group_uuid'] = $group_uuid;
+								$database = new database;
+								$group = $database->select($sql, $parameters, 'row');
+							}
+
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//build array
+										$uuids[] = "'".$record['uuid']."'";
+									//assign menu item groups
+											$array['menu_item_groups'][$x]['menu_uuid'] = $menu_uuid;
+											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $record['uuid'];
+											$array['menu_item_groups'][$x]['group_name'] = $group['group_name'];
+											$array['menu_item_groups'][$x]['group_uuid'] = $group['group_uuid'];
+									//increment
+											$x++;
+								}
+							}
+
+							unset($records);
+
+						//include child menu items and their main_uuid too
+							if (!empty($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select menu_uuid, menu_item_uuid as uuid from v_".$this->table." ";
+								$sql .= "where menu_item_parent_uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, null, 'all');
+								if (!empty($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										//assign menu item groups
+											$array['menu_item_groups'][$x]['menu_uuid'] = $row['menu_uuid'];
+											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $row['uuid'];
+											$array['menu_item_groups'][$x]['group_name'] = $group['group_name'];
+											$array['menu_item_groups'][$x]['group_uuid'] = $group['group_uuid'];
+										//increment
+											$x++;
+									}
+								}
+							}
+
+							unset($uuids);
+
+						//add the checked rows fro group
+							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+							//grant temporary permissions
+								$p = new permissions;
+								$p->add('menu_language_delete', 'temp');
+								$p->add('menu_item_group_delete', 'temp');
+
+							//execute delete
+								$database = new database;
+								$database->app_name = $this->app_name;
+								$database->app_uuid = $this->app_uuid;
+								$database->delete($array);
+								unset($array);
+
+							//revoke temporary permissions
+								$p->delete('menu_language_delete', 'temp');
+								$p->delete('menu_item_group_delete', 'temp');
+
+							//set message
+								message::add($text['message-delete']);
+							}
+					}
+			}
+		}
+
 		/**
-		 * restore the menu
+		 * restore the default menu
 		 */
-		public function restore() {
+		public function restore_default() {
 
 			//get the $apps array from the installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
@@ -609,7 +786,8 @@
 					$menu_items = $menu_field['menu_items'];
 
 					//prepare the protected menus
-					$menu_item_title = ($menu_field['menu_item_protected'] == "true") ? $menu_field['menu_item_title'] : $menu_field['menu_language_title'];
+					//$menu_item_title = ($menu_field['menu_item_protected'] == "true") ? $menu_field['menu_item_title'] : $menu_field['menu_language_title'];
+					$menu_item_title = $menu_field['menu_language_title'];
 
 					//prepare the menu_tags according to the category
 					$menu_tags = '';
@@ -690,7 +868,8 @@
 						$menu_items = $submenu_field['menu_items'];
 
 					//prepare the protected menus
-						$menu_item_title = ($submenu_field['menu_item_protected'] == "true") ? $submenu_field['menu_item_title'] : $submenu_field['menu_language_title'];
+						//$menu_item_title = ($submenu_field['menu_item_protected'] == "true") ? $submenu_field['menu_item_title'] : $submenu_field['menu_language_title'];
+						$menu_item_title = $submenu_field['menu_language_title'];
 
 					//prepare the menu_tags according to the category
 						switch ($menu_item_category) {
@@ -745,8 +924,8 @@
 
 			//get the menu from the database
 				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ";
-				$sql .= "i.menu_item_title, i.menu_item_protected, i.menu_item_category, ";
-				$sql .= "i.menu_item_icon, i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql .= "i.menu_item_title, i.menu_item_category, i.menu_item_icon, ";
+				$sql .= "i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
 				$sql .= "from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = :menu_language ";
@@ -815,7 +994,9 @@
 				}
 
 			//get the child menu from the database
-				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_icon, i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ";
+				$sql .= "i.menu_item_title, i.menu_item_category, i.menu_item_icon, ";
+				$sql .= "i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
 				$sql .= "from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = :menu_language ";
@@ -862,13 +1043,13 @@
 						//add the row to the array
 							$a[$x] = $row;
 
-						//prepare the protected menus
-							if ($row['menu_item_protected'] == "true") {
-								$a[$x]['menu_item_title'] = $row['menu_item_title'];
-							}
-							else {
-								$a[$x]['menu_item_title'] = $row['menu_language_title'];
-							}
+						//prepare the menus
+							//if ($row['menu_item_protected'] == "true") {
+							//	$a[$x]['menu_item_title'] = $row['menu_item_title'];
+							//}
+							//else {
+							$a[$x]['menu_item_title'] = $row['menu_language_title'];
+							//}
 
 						//get sub menu for children
 							if (!empty($menu_item_uuid)) {
@@ -917,7 +1098,7 @@
 						$p->delete('menu_add', 'temp');
 
 					//add the menu items
-						$this->restore();
+						$this->restore_default();
 				}
 		}
 

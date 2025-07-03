@@ -284,7 +284,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t33g_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/320x240.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/320x240.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T33G";
 		$y++;
@@ -292,7 +292,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t33g_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/320x240.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "320x240.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T33G screen";
 		$y++;
@@ -300,7 +300,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46s_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/480x272.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/480x272.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T46S";
 		$y++;
@@ -308,15 +308,31 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46s_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/480x272.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "480x272.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T46S screen";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db0ec569-53ab-430e-83b8-19f6fbada3ef";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46g_wallpaper";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/480x272.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T46G";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c39a884c-0b66-4fba-80ec-da72b8a7190f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46g_wallpaper_filename";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "480x272.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T46G screen";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "50f4d28d-d4a9-493f-91e3-6294acd386d5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46u_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/480x272.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/480x272.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T46U";
 		$y++;
@@ -324,7 +340,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t46u_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/480x272.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "480x272.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T46U screen";
 		$y++;
@@ -332,7 +348,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t48g_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/800x480.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T48G";
 		$y++;
@@ -340,7 +356,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t48g_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "800x480.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T48G screen";
 		$y++;
@@ -348,7 +364,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t48s_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/800x480.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T48S";
 		$y++;
@@ -356,7 +372,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t48s_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "800x480.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T48S screen";
 		$y++;
@@ -364,7 +380,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t48u_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/800x480.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T48U";
 		$y++;
@@ -372,7 +388,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t48u_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.jpg.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "800x480.jpg";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T48U screen";
 		$y++;
@@ -380,7 +396,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t54w_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/480x272.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/480x272.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T54W";
 		$y++;
@@ -388,7 +404,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t54w_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/480x272.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "480x272.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T54W screen";
 		$y++;
@@ -396,7 +412,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t57w_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/800x480.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T57W";
 		$y++;
@@ -404,7 +420,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t57w_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/800x480.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "800x480.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T57W screen";
 		$y++;
@@ -412,7 +428,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t58w_wallpaper";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/1024x600.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://your.domain.com/app/yealink/resources/images/1024x600.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background Wallpaper for the T58W";
 		$y++;
@@ -420,7 +436,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_t58w_wallpaper_filename";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/app/yealink/resources/images/1024x600.png";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1024x600.png";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper to load on to T58W screen";
 		$y++;
