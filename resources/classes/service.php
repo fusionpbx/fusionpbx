@@ -391,6 +391,29 @@ abstract class service {
 		}
 	}
 
+	private static function log_level_to_string(int $level = LOG_NOTICE): string {
+		switch ($level){
+			case 0:
+				return 'EMERGENCY';
+			case 1:
+				return 'ALERT';
+			case 2:
+				return 'CRITICAL';
+			case 3:
+				return 'ERROR';
+			case 4:
+				return 'WARNING';
+			case 5:
+				return 'NOTICE';
+			case 6:
+				return 'INFO';
+			case 7:
+				return 'DEBUG';
+			default:
+				return 'INFO';
+		}
+	}
+
 	/**
 	 * Show memory usage to the user
 	 */
@@ -416,7 +439,8 @@ abstract class service {
 
 		//enable sending message to the console directly
 		if (self::$log_level === LOG_DEBUG || !self::$forking_enabled) {
-			echo $message . "\n";
+			$time = date('Y-m-d H:i:s');
+			echo "[$time] [" . self::log_level_to_string($level) . "] " . $message . "\n";
 		}
 
 		// Log the message to syslog
@@ -621,7 +645,7 @@ abstract class service {
 	 * Set to not fork when started
 	 */
 	public static function set_no_fork() {
-		echo "Running in forground\n";
+		echo "Running in foreground";
 		self::$forking_enabled = false;
 	}
 

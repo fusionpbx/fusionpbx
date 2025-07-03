@@ -654,13 +654,6 @@
 						$domains_processed++;
 				}
 
-			//output result
-				if (defined('STDIN')) {
-					if ($domains_processed > 1) {
-						echo $text['message-upgrade_apps']."\n";
-					}
-				}
-
 		} //end upgrade method
 
 		/**

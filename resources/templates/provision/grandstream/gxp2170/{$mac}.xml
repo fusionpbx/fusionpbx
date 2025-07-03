@@ -560,7 +560,7 @@
 
 		<!-- On Hold Reminder Tone -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.call.onHoldReminderTone">Yes</item>
+		<item name="account.{$row.line_number}.call.onHoldReminderTone">No</item>
 
 		<!-- RFC2543 Hold -->
 		<!-- Yes, No -->
