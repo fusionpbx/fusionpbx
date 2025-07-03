@@ -136,14 +136,6 @@
 			// clear whitespace
 			$url = trim($url);
 
-			// allow only http, https, and relative path
-			if (preg_match('/^(https?):\/\//i', $url) ||
-				preg_match('#^(/|\.{1,2}/|\w)#', $url)) {
-				// valid
-			} else {
-				// invalid so return #
-				return '#';
-			}
 			return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 		}
 	}
