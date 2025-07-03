@@ -314,23 +314,22 @@
 				//connect to the database now
 				$this->connect();
 
-				//use the session domain_uuid
-				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
-					$this->domain_uuid = $_SESSION['domain_uuid'];
-				}
-
-				//allow passed domain_uuid in the constructor to override the session domain
-				if (isset($params['domain_uuid'])) {
-					$this->domain_uuid = $params['domain_uuid'];
-				}
-
 				//set the user_uuid
-				if (isset($params['user_uuid'])) {
-					//allow passed user_uuid in the constructor to override the session user_uuid
+				if (!empty($params['user_uuid'])) {
+					//use the parameter as the first priority when available
 					$this->user_uuid = $params['user_uuid'];
 				} elseif (!empty($_SESSION['user_uuid'])) {
-					//try to determine the current user_uuid using the session
+					//use the session when available
 					$this->user_uuid = $_SESSION['user_uuid'];
+				}
+
+				//set the domain_uuid
+				if (!empty($params['domain_uuid'])) {
+					//use the parameter as the first priority when available
+					$this->domain_uuid = $params['domain_uuid'];
+				} elseif (!empty($_SESSION['domain_uuid'])) {
+					//use the session when available
+					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 			}
 
@@ -2841,22 +2840,11 @@
 				//log the transaction results
 					if ($transaction_save && file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
 						try {
-
-							//get the domain_uuid
-							$domain_uuid = '';
-							foreach ($old_array as $data_array) {
-								foreach ($data_array as $row) {
-									if (!empty($row['domain_uuid'])) {
-										$domain_uuid = $row['domain_uuid'];
-									}
-								}
-							}
-
 							//insert the transaction into the database
 							$sql = "insert into ".self::TABLE_PREFIX."database_transactions ";
 							$sql .= "(";
 							$sql .= "database_transaction_uuid, ";
-							if (isset($domain_uuid) && is_uuid($domain_uuid)) {
+							if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
 								$sql .= "domain_uuid, ";
 							}
 							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
@@ -2879,7 +2867,7 @@
 							$sql .= "values ";
 							$sql .= "(";
 							$sql .= "'".uuid()."', ";
-							if (isset($domain_uuid) && is_uuid($domain_uuid)) {
+							if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
 								$sql .= ":domain_uuid, ";
 							}
 							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
@@ -2910,8 +2898,8 @@
 							$sql .= ":transaction_result ";
 							$sql .= ")";
 							$statement = $this->db->prepare($sql);
-							if (isset($domain_uuid) && is_uuid($domain_uuid)) {
-								$statement->bindParam(':domain_uuid', $domain_uuid);
+							if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
+								$statement->bindParam(':domain_uuid', $this->domain_uuid);
 							}
 							if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 								$statement->bindParam(':user_uuid', $this->user_uuid);
@@ -2949,7 +2937,7 @@
 					return $this->message;
 			} //save method
 
-						/**
+			/**
 			 * Ensure the database is still connected and active.
 			 * <p>NOTE:<br>
 			 * There is no method in PDO that can reliably detect if the connection is active. Therefor, a lightweight
@@ -3208,12 +3196,21 @@
 			}
 
 			//set the user_uuid
-			if (isset($params['user_uuid'])) {
-				//allow passed user_uuid in the constructor to override the session user_uuid
+			if (!empty($params['user_uuid'])) {
+				//use the parameter as the first priority when available
 				self::$database->user_uuid = $params['user_uuid'];
 			} elseif (!empty($_SESSION['user_uuid'])) {
-				//try to determine the current user_uuid using the session
+				//use the session when available
 				self::$database->user_uuid = $_SESSION['user_uuid'];
+			}
+
+			//set the domain_uuid
+			if (!empty($params['domain_uuid'])) {
+				//use the parameter as the first priority when available
+				self::$database->domain_uuid = $params['domain_uuid'];
+			} elseif (!empty($_SESSION['domain_uuid'])) {
+				//use the session when available
+				self::$database->domain_uuid = $_SESSION['domain_uuid'];
 			}
 
 			return self::$database;
