@@ -39,8 +39,9 @@
 	}
 
 //get the domain and user UUIDs
-	$domain_uuid = $domain_uuid ?? '';
-	$user_uuid = $user_uuid ?? '';
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$domain_name = $_SESSION['domain_name'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
 
 //add multi-lingual support
 	$language = new text;
@@ -48,15 +49,13 @@
 
 //return the first item if data type = array, returns value if data type = text 
 	function get_first_item($value) {
-	    return is_array($value) ? $value[0] : $value;
+		return is_array($value) ? $value[0] : $value;
 	}
 
-//initialize the core objects
-	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
-	$user_uuid = $_SESSION['user_uuid'] ?? '';
-	$config = config::load();
-	$database = database::new(['config' => $config]);
-	$domain_name = $database->select('select domain_name from v_domains where domain_uuid = :domain_uuid', ['domain_uuid' => $domain_uuid], 'column');
+//initialize the database object
+	$database = new database;
+
+//initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //set defaults
@@ -359,9 +358,6 @@
 		//set the domain_uuid
 			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
 				$domain_uuid = $_POST["domain_uuid"];
-			}
-			else {
-				$domain_uuid = $domain_uuid;
 			}
 
 		//validate the token
