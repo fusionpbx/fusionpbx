@@ -56,7 +56,7 @@ class base_message {
 	public function __construct($associative_properties_array = []) {
 
 		// Assign the unique object id given by PHP to identify the object
-		$this->id = spl_object_id($this);
+		$this->id = md5(spl_object_hash($this));
 
 		// Assign the object properties using the associative array provided in constructor
 		foreach ($associative_properties_array as $property_or_method => $value) {
