@@ -67,7 +67,7 @@
     $y++;
     $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5fe459d9-2876-4bbc-ae81-4d39464f1fc2";
     $apps[$x]['default_settings'][$y]['default_setting_category'] = "ringotel";
-    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_integration_username";
+    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_bandwidth_integration_username";
     $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
     $apps[$x]['default_settings'][$y]['default_setting_value'] = "";
     $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -75,7 +75,7 @@
     $y++;
     $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "59337d9d-3079-4c95-a006-aa0f46d8cd42";
     $apps[$x]['default_settings'][$y]['default_setting_category'] = "ringotel";
-    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_integration_password";
+    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_bandwidth_integration_password";
     $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
     $apps[$x]['default_settings'][$y]['default_setting_value'] = "";
     $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -83,19 +83,19 @@
     $y++;
     $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5b26b6e5-9cb4-484e-addd-09e1aaf4f948";
     $apps[$x]['default_settings'][$y]['default_setting_category'] = "ringotel";
-    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_integration_account_id";
+    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_bandwidth_integration_account_id";
     $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
     $apps[$x]['default_settings'][$y]['default_setting_value'] = "";
     $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-    $apps[$x]['default_settings'][$y]['default_setting_description'] = "Account ID";
+    $apps[$x]['default_settings'][$y]['default_setting_description'] = "Bandwidth Account ID";
     $y++;
     $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a240151d-db89-4a0a-b8b1-c854e66a8491";
     $apps[$x]['default_settings'][$y]['default_setting_category'] = "ringotel";
-    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_integration_application_id";
+    $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_bandwidth_integration_application_id";
     $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
     $apps[$x]['default_settings'][$y]['default_setting_value'] = "";
     $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-    $apps[$x]['default_settings'][$y]['default_setting_description'] = "Application ID";
+    $apps[$x]['default_settings'][$y]['default_setting_description'] = "Bandwidth Application ID";
     $y++;
 
     $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e0d6b38e-91aa-40cc-a788-c53e4f14d8f3";
@@ -110,7 +110,7 @@
     $apps[$x]['default_settings'][$y]['default_setting_category'] = "ringotel";
     $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ringotel_organization_port";
     $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-    $apps[$x]['default_settings'][$y]['default_setting_value'] = "5070";
+    $apps[$x]['default_settings'][$y]['default_setting_value'] = "5060";
     $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
     $apps[$x]['default_settings'][$y]['default_setting_description'] = "Set Default Ringotel Account Port";
     $y++;

@@ -764,10 +764,10 @@ class RingotelClass
     {
         $param = array(
             'profileid' => $_REQUEST['profileid'],
-            'Username' => $_SESSION['ringotel']['ringotel_integration_username']['text'],
-            'Password' => $_SESSION['ringotel']['ringotel_integration_password']['text'],
-            'Account_ID' => $_SESSION['ringotel']['ringotel_integration_account_id']['text'],
-            'Application_ID' => $_SESSION['ringotel']['ringotel_integration_application_id']['text'],
+            'Username' => $_SESSION['ringotel']['ringotel_bandwidth_integration_username']['text'],
+            'Password' => $_SESSION['ringotel']['ringotel_bandwidth_integration_password']['text'],
+            'Account_ID' => $_SESSION['ringotel']['ringotel_bandwidth_integration_account_id']['text'],
+            'Application_ID' => $_SESSION['ringotel']['ringotel_bandwidth_integration_application_id']['text'],
         );
         //main
         $server_output = $this->api->createIntegration($param);
@@ -781,10 +781,10 @@ class RingotelClass
     {
         $param = array(
             'profileid' => $_REQUEST['profileid'],
-            'Username' => $_SESSION['ringotel']['ringotel_integration_username']['text'],
-            'Password' => $_SESSION['ringotel']['ringotel_integration_password']['text'],
-            'Account_ID' => $_SESSION['ringotel']['ringotel_integration_account_id']['text'],
-            'Application_ID' => $_SESSION['ringotel']['ringotel_integration_application_id']['text'],
+            'Username' => $_SESSION['ringotel']['ringotel_bandwidth_integration_username']['text'],
+            'Password' => $_SESSION['ringotel']['ringotel_bandwidth_integration_password']['text'],
+            'Account_ID' => $_SESSION['ringotel']['ringotel_bandwidth_integration_account_id']['text'],
+            'Application_ID' => $_SESSION['ringotel']['ringotel_bandwidth_integration_application_id']['text'],
         );
         //main
         $server_output = $this->api->deleteIntegration($param);
