@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -524,6 +524,10 @@
 						}
 
 					//set missed calls
+						if (isset($xml->variables->missed_call) && $xml->variables->missed_call == 'true') {
+							//allow calls marked as missed_call value to be overridden, an alternate destination may have answered the call
+							$missed_call = 'true';
+						}
 						if (isset($call_direction) && $call_direction == 'inbound'
 							&& isset($xml->variables->hangup_cause)
 							&& $xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
@@ -560,10 +564,6 @@
 						}
 						if (isset($xml->variables->voicemail_answer_stamp) && !empty($xml->variables->voicemail_answer_stamp)) {
 							//voicemail
-							$missed_call = 'true';
-						}
-						if (isset($xml->variables->missed_call) && $xml->variables->missed_call == 'true') {
-							//marked as missed
 							$missed_call = 'true';
 						}
 
