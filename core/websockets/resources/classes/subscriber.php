@@ -434,7 +434,13 @@ class subscriber {
 		return $this->authenticated;
 	}
 
+	/**
+	 * Allows overriding the token authentication
+	 * @param bool $authenticated
+	 * @return self
+	 */
 	public function set_authenticated(bool $authenticated): self {
+		$this->authenticated = $authenticated;
 		return $this;
 	}
 
@@ -450,6 +456,14 @@ class subscriber {
 
 	public function is_service(): bool {
 		return $this->service;
+	}
+
+	/**
+	 * Alias of service_name without the parameters
+	 * @return string
+	 */
+	public function get_service_name(): string {
+		return $this->service_name;
 	}
 
 	/**
@@ -495,6 +509,11 @@ class subscriber {
 		return isset($this->services[$service_name]);
 	}
 
+	/**
+	 * Subscribe to a service by ensuring this subscriber has the appropriate permissions
+	 * @param string $service_name
+	 * @return self
+	 */
 	public function subscribe(string $service_name): self {
 		$this->services[$service_name] = true;
 		return $this;

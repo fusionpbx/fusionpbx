@@ -176,10 +176,21 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return filter
 	 */
 	public static function create_filter_chain_for(subscriber $subscriber): filter {
+		// Do not filter domain
+		if ($subscriber->has_permission('call_active_all') || $subscriber->is_service()) {
+			return filter_chain::and_link([
+				new event_filter(self::SWITCH_EVENTS),
+				new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
+				new event_key_filter(self::EVENT_KEYS),
+			]);
+		}
+
+		// Filter on single domain name
 		return filter_chain::and_link([
 			new event_filter(self::SWITCH_EVENTS),
 			new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
 			new event_key_filter(self::EVENT_KEYS),
+			new caller_context_filter([$subscriber->get_domain_name()]),
 		]);
 	}
 
