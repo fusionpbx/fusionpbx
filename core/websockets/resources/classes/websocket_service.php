@@ -193,24 +193,29 @@ class websocket_service extends service {
 		// Authenticate their token
 		if ($subscriber->authenticate_token($message->token)) {
 			$subscriber->send(websocket_message::request_authenticated($message->request_id, $message->service));
+			// Check for service authenticated
 			if ($subscriber->is_service()) {
 				$this->info("Service $subscriber->id authenticated");
 				$this->services[$subscriber->service_name()] = $subscriber;
 			} else {
+				// Subscriber authenticated
 				$this->info("Client $subscriber->id authenticated");
-				$this->info("Setting permissions on $subscriber->id");
 				$subscriptions = $subscriber->subscribed_to();
-				foreach ($subscriber->subscribed_to() as $subscribed_to) {
+				foreach ($subscriptions as $subscribed_to) {
 					if (isset($this->services[$subscribed_to])) {
-						$service = $this->services[$subscribed_to];
-						if (is_a($service, 'websocket_service_interface', true)) {
-							$class = $service->get_service_name();
-							$filter = $class::create_filter_chain_for($subscriber);
+						$subscriber_service = $this->services[$subscribed_to];
+						$class_name = $subscriber_service->service_class();
+						// Make sure we can call the 'create_filter_chain_for' method
+						if (is_a($class_name, 'websocket_service_interface', true)) {
+							// Call the service class method to validate the subscriber
+							$filter = $class_name::create_filter_chain_for($subscriber);
 							if ($filter !== null) {
+								// Log the filter has been set for the subscriber
+								$this->info("Set filter for " . $subscriber->id());
 								$subscriber->set_filter($filter);
 							}
 						}
-						$this->info("Set permissions for $subscriber->id for service " . $service->service_name());
+						$this->info("Set permissions for $subscriber->id for service " . $subscriber_service->service_name());
 					}
 				}
 			}
@@ -256,7 +261,6 @@ class websocket_service extends service {
 				try {
 					// Notify of the message we are broadcasting
 					$this->debug("Broadcasting message '" . $message->payload['event_name'] . "' for service '" . $message->service_name . "' to subscriber $subscriber->id");
-					$message->apply_filter($subscriber->get_filter());
 					$subscriber->send_message($message);
 				} catch (subscriber_token_expired_exception $ste) {
 					$this->info("Subscriber $ste->id token expired");
