@@ -111,6 +111,7 @@ Route::middleware(['auth','permission'])->group(function () {
 
     //LCR
     Route::resource('/lcr', LcrController::class)->name('lcr', 'lcr');
+    Route::post('/lcr/import', [LcrController::class, 'import'])->name('lcr.import', 'lcr.import');
 
     // MODULES
     Route::get('/modules/{module}/start', [ModuleController::class, 'start'])->name('modules.start');

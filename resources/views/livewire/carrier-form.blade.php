@@ -78,22 +78,22 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="cancellation_ratio" class="form-label">Cancellation ratio</label>
-<div class="d-flex">
-								<input
-									type="range"
-                                    min="0"
-                                    max="100"
-                                    step="1"
-									class="form-control @error('cancellation_ratio') is-invalid @enderror"
-									id="cancellation_ratio"
-									name="cancellation_ratio"
-									placeholder="Enter carrier cancellation ratio"
-									value="{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}"
-									required
-									wire:model="cancellation_ratio"
-									oninput="this.nextElementSibling.value = this.value"
-								>&nbsp<output>{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}</output>%
-</div>
+								<div class="d-flex">
+									<input
+										type="range"
+										min="0"
+										max="100"
+										step="1"
+										class="form-control @error('cancellation_ratio') is-invalid @enderror"
+										id="cancellation_ratio"
+										name="cancellation_ratio"
+										placeholder="Enter carrier cancellation ratio"
+										value="{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}"
+										required
+										wire:model="cancellation_ratio"
+										oninput="this.nextElementSibling.value = this.value"
+									>&nbsp<output>{{ old('cancellation_ratio', $carrier->cancellation_ratio ?? '100') }}</output>%
+								</div>
 								@error('cancellation_ratio')
 									<div class="invalid-feedback d-block">{{ $message }}</div>
 								@enderror
@@ -251,11 +251,113 @@
 						</div>
 					</div>
 
+					<div class="card-footer">
+						<button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 4px;">
+							{{ isset($carrier) ? 'Update Carrier' : 'Create Carrier' }}
+						</button>
+						<a href="{{ route('carriers.index') }}" class="btn btn-secondary ml-2 px-4 py-2" style="border-radius: 4px;">
+							Cancel
+						</a>
+					</div>
+				</form>
+
 					<h5 class="mt-4 mb-3">LCR</h5>
 					<div class="card mb-4">
+						 <div class="card-header">
+							<div class="card-tools">
+								<div class="d-flex gap-2" role="carrier" aria-label="Carriers actions">
+									@can('lcr_add')
+									<a href="{{ route('lcr.create', ['carrier_uuid' => $carrier->carrier_uuid]) }}" class="btn btn-primary btn-sm">
+										<i class="fas fa-plus mr-1"></i> {{__('Add')}}
+									</a>
+									@endcan
+									@can('lcr_edit')
+									<a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#csv_upload">
+										<i class="fas fa-upload mr-1"></i> {{__('Upload')}}
+									</a>
+
+									<div class="modal fade" id="csv_upload" tabindex="-1" aria-labelledby="csv_upload" aria-hidden="true">
+										<div class="modal-dialog modal-lg" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title">Upload CSV</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<form method="POST" action="{{ route('lcr.import') }}" enctype="multipart/form-data">
+														@csrf
+														<input type="hidden" name="carrier_uuid" value="{{ $carrier->carrier_uuid }}">
+														<div class="row">
+															<div class="col-md-10">
+																<div class="form-group">
+																	<input name="upload_file" type="file" class="form-control" id="upload_file" accept=".csv">
+																</div>
+															</div>
+															<div class="col-md-2">
+																<button type="submit" class="btn btn-primary px-4" style="border-radius: 4px;">
+																	{{ __('Send') }}
+																</button>
+															</div>
+														</div>
+														<div class="row mt-3">
+															<div class="col-md-10">
+																<div class="form-group">
+																	<label class="form-label d-block">Clear ALL rates before importing</label>
+																	<div class="form-check form-switch">
+																		<input class="form-check-input" type="checkbox" role="switch" id="enabled" name="clear_before" value="1">
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row mt-3">
+															<div class="col-md-4">
+																<div class="form-group">
+																	<label class="form-label d-block">LCR Profile / Pricing list</label>
+																	<input class="form-control" name='lcr_profile' type='text' value='default' required='required'>
+																</div>
+															</div>
+														</div>
+														<div class="row mt-3">
+															<p style="font-size: 11px;">
+																<br>CSV details. File must containt this values in next order. * are required.
+																<br>
+																<br>Destination -> description,
+																<br>Prefix -> digits *,
+																<br>Connect Increment -> connect_increment, if not specified then it will be the same as talk_increment
+																<br>Talking Increment -> talk_increment *,
+																<br>Rate -> rate *,
+																<br>Connect Rate -> connect_rate, if not specified then it will be the same as rate
+																<br>IntraState Rate -> intrastate_rate, if not specified then it will be the same as rate. Only useful for USA.
+																<br>IntraLata Rate -> intralata_rate, if not specified then it will be the same as rate. Only useful for USA.
+																<br>Currency -> currency, [3 chars]
+																<br>Direction -> lcr_direction, [inbound, outbound, internal]
+																<br>Start Date-> date_start [optional, if not specified then current date and time]
+																<br>End Date -> date_end [optional, if not specified then it will be 2099-12-31 06:50:00]
+																<br>Profile -> lcr_profile [use defaul if you dont know what to do, check lcr.conf.xml]
+																<br>Lead Strip -> lead_strip,
+																<br>Trail Strip -> trial_strip,
+																<br>Add Prefix -> prefix,
+																<br>Add Suffix -> suffix
+																<br>Random -> any value you want
+																<br>
+																<br>This is a simple import, check the box if you want to overwrite prefixes
+															</p>
+														</div>
+													</form>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									@endcan
+								</div>
+							</div>
+						</div>
 						<div class="card-body">
 							<div class="table-responsive">
-								<table class="table table-bordered">
+								<table class="laravel-livewire-table table table table-striped table-hover table-bordered">
 									<thead>
 										<tr>
 											<th>{{ __('Digits') }}</th>
@@ -274,7 +376,7 @@
 									<tbody>
 										@foreach($carrier->lcr as $lcr)
 										<tr>
-											<td>{{ $lcr->digits}}</td>
+											<td><a href="{{ route('lcr.edit', $lcr->lcr_uuid) }}">{{ $lcr->digits}}</a></td>
 											<td>{{ $lcr->lcr_direction}}</td>
 											<td>{{ $lcr->rate}}</td>
 											<td>{{ $lcr->currency}}</td>
@@ -303,14 +405,6 @@
 					@endif
 				</div>
 
-				<div class="card-footer">
-					<button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 4px;">
-						{{ isset($carrier) ? 'Update Carrier' : 'Create Carrier' }}
-					</button>
-					<a href="{{ route('carriers.index') }}" class="btn btn-secondary ml-2 px-4 py-2" style="border-radius: 4px;">
-						Cancel
-					</a>
-				</form>
 			</div>
 		</div>
 	</div>
