@@ -24,7 +24,7 @@ if (file_exists($settings_file)) {
 $message = '';
 if (!empty($_POST['action']) && $_POST['action'] === 'backup') {
     // Path to your backup script
-    $script = '/usr/local/bin/fusionpbx-backup-manager.sh';
+    $script = '/var/www/fusionpbx/app/backup_manager/scripts/fusionpbx-backup-manager.sh';
     // Execute backup (ensure www-data has sudo rights for this script)
     exec('sudo ' . escapeshellarg($script) . ' 2>&1',
 	$output,
