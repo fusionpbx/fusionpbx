@@ -164,10 +164,10 @@ class subscriber {
 	private $authenticated;
 
 	/**
-	 * Extensions the subscriber belongs to
+	 * User information
 	 * @var array
 	 */
-	private $extensions;
+	private $user;
 
 	/**
 	 * Creates a subscriber object.
@@ -204,6 +204,7 @@ class subscriber {
 		$this->subscriptions = [];
 		$this->service = false;
 		$this->service_name = '';
+		$this->user = [];
 
 		// Save the websocket frame wrapper used to communicate to this subscriber
 		$this->callback = $frame_wrapper;
@@ -509,8 +510,8 @@ class subscriber {
 				$this->domain_name = $array['domain']['name'] ?? '';
 				$this->domain_uuid = $array['domain']['uuid'] ?? '';
 
-				// Add their extensions
-				$this->extensions = $array['extensions'] ?? [];
+				// Add the user information when available
+				$this->user = $array['user'] ?? [];
 
 				// Add subscriptions for services
 				$services = $array['services'] ?? [];
@@ -793,9 +794,9 @@ class subscriber {
 		$array['permissions'] = $_SESSION['permissions'] ?? '';
 
 		//
-		// Store the extensions for the currently logged in user when available
+		// Store the currently logged in user when available
 		//
-		$array['extensions'] = $_SESSION['user']['extension'] ?? [];
+		$array['user'] = $_SESSION['user'] ?? [];
 
 		//
 		// Store the token service and events
