@@ -446,7 +446,7 @@
 						unset($i);
 
 					//get the caller ID from variables
-						if (!isset($caller_id_number) && isset($xml->variables->caller_id_name)) {
+						if (!isset($caller_id_name) && isset($xml->variables->caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->caller_id_name);
 						}
 						if (!isset($caller_id_number) && isset($xml->variables->caller_id_number)) {
