@@ -535,7 +535,7 @@ class subscriber {
 					// for the interface instead of checking for each individual method required for it to be
 					// considered a service. We can also adjust the interface with new methods and this code
 					// remains the same. It is also possbile for us to use the 'instanceof' operator to check
-					// that the object is what we require. However, using the instanceof operator requires anc
+					// that the object is what we require. However, using the instanceof operator requires an
 					// object first. Here we only check that the class has implemented the interface allowing
 					// us to call static methods without first creating an object.
 					//
