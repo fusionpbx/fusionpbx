@@ -255,8 +255,8 @@
 								$sql .= "destination_conditions = replace(destination_conditions::text, :destination_data_old, :destination_data_new)::json, ";
 								$sql .= "destination_actions = replace(destination_actions::text, :destination_data_old, :destination_data_new)::json ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$parameters['destination_data_old'] = 'XML '.$original_domain_name;
-								$parameters['destination_data_new'] = 'XML '.$domain_name;
+								$parameters['destination_data_old'] = $original_domain_name;
+								$parameters['destination_data_new'] = $domain_name;
 								$parameters['domain_uuid'] = $domain_uuid;
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);
