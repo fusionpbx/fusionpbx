@@ -16,12 +16,12 @@ $message = '';
 $selected_file = $_GET['file'] ?? '';
 if (!empty($_POST['action']) && $_POST['action'] === 'restore') {
     $backup_file = escapeshellarg('/var/backups/fusionpbx/' . $_POST['backup_file']);
-    $options     = $_POST['restore_options'] ?? [];
+    $option      = $_POST['restore_option'] ?? 'full';
     // Pre-restore safety dump
     exec('sudo /usr/local/bin/fusionpbx-pre-restore.sh');
-    // Extract and restore based on options
+    // Extract and restore based on option
     $script = '/usr/local/bin/fusionpbx-restore-manager.sh';
-    $cmd = 'sudo ' . escapeshellarg($script) . ' ' . $backup_file . ' ' . implode(',', $options) . ' 2>&1';
+    $cmd = 'sudo ' . escapeshellarg($script) . ' ' . $backup_file . ' ' . escapeshellarg($option) . ' 2>&1';
     exec($cmd, $output, $status);
     $message = $status === 0 ? 'Restore completed successfully.' : 'Restore failed!';
 }
@@ -43,10 +43,9 @@ foreach (array_filter(scandir('/var/backups/fusionpbx', SCANDIR_SORT_DESCENDING)
 }
 echo '</select><br/><br/>';
 
-echo '<label>Restore Options:</label><br/>';
-echo '<input type="checkbox" name="restore_options[]" value="db" /> Database (Config & CDRs)<br/>';
-echo '<input type="checkbox" name="restore_options[]" value="media" /> Voicemails & Recordings<br/>';
-echo '<input type="checkbox" name="restore_options[]" value="certs" /> SSL Certificates<br/><br/>';
+echo '<label>Restore Type:</label><br/>';
+echo '<label><input type="radio" name="restore_option" value="full" checked /> Full Backup</label><br/>';
+echo '<label><input type="radio" name="restore_option" value="media" /> Recordings, Music & Storage Only</label><br/><br/>';
 
 echo '<button type="submit" class="btn">Run Restore</button>';
 echo '</form>';
