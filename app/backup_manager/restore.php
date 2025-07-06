@@ -18,7 +18,8 @@ if (!empty($_POST['action']) && $_POST['action'] === 'restore') {
     $backup_file = escapeshellarg('/var/backups/fusionpbx/' . $_POST['backup_file']);
     $option      = $_POST['restore_option'] ?? 'full';
     // Pre-restore safety dump
-    exec('sudo /usr/local/bin/fusionpbx-pre-restore.sh');
+    $pre = '/var/www/fusionpbx/app/backup_manager/scripts/fusionpbx-pre-restore.sh';
+    exec('sudo ' . escapeshellarg($pre));
     // Extract and restore based on option
     $script = '/var/www/fusionpbx/app/backup_manager/scripts/fusionpbx-restore-manager.sh';
     $cmd = 'sudo ' . escapeshellarg($script) . ' ' . $backup_file . ' ' . escapeshellarg($option) . ' 2>&1';
