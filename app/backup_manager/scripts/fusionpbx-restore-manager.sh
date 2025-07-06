@@ -26,7 +26,8 @@ DB_PASS=$(_read_conf 'database\.0\.password')
 export PGPASSWORD="$DB_PASS"
 
 restore_db() {
-  SQL_FILE=$(find "$TMPDIR/postgresql" -name 'fusionpbx_*.sql' -print -quit)
+  # SQL dumps reside under var/backups when extracted
+  SQL_FILE=$(find "$TMPDIR" -path '*/postgresql/fusionpbx_*.sql' -print -quit)
   if [[ -f "$SQL_FILE" ]]; then
     psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -c "DROP SCHEMA public CASCADE;"
     psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -c "CREATE SCHEMA public;"
