@@ -37,8 +37,11 @@ if (!empty($_GET['delete'])) {
     $del = basename($_GET['delete']);
     $path = '/var/backups/fusionpbx/' . $del;
     if (file_exists($path)) {
-        unlink($path);
-        $message = 'Backup deleted.';
+        if (unlink($path)) {
+            $message = 'Backup deleted.';
+        } else {
+            $message = 'Failed to delete backup.';
+        }
     }
 }
 
