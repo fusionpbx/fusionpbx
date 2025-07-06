@@ -39,6 +39,17 @@ if (!empty($_GET['delete'])) {
     if (file_exists($path)) {
         if (unlink($path)) {
             $message = 'Backup deleted.';
+            if (preg_match('/backup_(\d{8}_\d{6})\.tgz$/', $del, $m)) {
+                $sql_path = '/var/backups/fusionpbx/postgresql/fusionpbx_' . $m[1] . '.sql';
+                if (file_exists($sql_path)) {
+                    if (!unlink($sql_path)) {
+                        $err = error_get_last();
+                        $error_msg = $err['message'] ?? 'unknown error';
+                        error_log("Failed to delete SQL file $sql_path: $error_msg");
+                        $message .= ' SQL delete failed: ' . $error_msg;
+                    }
+                }
+            }
         } else {
             $err = error_get_last();
             $error_msg = $err['message'] ?? 'unknown error';
