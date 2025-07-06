@@ -40,7 +40,10 @@ if (!empty($_GET['delete'])) {
         if (unlink($path)) {
             $message = 'Backup deleted.';
         } else {
-            $message = 'Failed to delete backup.';
+            $err = error_get_last();
+            $error_msg = $err['message'] ?? 'unknown error';
+            error_log("Failed to delete backup file $path: $error_msg");
+            $message = 'Failed to delete backup. ' . $error_msg;
         }
     }
 }
