@@ -41,7 +41,7 @@ class CallBlockController extends Controller
         }
         else
         {
-            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'));
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'))->get();
         }
 
         if ($extensions->count() == 0)
@@ -50,11 +50,15 @@ class CallBlockController extends Controller
         }
         else
         {
-            $xmlCDR = $xmlCDRQuery->whereIn('extension_uuid', $this->extensionRepository->mine()->pluck('extension_uuid'))
+            $xmlCDR = $xmlCDRQuery->when(!auth()->user()->hasPermission("call_block_all"),
+                   function ($query){
+			return $query->whereIn('extension_uuid', $this->extensionRepository->mine()->pluck('extension_uuid'));
+		})
                 ->orderBy("start_stamp", "desc")
                 ->limit(Setting::getSetting("call_block", "recent_call_limit", "text") ?? 50)
                 ->get();
         }
+
 		return view("pages.callblocks.form", compact("extensions", "xmlCDR"));
 	}
 
