@@ -214,6 +214,23 @@ class subscriber {
 	}
 
 	/**
+	 * Returns the user array information in this subscriber
+	 * @return array
+	 */
+	public function get_user_array(): array {
+		return $this->user;
+	}
+
+	/**
+	 * Returns the user information from the provided key.
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get_user_setting($key, $default_value = null) {
+		return $this->user[$key] ?? $default_value;
+	}
+
+	/**
 	 * Gets or sets the subscribed to services
 	 * @param array $services
 	 * @return $this|array
