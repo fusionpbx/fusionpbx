@@ -15,6 +15,13 @@ class LcrTable extends DataTableComponent
 {
     protected $model = Lcr::class;
 
+    public $carrier = null;
+
+    public function mount($carrier = null)
+    {
+        $this->carrier = $carrier;
+    }
+
     public function configure(): void
     {
         $canEdit = auth()->user()->hasPermission('lcr_edit');
@@ -169,6 +176,18 @@ class LcrTable extends DataTableComponent
             Column::make("Direction", "lcr_direction")
                 ->sortable(),
 
+            Column::make("Rate", "rate")
+                ->sortable(),
+
+            Column::make("Currency", "currency")
+                ->sortable(),
+
+            Column::make("Prefix", "prefix")
+                ->sortable(),
+
+            Column::make("Suffix", "suffix")
+                ->sortable(),
+
             BooleanColumn::make("Enabled", "enabled")
                 ->sortable(),
         ];
@@ -178,6 +197,12 @@ class LcrTable extends DataTableComponent
     {
         $query = Lcr::query()
             ->orderBy('insert_date', 'desc');
+
+        if($this->carrier)
+        {
+            $query->where("carrier_uuid", $this->carrier->carrier_uuid);
+        }
+
         return $query;
     }
 }

@@ -359,50 +359,7 @@
 							</div>
 						</div>
 						<div class="card-body">
-							<div class="table-responsive">
-								<table class="laravel-livewire-table table table table-striped table-hover table-bordered">
-									<thead>
-										<tr>
-											<th>{{ __('Digits') }}</th>
-											<th>{{ __('Call direction') }}</th>
-											<th>{{ __('Rate') }}</th>
-											<th>{{ __('Currency') }}</th>
-											<th>{{ __('Intrastate Rate') }}</th>
-											<th>{{ __('Intralata Rate') }}</th>
-											<th>{{ __('Lead strip') }}</th>
-											<th>{{ __('Trail strip') }}</th>
-											<th>{{ __('Prefix') }}</th>
-											<th>{{ __('Suffix') }}</th>
-											<th>{{ __('Enabled') }}</th>
-										</tr>
-									</thead>
-									<tbody>
-										@foreach($carrier->lcr as $lcr)
-										<tr>
-											<td><a href="{{ route('lcr.edit', $lcr->lcr_uuid) }}">{{ $lcr->digits}}</a></td>
-											<td>{{ $lcr->lcr_direction}}</td>
-											<td>{{ $lcr->rate}}</td>
-											<td>{{ $lcr->currency}}</td>
-											<td>{{ $lcr->intrastate_rate}}</td>
-											<td>{{ $lcr->intralata_rate}}</td>
-											<td>{{ $lcr->lead_strip}}</td>
-											<td>{{ $lcr->trail_strip}}</td>
-											<td>{{ $lcr->prefix}}</td>
-											<td>{{ $lcr->suffix}}</td>
-											<td>
-												<svg class="d-inline-block @if($lcr->enabled) text-success @else text-danger @endif laravel-livewire-tables-btn-small" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-													@if($lcr->enabled)
-													<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
-													@else
-													<path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
-													@endif
-												</svg>
-											</td>
-										</tr>
-										@endforeach
-									</tbody>
-								</table>
-							</div>
+							<livewire:lcr-table :carrier="$carrier" />
 						</div>
 					</div>
 					@endif
