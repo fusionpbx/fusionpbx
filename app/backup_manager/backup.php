@@ -101,8 +101,14 @@ $files = array_filter(scandir($dir, SCANDIR_SORT_DESCENDING), function($f) {
 });
 if (!empty($files)) {
     echo '<h3>Available Backups</h3>';
-    echo '<table>';
-    echo '<tr><th>Filename</th><th>Size</th><th>Date</th><th>Actions</th></tr>';
+    echo "<div class='card'>";
+    echo "<table class='list'>";
+    echo "<tr class='list-header'>";
+    echo "  <th>Filename</th>";
+    echo "  <th>Size</th>";
+    echo "  <th>Date</th>";
+    echo "  <th class='center'>Actions</th>";
+    echo "</tr>";
     foreach (array_slice($files, 0, 10) as $file) {
         $path = $dir . '/' . $file;
         $size = round(filesize($path) / 1024 / 1024, 2) . ' MB';
@@ -110,9 +116,19 @@ if (!empty($files)) {
         $url_download  = '/app/backup_manager/download.php?file=' . urlencode($file);
         $url_restore   = '/app/backup_manager/restore.php?file=' . urlencode($file);
         $url_delete    = '/app/backup_manager/backup.php?delete=' . urlencode($file);
-        echo "<tr><td>$file</td><td>$size</td><td>$date</td><td><a href='$url_restore'>Restore</a> | <a href='$url_download'>Download</a> | <a href='$url_delete' onclick=\"return confirm('Delete?');\">Delete</a></td></tr>";
+        echo "<tr class='list-row'>";
+        echo "  <td>".escape($file)."</td>";
+        echo "  <td>".escape($size)."</td>";
+        echo "  <td>".escape($date)."</td>";
+        echo "  <td class='no-link center'>";
+        echo "    <a href='".$url_restore."'>Restore</a> | ";
+        echo "    <a href='".$url_download."'>Download</a> | ";
+        echo "    <a href='".$url_delete."' onclick=\"return confirm('Delete?');\">Delete</a>";
+        echo "  </td>";
+        echo "</tr>";
     }
-    echo '</table>';
+    echo "</table>";
+    echo "</div>";
 }
 
 require_once "resources/footer.php";
