@@ -7,6 +7,7 @@ use App\Models\Lcr;
 use App\Repositories\LcrRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LcrController extends Controller
 {
@@ -357,5 +358,37 @@ class LcrController extends Controller
 		}
 
 		return $rates;
+	}
+
+	public function export(Request $request): StreamedResponse
+	{
+		$carrierUuid = $request->query('carrier_uuid');
+		$filename = 'LCR-' . ($carrierUuid ?? 'null') . '.csv';
+
+		return response()->streamDownload(function () use ($carrierUuid) {
+			$output = fopen('php://output', 'w');
+
+			// Obtener el primer registro para generar headers
+			$firstRow = Lcr::when($carrierUuid, fn($q) => $q->where('carrier_uuid', $carrierUuid))->first();
+
+			if($firstRow)
+			{
+				fputcsv($output, array_keys($firstRow->getAttributes()));
+			}
+
+			Lcr::when($carrierUuid, fn($q) => $q->where('carrier_uuid', $carrierUuid))
+				->orderBy('digits')
+				->chunk(1000, function ($chunk) use ($output) {
+					foreach ($chunk as $lcr) {
+						fputcsv($output, array_values($lcr->getAttributes()));
+					}
+				});
+
+			fclose($output);
+		}, $filename, [
+			'Content-Type' => 'text/csv',
+			'Content-Disposition' => "attachment; filename={$filename}",
+			'Cache-Control' => 'no-store, no-cache, must-revalidate',
+		]);
 	}
 }

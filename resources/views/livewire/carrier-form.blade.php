@@ -275,6 +275,9 @@
 									<a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#csv_upload">
 										<i class="fas fa-upload mr-1"></i> {{__('Upload')}}
 									</a>
+									<a href="{{ route('lcr.export', ['carrier_uuid' => $carrier->carrier_uuid]) }}" class="btn btn-primary btn-sm">
+										<i class="fas fa-download mr-1"></i> {{__('Download')}}
+									</a>
 
 									<div class="modal fade" id="csv_upload" tabindex="-1" aria-labelledby="csv_upload" aria-hidden="true">
 										<div class="modal-dialog modal-lg" role="document">

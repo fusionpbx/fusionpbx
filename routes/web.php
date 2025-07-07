@@ -110,8 +110,9 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
 
     //LCR
-    Route::resource('/lcr', LcrController::class)->name('lcr', 'lcr');
+    Route::get('/lcr/export', [LcrController::class, 'export'])->name('lcr.export', 'lcr.export');
     Route::post('/lcr/import', [LcrController::class, 'import'])->name('lcr.import', 'lcr.import');
+    Route::resource('/lcr', LcrController::class)->name('lcr', 'lcr');
 
     // MODULES
     Route::get('/modules/{module}/start', [ModuleController::class, 'start'])->name('modules.start');
