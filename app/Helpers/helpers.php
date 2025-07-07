@@ -186,3 +186,30 @@ if(!function_exists('array_find')) {
         return null;
     }
 }
+
+if (!function_exists('currency_select')) {
+	function currency_select($currency = '', $p100 = 0, $name='currency'){
+
+        $billingCurrency = Setting::getSetting('billing', 'currency', 'text');
+
+		if (strlen(trim($currency))== 0){
+			$currency = (strlen($billingCurrency) ? $billingCurrency : 'USD');
+		}
+
+        $options = config('currencies');
+
+        if ($p100) {
+            $options[] = '%';
+        }
+
+        echo "<select class='form-select' name=\"$name\" id=\"$name\">";
+
+        foreach ($options as $code) {
+            $selected = $currency === $code ? ' selected="selected"' : '';
+
+            echo "<option value=\"$code\"$selected>$code</option>";
+        }
+
+        echo '</select>';
+	}
+}
