@@ -54,6 +54,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		'unique_id',
 		// Domain
 		'caller_context',
+		'channel_presence_id',
 		// Ringing, Hangup, Answered
 		'answer_state',
 		'channel_call_state',
@@ -103,6 +104,8 @@ class active_calls_service extends service implements websocket_service_interfac
 		'application'               => 'call_active_application',
 		'playback_file_path'        => 'call_active_application',
 		'variable_current_application'=> 'call_active_application',
+		'channel_presence_id'		=> 'call_active_view',
+		'caller_context'			=> 'call_active_domain',
 	];
 
 	/**
@@ -186,11 +189,21 @@ class active_calls_service extends service implements websocket_service_interfac
 		}
 
 		// Filter on single domain name
+		if ($subscriber->has_permission('call_active_domain')) {
+			return filter_chain::and_link([
+				new event_filter(self::SWITCH_EVENTS),
+				new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
+				new event_key_filter(self::EVENT_KEYS),
+				new caller_context_filter([$subscriber->get_domain_name()]),
+			]);
+		}
+
+		// Filter on extensions
 		return filter_chain::and_link([
 			new event_filter(self::SWITCH_EVENTS),
 			new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
 			new event_key_filter(self::EVENT_KEYS),
-			new caller_context_filter([$subscriber->get_domain_name()]),
+			new extension_filter($subscriber->get_user_setting('extension', [])),
 		]);
 	}
 
