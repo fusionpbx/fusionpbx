@@ -9,6 +9,7 @@ use App\Models\Extension;
 use App\Models\XmlCDR;
 use App\Repositories\CallBlockRepository;
 use App\Repositories\DialplanRepository;
+use App\Repositories\ExtensionRepository;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -16,11 +17,13 @@ class CallBlockController extends Controller
 {
 	protected $callBlockRepository;
 	protected $dialplanRepository;
+    protected $extensionRepository;
 
-	public function __construct(CallBlockRepository $callBlockRepository, DialplanRepository $dialplanRepository)
+	public function __construct(CallBlockRepository $callBlockRepository, DialplanRepository $dialplanRepository, ExtensionRepository $extensionRepository)
 	{
 		$this->callBlockRepository = $callBlockRepository;
 		$this->dialplanRepository = $dialplanRepository;
+        $this->extensionRepository = $extensionRepository;
 	}
 
 	public function index()
@@ -30,18 +33,27 @@ class CallBlockController extends Controller
 
 	public function create()
 	{
-		$extensions = Extension::all();
-
-		$userExtension = Setting::getSetting("user", "extension");
+        if(auth()->user()->hasPermission("call_block_all"))
+        {
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'));
+        }
+        else
+        {
+            $extensions = $this->extensionRepository->mine();
+        }
 
 		$xmlCDRQuery = XmlCDR::where("domain_uuid", Session::get("domain_uuid"))
-    	->where("direction", "<>", "local");
+            ->where("direction", "<>", "local")
+            ->when(!auth()->user()->hasPermission("call_block_all"),
+                   function ($query){
+                       return $query->whereIn('extension_uuid', auth()->user()->extensions()->pluck('extension_uuid'));
+                });
 
-		if(auth()->user()->hasPermission("call_block_all") && !empty($userExtension))
+		if(auth()->user()->hasPermission("call_block_all") && !empty($extensions))
 		{
 			$extensionUUIDs = [];
 
-			foreach($userExtension as $assigned_extension)
+			foreach($extensions as $assigned_extension)
 			{
 				$extensionUUIDs[] = $assigned_extension["extension_uuid"];
 			}
@@ -60,7 +72,7 @@ class CallBlockController extends Controller
 
 		$xmlCDR = $xmlCDRQuery
 			->orderBy("start_stamp", "desc")
-			->limit(Setting::getSetting("call_block", "recent_call_limit", "text"))
+			->limit(Setting::getSetting("call_block", "recent_call_limit", "text") ?? 50)
 			->get();
 
 		return view("pages.callblocks.form", compact("extensions", "xmlCDR"));
@@ -80,7 +92,14 @@ class CallBlockController extends Controller
 
 	public function edit(CallBlock $callblock)
 	{
-		$extensions = Extension::all();
+        if(auth()->user()->hasPermission("call_block_all"))
+        {
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'));
+        }
+        else
+        {
+            $extensions = $this->extensionRepository->mine();
+        }
 
 		return view("pages.callblocks.form", compact("callblock", "extensions"));
 	}
@@ -131,7 +150,7 @@ class CallBlockController extends Controller
 					if($callblock->call_block_direction == 'inbound')
 					{
 						//remove e.164 and country code
-						if(trim($x->caller_id_number) == "+")
+						if(substr($x->caller_id_number, 0, 1) == "+")
 						{
 							//format e.164
 							$call_block_number = str_replace("+".trim($domainCountryCode), "", trim($x->caller_id_number));
