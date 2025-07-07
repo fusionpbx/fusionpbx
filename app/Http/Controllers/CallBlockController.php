@@ -33,48 +33,28 @@ class CallBlockController extends Controller
 
 	public function create()
 	{
-        if(auth()->user()->hasPermission("call_block_all"))
-        {
-            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'));
-        }
-        else
+        $xmlCDRQuery = XmlCDR::where("domain_uuid", Session::get("domain_uuid"))
+                        ->where("direction", "<>", "local");
+        if(!auth()->user()->hasPermission("call_block_all"))
         {
             $extensions = $this->extensionRepository->mine();
         }
+        else
+        {
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'));
+        }
 
-		$xmlCDRQuery = XmlCDR::where("domain_uuid", Session::get("domain_uuid"))
-            ->where("direction", "<>", "local")
-            ->when(!auth()->user()->hasPermission("call_block_all"),
-                   function ($query){
-                       return $query->whereIn('extension_uuid', auth()->user()->extensions()->pluck('extension_uuid'));
-                });
-
-		if(auth()->user()->hasPermission("call_block_all") && !empty($extensions))
-		{
-			$extensionUUIDs = [];
-
-			foreach($extensions as $assigned_extension)
-			{
-				$extensionUUIDs[] = $assigned_extension["extension_uuid"];
-			}
-
-			if(!empty($extensionUUIDs))
-			{
-				$xmlCDRQuery->where(function ($query) use ($extensionUUIDs)
-				{
-					foreach($extensionUUIDs as $extension_uuid)
-					{
-						$query->orWhere("extension_uuid", $extension_uuid);
-					}
-				});
-			}
-		}
-
-		$xmlCDR = $xmlCDRQuery
-			->orderBy("start_stamp", "desc")
-			->limit(Setting::getSetting("call_block", "recent_call_limit", "text") ?? 50)
-			->get();
-
+        if ($extensions->count() == 0)
+        {
+            $xmlCDR = collect([]);
+        }
+        else
+        {
+            $xmlCDR = $xmlCDRQuery->whereIn('extension_uuid', $this->extensionRepository->mine()->pluck('extension_uuid'))
+                ->orderBy("start_stamp", "desc")
+                ->limit(Setting::getSetting("call_block", "recent_call_limit", "text") ?? 50)
+                ->get();
+        }
 		return view("pages.callblocks.form", compact("extensions", "xmlCDR"));
 	}
 

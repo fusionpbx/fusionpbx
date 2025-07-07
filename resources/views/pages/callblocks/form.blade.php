@@ -32,13 +32,17 @@
                     </div>
                 </div>
 
-                @can('call_block_all')
+
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="extension_uuid" class="form-label">Extension</label>
                             <select class="form-select" name="extension_uuid">
+                                @can('call_block_all')
                                 <option value="">{{ __("All") }}</option>
+                                @else
+                                <option value="">{{ __("Mine") }}</option>
+                                @endcan
                                 @foreach($extensions as $extension)
                                 <option value="{{ $extension->extension_uuid }}" @selected(old('extension_uuid', $callblock->extension_uuid ?? null) == $extension->extension_uuid)>{{ $extension->extension }} {{ $extension->description }}</option>
                                 @endforeach
@@ -49,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-                @endcan
+
 
                 <div class="row mt-3">
                     <div class="col-md-6">
