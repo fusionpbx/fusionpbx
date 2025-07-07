@@ -108,14 +108,30 @@ class LcrController extends Controller
 
 		foreach($normalizedRates as $rate)
 		{
+			if(!$this->isValidRate($rate))
+			{
+				continue;
+			}
+
 			$this->insertLcr($rate, $carrierUuid, $lcrProfile);
 		}
 
 		return redirect()->back()->with('message', 'Importación completada.');
 	}
 
+	private function isValidRate(array $rate): bool
+	{
+		return !empty($rate['digits']) && !empty($rate['talk_increment']) && !empty($rate['rate']);
+	}
+
 	private function insertLcr(array $data, ?string $carrierUuid, ?string $defaultProfile): void
 	{
+		//handle empty values
+		foreach($data as $key => $value)
+		{
+			$data[$key] = $value === '' ? null : $value;
+		}
+
 		$ods = preg_split('/[\s,]+/', $data['origination_digits'] ?? '') ?: [''];
 
 		foreach($ods as $origDigits)
@@ -149,7 +165,7 @@ class LcrController extends Controller
 		}
 	}
 
-	function normalize_lcr($rates, $provider = 'custom')
+	function normalizeLcr($rates, $provider = 'custom')
 	{
 		$index = [];
 

@@ -322,26 +322,26 @@
 														</div>
 														<div class="row mt-3">
 															<p style="font-size: 11px;">
-																<br>CSV details. File must containt this values in next order. * are required.
+																<br><strong>CSV details:</strong> The file must contain the following column headers. Fields marked with * are required. The order of the columns does not matter.
 																<br>
-																<br>Destination -> description,
-																<br>Prefix -> digits *,
-																<br>Connect Increment -> connect_increment, if not specified then it will be the same as talk_increment
-																<br>Talking Increment -> talk_increment *,
-																<br>Rate -> rate *,
-																<br>Connect Rate -> connect_rate, if not specified then it will be the same as rate
-																<br>IntraState Rate -> intrastate_rate, if not specified then it will be the same as rate. Only useful for USA.
-																<br>IntraLata Rate -> intralata_rate, if not specified then it will be the same as rate. Only useful for USA.
-																<br>Currency -> currency, [3 chars]
-																<br>Direction -> lcr_direction, [inbound, outbound, internal]
-																<br>Start Date-> date_start [optional, if not specified then current date and time]
-																<br>End Date -> date_end [optional, if not specified then it will be 2099-12-31 06:50:00]
-																<br>Profile -> lcr_profile [use defaul if you dont know what to do, check lcr.conf.xml]
-																<br>Lead Strip -> lead_strip,
-																<br>Trail Strip -> trial_strip,
-																<br>Add Prefix -> prefix,
-																<br>Add Suffix -> suffix
-																<br>Random -> any value you want
+																<br><strong>Destination</strong> → description
+																<br><strong>Prefix *</strong> → digits
+																<br><strong>Connect Increment</strong> → connect_increment (if not specified then it will be the same as talk_increment)
+																<br><strong>Talking Increment *</strong> → talk_increment
+																<br><strong>Rate *</strong> → rate
+																<br><strong>Connect Rate</strong> → connect_rate (if not specified then it will be the same as rate)
+																<br><strong>IntraState Rate</strong> → intrastate_rate (if not specified then it will be the same as rate. Only useful for USA)
+																<br><strong>IntraLata Rate</strong> → intralata_rate (if not specified then it will be the same as rate. Only useful for USA)
+																<br><strong>Currency</strong> → currency (3 chars)
+																<br><strong>Direction</strong> → lcr_direction (inbound, outbound, internal)
+																<br><strong>Start Date</strong> → date_start (optional, if not specified then current date and time)
+																<br><strong>End Date</strong> → date_end (optional, if not specified then it will be 2099-12-31 06:50:00)
+																<br><strong>Profile</strong> → lcr_profile (use defaul if you dont know what to do, check lcr.conf.xml)
+																<br><strong>Lead Strip</strong> → lead_strip
+																<br><strong>Trail Strip</strong> → trail_strip
+																<br><strong>Add Prefix</strong> → prefix
+																<br><strong>Add Suffix</strong> → suffix
+																<br><strong>Random</strong> → any value you want
 																<br>
 																<br>This is a simple import, check the box if you want to overwrite prefixes
 															</p>
