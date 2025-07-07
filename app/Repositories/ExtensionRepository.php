@@ -7,9 +7,9 @@ use App\Models\Extension;
 use App\Models\ExtensionUser;
 use App\Models\User;
 use App\Models\Voicemail;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class ExtensionRepository
 {
@@ -22,10 +22,9 @@ class ExtensionRepository
         $this->extensionUser = $extensionUser;
     }
 
-  public function mine()
+    public function mine()
     {
-        $user = auth()->user();
-        return collect([$user->extensions]);
+        return auth()->user()->extensions->toResourceCollection();
     }
 
     public function all()
@@ -322,6 +321,7 @@ class ExtensionRepository
             throw $e;
         }
     }
+
     public function delete(string $uuid): void
     {
         try {
@@ -520,7 +520,7 @@ class ExtensionRepository
         if ($voicemail) {
             $voicemail->update([
                 'voicemail_password' => $extensionData['voicemail_password'] ?? $voicemail->voicemail_password,
-                'voicemail_mail_to' => $extensionData['voicemail_mail_to'] ,
+                'voicemail_mail_to' => $extensionData['voicemail_mail_to'],
                 'voicemail_transcription_enabled' => $extensionData['voicemail_transcription_enabled'] ?? false,
                 'voicemail_file' => $extensionData['voicemail_file'] ?? $voicemail->voicemail_file,
                 'voicemail_local_after_email' => $extensionData['voicemail_local_after_email'] ?? $voicemail->voicemail_local_after_email,
