@@ -34,13 +34,16 @@ declare(strict_types=1);
  */
 class subscriber {
 
-	public $show_all;
-
 	/**
 	 * The ID of the object given by PHP
 	 * @var spl_object_id
 	 */
 	private $id;
+
+	/**
+	 *
+	 * @var resource
+	 */
 	private $socket;
 
 	/**
@@ -52,20 +55,94 @@ class subscriber {
 	 */
 	private $socket_id;
 
+	/**
+	 * Remote IP of the socket resource connection
+	 * @var string
+	 */
 	private $remote_ip;
+
+	/**
+	 * Remote port of the socket resource connection
+	 * @var int
+	 */
 	private $remote_port;
+
+	/**
+	 * Services the subscriber has subscribed to
+	 * @var array
+	 */
 	private $services;
+
+	/**
+	 * Permissions array of the subscriber
+	 * @var array
+	 */
 	private $permissions;
+
+	/**
+	 * Domain name the subscriber belongs to
+	 * @var string|null
+	 */
 	private $domain_name;
+
+	/**
+	 * Domain UUID the subscriber belongs to
+	 * @var string|null
+	 */
 	private $domain_uuid;
+
+	/**
+	 * Token hash used to validate this subscriber
+	 * @var string|null
+	 */
 	private $token_hash;
+
+	/**
+	 * Token name used to validate this subscriber
+	 * @var string|null
+	 */
 	private $token_name;
+
+	/**
+	 * Epoch time the token was issued
+	 * @var int
+	 */
 	private $token_time;
+
+	/**
+	 * Time limit in seconds
+	 * @var int
+	 */
 	private $token_limit;
+
+	/**
+	 * Whether the subscriber has a time limit set for their token or not
+	 * @var bool True when there is a time limit. False if no time limit set.
+	 */
 	private $enable_token_time_limit;
+
+	/**
+	 * Whether the subscriber is able to broadcast messages as a service
+	 * @var bool
+	 */
 	private $service;
+
+	/**
+	 * The name of the service class object to handle callbacks
+	 * @var string|null
+	 */
 	private $service_class;
+
+	/**
+	 * If the subscriber is a service the service name used
+	 * @var string|null
+	 */
 	private $service_name;
+
+	/**
+	 * The filter used to send web socket messages
+	 * @var filter
+	 */
 	private $filter;
 
 	/**
@@ -73,9 +150,24 @@ class subscriber {
 	 * @var callable
 	 */
 	private $callback;
-	private $send_all;
+
+	/**
+	 * Subscriptions to services
+	 * @var array
+	 */
 	private $subscriptions;
+
+	/**
+	 * Whether or not this subscriber has been authenticated
+	 * @var bool
+	 */
 	private $authenticated;
+
+	/**
+	 * User information
+	 * @var array
+	 */
+	private $user;
 
 	/**
 	 * Creates a subscriber object.
@@ -108,17 +200,34 @@ class subscriber {
 		$this->authenticated = false;
 		$this->permissions = [];
 		$this->services = [];
-		$this->show_all = false;
 		$this->enable_token_time_limit = false;
 		$this->subscriptions = [];
 		$this->service = false;
 		$this->service_name = '';
+		$this->user = [];
 
 		// Save the websocket frame wrapper used to communicate to this subscriber
 		$this->callback = $frame_wrapper;
 
 		// No filter initially
 		$this->filter = null;
+	}
+
+	/**
+	 * Returns the user array information in this subscriber
+	 * @return array
+	 */
+	public function get_user_array(): array {
+		return $this->user;
+	}
+
+	/**
+	 * Returns the user information from the provided key.
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get_user_setting($key, $default_value = null) {
+		return $this->user[$key] ?? $default_value;
 	}
 
 	/**
@@ -134,6 +243,11 @@ class subscriber {
 		return array_keys($this->services);
 	}
 
+	/**
+	 * Gets or sets the service class name for this subscriber
+	 * @param string $service_class
+	 * @return $this|string
+	 */
 	public function service_class($service_class = null) {
 		if (func_num_args() > 0) {
 			$this->service_class = $service_class;
@@ -142,11 +256,20 @@ class subscriber {
 		return $this->service_class;
 	}
 
+	/**
+	 * Sets the filter used for this subscriber
+	 * @param filter $filter
+	 * @return $this
+	 */
 	public function set_filter(filter $filter) {
 		$this->filter = $filter;
 		return $this;
 	}
 
+	/**
+	 * Returns the filter used for this subscriber
+	 * @return filter
+	 */
 	public function get_filter() {
 		return $this->filter;
 	}
@@ -197,12 +320,18 @@ class subscriber {
 		return $object_or_resource_or_id->id() === $this->id;
 	}
 
+	/**
+	 * Compares this object to another object or resource id.
+	 * @param type $object_or_resource
+	 * @return bool True if this object is not equal to the other object or resource. False otherwise.
+	 * @see subscriber::equals()
+	 */
 	public function not_equals($object_or_resource): bool {
 		return !$this->equals($object_or_resource);
 	}
 
 	/**
-	 * Allow accessing copies of the private values
+	 * Allow accessing <b>copies</b> of the private values to ensure the object values are immutable.
 	 * @param string $name
 	 * @return mixed
 	 * @throws \InvalidArgumentException
@@ -247,10 +376,20 @@ class subscriber {
 		return isset($this->permissions[$permission]);
 	}
 
+	/**
+	 * Returns the array of permissions this subscriber has been assigned.
+	 * @return array
+	 */
 	public function get_permissions(): array {
 		return $this->permissions;
 	}
 
+	/**
+	 * Returns the domain name used.
+	 * <p>Note:<br>
+	 * This value is not validated in the object and must be validated.</p>
+	 * @return string
+	 */
 	public function get_domain_name(): string {
 		return $this->domain_name;
 	}
@@ -264,8 +403,8 @@ class subscriber {
 	}
 
 	/**
-	 * Returns the socket ID that was cast to an integer when the object was
-	 * created
+	 * Returns the socket ID that was cast to an integer when the object was created.
+	 * @return int The socket ID cast as an integer.
 	 */
 	public function socket_id(): int {
 		return $this->socket_id;
@@ -383,9 +522,13 @@ class subscriber {
 				$this->token_time = $token_time;
 				$this->enable_token_time_limit = $token_limit > 0;
 				$this->token_limit = $token_limit * 60; // convert to seconds for time() comparison
+
 				// Add the domain
 				$this->domain_name = $array['domain']['name'] ?? '';
 				$this->domain_uuid = $array['domain']['uuid'] ?? '';
+
+				// Add the user information when available
+				$this->user = $array['user'] ?? [];
 
 				// Add subscriptions for services
 				$services = $array['services'] ?? [];
@@ -410,7 +553,7 @@ class subscriber {
 					// for the interface instead of checking for each individual method required for it to be
 					// considered a service. We can also adjust the interface with new methods and this code
 					// remains the same. It is also possbile for us to use the 'instanceof' operator to check
-					// that the object is what we require. However, using the instanceof operator requires anc
+					// that the object is what we require. However, using the instanceof operator requires an
 					// object first. Here we only check that the class has implemented the interface allowing
 					// us to call static methods without first creating an object.
 					//
@@ -430,6 +573,10 @@ class subscriber {
 		return $valid;
 	}
 
+	/**
+	 * Returns whether or not this subscriber has been authenticated.
+	 * @return bool
+	 */
 	public function is_authenticated(): bool {
 		return $this->authenticated;
 	}
@@ -444,6 +591,15 @@ class subscriber {
 		return $this;
 	}
 
+	/**
+	 * Sets the domain UUID and name
+	 * @param string $uuid
+	 * @param string $name
+	 * @return self
+	 * @throws invalid_uuid_exception
+	 * @depends is_uuid()
+	 * @see is_uuid()
+	 */
 	public function set_domain(string $uuid, string $name): self {
 		if (is_uuid($uuid)) {
 			$this->uuid = $uuid;
@@ -454,6 +610,10 @@ class subscriber {
 		return $this;
 	}
 
+	/**
+	 * Returns whether or not this subscriber is a service.
+	 * @return bool True if this subscriber is a service and false if this subscriber is not a service.
+	 */
 	public function is_service(): bool {
 		return $this->service;
 	}
@@ -479,6 +639,12 @@ class subscriber {
 		return $this->service_name;
 	}
 
+	/**
+	 * Returns whether or not the service name matches this subscriber
+	 * @param string $service_name Name of the service
+	 * @return bool True if this subscriber matches the provided service name. False if this subscriber does not
+	 * match or this subscriber is not a service.
+	 */
 	public function service_equals(string $service_name): bool {
 		return ($this->service && $this->service_name === $service_name);
 	}
@@ -565,20 +731,50 @@ class subscriber {
 		return;
 	}
 
+	/**
+	 * The remote information is retrieved using the stream_socket_get_name function.
+	 * @param resource $socket
+	 * @return array Returns a zero-based indexed array of first the IP address and then the port of the remote machine.
+	 * @see stream_socket_get_name();
+	 * @link https://php.net/stream_socket_get_name PHP documentation for underlying function used to return information.
+	 */
 	public static function get_remote_information_from_socket($socket): array {
 		return explode(':', stream_socket_get_name($socket, true), 2);
 	}
 
+	/**
+	 * The remote information is retrieved using the stream_socket_get_name function.
+	 * @param resource $socket
+	 * @return string Returns the IP address of the remote machine or an empty string.
+	 * @see stream_socket_get_name();
+	 * @link https://php.net/stream_socket_get_name PHP documentation for underlying function used to return information.
+	 */
 	public static function get_remote_ip_from_socket($socket): string {
 		$array = explode(':', stream_socket_get_name($socket, true), 2);
 		return $array[0] ?? '';
 	}
 
+	/**
+	 * The remote information is retrieved using the stream_socket_get_name function.
+	 * @param resource $socket
+	 * @return string Returns the port of the remote machine as a string or an empty string.
+	 * @see stream_socket_get_name();
+	 * @link https://php.net/stream_socket_get_name PHP documentation for underlying function used to return information.
+	 */
 	public static function get_remote_port_from_socket($socket): string {
 		$array = explode(':', stream_socket_get_name($socket, true), 2);
 		return $array[1] ?? '';
 	}
 
+	/**
+	 * Returns the name and path for the token.
+	 * Priority is given to the /dev/shm folder if it exists as this is much faster. If that is not available, then the
+	 * sys_get_temp_dir() function is called to get a storage location.
+	 * @param string $token_name
+	 * @return string
+	 * @see sys_get_temp_dir()
+	 * @link https://php.net/sys_get_temp_dir PHP Documentation for the function used to get the temporary storage location.
+	 */
 	public static function get_token_file($token_name): string {
 		// Try to store in RAM first
 		if (is_dir('/dev/shm') && is_writable('/dev/shm')) {
@@ -612,7 +808,12 @@ class subscriber {
 		// Put the domain_name, permissions, and token in local storage so we can use all the information
 		// to authenticate an incoming connection from the websocket service.
 		//
-		$array['permissions'] = $_SESSION['permissions'];
+		$array['permissions'] = $_SESSION['permissions'] ?? '';
+
+		//
+		// Store the currently logged in user when available
+		//
+		$array['user'] = $_SESSION['user'] ?? [];
 
 		//
 		// Store the token service and events
@@ -634,8 +835,8 @@ class subscriber {
 		//
 		// Store the domain name in this session
 		//
-		$array['domain']['name'] = $_SESSION['domain_name'];
-		$array['domain']['uuid'] = $_SESSION['domain_uuid'];
+		$array['domain']['name'] = $_SESSION['domain_name'] ?? '';
+		$array['domain']['uuid'] = $_SESSION['domain_uuid'] ?? '';
 
 		//
 		// Get the full path and file name for storing the token
@@ -652,6 +853,10 @@ class subscriber {
 		file_put_contents($token_file, $file_contents);
 	}
 
+	/**
+	 * Checks the token time stored in this subscriber
+	 * @return bool True if the token has expired. False if the token is still valid
+	 */
 	public function token_time_exceeded(): bool {
 		if (!$this->enable_token_time_limit)
 			return false;
