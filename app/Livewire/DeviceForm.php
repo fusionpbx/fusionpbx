@@ -19,7 +19,7 @@ class DeviceForm extends Component
     public $device;
     public $isEditing = false;
 
-    public string $domain_uuid;
+    public ?string $domain_uuid = null;
     public string $device_mac_address;
     public string $device_label;
     public ?string $device_user_uuid = null;
@@ -139,7 +139,7 @@ class DeviceForm extends Component
 
         $this->vendors = $this->deviceRepository->getDeviceVendors();
         $this->users = $this->deviceRepository->getUsersForDomain($user->domain_uuid);
-        $this->vendorFunctions = $this->deviceRepository->getVendorFunctions();
+        $this->vendorFunctions = $this->deviceRepository->getVendorFunctions() ?? [];
 
         $this->deviceTemplates = $this->deviceService->getDeviceTemplates();
 
