@@ -41,7 +41,7 @@ class CallBlockController extends Controller
         }
         else
         {
-            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'))->get();
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'))->where("enabled", "true")->orderBy("extension")->get();
         }
 
         if ($extensions->count() == 0)
@@ -82,7 +82,7 @@ class CallBlockController extends Controller
         }
         else
         {
-            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'))->get();
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'))->where("enabled", "true")->orderBy("extension")->get();
         }
 
 		return view("pages.callblocks.form", compact("callblock", "extensions"));

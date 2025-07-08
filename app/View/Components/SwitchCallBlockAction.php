@@ -35,9 +35,14 @@ class SwitchCallBlockAction extends Component
         if(auth()->user()->hasPermission('call_block_extension'))
         {
             $values = [];
-
-            $extensions = Extension::where("domain_uuid", Session::get("domain_uuid"))->where("enabled", "true")->orderBy("extension")->get();
-
+	if(!auth()->user()->hasPermission("call_block_all"))
+        {
+            $extensions = $this->extensionRepository->mine();
+        }
+        else
+        {
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'))->where("enabled", "true")->orderBy("extension")->get();
+        }
             foreach($extensions as $extension)
             {
                 $values[] = [
