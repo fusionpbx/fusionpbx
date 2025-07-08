@@ -8,8 +8,7 @@
 	<condition field="${call_direction}" expression="^local$" break="never">
 		<action application="set" data="record_stereo=true" inline="true"/>
 	</condition>
-	<condition field="${record_path}" expression="^$"/>
-	<condition field="${record_name}" expression="^$">
+	<condition field="${record_path}" expression="^$">
 		<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true"/>
 		<action application="set" data="record_name=${uuid}.${record_ext}" inline="true"/>
 		<action application="mkdir" data="${record_path}"/>
