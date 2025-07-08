@@ -39,7 +39,7 @@ class E164 implements ValidationRule
                 $fail('A country code can not exceed of 3 digits.');
             }
 
-            if ((intval($value) < 1>) || (strlen($value) == 0))
+            if ((intval($value) < 1) || (strlen($value) == 0))
             {
                 $fail('A country code can not be zero or null.');
             }
