@@ -156,15 +156,9 @@ class ExtensionRequest extends FormRequest
         }
 
         $user = auth()->user();
-        if ($user->hasPermission('extension_user_context'))
-        {
-            $rules['user_context'][] = new ValidContext(config('freeswitch.ALLOW_PUBLIC_CONTEXT'));
-        }
-        else {
-            $rules['user_context'][] = new ValidContext();
-        }
-
-
+        $flag = 0;
+        $flag |= $user->hasPermission('extension_user_context') ? (config('freeswitch.ALLOW_CONTEXT_SESSION_MISMATCH') | config('freeswitch.ALLOW_PUBLIC_CONTEXT')) : 0 ;
+        $rules['user_context'][] = new ValidContext($flag);
 
         return $rules;
     }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BasicInformationRequest extends FormRequest
+class ContactBasicInformationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class BasicInformationRequest extends FormRequest
             'contactType' => 'required|string|in:customer,contractor,friend,lead,member,family,subscriber,supplier,provider,user,volunteer',
             'contactOrganization' => 'nullable|string|max:255',
             'contactNamePrefix' => 'nullable|string|max:50',
-            'contactNameGiven' => 'nullable|string|max:255',
+            'contactNameGiven' => 'required|nullable|string|max:255',
             'contactNameMiddle' => 'nullable|string|max:255',
             'contactNameFamily' => 'nullable|string|max:255',
             'contactNameSuffix' => 'nullable|string|max:50',

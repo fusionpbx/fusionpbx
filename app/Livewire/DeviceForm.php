@@ -19,7 +19,7 @@ class DeviceForm extends Component
     public $device;
     public $isEditing = false;
 
-    public string $domain_uuid;
+    public ?string $domain_uuid = null;
     public string $device_mac_address;
     public string $device_label;
     public ?string $device_user_uuid = null;
@@ -47,10 +47,10 @@ class DeviceForm extends Component
     public array $alternateDevices = [];
     public array $vendorFunctions = [];
 
-    public string $deviceLinesServerPrimary = '';
-    public string $deviceLinesServerSecondary = '';
-    public string $outboundProxyPrimary = '';
-    public string $outboundProxySecondary = '';
+    public array $deviceLinesServerPrimary = [];
+    public array $deviceLinesServerSecondary = [];
+    public array $outboundProxyPrimary = [];
+    public array $outboundProxySecondary = [];
 
     public bool $showAdvanced = false;
     public $duplicateMacDomain = null;
@@ -59,7 +59,6 @@ class DeviceForm extends Component
     protected $deviceService;
     public $deviceProfiles = [];
     public $hasProfiles = false;
-
 
     public function boot(DeviceRepository $deviceRepository, DeviceService $deviceService)
     {
@@ -139,7 +138,7 @@ class DeviceForm extends Component
 
         $this->vendors = $this->deviceRepository->getDeviceVendors();
         $this->users = $this->deviceRepository->getUsersForDomain($user->domain_uuid);
-        $this->vendorFunctions = $this->deviceRepository->getVendorFunctions();
+        $this->vendorFunctions = $this->deviceRepository->getVendorFunctions() ?? [];
 
         $this->deviceTemplates = $this->deviceService->getDeviceTemplates();
 
@@ -163,18 +162,23 @@ class DeviceForm extends Component
 
     public function LoadDeviceLines()
     {
+        $this->deviceLinesServerPrimary = [];
+        $this->deviceLinesServerSecondary = [];
+        $this->outboundProxyPrimary = [];
+        $this->outboundProxySecondary = [];
+
         if (null !== Setting::getSetting('provision', 'server_address_primary') && null !== Setting::getSetting('provision', 'server_address_primary', 'text')) {
-            $this->deviceLinesServerPrimary = DeviceLine::select('server_address_primary')->get();
+            $this->deviceLinesServerPrimary = DeviceLine::select('server_address_primary')->get()->toArray();
         }
         if (null !== Setting::getSetting('provision', 'server_address_secondary') && null !== Setting::getSetting('provision', 'server_address_secondary', 'text')) {
-            $this->deviceLinesServerSecondary = DeviceLine::select('server_address_secondary')->get();
+            $this->deviceLinesServerSecondary = DeviceLine::select('server_address_secondary')->get()->toArray();
         }
 
         if (null !== Setting::getSetting('provision', 'outbound_proxy_primary') && null !== Setting::getSetting('provision', 'outbound_proxy_primary', 'text')) {
-            $this->outboundProxyPrimary = DeviceLine::select('outbound_proxy_primary')->get();
+            $this->outboundProxyPrimary = DeviceLine::select('outbound_proxy_primary')->get()->toArray();
         }
         if (null !== Setting::getSetting('provision', 'outbound_proxy_secondary') && null !== Setting::getSetting('provision', 'outbound_proxy_secondary', 'text')) {
-            $this->outboundProxySecondary = DeviceLine::select('outbound_proxy_secondary')->get();
+            $this->outboundProxySecondary = DeviceLine::select('outbound_proxy_secondary')->get()->toArray();
         }
     }
 
@@ -211,7 +215,6 @@ class DeviceForm extends Component
 
     public function updatedDeviceTemplate()
     {
-
         if (empty($this->device_vendor) && !empty($this->device_template)) {
             $templateParts = explode('/', $this->device_template);
             if (count($templateParts) >= 1) {
@@ -219,7 +222,6 @@ class DeviceForm extends Component
             }
         }
     }
-
 
     public function addDeviceLine()
     {
@@ -374,7 +376,6 @@ class DeviceForm extends Component
                 'device_description' => $this->device_description,
             ];
 
-
             if ($this->isEditing) {
                 $device = $this->deviceRepository->update(
                     $this->deviceUuid,
@@ -415,7 +416,6 @@ class DeviceForm extends Component
             session()->flash('error', 'Error deleting device: ' . $e->getMessage());
         }
     }
-
 
     protected function generateNewMacAddress()
     {

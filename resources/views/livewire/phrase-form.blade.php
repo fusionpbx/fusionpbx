@@ -142,6 +142,11 @@
 														<option value="execute" @selected($phraseDetails[$index]['phrase_detail_function'] == 'execute')>Execute</option>
 														@endif
 													</select>
+													@error('phraseDetails.' . $index . '.phrase_detail_function')
+														<div class="invalid-feedback">
+															{{ $message }}
+														</div>
+													@enderror
 												</td>
 												<td>
 													<input list="sounds_play" type="{{ auth()->user()->hasGroup('superadmin') ? 'text' : 'hidden' }}" class="form-control form-control-action @error('phraseDetails.' . $index . '.phrase_detail_data') is-invalid @enderror" wire:model="phraseDetails.{{ $index }}.phrase_detail_data" />
@@ -181,9 +186,19 @@
 													@else
 													</select>
 													@endif
+													@error('phraseDetails.' . $index . '.phrase_detail_data')
+														<div class="invalid-feedback">
+															{{ $message }}
+														</div>
+													@enderror
 												</td>
 												<td>
 													<input type="number" step="1" min="0" max="1000" class="form-control @error('phraseDetails.' . $index . '.phrase_detail_order') is-invalid @enderror" wire:model="phraseDetails.{{ $index }}.phrase_detail_order" required>
+													@error('phraseDetails.' . $index . '.phrase_detail_order')
+														<div class="invalid-feedback">
+															{{ $message }}
+														</div>
+													@enderror
 												</td>
 												<td class="text-center">
 													@if (count($phraseDetails) > 1)

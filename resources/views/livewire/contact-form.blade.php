@@ -25,7 +25,7 @@
                     @endif
                 </div>
                 <div class="card-body">
-                    @livewire('basic-information-form', ['contactUuid' => $contactUuid])
+                    @livewire('contact-basic-information-form', ['contactUuid' => $contactUuid])
 
                     @livewire('contact-email-form', ['contactUuid' => $contactUuid])
 

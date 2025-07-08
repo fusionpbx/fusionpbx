@@ -11,12 +11,14 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\BridgeController;
+use App\Http\Controllers\CallBlockController;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExtensionController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceProfileController;
 use App\Http\Controllers\DeviceVendorController;
+use App\Http\Controllers\LcrController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\ModFormatCDRController;
 use App\Http\Controllers\ModuleController;
@@ -100,8 +102,17 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('/gateways', GateWayController::class)->name('gateways', 'gateways');
     Route::get('/gateways/{gateway}/copy', [GateWayController::class, 'copy'])->name('gateways.copy');
 
+    // CALL BLOCKS
+    Route::resource('/callblocks', CallBlockController::class)->name('callblocks', 'callblocks');
+    Route::post('/callblocks/block', [CallBlockController::class, 'block'])->name('callblocks.block', 'callblocks.block');
+
     // CARRIERS
     Route::resource('/carriers', CarrierController::class)->name('carriers', 'carriers');
+
+    //LCR
+    Route::get('/lcr/export', [LcrController::class, 'export'])->name('lcr.export', 'lcr.export');
+    Route::post('/lcr/import', [LcrController::class, 'import'])->name('lcr.import', 'lcr.import');
+    Route::resource('/lcr', LcrController::class)->name('lcr', 'lcr');
 
     // MODULES
     Route::get('/modules/{module}/start', [ModuleController::class, 'start'])->name('modules.start');

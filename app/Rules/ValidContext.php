@@ -3,19 +3,25 @@
 namespace App\Rules;
 
 use App\Models\Dialplan;
+use App\Models\Domain;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class ValidContext implements ValidationRule
 {
     private bool $allowPublicContext = false;
     private bool $allowGlobal = false;
+    private bool $allowContextSessionMismatch = false;
+
     public function __construct(int $flag = 0)
     {
+        $this->allowContextSessionMismatch= $flag & config('freeswitch.ALLOW_CONTEXT_SESSION_MISMATCH');
         $this->allowPublicContext= $flag & config('freeswitch.ALLOW_PUBLIC_CONTEXT');
         $this->allowGlobal= $flag & config('freeswitch.ALLOW_GLOBAL_CONTEXT');
+        //$this->extension_user_context = auth()->user()->hasPermission('extension_user_context');
     }
 
     /**
@@ -25,8 +31,15 @@ class ValidContext implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $contexts_query = Dialplan::select('dialplan_context')
+        if ((!$this->allowContextSessionMismatch) && (Session::get('domain_name') != $value))
+        {
+            $fail('The :attribute must match your current tenant domain name.');
+        }
+
+        $contexts_query = Dialplan::join(Domain::getTableName(), Dialplan::getTableName().'.domain_uuid', '=', Domain::getTableName().'.domain_uuid')
+                    ->select('dialplan_context')
                     ->distinct()
+                    ->where(Domain::getTableName().'.domain_enabled', 'true')
                     ->whereNotNull('dialplan_context')
                     ->when(!$this->allowPublicContext, function ($query){
                         return $query->whereNot('dialplan_context','=','public');

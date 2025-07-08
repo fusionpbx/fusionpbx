@@ -489,6 +489,7 @@
                                         @enderror
                                     </div>
                                 </div>
+                                @can('extension_user_context')
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label for="user_context" class="form-label">User Context</label>
@@ -501,6 +502,7 @@
                                         @enderror
                                     </div>
                                 </div>
+                                @endcan
                             </div>
                             <div class="row">
                                 @can('extension_call_group')
@@ -601,10 +603,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="form-group mb-3">
+                                    <div class="form-group mb-3" wire:ignore>
                                         <label for="toll_allow" class="form-label">Toll Allow</label>
                                         <input type="text"
-                                            class="form-control @error('toll_allow') is-invalid @enderror"
+                                            class="form-control form-tags @error('toll_allow') is-invalid @enderror"
                                             id="toll_allow" wire:model="toll_allow" placeholder="Enter toll allow">
                                         @error('toll_allow')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>

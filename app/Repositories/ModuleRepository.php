@@ -114,7 +114,7 @@ class ModuleRepository
 
 	public function reloadXML()
     {
-        $command = "reloadxml";
+        $command = "reloadxml"; $status = false;
 
         try
         {

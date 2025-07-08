@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\ContactAttachmentRequest;
 use App\Models\ContactAttachment;
 use App\Models\Contact;
 use Illuminate\Support\Facades\Session;
@@ -22,13 +23,19 @@ class ContactAttachmentForm extends Component
         'saveAttachment' => 'save',
     ];
 
-    public function mount($contactUuid)
+    public function mount($contactUuid): void
     {
         $this->contactUuid = $contactUuid;
         $this->loadAttachments();
     }
 
-    public function loadAttachments()
+    public function rules(): array
+    {
+        $request = new ContactAttachmentRequest();
+        return $request->rules();
+    }
+
+    public function loadAttachments(): void
     {
         $contact = Contact::where('contact_uuid', $this->contactUuid)
             ->with('attachments')
@@ -81,6 +88,7 @@ class ContactAttachmentForm extends Component
 
     public function save()
     {
+        $this->validate();
         foreach ($this->removedAttachments as $removedAttachment) {
             $contactAttachment = ContactAttachment::where('contact_attachment_uuid', $removedAttachment['contact_attachment_uuid'])->first();
             if ($contactAttachment) {
