@@ -100,6 +100,83 @@
 				return;
 			}
 
+		//get the original stream location
+			if (!empty($stream_uuid) && is_uuid($stream_uuid)) {
+				//get the original value from the database
+				$sql = "select stream_location from v_streams ";
+				$sql .= "where stream_uuid = :stream_uuid ";
+				$parameters['stream_uuid'] = $stream_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
+					$original_stream_location = $row["stream_location"];
+				}
+
+				//update call center queues
+				if (!empty($original_stream_location)) {
+					$sql = "update v_call_center_queues ";
+					$sql .= "set queue_moh_sound = :stream_location ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and queue_moh_sound = :original_stream_location ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['stream_location'] = $stream_location;
+					$parameters['original_stream_location'] = $original_stream_location;
+					$database->execute($sql, $parameters);
+					unset($parameters);
+				}
+
+				//update destinations
+				if (!empty($original_stream_location)) {
+					$sql = "update v_destinations ";
+					$sql .= "set destination_hold_music = :stream_location ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and destination_hold_music = :original_stream_location ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['stream_location'] = $stream_location;
+					$parameters['original_stream_location'] = $original_stream_location;
+					$database->execute($sql, $parameters);
+					unset($parameters);
+				}
+
+				//update extensions
+				if (!empty($original_stream_location)) {
+					$sql = "update v_extensions ";
+					$sql .= "set hold_music = :stream_location ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and hold_music = :original_stream_location ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['stream_location'] = $stream_location;
+					$parameters['original_stream_location'] = $original_stream_location;
+					$database->execute($sql, $parameters);
+					unset($parameters);
+				}
+
+				//update ivr menus
+				if (!empty($original_stream_location)) {
+					$sql = "update v_ivr_menus ";
+					$sql .= "set ivr_menu_ringback = :stream_location ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and ivr_menu_ringback = :original_stream_location ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['stream_location'] = $stream_location;
+					$parameters['original_stream_location'] = $original_stream_location;
+					$database->execute($sql, $parameters);
+					unset($parameters);
+				}
+
+				//update ring groups
+				if (!empty($original_stream_location)) {
+					$sql = "update v_ring_groups ";
+					$sql .= "set ring_group_ringback = :stream_location ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and ring_group_ringback = :original_stream_location ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['stream_location'] = $stream_location;
+					$parameters['original_stream_location'] = $original_stream_location;
+					$database->execute($sql, $parameters);
+					unset($parameters);
+				}
+			}
+
 		//add the stream_uuid
 			if (empty($_POST["stream_uuid"])) {
 				$stream_uuid = uuid();
@@ -119,7 +196,6 @@
 			$array['streams'][0]['stream_description'] = $stream_description;
 
 		//save to the data
-			$database = new database;
 			$database->app_name = 'streams';
 			$database->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
 			$database->save($array);
@@ -144,7 +220,6 @@
 		$sql = "select * from v_streams ";
 		$sql .= "where stream_uuid = :stream_uuid ";
 		$parameters['stream_uuid'] = $stream_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
