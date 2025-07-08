@@ -1446,7 +1446,7 @@ if (!class_exists('xml_cdr')) {
 			unset($x);
 
 			//set the last status to match the call detail record
-			$call_flow_summary[count($call_flow_summary)-1]['destination_status'] = $this->status;
+			$call_flow_summary[count($call_flow_summary ?? [])-1]['destination_status'] = $this->status;
 
 			//return the call flow summary array
 			return $call_flow_summary;
