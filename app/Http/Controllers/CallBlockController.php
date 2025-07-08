@@ -65,8 +65,8 @@ class CallBlockController extends Controller
 	public function store(CallBlockRequest $request)
 	{
 		$callblock = $this->callBlockRepository->create($request->validated());
-//dd($callblock);
-		return redirect()->route("callblocks.edit", $callblock->callblock_uuid);
+
+		return redirect()->route("callblocks.edit", $callblock->call_block_uuid);
 	}
 
     public function show(CallBlock $callblock)
