@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2023 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -346,6 +346,7 @@
 	require "resources.functions.base64";
 	require "resources.functions.trim";
 	require "resources.functions.file_exists";
+	require "resources.functions.file_size";
 	require "resources.functions.explode";
 	require "resources.functions.format_seconds";
 	require "resources.functions.mkdir";
@@ -517,11 +518,22 @@
 				--save the message
 					record_message();
 
-				-- build full path to file
+				--build full path to file
 					local full_path = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext
 
+				--check the voicemail file size to see if the voicemail is valid
+					voicemail_file_size = file_size(full_path);
+					freeswitch.consoleLog("notice", "[voicemail] file size ".. voicemail_file_size .. "\n");
+					if (voicemail_file_size < 3000) then
+						--set the message length to 0
+						message_length = 0;
+
+						--delete the file
+						os.remove(full_path);
+					end
+
 				--process base64
-					if (storage_type == "base64") then
+					if (storage_type == "base64" and tonumber(message_length) > 1) then
 						--show the storage type
 							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
@@ -551,6 +563,7 @@
 						x = x + 1;
 					end);
 					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
+
 				--show the storage type
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
@@ -570,7 +583,7 @@
 							end
 							y = y + 1;
 						--save the message to the voicemail messages
-							if (message_length ~= nil and tonumber(message_length) > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 1) then
 								caller_id_name = string.gsub(caller_id_name,"'","''");
 								local sql = {}
 								table.insert(sql, "INSERT INTO v_voicemail_messages ");
@@ -677,12 +690,12 @@
 							end
 
 						--send the message waiting event
-							if (message_length ~= nil and tonumber(message_length) > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 1) then
 								message_waiting(voicemail_id_copy, domain_uuid);
 							end
 
 						--send the email with the voicemail recording attached
-							if (message_length ~= nil and tonumber(message_length) > 2) then
+							if (message_length ~= nil and tonumber(message_length) > 1) then
 								send_email(voicemail_id_copy, voicemail_message_uuid);
 								if (voicemail_to_sms) then
 									send_sms(voicemail_id_copy, voicemail_message_uuid);
