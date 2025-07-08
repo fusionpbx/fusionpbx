@@ -487,15 +487,15 @@
 
 		if (empty($argv[2]) || $argv[2] == 'update') {
 			//send a message to the console
-			echo "[ Update ] Update all default services\n";
+			echo "[ Update ] Update default services\n";
 
 			//add or update all the services
 			upgrade_services($text, $settings);
 		}
 
 		//send a message to the console
-		if (empty($argv[2]) || $argv[2] == 'restart') {
-			echo "[ Update ] Stop all services\n";
+		if (empty($argv[2]) || $argv[2] == 'stop') {
+			echo "[ Update ] Stop services\n";
 
 			//stop all the services
 			stop_services($text, $settings);
@@ -503,7 +503,7 @@
 
 		//send a message to the console
 		if (empty($argv[2]) || $argv[2] == 'restart') {
-			echo "[ Update ] Restart all services\n";
+			echo "[ Update ] Restart services\n";
 
 			//restart all the services
 			restart_services($text, $settings);
