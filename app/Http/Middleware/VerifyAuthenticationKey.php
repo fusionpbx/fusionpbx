@@ -4,38 +4,73 @@ namespace App\Http\Middleware;
 
 use App\Models\User;
 use Closure;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class VerifyAuthenticationKey
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-	$apiKey = trim($request->input('api_key')) ?? null;
-	if(App::hasDebugModeEnabled()){
-    	    Log::debug('[' . __FILE__ . ':' . __LINE__ . '][' . __CLASS__ . '][' . __METHOD__ . '] $request: ' . print_r($request->toArray(), true));
-	}
-	$user = User::where('api_key', $apiKey)->first();
-	if (isset($apiKey) && (strlen($apiKey) > 0) && $user)
-	{
-		Auth::login($user);
-	}
-	else
-	{
-        return response()->json([
-            'data' => 'You are missing the api_key or the api_key does not bellong to any user.'
-        ], 401);
-	}
+        $apiKey = $this->extractApiKey($request);
 
-        return $next($request);
+        if (config('app.debug')) {
+            Log::debug('API Authentication attempt', [
+                'has_api_key' => !empty($apiKey),
+                'request_path' => $request->path()
+            ]);
+        }
+
+        if (empty($apiKey)) {
+            return response()->json([
+                'error' => 'API key required',
+                'message' => 'Please provide an API key in the Authorization header'
+            ], 401);
+        }
+
+        try {
+            $user = User::where('api_key', $apiKey)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'error' => 'Invalid API key',
+                    'message' => 'The provided API key is invalid'
+                ], 401);
+            }
+            Auth::setUser($user);
+
+            return $next($request);
+
+        } catch (\Exception $e) {
+            Log::error('API authentication error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Authentication failed',
+                'message' => 'An error occurred during authentication'
+            ], 500);
+        }
+    }
+
+    /**
+     * Extract API key from request headers
+     */
+    private function extractApiKey(Request $request): ?string
+    {
+        $authorization = $request->header('Authorization');
+
+        if (empty($authorization)) {
+            return null;
+        }
+
+        if (str_starts_with($authorization, 'Bearer ')) {
+            return trim(substr($authorization, 7));
+        }
+
+        return trim($authorization);
     }
 }

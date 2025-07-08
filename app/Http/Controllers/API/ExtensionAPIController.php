@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Facades\ExtensionService;
 use App\Http\Controllers\Controller;
 use App\Models\Extension;
 use App\Http\Requests\ExtensionRequest;
 use App\Repositories\ExtensionRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class ExtensionAPIController extends Controller
 {
@@ -20,17 +18,15 @@ class ExtensionAPIController extends Controller
 	}
 
 	public function mine(){
-        $extensions = $this->extensionRepository->mine();
-        return response()->json(["data" => $extensions]);
+        return response()->json(["data" => $this->extensionRepository->mine()]);
     }
 
 	public function index()
 	{
-        $extensions = $this->extensionRepository->all();
-        return response()->json($extensions);
+        return response()->json($this->extensionRepository->all());
 	}
 
-// TODO:
+    // TODO:
     public function store(ExtensionRequest $request)
 	{
 		$newExtension = $this->extensionRepository->create($request->validated());
