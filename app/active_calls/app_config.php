@@ -98,7 +98,10 @@
 	$apps[$x]['permissions'][$y]['name'] = "call_active_secure";
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$y++;
-
+	$apps[$x]['permissions'][$y]['name'] = "call_active_domain";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
 	/////////////////////////////////////////////////////////////////////////
 	// Permissions that could be implemented on a per switch event capture //
 	/////////////////////////////////////////////////////////////////////////
