@@ -195,19 +195,19 @@
 		echo "  A terminal-based upgrade tool used to simplify or automate the upgrade.\n";
 		echo "\n";
 		echo "Options:\n";
-		echo "  -h --help                         Show this help message.\n";
-		echo "  -v --version                      Show the version.\n";
-		echo "  -n --main                         Update the main application.\n";
-		echo "  -o --optional                     Update the optional applications.\n";
-		echo "  -s --schema                       Check the table and field structure.\n";
-		echo "  -t --types                        Updates field data types as needed.\n";
-		echo "  -d --defaults                     Restore application defaults.\n";
-		echo "  -m --menu [default|list]          Restore menu default or show the menu list\n";
-		echo "  -p --permissions                  Restore default file and group permissions.\n";
-		echo "  -g --group                        Restore default group permissions.\n";
-		echo "  -f --file                         Update the file permissions.\n";
-		echo "  -u --service [update|restart]     Update and restart services.\n";
-		echo "  -i --interactive                  Show the interactive menu.\n";
+		echo "  -h --help                              Show this help message.\n";
+		echo "  -v --version                           Show the version.\n";
+		echo "  -n --main                              Update the main application.\n";
+		echo "  -o --optional                          Update the optional applications.\n";
+		echo "  -s --schema                            Check the table and field structure.\n";
+		echo "  -t --types                             Updates field data types as needed.\n";
+		echo "  -d --defaults                          Restore application defaults.\n";
+		echo "  -m --menu [default|list]               Restore menu default or show the menu list\n";
+		echo "  -p --permissions                       Restore default file and group permissions.\n";
+		echo "  -g --group                             Restore default group permissions.\n";
+		echo "  -f --file                              Update the file permissions.\n";
+		echo "  -u --service [update|stop|restart]     Update and restart services.\n";
+		echo "  -i --interactive                       Show the interactive menu.\n";
 		echo "\n";
 
 	}
@@ -489,15 +489,23 @@
 			//send a message to the console
 			echo "[ Update ] Update all default services\n";
 
-			//add or update the services
+			//add or update all the services
 			upgrade_services($text, $settings);
+		}
+
+		//send a message to the console
+		if (empty($argv[2]) || $argv[2] == 'restart') {
+			echo "[ Update ] Stop all services\n";
+
+			//stop all the services
+			stop_services($text, $settings);
 		}
 
 		//send a message to the console
 		if (empty($argv[2]) || $argv[2] == 'restart') {
 			echo "[ Update ] Restart all services\n";
 
-			//restart the services
+			//restart all the services
 			restart_services($text, $settings);
 		}
 
@@ -644,6 +652,21 @@ function upgrade_services($text, settings $settings) {
 		system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
 		system("systemctl daemon-reload");
 		system("systemctl enable --now " . escapeshellarg($service_name));
+	}
+}
+
+/**
+ * Stop services
+ */
+function stop_services($text, settings $settings) {
+	//echo ($text['description-stop_services'] ?? "")."\n";
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
+	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+	$service_files = array_merge($core_files, $app_files);
+	foreach($service_files as $file) {
+		$service_name = find_service_name($file);
+		echo "	Name: ".$service_name."\n";
+		system("systemctl stop ".$service_name);
 	}
 }
 
