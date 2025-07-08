@@ -117,7 +117,7 @@
                         <div class="form-group">
                             <label for="call_block_action" class="form-label">Action</label>
 
-                            <x-switch-call-block-action name="call_block_action" selected="{{ $callblock->call_block_action }}" />
+                            <x-switch-call-block-action name="call_block_action" selected="{{ $callblock->call_block_action ?? null }}" />
 
                             @error('call_block_action')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
