@@ -65,7 +65,7 @@ class CallBlockController extends Controller
 	public function store(CallBlockRequest $request)
 	{
 		$callblock = $this->callBlockRepository->create($request->validated());
-
+//dd($callblock);
 		return redirect()->route("callblocks.edit", $callblock->callblock_uuid);
 	}
 
@@ -76,13 +76,13 @@ class CallBlockController extends Controller
 
 	public function edit(CallBlock $callblock)
 	{
-        if(auth()->user()->hasPermission("call_block_all"))
+        if(!auth()->user()->hasPermission("call_block_all"))
         {
-            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'));
+            $extensions = $this->extensionRepository->mine();
         }
         else
         {
-            $extensions = $this->extensionRepository->mine();
+            $extensions = Extension::where('domain_uuid','=',Session::get('domain_uuid'))->get();
         }
 
 		return view("pages.callblocks.form", compact("callblock", "extensions"));
