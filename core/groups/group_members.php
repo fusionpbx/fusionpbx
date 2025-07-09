@@ -119,7 +119,7 @@
 
 //add group_member to the users array
 	if (!empty($users)) {
-		foreach ($users as $field) {
+		foreach ($users as &$field) {
 			$field['group_member'] = 'false';
 			if (!empty($user_groups)) {
 				foreach($user_groups as $row) {
