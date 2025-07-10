@@ -116,6 +116,7 @@ class CallBlockController extends Controller
 				$callblockData = [];
                 $callblockData['domain_uuid'] = Session::get('domain_uuid');
                 $callblockData['call_block_direction'] = $request->input("call_block_direction");
+                $callblockData['call_block_action'] = $request->input("call_block_action");
                 $insert = false;
 
 				if(auth()->user()->hasPermission("call_block_all"))
