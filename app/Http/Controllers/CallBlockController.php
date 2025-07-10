@@ -170,12 +170,23 @@ class CallBlockController extends Controller
                         $callblockData['extension_uuid'] = $currentExtensionUuid;
                         if ($request->input("call_block_direction") == 'inbound')
                         {
+
                             //remove e.164 and country code
-                            $call_block_number = str_replace("+".trim($domainCountryCode), "", trim($x->caller_id_number));
+                            if(substr($x->caller_id_number, 0, 1) == "+")
+                            {
+                                //format e.164
+                                $call_block_number = str_replace("+".trim($domainCountryCode), "", trim($x->caller_id_number));
+                            }
+                            else
+                            {
+                                //remove the country code if its the first in the string
+                                $call_block_number = ltrim(trim($x->caller_id_number), $domainCountryCode ?? '');
+                            }
 
                             //build the array
                             $callblockData['call_block_name'] = '';
                             $callblockData['call_block_description'] = trim($x->caller_id_name);
+                            $callblockData['call_block_country_code'] = trim($domainCountryCode ?? '');
                             $callblockData['call_block_number'] = $call_block_number;
                         }
                         else
@@ -191,7 +202,13 @@ class CallBlockController extends Controller
 				}
 
 				if ($insert)
+                {
+                    if (array_key_exists('call_block_country_code', $data) && (($data['call_block_country_code'] == 0) || (strlen($data['call_block_country_code']) == 0)))
+                    {
+                        unset($data['call_block_country_code']);
+                    }
                     $this->callBlockRepository->create($callblockData);
+                }
 
             }
             $dialplans = Dialplan::where("domain_uuid", Session::get("domain_uuid"))

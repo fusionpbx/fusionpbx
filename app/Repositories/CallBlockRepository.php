@@ -47,7 +47,7 @@ class CallBlockRepository
 
     private function fixCountryCode(array &$data)
     {
-        if (($data['call_block_country_code'] == 0) || (strlen($data['call_block_country_code']) == 0))
+        if (!array_key_exists('call_block_country_code', $data) || ($data['call_block_country_code'] == 0) || (strlen($data['call_block_country_code']) == 0))
         {
             // Let's try to fix the Country
             if (preg_match('/1(\d{10})/', $data['call_block_number'], $matches))
