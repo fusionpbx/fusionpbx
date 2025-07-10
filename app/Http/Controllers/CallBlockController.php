@@ -167,7 +167,7 @@ class CallBlockController extends Controller
                         // The extension bellongs to the current user
 
                         $callblockData['extension_uuid'] = $currentExtensionUuid;
-                        if ($callblock->call_block_direction == 'inbound')
+                        if ($request->input("call_block_direction") == 'inbound')
                         {
                             //remove e.164 and country code
                             $call_block_number = str_replace("+".trim($domainCountryCode), "", trim($x->caller_id_number));
@@ -183,8 +183,6 @@ class CallBlockController extends Controller
                         }
 
                         $callblockData['call_block_count'] = 0;
-                        $callblockData['call_block_app'] = $callblock->call_block_app;
-                        $callblockData['call_block_data'] = $callblock->call_block_data;
                         $callblockData['call_block_enabled'] = 'true';
                         $callblockData['date_added'] = time();
                         $insert = true;
