@@ -120,9 +120,9 @@ class CallBlockController extends Controller
 
 				if(auth()->user()->hasPermission("call_block_all"))
 				{
-					if(Str::isUuid($xmlCDR->extension_uuid))
+					if(Str::isUuid($x->extension_uuid))
 					{
-						$callblockData['extension_uuid'] = $xmlCDR->extension_uuid;
+						$callblockData['extension_uuid'] = $x->extension_uuid;
 					}
 
 					if($request->input("call_block_direction") == 'inbound')
