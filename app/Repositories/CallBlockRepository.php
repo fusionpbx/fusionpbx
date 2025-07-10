@@ -47,16 +47,13 @@ class CallBlockRepository
 
     private function fixCountryCode(array &$data)
     {
-        if ($data['call_block_direction'] == 'inbound')
+        if (($data['call_block_country_code'] == 0) || (strlen($data['call_block_country_code']) == 0))
         {
-            if (($data['call_block_country_code'] == 0) || (strlen($data['call_block_country_code']) == 0))
+            // Let's try to fix the Country
+            if (preg_match('/1(\d{10})/', $data['call_block_number'], $matches))
             {
-               // Let's try to fix the Country
-                if (preg_match('/1(\d{10})/', $data['call_block_number'], $matches))
-                {
-                    $data['call_block_country_code'] = 1;
-                    $data['call_block_number'] = $matches[1];
-                }
+                $data['call_block_country_code'] = 1;
+                $data['call_block_number'] = $matches[1];
             }
         }
         return $data;
