@@ -25,12 +25,24 @@ class CallBlockRepository
         return $this->model->where('call_block_uuid', $uuid)->first();
     }
 
+    public function findByPayload(array $payload): ?CallBlock
+    {
+        $payloadQuery = CallBlock::where('domain_uuid', '=', Session::get('domain_uuid'));
+        foreach ($payload as $p => $v)
+        {
+            $payloadQuery = $payloadQuery->where('p','=', $v);
+        }
+        return $payloadQuery->get();
+    }
+
     private function setAppData(array &$data)
     {
 		list($call_block_app, $call_block_data) = explode(":", $data["call_block_action"] ?? "") + [null, null];
 
 		$data["call_block_app"] = $call_block_app;
 		$data["call_block_data"] = $call_block_data;
+
+        return $data;
     }
 
     public function create(array $data): CallBlock

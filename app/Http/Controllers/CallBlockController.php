@@ -108,30 +108,24 @@ class CallBlockController extends Controller
 
 		if(!empty($uuids))
 		{
-			$callblock = $this->callBlockRepository->create($request->validated());
-
 			$xmlCDR = XmlCDR::whereIn("xml_cdr_uuid", $uuids)->get();
-
 			$domainCountryCode = Setting::getSetting('domain', 'country_code', 'numeric');
-
-			$userExtension = Setting::getSetting('user', 'extension');
 
 			foreach($xmlCDR as $x)
 			{
 				$callblockData = [];
+                $callblockData['domain_uuid'] = Session::get('domain_uuid');
+                $callblockData['call_block_direction'] = $request->input("call_block_direction");
+                $insert = false;
 
 				if(auth()->user()->hasPermission("call_block_all"))
 				{
-					$callblockData['call_block_uuid'] = Str::uuid();
-					$callblockData['domain_uuid'] = Session::get('domain_uuid');
-					$callblockData['call_block_direction'] = $callblock->call_block_direction;
-
-					if(Str::isUuid($callblock->extension_uuid))
+					if(Str::isUuid($xmlCDR->extension_uuid))
 					{
-						$callblockData['extension_uuid'] = $callblock->extension_uuid;
+						$callblockData['extension_uuid'] = $xmlCDR->extension_uuid;
 					}
 
-					if($callblock->call_block_direction == 'inbound')
+					if($request->input("call_block_direction") == 'inbound')
 					{
 						//remove e.164 and country code
 						if(substr($x->caller_id_number, 0, 1) == "+")
@@ -145,75 +139,72 @@ class CallBlockController extends Controller
 							$call_block_number = ltrim(trim($x->caller_id_number), $domainCountryCode ?? '');
 						}
 
-						$callblockData['call_block_name'] = '';
+						// TODO: work on the name later
+						$callblockData['call_block_name'] = Str::ucfirst($request->input("call_block_direction")).' '.$x->caller_id_number;
 						$callblockData['call_block_description'] = trim($x->caller_id_name);
 						$callblockData['call_block_country_code'] = trim($domainCountryCode ?? '');
 						$callblockData['call_block_number'] = $call_block_number;
 					}
-
-					if($callblock->call_block_direction == 'outbound')
-					{
-						$callblockData['call_block_number'] = trim($x->caller_destination);
+					else {
+                        // Outbound call
+                        $callblockData['call_block_number'] = trim($x->caller_destination);
+                        $callblockData['call_block_name'] = Str::ucfirst($request->input("call_block_direction")).' '.$x->caller_id_number;
+						$callblockData['call_block_description'] = trim($x->caller_id_name);
 					}
 
 					$callblockData['call_block_count'] = 0;
-					$callblockData['call_block_app'] = $callblock->call_block_app;
-					$callblockData['call_block_data'] = $callblock->call_block_data;
 					$callblockData['call_block_enabled'] = 'true';
 					$callblockData['date_added'] = time();
+                    $insert = true;
 				}
 				else
 				{
-					if(is_array($userExtension))
-					{
-						foreach($userExtension as $field)
-						{
-							if(Str::isUuid($field['extension_uuid']))
-							{
-								$callblockData['call_block_uuid'] = Str::uuid();
-								$callblockData['domain_uuid'] = Session::get('domain_uuid');
-								$callblockData['call_block_direction'] = $callblock->call_block_direction;
-								$callblockData['extension_uuid'] = $field['extension_uuid'];
+                    // TODO: This assumes there will be always a value in extension_uuid
+                    $userExtensions = $this->extensionRepository->mine();
+                    $currentExtensionUuid = $x->extension_uuid;
+                    if ($this->extensionRepository->belongsToUser($currentExtensionUuid, auth()->user()->user_uuid()))
+                    {
+                        // The extension bellongs to the current user
 
-								if ($callblock->call_block_direction == 'inbound')
-								{
-									//remove e.164 and country code
-									$call_block_number = str_replace("+".trim($domainCountryCode), "", trim($x->caller_id_number));
+                        $callblockData['extension_uuid'] = $currentExtensionUuid;
+                        if ($callblock->call_block_direction == 'inbound')
+                        {
+                            //remove e.164 and country code
+                            $call_block_number = str_replace("+".trim($domainCountryCode), "", trim($x->caller_id_number));
 
-									//build the array
-									$callblockData['call_block_name'] = '';
-									$callblockData['call_block_description'] = trim($x->caller_id_name);
-									$callblockData['call_block_number'] = $call_block_number;
-								}
+                            //build the array
+                            $callblockData['call_block_name'] = '';
+                            $callblockData['call_block_description'] = trim($x->caller_id_name);
+                            $callblockData['call_block_number'] = $call_block_number;
+                        }
+                        else
+                        {
+                            $callblockData['call_block_number'] = trim($x->caller_destination);
+                        }
 
-								if($callblock->call_block_direction == 'outbound')
-								{
-									$callblockData['call_block_number'] = trim($x->caller_destination);
-								}
-
-								$callblockData['call_block_count'] = 0;
-								$callblockData['call_block_app'] = $callblock->call_block_app;
-								$callblockData['call_block_data'] = $callblock->call_block_data;
-								$callblockData['call_block_enabled'] = 'true';
-								$callblockData['date_added'] = time();
-							}
-						}
+                        $callblockData['call_block_count'] = 0;
+                        $callblockData['call_block_app'] = $callblock->call_block_app;
+                        $callblockData['call_block_data'] = $callblock->call_block_data;
+                        $callblockData['call_block_enabled'] = 'true';
+                        $callblockData['date_added'] = time();
+                        $insert = true;
 					}
 				}
 
-				$this->callBlockRepository->create($callblockData);
-			}
+				if ($insert)
+                    $this->callBlockRepository->create($callblockData);
 
-			$dialplans = Dialplan::where("domain_uuid", Session::get("domain_uuid"))
-				->where("app_uuid", "9ed63276-e085-4897-839c-4f2e36d92d6c")
-				->where("dialplan_enabled", "<>", "true")
-				->get();
+            }
+            $dialplans = Dialplan::where("domain_uuid", Session::get("domain_uuid"))
+            ->where("app_uuid", "9ed63276-e085-4897-839c-4f2e36d92d6c")
+            ->where("dialplan_enabled", "<>", "true")
+            ->get();
 
 			foreach ($dialplans as $dialplan)
 			{
 				$this->dialplanRepository->update($dialplan, ['dialplan_enabled' => 'true']);
 			}
-		}
+        }
 
         return redirect()->route('callblocks.index');
 	}

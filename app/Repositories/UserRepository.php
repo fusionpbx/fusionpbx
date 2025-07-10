@@ -31,7 +31,7 @@ class UserRepository
         if (App::hasDebugModeEnabled()) {
             Log::debug('[UserRepository][create] $userData: ' . print_r($userData, true));
         }
-        
+
         return $this->model->create($userData);
     }
 
@@ -96,5 +96,14 @@ class UserRepository
         if (empty($userData["password"])) {
             unset($userData["password"]);
         }
+    }
+
+    public function ownsExtension(string $userUuid, string $extensionUuid): bool
+    {
+        $c = ExtensionUser::where('user_uuid','=', $userUuid)
+            ->where('extension_uuid', '=', $extensionUuid)
+            ->where('domain_uuid', '=', Session::get('domain_uuid'))
+            ->count();
+        return (bool)($c > 0);
     }
 }

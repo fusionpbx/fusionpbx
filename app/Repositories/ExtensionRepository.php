@@ -220,7 +220,6 @@ class ExtensionRepository
         return $prefix . $newChar;
     }
 
-
     public function create(array $extensionData, array $extensionUsers = []): array
     {
         $extensionData['extension_uuid'] = $extensionData['extension_uuid'] ?? Str::uuid();
@@ -433,7 +432,6 @@ class ExtensionRepository
             ->get();
     }
 
-
     protected function validateExtensionLimit(string $domainUuid, int $range): void
     {
         $extensionLimit = Setting::getSetting('extension', 'limit', 'numeric');
@@ -585,5 +583,14 @@ class ExtensionRepository
             DB::rollBack();
             throw $e;
         }
+    }
+
+    public function belongsToUser(string $extensionUuid, string $userUuid): bool
+    {
+        $c = ExtensionUser::where('user_uuid','=', $userUuid)
+            ->where('extension_uuid', '=', $extensionUuid)
+            ->where('domain_uuid', '=', Session::get('domain_uuid'))
+            ->count();
+        return (bool)($c > 0);
     }
 }
