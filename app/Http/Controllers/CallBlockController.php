@@ -203,9 +203,9 @@ class CallBlockController extends Controller
 
 				if ($insert)
                 {
-                    if (array_key_exists('call_block_country_code', $data) && (($data['call_block_country_code'] == 0) || (strlen($data['call_block_country_code']) == 0)))
+                    if (array_key_exists('call_block_country_code', $callblockData) && (($callblockData['call_block_country_code'] == 0) || (strlen($callblockData['call_block_country_code']) == 0)))
                     {
-                        unset($data['call_block_country_code']);
+                        unset($callblockData['call_block_country_code']);
                     }
                     $this->callBlockRepository->create($callblockData);
                 }
