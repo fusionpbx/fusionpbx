@@ -527,6 +527,12 @@ class subscriber {
 				$this->domain_name = $array['domain']['name'] ?? '';
 				$this->domain_uuid = $array['domain']['uuid'] ?? '';
 
+				// Store the permissions
+				$this->permissions = $array['user']['permissions'] ?? [];
+
+				// Remove the permissions from the user array because this class handles them seperately
+				unset($array['user']['permissions']);
+
 				// Add the user information when available
 				$this->user = $array['user'] ?? [];
 
@@ -535,9 +541,6 @@ class subscriber {
 				foreach ($services as $service) {
 					$this->subscribe($service);
 				}
-
-				// Store the permissions
-				$this->permissions = $array['permissions'] ?? [];
 
 				// Check for service
 				if (isset($array['service'])) {
@@ -803,12 +806,6 @@ class subscriber {
 	 * @see token::create()
 	 */
 	public static function save_token(array $token, array $services, int $time_limit_in_minutes = 0) {
-
-		//
-		// Put the domain_name, permissions, and token in local storage so we can use all the information
-		// to authenticate an incoming connection from the websocket service.
-		//
-		$array['permissions'] = $_SESSION['permissions'] ?? '';
 
 		//
 		// Store the currently logged in user when available
