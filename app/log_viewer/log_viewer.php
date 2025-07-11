@@ -141,6 +141,8 @@
 	echo 			"<option value='1024' ".($_POST['size'] == 1024 ? "selected='selected'" : null).">1024</option>";
 	echo 			"<option value='2048' ".($_POST['size'] == 2048 ? "selected='selected'" : null).">2048</option>";
 	echo 			"<option value='4096' ".($_POST['size'] == 4096 ? "selected='selected'" : null).">4096</option>";
+	echo 			"<option value='8192' ".($_POST['size'] == 8192 ? "selected='selected'" : null).">8192</option>";
+	echo 			"<option value='max' ".($_POST['size'] === 'max' ? "selected='selected'" : null).">" . $text['label-max'] . "</option>";
 	echo 		"</select> ";
 	echo 		$text['label-size'];
 	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$settings->get('theme', 'button_icon_save'),'style'=>'margin-left: 15px;','name'=>'submit']);
@@ -213,7 +215,11 @@
 
 		echo "<div style='padding-bottom: 10px; text-align: right; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #fff;'>";
 		$user_file_size = '32768';
-		
+
+		if ($_POST['size'] === 'max') {
+			$_POST['size'] = $file_size;
+		}
+
 		if (!is_numeric($_POST['size'])) {
 			//should generate log warning here...
 			$user_file_size = 512 * 1024;
