@@ -556,15 +556,15 @@ class active_calls_service extends service implements websocket_service_interfac
 		$response['topic'] = $websocket_message->topic;
 		$response['request_id'] = $websocket_message->request_id;
 
-		// Get the payload
+		// Get the payload and domain from message
 		$payload = $websocket_message->payload();
+		$domain_name = $websocket_message->domain_name() ?? '';
 
 		// Get the eavesdrop information from the payload to send to the switch
 		$uuid = $payload['unique_id'] ?? '';
 		$origination_caller_id_name = $payload['origination_caller_id_name'] ?? '';
 		$caller_caller_id_number = $payload['caller_caller_id_number'] ?? '';
 		$origination_caller_contact = $payload['origination_caller_contact'] ?? '';
-		$domain_name = $payload['domain_name'] ?? '';
 
 		$response['status_message'] = 'success';
 		$response['status_code'] = 200;
