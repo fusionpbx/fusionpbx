@@ -36,7 +36,6 @@ abstract class system_information {
 	abstract public function get_cpu_percent(): float;
 	abstract public function get_cpu_percent_per_core(): array;
 	abstract public function get_network_speed(string $interface = 'eth0'): array;
-	abstract public function get_disk_usage(): array;
 	abstract public function get_memory_details(): array;
 
 	public function get_load_average() {
@@ -108,6 +107,13 @@ abstract class system_information {
 		if (stripos(PHP_OS, 'WIN') !== false) return 'windows';
 		if (stripos(PHP_OS, 'SUNOS') !== false || stripos(PHP_OS, 'SOLARIS') !== false) return 'solaris';
 		return '';
+	}
+
+	public function get_disk_usage(): array {
+		$free = disk_free_space("/");
+		$total = disk_total_space("/");
+		$used = $total - $free;
+		return ['total' => $total, 'free' => $free, 'used' => $used];
 	}
 
 	/**
