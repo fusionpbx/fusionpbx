@@ -37,14 +37,6 @@ class linux_system_information extends system_information {
 		return $cpu_cores;
 	}
 
-	public function get_disk_usage(): array {
-		return disk_free_space("/") !== false ? [
-			'total' => disk_total_space("/"),
-			'free' => disk_free_space("/"),
-			'used' => disk_total_space("/") - disk_free_space("/")
-				] : [];
-	}
-
 	public function get_memory_details(): array {
 		$data = file_get_contents("/proc/meminfo");
 		preg_match('/MemTotal:\s+(\d+)/', $data, $total);
