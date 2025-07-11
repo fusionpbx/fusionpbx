@@ -467,7 +467,7 @@ class subscriber {
 
 		// Check for required fields
 		if (empty($request_token)) {
-			$date = date('Y/m/d H:i:s', time());
+			//$date = date('Y/m/d H:i:s', time());
 			//self::$logger->warn("Empty token given for $this->id");
 			return false;
 		}
@@ -498,19 +498,6 @@ class subscriber {
 			if ($token_limit > 0) {
 				// check time has expired or not and put it in valid
 				$valid = $valid && (time() - $token_time < $token_limit * 60);  // token_time_limit * 60 seconds = 15 minutes
-			}
-
-			// Debug information
-			if (true) {
-				//self::$logger->debug("------------------ Authenticate Token Compare ------------------");
-				//self::$logger->debug(" Subscriber token name: ".$request_token['name']);
-				//self::$logger->debug(" Subscriber token hash: ".$request_token['hash']);
-				//self::$logger->debug("     Server token name: $token_name");
-				//self::$logger->debug("     Server token hash: $token_hash");
-				//self::$logger->debug("     Server token time: $token_time");
-				//self::$logger->debug("    Server token limit: $token_limit");
-				//self::$logger->debug("Valid: " . ($valid ? 'yes' : 'no'));
-				//self::$logger->debug("----------------------------------------------------------------");
 			}
 
 			// When token is valid
@@ -855,16 +842,10 @@ class subscriber {
 	 * @return bool True if the token has expired. False if the token is still valid
 	 */
 	public function token_time_exceeded(): bool {
-		if (!$this->enable_token_time_limit)
+		if (!$this->enable_token_time_limit) {
 			return false;
+		}
 
-		//self::$logger->debug("------------- TOKEN TIME LIMIT -------------");
-		//self::$logger->debug("    Token Limit: $this->token_limit");
-		//self::$logger->debug("     Token Time: $this->token_time");
-		//self::$logger->debug("   Current Time: " . time());
-		//self::$logger->debug("time-token_time: " . (time() - $this->token_time));
-		//self::$logger->debug("  Time Exceeded: " . ((time() - $this->token_time) > $this->token_limit ? 'Yes' : 'No'));
-		//self::$logger->debug("--------------------------------------------");
 		//test the time on the token to ensure it is valid
 		return (time() - $this->token_time) > $this->token_limit;
 	}

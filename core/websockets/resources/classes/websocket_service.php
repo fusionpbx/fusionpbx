@@ -711,19 +711,19 @@ class websocket_service extends service {
 			@fclose($resource);
 		}
 
-		$this->debug("OLD Client List: " . var_dump($this->clients, true));
+		//$this->debug("OLD Client List: " . var_dump($this->clients, true));
 
 		// Clean out the array
 		$clients = array_filter($this->clients, function ($resource) {
 			return is_resource($resource) && !feof($resource);
 		});
 
-		$this->debug("NEW Client List: " . var_dump($clients, true));
+		//$this->debug("NEW Client List: " . var_dump($clients, true));
 
 		// Compare to the original array
 		$diff = array_diff($this->clients, $clients);
 
-		$this->debug("DIFF Client List: " . var_dump($diff, true));
+		//$this->debug("DIFF Client List: " . var_dump($diff, true));
 
 		// Replace the old list with only the connected ones
 		$this->clients = $clients;
