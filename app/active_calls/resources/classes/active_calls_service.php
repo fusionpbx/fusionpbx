@@ -815,7 +815,7 @@ class active_calls_service extends service implements websocket_service_interfac
 			return;
 		}
 
-		$this->debug("Received message on websocket: $json_string (" . strlen($json_string) . " bytes)");
+		$this->debug("Received message on websocket: (" . strlen($json_string) . " bytes)");
 
 		// Get the web socket message as an object
 		$message = websocket_message::create_from_json_message($json_string);
