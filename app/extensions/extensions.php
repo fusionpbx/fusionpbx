@@ -450,5 +450,10 @@
 //show the footer
 	require_once "resources/footer.php";
 
+// Usages - Identify the source of usage within various components such as extensions, destinations, IVR menus, ring groups, voicemail, and more.
+	if (permission_exists('source_usages')) {
+	    $usages = new usages;
+	    $usages->render('extension');
+	}
 ?>
 
