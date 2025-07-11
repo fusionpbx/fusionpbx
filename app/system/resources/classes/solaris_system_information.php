@@ -31,14 +31,6 @@
  */
 class solaris_system_information extends system_information {
 
-	public function get_disk_usage(): array {
-		return [
-			'total' => disk_total_space("/"),
-			'free' => disk_free_space("/"),
-			'used' => disk_total_space("/") - disk_free_space("/")
-		];
-	}
-
 	public function get_memory_details(): array {
 		$total = (int) shell_exec("prtconf | grep Memory | awk '{print $3 * 1024 * 1024}'");
 		$free = (int) shell_exec("vmstat 1 2 | tail -1 | awk '{print $5 * 1024}'");
