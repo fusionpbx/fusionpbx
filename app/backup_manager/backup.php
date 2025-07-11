@@ -21,16 +21,29 @@ if (file_exists($settings_file)) {
     if (is_array($data)) $settings = array_merge($settings, $data);
 }
 
+$log_file = '/var/log/fusionpbx/backup_manager.log';
+if (!file_exists(dirname($log_file))) {
+    mkdir(dirname($log_file), 0755, true);
+}
 $message = '';
 if (!empty($_POST['action']) && $_POST['action'] === 'backup') {
     // Path to your backup script
     $script = '/var/www/fusionpbx/app/backup_manager/scripts/fusionpbx-backup-manager.sh';
     // Execute backup (ensure www-data has sudo rights for this script)
-    exec('sudo ' . escapeshellarg($script) . ' 2>&1',
-	$output,
-	$status
-	);
-    $message = $status === 0 ? 'Backup completed successfully.' : 'Backup failed!';
+    $cmd = 'sudo ' . escapeshellarg($script) . ' 2>&1';
+    exec($cmd, $output, $status);
+    $log_entry = date('Y-m-d H:i:s') . "\nCMD: $cmd\n" .
+        "STATUS: $status\n" .
+        implode(PHP_EOL, $output) . "\n\n";
+    error_log($log_entry, 3, $log_file);
+    if ($status === 0) {
+        $message = 'Backup completed successfully.';
+    } else {
+        $message = 'Backup failed! Check logs.';
+        if (!empty($output)) {
+            $message .= '<pre>' . htmlspecialchars(implode(PHP_EOL, $output)) . '</pre>';
+        }
+    }
 }
 
 if (!empty($_GET['delete'])) {
