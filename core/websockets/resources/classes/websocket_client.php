@@ -311,10 +311,10 @@ class websocket_client {
 					// Respond with PONG using same payload
 					$this->send_control_frame(0xA, $payload);
 					echo "[INFO] Received PING, sent PONG\n";
-					continue; // Skip returning PING
+					break 2;
 				case 0xA: // PONG
 					echo "[INFO] Received PONG\n";
-					continue; // Skip returning PONG
+					break 2;
 				case 0x1: // TEXT frame
 				case 0x0: // Continuation frame
 					$payload_data .= $payload;
