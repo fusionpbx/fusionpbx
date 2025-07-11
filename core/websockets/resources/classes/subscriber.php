@@ -467,7 +467,7 @@ class subscriber {
 
 		// Check for required fields
 		if (empty($request_token)) {
-			$date = date('Y/m/d H:i:s', time());
+			//$date = date('Y/m/d H:i:s', time());
 			//self::$logger->warn("Empty token given for $this->id");
 			return false;
 		}
