@@ -66,14 +66,19 @@
 	if ($action != '' && is_array($modules) && @sizeof($modules) != 0) {
 		switch ($action) {
 			case 'start':
+				//start the modules
 				$obj = new modules;
 				$obj->start($modules);
+				//add a delay so that modules have time to load
+				sleep(1);
 				break;
 			case 'stop':
+				//stop the modules
 				$obj = new modules;
 				$obj->stop($modules);
 				break;
 			case 'toggle':
+				//toggle enables or disables (stops) the modules
 				if (permission_exists('module_edit')) {
 					$obj = new modules;
 					$obj->toggle($modules);
@@ -87,6 +92,7 @@
 				break;
 		}
 
+		//redirect to display updates
 		header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
@@ -287,4 +293,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
