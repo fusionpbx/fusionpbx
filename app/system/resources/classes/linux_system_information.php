@@ -37,6 +37,25 @@ class linux_system_information extends system_information {
 		return $cpu_cores;
 	}
 
+	public function get_disk_usage(): array {
+		return disk_free_space("/") !== false ? [
+			'total' => disk_total_space("/"),
+			'free' => disk_free_space("/"),
+			'used' => disk_total_space("/") - disk_free_space("/")
+				] : [];
+	}
+
+	public function get_memory_details(): array {
+		$data = file_get_contents("/proc/meminfo");
+		preg_match('/MemTotal:\s+(\d+)/', $data, $total);
+		preg_match('/MemAvailable:\s+(\d+)/', $data, $available);
+		return [
+			'total' => (int) ($total[1] ?? 0) * 1024,
+			'available' => (int) ($available[1] ?? 0) * 1024,
+			'used' => ((int) ($total[1] ?? 0) - (int) ($available[1] ?? 0)) * 1024
+		];
+	}
+
 	//get the CPU details
 	public function get_cpu_percent(): float {
 		$stat1 = file_get_contents('/proc/stat');
