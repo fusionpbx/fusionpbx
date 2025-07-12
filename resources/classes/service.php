@@ -299,12 +299,12 @@ abstract class service {
 			if (function_exists('posix_getsid')) {
 				if (posix_getsid($pid) !== false) {
 					//return the pid for reloading configuration
-					return $pid;
+					return intval($pid);
 				}
 			} else {
 				if (file_exists('/proc/' . $pid)) {
 					//return the pid for reloading configuration
-					return $pid;
+					return intval($pid);
 				}
 			}
 		}
@@ -321,7 +321,11 @@ abstract class service {
 
 		// Remove the old pid file
 		if (file_exists(self::$pid_file)) {
-			unlink(self::$pid_file);
+			if (is_writable(self::$pid_file)) {
+				unlink(self::$pid_file);
+			} else {
+				throw new \RuntimeException("Unable to write to PID file " . self::$pid_file, 73); //Unix error code 73 - unable to write/create file
+			}
 		}
 
 		// Show the details to the user
@@ -330,7 +334,10 @@ abstract class service {
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
 
 		// Save the pid file
-		file_put_contents(self::$pid_file, $pid);
+		$success = file_put_contents(self::$pid_file, $pid);
+		if ($success === false) {
+			throw new \RuntimeException("Failed writing to PID file " . self::$pid_file, 74); //Unix error code 74 - I/O error
+		}
 	}
 
 	/**
