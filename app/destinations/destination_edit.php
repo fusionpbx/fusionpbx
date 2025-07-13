@@ -1131,7 +1131,7 @@
 									$array['destinations'][$x]["destination_type_emergency"] = $destination_type_emergency ? 1 : null;
 								}
 
-								//prepare the destination_conditions json
+							//prepare the destination_conditions json
 								if (!empty($conditions)) {
 									$array['destinations'][$x]["destination_conditions"] = json_encode($conditions);
 									unset($conditions);
@@ -1140,22 +1140,51 @@
 									$array['destinations'][$x]["destination_conditions"] = '';
 								}
 
-								//prepare the $actions array
+							//prepare the $actions array
 								$y=0;
 								if (!empty($destination_actions)) {
+									$i = 0;
 									foreach($destination_actions as $destination_action) {
+										//prepare the values
 										$action_array = explode(":", $destination_action, 2);
 										$action_app = $action_array[0] ?? null;
 										$action_data = $action_array[1] ?? null;
-										if (isset($action_array[0]) && !empty($action_array[0])) {
+
+										//build the actions array
+										if (isset($action_data) && !empty($action_data)) {
 											if ($destination->valid($action_app.':'.$action_data)) {
 												$actions[$y]['destination_app'] = $action_app;
 												$actions[$y]['destination_data'] = $action_data;
 												$y++;
 											}
 										}
+
+										//get the $destination_app and destination_data
+										if ($i == 0) {
+											$destination_app = $action_app;
+											$destination_data = $action_data;
+										}
+										if ($i == 1) {
+											$destination_alternate_app = $action_app;
+											$destination_alternate_data = $action_data;
+										}
+
+										//increment the id
+										$i++;
 									}
 								}
+
+							//add the destination app and data to the array
+								if (!empty($destination_app) && !empty($destination_data)) {
+									$array['destinations'][$x]["destination_app"] = $destination_app;
+									$array['destinations'][$x]["destination_data"] = $destination_data;
+								}
+								if (!empty($destination_alternate_app) && !empty($destination_alternate_data)) {
+									$array['destinations'][$x]["destination_alternate_app"] = $destination_alternate_app;
+									$array['destinations'][$x]["destination_alternate_data"] = $destination_alternate_data;
+								}
+
+							//add additional destination data to the array
 								$array['destinations'][$x]["destination_actions"] = json_encode($actions ?? null);
 								$array['destinations'][$x]["destination_order"] = $destination_order;
 								$array['destinations'][$x]["destination_enabled"] = $destination_enabled;
@@ -1178,8 +1207,7 @@
 				//save the dialplan
 					$database->app_name = 'destinations';
 					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-					$database->save($array);
-					//$response = $database->message;
+					$response = $database->save($array);
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", 'temp');
