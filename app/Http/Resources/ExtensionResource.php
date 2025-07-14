@@ -19,6 +19,7 @@ class ExtensionResource extends JsonResource
             'domain_uuid' => $this->domain_uuid,
             'extension' => $this->extension,
             'password' => $this->password,
+            'effective_caller_id_name' => $this->effective_caller_id_name,
             'description' => $this->description,
             'enabled' => boolval($this->enabled),
         ];
