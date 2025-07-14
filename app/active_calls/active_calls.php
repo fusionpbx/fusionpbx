@@ -208,7 +208,7 @@ if (permission_exists('call_active_hangup')) {
 		'style' => 'display: none;',
 		'label' => $text['label-hangup'],
 		'onclick' => "if (confirm('" . $text['confirm-hangup'] . "')) { "
-			. "hangup_selected();"
+			. "hangup_selected(this);"
 			. "} else { "
 			. "this.blur(); "
 			. "return false; "
@@ -801,18 +801,11 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 <?php /* add hangup button */ if (permission_exists('call_active_hangup')): ?>
 				const hangup = document.getElementById('btn_hangup').cloneNode(true);
-				const span_hangup = document.getElementById(`span_hangup_${call.unique_id}`);
-				hangup.id = `btn_hangup_${call.unique_id}`;
-				hangup.name = `btn_hangup_${call.unique_id}`;
+				const span_hangup = document.getElementById(`span_hangup_${uuid}`);
+				hangup.id = `btn_hangup_${uuid}`;
+				hangup.name = `btn_hangup_${uuid}`;
 				hangup.style.display = 'inline-block';
-				hangup.addEventListener('click', async e => {
-					//send command to server to hangup call
-					console.log('hangup:', call.unique_id);
-					//ask the service active.calls to hangup the call
-					client.request('active.calls', 'hangup', {
-						unique_id: call.unique_id
-					})
-				});
+				hangup.dataset.row_id = uuid;
 				span_hangup.appendChild(hangup);
 <?php endif; ?>
 
@@ -926,22 +919,24 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	// Hangup the checked calls
-	function hangup_selected() {
-//		const checked = document.querySelectorAll('#calls_active_body input[type="checkbox"]:checked');
-//
-//		if (checked.length === 0) {
-//			alert('No calls selected.');
-//			return;
-//		}
+	function hangup_selected(button) {
 
-		//const confirmHangup = confirm('<?= $text['confirm-hangup'] ?? 'Are you sure you want to hang up these calls?' ?>');
+		if (button) {
+			const checkbox = document.querySelector(`input[type="checkbox"][data-uuid="${button.dataset.row_id}"]`);
+			checkbox.checked = true;
+		}
 
-//		if (!confirmHangup) return;
-//
-//		checked.forEach(function (checkbox) {
-//			const row = checkbox.closest('tr');
-//			if (row) client.request('active.calls', 'hangup', {unique_id: row.id});
-//		});
+		const checked = document.querySelectorAll('#calls_active_body input[type="checkbox"]:checked');
+
+		if (checked.length === 0) {
+			alert('No calls selected.');
+			return;
+		}
+
+		checked.forEach(function (checkbox) {
+			const row = checkbox.closest('tr');
+			if (row) client.request('active.calls', 'hangup', {unique_id: row.id});
+		});
 	}
 
 	function remove_button_by_id(button_id) {
