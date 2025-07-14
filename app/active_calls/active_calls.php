@@ -207,6 +207,12 @@ if (permission_exists('call_active_hangup')) {
 		'type' => 'button',
 		'style' => 'display: none;',
 		'label' => $text['label-hangup'],
+		'onclick' => "if (confirm('" . $text['confirm-hangup'] . "')) { "
+			. "hangup_selected();"
+			. "} else { "
+			. "this.blur(); "
+			. "return false; "
+			. "}",
 		'icon' => 'phone-slash',
 	]) . "\n";
 }
