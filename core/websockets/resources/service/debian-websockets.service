@@ -9,7 +9,7 @@
 Description=Websocket Router Service
 
 [Service]
-ExecStartPre=/usr/bin/mkdir -p /var/run/fusionpbx; /usr/bin/chown -R www-data:www-data /var/run/fusionpbx
+ExecStartPre=/usr/bin/mkdir -p /var/run/fusionpbx; /usr/bin/chown www-data:www-data /var/run/fusionpbx
 ExecStart=/usr/bin/php /var/www/fusionpbx/core/websockets/resources/service/websockets.php --no-fork
 User=www-data
 Group=www-data
