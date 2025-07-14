@@ -99,7 +99,7 @@ function show_upgrade_menu() {
 		echo "Options:\n";
 		foreach ($options as list($key, $label, $description)) {
 			if (!is_numeric($key)) { echo "    "; }
-			echo "  $key) $label" . (($option == 'h') ? " - " . $description : "") . "\n";
+			echo "  $key) $label" . ((!empty($option) && $option == 'h') ? " - " . $description : "") . "\n";
 		}
 		echo "\n";
 		echo "  a) All\n";
