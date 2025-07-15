@@ -10,6 +10,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\CallBlockController;
 use App\Http\Controllers\CarrierController;
@@ -62,6 +63,9 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth','permission'])->group(function () {
     Route::view('/dashboard', 'dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+    // BILLING
+    Route::resource('/billings', BillingController::class)->name('billings', 'billings');
 
     // BRIDGE
     Route::resource('/bridges', BridgeController::class)->name('bridges', 'bridges');

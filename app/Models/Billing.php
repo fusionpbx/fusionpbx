@@ -5,18 +5,20 @@ namespace App\Models;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\GetTableName;
 use App\Traits\HasUniqueIdentifier;
+use App\Traits\HandlesStringBooleans;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 
 class Billing extends Model
 {
-	use HasApiTokens, HasFactory, Notifiable, GetTableName, HasUniqueIdentifier;
+	use HasApiTokens, HasFactory, Notifiable, GetTableName, HasUniqueIdentifier, HandlesStringBooleans;
 	protected $table = 'v_billings';
 	protected $primaryKey = 'billing_uuid';
 	public $incrementing = false;
@@ -68,6 +70,10 @@ class Billing extends Model
      * @var array<string, string>
      */
 	protected $casts = [
+	];
+
+	protected static $stringBooleanFields = [
+		'force_postpaid_full_payment',
 	];
 
 	public function domain(): BelongsTo {
