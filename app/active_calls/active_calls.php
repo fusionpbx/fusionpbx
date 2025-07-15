@@ -142,10 +142,10 @@ if (!$settings->get('active_calls', 'remove_completed_calls', true)) {
 	]);
 }
 
-if (permission_exists('call_active_hangup_disabled')) {
+if (permission_exists('call_active_hangup')) {
 	// Hangup selected calls
 	echo button::create([
-		'id' => 'btn_hangup',
+		'id' => 'btn_hangup_all',
 		'type' => 'button',
 		'label' => $text['label-hangup'],
 		'icon' => 'phone-slash',
@@ -922,8 +922,8 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	function hangup_selected(button) {
 
 		if (button) {
-			const checkbox = document.querySelector(`input[type="checkbox"][data-uuid="${button.dataset.row_id}"]`);
-			checkbox.checked = true;
+			client.request('active.calls', 'hangup', {unique_id: button.dataset.row_id});
+			return;
 		}
 
 		const checked = document.querySelectorAll('#calls_active_body input[type="checkbox"]:checked');
@@ -937,6 +937,9 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			const row = checkbox.closest('tr');
 			if (row) client.request('active.calls', 'hangup', {unique_id: row.id});
 		});
+
+		const checkbox_all = document.getElementById('checkbox_all');
+		if (checkbox_all) checkbox_all.checked = false;
 	}
 
 	function remove_button_by_id(button_id) {
