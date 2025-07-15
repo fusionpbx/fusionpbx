@@ -181,8 +181,11 @@
 		if (empty($_POST["persistformvar"])) {
 			if (permission_exists('recording_edit')) {
 
-				//set the recording format
-				$recording_format = $recording_format ?? 'wav';
+				//set the recording format for approved types
+				if (!in_array($recording_format, ['mp3', 'wav'], true)) {
+					//default to mp3
+					$recording_format = 'mp3';
+				}
 
 				//build the setting object and get the recording path
 				$recording_path = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'];
@@ -192,6 +195,17 @@
 					&& file_exists($recording_path.'/'.$recording_filename_original)
 					&& $recording_filename != $recording_filename_original) {
 					rename($recording_path.'/'.$recording_filename_original, $recording_path.'/'.$recording_filename);
+				}
+
+				//create the file name
+				if (empty($recording_filename)) {
+					// Replace invalid characters with underscore
+					$recording_filename = preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name);
+				}
+
+				//make sure the filename ends with the approved extension
+				if (!str_ends_with($recording_filename, ".$recording_format")) {
+					$recording_filename .= ".$recording_format";
 				}
 
 				//determine whether to create the recording
