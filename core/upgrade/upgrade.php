@@ -255,7 +255,7 @@
 		}
 	}
 
-//run all application defaults - more about looking missing not defaults, this not a factory reset
+//run all application defaults - add missing defaults
 	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--defaults') {
 		//send a message to the console
 		if ($display_type === 'text') {
