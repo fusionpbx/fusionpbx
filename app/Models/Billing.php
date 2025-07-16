@@ -96,4 +96,20 @@ class Billing extends Model
 		return $this->belongsToMany(BillingDeal::class, 'v_billing_profile_deals', 'billing_uuid', 'billing_deal_uuid');
 //		$this->belongsToMany(User::class)->using(UserGroup::class);
 	}
+
+	public static function parentProfiles(?string $excludeBillingUuid = null)
+	{
+		return self::join('v_contacts', 'v_contacts.contact_uuid', '=', 'v_billings.contact_uuid_to')
+			->select(
+				'v_billings.billing_uuid',
+				'v_contacts.contact_uuid',
+				'v_contacts.contact_organization',
+				'v_contacts.contact_name_given',
+				'v_contacts.contact_name_family'
+			)
+			->when($excludeBillingUuid, function ($query, $excludeBillingUuid) {
+				$query->where('v_billings.billing_uuid', '<>', $excludeBillingUuid);
+			})
+			->get();
+	}
 }

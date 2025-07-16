@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BillingRequest;
 use App\Models\Billing;
+use App\Models\Domain;
 use App\Repositories\BillingRepository;
 
 class BillingController extends Controller
@@ -21,7 +22,10 @@ class BillingController extends Controller
 
 	public function create()
 	{
-		return view("pages.billings.form");
+		$billings = Billing::parentProfiles();
+		$domains = Domain::all();
+
+		return view("pages.billings.form", compact("billings", "domains"));
 	}
 
 	public function store(BillingRequest $request)
@@ -42,7 +46,10 @@ class BillingController extends Controller
 
 	public function edit(Billing $billing)
 	{
-		return view("pages.billings.form", compact("billing"));
+		$billings = Billing::parentProfiles($billing->billing_uuid);
+		$domains = Domain::all();
+
+		return view("pages.billings.form", compact("billing", "billings", "domains"));
 	}
 
 	public function update(BillingRequest $request, Billing $billing)

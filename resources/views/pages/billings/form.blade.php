@@ -20,17 +20,20 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="billing_name" class="form-label">Parent profile</label>
-                            <input
-                                type="text"
-                                class="form-control @error('billing_name') is-invalid @enderror"
-                                id="billing_name"
-                                name="billing_name"
-                                placeholder="Enter billing name"
-                                value="{{ old('billing_name', $billing->billing_name ?? '') }}"
-                                required
+                            <label for="parent_billing_uuid" class="form-label">Parent profile</label>
+                            <select
+                                class="form-select @error('parent_billing_uuid') is-invalid @enderror"
+                                id="parent_billing_uuid"
+                                name="parent_billing_uuid"
                             >
-                            @error('billing_name')
+                                <option value="">(none)</option>
+                                @foreach($billings as $b)
+                                    <option value="{{ $b->billing_uuid }}" @selected(old('parent_billing_uuid', $billing->parent_billing_uuid ?? null) == $b->billing_uuid )>
+                                        {{ $b->contact_organization }} {{ $b->contact_name_family }} {{ $b->contact_name_given }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('parent_billing_uuid')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
@@ -65,9 +68,9 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="type" class="form-label">Bill shall be done by</label>
-                            <select class="form-select" name="type">
-                                <option value="domain" @selected($billing->type ?? null == "domain")>{{ __('tenant domain') }}</option>
-                                <option value="authcode" @selected($billing->type ?? null == "authcode")>{{ __('authcode assigned to each extension') }}</option>
+                            <select class="form-select" name="type" id="type">
+                                <option value="domain" @selected(($billing->type ?? null) == "domain")>{{ __('tenant domain') }}</option>
+                                <option value="authcode" @selected(($billing->type ?? null) == "authcode")>{{ __('authcode assigned to each extension') }}</option>
                             </select>
                             @error('type')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -79,14 +82,13 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="billing_description" class="form-label">Account code</label>
-                            <textarea
-                                class="form-control @error('billing_description') is-invalid @enderror"
-                                id="billing_description"
-                                name="billing_description"
-                                rows="3"
-                                placeholder="Enter billing description"
-                            >{{ old('billing_description', $billing->billing_description ?? '') }}</textarea>
+                            <label for="type_value" class="form-label">Account code</label>
+                            <select class="form-select @if(($billing->type ?? 'domain') == 'authcode') d-none @endif" id="type_value_select">
+                                @foreach($domains as $domain)
+                                <option value="{{ $domain->domain_uuid }}+{{ $domain->domain_name }}" @selected(($billing->type_value ?? null) == $domain->domain_uuid . '+' . $domain->domain_name)>{{ $domain->domain_name }}</option>
+                                @endforeach
+                            </select>
+                            <input class="form-control @if(($billing->type ?? 'domain') == 'domain') d-none @endif" type="text" id="type_value" name="type_value" value="{{ old('type_value', $billing->type_value ?? '') }}">
                             @error('billing_description')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -106,7 +108,7 @@
                                 min="1"
                                 max="28"
                                 step="1"
-                                placeholder="Enter billing cycle"
+                                placeholder="15"
                                 value="{{ old('billing_cycle', $billing->billing_cycle ?? '') }}"
                                 required
                             >
@@ -141,7 +143,7 @@
                                 class="form-control @error('credit') is-invalid @enderror"
                                 id="credit"
                                 name="credit"
-                                min="999999"
+                                min="-999999"
                                 step="0.01"
                                 value="{{ old('credit', $billing->credit ?? '') }}"
                                 required
@@ -198,7 +200,7 @@
                         <div class="form-group">
                             <label for="balance" class="form-label">Balance</label>
                             <input
-                                type="text"
+                                type="number"
                                 class="form-control @error('balance') is-invalid @enderror"
                                 id="balance"
                                 name="balance"
@@ -224,7 +226,6 @@
                                 min="0"
                                 step="1"
                                 value="{{ old('auto_topup_charge', $billing->auto_topup_charge ?? '') }}"
-                                required
                             >
                             @error('auto_topup_charge')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -238,7 +239,6 @@
                                 min="0"
                                 step="1"
                                 value="{{ old('auto_topup_minimum_balance', $billing->auto_topup_minimum_balance ?? '') }}"
-                                required
                             >
                             @error('auto_topup_minimum_balance')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -257,7 +257,6 @@
                                 id="lcr_profile"
                                 name="lcr_profile"
                                 value="{{ old('lcr_profile', $billing->lcr_profile ?? '') }}"
-                                required
                             >
                             @error('lcr_profile')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -278,7 +277,6 @@
                                 min="0"
                                 step="0.00001"
                                 value="{{ old('max_rate', $billing->max_rate ?? '') }}"
-                                required
                             >
                             @error('max_rate')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -311,7 +309,6 @@
                                 min="0"
                                 step="1"
                                 value="{{ old('referred_depth', $billing->referred_depth ?? '') }}"
-                                required
                             >
                             @error('referred_depth')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -330,9 +327,8 @@
                                 id="referred_percentage"
                                 name="referred_percentage"
                                 min="0"
-                                step="1"
+                                max="100"
                                 value="{{ old('referred_percentage', $billing->referred_percentage ?? '') }}"
-                                required
                             >
                             @error('referred_percentage')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -370,7 +366,6 @@
                                 min="1"
                                 step="1"
                                 value="{{ old('whmcs_user_id', $billing->whmcs_user_id ?? '') }}"
-                                required
                             >
                             @error('whmcs_user_id')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -393,3 +388,38 @@
     </div>
 </div>
 @endsection
+
+@push("scripts")
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function()
+{
+    const type = document.getElementById('type');
+    const type_value_select = document.getElementById('type_value_select');
+    const type_value = document.getElementById('type_value');
+
+    type.addEventListener('change', function()
+    {
+        switch(this.value)
+        {
+            case "domain":
+                type_value_select.classList.remove("d-none");
+                type_value.classList.add("d-none");
+                break;
+            case "authcode":
+                type_value_select.classList.add("d-none");
+                type_value.classList.remove("d-none");
+                break;
+        }
+    });
+
+    type_value_select.addEventListener('change', function()
+    {
+        type_value.value = this.value;
+    });
+});
+
+</script>
+
+@endpush
