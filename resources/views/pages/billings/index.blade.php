@@ -15,6 +15,21 @@
                         <i class="fas fa-plus mr-1"></i> {{__('Add')}}
                     </a>
                     @endcan
+
+                    @if(auth()->user()->hasGroup('superadmin'))
+                    <a href="{{ route('billings.analysis') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-magnifying-glass-chart"></i></i> {{__('Price analysis')}}
+                    </a>
+                    <a href="{{ route('billings.pricing') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-money-check-dollar"></i> {{__('Pricing list')}}
+                    </a>
+                    @endif
+
+                    @can('billing_deal_view')
+                    <a href="{{ route('billings.deals') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-hand-holding-dollar"></i> {{__('Deals')}}
+                    </a>
+                    @endcan
                 </div>
             </div>
         </div>

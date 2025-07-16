@@ -122,13 +122,13 @@ class BillingsTable extends DataTableComponent
         return [
             Column::make("Billing uuid", "billing_uuid")->hideIf(true),
 
-            Column::make("Billing name", "billing_name")
+            Column::make("Organization", "contactTo.contact_organization")
                 ->sortable(),
 
-            Column::make("Billing destination", "billing_destination")
+            Column::make("Given name", "contactTo.contact_name_given")
                 ->sortable(),
 
-            BooleanColumn::make("Billing enabled", "billing_enabled")
+            Column::make("Family name", "contactTo.contact_name_family")
                 ->sortable(),
         ];
     }
@@ -136,8 +136,8 @@ class BillingsTable extends DataTableComponent
     public function builder(): Builder
     {
         $query = Billing::query()
-            ->where('domain_uuid', Session::get('domain_uuid'))
-            ->orderBy('billing_name', 'asc');
+            ->where('v_billings.domain_uuid', Session::get('domain_uuid'))
+            ->orderBy('billing_uuid', 'asc');
         return $query;
     }
 }

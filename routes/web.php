@@ -65,6 +65,8 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
     // BILLING
+    Route::get('/billings/analysis', [BillingController::class, 'analysis'])->name('billings.analysis', 'billings.analysis');
+    Route::get('/billings/pricing', [BillingController::class, 'pricing'])->name('billings.pricing', 'billings.pricing');
     Route::resource('/billings', BillingController::class)->name('billings', 'billings');
 
     // BRIDGE

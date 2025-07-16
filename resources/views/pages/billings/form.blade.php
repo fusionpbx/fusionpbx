@@ -418,6 +418,10 @@ document.addEventListener('DOMContentLoaded', function()
     {
         type_value.value = this.value;
     });
+
+    const changeEvent = new Event("change");
+
+    type_value_select.dispatchEvent(changeEvent);
 });
 
 </script>

@@ -32,6 +32,7 @@ class Billing extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
+		'domain_uuid',
 		'parent_billing_uuid',
 		'type',
 		'type_value',
@@ -49,6 +50,7 @@ class Billing extends Model
 		'billing_creation_date',
 		'referred_by_uuid',
 		'referred_depth',
+		'referred_percentage',
 		'whmcs_user_id',
 		'force_postpaid_full_payment',
 		'max_rate',
@@ -90,6 +92,10 @@ class Billing extends Model
 
 	public function billinginvoices(): HasMany {
 		return $this->hasMany(BillingInvoice::class, 'billing_uuid', 'billing_uuid');
+	}
+
+	public function contactTo(): BelongsTo {
+		return $this->belongsTo(Contact::class, 'contact_uuid_to', 'contact_uuid');
 	}
 
 	public function deals(): BelongsToMany {

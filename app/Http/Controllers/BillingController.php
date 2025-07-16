@@ -5,6 +5,7 @@ use App\Http\Requests\BillingRequest;
 use App\Models\Billing;
 use App\Models\Domain;
 use App\Repositories\BillingRepository;
+use Illuminate\Support\Facades\Session;
 
 class BillingController extends Controller
 {
@@ -32,7 +33,7 @@ class BillingController extends Controller
 	{
 		$data = $request->validated();
 
-    	$data['domain_uuid'] = session('domain_uuid');
+    	$data['domain_uuid'] = Session::get('domain_uuid');
 
 		$billing = $this->billingRepository->create($data);
 
@@ -64,5 +65,15 @@ class BillingController extends Controller
         $this->billingRepository->delete($billing);
 
         return redirect()->route('billings.index');
+    }
+
+    public function analysis()
+    {
+        //
+    }
+
+    public function pricing()
+    {
+        //
     }
 }
