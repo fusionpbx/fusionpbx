@@ -24,6 +24,8 @@ WorkingDirectory=/var/www/fusionpbx
 ExecStartPre=/bin/mkdir -p /var/run/fusionpbx
 ;ExecStartPre=/bin/chown -R ${USER}:${GROUP} /var/www/fusionpbx
 ExecStart=/usr/bin/php /var/www/fusionpbx/app/email_queue/resources/service/email_queue.php
+User=www-data
+Group=www-data
 TimeoutSec=55s
 Restart=always
 

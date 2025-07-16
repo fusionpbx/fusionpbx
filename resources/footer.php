@@ -101,6 +101,8 @@
 
 //set template variables
 
+	//add self
+		$view->assign('php_self', basename($_SERVER['PHP_SELF']));
 	//add translations
 		foreach($text as $key => $value) {
 			$array[str_replace('-', '_', $key)] = $value;

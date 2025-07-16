@@ -53,5 +53,11 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "mp3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recording file format options: wav, mp3";
-
-?>
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f8dada74-82a0-4175-8268-2333de308d9d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "record_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${year}\${month_number}\${day}.\${time}.\${caller_id_number}.\${uuid}.mp3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recording download template. Options: \${uuid}, \${caller_id_name}, \${caller_id_number}, \${caller_destination}, \${destination_number}, \${date}, \${call_direction}, \${year}, \${month_name}, \${month_number}, \${day}, \${time}";

@@ -80,8 +80,12 @@
 	}
 
 //sanitize the variables
-	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
-	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+	if (!empty($search)) {
+		$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
+	}
+	if (!empty($domain_setting_category)) {
+		$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $default_setting_category);
+	}
 
 //build the query string
 	$query_string = '';
@@ -292,8 +296,8 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php?'.$query_string]);
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','onclick'=>'submit_form();']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php?'.$query_string]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

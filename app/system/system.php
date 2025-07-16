@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -381,6 +381,16 @@
 			echo "<tr>\n";
 			echo "	<th class='th' colspan='2' align='left'>".$text['title-database']."</th>\n";
 			echo "</tr>\n";
+
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-name']." \n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$system_information['database']['name']."<br>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-version']." \n";
@@ -448,6 +458,23 @@
 	}
 
 	if (permission_exists("system_view_support")) {
+		$system_support = "- Application\n";
+		$system_support .= "  - version ".$system_information['version']."\n";
+		$system_support .= "  - branch ".$system_information['git']['branch']."\n";
+		$system_support .= "  - path ".$system_information['path']."\n";
+		$system_support .= "- PHP\n";
+		$system_support .= "  - version ".$system_information['php']['version']."\n";
+		if (isset($system_information['switch']['version'])) {
+			$system_support .= "- Switch\n";
+			$system_support .= "  - version ".$system_information['switch']['version']."\n";
+		}
+		$system_support .= "- Database\n";
+		$system_support .= "  - name ".$system_information['database']['name']."\n";
+		$system_support .= "  - version ".$system_information['database']['version']."\n";
+		$system_support .= "- Operating System\n";
+		$system_support .= "  - name ".$system_information['os']['name']."\n";
+		$system_support .= "  - version ".$system_information['os']['version']."\n";
+
 		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='7' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -458,7 +485,7 @@
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "	<td colspan='2' style='padding: 0;'>\n";
-		echo "		<textarea class='formfld' id='system_information' name='system_information' style='display: none;'>".json_encode($system_information, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."</textarea>\n";
+		echo "		<textarea class='formfld' id='system_information' name='system_information' style='display: none;'>".escape($system_support)."</textarea>\n";
 		echo "		<div id='editor' style='border-radius: 4px;'></div>\n";
 		echo "		<table cellpadding='0' cellspacing='0' border='0' style='float: right; padding-top: 5px;'>\n";
 		echo "			<tr>\n";
@@ -539,7 +566,7 @@
 		//load editor
 		echo "	var editor = ace.edit('editor');\n";
 		echo "	editor.setOptions({\n";
-		echo "		mode: 'ace/mode/json',\n";
+		//echo "		mode: 'ace/mode/json',\n";
 		echo "		theme: 'ace/theme/'+document.getElementById('theme').options[document.getElementById('theme').selectedIndex].value,\n";
 		echo "		selectionStyle: 'text',\n";
 		echo "		cursorStyle: 'smooth',\n";

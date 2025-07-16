@@ -88,6 +88,11 @@
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
+//sanitize the variables
+	if (!empty($domain_setting_category)) {
+		$domain_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $domain_setting_category);
+	}
+
 //process the data
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
@@ -379,8 +384,8 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/domains/domain_edit.php?id='.urlencode($domain_uuid)]);
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','onclick'=>'submit_form();']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/domains/domain_edit.php?id='.urlencode($domain_uuid)]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

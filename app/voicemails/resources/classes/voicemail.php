@@ -412,6 +412,9 @@
 											$array['voicemail_greetings'][$x]['domain_uuid'] = $this->domain_uuid;
 										}
 										$x++;
+										$array['voicemail_destinations'][$x]['voicemail_uuid_copy'] = $voicemail_uuid;
+										$array['voicemail_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
+										$x++;
 								}
 							}
 
@@ -1174,7 +1177,7 @@
 			//set source folder path
 			$path = realpath($this->settings->get('switch','voicemail','/var/lib/freeswitch/storage/voicemail').'/default/'.$domain_name).'/'.$this->voicemail_id;
 
-			//prepare base64 content from db, if enabled
+			//prepare base64 content from the database, if enabled
 			if ($this->settings->get('voicemail','storage_type','') == 'base64') {
 				$sql = "select message_intro_base64 ";
 				$sql .= "from ";
@@ -1193,21 +1196,8 @@
 				$message_intro_base64 = $this->database->select($sql, $parameters, 'column');
 				if ($message_intro_base64 != '') {
 					$message_intro_decoded = base64_decode($message_intro_base64);
-					file_put_contents($path.'/intro_'.$this->voicemail_message_uuid.'.ext', $message_intro_decoded);
-					$finfo = finfo_open(FILEINFO_MIME_TYPE); //determine mime type (requires PHP >= 5.3.0, must be manually enabled on Windows)
-					$file_mime = finfo_file($finfo, $path.'/intro_'.$this->voicemail_message_uuid.'.ext');
-					finfo_close($finfo);
-					switch ($file_mime) {
-						case 'audio/x-wav':
-						case 'audio/wav':
-							$file_ext = 'wav';
-							break;
-						case 'audio/mpeg':
-						case 'audio/mp3':
-							$file_ext = 'mp3';
-							break;
-					}
-					rename($path.'/intro_'.$this->voicemail_message_uuid.'.ext', $path.'/intro_'.$this->voicemail_message_uuid.'.'.$file_ext);
+					$file_ext = $this->settings->get('voicemail','file_ext','mp3');
+					file_put_contents($path.'/intro_'.$this->voicemail_message_uuid.'.'.$file_ext, $message_intro_decoded);
 				}
 				unset($sql, $parameters, $message_intro_base64, $message_intro_decoded);
 			}
@@ -1295,7 +1285,7 @@
 			//set source folder path
 			$path = realpath($this->settings->get('switch','voicemail','/var/lib/freeswitch/storage/voicemail').'/default/'.$domain_name).'/'.$this->voicemail_id;
 
-			//prepare base64 content from db, if enabled
+			//prepare base64 content from the database, if enabled
 			if ($this->settings->get('voicemail','storage_type','') == 'base64') {
 				$sql = "select message_base64 ";
 				$sql .= "from ";
@@ -1314,21 +1304,8 @@
 				$message_base64 = $this->database->select($sql, $parameters, 'column');
 				if ($message_base64 != '') {
 					$message_decoded = base64_decode($message_base64);
-					file_put_contents($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $message_decoded);
-					$finfo = finfo_open(FILEINFO_MIME_TYPE); //determine mime type (requires PHP >= 5.3.0, must be manually enabled on Windows)
-					$file_mime = finfo_file($finfo, $path.'/msg_'.$this->voicemail_message_uuid.'.ext');
-					finfo_close($finfo);
-					switch ($file_mime) {
-						case 'audio/x-wav':
-						case 'audio/wav':
-							$file_ext = 'wav';
-							break;
-						case 'audio/mpeg':
-						case 'audio/mp3':
-							$file_ext = 'mp3';
-							break;
-					}
-					rename($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
+					$file_ext = $this->settings->get('voicemail','file_ext','mp3');
+					file_put_contents($path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext, $message_decoded);
 				}
 				unset($sql, $parameters, $message_base64, $message_decoded);
 			}

@@ -122,7 +122,7 @@
 		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?:\=#\n]/';
 
 		//sanitize the data
-		$dashboard_name = trim(preg_replace('/[^a-zA-Z0-9 _\-\/.#]/', '', $dashboard_name));
+		$dashboard_name = trim($dashboard_name);
 		$dashboard_path = preg_replace($text_pattern, '', strtolower($dashboard_path));
 		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
 		$dashboard_icon_color = preg_replace($text_pattern, '', $dashboard_icon_color);
@@ -130,7 +130,7 @@
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
 		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
 		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
-		$dashboard_content = trim(preg_replace($text_pattern, '', $dashboard_content));
+		$dashboard_content = trim($dashboard_content);
 		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
 		$dashboard_content_details = trim(preg_replace($text_pattern, '', $dashboard_content_details));
 		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
@@ -538,13 +538,19 @@
 	echo "			$('.type_icon, .type_content').hide();\n";
 	echo "			$('.type_chart').show();\n";
 	echo "		}\n";
+	echo "		if ($('#selected_icon option:selected').val() != '') {\n";
+	echo "			$('#dashboard_icon_color').show();\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('#dashboard_icon_color').hide();\n";
+	echo "		}\n";
 	echo "		if ($('#dashboard_url').val() != '') {\n";
 	echo "			$('#dashboard_target').show();\n";
 	echo "		}\n";
 	echo "		else {\n";
 	echo "			$('#dashboard_target').hide();\n";
 	echo "		}\n";
-	echo "		if ($('.dashboard_target option:selected').val() == 'new') {\n";
+	echo "		if ($('#dashboard_target option:selected').val() == 'new' && $('#dashboard_url').val() != '') {\n";
 	echo "			$('#dashboard_width').show();\n";
 	echo "			$('#dashboard_height').show();\n";
 	echo "		}\n";
@@ -562,16 +568,16 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'dashboard.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'dashboard.php']);
 	if ($action == 'update') {
 		if (permission_exists('dashboard_group_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (permission_exists('dashboard_group_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -629,7 +635,7 @@
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 			echo "	<tr>\n";
 			echo "		<td>\n";
-			echo "			<select class='formfld' name='dashboard_icon' id='selected_icon' onchange=\"$('#icons').slideUp(200); $('#icon_search').fadeOut(200, function() { $('#grid_icon').fadeIn(); });\">\n";
+			echo "			<select class='formfld' name='dashboard_icon' id='selected_icon' onchange=\"$('#icons').slideUp(200); $('#icon_search').fadeOut(200, function() { $('#grid_icon').fadeIn(); }); adjust_form();\">\n";
 			echo "				<option value=''></option>\n";
 			foreach ($font_awesome_icons as $icon) {
 				$selected = $dashboard_icon == implode(' ', $icon['classes']) ? "selected" : null;
@@ -638,7 +644,7 @@
 			echo "			</select>\n";
 			echo "		</td>\n";
 			echo "		<td style='padding: 0 0 0 5px;'>\n";
-			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"load_icons(); $(this).fadeOut(200, function() { $('#icons').fadeIn(200); $('#icon_search').fadeIn(200).focus(); });\"><span class='fa-solid fa-th'></span></button>";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"load_icons(); $(this).fadeOut(200, function() { $('#icons').fadeIn(200); $('#icon_search').fadeIn(200).focus(); }); $('#dashboard_icon_color').show();\"><span class='fa-solid fa-th'></span></button>";
 			echo "			<input id='icon_search' type='text' class='formfld' style='display: none;' onkeyup=\"if (this.value.length >= 3) { delay_submit(this.value); } else if (this.value == '') { load_icons(); } else { $('#icons').html(''); }\" placeholder=\"".$text['label-search']."\">\n";
 			echo "		</td>\n";
 			echo "	</tr>\n";
@@ -664,13 +670,13 @@
 			echo "</script>\n";
 		}
 		else {
-			echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."'>";
+			echo "		<input type='text' class='formfld' name='dashboard_icon' value='".escape($dashboard_icon)."' onchange=\"adjust_form();\">";
 		}
 		echo			$text['description-dashboard_icon']."\n";
 		echo "		</td>";
 		echo "	</tr>";
 
-		echo "<tr class='type_icon'>\n";
+		echo "<tr class='type_icon' id='dashboard_icon_color' ".(empty($dashboard_icon) && empty($dashboard_icon_color) ? "style='display: none;'" : null).">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_icon_color']."\n";
 		echo "</td>\n";
@@ -698,7 +704,7 @@
 		echo $text['label-target']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select name='dashboard_target' class='formfld dashboard_target' onchange=\"adjust_form();\">\n";
+		echo "	<select name='dashboard_target' class='formfld' onchange=\"adjust_form();\">\n";
 		echo "		<option value='self'>".$text['label-current_window']."</option>\n";
 		echo "		<option value='new' ".(!empty($dashboard_target) && $dashboard_target == 'new' ? "selected='selected'" : null).">".$text['label-new_window']."</option>\n";
 		echo "	</select>\n";
@@ -807,7 +813,7 @@
 			}
 		}
 		echo "</select>\n";
-		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add')]);
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_groups']."\n";
@@ -822,6 +828,11 @@
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
 		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
+		if ($dashboard_chart_type === 'line') {
+			echo "		<option value='line' selected='selected'>".$text['label-line']."</option>\n";
+		} else {
+			echo "		<option value='line'>".$text['label-line']."</option>\n";
+		}
 		if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
 			echo "		<option value='icon' ".($dashboard_chart_type == "icon" ? "selected='selected'" : null).">".$text['label-icon']."</option>\n";
 		}

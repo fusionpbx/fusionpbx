@@ -380,7 +380,11 @@
 		<!-- BLF Call-pickup  -->
 		<!-- Auto, Force, Disabled -->
 		<!-- Pvalue P6752 -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{if isset($grandstream_blf_callpickup_force) }
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">{$grandstream_blf_callpickup_force}</item>
+		{else}
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{/if}
 
 		<!-- BLF Call-pickup Prefix -->
 		<!-- Pvalue P1347 -->
@@ -1488,19 +1492,31 @@
 		<!-- # SSID -->
 		<!-- # String -->
 		<!-- Pvalue P8403 -->
+{if isset($grandstream_wifi_ap1_ssid)}
+		<item name="network.wifi.ap.1.ssid">{$grandstream_wifi_ap1_ssid}</item>
+{else}
 		<item name="network.wifi.ap.1.ssid"></item>
+{/if}
 
 		<!-- # Access Point 1 -->
 		<!-- # Password -->
 		<!-- # String -->
 		<!-- Pvalue P8404 -->
+{if isset($grandstream_wifi_ap1_password)}
+		<item name="network.wifi.ap.1.password">{$grandstream_wifi_ap1_password}</item>
+{else}
 		<item name="network.wifi.ap.1.password"></item>
+{/if}
 
 		<!-- # Access Point 1 -->
 		<!-- # Security Type -->
 		<!-- #  None, WEP, WPA_WPA2 PSK, WPA_WPA2 EAP, Auto.  -->
 		<!-- Pvalue P8405 -->
+{if isset($grandstream_wifi_ap1_type)}
+		<item name="network.wifi.ap.1.type">{$grandstream_wifi_ap1_type}</item>
+{else}
 		<item name="network.wifi.ap.1.type">WPA_PSK</item>
+{/if}
 
 		<!-- # Access Point 1 -->
 		<!-- # EAP Method -->
@@ -1524,19 +1540,31 @@
 		<!-- # SSID -->
 		<!-- # String -->
 		<!-- Pvalue P8406 -->
+{if isset($grandstream_wifi_ap2_ssid)}
+		<item name="network.wifi.ap.2.ssid">{$grandstream_wifi_ap2_ssid}</item>
+{else}
 		<item name="network.wifi.ap.2.ssid"></item>
+{/if}
 
 		<!-- # Access Point 2 -->
 		<!-- # Password -->
 		<!-- # String -->
 		<!-- Pvalue P8407 -->
+{if isset($grandstream_wifi_ap2_password)}
+		<item name="network.wifi.ap.2.password">{$grandstream_wifi_ap2_password}</item>
+{else}
 		<item name="network.wifi.ap.2.password"></item>
+{/if}
 
 		<!-- # Access Point 2 -->
 		<!-- # Security Type -->
 		<!-- #  None, WEP, WPA/WPA2 PSK,  WPA/WPA2 EAP, Auto.  -->
 		<!-- Pvalue P8408 -->
+{if isset($grandstream_wifi_ap2_type)}
+		<item name="network.wifi.ap.2.type">{$grandstream_wifi_ap2_type}</item>
+{else}
 		<item name="network.wifi.ap.2.type">WPA_PSK</item>
+{/if}
 
 		<!-- # Access Point 2 -->
 		<!-- # EAP Method -->

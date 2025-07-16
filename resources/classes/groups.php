@@ -63,10 +63,6 @@
 				$this->database = new database;
 			}
 
-			//set the application name and uuid
-			$this->database->app_name = $this->app_name;
-			$this->database->app_uuid = $this->app_uuid;
-
 			//set the domain_uuid
 			if (is_uuid($domain_uuid)) {
 				$this->domain_uuid = $domain_uuid;

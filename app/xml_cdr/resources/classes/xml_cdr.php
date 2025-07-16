@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -231,6 +231,8 @@
 			$this->fields[] = "hangup_cause";
 			$this->fields[] = "hangup_cause_q850";
 			$this->fields[] = "sip_hangup_disposition";
+			$this->fields[] = "ring_group_uuid";
+			$this->fields[] = "ivr_menu_uuid";
 
 			if (!empty($this->settings->get('cdr', 'field'))) {
 				foreach ($this->settings->get('cdr', 'field') as $field) {
@@ -444,7 +446,7 @@
 						unset($i);
 
 					//get the caller ID from variables
-						if (!isset($caller_id_number) && isset($xml->variables->caller_id_name)) {
+						if (!isset($caller_id_name) && isset($xml->variables->caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->caller_id_name);
 						}
 						if (!isset($caller_id_number) && isset($xml->variables->caller_id_number)) {
@@ -522,6 +524,10 @@
 						}
 
 					//set missed calls
+						if (isset($xml->variables->missed_call) && $xml->variables->missed_call == 'true') {
+							//allow calls marked as missed_call value to be overridden, an alternate destination may have answered the call
+							$missed_call = 'true';
+						}
 						if (isset($call_direction) && $call_direction == 'inbound'
 							&& isset($xml->variables->hangup_cause)
 							&& $xml->variables->hangup_cause == 'ORIGINATOR_CANCEL') {
@@ -543,14 +549,14 @@
 							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
+						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
+							//answered call
+							$missed_call = 'false';
+						}
 						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member'
 							&& isset($xml->variables->cc_cause) && $xml->variables->cc_cause == 'cancel') {
 							//call center
 							$missed_call = 'true';
-						}
-						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
-							//answered call
-							$missed_call = 'false';
 						}
 						if (isset($xml->variables->destination_number) && substr($xml->variables->destination_number, 0, 3) == '*99') {
 							//voicemail
@@ -558,10 +564,6 @@
 						}
 						if (isset($xml->variables->voicemail_answer_stamp) && !empty($xml->variables->voicemail_answer_stamp)) {
 							//voicemail
-							$missed_call = 'true';
-						}
-						if (isset($xml->variables->missed_call) && $xml->variables->missed_call == 'true') {
-							//marked as missed
 							$missed_call = 'true';
 						}
 
@@ -656,8 +658,45 @@
 						$caller_id_name = preg_replace('#[^a-zA-Z0-9\-.\#*@ ]#', '', $caller_id_name);
 						$caller_id_number = preg_replace('#[^0-9\-\#\*]#', '', $caller_id_number);
 
+					//get the extension_uuid and then add it to the database fields array
+						if (isset($xml->variables->extension_uuid)) {
+							$extension_uuid = urldecode($xml->variables->extension_uuid);
+							$this->array[$key][0]['extension_uuid'] = $extension_uuid;
+						}
+						else {
+							if (isset($domain_uuid) && isset($xml->variables->dialed_user)) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['dialed_user'] = $xml->variables->dialed_user;
+								$extension_uuid = $this->database->select($sql, $parameters, 'column');
+								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+							if (isset($domain_uuid) && isset($xml->variables->referred_by_user)) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :referred_by_user or number_alias = :referred_by_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['referred_by_user'] = $xml->variables->referred_by_user;
+								$extension_uuid = $this->database->select($sql, $parameters, 'column');
+								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+							if (isset($domain_uuid) && isset($xml->variables->last_sent_callee_id_number)) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :last_sent_callee_id_number or number_alias = :last_sent_callee_id_number) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['last_sent_callee_id_number'] = $xml->variables->last_sent_callee_id_number;
+								$extension_uuid = $this->database->select($sql, $parameters, 'column');
+								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+						}
+
 					//misc
-						$this->array[$key][0]['ring_group_uuid'] = urldecode($xml->variables->ring_group_uuid);
 						$this->array[$key][0]['xml_cdr_uuid'] = $uuid;
 						$this->array[$key][0]['destination_number'] = $destination_number;
 						$this->array[$key][0]['sip_call_id'] = urldecode($xml->variables->sip_call_id);
@@ -674,6 +713,8 @@
 						$this->array[$key][0]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key][0]['pin_number'] = urldecode($xml->variables->pin_number);
 						$this->array[$key][0]['status'] = $status;
+						$this->array[$key][0]['ring_group_uuid'] = urldecode($xml->variables->ring_group_uuid);
+						$this->array[$key][0]['ivr_menu_uuid'] = urldecode($xml->variables->ivr_menu_uuid);
 
 					//time
 						//catch invalid call detail records
@@ -697,7 +738,7 @@
 						$this->array[$key][0]['end_epoch'] = $end_epoch;
 						$this->array[$key][0]['end_stamp'] = is_numeric((int)$end_epoch) ? date('c', $end_epoch) : null;
 						$this->array[$key][0]['duration'] = urldecode($xml->variables->billsec);
-						$this->array[$key][0]['mduration'] = urldecode($xml->variables->mduration);
+						$this->array[$key][0]['mduration'] = urldecode($xml->variables->billmsec);
 						$this->array[$key][0]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key][0]['billmsec'] = urldecode($xml->variables->billmsec);
 						$this->array[$key][0]['hold_accum_seconds'] = urldecode($xml->variables->hold_accum_seconds);
@@ -736,6 +777,19 @@
 							$parameters['domain_uuid'] = $domain_uuid;
 							$parameters['queue_extension'] = explode("@", $xml->variables->cc_queue)[0];
 							$call_center_queue_uuid = $this->database->select($sql, $parameters, 'column');
+							unset($parameters);
+						}
+						if (empty($extension_uuid) && !empty($xml->variables->cc_agent)) {
+							//use the agent_id as an alternative way to get the extension_uuid
+							$sql = "select extension_uuid from v_extensions ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and extension in ( ";
+							$sql .= "  select agent_id from v_call_center_agents where call_center_agent_uuid = :agent_id ";
+							$sql .= ") ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$parameters['agent_id'] = $xml->variables->cc_agent;
+							$extension_uuid = $this->database->select($sql, $parameters, 'column');
+							$this->array[$key][0]['extension_uuid'] = $extension_uuid;
 							unset($parameters);
 						}
 						if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
@@ -1002,43 +1056,6 @@
 					//build the call detail array with json decode
 						$this->call_details = json_decode($this->json, true);
 
-					//get the extension_uuid and then add it to the database fields array
-						if (isset($xml->variables->extension_uuid)) {
-							$this->array[$key][0]['extension_uuid'] = urldecode($xml->variables->extension_uuid);
-						}
-						else {
-							if (isset($domain_uuid) && isset($xml->variables->dialed_user)) {
-								$sql = "select extension_uuid from v_extensions ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
-								$parameters['domain_uuid'] = $domain_uuid;
-								$parameters['dialed_user'] = $xml->variables->dialed_user;
-								$extension_uuid = $this->database->select($sql, $parameters, 'column');
-								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
-								unset($parameters);
-							}
-							if (isset($domain_uuid) && isset($xml->variables->referred_by_user)) {
-								$sql = "select extension_uuid from v_extensions ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and (extension = :referred_by_user or number_alias = :referred_by_user) ";
-								$parameters['domain_uuid'] = $domain_uuid;
-								$parameters['referred_by_user'] = $xml->variables->referred_by_user;
-								$extension_uuid = $this->database->select($sql, $parameters, 'column');
-								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
-								unset($parameters);
-							}
-							if (isset($domain_uuid) && isset($xml->variables->last_sent_callee_id_number)) {
-								$sql = "select extension_uuid from v_extensions ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and (extension = :last_sent_callee_id_number or number_alias = :last_sent_callee_id_number) ";
-								$parameters['domain_uuid'] = $domain_uuid;
-								$parameters['last_sent_callee_id_number'] = $xml->variables->last_sent_callee_id_number;
-								$extension_uuid = $this->database->select($sql, $parameters, 'column');
-								$this->array[$key][0]['extension_uuid'] = $extension_uuid;
-								unset($parameters);
-							}
-						}
-
 					//save the call flow json
 						$key = 'xml_cdr_flow';
 						$this->array[$key][0]['xml_cdr_flow_uuid'] = uuid();
@@ -1269,7 +1286,7 @@
 
 					//get the application array
 					if (!empty($destination_array) && !empty($row["caller_profile"]["destination_number"])) {
-						if ($this->call_direction == 'outbound') {
+						if ($this->call_direction == 'outbound' && !empty($row["caller_profile"]["username"])) {
 							$app = $this->find_app($destination_array, urldecode($row["caller_profile"]["username"]));
 						}
 						else {
@@ -1431,6 +1448,7 @@
 					$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.($app['application'] ?? ''));
 					$call_flow_summary[$x]["application_name"] = ($app['application'] ?? '');
 					$call_flow_summary[$x]["application_label"] = trim($text2['title-'.($app['application'] ?? '')] ?? '');
+					$call_flow_summary[$x]["application_icon"] = array("call_centers" => "fa-headset", "call_flows" => "fa-share-nodes", "conferences" => "fa-comments", "destinations" => "fa-right-to-bracket", "dialplans" => "fa-right-left", "extensions" => "fa-suitcase", "ivr_menus" => "fa-diagram-project", "ring_groups" => "fa-users", "time_conditions" => "fa-clock", "voicemails" => "fa-envelope");
 					$call_flow_summary[$x]["call_direction"] = $this->call_direction;
 
 					$call_flow_summary[$x]["application_url"] = $application_url;
@@ -1481,7 +1499,7 @@
 			unset($x);
 
 			//set the last status to match the call detail record
-			$call_flow_summary[count($call_flow_summary)-1]['destination_status'] = $this->status;
+			$call_flow_summary[count($call_flow_summary ?? [])-1]['destination_status'] = $this->status;
 
 			//return the call flow summary array
 			return $call_flow_summary;
@@ -1700,7 +1718,7 @@
 
 				//if http enabled is set to false then deny access
 					if (!defined('STDIN')) {
-						if ($this->settings->get('cdr', 'http_enabled', false)) {
+						if (!$this->settings->get('cdr', 'http_enabled', false)) {
 							openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 							syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR'].'] XML CDR import default setting http_enabled is not enabled. Line: '.__line__);
 							closelog();

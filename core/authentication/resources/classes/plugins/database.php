@@ -122,6 +122,26 @@ class plugin_database {
 					$view->assign("login_password_description", $text['label-password_description']);
 					$view->assign("button_cancel", $text['button-cancel']);
 					$view->assign("button_forgot_password", $text['button-forgot_password']);
+
+				//assign openid values to the template
+					if ($settings->get('open_id', 'enabled', false)) {
+						$classes = $settings->get('open_id', 'methods', []);
+						$banners = [];
+						foreach ($classes as $open_id_class) {
+							if (class_exists($open_id_class)) {
+								$banners[] = [
+									'name' => $open_id_class,
+									'image' => $open_id_class::get_banner_image(),
+									'url' => '/app/open_id/open_id.php?action=' . $open_id_class,
+								];
+							}
+						}
+						if (count($banners) > 0) {
+							$view->assign('banners', $banners);
+						}
+					}
+
+				//assign user to the template
 					if (!empty($_SESSION['username'])) {
 						$view->assign("username", $_SESSION['username']);
 					}

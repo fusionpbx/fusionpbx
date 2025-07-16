@@ -1,0 +1,13 @@
+[Unit]
+Description=Active Calls Websocket Service
+
+[Service]
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/active_calls/resources/service/active_calls.php --no-fork
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

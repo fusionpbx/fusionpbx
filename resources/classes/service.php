@@ -299,12 +299,12 @@ abstract class service {
 			if (function_exists('posix_getsid')) {
 				if (posix_getsid($pid) !== false) {
 					//return the pid for reloading configuration
-					return $pid;
+					return intval($pid);
 				}
 			} else {
 				if (file_exists('/proc/' . $pid)) {
 					//return the pid for reloading configuration
-					return $pid;
+					return intval($pid);
 				}
 			}
 		}
@@ -321,7 +321,11 @@ abstract class service {
 
 		// Remove the old pid file
 		if (file_exists(self::$pid_file)) {
-			unlink(self::$pid_file);
+			if (is_writable(self::$pid_file)) {
+				unlink(self::$pid_file);
+			} else {
+				throw new \RuntimeException("Unable to write to PID file " . self::$pid_file, 73); //Unix error code 73 - unable to write/create file
+			}
 		}
 
 		// Show the details to the user
@@ -330,7 +334,10 @@ abstract class service {
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
 
 		// Save the pid file
-		file_put_contents(self::$pid_file, $pid);
+		$success = file_put_contents(self::$pid_file, $pid);
+		if ($success === false) {
+			throw new \RuntimeException("Failed writing to PID file " . self::$pid_file, 74); //Unix error code 74 - I/O error
+		}
 	}
 
 	/**
@@ -391,6 +398,29 @@ abstract class service {
 		}
 	}
 
+	private static function log_level_to_string(int $level = LOG_NOTICE): string {
+		switch ($level){
+			case 0:
+				return 'EMERGENCY';
+			case 1:
+				return 'ALERT';
+			case 2:
+				return 'CRITICAL';
+			case 3:
+				return 'ERROR';
+			case 4:
+				return 'WARNING';
+			case 5:
+				return 'NOTICE';
+			case 6:
+				return 'INFO';
+			case 7:
+				return 'DEBUG';
+			default:
+				return 'INFO';
+		}
+	}
+
 	/**
 	 * Show memory usage to the user
 	 */
@@ -416,7 +446,8 @@ abstract class service {
 
 		//enable sending message to the console directly
 		if (self::$log_level === LOG_DEBUG || !self::$forking_enabled) {
-			echo $message . "\n";
+			$time = date('Y-m-d H:i:s');
+			echo "[$time] [" . self::log_level_to_string($level) . "] " . $message . "\n";
 		}
 
 		// Log the message to syslog
@@ -621,7 +652,7 @@ abstract class service {
 	 * Set to not fork when started
 	 */
 	public static function set_no_fork() {
-		echo "Running in forground\n";
+		echo "Running in foreground";
 		self::$forking_enabled = false;
 	}
 

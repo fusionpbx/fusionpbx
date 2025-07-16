@@ -207,7 +207,8 @@
 			table.insert(array, "recording_filename, ");
 			table.insert(array, "recording_description, ");
 			table.insert(array, "recording_base64, ");
-			table.insert(array, "recording_name ");
+			table.insert(array, "recording_name, ");
+			table.insert(array, "insert_date ");
 			table.insert(array, ") ");
 			table.insert(array, "VALUES ");
 			table.insert(array, "( ");
@@ -216,7 +217,8 @@
 			table.insert(array, ":recording_filename, ");
 			table.insert(array, ":recording_description, ");
 			table.insert(array, ":recording_base64, ");
-			table.insert(array, ":recording_name ");
+			table.insert(array, ":recording_name, ");
+			table.insert(array, " now() ");
 			table.insert(array, ") ");
 			sql = table.concat(array, "\n");
 

@@ -289,7 +289,11 @@
 
 		<!-- BLF Call-pickup  -->
 		<!-- Auto, Force, Disabled -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{if isset($grandstream_blf_callpickup_force) }
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">{$grandstream_blf_callpickup_force}</item>
+		{else}
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{/if}
 
 		<!-- BLF Call-pickup Prefix -->
 		<item name="account.{$row.line_number}.sip.blf.callPickup.prefix">**</item>
@@ -560,7 +564,7 @@
 
 		<!-- On Hold Reminder Tone -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.call.onHoldReminderTone">Yes</item>
+		<item name="account.{$row.line_number}.call.onHoldReminderTone">No</item>
 
 		<!-- RFC2543 Hold -->
 		<!-- Yes, No -->

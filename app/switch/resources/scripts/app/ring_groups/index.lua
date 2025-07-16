@@ -525,6 +525,12 @@ log = require "resources.functions.log".ring_group
 				caller_id_number = ring_group_caller_id_number;
 			end
 
+		--set the diversion header
+			local diversion_enabled = settings:get('ring_group', 'diversion_enabled', 'boolean') or 'false';
+			if (diversion_enabled == 'true') then
+				session:setVariable("sip_h_Diversion", "<sip:"..ring_group_forward_destination.."@"..context..":5060>;reason=unconditional");
+			end
+
 		--forward the ring group
 			if (caller_id_name) then
 				session:setVariable("effective_caller_id_name", caller_id_name);

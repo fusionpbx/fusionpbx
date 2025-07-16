@@ -87,6 +87,13 @@
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
+					case "mod_av":
+						$mod['module_label'] = 'AV';
+						$mod['module_category'] = 'Applications';
+						$mod['module_description'] = 'Supports libav and RTMP streams.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
 					case "mod_avmd":
 						$mod['module_label'] = 'AVMD';
 						$mod['module_category'] = 'Applications';
@@ -98,6 +105,20 @@
 						$mod['module_label'] = 'Blacklist';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'Blacklist.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
+					case "mod_b64":
+						$mod['module_label'] = 'B64';
+						$mod['module_category'] = 'Codecs';
+						$mod['module_description'] = 'B64 Codec.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
+					case "mod_bcg729":
+						$mod['module_label'] = 'BCG729';
+						$mod['module_category'] = 'Codecs';
+						$mod['module_description'] = 'G729 Open Source Codec.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -368,9 +389,9 @@
 						$mod['module_label'] = 'Memcached';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'API for memcached.';
-						$mod['module_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
 						$mod['module_order'] = 150;
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_native_file":
 						$mod['module_label'] = 'Native File';
@@ -400,10 +421,31 @@
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
+					case "mod_pgsql":
+						$mod['module_label'] = 'PGSQL';
+						$mod['module_category'] = 'Databases';
+						$mod['module_description'] = 'Client support for PostgreSQL database.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
+					case "mod_png":
+						$mod['module_label'] = 'PNG';
+						$mod['module_category'] = 'Formats';
+						$mod['module_description'] = 'Image format Portable Network Graphics.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
 					case "mod_pocketsphinx":
 						$mod['module_label'] = 'PocketSphinx';
 						$mod['module_category'] = 'Speech Recognition / Text to Speech';
 						$mod['module_description'] = 'Speech Recognition.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
+					case "mod_rtc":
+						$mod['module_label'] = 'RTC';
+						$mod['module_category'] = 'Applications';
+						$mod['module_description'] = 'Supports medias streaming for WebRTC and Verto.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -417,83 +459,91 @@
 					case "mod_say_de":
 						$mod['module_label'] = 'German';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'German sound files used for time, date, digits, etc.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_en":
 						$mod['module_label'] = 'English';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'English sound files used for time, date, digits, etc.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_es":
 						$mod['module_label'] = 'Spanish';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Spanish sound files used for time, date, digits, etc.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
+					case "mod_say_es_ar":
+						$mod['module_label'] = 'Spanish AR';
+						$mod['module_category'] = 'Say';
+						$mod['module_description'] = 'Spanish AR sound files used for time, date, digits, etc.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_fr":
 						$mod['module_label'] = 'French';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play French phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_he":
 						$mod['module_label'] = 'Hebrew';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play Hebrew phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_hu":
 						$mod['module_label'] = 'Hungarian';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play Hungarian phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_it":
 						$mod['module_label'] = 'Italian';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play Italian phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_nl":
 						$mod['module_label'] = 'Dutch';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play Dutch phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_pt":
 						$mod['module_label'] = 'Portuguese';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play Portuguese phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_ru":
 						$mod['module_label'] = 'Russian';
 						$mod['module_category'] = 'Say';
+						$mod['module_description'] = 'Play Russian phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_th":
 						$mod['module_label'] = 'Thai';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play Thai phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_say_zh":
 						$mod['module_label'] = 'Chinese';
 						$mod['module_category'] = 'Say';
-						$mod['module_description'] = '';
+						$mod['module_description'] = 'Play Chinese phrases using sound files for time, date, digits, and more.';
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -590,6 +640,13 @@
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
+					case "mod_test":
+						$mod['module_label'] = 'Test';
+						$mod['module_category'] = 'Applications';
+						$mod['module_description'] = 'Test application.';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
+						break;
 					case "mod_tone_stream":
 						$mod['module_label'] = 'Tone Stream';
 						$mod['module_category'] = 'Streams / Files';
@@ -660,6 +717,13 @@
 						$mod['module_enabled'] = 'false';
 						$mod['module_default_enabled'] = 'false';
 						break;
+					case "mod_xml_scgi":
+						$mod['module_label'] = 'XML SCGI';
+						$mod['module_category'] = 'XML Interfaces';
+						$mod['module_description'] = 'SCGI XML Gateway.';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
+						break;
 					default:
 						$mod['module_category'] = 'Auto';
 						$mod['module_enabled'] = 'false';
@@ -719,22 +783,22 @@
 								}
 								if (!$this->exists($name)) {
 									//set module found to true
-										$module_found = true;
+									$module_found = true;
 									//get the module array
-										$mod = $this->info($name);
+									$mod = $this->info($name);
 									//append the module label
-										$modules_new .= "<li>".$mod['module_label']."</li>\n";
+									$modules_new .= "<li>".$mod['module_label']."</li>\n";
 									//set the order
-										$order = $mod['module_order'];
+									$order = $mod['module_order'];
 									//build insert array
-										$array['modules'][$x]['module_uuid'] = uuid();
-										$array['modules'][$x]['module_label'] = $mod['module_label'];
-										$array['modules'][$x]['module_name'] = $mod['module_name'];
-										$array['modules'][$x]['module_description'] = $mod['module_description'];
-										$array['modules'][$x]['module_category'] = $mod['module_category'];
-										$array['modules'][$x]['module_order'] = $order;
-										$array['modules'][$x]['module_enabled'] = $mod['module_enabled'];
-										$array['modules'][$x]['module_default_enabled'] = $mod['module_default_enabled'];
+									$array['modules'][$x]['module_uuid'] = uuid();
+									$array['modules'][$x]['module_label'] = $mod['module_label'];
+									$array['modules'][$x]['module_name'] = $mod['module_name'];
+									$array['modules'][$x]['module_description'] = $mod['module_description'];
+									$array['modules'][$x]['module_category'] = $mod['module_category'];
+									$array['modules'][$x]['module_order'] = $order;
+									$array['modules'][$x]['module_enabled'] = $mod['module_enabled'];
+									$array['modules'][$x]['module_default_enabled'] = $mod['module_default_enabled'];
 									$x++;
 								}
 							}
@@ -742,16 +806,16 @@
 					}
 					if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 						//grant temporary permissions
-							$p = permissions::new();
-							$p->add('module_add', 'temp');
+						$p = permissions::new();
+						$p->add('module_add', 'temp');
 						//execute insert
-							$database = new database;
-							$database->app_name = 'modules';
-							$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
-							$database->save($array);
-							unset($array);
+						$database = new database;
+						$database->app_name = 'modules';
+						$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
+						$database->save($array);
+						unset($array);
 						//revoke temporary permissions
-							$p->delete('module_add', 'temp');
+						$p->delete('module_add', 'temp');
 					}
 					closedir($handle);
 					if ($module_found) {

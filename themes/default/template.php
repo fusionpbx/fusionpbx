@@ -20,7 +20,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202503130256'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202504150207'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -715,37 +715,55 @@
 		{literal}
 		var recording_audio, audio_clock, recording_id_playing;
 
-		function recording_play(player_id, data, audio_type) {
+		function recording_load(player_id, data, audio_type) {
+			{/literal}
+			//create and load waveform image
+			{if $settings.theme.audio_player_waveform_enabled == 'true'}
+				{literal}
+				//list playback
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+					document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+				}
+				//form playback
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+					document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+				}
+				{/literal}
+			{else}
+				{literal}
+				//list playback
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%)";
+				}
+				//form playback
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%)";
+				}
+				{/literal}
+			{/if}
+			{literal}
+		}
+
+		function recording_play(player_id, data, audio_type, label) {
 			if (document.getElementById('recording_progress_bar_' + player_id)) {
 				document.getElementById('recording_progress_bar_' + player_id).style.display='';
 			}
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 
+			var label_play = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_play}{literal}</span>{/literal}{/if}{literal}";
+			var label_pause = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_pause}{literal}</span>{/literal}{/if}{literal}";
+
 			if (recording_audio.paused) {
-				{/literal}
-				//create and load waveform image
-				{if $settings.theme.audio_player_waveform_enabled == 'true'}
-					{literal}
-					//list playback
-					if (document.getElementById('playback_progress_bar_background_' + player_id)) {
-						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
-						document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
-					}
-					//form playback
-					else if (document.getElementById('recording_progress_bar_' + player_id)) {
-						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
-						document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
-					}
-					{/literal}
-				{/if}
-				{literal}
+				recording_load(player_id, data, audio_type);
 				recording_audio.volume = 1;
 				recording_audio.play();
 				recording_id_playing = player_id;
-				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>";
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>" + (label_pause ?? '');
 				audio_clock = setInterval(function () { update_progress(player_id); }, 20);
 
-				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
+				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? ''));
 				$('[id*=recording_button_intro]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>");
 				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_' + player_id + ']').css('display', 'none');
 
@@ -763,7 +781,7 @@
 					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 				}
 				else {
-					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? '');
 				}
 				clearInterval(audio_clock);
 			}
@@ -778,9 +796,15 @@
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 			recording_audio.pause();
 			recording_audio.currentTime = 0;
-			if (document.getElementById('recording_progress_bar_' + player_id)) {
-				document.getElementById('recording_progress_bar_' + player_id).style.display='none';
-			}
+			{/literal}
+			{if $php_self <> 'xml_cdr_details.php'}
+				{literal}
+				if (document.getElementById('recording_progress_bar_' + player_id)) {
+					document.getElementById('recording_progress_bar_' + player_id).style.display='none';
+				}
+				{/literal}
+			{/if}
+			{literal}
 			if (player_id.substring(0,6) == 'intro_') {
 				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 			}
@@ -900,14 +924,14 @@
 			btn_delete = document.getElementById("btn_delete");
 			btn_download = document.getElementById("btn_download");
 			btn_transcribe = document.getElementById("btn_transcribe");
-			btn_resend = document.getElementById("btn_resend");
+			any_revealed = document.getElementsByClassName('revealed');
 			if (checked == true) {
 				if (btn_copy) { btn_copy.style.display = "inline"; }
 				if (btn_toggle) { btn_toggle.style.display = "inline"; }
 				if (btn_delete) { btn_delete.style.display = "inline"; }
 				if (btn_download) { btn_download.style.display = "inline"; }
 				if (btn_transcribe) { btn_transcribe.style.display = "inline"; }
-				if (btn_resend) { btn_resend.style.display = "inline"; }
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "inline"); }
 			}
 		 	else {
 				if (btn_copy) { btn_copy.style.display = "none"; }
@@ -915,7 +939,7 @@
 				if (btn_delete) { btn_delete.style.display = "none"; }
 				if (btn_download) { btn_download.style.display = "none"; }
 				if (btn_transcribe) { btn_transcribe.style.display = "none"; }
-				if (btn_resend) { btn_resend.style.display = "none"; }
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "none"); }
 		 	}
 		}
 		{/literal}
@@ -938,6 +962,13 @@
 					document.getElementById('btn_check_none').style.display = 'none';
 				}
 			}
+			any_revealed = document.getElementsByClassName('revealed');
+			if (checkbox_checked == true) {
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "inline"); }
+			}
+		 	else {
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "none"); }
+		 	}
 		}
 
 		function list_all_check() {

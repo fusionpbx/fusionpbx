@@ -134,15 +134,15 @@
 	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
-	$list_row_edit_button = filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
-	$button_icon_add = $_SESSION['theme']['button_icon_add'] ?? '';
-	$button_icon_copy = $_SESSION['theme']['button_icon_copy'] ?? '';
-	$button_icon_toggle = $_SESSION['theme']['button_icon_toggle'] ?? '';
-	$button_icon_all = $_SESSION['theme']['button_icon_all'] ?? '';
-	$button_icon_delete = $_SESSION['theme']['button_icon_delete'] ?? '';
-	$button_icon_search = $_SESSION['theme']['button_icon_search'] ?? '';
-	$button_icon_edit = $_SESSION['theme']['button_icon_edit'] ?? '';
-	$button_icon_reset = $_SESSION['theme']['button_icon_reset'] ?? '';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
+	$button_icon_add = $settings->get('theme', 'button_icon_add') ?? '';
+	$button_icon_copy = $settings->get('theme', 'button_icon_copy') ?? '';
+	$button_icon_toggle = $settings->get('theme', 'button_icon_toggle') ?? '';
+	$button_icon_all = $settings->get('theme', 'button_icon_all') ?? '';
+	$button_icon_delete = $settings->get('theme', 'button_icon_delete') ?? '';
+	$button_icon_search = $settings->get('theme', 'button_icon_search') ?? '';
+	$button_icon_edit = $settings->get('theme', 'button_icon_edit') ?? '';
+	$button_icon_reset = $settings->get('theme', 'button_icon_reset') ?? '';
 
 //get the number of rows in the dialplan
 	$sql = "select count(*) from v_dialplans ";
@@ -192,7 +192,7 @@
 	$num_rows = $database->select($sql, $parameters  ?? null, 'column');
 
 //prepare the paging
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	if (!empty($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
 	if (!empty($context)) { $params[] = "context=".urlencode($context); }
 	if (!empty($search)) { $params[] = "search=".urlencode($search); }

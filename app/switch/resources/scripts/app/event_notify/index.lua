@@ -65,6 +65,16 @@
 		end
 	end
 
+--algo
+	if (vendor == "algo") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync');
+		end
+	end
+
 --cisco
 	if (vendor == "cisco") then
 		if (command == "reboot") then

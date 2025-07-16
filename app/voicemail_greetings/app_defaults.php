@@ -34,6 +34,78 @@ if ($domains_processed == 1) {
 	$database->execute($sql);
 	unset($sql);
 
+	//get settings
+	$switch_storage = $settings->get('switch','storage');
+	$voicemail_storage_type = $settings->get('voicemail','storage_type');
+
+	//get all the voicemail greetings
+	$sql = "select d.domain_name, g.* ";
+	$sql .= "from v_voicemail_greetings as g, v_domains as d ";
+	$sql .= "where g.domain_uuid = d.domain_uuid ";
+	$voicemail_greetings = $database->select($sql, null, 'all');
+	foreach($voicemail_greetings as $row) {
+		$database_greetings[$row['domain_name']][$row['voicemail_id']][$row['greeting_filename']] = true;
+	}
+
+	//prepare the array
+	$array= [];
+
+	//get the list of voicemail greeting files
+	$greeting_files = glob($switch_storage.'/voicemail/default/*/*/greeting_*');
+	foreach ($greeting_files as $id => $greeting_file) {
+		//get the relative path
+		$relative_path = substr($greeting_file, strlen($switch_storage.'/voicemail/default/'));
+
+		//get the relevant details from the path
+		list($domain_name, $voicemail_id, $greeting_filename) = explode('/', $relative_path);
+
+		//get the greeting_id from the greeting filename
+		$greeting_id = '';
+		if (preg_match('/(\d+)/', $greeting_filename, $matches)) {
+			$greeting_id = $matches[1];
+		}
+
+		//skip if already in the database
+		if (!empty($database_greetings[$domain_name][$voicemail_id][$greeting_filename])) {
+			continue;
+		}
+
+		//get the domain_uuid
+		foreach($domains as $field) {
+			if ($field['domain_name'] == $domain_name) {
+				$domain_uuid = $field['domain_uuid'];
+				break;
+			}
+		}
+
+		//get the greeting name
+		$greeting_name = explode('.', $greeting_filename)[0];
+		$greeting_name = str_replace('greeting_', 'Greeting ', $greeting_name);
+
+		//add the greeting to the database
+		$array['voicemail_greetings'][$id]['voicemail_greeting_uuid'] = uuid();
+		$array['voicemail_greetings'][$id]['domain_uuid'] = $domain_uuid;
+		$array['voicemail_greetings'][$id]['voicemail_id'] = $voicemail_id;
+		$array['voicemail_greetings'][$id]['greeting_id'] = $greeting_id;
+		$array['voicemail_greetings'][$id]['greeting_name'] = $greeting_name;
+		$array['voicemail_greetings'][$id]['greeting_filename'] = $greeting_filename;
+	}
+
+	if (!empty($array)) {
+		//grant temporary permissions
+		$p = permissions::new();
+		$p->add('voicemail_greeting_add', 'temp');
+
+		//execute update
+		$database->app_name = 'voicemail_greetings';
+		$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
+		$message = $database->save($array, false);
+		unset($array);
+
+		//revoke temporary permissions
+		$p->delete('voicemail_greeting_add', 'temp');
+	}
+
 	//populate greeting id number if empty
 	$sql = "select voicemail_greeting_uuid, greeting_filename ";
 	$sql .= "from v_voicemail_greetings ";
@@ -66,10 +138,6 @@ if ($domains_processed == 1) {
 		}
 	}
 	unset($sql, $result, $row);
-
-	//get settings
-	$voicemail_storage_type = $settings->get('voicemail','storage_type');
-	$switch_storage = $settings->get('switch','storage');
 
 	//if base64, populate from existing greeting files, then remove
 	if (!empty($voicemail_storage_type) && $voicemail_storage_type == 'base64') {
