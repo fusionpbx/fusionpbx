@@ -2464,7 +2464,7 @@
     <!-- # IP Address. 0 - DHCP, 2 - PPPoE, 1 - Static IP -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_ip_mode)}<P8>{$grandstream_ip_mode}</P8>{else}<P8>0</P8>{/if}</P8>
+    {if isset($grandstream_ip_mode)}<P8>{$grandstream_ip_mode}</P8>{else}<P8>0</P8>{/if}
 
     <!-- ################################################################################# -->
     <!-- # DHCP -->
