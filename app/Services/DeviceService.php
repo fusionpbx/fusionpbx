@@ -154,6 +154,12 @@ class DeviceService
 
         return '';
     }
+
+    public function getDeviceTemplatesFromOnlineRepo(): array
+    {
+
+    }
+
     public function getDeviceTemplates(): array
     {
         $templateDir = $this->getTemplateDir();
@@ -258,7 +264,7 @@ class DeviceService
         return $info;
     }
 
-
+    // TODO: Fix this
     public function getTemplateDir(): string
     {
         if (!empty($this->templateDir)) {

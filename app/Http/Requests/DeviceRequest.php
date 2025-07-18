@@ -32,6 +32,7 @@ class DeviceRequest extends FormRequest
             'device_mac_address' => [
                 'required',
                 'string',
+                'mac_address',
                 'max:17',
                 Rule::unique('v_devices', 'device_mac_address')->ignore($this->device_uuid, 'device_uuid'),
             ],

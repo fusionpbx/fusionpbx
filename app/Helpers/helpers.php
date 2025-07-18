@@ -213,3 +213,14 @@ if (!function_exists('currency_select')) {
         echo '</select>';
 	}
 }
+
+if (!function_exists('github_raw_url')) {
+    function github_raw_url(string $url){
+        // from https://github.com/CoolPBX/templates/blob/main/provision/aastra/480i/aastra.cfg
+        // to https://raw.githubusercontent.com/CoolPBX/templates/refs/heads/main/provision/aastra/480i/aastra.cfg
+        // var rawLink = githubLink.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
+        $u = str_replace('github.com', 'raw.githubusercontent.com', $url);
+        $u = str_repeat('/blob/', '/', $u);
+        return $u;
+    }
+}

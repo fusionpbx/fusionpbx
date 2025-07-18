@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Filesystem Disk
+    | Settings for FreeSWITCH/CoolPBX
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default filesystem disk that should be used
@@ -14,6 +14,7 @@ return [
     */
 
     'api_type' => env('FS_API_TYPE', 'XML_RPC'),
+    'template_repo' => env('COOLPBX_TEMPLATE_REPOSITORY', "https://github.com/CoolPBX/templates"),
 
     'CHECK_CALLCENTERS' => 1,
     'CHECK_CONFERENCES' => 2,

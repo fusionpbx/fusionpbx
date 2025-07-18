@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "atomicptr/laravel-github-storage": "^0.1.2",
         "elvanto/litemoji": "^4.3",
         "jeroendesloovere/vcard": "^1.7",
         "laravel/framework": "^12.0",
