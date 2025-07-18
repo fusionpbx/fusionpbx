@@ -61,7 +61,7 @@ return [
             'token' => env('COOLPBX_TEMPLATE_REPOSITORY_TOKEN', ''),
             'username' => env('COOLPBX_TEMPLATE_REPOSITORY_USERNAME', ''),
             'repository' => env('COOLPBX_TEMPLATE_REPOSITORY', 'CoolPBX/templates'),
-            'branch' => env('COOLPBX_TEMPLATE_REPOSITORY_BRANCH', 'master'),
+            'branch' => env('COOLPBX_TEMPLATE_REPOSITORY_BRANCH', 'main'),
             'prefix' => env("COOLPBX_TEMPLATE_REPOSITORY_PREFIX", ''),
         ],
 
