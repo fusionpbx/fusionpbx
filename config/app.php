@@ -177,6 +177,8 @@ return [
         App\Providers\FreeSwitchModuleServiceProvider::class,
         App\Providers\FreeSwitchRegistrationServiceProvider::class,
         App\Providers\SettingServiceProvider::class,
+        Atomicptr\LaravelGithubStorage\GithubStorageServiceProvider::class,
+
     ])->toArray(),
 
     /*
