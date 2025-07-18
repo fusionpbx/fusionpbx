@@ -118,6 +118,7 @@ Route::middleware(['auth','permission'])->group(function () {
     //LCR
     Route::get('/lcr/export', [LcrController::class, 'export'])->name('lcr.export', 'lcr.export');
     Route::post('/lcr/import', [LcrController::class, 'import'])->name('lcr.import', 'lcr.import');
+    Route::post('/lcr/checkrate', [LcrController::class, 'checkrate'])->name('lcr.checkrate');
     Route::resource('/lcr', LcrController::class)->name('lcr', 'lcr');
 
     // MODULES
