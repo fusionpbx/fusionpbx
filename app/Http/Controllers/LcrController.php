@@ -407,4 +407,31 @@ class LcrController extends Controller
 			'Cache-Control' => 'no-store, no-cache, must-revalidate',
 		]);
 	}
+
+    public function checkrate(Request $request)
+    {
+        $number = preg_replace('/\D/', '', $request->input('number'));
+        $lcr_profile = $request->input('profile');
+        $direction = $request->input('direction');
+        $onlynumber = $request->input('onlynumber');
+
+        $ns = number_series($number);
+
+        $lcr = Lcr::whereIn('digits', $ns)
+            ->whereNull('carrier_uuid')
+            ->where('lcr_profile', $lcr_profile)
+            ->where('lcr_direction', $direction)
+            ->orderByDesc('digits')
+            ->orderByDesc('date_start')
+            ->first();
+
+		if($lcr)
+		{
+        	return $onlynumber == 1 ? response($lcr->rate) : response("{$lcr->rate} {$lcr->currency} per minute.");
+		}
+		else
+		{
+			return response(null);
+		}
+    }
 }

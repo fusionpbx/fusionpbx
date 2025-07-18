@@ -224,3 +224,13 @@ if (!function_exists('github_raw_url')) {
         return $u;
     }
 }
+
+if (!function_exists('number_series')) {
+    function number_series($number) {
+        $ret = [];
+        for ($i = strlen($number); $i > 0; $i--) {
+            $ret[] = substr($number, 0, $i);
+        }
+        return $ret;
+    }
+}

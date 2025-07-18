@@ -74,6 +74,6 @@ class BillingController extends Controller
 
     public function pricing()
     {
-        //
+        return view("pages.billings.pricing");
     }
 }
