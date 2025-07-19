@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2024
+	Portions created by the Initial Developer are Copyright (C) 2010-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -187,6 +187,7 @@
 			$ring_group_strategy = $_POST["ring_group_strategy"];
 			$ring_group_destinations = $_POST["ring_group_destinations"];
 			$ring_group_timeout_action = $_POST["ring_group_timeout_action"];
+			$ring_group_exit_key = $_POST["ring_group_exit_key"] ?? null;
 			$ring_group_call_timeout = $_POST["ring_group_call_timeout"];
 			$ring_group_caller_id_name = $_POST["ring_group_caller_id_name"];
 			$ring_group_caller_id_number = $_POST["ring_group_caller_id_number"];
@@ -369,6 +370,7 @@
 			$array['ring_groups'][0]["ring_group_extension"] = $ring_group_extension;
 			$array['ring_groups'][0]["ring_group_greeting"] = $ring_group_greeting;
 			$array['ring_groups'][0]["ring_group_strategy"] = $ring_group_strategy;
+			$array["ring_groups"][0]["ring_group_exit_key"] = $ring_group_exit_key;
 			$array["ring_groups"][0]["ring_group_call_timeout"] = $ring_group_call_timeout;
 			if (permission_exists('ring_group_caller_id_name')) {
 				$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
@@ -562,10 +564,10 @@
 			$ring_group_name = $row["ring_group_name"];
 			$ring_group_extension = $row["ring_group_extension"];
 			$ring_group_greeting = $row["ring_group_greeting"];
-			$ring_group_context = $row["ring_group_context"];
 			$ring_group_strategy = $row["ring_group_strategy"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
+			$ring_group_exit_key = $row["ring_group_exit_key"];
 			$ring_group_call_timeout = $row["ring_group_call_timeout"];
 			$ring_group_caller_id_name = $row["ring_group_caller_id_name"];
 			$ring_group_caller_id_number = $row["ring_group_caller_id_number"];
@@ -581,6 +583,7 @@
 			$ring_group_forward_enabled = $row["ring_group_forward_enabled"];
 			$ring_group_forward_destination = $row["ring_group_forward_destination"];
 			$ring_group_forward_toll_allow = $row["ring_group_forward_toll_allow"];
+			$ring_group_context = $row["ring_group_context"];
 			$ring_group_enabled = $row["ring_group_enabled"];
 			$ring_group_description = $row["ring_group_description"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -594,9 +597,7 @@
 //set the defaults
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
 	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');;
-	if (empty($ring_group_call_timeout)) {
-		$ring_group_call_timeout = '30';
-	}
+	if (empty($ring_group_call_timeout)) { $ring_group_call_timeout = '30'; }
 	if (empty($ring_group_enabled)) { $ring_group_enabled = 'true'; }
 
 //get the ring group destination array
@@ -1044,13 +1045,24 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "  ".$text['label-ring_group_exit_key']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_exit_key' value='".escape($ring_group_exit_key)."'>\n";
+	echo "<br />\n";
+	echo $text['description-ring_group_exit_key']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='ring_group_call_timeout' maxlength='255' value='".escape($ring_group_call_timeout)."'>\n";
 	echo "<br />\n";
-	echo (!empty($text['description-ring_group_call_timeout']))." \n";
+	echo $text['description-call_timeout']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
