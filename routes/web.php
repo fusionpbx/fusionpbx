@@ -11,6 +11,7 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\BillingDealController;
 use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\CallBlockController;
 use App\Http\Controllers\CarrierController;
@@ -67,6 +68,7 @@ Route::middleware(['auth','permission'])->group(function () {
     // BILLING
     Route::get('/billings/analysis', [BillingController::class, 'analysis'])->name('billings.analysis', 'billings.analysis');
     Route::get('/billings/pricing', [BillingController::class, 'pricing'])->name('billings.pricing', 'billings.pricing');
+    Route::resource('/billings/deals', BillingDealController::class)->names('billings.deals')->parameters(["deals" => "billingDeal"]);
     Route::resource('/billings', BillingController::class)->name('billings', 'billings');
 
     // BRIDGE

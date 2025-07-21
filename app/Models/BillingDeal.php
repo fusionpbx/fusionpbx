@@ -34,7 +34,8 @@ class BillingDeal extends Model
 		'rate',
 		'currency',
 		'billing_deal_notes',
-		'label'
+		'label',
+		'domain_uuid',
 	];
 
     /**

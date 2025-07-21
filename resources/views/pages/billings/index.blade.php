@@ -26,7 +26,7 @@
                     @endif
 
                     @can('billing_deal_view')
-                    <a href="{{ route('billings.deals') }}" class="btn btn-primary btn-sm">
+                    <a href="{{ route('billings.deals.index') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-hand-holding-dollar"></i> {{__('Deals')}}
                     </a>
                     @endcan
