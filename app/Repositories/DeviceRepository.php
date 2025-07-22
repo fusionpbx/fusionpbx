@@ -2,19 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Facades\Setting;
 use App\Models\Device;
 use App\Models\DeviceLine;
 use App\Models\DeviceKey;
 use App\Models\DeviceSetting;
-use App\Facades\Setting;
 use App\Models\DeviceProfile;
 use App\Models\DeviceVendor;
 use App\Models\DeviceVendorFunction;
 use App\Models\Domain;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Exception;
+
 
 class DeviceRepository
 {
@@ -469,8 +470,7 @@ class DeviceRepository
 
     public function getDeviceVendors(): array
     {
-        $vendors = DB::table()
-            ->where('enabled', 'true')
+        $vendors = DeviceVendor::where('enabled', 'true')
             ->orderBy('name', 'asc')
             ->select('name')
             ->get()
@@ -492,10 +492,17 @@ class DeviceRepository
             ->orderBy('f.type', 'asc')
             ->get()
             ->toArray();
+        $result = [];
+        foreach ($functions as $function)
+        {
+            $result[$function['vendor_name']][] = $function;
+        }
 
-        return array_map(function ($function) {
-            return (array) $function;
-        }, $functions);
+        return $$result;
+
+//        return array_map(function ($function) {
+            //return (array) $function;
+//        }, $functions);
     }
 
     public function getUsersForDomain(string $domainUuid): array
