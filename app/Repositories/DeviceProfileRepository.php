@@ -6,6 +6,8 @@ use App\Models\DeviceProfile;
 use App\Models\DeviceProfileKey;
 use App\Models\DeviceProfileSetting;
 use App\Facades\Setting;
+use App\Models\DeviceVendor;
+use App\Models\DeviceVendorFunction;
 use App\Models\Domain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -16,13 +18,6 @@ class DeviceProfileRepository
     protected $deviceProfile;
     protected $deviceProfileKey;
     protected $deviceProfileSetting;
-
-    protected $table = 'v_device_profiles';
-    protected $deviceProfileKeysTable = 'v_device_profile_keys';
-    protected $deviceProfileSettingsTable = 'v_device_profile_settings';
-    protected $deviceVendorsTable = 'v_device_vendors';
-    protected $deviceVendorFunctionsTable = 'v_device_vendor_functions';
-    protected $domainsTable = 'v_domains';
 
     public function __construct(
         DeviceProfile $deviceProfile,
@@ -317,7 +312,7 @@ class DeviceProfileRepository
 
     public function getDeviceVendors(): array
     {
-        $vendors = DB::table($this->deviceVendorsTable)
+        $vendors = DB::table(DeviceVendor::getTableName())
             ->where('enabled', 'true')
             ->orderBy('name', 'asc')
             ->select('name')
@@ -331,8 +326,8 @@ class DeviceProfileRepository
 
     public function getVendorFunctions(): array
     {
-        $functions = DB::table($this->deviceVendorsTable . ' as v')
-            ->join($this->deviceVendorFunctionsTable . ' as f', 'v.device_vendor_uuid', '=', 'f.device_vendor_uuid')
+        $functions = DB::table(DeviceVendor::getTableName(). ' as v')
+            ->join(DeviceVendorFunction::getTableName() . ' as f', 'v.device_vendor_uuid', '=', 'f.device_vendor_uuid')
             ->where('v.enabled', 'true')
             ->where('f.enabled', 'true')
             ->select('v.name as vendor_name', 'f.type', 'f.subtype', 'f.value')

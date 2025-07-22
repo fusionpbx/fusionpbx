@@ -8,7 +8,10 @@ use App\Models\DeviceKey;
 use App\Models\DeviceSetting;
 use App\Facades\Setting;
 use App\Models\DeviceProfile;
+use App\Models\DeviceVendor;
+use App\Models\DeviceVendorFunction;
 use App\Models\Domain;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Exception;
@@ -20,15 +23,6 @@ class DeviceRepository
     protected $deviceKey;
     protected $deviceSetting;
     protected $deviceProfile;
-
-    protected $table = 'v_devices';
-    protected $deviceLinesTable = 'v_device_lines';
-    protected $deviceKeysTable = 'v_device_keys';
-    protected $deviceSettingsTable = 'v_device_settings';
-    protected $deviceVendorsTable = 'v_device_vendors';
-    protected $deviceVendorFunctionsTable = 'v_device_vendor_functions';
-    protected $usersTable = 'v_users';
-    protected $domainsTable = 'v_domains';
 
     public function __construct(
         Device $device,
@@ -74,7 +68,7 @@ class DeviceRepository
     public function checkDuplicateMacAddress(string $macAddress, ?string $excludeDeviceUuid = null): ?string
     {
         $query = $this->device
-            ->join($this->domainsTable . ' as d', 'v_devices.domain_uuid', '=', 'd.domain_uuid')
+            ->join(Domain::getTableName() . ' as d', 'v_devices.domain_uuid', '=', 'd.domain_uuid')
             ->where('device_mac_address', $macAddress)
             ->select('d.domain_name');
 
@@ -475,7 +469,7 @@ class DeviceRepository
 
     public function getDeviceVendors(): array
     {
-        $vendors = DB::table($this->deviceVendorsTable)
+        $vendors = DB::table()
             ->where('enabled', 'true')
             ->orderBy('name', 'asc')
             ->select('name')
@@ -489,8 +483,8 @@ class DeviceRepository
 
     public function getVendorFunctions(): array
     {
-        $functions = DB::table($this->deviceVendorsTable . ' as v')
-            ->join($this->deviceVendorFunctionsTable . ' as f', 'v.device_vendor_uuid', '=', 'f.device_vendor_uuid')
+        $functions = DB::table(DeviceVendor::getTableName() . ' as v')
+            ->join(DeviceVendorFunction::getTableName() . ' as f', 'v.device_vendor_uuid', '=', 'f.device_vendor_uuid')
             ->where('v.enabled', 'true')
             ->where('f.enabled', 'true')
             ->select('v.name as vendor_name', 'f.type', 'f.subtype', 'f.value')
@@ -506,7 +500,7 @@ class DeviceRepository
 
     public function getUsersForDomain(string $domainUuid): array
     {
-        $users = DB::table($this->usersTable)
+        $users = DB::table(User::getTableName())
             ->where('domain_uuid', $domainUuid)
             ->where('user_enabled', 'true')
             ->orderBy('username', 'asc')
