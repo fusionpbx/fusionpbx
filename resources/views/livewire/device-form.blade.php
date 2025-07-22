@@ -667,10 +667,12 @@
 
                                                                     @foreach ($vendorFunctions as $vendor => $vendorData)
                                                                         <optgroup
-                                                                            label="{{ $vendorData['vendor_name'] }}">
-                                                                            <option value="{{ $vendorData['value'] }}">
-                                                                                {{ $vendorData['type'] }}
+                                                                            label="{{ $vendor }}">
+										@foreach ($vendorData as $data)
+                                                                            <option value="{{ $data['value'] }}">
+                                                                                {{ $data['type'] }}
                                                                             </option>
+										@endforeach
 
                                                                         </optgroup>
                                                                     @endforeach

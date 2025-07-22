@@ -495,10 +495,9 @@ class DeviceRepository
         $result = [];
         foreach ($functions as $function)
         {
-            $result[$function['vendor_name']][] = $function;
+            $result[$function->vendor_name][] = json_decode(json_encode($function, true), true);
         }
-
-        return $$result;
+        return $result;
 
 //        return array_map(function ($function) {
             //return (array) $function;
