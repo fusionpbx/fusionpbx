@@ -656,7 +656,6 @@
                                                             </td>
                                                         @endcan
 
-
                                                         <td>
                                                             <div class="template-select-container">
                                                                 <select
@@ -669,8 +668,8 @@
                                                                     @foreach ($vendorFunctions as $vendor => $vendorData)
                                                                         <optgroup
                                                                             label="{{ $vendorData['vendor_name'] }}">
-                                                                            <option value="{{ $template['value'] }}">
-                                                                                {{ $template['value'] }}
+                                                                            <option value="{{ $vendorData['value'] }}">
+                                                                                {{ $vendorData['type'] }}
                                                                             </option>
 
                                                                         </optgroup>
