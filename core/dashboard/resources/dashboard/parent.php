@@ -233,7 +233,7 @@ foreach ($parent_widgets as $row) {
 		$parent_widget_name = $dashboard_path_array[1];
 		$path_array = glob(dirname(__DIR__, 4).'/*/'.$application_name.'/resources/dashboard/'.$parent_widget_name.'.php');
 
-		echo "<div class='parent_widget' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\" id='".$dashboard_name_id."' draggable='false'>\n";
+		echo "<div class='parent_widget' id='".$dashboard_name_id."' draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
