@@ -4,6 +4,7 @@ $array['dashboard'][$x]['dashboard_uuid'] = '9083305a-ebb4-4b67-bb9b-8c09cf03026
 $array['dashboard'][$x]['dashboard_name'] = 'Call Center Agents';
 $array['dashboard'][$x]['dashboard_path'] = 'call_centers/call_center_agents';
 $array['dashboard'][$x]['dashboard_icon'] = '';
+$array['dashboard'][$x]['dashboard_icon_color'] = '';
 $array['dashboard'][$x]['dashboard_url'] = '';
 $array['dashboard'][$x]['dashboard_target'] = '';
 $array['dashboard'][$x]['dashboard_width'] = '';

@@ -1,3 +1,4 @@
+
 <?php
 /*
 	FusionPBX
@@ -105,10 +106,10 @@
 	$sql .= "dashboard_details_state, ";
 	$sql .= "dashboard_order, ";
 	$sql .= "cast(dashboard_enabled as text), ";
-	$sql .= "dashboard_description ";
+	$sql .= "dashboard_description, ";
+	$sql .= "dashboard_parent_uuid ";
 	$sql .= "from v_dashboard as d ";
 	$sql .= "where dashboard_enabled = 'true' ";
-	$sql .= "and dashboard_parent_uuid is null ";
 	$sql .= "and dashboard_uuid in (";
 	$sql .= "	select dashboard_uuid from v_dashboard_groups where group_uuid in (";
 	$sql .= "		".$group_uuids_in." ";
@@ -123,13 +124,25 @@
 		//set the variables from the http values
 		if (isset($_POST["widget_order"])) {
 			$widgets = explode(",", $_POST["widget_order"]);
-			$dashboard_order = '0';
 			$x = 0;
+
 			foreach ($widgets as $widget) {
+				list($widget_id, $parent_id, $order) = explode("|", $widget);
+				$parent_uuid = null;
+
 				foreach ($dashboard as $row) {
 					$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
-					if ($widget == $dashboard_name) {
-						$dashboard_order = $dashboard_order + 10;
+					if ($widget_id == $dashboard_name) {
+						if (!empty($parent_id)) {
+							//find parent uuid
+							foreach ($dashboard as $parent_row) {
+								$parent_dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($parent_row['dashboard_name'])), '_');
+								if ($parent_dashboard_name === $parent_id) {
+									$parent_uuid = $parent_row['dashboard_uuid'];
+									break;
+								}
+							}
+						}
 						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
 						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
 						$array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon'];
@@ -140,8 +153,10 @@
 						$array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target'];
 						$array['dashboard'][$x]['dashboard_width'] = $row['dashboard_width'];
 						$array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height'];
-						$array['dashboard'][$x]['dashboard_order'] = $dashboard_order;
+						$array['dashboard'][$x]['dashboard_order'] = $order;
+						$array['dashboard'][$x]['dashboard_parent_uuid'] = $parent_uuid;
 						$x++;
+						break;
 					}
 				}
 			}
@@ -386,6 +401,11 @@ foreach ($dashboard as $row) {
 			echo "	height: 195px;\n";
 			echo "}\n";
 	}
+	if ($row['dashboard_column_span'] > 1) {
+		echo "#".$dashboard_name." div.parent_widgets.hud_content {\n";
+		echo "	 justify-content: space-evenly;\n";
+		echo "}\n";
+	}
 
 }
 ?>
@@ -576,12 +596,13 @@ function toggle_grid_row_end_all() {
 		$widget_name = $dashboard_path_array[1];
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
 
-		echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
-		if (file_exists($path_array[0])) {
-			include $path_array[0];
+		if (empty($row['dashboard_parent_uuid'])) {
+			echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
+			if (file_exists($path_array[0])) {
+				include $path_array[0];
+			}
+			echo "</div>\n";
 		}
-		echo "</div>\n";
-
 		$x++;
 	}
 	echo "</div>\n";
@@ -632,8 +653,9 @@ function toggle_grid_row_end_all() {
 		</style>
 
 		<script>
-		var widgets = document.getElementById('widgets');
-		var sortable;
+		const widgets = document.getElementById('widgets');
+		let sortable;
+
 		//make widgets draggable
 		function edit_mode(state) {
 
@@ -642,39 +664,85 @@ function toggle_grid_row_end_all() {
 				$('.hud_box').addClass('editable');
 				$('#btn_back, #btn_save').show();
 				$('div.widget').attr('draggable',true).addClass('editable');
+				$('div.parent_widget').attr('draggable',true).addClass('editable');
+
+				function update_widget_order() {
+					let widget_ids_list = [];
+					let order = 10;
+
+					document.querySelectorAll('#widgets > div.widget[id]').forEach(widget => {
+						const widget_id = widget.id;
+
+						//add the widgets to the list
+						widget_ids_list.push(`${widget_id}|null|${order}`);
+						order += 10;
+
+						//add the nested widgets to the list
+						const nested_container = widget.querySelector('.parent_widgets');
+						if (nested_container) {
+							nested_container.querySelectorAll(':scope > div.parent_widget[id]').forEach(nested => {
+								const child_id = nested.id;
+								widget_ids_list.push(`${child_id}|${widget_id}|${order}`);
+								order += 10;
+							});
+						}
+					});
+
+					document.getElementById('widget_order').value = widget_ids_list;
+				}
 
 				sortable = Sortable.create(widgets, {
+					group: 'nested',
 					animation: 150,
-					draggable: ".widget",
+					draggable: '.widget',
 					preventOnFilter: true,
 					ghostClass: 'ghost',
-					onSort: function (evt) {
-						let widget_ids = document.querySelectorAll("#widgets > div[id]");
-						let widget_ids_list = [];
-						for (let i = 0; i < widget_ids.length; i++) {
-							widget_ids_list.push(widget_ids[i].id);
-						}
-						document.getElementById('widget_order').value = widget_ids_list;
+					onSort: update_widget_order,
+					onAdd: function (evt) {
+						evt.item.classList.add('widget');
+						update_widget_order();
+					},
+					onRemove: function (evt) {
+						evt.item.classList.remove('widget');
+						update_widget_order();
 					},
 				});
 
-				// set initial widget order
-				let widget_ids = document.querySelectorAll("#widgets > div[id]");
-				let widget_ids_list = [];
-				for (let i = 0; i < widget_ids.length; i++) {
-					widget_ids_list.push(widget_ids[i].id);
-				}
-				document.getElementById('widget_order').value = widget_ids_list;
+				document.querySelectorAll('.parent_widgets').forEach(function(container) {
+					Sortable.create(container, {
+						group: 'nested',
+						animation: 150,
+						draggable: '.parent_widget',
+						ghostClass: 'ghost',
+						fallbackOnBody: true,
+						onSort: update_widget_order,
+						onAdd: function (evt) {
+							evt.item.classList.add('parent_widget');
+							update_widget_order();
+						},
+						onRemove: function (evt) {
+							evt.item.classList.remove('parent_widget');
+							update_widget_order();
+						},
+					});
+				});
 
 			}
 			else { // off
 
 				$('div.widget').attr('draggable',false).removeClass('editable');
+				$('div.parent_widget').attr('draggable',false).removeClass('editable');
 				$('.hud_box').removeClass('editable');
 				$('#btn_back, #btn_save').hide();
 				$('span#expand_contract, #btn_edit, #btn_add').show();
 
 				sortable.option('disabled', true);
+				document.querySelectorAll('.parent_widgets').forEach(el => {
+				const nested_sortable = Sortable.get(el);
+					if (nested_sortable) {
+						nested_sortable.option('disabled', true);
+					}
+				});
 
 			}
 		}
