@@ -70,11 +70,9 @@ $row_style["1"] = "row_style1";
 //icon and count
 echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
 	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".$text['title']."</a></span>\n";
-	echo "<div class='hud_content'>\n";
-		echo "<div style='position: relative; display: inline-block;'>\n";
-			echo "<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
-			echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#03c04a')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
-		echo "</div>\n";
+	echo "<div style='position: relative; display: inline-block;'>\n";
+		echo "<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
+		echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#03c04a')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
 	echo "</div>\n";
 echo "</div>\n";
 
