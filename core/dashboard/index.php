@@ -135,10 +135,10 @@
 					if ($widget_id == $dashboard_name) {
 						if (!empty($parent_id)) {
 							//find parent uuid
-							foreach ($dashboard as $p_row) {
-								$p_dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($p_row['dashboard_name'])), '_');
-								if ($p_dashboard_name === $parent_id) {
-									$parent_uuid = $p_row['dashboard_uuid'];
+							foreach ($dashboard as $parent_row) {
+								$parent_dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($parent_row['dashboard_name'])), '_');
+								if ($parent_dashboard_name === $parent_id) {
+									$parent_uuid = $parent_row['dashboard_uuid'];
 									break;
 								}
 							}
