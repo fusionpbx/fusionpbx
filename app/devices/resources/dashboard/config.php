@@ -5,6 +5,7 @@ $array['dashboard'][$x]['dashboard_uuid'] = 'f1c722d5-b714-4fa2-9664-5f6d24d4466
 $array['dashboard'][$x]['dashboard_name'] = 'Device Keys';
 $array['dashboard'][$x]['dashboard_path'] = 'devices/device_keys';
 $array['dashboard'][$x]['dashboard_icon'] = '';
+$array['dashboard'][$x]['dashboard_icon_color'] = '';
 $array['dashboard'][$x]['dashboard_url'] = '';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
