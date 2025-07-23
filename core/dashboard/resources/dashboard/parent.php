@@ -23,6 +23,7 @@
 	$sql .= "dashboard_name, ";
 	$sql .= "dashboard_path, ";
 	$sql .= "dashboard_icon, ";
+	$sql .= "dashboard_icon_color, ";
 	$sql .= "dashboard_url, ";
 	$sql .= "dashboard_target, ";
 	$sql .= "dashboard_width, ";
@@ -38,9 +39,12 @@
 	$sql .= "dashboard_label_background_color_hover, ";
 	$sql .= "dashboard_number_text_color, ";
 	$sql .= "dashboard_number_text_color_hover, ";
+	$sql .= "dashboard_number_background_color, ";
 	$sql .= "dashboard_background_color, ";
 	$sql .= "dashboard_background_color_hover, ";
 	$sql .= "dashboard_detail_background_color, ";
+	$sql .= "dashboard_background_gradient_style, ";
+	$sql .= "dashboard_background_gradient_angle, ";
 	$sql .= "dashboard_column_span, ";
 	$sql .= "dashboard_row_span, ";
 	$sql .= "dashboard_details_state, ";
@@ -62,110 +66,125 @@
 		$window_parameters .= "width=".$dashboard_width.",height=".$dashboard_height;
 	}
 
-//dashboard settings
-	echo "<style>\n";
-	foreach ($parent_widgets as $row) {
-		$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
-		if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
-			echo "#".$dashboard_name." .hud_title {\n";
-			if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
-			if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
-			echo "}\n";
-		}
-		if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
-			echo "#".$dashboard_name.":hover .hud_title {\n";
-			if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
-			if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
-			echo "}\n";
-		}
-		if (!empty($row['dashboard_number_text_color'])) {
-			echo "#".$dashboard_name." .hud_stat {\n";
-			echo "	color: ".$row['dashboard_number_text_color'].";\n";
-			echo "}\n";
-		}
-		if (!empty($row['dashboard_number_text_color_hover'])) {
-			echo "#".$dashboard_name.":hover .hud_stat {\n";
-			echo "	color: ".$row['dashboard_number_text_color_hover'].";\n";
-			echo "}\n";
-		}
-		if (!empty($row['dashboard_background_color'])) {
-			$background_color = json_decode($row['dashboard_background_color'], true);
-			echo "#".$dashboard_name." {\n";
-			echo "	background: ".$background_color[0].";\n";
-			echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
-			echo "}\n";
-		}
-		if (!empty($row['dashboard_background_color_hover'])) {
-			$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-			echo "#".$dashboard_name.":hover {\n";
-			echo "	background: ".$background_color_hover[0].";\n";
-			echo "	background-image: linear-gradient(to right, ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
-			echo "}\n";
-		}
-		if (!empty($row['dashboard_detail_background_color'])) {
-			$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
-			echo "#".$dashboard_name." .hud_details {\n";
-			echo "	background: ".$detail_background_color[0].";\n";
-			echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
-			echo "}\n";
-		}
-		if ($row['dashboard_label_enabled'] == 'false') {
-			echo "#".$dashboard_name." .hud_title {\n";
-			echo "	display: none;\n";
-			echo "}\n";
-			echo "#".$dashboard_name." .hud_content {\n";
-			echo "	align-content: center;\n";
-			echo "}\n";
-		}
-		if ($row['dashboard_path'] == "dashboard/icon") {
-			echo "#".$dashboard_name.",\n";
-			echo "#".$dashboard_name." span.hud_title,\n";
-			echo "#".$dashboard_name." span.hud_stat {\n";
-			echo "	transition: .4s;\n";
-			echo "	border-radius: 5px;\n";
-			echo "}\n";
-		}
-		switch ($row['dashboard_row_span']) {
-			case 1:
-				echo "#".$dashboard_name." .hud_content {\n";
-				echo "	height: 89.5px;\n";
-				echo "}\n";
-				echo "#".$dashboard_name." .hud_stat {\n";
-				echo "	line-height: 0;\n";
-				echo "	font-size: 30pt;\n";
-				echo "}\n";
-				echo "#".$dashboard_name." .hud_chart {\n";
-				echo "	height: 54px;\n";
-				echo "	width: 180px;\n";
-				echo "	padding-top: 0;\n";
-				echo "}\n";
-				echo "#".$dashboard_name." div.hud_content .fas {\n";
-				echo "	line-height: 0;\n";
-				echo "	font-size: 24pt;\n";
-				echo "}\n";
-				break;
-			case 2:
-				echo "#".$dashboard_name." .hud_content {\n";
-				echo "	height: 195px;\n";
-				echo "}\n";
-				break;
-			case 3:
-				echo "#".$dashboard_name." .hud_content {\n";
-				echo "	height: 300.5px;\n";
-				echo "}\n";
-				break;
-		}
+?>
+
+<style>
+
+div.parent_widgets .hud_content {
+	align-content: center;
+}
+
+div.parent_widgets {
+	row-gap: 1rem;
+}
+
+div.parent_widget div.hud_box:first-of-type {
+	min-width: 120px;
+	flex: 0 0 33.3333%;
+	box-sizing: border-box;
+	box-shadow: none;
+	-webkit-transition: .1s;
+	-moz-transition: .1s;
+	transition: .1s;
+}
+
+div.parent_widget:has(i) div.hud_box {
+	max-height: 89.5px;
+}
+
+div.parent_widget:hover:has(i) div.hud_box,
+div.parent_widget.editable:hover:has(i) div.hud_box {
+	transform: scale(1.05, 1.05);
+	-webkit-transition: .1s;
+	-moz-transition: .1s;
+	transition: .1s;
+}
+
+/* dashboard settings */
+<?php
+foreach ($parent_widgets as $row) {
+	$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
+	if (!empty($row['dashboard_icon_color'])) {
+		echo "#".$dashboard_name." .hud_stat:has(i) {\n";
+		echo "	color: ".$row['dashboard_icon_color'].";\n";
+		echo "}\n";
 	}
-	echo "</style>\n";
+	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
+		echo "#".$dashboard_name." .hud_title {\n";
+		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
+		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
+		echo "#".$dashboard_name.":hover .hud_title {\n";
+		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
+		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_number_text_color'])) {
+		echo "#".$dashboard_name." .hud_stat {\n";
+		echo "	color: ".$row['dashboard_number_text_color'].";\n";
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_number_text_color_hover'])) {
+		echo "#".$dashboard_name.":hover .hud_stat {\n";
+		echo "	color: ".$row['dashboard_number_text_color_hover'].";\n";
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_background_color'])) {
+		$background_color = json_decode($row['dashboard_background_color'], true);
+		echo "#".$dashboard_name." {\n";
+		echo "	background: ".$background_color[0].";\n";
+		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_background_color_hover'])) {
+		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
+		echo "#".$dashboard_name.":hover {\n";
+		echo "	background: ".$background_color_hover[0].";\n";
+		echo "	background-image: linear-gradient(to right, ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_detail_background_color'])) {
+		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
+		echo "#".$dashboard_name." .hud_details {\n";
+		echo "	background: ".$detail_background_color[0].";\n";
+		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
+		echo "}\n";
+	}
+	if ($row['dashboard_label_enabled'] == 'false') {
+		echo "#".$dashboard_name." .hud_title {\n";
+		echo "	display: none;\n";
+		echo "}\n";
+		echo "#".$dashboard_name." .hud_content {\n";
+		echo "	align-content: center;\n";
+		echo "}\n";
+	}
+	if ($row['dashboard_path'] == "dashboard/icon") {
+		echo "#".$dashboard_name.",\n";
+		echo "#".$dashboard_name." span.hud_title,\n";
+		echo "#".$dashboard_name." span.hud_stat {\n";
+		echo "	transition: .4s;\n";
+		echo "	border-radius: 5px;\n";
+		echo "}\n";
+	}
+}
+?>
+
+</style>
+
+<?php
 
 //include the dashboards
-	echo "<div class='hud_box' style='width: 100%; overflow: scroll;'>\n";
-	echo "	<div class='hud_content'>\n";
+	echo "<div class='hud_box'>\n";
+	echo "	<div class='parent_widgets hud_content'>\n";
 
 	$x = 0;
 	foreach ($parent_widgets as $row) {
-		$dashboard_name = $row['dashboard_name'];
-		$dashboard_label = $row['dashboard_name'];
+		//set the variables
+		$dashboard_uuid = $row['dashboard_uuid'] ?? '';
+		$dashboard_name = $row['dashboard_name'] ?? '';
+		$dashboard_label = $row['dashboard_name'] ?? '';
 		$dashboard_icon = $row['dashboard_icon'] ?? '';
 		$dashboard_url = $row['dashboard_url'] ?? '';
 		$dashboard_target = $row['dashboard_target'] ?? '';
@@ -174,18 +193,50 @@
 		$dashboard_content = $row['dashboard_content'] ?? '';
 		$dashboard_content_text_align = $row['dashboard_content_text_align'] ?? '';
 		$dashboard_content_details = $row['dashboard_content_details'] ?? '';
-		//$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
-		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color');
-		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color');
-		//$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
-		//$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
-		//if ($dashboard_details_state == "expanded") {
-		//	$dashboard_row_span += 3;
-		//}
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
+		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
+		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
+		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
+		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
+		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
 
-		echo "<div class='icon_widget' style='width: 120px; margin: 15px 15px 8px 15px;' id='".trim(preg_replace("/[^a-z]/", '_', strtolower($dashboard_name)),'_')."' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\" draggable='false'>\n";
-		echo "	<span class='hud_title'>".escape($dashboard_label)."</span>";
-		echo "	<span class='hud_stat' style='padding: 0 0 7px 0;'><i class=\"fas ".$dashboard_icon."\" style='font-size: 24pt;'></i></span>\n";
+		//define the regex patterns
+		$uuid_pattern = '/[^-A-Fa-f0-9]/';
+		$number_pattern = '/[^-A-Za-z0-9()*#]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?:\=#\n]/';
+
+		//sanitize the data
+		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
+		$dashboard_name = trim(preg_replace($text_pattern, '', $dashboard_name));
+		$dashboard_name_id = trim(preg_replace("/[^a-z_]/", '_', strtolower($dashboard_name)),'_');
+		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
+		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
+		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
+		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
+		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
+		$dashboard_content = preg_replace($text_pattern, '', $dashboard_content);
+		$dashboard_content = str_replace("\n", '<br />', $dashboard_content);
+		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
+		$dashboard_content_details = preg_replace($text_pattern, '', $dashboard_content_details);
+		$dashboard_content_details = str_replace("\n", '<br />', $dashboard_content_details);
+		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
+		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
+		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
+		$dashboard_number_background_color = preg_replace($text_pattern, '', $dashboard_number_background_color);
+		$dashboard_details_state = preg_replace($text_pattern, '', $dashboard_details_state);
+		$dashboard_row_span = preg_replace($number_pattern, '', $dashboard_row_span);
+		$dashboard_path = preg_replace($text_pattern, '', strtolower($row['dashboard_path']));
+
+		//find the application and widget
+		$dashboard_path_array = explode('/', $dashboard_path);
+		$application_name = $dashboard_path_array[0];
+		$parent_widget_name = $dashboard_path_array[1];
+		$path_array = glob(dirname(__DIR__, 4).'/*/'.$application_name.'/resources/dashboard/'.$parent_widget_name.'.php');
+
+		echo "<div class='parent_widget' onclick=\"window.open('".$dashboard_url."', '".$dashboard_target."', '".$window_parameters."')\" id='".$dashboard_name_id."' draggable='false'>\n";
+		if (file_exists($path_array[0])) {
+			include $path_array[0];
+		}
 		echo "</div>\n";
 	}
 
