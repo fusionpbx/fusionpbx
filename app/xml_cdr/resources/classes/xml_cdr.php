@@ -549,7 +549,7 @@
 							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
-						if (isset($xml->variables->bridge_uuid)) {
+						if (isset($xml->variables->bridge_uuid) && !empty($xml->variables->bridge_uuid)) {
 							//call was bridged
 							$missed_call = 'false';
 						}
