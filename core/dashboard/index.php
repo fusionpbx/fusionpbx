@@ -175,7 +175,6 @@
 		}
 	}
 
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
