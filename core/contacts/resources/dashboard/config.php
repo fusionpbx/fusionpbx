@@ -5,6 +5,7 @@ $array['dashboard'][$x]['dashboard_uuid'] = '3b0cbb2f-733d-4646-8332-7d108808f2f
 $array['dashboard'][$x]['dashboard_name'] = 'Contacts';
 $array['dashboard'][$x]['dashboard_path'] = 'dashboard/icon';
 $array['dashboard'][$x]['dashboard_icon'] = 'fa-regular fa-address-card';
+$array['dashboard'][$x]['dashboard_icon_color'] = '#0292ff';
 $array['dashboard'][$x]['dashboard_url'] = '/core/contacts/contacts.php';
 $array['dashboard'][$x]['dashboard_target'] = 'self';
 $array['dashboard'][$x]['dashboard_width'] = '';
