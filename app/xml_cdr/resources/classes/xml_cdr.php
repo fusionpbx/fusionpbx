@@ -549,8 +549,8 @@
 							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
-						if (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
-							//answered call
+						if (isset($xml->variables->bridge_uuid) && !empty($xml->variables->bridge_uuid)) {
+							//call was bridged
 							$missed_call = 'false';
 						}
 						if (isset($xml->variables->cc_side) && $xml->variables->cc_side == 'member'
