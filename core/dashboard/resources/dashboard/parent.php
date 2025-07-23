@@ -176,7 +176,7 @@ foreach ($parent_widgets as $row) {
 <?php
 
 //include the dashboards
-	echo "<div class='hud_box'>\n";
+	echo "<div class='hud_box' style='overflow: scroll;'>\n";
 	echo "	<div class='parent_widgets hud_content'>\n";
 
 	$x = 0;
