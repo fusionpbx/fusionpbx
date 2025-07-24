@@ -29,21 +29,23 @@
     <alert_external_ring_sound perm="">{if isset($snom_alert_external)}{$snom_alert_external}{else}Ringer1{/if}</alert_external_ring_sound>
     <alert_group_ring_text perm="">alert-group</alert_group_ring_text>
     <alert_group_ring_sound perm="">{if isset($snom_alert_group)}{$snom_alert_group}{else}Ringer1{/if}</alert_group_ring_sound>
-    <!-- Wallpaper (480x272px PNG)-->
-    <custom_bg_image_url perm="">{if isset($snom_wallpaper_url_d785)}{$snom_wallpaper_url_d785}{else}{$snom_wallpaper_url}{/if}</custom_bg_image_url>
-    <!-- Expansion Mod (480x1280px PNG <2MB) -->
-    <expansion_module_background_image perm="">{if isset($snom_exp_wallpaper_url_d785)}{$snom_exp_wallpaper_url_d785}{else}{$snom_exp_wallpaper_url}{/if}</expansion_module_background_image>
+    <!-- Wallpaper (1280x720px PNG)-->
+    <custom_bg_image_url perm="">{if isset($snom_wallpaper_url_d812)}{$snom_wallpaper_url_d812}{else}{$snom_wallpaper_url}{/if}</custom_bg_image_url>
+    <!-- Expansion Mod (___x___px PNG <2MB) -->
+    <expansion_module_background_image perm="">{if isset($snom_exp_wallpaper_url_d812)}{$snom_exp_wallpaper_url_d812}{else}{$snom_exp_wallpaper_url}{/if}</expansion_module_background_image>
     <!-- SIP Settings -->
     <mwi_notification perm="">silent</mwi_notification>
     <mwi_dialtone perm="">stutter</mwi_dialtone>
     <enable_rport_rfc3581 perm="RW">on</enable_rport_rfc3581>
     <privacy_in perm="">off</privacy_in>
     <privacy_out perm="">off</privacy_out>
-    <quick_transfer perm="">blind</quick_transfer>
+    <quick_transfer perm="">{if isset($snom_quick_transfer)}{$snom_quick_transfer}{else}new_call{/if}</quick_transfer>
+    <transfer_dialing_on_transfer perm="">{if isset($snom_transfer_dialing_on_transfer)}{$snom_transfer_dialing_on_transfer}{else}blind{/if}</transfer_dialing_on_transfer>
+    <transfer_dialing_on_other perm="">{if isset($snom_transfer_dialing_on_other)}{$snom_transfer_dialing_on_other}{else}blind{/if}</transfer_dialing_on_other>
     <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
     <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
-    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d785}</firmware>
+    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d812}</firmware>
     <firmware_uxm perm="R">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
     <setting_server perm="RW">{if isset($snom_provision_url)}{$snom_provision_url}{else}https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}{/if}</setting_server>
     <settings_refresh_timer perm="RW">{if isset($snom_provision_timer_seconds)}{$snom_provision_timer_seconds}{else}0{/if}</settings_refresh_timer>
@@ -102,7 +104,8 @@
   <tbook e="2" complete="true">
     {foreach $contacts as $row}
     <item context="active" type="{if $row.category == "extensions"}colleagues{else}none{/if}" index="{$row@index}">
-      <name>{$row.contact_name_given} {$row.contact_name_family}</name>
+      <first_name>{$row.contact_name_given}</first_name>
+      <last_name>{$row.contact_name_family}</last_name>
       <number>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</number>
     </item>
     {/foreach}
