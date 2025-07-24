@@ -37,7 +37,7 @@
 		<item name="account.{$line}.name">{$row.display_name}</item>
 
 		<!-- SIP Server -->
-		<item name="account.{$line}.sip.server.1.address">{$row.server_address}</item>
+		<item name="account.{$line}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
 
 		<!-- SIP User ID -->
 		<item name="account.{$line}.sip.userid">{$row.user_id}</item>
@@ -104,7 +104,7 @@
 		<!-- UDP, TCP, TlsOrTcp -->
 		<item name="account.{$line}.sip.transport">{if $row.sip_transport=='tcp'}TCP{elseif $row.sip_transport=='tls'}TlsOrTcp{else}UDP{/if}</item>
 		<!-- Local SIP Port -->
-		<item name="account.{$line}.sip.localPort">{$row.sip_port}</item>
+		<item name="account.{$line}.sip.localPort">0</item>
 		<!-- SIP URI Scheme When Using TLS -->
 		<!-- sip, sips -->
 		<item name="account.{$line}.sip.uriSchemeWhenUsingTls">sip</item>
@@ -943,10 +943,10 @@
 		Wellington, New Zealand - NZST-12NZDT-13,M9.5.0/02:00:00,M3.5.0/03:00:00
 		Fiji - TZd-12
 		Nukualofa, Tonga - TZe-13 -->
-		<item name="dateTime.timezone">AST4ADT</item>
+		<item name="dateTime.timezone">{$grandstream_gxp_time_zone}</item>
 		<!-- Time Display Format -->
 		<!-- 12Hour, 24Hour -->
-		<item name="dateTime.format.time">24Hour</item>
+		<item name="dateTime.format.time">{$grandstream_24hr_time_display}</item>
 		<!-- Date Display Format -->
 		<!-- yyyy-mm-dd, mm-dd-yyyy, dd-mm-yyyy, Normal -->
 		<item name="dateTime.format.date">Normal</item>
