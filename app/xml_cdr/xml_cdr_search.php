@@ -75,8 +75,29 @@
 	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
 
-//get the list of call center queues
-	if (permission_exists('xml_cdr_call_center_queue')) {
+
+//get the ring groups
+	if (permission_exists('xml_cdr_search_ring_groups')) {
+		$sql = "select ring_group_uuid, ring_group_name, ring_group_extension from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and ring_group_enabled = 'true' ";
+		$sql .= "order by ring_group_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$ring_groups = $database->select($sql, $parameters, 'all');
+	}
+
+//get the ivr menus
+	if (permission_exists('xml_cdr_search_ivr_menus')) {
+		$sql = "select ivr_menu_uuid, ivr_menu_name, ivr_menu_extension from v_ivr_menus ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and ivr_menu_enabled = 'true' ";
+		$sql .= "order by ivr_menu_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$ivr_menus = $database->select($sql, $parameters, 'all');
+	}
+
+//get the call center queues
+	if (permission_exists('xml_cdr_search_call_center_queues')) {
 		$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_extension asc ";
@@ -246,10 +267,10 @@
 			echo "	</tr>";
 		}
 		echo "</table>";
-	
+
 	echo "		</td>";
 	echo "		<td width='50%' style='vertical-align: top;'>\n";
-	
+
 		echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>";
 		echo "		<td width='30%' class='vncell'>".$text['label-billsec']."</td>";
@@ -356,13 +377,13 @@
 		}
 
 		echo "</table>\n";
-	
+
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>\n";
 	echo "<br><br>";
-	
+
 	echo "</form>";
 
 //include footer
