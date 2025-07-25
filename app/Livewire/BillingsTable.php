@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Facades\Setting;
 use App\Models\Billing;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -123,21 +124,64 @@ class BillingsTable extends DataTableComponent
             Column::make("Billing uuid", "billing_uuid")->hideIf(true),
 
             Column::make("Organization", "contactTo.contact_organization")
-                ->sortable(),
+                ->format(function ($value, $row, Column $column) {
+			        $json_url = route('billings.export', $row->billing_uuid) . '?format=json&prefix=XXX';
+			        $csv_url = route('billings.export', $row->billing_uuid) . '?format=csv&prefix=XXX';
+
+                    return $value . "<br><small>JSON rates: {$json_url}<br/>CSV rates: {$csv_url}</small>";
+                })
+                ->sortable()
+                ->html(),
 
             Column::make("Given name", "contactTo.contact_name_given")
                 ->sortable(),
 
             Column::make("Family name", "contactTo.contact_name_family")
                 ->sortable(),
+
+            Column::make("Balance", "balance")
+                ->format(function ($value, $row, Column $column) {
+                    $value = "";
+
+                    if(($row->credit_type == 'postpaid') && (strlen($row->whmcs_user_id)))
+                    {
+                        $value = 'WHMCS is handling the balance';
+                    }
+                    else
+                    {
+                        $value = $row->balance . " " . $row->currency;
+                    }
+
+                    return $value;
+                })
+                ->sortable(),
         ];
     }
 
     public function builder(): Builder
     {
-        $query = Billing::query()
-            ->where('v_billings.domain_uuid', Session::get('domain_uuid'))
-            ->orderBy('billing_uuid', 'asc');
+        $query = Billing::with('contactTo')
+            ->select([
+                'v_billings.*',
+                DB::raw('0 AS depth'),
+                DB::raw('(SELECT COUNT(*) FROM ' . Billing::getTableName() . ' bb WHERE bb.parent_billing_uuid = v_billings.billing_uuid GROUP BY bb.parent_billing_uuid) AS child_count'),
+                DB::raw('type_value AS path')
+            ]);
+
+		if(!auth()->user()->hasGroup('superadmin'))
+        {
+			if(auth()->user()->hasGroupup('admin'))
+            {
+				$query->where("v_contacts.domain_uuid", Session::get('domain_uuid'));
+			}
+			else
+            {
+				$query->where("contact_uuid", Setting::getSetting("user", "contact_uuid"));
+			}
+		}
+
+        $query->orderBy('path');
+
         return $query;
     }
 }
