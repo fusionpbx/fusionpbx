@@ -595,6 +595,12 @@
 													$y++;
 												}
 
+											//include extension settings, if exists
+												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extension_settings/app_config.php")) {
+													$array['extension_settings'][$x]['extension_uuid'] = $record['uuid'];
+													$array['extension_settings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+												}
+
 											//create array of voicemail ids
 												if ($this->delete_voicemail && permission_exists('voicemail_delete')) {
 													if (is_numeric($extensions[$x]['extension'])) { $voicemail_ids[] = $extensions[$x]['extension']; }
@@ -631,7 +637,7 @@
 											}
 
 										//delete voicemail boxes
-											if (is_array($voicemails) && @sizeof($voicemails) != 0) {
+											if (!empty($voicemails) && is_array($voicemails)) {
 												$obj = new voicemail;
 												$obj->voicemail_delete($voicemails);
 											}
@@ -643,6 +649,7 @@
 									$p->add('follow_me_delete', 'temp');
 									$p->add('follow_me_destination_delete', 'temp');
 									$p->add('ring_group_destination_delete', 'temp');
+									$p->add('extension_setting_delete', 'temp');
 
 								//execute delete
 									$this->database->app_name = $this->app_name;
@@ -655,6 +662,7 @@
 									$p->delete('follow_me_delete', 'temp');
 									$p->delete('follow_me_destination_delete', 'temp');
 									$p->delete('ring_group_destination_delete', 'temp');
+									$p->delete('extension_setting_delete', 'temp');
 
 								//clear the cache
 									foreach ($extensions as $x => $extension) {
