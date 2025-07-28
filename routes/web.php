@@ -69,7 +69,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::match(['get', 'post'], '/billings/analysis', [BillingController::class, 'analysis'])->name('billings.analysis', 'billings.analysis');
     Route::get('/billings/pricing', [BillingController::class, 'pricing'])->name('billings.pricing', 'billings.pricing');
     Route::resource('/billings/deals', BillingDealController::class)->names('billings.deals')->parameters(["deals" => "billingDeal"]);
-    Route::get('/billings/{billing}/export', [BillingDealController::class, 'export'])->name('billings.export', 'billings.export');
+    Route::get('/billings/{billing}/export', [BillingController::class, 'export'])->name('billings.export', 'billings.export');
     Route::resource('/billings', BillingController::class)->name('billings', 'billings');
 
     // BRIDGE

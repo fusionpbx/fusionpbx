@@ -1,6 +1,7 @@
 <?php
 
 use App\Facades\Setting;
+use App\Models\RateConversion;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -232,5 +233,28 @@ if (!function_exists('number_series')) {
             $ret[] = substr($number, 0, $i);
         }
         return $ret;
+    }
+}
+
+if (!function_exists('currency_convert_rate')) {
+    function currency_convert_rate($to='USD',$from='USD', $debug=false){
+        $currency_ttl = Setting::getSetting('billing', 'currency_database_cache_ttl', 'numeric') ?? 0;
+
+        $rateConversion = RateConversion::where("from_iso4217", $from)
+        ->where("to_iso4217", $to)
+        ->when($currency_ttl >= 0, function ($query) use ($currency_ttl) {
+            $query->where('rate_epoch', '>=', (int)$currency_ttl);
+        })
+        ->orderBy("rate_epoch", "desc")
+        ->limit(1)
+        ->first();
+
+        return $rateConversion->rate ?? 0;
+    }
+}
+
+if (!function_exists('currency_convert')) {
+    function currency_convert($money, $to='USD', $from='USD'){
+        return (double) $money * currency_convert_rate($to, $from);
     }
 }

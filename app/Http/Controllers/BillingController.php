@@ -221,4 +221,92 @@ class BillingController extends Controller
     {
         return view("pages.billings.pricing");
     }
+
+	public function export(Billing $billing, Request $request)
+	{
+		$answer = [];
+
+		$lcr_profile = $billing->lcr_profile;
+		$currency = $billing->currency;
+		$format = $request->query('format');
+		$prefix = $request->query('prefix');
+		$filename = $billing->billing_uuid;
+
+		if(!empty($lcr_profile))
+		{
+			$digits = Lcr::query()
+				->select('digits')
+				->whereNull('carrier_uuid')
+				->when(strlen($prefix) > 0, function ($query) use ($prefix) {
+					$query->where('digits', 'like', $prefix . '%');
+				})
+				->distinct()
+				->orderByDesc('digits')
+				->pluck('digits');
+
+			foreach($digits as $d)
+			{
+				$ns = number_series($d);
+
+				$lcr = Lcr::query()
+					->whereNull('carrier_uuid')
+					->where('lcr_profile', $lcr_profile)
+					->whereIn('digits', $ns)
+					->orderByDesc('digits')
+					->limit(1)
+					->first();
+
+				if($lcr->currency != $currency)
+				{
+					$lcr->rate = number_format(currency_convert($lcr->rate, $currency, $lcr->currency), 5);
+					$lcr->intrastate_rate = number_format(currency_convert($lcr->intrastate_rate, $currency, $lcr->currency), 5);
+					$lcr->intralata_rate = number_format(currency_convert($lcr->intralata_rate, $currency, $lcr->currency), 5);
+					$lcr->connect_rate = number_format(currency_convert($lcr->connect_rate, $currency, $lcr->currency), 5);
+					$lcr->currency = $currency;
+				}
+
+				$lcr->digits = $d;
+				$lcr->lcr_profile = $lcr_profile;
+
+				$answer[] = $lcr;
+			}
+		}
+
+		switch($format)
+		{
+			case "csv":
+				$contentType = "text/csv";
+				break;
+			case "json":
+				$contentType = "application/json";
+				$answer = json_encode($answer, JSON_PRETTY_PRINT);
+				break;
+			default:
+				$contentType = "";
+		}
+
+		return response()->streamDownload(function () use ($answer) {
+			$output = fopen('php://output', 'w');
+
+			if(is_array($answer))
+			{
+				fputcsv($output, array_keys($answer[0]->getAttributes()));
+
+				foreach($answer as $a)
+				{
+					fputcsv($output, array_values($a->getAttributes()));
+				}
+			}
+			else
+			{
+				echo $answer;
+			}
+
+			fclose($output);
+		}, $filename, [
+			'Content-Type' => $contentType,
+			'Content-Disposition' => "attachment; filename={$filename}",
+			'Cache-Control' => 'no-store, no-cache, must-revalidate',
+		]);
+	}
 }
