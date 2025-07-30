@@ -53,6 +53,11 @@
 	$sql .= "dashboard_description ";
 	$sql .= "from v_dashboard as d ";
 	$sql .= "where dashboard_enabled = 'true' ";
+	$sql .= "and dashboard_uuid in (";
+	$sql .= "	select dashboard_uuid from v_dashboard_groups where group_uuid in (";
+	$sql .= "		".$group_uuids_in." ";
+	$sql .= "	)";
+	$sql .= ")";
 	$sql .= "and dashboard_parent_uuid = :dashboard_uuid ";
 	$sql .= "order by dashboard_order, dashboard_name asc ";
 	$parameters['dashboard_uuid'] = $dashboard_uuid;
@@ -70,26 +75,35 @@
 
 <style>
 
-div.parent_widgets .hud_content {
-	align-content: center;
-}
-
 div.parent_widgets {
+	max-width: 100%;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 	row-gap: 1rem;
 }
 
 div.parent_widget div.hud_box:first-of-type {
-	min-width: 120px;
-	flex: 0 0 33.3333%;
-	box-sizing: border-box;
+	/*min-width: 120px;*/
+	background: rgba(0,0,0,0);
+	border: 0px dashed rgba(0,0,0,0);
 	box-shadow: none;
+	overflow: visible;
 	-webkit-transition: .1s;
 	-moz-transition: .1s;
 	transition: .1s;
 }
 
-div.parent_widget:has(i) div.hud_box {
-	max-height: 89.5px;
+div.parent_widget.editable div.hud_box:first-of-type {
+	border: 1px dashed rgba(0,0,0,0.4);
+}
+
+div.parent_widget:not(:has(.parent_widgets)) .hud_content {
+	align-content: center;
+}
+
+div.parent_widget div.hud_chart  {
+	padding: 7px;
 }
 
 div.parent_widget:hover:has(i) div.hud_box,
@@ -103,7 +117,7 @@ div.parent_widget.editable:hover:has(i) div.hud_box {
 /* dashboard settings */
 <?php
 foreach ($parent_widgets as $row) {
-	$dashboard_name = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($row['dashboard_name'])),'_');
+	$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 	if (!empty($row['dashboard_icon_color'])) {
 		echo "#".$dashboard_name." .hud_stat:has(i) {\n";
 		echo "	color: ".$row['dashboard_icon_color'].";\n";
@@ -168,6 +182,16 @@ foreach ($parent_widgets as $row) {
 		echo "	border-radius: 5px;\n";
 		echo "}\n";
 	}
+	if ($row['dashboard_column_span'] > 1) {
+		echo "#".$dashboard_name.".parent_widget {\n";
+		echo "	grid-column: span ".preg_replace($number_pattern, '', $row['dashboard_column_span']).";\n";
+		echo "}\n";
+	}
+	else if ($row['dashboard_row_span'] > 1) {
+		echo "#".$dashboard_name.".parent_widget {\n";
+		echo "	grid-column: span 2;\n";
+		echo "}\n";
+	}
 }
 ?>
 
@@ -176,8 +200,8 @@ foreach ($parent_widgets as $row) {
 <?php
 
 //include the dashboards
-	echo "<div class='hud_box' style='overflow: scroll;'>\n";
-	echo "	<div class='parent_widgets hud_content'>\n";
+	echo "<div class='hud_box' style='overflow-y: auto;'>\n";
+	echo "	<div class='hud_content parent_widgets'>\n";
 
 	$x = 0;
 	foreach ($parent_widgets as $row) {
@@ -193,12 +217,12 @@ foreach ($parent_widgets as $row) {
 		$dashboard_content = $row['dashboard_content'] ?? '';
 		$dashboard_content_text_align = $row['dashboard_content_text_align'] ?? '';
 		$dashboard_content_details = $row['dashboard_content_details'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
 		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
 		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
-		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
-		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
+		$dashboard_details_state = $row['dashboard_details_state'] ?? 'disabled';
+		$dashboard_row_span = $row['dashboard_row_span'] ?? 1;
 
 		//define the regex patterns
 		$uuid_pattern = '/[^-A-Fa-f0-9]/';
@@ -208,7 +232,7 @@ foreach ($parent_widgets as $row) {
 		//sanitize the data
 		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
 		$dashboard_name = trim(preg_replace($text_pattern, '', $dashboard_name));
-		$dashboard_name_id = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($dashboard_name)),'_');
+		$dashboard_name_id = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($dashboard_name)),'_');
 		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
 		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
@@ -233,7 +257,7 @@ foreach ($parent_widgets as $row) {
 		$parent_widget_name = $dashboard_path_array[1];
 		$path_array = glob(dirname(__DIR__, 4).'/*/'.$application_name.'/resources/dashboard/'.$parent_widget_name.'.php');
 
-		echo "<div class='parent_widget' onclick=\"".(!empty($dashboard_url && $dashboard_path == "dashboard/icon") ? "window.open('". $dashboard_url ."', '". $dashboard_target ."', '". $window_parameters ."')" : "")."\" id='".$dashboard_name_id."' draggable='false'>\n";
+		echo "<div class='parent_widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."'  onclick=\"".(!empty($dashboard_url && $dashboard_path == "dashboard/icon") ? "window.open('". $dashboard_url ."', '". $dashboard_target ."', '". $window_parameters ."')" : "")."\" id='".$dashboard_name_id."' draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
