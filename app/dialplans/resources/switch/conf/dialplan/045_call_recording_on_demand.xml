@@ -1,4 +1,4 @@
-<extension name="call_recording_on_demand" number="" context="${domain_name}" continue="true" app_uuid="3746fc9c-f331-48c0-82d8-a80b1bfffa06" enabled="false" order="45">
+<extension name="call_recording_on_demand" number="" context="global" continue="true" app_uuid="3746fc9c-f331-48c0-82d8-a80b1bfffa06" global="true" enabled="false" order="45">
 	<condition field="${sip_authorized}" expression="true" break="never">
 		<action application="set" data="bind_target=both" inline="true"/>
 		<!-- set to peer to prevent manipulate of call by caller -->
