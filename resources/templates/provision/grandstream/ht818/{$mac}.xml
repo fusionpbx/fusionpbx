@@ -214,10 +214,10 @@
     <!-- # Enable TR-069. 0 - No, 1 - Yes (default is Yes) -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1409>1</P1409>
+    {if isset ($grandstream_tr069_enable)}<P1409>{$grandstream_tr069_enable}</P1409>{else}<P1409>0</P1409>{/if}
 
     <!-- # ACS URL -->
-    <P4503>https://acs.gdms.cloud</P4503>
+    {if isset($grandstream_acs_url)}<P4503>{$grandstream_acs_url}</P4503>{else}<P4503></P4503>{/if}
 
     <!-- # ACS Username -->
     <!-- # String -->
@@ -230,11 +230,7 @@
     <!-- # Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-        {if isset ($grandstream_tr069_periodic_inform_enable)}
-<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
-{else}
-<P4506>0</P4506>
-{/if}
+    {if isset ($grandstream_tr069_periodic_inform_enable)}<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>{else}<P4506>0</P4506>{/if}
 
     <!-- # Periodic Inform Interval (default is 300) -->
     <!-- # Number: 1-99999 -->
@@ -1798,7 +1794,7 @@
     <!-- # IP Address. 0 - DHCP, 2 - PPPoE, 1 - Static IP -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8>0</P8>
+    {if isset($grandstream_ip_mode)}<P8>{$grandstream_ip_mode}</P8>{else}<P8>0</P8>{/if}
 
     <!-- ################################################################################# -->
     <!-- # DHCP -->

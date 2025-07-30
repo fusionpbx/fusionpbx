@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -434,6 +434,7 @@
 	if ($summary_style == 'horizontal') {
 		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<th></th>\n";
 		echo "<th>".$text['label-direction']."</th>\n";
 		//echo "<th>Language</th>\n";
 		//echo "<th>Context</th>\n";
@@ -449,6 +450,16 @@
 		echo "<th align='center'>".$text['label-status']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr >\n";
+		echo "	<td style='width: 0' valign='top' class='".$row_style[$c]."'>\n";
+		if (!empty($call_direction)) {
+			$image_name = "icon_cdr_" . $call_direction . "_" . $status;
+			if ($row['leg'] == 'b') {
+				$image_name .= '_b';
+			}
+			$image_name .= ".png";
+			echo "		<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+		}
+		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
 		//echo "	<td valign='top' class='".$row_style[$c]."'>".$language."</td>\n";
 		//echo "	<td valign='top' class='".$row_style[$c]."'>".$context."</td>\n";
@@ -499,6 +510,7 @@
 	echo "<div class='card'>\n";
 	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
+	echo "		<th></th>\n";
 	echo "		<th>".$text['label-application']."</th>\n";
 	if ($call_direction == 'local' || $call_direction == 'outbound') {
 		echo "		<th>".$text['label-source']."</th>\n";
@@ -512,7 +524,8 @@
 	echo "	</tr>\n";
 	$i = 1;
 	foreach ($call_flow_summary as $row) {
-		echo "	<tr >\n";
+		echo "	<tr>\n";
+		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".$row["application_icon"][$row["application_name"]]."' style='opacity: 0.8;'></span></td>";
 		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
 		if ($call_direction == 'local' || $call_direction == 'outbound') {
 			echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";
@@ -534,6 +547,47 @@
 	echo "	</table>";
 	echo "</div>\n";
 	echo "<br /><br />\n";
+
+//call recording
+	if (permission_exists('xml_cdr_recording') && !empty($record_path)) {
+		//recording properties
+		if (!empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
+			$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
+			switch ($record_extension) {
+				case "wav" : $record_type = "audio/wav"; break;
+				case "mp3" : $record_type = "audio/mpeg"; break;
+				case "ogg" : $record_type = "audio/ogg"; break;
+			}
+		}
+
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "	<td align='left'><b>".$text['label-recording']."</b>&nbsp;</td>\n";
+		echo "	<td align='right'>\n";
+		//controls
+		if (!empty($record_path) || !empty($record_name)) {
+			echo "<audio id='recording_audio_".escape($xml_cdr_uuid)."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($xml_cdr_uuid)."')\" onended=\"recording_reset('".escape($xml_cdr_uuid)."');\" src=\"download.php?id=".escape($xml_cdr_uuid)."\" type='".escape($record_type)."'></audio>";
+			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'label'=>$text['label-play'],'id'=>'recording_button_'.escape($xml_cdr_uuid),'onclick'=>"recording_play('".escape($xml_cdr_uuid)."', null, null, 'true')",'style'=>'margin-bottom: 8px; margin-top: -8px;']);
+			if (permission_exists('xml_cdr_recording_download')) {
+				echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'label'=>$text['label-download'],'onclick'=>"window.location.href='download.php?id=".urlencode($xml_cdr_uuid)."&t=bin';",'style'=>'margin-bottom: 8px; margin-top: -8px;']);
+			}
+		}
+		echo "	</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "<div class='card'>\n";
+		//progress bar
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			echo "<tr class='list-row' id='recording_progress_bar_".$xml_cdr_uuid."' onclick=\"recording_seek(event,'".escape($xml_cdr_uuid)."')\">\n";
+				echo "<td id='playback_progress_bar_background_".escape($xml_cdr_uuid)."' class='playback_progress_bar_background' style='padding: 0; background-size: 100% 100% !important;'>\n";
+					echo "<span class='playback_progress_bar' id='recording_progress_".$xml_cdr_uuid."'></span>\n";
+				echo "</td>\n";
+			echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
+		echo "<br /><br />\n";
+		echo "<script>recording_load('".escape($xml_cdr_uuid)."');</script>\n";
+	}
 
 //transcription, if enabled
 	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {

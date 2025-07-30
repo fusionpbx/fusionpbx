@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -99,20 +99,25 @@
 		$recording_voice = $_POST["recording_voice"];
 		$recording_message = $_POST["recording_message"];
 		$recording_description = $_POST["recording_description"];
-		//sanitize recording filename and name
+
+		//sanitize: recording_filename
 		if (!empty($recording_filename)) {
 			$recording_filename_ext = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
 			if (!in_array($recording_filename_ext, ['wav','mp3','ogg'])) {
 				$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
 				$recording_filename = str_replace('.', '', $recording_filename);
 			}
-			$recording_filename = str_replace("\\", '', $recording_filename);
-			$recording_filename = str_replace('/', '', $recording_filename);
-			$recording_filename = str_replace('..', '', $recording_filename);
+			$replace = ['\\', '|', '/', '..', "`", "'"];
+			$recording_filename = str_replace($replace, '', $recording_filename);
 			$recording_filename = str_replace(' ', '-', $recording_filename);
-			$recording_filename = str_replace("'", '', $recording_filename);
 		}
-		$recording_name = str_replace("'", '', $recording_name);
+
+		//sanitize: recording_filename_original
+		if (!empty($recording_filename_original)) {
+			$replace = ['\\', '|', '/', '..', "`", "'"];
+			$recording_filename_original = str_replace($replace, '', $recording_filename_original);
+			$recording_filename_original = str_replace(' ', '-', $recording_filename_original);
+		}
 	}
 
 //process the HTTP POST
@@ -176,25 +181,31 @@
 		if (empty($_POST["persistformvar"])) {
 			if (permission_exists('recording_edit')) {
 
-				//set the recording format
-				$recording_format = $recording_format ?? 'wav';
-
-				//if file name is not the same then rename the file
-				if (!empty($recording_filename) && !empty($recording_filename_original) && $recording_filename != $recording_filename_original) {
-					rename($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename_original, $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
+				//set the recording format for approved types
+				if (!in_array($recording_extension, ['mp3', 'wav'], true)) {
+					//default to wav
+					$recording_extension = 'wav';
 				}
 
 				//build the setting object and get the recording path
 				$recording_path = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'];
 
+				//if file name is not the same then rename the file
+				if (!empty($recording_filename) && !empty($recording_filename_original)
+					&& file_exists($recording_path.'/'.$recording_filename_original)
+					&& $recording_filename != $recording_filename_original) {
+					rename($recording_path.'/'.$recording_filename_original, $recording_path.'/'.$recording_filename);
+				}
+
 				//create the file name
-				if (empty($recording_filename)) {
-					$recording_filename = $recording_name.'.'.$recording_format;
-					$recording_filename = str_replace("\\", '', $recording_filename);
-					$recording_filename = str_replace('/', '', $recording_filename);
-					$recording_filename = str_replace('..', '', $recording_filename);
-					$recording_filename = str_replace(' ', '-', $recording_filename);
-					$recording_filename = str_replace("'", '', $recording_filename);
+				//if (empty($recording_filename)) {
+					// Replace invalid characters with underscore
+					//$recording_filename = preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name);
+				//}
+
+				//make sure the filename ends with the approved extension
+				if (!str_ends_with($recording_filename, ".$recording_extension")) {
+					$recording_filename .= ".$recording_extension";
 				}
 
 				//determine whether to create the recording
@@ -212,7 +223,7 @@
 				if ($create_recording) {
 					$speech->audio_path = $recording_path;
 					$speech->audio_filename = $recording_filename;
-					$speech->audio_format = $recording_format;
+					$speech->audio_format = $recording_extension;
 					//$speech->audio_model = $recording_model ?? '';
 					$speech->audio_voice = $recording_voice;
 					//$speech->audio_language = $recording_language;
@@ -222,10 +233,12 @@
 
 					//fix invalid riff & data header lengths in generated wave file
 					if ($speech_engine == 'openai') {
-						$recording_filename_temp = str_replace('.'.$recording_format, '.tmp.'.$recording_format, $recording_filename);
-						exec('sox --ignore-length '.$recording_path.'/'.$recording_filename.' '.$recording_path.'/'.$recording_filename_temp);
+						$recording_filename_temp = str_replace('.'.$recording_extension, '.tmp.'.$recording_extension, $recording_filename);
+						if (file_exists($recording_path.'/'.$recording_filename)) {
+							exec('sox --ignore-length '.escapeshellarg($recording_path.'/'.$recording_filename).' '.escapeshellarg($recording_path.'/'.$recording_filename_temp));
+						}
 						if (file_exists($recording_path.'/'.$recording_filename_temp)) {
-							exec('rm -f '.$recording_path.'/'.$recording_filename.' && mv '.$recording_path.'/'.$recording_filename_temp.' '.$recording_path.'/'.$recording_filename);
+							exec('rm -f '.escapeshellarg($recording_path.'/'.$recording_filename).' && mv '.escapeshellarg($recording_path.'/'.$recording_filename_temp).' '.escapeshellarg($recording_path.'/'.$recording_filename));
 						}
 						unset($recording_filename_temp);
 					}
@@ -243,7 +256,7 @@
 				$array['recordings'][0]['recording_uuid'] = $recording_uuid;
 				$array['recordings'][0]['recording_filename'] = $recording_filename;
 				$array['recordings'][0]['recording_name'] = $recording_name;
-				if ($settings->get('recordings', 'storage_type', '') == 'base64' 
+				if ($settings->get('recordings', 'storage_type', '') == 'base64'
 					&& file_exists($recording_path.'/'.$recording_filename)) {
 					$array['recordings'][0]['recording_base64'] = base64_encode(file_get_contents($recording_path.'/'.$recording_filename));
 				}

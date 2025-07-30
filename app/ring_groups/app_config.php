@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "A tool to call multiple extensions.";
@@ -278,9 +278,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the greeting.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_context";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_exit_key";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the exit key.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_call_timeout";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
@@ -352,6 +352,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_missed_call_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_context";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

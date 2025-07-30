@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2023 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 --  Gill Abada <gill.abada@gmail.com>
 
 --include the log
-log = require "resources.functions.log".ring_group
+	log = require "resources.functions.log".ring_group
 
 --connect to the database
 	local Database = require "resources.functions.database";
@@ -230,6 +230,9 @@ log = require "resources.functions.log".ring_group
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
+		ring_group_timeout_app = row["ring_group_timeout_app"];
+		ring_group_timeout_data = row["ring_group_timeout_data"];
+		ring_group_exit_key = row["ring_group_exit_key"];
 		ring_group_call_timeout = row["ring_group_call_timeout"];
 		ring_group_caller_id_name = row["ring_group_caller_id_name"];
 		ring_group_caller_id_number = row["ring_group_caller_id_number"];
@@ -283,6 +286,17 @@ log = require "resources.functions.log".ring_group
 			ring_group_call_timeout = '300';
 		end
 		session:setVariable("call_timeout", ring_group_call_timeout);
+	end
+
+--set exit key action
+	if (ring_group_timeout_app and ring_group_timeout_data) then
+		if (ring_group_exit_key) then
+			--use the user defined exit key
+			session:execute("bind_digit_action", "exit_key,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
+		else
+			--use a default exit key of 9
+			session:execute("bind_digit_action", "exit_key,9,exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
+		end
 	end
 
 --play the greeting
@@ -523,6 +537,12 @@ log = require "resources.functions.log".ring_group
 			end
 			if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
 				caller_id_number = ring_group_caller_id_number;
+			end
+
+		--set the diversion header
+			local diversion_enabled = settings:get('ring_group', 'diversion_enabled', 'boolean') or 'false';
+			if (diversion_enabled == 'true') then
+				session:setVariable("sip_h_Diversion", "<sip:"..ring_group_forward_destination.."@"..context..":5060>;reason=unconditional");
 			end
 
 		--forward the ring group
@@ -916,11 +936,6 @@ log = require "resources.functions.log".ring_group
 						end
 						if (user_record == "local" and call_direction == "local") then
 							record_session = true;
-						end
-
-					--set record session to false if the recording was already started
-						if (session:getVariable("record_path") ~= nil and session:getVariable("record_name") ~= nil) then
-							record_session = false;
 						end
 
 					--record the session

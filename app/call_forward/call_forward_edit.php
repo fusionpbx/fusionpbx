@@ -112,13 +112,13 @@
 
 		//get http post variables and set them to php variables
 			if (!empty($_POST)) {
-				$forward_all_enabled = $_POST["forward_all_enabled"];
+				$forward_all_enabled = !empty($_POST["forward_all_destination"]) ? $_POST["forward_all_enabled"] : 'false';
 				$forward_all_destination = $_POST["forward_all_destination"];
-				$forward_busy_enabled = $_POST["forward_busy_enabled"];
+				$forward_busy_enabled = !empty($_POST["forward_busy_destination"]) ? $_POST["forward_busy_enabled"] : 'false';
 				$forward_busy_destination = $_POST["forward_busy_destination"];
-				$forward_no_answer_enabled = $_POST["forward_no_answer_enabled"];
+				$forward_no_answer_enabled = !empty($_POST["forward_no_answer_destination"]) ? $_POST["forward_no_answer_enabled"] : 'false';
 				$forward_no_answer_destination = $_POST["forward_no_answer_destination"];
-				$forward_user_not_registered_enabled = $_POST["forward_user_not_registered_enabled"];
+				$forward_user_not_registered_enabled = !empty($_POST["forward_user_not_registered_destination"]) ? $_POST["forward_user_not_registered_enabled"] : 'false';
 				$forward_user_not_registered_destination = $_POST["forward_user_not_registered_destination"];
 
 				$cid_name_prefix = $_POST["cid_name_prefix"] ?? '';

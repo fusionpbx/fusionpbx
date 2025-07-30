@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -76,23 +76,23 @@
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the domain_uuid
-			if ($action == "update" && $_POST["domain_uuid"]) {
+			if ($action == "update" && !empty($_POST["domain_uuid"]) && is_uuid($_POST["domain_uuid"])) {
 				$domain_uuid = $_POST["domain_uuid"];
 			}
 
 		//delete the domain
-			if (permission_exists('domain_delete')) {
-				if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($domain_uuid)) {
-					//prepare
-						$array[0]['checked'] = 'true';
-						$array[0]['uuid'] = $domain_uuid;
-					//delete
-						$obj = new domains;
-						$obj->delete($array);
-					//redirect
-						header('Location: domains.php');
-						exit;
-				}
+			if (permission_exists('domain_delete') && !empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($domain_uuid)) {
+				//prepare
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $domain_uuid;
+
+				//delete
+				$obj = new domains;
+				$obj->delete($array);
+
+				//redirect
+				header('Location: domains.php');
+				exit;
 			}
 
 		//validate the token
@@ -122,6 +122,8 @@
 
 		//add or update the database
 			if (empty($_POST["persistformvar"])) {
+
+				//add a domain to the database
 				if ($action == "add" && permission_exists('domain_add')) {
 					$sql = "select count(*) from v_domains ";
 					$sql .= "where lower(domain_name) = :domain_name ";
@@ -132,52 +134,52 @@
 					if ($num_rows == 0) {
 
 						//add the domain name
-							$domain_enabled = 'true';
-							$domain_uuid = uuid();
+						$domain_enabled = 'true';
+						$domain_uuid = uuid();
 
 						//build the domain array
-							$array['domains'][0]['domain_uuid'] = $domain_uuid;
-							$array['domains'][0]['domain_name'] = $domain_name;
-							$array['domains'][0]['domain_enabled'] = $domain_enabled;
-							$array['domains'][0]['domain_description'] = $domain_description;
+						$array['domains'][0]['domain_uuid'] = $domain_uuid;
+						$array['domains'][0]['domain_name'] = $domain_name;
+						$array['domains'][0]['domain_enabled'] = $domain_enabled;
+						$array['domains'][0]['domain_description'] = $domain_description;
 
 						//create a copy of the domain array as the database save method empties the array that we still need.
-							$domain_array = $array;
+						$domain_array = $array;
 
 						//add the new domain
-							$database->app_name = 'domains';
-							$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
-							$database->save($array);
+						$database->app_name = 'domains';
+						$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
+						$database->save($array);
 
 						//add dialplans to the domain
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
-								//import the dialplans
-								$dialplan = new dialplan;
-								$dialplan->import($domain_array['domains']);
-								unset($array);
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
+							//import the dialplans
+							$dialplan = new dialplan;
+							$dialplan->import($domain_array['domains']);
+							unset($array);
 
-								//add xml for each dialplan where the dialplan xml is empty
-								$dialplans = new dialplan;
-								$dialplans->source = "details";
-								$dialplans->destination = "database";
-								$dialplans->context = $domain_name;
-								$dialplans->is_empty = "dialplan_xml";
-								$array = $dialplans->xml();
-							}
+							//add xml for each dialplan where the dialplan xml is empty
+							$dialplans = new dialplan;
+							$dialplans->source = "details";
+							$dialplans->destination = "database";
+							$dialplans->context = $domain_name;
+							$dialplans->is_empty = "dialplan_xml";
+							$array = $dialplans->xml();
+						}
 
 						//create the recordings directory for the new domain.
-							if (isset($_SESSION['switch']['recordings']['dir']) && !empty($_SESSION['switch']['recordings']['dir'])) {
-								if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
-									mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
-								}
+						if (isset($_SESSION['switch']['recordings']['dir']) && !empty($_SESSION['switch']['recordings']['dir'])) {
+							if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
+								mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
 							}
+						}
 
 						//create the voicemail directory for the new domain.
-							if (isset($_SESSION['switch']['voicemail']['dir']) && !empty($_SESSION['switch']['voicemail']['dir'])) {
-								if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
-									mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
-								}
+						if (isset($_SESSION['switch']['voicemail']['dir']) && !empty($_SESSION['switch']['voicemail']['dir'])) {
+							if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
+								mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
 							}
+						}
 
 					}
 					else {
@@ -187,6 +189,7 @@
 					}
 				}
 
+				//update the domain
 				if ($action == "update" && permission_exists('domain_edit')) {
 
 					//get original domain name
@@ -248,7 +251,9 @@
 						//update destinations
 							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/destinations/app_config.php")) {
 								$sql = "update v_destinations set ";
-								$sql .= "destination_data = replace(destination_data, :destination_data_old, :destination_data_new) ";
+								$sql .= "destination_data = replace(destination_data, :destination_data_old, :destination_data_new), ";
+								$sql .= "destination_conditions = replace(destination_conditions::text, :destination_data_old, :destination_data_new)::json, ";
+								$sql .= "destination_actions = replace(destination_actions::text, :destination_data_old, :destination_data_new)::json ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$parameters['destination_data_old'] = $original_domain_name;
 								$parameters['destination_data_new'] = $domain_name;
@@ -326,19 +331,6 @@
 								$sql .= "and domain_uuid = :domain_uuid ";
 								$parameters['context_old'] = $original_domain_name;
 								$parameters['context_new'] = $domain_name;
-								$parameters['domain_uuid'] = $domain_uuid;
-								$database->execute($sql, $parameters);
-								unset($sql, $parameters);
-							}
-
-						//update billing, if installed
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
-								$sql = "update v_billings set ";
-								$sql .= "type_value = :type_value_new ";
-								$sql .= "where type_value = :type_value_old ";
-								$sql .= "and domain_uuid = :domain_uuid ";
-								$parameters['type_value_old'] = $original_domain_name;
-								$parameters['type_value_new'] = $domain_name;
 								$parameters['domain_uuid'] = $domain_uuid;
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);

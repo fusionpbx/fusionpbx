@@ -65,8 +65,8 @@
 			sound_prefix = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/";
 			sound_prefix = xml.sanitize(sound_prefix);
 			sound_prefix = string.gsub(sound_prefix, "{default_language}", "${default_language}");
-			sound_prefix = string.gsub(sound_prefix, "{default_dialect}", "${default_dialect}"); 
-			sound_prefix = string.gsub(sound_prefix, "{default_voice}", "${default_voice}"); 
+			sound_prefix = string.gsub(sound_prefix, "{default_dialect}", "${default_dialect}");
+			sound_prefix = string.gsub(sound_prefix, "{default_voice}", "${default_voice}");
 
 		--connect to the database
 			local dbh = Database.new('system');
@@ -77,13 +77,13 @@
 		--get the ivr menu from the database
 			local sql = [[
 				with recursive ivr_menus as (
-					select * 
-						from v_ivr_menus 
+					select *
+						from v_ivr_menus
 						where ivr_menu_uuid = :ivr_menu_uuid
 						and ivr_menu_enabled = 'true'
-						union all 
+						union all
 						select child.*
-						from v_ivr_menus as child, ivr_menus as parent 
+						from v_ivr_menus as child, ivr_menus as parent
 						where child.ivr_menu_parent_uuid = parent.ivr_menu_uuid
 						and child.ivr_menu_enabled = 'true'
 					)
@@ -157,9 +157,9 @@
 							local function load_record(name)
 								local path = base_path .. "/" .. name;
 								local is_base64 = false;
-		
+
 								if not file_exists(path) then
-									local sql = "SELECT recording_base64 FROM v_recordings " .. 
+									local sql = "SELECT recording_base64 FROM v_recordings " ..
 										"WHERE domain_uuid = :domain_uuid " ..
 										"AND recording_filename = :name "
 									local params = {domain_uuid = domain_uuid, name = name};
@@ -285,7 +285,13 @@
 						ivr_menu_option_param = r.ivr_menu_option_param
 						ivr_menu_option_description = r.ivr_menu_option_description
 						if (#ivr_menu_option_action > 0) then
+							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "$1", "{group.1}");
+							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "$2", "{group.2}");
+							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "$3", "{group.3}");
 							ivr_menu_option_param = xml.sanitize(ivr_menu_option_param);
+							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{group.1}", "$1");
+							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{group.2}", "$2");
+							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{group.3}", "$3");
 							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{accountcode}", "${accountcode}");
 							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{uuid}", "${uuid}");
 							ivr_menu_option_param = string.gsub(ivr_menu_option_param, "{caller_id_name}", "${caller_id_name}");

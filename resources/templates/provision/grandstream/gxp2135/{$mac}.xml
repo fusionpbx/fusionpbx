@@ -289,7 +289,11 @@
 
 		<!-- BLF Call-pickup  -->
 		<!-- Auto, Force, Disabled -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{if isset($grandstream_blf_callpickup_force) }
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">{$grandstream_blf_callpickup_force}</item>
+		{else}
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{/if}
 
 		<!-- BLF Call-pickup Prefix -->
 		<item name="account.{$row.line_number}.sip.blf.callPickup.prefix">**</item>
@@ -560,7 +564,7 @@
 
 		<!-- On Hold Reminder Tone -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.call.onHoldReminderTone">Yes</item>
+		<item name="account.{$row.line_number}.call.onHoldReminderTone">No</item>
 
 		<!-- RFC2543 Hold -->
 		<!-- Yes, No -->
@@ -578,7 +582,7 @@
 		<item name="account.{$row.line_number}.call.callWaiting">{$grandstream_call_waiting}</item>
 
 		<!-- Account Ringtone -->
-		<item name="account.{$row.line_number}.ring.ringtone">5</item>
+		<item name="account.{$row.line_number}.ring.ringtone">{$grandstream_account_ring_tone_1}</item>
 
 		<!-- Matching Incoming Caller ID. Matching Rule 1 -->
 		<item name="account.{$row.line_number}.ring.match.1.callerId">{$grandstream_distinctive_ringtone_name_1}</item>
@@ -1057,10 +1061,24 @@
 		<!-- ## Network/SNMP Settings                     ## -->
 		<!-- ############################################################################## -->
 		<!-- # Enable SNMP. Yes or No -->
+{if isset($grandstream_snmp_enable) && $grandstream_snmp_enable == '1'}
+		<item name="network.snmp.enable">Yes</item>
+{else}
 		<item name="network.snmp.enable">No</item>
+{/if}
 
 		<!-- # Version. Version1, Version2, Version3. Default is Version3 -->
+{if isset($grandstream_snmp_version)}
+	{if $grandstream_snmp_version == '1'}
+		<item name="network.snmp.version">Version1</item>
+	{elseif $grandstream_snmp_version == '2'}
+		<item name="network.snmp.version">Version2</item>
+	{else}
 		<item name="network.snmp.version">Version3</item>
+	{/if}
+{else}
+		<item name="network.snmp.version">Version2</item>
+{/if}
 
 		<!-- # Port -->
 		<!-- # Number. Default is 161. -->
@@ -1068,7 +1086,11 @@
 
 		<!-- # Community -->
 		<!-- # String -->
-		<item name="network.snmp.community"/>
+{if isset($grandstream_snmp_community)}
+		<item name="network.snmp.community">{$grandstream_snmp_community}</item>
+{else}
+		<item name="network.snmp.community">public</item>
+{/if}
 
 		<!-- # SNMP Trap Version -->
 		<!-- # Version1, Version2, Version3. -->

@@ -315,9 +315,9 @@
 		}
 
 		/**
-		 * delete items in the menu that are not protected
+		 * delete items in the menu used by restore default
 		 */
-		public function delete_unprotected() {
+		public function restore_delete() {
 			//remove existing menu languages
 				$sql  = "delete from v_menu_languages ";
 				$sql .= "where menu_uuid = :menu_uuid ";
@@ -325,38 +325,38 @@
 				$sql .= "	select menu_item_uuid ";
 				$sql .= "	from v_menu_items ";
 				$sql .= "	where menu_uuid = :menu_uuid ";
-				$sql .= "	and ( ";
-				$sql .= " 		menu_item_protected <> 'true' ";
-				$sql .= "		or menu_item_protected is null ";
-				$sql .= "	) ";
+				//$sql .= "	and ( ";
+				//$sql .= " 		menu_item_protected <> 'true' ";
+				//$sql .= "		or menu_item_protected is null ";
+				//$sql .= "	) ";
 				$sql .= ") ";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$this->database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
-			//remove existing unprotected menu item groups
+			//remove existing menu item groups
 				$sql = "delete from v_menu_item_groups ";
 				$sql .= "where menu_uuid = :menu_uuid ";
 				$sql .= "and menu_item_uuid in ( ";
 				$sql .= "	select menu_item_uuid ";
 				$sql .= "	from v_menu_items ";
 				$sql .= "	where menu_uuid = :menu_uuid ";
-				$sql .= "	and ( ";
-				$sql .= " 		menu_item_protected <> 'true' ";
-				$sql .= "		or menu_item_protected is null ";
-				$sql .= "	) ";
+				//$sql .= "	and ( ";
+				//$sql .= " 		menu_item_protected <> 'true' ";
+				//$sql .= "		or menu_item_protected is null ";
+				//$sql .= "	) ";
 				$sql .= ") ";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$this->database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
-			//remove existing unprotected menu items
+			//remove existing menu items
 				$sql  = "delete from v_menu_items ";
 				$sql .= "where menu_uuid = :menu_uuid ";
-				$sql .= "and ( ";
-				$sql .= "	menu_item_protected <> 'true' ";
-				$sql .= "	or menu_item_protected is null ";
-				$sql .= ") ";
+				//$sql .= "and ( ";
+				//$sql .= "	menu_item_protected <> 'true' ";
+				//$sql .= "	or menu_item_protected is null ";
+				//$sql .= ") ";
 				$parameters['menu_uuid'] = $this->menu_uuid;
 				$this->database->execute($sql, $parameters);
 				unset($sql, $parameters);
@@ -434,7 +434,7 @@
 								//execute save
 									$database = new database;
 									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;				
+									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
 								//set message
@@ -540,9 +540,9 @@
 		}
 
 		/**
-		 * restore the menu
+		 * restore the default menu
 		 */
-		public function restore() {
+		public function restore_default() {
 
 			//get the $apps array from the installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
@@ -786,7 +786,8 @@
 					$menu_items = $menu_field['menu_items'];
 
 					//prepare the protected menus
-					$menu_item_title = ($menu_field['menu_item_protected'] == "true") ? $menu_field['menu_item_title'] : $menu_field['menu_language_title'];
+					//$menu_item_title = ($menu_field['menu_item_protected'] == "true") ? $menu_field['menu_item_title'] : $menu_field['menu_language_title'];
+					$menu_item_title = $menu_field['menu_language_title'];
 
 					//prepare the menu_tags according to the category
 					$menu_tags = '';
@@ -867,7 +868,8 @@
 						$menu_items = $submenu_field['menu_items'];
 
 					//prepare the protected menus
-						$menu_item_title = ($submenu_field['menu_item_protected'] == "true") ? $submenu_field['menu_item_title'] : $submenu_field['menu_language_title'];
+						//$menu_item_title = ($submenu_field['menu_item_protected'] == "true") ? $submenu_field['menu_item_title'] : $submenu_field['menu_language_title'];
+						$menu_item_title = $submenu_field['menu_language_title'];
 
 					//prepare the menu_tags according to the category
 						switch ($menu_item_category) {
@@ -922,8 +924,8 @@
 
 			//get the menu from the database
 				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ";
-				$sql .= "i.menu_item_title, i.menu_item_protected, i.menu_item_category, ";
-				$sql .= "i.menu_item_icon, i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql .= "i.menu_item_title, i.menu_item_category, i.menu_item_icon, ";
+				$sql .= "i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
 				$sql .= "from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = :menu_language ";
@@ -992,7 +994,9 @@
 				}
 
 			//get the child menu from the database
-				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_icon, i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, ";
+				$sql .= "i.menu_item_title, i.menu_item_category, i.menu_item_icon, ";
+				$sql .= "i.menu_item_icon_color, i.menu_item_uuid, i.menu_item_parent_uuid ";
 				$sql .= "from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = :menu_language ";
@@ -1039,13 +1043,13 @@
 						//add the row to the array
 							$a[$x] = $row;
 
-						//prepare the protected menus
-							if ($row['menu_item_protected'] == "true") {
-								$a[$x]['menu_item_title'] = $row['menu_item_title'];
-							}
-							else {
-								$a[$x]['menu_item_title'] = $row['menu_language_title'];
-							}
+						//prepare the menus
+							//if ($row['menu_item_protected'] == "true") {
+							//	$a[$x]['menu_item_title'] = $row['menu_item_title'];
+							//}
+							//else {
+							$a[$x]['menu_item_title'] = $row['menu_language_title'];
+							//}
 
 						//get sub menu for children
 							if (!empty($menu_item_uuid)) {
@@ -1094,7 +1098,7 @@
 						$p->delete('menu_add', 'temp');
 
 					//add the menu items
-						$this->restore();
+						$this->restore_default();
 				}
 		}
 

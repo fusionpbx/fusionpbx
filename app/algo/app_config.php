@@ -31,7 +31,6 @@
 		$apps[$x]['description']['uk-ua'] = "";
 
 	//default settings
- 
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e874cf2e-b58a-4833-b1c5-921ee3419681";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
