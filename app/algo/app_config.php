@@ -87,8 +87,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '240';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Algo Multicast Modes
-		0 - None
-		1 - Transmitter (Sender)
-		2- Receiver (Listener).";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Algo Multicast Modes Options: 0 - None, 1 - Transmitter (Sender), 2- Receiver (Listener).";
 		$y++;
