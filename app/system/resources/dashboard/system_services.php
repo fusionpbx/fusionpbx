@@ -175,7 +175,7 @@ if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 	echo "				data: {\n";
 	echo "					labels: ['Active: ".$total_running."' , 'Inactive: ".($total_services-$total_running)."'],\n";
 	echo "					datasets: [{\n";
-	echo "							data: ['5','".($total_services-$total_running)."'],\n";
+	echo "							data: ['".$total_running."','".($total_services-$total_running)."'],\n";
 	echo "							backgroundColor: [\n";
 	echo "								'".$settings->get('theme', 'dashboard_system_counts_chart_main_color','#2a9df4')."',\n";
 	echo "								'".$settings->get('theme', 'dashboard_system_counts_chart_sub_color','#d4d4d4')."'\n";
