@@ -3134,7 +3134,7 @@ else { //default: white
 
 	@media(min-width: 1200px) {
 		div.hud_details {
-			height: 350px;
+			height: 318px;
 			display: block;
 			<?php
 			echo "background: ".($dashboard_detail_background_color[0] ?? '#ffffff').";\n";
