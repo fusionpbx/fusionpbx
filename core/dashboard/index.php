@@ -131,12 +131,12 @@
 				$parent_uuid = null;
 
 				foreach ($dashboard as $row) {
-					$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
+					$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 					if ($widget_id == $dashboard_name) {
 						if (!empty($parent_id)) {
 							//find parent uuid
 							foreach ($dashboard as $parent_row) {
-								$parent_dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($parent_row['dashboard_name'])), '_');
+								$parent_dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($parent_row['dashboard_name'])), '_');
 								if ($parent_dashboard_name === $parent_id) {
 									$parent_uuid = $parent_row['dashboard_uuid'];
 									break;
@@ -285,7 +285,7 @@ div.hud_chart {
 /* dashboard settings */
 <?php
 foreach ($dashboard as $row) {
-	$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
+	$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 	if (!empty($row['dashboard_icon_color'])) {
 		echo "#".$dashboard_name." .hud_stat:has(i) {\n";
 		echo "	color: ".$row['dashboard_icon_color'].";\n";
@@ -416,7 +416,7 @@ foreach ($dashboard as $row) {
 	.col-num { grid-column: span 1; }
 	<?php
 		foreach ($dashboard as $row) {
-			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
+			$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 			if (isset($row['dashboard_column_span']) && is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
@@ -438,7 +438,7 @@ foreach ($dashboard as $row) {
 	.col-num { grid-column: span 2; }
 	<?php
 		foreach ($dashboard as $row) {
-			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
+			$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 			if (is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
@@ -465,7 +465,7 @@ foreach ($dashboard as $row) {
 	.col-num { grid-column: span 2; }
 	<?php
 		foreach ($dashboard as $row) {
-			$dashboard_name = trim(preg_replace("/[^a-z]/", '_', strtolower($row['dashboard_name'])),'_');
+			$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 			if (is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
@@ -571,7 +571,7 @@ function toggle_grid_row_end_all() {
 		//sanitize the data
 		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
 		$dashboard_name = trim(preg_replace($text_pattern, '', $dashboard_name));
-		$dashboard_name_id = trim(preg_replace("/[^a-z_]/", '_', strtolower($dashboard_name)),'_');
+		$dashboard_name_id = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($dashboard_name)),'_');
 		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
 		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
