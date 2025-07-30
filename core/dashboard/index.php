@@ -131,12 +131,12 @@
 				$parent_uuid = null;
 
 				foreach ($dashboard as $row) {
-					$dashboard_name = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($row['dashboard_name'])),'_');
+					$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 					if ($widget_id == $dashboard_name) {
 						if (!empty($parent_id)) {
 							//find parent uuid
 							foreach ($dashboard as $parent_row) {
-								$parent_dashboard_name = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($parent_row['dashboard_name'])), '_');
+								$parent_dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($parent_row['dashboard_name'])), '_');
 								if ($parent_dashboard_name === $parent_id) {
 									$parent_uuid = $parent_row['dashboard_uuid'];
 									break;
@@ -285,7 +285,7 @@ div.hud_chart {
 /* dashboard settings */
 <?php
 foreach ($dashboard as $row) {
-	$dashboard_name = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($row['dashboard_name'])),'_');
+	$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 	if (!empty($row['dashboard_icon_color'])) {
 		echo "#".$dashboard_name." .hud_stat:has(i) {\n";
 		echo "	color: ".$row['dashboard_icon_color'].";\n";
@@ -401,12 +401,6 @@ foreach ($dashboard as $row) {
 			echo "	height: 195px;\n";
 			echo "}\n";
 	}
-	if ($row['dashboard_column_span'] > 1) {
-		echo "#".$dashboard_name." div.parent_widgets.hud_content {\n";
-		echo "	 justify-content: space-evenly;\n";
-		echo "}\n";
-	}
-
 }
 ?>
 
@@ -416,7 +410,7 @@ foreach ($dashboard as $row) {
 	.col-num { grid-column: span 1; }
 	<?php
 		foreach ($dashboard as $row) {
-			$dashboard_name = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($row['dashboard_name'])),'_');
+			$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 			if (isset($row['dashboard_column_span']) && is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span 1;\n";
@@ -438,8 +432,13 @@ foreach ($dashboard as $row) {
 	.col-num { grid-column: span 2; }
 	<?php
 		foreach ($dashboard as $row) {
-			$dashboard_name = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($row['dashboard_name'])),'_');
-			if (is_numeric($row['dashboard_column_span'])) {
+			$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
+			if (is_numeric($row['dashboard_column_span']) && $row['dashboard_column_span'] > 2) {
+				echo "#".$dashboard_name." {\n";
+				echo "	grid-column: span 2;\n";
+				echo "}\n";
+			}
+			else if (is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
 				echo "}\n";
@@ -465,7 +464,7 @@ foreach ($dashboard as $row) {
 	.col-num { grid-column: span 2; }
 	<?php
 		foreach ($dashboard as $row) {
-			$dashboard_name = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($row['dashboard_name'])),'_');
+			$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
 			if (is_numeric($row['dashboard_column_span'])) {
 				echo "#".$dashboard_name." {\n";
 				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
@@ -556,11 +555,11 @@ function toggle_grid_row_end_all() {
 		$dashboard_content = $row['dashboard_content'] ?? '';
 		$dashboard_content_text_align = $row['dashboard_content_text_align'] ?? '';
 		$dashboard_content_details = $row['dashboard_content_details'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'] ?? "doughnut";
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
 		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
 		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
-		$dashboard_details_state = $row['dashboard_details_state'] ?? "expanded";
+		$dashboard_details_state = $row['dashboard_details_state'] ?? 'expanded';
 		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
 
 		//define the regex patterns
@@ -571,7 +570,7 @@ function toggle_grid_row_end_all() {
 		//sanitize the data
 		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
 		$dashboard_name = trim(preg_replace($text_pattern, '', $dashboard_name));
-		$dashboard_name_id = trim(preg_replace("/[^a-z0-9_ ]/", '_', strtolower($dashboard_name)),'_');
+		$dashboard_name_id = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($dashboard_name)),'_');
 		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
 		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
@@ -719,10 +718,13 @@ function toggle_grid_row_end_all() {
 						onAdd: function (evt) {
 							evt.item.classList.add('parent_widget');
 							update_widget_order();
+							let current_row_end = evt.item.style.gridRowEnd;
+							evt.item.style.gridColumn = current_row_end;
 						},
 						onRemove: function (evt) {
 							evt.item.classList.remove('parent_widget');
 							update_widget_order();
+							evt.item.style.gridColumn = '';
 						},
 					});
 				});
