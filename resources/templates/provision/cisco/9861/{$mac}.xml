@@ -11,8 +11,8 @@
 <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
 <Admin_Password ua="na">{$admin_password}</Admin_Password>
 <User_Password ua="rw">{$user_password}</User_Password>
-<Display_Password_Warnings ua="na">No</Display_Password_Warnings>
-<Block_Nonproxy_SIP ua="na">Yes</Block_Nonproxy_SIP>
+<Display_Password_Warnings ua="na">Yes</Display_Password_Warnings>
+<Block_Nonproxy_SIP ua="na">No</Block_Nonproxy_SIP>
 <!--  Security Settings  -->
 <FIPS_Mode ua="na">Disabled</FIPS_Mode>
 <!--  available options: Disabled|Enabled  -->
@@ -26,7 +26,7 @@
 <Disable_Back_USB_Port ua="na">No</Disable_Back_USB_Port>
 <Disable_Side_USB_Port ua="na">No</Disable_Side_USB_Port>
 <!--  Network Settings  -->
-<IP_Mode ua="rw">IPv4 Only</IP_Mode>
+<IP_Mode ua="rw">Dual Mode</IP_Mode>
 <!--  available options: IPv4 Only|IPv6 Only|Dual Mode  -->
 <Disable_DF ua="na">Disable IP DF flag</Disable_DF>
 <!--  IPv4 Settings   -->
@@ -154,7 +154,7 @@
 <Retry_Reg_RSC ua="na"/>
 <!--  RTP Parameters  -->
 <RTP_Port_Min ua="na">16384</RTP_Port_Min>
-<RTP_Port_Max ua="na">32768</RTP_Port_Max>
+<RTP_Port_Max ua="na">16482</RTP_Port_Max>
 <RTP_Packet_Size ua="na">0.02</RTP_Packet_Size>
 <Max_RTP_ICMP_Err ua="na">0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval ua="na">5</RTCP_Tx_Interval>
@@ -629,7 +629,7 @@
 <!--  Call Feature Settings  -->
 <Blind_Attn-Xfer_Enable_1_ ua="na">No</Blind_Attn-Xfer_Enable_1_>
 <Auth_Page_1_ ua="na">No</Auth_Page_1_>
-<Default_Ring_1_ ua="rw">12</Default_Ring_1_>
+<Default_Ring_1_ ua="rw">1</Default_Ring_1_>
 <!--  available options: No Ring|1|2|3|4|5|6|7|8|9|10|11|12|13|14  -->
 <Auth_Page_Realm_1_ ua="na"/>
 <Conference_Bridge_URL_1_ ua="na"/>
