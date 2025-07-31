@@ -75,7 +75,7 @@
 
 <style>
 
-div.parent_widgets {
+div.parent_widget {
 	max-width: 100%;
 	margin: 0 auto;
 	display: grid;
@@ -83,7 +83,7 @@ div.parent_widgets {
 	row-gap: 1rem;
 }
 
-div.parent_widget div.hud_box:first-of-type {
+div.child_widget div.hud_box:first-of-type {
 	/*min-width: 120px;*/
 	background: rgba(0,0,0,0);
 	border: 0px dashed rgba(0,0,0,0);
@@ -94,20 +94,20 @@ div.parent_widget div.hud_box:first-of-type {
 	transition: .1s;
 }
 
-div.parent_widget.editable div.hud_box:first-of-type {
+div.child_widget.editable div.hud_box:first-of-type {
 	border: 1px dashed rgba(0,0,0,0.4);
 }
 
-div.parent_widget:not(:has(.parent_widgets)) .hud_content {
+div.child_widget:not(:has(.parent_widget)) .hud_content {
 	align-content: center;
 }
 
-div.parent_widget div.hud_chart  {
+div.child_widget div.hud_chart  {
 	padding: 7px;
 }
 
-div.parent_widget:hover:has(i) div.hud_box,
-div.parent_widget.editable:hover:has(i) div.hud_box {
+div.child_widget:hover:has(i) div.hud_box,
+div.child_widget.editable:hover:has(i) div.hud_box {
 	transform: scale(1.05, 1.05);
 	-webkit-transition: .1s;
 	-moz-transition: .1s;
@@ -183,12 +183,12 @@ foreach ($parent_widgets as $row) {
 		echo "}\n";
 	}
 	if ($row['dashboard_column_span'] > 1) {
-		echo "#".$dashboard_name.".parent_widget {\n";
+		echo "#".$dashboard_name.".child_widget {\n";
 		echo "	grid-column: span ".preg_replace($number_pattern, '', $row['dashboard_column_span']).";\n";
 		echo "}\n";
 	}
 	else if ($row['dashboard_row_span'] > 1) {
-		echo "#".$dashboard_name.".parent_widget {\n";
+		echo "#".$dashboard_name.".child_widget {\n";
 		echo "	grid-column: span 2;\n";
 		echo "}\n";
 	}
@@ -201,7 +201,7 @@ foreach ($parent_widgets as $row) {
 
 //include the dashboards
 	echo "<div class='hud_box' style='overflow-y: auto;'>\n";
-	echo "	<div class='hud_content parent_widgets'>\n";
+	echo "	<div class='hud_content parent_widget'>\n";
 
 	$x = 0;
 	foreach ($parent_widgets as $row) {
@@ -254,10 +254,10 @@ foreach ($parent_widgets as $row) {
 		//find the application and widget
 		$dashboard_path_array = explode('/', $dashboard_path);
 		$application_name = $dashboard_path_array[0];
-		$parent_widget_name = $dashboard_path_array[1];
-		$path_array = glob(dirname(__DIR__, 4).'/*/'.$application_name.'/resources/dashboard/'.$parent_widget_name.'.php');
+		$child_widget_name = $dashboard_path_array[1];
+		$path_array = glob(dirname(__DIR__, 4).'/*/'.$application_name.'/resources/dashboard/'.$child_widget_name.'.php');
 
-		echo "<div class='parent_widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."'  onclick=\"".(!empty($dashboard_url && $dashboard_path == "dashboard/icon") ? "window.open('". $dashboard_url ."', '". $dashboard_target ."', '". $window_parameters ."')" : "")."\" id='".$dashboard_name_id."' draggable='false'>\n";
+		echo "<div class='child_widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
