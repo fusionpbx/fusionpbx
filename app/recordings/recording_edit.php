@@ -198,10 +198,10 @@
 				}
 
 				//create the file name
-				//if (empty($recording_filename)) {
+				if (empty($recording_filename) && !empty($recording_name)) {
 					// Replace invalid characters with underscore
-					//$recording_filename = preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name);
-				//}
+					$recording_filename = preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name);
+				}
 
 				//make sure the filename ends with the approved extension
 				if (!str_ends_with($recording_filename, ".$recording_extension")) {
