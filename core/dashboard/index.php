@@ -601,7 +601,6 @@ function toggle_grid_row_end_all() {
 		$widget_name = $dashboard_path_array[1];
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
 
-		//do not render the widget if a parent is assigned
 		if (empty($row['dashboard_parent_uuid'])) {
 			echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
 			if (file_exists($path_array[0])) {
