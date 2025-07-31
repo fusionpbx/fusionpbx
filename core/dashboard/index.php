@@ -277,13 +277,13 @@ foreach ($dashboard as $row) {
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
-		echo "#".$dashboard_name." .hud_title {\n";
+		echo "#".$dashboard_name." .hud_title:first-of-type {\n";
 		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
 		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
-		echo "#".$dashboard_name.":hover .hud_title {\n";
+		echo "#".$dashboard_name.":hover .hud_title:first-of-type {\n";
 		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
 		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
 		echo "}\n";
@@ -335,7 +335,7 @@ foreach ($dashboard as $row) {
 		echo "}\n";
 	}
 	if ($row['dashboard_label_enabled'] == 'false') {
-		echo "#".$dashboard_name." .hud_title {\n";
+		echo "#".$dashboard_name." .hud_title:first-of-type {\n";
 		echo "	display: none;\n";
 		echo "}\n";
 		echo "#".$dashboard_name." .hud_content {\n";
