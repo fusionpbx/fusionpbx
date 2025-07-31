@@ -181,8 +181,11 @@
 		if (empty($_POST["persistformvar"])) {
 			if (permission_exists('recording_edit')) {
 
-				//set the recording format
-				$recording_format = $recording_format ?? 'wav';
+				//set the recording format for approved types
+				if (!in_array($recording_extension, ['mp3', 'wav'], true)) {
+					//default to wav
+					$recording_extension = 'wav';
+				}
 
 				//build the setting object and get the recording path
 				$recording_path = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'];
@@ -192,6 +195,17 @@
 					&& file_exists($recording_path.'/'.$recording_filename_original)
 					&& $recording_filename != $recording_filename_original) {
 					rename($recording_path.'/'.$recording_filename_original, $recording_path.'/'.$recording_filename);
+				}
+
+				//create the file name
+				if (empty($recording_filename) && !empty($recording_name)) {
+					// Replace invalid characters with underscore
+					$recording_filename = preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name);
+				}
+
+				//make sure the filename ends with the approved extension
+				if (!str_ends_with($recording_filename, ".$recording_extension")) {
+					$recording_filename .= ".$recording_extension";
 				}
 
 				//determine whether to create the recording
@@ -209,7 +223,7 @@
 				if ($create_recording) {
 					$speech->audio_path = $recording_path;
 					$speech->audio_filename = $recording_filename;
-					$speech->audio_format = $recording_format;
+					$speech->audio_format = $recording_extension;
 					//$speech->audio_model = $recording_model ?? '';
 					$speech->audio_voice = $recording_voice;
 					//$speech->audio_language = $recording_language;
@@ -219,7 +233,7 @@
 
 					//fix invalid riff & data header lengths in generated wave file
 					if ($speech_engine == 'openai') {
-						$recording_filename_temp = str_replace('.'.$recording_format, '.tmp.'.$recording_format, $recording_filename);
+						$recording_filename_temp = str_replace('.'.$recording_extension, '.tmp.'.$recording_extension, $recording_filename);
 						if (file_exists($recording_path.'/'.$recording_filename)) {
 							exec('sox --ignore-length '.escapeshellarg($recording_path.'/'.$recording_filename).' '.escapeshellarg($recording_path.'/'.$recording_filename_temp));
 						}
