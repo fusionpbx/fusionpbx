@@ -335,7 +335,7 @@ foreach ($dashboard as $row) {
 		echo "}\n";
 	}
 	if ($row['dashboard_label_enabled'] == 'false') {
-		echo "#".$dashboard_name." .hud_title {\n";
+		echo "#".$dashboard_name." .hud_title:first-of-type {\n";
 		echo "	display: none;\n";
 		echo "}\n";
 		echo "#".$dashboard_name." .hud_content {\n";
