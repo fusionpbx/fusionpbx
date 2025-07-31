@@ -828,10 +828,8 @@
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
 		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
-		if ($dashboard_chart_type === 'line') {
-			echo "		<option value='line' selected='selected'>".$text['label-line']."</option>\n";
-		} else {
-			echo "		<option value='line'>".$text['label-line']."</option>\n";
+		if ($dashboard_chart_type == 'line' || $dashboard_path == 'system/system_cpu_status') {
+			echo "		<option value='line' ".($dashboard_chart_type == "line" ? "selected='selected'" : null).">".$text['label-line']."</option>\n";
 		}
 		if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
 			echo "		<option value='icon' ".($dashboard_chart_type == "icon" ? "selected='selected'" : null).">".$text['label-icon']."</option>\n";
@@ -931,7 +929,7 @@
 		echo "</tr>\n";
 	}
 
-	if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
+	if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['active_calls/active_calls', 'domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
 		echo "<tr class='type_icon'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_number_text_color_hover']."\n";
@@ -988,8 +986,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == "add" || $dashboard_path == "dashboard/icon") {
-		echo "<tr class='type_icon' ".($dashboard_path != 'dashboard/icon' ? "style='display: none;'" : null).">\n";
+	if ($action == "add" || $dashboard_path == "dashboard/icon" || $dashboard_chart_type == "icon") {
+		echo "<tr class='type_icon' ".($dashboard_path != "dashboard/icon" || $dashboard_chart_type != "icon" ? null : "style='display: none;'").">\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo $text['label-dashboard_background_color_hover']."\n";
 		echo "</td>\n";
