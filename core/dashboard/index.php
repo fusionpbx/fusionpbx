@@ -1,4 +1,3 @@
-
 <?php
 /*
 	FusionPBX
@@ -291,14 +290,25 @@ foreach ($dashboard as $row) {
 		echo "	color: ".$row['dashboard_icon_color'].";\n";
 		echo "}\n";
 	}
+	if ($row['dashboard_label_enabled'] == 'false') {
+		echo "#".$dashboard_name." .hud_title:first-of-type {\n";
+		echo "	display: none;\n";
+		echo "}\n";
+		echo "#".$dashboard_name." .hud_content {\n";
+		echo "	align-content: center;\n";
+		echo "}\n";
+		echo "#".$dashboard_name." .hud_chart {\n";
+		echo "	padding-top: 0;\n";
+		echo "}\n";
+	}
 	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
-		echo "#".$dashboard_name." .hud_title {\n";
+		echo "#".$dashboard_name." .hud_title:first-of-type {\n";
 		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
 		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
-		echo "#".$dashboard_name.":hover .hud_title {\n";
+		echo "#".$dashboard_name.":hover .hud_title:first-of-type {\n";
 		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
 		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
 		echo "}\n";
@@ -349,17 +359,6 @@ foreach ($dashboard as $row) {
 		}
 		echo "}\n";
 	}
-	if ($row['dashboard_label_enabled'] == 'false') {
-		echo "#".$dashboard_name." .hud_title {\n";
-		echo "	display: none;\n";
-		echo "}\n";
-		echo "#".$dashboard_name." .hud_content {\n";
-		echo "	align-content: center;\n";
-		echo "}\n";
-		echo "#".$dashboard_name." .hud_chart {\n";
-		echo "	padding-top: 0;\n";
-		echo "}\n";
-	}
 	if ($row['dashboard_path'] == "dashboard/icon") {
 		echo "#".$dashboard_name." div.hud_content,\n";
 		echo "#".$dashboard_name." span.hud_title,\n";
@@ -394,6 +393,11 @@ foreach ($dashboard as $row) {
 		case 3:
 			echo "#".$dashboard_name." .hud_content {\n";
 			echo "	height: 300.5px;\n";
+			echo "}\n";
+			break;
+		case 4:
+			echo "#".$dashboard_name." .hud_content {\n";
+			echo "	height: 406px;\n";
 			echo "}\n";
 			break;
 		default: //if empty
@@ -485,9 +489,11 @@ foreach ($dashboard as $row) {
 	.widgets { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
 	.col-num { grid-column: span 2; }
 }
+
 </style>
 
 <script>
+
 function toggle_grid_row_end(dashboard_name) {
 	let widget = document.getElementById(dashboard_name.toLowerCase().replace(/ /g, '_'));
 	let state = widget.getAttribute('data-state');
@@ -559,7 +565,7 @@ function toggle_grid_row_end_all() {
 		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
 		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
-		$dashboard_details_state = $row['dashboard_details_state'] ?? 'expanded';
+		$dashboard_details_state = $row['dashboard_details_state'] ?? 'hidden';
 		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
 
 		//define the regex patterns
@@ -595,6 +601,7 @@ function toggle_grid_row_end_all() {
 		$widget_name = $dashboard_path_array[1];
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
 
+		//do not render the widget if a parent is assigned
 		if (empty($row['dashboard_parent_uuid'])) {
 			echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
 			if (file_exists($path_array[0])) {
@@ -663,7 +670,7 @@ function toggle_grid_row_end_all() {
 				$('.hud_box').addClass('editable');
 				$('#btn_back, #btn_save').show();
 				$('div.widget').attr('draggable',true).addClass('editable');
-				$('div.parent_widget').attr('draggable',true).addClass('editable');
+				$('div.child_widget').attr('draggable',true).addClass('editable');
 
 				function update_widget_order() {
 					let widget_ids_list = [];
@@ -677,9 +684,9 @@ function toggle_grid_row_end_all() {
 						order += 10;
 
 						//add the nested widgets to the list
-						const nested_container = widget.querySelector('.parent_widgets');
+						const nested_container = widget.querySelector('.parent_widget');
 						if (nested_container) {
-							nested_container.querySelectorAll(':scope > div.parent_widget[id]').forEach(nested => {
+							nested_container.querySelectorAll(':scope > div.child_widget[id]').forEach(nested => {
 								const child_id = nested.id;
 								widget_ids_list.push(`${child_id}|${widget_id}|${order}`);
 								order += 10;
@@ -699,30 +706,30 @@ function toggle_grid_row_end_all() {
 					onSort: update_widget_order,
 					onAdd: function (evt) {
 						evt.item.classList.add('widget');
+						evt.item.classList.remove('child_widget');
 						update_widget_order();
 					},
 					onRemove: function (evt) {
 						evt.item.classList.remove('widget');
+						evt.item.classList.add('child_widget');
 						update_widget_order();
 					},
 				});
 
-				document.querySelectorAll('.parent_widgets').forEach(function(container) {
+				document.querySelectorAll('.parent_widget').forEach(function(container) {
 					Sortable.create(container, {
 						group: 'nested',
 						animation: 150,
-						draggable: '.parent_widget',
+						draggable: '.child_widget',
 						ghostClass: 'ghost',
 						fallbackOnBody: true,
 						onSort: update_widget_order,
 						onAdd: function (evt) {
-							evt.item.classList.add('parent_widget');
 							update_widget_order();
 							let current_row_end = evt.item.style.gridRowEnd;
 							evt.item.style.gridColumn = current_row_end;
 						},
 						onRemove: function (evt) {
-							evt.item.classList.remove('parent_widget');
 							update_widget_order();
 							evt.item.style.gridColumn = '';
 						},
@@ -733,13 +740,13 @@ function toggle_grid_row_end_all() {
 			else { // off
 
 				$('div.widget').attr('draggable',false).removeClass('editable');
-				$('div.parent_widget').attr('draggable',false).removeClass('editable');
+				$('div.child_widget').attr('draggable',false).removeClass('editable');
 				$('.hud_box').removeClass('editable');
 				$('#btn_back, #btn_save').hide();
 				$('span#expand_contract, #btn_edit, #btn_add').show();
 
 				sortable.option('disabled', true);
-				document.querySelectorAll('.parent_widgets').forEach(el => {
+				document.querySelectorAll('.parent_widget').forEach(el => {
 				const nested_sortable = Sortable.get(el);
 					if (nested_sortable) {
 						nested_sortable.option('disabled', true);
