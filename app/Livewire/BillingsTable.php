@@ -155,6 +155,24 @@ class BillingsTable extends DataTableComponent
                     return $value;
                 })
                 ->sortable(),
+
+            Column::make("Actions", "billing_uuid")
+                ->format(function ($value, $row, Column $column) {
+                    $buttons = '<a href="' . route("billings.view", $row->billing_uuid) . '" class="btn btn-primary btn-sm m-1"><i class="fa-solid fa-eye"></i></a>';
+
+                    if(($row->credit_type != 'postpaid') || (!empty($row->whmcs_user_id)))
+                    {
+                        $buttons .= '<a href="' . route("billings.payment", $row->billing_uuid) . '" class="btn btn-primary btn-sm m-1"><i class="fa-solid fa-wallet"></i></a>';
+                    }
+
+                    if(($row->child_count > 0) && ($row->balance > 0))
+                    {
+                        $buttons .= '<a href="' . route("billings.payment", $row->billing_uuid) . '" class="btn btn-primary btn-sm m-1"><i class="fa-solid fa-money-bill-transfer"></i></a>';
+                    }
+
+                    return $buttons;
+                })
+                ->html()
         ];
     }
 

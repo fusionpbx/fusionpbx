@@ -309,4 +309,16 @@ class BillingController extends Controller
 			'Cache-Control' => 'no-store, no-cache, must-revalidate',
 		]);
 	}
+
+	public function view(Billing $billing)
+	{
+		return view("pages.billings.view", compact("billing"));
+	}
+
+	public function payment(Billing $billing)
+	{
+		$payments = array_keys(config('payments'));
+
+		return view("pages.billings.payments.index", compact("billing", "payments"));
+	}
 }

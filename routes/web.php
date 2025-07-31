@@ -70,6 +70,9 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/billings/pricing', [BillingController::class, 'pricing'])->name('billings.pricing', 'billings.pricing');
     Route::resource('/billings/deals', BillingDealController::class)->names('billings.deals')->parameters(["deals" => "billingDeal"]);
     Route::get('/billings/{billing}/export', [BillingController::class, 'export'])->name('billings.export', 'billings.export');
+    Route::get('/billings/{billing}/payment', [BillingController::class, 'payment'])->name('billings.payment', 'billings.payment');
+    Route::get('/billings/{billing}/{payment}/create', [BillingController::class, 'paymentCreate'])->name('billings.payment.create', 'billings.payment.create');
+    Route::get('/billings/{billing}/view', [BillingController::class, 'view'])->name('billings.view', 'billings.view');
     Route::resource('/billings', BillingController::class)->name('billings', 'billings');
 
     // BRIDGE
