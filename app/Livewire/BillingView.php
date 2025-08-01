@@ -52,24 +52,42 @@ class BillingView extends DataTableComponent
 			Column::make("Method", "plugin_used"),
             Column::make("Actions", "settled")
                 ->format(function ($value, $row, Column $column) {
-                    $buttons = '';
+                    $cell = '';
 
                     if($row->settled == 0)
                     {
-                        $buttons .= '<a href="#" class="btn btn-success btn-sm">Settle</a>';
+                        $cell .= 'Pending';
+
+                        if(!auth()->user()->hasGroup('superadmin'))
+                        {
+                            $cell .= '<br><form action="' . route("billings.process", $row->billing_invoice_uuid) . '" method="post">';
+                            $cell .= '<input type="hidden" name="_token" value="' . csrf_token() .'">';
+                            $cell .= '<button type="submit" class="btn btn-success btn-sm">Settle</button>';
+                            $cell .= '<input type="hidden" name="settled" value="1">';
+                            $cell .= '</form>';
+                        }
                     }
 
-                    if($row->settled == "1")
+                    if($row->settled == 1)
                     {
-                        $buttons .= '<a href="#" class="btn btn-danger btn-sm mw-150">Refund</a>';
+                        $cell .= 'Settled';
+
+                        if(!auth()->user()->hasGroup('superadmin'))
+                        {
+                            $cell .= '<br><form action="' . route("billings.process", $row->billing_invoice_uuid) . '" method="post">';
+                            $cell .= '<input type="hidden" name="_token" value="' . csrf_token() .'">';
+                            $cell .= '<button type="submit" class="btn btn-danger btn-sm">Refund</button>';
+                            $cell .= '<input type="hidden" name="settled" value="-1">';
+                            $cell .= '</form>';
+                        }
                     }
 
                     if($row->settled == -1)
                     {
-                        $buttons .= '<a href="#" class="btn btn-primary btn-sm">Refunded</a>';
+                        $cell = '<button type="button" class="btn btn-primary btn-sm">Refunded</button>';
                     }
 
-                    return $buttons;
+                    return $cell;
                 })
                 ->html()
         ];

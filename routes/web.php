@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BillingDealController;
+use App\Http\Controllers\BillingInvoiceController;
 use App\Http\Controllers\BridgeController;
 use App\Http\Controllers\CallBlockController;
 use App\Http\Controllers\CarrierController;
@@ -73,6 +74,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/billings/{billing}/payment', [BillingController::class, 'payment'])->name('billings.payment', 'billings.payment');
     Route::get('/billings/{billing}/{payment}/create', [BillingController::class, 'paymentCreate'])->name('billings.payment.create', 'billings.payment.create');
     Route::get('/billings/{billing}/view', [BillingController::class, 'view'])->name('billings.view', 'billings.view');
+    Route::post('/billings/{billingInvoice}/process', [BillingInvoiceController::class, 'process'])->name('billings.process', 'billings.process');
     Route::resource('/billings', BillingController::class)->name('billings', 'billings');
 
     // BRIDGE
