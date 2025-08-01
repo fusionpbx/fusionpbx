@@ -879,7 +879,7 @@
 	$sql = "select * from v_gateways ";
 	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= "order by domain_uuid = :domain_uuid DESC, gateway ";
+		$sql .= "order by CASE WHEN domain_uuid = :domain_uuid THEN 0 ELSE 1 END, domain_uuid DESC, gateway ";
 	}
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";
