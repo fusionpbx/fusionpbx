@@ -49,7 +49,7 @@
 		}
 	}
 
-	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"").">\n";
 	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</a></span>";
 
 	if (isset($dashboard_chart_type) && $dashboard_chart_type == "doughnut") {
@@ -147,7 +147,7 @@
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_voicemail_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 
 	echo "</div>\n";

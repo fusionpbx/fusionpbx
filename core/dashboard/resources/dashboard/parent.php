@@ -117,78 +117,78 @@ div.child_widget.editable:hover:has(i) div.hud_box {
 /* dashboard settings */
 <?php
 foreach ($parent_widgets as $row) {
-	$dashboard_name = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($row['dashboard_name'])),'_');
+	$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
 	if (!empty($row['dashboard_icon_color'])) {
-		echo "#".$dashboard_name." .hud_stat:has(i) {\n";
+		echo "#".$dashboard_id." .hud_stat:has(i) {\n";
 		echo "	color: ".$row['dashboard_icon_color'].";\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
-		echo "#".$dashboard_name." .hud_title {\n";
+		echo "#".$dashboard_id." .hud_title {\n";
 		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
 		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
-		echo "#".$dashboard_name.":hover .hud_title {\n";
+		echo "#".$dashboard_id.":hover .hud_title {\n";
 		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
 		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_number_text_color'])) {
-		echo "#".$dashboard_name." .hud_stat {\n";
+		echo "#".$dashboard_id." .hud_stat {\n";
 		echo "	color: ".$row['dashboard_number_text_color'].";\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_number_text_color_hover'])) {
-		echo "#".$dashboard_name.":hover .hud_stat {\n";
+		echo "#".$dashboard_id.":hover .hud_stat {\n";
 		echo "	color: ".$row['dashboard_number_text_color_hover'].";\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_background_color'])) {
 		$background_color = json_decode($row['dashboard_background_color'], true);
-		echo "#".$dashboard_name." {\n";
+		echo "#".$dashboard_id." {\n";
 		echo "	background: ".$background_color[0].";\n";
 		echo "	background-image: linear-gradient(to right, ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_background_color_hover'])) {
 		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-		echo "#".$dashboard_name.":hover {\n";
+		echo "#".$dashboard_id.":hover {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
 		echo "	background-image: linear-gradient(to right, ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_detail_background_color'])) {
 		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
-		echo "#".$dashboard_name." .hud_details {\n";
+		echo "#".$dashboard_id." .hud_details {\n";
 		echo "	background: ".$detail_background_color[0].";\n";
 		echo "	background-image: linear-gradient(to right, ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
 		echo "}\n";
 	}
 	if ($row['dashboard_label_enabled'] == 'false') {
-		echo "#".$dashboard_name." .hud_title {\n";
+		echo "#".$dashboard_id." .hud_title {\n";
 		echo "	display: none;\n";
 		echo "}\n";
-		echo "#".$dashboard_name." .hud_content {\n";
+		echo "#".$dashboard_id." .hud_content {\n";
 		echo "	align-content: center;\n";
 		echo "}\n";
 	}
 	if ($row['dashboard_path'] == "dashboard/icon") {
-		echo "#".$dashboard_name.",\n";
-		echo "#".$dashboard_name." span.hud_title,\n";
-		echo "#".$dashboard_name." span.hud_stat {\n";
+		echo "#".$dashboard_id.",\n";
+		echo "#".$dashboard_id." span.hud_title,\n";
+		echo "#".$dashboard_id." span.hud_stat {\n";
 		echo "	transition: .4s;\n";
 		echo "	border-radius: 5px;\n";
 		echo "}\n";
 	}
 	if ($row['dashboard_column_span'] > 1) {
-		echo "#".$dashboard_name.".child_widget {\n";
+		echo "#".$dashboard_id.".child_widget {\n";
 		echo "	grid-column: span ".preg_replace($number_pattern, '', $row['dashboard_column_span']).";\n";
 		echo "}\n";
 	}
 	else if ($row['dashboard_row_span'] > 1) {
-		echo "#".$dashboard_name.".child_widget {\n";
+		echo "#".$dashboard_id.".child_widget {\n";
 		echo "	grid-column: span 2;\n";
 		echo "}\n";
 	}
@@ -231,8 +231,8 @@ foreach ($parent_widgets as $row) {
 
 		//sanitize the data
 		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
+		$dashboard_id = 'id_'.md5($dashboard_uuid);
 		$dashboard_name = trim(preg_replace($text_pattern, '', $dashboard_name));
-		$dashboard_name_id = trim(preg_replace("/[^a-z0-9_]/", '_', strtolower($dashboard_name)),'_');
 		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
 		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
 		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
@@ -257,7 +257,7 @@ foreach ($parent_widgets as $row) {
 		$child_widget_name = $dashboard_path_array[1];
 		$path_array = glob(dirname(__DIR__, 4).'/*/'.$application_name.'/resources/dashboard/'.$child_widget_name.'.php');
 
-		echo "<div class='child_widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_name_id."' draggable='false'>\n";
+		echo "<div class='child_widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_id."' draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
