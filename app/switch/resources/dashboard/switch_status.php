@@ -77,7 +77,7 @@
 	}
 
 //show the content
-	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"").">\n";
 	echo "	<span class='hud_title'>".$text['label-switch_status']."</span>\n";
 
 	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
@@ -178,7 +178,7 @@
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 	echo "</div>\n";
 

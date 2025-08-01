@@ -68,7 +68,7 @@ $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
 //icon and count
-echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
+echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."')\"").">\n";
 	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".$text['title']."</a></span>\n";
 	echo "<div style='position: relative; display: inline-block;'>\n";
 		echo "<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";

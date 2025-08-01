@@ -39,8 +39,6 @@
 		exit;
 	}
 
-	$dashboard_name = "System Services";
-
 //function to parse a FusionPBX service from a .service file
 	if (!function_exists('get_classname')) {
 		function get_classname(string $file) {
@@ -161,7 +159,7 @@
 
 //show the results
 echo "<div class='hud_box'>\n";
-echo "	<div class='hud_content' ".($dashboard_details_state == 'disabled' ?: "onclick=\"$('#hud_system_services_details').slideToggle('fast'); toggle_grid_row_end('$dashboard_name')\""). ">\n";
+echo "	<div class='hud_content' ".($dashboard_details_state == 'disabled' ?: "onclick=\"$('#hud_system_services_details').slideToggle('fast'); toggle_grid_row_end('$dashboard_id');\""). ">\n";
 echo "		<span class='hud_title'>System Services</span>\n";
 
 //doughnut chart
