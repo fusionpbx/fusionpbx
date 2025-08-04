@@ -255,7 +255,7 @@
 				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['queue_name'])."</a>";
 			}
 			else {
-				echo "	".escape($row[queue_name]);
+				echo "	".escape($row['queue_name']);
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['queue_extension'])."</td>\n";
