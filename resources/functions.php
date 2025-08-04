@@ -2435,7 +2435,7 @@ if (!function_exists('git_pull')) {
 		chdir($path);
 
 		//specify how to reconcile divergent branches
-		exec('git config pull.rebase true');
+		exec('git config pull.rebase false');
 
 		//git pull
 		exec("GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git pull 2>&1", $response_source_update);
