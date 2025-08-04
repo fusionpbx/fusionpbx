@@ -46,7 +46,7 @@ abstract class service {
 	 * current debugging level for output to syslog
 	 * @var int Syslog level
 	 */
-	protected static $log_level = LOG_INFO;
+	protected static $log_level = LOG_NOTICE;
 
 	/**
 	 * config object
@@ -336,11 +336,12 @@ abstract class service {
 		}
 
 		// Show the details to the user
+		self::log("Starting up...");
 		self::log("Mode      : " . (self::$daemon_mode ? "Daemon" : "Foreground"), LOG_INFO);
 		self::log("Service   : $basename", LOG_INFO);
 		self::log("Process ID: $pid", LOG_INFO);
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
-		self::log("Log level : " . self::log_level_to_string(self::$log_level));
+		self::log("Log level : " . self::log_level_to_string(self::$log_level), LOG_INFO);
 		self::log("Timestamps: " . (self::$show_timestamp_log ? "Yes" : "No"), LOG_INFO);
 
 		// Save the pid file
@@ -404,7 +405,7 @@ abstract class service {
 				self::$log_level = LOG_DEBUG; // Debugging
 				break;
 			default:
-				self::$log_level = LOG_INFO; // Default to INFO if invalid level
+				self::$log_level = LOG_NOTICE; // Default to INFO if invalid level
 		}
 
 		// When we are using LOG_DEBUG there is a high chance we are logging to the console
@@ -450,11 +451,11 @@ abstract class service {
 	}
 
 	/**
-	 * Logs to the system log
-	 * @param string $message
-	 * @param int $level
+	 * Logs to the system log or console when running in foreground
+	 * @param string $message Message to display in the system log or console when running in foreground
+	 * @param int $level (Optional) Level to use for logging to the console or daemon. Default value is LOG_NOTICE
 	 */
-	protected static function log(string $message, int $level = LOG_INFO) {
+	protected static function log(string $message, int $level = LOG_NOTICE) {
 		// Check if we need to show the message
 		if ($level <= self::$log_level) {
 			// When not in daemon mode we log to console directly
@@ -470,7 +471,6 @@ abstract class service {
 				// Log the message to syslog
 				syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
 			}
-
 		}
 	}
 
