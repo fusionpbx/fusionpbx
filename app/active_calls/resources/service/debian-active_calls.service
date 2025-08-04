@@ -2,7 +2,7 @@
 Description=Active Calls Websocket Service
 
 [Service]
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/active_calls/resources/service/active_calls.php --suppress-timestamp --no-fork
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/active_calls/resources/service/active_calls.php --no-fork
 User=www-data
 Group=www-data
 Restart=always

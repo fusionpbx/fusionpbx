@@ -89,7 +89,7 @@ abstract class service {
 	 * Used to suppress the timestamp in syslog
 	 * @var bool
 	 */
-	protected static $suppress_timestamp_log = false;
+	protected static $show_timestamp_log = false;
 
 	/**
 	 * Child classes must provide a mechanism to reload settings
@@ -341,7 +341,7 @@ abstract class service {
 		self::log("Process ID: $pid", LOG_INFO);
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
 		self::log("Log level : " . self::log_level_to_string(self::$log_level));
-		self::log("Timestamps: " . (self::$suppress_timestamp_log ? "Yes" : "No"), LOG_INFO);
+		self::log("Timestamps: " . (self::$show_timestamp_log ? "Yes" : "No"), LOG_INFO);
 
 		// Save the pid file
 		$success = file_put_contents(self::$pid_file, $pid);
@@ -454,7 +454,7 @@ abstract class service {
 			// Enable sending message to the console directly
 			if (!self::$forking_enabled) {
 				$level_as_string = self::log_level_to_string($level);
-				if (self::$suppress_timestamp_log) {
+				if (!self::$show_timestamp_log) {
 					echo "[$level_as_string] $message\n";
 				} else {
 					$time = date('Y-m-d H:i:s');
@@ -639,11 +639,11 @@ abstract class service {
 		$help_options[$index]['functions'][] = 'set_debug_level';
 		$index++;
 		$help_options[$index]['short_option'] = '';
-		$help_options[$index]['long_option'] = 'suppress-timestamp';
-		$help_options[$index]['description'] = 'Disable the timestamp when logging';
+		$help_options[$index]['long_option'] = 'show-timestamp';
+		$help_options[$index]['description'] = 'Enable the timestamp when logging';
 		$help_options[$index]['short_description'] = '';
-		$help_options[$index]['long_description'] = '--suppress-timestamp';
-		$help_options[$index]['functions'][] = 'suppress_timestamp';
+		$help_options[$index]['long_description'] = '--show-timestamp';
+		$help_options[$index]['functions'][] = 'show_timestamp';
 		$index++;
 		$help_options[$index]['short_option'] = 'c:';
 		$help_options[$index]['long_option'] = 'config:';
@@ -669,8 +669,8 @@ abstract class service {
 		return $help_options;
 	}
 
-	public static function suppress_timestamp() {
-		self::$suppress_timestamp_log = true;
+	public static function show_timestamp() {
+		self::$show_timestamp_log = true;
 	}
 
 	/**
