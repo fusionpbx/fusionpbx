@@ -46,7 +46,7 @@ abstract class service {
 	 * current debugging level for output to syslog
 	 * @var int Syslog level
 	 */
-	protected static $log_level = LOG_INFO;
+	protected static $log_level = LOG_NOTICE;
 
 	/**
 	 * config object
@@ -82,7 +82,14 @@ abstract class service {
 	 * Fork the service to it's own process ID
 	 * @var bool
 	 */
-	protected static $forking_enabled = true;
+	protected static $daemon_mode = false;
+
+	/**
+	 * Suppress the timestamp
+	 * Used to suppress the timestamp in syslog
+	 * @var bool
+	 */
+	protected static $show_timestamp_log = false;
 
 	/**
 	 * Child classes must provide a mechanism to reload settings
@@ -329,9 +336,13 @@ abstract class service {
 		}
 
 		// Show the details to the user
+		self::log("Starting up...");
+		self::log("Mode      : " . (self::$daemon_mode ? "Daemon" : "Foreground"), LOG_INFO);
 		self::log("Service   : $basename", LOG_INFO);
 		self::log("Process ID: $pid", LOG_INFO);
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
+		self::log("Log level : " . self::log_level_to_string(self::$log_level), LOG_INFO);
+		self::log("Timestamps: " . (self::$show_timestamp_log ? "Yes" : "No"), LOG_INFO);
 
 		// Save the pid file
 		$success = file_put_contents(self::$pid_file, $pid);
@@ -396,6 +407,12 @@ abstract class service {
 			default:
 				self::$log_level = LOG_NOTICE; // Default to NOTICE if invalid level
 		}
+
+		// When we are using LOG_DEBUG there is a high chance we are logging to the console
+		// directly without systemctl so enable the timestamps by default
+		if (self::$log_level === LOG_DEBUG && !self::$daemon_mode) {
+			self::show_timestamp();
+		}
 	}
 
 	private static function log_level_to_string(int $level = LOG_NOTICE): string {
@@ -434,24 +451,27 @@ abstract class service {
 	}
 
 	/**
-	 * Logs to the system log
-	 * @param string $message
-	 * @param int $level
+	 * Logs to the system log or console when running in foreground
+	 * @param string $message Message to display in the system log or console when running in foreground
+	 * @param int $level (Optional) Level to use for logging to the console or daemon. Default value is LOG_NOTICE
 	 */
-	protected static function log(string $message, int $level = null) {
-		// Use default log level if not provided
-		if ($level === null) {
-			$level = self::$log_level;
+	protected static function log(string $message, int $level = LOG_NOTICE) {
+		// Check if we need to show the message
+		if ($level <= self::$log_level) {
+			// When not in daemon mode we log to console directly
+			if (!self::$daemon_mode) {
+				$level_as_string = self::log_level_to_string($level);
+				if (!self::$show_timestamp_log) {
+					echo "[$level_as_string] $message\n";
+				} else {
+					$time = date('Y-m-d H:i:s');
+					echo "[$time][$level_as_string] $message\n";
+				}
+			} else {
+				// Log the message to syslog
+				syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
+			}
 		}
-
-		//enable sending message to the console directly
-		if (self::$log_level === LOG_DEBUG || !self::$forking_enabled) {
-			$time = date('Y-m-d H:i:s');
-			echo "[$time] [" . self::log_level_to_string($level) . "] " . $message . "\n";
-		}
-
-		// Log the message to syslog
-		syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
 	}
 
 	/**
@@ -631,12 +651,19 @@ abstract class service {
 		$help_options[$index]['long_description'] = '--config <path>';
 		$help_options[$index]['functions'][] = 'set_config_file';
 		$index++;
-		$help_options[$index]['short_option'] = '1';
-		$help_options[$index]['long_option'] = 'no-fork';
-		$help_options[$index]['description'] = 'Do not fork the process';
-		$help_options[$index]['short_description'] = '-1';
-		$help_options[$index]['long_description'] = '--no-fork';
-		$help_options[$index]['functions'][] = 'set_no_fork';
+		$help_options[$index]['short_option'] = 'f';
+		$help_options[$index]['long_option'] = 'daemon';
+		$help_options[$index]['description'] = 'Start the process as a daemon. (Also known as forking)';
+		$help_options[$index]['short_description'] = '-f';
+		$help_options[$index]['long_description'] = '--daemon';
+		$help_options[$index]['functions'][] = 'enable_daemon_mode';
+		$index++;
+		$help_options[$index]['short_option'] = '';
+		$help_options[$index]['long_option'] = 'show-timestamp';
+		$help_options[$index]['description'] = 'Enable the timestamp when logging';
+		$help_options[$index]['short_description'] = '';
+		$help_options[$index]['long_description'] = '--show-timestamp';
+		$help_options[$index]['functions'][] = 'show_timestamp';
 		$index++;
 		$help_options[$index]['short_option'] = 'x';
 		$help_options[$index]['long_option'] = 'exit';
@@ -648,12 +675,16 @@ abstract class service {
 		return $help_options;
 	}
 
+	public static function show_timestamp() {
+		self::$show_timestamp_log = true;
+	}
+
 	/**
-	 * Set to not fork when started
+	 * Set to foreground when started
 	 */
-	public static function set_no_fork() {
-		echo "Running in foreground";
-		self::$forking_enabled = false;
+	public static function enable_daemon_mode() {
+		self::$daemon_mode = true;
+		self::$show_timestamp_log = false;
 	}
 
 	/**
@@ -771,8 +802,7 @@ abstract class service {
 		self::parse_service_command_options();
 
 		//fork process
-		if (self::$forking_enabled) {
-			echo "Running in daemon mode\n";
+		if (self::$daemon_mode) {
 			//force launching in a seperate process
 			if ($pid = pcntl_fork()) {
 				exit;
