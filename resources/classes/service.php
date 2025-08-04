@@ -85,6 +85,13 @@ abstract class service {
 	protected static $forking_enabled = true;
 
 	/**
+	 * Suppress the timestamp
+	 * Used to suppress the timestamp in syslog
+	 * @var bool
+	 */
+	protected static $suppress_timestamp_log = false;
+
+	/**
 	 * Child classes must provide a mechanism to reload settings
 	 */
 	abstract protected function reload_settings(): void;
@@ -329,9 +336,12 @@ abstract class service {
 		}
 
 		// Show the details to the user
+		self::log("Mode      : " . (self::$forking_enabled ? "Daemon" : "Foreground"), LOG_INFO);
 		self::log("Service   : $basename", LOG_INFO);
 		self::log("Process ID: $pid", LOG_INFO);
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
+		self::log("Log level : " . self::log_level_to_string(self::$log_level));
+		self::log("Timestamps: " . (self::$suppress_timestamp_log ? "Yes" : "No"), LOG_INFO);
 
 		// Save the pid file
 		$success = file_put_contents(self::$pid_file, $pid);
@@ -438,20 +448,24 @@ abstract class service {
 	 * @param string $message
 	 * @param int $level
 	 */
-	protected static function log(string $message, int $level = null) {
-		// Use default log level if not provided
-		if ($level === null) {
-			$level = self::$log_level;
-		}
+	protected static function log(string $message, int $level = LOG_INFO) {
+		// Check if we need to show the message
+		if ($level <= self::$log_level) {
+			// Enable sending message to the console directly
+			if (!self::$forking_enabled) {
+				$level_as_string = self::log_level_to_string($level);
+				if (self::$suppress_timestamp_log) {
+					echo "[$level_as_string] $message\n";
+				} else {
+					$time = date('Y-m-d H:i:s');
+					echo "[$time][$level_as_string] $message\n";
+				}
+			} else {
+				// Log the message to syslog
+				syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
+			}
 
-		//enable sending message to the console directly
-		if (self::$log_level === LOG_DEBUG || !self::$forking_enabled) {
-			$time = date('Y-m-d H:i:s');
-			echo "[$time] [" . self::log_level_to_string($level) . "] " . $message . "\n";
 		}
-
-		// Log the message to syslog
-		syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
 	}
 
 	/**
@@ -624,6 +638,13 @@ abstract class service {
 		$help_options[$index]['long_description'] = '--debug <level>';
 		$help_options[$index]['functions'][] = 'set_debug_level';
 		$index++;
+		$help_options[$index]['short_option'] = '';
+		$help_options[$index]['long_option'] = 'suppress-timestamp';
+		$help_options[$index]['description'] = 'Disable the timestamp when logging';
+		$help_options[$index]['short_description'] = '';
+		$help_options[$index]['long_description'] = '--suppress-timestamp';
+		$help_options[$index]['functions'][] = 'suppress_timestamp';
+		$index++;
 		$help_options[$index]['short_option'] = 'c:';
 		$help_options[$index]['long_option'] = 'config:';
 		$help_options[$index]['description'] = 'Full path and file name of the configuration file to use. /etc/fusionpbx/config.conf or /usr/local/etc/fusionpbx/config.conf on FreeBSD is default';
@@ -648,11 +669,14 @@ abstract class service {
 		return $help_options;
 	}
 
+	public static function suppress_timestamp() {
+		self::$suppress_timestamp_log = true;
+	}
+
 	/**
 	 * Set to not fork when started
 	 */
 	public static function set_no_fork() {
-		echo "Running in foreground";
 		self::$forking_enabled = false;
 	}
 
