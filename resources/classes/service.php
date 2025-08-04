@@ -405,7 +405,7 @@ abstract class service {
 				self::$log_level = LOG_DEBUG; // Debugging
 				break;
 			default:
-				self::$log_level = LOG_NOTICE; // Default to INFO if invalid level
+				self::$log_level = LOG_NOTICE; // Default to NOTICE if invalid level
 		}
 
 		// When we are using LOG_DEBUG there is a high chance we are logging to the console
