@@ -82,7 +82,7 @@ abstract class service {
 	 * Fork the service to it's own process ID
 	 * @var bool
 	 */
-	protected static $forking_enabled = true;
+	protected static $daemon_mode = false;
 
 	/**
 	 * Suppress the timestamp
@@ -336,7 +336,7 @@ abstract class service {
 		}
 
 		// Show the details to the user
-		self::log("Mode      : " . (self::$forking_enabled ? "Daemon" : "Foreground"), LOG_INFO);
+		self::log("Mode      : " . (self::$daemon_mode ? "Daemon" : "Foreground"), LOG_INFO);
 		self::log("Service   : $basename", LOG_INFO);
 		self::log("Process ID: $pid", LOG_INFO);
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
@@ -404,7 +404,13 @@ abstract class service {
 				self::$log_level = LOG_DEBUG; // Debugging
 				break;
 			default:
-				self::$log_level = LOG_NOTICE; // Default to NOTICE if invalid level
+				self::$log_level = LOG_INFO; // Default to INFO if invalid level
+		}
+
+		// When we are using LOG_DEBUG there is a high chance we are logging to the console
+		// directly without systemctl so enable the timestamps by default
+		if (self::$log_level === LOG_DEBUG && !self::$daemon_mode) {
+			self::show_timestamp();
 		}
 	}
 
@@ -451,8 +457,8 @@ abstract class service {
 	protected static function log(string $message, int $level = LOG_INFO) {
 		// Check if we need to show the message
 		if ($level <= self::$log_level) {
-			// Enable sending message to the console directly
-			if (!self::$forking_enabled) {
+			// When not in daemon mode we log to console directly
+			if (!self::$daemon_mode) {
 				$level_as_string = self::log_level_to_string($level);
 				if (!self::$show_timestamp_log) {
 					echo "[$level_as_string] $message\n";
@@ -638,13 +644,6 @@ abstract class service {
 		$help_options[$index]['long_description'] = '--debug <level>';
 		$help_options[$index]['functions'][] = 'set_debug_level';
 		$index++;
-		$help_options[$index]['short_option'] = '';
-		$help_options[$index]['long_option'] = 'show-timestamp';
-		$help_options[$index]['description'] = 'Enable the timestamp when logging';
-		$help_options[$index]['short_description'] = '';
-		$help_options[$index]['long_description'] = '--show-timestamp';
-		$help_options[$index]['functions'][] = 'show_timestamp';
-		$index++;
 		$help_options[$index]['short_option'] = 'c:';
 		$help_options[$index]['long_option'] = 'config:';
 		$help_options[$index]['description'] = 'Full path and file name of the configuration file to use. /etc/fusionpbx/config.conf or /usr/local/etc/fusionpbx/config.conf on FreeBSD is default';
@@ -652,12 +651,19 @@ abstract class service {
 		$help_options[$index]['long_description'] = '--config <path>';
 		$help_options[$index]['functions'][] = 'set_config_file';
 		$index++;
-		$help_options[$index]['short_option'] = '1';
-		$help_options[$index]['long_option'] = 'no-fork';
-		$help_options[$index]['description'] = 'Do not fork the process';
-		$help_options[$index]['short_description'] = '-1';
-		$help_options[$index]['long_description'] = '--no-fork';
-		$help_options[$index]['functions'][] = 'set_no_fork';
+		$help_options[$index]['short_option'] = 'f';
+		$help_options[$index]['long_option'] = 'daemon';
+		$help_options[$index]['description'] = 'Start the process as a daemon. (Also known as forking)';
+		$help_options[$index]['short_description'] = '-f';
+		$help_options[$index]['long_description'] = '--daemon';
+		$help_options[$index]['functions'][] = 'enable_daemon_mode';
+		$index++;
+		$help_options[$index]['short_option'] = '';
+		$help_options[$index]['long_option'] = 'show-timestamp';
+		$help_options[$index]['description'] = 'Enable the timestamp when logging';
+		$help_options[$index]['short_description'] = '';
+		$help_options[$index]['long_description'] = '--show-timestamp';
+		$help_options[$index]['functions'][] = 'show_timestamp';
 		$index++;
 		$help_options[$index]['short_option'] = 'x';
 		$help_options[$index]['long_option'] = 'exit';
@@ -674,10 +680,11 @@ abstract class service {
 	}
 
 	/**
-	 * Set to not fork when started
+	 * Set to foreground when started
 	 */
-	public static function set_no_fork() {
-		self::$forking_enabled = false;
+	public static function enable_daemon_mode() {
+		self::$daemon_mode = true;
+		self::$show_timestamp_log = false;
 	}
 
 	/**
@@ -795,8 +802,7 @@ abstract class service {
 		self::parse_service_command_options();
 
 		//fork process
-		if (self::$forking_enabled) {
-			echo "Running in daemon mode\n";
+		if (self::$daemon_mode) {
 			//force launching in a seperate process
 			if ($pid = pcntl_fork()) {
 				exit;
