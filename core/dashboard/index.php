@@ -602,7 +602,7 @@ function toggle_grid_row_end_all() {
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
 
 		if (empty($row['dashboard_parent_uuid'])) {
-			echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_id."' draggable='false'>\n";
+			echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_id."' ".($dashboard_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
 			if (file_exists($path_array[0])) {
 				include $path_array[0];
 			}
@@ -697,7 +697,13 @@ function toggle_grid_row_end_all() {
 				}
 
 				sortable = Sortable.create(widgets, {
-					group: 'nested',
+					group: {
+						name: 'shared',
+						pull: function(to, from, dragEl) {
+							return !dragEl.hasAttribute('data-is-parent');
+						},
+						put: true,
+					},
 					animation: 150,
 					draggable: '.widget',
 					preventOnFilter: true,
@@ -717,7 +723,15 @@ function toggle_grid_row_end_all() {
 
 				document.querySelectorAll('.parent_widget').forEach(function(container) {
 					Sortable.create(container, {
-						group: 'nested',
+						group: {
+							name: 'shared',
+							pull: function(to, from, dragEl) {
+								return true;
+							},
+							put: function(to, from, dragEl) {
+								return !dragEl.hasAttribute('data-is-parent');
+							},
+						},
 						animation: 150,
 						draggable: '.child_widget',
 						ghostClass: 'ghost',
