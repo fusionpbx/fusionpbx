@@ -528,15 +528,22 @@ class websocket_service extends service {
 				if ($client_socket === $this->server_socket) {
 					$conn = @stream_socket_accept($this->server_socket, 0);
 					if ($conn) {
-						// complete handshake on blocking socket
-						stream_set_blocking($conn, true);
-						$this->handshake($conn);
-						// switch to non-blocking for further reads
-						stream_set_blocking($conn, false);
-						// add them to the websocket list
-						$this->clients[] = $conn;
-						// notify websocket on_connect listeners
-						$this->trigger_connect($conn);
+						try {
+							// complete handshake on blocking socket
+							stream_set_blocking($conn, true);
+							$this->handshake($conn);
+							// switch to non-blocking for further reads
+							stream_set_blocking($conn, false);
+							// add them to the websocket list
+							$this->clients[] = $conn;
+							// notify websocket on_connect listeners
+							$this->trigger_connect($conn);
+						} catch (invalid_handshake_exception $ex) {
+							$resource = $ex->getResourceId();
+							$this->warning('Invalid handshake from resource ' . $resource);
+							$this->disconnect_client($resource);
+							$this->warning('Disconnected resource ' . $resource);
+						}
 						continue;
 					}
 				}
@@ -756,7 +763,7 @@ class websocket_service extends service {
 			}
 		}
 		if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $request_header, $matches)) {
-			throw new \RuntimeException("Invalid WebSocket handshake");
+			throw new invalid_handshake_exception($resource, "Invalid WebSocket handshake");
 		}
 		$key = trim($matches[1]);
 		$accept_key = base64_encode(

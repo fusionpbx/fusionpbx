@@ -345,7 +345,7 @@ class websocket_server {
 			}
 		}
 		if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $request_header, $matches)) {
-			throw new \RuntimeException("Invalid WebSocket handshake");
+			throw new \invalid_handshake_exception($socket, "Invalid WebSocket handshake");
 		}
 		$key = trim($matches[1]);
 		$accept_key = base64_encode(

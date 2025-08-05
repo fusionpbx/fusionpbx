@@ -27,15 +27,12 @@
  */
 
 /**
- * General socket exception class
+ * Description of invalid_handshake_exception
  *
  * @author Tim Fry <tim@fusionpbx.com>
  */
-class socket_exception extends \Exception {
-	public $id;
-	public function __construct($id = null, string $message = "", int $code = 0, ?\Throwable $previous = null) {
-		$this->id = $id;
-		return parent::__construct($message, $code, $previous);
+class invalid_handshake_exception extends \socket_exception {
+	public function __construct($id = null, string $message = "Invalid handshake", int $code = 0, ?\Throwable $previous = null) {
+		return parent::__construct($id, $message, $code, $previous);
 	}
-	public function getResourceId() { return $this->id; }
 }
