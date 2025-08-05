@@ -27,15 +27,12 @@
  */
 
 /**
- * General socket exception class
+ * Description of websocket_exception
  *
  * @author Tim Fry <tim@fusionpbx.com>
  */
-class socket_exception extends \Exception {
-	public $id;
-	public function __construct($id = null, string $message = "", int $code = 0, ?\Throwable $previous = null) {
-		$this->id = $id;
+class websocket_exception extends \Exception {
+	public function __construct(string $message = "Websocket exception has occurred", int $code = 500, ?\Throwable $previous = null) {
 		return parent::__construct($message, $code, $previous);
 	}
-	public function getResourceId() { return $this->id; }
 }
