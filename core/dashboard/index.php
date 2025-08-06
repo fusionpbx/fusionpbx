@@ -405,6 +405,30 @@ foreach ($dashboard as $row) {
 			echo "	height: 195px;\n";
 			echo "}\n";
 	}
+	$row_span = $row['dashboard_row_span'] * 4;
+	$expanded_row_span = $row_span + 13;
+	if ($row['dashboard_details_state'] === "expanded" || $row['dashboard_details_state'] === "contracted") {
+		$row_span += 1;
+		$expanded_row_span += 1;
+	}
+	if (!empty($row['dashboard_row_span'])) {
+		echo "#".$dashboard_id." {\n";
+		echo "	grid-row: span ".$row_span.";\n";
+		echo "}\n";
+		echo "#".$dashboard_id.".expanded {\n";
+		echo "	grid-row: span ".$expanded_row_span.";\n";
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_column_span'])) {
+		echo "#".$dashboard_id." {\n";
+		echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+		echo "}\n";
+	}
+	if ($row['dashboard_path'] != "dashboard/icon" && $row['dashboard_chart_type'] != "icon" && $row['dashboard_column_span'] == 1) {
+		echo "#".$dashboard_id.".child_widget {\n";
+		echo "	grid-column: span 2;\n";
+		echo "}\n";
+	}
 }
 ?>
 
@@ -415,7 +439,7 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (isset($row['dashboard_column_span']) && is_numeric($row['dashboard_column_span'])) {
+			if (!empty($row['dashboard_column_span'])) {
 				echo "#".$dashboard_id." {\n";
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
@@ -437,18 +461,18 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (is_numeric($row['dashboard_column_span']) && $row['dashboard_column_span'] > 2) {
+			if ($row['dashboard_column_span'] > 2) {
 				echo "#".$dashboard_id." {\n";
 				echo "	grid-column: span 2;\n";
 				echo "}\n";
 			}
-			else if (is_numeric($row['dashboard_column_span'])) {
-				echo "#".$dashboard_id." {\n";
-				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+			if ($row['dashboard_details_state'] == "expanded") {
+				echo "#".$dashboard_id." .hud_box .hud_details {\n";
+				echo "	display: block;\n";
 				echo "}\n";
 			}
 			if ($row['dashboard_details_state'] == "contracted") {
-				echo "#".$dashboard_id." .hud_box .hud_details {\n";
+				echo "#".$dashboard_id." .widget .hud_box .hud_details {\n";
 				echo "	display: none;\n";
 				echo "}\n";
 			}
@@ -469,9 +493,9 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (is_numeric($row['dashboard_column_span'])) {
+			if ($row['dashboard_column_span'] > 3) {
 				echo "#".$dashboard_id." {\n";
-				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+				echo "	grid-column: span 3;\n";
 				echo "}\n";
 			}
 		}
