@@ -159,7 +159,7 @@
 
 //show the results
 echo "<div class='hud_box'>\n";
-echo "	<div class='hud_content' ".($dashboard_details_state == 'disabled' ?: "onclick=\"$('#hud_system_services_details').slideToggle('fast'); toggle_grid_row_end('$dashboard_id');\""). ">\n";
+echo "	<div class='hud_content' ".($dashboard_details_state == 'disabled' ?: "onclick=\"$('#hud_system_services_details').slideToggle('fast');\""). ">\n";
 echo "		<span class='hud_title'>System Services</span>\n";
 
 //doughnut chart
