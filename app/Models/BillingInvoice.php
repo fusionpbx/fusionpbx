@@ -28,6 +28,9 @@ class BillingInvoice extends Model
      * @var array<int, string>
      */
 	protected $fillable = [
+		'billing_uuid',
+		'domain_uuid',
+		'payer_uuid',
 		'billing_payment_date',
 		'settled',
 		'amount',

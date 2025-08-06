@@ -4,7 +4,9 @@
 <div class="container-fluid">
     <div class="card card-primary mt-3">
         <div class="card-header">
-			<h3>Select payment method</h3>
+            <h3 class="card-title">
+                {{ 'Select payment method' }}
+            </h3>
    		</div>
 
 		<div class="card-body">

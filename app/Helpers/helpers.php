@@ -249,7 +249,7 @@ if (!function_exists('currency_convert_rate')) {
         ->limit(1)
         ->first();
 
-        return $rateConversion->rate ?? 0;
+        return $rateConversion->rate ?? 1;
     }
 }
 

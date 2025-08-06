@@ -2,11 +2,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BillingRequest;
+use App\Http\Requests\BillingTransferRequest;
 use App\Models\Billing;
 use App\Models\Carrier;
+use App\Models\Contact;
 use App\Models\Domain;
 use App\Models\Lcr;
 use App\Models\RateConversion;
+use App\Repositories\BillingInvoiceRepository;
 use App\Repositories\BillingRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,10 +18,12 @@ use Illuminate\Support\Facades\Session;
 class BillingController extends Controller
 {
 	protected $billingRepository;
+	protected $billingInvoiceRepository;
 
-	public function __construct(BillingRepository $billingRepository)
+	public function __construct(BillingRepository $billingRepository, BillingInvoiceRepository $billingInvoiceRepository)
 	{
 		$this->billingRepository = $billingRepository;
+		$this->billingInvoiceRepository = $billingInvoiceRepository;
 	}
 
 	public function index()
@@ -320,5 +325,132 @@ class BillingController extends Controller
 		$payments = array_keys(config('payments'));
 
 		return view("pages.billings.payments.index", compact("billing", "payments"));
+	}
+
+	private function getMaxCredit(Billing $billing)
+	{
+		$max = 0;
+
+		if($billing->credit_type == 'prepaid')
+		{
+			$max = $billing->balance;
+		}
+
+		if($billing->credit_type == 'postpaid')
+		{
+			$max = abs($billing->credit - $billing->balance);
+		}
+
+		return $max;
+	}
+
+	public function transferGet(Billing $billing)
+	{
+		$v_billing = Billing::getTableName();
+		$v_contacts = Contact::getTableName();
+
+		$queryBilling = Billing::query()
+			->leftJoin($v_contacts, 'contact_uuid_to', '=', $v_contacts . '.contact_uuid')
+			->where('billing_uuid', $billing->billing_uuid)
+			->where(function ($q) {
+				$q->whereNull('whmcs_user_id')
+				->orWhere('whmcs_user_id', '<', 1);
+			})
+			->where(function ($q) {
+				$q->where(function ($sub) {
+					$sub->where('credit_type', 'postpaid')
+						->whereColumn('balance', '>', 'credit');
+				})->orWhere(function ($sub) {
+					$sub->where('credit_type', 'prepaid')
+						->where('balance', '>', 0);
+				});
+			});
+
+		$billing = $queryBilling->first();
+
+		$queryBillings = Billing::query()
+			->selectRaw($v_billing . '.*,' . $v_contacts . '.*, 0 as depth')
+			->leftJoin($v_contacts, $v_billing . '.contact_uuid_to', '=', $v_contacts . '.contact_uuid')
+			->where(function ($q) {
+				$q->whereNull('whmcs_user_id')->orWhere('whmcs_user_id', '<', 1);
+			});
+
+		if(!auth()->user()->hasGroup('superadmin'))
+		{
+			$queryBillings->where('parent_billing_uuid', $billing);
+		}
+
+		$billings = $queryBillings->get();
+
+		$max = $this->getMaxCredit($billing);
+
+		return view("pages.billings.transfer", compact("billing", "billings", "max"));
+	}
+
+	public function transferPost(BillingTransferRequest $request, Billing $billing)
+	{
+		$data = $request->validated();
+
+		$billing_uuid_to = $data['billing_uuid_to'];
+		$transfer = $data['transfer'];
+
+		$billingTo = Billing::findOrFail($billing_uuid_to);
+
+		$max = $this->getMaxCredit($billing);
+
+		if($transfer > $max)
+		{
+			$transfer = $max;
+		}
+
+		$transferTo = $transfer * currency_convert_rate($billingTo->currency, $billing->currency);
+
+		// Update from
+		$billingData = [
+			"balance" => $billing->balance - $transfer,
+		];
+
+		$this->billingRepository->update($billing, $billingData);
+
+		// Insert activity
+		$billingInvoiceData = [
+			"billing_uuid" => $billing->billing_uuid,
+			"payer_uuid" => $billing->contact_uuid_to,
+			"billing_payment_date" => date("Y-m-d H:i:s"),
+			"settled" => 1,
+			"amount" => $transfer,
+			"debt" => $billing->balance,
+			"post_payload" => "",
+			"plugin_used" => "transfer",
+			"domain_uuid" => $billing->domain_uuid,
+			"tax" => 0,
+		];
+
+		$this->billingInvoiceRepository->create($billingInvoiceData);
+
+		// Update to
+		$billingData = [
+			"balance" => $billingTo->balance + $transferTo,
+		];
+
+		$this->billingRepository->update($billingTo, $billingData);
+
+		// Insert activity
+		$billingInvoiceData = [
+			"billing_uuid" => $billingTo->billing_uuid,
+			"payer_uuid" => $billingTo->contact_uuid_to,
+			"billing_payment_date" => date("Y-m-d H:i:s"),
+			"settled" => 1,
+			"amount" => $transferTo,
+			"debt" => $billingTo->balance,
+			"post_payload" => "",
+			"plugin_used" => "transfer",
+			"domain_uuid" => $billingTo->domain_uuid,
+			"tax" => 0,
+		];
+
+		$this->billingInvoiceRepository->create($billingInvoiceData);
+
+		return view("pages.billings.index");
 	}
 }

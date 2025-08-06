@@ -167,7 +167,7 @@ class BillingsTable extends DataTableComponent
 
                     if(($row->child_count > 0) && ($row->balance > 0))
                     {
-                        $buttons .= '<a href="' . route("billings.payment", $row->billing_uuid) . '" class="btn btn-primary btn-sm m-1"><i class="fa-solid fa-money-bill-transfer"></i></a>';
+                        $buttons .= '<a href="' . route("billings.transfer_get", $row->billing_uuid) . '" class="btn btn-primary btn-sm m-1"><i class="fa-solid fa-money-bill-transfer"></i></a>';
                     }
 
                     return $buttons;

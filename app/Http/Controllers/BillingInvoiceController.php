@@ -48,7 +48,7 @@ class BillingInvoiceController extends Controller
 			}
 
 			$billingData = [
-				"balance" => $billing->old_balance + $increment,
+				"balance" => $billing->balance + $increment,
 				"old_balance" => $billing->old_balance + $increment,
 			];
 		}

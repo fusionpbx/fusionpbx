@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class BillingInvoiceRequest extends FormRequest
+class BillingTransferRequest extends FormRequest
 {
 	public function authorize(): bool
 	{
@@ -15,8 +15,8 @@ class BillingInvoiceRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'billing_invoice_uuid' => 'bail|required|uuid|exists:App\Models\BillingInvoice,billing_invoice_uuid',
-			'settled' => 'bail|required|numeric|in:0,1,-1',
+			'billing_uuid_to' => 'bail|required|uuid|exists:App\Models\Billing,billing_uuid',
+			'transfer' => 'bail|required|numeric|min:1',
 		];
 	}
 }
