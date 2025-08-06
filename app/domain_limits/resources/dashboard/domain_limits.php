@@ -110,7 +110,7 @@
 				$hud_stat_title = $text['label-destinations'];
 			}
 
-			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"").">\n";
+			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"").">\n";
 			echo "		<span class='hud_title'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
@@ -240,7 +240,7 @@
 				echo "</div>";
 				//$n++;
 
-				echo "<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"><span class='fas fa-ellipsis-h'></span></span>";
+				echo "<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 			}
 			echo "</div>\n";
 	}

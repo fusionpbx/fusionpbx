@@ -24,7 +24,7 @@
 
 //dashboard icon
 	echo "<div class='hud_box'>\n";
-	echo "	<div class='hud_content' ".(!empty($row['dashboard_background_color']) ? "style='background: ".$row['dashboard_background_color'].";'" : null)." ".(empty($dashboard_details_state) || $dashboard_details_state != "disabled" ? "onclick=\"$('#hud_content_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"" : null).">\n";
+	echo "	<div class='hud_content' ".(!empty($row['dashboard_background_color']) ? "style='background: ".$row['dashboard_background_color'].";'" : null)." ".(empty($dashboard_details_state) || $dashboard_details_state != "disabled" ? "onclick=\"$('#hud_content_details').slideToggle('fast');\"" : null).">\n";
 	echo "		<span class='hud_title' ".(!empty($row['dashboard_label_background_color']) ? "style='background: ".$row['dashboard_label_background_color'].";'" : null).">".escape($dashboard_name)."</span>";
 	echo "		<span style='padding: 12px; height: ".$dashboard_content_height."; max-height: ".$dashboard_content_height.";  text-align: ".$row['dashboard_content_text_align']."; vertical-align: ".$dashboard_content_text_vertical_align."; overflow: auto; ".(!empty($row['dashboard_number_text_color']) ? "color: ".$row['dashboard_number_text_color'].";" : null)."'>".$dashboard_content."</span>\n";
 	echo "	</div>\n";
