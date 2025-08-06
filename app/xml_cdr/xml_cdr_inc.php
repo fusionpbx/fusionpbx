@@ -366,7 +366,8 @@
 	if ($permission['xml_cdr_mos']) {
 		$sql .= "c.rtp_audio_in_mos, \n";
 	}
-	$sql .= "c.waitsec as tta ";
+	$sql .= "(c.answer_epoch - c.start_epoch) as tta, ";
+	$sql .= "c.waitsec as wait ";
 	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && $permission['xml_cdr_all']) {
 		$sql .= ", c.domain_name \n";
 	}
