@@ -3134,7 +3134,7 @@ else { //default: white
 
 	@media(min-width: 1200px) {
 		div.hud_details {
-			height: 318px;
+			height: 345.5px;
 			display: block;
 			<?php
 			echo "background: ".($dashboard_detail_background_color[0] ?? '#ffffff').";\n";
@@ -3190,10 +3190,10 @@ else { //default: white
 		display: block;
 		clear: both;
 		background: <?=$dashboard_footer_background_color?>;
-		padding: 4px 0;
+		padding: 6px 0;
 		text-align: center;
 		width: 100%;
-		height: 25px;
+		height: 26.5px;
 		font-size: 13px;
 		line-height: 5px;
 		color: <?=$dashboard_footer_dots_color?>;

@@ -405,12 +405,18 @@ foreach ($dashboard as $row) {
 			echo "	height: 195px;\n";
 			echo "}\n";
 	}
+	$row_span = $row['dashboard_row_span'] * 4;
+	$expanded_row_span = $row_span + 13;
+	if ($row['dashboard_details_state'] === "expanded" || $row['dashboard_details_state'] === "contracted") {
+		$row_span += 1;
+		$expanded_row_span += 1;
+	}
 	if (!empty($row['dashboard_row_span'])) {
 		echo "#".$dashboard_id." {\n";
-		echo "	grid-row: span ".$row['dashboard_row_span'].";\n";
+		echo "	grid-row: span ".$row_span.";\n";
 		echo "}\n";
 		echo "#".$dashboard_id.".expanded {\n";
-		echo "	grid-row: span ".($row['dashboard_row_span'] + 3).";\n";
+		echo "	grid-row: span ".$expanded_row_span.";\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_column_span'])) {
