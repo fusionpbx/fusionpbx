@@ -831,7 +831,7 @@
 		if ($dashboard_chart_type == 'line' || $dashboard_path == 'system/system_cpu_status') {
 			echo "		<option value='line' ".($dashboard_chart_type == "line" ? "selected='selected'" : null).">".$text['label-line']."</option>\n";
 		}
-		if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
+		if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['active_calls/active_calls', 'domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
 			echo "		<option value='icon' ".($dashboard_chart_type == "icon" ? "selected='selected'" : null).">".$text['label-icon']."</option>\n";
 		}
 		echo "		<option value='number' ".($dashboard_chart_type == "number" ? "selected='selected'" : null).">".$text['label-number']."</option>\n";
