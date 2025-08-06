@@ -109,11 +109,11 @@
 	$sql .= "dashboard_parent_uuid ";
 	$sql .= "from v_dashboard as d ";
 	$sql .= "where dashboard_enabled = 'true' ";
-	$sql .= "and dashboard_uuid in (";
-	$sql .= "	select dashboard_uuid from v_dashboard_groups where group_uuid in (";
+	$sql .= "and dashboard_uuid in ( ";
+	$sql .= "	select dashboard_uuid from v_dashboard_groups where group_uuid in ( ";
 	$sql .= "		".$group_uuids_in." ";
-	$sql .= "	)";
-	$sql .= ")";
+	$sql .= "	) ";
+	$sql .= ") ";
 	$sql .= "order by dashboard_order, dashboard_name asc ";
 	$dashboard = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
@@ -226,8 +226,8 @@
 		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','name'=>'btn_save','style'=>'display: none; margin-left: 15px;']);
 	}
 	echo "<span id='expand_contract'>\n";
-		echo button::create(['type'=>'button','label'=>$text['button-expand_all'],'icon'=>$settings->get('theme', 'button_icon_expand'),'id'=>'btn_expand','name'=>'btn_expand','style'=>($expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideDown('fast'); $(this).hide(); $('#btn_contract').show(); toggle_grid_row_end_all();"]);
-		echo button::create(['type'=>'button','label'=>$text['button-collapse_all'],'icon'=>$settings->get('theme', 'button_icon_contract'),'id'=>'btn_contract','name'=>'btn_contract','style'=>(!$expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideUp('fast'); $(this).hide(); $('#btn_expand').show(); toggle_grid_row_end_all();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-expand_all'],'icon'=>$settings->get('theme', 'button_icon_expand'),'id'=>'btn_expand','name'=>'btn_expand','style'=>($expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideDown('fast'); $(this).hide(); $('#btn_contract').show(); toggle_grid_row_span_all();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-collapse_all'],'icon'=>$settings->get('theme', 'button_icon_contract'),'id'=>'btn_contract','name'=>'btn_contract','style'=>(!$expanded_all ? 'display: none;' : null),'onclick'=>"$('.hud_details').slideUp('fast'); $(this).hide(); $('#btn_expand').show(); toggle_grid_row_span_all();"]);
 	echo "</span>\n";
 	if (permission_exists('dashboard_edit')) {
 		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'id'=>'btn_edit','name'=>'btn_edit','style'=>'margin-left: 15px;','onclick'=>"edit_mode('on');"]);
@@ -405,6 +405,24 @@ foreach ($dashboard as $row) {
 			echo "	height: 195px;\n";
 			echo "}\n";
 	}
+	if (!empty($row['dashboard_row_span'])) {
+		echo "#".$dashboard_id." {\n";
+		echo "	grid-row: span ".$row['dashboard_row_span'].";\n";
+		echo "}\n";
+		echo "#".$dashboard_id.".expanded {\n";
+		echo "	grid-row: span ".($row['dashboard_row_span'] + 3).";\n";
+		echo "}\n";
+	}
+	if (!empty($row['dashboard_column_span'])) {
+		echo "#".$dashboard_id." {\n";
+		echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+		echo "}\n";
+	}
+	if ($row['dashboard_path'] != "dashboard/icon" && $row['dashboard_chart_type'] != "icon" && $row['dashboard_column_span'] == 1) {
+		echo "#".$dashboard_id.".child_widget {\n";
+		echo "	grid-column: span 2;\n";
+		echo "}\n";
+	}
 }
 ?>
 
@@ -415,7 +433,7 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (isset($row['dashboard_column_span']) && is_numeric($row['dashboard_column_span'])) {
+			if (!empty($row['dashboard_column_span'])) {
 				echo "#".$dashboard_id." {\n";
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
@@ -437,18 +455,18 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (is_numeric($row['dashboard_column_span']) && $row['dashboard_column_span'] > 2) {
+			if ($row['dashboard_column_span'] > 2) {
 				echo "#".$dashboard_id." {\n";
 				echo "	grid-column: span 2;\n";
 				echo "}\n";
 			}
-			else if (is_numeric($row['dashboard_column_span'])) {
-				echo "#".$dashboard_id." {\n";
-				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+			if ($row['dashboard_details_state'] == "expanded") {
+				echo "#".$dashboard_id." .hud_box .hud_details {\n";
+				echo "	display: block;\n";
 				echo "}\n";
 			}
 			if ($row['dashboard_details_state'] == "contracted") {
-				echo "#".$dashboard_id." .hud_box .hud_details {\n";
+				echo "#".$dashboard_id." .widget .hud_box .hud_details {\n";
 				echo "	display: none;\n";
 				echo "}\n";
 			}
@@ -469,9 +487,9 @@ foreach ($dashboard as $row) {
 	<?php
 		foreach ($dashboard as $row) {
 			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (is_numeric($row['dashboard_column_span'])) {
+			if ($row['dashboard_column_span'] > 3) {
 				echo "#".$dashboard_id." {\n";
-				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+				echo "	grid-column: span 3;\n";
 				echo "}\n";
 			}
 		}
@@ -494,48 +512,55 @@ foreach ($dashboard as $row) {
 
 <script>
 
-function toggle_grid_row_end(dashboard_name) {
-	let widget = document.getElementById(dashboard_name.toLowerCase().replace(/ /g, '_'));
-	let state = widget.getAttribute('data-state');
-	let current_row_end = widget.style.gridRowEnd;
-	let current_row_end_number = current_row_end.startsWith('span ') ? Number(current_row_end.replace('span ', '')) : 0;
+document.addEventListener('click', function(event) {
+	let hud_content = event.target.closest('.hud_content');
+	let hud_expander = event.target.closest('.hud_expander');
 
-	if (state == 'expanded') {
-		widget.style.gridRowEnd = 'span ' + (current_row_end_number - 3);
-		widget.dataset.state = 'contracted';
+	if (hud_content || hud_expander) {
+		let widget = event.target.closest('div.widget, div.child_widget');
+
+		if (widget.classList.contains('disabled')) {
+			return;
+		}
+
+		if (widget && widget.id) {
+			toggle_grid_row_span(widget.id);
+		}
+	}
+});
+
+function toggle_grid_row_span(dashboard_id) {
+	let widget = document.getElementById(dashboard_id);
+
+	if (widget.classList.contains('expanded')) {
+		widget.classList.remove('expanded');
 	}
 	else {
-		widget.style.gridRowEnd = 'span ' + (current_row_end_number + 3);
-		widget.dataset.state = 'expanded';
+		widget.classList.add('expanded');
 	}
 }
 
 let first_toggle = false;
 
-function toggle_grid_row_end_all() {
-	let widgets = document.querySelectorAll('div.widget');
+function toggle_grid_row_span_all() {
+	const widgets = document.querySelectorAll('div.widget, div.child_widget');
 
-	widgets.forEach(div => {
-		let state = div.getAttribute('data-state');
-		let current_row_end = div.style.gridRowEnd;
-		let current_row_end_number = current_row_end.startsWith('span ') ? Number(current_row_end.replace('span ', '')) : 0;
-
-		// Skip if widget details state is disabled
-		if (state === 'disabled') {
+	widgets.forEach(widget => {
+		if (widget.classList.contains('disabled')) {
 			return;
 		}
 
-		// On the first call, skip expanded widgets
-		if (!first_toggle && state === 'expanded') {
+		if (!first_toggle && widget.classList.contains('expanded')) {
 			return;
 		}
 
-		if (state === 'expanded') {
-			div.style.gridRowEnd = 'span ' + (current_row_end_number - 3);
-			div.dataset.state = 'contracted';
-		} else {
-			div.style.gridRowEnd = 'span ' + (current_row_end_number + 3);
-			div.dataset.state = 'expanded';
+		if (widget.classList.contains('expanded') || widget.getAttribute('data-expanded-all') === 'true') {
+			widget.classList.remove('expanded');
+			widget.setAttribute('data-expanded-all', 'false');
+		}
+		else {
+			widget.classList.add('expanded');
+			widget.setAttribute('data-expanded-all', 'true');
 		}
 	});
 
@@ -550,6 +575,11 @@ function toggle_grid_row_end_all() {
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach ($dashboard as $row) {
+		//skip child widgets
+		if (!empty($row['dashboard_parent_uuid'])) {
+			continue;
+		}
+
 		//set the variables
 		$dashboard_uuid = $row['dashboard_uuid'] ?? '';
 		$dashboard_name = $row['dashboard_name'] ?? '';
@@ -561,12 +591,12 @@ function toggle_grid_row_end_all() {
 		$dashboard_content = $row['dashboard_content'] ?? '';
 		$dashboard_content_text_align = $row['dashboard_content_text_align'] ?? '';
 		$dashboard_content_details = $row['dashboard_content_details'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'] ?? 'doughnut';
+		$dashboard_chart_type = $row['dashboard_chart_type'] ?? '';
 		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
 		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
 		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
 		$dashboard_details_state = $row['dashboard_details_state'] ?? 'hidden';
-		$dashboard_row_span = $row['dashboard_row_span'] ?? 2;
+		$dashboard_row_span = $row['dashboard_row_span'] ?? '';
 
 		//define the regex patterns
 		$uuid_pattern = '/[^-A-Fa-f0-9]/';
@@ -601,13 +631,13 @@ function toggle_grid_row_end_all() {
 		$widget_name = $dashboard_path_array[1];
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
 
-		if (empty($row['dashboard_parent_uuid'])) {
-			echo "<div class='widget' style='grid-row-end: span ".$dashboard_row_span.";' data-state='".$dashboard_details_state."' id='".$dashboard_id."' ".($dashboard_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
-			if (file_exists($path_array[0])) {
-				include $path_array[0];
-			}
-			echo "</div>\n";
+		echo "<div class='widget ".$dashboard_details_state."' id='".$dashboard_id."' ".($dashboard_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
+		if (file_exists($path_array[0])) {
+			include $path_array[0];
 		}
+		echo "</div>\n";
+
+
 		$x++;
 	}
 	echo "</div>\n";
@@ -675,7 +705,7 @@ function toggle_grid_row_end_all() {
 					let widget_ids_list = [];
 					let order = 10;
 
-					document.querySelectorAll('#widgets > div.widget[id]').forEach(widget => {
+					widgets.querySelectorAll(':scope > div.widget[id]').forEach(widget => {
 						const widget_id = widget.id;
 
 						//add the widgets to the list
@@ -709,15 +739,20 @@ function toggle_grid_row_end_all() {
 					preventOnFilter: true,
 					ghostClass: 'ghost',
 					onSort: update_widget_order,
-					onAdd: function (evt) {
-						evt.item.classList.add('widget');
-						evt.item.classList.remove('child_widget');
+					onAdd: function (event) {
+						event.item.classList.add('widget');
 						update_widget_order();
 					},
-					onRemove: function (evt) {
-						evt.item.classList.remove('widget');
-						evt.item.classList.add('child_widget');
+					onRemove: function (event) {
+						event.item.classList.remove('widget');
 						update_widget_order();
+					},
+					onMove: function (event) {
+						if (event.to !== event.from) {
+							event.dragged.classList.remove('widget');
+						} else {
+							event.dragged.classList.add('widget');
+						}
 					},
 				});
 
@@ -736,15 +771,21 @@ function toggle_grid_row_end_all() {
 						draggable: '.child_widget',
 						ghostClass: 'ghost',
 						fallbackOnBody: true,
+						swapThreshold: 0.65,
 						onSort: update_widget_order,
-						onAdd: function (evt) {
+						onAdd: function (event) {
+							event.item.classList.add('child_widget');
 							update_widget_order();
-							let current_row_end = evt.item.style.gridRowEnd;
-							evt.item.style.gridColumn = current_row_end;
 						},
-						onRemove: function (evt) {
+						onRemove: function (event) {
 							update_widget_order();
-							evt.item.style.gridColumn = '';
+						},
+						onMove: function (event) {
+							if (event.to !== event.from) {
+								event.dragged.classList.remove('child_widget');
+							} else {
+								event.dragged.classList.add('child_widget');
+							}
 						},
 					});
 				});

@@ -77,13 +77,13 @@
 	}
 
 //show the content
-	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"").">\n";
+	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"").">\n";
 	echo "	<span class='hud_title'>".$text['label-switch_status']."</span>\n";
 
 	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
-		<div class='hud_chart'><canvas id='switch_status_chart'></canvas></div>
+		<div class='hud_chart' style='width: 175px;'><canvas id='switch_status_chart'></canvas></div>
 
 		<script>
 			const switch_status_chart = new Chart(
@@ -178,7 +178,7 @@
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_switch_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_id."');\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 	echo "</div>\n";
 
