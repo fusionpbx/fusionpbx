@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (if_group("superadmin")) {
+	if (permission_exists("sip_status_command")) {
 		//access granted
 	}
 	else {
