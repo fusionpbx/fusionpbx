@@ -741,7 +741,9 @@
 	if (permission_exists('user_setting_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_settings','style'=>'','link'=>PROJECT_PATH.'/core/user_settings/user_settings.php?id='.urlencode($user_uuid)]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	if (permission_exists('user_add') || permission_exists('user_edit')) {
+		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
