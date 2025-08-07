@@ -139,8 +139,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-sip_status']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('system_status_sofia_status')) {
+	if (permission_exists('sip_status_flush_cache')) {
 		echo button::create(['type'=>'button','label'=>$text['button-flush_cache'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?action=cache-flush']);
+	]
+	if (permission_exists('sip_status_command')) {
 		echo button::create(['type'=>'button','label'=>$text['button-reload_acl'],'icon'=>'shield-alt','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadacl']);
 		echo button::create(['type'=>'button','label'=>$text['button-reload_xml'],'icon'=>'code','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadxml']);
 	}
