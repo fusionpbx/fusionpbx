@@ -64,6 +64,7 @@
 	$permission['xml_cdr_search_caller_destination'] = permission_exists('xml_cdr_search_caller_destination');
 	$permission['xml_cdr_search_destination'] = permission_exists('xml_cdr_search_destination');
 	$permission['xml_cdr_codecs'] = permission_exists('xml_cdr_codecs');
+	$permission['xml_cdr_search_wait'] = permission_exists('xml_cdr_search_wait');
 	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
 	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
 	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
@@ -74,6 +75,7 @@
 	$permission['xml_cdr_caller_destination'] = permission_exists('xml_cdr_caller_destination');
 	$permission['xml_cdr_destination'] = permission_exists('xml_cdr_destination');
 	$permission['xml_cdr_start'] = permission_exists('xml_cdr_start');
+	$permission['xml_cdr_wait'] = permission_exists('xml_cdr_wait');
 	$permission['xml_cdr_tta'] = permission_exists('xml_cdr_tta');
 	$permission['xml_cdr_duration'] = permission_exists('xml_cdr_duration');
 	$permission['xml_cdr_pdd'] = permission_exists('xml_cdr_pdd');
@@ -135,6 +137,8 @@
 		$remote_media_ip = $_REQUEST["remote_media_ip"] ?? '';
 		$network_addr = $_REQUEST["network_addr"] ?? '';
 		$bridge_uuid = $_REQUEST["network_addr"] ?? '';
+		$wait_min = $_REQUEST['wait_min'] ?? '';
+		$wait_max = $_REQUEST['wait_max'] ?? '';
 		$tta_min = $_REQUEST['tta_min'] ?? '';
 		$tta_max = $_REQUEST['tta_max'] ?? '';
 		$recording = $_REQUEST['recording'] ?? '';
@@ -236,6 +240,8 @@
 	$param .= "&bridge_uuid=".urlencode($bridge_uuid ?? '');
 	$param .= "&mos_comparison=".urlencode($mos_comparison ?? '');
 	$param .= "&mos_score=".urlencode($mos_score ?? '');
+	$param .= "&wait_min=".urlencode($wait_min ?? '');
+	$param .= "&wait_max=".urlencode($wait_max ?? '');
 	$param .= "&tta_min=".urlencode($tta_min ?? '');
 	$param .= "&tta_max=".urlencode($tta_max ?? '');
 	$param .= "&recording=".urlencode($recording ?? '');
@@ -366,8 +372,8 @@
 	if ($permission['xml_cdr_mos']) {
 		$sql .= "c.rtp_audio_in_mos, \n";
 	}
-	$sql .= "(c.answer_epoch - c.start_epoch) as tta, ";
-	$sql .= "c.waitsec as wait ";
+	$sql .= "c.waitsec as wait, ";
+	$sql .= "(c.answer_epoch - c.start_epoch) as tta ";
 	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == "all" && $permission['xml_cdr_all']) {
 		$sql .= ", c.domain_name \n";
 	}
@@ -584,6 +590,14 @@
 	if (!empty($leg)) {
 		$sql .= "and leg = :leg \n";
 		$parameters['leg'] = $leg;
+	}
+	if (is_numeric($wait_min)) {
+		$sql .= "and waitsec >= :wait_min \n";
+		$parameters['wait_min'] = $wait_min;
+	}
+	if (is_numeric($wait_max)) {
+		$sql .= "and waitsec <= :wait_max \n";
+		$parameters['wait_max'] = $wait_max;
 	}
 	if (is_numeric($tta_min)) {
 		$sql .= "and (c.answer_epoch - c.start_epoch) >= :tta_min \n";

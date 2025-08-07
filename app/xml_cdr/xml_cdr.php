@@ -68,6 +68,7 @@
 	$permission['xml_cdr_search_caller_destination'] = permission_exists('xml_cdr_search_caller_destination');
 	$permission['xml_cdr_search_destination'] = permission_exists('xml_cdr_search_destination');
 	$permission['xml_cdr_codecs'] = permission_exists('xml_cdr_codecs');
+	$permission['xml_cdr_search_wait'] = permission_exists('xml_cdr_search_wait');
 	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
 	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
 	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
@@ -78,6 +79,7 @@
 	$permission['xml_cdr_caller_destination'] = permission_exists('xml_cdr_caller_destination');
 	$permission['xml_cdr_destination'] = permission_exists('xml_cdr_destination');
 	$permission['xml_cdr_start'] = permission_exists('xml_cdr_start');
+	$permission['xml_cdr_wait'] = permission_exists('xml_cdr_wait');
 	$permission['xml_cdr_tta'] = permission_exists('xml_cdr_tta');
 	$permission['xml_cdr_duration'] = permission_exists('xml_cdr_duration');
 	$permission['xml_cdr_pdd'] = permission_exists('xml_cdr_pdd');
@@ -274,6 +276,8 @@
 	echo "		<input type='hidden' name='network_addr' value='".escape($network_addr ?? '')."'>\n";
 	echo "		<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid ?? '')."'>\n";
 	echo "		<input type='hidden' name='leg' value='".escape($leg ?? '')."'>\n";
+	echo "		<input type='hidden' name='wait_min' value='".escape($wait_min ?? '')."'>\n";
+	echo "		<input type='hidden' name='wait_max' value='".escape($wait_max ?? '')."'>\n";
 	echo "		<input type='hidden' name='tta_min' value='".escape($tta_min ?? '')."'>\n";
 	echo "		<input type='hidden' name='tta_max' value='".escape($tta_max ?? '')."'>\n";
 	echo "		<input type='hidden' name='call_center_queue_uuid' value='".escape($call_center_queue_uuid ?? '')."'>\n";
@@ -467,6 +471,17 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
+		if ($permission['xml_cdr_search_wait']) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-wait']." (".$text['label-seconds'].")\n";
+			echo "		</div>\n";
+			echo "		<div class='field no-wrap'>\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='wait_min' id='wait_min' value='".escape($wait_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='wait_max' id='wait_max' value='".escape($wait_max)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
 		if ($permission['xml_cdr_search_tta']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
@@ -478,7 +493,6 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-
 		if ($permission['xml_cdr_search_hangup_cause']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
@@ -570,6 +584,9 @@
 			}
 			if ($permission['xml_cdr_start']) {
 				echo "			<option value='start_stamp' ".($order_by == 'start_stamp' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
+			}
+			if ($permission['xml_cdr_wait']) {
+				echo "			<option value='wait' ".($order_by == 'wait' ? "selected='selected'" : null).">".$text['label-wait']."</option>\n";
 			}
 			if ($permission['xml_cdr_tta']) {
 				echo "			<option value='tta' ".($order_by == 'tta' ? "selected='selected'" : null).">".$text['label-tta']."</option>\n";
@@ -1055,7 +1072,7 @@
 					if ($permission['xml_cdr_codecs']) {
 						$content .= "	<td class='middle right hide-lg-dn no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
 					}
-				//tta (time to answer)
+				//wait - total time caller waited
 					if ($permission['xml_cdr_wait']) {
 						$content .= "	<td class='middle right hide-lg-dn'>".(!empty($row['wait']) && $row['wait'] >= 0 ? gmdate("i:s", $row['wait']) : "&nbsp;")."</td>\n";
 					}
