@@ -77,7 +77,6 @@ div.parent_widget {
 }
 
 div.child_widget div.hud_box:first-of-type {
-	/*min-width: 120px;*/
 	background: rgba(0,0,0,0);
 	border: 0px dashed rgba(0,0,0,0);
 	box-shadow: none;
@@ -93,6 +92,7 @@ div.child_widget.editable div.hud_box:first-of-type {
 
 div.child_widget .hud_content {
 	align-content: center;
+	border-radius: 5px;
 }
 
 div.child_widget div.hud_chart  {
@@ -103,126 +103,6 @@ div.child_widget div.hud_chart  {
 <?php
 foreach ($parent_widgets as $row) {
 	$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-	if (!empty($row['dashboard_icon_color'])) {
-		echo "#".$dashboard_id." .hud_stat:has(i) {\n";
-		echo "	color: ".$row['dashboard_icon_color'].";\n";
-		echo "}\n";
-	}
-	if ($row['dashboard_label_enabled'] == 'false') {
-		echo "#".$dashboard_id." .hud_title:first-of-type {\n";
-		echo "	display: none;\n";
-		echo "}\n";
-		echo "#".$dashboard_id." .hud_content {\n";
-		echo "	align-content: center;\n";
-		echo "}\n";
-		echo "#".$dashboard_id." .hud_chart {\n";
-		echo "	padding-top: 0;\n";
-		echo "}\n";
-	}
-	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
-		echo "#".$dashboard_id." .hud_title:first-of-type {\n";
-		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
-		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
-		echo "}\n";
-	}
-	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
-		echo "#".$dashboard_id.":hover .hud_title:first-of-type {\n";
-		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
-		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
-		echo "}\n";
-	}
-	if (!empty($row['dashboard_number_text_color'])) {
-		echo "#".$dashboard_id." .hud_stat {\n";
-		echo "	color: ".$row['dashboard_number_text_color'].";\n";
-		echo "}\n";
-	}
-	if (!empty($row['dashboard_number_text_color_hover'])) {
-		echo "#".$dashboard_id.":hover .hud_stat {\n";
-		echo "	color: ".$row['dashboard_number_text_color_hover'].";\n";
-		echo "}\n";
-	}
-	if (!empty($row['dashboard_background_color'])) {
-		$background_color = json_decode($row['dashboard_background_color'], true);
-		echo "#".$dashboard_id." .hud_content {\n";
-		echo "	background: ".$background_color[0].";\n";
-		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
-		}
-		else { //simple
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[0]." 0%, ".$background_color[1]." 100%);\n";
-		}
-		echo "}\n";
-	}
-	if (!empty($row['dashboard_background_color_hover'])) {
-		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-		echo "#".$dashboard_id.":hover .hud_content {\n";
-		echo "	background: ".$background_color_hover[0].";\n";
-		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
-		}
-		else { //simple
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[0]." 0%, ".$background_color_hover[1]." 100%);\n";
-		}
-		echo "}\n";
-	}
-	if (!empty($row['dashboard_detail_background_color'])) {
-		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
-		echo "#".$dashboard_id." .hud_details {\n";
-		echo "	background: ".$detail_background_color[0].";\n";
-		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
-		}
-		else { //simple
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$detail_background_color[0]." 0%, ".$detail_background_color[1]." 100%);\n";
-		}
-		echo "}\n";
-	}
-	if ($row['dashboard_path'] == "dashboard/icon") {
-		echo "#".$dashboard_id.",\n";
-		echo "#".$dashboard_id." span.hud_title,\n";
-		echo "#".$dashboard_id." span.hud_stat {\n";
-		echo "	transition: .4s;\n";
-		echo "}\n";
-	}
-	switch ($row['dashboard_row_span']) {
-		case 1:
-			echo "#".$dashboard_id." .hud_content {\n";
-			echo "	height: 89.5px;\n";
-			echo "}\n";
-			echo "#".$dashboard_id." .hud_stat {\n";
-			echo "	line-height: 0;\n";
-			echo "	font-size: 30pt;\n";
-			echo "}\n";
-			echo "#".$dashboard_id." .hud_chart {\n";
-			echo "	height: 54px;\n";
-			echo "	width: 180px;\n";
-			echo "	padding-top: 0;\n";
-			echo "}\n";
-			echo "#".$dashboard_id." div.hud_content .fas {\n";
-			echo "	line-height: 0;\n";
-			echo "	font-size: 24pt;\n";
-			echo "}\n";
-			break;
-		case 2:
-			echo "#".$dashboard_id." .hud_content {\n";
-			echo "	height: 195px;\n";
-			echo "}\n";
-			break;
-		case 3:
-			echo "#".$dashboard_id." .hud_content {\n";
-			echo "	height: 300.5px;\n";
-			echo "}\n";
-			break;
-		case 4:
-			echo "#".$dashboard_id." .hud_content {\n";
-			echo "	height: 406px;\n";
-			echo "}\n";
-			break;
-		default: //if empty
-			echo "#".$dashboard_id." .hud_content {\n";
-			echo "	height: 195px;\n";
-			echo "}\n";
-	}
 	if ($row['dashboard_path'] === "dashboard/icon" || $row['dashboard_chart_type'] === "icon") {
 		echo "#".$dashboard_id.":hover div.hud_box:first-of-type,\n";
 		echo "#".$dashboard_id.".editable:hover div.hud_box:first-of-type {\n";
