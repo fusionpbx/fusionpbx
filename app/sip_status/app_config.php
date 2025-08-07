@@ -45,5 +45,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "sip_status_command";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "sip_status_flush_cache";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 ?>
