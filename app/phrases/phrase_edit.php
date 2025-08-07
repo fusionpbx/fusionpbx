@@ -336,7 +336,7 @@
 	echo "			clear_action_options();\n";
 	echo "		}\n";
 	echo "	}\n";
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "	else {\n";
 		echo "		document.getElementById('phrase_detail_data_switch').style.display='none';\n";
 		echo "		obj_action.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
@@ -381,7 +381,7 @@
 		echo "	obj_action.options[obj_action.options.length] = new Option('".number_format($s, 1)."s', 'sleep(".($s * 1000).")');\n";
 	}
 	echo "	}\n";
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "	else if (selected_index == 2) {\n"; //execute
 		echo "		action_to_input();\n";
 		echo "	}\n";
@@ -403,7 +403,7 @@
 	echo "	}\n";
 	echo "}\n";
 
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "function action_to_input() {\n";
 		echo "	obj = document.getElementById('phrase_detail_data');\n";
 		echo "	tb = document.createElement('INPUT');\n";
@@ -548,14 +548,14 @@
 	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "			<option value='execute'>".$text['label-execute']."</option>\n";
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange='action_to_input();'" : null)."></select>";
-	if (if_group("superadmin")) {
+	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((permission_exists("phrase_execute")) ? "onchange='action_to_input();'" : null)."></select>";
+	if (permission_exists("phrase_execute")) {
 		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
 	}
 	echo "		<script>load_action_options(0);</script>\n";
