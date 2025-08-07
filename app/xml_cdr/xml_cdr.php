@@ -278,6 +278,7 @@
 	echo "		<input type='hidden' name='tta_max' value='".escape($tta_max ?? '')."'>\n";
 	echo "		<input type='hidden' name='call_center_queue_uuid' value='".escape($call_center_queue_uuid ?? '')."'>\n";
 	echo "		<input type='hidden' name='ring_group_uuid' value='".escape($ring_group_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='recording' value='".escape($recording ?? '')."'>\n";
 	if ($permission['xml_cdr_all'] && $_REQUEST['show'] == 'all') {
 		echo "	<input type='hidden' name='show' value='all'>\n";
 	}
