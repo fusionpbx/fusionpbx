@@ -106,9 +106,13 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search_tta";
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search_wait";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search_tta";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search_hangup_cause";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
