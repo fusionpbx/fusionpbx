@@ -286,11 +286,11 @@ div.hud_chart {
 foreach ($dashboard as $row) {
 	$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
 	if (!empty($row['dashboard_icon_color'])) {
-		echo "#".$dashboard_id." .hud_stat:has(i) {\n";
+		echo "#".$dashboard_id." .hud_stat .fas {\n";
 		echo "	color: ".$row['dashboard_icon_color'].";\n";
 		echo "}\n";
 	}
-	if ($row['dashboard_label_enabled'] == 'false') {
+	if ($row['dashboard_label_enabled'] == 'false' && $row['dashboard_path'] != 'dashboard/parent') {
 		echo "#".$dashboard_id." .hud_title:first-of-type {\n";
 		echo "	display: none;\n";
 		echo "}\n";
@@ -302,30 +302,30 @@ foreach ($dashboard as $row) {
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
-		echo "#".$dashboard_id." .hud_title:first-of-type {\n";
+		echo "#".$dashboard_id." > .hud_box > .hud_content > .hud_title:first-of-type {\n";
 		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
 		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
-		echo "#".$dashboard_id.":hover .hud_title:first-of-type {\n";
+		echo "#".$dashboard_id.":hover  > .hud_box > .hud_content > .hud_title:first-of-type {\n";
 		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
 		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_number_text_color'])) {
-		echo "#".$dashboard_id." .hud_stat {\n";
+		echo "#".$dashboard_id." > .hud_box > .hud_content > .hud_stat {\n";
 		echo "	color: ".$row['dashboard_number_text_color'].";\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_number_text_color_hover'])) {
-		echo "#".$dashboard_id.":hover .hud_stat {\n";
+		echo "#".$dashboard_id.":hover > .hud_box > .hud_content > .hud_stat {\n";
 		echo "	color: ".$row['dashboard_number_text_color_hover'].";\n";
 		echo "}\n";
 	}
 	if (!empty($row['dashboard_background_color'])) {
 		$background_color = json_decode($row['dashboard_background_color'], true);
-		echo "#".$dashboard_id." .hud_content {\n";
+		echo "#".$dashboard_id." > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color[0].";\n";
 		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
 			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
@@ -337,7 +337,7 @@ foreach ($dashboard as $row) {
 	}
 	if (!empty($row['dashboard_background_color_hover'])) {
 		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-		echo "#".$dashboard_id.":hover .hud_content {\n";
+		echo "#".$dashboard_id.":hover > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
 		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
 			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
@@ -349,7 +349,7 @@ foreach ($dashboard as $row) {
 	}
 	if (!empty($row['dashboard_detail_background_color'])) {
 		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
-		echo "#".$dashboard_id." .hud_details {\n";
+		echo "#".$dashboard_id." > .hud_box > .hud_details {\n";
 		echo "	background: ".$detail_background_color[0].";\n";
 		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
 			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
@@ -368,7 +368,7 @@ foreach ($dashboard as $row) {
 	}
 	switch ($row['dashboard_row_span']) {
 		case 1:
-			echo "#".$dashboard_id." .hud_content {\n";
+			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
 			echo "	height: 89.5px;\n";
 			echo "}\n";
 			echo "#".$dashboard_id." .hud_stat {\n";
@@ -380,28 +380,28 @@ foreach ($dashboard as $row) {
 			echo "	width: 180px;\n";
 			echo "	padding-top: 0;\n";
 			echo "}\n";
-			echo "#".$dashboard_id." div.hud_content .fas {\n";
+			echo "#".$dashboard_id." .hud_stat .fas {\n";
 			echo "	line-height: 0;\n";
 			echo "	font-size: 24pt;\n";
 			echo "}\n";
 			break;
 		case 2:
-			echo "#".$dashboard_id." .hud_content {\n";
+			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
 			echo "	height: 195px;\n";
 			echo "}\n";
 			break;
 		case 3:
-			echo "#".$dashboard_id." .hud_content {\n";
+			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
 			echo "	height: 300.5px;\n";
 			echo "}\n";
 			break;
 		case 4:
-			echo "#".$dashboard_id." .hud_content {\n";
+			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
 			echo "	height: 406px;\n";
 			echo "}\n";
 			break;
 		default: //if empty
-			echo "#".$dashboard_id." .hud_content {\n";
+			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
 			echo "	height: 195px;\n";
 			echo "}\n";
 	}
@@ -506,6 +506,16 @@ foreach ($dashboard as $row) {
 @media (min-width: 1500px) {
 	.widgets { grid-template-columns: repeat(4, minmax(100px, 1fr)); }
 	.col-num { grid-column: span 2; }
+	<?php
+		foreach ($dashboard as $row) {
+			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
+			if (!empty($row['dashboard_column_span'])) {
+				echo "#".$dashboard_id." {\n";
+				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+				echo "}\n";
+			}
+		}
+	?>
 }
 
 /* Screen larger than 2000px? 5 columns */
