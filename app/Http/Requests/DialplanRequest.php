@@ -24,11 +24,11 @@ class DialplanRequest extends FormRequest
 			"dialplan_destination" => "bail|nullable|bool",
 			"dialplan_continue" => "bail|nullable|bool",
 			"dialplan_order" => "bail|integer|min:0|max:999",
-			"dialplan_enabled" => "bail|nullable|in:true,false",
+			"dialplan_enabled" => "bail|nullable|bool",
 			"dialplan_description" => "bail|nullable|string|max:255",
 			"app_uuid" => 'nullable|uuid',
-            "from_user" => 'nullable|string|ascii',
-            "from_domain" => 'nullable|string|ascii',
+            // "from_user" => 'nullable|string|ascii',
+            // "from_domain" => 'nullable|string|ascii',
 		];
 	}
 
