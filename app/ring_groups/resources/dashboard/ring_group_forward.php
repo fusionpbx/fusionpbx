@@ -157,7 +157,7 @@
 	echo "		<span class='hud_title'>".$text['header-ring-group-forward']."</span>\n";
 
 //doughnut chart
-	if (!isset($dashboard_chart_type) ||$dashboard_chart_type == "doughnut") {
+	if (empty($dashboard_chart_type) ||$dashboard_chart_type == "doughnut") {
 		echo "	<div class='hud_chart' style='width: 275px;'><canvas id='ring_group_forward_chart'></canvas></div>\n";
 
 		echo "<script>\n";
