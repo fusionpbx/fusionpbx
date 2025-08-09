@@ -106,7 +106,7 @@
 	echo "		<span class='hud_title'>".$text['header-call_forward']."</span>\n";
 
 //doughnut chart
-	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+	if (empty($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
 		echo "<div class='hud_chart' style='width: 275px;'><canvas id='call_forward_chart'></canvas></div>\n";
 
 		echo "<script>\n";
