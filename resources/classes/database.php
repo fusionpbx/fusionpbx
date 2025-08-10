@@ -2480,23 +2480,21 @@
 											if (is_array($parent_field_array)) {
 												foreach ($parent_field_array as $array_key => $array_value) {
 													if (is_array($array_value)) { continue;	}
-													if ($array_key != $parent_key_name) {
-														$array_key = self::sanitize($array_key);
-														if (!isset($array_value) || (isset($array_value) && $array_value === '')) {
-															$temp_array[$array_key] = null;
-														}
-														elseif ($array_value === "now()") {
-															$temp_array[$array_key] = $array_value;
-														}
-														elseif ($array_value === "user_uuid()") {
-															$temp_array[$array_key] = $this->user_uuid ?? null;
-														}
-														elseif ($array_value === "remote_address()") {
-															$temp_array[$array_key] = $_SERVER['REMOTE_ADDR'];
-														}
-														else {
-															$temp_array[$array_key] = trim($array_value);
-														}
+													$array_key = self::sanitize($array_key);
+													if (!isset($array_value) || (isset($array_value) && $array_value === '')) {
+														$temp_array[$array_key] = null;
+													}
+													elseif ($array_value === "now()") {
+														$temp_array[$array_key] = $array_value;
+													}
+													elseif ($array_value === "user_uuid()") {
+														$temp_array[$array_key] = $this->user_uuid ?? null;
+													}
+													elseif ($array_value === "remote_address()") {
+														$temp_array[$array_key] = $_SERVER['REMOTE_ADDR'];
+													}
+													else {
+														$temp_array[$array_key] = trim($array_value);
 													}
 												}
 											}
@@ -2731,23 +2729,22 @@
 																	//update the special values
 																	if (is_array($row)) {
 																		foreach ($row as $k => $v) {
-																			if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
-																				$k = self::sanitize($k);
-																				if (!isset($v) || (isset($v) && $v == '')) {
-																					$temp_array[$k] = null;
-																				}
-																				elseif ($v === "now()") {
-																					$temp_array[$k] = 'now()';
-																				}
-																				elseif ($v === "user_uuid()") {
-																					$temp_array[$k] = $this->user_uuid ?? null;
-																				}
-																				elseif ($v === "remote_address()") {
-																					$temp_array[$k] = $_SERVER['REMOTE_ADDR'];
-																				}
-																				else {
-																					$temp_array[$k] = isset($v) ? trim($v) : null;
-																				}
+																			if (!is_array($v)) { continue; }
+																			$k = self::sanitize($k);
+																			if (!isset($v) || (isset($v) && $v == '')) {
+																				$temp_array[$k] = null;
+																			}
+																			elseif ($v === "now()") {
+																				$temp_array[$k] = 'now()';
+																			}
+																			elseif ($v === "user_uuid()") {
+																				$temp_array[$k] = $this->user_uuid ?? null;
+																			}
+																			elseif ($v === "remote_address()") {
+																				$temp_array[$k] = $_SERVER['REMOTE_ADDR'];
+																			}
+																			else {
+																				$temp_array[$k] = isset($v) ? trim($v) : null;
 																			}
 																		}
 																	}
