@@ -2326,7 +2326,7 @@
 
 									if (permission_exists(self::singular($parent_name).'_add')) {
 											//add to the old and new arrays
-											$old_array[$parent_name][] = null;
+											$old_array = null;
 											$new_array[$parent_name][] = $parent_field_array;
 
 											//prepare the insert statement
@@ -2882,7 +2882,7 @@
 															}
 
 															//add to the old and new arrays
-															$old_array[$child_name][] = null;
+															$old_array = null;
 															$new_array[$child_name][] = $row;
 
 															//build the insert
