@@ -490,6 +490,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_template";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_template";
