@@ -284,7 +284,6 @@
 					}
 					if (permission_exists('device_enable')) {
 						$array['devices'][0]['device_enabled'] = $device_enabled;
-						$array['devices'][0]['device_enabled_date'] = 'now()';
 					}
 					if (permission_exists('device_template')) {
 						$array['devices'][0]['device_template'] = $device_template;
