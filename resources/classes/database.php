@@ -2235,9 +2235,6 @@
 				//set the message id
 					$m = 0;
 
-				//build the json string from the array
-					$new_json = json_encode($array, JSON_PRETTY_PRINT);
-
 				//debug sql
 					//$this->debug["sql"] = true;
 
@@ -2255,6 +2252,7 @@
 						if (is_array($parent_array)) foreach ($parent_array as $row_id => $parent_field_array) {
 
 							//set the variables
+								$parent_name = self::sanitize($parent_name);
 								$table_name = self::TABLE_PREFIX.$parent_name;
 								$parent_key_name = self::singular($parent_name)."_uuid";
 								$parent_key_name = self::sanitize($parent_key_name);
@@ -2298,7 +2296,7 @@
 										//get the data
 											try {
 												$prep_statement->execute();
-												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+												$parent_results = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 											}
 											catch(PDOException $e) {
 												$message["type"] = 'error';
@@ -2310,15 +2308,14 @@
 											}
 
 										//set the action
-											if (count($result) > 0) {
+											if (count($parent_results) > 0) {
 												$action = "update";
-												$old_array[$parent_name] = $result;
 											}
 											else {
 												$action = "add";
 											}
 									}
-									unset($prep_statement, $result);
+									unset($prep_statement);
 								}
 								else {
 									$action = "add";
@@ -2328,7 +2325,11 @@
 								if ($action == "add") {
 
 									if (permission_exists(self::singular($parent_name).'_add')) {
+											//add to the old and new arrays
+											$old_array[$parent_name][] = null;
+											$new_array[$parent_name][] = $parent_field_array;
 
+											//prepare the insert statement
 											$params = array();
 											$sql = "INSERT INTO ".$table_name." ";
 											$sql .= "(";
@@ -2455,12 +2456,65 @@
 								if ($action == "update") {
 									if (permission_exists(self::singular($parent_name).'_edit')) {
 
-										//parent data
+										//validate changes
+										$data_modified = false;
+										if (is_array($parent_field_array)) {
+											foreach ($parent_field_array as $array_key => $array_value) {
+												//skip child array
+												if (is_array($array_value)) { continue;	}
+
+												//verify if the data in the database has been modified
+												if ($parent_results[0][$array_key] != $array_value) {
+													//echo "no match\n";
+													//echo "$parent_name.$array_key ".($parent_results[0][$array_key])." != ".$array_value."\n\n";
+													$data_modified = true;
+													break;
+												}
+											}
+										}
+
+										//parent data - process the modified data
+										if ($data_modified) {
+
+											//remove the child array and update the special values
+											if (is_array($parent_field_array)) {
+												foreach ($parent_field_array as $array_key => $array_value) {
+													if (is_array($array_value)) { continue;	}
+													if ($array_key != $parent_key_name) {
+														$array_key = self::sanitize($array_key);
+														if (!isset($array_value) || (isset($array_value) && $array_value === '')) {
+															$temp_array[$array_key] = null;
+														}
+														elseif ($array_value === "now()") {
+															$temp_array[$array_key] = $array_value;
+														}
+														elseif ($array_value === "user_uuid()") {
+															$temp_array[$array_key] = $this->user_uuid ?? null;
+														}
+														elseif ($array_value === "remote_address()") {
+															$temp_array[$array_key] = $_SERVER['REMOTE_ADDR'];
+														}
+														else {
+															$temp_array[$array_key] = trim($array_value);
+														}
+													}
+												}
+											}
+
+											//add to the old and new arrays
+											$old_array[$parent_name] = $parent_results;
+											$new_array[$parent_name][] = $temp_array;
+
+											//empty the temp array
+											unset($temp_array);
+
+											//prepare the update statement
 											$params = array();
 											$sql = "UPDATE ".$table_name." SET ";
 											if (is_array($parent_field_array)) {
 												foreach ($parent_field_array as $array_key => $array_value) {
-													if (!is_array($array_value) && $array_key != $parent_key_name) {
+													if (is_array($array_value)) { continue;	}
+													if ($array_key != $parent_key_name) {
 														$array_key = self::sanitize($array_key);
 														if (!isset($array_value) || (isset($array_value) && $array_value === '')) {
 															$sql .= $array_key." = null, ";
@@ -2540,6 +2594,15 @@
 												$this->message = $message;
 												$m++;
 											}
+										}
+										else {
+											$message["details"][$m]["name"] = $parent_name;
+											$message["details"][$m]["message"] = 'No Changes';
+											$message["details"][$m]["code"] = "000";
+											$message["details"][$m]["uuid"] = $parent_key_value;
+											$this->message = $message;
+											$m++;
+										}
 									}
 									else {
 										$retval = false;
@@ -2611,19 +2674,14 @@
 																if ($prep_statement) {
 																	//get the data
 																		$prep_statement->execute();
-																		$child_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
+																		$child_results = $prep_statement->fetch(PDO::FETCH_ASSOC);
 
 																	//set the action
-																		if (is_array($child_array)) {
+																		if (is_array($child_results)) {
 																			$action = "update";
 																		}
 																		else {
 																			$action = "add";
-																		}
-
-																	//add to the parent array
-																		if (is_array($child_array)) {
-																			$old_array[$parent_name][$row_id][$key][] = $child_array;
 																		}
 																}
 																unset($prep_statement);
@@ -2647,83 +2705,148 @@
 													//update the child data
 														if ($action == "update") {
 															if (permission_exists($child_name.'_edit')) {
-																$sql = "UPDATE ".$child_table_name." SET ";
+
+																//validate changes
+																$data_modified = false;
 																if (is_array($row)) {
 																	foreach ($row as $k => $v) {
-																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
-																			$k = self::sanitize($k);
-																			if (!isset($v) || (isset($v) && $v == '')) {
-																				$sql .= $k." = null, ";
-																			}
-																			elseif ($v === "now()") {
-																				$sql .= $k." = now(), ";
-																			}
-																			elseif ($v === "user_uuid()") {
-																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = $this->user_uuid ?? null;
-																			}
-																			elseif ($v === "remote_address()") {
-																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = $_SERVER['REMOTE_ADDR'];
-																			}
-																			else {
-																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = isset($v) ? trim($v) : null;
-																			}
+																		//if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
+																		//	continue;
+																		//}
+																		$k = self::sanitize($k);
+
+																		//verify if the data in the database has been modified
+																		if ($child_results[$k] != $v) {
+																			//echo "no match\n";
+																			//echo "$child_name.$k ".($child_results[$k])." != ".$v."\n\n";
+																			$data_modified = true;
+																			break;
 																		}
 																	}
 																}
 
-																//add the modified date and user
-																$sql .= "update_date = now(), ";
-																$sql .= "update_user = :update_user ";
-																$params['update_user'] = $this->user_uuid ?? null;
+																//child data - process the modified data
+																if ($data_modified) {
 
-																//add the where with the parent name and value
-																$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
-																$sql .= "AND ".$child_key_name." = '".$child_key_value."'; ";
-																$sql = str_replace(", WHERE", " WHERE", $sql);
+																	//update the special values
+																	if (is_array($row)) {
+																		foreach ($row as $k => $v) {
+																			if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
+																				$k = self::sanitize($k);
+																				if (!isset($v) || (isset($v) && $v == '')) {
+																					$temp_array[$k] = null;
+																				}
+																				elseif ($v === "now()") {
+																					$temp_array[$k] = 'now()';
+																				}
+																				elseif ($v === "user_uuid()") {
+																					$temp_array[$k] = $this->user_uuid ?? null;
+																				}
+																				elseif ($v === "remote_address()") {
+																					$temp_array[$k] = $_SERVER['REMOTE_ADDR'];
+																				}
+																				else {
+																					$temp_array[$k] = isset($v) ? trim($v) : null;
+																				}
+																			}
+																		}
+																	}
 
-																//set the error mode
-																$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+																	//add to the old and new arrays
+																	$old_array[$key][] = $child_results;
+																	$new_array[$key][] = $temp_array;
 
-																//reduce prepared statement latency
-																if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-																	$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
+																	//empty the temp array
+																	unset($temp_array);
+
+																	//update the child data
+																	$sql = "UPDATE ".$child_table_name." SET ";
+																	if (is_array($row)) {
+																		foreach ($row as $k => $v) {
+																			if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
+																				$k = self::sanitize($k);
+																				if (!isset($v) || (isset($v) && $v == '')) {
+																					$sql .= $k." = null, ";
+																				}
+																				elseif ($v === "now()") {
+																					$sql .= $k." = now(), ";
+																				}
+																				elseif ($v === "user_uuid()") {
+																					$sql .= $k." = :".$k.", ";
+																					$params[$k] = $this->user_uuid ?? null;
+																				}
+																				elseif ($v === "remote_address()") {
+																					$sql .= $k." = :".$k.", ";
+																					$params[$k] = $_SERVER['REMOTE_ADDR'];
+																				}
+																				else {
+																					$sql .= $k." = :".$k.", ";
+																					$params[$k] = isset($v) ? trim($v) : null;
+																				}
+																			}
+																		}
+																	}
+
+																	//add the modified date and user
+																	$sql .= "update_date = now(), ";
+																	$sql .= "update_user = :update_user ";
+																	$params['update_user'] = $this->user_uuid ?? null;
+
+																	//add the where with the parent name and value
+																	$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
+																	$sql .= "AND ".$child_key_name." = '".$child_key_value."'; ";
+																	$sql = str_replace(", WHERE", " WHERE", $sql);
+
+																	//set the error mode
+																	$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+																	//reduce prepared statement latency
+																	if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+																		$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
+																	}
+
+																	//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
+																	try {
+																		//$this->db->query(check_sql($sql));
+																		$prep_statement = $this->db->prepare($sql);
+																		$prep_statement->execute($params);
+																		unset($prep_statement);
+																		$message["details"][$m]["name"] = $key;
+																		$message["details"][$m]["message"] = "OK";
+																		$message["details"][$m]["code"] = "200";
+																		$message["details"][$m]["uuid"] = $child_key_value;
+																		$message["details"][$m]["sql"] = $sql;
+																		if (is_array($params)) {
+																			$message["details"][$m]["params"] = $params;
+																		}
+																		unset($params);
+																		$this->message = $message;
+																		$m++;
+																	}
+																	catch(PDOException $e) {
+																		$retval = false;
+																		if ($message["code"] == "200") {
+																			$message["message"] = "Bad Request";
+																			$message["code"] = "400";
+																		}
+																		$message["details"][$m]["name"] = $key;
+																		$message["details"][$m]["message"] = $e->getMessage();
+																		$message["details"][$m]["code"] = "400";
+																		$message["details"][$m]["sql"] = $sql;
+																		if (is_array($params)) {
+																			$message["details"][$m]["params"] = $params;
+																		}
+																		unset($params);
+																		$this->message = $message;
+																		$m++;
+																	}
+
 																}
-
-																//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
-																try {
-																	//$this->db->query(check_sql($sql));
-																	$prep_statement = $this->db->prepare($sql);
-																	$prep_statement->execute($params);
-																	unset($prep_statement);
+																else {
 																	$message["details"][$m]["name"] = $key;
-																	$message["details"][$m]["message"] = "OK";
-																	$message["details"][$m]["code"] = "200";
+																	$message["details"][$m]["message"] = 'No Changes';
+																	$message["details"][$m]["code"] = "000";
 																	$message["details"][$m]["uuid"] = $child_key_value;
-																	$message["details"][$m]["sql"] = $sql;
-																	if (is_array($params)) {
-																		$message["details"][$m]["params"] = $params;
-																	}
-																	unset($params);
-																	$this->message = $message;
-																	$m++;
-																}
-																catch(PDOException $e) {
-																	$retval = false;
-																	if ($message["code"] == "200") {
-																		$message["message"] = "Bad Request";
-																		$message["code"] = "400";
-																	}
-																	$message["details"][$m]["name"] = $key;
-																	$message["details"][$m]["message"] = $e->getMessage();
-																	$message["details"][$m]["code"] = "400";
-																	$message["details"][$m]["sql"] = $sql;
-																	if (is_array($params)) {
-																		$message["details"][$m]["params"] = $params;
-																	}
-																	unset($params);
 																	$this->message = $message;
 																	$m++;
 																}
@@ -2760,6 +2883,11 @@
 															if (!isset($child_key_value) || $child_key_value == '') {
 																$child_key_value = uuid();
 															}
+
+															//add to the old and new arrays
+															$old_array[$child_name][] = null;
+															$new_array[$child_name][] = $row;
+
 															//build the insert
 															$sql = "INSERT INTO ".$child_table_name." ";
 															$sql .= "(";
@@ -2919,9 +3047,33 @@
 						$transaction_type = $action;
 					}
 
+				//debug message
+					//echo "old\n";
+					//view_array($old_array, false);
+					//echo "new\n";
+					//view_array($new_array, false);
+					//exit;
+
+				//check to see if the database was updated
+					$database_updated = false;
+					foreach($this->message['details'] as $row) {
+						if ($row['code'] == '200') {
+							$database_updated = true;
+							break;
+						}
+					}
+
 				//log the transaction results
-					if ($transaction_save && file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
+					if ($transaction_save && $database_updated && file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
 						try {
+							//build the json string from the array
+							if (!empty($old_array)) {
+								$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
+							}
+							if (!empty($new_array)) {
+								$new_json = json_encode($new_array, JSON_PRETTY_PRINT);
+							}
+
 							//insert the transaction into the database
 							$sql = "insert into ".self::TABLE_PREFIX."database_transactions ";
 							$sql .= "(";
@@ -2965,13 +3117,13 @@
 							$sql .= ":remote_address, ";
 							$sql .= "'".$transaction_type."', ";
 							$sql .= "now(), ";
-							if (!empty($old_array)) {
+							if (!empty($old_json)) {
 								$sql .= ":transaction_old, ";
 							}
 							else {
 								$sql .= "null, ";
 							}
-							if (!empty($array)) {
+							if (!empty($new_json)) {
 								$sql .= ":transaction_new, ";
 							}
 							else {
@@ -2993,7 +3145,7 @@
 								$statement->bindParam(':app_name', $this->app_name);
 							}
 							$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
-							if (!empty($old_array)) {
+							if (!empty($old_json)) {
 								$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
 								$statement->bindParam(':transaction_old', $old_json);
 							}
@@ -3003,7 +3155,7 @@
 							$message = json_encode($this->message, JSON_PRETTY_PRINT);
 							$statement->bindParam(':transaction_result', $message);
 							$statement->execute();
-							unset($sql);
+							unset($sql, $old_array, $old_json, $new_array, $new_json);
 						}
 						catch(PDOException $e) {
 							$message['message'] = $e->getMessage();
