@@ -11,13 +11,13 @@
 
 		<div class="card-body">
 			<div class="d-flex flex-wrap gap-3">
-			@foreach($payments as $payment)
+			@foreach($paymentgateways as $paymentgateway)
 				<div style="flex: 0 0 275px;">
 					<div class="info-box">
 						<div class="info-box-content">
 							<span class="info-box-text text-center">
-								<a href="{{ route('billings.payment.create', [$billing->billing_uuid, $payment]) }}">
-									<img src="{{ asset("assets/logos/{$payment}.png") }}" alt="{{ $payment }}">
+								<a href="{{ route('billings.payment.create', [$billing->billing_uuid, $paymentgateway]) }}">
+									<img src="{{ asset("assets/logos/{$paymentgateway}.png") }}" alt="{{ $paymentgateway }}">
 								</a>
 							</span>
 						</div>

@@ -86,12 +86,16 @@ class Billing extends Model
 		return $this->hasMany(Billing::class, 'billing_uuid', 'billing_uuid');
 	}
 
-	public function billingfixedcharges(): HasMany {
+	public function billingFixedCharges(): HasMany {
 		return $this->hasMany(BillingFixedCharge::class, 'billing_uuid', 'billing_uuid');
 	}
 
 	public function billinginvoices(): HasMany {
 		return $this->hasMany(BillingInvoice::class, 'billing_uuid', 'billing_uuid');
+	}
+
+	public function contactFrom(): BelongsTo {
+		return $this->belongsTo(Contact::class, 'contact_uuid_from', 'contact_uuid');
 	}
 
 	public function contactTo(): BelongsTo {

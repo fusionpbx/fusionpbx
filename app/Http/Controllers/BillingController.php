@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BillingPaymentRequest;
 use App\Http\Requests\BillingRequest;
 use App\Http\Requests\BillingTransferRequest;
 use App\Models\Billing;
@@ -11,6 +12,7 @@ use App\Models\Lcr;
 use App\Models\RateConversion;
 use App\Repositories\BillingInvoiceRepository;
 use App\Repositories\BillingRepository;
+use App\Services\Payments\PaymentGatewayFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -322,9 +324,9 @@ class BillingController extends Controller
 
 	public function payment(Billing $billing)
 	{
-		$payments = array_keys(config('payments'));
+		$paymentgateways = array_keys(config('paymentgateways'));
 
-		return view("pages.billings.payments.index", compact("billing", "payments"));
+		return view("pages.billings.payments.index", compact("billing", "paymentgateways"));
 	}
 
 	private function getMaxCredit(Billing $billing)
@@ -452,5 +454,25 @@ class BillingController extends Controller
 		$this->billingInvoiceRepository->create($billingInvoiceData);
 
 		return view("pages.billings.index");
+	}
+
+	public function paymentCreate(Billing $billing, string $paymentGateway)
+	{
+		$paymentGateways = config('paymentgateways');
+
+		$paymentgatewayConfig = $paymentGateways[$paymentGateway];
+
+		$defaultCharge = $paymentgatewayConfig['default_charge'];
+
+		return view("pages.billings.payments.{$paymentGateway}", compact("billing", "paymentGateway", "defaultCharge"));
+	}
+
+	public function paymentStore(BillingPaymentRequest $request, Billing $billing, string $paymentGateway)
+	{
+		$PaymentGatewayFactory = PaymentGatewayFactory::make($paymentGateway);
+
+		$PaymentGatewayFactory->createPayment($billing, $request->validated());
+
+		return redirect()->route("billings.payment", $billing);
 	}
 }

@@ -74,7 +74,8 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::get('/billings/{billing}/payment', [BillingController::class, 'payment'])->name('billings.payment', 'billings.payment');
     Route::get('/billings/{billing}/transfer', [BillingController::class, 'transferGet'])->name('billings.transfer_get', 'billings.transfer_get');
     Route::post('/billings/{billing}/transfer', [BillingController::class, 'transferPost'])->name('billings.transfer_post', 'billings.transfer_post');
-    Route::get('/billings/{billing}/{payment}/create', [BillingController::class, 'paymentCreate'])->name('billings.payment.create', 'billings.payment.create');
+    Route::get('/billings/{billing}/{paymentGateway}/create', [BillingController::class, 'paymentCreate'])->name('billings.payment.create', 'billings.payment.create');
+    Route::post('/billings/{billing}/{paymentGateway}/store', [BillingController::class, 'paymentStore'])->name('billings.payment.store', 'billings.payment.store');
     Route::get('/billings/{billing}/view', [BillingController::class, 'view'])->name('billings.view', 'billings.view');
     Route::post('/billings/{billingInvoice}/process', [BillingInvoiceController::class, 'process'])->name('billings.process', 'billings.process');
     Route::resource('/billings', BillingController::class)->name('billings', 'billings');
