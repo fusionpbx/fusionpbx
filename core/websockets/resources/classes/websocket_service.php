@@ -762,7 +762,7 @@ class websocket_service extends service {
 				break;
 			}
 		}
-		if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $request_header, $matches)) {
+		if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/i", $request_header, $matches)) {
 			throw new invalid_handshake_exception($resource, "Invalid WebSocket handshake");
 		}
 		$key = trim($matches[1]);
