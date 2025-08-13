@@ -464,7 +464,12 @@ class BillingController extends Controller
 
 		$defaultCharge = $paymentgatewayConfig['default_charge'];
 
-		return view("pages.billings.payments.{$paymentGateway}", compact("billing", "paymentGateway", "defaultCharge"));
+        $billingFixedCharges = $billing->billingFixedCharges()
+            ->where("currency", "%")
+            ->where("times", ">", 0)
+            ->get();
+
+		return view("pages.billings.payments.{$paymentGateway}", compact("billing", "paymentGateway", "defaultCharge", "billingFixedCharges"));
 	}
 
 	public function paymentStore(BillingPaymentRequest $request, Billing $billing, string $paymentGateway)

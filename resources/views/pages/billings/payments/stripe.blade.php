@@ -5,7 +5,7 @@
     <div class="card card-primary mt-3">
         <div class="card-header">
             <h3 class="card-title">
-                {{ 'Offline' }}
+                {{ 'Stripe' }}
             </h3>
         </div>
 
@@ -120,6 +120,36 @@
                 </div>
 
                 <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Credit card</label>
+                            <input type="number" class="form-control" name="card-number">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="form-label">CVC</label>
+                            <input type="number" class="form-control" name="cvc" max="999">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="form-label">Expiration month</label>
+                            <input type="number" class="form-control" name="exp-month" min="1" max="12">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="form-label">Expiration year</label>
+                            <input type="number" class="form-control" name="exp-year" min="2014" max="2026">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label">Amount</label>
@@ -161,7 +191,7 @@
                                 <input type="number" class="form-control" name="amount" value="{{ $credit }}" step="{{ $currency_step }}" min="{{ $min_payment }}" required>
                             @endif
 
-                            <span><small>Tax NOT included (if any)</small></span>
+                            <span><small>Plus taxes</small></span>
                         </div>
                     </div>
                     <div class="col-md-2">
