@@ -228,6 +228,15 @@
 					$cmd = "callcenter_config agent set status ".$call_center_agent_uuid." '".$agent_status."'";
 					$response = event_socket::api($cmd);
 					usleep(200);
+				//agent set state
+					if (in_array($agent_status, array('Available', 'Available (On Demand)'))) {
+						$agent_state = 'Waiting';
+					} else {
+						$agent_state = 'Idle';
+					}
+					$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." '".$agent_state."'";
+					$response = event_socket_request($fp, $cmd);
+					usleep(200);
 				//agent set reject_delay_time
 					$cmd = 'callcenter_config agent set reject_delay_time '.$call_center_agent_uuid.' '. $agent_reject_delay_time;
 					$response = event_socket::api($cmd);
