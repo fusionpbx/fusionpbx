@@ -2459,17 +2459,31 @@
 										//validate changes
 										$data_modified = false;
 										if (is_array($parent_field_array)) {
+											$i = 0;
 											foreach ($parent_field_array as $array_key => $array_value) {
 												//skip child array
 												if (is_array($array_value)) { continue;	}
 
+												//normalize the boolean data
+												if ($array_value == 'true' || $array_value == 'false') {
+													if ($parent_results[$i][$array_key] == 0) {
+														$parent_results[$i][$array_key] = 'false';
+													}
+													if ($parent_results[$i][$array_key] == 1) {
+														$parent_results[$i][$array_key] = 'true';
+													}
+												}
+
 												//verify if the data in the database has been modified
-												if ($parent_results[0][$array_key] != $array_value) {
+												if ($parent_results[$i][$array_key] != $array_value) {
 													//echo "no match\n";
 													//echo "$parent_name.$array_key ".($parent_results[0][$array_key])." != ".$array_value."\n\n";
 													$data_modified = true;
 													break;
 												}
+
+												//inrement the id
+												$i;
 											}
 										}
 
@@ -2708,10 +2722,18 @@
 																$data_modified = false;
 																if (is_array($row)) {
 																	foreach ($row as $k => $v) {
-																		//if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
-																		//	continue;
-																		//}
+																		//santize the data
 																		$k = self::sanitize($k);
+
+																		//normalize the boolean data
+																		if ($v == 'true' || $v == 'false') {
+																			if ($parent_results[$k] == 0) {
+																				$parent_results[$k] = 'false';
+																			}
+																			if ($child_results[$k] == 1) {
+																				$child_results[$k] = 'true';
+																			}
+																		}
 
 																		//verify if the data in the database has been modified
 																		if ($child_results[$k] != $v) {
