@@ -375,10 +375,7 @@
 				}
 
 			//skip call detail records for calls blocked by call block
-				if (isset($xml->variables->call_block)
-					&& $xml->variables->call_block == 'true'
-					&& !$this->settings->get('call_block', 'save_call_detail_record', true)
-					) {
+				if (isset($xml->variables->call_block) && $xml->variables->call_block == 'true' && !$this->settings->get('call_block', 'save_call_detail_record', true)) {
 					//delete the xml cdr file
 					if (!empty($this->settings->get('switch', 'log'))) {
 						$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
