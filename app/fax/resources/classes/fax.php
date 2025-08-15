@@ -707,7 +707,7 @@
 									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$database->save($array, false);
 									unset($array);
 
 								//return toggled count
