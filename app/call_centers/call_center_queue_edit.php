@@ -134,7 +134,7 @@
 			$queue_announce_position = $_POST["queue_announce_position"] ?? null;
 			$queue_announce_sound = $_POST["queue_announce_sound"];
 			$queue_announce_frequency = $_POST["queue_announce_frequency"];
-			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"];
+			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"] ?? null;
 			$queue_email_address = $_POST["queue_email_address"] ?? null;
 			$queue_description = $_POST["queue_description"];
 
@@ -435,7 +435,7 @@
 			if (!empty($queue_cid_prefix)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($queue_cid_prefix)."#\${caller_id_name}\"/>\n";
 			}
-			if (!empty($queue_cc_exit_keys)) {
+			if ($queue_cc_exit_keys !== null) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".xml::sanitize($queue_cc_exit_keys)."\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($queue_extension)."@".$domain_name."\"/>\n";
