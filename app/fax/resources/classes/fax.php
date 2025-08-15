@@ -74,6 +74,16 @@
 		*/
 		public function dialplan() {
 
+			//require the fax_extension
+				if (!empty($this->fax_extension)) {
+					return false;
+				}
+
+			//require the destination_number
+				if (!empty($this->destination_number)) {
+					return false;
+				}
+
 			//normalize the fax forward number
 				if (strlen($this->fax_forward_number) > 3) {
 					//$fax_forward_number = preg_replace("~[^0-9]~", "",$fax_forward_number);
