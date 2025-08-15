@@ -248,6 +248,11 @@
 
 <style>
 
+:root {
+	--row-height: 89.5px;
+	--grid-gap: 16px;
+}
+
 * {
 	box-sizing: border-box;
 	padding: 0;
@@ -263,7 +268,7 @@
 	max-width: 100%;
 	margin: 0 auto;
 	display: grid;
-	grid-gap: 1rem;
+	grid-gap: var(--grid-gap);
 }
 
 div.hud_content {
@@ -369,40 +374,40 @@ foreach ($dashboard as $row) {
 	switch ($row['dashboard_row_span']) {
 		case 1:
 			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
-			echo "	height: 89.5px;\n";
+			echo "	height: var(--row-height);\n";
 			echo "}\n";
 			echo "#".$dashboard_id." .hud_stat {\n";
 			echo "	line-height: 0;\n";
 			echo "	font-size: 30pt;\n";
 			echo "}\n";
-			echo "#".$dashboard_id." .hud_chart {\n";
-			echo "	height: 54px;\n";
-			echo "	width: 180px;\n";
-			echo "	padding-top: 0;\n";
-			echo "}\n";
 			echo "#".$dashboard_id." .hud_stat .fas {\n";
 			echo "	line-height: 0;\n";
 			echo "	font-size: 24pt;\n";
 			echo "}\n";
+			echo "#".$dashboard_id.".widget > .hud_box > .hud_content > .hud_chart {\n";
+			echo "	height: 54px;\n";
+			echo "	width: 180px;\n";
+			echo "	padding-top: 0;\n";
+			echo "}\n";
 			break;
 		case 2:
 			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
-			echo "	height: 195px;\n";
+			echo "	height: calc((var(--row-height) * 2) + var(--grid-gap));\n";
 			echo "}\n";
 			break;
 		case 3:
 			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
-			echo "	height: 300.5px;\n";
+			echo "	height: calc((var(--row-height) * 3) + (var(--grid-gap) * 2));\n";
 			echo "}\n";
 			break;
 		case 4:
 			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
-			echo "	height: 406px;\n";
+			echo "	height: calc((var(--row-height) * 4) + (var(--grid-gap) * 3));\n";
 			echo "}\n";
 			break;
 		default: //if empty
 			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
-			echo "	height: 195px;\n";
+			echo "	height: calc((var(--row-height) * 2) + var(--grid-gap));\n";
 			echo "}\n";
 	}
 	$row_span = $row['dashboard_row_span'] * 4;
@@ -412,6 +417,9 @@ foreach ($dashboard as $row) {
 		$expanded_row_span += 1;
 	}
 	if (!empty($row['dashboard_row_span'])) {
+		echo "#".$dashboard_id." {\n";
+		echo "	--row-span: ".$row['dashboard_row_span'].";\n";
+		echo "}\n";
 		echo "#".$dashboard_id." {\n";
 		echo "	grid-row: span ".$row_span.";\n";
 		echo "}\n";
@@ -582,6 +590,36 @@ function toggle_grid_row_span_all() {
 
 	first_toggle = true;
 }
+
+function update_parent_height() {
+	const parent_widgets = document.querySelectorAll('.parent_widget');
+
+	parent_widgets.forEach(parent_widget => {
+		if (!parent_widget.dataset.originalHeight) {
+			parent_widget.dataset.originalHeight = parseFloat(window.getComputedStyle(parent_widget).height.replace('px', ''));
+		}
+		const widget = parent_widget.closest('.widget');
+		const row_gap = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--grid-gap').replace('px', ''));
+		const row_height = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--row-height').replace('px', ''));
+		const original_row_span = parseInt(window.getComputedStyle(widget).getPropertyValue('--row-span').replace('span ', ''));
+		const original_height = parseFloat(parent_widget.dataset.originalHeight);
+		const content_height = parent_widget.scrollHeight;
+		const new_row_span = Math.ceil(content_height / (row_height + row_gap));
+
+		if (content_height !== original_height) {
+			widget.style.gridRow = `span ${new_row_span * 4}`;
+		}
+		else {
+			widget.style.gridRow = `span ${original_row_span * 4}`;
+		}
+
+		parent_widget.style.minHeight = `${original_height}px`;
+		parent_widget.style.height = `auto`;
+	});
+}
+
+document.addEventListener('DOMContentLoaded', update_parent_height);
+window.addEventListener('resize', update_parent_height);
 
 </script>
 
@@ -788,13 +826,18 @@ function toggle_grid_row_span_all() {
 						ghostClass: 'ghost',
 						fallbackOnBody: true,
 						swapThreshold: 0.65,
-						onSort: update_widget_order,
+						onSort: function (event) {
+							update_widget_order();
+							update_parent_height();
+						},
 						onAdd: function (event) {
 							event.item.classList.add('child_widget');
 							update_widget_order();
+							update_parent_height();
 						},
 						onRemove: function (event) {
 							update_widget_order();
+							update_parent_height();
 						},
 						onMove: function (event) {
 							if (event.to !== event.from) {
