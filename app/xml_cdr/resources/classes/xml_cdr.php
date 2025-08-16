@@ -359,14 +359,8 @@
 			//load the string into an xml object
 				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				if ($xml === false) {
-
 					//failed to load the XML, move the XML file to the failed directory
 					if (!empty($xml_cdr_dir)) {
-						if (!file_exists($xml_cdr_dir.'/failed/invalid_xml')) {
-							if (!mkdir($xml_cdr_dir.'/failed/invalid_xml', 0660, true)) {
-								die('Failed to create '.$xml_cdr_dir.'/failed');
-							}
-						}
 						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/invalid_xml/'.$this->file);
 					}
 
@@ -375,19 +369,17 @@
 				}
 
 			//skip call detail records for calls blocked by call block
-				if (isset($xml->variables->call_block) && !empty($this->settings->get('call_block', 'save_call_detail_record'))) {
-					if ($xml->variables->call_block == 'true' && $this->settings->get('call_block', 'save_call_detail_record', false) !== true) {
-						//delete the xml cdr file
-						if (!empty($this->settings->get('switch', 'log'))) {
-							$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
-							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
-								unlink($xml_cdr_dir.'/'.$this->file);
-							}
+				if (isset($xml->variables->call_block) && $xml->variables->call_block == 'true' && !$this->settings->get('call_block', 'save_call_detail_record', true)) {
+					//delete the xml cdr file
+					if (!empty($this->settings->get('switch', 'log'))) {
+						$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
+						if (file_exists($xml_cdr_dir.'/'.$this->file)) {
+							unlink($xml_cdr_dir.'/'.$this->file);
 						}
-
-						//return without saving
-						return false;
 					}
+
+					//return without saving
+					return false;
 				}
 
 			//check for duplicate call uuid's
