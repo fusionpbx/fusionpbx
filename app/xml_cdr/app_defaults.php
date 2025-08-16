@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,6 +27,20 @@
 //make sure that prefix-a-leg is set to true in the xml_cdr.conf.xml file
 
 	if ($domains_processed == 1) {
+
+		//get the xml_cdr directory
+		$xml_cdr_dir = $settings->get('switch', 'log').'/xml_cdr';
+
+		//create the failed/size directory
+		if (!file_exists($xml_cdr_dir.'/failed/size')) {
+			mkdir($xml_cdr_dir.'/failed/size', 0660, true);
+		}
+
+		//create the failed/invalid_xml directory
+		if (!file_exists($xml_cdr_dir.'/failed/invalid_xml')) {
+			mkdir($xml_cdr_dir.'/failed/invalid_xml', 0660, true);
+		}
+
 		/*
 		$file_contents = file_get_contents($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_cdr.conf.xml");
 		$file_contents_new = str_replace("param name=\"prefix-a-leg\" value=\"false\"/", "param name=\"prefix-a-leg\" value=\"true\"/", $file_contents);
