@@ -78,7 +78,7 @@ div.parent_widget {
 
 div.child_widget div.hud_box:first-of-type {
 	background: rgba(0,0,0,0);
-	border: 0px dashed rgba(0,0,0,0);
+	border: 1px dashed rgba(0,0,0,0);
 	box-shadow: none;
 	overflow: visible;
 	-webkit-transition: .1s;
@@ -120,7 +120,7 @@ foreach ($parent_widgets as $row) {
 <?php
 
 //include the dashboards
-	echo "<div class='hud_box' style='overflow-y: auto;'>\n";
+	echo "<div class='hud_box'>\n";
 	echo "	<div class='hud_content parent_widget'>\n";
 
 	$x = 0;
