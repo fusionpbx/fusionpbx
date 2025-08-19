@@ -320,7 +320,7 @@ class authentication {
 		$sql .= "and user_setting_enabled = 'true' ";
 		$parameters['domain_uuid'] = $result["domain_uuid"];
 		$parameters['user_uuid'] = $result["user_uuid"];
-		$user_settings = $this->database->select($sql, $parameters, 'all');
+		$user_settings = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 
 		//store user settings in the session when available
