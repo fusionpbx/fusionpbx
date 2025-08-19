@@ -826,20 +826,37 @@
 		echo $text['label-dashboard_chart_type']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<select name='dashboard_chart_type' class='formfld'>\n";
-		echo "		<option value='doughnut'>".$text['label-doughnut']."</option>\n";
-		if ($dashboard_chart_type == 'line' || $dashboard_path == 'system/system_cpu_status') {
-			echo "		<option value='line' ".($dashboard_chart_type == "line" ? "selected='selected'" : null).">".$text['label-line']."</option>\n";
-		}
+		echo "	<div style='display: flex; gap: 8px;'>\n";
+		echo "		<label class='chart_type_button' title='".$text['label-number']."'>\n";
+		echo "			<input type='radio' style='display: none;' name='dashboard_chart_type' value='number' ".($dashboard_chart_type == 'number' ? 'checked' : '').">\n";
+		echo "			<i class='fas fa-hashtag'></i>\n";
+		echo "		</label>\n";
+		echo "		<label class='chart_type_button' title='".$text['label-doughnut']."'>\n";
+		echo "			<input type='radio' style='display: none;' name='dashboard_chart_type' value='doughnut' ".($dashboard_chart_type == 'doughnut' ? 'checked' : '').">\n";
+		echo "			<i class='fas fa-chart-pie'></i>\n";
+		echo "		</label>\n";
 		if ($dashboard_chart_type == "icon" || in_array($dashboard_path, ['active_calls/active_calls', 'domains/domains', 'xml_cdr/missed_calls', 'voicemails/voicemails', 'xml_cdr/recent_calls', 'registrations/registrations'])) {
-			echo "		<option value='icon' ".($dashboard_chart_type == "icon" ? "selected='selected'" : null).">".$text['label-icon']."</option>\n";
+			echo "		<label class='chart_type_button' title='".$text['label-icon']."'>\n";
+			echo "			<input type='radio' style='display: none;' name='dashboard_chart_type' value='icon' ".($dashboard_chart_type == 'icon' ? 'checked' : '').">\n";
+			echo "			<div style='position: relative; display: inline-block;'>\n";
+			echo "				<i class='fas fa-envelope'></i>\n";
+			echo "				<span style=\"background: #4099FF; color: #ffffff; font-size: 9px; font-weight: bold; text-align: center; position: absolute; top: 11px; left: 14px; padding: 0px 4px; border-radius: 10px; white-space: nowrap;\">1</span>\n";
+			echo "			</div>\n";
+			echo "		</label>\n";
 		}
-		echo "		<option value='number' ".($dashboard_chart_type == "number" ? "selected='selected'" : null).">".$text['label-number']."</option>\n";
+		if ($dashboard_chart_type == 'line' || $dashboard_path == 'system/system_cpu_status') {
+			echo "		<label class='chart_type_button' title='".$text['label-line']."'>\n";
+			echo "			<input type='radio' style='display: none;' name='dashboard_chart_type' value='line' ".($dashboard_chart_type == 'line' ? 'checked' : '').">\n";
+			echo "			<i class='fas fa-chart-line'></i>\n";
+			echo "		</label>\n";
+		}
 		if ($dashboard_chart_type == "progress_bar" || $dashboard_path == "system/system_status") {
-			echo "		<option value='progress_bar' ".($dashboard_chart_type == "progress_bar" ? "selected='selected'" : null).">".$text['label-progress_bar']."</option>\n";
+			echo "		<label class='chart_type_button' title='".$text['label-progress_bar']."'>\n";
+			echo "			<input type='radio' style='display: none;' name='dashboard_chart_type' value='progress_bar' ".($dashboard_chart_type == 'progress_bar' ? 'checked' : '').">\n";
+			echo "			<i class='fas fa-bars-progress'></i>\n";
+			echo "		</label>\n";
 		}
-		echo "	</select>\n";
-		echo "<br />\n";
+		echo "	</div>\n";
 		echo $text['description-dashboard_chart_type']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
