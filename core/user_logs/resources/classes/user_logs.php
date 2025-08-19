@@ -57,7 +57,7 @@
 		/**
 		 * add user_logs
 		 */
-		public static function add($result) {
+		public static function add($result, $message = null) {
 
 			//prepare the array
 				$array = [];
@@ -75,7 +75,7 @@
 					$array['user_logs'][0]["result"] = 'success';
 				}
 				else {
-					$array['user_logs'][0]["result"] = 'failure';
+					$array['user_logs'][0]["result"] = $message ?? 'failure';
 				}
 
 			//add the dialplan permission

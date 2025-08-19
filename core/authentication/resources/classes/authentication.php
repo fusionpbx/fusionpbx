@@ -59,6 +59,9 @@ class authentication {
 		//set default return array as null
 			$result = null;
 
+		//use a login message when a login attempt fails
+			$failed_login_message = null;
+
 		//get the domain_name and domain_uuid
 			if (!isset($this->domain_name) || !isset($this->domain_uuid)) {
 				$this->get_domain();
@@ -170,13 +173,16 @@ class authentication {
 
 		//set authorized to false if any authentication method failed
 			$authorized = false;
+			$plugin_name = '';
 			if (is_array($_SESSION['authentication']['plugin'])) {
 				foreach($_SESSION['authentication']['plugin'] as $row) {
+					$plugin_name = $row['plugin'];
 					if ($row["authorized"]) {
 						$authorized = true;
 					}
 					else {
 						$authorized = false;
+						$failed_login_message = "Authentication plugin '$plugin_name' blocked login attempt";
 						break;
 					}
 				}
@@ -193,6 +199,8 @@ class authentication {
 				} else {
 					//user failed the cidr check - no longer authorized
 					$authorized = false;
+					$failed_login_message = "CIDR blocked login attempt";
+					$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
 				}
 			}
 
@@ -201,7 +209,7 @@ class authentication {
 
 		//log the attempt
 			$plugin_classname = substr($class_name, 7);
-			user_logs::add($_SESSION['authentication']['plugin'][$plugin_classname]);
+			user_logs::add($_SESSION['authentication']['plugin'][$name], $failed_login_message);
 
 		//return the result
 			return $result ?? false;
@@ -313,6 +321,9 @@ class authentication {
 			require_once $project_root . '/app/domains/resources/domains.php';
 		}
 
+		//initialize the parameters array
+		$parameters = [];
+
 		//get the user settings
 		$sql = "select * from v_user_settings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -321,7 +332,6 @@ class authentication {
 		$parameters['domain_uuid'] = $result["domain_uuid"];
 		$parameters['user_uuid'] = $result["user_uuid"];
 		$user_settings = $database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
 
 		//store user settings in the session when available
 		if (is_array($user_settings)) {
