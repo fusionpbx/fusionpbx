@@ -3218,7 +3218,7 @@ else { //default: white
 		}
 
 	.chart_type_button:has(input:checked) {
-		background-color: #F0F4FE;
+		background-color: rgba(64,153,255,0.05);
 		border-color: #8EACF9;
 		}
 
