@@ -3206,6 +3206,30 @@ else { //default: white
 		cursor: pointer;
 		}
 
+/* DASHBOARD EDIT **********************************************************************/
+
+	.chart_type_button {
+		padding: 8px 16px;
+		border: 1px solid rgba(0,0,0,0.1);
+		border-radius: 5px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		}
+
+	.chart_type_button:has(input:checked) {
+		background-color: #F0F4FE;
+		border-color: #8EACF9;
+		}
+
+	.chart_type_button:hover {
+		background-color: rgba(0,0,0,0.03);
+		}
+
+	.chart_type_button i {
+		font-size: 15pt;
+		}
+
 /* PLUGINS ********************************************************************/
 
 	/* bootstrap colorpicker  */
