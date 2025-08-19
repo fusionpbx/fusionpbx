@@ -110,6 +110,76 @@
 		}
 	}
 
+//define the process id file
+	$pid_file = "/var/run/fusionpbx/".basename($argv[0], ".php") .".pid";
+	echo "pid_file: ".$pid_file."\n";
+
+//function to check if the process exists
+	function process_exists($file) {
+
+		//set the default exists to false
+		$exists = false;
+
+		//check to see if the process is running
+		if (file_exists($file)) {
+			$pid = file_get_contents($file);
+			if (function_exists('posix_getsid')) {
+				if (posix_getsid($pid) === false) {
+					//process is not running
+					$exists = false;
+				}
+				else {
+					//process is running
+					$exists = true;
+				}
+			}
+			else {
+				if (file_exists('/proc/'.$pid)) {
+					//process is running
+					$exists = true;
+				}
+				else {
+					//process is not running
+					$exists = false;
+				}
+			}
+		}
+
+		//return the result
+		return $exists;
+	}
+
+//check to see if the process exists
+	$pid_exists = process_exists($pid_file);
+
+//prevent the process running more than once
+	if ($pid_exists) {
+		echo "Cannot lock pid file {$pid_file}\n";
+		exit;
+	}
+	else {
+		echo "pid file exists\n";
+	}
+
+//create the process id file if the process doesn't exist
+	if (!$pid_exists) {
+		//remove the old pid file
+		if (file_exists($pid_file)) {
+			unlink($pid_file);
+		}
+
+		//show the details to the user
+		if (isset($debug) && $debug == true) {
+			echo "\n";
+			echo "Service: ".basename( $argv[0], ".php")."\n";
+			echo "Process ID: ".getmypid()."\n";
+			echo "PID File: ".$pid_file."\n";
+		}
+
+		//save the pid file
+		file_put_contents($pid_file, getmypid());
+	}
+
 //connect to the database
 	$database = database::new();
 
