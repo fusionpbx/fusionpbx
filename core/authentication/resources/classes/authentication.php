@@ -185,11 +185,11 @@ class authentication {
 		//user is authorized - get user settings, check user cidr
 			if ($authorized) {
 				//get the cidr restrictions from global, domain, and user default settings
-				$user_settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-				$cidr_list = $user_settings->get('domain', 'cidr', []);
+				$settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+				$cidr_list = $settings->get('domain', 'cidr', []);
 				if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
 					//user passed the cidr check
-					self::create_user_session($result, $user_settings);
+					self::create_user_session($result, $settings);
 				} else {
 					//user failed the cidr check - no longer authorized
 					$authorized = false;
@@ -214,15 +214,15 @@ class authentication {
 	 * @global database $database
 	 * @global string $conf
 	 * @param array|bool $result Associative array containing: domain_uuid, domain_name, user_uuid, username. Contact keys can be empty, but should still be present. They include: contact_uuid, contact_name_given, contact_name_family, contact_image.
-	 * @param array $user_settings User settings from the v_user_settings table or an empty array.
+	 * @param settings $settings From the settings object
 	 * @return void
 	 */
-	public static function create_user_session($result = [], $user_settings = []): void {
+	public static function create_user_session($result = [], $settings = null): void {
+
+		//use the database global
 		global $database;
 
-		//
-		// Validate data
-		//
+		// validate data
 		if (empty($result)) {
 			return;
 		}
@@ -313,13 +313,23 @@ class authentication {
 			require_once $project_root . '/app/domains/resources/domains.php';
 		}
 
+		//get the user settings
+		$sql = "select * from v_user_settings ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and user_uuid = :user_uuid ";
+		$sql .= "and user_setting_enabled = 'true' ";
+		$parameters['domain_uuid'] = $result["domain_uuid"];
+		$parameters['user_uuid'] = $result["user_uuid"];
+		$user_settings = $this->database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+
 		//store user settings in the session when available
 		if (is_array($user_settings)) {
 			foreach ($user_settings as $row) {
 				$name = $row['user_setting_name'];
 				$category = $row['user_setting_category'];
 				$subcategory = $row['user_setting_subcategory'];
-				if (!empty($row['user_setting_value'])) {
+				if (isset($row['user_setting_value'])) {
 					if (empty($subcategory)) {
 						//$$category[$name] = $row['domain_setting_value'];
 						if ($name == "array") {
@@ -342,9 +352,13 @@ class authentication {
 		//get the extensions that are assigned to this user
 		if (file_exists($project_root . '/app/extensions/app_config.php')) {
 			if (isset($_SESSION["user"]) && is_uuid($_SESSION["user_uuid"]) && is_uuid($_SESSION["domain_uuid"]) && !isset($_SESSION['user']['extension'])) {
+				//define the array
 				$parameters = [];
+
+				//initialize the array
+				$_SESSION['user']['extension'] = [];
+
 				//get the user extension list
-				$_SESSION['user']['extension'] = null;
 				$sql = "select ";
 				$sql .= "e.extension_uuid, ";
 				$sql .= "e.extension, ";
@@ -398,7 +412,7 @@ class authentication {
 		}
 		if (strlen($_SESSION["time_zone"]["user"] ?? '') === 0) {
 			//set the domain time zone as the default time zone
-			date_default_timezone_set($_SESSION['domain']['time_zone']['name']);
+			date_default_timezone_set($settings->get('domain', 'time_zone', 'UTC'));
 		} else {
 			//set the user defined time zone
 			date_default_timezone_set($_SESSION["time_zone"]["user"]);
@@ -506,5 +520,3 @@ $auth->domain_name = "sip.fusionpbx.com";
 $response = $auth->validate();
 print_r($response);
 */
-
-?>
