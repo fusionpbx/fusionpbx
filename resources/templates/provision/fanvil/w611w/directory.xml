@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<FanvilIPPhoneDirectory>
+{if $smarty.get.contacts == "users"}
+<Title>Users Directory</Title>
+{elseif $smarty.get.contacts == "groups"}
+<Title>Groups Directory</Title>
+{elseif $smarty.get.contacts == "extensions"}
+<Title>Extensions Directory</Title>
+{else}
+<Title>Complete Directory</Title>
+{/if}
+
+{foreach $contacts as $row}
+{if $smarty.get.contacts == "users" && $row.category == "users"}
+<DirectoryEntry>
+    {if $row.contact_organization && $row.contact_name_given && $row.contact_name_family}
+        <Name>{$row.contact_organization}, {$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_organization && $row.contact_name_given == "" && $row.contact_name_family == ""}
+        <Name>{$row.contact_organization}</Name>
+    {elseif $row.contact_name_given && $row.contact_name_family && $row.contact_organization == ""}
+        <Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_name_given && $row.contact_name_family}
+        <Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_name_given}
+        <Name>{$row.contact_name_given}</Name>
+    {elseif $row.contact_name_family}
+        <Name>{$row.contact_name_family}</Name>
+    {else}
+        <Name>{$row.effective_caller_id_name}</Name>
+    {/if}
+
+    {foreach $row.numbers as $number}
+        {if $number.phone_label == "work" && $number.phone_number != ""}
+            <Telephone>{$number.phone_number}</Telephone>
+        {elseif !isset($telephone_set) && $number.phone_number != ""}
+            <Telephone>{$number.phone_number}</Telephone>
+            {$telephone_set = true}
+        {/if}
+        
+        {if $number.phone_label == "mobile" && $number.phone_number != ""}
+            <Mobile>{$number.phone_number}</Mobile>
+        {elseif !isset($mobile_set) && $number.phone_number != "" && !isset($telephone_set)}
+            <Mobile>{$number.phone_number}</Mobile>
+            {$mobile_set = true}
+        {/if}
+        
+        {if $number.phone_label == "home" && $number.phone_number != ""}
+            <Other>{$number.phone_number}</Other>
+        {elseif !isset($other_set) && $number.phone_number != "" && !isset($telephone_set) && !isset($mobile_set)}
+            <Other>{$number.phone_number}</Other>
+            {$other_set = true}
+        {/if}
+    {/foreach}
+    
+    <Ring>0</Ring>
+    <Group>Users</Group>
+    <picture></picture>
+    
+    {* Reset variables for next contact *}
+    {$telephone_set = null}
+    {$mobile_set = null}
+    {$other_set = null}
+</DirectoryEntry>
+
+{elseif $smarty.get.contacts == "groups" && $row.category == "groups"}
+<DirectoryEntry>
+    {if $row.contact_organization && $row.contact_name_given && $row.contact_name_family}
+        <Name>{$row.contact_organization}, {$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_organization && $row.contact_name_given == "" && $row.contact_name_family == ""}
+        <Name>{$row.contact_organization}</Name>
+    {elseif $row.contact_name_given && $row.contact_name_family && $row.contact_organization == ""}
+        <Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_name_given && $row.contact_name_family}
+        <Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_name_given}
+        <Name>{$row.contact_name_given}</Name>
+    {elseif $row.contact_name_family}
+        <Name>{$row.contact_name_family}</Name>
+    {else}
+        <Name>{$row.effective_caller_id_name}</Name>
+    {/if}
+
+    {foreach $row.numbers as $number}
+        {if $number.phone_label == "work" && $number.phone_number != ""}
+            <Telephone>{$number.phone_number}</Telephone>
+        {elseif !isset($telephone_set) && $number.phone_number != ""}
+            <Telephone>{$number.phone_number}</Telephone>
+            {$telephone_set = true}
+        {/if}
+        
+        {if $number.phone_label == "mobile" && $number.phone_number != ""}
+            <Mobile>{$number.phone_number}</Mobile>
+        {elseif !isset($mobile_set) && $number.phone_number != "" && !isset($telephone_set)}
+            <Mobile>{$number.phone_number}</Mobile>
+            {$mobile_set = true}
+        {/if}
+        
+        {if $number.phone_label == "home" && $number.phone_number != ""}
+            <Other>{$number.phone_number}</Other>
+        {elseif !isset($other_set) && $number.phone_number != "" && !isset($telephone_set) && !isset($mobile_set)}
+            <Other>{$number.phone_number}</Other>
+            {$other_set = true}
+        {/if}
+    {/foreach}
+    
+    <Ring>0</Ring>
+    <Group>Groups</Group>
+    <picture></picture>
+    
+    {* Reset variables for next contact *}
+    {$telephone_set = null}
+    {$mobile_set = null}
+    {$other_set = null}
+</DirectoryEntry>
+
+{elseif $smarty.get.contacts == "extensions" && $row.category == "extensions"}
+<DirectoryEntry>
+    {if $row.contact_name_given}
+        <Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+    {else}
+        <Name>{$row.effective_caller_id_name}</Name>
+    {/if}
+    
+    {if $row.phone_number}
+        <Telephone>{$row.phone_number}</Telephone>
+    {else}
+        <Telephone>{$row.phone_extension}</Telephone>
+    {/if}
+    <Mobile></Mobile>
+    <Other></Other>
+    <Ring>0</Ring>
+    <Group>Extensions</Group>
+    <picture></picture>
+</DirectoryEntry>
+
+{elseif $smarty.get.contacts == "all" || !$smarty.get.contacts}
+<DirectoryEntry>
+    {if $row.contact_organization && $row.contact_name_given && $row.contact_name_family}
+        <Name>{$row.contact_organization}, {$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_organization && $row.contact_name_given == "" && $row.contact_name_family == ""}
+        <Name>{$row.contact_organization}</Name>
+    {elseif $row.contact_name_given && $row.contact_name_family && $row.contact_organization == ""}
+        <Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_name_given && $row.contact_name_family}
+        <Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+    {elseif $row.contact_name_given}
+        <Name>{$row.contact_name_given}</Name>
+    {elseif $row.contact_name_family}
+        <Name>{$row.contact_name_family}</Name>
+    {else}
+        <Name>{$row.effective_caller_id_name}</Name>
+    {/if}
+
+    {if $row.category == "extensions"}
+        {if $row.phone_number}
+            <Telephone>{$row.phone_number}</Telephone>
+        {else}
+            <Telephone>{$row.phone_extension}</Telephone>
+        {/if}
+        <Mobile></Mobile>
+        <Other></Other>
+    {elseif isset($row.numbers)}
+        {foreach $row.numbers as $number}
+            {if $number.phone_label == "work" && $number.phone_number != ""}
+                <Telephone>{$number.phone_number}</Telephone>
+            {elseif !isset($telephone_set) && $number.phone_number != ""}
+                <Telephone>{$number.phone_number}</Telephone>
+                {$telephone_set = true}
+            {/if}
+            
+            {if $number.phone_label == "mobile" && $number.phone_number != ""}
+                <Mobile>{$number.phone_number}</Mobile>
+            {elseif !isset($mobile_set) && $number.phone_number != "" && !isset($telephone_set)}
+                <Mobile>{$number.phone_number}</Mobile>
+                {$mobile_set = true}
+            {/if}
+            
+            {if $number.phone_label == "home" && $number.phone_number != ""}
+                <Other>{$number.phone_number}</Other>
+            {elseif !isset($other_set) && $number.phone_number != "" && !isset($telephone_set) && !isset($mobile_set)}
+                <Other>{$number.phone_number}</Other>
+                {$other_set = true}
+            {/if}
+        {/foreach}
+    {else}
+        <Telephone>{$row.phone_extension}</Telephone>
+        <Mobile></Mobile>
+        <Other></Other>
+    {/if}
+    
+    <Ring>0</Ring>
+    {if $row.category == "users"}
+        <Group>Users</Group>
+    {elseif $row.category == "groups"}
+        <Group>Groups</Group>
+    {elseif $row.category == "extensions"}
+        <Group>Extensions</Group>
+    {else}
+        <Group></Group>
+    {/if}
+    <picture></picture>
+    
+    {* Reset variables for next contact *}
+    {$telephone_set = null}
+    {$mobile_set = null}
+    {$other_set = null}
+</DirectoryEntry>
+{/if}
+{/foreach}
+</FanvilIPPhoneDirectory>

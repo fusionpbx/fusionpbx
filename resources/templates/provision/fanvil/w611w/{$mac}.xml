@@ -1,0 +1,1424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sysConf>
+    <Version>2.0000000000</Version>
+    <net>
+        <WANTYPE>0</WANTYPE>
+        <EnableDHCP>{if isset($fanvil_enable_dhcp)}{$fanvil_enable_dhcp}{else}1{/if}</EnableDHCP>
+        <DHCPAutoDNS>1</DHCPAutoDNS>
+        <DHCPAutoTime>0</DHCPAutoTime>
+        <DHCPOption100-101>0</DHCPOption100-101>
+        <UseVendorClassID>0</UseVendorClassID>
+        <VendorClassID>Fanvil W611W</VendorClassID>
+        <EnablePPPoE>0</EnablePPPoE>
+        <PPPoEUser>user123</PPPoEUser>
+        <PPPoEPassword></PPPoEPassword>
+        <ARPCacheLife>2</ARPCacheLife>
+        <MTU>1500</MTU>
+        <DHCPHostname>W611W</DHCPHostname>
+        <WAN6IP></WAN6IP>
+        <WAN6IPPREFIX></WAN6IPPREFIX>
+        <WAN6Gateway></WAN6Gateway>
+        <Domain6Name></Domain6Name>
+        <PrimaryDNS6></PrimaryDNS6>
+        <SecondaryDNS6></SecondaryDNS6>
+        <EnableDHCP6>0</EnableDHCP6>
+        <DHCP6AutoDNS>1</DHCP6AutoDNS>
+        <DHCP6AutoTime>0</DHCP6AutoTime>
+        <UseVendor6ClassID>0</UseVendor6ClassID>
+        <Vendor6ClassID></Vendor6ClassID>
+        <DHCP6Hostname></DHCP6Hostname>
+        <wifi>
+            <WIFIEnable>{if isset($fanvil_wifi_enable)}{$fanvil_wifi_enable}{else}1{/if}</WIFIEnable>
+            <WIFILogEnable>1</WIFILogEnable>
+            <WIFICountryCode>{if isset($fanvil_country_code)}{$fanvil_country_code}{else}CN{/if}</WIFICountryCode>
+            <WANTYPE>0</WANTYPE>
+            <EnableDHCP>{if isset($fanvil_enable_dhcp)}{$fanvil_enable_dhcp}{else}1{/if}</EnableDHCP>
+            <DHCPAutoDNS>1</DHCPAutoDNS>
+            <DHCPOption100-101>1</DHCPOption100-101>
+            <UseVendorClassID>0</UseVendorClassID>
+            <VendorClassID>Fanvil W611W</VendorClassID>
+            <DHCPHostname>W611W</DHCPHostname>
+            <EnablePPPoE>0</EnablePPPoE>
+            <PPPoEUser>user123</PPPoEUser>
+            <PPPoEPassword></PPPoEPassword>
+            <WAN6IP></WAN6IP>
+            <WAN6IPPREFIX></WAN6IPPREFIX>
+            <WAN6Gateway></WAN6Gateway>
+            <Domain6Name></Domain6Name>
+            <PrimaryDNS6></PrimaryDNS6>
+            <SecondaryDNS6></SecondaryDNS6>
+            <EnableDHCP6>0</EnableDHCP6>
+            <DHCP6AutoDNS>1</DHCP6AutoDNS>
+            <UseVendor6ClassID>0</UseVendor6ClassID>
+            <Vendor6ClassID></Vendor6ClassID>
+            <DHCP6Hostname></DHCP6Hostname>
+        </wifi>
+        <NetGlobal>
+            <NetPriority>1</NetPriority>
+        </NetGlobal>
+        <wifisharing>
+            <Enable>0</Enable>
+            <SSID></SSID>
+            <SecureMode>0</SecureMode>
+            <Password></Password>
+        </wifisharing>
+    </net>
+    <mm>
+        <G723BitRate>1</G723BitRate>
+        <ILBCPayloadType>97</ILBCPayloadType>
+        <ILBCPayloadLen>20</ILBCPayloadLen>
+        <AMRPayloadType>108</AMRPayloadType>
+        <AMRWBPayloadType>109</AMRWBPayloadType>
+        <G726-16PayloadType>103</G726-16PayloadType>
+        <G726-24PayloadType>104</G726-24PayloadType>
+        <G726-32PayloadType>102</G726-32PayloadType>
+        <G726-40PayloadType>105</G726-40PayloadType>
+        <DtmfPayloadType>101</DtmfPayloadType>
+        <OpusPayloadType>107</OpusPayloadType>
+        <OpusSampleRate>0</OpusSampleRate>
+        <VAD>0</VAD>
+        <H264PayloadType>117</H264PayloadType>
+        <H264PacketMode>0</H264PacketMode>
+        <H264Profile>0</H264Profile>
+        <ResvAudioBand>0</ResvAudioBand>
+        <H265PayloadType>98</H265PayloadType>
+        <Mpa-robustPayloadType>121</Mpa-robustPayloadType>
+        <MP3PayloadType>110</MP3PayloadType>
+        <PSPayloadType>96</PSPayloadType>
+        <RTPInitialPort>10000</RTPInitialPort>
+        <RTPPortQuantity>1000</RTPPortQuantity>
+        <RTPKeepAlive>1</RTPKeepAlive>
+        <RTPRelay>0</RTPRelay>
+        <RTCPCNAMEUser></RTCPCNAMEUser>
+        <RTCPCNAMEHost></RTCPCNAMEHost>
+        <SelectYourTone>11</SelectYourTone>
+        <SidetoneGAIN>1</SidetoneGAIN>
+        <PlayEgressDTMF>0</PlayEgressDTMF>
+        <AudioProfile>DEFAULT</AudioProfile>
+        <NoiseCancellation>0</NoiseCancellation>
+        <AcousShield>0</AcousShield>
+        <AudioDelay>0</AudioDelay>
+        <AudioStopHangup>0</AudioStopHangup>
+        <DialTone>350+440/0</DialTone>
+        <RingbackTone>440+480/2000,0/4000</RingbackTone>
+        <BusyTone>480+620/500,0/500</BusyTone>
+        <CongestionTone></CongestionTone>
+        <CallwaitingTone>440/300,0/10000,440/300,0/10000,0/0</CallwaitingTone>
+        <HoldingTone></HoldingTone>
+        <ErrorTone></ErrorTone>
+        <StutterTone></StutterTone>
+        <InformationTone></InformationTone>
+        <DialRecallTone>350+440/100,0/100,350+440/100,0/100,350+440/100,0/100,350+440/0</DialRecallTone>
+        <MessageTone></MessageTone>
+        <HowlerTone></HowlerTone>
+        <NumberUnobtainable>400/500,0/6000</NumberUnobtainable>
+        <WarningTone>1400/500,0/0</WarningTone>
+        <RecordTone>440/500,0/5000</RecordTone>
+        <AutoAnswerTone></AutoAnswerTone>
+        <H264PacketModeCheck>1</H264PacketModeCheck>
+        <NoiseReductionLevel>2</NoiseReductionLevel>
+        <capability>
+            <AudioCodecSets>{if isset($fanvil_video_codec)}{$fanvil_video_codec}{else}G722,PCMU,PCMA,G729,opus,iLBC{/if}</AudioCodecSets>
+        </capability>
+    </mm>
+    <sip>
+        <SIPPort>{if isset($sip_port)}{$sip_port}{else}{if isset($sip_transport) && $sip_transport == 'tls'}5061{else}5060{/if}{/if}</SIPPort>
+        <STUNServer>{if isset($fanvil_stun_server)}{$fanvil_stun_server}{/if}</STUNServer>
+        <STUNPort>{if isset($fanvil_stun_port)}{$fanvil_stun_port}{else}3478{/if}</STUNPort>
+        <STUNRefreshTime>50</STUNRefreshTime>
+        <SIPWaitStunTime>800</SIPWaitStunTime>
+        <ExternNATAddrs></ExternNATAddrs>
+        <RegFailInterval>50</RegFailInterval>
+        <StrictBranchPrefix>0</StrictBranchPrefix>
+        <VideoMuteAttr>0</VideoMuteAttr>
+        <EnableGroupBackup>0</EnableGroupBackup>
+        <EnableRFC4475>1</EnableRFC4475>
+        <StrictUAMatch>1</StrictUAMatch>
+        <CSTAEnable>0</CSTAEnable>
+        <NotifyReboot>1</NotifyReboot>
+        <SMSdirectEnabled>0</SMSdirectEnabled>
+        <SMSSaveEnabled>1</SMSSaveEnabled>
+        <SMSRingEnabled>1</SMSRingEnabled>
+        <SMSDisplayTime>3</SMSDisplayTime>
+        
+        {foreach $lines as $row}
+        <line index="{$row.line_number}">
+            <PhoneNumber>{$row.user_id}</PhoneNumber>
+            <DisplayName>{$row.display_name}</DisplayName>
+            <SipName>{$row.user_id}</SipName>
+            <RegisterAddr>{$row.server_address}</RegisterAddr>
+            <RegisterPort>{if isset($row.sip_port)}{$row.sip_port}{else}{if isset($row.sip_transport) && $row.sip_transport == 'tls'}5061{else}5060{/if}{/if}</RegisterPort>
+            <RegisterUser>{$row.user_id}</RegisterUser>
+            <RegisterPswd>{$row.password}</RegisterPswd>
+            <RegisterTTL>{if isset($row.register_expires)}{$row.register_expires}{else}3600{/if}</RegisterTTL>
+            <NeedRegOn>{if isset($row.register)}{if $row.register == 'true'}1{else}0{/if}{else}0{/if}</NeedRegOn>
+            <BackupAddr>{if isset($row.server_address_secondary)}{$row.server_address_secondary}{/if}</BackupAddr>
+            <BackupPort>{if isset($row.sip_port_secondary)}{$row.sip_port_secondary}{else}{if isset($row.sip_transport_secondary) && $row.sip_transport_secondary == 'tls'}5061{else}5060{/if}{/if}</BackupPort>
+            <BackupTransport>{if isset($row.sip_transport_secondary) && $row.sip_transport_secondary == 'tcp'}1{elseif isset($row.sip_transport_secondary) && $row.sip_transport_secondary == 'tls'}3{else}0{/if}</BackupTransport>
+            <BackupTTL>{if isset($row.register_expires_secondary)}{$row.register_expires_secondary}{else}3600{/if}</BackupTTL>
+            <BackupNeedRegOn>0</BackupNeedRegOn>
+            <EnableReg>{if isset($row.enabled)}{if $row.enabled == 'true'}1{else}0{/if}{else}0{/if}</EnableReg>
+            <BackupMode>0</BackupMode>
+            <ProxyAddr>{if isset($row.outbound_proxy_primary)}{$row.outbound_proxy_primary}{/if}</ProxyAddr>
+            <ProxyPort>{if isset($row.sip_port)}{$row.sip_port}{else}{if isset($row.sip_transport) && $row.sip_transport == 'tls'}5061{else}5060{/if}{/if}</ProxyPort>
+            <ProxyUser>{$row.user_id}</ProxyUser>
+            <ProxyPswd>{$row.password}</ProxyPswd>
+            <ProxyNeedRegOn>0</ProxyNeedRegOn>
+            <BakProxyAddr>{if isset($row.outbound_proxy_secondary)}{$row.outbound_proxy_secondary}{/if}</BakProxyAddr>
+            <BakProxyPort>{if isset($row.sip_port_secondary)}{$row.sip_port_secondary}{else}{if isset($row.sip_transport_secondary) && $row.sip_transport_secondary == 'tls'}5061{else}5060{/if}{/if}</BakProxyPort>
+            <BakProxyNeedRegOn>0</BakProxyNeedRegOn>
+            <EnableFailback>1</EnableFailback>
+            <FailbackInterval>1800</FailbackInterval>
+            <SignalFailback>0</SignalFailback>
+            <SignalRetryCounts>3</SignalRetryCounts>
+            <SigCryptoKey></SigCryptoKey>
+            <EnableOSRTP>0</EnableOSRTP>
+            <MediaCrypto>1</MediaCrypto>
+            <MedCryptoKey></MedCryptoKey>
+            <SRTPAuth-Tag>0</SRTPAuth-Tag>
+            <EnableRFC5939>0</EnableRFC5939>
+            <LocalDomain>{if isset($fanvil_realm)}{$fanvil_realm}{/if}</LocalDomain>
+            <AlwaysFWD>0</AlwaysFWD>
+            <BusyFWD>0</BusyFWD>
+            <NoAnswerFWD>0</NoAnswerFWD>
+            <AlwaysFWDNum></AlwaysFWDNum>
+            <BusyFWDNum></BusyFWDNum>
+            <NoAnswerFWDNum></NoAnswerFWDNum>
+            <FWDTimer>5</FWDTimer>
+            <HotlineNum></HotlineNum>
+            <EnableHotline>0</EnableHotline>
+            <WarmLineTime>0</WarmLineTime>
+            <PickupNum>{if isset($fanvil_pickup_num)}{$fanvil_pickup_num}{/if}</PickupNum>
+            <JoinNum></JoinNum>
+            <IntercomNum></IntercomNum>
+            {literal}
+            {assign var="line_id" value=$row.line_number}
+            <RingType>{if isset(${"fanvil_ringtone_line$line_id"})}{${"fanvil_ringtone_line$line_id"}}{else}default{/if}</RingType>
+            {/literal}
+            <NATUDPUpdate>2</NATUDPUpdate>
+            <UDPUpdateTTL>30</UDPUpdateTTL>
+            <UDPUpdateTryTimes>3</UDPUpdateTryTimes>
+            <ServerType>0</ServerType>
+            <UserAgent></UserAgent>
+            <PRACK>0</PRACK>
+            <KeepAUTH>0</KeepAUTH>
+            <SessionTimer>0</SessionTimer>
+            <STimerExpires>1800</STimerExpires>
+            <EnableGRUU>0</EnableGRUU>
+            <DTMFMode>3</DTMFMode>
+            <DTMFInfoMode>0</DTMFInfoMode>
+            <NATType>0</NATType>
+            <EnableRport>1</EnableRport>
+            <Subscribe>1</Subscribe>
+            <SubExpire>3600</SubExpire>
+            <SingleCodec>0</SingleCodec>
+            <CLIR>0</CLIR>
+            <StrictProxy>1</StrictProxy>
+            <DirectContact>0</DirectContact>
+            <HistoryInfo>0</HistoryInfo>
+            <DNSSRV>0</DNSSRV>
+            <DNSMode>0</DNSMode>
+            <XFERExpire>0</XFERExpire>
+            <BanAnonymous>0</BanAnonymous>
+            <DialOffLine>0</DialOffLine>
+            <QuotaName>0</QuotaName>
+            <PresenceMode>0</PresenceMode>
+            <RFCVer>1</RFCVer>
+            <PhonePort>0</PhonePort>
+            <SignalPort>5060</SignalPort>
+            <Transport>{if isset($row.sip_transport) && $row.sip_transport == 'tcp'}1{elseif isset($row.sip_transport) && $row.sip_transport == 'tls'}3{else}0{/if}</Transport>
+            <UseSRVMixer>0</UseSRVMixer>
+            <SRVMixerUri></SRVMixerUri>
+            <LongContact>0</LongContact>
+            <AutoTCP>0</AutoTCP>
+            <UriEscaped>1</UriEscaped>
+            <ClicktoTalk>0</ClicktoTalk>
+            <MwiNo></MwiNo>
+            <MWINum>{$voicemail_number}</MWINum>
+            <ParkNo></ParkNo>
+            <CallParkNum></CallParkNum>
+            <RetrieveNum></RetrieveNum>
+            <RetrieveType>0</RetrieveType>
+            <HelpNo></HelpNo>
+            <MSRPHelpNum></MSRPHelpNum>
+            <UserIsPhone>0</UserIsPhone>
+            <AutoAnswer>0</AutoAnswer>
+            <NoAnswerTime>5</NoAnswerTime>
+            <MissedCallLog>1</MissedCallLog>
+            <ParkMode></ParkMode>
+            <SvcCodeMode>0</SvcCodeMode>
+            <DNDOnSvcCode></DNDOnSvcCode>
+            <DNDOffSvcCode></DNDOffSvcCode>
+            <CFUOnSvcCode></CFUOnSvcCode>
+            <CFUOffSvcCode></CFUOffSvcCode>
+            <CFBOnSvcCode></CFBOnSvcCode>
+            <CFBOffSvcCode></CFBOffSvcCode>
+            <CFNOnSvcCode></CFNOnSvcCode>
+            <CFNOffSvcCode></CFNOffSvcCode>
+            <ANCOnSvcCode></ANCOnSvcCode>
+            <ANCOffSvcCode></ANCOffSvcCode>
+            <SendANOnCode></SendANOnCode>
+            <SendANOffCode></SendANOffCode>
+            <CWOnCode></CWOnCode>
+            <CWOffCode></CWOffCode>
+            <VoiceCodecMap>G722,PCMU,PCMA,G729,opus,iLBC</VoiceCodecMap>
+            <VideoCodecMap></VideoCodecMap>
+            <BLFListUri></BLFListUri>
+            <BLFServer>{$row.server_address}</BLFServer>
+            <Respond182>0</Respond182>
+            <EnableBLFList>0</EnableBLFList>
+            <CallerIdType>2</CallerIdType>
+            <KeepHigherCallerID>0</KeepHigherCallerID>
+            <SynClockTime>0</SynClockTime>
+            <MohServer></MohServer>
+            <UseVPN>1</UseVPN>
+            <EnableDND>0</EnableDND>
+            <InactiveHold>0</InactiveHold>
+            <ReqWithPort>1</ReqWithPort>
+            <UpdateRegExpire>1</UpdateRegExpire>
+            <EnableSCA>0</EnableSCA>
+            <SubCallPark>0</SubCallPark>
+            <SubCCStatus>0</SubCCStatus>
+            <FeatureSync>0</FeatureSync>
+            <EnableXferBack>0</EnableXferBack>
+            <XferBackTime>35</XferBackTime>
+            <UseTelCall>0</UseTelCall>
+            <EnablePreview>0</EnablePreview>
+            <PreviewMode>1</PreviewMode>
+            <TLSVersion>2</TLSVersion>
+            <CSTANumber></CSTANumber>
+            <EnableChgPort>1</EnableChgPort>
+            <VQName></VQName>
+            <VQServer></VQServer>
+            <VQServerPort>5060</VQServerPort>
+            <VQHTTPServer></VQHTTPServer>
+            <FlashMode>0</FlashMode>
+            <ContentType></ContentType>
+            <ContentBody></ContentBody>
+            <UnregisterOnBoot>1</UnregisterOnBoot>
+            <EnableMACHeader>1</EnableMACHeader>
+            <EnableRegisterMAC>1</EnableRegisterMAC>
+            <RecordStart>Record:on</RecordStart>
+            <RecordStop>Record:off</RecordStop>
+            <BLFDialogMatch>1</BLFDialogMatch>
+            <Ptime>0</Ptime>
+            <EnableDeal180>1</EnableDeal180>
+            <KeepSingleContact>0</KeepSingleContact>
+            <SessionTimerT1>500</SessionTimerT1>
+            <SessionTimerT2>4000</SessionTimerT2>
+            <SessionTimerT4>5000</SessionTimerT4>
+            <UnavailableMode>0</UnavailableMode>
+            <TCPUseRetryTimer>0</TCPUseRetryTimer>
+            <Call-IDFormat>$id@$ip</Call-IDFormat>
+            <GB28181Mode>0</GB28181Mode>
+            <ProxyRequire></ProxyRequire>
+            <BlockRTPWhenAlerting>0</BlockRTPWhenAlerting>
+            <blindTransferTimeout>60</blindTransferTimeout>
+            <recoveryOnBlindTransfer>1</recoveryOnBlindTransfer>
+        </line>
+        {/foreach}
+        <p2p>
+            <SIPP2PEnableAutoAnswer>0</SIPP2PEnableAutoAnswer>
+            <SIPP2PAutoAnswerDelay>30</SIPP2PAutoAnswerDelay>
+            <SIPP2PDtmfMode>1</SIPP2PDtmfMode>
+            <SIPP2PSipInfoDtmfMode>0</SIPP2PSipInfoDtmfMode>
+            <SIPP2PEnablePreview>0</SIPP2PEnablePreview>
+            <SIPP2PPreviewMode>0</SIPP2PPreviewMode>
+            <SIPP2PUseVPN>1</SIPP2PUseVPN>
+            <SIPP2PCall-IDFormat>$id@$ip</SIPP2PCall-IDFormat>
+            <SIPP2PSessionTimer>0</SIPP2PSessionTimer>
+            <SIPP2PSTimerExpires>1800</SIPP2PSTimerExpires>
+            <SIPP2PDisplayName></SIPP2PDisplayName>
+            <SIPP2PUsername></SIPP2PUsername>
+            <SIPP2PBlockRTPWhenAlerting>0</SIPP2PBlockRTPWhenAlerting>
+            <SIPP2PEnableDeal180>1</SIPP2PEnableDeal180>
+        </p2p>
+    </sip>
+    <call>
+        <port index="1">
+            <EnableXferDPlan>1</EnableXferDPlan>
+            <EnableFwdDPlan>1</EnableFwdDPlan>
+            <EnablePreDPlan>0</EnablePreDPlan>
+            <IPDialPrefix>.</IPDialPrefix>
+            <EnableDND>1</EnableDND>
+            <DNDMode>0</DNDMode>
+            <EnableSpaceDND>0</EnableSpaceDND>
+            <DNDStartTime>1500</DNDStartTime>
+            <DNDEndTime>1730</DNDEndTime>
+            <DNDAcceptMcast>0</DNDAcceptMcast>
+            <EnableCallBar>1</EnableCallBar>
+            <EnableAllowedlist>1</EnableAllowedlist>
+            <EnableBlockedlist>1</EnableBlockedlist>
+            <MuteRinging>0</MuteRinging>
+            <BanDialOut>0</BanDialOut>
+            <BanDialOutToneMode>1</BanDialOutToneMode>
+            <BanDialOutTone></BanDialOutTone>
+            <BanEmptyCID>0</BanEmptyCID>
+            <EnableCLIP>1</EnableCLIP>
+            <CallWaiting>1</CallWaiting>
+            <CallTransfer>1</CallTransfer>
+            <CallSemiXfer>1</CallSemiXfer>
+            <CallConference>1</CallConference>
+            <AutoPickupNext>0</AutoPickupNext>
+            <BusyNoLine>1</BusyNoLine>
+            <AutoOnhook>1</AutoOnhook>
+            <AutoOnhookTime>3</AutoOnhookTime>
+            <AutoHangUpTone>1</AutoHangUpTone>
+            <EnableIntercom>1</EnableIntercom>
+            <IntercomMute>0</IntercomMute>
+            <IntercomTone>1</IntercomTone>
+            <IntercomBarge>0</IntercomBarge>
+            <UseAutoRedial>0</UseAutoRedial>
+            <RedialEnterCallLog>0</RedialEnterCallLog>
+            <AutoRedialDelay>30</AutoRedialDelay>
+            <AutoRedialTimes>5</AutoRedialTimes>
+            <CallComplete>0</CallComplete>
+            <CHoldingTone>1</CHoldingTone>
+            <CWaitingTone>1</CWaitingTone>
+            <HideDTMFType>0</HideDTMFType>
+            <TalkDTMFTone>1</TalkDTMFTone>
+            <DialDTMFTone>1</DialDTMFTone>
+            <PswDialMode>0</PswDialMode>
+            <PswDialLength>0</PswDialLength>
+            <PswDialPrefix></PswDialPrefix>
+            <EnableMultiLine>1</EnableMultiLine>
+            <AllowIPCall>1</AllowIPCall>
+            <CallerNameType>0</CallerNameType>
+            <MuteForRing>0</MuteForRing>
+            <AutoHandleVideo>0</AutoHandleVideo>
+            <DefaultAnsMode>1</DefaultAnsMode>
+            <DefaultDialMode>1</DefaultDialMode>
+            <HoldToTransfer>0</HoldToTransfer>
+            <EnablePreDial>1</EnablePreDial>
+            <DefaultExtLine>1</DefaultExtLine>
+            <EnableDefLine>1</EnableDefLine>
+            <EnableSelLine>1</EnableSelLine>
+            <RinginHeadset>1</RinginHeadset>
+            <AutoHeadset>1</AutoHeadset>
+            <DNDReturnCode>480</DNDReturnCode>
+            <BusyReturnCode>486</BusyReturnCode>
+            <RejectReturnCode>603</RejectReturnCode>
+            <ContactType>0</ContactType>
+            <EnableCountryCode>0</EnableCountryCode>
+            <CountryCode></CountryCode>
+            <CallAreaCode></CallAreaCode>
+            <NumberPrivacy>0</NumberPrivacy>
+            <PrivacyRule></PrivacyRule>
+            <TransfDTMFCode></TransfDTMFCode>
+            <HoldDTMFCode></HoldDTMFCode>
+            <ConfDTMFCode></ConfDTMFCode>
+            <DisableDialSearch>0</DisableDialSearch>
+            <CallNumberFilter></CallNumberFilter>
+            <AutoResumeCurrent>0</AutoResumeCurrent>
+            <CallTimeout>120</CallTimeout>
+            <RingTimeout>120</RingTimeout>
+            <RingPriority>1</RingPriority>
+            <AutoAnswerTone>1</AutoAnswerTone>
+            <AlertingTone>1</AlertingTone>
+            <BusyTone>1</BusyTone>
+            <SnapshotTimeout>60</SnapshotTimeout>
+            <DisableSpeakerMode>0</DisableSpeakerMode>
+        </port>
+        <basic>
+            <DialbyPound>1</DialbyPound>
+            <BTransferbyPound>0</BTransferbyPound>
+            <OnhooktoBXfer>0</OnhooktoBXfer>
+            <OnhooktoAXfer>0</OnhooktoAXfer>
+            <ConfOnhooktoXfer>0</ConfOnhooktoXfer>
+            <DialFixedLength>0</DialFixedLength>
+            <FixedLengthNums>11</FixedLengthNums>
+            <DialbyTimeout>1</DialbyTimeout>
+            <DialTimeoutvalue>10</DialTimeoutvalue>
+            <EnableEOneSixFour>0</EnableEOneSixFour>
+        </basic>
+        <alertInfo index="1">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="2">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="3">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="4">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="5">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="6">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="7">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="8">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="9">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+        <alertInfo index="10">
+            <Text></Text>
+            <Line>-1</Line>
+            <RingType>1.wav</RingType>
+        </alertInfo>
+    </call>
+    <phone>
+        <MenuPassword>{if isset($fanvil_menu_password)}{$fanvil_menu_password}{/if}</MenuPassword>
+        <KeyLockPassword></KeyLockPassword>
+        <FastKeylockCode></FastKeylockCode>
+        <EnableKeyLock>0</EnableKeyLock>
+        <KeyLockTimeout>30</KeyLockTimeout>
+        <KeyLockStatus>0</KeyLockStatus>
+        <EmergencyCall>{if isset($fanvil_emergency_number)}{$fanvil_emergency_number}{else}911{/if}</EmergencyCall>
+        <PushXMLIP></PushXMLIP>
+        <SIPNumberPlan>0</SIPNumberPlan>
+        <LDAPSearch>0</LDAPSearch>
+        <SearchPath>0</SearchPath>
+        <CallerDisplayType>5</CallerDisplayType>
+        <CallLogDisplayType>0</CallLogDisplayType>
+        <EnableRecvSMS>1</EnableRecvSMS>
+        <EnableCallHistory>1</EnableCallHistory>
+        <LineDisplayFormat>$name@$protocol$instance</LineDisplayFormat>
+        <EnableMWITone>0</EnableMWITone>
+        <SIPNotifyXML>1</SIPNotifyXML>
+        <BlockXMLWhenCall>1</BlockXMLWhenCall>
+        <XMLUpdateInterval>30</XMLUpdateInterval>
+        <VqmDisplayOrder></VqmDisplayOrder>
+        <EnablePushXMLAuth>0</EnablePushXMLAuth>
+        <PickupVisualAlert>0</PickupVisualAlert>
+        <PickupAudioAlert>0</PickupAudioAlert>
+        <PickupRingType></PickupRingType>
+        <CallparkVisualAlert>0</CallparkVisualAlert>
+        <CallparkAudioAlert>0</CallparkAudioAlert>
+        <CallparkRingType></CallparkRingType>
+        <PbookDisplayAttr></PbookDisplayAttr>
+        <DisplayBusinessCardTimeout>0</DisplayBusinessCardTimeout>
+        <DisplayCallDuration>1</DisplayCallDuration>
+        <EnableTimePlanList>1</EnableTimePlanList>
+        <EnableTimePlanPauseList>1</EnableTimePlanPauseList>
+        <DSSNameSearch>1</DSSNameSearch>
+        <LowBatteryTone>0</LowBatteryTone>
+        <display>
+            <LCDTitle>{if isset($fanvil_greeting)}{$fanvil_greeting}{else}VoIP Phone{/if}</LCDTitle>
+            <LCDConstrast>5</LCDConstrast>
+            <EnableEnergysaving>{if isset($fanvil_hotel_lcd)}{$fanvil_hotel_lcd}{else}4{/if}</EnableEnergysaving>
+            <LCDLuminanceLevel>{if isset($fanvil_display_brightness_active)}{$fanvil_display_brightness_active}{else}12{/if}</LCDLuminanceLevel>
+            <BacklightOffTime>{if isset($fanvil_display_inactivity_time)}{$fanvil_display_inactivity_time}{else}60{/if}</BacklightOffTime>
+            <DisableCHNIME>0</DisableCHNIME>
+            <PhoneModel></PhoneModel>
+            <HostName>(none)</HostName>
+            <DefaultLanguage>en</DefaultLanguage>
+            <EnableGreetings>0</EnableGreetings>
+        </display>
+        <powerLed>
+            <Power>0</Power>
+            <MWIOrSMS>3</MWIOrSMS>
+            <InUsing>0</InUsing>
+            <Ring>2</Ring>
+            <Hold>0</Hold>
+            <Mute>0</Mute>
+            <MissedCall>3</MissedCall>
+            <PowerSaving>1</PowerSaving>
+            <IdleMute>3</IdleMute>
+            <RegisterFailed>3</RegisterFailed>
+            <DND>0</DND>
+            <PowerColor>1</PowerColor>
+            <MWIOrSMSColor>1</MWIOrSMSColor>
+            <InUsingColor>1</InUsingColor>
+            <RingColor>1</RingColor>
+            <HoldColor>1</HoldColor>
+            <MuteColor>1</MuteColor>
+            <MissedCallColor>1</MissedCallColor>
+            <IdleMuteColor>1</IdleMuteColor>
+            <RegisterFailedColor>1</RegisterFailedColor>
+            <PowerSavingColor>1</PowerSavingColor>
+            <DNDColor>1</DNDColor>
+        </powerLed>
+        <lineLed>
+            <LineIdleColor>0</LineIdleColor>
+            <LineIdleCtl>1</LineIdleCtl>
+        </lineLed>
+        <blfLed>
+            <BLFIdleColor>0</BLFIdleColor>
+            <BLFIdleCtl>1</BLFIdleCtl>
+            <BLFIdleText>terminated</BLFIdleText>
+            <BLFRingColor>1</BLFRingColor>
+            <BLFRingCtl>2</BLFRingCtl>
+            <BLFRingText>early</BLFRingText>
+            <BLFDialingColor>1</BLFDialingColor>
+            <BLFDialingCtl>0</BLFDialingCtl>
+            <BLFDialingText></BLFDialingText>
+            <BLFTalkingColor>1</BLFTalkingColor>
+            <BLFTalkingCtl>1</BLFTalkingCtl>
+            <BLFTalkingText>confirmed</BLFTalkingText>
+            <BLFHoldColor>1</BLFHoldColor>
+            <BLFHoldCtl>0</BLFHoldCtl>
+            <BLFHoldText></BLFHoldText>
+            <BLFFailedColor>2</BLFFailedColor>
+            <BLFFailedCtl>0</BLFFailedCtl>
+            <BLFFailedText>failed</BLFFailedText>
+            <BLFParkedColor>0</BLFParkedColor>
+            <BLFParkedCtl>3</BLFParkedCtl>
+            <BLFParkedText>parked</BLFParkedText>
+        </blfLed>
+        <volume>
+            <HandsetVol>5</HandsetVol>
+            <HandsetMicVol>3</HandsetMicVol>
+            <HandsetToneVol>3</HandsetToneVol>
+            <HeadsetVol>5</HeadsetVol>
+            <HeadsetMicVol>3</HeadsetMicVol>
+            <HeadsetRingVol>5</HeadsetRingVol>
+            <HeadsetToneVol>3</HeadsetToneVol>
+            <HandFreeVol>5</HandFreeVol>
+            <HandFreeMicVol>3</HandFreeMicVol>
+            <HandFreeRingVol>5</HandFreeRingVol>
+            <HandFreeToneVol>3</HandFreeToneVol>
+            <RingType>{if isset($fanvil_default_ringtone)}{$fanvil_default_ringtone}{else}default.wav{/if}</RingType>
+        </volume>
+        <date>
+            <EnableSNTP>{if isset($fanvil_enable_sntp)}{$fanvil_enable_sntp}{else}1{/if}</EnableSNTP>
+            <SNTPServer>{if isset($ntp_server_primary)}{$ntp_server_primary}{else}0.pool.ntp.org{/if}</SNTPServer>
+            <SecondSNTPServer>{if isset($ntp_server_secondary)}{$ntp_server_secondary}{else}time.nist.gov{/if}</SecondSNTPServer>
+            <TimeZone>{if isset($fanvil_location)}{$fanvil_location}{else}32{/if}</TimeZone>
+            <TimeZoneName>{if isset($fanvil_time_zone_name)}{$fanvil_time_zone_name}{else}UTC+8{/if}</TimeZoneName>
+            <SNTPTimeout>9600</SNTPTimeout>
+            <DSTType>{if isset($fanvil_enable_dst)}{$fanvil_enable_dst}{else}0{/if}</DSTType>
+            <DSTLocation>0</DSTLocation>
+            <DSTRuleMode>{if isset($fanvil_dst_fixed_type)}{$fanvil_dst_fixed_type}{else}0{/if}</DSTRuleMode>
+            <DSTMinOffset>{if isset($fanvil_dst_minute_offset)}{$fanvil_dst_minute_offset}{else}60{/if}</DSTMinOffset>
+            <DSTStartMon>3</DSTStartMon>
+            <DSTStartWeek>5</DSTStartWeek>
+            <DSTStartWday>0</DSTStartWday>
+            <DSTStartHour>2</DSTStartHour>
+            <DSTEndMon>10</DSTEndMon>
+            <DSTEndWeek>5</DSTEndWeek>
+            <DSTEndWday>0</DSTEndWday>
+            <DSTEndHour>2</DSTEndHour>
+        </date>
+        <timeDisplay>
+            <EnableTimeDisplay>0</EnableTimeDisplay>
+            <TimeDisplayStyle>{if isset($fanvil_time_display)}{$fanvil_time_display}{else}0{/if}</TimeDisplayStyle>
+            <DateDisplayStyle>{if isset($fanvil_date_display)}{$fanvil_date_display}{else}0{/if}</DateDisplayStyle>
+            <DateSeparator>{if isset($fanvil_date_separator)}{$fanvil_date_separator}{else}0{/if}</DateSeparator>
+        </timeDisplay>
+        <softkey>
+            <SoftkeyMode>1</SoftkeyMode>
+            <SoftKeyExitStyle>{if isset($fanvil_softkey_exit)}{$fanvil_softkey_exit}{else}2{/if}</SoftKeyExitStyle>
+            <DesktopSoftkey>{if isset($fanvil_softkey_desktopsoftkey)}{$fanvil_softkey_desktopsoftkey}{else}DssPage1;menu;{/if}</DesktopSoftkey>
+            <TalkingSoftkey>{if isset($fanvil_softkey_talkingsoftkey)}{$fanvil_softkey_talkingsoftkey}{else}DssPage1;end;new;hold;xfer;conf;mute;{/if}</TalkingSoftkey>
+            <RingingSoftkey>{if isset($fanvil_softkey_ringingsoftkey)}{$fanvil_softkey_ringingsoftkey}{else}forward;accept;reject;mute;{/if}</RingingSoftkey>
+            <AlertingSoftkey>end;none;</AlertingSoftkey>
+            <XAlertingSoftkey>end;xfer;</XAlertingSoftkey>
+            <ConferenceSoftkey>end;hold;split;mute;</ConferenceSoftkey>
+            <WaitingSoftkey>accept;xfer;reject;end;</WaitingSoftkey>
+            <EndingSoftkey>end;redial;</EndingSoftkey>
+            <DialerPreSoftkey>delete;send;</DialerPreSoftkey>
+            <DialerCallSoftkey>exit;send;</DialerCallSoftkey>
+            <DialerXferSoftkey>exit;none;send;xfer;</DialerXferSoftkey>
+            <DialerCfwdSoftkey>exit;send;</DialerCfwdSoftkey>
+            <DesktopClick>{if isset($fanvil_softkey_desktopclick)}{$fanvil_softkey_desktopclick}{else}history;status;DssPage1;DssPage2;menu;{/if}</DesktopClick>
+            <DailerClick>pline;nline;pline;nline;none;</DailerClick>
+            <RingingClick>none;none;none;none;none;</RingingClick>
+            <AlertingClick>end;end;end;end;end;</AlertingClick>
+            <CallClick>none;none;voldown;volup;none;</CallClick>
+            <DesktopLongPress>status;none;none;none;none;</DesktopLongPress>
+            <DialerConfSoftkey>contact;clogs;redial;video;cancel;</DialerConfSoftkey>
+        </softkey>
+        <agent>
+            <AgentUsername></AgentUsername>
+            <AgentPassword></AgentPassword>
+            <AgentNumber></AgentNumber>
+            <AgentSipline>0</AgentSipline>
+            <AgentStatus>0</AgentStatus>
+            <AgentStatusReason></AgentStatusReason>
+            <AgentClearCallLog>0</AgentClearCallLog>
+        </agent>
+        <bwDir index="1">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwDir>
+        <bwDir index="2">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwDir>
+        <bwDir index="3">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwDir>
+        <bwDir index="4">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwDir>
+        <bwDir index="5">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwDir>
+        <bwDir index="6">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwDir>
+        <bwCallLog index="1">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwCallLog>
+        <bwCallLog index="2">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwCallLog>
+        <bwCallLog index="3">
+            <Title></Title>
+            <URL></URL>
+            <Username></Username>
+            <Password></Password>
+            <SipLine>0</SipLine>
+        </bwCallLog>
+        <ldap index="1">
+            <Title></Title>
+            <Server></Server>
+            <port>389</port>
+            <Base></Base>
+            <UseSSL>0</UseSSL>
+            <Version>3</Version>
+            <CallingLine>-1</CallingLine>
+            <BindLine>-1</BindLine>
+            <InCallSearch>0</InCallSearch>
+            <OutCallSearch>0</OutCallSearch>
+            <Authenticate>3</Authenticate>
+            <Username></Username>
+            <Password></Password>
+            <TelAttr>telephoneNumber</TelAttr>
+            <MobileAttr>mobile</MobileAttr>
+            <OtherAttr>other</OtherAttr>
+            <NameAttr>cn sn ou</NameAttr>
+            <SortAttr>cn</SortAttr>
+            <ImageAttr>thumbnailPhoto</ImageAttr>
+            <Displayname>cn</Displayname>
+            <NumberFilter>(|(telephoneNumber=%)(mobile=%)(other=%))</NumberFilter>
+            <NameFilter>(|(cn=%)(sn=%))</NameFilter>
+            <MaxHits>50</MaxHits>
+            <DisplayType>0</DisplayType>
+            <ServerType>0</ServerType>
+            <DisplayAttr></DisplayAttr>
+            <SearchType>0</SearchType>
+        </ldap>
+        <ldap index="2">
+            <Title></Title>
+            <Server></Server>
+            <port>389</port>
+            <Base></Base>
+            <UseSSL>0</UseSSL>
+            <Version>3</Version>
+            <CallingLine>-1</CallingLine>
+            <BindLine>-1</BindLine>
+            <InCallSearch>0</InCallSearch>
+            <OutCallSearch>0</OutCallSearch>
+            <Authenticate>3</Authenticate>
+            <Username></Username>
+            <Password></Password>
+            <TelAttr>telephoneNumber</TelAttr>
+            <MobileAttr>mobile</MobileAttr>
+            <OtherAttr>other</OtherAttr>
+            <NameAttr>cn sn ou</NameAttr>
+            <SortAttr>cn</SortAttr>
+            <ImageAttr>thumbnailPhoto</ImageAttr>
+            <Displayname>cn</Displayname>
+            <NumberFilter>(|(telephoneNumber=%)(mobile=%)(other=%))</NumberFilter>
+            <NameFilter>(|(cn=%)(sn=%))</NameFilter>
+            <MaxHits>50</MaxHits>
+            <DisplayType>0</DisplayType>
+            <ServerType>0</ServerType>
+            <DisplayAttr></DisplayAttr>
+            <SearchType>0</SearchType>
+        </ldap>
+        <ldap index="3">
+            <Title></Title>
+            <Server></Server>
+            <port>389</port>
+            <Base></Base>
+            <UseSSL>0</UseSSL>
+            <Version>3</Version>
+            <CallingLine>-1</CallingLine>
+            <BindLine>-1</BindLine>
+            <InCallSearch>0</InCallSearch>
+            <OutCallSearch>0</OutCallSearch>
+            <Authenticate>3</Authenticate>
+            <Username></Username>
+            <Password></Password>
+            <TelAttr>telephoneNumber</TelAttr>
+            <MobileAttr>mobile</MobileAttr>
+            <OtherAttr>other</OtherAttr>
+            <NameAttr>cn sn ou</NameAttr>
+            <SortAttr>cn</SortAttr>
+            <ImageAttr>thumbnailPhoto</ImageAttr>
+            <Displayname>cn</Displayname>
+            <NumberFilter>(|(telephoneNumber=%)(mobile=%)(other=%))</NumberFilter>
+            <NameFilter>(|(cn=%)(sn=%))</NameFilter>
+            <MaxHits>50</MaxHits>
+            <DisplayType>0</DisplayType>
+            <ServerType>0</ServerType>
+            <DisplayAttr></DisplayAttr>
+            <SearchType>0</SearchType>
+        </ldap>
+        <ldap index="4">
+            <Title></Title>
+            <Server></Server>
+            <port>389</port>
+            <Base></Base>
+            <UseSSL>0</UseSSL>
+            <Version>3</Version>
+            <CallingLine>-1</CallingLine>
+            <BindLine>-1</BindLine>
+            <InCallSearch>0</InCallSearch>
+            <OutCallSearch>0</OutCallSearch>
+            <Authenticate>3</Authenticate>
+            <Username></Username>
+            <Password></Password>
+            <TelAttr>telephoneNumber</TelAttr>
+            <MobileAttr>mobile</MobileAttr>
+            <OtherAttr>other</OtherAttr>
+            <NameAttr>cn sn ou</NameAttr>
+            <SortAttr>cn</SortAttr>
+            <ImageAttr>thumbnailPhoto</ImageAttr>
+            <Displayname>cn</Displayname>
+            <NumberFilter>(|(telephoneNumber=%)(mobile=%)(other=%))</NumberFilter>
+            <NameFilter>(|(cn=%)(sn=%))</NameFilter>
+            <MaxHits>50</MaxHits>
+            <DisplayType>0</DisplayType>
+            <ServerType>0</ServerType>
+            <DisplayAttr></DisplayAttr>
+            <SearchType>0</SearchType>
+        </ldap>
+        <ldap index="5">
+            <Title></Title>
+            <Server></Server>
+            <port>389</port>
+            <Base></Base>
+            <UseSSL>0</UseSSL>
+            <Version>3</Version>
+            <CallingLine>-1</CallingLine>
+            <BindLine>-1</BindLine>
+            <InCallSearch>0</InCallSearch>
+            <OutCallSearch>0</OutCallSearch>
+            <Authenticate>3</Authenticate>
+            <Username></Username>
+            <Password></Password>
+            <TelAttr>telephoneNumber</TelAttr>
+            <MobileAttr>mobile</MobileAttr>
+            <OtherAttr>other</OtherAttr>
+            <NameAttr>cn sn ou</NameAttr>
+            <SortAttr>cn</SortAttr>
+            <ImageAttr>thumbnailPhoto</ImageAttr>
+            <Displayname>cn</Displayname>
+            <NumberFilter>(|(telephoneNumber=%)(mobile=%)(other=%))</NumberFilter>
+            <NameFilter>(|(cn=%)(sn=%))</NameFilter>
+            <MaxHits>50</MaxHits>
+            <DisplayType>0</DisplayType>
+            <ServerType>0</ServerType>
+            <DisplayAttr></DisplayAttr>
+            <SearchType>0</SearchType>
+        </ldap>
+        <xmlContact index="1">
+            <Name>{if isset($fanvil_remote_phonebook_2_name)}{$fanvil_remote_phonebook_2_name}{else}Users{/if}</Name>
+            <Addr>https://{$domain_name}/app/provision/?address={$mac}&amp;file=directory.xml&amp;contacts=users</Addr>
+            <UserName>{if isset($http_auth_username)}{$http_auth_username}{/if}</UserName>
+            <PassWd>{if isset($http_auth_password)}{$http_auth_password}{/if}</PassWd>
+            <Sipline>-1</Sipline>
+            <BindLine>-1</BindLine>
+            <PhonebookType>0</PhonebookType>
+        </xmlContact>
+        <xmlContact index="2">
+            <Name>{if isset($fanvil_remote_phonebook_2_name)}{$fanvil_remote_phonebook_2_name}{else}Groups{/if}</Name>
+            <Addr>https://{$domain_name}/app/provision/?address={$mac}&amp;file=directory.xml&amp;contacts=groups</Addr>
+            <UserName>{if isset($http_auth_username)}{$http_auth_username}{/if}</UserName>
+            <PassWd>{if isset($http_auth_password)}{$http_auth_password}{/if}</PassWd>
+            <Sipline>-1</Sipline>
+            <BindLine>-1</BindLine>
+            <PhonebookType>0</PhonebookType>
+        </xmlContact>
+        <xmlContact index="3">
+            <Name>{if isset($fanvil_remote_phonebook_3_name)}{$fanvil_remote_phonebook_3_name}{else}Extensions{/if}</Name>
+            <Addr>https://{$domain_name}/app/provision/?address={$mac}&amp;file=directory.xml&amp;contacts=extensions</Addr>
+            <UserName>{if isset($http_auth_username)}{$http_auth_username}{/if}</UserName>
+            <PassWd>{if isset($http_auth_password)}{$http_auth_password}{/if}</PassWd>
+            <Sipline>-1</Sipline>
+            <BindLine>-1</BindLine>
+            <PhonebookType>0</PhonebookType>
+        </xmlContact>
+    </phone>
+    <dm>
+        <OnhookTime>120</OnhookTime>
+        <EnableHookflash>0</EnableHookflash>
+        <KeyLongPressTime>2</KeyLongPressTime>
+        <KeyLongLongPressTime>6</KeyLongLongPressTime>
+        <CallerIDMode>2</CallerIDMode>
+        <SLICImpedance>0</SLICImpedance>
+        <OnhookMinTime>200</OnhookMinTime>
+    </dm>
+    <vqm>
+        <SessionReport>1</SessionReport>
+        <IntervalReport>1</IntervalReport>
+        <IntervalPeriod>60</IntervalPeriod>
+        <MOS-LQWarning>40</MOS-LQWarning>
+        <MOS-LQCritical>25</MOS-LQCritical>
+        <DelayWarning>150</DelayWarning>
+        <DelayCritical>200</DelayCritical>
+        <PhoneReport>1</PhoneReport>
+        <WEBReport>1</WEBReport>
+    </vqm>
+    <cti>
+        <EnabledActiveUri>1</EnabledActiveUri>
+        <EnabledActionUrl>1</EnabledActionUrl>
+        <ActionUrlType>0</ActionUrlType>
+        <ActiveUriIP></ActiveUriIP>
+        <StartRebootUrl></StartRebootUrl>
+        <BootCompletedUrl></BootCompletedUrl>
+        <IPChangeUrl></IPChangeUrl>
+        <RegOnUrl></RegOnUrl>
+        <RegOffUrl></RegOffUrl>
+        <RegFailedUrl></RegFailedUrl>
+        <PhoneStateIdleUrl></PhoneStateIdleUrl>
+        <PhoneStateTalking></PhoneStateTalking>
+        <PhoneStateRinging></PhoneStateRinging>
+        <OnhookUri></OnhookUri>
+        <OffhookUrl></OffhookUrl>
+        <DNDOnUrl>https://fdmcs.fanvil.com.cn/api/f/mc/event/dnd?state=1</DNDOnUrl>
+        <DNDOffUrl>https://fdmcs.fanvil.com.cn/api/f/mc/event/dnd?state=0</DNDOffUrl>
+        <AlwaysFWDOnUrl></AlwaysFWDOnUrl>
+        <AlwaysFWDOffUrl></AlwaysFWDOffUrl>
+        <BusyFWDOnUrl></BusyFWDOnUrl>
+        <BusyFWDOffUrl></BusyFWDOffUrl>
+        <NoAnsFWDOnUrl></NoAnsFWDOnUrl>
+        <NoAnsFWDOffUrl></NoAnsFWDOffUrl>
+        <MuteOnUrl></MuteOnUrl>
+        <MuteOffUrl></MuteOffUrl>
+        <IncomingCallUrl></IncomingCallUrl>
+        <OutgoingCallUrl></OutgoingCallUrl>
+        <CallActiveUrl></CallActiveUrl>
+        <CallStopUrl></CallStopUrl>
+        <TransferUrl></TransferUrl>
+        <HoldOnUrl></HoldOnUrl>
+        <HoldOffUrl></HoldOffUrl>
+        <HeldOnUrl></HeldOnUrl>
+        <HeldOffUrl></HeldOffUrl>
+        <MuteOnCallUrl></MuteOnCallUrl>
+        <MuteOffCallUrl></MuteOffCallUrl>
+        <NewMissedcallUrl></NewMissedcallUrl>
+        <NewMWIUrl></NewMWIUrl>
+        <NewSMSUrl></NewSMSUrl>
+        <WebAuthChangedUrl></WebAuthChangedUrl>
+        <RecvSipMsgUrl></RecvSipMsgUrl>
+        <ResetPhoneUrl></ResetPhoneUrl>
+        <InsufficientRomUrl></InsufficientRomUrl>
+        <EquipmentCapabilityUrl>https://fdmcs.fanvil.com.cn/api/f/mc/event/abilityEvent</EquipmentCapabilityUrl>
+        <at>
+            <AtEnabled>0</AtEnabled>
+            <AtServer></AtServer>
+        </at>
+    </cti>
+    <ateTest>
+        <ATEId>0000000000000000</ATEId>
+    </ateTest>
+    <mcast>
+        <Priority>0</Priority>
+        <EnablePriority>0</EnablePriority>
+        <IntercomPriority>0</IntercomPriority>
+        <EnablePrioChan>0</EnablePrioChan>
+        <EnableEmerChan>0</EnableEmerChan>
+        <MulticastTone>1</MulticastTone>
+        <McastListeningRenewTime>0</McastListeningRenewTime>
+        <McastSendDTMFMode>0</McastSendDTMFMode>
+        <MulticastHandfreePlay>0</MulticastHandfreePlay>
+        <addr index="1">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="2">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="3">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="4">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="5">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="6">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="7">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="8">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="9">
+            <Name></Name>
+            <!-- DEBUG MARKER: Checking for error around this area -->
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <addr index="10">
+            <Name></Name>
+            <Host></Host>
+            <Port>0</Port>
+            <Channel>0</Channel>
+        </addr>
+        <dynamic>
+            <AutoExitExpires>60</AutoExitExpires>
+        </dynamic>
+    </mcast>
+    {* Standard FusionPBX types and additional Fanvil types *}
+    {assign var=key_types value=[
+    "1"=>"1",
+    "ba"=>"1",
+    "bb"=>"1", 
+    "bf"=>"1",
+    "bc"=>"1",
+    "bcV"=>"1",
+    "a"=>"1",
+    "c"=>"1",
+    "i"=>"1",
+    "f"=>"2", 
+    "2"=>"2",
+    "m"=>"2",
+    "3"=>"0",
+    "14"=>"29",
+    "blf_list"=>"28",
+    "dtmf"=>"5",
+    "presence"=>"2",
+    "event"=>"3",
+    "record"=>"3",
+    "dnd"=>"3",
+    "hold"=>"3",
+    "transfer"=>"3",
+    "phonebook"=>"3",
+    "pickup"=>"3",
+    "join"=>"3",
+    "headset"=>"3",
+    "redial"=>"3",
+    "prefix"=>"3",
+    "ldap"=>"11",
+    "action_url"=>"25",
+    "xml_browser"=>"22",
+    "multicast_listen"=>"25"
+    ]}
+
+    {assign var=blf_suffixes value=[
+    "ba"=>"/ba",
+    "bb"=>"/bb",
+    "bf"=>"/bf",
+    "bc"=>"/bc",
+    "bcV"=>"/bcV",
+    "a"=>"/a",
+    "c"=>"/c",
+    "i"=>"/i"
+    ]}
+
+    {assign var=event_types value=[
+    "dnd"=>"F_DND",
+    "mwi"=>"F_MWI",
+    "hold"=>"F_HOLD",
+    "transfer"=>"F_TRANSFER",
+    "phonebook"=>"F_PHONEBOOK",
+    "redial"=>"F_REDIAL",
+    "pickup"=>"F_PICKUP",
+    "join"=>"F_JOIN",
+    "call_forward"=>"F_CALLFORWARD",
+    "record"=>"F_RECORD"
+    ]}
+    <dsskey>
+        <SelectDsskeyAction>2</SelectDsskeyAction>
+        <MemoryKeytoBXfer>3</MemoryKeytoBXfer>
+        <FuncKeyPageNum>2</FuncKeyPageNum>
+        <SideKeyPageNum>1</SideKeyPageNum>
+        <DSSHomePage>0</DSSHomePage>
+        <DSSTimeoutToHome>90</DSSTimeoutToHome>
+        <DisplayParkedInfo>0</DisplayParkedInfo>
+        <DSSDIALSwitchMode>0</DSSDIALSwitchMode>
+        <FirstCallWaitTime>16</FirstCallWaitTime>
+        <FirstNumStartTime>360</FirstNumStartTime>
+        <FirstNumEndTime>1080</FirstNumEndTime>
+        <DSSLongPressAction>1</DSSLongPressAction>
+        <AutoBLFList>1</AutoBLFList>
+        <Extern1PageBelong>0</Extern1PageBelong>
+        <Extern2PageBelong>0</Extern2PageBelong>
+        <Extern3PageBelong>0</Extern3PageBelong>
+        <Extern4PageBelong>0</Extern4PageBelong>
+        <Extern5PageBelong>0</Extern5PageBelong>
+        <DSSExtend1MAC></DSSExtend1MAC>
+        <DSSExtend1IP></DSSExtend1IP>
+        <DSSExtend2MAC></DSSExtend2MAC>
+        <DSSExtend2IP></DSSExtend2IP>
+        <DSSExtend3MAC></DSSExtend3MAC>
+        <DSSExtend3IP></DSSExtend3IP>
+        <DSSExtend4MAC></DSSExtend4MAC>
+        <DSSExtend4IP></DSSExtend4IP>
+        <DSSExtend5MAC></DSSExtend5MAC>
+        <DSSExtend5IP></DSSExtend5IP>
+        <dssSide index="1">
+            <Fkey index="1">
+                <Type>24</Type>
+                <Value>*724@-1/i</Value>
+                <Title></Title>
+                <ICON>Green</ICON>
+            </Fkey>
+            <Fkey index="2">
+                <Type>1</Type>
+                <Value>@1/f</Value>
+                <Title></Title>
+                <ICON>Green</ICON>
+            </Fkey>
+        </dssSide>
+        
+        {* Filter line keys first *}
+        {assign var="line_keys" value=[]}
+        
+        {* Output original keys array for debugging *}
+        {* Original keys array: {$keys|@print_r:true} *}
+        
+        {foreach $keys["line"] as $row}
+            {* Output each row being processed *}
+            {* Processing row: {$row|@print_r:true} *}
+            
+            {if $row.device_key_category == "line"}
+                {* Adding line key: {$row|@print_r:true} *}
+                {append var="line_keys" value=$row index=$row.device_key_id}
+            {/if}
+        {/foreach}
+        
+        {* Debug: Print final line_keys array *}
+        {* Final line_keys array: {$line_keys|@print_r:true} *}
+        
+        {* Create a mapping of key positions by their exact device_key_id *}
+        {assign var="key_map" value=[]}
+        {foreach $line_keys as $row}
+            {if isset($row.device_key_id) && $row.device_key_id > 0}
+                {assign var="key_map[$row.device_key_id]" value=$row}
+            {/if}
+        {/foreach}
+        
+        {* Always generate exactly 2 pages *}
+        {for $page_num=1 to 2}
+        <internal index="{$page_num}">
+            {* Calculate starting key_id for this page *}
+            {assign var="start_key_id" value=(($page_num-1)*8)+1}
+            
+            {* Output all 8 positions on each page *}
+            {for $position=1 to 8}
+                {assign var="key_id" value=$start_key_id+$position-1}
+                <Fkey index="{$position}">
+                    {if isset($line_keys[$key_id]) && isset($key_types[$line_keys[$key_id].device_key_type])}
+                    <Type>{$key_types[$line_keys[$key_id].device_key_type]}</Type>
+                    <Value>{$line_keys[$key_id].device_key_value}@1{if isset($blf_suffixes[$line_keys[$key_id].device_key_type])}{$blf_suffixes[$line_keys[$key_id].device_key_type]}{/if}</Value>
+                    <Title>{$line_keys[$key_id].device_key_label}</Title>
+                    <ICON>Green</ICON>
+                    {else}
+                    <Type>0</Type>
+                    <Value></Value>
+                    <Title></Title>
+                    <ICON></ICON>
+                    {/if}
+                </Fkey>
+            {/for}
+        </internal>
+        {/for}
+        {* Memory (soft) keys *}
+        {for $i=1 to 10}
+            {assign var="found" value=false}
+            {foreach $keys["memory"] as $row}
+                {if $row.device_key_category == "memory" && $row.device_key_id == $i}
+                    {assign var="found" value=true}
+            <dssSoft index="{$i}">
+                <Type>{if isset($key_types[$row.device_key_type])}{$key_types[$row.device_key_type]}{else}2{/if}</Type>
+                <Value>{$row.device_key_value}{if isset($blf_suffixes[$row.device_key_type])}{$blf_suffixes[$row.device_key_type]}{/if}</Value>
+                <Title>{$row.device_key_label}</Title>
+                <ICON>Green</ICON>
+            </dssSoft>
+                {/if}
+            {/foreach}
+        {/for}
+    </dsskey>
+    <web>
+        <WebServerType>0</WebServerType>
+        <WebPort>80</WebPort>
+        <HttpsWebPort>443</HttpsWebPort>
+        <TLSVersion>2</TLSVersion>
+        <RemoteControl>1</RemoteControl>
+        <EnableMMIFilter>0</EnableMMIFilter>
+        <WebAuthentication>0</WebAuthentication>
+        <CaptchaEnable>0</CaptchaEnable>
+        <TelnetPort>23</TelnetPort>
+        <TelnetPrompt></TelnetPrompt>
+        <LogonTimeout>15</LogonTimeout>
+        <account index="1">
+            <Name>admin</Name>
+            <Password>{if isset($admin_password)}{$admin_password}{elseif isset($fanvil_admin_password)}{$fanvil_admin_password}{/if}</Password>
+            <Level>10</Level>
+        </account>
+        <account index="2">
+            <Name>guest</Name>
+            <Password></Password>
+            <Level>0</Level>
+        </account>
+    </web>
+    <log>
+        <Level>ERROR</Level>
+        <Style>level,tag</Style>
+        <OutputDevice>stdout</OutputDevice>
+        <FileName>platform.log</FileName>
+        <FileSize>512KB</FileSize>
+        <SyslogTag>platform</SyslogTag>
+        <SyslogServer>{if isset($fanvil_syslog_server)}{$fanvil_syslog_server}{else}0.0.0.0{/if}</SyslogServer>
+        <SyslogServerPort>{if isset($fanvil_syslog_server_port)}{$fanvil_syslog_server_port}{else}514{/if}</SyslogServerPort>
+    </log>
+    <vpn>
+        <VPNmode>-1</VPNmode>
+        <EnableVPN>0</EnableVPN>
+        <EnableNat>0</EnableNat>
+        <Openvpnmode>0</Openvpnmode>
+        <VPNConnectTimeout>60</VPNConnectTimeout>
+        <OpenvpnEnableUserAuth>0</OpenvpnEnableUserAuth>
+        <OpenvpnUserName></OpenvpnUserName>
+        <OpenvpnPassword></OpenvpnPassword>
+        <L2TPServerAddress>0.0.0.0</L2TPServerAddress>
+        <L2TPUserName></L2TPUserName>
+        <L2TPPassword></L2TPPassword>
+        <L2TPNegotiateDNS>1</L2TPNegotiateDNS>
+        <PPTPServerAddress>0.0.0.0</PPTPServerAddress>
+        <PPTPUserName></PPTPUserName>
+        <PPTPPassword></PPTPPassword>
+        <SSTPServerAddress>0.0.0.0</SSTPServerAddress>
+        <SSTPUserName></SSTPUserName>
+        <SSTPPassword></SSTPPassword>
+    </vpn>
+    <mt>
+        <ContactUpdateMode>0</ContactUpdateMode>
+        <AutoServerDigest>0</AutoServerDigest>
+    </mt>
+    <ap>
+        <DefaultUsername>{$http_auth_username}</DefaultUsername>
+        <DefaultPassword>{$http_auth_password}</DefaultPassword>
+        <InputCfgFileName></InputCfgFileName>
+        <DeviceCfgFileKey></DeviceCfgFileKey>
+        <CommonCfgFileKey></CommonCfgFileKey>
+        <DownloadCommonConf>1</DownloadCommonConf>
+        <SaveProvisionInfo>1</SaveProvisionInfo>
+        <CheckFailTimes>1</CheckFailTimes>
+        <FlashServerIP>{$fanvil_config_server_path}</FlashServerIP>
+        <FlashFileName></FlashFileName>
+        <FlashProtocol>5</FlashProtocol>
+        <FlashMode>1</FlashMode>
+        <FlashInterval>1</FlashInterval>
+        <updatePBInterval>720</updatePBInterval>
+        <APConfigPriority>0</APConfigPriority>
+        <pnp>
+            <PNPEnable>1</PNPEnable>
+            <PNPIP>224.0.1.75</PNPIP>
+            <PNPPort>5060</PNPPort>
+            <PNPTransport>0</PNPTransport>
+            <PNPInterval>1</PNPInterval>
+        </pnp>
+        <opt>
+            <DHCPOption>66</DHCPOption>
+            <DHCPv6Option>0</DHCPv6Option>
+            <DhcpOption120>0</DhcpOption120>
+            <SaveDHCPOpion>0</SaveDHCPOpion>
+            <DhcpRenewUpgrade>1</DhcpRenewUpgrade>
+            <DHCPOptionACS>0</DHCPOptionACS>
+        </opt>
+    </ap>
+    <fwCheck>
+        <EnableAutoUpgrade>{$fanvil_enable_auto_upgrade}</EnableAutoUpgrade>
+        <UpgradeServer1>{$fanvil_firmware_upgrade_server_1}</UpgradeServer1>
+        <UpgradeServer2>{$fanvil_firmware_upgrade_server_2}</UpgradeServer2>
+        <AutoUpgradeInterval>{$fanvil_firmware_upgrade_interval}</AutoUpgradeInterval>
+    </fwCheck>
+    <qos>
+        <EnableVLAN>0</EnableVLAN>
+        <VLANID>{if isset($fanvil_lan_port_vlan)}{$fanvil_lan_port_vlan}{else}256{/if}</VLANID>
+        <EnablePVID>1</EnablePVID>
+        <PVIDValue>{if isset($fanvil_lan_port_vlan)}{$fanvil_lan_port_vlan}{else}254{/if}</PVIDValue>
+        <SignallingPriority>{if isset($fanvil_qos_sip)}{$fanvil_qos_sip}{else}0{/if}</SignallingPriority>
+        <VoicePriority>{if isset($fanvil_qos_rtp_voice)}{$fanvil_qos_rtp_voice}{else}0{/if}</VoicePriority>
+        <VideoPriority>{if isset($fanvil_qos_rtp_video)}{$fanvil_qos_rtp_video}{else}0{/if}</VideoPriority>
+        <LANPortPriority>0</LANPortPriority>
+        <EnablediffServ>{if isset($fanvil_enable_diffserv)}{$fanvil_enable_diffserv}{else}0{/if}</EnablediffServ>
+        <SignalDSCP>{if isset($fanvil_dscp_sip)}{$fanvil_dscp_sip}{else}46{/if}</SignalDSCP>
+        <VoiceDSCP>{if isset($fanvil_dscp_rtp_voice)}{$fanvil_dscp_rtp_voice}{else}46{/if}</VoiceDSCP>
+        <VideoDSCP>{if isset($fanvil_dscp_rtp_video)}{$fanvil_dscp_rtp_video}{else}46{/if}</VideoDSCP>
+        <LLDPTransmit>{if isset($fanvil_lldp_tx_enable)}{$fanvil_lldp_tx_enable}{else}0{/if}</LLDPTransmit>
+        <LLDPRefreshTime>{if isset($fanvil_lldp_refresh)}{$fanvil_lldp_refresh}{else}60{/if}</LLDPRefreshTime>
+        <LLDPLearnPolicy>{if isset($fanvil_lldp_learn)}{$fanvil_lldp_learn}{else}0{/if}</LLDPLearnPolicy>
+        <LLDPSaveLearnData>0</LLDPSaveLearnData>
+        <CDPEnable>0</CDPEnable>
+        <CDPRefreshTime>60</CDPRefreshTime>
+        <DHCPOptionVlan>132</DHCPOptionVlan>
+        <DHCPVlanDataType>0</DHCPVlanDataType>
+    </qos>
+    <dot1x>
+        <XsupMode>0</XsupMode>
+        <XsupUser>admin</XsupUser>
+        <XsupPassword></XsupPassword>
+        <wifi>
+            <XsupMode></XsupMode>
+            <XsupUser>admin</XsupUser>
+            <XsupPassword></XsupPassword>
+        </wifi>
+        <sslMode>
+            <PermissionCTF>0</PermissionCTF>
+            <CommonName>0</CommonName>
+            <CTFmode>0</CTFmode>
+            <DeviceCertMode>0</DeviceCertMode>
+        </sslMode>
+    </dot1x>
+    <rtsp>
+        <RtspClientWorkMode>0</RtspClientWorkMode>
+    </rtsp>
+    <pubApp>
+        <WatchDogEnabled>1</WatchDogEnabled>
+        <EnableInAccess>0</EnableInAccess>
+        <EnableOutAccess>0</EnableOutAccess>
+    </pubApp>
+    <kc>
+        <KeyConvertRuleEnable>1</KeyConvertRuleEnable>
+        <rule index="1">
+            <KeyValue>sidekey2</KeyValue>
+            <Rule>none;accept;exit;none;exit;</Rule>
+        </rule>
+    </kc>
+    <record>
+        <Enabled>0</Enabled>
+        <VoiceCodec>G729</VoiceCodec>
+        <RecordType>1</RecordType>
+        <FileSizeLimit>8</FileSizeLimit>
+        <ServerAddr>0.0.0.0</ServerAddr>
+        <ServerPort>10000</ServerPort>
+        <CoverOlderRecordings>0</CoverOlderRecordings>
+        <Username></Username>
+        <Password></Password>
+        <EnableAutoRecord>0</EnableAutoRecord>
+    </record>
+    <ui>
+        <BluetoothEnabled>0</BluetoothEnabled>
+        <BluetoothAdapterName>Fanvil W611W</BluetoothAdapterName>
+        <BluetoothRingMode>1</BluetoothRingMode>
+        <DisplayLanguage>en;cn;tc;ru;it;fr;de;he;es;cat;eus;gal;tr;hr;slo;cz;nl;ko;ua;pt;pl;ar;jp;</DisplayLanguage>
+        <Currentmaterialversion>0x02000002</Currentmaterialversion>
+        <EncryptTheApp></EncryptTheApp>
+        <uiWifi>
+            <WIFIRoamDelta>15</WIFIRoamDelta>
+            <WIFI2-4GBand>1</WIFI2-4GBand>
+            <WIFI5GBand>1</WIFI5GBand>
+        </uiWifi>
+    </ui>
+    <background>
+        <TimeoutToScreensaver>15</TimeoutToScreensaver>
+        <TimeoutToSleep>30</TimeoutToSleep>
+        <UserChangeBackground>0</UserChangeBackground>
+        <UserChangeSubBackground></UserChangeSubBackground>
+        <EHSHeadsettype>0</EHSHeadsettype>
+        <MissedCallPopup>1</MissedCallPopup>
+        <MWIPopup>1</MWIPopup>
+        <DeviceConnectPopup>1</DeviceConnectPopup>
+        <SMSPopup>1</SMSPopup>
+        <OtherPopup>1</OtherPopup>
+        <EnablePortMirror>0</EnablePortMirror>
+        <EnableDisplayToInfo>0</EnableDisplayToInfo>
+        <AutoCloseLed>0</AutoCloseLed>
+        <IdleTimeFontColor>0xffffff</IdleTimeFontColor>
+        <CommonTitleFontColor>0xffffff</CommonTitleFontColor>
+        <SoftkeyFontColor>0xffffff</SoftkeyFontColor>
+        <MenuListFontColor>0xFAFAFA</MenuListFontColor>
+        <ScrollBarColor>0x808080</ScrollBarColor>
+        <WarnThemeColor>0xc4012f</WarnThemeColor>
+        <InformThemeColor>0x007bb0</InformThemeColor>
+        <FunkeyListFontColor>0xffffff</FunkeyListFontColor>
+        <TalkingFontColor>0x262626</TalkingFontColor>
+        <DisplayLogoonScreensaver>1</DisplayLogoonScreensaver>
+        <DisplayTimeonScreensaver>1</DisplayTimeonScreensaver>
+        <DisplayDateonScreensaver>1</DisplayDateonScreensaver>
+        <DisplaySIPonScreensaver>1</DisplaySIPonScreensaver>
+        <DisplayProvisionprompt>2</DisplayProvisionprompt>
+        <PowerSaving>0</PowerSaving>
+        <TimeoutToPowerSaving>14400</TimeoutToPowerSaving>
+        <EnableDNDLargeIcon></EnableDNDLargeIcon>
+    </background>
+    <apconfig>
+        <APEnable>0</APEnable>
+        <APSecureMode>1</APSecureMode>
+        <APSSID>w611-0C-38-3E-5F-41-6F</APSSID>
+        <APPassword></APPassword>
+        <APMaxClient>16</APMaxClient>
+    </apconfig>
+</sysConf>
