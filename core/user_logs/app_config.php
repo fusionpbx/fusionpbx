@@ -73,6 +73,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the result.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'detail';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Details about the result.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'remote_address';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
