@@ -90,7 +90,7 @@
 				if (strlen($user_log_uuid ?? '')>0)
 					$database->uuid($user_log_uuid);
 				$database->save($array, false);
-				$details = $database->message;
+				$message = $database->message;
 
 			//remove the temporary permission
 				$p->delete("user_log_add", 'temp');
