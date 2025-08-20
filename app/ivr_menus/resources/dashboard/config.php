@@ -14,6 +14,7 @@ $array['dashboard'][$x]['dashboard_content'] = '';
 $array['dashboard'][$x]['dashboard_content_text_align'] = '';
 $array['dashboard'][$x]['dashboard_content_details'] = '';
 $array['dashboard'][$x]['dashboard_chart_type'] = '';
+$array['dashboard'][$x]['dashboard_chart_type_options'] = [];
 $array['dashboard'][$x]['dashboard_label_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_label_text_color'] = '#444444';
 $array['dashboard'][$x]['dashboard_label_text_color_hover'] = '';
