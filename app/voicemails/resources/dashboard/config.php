@@ -14,6 +14,7 @@ $array['dashboard'][$x]['dashboard_content'] = '';
 $array['dashboard'][$x]['dashboard_content_text_align'] = '';
 $array['dashboard'][$x]['dashboard_content_details'] = '';
 $array['dashboard'][$x]['dashboard_chart_type'] = 'icon';
+$array['dashboard'][$x]['dashboard_chart_type_options'] = ['number', 'doughnut', 'icon'];
 $array['dashboard'][$x]['dashboard_label_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_label_text_color'] = '#444444';
 $array['dashboard'][$x]['dashboard_label_text_color_hover'] = '';
@@ -90,4 +91,3 @@ $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'user';
 $y++;
 
 ?>
-
