@@ -41,9 +41,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//add the config, database, and settings objects
-	global $config, $database, $settings;
-
 //check for speech app
 	$speech_enabled = $settings->get('speech', 'enabled');
 
