@@ -41,8 +41,10 @@
 	$language = new text;
 	$text = $language->get();
 
-//add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+//add the config, database, and settings objects
+	global $config, $database, $settings;
+
+//check for speech app
 	$speech_enabled = $settings->get('speech', 'enabled');
 
 //set the defaults
@@ -76,9 +78,9 @@
 	$sql = "select greeting_id from v_voicemails ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and voicemail_id = :voicemail_id ";
+	$parameters = [];
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['voicemail_id'] = $voicemail_id;
-	$database = new database;
 	$selected_greeting_id = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -96,9 +98,9 @@
 			$sql .= "from v_voicemail_greetings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
+			$parameters = [];
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$greeting_filename = $row['greeting_filename'];
@@ -165,44 +167,33 @@
 		}
 
 		//get the file extension
-		$file_ext = $file_ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+		$file_ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 		$file_name = $_FILES['file']['name'];
 
 		//check file extension
-		if ($file_ext == 'wav' || $file_ext == 'mp3') {
+		if ($file_ext == 'wav' || $file_ext == 'mp3' || $file_ext == 'ogg') {
 
-			//find the next available
-			for ($i = 1; $i < 10; $i++) {
-				//set the file name
-				$file_name = 'greeting_'.$i.'.'.$file_ext;
+			//get the next greeting id starting at 1
+			$greeting_id = count(glob($greeting_dir . '/greeting_*.*')) + 1;
 
-				//set the greeting id
-				if (!file_exists($greeting_dir.'/'.$file_name)) {
-					//set the greeting id
-					$greeting_id = $i;
-
-					//end the loop
-					break;
-				}
-			}
+			//set the greeting file name
+			$greeting_file_name = "greeting_{$greeting_id}.{$file_ext}";
 
 			//move the uploaded greeting
 			if (!empty($greeting_dir) && !file_exists($greeting_dir)) {
 				mkdir($greeting_dir, 0770, false);
 			}
-			if ($file_ext == 'wav' || $file_ext == 'mp3') {
-				move_uploaded_file($_FILES['file']['tmp_name'], $greeting_dir.'/'.$file_name);
-			}
+			move_uploaded_file($_FILES['file']['tmp_name'], $greeting_dir.'/'.$greeting_file_name);
 
 			//set newly uploaded greeting as active greeting for voicemail box
 			$sql = "update v_voicemails ";
 			$sql .= "set greeting_id = :greeting_id ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and voicemail_id = :voicemail_id ";
+			$parameters = [];
 			$parameters['greeting_id'] = $greeting_id;
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['voicemail_id'] = $voicemail_id;
-			$database = new database;
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
 
@@ -213,7 +204,7 @@
 			$array['voicemail_greetings'][$x]['voicemail_id'] = $voicemail_id;
 			$array['voicemail_greetings'][$x]['greeting_id'] = $greeting_id;
 			$array['voicemail_greetings'][$x]['greeting_name'] = $text['label-greeting'].' '.$greeting_id;
-			$array['voicemail_greetings'][$x]['greeting_filename'] = $file_name;
+			$array['voicemail_greetings'][$x]['greeting_filename'] = $greeting_file_name;
 			$array['voicemail_greetings'][$x]['greeting_description'] = '';
 			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
 				$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($greeting_dir.'/'.$file_name));
@@ -228,7 +219,6 @@
 				$p->add('voicemail_greeting_edit', 'temp');
 
 				//execute inserts/updates
-				$database = new database;
 				$database->app_name = 'voicemail_greetings';
 				$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 				$database->save($array);
@@ -272,10 +262,10 @@
 		$sql .= "set greeting_id = :greeting_id ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_id = :voicemail_id ";
+		$parameters = [];
 		$parameters['greeting_id'] = $greeting_id;
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['voicemail_id'] = $voicemail_id;
-		$database = new database;
 		$database->execute($sql, $parameters);
 		unset($sql, $parameters);
 
@@ -321,9 +311,9 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and voicemail_id = :voicemail_id ";
 	$sql .= order_by($order_by, $order);
+	$parameters = [];
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['voicemail_id'] = $voicemail_id;
-	$database = new database;
 	$greetings = $database->select($sql, $parameters, 'all');
 	$num_rows = is_array($greetings) ? @sizeof($greetings) : 0;
 	unset($sql, $parameters);
@@ -607,6 +597,3 @@
 
 		fclose($fp);
 	}
-
-?>
-
