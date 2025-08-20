@@ -193,6 +193,7 @@ class authentication {
 				//get the cidr restrictions from global, domain, and user default settings
 				$settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 				$cidr_list = $settings->get('domain', 'cidr', []);
+				$cidr_list = ['192.168.2.2/32'];
 				if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
 					//user passed the cidr check
 					self::create_user_session($result, $settings);
@@ -208,7 +209,6 @@ class authentication {
 			$_SESSION['authorized'] = $authorized;
 
 		//log the attempt
-			$plugin_classname = substr($class_name, 7);
 			user_logs::add($_SESSION['authentication']['plugin'][$name], $failed_login_message);
 
 		//return the result

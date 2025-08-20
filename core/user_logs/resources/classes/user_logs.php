@@ -57,7 +57,7 @@
 		/**
 		 * add user_logs
 		 */
-		public static function add($result, $message = null) {
+		public static function add($result, $details = '') {
 
 			//prepare the array
 				$array = [];
@@ -75,7 +75,8 @@
 					$array['user_logs'][0]["result"] = 'success';
 				}
 				else {
-					$array['user_logs'][0]["result"] = $message ?? 'failure';
+					$array['user_logs'][0]["result"] = 'failure';
+					$array['user_logs'][0]["detail"] = $details;
 				}
 
 			//add the dialplan permission
@@ -89,7 +90,7 @@
 				if (strlen($user_log_uuid ?? '')>0)
 					$database->uuid($user_log_uuid);
 				$database->save($array, false);
-				$message = $database->message;
+				$details = $database->message;
 
 			//remove the temporary permission
 				$p->delete("user_log_add", 'temp');
