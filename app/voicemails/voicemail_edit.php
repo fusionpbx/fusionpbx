@@ -65,6 +65,10 @@
 	$voicemail_mail_to = '';
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 
+//set the domain variables
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$domain_name = $_SESSION['domain_name'] ?? '';
+
 //get http variables and set them to php variables
 	$referer_path = $_REQUEST["referer_path"] ?? '';
 	$referer_query = $_REQUEST["referer_query"] ?? '';
@@ -154,7 +158,7 @@
 						$voicemail_uuid = uuid();
 						//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
 						if (!permission_exists('voicemail_transcription_enabled')) {
-							$voicemail_transcription_enabled = filter_var($_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+							$voicemail_transcription_enabled = $settings->get('voicemail', 'transcription_enabled_default', false); 
 						}
 					}
 
@@ -196,7 +200,7 @@
 							if (is_numeric($voicemail_option["voicemail_option_param"])) {
 								//if numeric then add tranfer $1 XML domain_name
 								$voicemail_option['voicemail_option_action'] = "menu-exec-app";
-								$voicemail_option['voicemail_option_param'] = "transfer ".$voicemail_option["voicemail_option_param"]." XML ".$_SESSION['domain_name'];
+								$voicemail_option['voicemail_option_param'] = "transfer ".$voicemail_option["voicemail_option_param"]." XML ".$domain_name;
 							}
 							else {
 								//seperate the action and the param
@@ -249,20 +253,20 @@
 
 				//create or rename voicemail directory as needed
 					if (is_numeric($voicemail_id)) {
-						// old and new voicemail ids differ, old directory exists and new doesn't, rename directory
 						if (
 							!empty($voicemail_id_previous) && is_numeric($voicemail_id_previous) && $voicemail_id_previous != $voicemail_id &&
-							file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id_previous) &&
-							!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)
+							file_exists($settings->get('switch', 'voicemail')."/default/".$domain_name."/".$voicemail_id_previous) &&
+							!file_exists($settings->get('switch', 'voicemail')."/default/".$domain_name."/".$voicemail_id)
 							) {
+							// old and new voicemail ids differ, old directory exists and new doesn't, rename directory
 							rename(
-								$_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id_previous, // previous
-								$_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id // new
+								$settings->get('switch', 'voicemail')."/default/".$domain_name."/".$voicemail_id_previous, // previous
+								$settings->get('switch', 'voicemail')."/default/".$domain_name."/".$voicemail_id // new
 								);
 						}
-						// new directory doesn't exist, create
-						else if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
-							mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770);
+						else if (!file_exists($settings->get('switch', 'voicemail')."/default/".$domain_name."/".$voicemail_id)) {
+							// new directory doesn't exist, create
+							mkdir($settings->get('switch', 'voicemail')."/default/".$domain_name."/".$voicemail_id, 0770);
 						}
 					}
 
@@ -298,11 +302,11 @@
 				//delete record name if requested
 					if (
 						(!empty($_POST['recorded_name']) && $_POST['recorded_name'] == 1) &&
-						!empty($_SESSION['switch']['storage']['dir']) &&
-						file_exists($_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/recorded_name.wav') &&
+						!empty($settings->get('switch', 'storage')) &&
+						file_exists($settings->get('switch', 'storage').'/voicemail/default/'.$domain_name.'/'.$voicemail_id.'/recorded_name.wav') &&
 						(permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))
 						) {
-						@unlink($_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/recorded_name.wav');
+						@unlink($settings->get('switch', 'storage').'/voicemail/default/'.$domain_name.'/'.$voicemail_id.'/recorded_name.wav');
 					}
 
 				//set message
@@ -353,8 +357,8 @@
 		unset($sql, $parameters, $row);
 	}
 	else {
-		$voicemail_file = $_SESSION['voicemail']['voicemail_file']['text'];
-		$voicemail_local_after_email = filter_var($_SESSION['voicemail']['keep_local']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+		$voicemail_file = $settings->get('voicemail', 'voicemail_file');
+		$voicemail_local_after_email = $settings->get('voicemail', 'keep_local', false);
 	}
 
 //remove the spaces
@@ -365,7 +369,7 @@
 //set the defaults
 	if (empty($voicemail_local_after_email)) { $voicemail_local_after_email = 'true'; }
 	if (empty($voicemail_enabled)) { $voicemail_enabled = 'true'; }
-	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = filter_var($_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?? false, FILTER_VALIDATE_BOOL); }
+	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $settings->get('voicemail', 'transcription_enabled_default', false); }
 	if (empty($voicemail_tutorial)) { $voicemail_tutorial = 'false'; }
 	if (empty($voicemail_recording_instructions)) { $voicemail_recording_instructions = 'true'; }
 	if (empty($voicemail_recording_options)) { $voicemail_recording_options = 'true'; }
@@ -392,7 +396,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_uuid = :voicemail_uuid ";
 		$sql .= "order by voicemail_option_digits, voicemail_option_order asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['voicemail_uuid'] = $voicemail_uuid;
 		$database = new database;
 		$voicemail_options = $database->select($sql, $parameters, 'all');
@@ -409,7 +413,7 @@
 				$voicemail_option_param = str_replace("XML", "", $voicemail_option_param);
 				$voicemail_option_param = str_replace("transfer", "", $voicemail_option_param);
 				$voicemail_option_param = str_replace("bridge", "", $voicemail_option_param);
-				$voicemail_option_param = str_replace($_SESSION['domain_name'], "", $voicemail_option_param);
+				$voicemail_option_param = str_replace($domain_name, "", $voicemail_option_param);
 				$voicemail_option_param = str_replace("\${domain_name}", "", $voicemail_option_param);
 				$voicemail_option_param = str_replace("\${domain}", "", $voicemail_option_param);
 				$voicemail_option_param = ucfirst(trim($voicemail_option_param));
@@ -429,7 +433,7 @@
 		$sql .= "v.voicemail_enabled = 'true' and ";
 		$sql .= "d.voicemail_uuid = :voicemail_uuid ";
 		$sql .= "order by v.voicemail_id asc";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['voicemail_uuid'] = $voicemail_uuid;
 		$database = new database;
 		$voicemail_destinations_assigned = $database->select($sql, $parameters, 'all');
@@ -453,7 +457,7 @@
 		$sql .= "and v.voicemail_uuid not in (".implode(',', $voicemail_destinations).") ";
 	}
 	$sql .= "order by v.voicemail_id asc";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
 	if (!empty($voicemail_uuid) && is_uuid($voicemail_uuid)) {
 		$parameters['voicemail_uuid'] = $voicemail_uuid;
 	}
@@ -470,10 +474,10 @@
 	require_once "resources/header.php";
 
 //password complexity
-	$password_complexity = filter_var($_SESSION['voicemail']['password_complexity']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+	$password_complexity = $settings->get('voicemail', 'password_complexity', false);
 	if ($password_complexity) {
 		echo "<script>\n";
-		$req['length'] = $_SESSION['voicemail']['password_min_length']['numeric'];
+		$req['length'] = $settings->get('voicemail', 'password_min_length', 20);
 		echo "	function check_password_strength(pwd) {\n";
 		echo "		var msg_errors = [];\n";
 		//length
@@ -579,7 +583,7 @@
 	echo "	".$text['label-voicemail_tutorial']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
 		echo "		<input type='checkbox' id='voicemail_tutorial' name='voicemail_tutorial' value='true' ".($voicemail_tutorial == 'true' ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span> \n";
@@ -597,8 +601,8 @@
 	echo "</tr>\n";
 
 	if (
-		!empty($_SESSION['switch']['storage']['dir']) &&
-		file_exists($_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/recorded_name.wav') &&
+		!empty($settings->get('switch', 'storage')) &&
+		file_exists($settings->get('switch', 'storage').'/voicemail/default/'.$domain_name.'/'.$voicemail_id.'/recorded_name.wav') &&
 		(permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))
 		) {
 		echo "<tr>\n";
@@ -687,7 +691,7 @@
 		echo "	".$text['label-recording_instructions']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
-		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
 			echo "		<input type='checkbox' id='voicemail_recording_instructions' name='voicemail_recording_instructions' value='true' ".($voicemail_recording_instructions == 'true' ? "checked='checked'" : null).">\n";
 			echo "		<span class='slider'></span> \n";
@@ -711,7 +715,7 @@
 		echo "	".$text['label-recording_options']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
 			echo "		<input type='checkbox' id='voicemail_recording_options' name='voicemail_recording_options' value='true' ".($voicemail_recording_options == 'true' ? "checked='checked'" : null).">\n";
 			echo "		<span class='slider'></span> \n";
@@ -840,16 +844,16 @@
 		echo "	".$text['label-voicemail_transcription_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled' value='true' ".($voicemail_transcription_enabled == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<input type='checkbox' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled' value='true' ".($voicemail_transcription_enabled == true ? "checked='checked'" : null).">\n";
 			echo "		<span class='slider'></span> \n";
 			echo "	</label>\n";
 		}
 		else {
 			echo "	<select class='formfld' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled'>\n";
 			echo "		<option value='true'>".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".(empty($voicemail_transcription_enabled) || $voicemail_transcription_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='false' ".($voicemail_transcription_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 		}
 		echo "<br />\n";
@@ -881,7 +885,7 @@
 		echo "	".$text['label-voicemail_local_after_email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
 			echo "		<input type='checkbox' id='voicemail_local_after_email' name='voicemail_local_after_email' value='true' ".($voicemail_local_after_email == 'true' ? "checked='checked'" : null)." onchange=\"if (!this.checked) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
 			echo "		<span class='slider'></span> \n";
@@ -954,7 +958,7 @@
 	echo "	".$text['label-voicemail_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
 		echo "		<input type='checkbox' id='voicemail_enabled' name='voicemail_enabled' value='true' ".($voicemail_enabled == 'true' ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
