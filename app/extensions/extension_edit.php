@@ -1872,10 +1872,18 @@
 			echo "    ".$text['label-voicemail_local_after_email']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-			echo "    	<option value='true' ".(($voicemail_local_after_email == true) ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "    	<option value='false' ".(($voicemail_local_after_email == false) ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "    </select>\n";
+			if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+				echo "	<label class='switch'>\n";
+				echo "		<input type='checkbox' id='voicemail_local_after_email' name='voicemail_local_after_email' value='true' ".($voicemail_local_after_email == 'true' ? "checked='checked'" : null)." onchange=\"if (!this.checked) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
+				echo "		<span class='slider'></span> \n";
+				echo "	</label>\n";
+			}
+			else {
+				echo "	<select class='formfld' id='voicemail_local_after_email' name='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
+				echo "		<option value='true'>".$text['option-true']."</option>\n";
+				echo "		<option value='false' ".($voicemail_local_after_email == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "	</select>\n";
+			}
 			echo "<br />\n";
 			echo $text['description-voicemail_local_after_email']."\n";
 			echo "</td>\n";
