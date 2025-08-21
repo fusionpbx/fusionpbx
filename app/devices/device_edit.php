@@ -1451,10 +1451,18 @@
 				}
 
 				echo "			<td align='left'>\n";
-				echo "				<select class='formfld' name='device_lines[".$x."][enabled]'>\n";
-				echo "					<option value='true' ".(($row['enabled'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-				echo "					<option value='false' ".(($row['enabled'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-				echo "				</select>\n";
+				if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+					echo "			<label class='switch'>\n";
+					echo "				<input type='checkbox' name='device_lines[".$x."][enabled]' value='true' ".(empty($row['enabled']) || $row['enabled'] == 'true' ? "checked='checked'" : null).">\n";
+					echo "				<span class='slider'></span>\n";
+					echo "			</label>\n";
+				}
+				else {
+					echo "			<select class='formfld' name='device_lines[".$x."][enabled]'>\n";
+					echo "				<option value='true'>".$text['option-true']."</option>\n";
+					echo "				<option value='false' ".($row['enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+					echo "			</select>\n";
+				}
 				echo "			</td>\n";
 
 				if (!empty($device_lines) && is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete') && !empty($row['device_line_uuid']) && is_uuid($row['device_line_uuid'])) {
@@ -1807,10 +1815,18 @@
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "  <select class='formfld' name='device_settings[".$x."][device_setting_enabled]' style='width: 90px;'>\n";
-				echo "  	<option value='true'>".$text['label-true']."</option>\n";
-				echo "  	<option value='false' ".(!empty($row['device_setting_enabled']) && $row['device_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-				echo "  </select>\n";
+				if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+					echo "	<label class='switch'>\n";
+					echo "		<input type='checkbox' name='device_settings[".$x."][device_setting_enabled]' value='true' ".(empty($row['enabled']) || $row['enabled'] == 'true' ? "checked='checked'" : null).">\n";
+					echo "		<span class='slider'></span>\n";
+					echo "	</label>\n";
+				}
+				else {
+					echo "	<select class='formfld' name='device_settings[".$x."][device_setting_enabled]'>\n";
+					echo "		<option value='true'>".$text['option-true']."</option>\n";
+					echo "		<option value='false' ".(!empty($row['device_setting_enabled']) && $row['device_setting_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+					echo "	</select>\n";
+				}
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
