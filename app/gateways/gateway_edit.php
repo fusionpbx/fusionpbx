@@ -88,7 +88,7 @@
 		$register_proxy = $_POST["register_proxy"];
 		$outbound_proxy = $_POST["outbound_proxy"];
 		$expire_seconds = $_POST["expire_seconds"];
-		$register = $_POST["register"];
+		$register = $_POST["register"] ?? 'false';
 		$register_transport = $_POST["register_transport"];
 		$contact_params = $_POST["contact_params"];
 		$retry_seconds = $_POST["retry_seconds"];
@@ -326,7 +326,6 @@
 	if (empty($register_proxy)) { $register_proxy = ''; }
 	if (empty($outbound_proxy)) { $outbound_proxy = ''; }
 	if (empty($expire_seconds)) { $expire_seconds = ''; }
-	if (empty($register)) { $register = ''; }
 	if (empty($register_transport)) { $register_transport = ''; }
 	if (empty($contact_params)) { $contact_params = ''; }
 	if (empty($retry_seconds)) { $retry_seconds = ''; }
@@ -490,20 +489,18 @@
 	echo "    ".$text['label-register']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='register'>\n";
-	if ($register == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='register' value='true' ".(empty($register) || $register == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' name='register'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(!empty($register) && $register == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($register == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-register']."\n";
 	echo "</td>\n";
