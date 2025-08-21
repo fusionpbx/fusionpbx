@@ -711,28 +711,18 @@
 			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_value]' maxlength='255' value=\"".escape($row["profile_setting_value"])."\">\n";
 			echo "			</td>\n";
 			echo "			<td class='formfld'>\n";
-
 			if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' name='device_profile_settings[".$x."][profile_setting_enabled]' value='true' ".(empty($row['profile_setting_enabled']) || $row['profile_setting_enabled'] == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+				echo "			<label class='switch'>\n";
+				echo "				<input type='checkbox' name='device_profile_settings[".$x."][profile_setting_enabled]' value='true' ".(empty($row['profile_setting_enabled']) || $row['profile_setting_enabled'] == 'true' ? "checked='checked'" : null).">\n";
+				echo "				<span class='slider'></span>\n";
+				echo "			</label>\n";
 			}
 			else {
-				echo "	<select class='formfld' name='device_profile_settings[".$x."][profile_setting_enabled]'>\n";
-				echo "		<option value='true'>".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".(!empty($row['profile_setting_enabled']) && $row['profile_setting_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+				echo "			<select class='formfld' name='device_profile_settings[".$x."][profile_setting_enabled]'>\n";
+				echo "				<option value='true'>".$text['option-true']."</option>\n";
+				echo "				<option value='false' ".(!empty($row['profile_setting_enabled']) && $row['profile_setting_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "			</select>\n";
 			}
-
-			// echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
-			// echo "					<option value='true'>".$text['label-true']."</option>\n";
-			// echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			// echo "				</select>\n";
-
-
-
-
 			echo "			</td>\n";
 			echo "			<td class='formfld'>\n";
 			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
