@@ -1710,20 +1710,18 @@
 		echo "    ".$text['label-directory_visible']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='directory_visible'>\n";
-		if (!empty($directory_visible) && $directory_visible == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' id='directory_visible' name='directory_visible' value='true' ".($directory_visible == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
 		}
 		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+			echo "	<select class='formfld' id='directory_visible' name='directory_visible'>\n";
+			echo "		<option value='true' ".($directory_visible == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($directory_visible == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
 		}
-		if (!empty($directory_visible) && $directory_visible == "false") {
-			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-directory_visible']."\n";
 		echo "</td>\n";
@@ -1734,20 +1732,18 @@
 		echo "    ".$text['label-directory_exten_visible']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='directory_exten_visible'>\n";
-		if (!empty($directory_exten_visible) && $directory_exten_visible == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' id='directory_exten_visible' name='directory_exten_visible' value='true' ".($directory_exten_visible == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
 		}
 		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+			echo "	<select class='formfld' id='directory_exten_visible' name='directory_exten_visible'>\n";
+			echo "		<option value='true' ".($directory_exten_visible == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($directory_exten_visible == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
 		}
-		if (!empty($directory_exten_visible) && $directory_exten_visible == "false") {
-			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-directory_exten_visible']."\n";
 		echo "</td>\n";
