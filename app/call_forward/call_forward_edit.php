@@ -581,7 +581,7 @@
 	else {
 		$on_click = "$('#div_follow_me_settings').slideUp('fast'); ";
 		$on_click .= "document.getElementById('follow_me_disabled').checked = true; ";
-		$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
+		$on_click .= "document.getElementById('dnd_disabled').checked = true; ";
 		$on_click .= "document.getElementById('forward_all_destination').focus(); ";
 		$on_click2 = "(document.getElementById('follow_me_enabled').checked) ? $('#div_follow_me_settings').slideDown('fast') : '' ";
 		echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"$on_click2\" value='false' ".(($forward_all_enabled == "false" || $forward_all_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
@@ -616,7 +616,7 @@
 		echo "</script>\n";
 	}
 	else {
-		$on_click = "document.getElementById('dnd_disabled').checked=true;";
+		$on_click = "document.getElementById('dnd_disabled').checked = true;";
 		$on_click .= "document.getElementById('forward_busy_destination').focus();";
 		echo "	<label for='forward_busy_disabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_disabled' onclick=\"\" value='false' ".(($forward_busy_enabled == "false" || $forward_busy_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 		echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"$on_click\" value='true' ".(($forward_busy_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
@@ -649,7 +649,7 @@
 		echo "</script>\n";
 	}
 	else {
-		$on_click = "document.getElementById('dnd_disabled').checked=true;";
+		$on_click = "document.getElementById('dnd_disabled').checked = true;";
 		$on_click .= "document.getElementById('forward_no_answer_destination').focus();";
 		echo "	<label for='forward_no_answer_disabled'><input type='radio' name='forward_no_answer_enabled' id='forward_no_answer_disabled' onclick=\"\" value='false' ".(($forward_no_answer_enabled == "false" || $forward_no_answer_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 		echo "	<label for='forward_no_answer_enabled'><input type='radio' name='forward_no_answer_enabled' id='forward_no_answer_enabled' onclick=\"$on_click\" value='true' ".(($forward_no_answer_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
@@ -721,8 +721,8 @@
 			echo "</script>\n";
 		}
 		else {
-			$on_click = "document.getElementById('forward_all_disabled').checked=true; ";
-			$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
+			$on_click = "document.getElementById('forward_all_disabled').checked = true; ";
+			$on_click .= "document.getElementById('dnd_disabled').checked = true; ";
 			echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#div_follow_me_settings').slideUp('fast');\" value='false' ".((!empty($follow_me_enabled) && $follow_me_enabled == "false" || empty($follow_me_enabled)) ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 			echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#div_follow_me_settings').slideDown('fast'); $on_click\" value='true' ".((!empty($follow_me_enabled) && $follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 			unset($on_click);
@@ -854,7 +854,7 @@
 		echo "</script>\n";
 	}
 	else {
-		$on_click = "document.getElementById('forward_all_disabled').checked=true;";
+		$on_click = "document.getElementById('forward_all_disabled').checked = true;";
 		$on_click2 = "if (document.getElementById('follow_me_enabled').checked) { $('#div_follow_me_settings').slideDown('fast'); }";
 		echo "	<label for='dnd_disabled'><input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"$on_click2\" ".(($dnd_enabled == "false" || $dnd_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 		echo "	<label for='dnd_enabled'><input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\" ".(($dnd_enabled == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
