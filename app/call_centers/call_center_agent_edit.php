@@ -83,7 +83,7 @@
 		$agent_wrap_up_time = $_POST["agent_wrap_up_time"];
 		$agent_reject_delay_time = $_POST["agent_reject_delay_time"];
 		$agent_busy_delay_time = $_POST["agent_busy_delay_time"];
-		$agent_record = $_POST["agent_record"];
+		$agent_record = $_POST["agent_record"] ?? 'false';
 		//$agent_logout = $_POST["agent_logout"];
 	}
 
@@ -495,10 +495,18 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='agent_record'>\n";
-	echo "		<option value='true'>".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".(!empty($agent_record) && $agent_record != "true" ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='agent_record' value='true' ".(empty($agent_record) || $agent_record == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' name='agent_record'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(!empty($agent_record) && $agent_record != 'true' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";
 	echo "</td>\n";
