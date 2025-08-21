@@ -349,7 +349,7 @@
 								if (permission_exists('device_line_shared')) {
 									$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
 								}
-								$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"];
+								$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"] ?? 'false';
 								if (permission_exists('device_line_port')) {
 									$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
 								}
@@ -435,13 +435,15 @@
 								$array['devices'][0]['device_settings'][$y]['device_setting_subcategory'] = $row["device_setting_subcategory"] ?? null;
 								$array['devices'][0]['device_settings'][$y]['device_setting_name'] = $row["device_setting_name"] ?? null;
 								$array['devices'][0]['device_settings'][$y]['device_setting_value'] = $row["device_setting_value"] ?? null;
-								$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"];
+								$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"] ?? 'false';
+// echo $array['devices'][0]['device_settings'][$y]['device_setting_enabled'].'<br>';
 								$array['devices'][0]['device_settings'][$y]['device_setting_description'] = $row["device_setting_description"];
 								$y++;
 							}
 						}
 					}
-
+// view_array($array);
+// exit;
 				//save the device
 					$database->app_name = 'devices';
 					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
@@ -1817,7 +1819,7 @@
 				echo "<td align='left'>\n";
 				if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 					echo "	<label class='switch'>\n";
-					echo "		<input type='checkbox' name='device_settings[".$x."][device_setting_enabled]' value='true' ".(empty($row['enabled']) || $row['enabled'] == 'true' ? "checked='checked'" : null).">\n";
+					echo "		<input type='checkbox' name='device_settings[".$x."][device_setting_enabled]' value='true' ".(empty($row['device_setting_enabled']) || $row['device_setting_enabled'] == 'true' ? "checked='checked'" : null).">\n";
 					echo "		<span class='slider'></span>\n";
 					echo "	</label>\n";
 				}
