@@ -1265,8 +1265,6 @@
 	echo "	".$text['label-abandoned_resume_allowed']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-
 	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
 		echo "		<input type='checkbox' name='queue_abandoned_resume_allowed' value='true' ".(!empty($queue_abandoned_resume_allowed) && $queue_abandoned_resume_allowed == 'true' ? "checked='checked'" : null).">\n";
@@ -1279,25 +1277,6 @@
 		echo "		<option value='true' ".(!empty($queue_abandoned_resume_allowed) && $queue_abandoned_resume_allowed == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
 	}
-
-
-	// echo "	<select class='formfld' name='queue_abandoned_resume_allowed'>\n";
-	// if ($queue_abandoned_resume_allowed == "false") {
-	// 	echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-	// }
-	// else {
-	// 	echo "	<option value='false'>".$text['option-false']."</option>\n";
-	// }
-	// if ($queue_abandoned_resume_allowed == "true") {
-	// 	echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
-	// }
-	// else {
-	// 	echo "	<option value='true'>".$text['option-true']."</option>\n";
-	// }
-	// echo "	</select>\n";
-
-
-
 	echo "<br />\n";
 	echo $text['description-abandoned_resume_allowed']."\n";
 	echo "</td>\n";
