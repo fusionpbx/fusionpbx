@@ -95,7 +95,7 @@
 		$type = $_POST["type"];
 		$subtype = $_POST["subtype"];
 		$value = $_POST["value"];
-		$enabled = $_POST["enabled"];
+		$enabled = $_POST["enabled"] ?? 'false';
 		$description = $_POST["description"];
 	}
 
@@ -366,10 +366,18 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(empty($enabled) || $enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-	echo "	</select>\n";
+	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='enabled' value='true' ".(empty($enabled) || $enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' name='enabled'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(empty($enabled) || $enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";
