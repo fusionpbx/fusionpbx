@@ -47,7 +47,7 @@
 		$quick_select = $_REQUEST['quick_select'];
 		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
 		$start_stamp_end = $_REQUEST['start_stamp_end'];
-		$include_internal = $_REQUEST['include_internal'];
+		$include_internal = $_REQUEST['include_internal'] ?? '0';
 	}
 	else {
 		$quick_select = 3; //set default
@@ -154,10 +154,18 @@
 		echo "			".$text['label-include_internal']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<select class='formfld' name='include_internal' id='include_internal'>\n";
-		echo "				<option value='0'>".$text['option-false']."</option>\n";
-		echo "				<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
-		echo "			</select>\n";
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+			echo "		<label class='switch'>\n";
+			echo "			<input type='checkbox' id='include_internal' name='include_internal' value='1' ".(!empty($include_internal) && $include_internal == 1 ? "checked='checked'" : null).">\n";
+			echo "			<span class='slider'></span>\n";
+			echo "		</label>\n";
+		}
+		else {
+			echo "		<select class='formfld' id='include_internal' name='include_internal'>\n";
+			echo "			<option value='0'>".$text['option-false']."</option>\n";
+			echo "			<option value='1' ".(!empty($include_internal) && $include_internal == 1 ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		</select>\n";
+		}
 		echo "		</div>\n";
 
 		echo "	</div>\n";
