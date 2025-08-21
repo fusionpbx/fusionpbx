@@ -165,12 +165,12 @@
 			$y = 0;
 			if (permission_exists("device_profile_setting_edit")) {
 				foreach ($device_profile_settings as $row) {
-					if (strlen($row['profile_setting_name']) > 0 && !empty($row['profile_setting_enabled'])) {
+					if (strlen($row['profile_setting_name']) > 0) {
 						$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
 						$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
 						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
 						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_value"] = $row["profile_setting_value"];
-						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_enabled"] = $row["profile_setting_enabled"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_enabled"] = $row["profile_setting_enabled"] ?? 'false';
 						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_description"] = $row["profile_setting_description"];
 						$y++;
 					}
@@ -369,7 +369,7 @@
 	$device_profile_settings[$x]['device_profile_setting_uuid'] = '';
 	$device_profile_settings[$x]['profile_setting_name'] = '';
 	$device_profile_settings[$x]['profile_setting_value'] = '';
-	$device_profile_settings[$x]['profile_setting_enabled'] = '';
+	$device_profile_settings[$x]['profile_setting_enabled'] = 'true';
 	$device_profile_settings[$x]['profile_setting_description'] = '';
 
 //filter the uuid
@@ -711,10 +711,28 @@
 			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_value]' maxlength='255' value=\"".escape($row["profile_setting_value"])."\">\n";
 			echo "			</td>\n";
 			echo "			<td class='formfld'>\n";
-			echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
-			echo "					<option value='true'>".$text['label-true']."</option>\n";
-			echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "				</select>\n";
+
+			if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+				echo "	<label class='switch'>\n";
+				echo "		<input type='checkbox' name='device_profile_settings[".$x."][profile_setting_enabled]' value='true' ".(empty($row['profile_setting_enabled']) || $row['profile_setting_enabled'] == 'true' ? "checked='checked'" : null).">\n";
+				echo "		<span class='slider'></span>\n";
+				echo "	</label>\n";
+			}
+			else {
+				echo "	<select class='formfld' name='device_profile_settings[".$x."][profile_setting_enabled]'>\n";
+				echo "		<option value='true'>".$text['option-true']."</option>\n";
+				echo "		<option value='false' ".(!empty($row['profile_setting_enabled']) && $row['profile_setting_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "	</select>\n";
+			}
+
+			// echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
+			// echo "					<option value='true'>".$text['label-true']."</option>\n";
+			// echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			// echo "				</select>\n";
+
+
+
+
 			echo "			</td>\n";
 			echo "			<td class='formfld'>\n";
 			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
