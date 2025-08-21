@@ -567,16 +567,24 @@
 		echo "<script>\n";
 		echo "function changed_forward_all(el) {\n";
 		echo "	if (el.checked) {\n";
+		echo "		$('#div_follow_me_settings').slideUp('fast');\n";
+		echo "		document.getElementById('follow_me_enabled').checked = false;\n";
 		echo "		document.getElementById('dnd_enabled').checked = false;\n";
 		echo "		document.getElementById('forward_all_destination').focus();\n";
+		echo "	}\n";
+		echo "	else {\n";
+		echo "		if (document.getElementById('follow_me_enabled').checked) { $('#div_follow_me_settings').slideDown('fast'); }\n";
 		echo "	}\n";
 		echo "}\n";
 		echo "</script>\n";
 	}
 	else {
-		$on_click = "document.getElementById('dnd_disabled').checked=true; ";
+		$on_click = "$('#div_follow_me_settings').slideUp('fast'); ";
+		$on_click .= "document.getElementById('follow_me_disabled').checked = true; ";
+		$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
 		$on_click .= "document.getElementById('forward_all_destination').focus(); ";
-		echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"\" value='false' ".(($forward_all_enabled == "false" || $forward_all_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+		$on_click2 = "(document.getElementById('follow_me_enabled').checked) ? $('#div_follow_me_settings').slideDown('fast') : '' ";
+		echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"$on_click2\" value='false' ".(($forward_all_enabled == "false" || $forward_all_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 		echo "	<label for='forward_all_enabled'><input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' ".(($forward_all_enabled == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
 		unset($on_click);
 		echo "&nbsp;&nbsp;";
