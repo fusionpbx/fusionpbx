@@ -72,9 +72,8 @@
 
 		$dialplan_context = $_POST["dialplan_context"];
 		$dialplan_order = $_POST["dialplan_order"];
-		$dialplan_enabled = $_POST["dialplan_enabled"];
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
 		$dialplan_description = $_POST["dialplan_description"];
-		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
 	}
 
 //set the default
@@ -521,10 +520,18 @@
 	echo "		".$text['label-enabled']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<select class='formfld' name='dialplan_enabled'>\n";
-	echo "			<option value='true'>".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".(!empty($dialplan_enabled) && $dialplan_enabled == "false" ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "		</select>\n";
+	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='dialplan_enabled' value='true' ".(empty($dialplan_enabled) || $dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' name='dialplan_enabled'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(!empty($dialplan_enabled) && $dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
