@@ -639,20 +639,18 @@
 	echo "		".$text['label-continue']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<select class='formfld' name='dialplan_continue'>\n";
-	if ($dialplan_continue == "true") {
-		echo "			<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='dialplan_continue' value='true' ".(!empty($dialplan_continue) && $dialplan_continue == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "			<option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' name='dialplan_continue'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(!empty($dialplan_continue) && $dialplan_continue == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($dialplan_continue == "false") {
-		echo "			<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "			<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
