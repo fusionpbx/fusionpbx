@@ -110,11 +110,36 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
+//get the xml_cdr directory
+	$xml_cdr_dir = $settings->get('switch', 'log').'/xml_cdr';
+
+//rename the directory
+	if (file_exists($xml_cdr_dir.'/failed/invalid_xml')) {
+		rename($xml_cdr_dir.'/failed/invalid_xml', $xml_cdr_dir.'/failed/xml');
+	}
+
+//create the invalid xml directory
+	if (!file_exists($xml_cdr_dir.'/failed/xml')) {
+		mkdir($xml_cdr_dir.'/failed/xml', 0770, true);
+	}
+
+//create the invalid size directory
+	if (!file_exists($xml_cdr_dir.'/failed/size')) {
+		mkdir($xml_cdr_dir.'/failed/size', 0770, true);
+	}
+
+//create the invalid sql directory
+	if (!file_exists($xml_cdr_dir.'/failed/sql')) {
+		mkdir($xml_cdr_dir.'/failed/sql', 0770, true);
+	}
+
+//update permissions to correct systems with the wrong permissions
+	if (file_exists($xml_cdr_dir.'/failed')) {
+		exec('chmod 770 -R '.$xml_cdr_dir.'/failed');
+	}
+
 //import the call detail records from HTTP POST or file system
 	$cdr = new xml_cdr;
-
-//get the cdr record
-	$xml_cdr_dir = $settings->get('switch', 'log').'/xml_cdr';
 
 //service loop
 	while (true) {
