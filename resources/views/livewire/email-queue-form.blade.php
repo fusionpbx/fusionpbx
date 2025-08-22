@@ -34,7 +34,6 @@
 
                 <div class="card-body">
                     <form wire:submit.prevent="save">
-                        <!-- Basic Email Information -->
                         <h5 class="mb-3">{{ __('Email Information') }}</h5>
                         <div class="row">
                             <div class="col-md-6">
@@ -94,7 +93,6 @@
                             </div>
                         </div>
 
-                        <!-- Status and Configuration -->
                         <h5 class="mt-4 mb-3">{{ __('Status Configuration') }}</h5>
                         <div class="card mb-4">
                             <div class="card-body">
@@ -143,7 +141,6 @@
                             </div>
                         </div>
 
-                        <!-- Date Information -->
                         <h5 class="mt-4 mb-3">{{ __('Date Information') }}</h5>
                         <div class="card mb-4">
                             <div class="card-body">
@@ -169,7 +166,6 @@
                             </div>
                         </div>
 
-                        <!-- Actions Configuration -->
                         <div class="accordion mb-4" id="actionsAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="actionsHeading">
@@ -184,21 +180,6 @@
                                     aria-labelledby="actionsHeading" data-bs-parent="#actionsAccordion">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label for="email_action_before"
-                                                        class="form-label">{{ __('Action Before') }}</label>
-                                                    <textarea class="form-control @error('email_action_before') is-invalid @enderror" id="email_action_before"
-                                                        wire:model="email_action_before" rows="4" placeholder="Enter action to execute before sending email"></textarea>
-                                                    @error('email_action_before')
-                                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                    @enderror
-                                                    <small class="form-text text-muted">
-                                                        {{ __('Script or command to execute before sending the email') }}
-                                                    </small>
-                                                </div>
-                                            </div>
-
                                             <div class="col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label for="email_action_after"
@@ -219,23 +200,6 @@
                             </div>
                         </div>
 
-                        <!-- Test Email Section -->
-                        @if (!$isEditing)
-                            <h5 class="mt-4 mb-3">{{ __('Test Email') }}</h5>
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="alert alert-info">
-                                        <i class="fa fa-info-circle me-2"></i>
-                                        {{ __('You can test the email configuration by clicking the Test Email button. This will queue a test email with "[TEST]" prefix in the subject.') }}
-                                    </div>
-                                    <button type="button" class="btn btn-info" wire:click="testEmail">
-                                        <i class="fa fa-paper-plane me-2"></i>{{ __('Queue Test Email') }}
-                                    </button>
-                                </div>
-                            </div>
-                        @endif
-
-                        <!-- Form Actions -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between">
@@ -243,20 +207,9 @@
                                         <button type="button" class="btn btn-secondary me-2" wire:click="goBack">
                                             <i class="fa fa-arrow-left"></i> {{ __('Back') }}
                                         </button>
-                                        <button type="button" class="btn btn-warning" wire:click="resetForm">
-                                            <i class="fa fa-undo"></i> {{ __('Reset') }}
-                                        </button>
-                                    </div>
-                                    <div>
-                                        @if ($isEditing && in_array($email_status, ['failed', 'sent']))
-                                            <button type="button" class="btn btn-warning me-2" wire:click="resend">
-                                                <i class="fa fa-redo"></i> {{ __('Queue for Resend') }}
-                                            </button>
-                                        @endif
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fa fa-save"></i> {{ $isEditing ? __('Update') : __('Create') }}
                                         </button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -264,7 +217,6 @@
                 </div>
             </div>
 
-            <!-- Status Information Card (if editing) -->
             @if ($isEditing && $emailQueue)
                 <div class="card card-info mt-3 card-outline">
                     <div class="card-header">
@@ -301,7 +253,6 @@
             @endif
         </div>
 
-        <!-- Success/Error Messages -->
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
                 <i class="fa fa-check-circle me-2"></i>
@@ -340,7 +291,6 @@
                 });
             });
 
-            // Confirmation for destructive actions
             window.addEventListener('confirm-delete', event => {
                 if (confirm(event.detail.message)) {
                     @this.call('delete');

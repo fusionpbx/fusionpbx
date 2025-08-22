@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\EmailQueue;
 use App\Repositories\EmailQueueRepository;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Str;
@@ -26,7 +27,6 @@ class EmailQueueForm extends Component
     
     public string $hostname = '';
     
-    public string $email_action_before = '';
     
     public string $email_action_after = '';
     
@@ -51,9 +51,8 @@ class EmailQueueForm extends Component
             'email_body' => 'required|string',
             'email_status' => 'in:' . implode(',', array_keys($this->statusOptions)),
             'hostname' => 'nullable|string|max:255',
-            'email_action_before' => 'nullable|string',
             'email_action_after' => 'nullable|string',
-            'email_retry_count' => 'integer|min:0',
+            'email_retry_count' => 'integer',
             'email_date' => 'nullable|date',
         ];
     }
@@ -98,7 +97,6 @@ class EmailQueueForm extends Component
         $this->email_body = $this->emailQueue->email_body ?? '';
         $this->email_status = $this->emailQueue->email_status ?? 'waiting';
         $this->hostname = $this->emailQueue->hostname ?? '';
-        $this->email_action_before = $this->emailQueue->email_action_before ?? '';
         $this->email_action_after = $this->emailQueue->email_action_after ?? '';
         $this->email_retry_count = $this->emailQueue->email_retry_count ?? 0;
         $this->email_date = $this->emailQueue->email_date?->format('Y-m-d\TH:i');
@@ -145,25 +143,10 @@ class EmailQueueForm extends Component
             'email_body' => $this->email_body,
             'email_status' => $this->email_status,
             'hostname' => $this->hostname ?: request()->getHost(),
-            'email_action_before' => $this->email_action_before,
             'email_action_after' => $this->email_action_after,
             'email_retry_count' => $this->email_retry_count,
-            'email_date' => $this->email_date ? \Carbon\Carbon::parse($this->email_date) : now(),
+            'email_date' => $this->email_date ? Carbon::parse($this->email_date) : now(),
         ];
-    }
-
-    public function resetForm(): void
-    {
-        $this->reset([
-            'email_from', 'email_to', 'email_subject', 'email_body',
-            'email_action_before', 'email_action_after'
-        ]);
-        
-        if (!$this->isEditing) {
-            $this->initializeNewEmail();
-        } else {
-            $this->fillFormData();
-        }
     }
 
     public function delete(): void
@@ -187,48 +170,7 @@ class EmailQueueForm extends Component
         }
     }
 
-    public function resend(): void
-    {
-        if (!$this->isEditing || !$this->emailQueueUuid) {
-            session()->flash('error', 'Cannot resend: Email queue entry not found.');
-            return;
-        }
 
-        try {
-            $this->repository->updateStatus($this->emailQueueUuid, 'waiting', [
-                'email_retry_count' => 0,
-            ]);
-
-            $this->email_status = 'waiting';
-            $this->email_retry_count = 0;
-            
-            session()->flash('success', 'Email queued for resending.');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error resending email: ' . $e->getMessage());
-        }
-    }
-
-    public function testEmail(): void
-    {
-        $this->validate([
-            'email_to' => 'required|email',
-            'email_subject' => 'required|string',
-            'email_body' => 'required|string'
-        ]);
-
-        try {
-            $testData = $this->getFormData();
-            $testData['email_queue_uuid'] = Str::uuid()->toString();
-            $testData['email_status'] = 'waiting';
-            $testData['email_subject'] = '[TEST] ' . $testData['email_subject'];
-            
-            $this->repository->create($testData);
-            
-            session()->flash('success', 'Test email queued successfully.');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error queuing test email: ' . $e->getMessage());
-        }
-    }
 
     public function updatedEmailStatus($value): void
     {
@@ -245,7 +187,6 @@ class EmailQueueForm extends Component
             return null;
         }
 
-        // dd($this->emailQueue->email_date);
 
         return $this->emailQueue->email_date->format('d M Y H:i:s');
     }

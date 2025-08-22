@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class EmailQueueRepository
 {
-    protected $emailQueue;
+    protected EmailQueue $emailQueue;
 
     public function __construct(EmailQueue $emailQueue)
     {
@@ -20,7 +20,6 @@ class EmailQueueRepository
     {
         return $this->emailQueue->all();
     }
-
 
     public function mine()
     {
@@ -46,10 +45,10 @@ class EmailQueueRepository
             $search = strtolower($filters['search']);
             $query->where(function ($q) use ($search) {
                 $q->whereRaw('LOWER(email_from) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(email_to) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(email_subject) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(email_body) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(email_status) LIKE ?', ["%{$search}%"]);
+                    ->orWhereRaw('LOWER(email_to) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(email_subject) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(email_body) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(email_status) LIKE ?', ["%{$search}%"]);
             });
         }
 
@@ -70,9 +69,7 @@ class EmailQueueRepository
         return $this->emailQueue->create($data);
     }
 
-    /**
-     * Actualizar email en cola
-     */
+
     public function update(string $uuid, array $data): ?EmailQueue
     {
         $email = $this->findByUuid($uuid);
@@ -83,17 +80,13 @@ class EmailQueueRepository
         return null;
     }
 
-    /**
-     * Eliminar emails por UUIDs
-     */
+
     public function deleteByUuids(array $uuids): int
     {
         return $this->emailQueue->whereIn('email_queue_uuid', $uuids)->delete();
     }
 
-    /**
-     * Eliminar email por UUID
-     */
+ 
     public function deleteByUuid(string $uuid): bool
     {
         $email = $this->findByUuid($uuid);
@@ -124,15 +117,12 @@ class EmailQueueRepository
     public function updateStatus(string $uuid, string $status, array $additionalData = []): bool
     {
         $updateData = array_merge(['email_status' => $status], $additionalData);
-        
+
 
         return $this->emailQueue->where('email_queue_uuid', $uuid)
             ->update($updateData) > 0;
     }
 
-    /**
-     * Incrementar contador de reintentos
-     */
     public function incrementRetryCount(string $uuid): bool
     {
         return $this->emailQueue->where('email_queue_uuid', $uuid)
@@ -169,5 +159,12 @@ class EmailQueueRepository
         return $this->emailQueue->where('hostname', $hostname)
             ->orderBy('email_date', 'desc')
             ->get();
+    }
+
+    public function findByUuidWithAttachments(string $uuid): ?EmailQueue
+    {
+        return $this->emailQueue->where('email_queue_uuid', $uuid)
+            ->with('attachments')
+            ->first();
     }
 }

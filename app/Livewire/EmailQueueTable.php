@@ -8,11 +8,11 @@ use App\Models\EmailQueue;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class EmailQueueTable extends DataTableComponent
 {
     protected $model = EmailQueue::class;
-    public string $status = '';
 
     public function configure(): void
     {
@@ -24,8 +24,10 @@ class EmailQueueTable extends DataTableComponent
             ->setSearchEnabled()
             ->setSearchPlaceholder('Search email queues')
             ->setPerPageAccepted([10, 25, 50, 100])
-            ->setPaginationEnabled();
-        
+            ->setPaginationEnabled()
+            ->setFiltersEnabled()
+            ->setFiltersVisibilityEnabled();
+
 
         if ($canEdit) {
             $tableConfig->setTableRowUrl(function ($row) use ($canEdit) {
@@ -57,7 +59,7 @@ class EmailQueueTable extends DataTableComponent
                 ->sortable(),
             Column::make("Email subject", "email_subject")
                 ->sortable()
-                ->format(fn($value) => $value ? iconv_mime_decode($value, 0, 'UTF-8') : null),
+                ->format(fn($value): bool|string|null => $value ? iconv_mime_decode($value, 0, 'UTF-8') : null),
             Column::make("Email status", "email_status")
                 ->sortable(),
             Column::make('Retry', 'email_retry_count')
@@ -66,10 +68,36 @@ class EmailQueueTable extends DataTableComponent
                 ->sortable(),
 
         ];
-        
+
         return $columns;
     }
 
+    public function filters(): array
+    {
+        $statusOptions = [
+            'all' => 'All Statuses',
+        ];
+
+        $statuses = EmailQueue::distinct('email_status')
+            ->whereNotNull('email_status')
+            ->pluck('email_status')
+            ->toArray();
+
+        foreach ($statuses as $status) {
+            $statusOptions[$status] = ucfirst($status);
+        }
+        return [
+            SelectFilter::make('Status', 'email_status')
+                ->options($statusOptions) 
+                ->setFilterPillTitle('Status: ')
+                ->setFilterPillValues($statusOptions)
+                ->filter(function (Builder $builder, string $value) {
+                    if ($value !== 'all') {
+                        $builder->where('email_status', $value);
+                    }
+                }),
+        ];
+    }
     public function bulkActions(): array
     {
         $bulkActions = [];
@@ -94,16 +122,11 @@ class EmailQueueTable extends DataTableComponent
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
-            // session()->flash('error', 'Failed to delete email queues: ' . $e->getMessage());
         }
     }
 
     public function builder(): Builder
     {
-        $query = EmailQueue::query();
-
-        return $query->when($this->status, fn ($query) => $query->where('email_status', $this->status));
-
+        return EmailQueue::query();
     }
-
 }
