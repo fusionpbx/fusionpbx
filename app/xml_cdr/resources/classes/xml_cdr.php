@@ -272,26 +272,30 @@
 				//$this->database->domain_uuid = $domain_uuid;
 				$response = $this->database->save($this->array, false);
 				if ($response['code'] == '200') {
-					//saved to the database successfully delete the database file
-					if (!empty($xml_cdr_dir)) {
-						if (file_exists($xml_cdr_dir.'/'.$this->file)) {
-							unlink($xml_cdr_dir.'/'.$this->file);
-						}
+					//delete the file after it is saved to the database
+					if (!empty($xml_cdr_dir) && file_exists($xml_cdr_dir.'/'.$this->file)) {
+						unlink($xml_cdr_dir.'/'.$this->file);
 					}
 				}
 				else {
 					//move the file to a failed directory
-					if (!empty($xml_cdr_dir)) {
+					if (!empty($xml_cdr_dir) && !$response) {
+						if (!file_exists($xml_cdr_dir.'/failed/sql')) {
+							mkdir($xml_cdr_dir.'/failed/sql', 0770, true);
+							//echo "Failed to create ".$xml_cdr_dir."/failed/sql\n";
+						}
+						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/sql/'.$this->file);
+					}
+					elseif (!empty($xml_cdr_dir)) {
 						if (!file_exists($xml_cdr_dir.'/failed')) {
-							if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
-								die('Failed to create '.$xml_cdr_dir.'/failed');
-							}
+							mkdir($xml_cdr_dir.'/failed', 0770, true);
+							//echo "Failed to create ".$xml_cdr_dir."/failed\n";
 						}
 						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
 					}
 
 					//send an error message
-					echo 'failed file moved to '.$xml_cdr_dir.'/failed/'.$this->file;
+					//echo "failed file moved to ".$xml_cdr_dir."/failed/".$this->file."\n";
 				}
 
 				//clear the array
@@ -1567,9 +1571,8 @@
 		public function move_to_failed($failed_file) {
 			$xml_cdr_dir = $this->settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
 			if (!file_exists($xml_cdr_dir.'/failed')) {
-				if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
-					die('Failed to create '.$xml_cdr_dir.'/failed');
-				}
+				mkdir($xml_cdr_dir.'/failed', 0770, true);
+				//echo "Failed to create ".$xml_cdr_dir."/failed\n";
 			}
 			rename($xml_cdr_dir.'/'.$failed_file, $xml_cdr_dir.'/failed/'.$failed_file);
 		}
@@ -1624,9 +1627,8 @@
 								//echo "WARNING: File too large or zero file size. Moving $file to failed\n";
 								if (!empty($xml_cdr_dir)) {
 									if (!file_exists($xml_cdr_dir.'/failed')) {
-										if (!mkdir($xml_cdr_dir.'/failed', 0660, true)) {
-											die('Failed to create '.$xml_cdr_dir.'/failed');
-										}
+										mkdir($xml_cdr_dir.'/failed', 0770, true);
+										//echo "Failed to create ".$xml_cdr_dir."/failed\n";
 									}
 									if (rename($xml_cdr_dir.'/'.$file, $xml_cdr_dir.'/failed/'.$file)) {
 										//echo "Moved $file successfully\n";
