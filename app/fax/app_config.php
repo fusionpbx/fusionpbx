@@ -505,6 +505,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "300-399";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for fax servers";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f91cf33c-7f89-11f0-88f8-abceb7c1c991";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "upload_file_limit";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the upload file limit for Fax File(s)";
 
 	//schema details
 		$y=0;
