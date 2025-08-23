@@ -510,7 +510,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "upload_file_limit";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the upload file limit for Fax File(s)";
 
