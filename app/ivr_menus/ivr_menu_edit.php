@@ -142,7 +142,7 @@
 			$ivr_menu_max_failures = $_POST["ivr_menu_max_failures"];
 			$ivr_menu_max_timeouts = $_POST["ivr_menu_max_timeouts"];
 			$ivr_menu_digit_len = $_POST["ivr_menu_digit_len"];
-			$ivr_menu_direct_dial = $_POST["ivr_menu_direct_dial"];
+			$ivr_menu_direct_dial = $_POST["ivr_menu_direct_dial"] ?? 'false';
 			$ivr_menu_ringback = $_POST["ivr_menu_ringback"];
 			$ivr_menu_cid_prefix = $_POST["ivr_menu_cid_prefix"];
 			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?? 'false';
@@ -1177,20 +1177,18 @@
 	echo "	".$text['label-direct_dial']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ivr_menu_direct_dial'>\n";
-	if ($ivr_menu_direct_dial == "true") {
-		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='ivr_menu_direct_dial' value='true' ".(!empty($ivr_menu_direct_dial) && $ivr_menu_direct_dial == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
+		echo "	<select class='formfld' name='ivr_menu_direct_dial'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(!empty($ivr_menu_direct_dial) && $ivr_menu_direct_dial == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($ivr_menu_direct_dial == "false") {
-		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-direct_dial']."\n";
 	echo "</td>\n";
