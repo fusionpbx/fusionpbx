@@ -512,7 +512,7 @@
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_name'] = $row["contact_setting_name"];
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_value'] = $row["contact_setting_value"];
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_order'] = $row["contact_setting_order"];
-						$array['contacts'][0]['contact_settings'][$y]['contact_setting_enabled'] = $row["contact_setting_enabled"];
+						$array['contacts'][0]['contact_settings'][$y]['contact_setting_enabled'] = $row["contact_setting_enabled"] ?? 'false';
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_description'] = $row["contact_setting_description"];
 						$y++;
 					}
@@ -897,7 +897,7 @@
 		$contact_settings[$x]['contact_setting_name'] = '';
 		$contact_settings[$x]['contact_setting_value'] = '';
 		$contact_settings[$x]['contact_setting_order'] = '';
-		$contact_settings[$x]['contact_setting_enabled'] = '';
+		$contact_settings[$x]['contact_setting_enabled'] = 'true';
 		$contact_settings[$x]['contact_setting_description'] = '';
 	}
 
@@ -2501,19 +2501,8 @@ if (permission_exists('contact_setting_view')) {
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<select name='contact_settings[$x][contact_setting_order]' class='formfld'>\n";
 		echo "				<option value=''></option>\n";
-		$i=0;
-		while ($i<=999) {
-			$selected = ($i == $row["contact_setting_order"]) ? "selected='selected'" : null;
-			if (strlen($i) == 1) {
-				echo "				<option value='00$i' ".$selected.">00$i</option>\n";
-			}
-			if (strlen($i) == 2) {
-				echo "				<option value='0$i' ".$selected.">0$i</option>\n";
-			}
-			if (strlen($i) == 3) {
-				echo "				<option value='$i' ".$selected.">$i</option>\n";
-			}
-			$i++;
+		for ($i = 0; $i <=999; $i++) {
+			echo "			<option value='".str_pad($i, 3, '0', STR_PAD_LEFT)."' ".(isset($row["contact_setting_order"]) && $i == $row["contact_setting_order"] ? "selected='selected'" : null).">".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
 		}
 		echo "			</select>\n";
 		echo "		</div>\n";
@@ -2522,23 +2511,19 @@ if (permission_exists('contact_setting_view')) {
 		echo "			".$text['label-enabled']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		echo "			<select class='formfld' name='contact_settings[$x][contact_setting_enabled]' style='width: 5em;'>\n";
-		echo "				<option value=''><b>".escape($text['label-contact_setting_enabled'] ?? '')."</b></option>\n";
-		if ($row['contact_setting_enabled'] == "true") {
-			echo "				<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' name='contact_settings[$x][contact_setting_enabled]' value='true' ".(empty($row['contact_setting_enabled']) || $row['contact_setting_enabled'] == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
 		}
 		else {
-			echo "				<option value='true'>".$text['label-true']."</option>\n";
+			echo "	<select class='formfld' name='contact_settings[$x][contact_setting_enabled]'>\n";
+			echo "		<option value='true'>".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".(!empty($row['contact_setting_enabled']) && $row['contact_setting_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
 		}
-		if ($row['contact_setting_enabled'] == "false") {
-			echo "				<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "				<option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		echo "		</div>\n";
-
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-description']."\n";
 		echo "		</div>\n";
@@ -2546,22 +2531,11 @@ if (permission_exists('contact_setting_view')) {
 		echo "				<input class='formfld' type='text' name='contact_settings[$x][contact_setting_description]' placeholder='".escape($text['label-contact_setting_description'] ?? '')."' maxlength='255' value=\"".escape($row["contact_setting_description"])."\">\n";
 		echo "		</div>\n";
 
-		if (!empty($contact_settings) && @sizeof($contact_settings) > 1 && permission_exists('contact_setting_delete')) {
-			if (!empty($row['contact_setting_uuid']) && is_uuid($row['contact_setting_uuid'])) {
-				echo "		<div class='label'>\n";
-				echo "			".$text['label-enabled']."\n";
-				echo "		</div>\n";
-				echo "		<div class='field no-wrap'>\n";
-				echo "			<input type='checkbox' name='contact_settings[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
-				echo "		</div>\n";
-			}
-		}
-
-		echo "		<div class='label empty_row' style='grid-row: 9 / span 99;'>\n";
-		echo "			&nbsp;\n";
-		echo "		</div>\n";
-		echo "		<div class='field no-wrap empty_row' style='grid-row: 9 / span 99;'>\n";
-		echo "		</div>\n";
+		// echo "		<div class='label empty_row' style='grid-row: 9 / span 99;'>\n";
+		// echo "			&nbsp;\n";
+		// echo "		</div>\n";
+		// echo "		<div class='field no-wrap empty_row' style='grid-row: 9 / span 99;'>\n";
+		// echo "		</div>\n";
 
 		echo "	</div>\n";
 		$x++;
