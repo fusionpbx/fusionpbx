@@ -66,7 +66,7 @@
 		$group_name_previous = $_POST["group_name_previous"];
 		$domain_uuid = $_POST["domain_uuid"];
 		$group_level = $_POST["group_level"] ?? '10';
-		$group_protected = $_POST["group_protected"] ?? '';
+		$group_protected = $_POST["group_protected"] ?? 'false';
 		$group_description = $_POST["group_description"] ?? '';
 	}
 
@@ -300,10 +300,18 @@
 	echo "	".$text['label-group_protected']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='group_protected'>\n";
-	echo "		<option value='false'>".$text['label-false']."</option>\n";
-	echo "		<option value='true' ".(!empty($group_protected) && $group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-	echo "	</select>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='group_protected' value='true' ".(!empty($group_protected) && $group_protected == "true" ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
+	}
+	else {
+		echo "	<select class='formfld' name='group_protected'>\n";
+		echo "		<option value='false'>".$text['label-false']."</option>\n";
+		echo "		<option value='true' ".(!empty($group_protected) && $group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "	</select>\n";
+	}
 	echo "<br />\n";
 	//echo $text['description-group_protected']."\n";
 	echo "</td>\n";
