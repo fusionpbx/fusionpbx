@@ -1279,7 +1279,6 @@
 		echo "	".$text['label-ring_group_forward']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-
 		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
 			echo "		<input type='checkbox' name='ring_group_forward_enabled' value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == 'true' ? "checked='checked'" : null)." onchange='changed_ring_group_forward_enabled(this);'>\n";
