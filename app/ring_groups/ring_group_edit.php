@@ -200,7 +200,7 @@
 			$ring_group_follow_me_enabled = $_POST["ring_group_follow_me_enabled"];
 			$ring_group_missed_call_app = $_POST["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $_POST["ring_group_missed_call_data"];
-			$ring_group_forward_enabled = $_POST["ring_group_forward_enabled"];
+			$ring_group_forward_enabled = $_POST["ring_group_forward_enabled"] ?? 'false';
 			$ring_group_forward_destination = $_POST["ring_group_forward_destination"];
 			$ring_group_forward_toll_allow = $_POST["ring_group_forward_toll_allow"];
 			$ring_group_enabled = $_POST["ring_group_enabled"] ?? 'false';
@@ -1279,10 +1279,27 @@
 		echo "	".$text['label-ring_group_forward']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
-		echo "		<option value='false'>".$text['option-disabled']."</option>";
-		echo "		<option value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
-		echo "	</select>";
+
+		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' name='ring_group_forward_enabled' value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == 'true' ? "checked='checked'" : null)." onchange='changed_ring_group_forward_enabled(this);'>\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
+			echo "	<script>\n";
+			echo "	function changed_ring_group_forward_enabled(el) {\n";
+			echo "		if (el.checked) {\n";
+			echo "			document.getElementById('ring_group_forward_destination').focus();\n";
+			echo "		}\n";
+			echo "	}\n";
+			echo "	</script>\n";
+		}
+		else {
+			echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
+			echo "		<option value='false'>".$text['option-disabled']."</option>";
+			echo "		<option value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
+			echo "	</select>";
+		}
+		echo "&nbsp;";
 		echo 	"<input class='formfld' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
 		echo "<br />\n";
 		echo $text['description-ring-group-forward']."\n";
