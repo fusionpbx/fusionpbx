@@ -257,11 +257,17 @@
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['button-show_all']."</td>";
 			echo "		<td class='vtable'>\n";
-			if (permission_exists('xml_cdr_all') && isset($_REQUEST['show']) && $_REQUEST['show'] == "all") {
-				echo "			<input type='checkbox' class='formfld' name='showall' checked='checked' value='true'>";
+			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+				echo "	<label class='switch'>\n";
+				echo "		<input type='checkbox' name='showall' value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "checked='checked'" : null).">\n";
+				echo "		<span class='slider'></span>\n";
+				echo "	</label>\n";
 			}
 			else {
-				echo "			<input type='checkbox' class='formfld' name='showall' value='true'>";
+				echo "	<select class='formfld' name='showall'>";
+				echo "		<option value=''>".$text['option-false']."</option>";
+				echo "		<option value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "selected='selected'" : null).">".$text['option-true']."</option>";
+				echo "	</select>";
 			}
 			echo "		<td>";
 			echo "	</tr>";
