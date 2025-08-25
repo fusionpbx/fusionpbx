@@ -75,7 +75,7 @@
 		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
 		$contact_setting_value = $_POST["contact_setting_value"];
 		$contact_setting_order = $_POST["contact_setting_order"] ?? null;
-		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]);
+		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]) ?? 'false';
 		$contact_setting_description = $_POST["contact_setting_description"];
 	}
 
@@ -296,19 +296,9 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='contact_setting_order' class='formfld'>\n";
-		$i=0;
-		while($i<=999) {
-			$selected = ($i == $contact_setting_order) ? "selected" : null;
-			if (strlen($i) == 1) {
-				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
-			}
-			if (strlen($i) == 2) {
-				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
-			}
-			if (strlen($i) == 3) {
-				echo "		<option value='$i' ".$selected.">$i</option>\n";
-			}
-			$i++;
+		echo "		<option value=''></option>\n";
+		for ($i = 0; $i <=999; $i++) {
+			echo "	<option value='".str_pad($i, 3, '0', STR_PAD_LEFT)."' ".(isset($contact_setting_order) && $i == $contact_setting_order ? "selected='selected'" : null).">".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
 		}
 		echo "	</select>\n";
 		echo "	<br />\n";
@@ -322,20 +312,18 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='contact_setting_enabled'>\n";
-	if ($contact_setting_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' name='contact_setting_enabled' value='true' ".(empty($contact_setting_enabled) || $contact_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' name='contact_setting_enabled'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(!empty($contact_setting_enabled) && $contact_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($contact_setting_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";
