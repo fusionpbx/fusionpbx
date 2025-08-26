@@ -654,15 +654,16 @@
 			$parameters['offset'] = intval($offset);
 		}
 	}
+$settings->get('cdr', 'archive_database_driver')
 	$sql = str_replace("  ", " ", $sql);
-	if ($archive_request && filter_var($_SESSION['cdr']['archive_database']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
-		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
-		$database->host = $_SESSION['cdr']['archive_database_host']['text'];
-		$database->type = $_SESSION['cdr']['archive_database_type']['text'];
-		$database->port = $_SESSION['cdr']['archive_database_port']['text'];
-		$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
-		$database->username = $_SESSION['cdr']['archive_database_username']['text'];
-		$database->password = $_SESSION['cdr']['archive_database_password']['text'];
+	if ($settings->get('cdr', 'archive_database', false)) {
+		$database->driver = $settings->get('cdr', 'archive_database_driver');
+		$database->host = $settings->get('cdr', 'archive_database_host');
+		$database->type = $settings->get('cdr', 'archive_database_type');
+		$database->port = $settings->get('cdr', 'archive_database_port');
+		$database->db_name = $settings->get('cdr', 'archive_database_name');
+		$database->username = $settings->get('cdr', 'archive_database_username');
+		$database->password = $settings->get('cdr', 'archive_database_password');
 	}
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = is_array($result) ? sizeof($result) : 0;

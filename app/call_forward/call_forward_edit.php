@@ -341,7 +341,7 @@
 		*/
 
 		//send feature event notify to the phone
-			if (filter_var($_SESSION['device']['feature_sync']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if ($settings->get('device', 'feature_sync', false)) {
 				$ring_count = ceil($call_timeout / 6);
 				$feature_event_notify = new feature_event_notify;
 				$feature_event_notify->domain_name = $_SESSION['domain_name'];
@@ -503,7 +503,7 @@
 	}
 
 //prepare the autocomplete
-	if(filter_var($_SESSION['follow_me']['follow_me_autocomplete']['boolean'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+	if ($settings->get('follow_me', 'follow_me_autocomplete', false)) {
 		echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.css\" />\n";
 		echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.js\"></script>\n";
 		echo "<script type=\"text/javascript\">\n";

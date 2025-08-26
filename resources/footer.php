@@ -51,7 +51,7 @@
 	ob_end_clean(); //clean the buffer
 
 //clear the template
-	//if (!filter_var($_SESSION['theme']['cache']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	//if (!$settings->get('theme', 'cache', false)) {
 	//	$_SESSION["template_content"] = '';
 	//}
 
@@ -290,10 +290,9 @@
 	//messages
 		$view->assign('messages', message::html(true, '		'));
 	//session timer
-		if (
-			$authenticated &&
+		if ($authenticated &&
 			file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/app/session_timer/session_timer.php') &&
-			filter_var($_SESSION['security']['session_timer_enabled']['boolean'] ?? false, FILTER_VALIDATE_BOOL)
+			$settings->get('security', 'session_timer_enabled', false)
 			) {
 			include_once PROJECT_PATH.'app/session_timer/session_timer.php';
 			$view->assign('session_timer', $session_timer);

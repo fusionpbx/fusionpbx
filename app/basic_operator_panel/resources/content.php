@@ -353,7 +353,7 @@ if (is_array($activity)) {
 		}
 		else {
 			//unregistered extension
-			if (filter_var($_SESSION['operator_panel']['show_unregistered']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if ($settings->get('operator_panel', 'show_unregistered', false)) {
 				$css_class = "ur_ext";
 			}
 			else {
@@ -551,7 +551,7 @@ if (is_array($activity)) {
 
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
 			$user_extensions[] = $block;
-		} elseif (!empty($ext['call_group']) && filter_var($_SESSION['operator_panel']['group_extensions']['boolean'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+		} elseif (!empty($ext['call_group']) && $settings->get('operator_panel', 'group_extensions', false)) {
 			$grouped_extensions[$ext['call_group']][] = $block;
 		} else {
 			$other_extensions[] = $block;

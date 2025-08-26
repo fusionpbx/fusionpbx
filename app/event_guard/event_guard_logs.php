@@ -236,7 +236,7 @@
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
-	if (permission_exists('event_guard_log_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -277,7 +277,7 @@
 			echo "	<td>".escape($row['extension'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($text['label-'.$row['log_status']])."</td>\n";
-			if (permission_exists('event_guard_log_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";

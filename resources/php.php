@@ -32,7 +32,7 @@
 			}
 		}
 	//regenerate sessions to avoid session id attacks such as session fixation
-		if (array_key_exists('security',$_SESSION) && filter_var($_SESSION['security']['session_rotate']['boolean'] ?? true, FILTER_VALIDATE_BOOL)) {
+		if (array_key_exists('security',$_SESSION) && $settings->get('security', 'session_rotate', false)) {
 			$_SESSION['session']['last_activity'] = time();
 			if (!isset($_SESSION['session']['created'])) {
 				$_SESSION['session']['created'] = time();
