@@ -1991,30 +1991,4 @@ $text['label-system_status']['zh-cn'] = "系统状况";
 $text['label-system_status']['ja-jp'] = "システムステータス";
 $text['label-system_status']['ko-kr'] = "시스템 상태";
 
-$text['button-add_parent']['en-us'] = "Add Parent";
-$text['button-add_parent']['en-gb'] = "Add Parent";
-$text['button-add_parent']['ar-eg'] = "";
-$text['button-add_parent']['de-at'] = "";
-$text['button-add_parent']['de-ch'] = "";
-$text['button-add_parent']['de-de'] = "";
-$text['button-add_parent']['el-gr'] = "";
-$text['button-add_parent']['es-cl'] = "";
-$text['button-add_parent']['es-mx'] = "";
-$text['button-add_parent']['fr-ca'] = "";
-$text['button-add_parent']['fr-fr'] = "";
-$text['button-add_parent']['he-il'] = "";
-$text['button-add_parent']['it-it'] = "";
-$text['button-add_parent']['nl-nl'] = "";
-$text['button-add_parent']['pl-pl'] = "";
-$text['button-add_parent']['pt-br'] = "";
-$text['button-add_parent']['pt-pt'] = "";
-$text['button-add_parent']['ro-ro'] = "";
-$text['button-add_parent']['ru-ru'] = "";
-$text['button-add_parent']['sv-se'] = "";
-$text['button-add_parent']['uk-ua'] = "";
-$text['button-add_parent']['tr-tr'] = "";
-$text['button-add_parent']['zh-cn'] = "";
-$text['button-add_parent']['ja-jp'] = "";
-$text['button-add_parent']['ko-kr'] = "";
-
 ?>
