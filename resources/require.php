@@ -88,10 +88,10 @@
 	global $database;
 	$database = database::new(['config' => $config]);
 
-//if not using the command line required files
+//start the session if not using the command line
 	global $no_session;
 	if (!defined('STDIN') && empty($no_session)) {
-		require_once __DIR__ . '/php.php';
+		session_start();
 	}
 
 //load settings
