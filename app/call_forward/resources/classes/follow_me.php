@@ -405,7 +405,7 @@
 									$p->delete('follow_me_edit', 'temp');
 
 								//send feature event notify to the phone
-									if (filter_var($_SESSION['device']['feature_sync']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+									if ($settings->get('device', 'feature_sync', false)) {
 										foreach ($extensions as $uuid => $extension) {
 											$feature_event_notify = new feature_event_notify;
 											$feature_event_notify->domain_name = $_SESSION['domain_name'];

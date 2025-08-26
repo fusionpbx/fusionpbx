@@ -104,11 +104,11 @@
 
 //retrieve password requirements
 	if (permission_exists('user_password')) {
-		$required['length'] = $_SESSION['users']['password_length']['numeric'];
-		$required['number'] = filter_var($_SESSION['users']['password_number']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
-		$required['lowercase'] = filter_var($_SESSION['users']['password_lowercase']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
-		$required['uppercase'] = filter_var($_SESSION['users']['password_uppercase']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
-		$required['special'] = filter_var($_SESSION['users']['password_special']['boolean'] ?? false, FILTER_VALIDATE_BOOL);
+		$required['length'] = $settings->get('users', 'password_length', 12);
+		$required['number'] = $settings->get('users', 'password_number', false);
+		$required['lowercase'] = $settings->get('users', 'password_lowercase', false);
+		$required['uppercase'] = $settings->get('users', 'password_uppercase', false);
+		$required['special'] = $settings->get('users', 'password_special', false);
 	}
 
 //prepare the data
