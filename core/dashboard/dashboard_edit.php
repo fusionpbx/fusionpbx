@@ -616,7 +616,7 @@
 		if (empty($dashboard_url)) {
 			$items_to_remove[] = 'dashboard_target';
 		}
-		if ($dashboard_target != "new") {
+		if (empty($dashboard_url) || $dashboard_target != "new") {
 			$items_to_remove[] = 'dashboard_width';
 			$items_to_remove[] = 'dashboard_height';
 		}
@@ -648,7 +648,6 @@
 	$dashboard_settings = array_diff($dashboard_settings, $items_to_remove);
 
 ?>
-
 <script>
 
 //adjust form by type entered
@@ -688,7 +687,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		let url_input = document.getElementById('dashboard_url');
 		let target_select = document.getElementById('dashboard_target');
 
-		if (url_input.value !== '') {
+		if (url_input.value != '') {
 			document.getElementById('tr_dashboard_target').style.display = '';
 		}
 		else {
@@ -697,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		let selected_target = target_select.options[target_select.selectedIndex].value;
 
-		if (selected_target === 'new' && url_input.value !== '') {
+		if (selected_target == 'new' && url_input.value != '') {
 			document.getElementById('tr_dashboard_width').style.display = '';
 			document.getElementById('tr_dashboard_height').style.display = '';
 		}
@@ -710,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	function toggle_label_settings() {
 		let label_settings = document.querySelectorAll("[id^='tr_dashboard_label_']:not([id='tr_dashboard_label_enabled'])");
 		label_settings.forEach(function(setting) {
-			setting.style.display = (setting.style.display === 'none' || setting.style.display === '') ? '' : 'none';
+			setting.style.display = (setting.style.display == 'none' ? '' : 'none');
 		});
 	}
 
