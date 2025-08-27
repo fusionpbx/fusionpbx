@@ -353,6 +353,7 @@
 									$sql .= "set device_provisioned_date = :device_provisioned_date, device_provisioned_method = :device_provisioned_method, device_provisioned_ip = :device_provisioned_ip, device_provisioned_agent = :device_provisioned_agent ";
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and device_address = :device_address  ";
+									$sql .= "and device_provisioned_date < NOW() - INTERVAL '30 seconds' ";
 									$parameters['domain_uuid'] = $domain_uuid;
 									$parameters['device_address'] = strtolower($device_address);
 									$parameters['device_provisioned_date'] = 'now()';
