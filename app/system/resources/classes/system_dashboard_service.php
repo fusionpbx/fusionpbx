@@ -115,8 +115,21 @@ class system_dashboard_service extends base_websocket_system_service {
 			count($cpu_percent_per_core)
 		));
 
-		// Send the broadcast
-		$this->respond($response);
+		$show_disconnect_message = true;
+		try {
+			// Send the broadcast
+			$this->respond($response);
+		} catch (\socket_disconnected_exception $sde) {
+			// wait until we connect again
+			while (!$this->connect_to_ws_server()) {
+				if ($show_disconnect_message) {
+					$this->warn("Websocket server disconnected");
+					$show_disconnect_message = false;
+				}
+				sleep(1);
+			}
+			$this->warn("Websocket server connected");
+		}
 	}
 
 
@@ -129,15 +142,17 @@ class system_dashboard_service extends base_websocket_system_service {
 		// Get the subscriber permissions
 		$permissions = $subscriber->get_permissions();
 
-		// Create a filter
-		$filter = filter_chain::and_link([new permission_filter()]);
+		// Create a filter for broadcaster => permission
+		$permission_filter = new permission_filter([self::get_service_name() => 'system_view_cpu']);
 
 		// Match them to create a filter
 		foreach (self::PERMISSIONS as $permission) {
 			if (in_array($permission, $permissions)) {
-				$filter->add_permission($permission);
+				$permission_filter->add_permission($permission);
 			}
 		}
+
+		$filter = filter_chain::and_link([$permission_filter]);
 
 		// Return the filter with user permissions to ensure they can't receive information they shouldn't
 		return $filter;

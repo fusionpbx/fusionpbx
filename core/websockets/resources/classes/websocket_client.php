@@ -154,7 +154,7 @@ class websocket_client {
 	 */
 	public static function send($resource, ?string $payload): bool {
 		if (!is_resource($resource)) {
-			throw new \RuntimeException("Not connected");
+			throw new \socket_disconnected_exception($resource, 400);
 		}
 
 		// Check for a null message and send a disconnect frame
@@ -254,8 +254,9 @@ class websocket_client {
 
 		while (!$final_frame) {
 			$header = $this->read_bytes(2);
-			if ($header === null)
+			if (strlen($header) !== 2) {
 				return null;
+			}
 
 			$byte1 = ord($header[0]);
 			$byte2 = ord($header[1]);
@@ -338,7 +339,9 @@ class websocket_client {
 		$data = '';
 		$max_chunk_size = stream_get_chunk_size($this->resource);
 
-		while (strlen($data) < $length) {
+		// 20 tries waits 200 ms total per chunk
+		$tries = 0;
+		while (strlen($data) < $length && $tries < 20) {
 			$remaining = $length - strlen($data);
 			$read_size = min($max_chunk_size, $remaining);
 
@@ -360,8 +363,14 @@ class websocket_client {
 				usleep(10000);
 
 				// Try again
+				$tries++;
 				continue;
 			}
+
+			// reset count for successfully received chunk
+			$tries = 0;
+
+			// append the chunk to the received data
 			$data .= $chunk;
 		}
 		return $data;
