@@ -115,8 +115,21 @@ class system_dashboard_service extends base_websocket_system_service {
 			count($cpu_percent_per_core)
 		));
 
-		// Send the broadcast
-		$this->respond($response);
+		$show_disconnect_message = true;
+		try {
+			// Send the broadcast
+			$this->respond($response);
+		} catch (\socket_disconnected_exception $sde) {
+			// wait until we connect again
+			while (!$this->connect_to_ws_server()) {
+				if ($show_disconnect_message) {
+					$this->warn("Websocket server disconnected");
+					$show_disconnect_message = false;
+				}
+				sleep(1);
+			}
+			$this->warn("Websocket server connected");
+		}
 	}
 
 
