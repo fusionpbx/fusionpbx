@@ -684,7 +684,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					console.error('Error fetching config:', data.error);
 				}
 				else {
-					let chart_type = data.chart_type;
+					let chart_type = document.querySelector('.chart_type_button input:checked').value;
 					let chart_type_options = data.chart_type_options;
 
 					//update chart settings
