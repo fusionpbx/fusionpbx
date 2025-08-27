@@ -426,9 +426,9 @@
 
 //find the chart type options
 	$dashboard_chart_type_options = [];
-	foreach ($array['dashboard'] as $index => $widget) {
-		if ($widget['dashboard_path'] === "$application_name/$widget_name") {
-			$dashboard_chart_type_options = $widget['dashboard_chart_type_options'];
+	foreach ($array['dashboard'] as $index => $row) {
+		if ($row['dashboard_path'] === "$application_name/$widget_name") {
+			$dashboard_chart_type_options = $row['dashboard_chart_type_options'];
 			break;
 		}
 	}
@@ -657,10 +657,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		let settings_config = <?php echo json_encode($dashboard_settings_config); ?>;
 		let settings = settings_config['shared'];
 
-		const all_settings = document.querySelectorAll("tr[id^='tr_dashboard_']");
-		all_settings.forEach(function(tr) {
-			tr.style.display = 'none';
-		});
+		//hide all settings initially
+		const all_settings = Array.from(document.querySelectorAll("tr[id^='tr_dashboard_']"));
+		all_settings.forEach(tr => tr.style.display = 'none');
 
 		switch (selected_path) {
 			case 'dashboard/icon':
@@ -674,9 +673,50 @@ document.addEventListener('DOMContentLoaded', function() {
 				break;
 		}
 
-		settings.forEach(function(setting) {
-			document.getElementById('tr_' + setting).style.display = '';
-		});
+		//show settings after updating the settings array
+		settings.forEach(setting => document.getElementById(`tr_${setting}`).style.display = '');
+
+		//get the widget config
+		fetch(`dashboard_config_json.php?dashboard_path=${encodeURIComponent(selected_path)}`)
+			.then(response => response.json())
+			.then(data => {
+				if (data.error) {
+					console.error('Error fetching config:', data.error);
+				}
+				else {
+					let chart_type = data.chart_type;
+					let chart_type_options = data.chart_type_options;
+
+					//update chart settings
+					if (chart_type_options.length > 0) {
+						const chart_settings = Object.values(settings_config['chart']).filter(value => !Array.isArray(value));
+						const chart_type_buttons = Array.from(document.querySelectorAll('.chart_type_button'));
+
+						//hide all chart settings initially
+						chart_settings.forEach(setting => document.getElementById(`tr_${setting}`).style.display = 'none');
+						chart_type_buttons.forEach(button => button.style.display = 'none');
+
+						if (chart_type === "icon") {
+							chart_settings.push(...settings_config['chart']['icon']);
+						}
+						else if (chart_type === "line" && chart_settings.includes('dashboard_number_color')) {
+							chart_settings = chart_settings.indexOf('dashboard_number_color');
+						}
+
+						//show chart settings
+						chart_settings.forEach(setting => document.getElementById(`tr_${setting}`).style.display = '');
+						chart_type_options.forEach(option => {
+							const button = document.querySelector(`.chart_type_button input[value='${option}']`).closest('.chart_type_button');
+							if (button) {
+								button.style.display = '';
+							}
+						});
+					}
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
 
 		if (selected_path == 'dashboard/icon') {
 			adjust_form_url();
