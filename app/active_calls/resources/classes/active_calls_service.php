@@ -404,9 +404,11 @@ class active_calls_service extends service implements websocket_service_interfac
 
 						// Web socket event
 						if ($resource === $this->ws_client->socket()) {
-							$this->handle_websocket_event($this->ws_client);
+							$this->handle_websocket_event();
 							continue;
 						}
+
+						$this->debug('Unknown Event from ' . $resource);
 					}
 				}
 			}
