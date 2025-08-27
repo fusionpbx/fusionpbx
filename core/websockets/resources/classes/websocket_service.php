@@ -260,7 +260,7 @@ class websocket_service extends service {
 			foreach ($send_to as $subscriber) {
 				try {
 					// Notify of the message we are broadcasting
-					$this->debug("Broadcasting message '" . $message->payload['event_name'] . "' for service '" . $message->service_name . "' to subscriber $subscriber->id");
+					$this->debug("Broadcasting message '" . $message->topic() . "' for service '" . $message->service_name . "' to subscriber $subscriber->id");
 					$subscriber->send_message($message);
 				} catch (subscriber_token_expired_exception $ste) {
 					$this->info("Subscriber $ste->id token expired");
@@ -806,6 +806,7 @@ class websocket_service extends service {
 		// Ensure we have the correct number of bytes
 		if (strlen($hdr) !== 2) {
 			$this->warning('Header is empty!');
+			$this->debug('Header content: ' . bin2hex($hdr) . '(' . strlen($hdr) . ' bytes)');
 			$this->update_connected_clients();
 			return '';
 		}
