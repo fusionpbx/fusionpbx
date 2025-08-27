@@ -885,7 +885,6 @@ class websocket_service extends service {
 	 */
 	public static function send($resource, ?string $payload): bool {
 		if (!is_resource($resource)) {
-			self::log("Cannot send: invalid resource", LOG_ERR);
 			return false;
 		}
 
