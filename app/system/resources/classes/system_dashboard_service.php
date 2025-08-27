@@ -129,15 +129,17 @@ class system_dashboard_service extends base_websocket_system_service {
 		// Get the subscriber permissions
 		$permissions = $subscriber->get_permissions();
 
-		// Create a filter
-		$filter = filter_chain::and_link([new permission_filter()]);
+		// Create a filter for broadcaster => permission
+		$permission_filter = new permission_filter([self::get_service_name() => 'system_view_cpu']);
 
 		// Match them to create a filter
 		foreach (self::PERMISSIONS as $permission) {
 			if (in_array($permission, $permissions)) {
-				$filter->add_permission($permission);
+				$permission_filter->add_permission($permission);
 			}
 		}
+
+		$filter = filter_chain::and_link([$permission_filter]);
 
 		// Return the filter with user permissions to ensure they can't receive information they shouldn't
 		return $filter;
