@@ -56,8 +56,7 @@
 			foreach ($array['dashboard'] as $index => $row) {
 				if ($row['dashboard_path'] === "$application_name/$widget_name") {
 					echo json_encode([
-						'chart_type' => $row['dashboard_chart_type'],
-						'chart_type_options' => $row['dashboard_chart_type_options']
+						'chart_type_options' => $row['dashboard_chart_type_options'],
 					]);
 					exit;
 				}
