@@ -154,7 +154,7 @@ class websocket_client {
 	 */
 	public static function send($resource, ?string $payload): bool {
 		if (!is_resource($resource)) {
-			throw new \RuntimeException("Not connected");
+			throw new \socket_disconnected_exception($resource, 400);
 		}
 
 		// Check for a null message and send a disconnect frame
