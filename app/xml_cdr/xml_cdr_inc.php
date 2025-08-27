@@ -654,7 +654,6 @@
 			$parameters['offset'] = intval($offset);
 		}
 	}
-$settings->get('cdr', 'archive_database_driver')
 	$sql = str_replace("  ", " ", $sql);
 	if ($settings->get('cdr', 'archive_database', false)) {
 		$database->driver = $settings->get('cdr', 'archive_database_driver');
