@@ -165,7 +165,7 @@ abstract class base_websocket_system_service extends service implements websocke
 
 	/**
 	 * Connects to the web socket server using a websocket_client object
-	 * @return bool
+	 * @return bool True if connected and False if not able to connect
 	 */
 	protected function connect_to_ws_server(): bool {
 		if ($this->ws_client !== null && $this->ws_client->is_connected()) return true;
