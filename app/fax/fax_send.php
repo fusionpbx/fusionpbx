@@ -1099,7 +1099,7 @@ if (!defined('STDIN')) {
 		$upload_file_limit = (int)$settings->get('fax','upload_file_limit',5);
 		for ($f = 1; $f <= $upload_file_limit; $f++) {
 			echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
-			echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < $upload_file_range_limit) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'>";
+			echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < $upload_file_limit) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'>";
 			echo button::create(['type'=>'button','label'=>$text['button-clear'],'icon'=>$settings->get('theme','button_icon_reset'),'onclick'=>"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';"]);
 			echo 	"<br />";
 			echo "	<span id='file_list_".$f."'></span>";
