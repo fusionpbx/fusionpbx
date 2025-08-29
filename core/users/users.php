@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('user_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('user_view')) {
 		echo "access denied";
 		exit;
 	}
