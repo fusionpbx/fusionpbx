@@ -75,12 +75,12 @@
 		public function dialplan() {
 
 			//require the fax_extension
-				if (!empty($this->fax_extension)) {
+				if (empty($this->fax_extension)) {
 					return false;
 				}
 
 			//require the destination_number
-				if (!empty($this->destination_number)) {
+				if (empty($this->destination_number)) {
 					return false;
 				}
 
