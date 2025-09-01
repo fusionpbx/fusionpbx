@@ -21,7 +21,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Bloqueio de Chamadas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Blocare apel";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Черный список";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Blockera Samtal";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Blockera samtal";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Блокування дзвінків";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "呼叫块";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "コール ブロック";

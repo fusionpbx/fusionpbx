@@ -20,7 +20,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Centro de Chamadas Activo";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Centru de apeluri activ";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Активные Колл-центры";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Aktivt Call Center";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Aktivt callcenter";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Центр активного виклику";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "主动呼叫中心";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "アクティブコールセンター";
