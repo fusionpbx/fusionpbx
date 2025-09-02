@@ -100,9 +100,6 @@
 	if (!empty($search)) {
 		$query_string .= '&search='.urlencode($search);
 	}
-	if (!empty($_GET['page']) && is_numeric($_GET['page'])) {
-		$query_string .= '&page='.urlencode($_GET['page']);
-	}
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('extension_all')) {
 		$query_string .= "&show=all";
 	}
