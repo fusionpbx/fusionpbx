@@ -349,13 +349,16 @@
 				$xml_string = preg_replace('/<\/?\d+>/', '', $xml_string);
 
 			//replace xml tag name <set api_hangup_hook> with <api_hangup_hook>
-				$xml_string = preg_replace('/(<\/?)(set )([^>]*>)/', '$1$3', $xml_string);
+				$xml_string = preg_replace('/(<\/?)(set )([^>]*>)/i', '$1$3', $xml_string);
 
 			//replace xml tag name <^^,default_language> with <default_language>
 				$xml_string = preg_replace('/(<\/?)(\^\^,)([^>]*>)/', '$1$3', $xml_string);
 
 			//replace xml tag name <nolocal:operator> with <operator>
-				$xml_string = preg_replace('/(<\/?)(nolocal:)([^>]*>)/', '$1$3', $xml_string);
+				$xml_string = preg_replace('/(<\/?)(nolocal:)([^>]*>)/i', '$1$3', $xml_string);
+
+			//remove spaces in the beginning of the xml open and closing tags
+				$xml_string = preg_replace('/(<\/?)\s*([\w:-]+)/', '$1$2', $xml_string);
 
 			//disable xml entities
 				if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
@@ -365,7 +368,7 @@
 				if ($xml === false) {
 					//failed to load the XML, move the XML file to the failed directory
 					if (!empty($xml_cdr_dir)) {
-						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/invalid_xml/'.$this->file);
+						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/xml/'.$this->file);
 					}
 
 					//return without saving the invalid xml
