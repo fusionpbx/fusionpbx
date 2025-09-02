@@ -46,6 +46,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//get order and order by, page, sort
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? 'extension'));
+	$order = $_REQUEST["order"] ?? 'asc';
+	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+	$sort = $order_by == 'extension' ? 'natural' : null;
+
 //get posted data
 	if (!empty($_POST['extensions']) && is_array($_POST['extensions'])) {
 		$action = $_POST['action'];
@@ -74,14 +80,9 @@
 				break;
 		}
 
-		header('Location: extensions.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).($search != '' ? '&search='.urlencode($search) : null));
 		exit;
 	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? 'extension';
-	$order = $_GET["order"] ?? 'asc';
-	$sort = $order_by == 'extension' ? 'natural' : null;
 
 //get total extension count for domain
 	if (isset($_SESSION['limit']['extensions']['numeric'])) {
@@ -141,7 +142,6 @@
 		$param .= "&order=".$order;
 		$param .= "&order_by=".$order_by;
 	}
-	$page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param.$query_string, $rows_per_page); //bottom
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param.$query_string, $rows_per_page, true); //top
 	$offset = $rows_per_page * $page;
@@ -308,6 +308,13 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	if (!empty($order_by)) {
+		echo "<input type='hidden' name='order_by' value='".$order_by."'>\n";
+		echo "<input type='hidden' name='order' value='".$order."'>\n";
+	}
+	if (isset($page) && is_numeric($page)) {
+		echo "<input type='hidden' name='page' value='".$page."'>\n";
+	}
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
@@ -357,7 +364,7 @@
 		foreach($extensions as $row) {
 			$list_row_url = '';
 			if (permission_exists('extension_edit')) {
-				$list_row_url = "extension_edit.php?id=".urlencode($row['extension_uuid']).(is_numeric($page) ? '&page='.urlencode($page) : null);
+				$list_row_url = "extension_edit.php?id=".urlencode($row['extension_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null);
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
