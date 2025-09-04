@@ -162,7 +162,6 @@
 	$sql .= "and q.domain_uuid = d.domain_uuid and f.fax_uuid = q.fax_uuid";
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$row = $database->select($sql, $parameters, 'row');
-	// Check for false, null, and an empty array
 	if (!empty($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
