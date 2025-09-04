@@ -63,6 +63,7 @@
 
 //shutdown call back function
 	function shutdown() {
+		global $database, $fax_queue_uuid;
 		//when the fax status is still sending
 		//then set the fax status to trying
 		$sql = "update v_fax_queue ";
