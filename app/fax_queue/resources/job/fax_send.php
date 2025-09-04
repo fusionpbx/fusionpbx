@@ -72,6 +72,12 @@
 		$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 		$database->execute($sql, $parameters);
 		unset($sql);
+
+		//remove the old pid file
+		global $pid_file;
+		if (file_exists($pid_file)) {
+			unlink($pid_file);
+		}
 	}
 	register_shutdown_function('shutdown');
 
