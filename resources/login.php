@@ -152,24 +152,24 @@
 								}
 								else {
 									//email failed
-									message::add($eml_error, 'negative', 5000);
+									//message::add($eml_error, 'negative', 5000);
 								}
 						}
 						else {
 							//not found
-							message::add($text['message-invalid_email'], 'negative', 5000);
+							message::add($text['message-reset_link_sent'], 'negative', 5000);
 						}
 
 					}
 					else {
 						//matched multiple users
-						message::add($text['message-email_assigned_mutliple_users'], 'negative', 5000);
+						message::add($text['message-reset_link_sent'], 'negative', 5000);
 					}
 
 				}
 				else {
 					//not found
-					message::add($text['message-invalid_email'], 'negative', 5000);
+					message::add($text['message-reset_link_sent'], 'negative', 5000);
 				}
 
 		}
