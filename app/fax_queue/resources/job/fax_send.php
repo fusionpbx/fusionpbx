@@ -156,7 +156,8 @@
 	$sql .= "and q.domain_uuid = d.domain_uuid and f.fax_uuid = q.fax_uuid";
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row)) {
+	// Check for false, null, and an empty array
+	if (!empty($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
 		$domain_name = $row['domain_name'];
@@ -177,6 +178,12 @@
 		$fax_accountcode = $row["fax_accountcode"];
 		$fax_command = $row["fax_command"];
 		$fax_toll_allow = $row["fax_toll_allow"];
+	} else {
+		// Notify user using the system logs
+		syslog(E_WARNING, "Fax Send: UUID {$fax_queue_uuid} not found in fax queue");
+
+		// Exit with non-zero exit code to indicate an error in the program execution
+		exit(1);
 	}
 	unset($parameters);
 
