@@ -43,10 +43,16 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('speech', 'enabled', false);
+
+//as long as the class exists, enable speech using default settings
+	$speech_enabled = class_exists('speech') && $settings->get('speech', 'enabled', false);
 	$speech_engine = $settings->get('speech', 'engine', '');
-	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
+
+//as long as the class exists, enable transcribe using default settings
+	$transcribe_enabled = class_exists('transcribe') && $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
+//set the storage type from default settings
 	$storage_type = $settings->get('voicemail', 'storage_type', '');
 
 //set defaults
