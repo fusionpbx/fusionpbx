@@ -410,7 +410,7 @@ foreach ($widgets as $row) {
 			echo "	line-height: 0;\n";
 			echo "	font-size: 24pt;\n";
 			echo "}\n";
-			echo "#".$widget_id.".widget > .hud_box > .hud_content > .hud_chart {\n";
+			echo "#".$widget_id." > .hud_box > .hud_content > .hud_chart {\n";
 			echo "	height: 54px;\n";
 			echo "	width: 180px;\n";
 			echo "	padding-top: 0;\n";
