@@ -102,11 +102,11 @@
 //begin widget
 	echo "<div class='hud_box'>\n";
 
-	echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_call_forward_details').slideToggle('fast');\"").">\n";
+	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_call_forward_details').slideToggle('fast');\"").">\n";
 	echo "		<span class='hud_title'>".$text['header-call_forward']."</span>\n";
 
 //doughnut chart
-	if (empty($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+	if (empty($widget_chart_type) || $widget_chart_type == "doughnut") {
 		echo "<div class='hud_chart' style='width: 275px;'><canvas id='call_forward_chart'></canvas></div>\n";
 
 		echo "<script>\n";
@@ -170,7 +170,7 @@
 		echo "						labels: {\n";
 		echo "							usePointStyle: true,\n";
 		echo "							pointStyle: 'rect',\n";
-		echo "							color: '".$dashboard_label_text_color."'\n";
+		echo "							color: '".$widget_label_text_color."'\n";
 		echo "						}\n";
 		echo "					}\n";
 		echo "				}\n";
@@ -182,7 +182,7 @@
 		echo "					ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 		echo "					ctx.textBaseline = 'middle';\n";
 		echo "					ctx.textAlign = 'center';\n";
-		echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+		echo "					ctx.fillStyle = '".$widget_number_text_color."';\n";
 		echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 		echo "					ctx.save();\n";
 		echo "				}\n";
@@ -191,13 +191,13 @@
 		echo "	);\n";
 		echo "</script>\n";
 	}
-	if ($dashboard_chart_type == "number") {
+	if ($widget_chart_type == "number") {
 		echo "	<span class='hud_stat'>".$stats['call_forward']."</span>";
 	}
 	echo "	</div>\n";
 
 //details
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_call_forward_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr style='position: -webkit-sticky; position: sticky; z-index: 5; top: 0;'>\n";

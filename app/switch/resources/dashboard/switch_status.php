@@ -77,10 +77,10 @@
 	}
 
 //show the content
-	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"").">\n";
+	echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_switch_status_details').slideToggle('fast');\"").">\n";
 	echo "	<span class='hud_title'>".$text['label-switch_status']."</span>\n";
 
-	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+	if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
 		<div class='hud_chart' style='width: 175px;'><canvas id='switch_status_chart'></canvas></div>
@@ -115,7 +115,7 @@
 							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
-							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
 							ctx.fillText(options.text, width / 2, top + (height / 2));
 							ctx.save();
 						}
@@ -125,12 +125,12 @@
 		</script>
 		<?php
 	}
-	if ($dashboard_chart_type == "number") {
+	if ($widget_chart_type == "number") {
 		echo "	<span class='hud_stat'>".$registrations."</span>";
 	}
 	echo "	</div>\n";
 
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_switch_status_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";

@@ -72,88 +72,114 @@
 		$group_uuids_in = "'".implode("','", $group_uuids)."'";
 	}
 
+//get the dashboard uuid
+	$sql = "select dashboard_uuid ";
+	$sql .= "from v_dashboards ";
+	$sql .= "where dashboard_enabled = 'true' ";
+	$sql .= "and domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$result = $database->select($sql, $parameters ?? null, 'all');
+	if (empty($result)) {
+		$sql = "select dashboard_uuid ";
+		$sql .= "from v_dashboards ";
+		$sql .= "where dashboard_enabled = 'true' ";
+		$sql .= "and domain_uuid is null";
+		$result = $database->select($sql, null, 'all');
+	}
+	$dashboard_uuid = $result[0]['dashboard_uuid'] ?? null;
+	unset($sql, $parameters);
+
 //get the list
 	$sql = "select ";
 	$sql .= "dashboard_uuid, ";
-	$sql .= "dashboard_name, ";
-	$sql .= "dashboard_path, ";
-	$sql .= "dashboard_icon, ";
-	$sql .= "dashboard_icon_color, ";
-	$sql .= "dashboard_url, ";
-	$sql .= "dashboard_target, ";
-	$sql .= "dashboard_width, ";
-	$sql .= "dashboard_height, ";
-	$sql .= "dashboard_content, ";
-	$sql .= "dashboard_content_text_align, ";
-	$sql .= "dashboard_content_details, ";
-	$sql .= "dashboard_chart_type, ";
-	$sql .= "cast(dashboard_label_enabled as text), ";
-	$sql .= "dashboard_label_text_color, ";
-	$sql .= "dashboard_label_text_color_hover, ";
-	$sql .= "dashboard_label_background_color, ";
-	$sql .= "dashboard_label_background_color_hover, ";
-	$sql .= "dashboard_number_text_color, ";
-	$sql .= "dashboard_number_text_color_hover, ";
-	$sql .= "dashboard_number_background_color, ";
-	$sql .= "dashboard_background_color, ";
-	$sql .= "dashboard_background_color_hover, ";
-	$sql .= "dashboard_detail_background_color, ";
-	$sql .= "dashboard_background_gradient_style, ";
-	$sql .= "dashboard_background_gradient_angle, ";
-	$sql .= "dashboard_column_span, ";
-	$sql .= "dashboard_row_span, ";
-	$sql .= "dashboard_details_state, ";
-	$sql .= "dashboard_order, ";
-	$sql .= "cast(dashboard_enabled as text), ";
-	$sql .= "dashboard_description, ";
-	$sql .= "dashboard_parent_uuid ";
-	$sql .= "from v_dashboard as d ";
-	$sql .= "where dashboard_enabled = 'true' ";
-	$sql .= "and dashboard_uuid in ( ";
-	$sql .= "	select dashboard_uuid from v_dashboard_groups where group_uuid in ( ";
+	$sql .= "dashboard_widget_uuid, ";
+	$sql .= "widget_name, ";
+	$sql .= "widget_path, ";
+	$sql .= "widget_icon, ";
+	$sql .= "widget_icon_color, ";
+	$sql .= "widget_url, ";
+	$sql .= "widget_target, ";
+	$sql .= "widget_width, ";
+	$sql .= "widget_height, ";
+	$sql .= "widget_content, ";
+	$sql .= "widget_content_text_align, ";
+	$sql .= "widget_content_details, ";
+	$sql .= "widget_chart_type, ";
+	$sql .= "cast(widget_label_enabled as text), ";
+	$sql .= "widget_label_text_color, ";
+	$sql .= "widget_label_text_color_hover, ";
+	$sql .= "widget_label_background_color, ";
+	$sql .= "widget_label_background_color_hover, ";
+	$sql .= "widget_number_text_color, ";
+	$sql .= "widget_number_text_color_hover, ";
+	$sql .= "widget_number_background_color, ";
+	$sql .= "widget_background_color, ";
+	$sql .= "widget_background_color_hover, ";
+	$sql .= "widget_detail_background_color, ";
+	$sql .= "widget_background_gradient_style, ";
+	$sql .= "widget_background_gradient_angle, ";
+	$sql .= "widget_column_span, ";
+	$sql .= "widget_row_span, ";
+	$sql .= "widget_details_state, ";
+	$sql .= "dashboard_widget_parent_uuid, ";
+	$sql .= "widget_order, ";
+	$sql .= "cast(widget_enabled as text), ";
+	$sql .= "widget_description ";
+	$sql .= "from v_dashboard_widgets as d ";
+	$sql .= "where widget_enabled = 'true' ";
+	$sql .= "and dashboard_widget_uuid in ( ";
+	$sql .= "	select dashboard_widget_uuid from v_dashboard_widget_groups where group_uuid in ( ";
 	$sql .= "		".$group_uuids_in." ";
 	$sql .= "	) ";
 	$sql .= ") ";
-	$sql .= "order by dashboard_order, dashboard_name asc ";
-	$dashboard = $database->select($sql, $parameters ?? null, 'all');
+	$sql .= "and dashboard_uuid = :dashboard_uuid ";
+	$sql .= "order by widget_order, widget_name asc ";
+	$parameters['dashboard_uuid'] = $dashboard_uuid;
+	$widgets = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
+
+//get the list of widget uuids
+	$widget_uuid_list = [];
+	foreach ($widgets as $row) {
+		$widget_uuid_list[] = $row['dashboard_widget_uuid'];
+	}
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0 && permission_exists('dashboard_edit')) {
 		//set the variables from the http values
 		if (isset($_POST["widget_order"])) {
-			$widgets = explode(",", $_POST["widget_order"]);
+			$widget_order = explode(",", $_POST["widget_order"]);
 			$x = 0;
 
-			foreach ($widgets as $widget) {
+			foreach ($widget_order as $widget) {
 				list($widget_id, $parent_id, $order) = explode("|", $widget);
 				$parent_uuid = null;
 
-				foreach ($dashboard as $row) {
-					$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-					if ($widget_id == $dashboard_id) {
+				foreach ($widgets as $row) {
+					$dashboard_widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
+					if ($widget_id == $dashboard_widget_id) {
 						if (!empty($parent_id)) {
 							//find parent uuid
-							foreach ($dashboard as $parent_row) {
-								$parent_dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $parent_row['dashboard_uuid']));
-								if ($parent_dashboard_id === $parent_id) {
-									$parent_uuid = $parent_row['dashboard_uuid'];
+							foreach ($widgets as $parent_row) {
+								$parent_widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $parent_row['dashboard_widget_uuid']));
+								if ($parent_widget_id === $parent_id) {
+									$parent_uuid = $parent_row['dashboard_widget_uuid'];
 									break;
 								}
 							}
 						}
-						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
-						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
-						$array['dashboard'][$x]['dashboard_icon'] = $row['dashboard_icon'];
-						$array['dashboard'][$x]['dashboard_url'] = $row['dashboard_url'];
-						$array['dashboard'][$x]['dashboard_content'] = $row['dashboard_content'];
-						$array['dashboard'][$x]['dashboard_content_text_align'] = $row['dashboard_content_text_align'];
-						$array['dashboard'][$x]['dashboard_content_details'] = $row['dashboard_content_details'];
-						$array['dashboard'][$x]['dashboard_target'] = $row['dashboard_target'];
-						$array['dashboard'][$x]['dashboard_width'] = $row['dashboard_width'];
-						$array['dashboard'][$x]['dashboard_height'] = $row['dashboard_height'];
-						$array['dashboard'][$x]['dashboard_order'] = $order;
-						$array['dashboard'][$x]['dashboard_parent_uuid'] = $parent_uuid;
+						$array['dashboard_widgets'][$x]['dashboard_widget_uuid'] = $row['dashboard_widget_uuid'];
+						$array['dashboard_widgets'][$x]['widget_name'] = $row['widget_name'];
+						$array['dashboard_widgets'][$x]['widget_icon'] = $row['widget_icon'];
+						$array['dashboard_widgets'][$x]['widget_url'] = $row['widget_url'];
+						$array['dashboard_widgets'][$x]['widget_content'] = $row['widget_content'];
+						$array['dashboard_widgets'][$x]['widget_content_text_align'] = $row['widget_content_text_align'];
+						$array['dashboard_widgets'][$x]['widget_content_details'] = $row['widget_content_details'];
+						$array['dashboard_widgets'][$x]['widget_target'] = $row['widget_target'];
+						$array['dashboard_widgets'][$x]['widget_width'] = $row['widget_width'];
+						$array['dashboard_widgets'][$x]['widget_height'] = $row['widget_height'];
+						$array['dashboard_widgets'][$x]['widget_order'] = $order;
+						$array['dashboard_widgets'][$x]['dashboard_widget_parent_uuid'] = $parent_uuid;
 						$x++;
 						break;
 					}
@@ -207,9 +233,9 @@
 
 //determine initial state all button to display
 	$expanded_all = true;
-	if (!empty($dashboard)) {
-		foreach ($dashboard as $row) {
-			if ($row['dashboard_details_state'] == 'contracted' || $row['dashboard_details_state'] == 'hidden' || $row['dashboard_details_state'] == 'disabled') { $expanded_all = false; }
+	if (!empty($widgets)) {
+		foreach ($widgets as $row) {
+			if ($row['widget_details_state'] == 'contracted' || $row['widget_details_state'] == 'hidden' || $row['widget_details_state'] == 'disabled') { $expanded_all = false; }
 		}
 	}
 
@@ -288,152 +314,152 @@ div.hud_chart {
 
 /* dashboard settings */
 <?php
-foreach ($dashboard as $row) {
-	$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-	if (!empty($row['dashboard_icon_color'])) {
-		echo "#".$dashboard_id." .hud_stat .fas {\n";
-		echo "	color: ".$row['dashboard_icon_color'].";\n";
+foreach ($widgets as $row) {
+	$widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
+	if (!empty($row['widget_icon_color'])) {
+		echo "#".$widget_id." .hud_stat .fas {\n";
+		echo "	color: ".$row['widget_icon_color'].";\n";
 		echo "}\n";
 	}
-	if ($row['dashboard_label_enabled'] == 'false' && $row['dashboard_path'] != 'dashboard/parent') {
-		echo "#".$dashboard_id." .hud_title:first-of-type {\n";
+	if ($row['widget_label_enabled'] == 'false' && $row['widget_path'] != 'dashboard/parent') {
+		echo "#".$widget_id." .hud_title:first-of-type {\n";
 		echo "	display: none;\n";
 		echo "}\n";
-		echo "#".$dashboard_id." .hud_content {\n";
+		echo "#".$widget_id." .hud_content {\n";
 		echo "	align-content: center;\n";
 		echo "}\n";
-		echo "#".$dashboard_id." .hud_chart {\n";
+		echo "#".$widget_id." .hud_chart {\n";
 		echo "	padding-top: 0;\n";
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_label_text_color']) || !empty($row['dashboard_label_background_color'])) {
-		echo "#".$dashboard_id." > .hud_box > .hud_content > .hud_title:first-of-type {\n";
-		if (!empty($row['dashboard_label_text_color'])) { echo "	color: ".$row['dashboard_label_text_color'].";\n"; }
-		if (!empty($row['dashboard_label_background_color'])) { echo "	background-color: ".$row['dashboard_label_background_color'].";\n"; }
+	if (!empty($row['widget_label_text_color']) || !empty($row['widget_label_background_color'])) {
+		echo "#".$widget_id." > .hud_box > .hud_content > .hud_title:first-of-type {\n";
+		if (!empty($row['widget_label_text_color'])) { echo "	color: ".$row['widget_label_text_color'].";\n"; }
+		if (!empty($row['widget_label_background_color'])) { echo "	background-color: ".$row['widget_label_background_color'].";\n"; }
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_label_text_color_hover']) || !empty($row['dashboard_label_background_color_hover'])) {
-		echo "#".$dashboard_id.":hover  > .hud_box > .hud_content > .hud_title:first-of-type {\n";
-		if (!empty($row['dashboard_label_text_color_hover'])) { echo "	color: ".$row['dashboard_label_text_color_hover'].";\n"; }
-		if (!empty($row['dashboard_label_background_color_hover'])) { echo "	background-color: ".$row['dashboard_label_background_color_hover'].";\n"; }
+	if (!empty($row['widget_label_text_color_hover']) || !empty($row['widget_label_background_color_hover'])) {
+		echo "#".$widget_id.":hover  > .hud_box > .hud_content > .hud_title:first-of-type {\n";
+		if (!empty($row['widget_label_text_color_hover'])) { echo "	color: ".$row['widget_label_text_color_hover'].";\n"; }
+		if (!empty($row['widget_label_background_color_hover'])) { echo "	background-color: ".$row['widget_label_background_color_hover'].";\n"; }
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_number_text_color'])) {
-		echo "#".$dashboard_id." > .hud_box > .hud_content > .hud_stat {\n";
-		echo "	color: ".$row['dashboard_number_text_color'].";\n";
+	if (!empty($row['widget_number_text_color'])) {
+		echo "#".$widget_id." > .hud_box > .hud_content > .hud_stat {\n";
+		echo "	color: ".$row['widget_number_text_color'].";\n";
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_number_text_color_hover'])) {
-		echo "#".$dashboard_id.":hover > .hud_box > .hud_content > .hud_stat {\n";
-		echo "	color: ".$row['dashboard_number_text_color_hover'].";\n";
+	if (!empty($row['widget_number_text_color_hover'])) {
+		echo "#".$widget_id.":hover > .hud_box > .hud_content > .hud_stat {\n";
+		echo "	color: ".$row['widget_number_text_color_hover'].";\n";
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_background_color'])) {
-		$background_color = json_decode($row['dashboard_background_color'], true);
-		echo "#".$dashboard_id." > .hud_box:first-of-type {\n";
+	if (!empty($row['widget_background_color'])) {
+		$background_color = json_decode($row['widget_background_color'], true);
+		echo "#".$widget_id." > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color[0].";\n";
-		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
+		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
+			echo "	background-image: linear-gradient(".(empty($row['widget_background_gradient_angle']) ? '0deg' : $row['widget_background_gradient_angle'].'deg').", ".$background_color[1]." 0%, ".$background_color[0]." 30%, ".$background_color[0]." 70%, ".$background_color[1]." 100%);\n";
 		}
 		else { //simple
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color[0]." 0%, ".$background_color[1]." 100%);\n";
+			echo "	background-image: linear-gradient(".(empty($row['widget_background_gradient_angle']) ? '0deg' : $row['widget_background_gradient_angle'].'deg').", ".$background_color[0]." 0%, ".$background_color[1]." 100%);\n";
 		}
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_background_color_hover'])) {
-		$background_color_hover = json_decode($row['dashboard_background_color_hover'], true);
-		echo "#".$dashboard_id.":hover > .hud_box:first-of-type {\n";
+	if (!empty($row['widget_background_color_hover'])) {
+		$background_color_hover = json_decode($row['widget_background_color_hover'], true);
+		echo "#".$widget_id.":hover > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
-		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
+		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
+			echo "	background-image: linear-gradient(".(empty($row['widget_background_gradient_angle']) ? '0deg' : $row['widget_background_gradient_angle'].'deg').", ".$background_color_hover[1]." 0%, ".$background_color_hover[0]." 30%, ".$background_color_hover[0]." 70%, ".$background_color_hover[1]." 100%);\n";
 		}
 		else { //simple
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$background_color_hover[0]." 0%, ".$background_color_hover[1]." 100%);\n";
+			echo "	background-image: linear-gradient(".(empty($row['widget_background_gradient_angle']) ? '0deg' : $row['widget_background_gradient_angle'].'deg').", ".$background_color_hover[0]." 0%, ".$background_color_hover[1]." 100%);\n";
 		}
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_detail_background_color'])) {
-		$detail_background_color = json_decode($row['dashboard_detail_background_color'], true);
-		echo "#".$dashboard_id." > .hud_box > .hud_details {\n";
+	if (!empty($row['widget_detail_background_color'])) {
+		$detail_background_color = json_decode($row['widget_detail_background_color'], true);
+		echo "#".$widget_id." > .hud_box > .hud_details {\n";
 		echo "	background: ".$detail_background_color[0].";\n";
-		if (empty($row['dashboard_background_gradient_style']) || $row['dashboard_background_gradient_style'] == 'mirror') {
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
+		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
+			echo "	background-image: linear-gradient(".(empty($row['widget_background_gradient_angle']) ? '0deg' : $row['widget_background_gradient_angle'].'deg').", ".$detail_background_color[1]." 0%, ".$detail_background_color[0]." 30%, ".$detail_background_color[0]." 70%, ".$detail_background_color[1]." 100%);\n";
 		}
 		else { //simple
-			echo "	background-image: linear-gradient(".(empty($row['dashboard_background_gradient_angle']) ? '0deg' : $row['dashboard_background_gradient_angle'].'deg').", ".$detail_background_color[0]." 0%, ".$detail_background_color[1]." 100%);\n";
+			echo "	background-image: linear-gradient(".(empty($row['widget_background_gradient_angle']) ? '0deg' : $row['widget_background_gradient_angle'].'deg').", ".$detail_background_color[0]." 0%, ".$detail_background_color[1]." 100%);\n";
 		}
 		echo "}\n";
 	}
-	if ($row['dashboard_path'] == "dashboard/icon") {
-		echo "#".$dashboard_id." div.hud_content,\n";
-		echo "#".$dashboard_id." span.hud_title,\n";
-		echo "#".$dashboard_id." span.hud_stat {\n";
+	if ($row['widget_path'] == "dashboard/icon") {
+		echo "#".$widget_id." div.hud_content,\n";
+		echo "#".$widget_id." span.hud_title,\n";
+		echo "#".$widget_id." span.hud_stat {\n";
 		echo "	transition: .4s;\n";
 		echo "}\n";
 	}
-	switch ($row['dashboard_row_span']) {
+	switch ($row['widget_row_span']) {
 		case 1:
-			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
+			echo "#".$widget_id." > .hud_box > .hud_content {\n";
 			echo "	height: var(--row-height);\n";
 			echo "}\n";
-			echo "#".$dashboard_id." .hud_stat {\n";
+			echo "#".$widget_id." .hud_stat {\n";
 			echo "	line-height: 0;\n";
 			echo "	font-size: 30pt;\n";
 			echo "}\n";
-			echo "#".$dashboard_id." .hud_stat .fas {\n";
+			echo "#".$widget_id." .hud_stat .fas {\n";
 			echo "	line-height: 0;\n";
 			echo "	font-size: 24pt;\n";
 			echo "}\n";
-			echo "#".$dashboard_id.".widget > .hud_box > .hud_content > .hud_chart {\n";
+			echo "#".$widget_id." > .hud_box > .hud_content > .hud_chart {\n";
 			echo "	height: 54px;\n";
 			echo "	width: 180px;\n";
 			echo "	padding-top: 0;\n";
 			echo "}\n";
 			break;
 		case 2:
-			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
+			echo "#".$widget_id." > .hud_box > .hud_content {\n";
 			echo "	height: calc((var(--row-height) * 2) + var(--grid-gap));\n";
 			echo "}\n";
 			break;
 		case 3:
-			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
+			echo "#".$widget_id." > .hud_box > .hud_content {\n";
 			echo "	height: calc((var(--row-height) * 3) + (var(--grid-gap) * 2));\n";
 			echo "}\n";
 			break;
 		case 4:
-			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
+			echo "#".$widget_id." > .hud_box > .hud_content {\n";
 			echo "	height: calc((var(--row-height) * 4) + (var(--grid-gap) * 3));\n";
 			echo "}\n";
 			break;
 		default: //if empty
-			echo "#".$dashboard_id." > .hud_box > .hud_content {\n";
+			echo "#".$widget_id." > .hud_box > .hud_content {\n";
 			echo "	height: calc((var(--row-height) * 2) + var(--grid-gap));\n";
 			echo "}\n";
 	}
-	$row_span = $row['dashboard_row_span'] * 4;
+	$row_span = $row['widget_row_span'] * 4;
 	$expanded_row_span = $row_span + 13;
-	if ($row['dashboard_details_state'] === "expanded" || $row['dashboard_details_state'] === "contracted") {
+	if ($row['widget_details_state'] === "expanded" || $row['widget_details_state'] === "contracted") {
 		$row_span += 1;
 		$expanded_row_span += 1;
 	}
-	if (!empty($row['dashboard_row_span'])) {
-		echo "#".$dashboard_id." {\n";
-		echo "	--row-span: ".$row['dashboard_row_span'].";\n";
+	if (!empty($row['widget_row_span'])) {
+		echo "#".$widget_id." {\n";
+		echo "	--row-span: ".$row['widget_row_span'].";\n";
 		echo "}\n";
-		echo "#".$dashboard_id." {\n";
+		echo "#".$widget_id." {\n";
 		echo "	grid-row: span ".$row_span.";\n";
 		echo "}\n";
-		echo "#".$dashboard_id.".expanded {\n";
+		echo "#".$widget_id.".expanded {\n";
 		echo "	grid-row: span ".$expanded_row_span.";\n";
 		echo "}\n";
 	}
-	if (!empty($row['dashboard_column_span'])) {
-		echo "#".$dashboard_id." {\n";
-		echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+	if (!empty($row['widget_column_span'])) {
+		echo "#".$widget_id." {\n";
+		echo "	grid-column: span ".$row['widget_column_span'].";\n";
 		echo "}\n";
 	}
-	if ($row['dashboard_path'] != "dashboard/icon" && $row['dashboard_chart_type'] != "icon" && $row['dashboard_column_span'] == 1) {
-		echo "#".$dashboard_id.".child_widget {\n";
+	if ($row['widget_path'] != "dashboard/icon" && $row['widget_chart_type'] != "icon" && $row['widget_column_span'] == 1) {
+		echo "#".$widget_id.".child_widget {\n";
 		echo "	grid-column: span 2;\n";
 		echo "}\n";
 	}
@@ -445,16 +471,16 @@ foreach ($dashboard as $row) {
 	.widgets { grid-template-columns: repeat(1, minmax(100px, 1fr)); }
 	.col-num { grid-column: span 1; }
 	<?php
-		foreach ($dashboard as $row) {
-			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (!empty($row['dashboard_column_span'])) {
-				echo "#".$dashboard_id." {\n";
+		foreach ($widgets as $row) {
+			$widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
+			if (!empty($row['widget_column_span'])) {
+				echo "#".$widget_id." {\n";
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
 			}
-			if ($row['dashboard_details_state'] == "hidden" || $row['dashboard_details_state'] == "disabled") {
-				echo "#".$dashboard_id." .hud_box .hud_expander, \n";
-				echo "#".$dashboard_id." .hud_box .hud_details {\n";
+			if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
+				echo "#".$widget_id." .hud_box .hud_expander, \n";
+				echo "#".$widget_id." .hud_box .hud_details {\n";
 				echo "	display: none;\n";
 				echo "}\n";
 			}
@@ -467,26 +493,26 @@ foreach ($dashboard as $row) {
 	.widgets { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
 	.col-num { grid-column: span 2; }
 	<?php
-		foreach ($dashboard as $row) {
-			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if ($row['dashboard_column_span'] > 2) {
-				echo "#".$dashboard_id." {\n";
+		foreach ($widgets as $row) {
+			$widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
+			if ($row['widget_column_span'] > 2) {
+				echo "#".$widget_id." {\n";
 				echo "	grid-column: span 2;\n";
 				echo "}\n";
 			}
-			if ($row['dashboard_details_state'] == "expanded") {
-				echo "#".$dashboard_id." .hud_box .hud_details {\n";
+			if ($row['widget_details_state'] == "expanded") {
+				echo "#".$widget_id." .hud_box .hud_details {\n";
 				echo "	display: block;\n";
 				echo "}\n";
 			}
-			if ($row['dashboard_details_state'] == "contracted") {
-				echo "#".$dashboard_id." .widget .hud_box .hud_details {\n";
+			if ($row['widget_details_state'] == "contracted") {
+				echo "#".$widget_id." .widget .hud_box .hud_details {\n";
 				echo "	display: none;\n";
 				echo "}\n";
 			}
-			if ($row['dashboard_details_state'] == "hidden" || $row['dashboard_details_state'] == "disabled") {
-				echo "#".$dashboard_id." .hud_box .hud_expander, \n";
-				echo "#".$dashboard_id." .hud_box .hud_details {\n";
+			if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
+				echo "#".$widget_id." .hud_box .hud_expander, \n";
+				echo "#".$widget_id." .hud_box .hud_details {\n";
 				echo "	display: none;\n";
 				echo "}\n";
 			}
@@ -499,10 +525,10 @@ foreach ($dashboard as $row) {
 	.widgets { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
 	.col-num { grid-column: span 2; }
 	<?php
-		foreach ($dashboard as $row) {
-			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if ($row['dashboard_column_span'] > 3) {
-				echo "#".$dashboard_id." {\n";
+		foreach ($widgets as $row) {
+			$widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
+			if ($row['widget_column_span'] > 3) {
+				echo "#".$widget_id." {\n";
 				echo "	grid-column: span 3;\n";
 				echo "}\n";
 			}
@@ -515,11 +541,11 @@ foreach ($dashboard as $row) {
 	.widgets { grid-template-columns: repeat(4, minmax(100px, 1fr)); }
 	.col-num { grid-column: span 2; }
 	<?php
-		foreach ($dashboard as $row) {
-			$dashboard_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_uuid']));
-			if (!empty($row['dashboard_column_span'])) {
-				echo "#".$dashboard_id." {\n";
-				echo "	grid-column: span ".$row['dashboard_column_span'].";\n";
+		foreach ($widgets as $row) {
+			$widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
+			if (!empty($row['widget_column_span'])) {
+				echo "#".$widget_id." {\n";
+				echo "	grid-column: span ".$row['widget_column_span'].";\n";
 				echo "}\n";
 			}
 		}
@@ -553,8 +579,8 @@ document.addEventListener('click', function(event) {
 	}
 });
 
-function toggle_grid_row_span(dashboard_id) {
-	let widget = document.getElementById(dashboard_id);
+function toggle_grid_row_span(widget_id) {
+	let widget = document.getElementById(widget_id);
 
 	if (widget.classList.contains('expanded')) {
 		widget.classList.remove('expanded');
@@ -628,29 +654,29 @@ window.addEventListener('resize', update_parent_height);
 //include the dashboards
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
-	foreach ($dashboard as $row) {
-		//skip child widgets
-		if (!empty($row['dashboard_parent_uuid'])) {
+	foreach ($widgets as $row) {
+		//skip child widgets unless the parent doesn't exist
+		if (!empty($row['dashboard_widget_parent_uuid']) && in_array($row['dashboard_widget_parent_uuid'], $widget_uuid_list)) {
 			continue;
 		}
 
 		//set the variables
-		$dashboard_uuid = $row['dashboard_uuid'] ?? '';
-		$dashboard_name = $row['dashboard_name'] ?? '';
-		$dashboard_icon = $row['dashboard_icon'] ?? '';
-		$dashboard_url = $row['dashboard_url'] ?? '';
-		$dashboard_target = $row['dashboard_target'] ?? '';
-		$dashboard_width = $row['dashboard_width'] ?? '';
-		$dashboard_height = $row['dashboard_height'] ?? '';
-		$dashboard_content = $row['dashboard_content'] ?? '';
-		$dashboard_content_text_align = $row['dashboard_content_text_align'] ?? '';
-		$dashboard_content_details = $row['dashboard_content_details'] ?? '';
-		$dashboard_chart_type = $row['dashboard_chart_type'] ?? '';
-		$dashboard_label_text_color = $row['dashboard_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
-		$dashboard_number_text_color = $row['dashboard_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
-		$dashboard_number_background_color = $row['dashboard_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
-		$dashboard_details_state = $row['dashboard_details_state'] ?? 'hidden';
-		$dashboard_row_span = $row['dashboard_row_span'] ?? '';
+		$widget_uuid = $row['dashboard_widget_uuid'] ?? '';
+		$widget_name = $row['widget_name'] ?? '';
+		$widget_icon = $row['widget_icon'] ?? '';
+		$widget_url = $row['widget_url'] ?? '';
+		$widget_target = $row['widget_target'] ?? '';
+		$widget_width = $row['widget_width'] ?? '';
+		$widget_height = $row['widget_height'] ?? '';
+		$widget_content = $row['widget_content'] ?? '';
+		$widget_content_text_align = $row['widget_content_text_align'] ?? '';
+		$widget_content_details = $row['widget_content_details'] ?? '';
+		$widget_chart_type = $row['widget_chart_type'] ?? '';
+		$widget_label_text_color = $row['widget_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
+		$widget_number_text_color = $row['widget_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
+		$widget_number_background_color = $row['widget_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
+		$widget_details_state = $row['widget_details_state'] ?? 'hidden';
+		$widget_row_span = $row['widget_row_span'] ?? '';
 
 		//define the regex patterns
 		$uuid_pattern = '/[^-A-Fa-f0-9]/';
@@ -658,39 +684,38 @@ window.addEventListener('resize', update_parent_height);
 		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?:\=#\n]/';
 
 		//sanitize the data
-		$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
-		$dashboard_id = 'id_'.md5($dashboard_uuid);
-		$dashboard_name = trim(preg_replace($text_pattern, '', $dashboard_name));
-		$dashboard_icon = preg_replace($text_pattern, '', $dashboard_icon);
-		$dashboard_url = trim(preg_replace($text_pattern, '', $dashboard_url));
-		$dashboard_target = trim(preg_replace($text_pattern, '', $dashboard_target));
-		$dashboard_width = trim(preg_replace($text_pattern, '', $dashboard_width));
-		$dashboard_height = trim(preg_replace($text_pattern, '', $dashboard_height));
-		$dashboard_content = preg_replace($text_pattern, '', $dashboard_content);
-		$dashboard_content = str_replace("\n", '<br />', $dashboard_content);
-		$dashboard_content_text_align = trim(preg_replace($text_pattern, '', $dashboard_content_text_align));
-		$dashboard_content_details = preg_replace($text_pattern, '', $dashboard_content_details);
-		$dashboard_content_details = str_replace("\n", '<br />', $dashboard_content_details);
-		$dashboard_chart_type = preg_replace($text_pattern, '', $dashboard_chart_type);
-		$dashboard_label_text_color = preg_replace($text_pattern, '', $dashboard_label_text_color);
-		$dashboard_number_text_color = preg_replace($text_pattern, '', $dashboard_number_text_color);
-		$dashboard_number_background_color = preg_replace($text_pattern, '', $dashboard_number_background_color);
-		$dashboard_details_state = preg_replace($text_pattern, '', $dashboard_details_state);
-		$dashboard_row_span = preg_replace($number_pattern, '', $dashboard_row_span);
-		$dashboard_path = preg_replace($text_pattern, '', strtolower($row['dashboard_path']));
+		$widget_uuid = preg_replace($uuid_pattern, '', $widget_uuid);
+		$widget_id = 'id_'.md5($widget_uuid);
+		$widget_name = trim(preg_replace($text_pattern, '', $widget_name));
+		$widget_icon = preg_replace($text_pattern, '', $widget_icon);
+		$widget_url = trim(preg_replace($text_pattern, '', $widget_url));
+		$widget_target = trim(preg_replace($text_pattern, '', $widget_target));
+		$widget_width = trim(preg_replace($text_pattern, '', $widget_width));
+		$widget_height = trim(preg_replace($text_pattern, '', $widget_height));
+		$widget_content = preg_replace($text_pattern, '', $widget_content);
+		$widget_content = str_replace("\n", '<br />', $widget_content);
+		$widget_content_text_align = trim(preg_replace($text_pattern, '', $widget_content_text_align));
+		$widget_content_details = preg_replace($text_pattern, '', $widget_content_details);
+		$widget_content_details = str_replace("\n", '<br />', $widget_content_details);
+		$widget_chart_type = preg_replace($text_pattern, '', $widget_chart_type);
+		$widget_label_text_color = preg_replace($text_pattern, '', $widget_label_text_color);
+		$widget_number_text_color = preg_replace($text_pattern, '', $widget_number_text_color);
+		$widget_number_background_color = preg_replace($text_pattern, '', $widget_number_background_color);
+		$widget_details_state = preg_replace($text_pattern, '', $widget_details_state);
+		$widget_row_span = preg_replace($number_pattern, '', $widget_row_span);
+		$widget_path = preg_replace($text_pattern, '', strtolower($row['widget_path']));
 
 		//find the application and widget
-		$dashboard_path_array = explode('/', $dashboard_path);
-		$application_name = $dashboard_path_array[0];
-		$widget_name = $dashboard_path_array[1];
-		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_name.'.php');
+		$widget_path_array = explode('/', $widget_path);
+		$application_name = $widget_path_array[0];
+		$widget_path_name = $widget_path_array[1];
+		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_path_name.'.php');
 
-		echo "<div class='widget ".$dashboard_details_state."' id='".$dashboard_id."' ".($dashboard_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
+		echo "<div class='widget ".$widget_details_state."' id='".$widget_id."' ".($widget_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
 		echo "</div>\n";
-
 
 		$x++;
 	}
