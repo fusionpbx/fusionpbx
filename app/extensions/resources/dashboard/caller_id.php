@@ -172,11 +172,11 @@
 		//caller id
 			echo "<div class='hud_box'>\n";
 
-			echo "	<div class='hud_content'  ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast');\"").">\n";
+			echo "	<div class='hud_content'  ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast');\"").">\n";
 			echo "		<span class='hud_title'>".$text['label-caller_id_number']."</span>\n";
 
 		//doughnut chart
-			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+			if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 				echo "<div class='hud_chart' style='width: 275px;'><canvas id='caller_id_chart'></canvas></div>\n";
 
 				echo "<script>\n";
@@ -215,7 +215,7 @@
 				echo "						labels: {\n";
 				echo "							usePointStyle: true,\n";
 				echo "							pointStyle: 'rect',\n";
-				echo "							color: '".$dashboard_label_text_color."'\n";
+				echo "							color: '".$widget_label_text_color."'\n";
 				echo "						}\n";
 				echo "					}\n";
 				echo "				}\n";
@@ -227,7 +227,7 @@
 				echo "					ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 				echo "					ctx.textBaseline = 'middle';\n";
 				echo "					ctx.textAlign = 'center';\n";
-				echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+				echo "					ctx.fillStyle = '".$widget_number_text_color."';\n";
 				echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 				echo "					ctx.save();\n";
 				echo "				}\n";
@@ -236,13 +236,13 @@
 				echo "	);\n";
 				echo "</script>\n";
 			}
-			if ($dashboard_chart_type == "number") {
+			if ($widget_chart_type == "number") {
 				echo "	<span class='hud_stat'>".$stats['undefined']."</span>";
 			}
 			echo "	</div>\n";
 
 		//details
-			if ($dashboard_details_state != 'disabled') {
+			if ($widget_details_state != 'disabled') {
 				echo "<form id='form_list_caller_id' method='post' action='".PROJECT_PATH."/app/extensions/resources/dashboard/caller_id.php'>\n";
 
 				echo "<div class='hud_details hud_box' id='hud_caller_id_details' style='text-align: right;'>";
