@@ -947,7 +947,7 @@
 	//list page functions
 		{literal}
 		function list_all_toggle(modifier) {
-			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']");
+			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']:not([id*='_enabled'])");
 			var checkbox_checked = document.getElementById('checkbox_all' + (modifier !== undefined ? '_'+modifier : '')).checked;
 			for (var i = 0, max = checkboxes.length; i < max; i++) {
 				checkboxes[i].checked = checkbox_checked;
