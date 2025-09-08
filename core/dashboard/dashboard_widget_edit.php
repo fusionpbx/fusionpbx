@@ -637,7 +637,7 @@
 		$widget_settings = $widget_settings_config['parent'];
 	}
 
-	if (!empty($widget_chart_type)) {
+	if (!empty($widget_chart_type) && !empty($widget_chart_type_options)) {
 		$widget_settings = array_merge($widget_settings, array_filter($widget_settings_config['chart'], 'is_scalar'));
 
 		if ($widget_chart_type == "icon") {
