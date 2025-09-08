@@ -110,11 +110,11 @@
 				$hud_stat_title = $text['label-destinations'];
 			}
 
-			echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"").">\n";
+			echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"").">\n";
 			echo "		<span class='hud_title'>".$text['label-domain_limits']."</span>\n";
 
 		//doughnut chart
-			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+			if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 				echo "<div class='hud_chart' style='width: 275px;'><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
@@ -164,7 +164,7 @@
 				echo "						ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 				echo "						ctx.textBaseline = 'middle';\n";
 				echo "						ctx.textAlign = 'center';\n";
-				echo "						ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+				echo "						ctx.fillStyle = '".$widget_number_text_color."';\n";
 				echo "						ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 				echo "						ctx.save();\n";
 				echo "				}\n";
@@ -173,13 +173,13 @@
 				echo "	);\n";
 				echo "</script>\n";
 			}
-			if ($dashboard_chart_type == "number") {
+			if ($widget_chart_type == "number") {
 				echo "	<span class='hud_stat'>".$hud_stat_used."</span>";
 			}
 			echo "	</div>\n";
 
 		//details
-			if ($dashboard_details_state != 'disabled') {
+			if ($widget_details_state != 'disabled') {
 				echo "<div class='hud_details hud_box' id='hud_domain_limits_details'>";
 
 				echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";

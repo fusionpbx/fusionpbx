@@ -295,10 +295,10 @@
 	echo "<div class='hud_box'>\n";
 	if ($show_stat) {
 
-		echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"").">\n";
+		echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"").">\n";
 		echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</a></span>\n";
 
-		if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+		if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 			//add doughnut chart
 			?>
 			<div class='hud_chart' style='width: 250px;'><canvas id='system_counts_chart'></canvas></div>
@@ -331,7 +331,7 @@
 									labels: {
 										usePointStyle: true,
 										pointStyle: 'rect',
-										color: '<?php echo $dashboard_heading_text_color; ?>'
+										color: '<?php echo $widget_label_text_color; ?>'
 									}
 								}
 							}
@@ -343,7 +343,7 @@
 								ctx.font = chart_text_size + ' ' + chart_text_font;
 								ctx.textBaseline = 'middle';
 								ctx.textAlign = 'center';
-								ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+								ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
 								ctx.fillText(options.text, width / 2, top + (height / 2));
 								ctx.save();
 							}
@@ -353,13 +353,13 @@
 			</script>
 			<?php
 		}
-		if ($dashboard_chart_type == "number") {
+		if ($widget_chart_type == "number") {
 			echo "	<span class='hud_stat'>".$domain_total."</span>";
 		}
 		echo "	</div>\n";
 	}
 
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_system_counts_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";

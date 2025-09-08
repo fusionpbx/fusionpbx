@@ -51,7 +51,7 @@
 	}
 
 	//show the content
-	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\"").">\n";
+	echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_system_cpu_status_details').slideToggle('fast');\"").">\n";
 	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-cpu_usage']."</a></span>\n";
 
 	$token = (new token())->create($_SERVER['PHP_SELF']);
@@ -60,7 +60,7 @@
 
 	subscriber::save_token($token, [system_dashboard_service::get_service_name()]);
 
-	if ($dashboard_chart_type === 'line') { ?>
+	if ($widget_chart_type === 'line') { ?>
 		<div class='hud_chart' style='width: 90%;'><canvas id='system_cpu_status_chart'></canvas></div>
 
 		<script>
@@ -201,7 +201,7 @@
 
 	<?php }
 	//add half doughnut chart
-	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") { ?>
+	if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") { ?>
 		<div class='hud_chart' style='width: 175px;'><canvas id='system_cpu_status_chart'></canvas></div>
 
 		<script>
@@ -315,7 +315,7 @@
 							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
-							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
 							ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
 							ctx.save();
 						}
@@ -326,12 +326,12 @@
 			connect_cpu_status_websocket();
 		</script>
 	<?php }
-	if ($dashboard_chart_type == "number") {
+	if ($widget_chart_type == "number") {
 		echo "<span class='hud_stat'>".round($percent_cpu)."%</span>";
 	}
 	echo "</div>\n";
 
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_system_cpu_status_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";

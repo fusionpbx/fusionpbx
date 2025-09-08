@@ -46,7 +46,7 @@ if (!isset($database)) {
 }
 
 //set the dashboard icon to a solid color phone
-$dashboard_icon = 'fa-solid fa-phone';
+$widget_icon = 'fa-solid fa-phone';
 
 //add multi-lingual support
 $text = (new text)->get($_SESSION['domain']['language']['code'], 'app/active_calls');
@@ -68,17 +68,17 @@ $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
 //icon and count
-echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast');\"").">\n";
+echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast');\"").">\n";
 	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".$text['title']."</a></span>\n";
 	echo "<div style='position: relative; display: inline-block;'>\n";
-		echo "<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
-		echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#03c04a')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
+		echo "<span class='hud_stat'><i class=\"fas ".$widget_icon." \"></i></span>\n";
+		echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($widget_number_background_color) ? $widget_number_background_color : '#03c04a')."; color: ".(!empty($widget_number_text_color) ? $widget_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
 	echo "</div>\n";
 echo "</div>\n";
 
 //active call details
 echo "<div class='hud_details hud_box' id='hud_active_calls_details'>\n";
-if ($dashboard_details_state != 'disabled') {
+if ($widget_details_state != 'disabled') {
 	echo "<table id='active_calls' name='active_calls' class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<thead id='head_active_calls' name='head_active_calls'>\n";
 			echo "<tr>\n";

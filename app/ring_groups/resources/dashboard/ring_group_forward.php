@@ -153,11 +153,11 @@
 //ring group forward
 	echo "<div class='hud_box'>\n";
 
-	echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\"").">\n";
+	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\"").">\n";
 	echo "		<span class='hud_title'>".$text['header-ring-group-forward']."</span>\n";
 
 //doughnut chart
-	if (empty($dashboard_chart_type) ||$dashboard_chart_type == "doughnut") {
+	if (empty($widget_chart_type) ||$widget_chart_type == "doughnut") {
 		echo "	<div class='hud_chart' style='width: 275px;'><canvas id='ring_group_forward_chart'></canvas></div>\n";
 
 		echo "<script>\n";
@@ -196,12 +196,12 @@
 		echo "						labels: {\n";
 		echo "							usePointStyle: true,\n";
 		echo "							pointStyle: 'rect',\n";
-		echo "							color: '".$dashboard_label_text_color."'\n";
+		echo "							color: '".$widget_label_text_color."'\n";
 		echo "						}\n";
 		echo "					},\n";
 		echo "					title: {\n";
 		echo "						text: '".$text['header-ring-group-forward']."',\n";
-		echo "						color: '".$dashboard_label_text_color."'\n";
+		echo "						color: '".$widget_label_text_color."'\n";
 		echo "					}\n";
 		echo "				}\n";
 		echo "			},\n";
@@ -212,7 +212,7 @@
 		echo "					ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 		echo "					ctx.textBaseline = 'middle';\n";
 		echo "					ctx.textAlign = 'center';\n";
-		echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+		echo "					ctx.fillStyle = '".$widget_number_text_color."';\n";
 		echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 		echo "					ctx.save();\n";
 		echo "				}\n";
@@ -221,13 +221,13 @@
 		echo "	);\n";
 		echo "</script>\n";
 	}
-	if ($dashboard_chart_type == "number") {
+	if ($widget_chart_type == "number") {
 		echo "	<span class='hud_stat'>".$stats['forwarding']."</span>";
 	}
 	echo "	</div>\n";
 
 //details
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		if (permission_exists('ring_group_forward')) {
 			echo "<form id='form_list_ring_group_forward' method='post' action='".$validated_path."'>\n";
 		}
