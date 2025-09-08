@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2019-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -36,10 +36,12 @@
 		private $app_uuid;
 		private $name;
 		private $table;
+		private $tables;
 		private $toggle_field;
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $uuid_prefix;
 
 		/**
 		 * called when the object is created
@@ -48,18 +50,24 @@
 			//assign the variables
 				$this->app_name = 'dashboard';
 				$this->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
-				$this->name = 'dashboard';
-				$this->table = 'dashboard';
+				$this->tables[] = 'dashboards';
+				$this->tables[] = 'dashboard_widgets';
+				$this->tables[] = 'dashboard_widget_groups';
 				$this->toggle_field = 'dashboard_enabled';
 				$this->toggle_values = ['true','false'];
 				$this->description_field = 'dashboard_description';
 				$this->location = 'dashboard.php';
+				$this->uuid_prefix = 'dashboard_';
 		}
 
 		/**
 		 * delete rows from the database
 		 */
 		public function delete($records) {
+			//assign the variables
+				$this->name = 'dashboard';
+				$this->table = 'dashboards';
+
 			if (permission_exists($this->name.'_delete')) {
 
 				//add multi-lingual support
@@ -76,27 +84,40 @@
 
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
-						//build the delete array
-							$x = 0;
-							foreach ($records as $record) {
-								//add to the array
-									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
-										$array[$this->table][$x]['dashboard_uuid'] = $record['dashboard_uuid'];
-										$array[$this->table.'_groups'][$x]['dashboard_uuid'] = $record['dashboard_uuid'];
-									}
 
-								//increment the id
-									$x++;
+						//build the delete array
+							foreach ($records as $x => $record) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
+									if (is_array($this->tables) && @sizeof($this->tables) != 0) {
+										foreach ($this->tables as $table) {
+											$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['dashboard_uuid'];
+										}
+									}
+								}
 							}
 
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temp permissions
+									$p = permissions::new();
+									$database = new database;
+									foreach ($this->tables as $table) {
+										$p->add(database::singular($table).'_delete', 'temp');
+									}
+
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+								//revoke temp permissions
+									$database = new database;
+									foreach ($this->tables as $table) {
+										$p->delete(database::singular($table).'_delete', 'temp');
+									}
 
 								//set message
 									message::add($text['message-delete']);
@@ -110,6 +131,10 @@
 		 * toggle a field between two values
 		 */
 		public function toggle($records) {
+			//assign the variables
+				$this->name = 'dashboard';
+				$this->table = 'dashboards';
+
 			if (permission_exists($this->name.'_edit')) {
 
 				//add multi-lingual support
@@ -177,6 +202,10 @@
 		 * copy rows from the database
 		 */
 		public function copy($records) {
+			//assign the variables
+				$this->name = 'dashboard';
+				$this->table = 'dashboards';
+
 			if (permission_exists($this->name.'_add')) {
 
 				//add multi-lingual support
@@ -237,6 +266,126 @@
 									message::add($text['message-copy']);
 							}
 							unset($records);
+					}
+			}
+		}
+
+		public function delete_items($records) {
+			//assign the variables
+				$this->name = 'dashboard_widget';
+				$this->table = 'dashboard_widgets';
+
+			if (permission_exists($this->name.'_delete')) {
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
+						message::add($this->text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								//add to the array
+									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
+										$array[$this->table][$x]['dashboard_widget_uuid'] = $record['dashboard_widget_uuid'];
+										$array[$this->name.'_groups'][$x]['dashboard_widget_uuid'] = $record['dashboard_widget_uuid'];
+									}
+
+								//increment the id
+									$x++;
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
+		public function toggle_items($records) {
+			//assign the variables
+				$this->name = 'dashboard_widget';
+				$this->table = 'dashboard_widgets';
+				$this->toggle_field = 'widget_enabled';
+
+			if (permission_exists($this->name.'_edit')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
+						message::add($this->text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//toggle the checked records
+					if (is_array($records) && @sizeof($records) != 0) {
+						//get current toggle state
+							foreach($records as $record) {
+								if (isset($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
+									$uuids[] = "'".$record['dashboard_widget_uuid']."'";
+								}
+							}
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
+								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, $parameters ?? null, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										$states[$row['uuid']] = $row['toggle'];
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//build update array
+							$x = 0;
+							foreach($states as $uuid => $state) {
+								//create the array
+									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
+									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+
+								//increment the id
+									$x++;
+							}
+
+						//save the changes
+							if (is_array($array) && @sizeof($array) != 0) {
+								//save the array
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+
+								//set message
+									message::add($text['message-toggle']);
+							}
+							unset($records, $states);
 					}
 			}
 		}
