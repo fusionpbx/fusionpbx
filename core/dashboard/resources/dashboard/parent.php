@@ -62,7 +62,7 @@
 	$sql .= "and dashboard_widget_parent_uuid = :dashboard_widget_uuid ";
 	$sql .= "order by widget_order, widget_name asc ";
 	$parameters['dashboard_widget_uuid'] = $widget_uuid;
-	$parent_widgets = $database->select($sql, $parameters ?? null, 'all');
+	$child_widgets = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 ?>
@@ -102,7 +102,7 @@ div.child_widget div.hud_chart  {
 
 /* dashboard settings */
 <?php
-foreach ($parent_widgets as $row) {
+foreach ($child_widgets as $row) {
 	$widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
 	if ($row['widget_path'] === "dashboard/icon" || $row['widget_chart_type'] === "icon") {
 		echo "#".$widget_id.":hover div.hud_box:first-of-type,\n";
@@ -125,7 +125,7 @@ foreach ($parent_widgets as $row) {
 	echo "	<div class='hud_content parent_widget'>\n";
 
 	$x = 0;
-	foreach ($parent_widgets as $row) {
+	foreach ($child_widgets as $row) {
 		//set the variables
 		$widget_uuid = $row['dashboard_widget_uuid'] ?? '';
 		$widget_name = $row['widget_name'] ?? '';
