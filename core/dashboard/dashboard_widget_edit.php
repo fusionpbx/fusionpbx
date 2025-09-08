@@ -475,7 +475,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	$document['title'] = $text['title-dashboard'];
+	$document['title'] = $text['title-dashboard_widget'];
 	require_once "resources/header.php";
 
 //get the dashboard groups
@@ -770,7 +770,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "<input class='formfld' type='hidden' name='dashboard_widget_uuid' value='".escape($widget_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-dashboard_widget']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'dashboard_edit.php?id='.urlencode($dashboard_uuid)]);
 	if ($action == 'update') {
