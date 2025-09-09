@@ -42,9 +42,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the database connection
-	$database = database::new();
-
 //set defaults
 	$recording_name = '';
 	$recording_message = '';
@@ -53,11 +50,16 @@
 	$translate_enabled = false;
 	$language_enabled = false;
 
+//set the variables
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$domain_name = $_SESSION['domain_name'];
+	$user_uuid = $_SESSION['user_uuid'];
+
 //add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('speech', 'enabled', false);
+	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
+	$speech_enabled = class_exists('speech') && $settings->get('speech', 'enabled', false);
 	$speech_engine = $settings->get('speech', 'engine', '');
-	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
+	$transcribe_enabled = class_exists('transcribe') && $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 //add the speech object and get the voices and languages arrays
@@ -188,7 +190,7 @@
 				}
 
 				//build the setting object and get the recording path
-				$recording_path = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'];
+				$recording_path = $settings->get('switch', 'recordings').'/'.$domain_name;
 
 				//if file name is not the same then rename the file
 				if (!empty($recording_filename) && !empty($recording_filename_original)
