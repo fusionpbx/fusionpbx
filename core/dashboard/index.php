@@ -76,16 +76,17 @@
 	$sql = "select dashboard_uuid ";
 	$sql .= "from v_dashboards ";
 	$sql .= "where dashboard_enabled = 'true' ";
-	$sql .= "and domain_uuid = :domain_uuid ";
+	$sql .= "and (";
+	$sql .= "	domain_uuid = :domain_uuid ";
+	$sql .= "	or domain_uuid is null ";
+	$sql .= ") ";
+	if (!empty($_GET['name'])) {
+		$sql .= "and dashboard_name = :dashboard_name ";
+		$parameters['dashboard_name'] = $_GET['name'];
+	}
+	$sql .= "order by case when domain_uuid = :domain_uuid then 0 else 1 end ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$result = $database->select($sql, $parameters ?? null, 'all');
-	if (empty($result)) {
-		$sql = "select dashboard_uuid ";
-		$sql .= "from v_dashboards ";
-		$sql .= "where dashboard_enabled = 'true' ";
-		$sql .= "and domain_uuid is null";
-		$result = $database->select($sql, null, 'all');
-	}
 	$dashboard_uuid = $result[0]['dashboard_uuid'] ?? null;
 	unset($sql, $parameters);
 
