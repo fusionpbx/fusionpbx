@@ -66,8 +66,8 @@
 //set the defaults
 	if (empty($destination_type)) { $destination_type = 'inbound'; }
 	if (empty($destination_context)) { $destination_context = 'public'; }
-	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
-	if ($destination_type =="outbound" && empty($destination_context)) { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type == "outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type == "outbound" && empty($destination_context)) { $destination_context = $_SESSION['domain_name']; }
 	if (empty($from_row)) { $from_row = '2'; }
 
 //save the data to the csv file
@@ -520,7 +520,7 @@
 			}
 
 		//send the redirect header
-			header("Location: destinations.php?type=".$destination_type);
+			header("Location: destinations.php?type=".urlencode($destination_type));
 			exit;
 
 	}
@@ -707,7 +707,7 @@
 					message::add($text['message-delete'], 'positive');
 
 				//send the redirect header
-					header("Location: /app/destinations/destinations.php?type=".$destination_type);
+					header("Location: /app/destinations/destinations.php?type=".urlencode($destination_type));
 					exit;
 			}
 	}
