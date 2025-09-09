@@ -68,6 +68,7 @@
 	if ($speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
+		$greeting_format = $speech->get_format();
 		//$speech_models = $speech->get_models();
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
@@ -197,7 +198,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			if ($speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
 				$speech->audio_path = $greeting_path;
 				$speech->audio_filename = $greeting_filename;
-				$speech->audio_format = $greeting_format;
 				//$speech->audio_model = $greeting_model ?? '';
 				$speech->audio_voice = $greeting_voice;
 				//$speech->audio_language = $greeting_language;
@@ -418,7 +418,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
