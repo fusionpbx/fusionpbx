@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -188,7 +188,7 @@
 
 		//redirect the browser
 			message::add($text['message-delete']);
-			header("Location: fax_edit.php?id=".$fax_uuid);
+			header("Location: fax_edit.php?id=".urlencode($fax_uuid));
 			return;
 	}
 
@@ -216,7 +216,7 @@
 
 		//redirect the browser
 			message::add($text['confirm-add']);
-			header("Location: fax_edit.php?id=".$fax_uuid);
+			header("Location: fax_edit.php?id=".urlencode($fax_uuid));
 			return;
 	}
 
