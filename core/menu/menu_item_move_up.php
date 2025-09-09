@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,7 @@
 //move down more than one level at a time
 //update v_menu_items set menu_order = (menu_order+1) where menu_order > 2 or menu_order = 2
 
-if (count($_GET)>0) {
+if (count($_GET) > 0) {
 	$menu_item_id = $_GET["menu_item_id"];
 	$menu_order = $_GET["menu_order"];
 
@@ -83,7 +83,7 @@ if (count($_GET)>0) {
 	}
 
 	//redirect the user
-		header("Location: menu_list.php?menu_item_id=".$menu_item_id);
+		header("Location: menu_list.php?menu_item_id=".urlencode($menu_item_id));
 		return;
 }
 
