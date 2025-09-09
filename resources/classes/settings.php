@@ -256,7 +256,7 @@ class settings implements clear_cache {
 
 		//get the default settings
 		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_enabled = 'true' ";
+		$sql .= "where default_setting_enabled = true ";
 		if (!empty($this->category)) {
 			$sql .= "and default_setting_category = :default_setting_category ";
 			$parameters['default_setting_category'] = $this->category;
@@ -304,7 +304,7 @@ class settings implements clear_cache {
 		} else {
 			$sql = "select * from v_domain_settings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and domain_setting_enabled = 'true' ";
+			$sql .= "and domain_setting_enabled = true ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
 			//if the apcu extension is loaded store the result
@@ -373,7 +373,7 @@ class settings implements clear_cache {
 		}
 		if (!empty($result)) {
 			foreach ($result as $row) {
-				if ($row['user_setting_enabled'] == 'true') {
+				if ($row['user_setting_enabled'] == true) {
 					$name = $row['user_setting_name'];
 					$category = $row['user_setting_category'];
 					$subcategory = $row['user_setting_subcategory'];
