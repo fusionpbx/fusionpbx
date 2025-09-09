@@ -66,6 +66,7 @@
 	if ($speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
+		$recording_extension = $speech->get_format();
 		//$speech_models = $speech->get_models();
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
@@ -104,8 +105,8 @@
 
 		//sanitize: recording_filename
 		if (!empty($recording_filename)) {
-			$recording_filename_ext = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
-			if (!in_array($recording_filename_ext, ['wav','mp3','ogg'])) {
+			$recording_extension = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
+			if (!in_array($recording_extension, ['wav','mp3','ogg'])) {
 				$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
 				$recording_filename = str_replace('.', '', $recording_filename);
 			}
@@ -225,7 +226,6 @@
 				if ($create_recording) {
 					$speech->audio_path = $recording_path;
 					$speech->audio_filename = $recording_filename;
-					$speech->audio_format = $recording_extension;
 					//$speech->audio_model = $recording_model ?? '';
 					$speech->audio_voice = $recording_voice;
 					//$speech->audio_language = $recording_language;
