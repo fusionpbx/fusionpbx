@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2024
+	Portions created by the Initial Developer are Copyright (C) 2022-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -104,7 +104,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: email_queue_edit.php?id='.$id);
+					header('Location: email_queue_edit.php?id='.urlencode($id));
 					exit;
 				}
 			}
