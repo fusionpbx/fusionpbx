@@ -59,7 +59,7 @@ if (is_uuid($domain_uuid)) {
 }
 else {
 	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);
-	$location = 'default_settings.php'.($search != '' ? "?search=".$search : null);
+	$location = 'default_settings.php'.($search != '' ? "?search=".urlencode($search) : null);
 }
 header("Location: ".$location);
 
