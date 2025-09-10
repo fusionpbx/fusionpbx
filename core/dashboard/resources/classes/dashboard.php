@@ -412,7 +412,7 @@
 					//assign multiple records
 					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
 
-						//define the group_name, group_uuid, dashboard_uuid
+						//define the group_name and group_uuid
 							if (!empty($records) && @sizeof($records) != 0) {
 								$sql = "select group_name, group_uuid from v_groups	";
 								$sql .= "where group_uuid = :group_uuid	";
@@ -456,7 +456,7 @@
 							unset($dashboard_widget_groups);
 						}
 
-						//add the checked rows fro group
+						//add the checked rows from group
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute save
 									$database = new database;
@@ -493,7 +493,7 @@
 					//assign multiple records
 					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
 
-						//define the group_name, group_uuid
+						//define the group_name and group_uuid
 							if (!empty($records) && @sizeof($records) != 0) {
 								$sql = "select group_name, group_uuid from v_groups	";
 								$sql .= "where group_uuid = :group_uuid	";
@@ -508,7 +508,7 @@
 								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
 									//build array
 										$uuids[] = "'".$record['dashboard_widget_uuid']."'";
-									//assign dashboard widgets groups
+									//assign dashboard widget groups
 											$array[$this->name.'_groups'][$x]['dashboard_uuid'] = $dashboard_uuid;
 											$array[$this->name.'_groups'][$x][$this->name.'_uuid'] = $record['dashboard_widget_uuid'];
 											$array[$this->name.'_groups'][$x]['group_uuid'] = $group['group_uuid'];
