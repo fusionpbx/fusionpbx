@@ -411,7 +411,7 @@
 	echo "	".$text['label-fax_notify_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_notify_date ?? '')."'>\n";
+	echo "  <input class='formfld' type='text' name='fax_notify_date' maxlength='255' value='".escape($fax_notify_date ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_notify_date']."\n";
 	echo "</td>\n";
