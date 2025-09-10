@@ -127,7 +127,7 @@
 								//set message
 									message::add($text['message-resending_messages']);
 							}
-							unset($records, $states);
+							unset($records);
 					}
 			}
 		}
