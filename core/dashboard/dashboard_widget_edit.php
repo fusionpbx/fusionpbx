@@ -81,7 +81,6 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		//$dashboard_uuid = $_POST["dashboard_uuid"] ?? '';
 		$widget_name = $_POST["widget_name"] ?? '';
 		$widget_path = $_POST["widget_path"] ?? '';
 		$widget_icon = $_POST["widget_icon"] ?? '';
@@ -119,10 +118,9 @@
 		//define the regex patterns
 		$uuid_pattern = '/[^-A-Fa-f0-9]/';
 		$number_pattern = '/[^-A-Za-z0-9()*#]/';
-		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?:\=#\n]/';
+		$text_pattern = '/[^a-zA-Z0-9 _\-\/.\?:\=#\n,()]/';
 
 		//sanitize the data
-		//$dashboard_uuid = preg_replace($uuid_pattern, '', $dashboard_uuid);
 		$widget_name = trim($widget_name);
 		$widget_path = preg_replace($text_pattern, '', strtolower($widget_path));
 		$widget_icon = preg_replace($text_pattern, '', $widget_icon);
