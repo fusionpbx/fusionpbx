@@ -105,6 +105,60 @@
 		}
 
 		/**
+		 * resend selected faxes in the fax queue
+		 */
+		public function resend($records) {
+			if (permission_exists($this->name.'_edit')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//resend multiple faxes
+					if (is_array($records) && @sizeof($records) != 0) {
+						//build the fax array
+							$x = 0;
+							foreach ($records as $record) {
+								//add to the array
+									if ($record['checked'] == 'true' && is_uuid($record['fax_queue_uuid'])) {
+										$array[$this->table][$x][$this->name.'_uuid'] = $record['fax_queue_uuid'];
+										$array[$this->table][$x]['fax_status'] = 'waiting';
+										$array[$this->table][$x]['fax_retry_date'] = null;
+										$array[$this->table][$x]['fax_notify_date'] = null;
+										$array[$this->table][$x]['fax_retry_count'] = '0';
+									}
+
+								//increment the id
+									$x++;
+							}
+
+						//save the changes
+							if (is_array($array) && @sizeof($array) != 0) {
+								//save the array
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+
+								//set message
+									message::add($text['message-resending_faxes']);
+							}
+							unset($records);
+					}
+
+			}
+		}
+
+		/**
 		 * toggle a field between two values
 		 */
 		public function toggle($records) {
