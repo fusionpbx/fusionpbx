@@ -43,22 +43,34 @@
 		$action = $_POST['action'];
 		$dashboard_uuid = $_POST['dashboard_uuid'];
 		$dashboard_widgets = $_POST['dashboard_widgets'];
+		$group_uuid = $_POST['group_uuid'];
 	}
 
 //process the http post data by action
 	if (!empty($action) && !empty($dashboard_widgets)) {
-
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('dashboard_widget_edit')) {
 					$obj = new dashboard;
-					$obj->toggle_items($dashboard_widgets);
+					$obj->toggle_widgets($dashboard_widgets);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('dashboard_widget_delete')) {
 					$obj = new dashboard;
-					$obj->delete_items($dashboard_widgets);
+					$obj->delete_widgets($dashboard_widgets);
+				}
+				break;
+			case 'group_widgets_add':
+				if (permission_exists('dashboard_widget_edit')) {
+					$obj = new dashboard;
+					$obj->assign_widgets($dashboard_widgets, $dashboard_uuid, $group_uuid);
+				}
+				break;
+			case 'group_widgets_delete':
+				if (permission_exists('dashboard_widget_delete')) {
+					$obj = new dashboard;
+					$obj->unassign_widgets($dashboard_widgets, $dashboard_uuid, $group_uuid);
 				}
 				break;
 		}
@@ -107,17 +119,17 @@
 	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
 	$database = new database;
 	$parameters['dashboard_uuid'] = $dashboard_uuid;
-	$widget_data = $database->select($sql, $parameters ?? null, 'all');
+	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 	//get the list of widget uuids
 	$widget_uuid_list = [];
-	foreach ($widget_data as $row) {
+	foreach ($result as $row) {
 		$widget_uuid_list[] = $row['dashboard_widget_uuid'];
 	}
 
 	$widgets = [];
-	foreach ($widget_data as $row) {
+	foreach ($result as $row) {
 		//skip child widgets unless the parent doesn't exist
 		if (!empty($row['dashboard_widget_parent_uuid']) && in_array($row['dashboard_widget_parent_uuid'], $widget_uuid_list)) {
 			continue;
@@ -128,7 +140,7 @@
 
 		//add child widgets under parent widgets
 		if ($row['widget_path'] == 'dashboard/parent') {
-			foreach ($widget_data as $child) {
+			foreach ($result as $child) {
 				if ($child['dashboard_widget_parent_uuid'] == $row['dashboard_widget_uuid']) {
 					$widgets[] = $child;
 				}
@@ -136,14 +148,42 @@
 		}
 	}
 
+	//get the group list
+	$sql = "select group_uuid, group_name from v_groups ";
+	$database = new database;
+	$groups = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 //create token
 	$object = new token;
 	$token = $object->create('/core/dashboard/dashboard_widget_list.php');
 
 //show the content
+	echo "<form id='form_list' method='post' action='dashboard_widget_list.php'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='dashboard_uuid' value='".escape($dashboard_uuid)."'>\n";
+
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
 	echo "	<div class='heading'><b>".$text['title-widgets']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
+	echo "	<select class='formfld revealed' id='group_uuid' name='group_uuid' style='display: none;'>\n";
+	echo "		<option value=''>Select Group</option>\n";
+	if (!empty($groups)) {
+		foreach ($groups as $row) {
+			echo "	<option value='".urlencode($row["group_uuid"])."'>".escape($row['group_name'])." ".escape($row['group_description'])."</option>\n";
+		}
+	}
+	echo "	</select>\n";
+
+	if (permission_exists('dashboard_widget_add') && !empty($widgets)) {
+		echo button::create(['type'=>'button','label'=>$text['button-assign'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_group_widgets_add','class' => 'btn btn-default revealed','collapse'=>'hide-xs','style'=>'display: none;','onclick'=>"list_action_set('group_widgets_add'); list_form_submit('form_list');"]);
+	}
+	if (permission_exists('dashboard_widget_delete') && !empty($widgets)) {
+		echo button::create(['type'=>'button','label'=>$text['button-unassign'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'name'=>'btn_group_widgets_delete','class' => 'btn btn-default revealed','style'=>'display: none; margin-right: 35px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete-groups','btn_group_widgets_delete');"]);
+	}
+	if (permission_exists('dashboard_widget_delete') && !empty($widgets)) {
+		echo modal::create(['id'=>'modal-delete-groups','type'=>'unassign', 'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_group_widgets_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('group_widgets_delete'); list_form_submit('form_list');"])]);
+	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'dashboard.php']);
 	if (permission_exists('dashboard_widget_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard_widget_edit.php?id='.escape($dashboard_uuid).'&widget_uuid='.escape($widget_uuid)]);
@@ -157,7 +197,6 @@
 	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
-	echo "		</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -168,10 +207,6 @@
 	if (permission_exists('dashboard_widget_delete') && !empty($widgets)) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
-
-	echo "<form id='form_list' method='post' action='dashboard_widget_list.php?'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='dashboard_uuid' value='".escape($dashboard_uuid)."'>\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
