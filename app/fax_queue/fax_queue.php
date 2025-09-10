@@ -78,12 +78,12 @@
 					$obj->copy($fax_queue);
 				}
 				break;
-			//case 'toggle':
-			//	if ($permission['fax_queue_edit']) {
-			//		$obj = new fax_queue;
-			//		$obj->toggle($fax_queue);
-			//	}
-			//	break;
+			case 'resend':
+				if ($permission['fax_queue_edit']) {
+					$obj = new fax_queue;
+					$obj->resend($fax_queue);
+				}
+				break;
 			case 'delete':
 				if ($permission['fax_queue_delete']) {
 					$obj = new fax_queue;
@@ -249,9 +249,9 @@
 	if ($permission['fax_queue_add'] && $fax_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
-	//if ($permission['fax_queue_edit'] && $fax_queue) {
-	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	//}
+	if ($permission['fax_queue_edit'] && $fax_queue) {
+		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>'fax','id'=>'btn_resend','name'=>'btn_resend','collapse'=>'hide-xs','style'=>'display: none;','class'=>'+revealed','onclick'=>"modal_open('modal-resend','btn_resend');"]);
+	}
 	if ($permission['fax_queue_delete'] && $fax_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -260,7 +260,7 @@
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'style'=>'margin-left: 15px;','link'=>'?show=all']);
 		}
 	}
 	echo			"<form id='form_search' class='inline' method='get'>\n";
@@ -274,7 +274,7 @@
 	echo "			<option value='busy' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
 	echo "			<option value='failed' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
 	echo "		</select>\n";
-	echo			"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
+	echo			"<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	if (!empty($paging_controls_mini)) {
 		echo		"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -287,9 +287,16 @@
 	if ($permission['fax_queue_add'] && $fax_queue) {
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
-	//if ($permission['fax_queue_edit'] && $fax_queue) {
-	//	echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
-	//}
+	if (permission_exists('fax_queue_edit') && $fax_queue) {
+		echo modal::create([
+			'id'=>'modal-resend',
+			'title'=>$text['modal_title-resend'],
+			'message'=>$text['modal_message-resend'],
+			'actions'=>
+				button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'collapse'=>'hide-xs','onclick'=>'modal_close();']).
+				button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('resend'); list_form_submit('form_list');"])
+			]);
+	}
 	if ($permission['fax_queue_delete'] && $fax_queue) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
