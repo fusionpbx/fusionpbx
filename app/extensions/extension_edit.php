@@ -1840,7 +1840,7 @@
 			else {
 				echo "	<select class='formfld' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled'>\n";
 				echo "		<option value='true'>".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($voicemail_transcription_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "		<option value='false' ".($voicemail_transcription_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 				echo "	</select>\n";
 			}
 			echo "<br />\n";
