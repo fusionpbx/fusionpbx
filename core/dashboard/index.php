@@ -196,7 +196,7 @@
 
 			//redirect the browser
 			message::add($text['message-update']);
-			header("Location: /core/dashboard/".(!empty($_GET['name']) ? "?name=".$_GET['name'] : null));
+			header("Location: /core/dashboard/".(!empty($_GET['name']) ? "?name=".urlencode($_GET['name']) : null));
 			return;
 		}
 	}

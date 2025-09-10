@@ -209,7 +209,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: dashboard_edit.php?id='.$dashboard_uuid);
+					header('Location: dashboard_edit.php?id='.urlencode($dashboard_uuid));
 					exit;
 				}
 			}
