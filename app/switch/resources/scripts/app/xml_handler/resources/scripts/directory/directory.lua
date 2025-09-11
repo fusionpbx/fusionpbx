@@ -302,11 +302,11 @@
 								extension_uuid = row.extension_uuid;
 								extension = row.extension;
 								cidr = "";
-								if (string.len(row.cidr) > 0) then
+								if (row.cidr ~= nil and string.len(row.cidr) > 0) then
 									cidr = row.cidr;
 								end
 								number_alias = ""
-								if (string.len(row.number_alias) > 0) then
+								if (row.number_alias ~= nil and string.len(row.number_alias) > 0) then
 									number_alias = row.number_alias;
 								end
 
@@ -396,13 +396,13 @@
 								elseif (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
-									--set the destintion
+									--set the destination
 										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 									--set a default dial string
 										if (dial_string == null) then
 											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .. "}${sofia_contact(*/" .. destination .. ")}";
 										end
-									--set the an alternative dial string if the hostnames don't match
+									--set an alternative dial string if the hostnames don't match
 										if (USE_FS_PATH) then
 											if (local_hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler][directory] local_host and database_host are the same\n");
@@ -420,7 +420,7 @@
 											--freeswitch.consoleLog("notice", "[xml_handler][directory] seems balancing is false??" .. tostring(USE_FS_PATH) .. "\n");
 										end
 
-									--show debug informationa
+									--show debug information
 										if (USE_FS_PATH) then
 											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
