@@ -55,6 +55,16 @@
 	local play_file   = require "resources.functions.play_file"
 	local send_mail = require 'resources.functions.send_mail'
 
+--define hex_to_char function
+	local hex_to_char = function(x)
+		return string.char(tonumber(x, 16))
+	end
+	
+	--define url_decode function
+	local url_decode = function(url)
+		return url:gsub("%%(%x%x)", hex_to_char)
+	end
+
 --define the session hangup
 	function session_hangup_hook()
 
@@ -783,12 +793,24 @@
 				end
 			end
 
+		--add the array to the logs
+			-- for key, row in pairs(destinations) do
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] domain_name: "..row.domain_name.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_number: "..row.destination_number.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_delay: "..row.destination_delay.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_timeout: "..row.destination_timeout.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_prompt: "..row.destination_prompt.."\n");
+			-- end
+
 		--prepare the array of destinations
 			for key, row in pairs(destinations) do
-				--determine if the user is registered if not registered then lookup
 				if (row.user_exists == "true") then
+					--get the results from sofia_contact
 					cmd = "sofia_contact */".. row.destination_number .."@" ..domain_name;
-					if (api:executeString(cmd) == "error/user_not_registered") then
+					sofia_contact_result = api:executeString(cmd);
+
+					--determine if the user is registered if not registered then lookup
+					if (sofia_contact_result == "error/user_not_registered") then
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 						cmd = "user_data ".. row.destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
@@ -804,11 +826,59 @@
 							end
 						end
 					end
+
+					--handle multiple registrations
+					contact_array = {};
+					if (row.ring_group_strategy == 'simultaneous' and sofia_contact_result ~= "error/user_not_registered") then
+						--sofia_contact_result = url_decode(sofia_contact_result);
+
+						contact_array = explode(",",sofia_contact_result);
+						if (#contact_array > 1) then
+							i = 0;
+							for index, value in ipairs(contact_array) do
+								--contact_array_sub = explode(";",value);
+								destination_number = string.gsub(value, "sip:", "");
+								if (i == 0) then
+									--row use the original key
+									new_key = key;
+								else
+									--add a new key
+									new_key = #destinations + 1;
+								end
+
+								--multiple registrations - keep the original destination_number
+								destinations[new_key] = {}
+								destinations[new_key]['ring_group_strategy'] = row.ring_group_strategy;
+								destinations[new_key]['ring_group_timeout_app'] = row.ring_group_timeout_app;
+								destinations[new_key]['ring_group_timeout_data'] = row.ring_group_timeout_data;
+								destinations[new_key]['ring_group_caller_id_name'] = row.ring_group_caller_id_name;
+								destinations[new_key]['ring_group_caller_id_number'] = row.ring_group_caller_id_number;
+								destinations[new_key]['ring_group_cid_name_prefix'] = row.ring_group_cid_name_prefix;
+								destinations[new_key]['ring_group_cid_number_prefix'] = row.ring_group_cid_number_prefix;
+								destinations[new_key]['ring_group_distinctive_ring'] = row.ring_group_distinctive_ring;
+								destinations[new_key]['ring_group_ringback'] = row.ring_group_ringback;
+								destinations[new_key]['domain_name'] = domain_name;
+								destinations[new_key]['destination_number'] = destination_number;
+								destinations[new_key]['destination_delay'] = tonumber(row.destination_delay);
+								destinations[new_key]['destination_timeout'] = row.destination_timeout;
+								destinations[new_key]['destination_prompt'] = 'false';
+								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
+								destinations[new_key]['group_confirm_file'] = row.group_confirm_file;
+								destinations[new_key]['toll_allow'] = toll_allow;
+								destinations[new_key]['user_exists'] = 'false'; --NOT sure about this
+								destinations[new_key]['is_follow_me_destination'] = "true";
+
+								i = i + 1;
+							end
+						end
+					end
+
 				end
 			end
 
 		--add the array to the logs
 			for key, row in pairs(destinations) do
+				freeswitch.consoleLog("NOTICE", "[ring group]\n");
 				freeswitch.consoleLog("NOTICE", "[ring group] domain_name: "..row.domain_name.."\n");
 				freeswitch.consoleLog("NOTICE", "[ring group] destination_number: "..row.destination_number.."\n");
 				freeswitch.consoleLog("NOTICE", "[ring group] destination_delay: "..row.destination_delay.."\n");
@@ -845,8 +915,10 @@
 						end
 
 					--check if the user exists
-						cmd = "user_exists id ".. destination_number .." "..domain_name;
-						user_exists = api:executeString(cmd);
+						if (user_exists == nil) then
+							cmd = "user_exists id ".. destination_number .." "..domain_name;
+							user_exists = api:executeString(cmd);
+						end
 
 					--set ringback
 						if (ring_group_ringback and string.len(ring_group_ringback) > 0) then
@@ -1083,7 +1155,7 @@
 			end
 
 		--release dbh before bridge
-				dbh:release();
+			dbh:release();
 
 		--session execute
 			if (session:ready()) then
