@@ -127,7 +127,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "24h";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Toggle between 24 hour and 12 hour time formats. Default is 24hr when disabled.";		
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Toggle between 24 hour and 12 hour time formats. Default is 12 hour when disabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9f4a1209-72ba-435b-90e1-4cba48d74509";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
