@@ -172,7 +172,7 @@
 	require_once "resources/header.php";
 
 //include websockets
-	$version = md5(file_get_contents(__DIR__, '/resources/javascript/ws_client.js'));
+	$version = md5(file_get_contents(__DIR__ . '/resources/javascript/ws_client.js'));
 	echo "<script src='/core/dashboard/resources/javascript/ws_client.js?v=$version'></script>\n";
 
 //include sortablejs
@@ -204,7 +204,7 @@
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo "		<form id='dashboard' method='post' _onsubmit='setFormSubmitting()'>\n";
-	if ($_SESSION['theme']['menu_style']['text'] != 'side') {
+	if ($settings->get('theme', 'menu_style') != 'side') {
 		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
 	}
 	if (permission_exists('dashboard_edit')) {

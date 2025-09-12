@@ -241,9 +241,9 @@ echo "	<input id='token' type='hidden' name='" . $token['name'] . "' value='" . 
 subscriber::save_token($token, ['active.calls']);
 
 //break the caching
-$version = md5(file_get_contents(__DIR__, '/resources/javascript/websocket_client.js'));
+$version = md5(file_get_contents(__DIR__ . '/resources/javascript/websocket_client.js'));
 echo "<script src='resources/javascript/websocket_client.js?v=$version'></script>\n";
-$version = md5(file_get_contents(__DIR__, '/resources/javascript/arrow.js'));
+$version = md5(file_get_contents(__DIR__ . '/resources/javascript/arrows.js'));
 echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 ?>
 <script>

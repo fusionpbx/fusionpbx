@@ -96,7 +96,7 @@ if ($dashboard_details_state != 'disabled') {
 echo "</div>\n";
 
 //include arrows when not changed
-$version = md5(file_get_contents($project_root, '/app/active_calls/resources/javascript/arrow.js'));
+$version = md5(file_get_contents($project_root . '/app/active_calls/resources/javascript/arrows.js'));
 echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'></script>\n";
 
 ?>
