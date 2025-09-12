@@ -12,7 +12,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], dirname($widget_url));
 
 //get the dashboard label
-	$widget_label = $text['title-'.$widget_key];
+	$widget_label = $text['title-'.$widget_key] ?? '';
 	if (empty($widget_label)) {
 		$widget_label = $widget_name;
 	}
