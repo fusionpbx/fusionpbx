@@ -213,7 +213,7 @@
 	require_once "resources/header.php";
 
 //include websockets
-	$version = md5(file_get_contents(__DIR__, '/resources/javascript/ws_client.js'));
+	$version = md5(file_get_contents(__DIR__ . '/resources/javascript/ws_client.js'));
 	echo "<script src='/core/dashboard/resources/javascript/ws_client.js?v=$version'></script>\n";
 
 //include sortablejs
@@ -224,9 +224,9 @@
 
 //chart variables
 	echo "<script>\n";
-	echo "	var chart_text_font = '".($settings->get('theme', 'dashboard_number_text_font') ?? 'arial')."';\n";
-	echo "	var chart_text_size = '".($settings->get('theme', 'dashboard_chart_text_size') ?? '30px')."';\n";
-	echo "	Chart.overrides.doughnut.cutout = '".($settings->get('theme', 'dashboard_chart_cutout') ?? '75%')."';\n";
+	echo "	var chart_text_font = '".$settings->get('theme', 'dashboard_number_text_font', 'arial')."';\n";
+	echo "	var chart_text_size = '".$settings->get('theme', 'dashboard_chart_text_size', '30px')."';\n";
+	echo "	Chart.overrides.doughnut.cutout = '".$settings->get('theme', 'dashboard_chart_cutout', '75%')."';\n";
 	echo "	Chart.defaults.responsive = true;\n";
 	echo "	Chart.defaults.maintainAspectRatio = false;\n";
 	echo "	Chart.defaults.plugins.legend.display = false;\n";
@@ -245,7 +245,7 @@
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo "		<form id='dashboard' method='post' _onsubmit='setFormSubmitting()'>\n";
-	if ($_SESSION['theme']['menu_style']['text'] != 'side') {
+	if ($settings->get('theme', 'menu_style', '') != 'side') {
 		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
 	}
 	if (permission_exists('dashboard_edit')) {

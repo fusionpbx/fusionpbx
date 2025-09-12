@@ -151,7 +151,7 @@
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
 	$database = new database;
-	$groups = $database->select($sql, $parameters, 'all');
+	$groups = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -186,7 +186,7 @@
 	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'dashboard.php']);
 	if (permission_exists('dashboard_widget_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard_widget_edit.php?id='.escape($dashboard_uuid).'&widget_uuid='.escape($widget_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard_widget_edit.php?id='.escape($dashboard_uuid).'&widget_uuid='.escape($widget_uuid ?? null)]);
 	}
 	if (permission_exists('dashboard_widget_edit') && !empty($widgets)) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
@@ -233,7 +233,7 @@
 			$list_row_url = '';
 			if (permission_exists('dashboard_widget_edit')) {
 				$list_row_url = "dashboard_widget_edit.php?id=".urlencode($dashboard_uuid)."&widget_uuid=".urlencode($row['dashboard_widget_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}

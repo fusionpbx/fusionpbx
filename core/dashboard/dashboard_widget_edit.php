@@ -57,7 +57,9 @@
 	$widget_groups = [];
 	$widget_label_enabled = 'true';
 	$widget_label_text_color = '';
+	$widget_label_text_color_hover = '';
 	$widget_label_background_color = '';
+	$widget_label_background_color_hover = '';
 	$widget_number_text_color = '';
 	$widget_number_background_color = '';
 	$widget_column_span = '';
@@ -422,15 +424,18 @@
 	$widget_path_name = $widget_path_array[1];
 	$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/config.php');
 	if (file_exists($path_array[0])) {
+		$x = 0;
 		include($path_array[0]);
 	}
 
 //find the chart type options
 	$widget_chart_type_options = [];
-	foreach ($array['dashboard_widgets'] as $index => $row) {
-		if ($row['widget_path'] === "$application_name/$widget_path_name") {
-			$widget_chart_type_options = $row['widget_chart_type_options'];
-			break;
+	if (!empty($array['dashboard_widgets'])) {
+		foreach ($array['dashboard_widgets'] as $index => $row) {
+			if ($row['widget_path'] === "$application_name/$widget_path_name") {
+				$widget_chart_type_options = $row['widget_chart_type_options'];
+				break;
+			}
 		}
 	}
 
