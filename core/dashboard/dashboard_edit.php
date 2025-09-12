@@ -55,9 +55,12 @@
 	$dashboard_content = '';
 	$dashboard_content_text_align = '';
 	$dashboard_content_details = '';
+	$dashboard_chart_type = '';
 	$dashboard_label_enabled = 'true';
 	$dashboard_label_text_color = '';
+	$dashboard_label_text_color_hover = '';
 	$dashboard_label_background_color = '';
+	$dashboard_label_background_color_hover = '';
 	$dashboard_number_text_color = '';
 	$dashboard_number_background_color = '';
 	$dashboard_groups = [];
