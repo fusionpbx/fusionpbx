@@ -18,7 +18,7 @@
 
   The Initial Developer of the Original Code is
   Mark J Crane <markjcrane@fusionpbx.com>
-  Copyright (C) 2013 - 2023
+  Copyright (C) 2013 - 2025
   All Rights Reserved.
 
   Contributor(s):
@@ -441,6 +441,19 @@
 			//$db_port = $config->db_port;
 			//includes files
 			require dirname(__DIR__, 2) . "/resources/require.php";
+
+			//drop views so that alter table statements complete use application defaults will recreate the views
+			$views[] = 'view_users';
+			$views[] = 'view_groups';
+			$views[] = 'view_call_block';
+			$views[] = 'view_call_recordings';
+			$views[] = 'view_domains';
+			$views[] = 'view_contacts';
+			foreach ($views as $view) {
+				$sql = "DROP VIEW " . $view . ";";
+				$response .= $sql;
+				$this->database->execute($sql);
+			}
 
 			//add multi-lingual support
 			if (!isset($text)) {
