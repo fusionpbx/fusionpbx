@@ -332,7 +332,22 @@
 //pre-populate the form
 	if (!empty($_GET) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$voicemail_uuid = $_GET["id"];
-		$sql = "select * from v_voicemails ";
+		$sql = "select ";
+		$sql .= "voicemail_id, ";
+		$sql .= "voicemail_password, ";
+		$sql .= "greeting_id, ";
+		$sql .= "voicemail_alternate_greet_id, ";
+		$sql .= "voicemail_mail_to, ";
+		$sql .= "voicemail_sms_to, ";
+		$sql .= "cast(voicemail_transcription_enabled as text), ";
+		$sql .= "cast(voicemail_tutorial as text), ";
+		$sql .= "cast(voicemail_recording_instructions as text), ";
+		$sql .= "cast(voicemail_recording_options as text), ";
+		$sql .= "voicemail_file, ";
+		$sql .= "voicemail_local_after_email, ";
+		$sql .= "cast(voicemail_enabled as text), ";
+		$sql .= "voicemail_description ";
+		$sql .= "from v_voicemails ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_uuid = :voicemail_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
