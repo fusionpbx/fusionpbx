@@ -91,7 +91,6 @@
 	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(phrase_name) like :search ";
-		$sql_search .= "or lower(phrase_enabled) like :search ";
 		$sql_search .= "or lower(phrase_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';

@@ -128,7 +128,7 @@
 			$device_uuid_alternate = $_POST["device_uuid_alternate"] ?? null;
 			$device_model = $_POST["device_model"] ?? null;
 			$device_firmware_version = $_POST["device_firmware_version"] ?? null;
-			$device_enabled = $_POST["device_enabled"] ?? 'false';
+			$device_enabled = $_POST["device_enabled"] ?? false;
 			$device_template = $_POST["device_template"];
 			$device_description = $_POST["device_description"];
 		//lines
@@ -546,7 +546,7 @@
 	unset($sql, $parameters);
 
 //set the defaults
-	if (empty($device_enabled)) { $device_enabled = 'true'; }
+	if (empty($device_enabled)) { $device_enabled = true; }
 
 //use the device address to get the vendor
 	if (empty($device_vendor)) {
@@ -694,7 +694,7 @@
 //get the users
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and user_enabled = 'true' ";
+	$sql .= "and user_enabled = true ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$users = $database->select($sql, $parameters, 'all');
@@ -2019,14 +2019,14 @@
 		echo "<td class='vtable' align='left'>\n";
 		if (substr($settings->get('theme', 'input_toggle_style', ''), 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='device_enabled' name='device_enabled' value='true' ".($device_enabled == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<input type='checkbox' id='device_enabled' name='device_enabled' value='true' ".($device_enabled == true ? "checked='checked'" : null).">\n";
 			echo "		<span class='slider'></span>\n";
 			echo "	</label>\n";
 		}
 		else {
 			echo "	<select class='formfld' id='device_enabled' name='device_enabled'>\n";
-			echo "		<option value='true' ".($device_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($device_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($device_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($device_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 		}
 		echo "<br />\n";

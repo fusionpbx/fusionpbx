@@ -70,7 +70,7 @@
 		$conference_account_code = $_POST["conference_account_code"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
-		$conference_enabled = $_POST["conference_enabled"] ?? 'false';
+		$conference_enabled = $_POST["conference_enabled"] ?? false;
 
 		//set the context for users that do not have the permission
 		if (permission_exists('conference_context')) {
@@ -234,7 +234,7 @@
 					}
 					$array['dialplans'][0]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
-					$array['dialplans'][0]['dialplan_continue'] = 'false';
+					$array['dialplans'][0]['dialplan_continue'] = false;
 					$array['dialplans'][0]['dialplan_order'] = '333';
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
@@ -315,7 +315,7 @@
 
 //set the defaults
 	if (empty($conference_context)) { $conference_context = $_SESSION['domain_name']; }
-	if (empty($conference_enabled)) { $conference_enabled = 'true'; }
+	if (empty($conference_enabled)) { $conference_enabled = true; }
 
 //get the conference profiles
 	$sql = "select * ";
@@ -329,7 +329,7 @@
 //get conference users
 	$sql = "select * from v_conference_users as e, v_users as u ";
 	$sql .= "where e.user_uuid = u.user_uuid  ";
-	$sql .= "and u.user_enabled = 'true' ";
+	$sql .= "and u.user_enabled = true ";
 	$sql .= "and e.domain_uuid = :domain_uuid ";
 	$sql .= "and e.conference_uuid = :conference_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -341,7 +341,7 @@
 //get the users
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and user_enabled = 'true' ";
+	$sql .= "and user_enabled = true ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$users = $database->select($sql, $parameters ?? null, 'all');
@@ -558,14 +558,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='conference_enabled' name='conference_enabled' value='true' ".($conference_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='conference_enabled' name='conference_enabled' value='true' ".($conference_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='conference_enabled' name='conference_enabled'>\n";
-		echo "		<option value='true' ".($conference_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($conference_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

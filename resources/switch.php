@@ -277,7 +277,7 @@ function save_var_xml() {
 
 		//build the xml
 		$sql = "select * from v_vars ";
-		$sql .= "where var_enabled = 'true' ";
+		$sql .= "where var_enabled = true ";
 		$sql .= "order by var_category, var_order asc ";
 		$database = new database;
 		$variables = $database->select($sql, null, 'all');
@@ -351,8 +351,8 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	}
 	$sql .= "and (hostname = :hostname or hostname is null) ";
 	$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-	$sql .= "and d.dialplan_enabled = 'true' ";
-	$sql .= "and (dd.dialplan_detail_enabled = 'true' or dd.dialplan_detail_enabled is null) ";
+	$sql .= "and d.dialplan_enabled = true ";
+	$sql .= "and (dd.dialplan_detail_enabled = true or dd.dialplan_detail_enabled is null) ";
 	$sql .= "order by d.domain_uuid,  d.dialplan_order, dd.dialplan_detail_order ";
 	$parameters['hostname'] = $hostname;
 	$database = new database;
@@ -423,7 +423,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 					}
 				}
 
-				if (!empty($bridge_array) && $dialplan["dialplan_continue"] == "false") {
+				if (!empty($bridge_array) && $dialplan["dialplan_continue"] == false) {
 					break;
 				}
 			}
@@ -446,7 +446,7 @@ function extension_exists($extension) {
 	$sql .= "extension = :extension ";
 	$sql .= "or number_alias = :extension ";
 	$sql .= ") ";
-	$sql .= "and enabled = 'true' ";
+	$sql .= "and enabled = true ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['extension'] = $extension;
 	$database = new database;
@@ -888,7 +888,7 @@ if (!function_exists('save_sip_profile_xml')) {
 					$sip_profile_name = $row['sip_profile_name'];
 					$sip_profile_enabled = $row['sip_profile_enabled'];
 
-					if ($sip_profile_enabled == 'false') {
+					if ($sip_profile_enabled == false) {
 						$fout = fopen($profile_dir.'/'.$sip_profile_name.".xml","w");
 						if ($fout) {
 							fclose($fout);
@@ -907,7 +907,7 @@ if (!function_exists('save_sip_profile_xml')) {
 					//get the sip profile settings
 						$sql = "select * from v_sip_profile_settings ";
 						$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
-						$sql .= "and sip_profile_setting_enabled = 'true' ";
+						$sql .= "and sip_profile_setting_enabled = true ";
 						$parameters['sip_profile_uuid'] = $sip_profile_uuid;
 						$database = new database;
 						$result_2 = $database->select($sql, $parameters, 'all');

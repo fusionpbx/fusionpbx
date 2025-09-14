@@ -337,7 +337,7 @@
 							if (is_array($row) && sizeof($row) != 0) {
 
 								//checks either device enabled
-									if ($row['device_enabled'] != 'true') {
+									if ($row['device_enabled'] != true) {
 										syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempted but the device is not enabled for ".escape($device_address));
 										if ($this->settings->get('provision','debug', false)) {
 											echo "<br/>device disabled<br/>";
@@ -384,7 +384,7 @@
 							if (empty($device_template)) {
 								$sql = "select * from v_devices ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and device_enabled = 'true' ";
+								$sql .= "and device_enabled = true ";
 								$sql .= "limit 1 ";
 								$parameters['domain_uuid'] = $domain_uuid;
 								$row = $this->database->select($sql, $parameters, 'row');
@@ -544,7 +544,7 @@
 								$array['devices'][$x]['device_uuid'] = $device_uuid;
 								$array['devices'][$x]['device_address'] = $device_address;
 								$array['devices'][$x]['device_vendor'] = $device_vendor;
-								$array['devices'][$x]['device_enabled'] = 'true';
+								$array['devices'][$x]['device_enabled'] = true;
 								$array['devices'][$x]['device_template'] = $device_template;
 								$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
 
@@ -573,7 +573,7 @@
 				if (is_uuid($device_uuid)) {
 					$sql = "select * from v_devices ";
 					$sql .= "where device_uuid = :device_uuid ";
-					$sql .= "and device_enabled = 'true' ";
+					$sql .= "and device_enabled = true ";
 					$parameters['device_uuid'] = $device_uuid;
 					$row = $this->database->select($sql, $parameters, 'row');
 					if (is_array($row) && sizeof($row) != 0) {
@@ -589,7 +589,7 @@
 							$parameters['device_uuid'] = $device_uuid;
 							$row = $this->database->select($sql, $parameters, 'row');
 							if (is_array($row) && sizeof($row) != 0) {
-								if ($row["device_enabled"] == "true") {
+								if ($row["device_enabled"]) {
 									$device_label = $row["device_label"];
 
 									//if the device vendor match then use the alternate device template
@@ -614,7 +614,7 @@
 				if (is_uuid($device_uuid) && is_uuid($device_profile_uuid)) {
 					$sql = "select * from v_device_profile_settings ";
 					$sql .= "where device_profile_uuid = :device_profile_uuid ";
-					$sql .= "and profile_setting_enabled = 'true' ";
+					$sql .= "and profile_setting_enabled = true ";
 					$parameters['device_profile_uuid'] = $device_profile_uuid;
 					$device_profile_settings = $this->database->select($sql, $parameters, 'all');
 					if (is_array($device_profile_settings) && sizeof($device_profile_settings) != 0) {
@@ -1381,7 +1381,7 @@
 												//destination file path
 													$dest_path = path_join($directory, $file_name);
 
-													if ($device_enabled == 'true') {
+													if ($device_enabled) {
 														//output template to string for header processing
 															$file_contents = $this->render();
 

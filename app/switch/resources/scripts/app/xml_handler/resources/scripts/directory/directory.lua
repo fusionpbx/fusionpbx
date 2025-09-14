@@ -287,9 +287,9 @@
 						local sql = "SELECT e.*, random() FROM v_extensions as e, v_domains as d "
 							.. "WHERE e.domain_uuid = :domain_uuid "
 							.. "AND d.domain_uuid = :domain_uuid "
-							.. "AND d.domain_enabled = 'true' "
+							.. "AND d.domain_enabled = true "
 							.. "AND (e.extension = :user or e.number_alias = :user) "
-							.. "AND e.enabled = 'true' ";
+							.. "AND e.enabled = true ";
 						local params = {domain_uuid=domain_uuid, user=user};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");

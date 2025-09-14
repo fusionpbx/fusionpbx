@@ -267,7 +267,7 @@
 										$array["dialplans"][$row_id]["dialplan_name"] = !empty($dialplan_name) ? $dialplan_name : format_phone($destination_number);
 										$array["dialplans"][$row_id]["dialplan_number"] = $destination_number;
 										$array["dialplans"][$row_id]["dialplan_context"] = $destination_context;
-										$array["dialplans"][$row_id]["dialplan_continue"] = "false";
+										$array["dialplans"][$row_id]["dialplan_continue"] = false;
 										$array["dialplans"][$row_id]["dialplan_order"] = "100";
 										$array["dialplans"][$row_id]["dialplan_enabled"] = $destination_enabled;
 										$array["dialplans"][$row_id]["dialplan_description"] = $destination_description;

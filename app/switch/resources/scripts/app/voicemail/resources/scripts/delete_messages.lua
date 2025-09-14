@@ -52,7 +52,7 @@
     end
 
 --get the voicemail extension
-    sql = "SELECT * FROM v_vars WHERE var_category = 'Defaults' AND var_name = 'vm_message_ext' AND var_enabled = 'true'";
+    sql = "SELECT * FROM v_vars WHERE var_category = 'Defaults' AND var_name = 'vm_message_ext' AND var_enabled = true ";
     dbh:query(sql, function(row)
         vm_message_ext = row["var_value"];
     end);

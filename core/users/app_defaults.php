@@ -195,7 +195,7 @@ if ($domains_processed == 1) {
 				$array['email_templates'][$x]['template_body'] .= "</body>\n";
 				$array['email_templates'][$x]['template_body'] .= "</html>\n";
 				$array['email_templates'][$x]['template_type'] = 'html';
-				$array['email_templates'][$x]['template_enabled'] = 'true';
+				$array['email_templates'][$x]['template_enabled'] = true;
 				$array['email_templates'][$x]['template_description'] = 'Default password reset email template.';
 				$x++;
 

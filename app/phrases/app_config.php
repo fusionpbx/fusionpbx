@@ -35,7 +35,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "phrases";
 		$apps[$x]['destinations'][$y]['name'] = "phrases";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and phrase_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and phrase_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "phrase_name asc";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "phrase_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "phrase_name";

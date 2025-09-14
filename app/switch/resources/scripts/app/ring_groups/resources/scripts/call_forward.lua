@@ -106,7 +106,7 @@
 	if not session:ready() then return end
 
 --search ring_group in database
-	local sql = [[SELECT ring_group_uuid as uuid, ring_group_forward_enabled as forward_enabled,
+	local sql = [[SELECT ring_group_uuid as uuid, cast(ring_group_forward_enabled as text) as forward_enabled,
 		ring_group_forward_destination as forward_destination, ring_group_extension as extension
 	FROM v_ring_groups
 		WHERE domain_uuid = :domain_uuid

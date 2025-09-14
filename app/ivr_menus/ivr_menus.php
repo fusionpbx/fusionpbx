@@ -110,7 +110,6 @@
 		$sql .= "and (";
 		$sql .= "	lower(ivr_menu_name) like :search ";
 		$sql .= "	or lower(ivr_menu_extension) like :search ";
-		$sql .= "	or lower(ivr_menu_enabled) like :search ";
 		$sql .= "	or lower(ivr_menu_description) like :search ";
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';
@@ -142,7 +141,6 @@
 		$sql .= "and (";
 		$sql .= "	lower(ivr_menu_name) like :search ";
 		$sql .= "	or lower(ivr_menu_extension) like :search ";
-		$sql .= "	or lower(ivr_menu_enabled) like :search ";
 		$sql .= "	or lower(ivr_menu_description) like :search ";
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';

@@ -82,7 +82,7 @@
 			$conference_center_extension = $_POST["conference_center_extension"];
 			$conference_center_greeting = $_POST["conference_center_greeting"];
 			$conference_center_pin_length = $_POST["conference_center_pin_length"];
-			$conference_center_enabled = $_POST["conference_center_enabled"] ?? 'false';
+			$conference_center_enabled = $_POST["conference_center_enabled"] ?? false;
 			$conference_center_description = $_POST["conference_center_description"];
 
 		//validate the token
@@ -156,7 +156,7 @@
 			$array['dialplans'][0]["dialplan_name"] = $conference_center_name;
 			$array['dialplans'][0]["dialplan_number"] = $conference_center_extension;
 			$array['dialplans'][0]["dialplan_context"] = $_SESSION['domain_name'];
-			$array['dialplans'][0]["dialplan_continue"] = "false";
+			$array['dialplans'][0]["dialplan_continue"] = false;
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "333";
 			$array['dialplans'][0]["dialplan_enabled"] = $conference_center_enabled;
@@ -233,7 +233,7 @@
 	}
 
 //set defaults
-	if (empty($conference_center_enabled)) { $conference_center_enabled = "true"; }
+	if (empty($conference_center_enabled)) { $conference_center_enabled = true; }
 	if (empty($conference_center_pin_length)) { $conference_center_pin_length = 9; }
 
 //get the sounds
@@ -455,14 +455,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='conference_center_enabled' name='conference_center_enabled' value='true' ".($conference_center_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='conference_center_enabled' name='conference_center_enabled' value='true' ".($conference_center_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
-		echo "		<option value='true' ".($conference_center_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($conference_center_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($conference_center_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($conference_center_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

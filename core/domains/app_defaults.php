@@ -28,7 +28,7 @@
 	if ($domains_processed == 1) {
 
 		//set domain enable to true
-		$sql = "update v_domains set domain_enabled = 'true' ";
+		$sql = "update v_domains set domain_enabled = true ";
 		$sql .= "where domain_enabled is null ";
 		$database->execute($sql, null);
 		unset($sql);

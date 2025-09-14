@@ -171,7 +171,6 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['destination_type'] = $destination_type;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -230,7 +229,6 @@
 			$sql .= " or lower(destination_caller_id_name) like :search ";
 			$sql .= " or destination_caller_id_number like :search ";
 		}
-		$sql .= " or lower(destination_enabled) like :search ";
 		$sql .= " or lower(destination_description) like :search ";
 		$sql .= " or lower(destination_data) like :search ";
 		$sql .= ") ";
@@ -238,7 +236,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'destination_number, destination_order ', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$destinations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

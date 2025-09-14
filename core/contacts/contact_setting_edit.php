@@ -75,7 +75,7 @@
 		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
 		$contact_setting_value = $_POST["contact_setting_value"];
 		$contact_setting_order = $_POST["contact_setting_order"] ?? null;
-		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]) ?? 'false';
+		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]) ?? false;
 		$contact_setting_description = $_POST["contact_setting_description"];
 	}
 
@@ -314,14 +314,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='contact_setting_enabled' value='true' ".(empty($contact_setting_enabled) || $contact_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' name='contact_setting_enabled' value='true' ".(empty($contact_setting_enabled) || $contact_setting_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' name='contact_setting_enabled'>\n";
 		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(!empty($contact_setting_enabled) && $contact_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='false' ".(!empty($contact_setting_enabled) && $contact_setting_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

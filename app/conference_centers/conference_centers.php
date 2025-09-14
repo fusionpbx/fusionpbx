@@ -127,7 +127,17 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_conference_centers ";
+	$sql = "select ";
+	$sql .= "domain_uuid, ";
+	$sql .= "conference_center_uuid, ";
+	$sql .= "dialplan_uuid, ";
+	$sql .= "conference_center_name, ";
+	$sql .= "conference_center_extension, ";
+	$sql .= "conference_center_pin_length, ";
+	$sql .= "conference_center_greeting, ";
+	$sql .= "conference_center_description, ";
+	$sql .= "cast(conference_center_enabled as text) ";
+	$sql .= "from v_conference_centers ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -289,4 +299,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

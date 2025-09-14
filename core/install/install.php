@@ -211,7 +211,7 @@
 				//prepare the array
 				$array['domains'][0]['domain_uuid'] = $domain_uuid;
 				$array['domains'][0]['domain_name'] = $domain_name;
-				$array['domains'][0]['domain_enabled'] = 'true';
+				$array['domains'][0]['domain_enabled'] = true;
 
 				//save to the user data
 				$database = new database;
@@ -282,7 +282,7 @@
 			$array['users'][0]['username'] = $admin_username;
 			$array['users'][0]['password'] = $password_hash;
 			$array['users'][0]['salt'] = $user_salt;
-			$array['users'][0]['user_enabled'] = 'true';
+			$array['users'][0]['user_enabled'] = true;
 			$array['user_groups'][0]['user_group_uuid'] = uuid();
 			$array['user_groups'][0]['domain_uuid'] = $domain_uuid;
 			$array['user_groups'][0]['group_name'] = 'superadmin';

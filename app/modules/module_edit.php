@@ -67,8 +67,8 @@
 		$module_description = $_POST["module_description"];
 		$module_category = $_POST["module_category"];
 		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"] ?? 'false';
-		$module_default_enabled = $_POST["module_default_enabled"] ?? 'false';
+		$module_enabled = $_POST["module_enabled"] ?? false;
+		$module_default_enabled = $_POST["module_default_enabled"] ?? false;
 	}
 
 //process the data
@@ -170,8 +170,8 @@
 	}
 
 //set the defaults
-	if (empty($module_enabled)) { $module_enabled = 'true'; }
-	if (empty($module_default_enabled)) { $module_default_enabled = 'true'; }
+	if (empty($module_enabled)) { $module_enabled = true; }
+	if (empty($module_default_enabled)) { $module_default_enabled = true; }
 
 //create token
 	$object = new token;
@@ -255,14 +255,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='module_enabled' name='module_enabled' value='true' ".($module_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='module_enabled' name='module_enabled' value='true' ".($module_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='module_enabled' name='module_enabled'>\n";
-		echo "		<option value='true' ".($module_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($module_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($module_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($module_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "</td>\n";
@@ -275,14 +275,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='module_default_enabled' name='module_default_enabled' value='true' ".($module_default_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='module_default_enabled' name='module_default_enabled' value='true' ".($module_default_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='module_default_enabled' name='module_default_enabled'>\n";
-		echo "		<option value='true' ".($module_default_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($module_default_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($module_default_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($module_default_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "</td>\n";

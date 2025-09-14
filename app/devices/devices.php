@@ -135,7 +135,6 @@
 		$sql .= "	lower(d.device_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
 		$sql .= "	or lower(d.device_vendor) like :search ";
-		$sql .= "	or lower(d.device_enabled) like :search ";
 		$sql .= "	or lower(d.device_template) like :search ";
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";
@@ -224,7 +223,6 @@
 		$sql .= "	lower(d.device_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
 		$sql .= "	or lower(d.device_vendor) like :search ";
-		$sql .= "	or lower(d.device_enabled) like :search ";
 		$sql .= "	or lower(d.device_template) like :search ";
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";

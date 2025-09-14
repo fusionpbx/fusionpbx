@@ -164,10 +164,10 @@
 				$dialplan["dialplan_name"] = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 				$dialplan["dialplan_number"] = $this->fax_extension;
 				$dialplan["dialplan_context"] = $_SESSION['domain_name'];
-				$dialplan["dialplan_continue"] = "false";
+				$dialplan["dialplan_continue"] = false;
 				$dialplan["dialplan_xml"] = $dialplan_xml;
 				$dialplan["dialplan_order"] = "40";
-				$dialplan["dialplan_enabled"] = "true";
+				$dialplan["dialplan_enabled"] = true;
 				$dialplan["dialplan_description"] = $this->fax_description;
 				$dialplan_detail_order = 10;
 

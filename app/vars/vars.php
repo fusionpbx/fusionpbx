@@ -96,7 +96,6 @@
 		$sql .= "	or lower(var_name) like :search ";
 		$sql .= "	or lower(var_value) like :search ";
 		$sql .= "	or lower(var_hostname) like :search ";
-		$sql .= "	or lower(var_enabled) like :search ";
 		$sql .= "	or lower(var_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';

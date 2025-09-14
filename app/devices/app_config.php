@@ -1073,7 +1073,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the profile setting value.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'profile_setting_enabled';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'boolean';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the profile setting enabled.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'profile_setting_description';

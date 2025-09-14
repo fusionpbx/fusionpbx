@@ -97,7 +97,6 @@
 	$sql .= "where conference_control_uuid = :conference_control_uuid ";
 	$sql .= $sql_search ?? '';
 	$parameters['conference_control_uuid'] = $conference_control_uuid ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -110,11 +109,17 @@
 	}
 
 //get the list
-	$sql = str_replace('count(conference_control_detail_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= "conference_control_detail_uuid, ";
+	$sql .= "conference_control_uuid, ";
+	$sql .= "control_digits, ";
+	$sql .= "control_action, ";
+	$sql .= "control_data, ";
+	$sql .= "cast(control_enabled as text) ";
+	$sql .= "from v_conference_control_details ";
 	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'control_digits', 'asc');
 	$sql .= limit_offset($rows_per_page, !empty($offset));
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

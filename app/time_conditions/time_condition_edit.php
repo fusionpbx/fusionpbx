@@ -80,7 +80,7 @@
 		if (permission_exists('time_condition_context')) {
 			$dialplan_context = $_POST["dialplan_context"];
 		}
-		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?? false;
 		$dialplan_description = $_POST["dialplan_description"];
 
 		if (!permission_exists('time_condition_domain')) {
@@ -149,7 +149,7 @@
 					$dialplan_uuid = uuid();
 					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
 					$array['dialplans'][0]['app_uuid'] = '4b821450-926b-175a-af93-a03c441818b1';
-					$array['dialplans'][0]['dialplan_continue'] = 'false';
+					$array['dialplans'][0]['dialplan_continue'] = false;
 					$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 
 				//grant temporary permissions
@@ -176,7 +176,7 @@
 
 				//build update array
 					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
-					$array['dialplans'][0]['dialplan_continue'] = 'false';
+					$array['dialplans'][0]['dialplan_continue'] = false;
 					if (!empty($dialplan_context)) {
 						$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 					}
@@ -662,7 +662,7 @@
 
 //set the defaults
 	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
-	if (empty($dialplan_enabled)) { $dialplan_enabled = 'true'; }
+	if (empty($dialplan_enabled)) { $dialplan_enabled = true; }
 
 //create token
 	$object = new token;
@@ -1309,14 +1309,14 @@ if ($action == 'update') {
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".($dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".($dialplan_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
-		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($dialplan_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

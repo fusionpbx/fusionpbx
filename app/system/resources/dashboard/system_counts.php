@@ -28,7 +28,7 @@
 		$stats['system']['domains']['total'] = sizeof($_SESSION['domains']);
 		$stats['system']['domains']['disabled'] = 0;
 		foreach ($_SESSION['domains'] as $domain) {
-			$stats['system']['domains']['disabled'] += ($domain['domain_enabled'] != 'true') ? 1 : 0;
+			$stats['system']['domains']['disabled'] += ($domain['domain_enabled'] != true) ? 1 : 0;
 		}
 	}
 
@@ -43,10 +43,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['devices']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['devices']['disabled'] += ($row['device_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['devices']['total']++;
-					$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -64,10 +64,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['extensions']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$stats['system']['extensions']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['extensions']['total']++;
-					$stats['domain']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['extensions']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -85,10 +85,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['gateways']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$stats['system']['gateways']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['gateways']['total']++;
-					$stats['domain']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['gateways']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -106,10 +106,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['users']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['users']['disabled'] += ($row['user_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['users']['total']++;
-					$stats['domain']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['users']['disabled'] += ($row['user_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -127,10 +127,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['destinations']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['destinations']['total']++;
-					$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -148,10 +148,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['call_center_queues']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+				//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['call_center_queues']['total']++;
-					//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+					//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -169,10 +169,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ivr_menus']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['ivr_menus']['total']++;
-					$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -185,15 +185,15 @@
 		$stats['system']['ring_groups']['disabled'] = 0;
 		$stats['domain']['ring_groups']['total'] = 0;
 		$stats['domain']['ring_groups']['disabled'] = 0;
-		$sql = "select domain_uuid, ring_group_enabled from v_ring_groups";
+		$sql = "select domain_uuid, cast(ring_group_enabled as text) from v_ring_groups";
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ring_groups']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['ring_groups']['total']++;
-					$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -211,10 +211,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['voicemails']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['voicemails']['total']++;
-					$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -260,8 +260,8 @@
 
 	//get the domain active and inactive counts
 	$sql = "select ";
-	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'true') as active, ";
-	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'false') as inactive; ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = true) as active, ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = false) as inactive; ";
 	$row = $database->select($sql, null, 'row');
 	$domain_active = $row['active'];
 	$domain_inactive = $row['inactive'];

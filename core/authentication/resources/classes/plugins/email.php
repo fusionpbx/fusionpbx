@@ -222,7 +222,7 @@ class plugin_email {
 				$sql .= "and template_category = :template_category ";
 				$sql .= "and template_subcategory = :template_subcategory ";
 				$sql .= "and template_type = :template_type ";
-				$sql .= "and template_enabled = 'true' ";
+				$sql .= "and template_enabled = true ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				$parameters['template_language'] = $language_code;
 				$parameters['template_category'] = 'authentication';

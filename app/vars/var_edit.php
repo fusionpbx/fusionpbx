@@ -67,7 +67,7 @@
 		$var_value = trim($_POST["var_value"]);
 		$var_command = trim($_POST["var_command"]);
 		$var_hostname = trim($_POST["var_hostname"]);
-		$var_enabled = trim($_POST["var_enabled"] ?? 'false');
+		$var_enabled = trim($_POST["var_enabled"] ?? false);
 		$var_order = trim($_POST["var_order"]);
 		$var_description = trim($_POST["var_description"]);
 
@@ -184,7 +184,7 @@
 	}
 
 //set the defaults
-	if (empty($var_enabled)) { $var_enabled = 'true'; }
+	if (empty($var_enabled)) { $var_enabled = true; }
 
 //create token
 	$object = new token;
@@ -287,14 +287,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='var_enabled' name='var_enabled' value='true' ".($var_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='var_enabled' name='var_enabled' value='true' ".($var_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='var_enabled' name='var_enabled'>\n";
-		echo "		<option value='true' ".($var_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($var_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($var_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($var_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

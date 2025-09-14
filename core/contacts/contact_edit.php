@@ -512,7 +512,7 @@
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_name'] = $row["contact_setting_name"];
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_value'] = $row["contact_setting_value"];
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_order'] = $row["contact_setting_order"];
-						$array['contacts'][0]['contact_settings'][$y]['contact_setting_enabled'] = $row["contact_setting_enabled"] ?? 'false';
+						$array['contacts'][0]['contact_settings'][$y]['contact_setting_enabled'] = $row["contact_setting_enabled"] ?? false;
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_description'] = $row["contact_setting_description"];
 						$y++;
 					}
@@ -897,7 +897,7 @@
 		$contact_settings[$x]['contact_setting_name'] = '';
 		$contact_settings[$x]['contact_setting_value'] = '';
 		$contact_settings[$x]['contact_setting_order'] = '';
-		$contact_settings[$x]['contact_setting_enabled'] = 'true';
+		$contact_settings[$x]['contact_setting_enabled'] = true;
 		$contact_settings[$x]['contact_setting_description'] = '';
 	}
 
@@ -2513,14 +2513,14 @@ if (permission_exists('contact_setting_view')) {
 		echo "		<div class='field no-wrap'>\n";
 		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' name='contact_settings[$x][contact_setting_enabled]' value='true' ".(empty($row['contact_setting_enabled']) || $row['contact_setting_enabled'] == 'true' ? "checked='checked'" : null).">\n";
+			echo "		<input type='checkbox' name='contact_settings[$x][contact_setting_enabled]' value='true' ".(empty($row['contact_setting_enabled']) || $row['contact_setting_enabled'] == true ? "checked='checked'" : null).">\n";
 			echo "		<span class='slider'></span>\n";
 			echo "	</label>\n";
 		}
 		else {
 			echo "	<select class='formfld' name='contact_settings[$x][contact_setting_enabled]'>\n";
 			echo "		<option value='true'>".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".(!empty($row['contact_setting_enabled']) && $row['contact_setting_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='false' ".(!empty($row['contact_setting_enabled']) && $row['contact_setting_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 		}
 		echo "		</div>\n";

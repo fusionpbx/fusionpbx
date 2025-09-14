@@ -341,13 +341,13 @@
 				//----------------------------------
 
 				echo "	<td>\n";
-				echo $row['forward_all_enabled'] == 'true' ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;';
+				echo $row['forward_all_enabled'] == true ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;';
 				echo "	</td>\n";
 			}
 			if (permission_exists('follow_me')) {
 				//-- inline toggle -----------------
 				//get destination count
-				//if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+				//if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 				//	$sql = "select count(*) from v_follow_me_destinations ";
 				//	$sql .= "where follow_me_uuid = :follow_me_uuid ";
 				//	$sql .= "and domain_uuid = :domain_uuid ";
@@ -370,7 +370,7 @@
 				//----------------------------------
 				//get destination count
 				$follow_me_destination_count = 0;
-				if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+				if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 					$sql = "select count(*) from v_follow_me_destinations ";
 					$sql .= "where follow_me_uuid = :follow_me_uuid ";
 					$sql .= "and domain_uuid = :domain_uuid ";

@@ -405,7 +405,7 @@ class settings implements clear_cache {
 		$sql = "select profile_setting_name, profile_setting_value from v_device_profile_settings"
 			. " where device_profile_uuid = :device_profile_uuid"
 			. " and domain_uuid = :domain_uuid"
-			. " and profile_setting_enabled = 'true'"
+			. " and profile_setting_enabled = true "
 		;
 		$params = [];
 		$params['device_profile_uuid'] = $this->device_profile_uuid;

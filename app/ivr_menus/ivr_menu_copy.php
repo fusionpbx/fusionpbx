@@ -139,10 +139,10 @@
 			$dialplan[$x]["dialplan_name"] = $ivr_menu_name;
 			$dialplan[$x]["dialplan_number"] = $ivr_menu_extension;
 			$dialplan[$x]["dialplan_context"] = $ivr_menu_context;
-			$dialplan[$x]["dialplan_continue"] = "false";
+			$dialplan[$x]["dialplan_continue"] = false;
 			$dialplan[$x]["dialplan_xml"] = $dialplan_xml;
 			$dialplan[$x]["dialplan_order"] = "101";
-			$dialplan[$x]["dialplan_enabled"] = "true";
+			$dialplan[$x]["dialplan_enabled"] = true;
 			$dialplan[$x]["dialplan_description"] = $ivr_menu_description;
 			$dialplan[$x]["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
 

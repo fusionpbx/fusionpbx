@@ -74,7 +74,7 @@
 			//build array
 				if (is_uuid($row['ring_group_uuid'])) {
 					$array['ring_groups'][$x]['ring_group_uuid'] = $row['ring_group_uuid'];
-					$array['ring_groups'][$x]['ring_group_forward_enabled'] = $row['ring_group_forward_enabled'] == 'true' && $row['ring_group_forward_destination'] != '' ? 'true' : 'false';
+					$array['ring_groups'][$x]['ring_group_forward_enabled'] = $row['ring_group_forward_enabled'] == true && $row['ring_group_forward_destination'] != '' ? 'true' : 'false';
 					$array['ring_groups'][$x]['ring_group_forward_destination'] = $row['ring_group_forward_destination'];
 				}
 			//increment counter
@@ -134,7 +134,7 @@
 
 	if (is_array($result) && @sizeof($result) != 0) {
 		foreach ($result as $row) {
-			$stats['forwarding'] += $row['ring_group_forward_enabled'] == 'true' && $row['ring_group_forward_destination'] ? 1 : 0;
+			$stats['forwarding'] += $row['ring_group_forward_enabled'] == true && $row['ring_group_forward_destination'] ? 1 : 0;
 		}
 		$stats['active'] = @sizeof($result) - $stats['forwarding'];
 	}
@@ -260,7 +260,7 @@
 					// switch
 					if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 						echo "	<label class='switch'>\n";
-						echo "		<input type='checkbox' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' value='true' ".($row["ring_group_forward_enabled"] == 'true' ? "checked='checked'" : null)." onclick=\"this.checked && !document.getElementById('destination_".$x."').value ? document.getElementById('destination_".$x."').focus() : null;\">\n";
+						echo "		<input type='checkbox' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' value='true' ".($row["ring_group_forward_enabled"] == true ? "checked='checked'" : null)." onclick=\"this.checked && !document.getElementById('destination_".$x."').value ? document.getElementById('destination_".$x."').focus() : null;\">\n";
 						echo "		<span class='slider'></span>\n";
 						echo "	</label>\n";
 					}
@@ -268,13 +268,13 @@
 					else {
 						echo "	<select class='formfld' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' onchange=\"this.selectedIndex && !document.getElementById('destination_".$x."').value ? document.getElementById('destination_".$x."').focus() : null;\">\n";
 						echo "		<option value='false'>".$text['option-disabled']."</option>\n";
-						echo "		<option value='true' ".($row["ring_group_forward_enabled"] == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
+						echo "		<option value='true' ".($row["ring_group_forward_enabled"] == true ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
 						echo "	</select>\n";
 					}
 				}
 				else {
 					echo "	<td valign='top' class='".$row_style[$c]." hud_text' style='width: 1%; text-align: left;'>";
-					if ($row["ring_group_forward_enabled"] == 'true') {
+					if ($row["ring_group_forward_enabled"] == true) {
 						echo $text['option-enabled'];
 					}
 					else {

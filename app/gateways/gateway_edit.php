@@ -303,7 +303,7 @@
 
 //get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
-	$sql .= "where sip_profile_enabled = 'true' ";
+	$sql .= "where sip_profile_enabled = true ";
 	$sql .= "order by sip_profile_name asc ";
 	$database = new database;
 	$sip_profiles = $database->select($sql, null, 'all');
@@ -311,8 +311,8 @@
 
 //set defaults
 	if (empty($gateway_uuid)) { $gateway_uuid = ""; }
-	if (empty($enabled)) { $enabled = "true"; }
-	if (empty($register)) { $register = "true"; }
+	if (empty($enabled)) { $enabled = true; }
+	if (empty($register)) { $register = true; }
 	if (empty($retry_seconds)) { $retry_seconds = "30"; }
 	if (empty($gateway)) { $gateway = ''; }
 	if (empty($username)) { $username = ''; }
@@ -343,7 +343,7 @@
 	if (empty($context)) { $context = ''; }
 	if (empty($profile)) { $profile = ''; }
 	if (empty($hostname)) { $hostname = ''; }
-	if (empty($enabled)) { $enabled = 'true'; }
+	if (empty($enabled)) { $enabled = true; }
 	if (empty($description)) { $description = ''; }
 
 //create token
@@ -498,7 +498,7 @@
 	else {
 		echo "	<select class='formfld' name='register'>\n";
 		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(!empty($register) && $register == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='false' ".(!empty($register) && $register == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

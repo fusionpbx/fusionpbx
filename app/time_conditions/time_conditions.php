@@ -100,8 +100,6 @@
 		$sql .= " 	lower(dialplan_context) like :search ";
 		$sql .= " 	or lower(dialplan_name) like :search ";
 		$sql .= " 	or lower(dialplan_number) like :search ";
-		$sql .= " 	or lower(dialplan_continue) like :search ";
-		$sql .= " 	or lower(dialplan_enabled) like :search ";
 		$sql .= " 	or lower(dialplan_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';

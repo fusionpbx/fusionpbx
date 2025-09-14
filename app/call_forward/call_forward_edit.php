@@ -295,7 +295,7 @@
 			}
 
 		//if follow me is enabled then process call forward and dnd first
-			if ($follow_me_enabled == "true") {
+			if ($follow_me_enabled) {
 				//call forward
 					$call_forward->set();
 					unset($call_forward);
@@ -318,8 +318,8 @@
 			}
 
 		//if dnd or call forward are enabled process them last
-			if ($follow_me_enabled != "true") {
-				if ($forward_all_enabled == "true") {
+			if ($follow_me_enabled != true) {
+				if ($forward_all_enabled == true) {
 					//dnd
 						$dnd->set();
 						$dnd->user_status();
@@ -704,7 +704,7 @@
 		echo "<td width='70%' class='vtable' align='left'>\n";
 		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 			echo "<label class='switch'>\n";
-			echo "	<input type='checkbox' id='follow_me_enabled' name='follow_me_enabled' value='true' ".(!empty($follow_me_enabled) && $follow_me_enabled == 'true' ? "checked='checked'" : null)." onchange='changed_follow_me(this);'>\n";
+			echo "	<input type='checkbox' id='follow_me_enabled' name='follow_me_enabled' value='true' ".(!empty($follow_me_enabled) && $follow_me_enabled == true ? "checked='checked'" : null)." onchange='changed_follow_me(this);'>\n";
 			echo "	<span class='slider'></span>\n";
 			echo "</label>\n";
 			echo "<script>\n";
@@ -723,15 +723,15 @@
 		else {
 			$on_click = "document.getElementById('forward_all_disabled').checked = true; ";
 			$on_click .= "document.getElementById('dnd_disabled').checked = true; ";
-			echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#div_follow_me_settings').slideUp('fast');\" value='false' ".((!empty($follow_me_enabled) && $follow_me_enabled == "false" || empty($follow_me_enabled)) ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-			echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#div_follow_me_settings').slideDown('fast'); $on_click\" value='true' ".((!empty($follow_me_enabled) && $follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+			echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#div_follow_me_settings').slideUp('fast');\" value='false' ".((!empty($follow_me_enabled) && $follow_me_enabled == false || empty($follow_me_enabled)) ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+			echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#div_follow_me_settings').slideDown('fast'); $on_click\" value='true' ".((!empty($follow_me_enabled) && $follow_me_enabled == true) ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 			unset($on_click);
 		}
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 
-		if (!empty($follow_me_enabled) && $follow_me_enabled == "true" && $dnd_enabled  != "true" && $forward_all_enabled != "true") { $style = ''; } else { $style = 'display: none;'; }
+		if (!empty($follow_me_enabled) && $follow_me_enabled == true && $dnd_enabled  != true && $forward_all_enabled != true) { $style = ''; } else { $style = 'display: none;'; }
 		echo "<div id='div_follow_me_settings' style='$style'>\n";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";

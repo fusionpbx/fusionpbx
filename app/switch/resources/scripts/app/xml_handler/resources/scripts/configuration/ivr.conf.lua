@@ -80,12 +80,12 @@
 					select *
 						from v_ivr_menus
 						where ivr_menu_uuid = :ivr_menu_uuid
-						and ivr_menu_enabled = 'true'
+						and ivr_menu_enabled = true
 						union all
 						select child.*
 						from v_ivr_menus as child, ivr_menus as parent
 						where child.ivr_menu_parent_uuid = parent.ivr_menu_uuid
-						and child.ivr_menu_enabled = 'true'
+						and child.ivr_menu_enabled = true
 					)
 					select * from ivr_menus
 			]];
@@ -273,7 +273,7 @@
 					xml:append([[				>]]);
 
 				--get the ivr menu options
-					local sql = [[ SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = :ivr_menu_uuid AND ivr_menu_option_enabled = 'true' ORDER BY ivr_menu_option_order asc ]];
+					local sql = [[ SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = :ivr_menu_uuid AND ivr_menu_option_enabled = true ORDER BY ivr_menu_option_order asc ]];
 					local params = {ivr_menu_uuid = ivr_menu_uuid};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -305,7 +305,7 @@
 					end);
 
 				--direct dial
-					if (ivr_menu_direct_dial == "true") then
+					if (ivr_menu_direct_dial == true) then
 						local negative_lookahead = "";
 						if (#direct_dial_exclude > 0) then
 							negative_lookahead = "(?!^("..table.concat(direct_dial_exclude, "|")..")$)";

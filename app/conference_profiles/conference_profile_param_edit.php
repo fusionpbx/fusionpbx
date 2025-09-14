@@ -64,7 +64,7 @@
 	if (!empty($_POST)) {
 		$profile_param_name = $_POST["profile_param_name"];
 		$profile_param_value = $_POST["profile_param_value"];
-		$profile_param_enabled = $_POST["profile_param_enabled"] ?? 'false';
+		$profile_param_enabled = $_POST["profile_param_enabled"] ?? false;
 		$profile_param_description = $_POST["profile_param_description"];
 	}
 
@@ -123,7 +123,6 @@
 				}
 
 				if (is_uuid($array['conference_profile_params'][0]['conference_profile_param_uuid'])) {
-					$database = new database;
 					$database->app_name = 'conference_profiles';
 					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 					$database->save($array);
@@ -142,7 +141,6 @@
 		$sql = "select * from v_conference_profile_params ";
 		$sql .= "where conference_profile_param_uuid = :conference_profile_param_uuid ";
 		$parameters['conference_profile_param_uuid'] = $conference_profile_param_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$profile_param_name = $row["profile_param_name"];
@@ -154,7 +152,7 @@
 	}
 
 //set the defaults
-	if (empty($profile_param_enabled)) { $profile_param_enabled = 'true'; }
+	if (empty($profile_param_enabled)) { $profile_param_enabled = true; }
 
 //create token
 	$object = new token;
@@ -208,14 +206,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='profile_param_enabled' name='profile_param_enabled' value='true' ".($profile_param_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='profile_param_enabled' name='profile_param_enabled' value='true' ".($profile_param_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='profile_param_enabled' name='profile_param_enabled'>\n";
-		echo "		<option value='true' ".($profile_param_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($profile_param_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($profile_param_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($profile_param_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

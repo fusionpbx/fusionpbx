@@ -161,7 +161,35 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(voicemail_uuid)', '*', $sql);
+	$sql = "select domain_uuid, voicemail_uuid, voicemail_id, voicemail_mail_to, voicemail_file, ";
+	$sql .= "cast(voicemail_local_after_email as text), cast(voicemail_transcription_enabled as text), cast(voicemail_enabled as text), voicemail_description ";
+	$sql .= "from v_voicemails ";
+	$sql .= "where true ";
+	$parameters = null;
+	if ($show != "all" || !permission_exists('voicemail_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!permission_exists('voicemail_domain')) {
+		if (is_array($voicemail_uuids) && sizeof($voicemail_uuids) != 0) {
+			$sql .= "and (";
+			foreach ($voicemail_uuids as $x => $row) {
+				$sql_where_or[] = 'voicemail_uuid = :voicemail_uuid_'.$x;
+				$parameters['voicemail_uuid_'.$x] = $row['voicemail_uuid'];
+			}
+			if (is_array($sql_where_or) && sizeof($sql_where_or) != 0) {
+				$sql .= implode(' or ', $sql_where_or);
+			}
+			$sql .= ")";
+		}
+		else {
+			$sql .= "and voicemail_uuid is null ";
+		}
+	}
+	if (!empty($sql_search)) {
+		$sql .= $sql_search;
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$voicemails = $database->select($sql, $parameters, 'all');
@@ -376,5 +404,3 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
-

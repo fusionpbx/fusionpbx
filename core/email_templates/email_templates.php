@@ -100,7 +100,6 @@
 		$sql_search .= " or lower(template_subject) like :search ";
 		$sql_search .= " or lower(template_body) like :search ";
 		$sql_search .= " or lower(template_type) like :search ";
-		$sql_search .= " or lower(template_enabled) like :search ";
 		$sql_search .= " or lower(template_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';

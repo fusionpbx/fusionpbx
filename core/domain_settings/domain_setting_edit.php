@@ -84,7 +84,7 @@
 		$domain_setting_name = strtolower($_POST["domain_setting_name"]);
 		$domain_setting_value = $_POST["domain_setting_value"];
 		$domain_setting_order = $_POST["domain_setting_order"];
-		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?? 'false');
+		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?? false);
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
@@ -355,7 +355,7 @@
 	$domain_setting_name = $domain_setting_name ?? '';
 	$domain_setting_value = $domain_setting_value ?? '';
 	$domain_setting_order = $domain_setting_order ?? '';
-	$domain_setting_enabled = $domain_setting_enabled ?? 'true';
+	$domain_setting_enabled = $domain_setting_enabled ?? true;
 	$domain_setting_description = $domain_setting_description ?? '';
 
 //create token
@@ -832,14 +832,14 @@
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='domain_setting_enabled' name='domain_setting_enabled' value='true' ".($domain_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='domain_setting_enabled' name='domain_setting_enabled' value='true' ".($domain_setting_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='domain_setting_enabled' name='domain_setting_enabled'>\n";
-		echo "		<option value='true' ".($domain_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($domain_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($domain_setting_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($domain_setting_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

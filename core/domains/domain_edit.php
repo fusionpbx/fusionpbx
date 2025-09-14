@@ -68,7 +68,7 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$domain_name = strtolower($_POST["domain_name"]);
-		$domain_enabled = $_POST["domain_enabled"] ?? 'false';
+		$domain_enabled = $_POST["domain_enabled"] ?? false;
 		$domain_description = $_POST["domain_description"];
 	}
 
@@ -134,7 +134,7 @@
 					if ($num_rows == 0) {
 
 						//add the domain name
-						$domain_enabled = 'true';
+						$domain_enabled = true;
 						$domain_uuid = uuid();
 
 						//build the domain array
@@ -543,7 +543,7 @@
 	}
 
 //set the defaults
-	if (empty($domain_enabled)) { $domain_enabled = 'true'; }
+	if (empty($domain_enabled)) { $domain_enabled = true; }
 
 //create token
 	$object = new token;
@@ -671,14 +671,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='domain_enabled' name='domain_enabled' value='true' ".($domain_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='domain_enabled' name='domain_enabled' value='true' ".($domain_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='domain_enabled' name='domain_enabled'>\n";
-		echo "		<option value='true' ".($domain_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($domain_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($domain_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($domain_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

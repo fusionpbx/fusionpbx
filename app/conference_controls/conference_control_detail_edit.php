@@ -65,7 +65,7 @@
 		$control_digits = $_POST["control_digits"];
 		$control_action = $_POST["control_action"];
 		$control_data = $_POST["control_data"];
-		$control_enabled = $_POST["control_enabled"] ?? 'false';
+		$control_enabled = $_POST["control_enabled"] ?? false;
 	}
 
 //process the http post
@@ -156,7 +156,7 @@
 	}
 
 //set the defaults
-	if (empty($control_enabled)) { $control_enabled = 'true'; }
+	if (empty($control_enabled)) { $control_enabled = true; }
 
 //create token
 	$object = new token;
@@ -221,14 +221,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='control_enabled' name='control_enabled' value='true' ".($control_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='control_enabled' name='control_enabled' value='true' ".($control_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='control_enabled' name='control_enabled'>\n";
-		echo "		<option value='true' ".($control_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($control_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($control_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($control_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

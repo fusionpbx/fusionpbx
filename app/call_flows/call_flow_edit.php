@@ -84,7 +84,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"] ?? 'false';
+			$call_flow_enabled = $_POST["call_flow_enabled"] ?? false;
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -205,7 +205,7 @@
 			$array["dialplans"][$i]["dialplan_name"] = $call_flow_name;
 			$array["dialplans"][$i]["dialplan_number"] = $call_flow_extension;
 			$array["dialplans"][$i]["dialplan_context"] = $call_flow_context;
-			$array["dialplans"][$i]["dialplan_continue"] = "false";
+			$array["dialplans"][$i]["dialplan_continue"] = false;
 			$array["dialplans"][$i]["dialplan_xml"] = $dialplan_xml;
 			$array["dialplans"][$i]["dialplan_order"] = "333";
 			$array["dialplans"][$i]["dialplan_enabled"] = $call_flow_enabled;
@@ -365,7 +365,7 @@
 	}
 
 //set the defaults
-	if (empty($call_flow_enabled)) { $call_flow_enabled = 'true'; }
+	if (empty($call_flow_enabled)) { $call_flow_enabled = true; }
 
 //get the sounds
 	$sounds = new sounds;
@@ -778,8 +778,8 @@
 	}
 	else {
 		echo "	<select class='formfld' id='call_flow_enabled' name='call_flow_enabled'>\n";
-		echo "		<option value='true' ".($call_flow_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($call_flow_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($call_flow_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_flow_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<tr>\n";

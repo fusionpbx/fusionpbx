@@ -120,7 +120,7 @@
 			$user_uuid = $_POST["user_uuid"];
 			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
-			$destination_enabled = $_POST["destination_enabled"] ?? 'false';
+			$destination_enabled = $_POST["destination_enabled"] ?? false;
 			$destination_description = $_POST["destination_description"];
 			$destination_sell = check_float($_POST["destination_sell"] ?? '');
 			$currency = $_POST["currency"] ?? null;
@@ -449,7 +449,7 @@
 								$dialplan["dialplan_name"] = (!empty($dialplan_name)) ? $dialplan_name : format_phone($destination_area_code.$destination_number);
 								$dialplan["dialplan_number"] = $destination_area_code.$destination_number;
 								$dialplan["dialplan_context"] = $destination_context;
-								$dialplan["dialplan_continue"] = "false";
+								$dialplan["dialplan_continue"] = false;
 								$dialplan["dialplan_order"] = $destination_order;
 								$dialplan["dialplan_enabled"] = $destination_enabled;
 								$dialplan["dialplan_description"] = (!empty($dialplan_description)) ? $dialplan_description : $destination_description;
@@ -1462,7 +1462,7 @@
 	if (empty($destination_order)) { $destination_order = '100'; }
 	if (empty($destination_type)) { $destination_type = 'inbound'; }
 	if (empty($destination_context)) { $destination_context = 'public'; }
-	if (empty($destination_enabled)) { $destination_enabled = 'true'; }
+	if (empty($destination_enabled)) { $destination_enabled = true; }
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
@@ -1489,7 +1489,7 @@
 	if (permission_exists('user_edit')) {
 		$sql = "select * from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and user_enabled = 'true' ";
+		$sql .= "and user_enabled = true ";
 		$sql .= "order by username asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$users = $database->select($sql, $parameters, 'all');
@@ -2137,18 +2137,15 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($settings->get('theme', 'input_toggle_style', ''), 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='destination_enabled' name='destination_enabled' value='true' ".($destination_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='destination_enabled' name='destination_enabled' value='true' ".($destination_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' name='destination_enabled'>\n";
-		switch ($destination_enabled) {
-			case "true" :	$selected[1] = "selected='selected'";	break;
-			case "false" :	$selected[2] = "selected='selected'";	break;
-		}
-		echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
-		echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
+		echo "		<option value='true' ".($destination_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($destination_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+
 		unset($selected);
 		echo "	</select>\n";
 	}

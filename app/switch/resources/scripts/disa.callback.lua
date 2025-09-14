@@ -69,7 +69,7 @@ else
 	local sql = [[select * from v_dialplans as d, v_dialplan_details as s
 			where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
 				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-				and d.dialplan_enabled = 'true'
+				and d.dialplan_enabled = true
 				and d.dialplan_uuid = s.dialplan_uuid
 				order by
 				d.dialplan_order asc,
@@ -183,7 +183,7 @@ if session1:ready() and session1:answered() then
 		local sql = [[select * from v_dialplans as d, v_dialplan_details as s
 			where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
 				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-				and d.dialplan_enabled = 'true'
+				and d.dialplan_enabled = true
 				and d.dialplan_uuid = s.dialplan_uuid
 				order by
 				d.dialplan_order asc,

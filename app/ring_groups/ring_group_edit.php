@@ -200,10 +200,10 @@
 			$ring_group_follow_me_enabled = $_POST["ring_group_follow_me_enabled"];
 			$ring_group_missed_call_app = $_POST["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $_POST["ring_group_missed_call_data"];
-			$ring_group_forward_enabled = $_POST["ring_group_forward_enabled"] ?? 'false';
+			$ring_group_forward_enabled = $_POST["ring_group_forward_enabled"] ?? false;
 			$ring_group_forward_destination = $_POST["ring_group_forward_destination"];
 			$ring_group_forward_toll_allow = $_POST["ring_group_forward_toll_allow"];
-			$ring_group_enabled = $_POST["ring_group_enabled"] ?? 'false';
+			$ring_group_enabled = $_POST["ring_group_enabled"] ?? false;
 			$ring_group_description = $_POST["ring_group_description"];
 			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 			//$ring_group_timeout_action = "transfer:1001 XML default";
@@ -453,7 +453,7 @@
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
-							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? 'false';
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? false;
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 							$y++;
 						}
@@ -466,7 +466,7 @@
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
-					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? 'false';
+					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'] ?? false;
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 				}
 				$y++;
@@ -492,7 +492,7 @@
 			if (isset($ring_group_context)) {
 				$array["dialplans"][0]["dialplan_context"] = $ring_group_context;
 			}
-			$array["dialplans"][0]["dialplan_continue"] = "false";
+			$array["dialplans"][0]["dialplan_continue"] = false;
 			$array["dialplans"][0]["dialplan_xml"] = $dialplan_xml;
 			$array["dialplans"][0]["dialplan_order"] = "101";
 			$array["dialplans"][0]["dialplan_enabled"] = $ring_group_enabled;
@@ -598,7 +598,7 @@
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
 	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');;
 	if (empty($ring_group_call_timeout)) { $ring_group_call_timeout = '30'; }
-	if (empty($ring_group_enabled)) { $ring_group_enabled = 'true'; }
+	if (empty($ring_group_enabled)) { $ring_group_enabled = true; }
 
 //get the ring group destination array
 	if ($action == "add") {
@@ -640,7 +640,7 @@
 		$sql = "select u.username, r.user_uuid, r.ring_group_uuid ";
 		$sql .= "from v_ring_group_users as r, v_users as u ";
 		$sql .= "where r.user_uuid = u.user_uuid  ";
-		$sql .= "and u.user_enabled = 'true' ";
+		$sql .= "and u.user_enabled = true ";
 		$sql .= "and r.domain_uuid = :domain_uuid ";
 		$sql .= "and r.ring_group_uuid = :ring_group_uuid ";
 		$sql .= "order by u.username asc ";
@@ -653,14 +653,14 @@
 //get the users
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and user_enabled = 'true' ";
+	$sql .= "and user_enabled = true ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //set defaults
-	if (empty($ring_group_enabled)) { $ring_group_enabled = 'true'; }
+	if (empty($ring_group_enabled)) { $ring_group_enabled = true; }
 
 //set the default ring group context
 	if (empty($ring_group_context)) {
@@ -1001,7 +1001,7 @@
 		// switch
 		if (substr($settings->get('theme', 'input_toggle_style', ''), 0, 6) == 'switch') {
 			echo "				<label class='switch'>\n";
-			echo "					<input type='checkbox' id='ring_group_destinations_".$x."_destination_enabled' name='ring_group_destinations[".$x."][destination_enabled]' value='true' ".(!empty($row['destination_enabled']) && $row['destination_enabled'] == 'true' ? "checked='checked'" : null).">\n";
+			echo "					<input type='checkbox' id='ring_group_destinations_".$x."_destination_enabled' name='ring_group_destinations[".$x."][destination_enabled]' value='true' ".(!empty($row['destination_enabled']) && $row['destination_enabled'] == true ? "checked='checked'" : null).">\n";
 			echo "					<span class='slider'></span>\n";
 			echo "				</label>\n";
 		}
@@ -1009,7 +1009,7 @@
 		else {
 			echo "				<select class='formfld' id='ring_group_destinations_".$x."_destination_enabled' name='ring_group_destinations[".$x."][destination_enabled]'>\n";
 			echo "					<option value='false'>".$text['option-false']."</option>\n";
-			echo "					<option value='true' ".($row['destination_enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "					<option value='true' ".($row['destination_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 			echo "				</select>\n";
 		}
 		echo "				</td>\n";
@@ -1184,13 +1184,13 @@
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='ring_group_call_screen_enabled'>\n";
 		echo "    <option value=''></option>\n";
-		if ($ring_group_call_screen_enabled == "true") {
+		if ($ring_group_call_screen_enabled == true) {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "    <option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($ring_group_call_screen_enabled == "false") {
+		if ($ring_group_call_screen_enabled == false) {
 			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -1210,13 +1210,13 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ring_group_call_forward_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if (!empty($ring_group_call_forward_enabled) && $ring_group_call_forward_enabled == "true") {
+	if (!empty($ring_group_call_forward_enabled) && $ring_group_call_forward_enabled == true) {
 		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['option-true']."</option>\n";
 	}
-	if (!empty($ring_group_call_forward_enabled) && $ring_group_call_forward_enabled == "false") {
+	if (!empty($ring_group_call_forward_enabled) && $ring_group_call_forward_enabled == false) {
 		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
@@ -1235,13 +1235,13 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ring_group_follow_me_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if (!empty($ring_group_follow_me_enabled) && $ring_group_follow_me_enabled == "true") {
+	if (!empty($ring_group_follow_me_enabled) && $ring_group_follow_me_enabled == true) {
 		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['option-true']."</option>\n";
 	}
-	if (!empty($ring_group_follow_me_enabled) && $ring_group_follow_me_enabled == "false") {
+	if (!empty($ring_group_follow_me_enabled) && $ring_group_follow_me_enabled == false) {
 		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
@@ -1281,7 +1281,7 @@
 		echo "<td class='vtable' align='left'>\n";
 		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' name='ring_group_forward_enabled' value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == 'true' ? "checked='checked'" : null)." onchange='changed_ring_group_forward_enabled(this);'>\n";
+			echo "		<input type='checkbox' name='ring_group_forward_enabled' value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == true ? "checked='checked'" : null)." onchange='changed_ring_group_forward_enabled(this);'>\n";
 			echo "		<span class='slider'></span>\n";
 			echo "	</label>\n";
 			echo "	<script>\n";
@@ -1295,7 +1295,7 @@
 		else {
 			echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
 			echo "		<option value='false'>".$text['option-disabled']."</option>";
-			echo "		<option value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
+			echo "		<option value='true' ".(!empty($ring_group_forward_enabled) && $ring_group_forward_enabled == true\ ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
 			echo "	</select>";
 		}
 		echo "&nbsp;";
@@ -1339,14 +1339,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($settings->get('theme', 'input_toggle_style', ''), 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='ring_group_enabled' name='ring_group_enabled' value='true' ".($ring_group_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='ring_group_enabled' name='ring_group_enabled' value='true' ".($ring_group_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='ring_group_enabled' name='ring_group_enabled'>\n";
-		echo "		<option value='true' ".($ring_group_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($ring_group_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($ring_group_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($ring_group_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

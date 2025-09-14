@@ -96,10 +96,10 @@
 		$dialplan_name = $_POST["dialplan_name"];
 		$dialplan_number = $_POST["dialplan_number"];
 		$dialplan_order = $_POST["dialplan_order"];
-		$dialplan_continue = $_POST["dialplan_continue"] ?? 'false';
+		$dialplan_continue = $_POST["dialplan_continue"] ?? false;
 		$dialplan_details = $_POST["dialplan_details"] ?? null;
 		$dialplan_context = $_POST["dialplan_context"];
-		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?? false;
 		$dialplan_description = $_POST["dialplan_description"];
 		$dialplan_details_delete = $_POST["dialplan_details_delete"] ?? null;
 		if (!empty($dialplan_details_delete)) {
@@ -265,7 +265,7 @@
 			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
 			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
 			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
-			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"] ?? 'false';
+			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"] ?? false;
 			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
 			$y = 0;
 			if (!empty($_POST["dialplan_details"]) && is_array($_POST["dialplan_details"])) {
@@ -312,7 +312,6 @@
 			$array['dialplans'][$x]['dialplan_xml'] = $dialplan_array[$dialplan_uuid];
 
 		//add or update the database
-			$database = new database;
 			$database->app_name = 'dialplans';
 			$database->app_uuid = $app_uuid ?? null;
 			$database->uuid($dialplan_uuid);
@@ -356,7 +355,6 @@
 		$sql = "select * from v_dialplans ";
 		$sql .= "where dialplan_uuid = :dialplan_uuid ";
 		$parameters['dialplan_uuid'] = $dialplan_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -381,7 +379,7 @@
 		$dialplan_order = '200';
 	}
 	if (empty($dialplan_destination)) {
-		$dialplan_destination = 'false';
+		$dialplan_destination = false;
 	}
 
 //get the dialplan details in an array
@@ -392,7 +390,6 @@
 	$sql .= "where dialplan_uuid = :dialplan_uuid ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 	$parameters['dialplan_uuid'] = $dialplan_uuid;
-	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -641,14 +638,14 @@
 	echo "	<td class='vtable' align='left'>\n";
 	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='dialplan_continue' value='true' ".(!empty($dialplan_continue) && $dialplan_continue == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' name='dialplan_continue' value='true' ".(!empty($dialplan_continue) && $dialplan_continue == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' name='dialplan_continue'>\n";
 		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(!empty($dialplan_continue) && $dialplan_continue == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='false' ".(!empty($dialplan_continue) && $dialplan_continue == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "	</td>\n";
@@ -692,13 +689,13 @@
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<select class='formfld' name='dialplan_destination'>\n";
 	echo "			<option value=''></option>\n";
-	if ($dialplan_destination == "true") {
+	if ($dialplan_destination == true) {
 		echo "			<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "			<option value='true'>".$text['option-true']."</option>\n";
 	}
-	if ($dialplan_destination == "false") {
+	if ($dialplan_destination == false) {
 		echo "			<option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
@@ -745,14 +742,14 @@
 	echo "	<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
-		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($dialplan_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "	</td>\n";
@@ -839,7 +836,7 @@
 
 							//default to enabled true
 								if (empty($dialplan_detail_enabled)) {
-									$dialplan_detail_enabled = 'true';
+									$dialplan_detail_enabled = true;
 								}
 
 							//no border on last row
@@ -949,7 +946,6 @@
 												// retrieve gateway name from db
 												$sql = "select gateway from v_gateways where gateway_uuid = :gateway_uuid ";
 												$parameters['gateway_uuid'] = $bridge_statement[3];
-												$database = new database;
 												$gateways = $database->select($sql, $parameters, 'all');
 												if (is_array($gateways) && @sizeof($gateways) != 0) {
 													$gateway_name = $gateways[0]['gateway'];
@@ -1042,8 +1038,8 @@
 								}
 								echo "	<select id='dialplan_detail_enabled_".$x."' name='dialplan_details[".$x."][dialplan_detail_enabled]' class='formfld' style='width: auto; ".$element['visibility']."'>\n";
 								echo "	<option></option>\n";
-								echo "	<option value='true' ".($dialplan_detail_enabled == "true" ? $selected : null).">".$text['option-true']."</option>\n";
-								echo "	<option value='false' ".($dialplan_detail_enabled == "false" ? $selected : null).">".$text['option-false']."</option>\n";
+								echo "	<option value='true' ".($dialplan_detail_enabled == true ? $selected : null).">".$text['option-true']."</option>\n";
+								echo "	<option value='false' ".($dialplan_detail_enabled == false ? $selected : null).">".$text['option-false']."</option>\n";
 								echo "	</select>\n";
 								echo "</td>\n";
 							//tools

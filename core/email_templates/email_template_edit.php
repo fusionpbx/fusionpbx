@@ -66,7 +66,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?? 'false';
+		$template_enabled = $_POST["template_enabled"] ?? false;
 		$template_description = $_POST["template_description"];
 	}
 
@@ -175,7 +175,7 @@
 	}
 
 //set the defaults
-	if (empty($template_enabled)) { $template_enabled = 'true'; }
+	if (empty($template_enabled)) { $template_enabled = true; }
 
 //load editor preferences/defaults
 	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
@@ -427,14 +427,14 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='template_enabled' name='template_enabled' value='true' ".($template_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='template_enabled' name='template_enabled' value='true' ".($template_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='template_enabled' name='template_enabled'>\n";
-		echo "		<option value='true' ".($template_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($template_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($template_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($template_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

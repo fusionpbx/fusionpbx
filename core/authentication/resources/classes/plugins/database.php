@@ -251,7 +251,7 @@ class plugin_database {
 				$sql .= "and u.domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
-			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+			$sql .= "and (user_enabled = true or user_enabled is null) ";
 			$row = $settings->database()->select($sql, $parameters, 'row');
 			if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 

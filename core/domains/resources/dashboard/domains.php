@@ -26,7 +26,7 @@
 
 //get the domain count for enabled domains
 	$sql = "select count(*) as count from v_domains ";
-	$sql .= "where domain_enabled = 'true'; ";
+	$sql .= "where domain_enabled = true; ";
 	$row = $database->select($sql, null, 'row');
 	$domain_count = $row['count'];
 	unset($sql, $row);

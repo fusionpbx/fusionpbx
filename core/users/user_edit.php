@@ -138,7 +138,7 @@
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
 			$user_type = $_POST["user_type"];
-			$user_enabled = $_POST["user_enabled"] ?? 'false';
+			$user_enabled = $_POST["user_enabled"] ?? false;
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
 			}
@@ -288,7 +288,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'language';
 					$array['user_settings'][$i]['user_setting_name'] = 'code';
 					$array['user_settings'][$i]['user_setting_value'] = $user_language;
-					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+					$array['user_settings'][$i]['user_setting_enabled'] = true;
 					$i++;
 			}
 			else {
@@ -314,7 +314,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'language';
 					$array['user_settings'][$i]['user_setting_name'] = 'code';
 					$array['user_settings'][$i]['user_setting_value'] = $user_language;
-					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+					$array['user_settings'][$i]['user_setting_enabled'] = true;
 					$i++;
 				}
 			}
@@ -336,7 +336,7 @@
 				$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
 				$array['user_settings'][$i]['user_setting_name'] = 'name';
 				$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
-				$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+				$array['user_settings'][$i]['user_setting_enabled'] = true;
 				$i++;
 			}
 			else {
@@ -362,7 +362,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
 					$array['user_settings'][$i]['user_setting_name'] = 'name';
 					$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
-					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+					$array['user_settings'][$i]['user_setting_enabled'] = true;
 					$i++;
 				}
 			}
@@ -385,7 +385,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
 					$array['user_settings'][$i]['user_setting_name'] = 'text';
 					$array['user_settings'][$i]['user_setting_value'] = $message_key;
-					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+					$array['user_settings'][$i]['user_setting_enabled'] = true;
 					$i++;
 				}
 				else {
@@ -411,7 +411,7 @@
 						$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
 						$array['user_settings'][$i]['user_setting_name'] = 'text';
 						$array['user_settings'][$i]['user_setting_value'] = $message_key;
-						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+						$array['user_settings'][$i]['user_setting_enabled'] = true;
 						$i++;
 					}
 				}
@@ -652,7 +652,7 @@
 				//get user settings
 				$sql = "select * from v_user_settings ";
 				$sql .= "where user_uuid = :user_uuid ";
-				$sql .= "and user_setting_enabled = 'true' ";
+				$sql .= "and user_setting_enabled = true ";
 				$parameters['user_uuid'] = $user_uuid;
 				$result = $database->select($sql, $parameters, 'all');
 				if (is_array($result)) {
@@ -674,7 +674,7 @@
 	}
 
 //set the defaults
-	if (empty($user_enabled)) { $user_enabled = "true"; }
+	if (!isset($user_enabled)) { $user_enabled = true; }
 	if (empty($user_totp_secret)) { $user_totp_secret = ""; }
 
 //create token
@@ -1212,14 +1212,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='user_enabled' name='user_enabled' value='true' ".($user_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='user_enabled' name='user_enabled' value='true' ".($user_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='user_enabled' name='user_enabled'>\n";
-		echo "		<option value='true' ".($user_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($user_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($user_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($user_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

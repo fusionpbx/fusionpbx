@@ -122,9 +122,9 @@
 				$condition_expression_1 = '^('.$condition_expression_1.')$';
 			}
 		}
-		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
+		$dialplan_enabled = $_POST["dialplan_enabled"] ?? false;
 		$dialplan_description = $_POST["dialplan_description"];
-		if (empty($dialplan_enabled)) { $dialplan_enabled = "true"; } //set default to enabled
+		if (empty($dialplan_enabled)) { $dialplan_enabled = true; } //set default to enabled
 	}
 
 //process the http post data
@@ -180,7 +180,7 @@
 			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
 			$array['dialplans'][$x]['dialplan_number'] = $destination_number;
 			$array['dialplans'][$x]['dialplan_order'] = $public_order;
-			$array['dialplans'][$x]['dialplan_continue'] = 'false';
+			$array['dialplans'][$x]['dialplan_continue'] = false;
 			$array['dialplans'][$x]['dialplan_context'] = 'public';
 			$array['dialplans'][$x]['dialplan_enabled'] = $dialplan_enabled;
 			$array['dialplans'][$x]['dialplan_description'] = $dialplan_description;
@@ -783,14 +783,14 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
-		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($dialplan_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($dialplan_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

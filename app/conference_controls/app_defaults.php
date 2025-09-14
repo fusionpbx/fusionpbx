@@ -83,7 +83,7 @@
 								$control_action = $p['@attributes']['action'];
 								$control_digits = $p['@attributes']['digits'];
 								$control_data = $p['@attributes']['data'];
-								$control_enabled = 'true';
+								$control_enabled = true;
 
 							//add the coference profile params
 								$conference_control_detail_uuid = uuid();

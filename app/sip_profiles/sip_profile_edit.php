@@ -55,7 +55,7 @@
 	$sip_profile_uuid = '';
 	$sip_profile_name = '';
 	$sip_profile_hostname = '';
-	$sip_profile_enabled = 'false';
+	$sip_profile_enabled = false;
 	$sip_profile_description = '';
 	$sip_profile_domains = [];
 	$sip_profile_settings = [];
@@ -87,7 +87,7 @@
 			$sip_profile_uuid = $_POST["sip_profile_uuid"];
 			$sip_profile_name = $_POST["sip_profile_name"];
 			$sip_profile_hostname = $_POST["sip_profile_hostname"];
-			$sip_profile_enabled = $_POST["sip_profile_enabled"] ?? 'false';
+			$sip_profile_enabled = $_POST["sip_profile_enabled"] ?? false;
 			$sip_profile_description = $_POST["sip_profile_description"];
 			$sip_profile_domains = $_POST["sip_profile_domains"];
 			$sip_profile_settings = $_POST["sip_profile_settings"];
@@ -292,7 +292,7 @@
 	}
 
 //set the defaults
-	if (empty($sip_profile_enabled)) { $sip_profile_enabled = 'true'; }
+	if (empty($sip_profile_enabled)) { $sip_profile_enabled = true; }
 
 //get the child data
 	$sql = "select * from v_sip_profile_settings ";
@@ -580,7 +580,7 @@
 		echo "					<label id='label_sip_profile_setting_enabled_$x'>".$label_sip_profile_setting_enabled."</label>\n";
 		echo "					<select id='sip_profile_setting_enabled_$x' class='formfld' style='display: none;' name='sip_profile_settings[$x][sip_profile_setting_enabled].'>\n";
 		echo "						<option value='true'>".$text['label-true']."</option>\n";
-		echo "						<option value='false' ".($row['sip_profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "						<option value='false' ".($row['sip_profile_setting_enabled'] == false ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "					</select>\n";
 		echo "				</td>\n";
 		echo "				<td class='vtablerow' style='".$bottom_border."' ".(permission_exists('sip_profile_setting_edit') ? "onclick=\"label_to_form('label_sip_profile_setting_description_$x','sip_profile_setting_description_$x');\"" : null)." nowrap='nowrap'>\n";
@@ -633,14 +633,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='sip_profile_enabled' name='sip_profile_enabled' value='true' ".($sip_profile_enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='sip_profile_enabled' name='sip_profile_enabled' value='true' ".($sip_profile_enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='sip_profile_enabled' name='sip_profile_enabled'>\n";
-		echo "		<option value='true' ".($sip_profile_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($sip_profile_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($sip_profile_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($sip_profile_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";

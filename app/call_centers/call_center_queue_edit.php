@@ -451,10 +451,10 @@
 			$array['dialplans'][0]["dialplan_name"] = $queue_name;
 			$array['dialplans'][0]["dialplan_number"] = $queue_extension;
 			$array['dialplans'][0]["dialplan_context"] = $queue_context;
-			$array['dialplans'][0]["dialplan_continue"] = "false";
+			$array['dialplans'][0]["dialplan_continue"] = false;
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "230";
-			$array['dialplans'][0]["dialplan_enabled"] = "true";
+			$array['dialplans'][0]["dialplan_enabled"] = true;
 			$array['dialplans'][0]["dialplan_description"] = $queue_description;
 			$array['dialplans'][0]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
 

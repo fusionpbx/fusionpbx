@@ -86,7 +86,7 @@
 							}
 
 						//add the sip profile if it is not false
-							if ($sip_profile_enabled != "false") {
+							if ($sip_profile_enabled != false) {
 
 								//add profile name and description
 									$sip_profile_uuid = uuid();
@@ -109,7 +109,7 @@
 										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_uuid'] = $sip_profile_uuid;
 										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_name'] = $row['@attributes']['name'];
 										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_value'] = $row['@attributes']['value'];
-										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_enabled'] = $row['@attributes']['enabled'] != 'false' ? 'true' : $row['@attributes']['enabled'];
+										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_enabled'] = $row['@attributes']['enabled'] != false ? true : $row['@attributes']['enabled'];
 									}
 
 							}
@@ -219,7 +219,7 @@
 
 		//if empty, set enabled to true
 			$sql = "update v_sip_profiles set ";
-			$sql .= "sip_profile_enabled = 'true' ";
+			$sql .= "sip_profile_enabled = true ";
 			$sql .= "where sip_profile_enabled is null ";
 			$sql .= "or sip_profile_enabled = '' ";
 			$database->execute($sql);
