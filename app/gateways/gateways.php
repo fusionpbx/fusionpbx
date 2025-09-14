@@ -154,7 +154,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	sql = "select ";
+	$sql = "select ";
 	$sql .= "gateway_uuid, domain_uuid, gateway, username, password, ";
 	$sql .= "cast(distinct_to as text), auth_username, realm, from_user, from_domain, ";
 	$sql .= "proxy, register_proxy,outbound_proxy,expire_seconds, ";
@@ -162,7 +162,7 @@
 	$sql .= "extension, ping, ping_min, ping_max, ";
 	$sql .= "cast(contact_in_ping as text) , ";
 	$sql .= "cast(caller_id_in_from as text), ";
-	$sql .= "cast(supress_cng as text),
+	$sql .= "cast(supress_cng as text), ";
 	$sql .= "sip_cid_type, codec_prefs, channels, ";
 	$sql .= "cast(extension_in_contact as text), ";
 	$sql .= "context, profile, hostname, ";
@@ -406,4 +406,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
