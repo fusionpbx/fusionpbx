@@ -79,12 +79,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "module_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "moduleenabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "module_default_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "moduledefaultenabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "module_description";
