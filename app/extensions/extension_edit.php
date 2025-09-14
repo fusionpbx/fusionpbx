@@ -1991,21 +1991,18 @@
 		echo "    ".$text['label-call_screen_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='call_screen_enabled'>\n";
-		echo "    <option value=''></option>\n";
-		if ($call_screen_enabled == true) {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
+			echo "	<label class='switch'>\n";
+			echo "		<input type='checkbox' id='call_screen_enabled' name='call_screen_enabled' value='true' ".($call_screen_enabled == true ? "checked='checked'" : null).">\n";
+			echo "		<span class='slider'></span>\n";
+			echo "	</label>\n";
 		}
 		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+			echo "	<select class='formfld' id='call_screen_enabled' name='call_screen_enabled'>\n";
+			echo "		<option value='true' ".($call_screen_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($call_screen_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
 		}
-		if ($call_screen_enabled == false) {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-call_screen_enabled']."\n";
 		echo "</td>\n";
