@@ -106,7 +106,7 @@
 		$context = $_POST["context"];
 		$profile = $_POST["profile"];
 		$hostname = $_POST["hostname"];
-		$enabled = $_POST["enabled"] ?? 'false';
+		$enabled = $_POST["enabled"] ?? false;
 		$description = $_POST["description"];
 	}
 
@@ -198,7 +198,7 @@
 					$array['gateways'][$x]["description"] = $description;
 
 				//update gateway session variable
-					if ($enabled == 'true') {
+					if ($enabled) {
 						$_SESSION['gateways'][$gateway_uuid] = $gateway;
 					}
 					else {
@@ -216,7 +216,7 @@
 					$message = $database->message;
 
 				//remove xml file (if any) if not enabled
-					if ($enabled != 'true' && !empty($_SESSION['switch']['sip_profiles']['dir'])) {
+					if ($enabled != true && !empty($_SESSION['switch']['sip_profiles']['dir'])) {
 						$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
 						if (file_exists($gateway_xml_file)) {
 							unlink($gateway_xml_file);
@@ -540,21 +540,18 @@
 	echo "    ".$text['label-distinct_to']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='distinct_to'>\n";
-	echo "    <option value=''></option>\n";
-	if ($distinct_to == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='distinct_to' name='distinct_to' value='true' ".($distinct_to == true ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='distinct_to' name='distinct_to'>\n";
+		echo "		<option value='true' ".($distinct_to == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($distinct_to == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($distinct_to == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-distinct_to']."\n";
 	echo "</td>\n";
@@ -651,21 +648,18 @@
 	echo "		".$text['label-caller_id_in_from']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<select class='formfld' name='caller_id_in_from'>\n";
-	echo "		<option value=''></option>\n";
-	if ($caller_id_in_from == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='caller_id_in_from' name='caller_id_in_from' value='true' ".($caller_id_in_from == true ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='caller_id_in_from' name='caller_id_in_from'>\n";
+		echo "		<option value='true' ".($caller_id_in_from == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($caller_id_in_from == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($caller_id_in_from == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-caller_id_in_from']."\n";
 	echo "</td>\n";
@@ -676,21 +670,18 @@
 	echo "    ".$text['label-supress_cng']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='supress_cng'>\n";
-	echo "    <option value=''></option>\n";
-	if ($supress_cng == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='supress_cng' name='supress_cng' value='true' ".($supress_cng == true ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='supress_cng' name='supress_cng'>\n";
+		echo "		<option value='true' ".($supress_cng == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($supress_cng == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($supress_cng == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-supress_cng']."\n";
 	echo "</td>\n";
@@ -781,21 +772,18 @@
 	echo "    ".$text['label-contact_in_ping']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='contact_in_ping'>\n";
-	echo "    <option value=''></option>\n";
-	if ($contact_in_ping == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
+		echo "	<label class='switch'>\n";
+		echo "		<input type='checkbox' id='contact_in_ping' name='contact_in_ping' value='true' ".($contact_in_ping == true ? "checked='checked'" : null).">\n";
+		echo "		<span class='slider'></span>\n";
+		echo "	</label>\n";
 	}
 	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='contact_in_ping' name='contact_in_ping'>\n";
+		echo "		<option value='true' ".($contact_in_ping == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($contact_in_ping == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
 	}
-	if ($contact_in_ping == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-contact_in_ping']."\n";
 	echo "</td>\n";
@@ -900,14 +888,14 @@
 	echo "<td class='vtable' align='left'>\n";
 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
 		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
+		echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == true ? "checked='checked'" : null).">\n";
 		echo "		<span class='slider'></span>\n";
 		echo "	</label>\n";
 	}
 	else {
 		echo "	<select class='formfld' id='enabled' name='enabled'>\n";
-		echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
