@@ -81,7 +81,7 @@
 	}
 
 //delete the group from the user
-	if (!empty($_POST['action']) && $_POST['action'] === 'delete' && permission_exists("user_group_delete") && is_uuid($_POST["group_uuid"]) && is_uuid($user_uuid)) {
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("user_group_delete") && is_uuid($_POST["group_uuid"]) && is_uuid($user_uuid)) {
 		//get the uuid
 			$group_uuid = $_POST['group_uuid'];
 
