@@ -73,7 +73,7 @@
 	}
 
 //delete the group from the sub table
-	if (!empty($_POST["action"]) && $_POST["action"] === 'delete' && permission_exists("device_vendor_function_group_delete") && is_uuid($_POST["group_uuid"]) && is_uuid($_POST["device_vendor_function_group_uuid"])) {
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("device_vendor_function_group_delete") && is_uuid($_POST["group_uuid"]) && is_uuid($_POST["device_vendor_function_group_uuid"])) {
 		//get the uuid
 			$group_uuid = $_POST["group_uuid"];
 			$device_vendor_function_group_uuid = $_POST["device_vendor_function_group_uuid"];
