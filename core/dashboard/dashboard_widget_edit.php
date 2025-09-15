@@ -158,7 +158,7 @@
 	}
 
 //delete the group from the sub table
-	if (!empty($_POST["action"]) && $_POST["action"] === 'delete' && permission_exists("dashboard_widget_group_delete") && is_uuid($_POST["dashboard_widget_group_uuid"]) && is_uuid($_POST["dashboard_widget_uuid"])) {
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("dashboard_widget_group_delete") && is_uuid($_POST["dashboard_widget_group_uuid"]) && is_uuid($_POST["dashboard_widget_uuid"])) {
 		//get the uuid
 			$widget_group_uuid = $_POST['dashboard_widget_group_uuid'];
 
