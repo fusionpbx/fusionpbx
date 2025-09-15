@@ -75,7 +75,6 @@
 //delete the group from the sub table
 	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("device_vendor_function_group_delete") && is_uuid($_POST["group_uuid"]) && is_uuid($_POST["device_vendor_function_group_uuid"])) {
 		//get the uuid
-			$group_uuid = $_POST["group_uuid"];
 			$device_vendor_function_group_uuid = $_POST["device_vendor_function_group_uuid"];
 
 		//validate the token
@@ -87,7 +86,6 @@
 			}
 
 		//delete the device vendor function group
-			$array['device_vendor_function_groups'][0]['group_uuid'] = $group_uuid;
 			$array['device_vendor_function_groups'][0]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
 			$database = new database;
 			$database->app_name = 'devices';
@@ -332,7 +330,6 @@
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		if (permission_exists('device_vendor_function_group_delete')) {
 			echo "	<input type='hidden' id='action' name='action' value=''>\n";
-			echo "	<input type='hidden' id='group_uuid' name='group_uuid' value=''>\n";
 			echo "	<input type='hidden' id='device_vendor_function_group_uuid' name='device_vendor_function_group_uuid' value=''>\n";
 		}
 		$x = 0;
