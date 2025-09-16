@@ -680,6 +680,7 @@
 							foreach($extensions as $row) {
 								$extension_labels[$row['extension']]['caller_id_name'] = $row['effective_caller_id_name'];
 							}
+							unset($sql, $parameters);
 
 						//get the device lines array
 							$sql = "select * from v_device_lines ";
