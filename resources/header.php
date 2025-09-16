@@ -150,6 +150,14 @@
 			break;
 	}
 
+//get the input toggle style options: select, switch_round, switch_square
+	if (substr($settings->get('theme', 'input_toggle_style', 'switch round'), 0, 6) == 'switch') {
+		$input_toggle_style_switch = true;
+	}
+	else {
+		$input_toggle_style_switch = false;
+	}
+
 //start the output buffer
 	ob_start();
 
