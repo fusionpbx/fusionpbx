@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -158,7 +158,7 @@
 	$sql .= "gateway_uuid, domain_uuid, gateway, username, password, ";
 	$sql .= "cast(distinct_to as text), auth_username, realm, from_user, from_domain, ";
 	$sql .= "proxy, register_proxy,outbound_proxy,expire_seconds, ";
-	$sql .= "register, register_transport, contact_params, retry_seconds, ";
+	$sql .= "cast(register as text), register_transport, contact_params, retry_seconds, ";
 	$sql .= "extension, ping, ping_min, ping_max, ";
 	$sql .= "cast(contact_in_ping as text) , ";
 	$sql .= "cast(caller_id_in_from as text), ";
