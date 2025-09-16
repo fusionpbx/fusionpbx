@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,7 +91,6 @@
 	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(phrase_name) like :search ";
-		$sql_search .= "or lower(phrase_enabled) like :search ";
 		$sql_search .= "or lower(phrase_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -105,7 +104,6 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= $sql_search;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -120,10 +118,22 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= " phrase_uuid, ";
+	$sql .= " domain_uuid, ";
+	$sql .= " phrase_name, ";
+	$sql .= " phrase_language, ";
+	$sql .= " cast(phrase_enabled as text), ";
+	$sql .= " phrase_description ";
+	$sql .= "from v_phrases ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('phrase_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	$sql .= $sql_search;
 	$sql .= order_by($order_by, $order, 'phrase_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$phrases = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -277,4 +287,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
