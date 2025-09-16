@@ -81,7 +81,7 @@
 		}
 		$phrase_name = $_POST["phrase_name"];
 		$phrase_language = $_POST["phrase_language"];
-		$phrase_enabled = $_POST["phrase_enabled"] ?? 'false';
+		$phrase_enabled = $_POST["phrase_enabled"];
 		$phrase_description = $_POST["phrase_description"];
 		$phrase_details_delete = $_POST["phrase_details_delete"] ?? '';
 
@@ -163,7 +163,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database = new database;
 						$database->app_name = 'phrases';
 						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
@@ -227,7 +226,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database = new database;
 						$database->app_name = 'phrases';
 						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
@@ -276,7 +274,6 @@
 		$sql .= "and phrase_uuid = :phrase_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$phrase_name = $row["phrase_name"];
@@ -287,9 +284,6 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set the defaults
-	if (empty($phrase_enabled)) { $phrase_enabled = 'true'; }
-
 //get the phrase details
 	if (!empty($phrase_uuid)) {
 		$sql = "select * from v_phrase_details ";
@@ -298,7 +292,6 @@
 		$sql .= "order by phrase_detail_order asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$phrase_details = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -308,7 +301,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -611,59 +603,17 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-
-
-// ... WAS ...
-//
-// 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-// 		echo "	<label class='switch'>\n";
-// 		echo "		<input type='checkbox' id='phrase_enabled' name='phrase_enabled' value='true' ".($phrase_enabled == 'true' ? "checked='checked'" : null).">\n";
-// 		echo "		<span class='slider'></span>\n";
-// 		echo "	</label>\n";
-// 	}
-// 	else {
-// 		echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
-// 		echo "		<option value='true' ".($phrase_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-// 		echo "		<option value='false' ".($phrase_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-// 		echo "	</select>\n";
-// 	}
-//
-//
-//
-// ... COULD USE 2 IF STATEMENTS TO WRAP THE SELECT (WHEN THE SLIDE TOGGLE IS ENABLED) ...
-//
-// 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-// 		echo "	<span class='switch'>\n";
-// 	}
-// 	echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
-// 	echo "		<option value='true' ".($phrase_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-// 	echo "		<option value='false' ".($phrase_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-// 	echo "	</select>\n";
-// 	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-// 		echo "		<span class='slider'></span>\n";
-// 		echo "	</span>\n";
-// 	}
-//
-//
-//
-// ... OR MAYBE JUST A SINGLE IF STATEMENT ...
-
-	$select_field = "<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
-	$select_field .= "	<option value='true' ".($phrase_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	$select_field .= "	<option value='false' ".($phrase_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	$select_field .= "</select>\n";
-	echo (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') ? "<span class='switch'>".$select_field."<span class='slider'></span></span>\n" : $select_field;
-	unset($select_field);
-
-
-	// 					id					name			value	label				  value		label					selected value
-	// echo select_field('phrase_enabled', 'phrase_enabled', ['true'=>$text['option-true'],'false'=>$text['option-false']], $phrase_enabled);
-
-	// echo select_field('phrase_enabled', 'phrase_enabled', [''=>'','true'=>$text['option-true'],'false'=>$text['option-false']], $phrase_enabled, $onchange);
-
-
-
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
+	echo "		<option value='true' ".($phrase_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($phrase_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "	<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";
