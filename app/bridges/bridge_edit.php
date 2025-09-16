@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -62,7 +62,7 @@
 		$bridge_gateways = $_POST["bridge_gateways"];
 		$destination_number = $_POST["destination_number"];
 		$bridge_destination = $_POST["bridge_destination"];
-		$bridge_enabled = $_POST["bridge_enabled"] ?? false;
+		$bridge_enabled = $_POST["bridge_enabled"];
 		$bridge_description = $_POST["bridge_description"];
 	}
 
@@ -357,9 +357,6 @@
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
 
-//set the defaults
-	if (empty($bridge_enabled)) { $bridge_enabled = true; }
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -572,17 +569,16 @@
 	echo "	".$text['label-bridge_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='bridge_enabled' name='bridge_enabled' value='true' ".(!empty($bridge_enabled) && $bridge_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
-		echo "		<option value='true' ".($bridge_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($bridge_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
+	echo "			<option value='true' ".($bridge_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($bridge_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-bridge_enabled']."\n";
