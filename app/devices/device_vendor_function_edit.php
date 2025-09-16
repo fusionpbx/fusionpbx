@@ -73,7 +73,7 @@
 	}
 
 //delete the group from the sub table
-	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("device_vendor_function_group_delete") && is_uuid($_POST["group_uuid"]) && is_uuid($_POST["device_vendor_function_group_uuid"])) {
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("device_vendor_function_group_delete") && is_uuid($_POST["device_vendor_function_group_uuid"])) {
 		//get the uuid
 			$device_vendor_function_group_uuid = $_POST["device_vendor_function_group_uuid"];
 
@@ -342,7 +342,7 @@
 				if (permission_exists('device_vendor_function_group_delete')) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>";
 					echo button::create(['type'=>'button','icon'=>'fas fa-minus','id'=>'btn_delete','class'=>'default list_control_icon','name'=>'btn_delete','onclick'=>"modal_open('modal-delete-group-$x','btn_delete');"]);
-					echo modal::create(['id'=>'modal-delete-group-'.$x,'type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); document.getElementById('group_uuid').value = '".escape($field['group_uuid'])."'; document.getElementById('device_vendor_function_group_uuid').value = '".escape($field['device_vendor_function_group_uuid'])."'; list_form_submit('frm');"])]);
+					echo modal::create(['id'=>'modal-delete-group-'.$x,'type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); document.getElementById('device_vendor_function_group_uuid').value = '".escape($field['device_vendor_function_group_uuid'])."'; list_form_submit('frm');"])]);
 					echo "	</td>";
 				}
 				echo "</tr>\n";
