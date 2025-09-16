@@ -668,6 +668,19 @@
 
 				//get the provisioning information
 					if (is_uuid($device_uuid)) {
+						//get the extensions from the database
+							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
+							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
+							$sql .= "number_alias, extension, call_group ";
+							$sql .= "from v_extensions ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "order by extension asc ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$extensions = $this->database->select($sql, $parameters, 'all');
+							foreach($extensions as $row) {
+								$extension_labels[$row['extension']]['caller_id_name'] = $row['effective_caller_id_name'];
+							}
+
 						//get the device lines array
 							$sql = "select * from v_device_lines ";
 							$sql .= "where device_uuid = :device_uuid ";
@@ -796,6 +809,20 @@
 								}
 							}
 							unset($sql, $parameters, $keys);
+
+						//replace the ${caller_id_name} with the extensions caller id name
+							if (is_array($device_keys)) {
+								foreach($device_keys as $row) {
+									//set the variables
+									$id = $row['device_key_id'];
+									$category = $row['device_key_category'];
+
+									//build the device keys array
+									if ($row['device_key_label'] == '${caller_id_name}' && is_numeric($row['device_key_value'])) {
+										$device_keys[$category][$id]['device_key_label'] = $extension_labels[$row['device_key_value']]['caller_id_name'];
+									}
+								}
+							}
 
 						//set the variables
 							if (is_array($device_lines) && sizeof($device_lines) != 0) {
