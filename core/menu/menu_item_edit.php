@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -72,18 +72,29 @@
 	}
 
 //delete the group from the menu item
-	if ($action == "delete" && permission_exists("menu_delete") && is_uuid($menu_item_group_uuid)) {
-		//delete the group from the users
-		$array['menu_item_groups'][0]['menu_item_group_uuid'] = $menu_item_group_uuid;
-		$database->app_name = 'menu';
-		$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
-		$database->delete($array);
-		unset($array);
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("menu_item_group_delete") && is_uuid($_POST["menu_item_group_uuid"])) {
+		//get the uuid
+			$menu_item_group_uuid = $_POST['menu_item_group_uuid'];
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: menu.php');
+				exit;
+			}
+
+		//delete the group from the menu item
+			$array['menu_item_groups'][0]['menu_item_group_uuid'] = $menu_item_group_uuid;
+			$database->app_name = 'menu';
+			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+			$database->delete($array);
+			unset($array);
 
 		//redirect the browser
-		message::add($text['message-delete']);
-		header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
-		return;
+			message::add($text['message-delete']);
+			header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
+			return;
 	}
 
 //action add or update
@@ -502,18 +513,25 @@
 	echo "		<td class='vtable'>";
 	if (!empty($menu_item_groups) && sizeof($menu_item_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+		if (permission_exists('menu_item_group_delete')) {
+			echo "<input type='hidden' id='action' name='action' value=''>\n";
+			echo "<input type='hidden' id='menu_item_group_uuid' name='menu_item_group_uuid' value=''>\n";
+		}
+		$x = 0;
 		foreach($menu_item_groups as $field) {
 			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 				echo $field['group_name'].((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
-				if (permission_exists('group_member_delete') || if_group("superadmin")) {
+				if (permission_exists('menu_item_group_delete')) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>";
-					echo 		"<a href='menu_item_edit.php?id=".escape($field['menu_uuid'])."&menu_item_group_uuid=".escape($field['menu_item_group_uuid'])."&menu_item_uuid=".escape($menu_item_uuid)."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo button::create(['type'=>'button','icon'=>'fas fa-minus','id'=>'btn_delete','class'=>'default list_control_icon','name'=>'btn_delete','onclick'=>"modal_open('modal-delete-group-$x','btn_delete');"]);
+					echo modal::create(['id'=>'modal-delete-group-'.$x,'type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); document.getElementById('menu_item_group_uuid').value = '".escape($field['menu_item_group_uuid'])."'; list_form_submit('frm');"])]);
 					echo "	</td>";
 				}
 				echo "</tr>\n";
+				$x++;
 			}
 		}
 		echo "</table>\n";
