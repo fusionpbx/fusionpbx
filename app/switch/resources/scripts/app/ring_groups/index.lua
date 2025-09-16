@@ -95,7 +95,7 @@
 			end
 
 		--send the ring group event
-		    event = freeswitch.Event("CUSTOM", "RING_GROUPS");
+			event = freeswitch.Event("CUSTOM", "RING_GROUPS");
 			event:addHeader("domain_uuid", domain_uuid);
 			event:addHeader("domain_name", domain_name);
 			event:addHeader("ring_group_uuid", ring_group_uuid);
@@ -224,12 +224,12 @@
 --get current switchname
 	hostname = trim(api:execute("hostname", ""))
 
-
-
 --get the ring group
 	ring_group_forward_enabled = '';
 	ring_group_forward_destination = '';
-	sql = sql .. "SELECT d.domain_name, ";
+	sql = "SELECT d.domain_name, ";
+	sql = sql .. "d.domain_uuid, ";
+	sql = sql .. "d.domain_name, ";
 	sql = sql .. "r.ring_group_name, ";
 	sql = sql .. "r.ring_group_extension, ";
 	sql = sql .. "r.ring_group_greeting, ";
@@ -602,9 +602,7 @@
 					AND r.domain_uuid = :domain_uuid
 					AND r.ring_group_enabled = true
 			]];
-
 			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
-
 			dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
@@ -612,10 +610,13 @@
 					else
 						sql_order = 'random() * 1000000' --both postgresql and sqlite uses random() instead of rand()
 					end
-				else
-					sql_order='d.destination_delay, d.destination_number asc'
 				end
 			end);
+
+		--if the sql_order is not then set a default
+			if (sql_order == nil) then
+					sql_order = 'd.destination_delay, d.destination_number asc';
+			end
 
 		--get the ring group destinations
 			sql = [[
