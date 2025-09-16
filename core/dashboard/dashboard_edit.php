@@ -173,7 +173,7 @@
 			}
 
 		//delete the group from the widget
-			$array['dashboard_groups'][0]['dashboard_group_uuid'] = $widget_group_uuid;
+			$array['dashboard_groups'][0]['dashboard_group_uuid'] = $dashboard_group_uuid;
 			$database->app_name = 'dashboard';
 			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->delete($array);
