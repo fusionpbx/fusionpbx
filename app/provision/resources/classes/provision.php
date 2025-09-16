@@ -661,9 +661,9 @@
 				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
-			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
+			//replace the variables in the template in the future, loop through all the line numbers to do a replace for each possible line number
 
-				//create a device address with back slashes for backwards compatability
+				//create a device address with backslashes for backwards compatibility
 					//$address_dash = substr($device_address, 0,2).'-'.substr($device_address, 2,2).'-'.substr($device_address, 4,2).'-'.substr($device_address, 6,2).'-'.substr($device_address, 8,2).'-'.substr($device_address, 10,2);
 
 				//get the provisioning information
