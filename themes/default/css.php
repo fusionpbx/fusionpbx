@@ -2549,6 +2549,7 @@ else { //default: white
 		border-bottom: 1px solid <?=$form_table_field_border_color?>;
 		padding: <?=$form_table_field_padding?>;
 		text-align: left;
+		text-wrap: wrap;
 		vertical-align: middle;
 		color: <?=$form_table_field_text_color?>;
 		font-family: <?=$form_table_field_text_font?>;
