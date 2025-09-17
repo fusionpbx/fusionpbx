@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2024
+	Copyright (C) 2008-2025
 	All Rights Reserved.
 
 	Contributor(s):
@@ -254,17 +254,16 @@
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['button-show_all']."</td>";
 			echo "		<td class='vtable'>\n";
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' name='showall' value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' name='showall'>";
-				echo "		<option value=''>".$text['option-false']."</option>";
-				echo "		<option value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "selected='selected'" : null).">".$text['option-true']."</option>";
-				echo "	</select>";
+			echo "		<select class='formfld' id='showall' name='showall'>\n";
+			echo "			<option value='false'>".$text['option-false']."</option>\n";
+			echo "			<option value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "		<td>";
 			echo "	</tr>";
