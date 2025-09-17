@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -138,7 +138,7 @@
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
 			$user_type = $_POST["user_type"];
-			$user_enabled = $_POST["user_enabled"] ?? false;
+			$user_enabled = $_POST["user_enabled"];
 			if (permission_exists('api_key')) {
 				$api_key = $_POST["api_key"];
 			}
@@ -288,7 +288,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'language';
 					$array['user_settings'][$i]['user_setting_name'] = 'code';
 					$array['user_settings'][$i]['user_setting_value'] = $user_language;
-					$array['user_settings'][$i]['user_setting_enabled'] = true;
+					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 					$i++;
 			}
 			else {
@@ -314,7 +314,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'language';
 					$array['user_settings'][$i]['user_setting_name'] = 'code';
 					$array['user_settings'][$i]['user_setting_value'] = $user_language;
-					$array['user_settings'][$i]['user_setting_enabled'] = true;
+					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 					$i++;
 				}
 			}
@@ -336,7 +336,7 @@
 				$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
 				$array['user_settings'][$i]['user_setting_name'] = 'name';
 				$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
-				$array['user_settings'][$i]['user_setting_enabled'] = true;
+				$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 				$i++;
 			}
 			else {
@@ -362,7 +362,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
 					$array['user_settings'][$i]['user_setting_name'] = 'name';
 					$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
-					$array['user_settings'][$i]['user_setting_enabled'] = true;
+					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 					$i++;
 				}
 			}
@@ -385,7 +385,7 @@
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
 					$array['user_settings'][$i]['user_setting_name'] = 'text';
 					$array['user_settings'][$i]['user_setting_value'] = $message_key;
-					$array['user_settings'][$i]['user_setting_enabled'] = true;
+					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 					$i++;
 				}
 				else {
@@ -411,7 +411,7 @@
 						$array['user_settings'][$i]['user_setting_subcategory'] = 'key';
 						$array['user_settings'][$i]['user_setting_name'] = 'text';
 						$array['user_settings'][$i]['user_setting_value'] = $message_key;
-						$array['user_settings'][$i]['user_setting_enabled'] = true;
+						$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 						$i++;
 					}
 				}
@@ -619,7 +619,7 @@
 		//populate the form with values from db
 			if ($action == 'edit') {
 				$sql = "select domain_uuid, user_uuid, username, user_email, api_key, user_totp_secret, ";
-				$sql .= "user_type, user_enabled, contact_uuid, cast(user_enabled as text), user_status ";
+				$sql .= "user_type, contact_uuid, user_enabled, user_status ";
 				$sql .= "from v_users ";
 				$sql .= "where user_uuid = :user_uuid ";
 				if (!permission_exists('user_all')) {
@@ -674,7 +674,6 @@
 	}
 
 //set the defaults
-	if (!isset($user_enabled)) { $user_enabled = true; }
 	if (empty($user_totp_secret)) { $user_totp_secret = ""; }
 
 //create token
@@ -1210,17 +1209,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='user_enabled' name='user_enabled' value='true' ".($user_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='user_enabled' name='user_enabled'>\n";
-		echo "		<option value='true' ".($user_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($user_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='user_enabled' name='user_enabled'>\n";
+	echo "		<option value='true' ".($user_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($user_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
