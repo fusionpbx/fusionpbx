@@ -47,7 +47,7 @@
 		$quick_select = $_REQUEST['quick_select'];
 		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
 		$start_stamp_end = $_REQUEST['start_stamp_end'];
-		$include_internal = $_REQUEST['include_internal'] ?? '0';
+		$include_internal = $_REQUEST['include_internal'];
 	}
 	else {
 		$quick_select = 3; //set default
@@ -155,15 +155,15 @@
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
 		if ($input_toggle_style_switch) {
-			echo "	<span class='switch'>\n";
+			echo "		<span class='switch'>\n";
 		}
-		echo "		<select class='formfld' id='include_internal' name='include_internal'>\n";
-		echo "			<option value='0'>".$text['option-false']."</option>\n";
-		echo "			<option value='1' ".(isset($include_internal) && $include_internal == 1 ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		</select>\n";
+		echo "			<select class='formfld' id='include_internal' name='include_internal'>\n";
+		echo "				<option value='false' ".($include_internal === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				<option value='true' ".($include_internal === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "			</select>\n";
 		if ($input_toggle_style_switch) {
-			echo "		<span class='slider'></span>\n";
-			echo "	</span>\n";
+			echo "			<span class='slider'></span>\n";
+			echo "		</span>\n";
 		}
 		echo "		</div>\n";
 
