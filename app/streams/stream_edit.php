@@ -225,7 +225,7 @@
 			$domain_uuid = $row["domain_uuid"];
 			$stream_name = $row["stream_name"];
 			$stream_location = $row["stream_location"];
-			$stream_enabled = $row["stream_enabled"] ?? true;
+			$stream_enabled = $row["stream_enabled"];
 			$stream_description = $row["stream_description"];
 		}
 		unset($sql, $parameters, $row);
