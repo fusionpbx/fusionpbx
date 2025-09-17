@@ -188,7 +188,30 @@
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$sql .= "d3.domain_name, ";
 	}
-	$sql .="d.*, d2.device_label as alternate_label, ";
+	$sql .= "d.device_uuid, ";
+	$sql .= "d.domain_uuid, ";
+	$sql .= "d.device_address, ";
+	$sql .= "d.device_label, ";
+	$sql .= "d.device_vendor, ";
+	$sql .= "d.device_model, ";
+	$sql .= "d.device_firmware_version, ";
+	$sql .= "d.device_template, ";
+	$sql .= "d.device_username, ";
+	$sql .= "d.device_password, ";
+	$sql .= "d.device_time_zone, ";
+	$sql .= "d.device_description, ";
+	$sql .= "d.device_profile_uuid, ";
+	$sql .= "d.device_uuid_alternate, ";
+	$sql .= "d.device_user_uuid, ";
+	$sql .= "d.device_provisioned_date, ";
+	$sql .= "d.device_provisioned_method, ";
+	$sql .= "d.device_provisioned_ip, ";
+	$sql .= "d.device_enabled_date, ";
+	$sql .= "d.device_provisioned_agent, ";
+	$sql .= "d.device_location, ";
+	$sql .= "d.device_serial_number, ";
+	$sql .= "cast(d.device_enabled as text), ";
+	$sql .= "d2.device_label as alternate_label, ";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'DD Mon YYYY') as provisioned_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'HH12:MI:SS am') as provisioned_time_formatted \n";
 	$sql .= "from v_devices as d, v_devices as d2 ";
@@ -475,4 +498,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

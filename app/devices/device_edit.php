@@ -128,7 +128,7 @@
 			$device_uuid_alternate = $_POST["device_uuid_alternate"] ?? null;
 			$device_model = $_POST["device_model"] ?? null;
 			$device_firmware_version = $_POST["device_firmware_version"] ?? null;
-			$device_enabled = $_POST["device_enabled"] ?? false;
+			$device_enabled = $_POST["device_enabled"];
 			$device_template = $_POST["device_template"];
 			$device_description = $_POST["device_description"];
 		//lines
@@ -436,14 +436,13 @@
 								$array['devices'][0]['device_settings'][$y]['device_setting_name'] = $row["device_setting_name"] ?? null;
 								$array['devices'][0]['device_settings'][$y]['device_setting_value'] = $row["device_setting_value"] ?? null;
 								$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"] ?? 'false';
-// echo $array['devices'][0]['device_settings'][$y]['device_setting_enabled'].'<br>';
 								$array['devices'][0]['device_settings'][$y]['device_setting_description'] = $row["device_setting_description"];
 								$y++;
 							}
 						}
 					}
-// view_array($array);
-// exit;
+
+
 				//save the device
 					$database->app_name = 'devices';
 					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
@@ -544,9 +543,6 @@
 	$sql .= "order by domain_name asc ";
 	$domains = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
-
-//set the defaults
-	if (empty($device_enabled)) { $device_enabled = true; }
 
 //use the device address to get the vendor
 	if (empty($device_vendor)) {
@@ -1283,7 +1279,6 @@
 
 		$x = 0;
 		foreach ($device_lines as $row) {
-
 			//set the defaults
 				if (!permission_exists('device_line_server_address')) {
 					if (empty($row['server_address'])) { $row['server_address'] = $domain_name; }
@@ -1453,17 +1448,16 @@
 				}
 
 				echo "			<td align='left'>\n";
-				if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-					echo "			<label class='switch'>\n";
-					echo "				<input type='checkbox' name='device_lines[".$x."][enabled]' value='true' ".(empty($row['enabled']) || $row['enabled'] == 'true' ? "checked='checked'" : null).">\n";
-					echo "				<span class='slider'></span>\n";
-					echo "			</label>\n";
+				if ($input_toggle_style_switch) {
+					echo "	<span class='switch'>\n";
 				}
-				else {
-					echo "			<select class='formfld' name='device_lines[".$x."][enabled]'>\n";
-					echo "				<option value='true'>".$text['option-true']."</option>\n";
-					echo "				<option value='false' ".($row['enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-					echo "			</select>\n";
+				echo "	<select class='formfld' id='user_setting_enabled' name='device_lines[".$x."][enabled]'>\n";
+				echo "		<option value='true' ".($row['enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+				echo "		<option value='false' ".($row['enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "	</select>\n";
+				if ($input_toggle_style_switch) {
+					echo "		<span class='slider'></span>\n";
+					echo "	</span>\n";
 				}
 				echo "			</td>\n";
 
@@ -1817,17 +1811,16 @@
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-					echo "	<label class='switch'>\n";
-					echo "		<input type='checkbox' name='device_settings[".$x."][device_setting_enabled]' value='true' ".(empty($row['device_setting_enabled']) || $row['device_setting_enabled'] == 'true' ? "checked='checked'" : null).">\n";
-					echo "		<span class='slider'></span>\n";
-					echo "	</label>\n";
+				if ($input_toggle_style_switch) {
+					echo "	<span class='switch'>\n";
 				}
-				else {
-					echo "	<select class='formfld' name='device_settings[".$x."][device_setting_enabled]'>\n";
-					echo "		<option value='true'>".$text['option-true']."</option>\n";
-					echo "		<option value='false' ".(!empty($row['device_setting_enabled']) && $row['device_setting_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-					echo "	</select>\n";
+				echo "	<select class='formfld' id='device_setting_enabled' name='device_settings[".$x."][device_setting_enabled]'>\n";
+				echo "		<option value='true' ".($row['device_setting_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+				echo "		<option value='false' ".($row['device_setting_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "	</select>\n";
+				if ($input_toggle_style_switch) {
+					echo "		<span class='slider'></span>\n";
+					echo "	</span>\n";
 				}
 				echo "</td>\n";
 
@@ -2017,17 +2010,16 @@
 		echo "	".$text['label-device_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style', ''), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='device_enabled' name='device_enabled' value='true' ".($device_enabled == true ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span>\n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='device_enabled' name='device_enabled'>\n";
-			echo "		<option value='true' ".($device_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($device_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='device_enabled' name='device_enabled'>\n";
+		echo "		<option value='true' ".($device_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($device_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-device_enabled']."\n";
