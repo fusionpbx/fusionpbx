@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -102,9 +102,18 @@
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($sql);
 
 //get the list
-	$sql = str_replace('count(conference_profile_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= "conference_profile_uuid, ";
+	$sql .= "profile_name, ";
+	$sql .= "cast(profile_enabled as text), ";
+	$sql .= "profile_description ";
+	$sql .= "from v_conference_profiles ";
+	if (!empty($sql_search)) {
+		$sql .= "where ".$sql_search;
+	}
 	$sql .= order_by($order_by, $order, 'profile_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
 	$database = new database;
