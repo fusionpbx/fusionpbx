@@ -349,7 +349,7 @@
 								if (permission_exists('device_line_shared')) {
 									$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
 								}
-								$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"] ?? 'false';
+								$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"] ?? false;
 								if (permission_exists('device_line_port')) {
 									$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
 								}
@@ -435,7 +435,7 @@
 								$array['devices'][0]['device_settings'][$y]['device_setting_subcategory'] = $row["device_setting_subcategory"] ?? null;
 								$array['devices'][0]['device_settings'][$y]['device_setting_name'] = $row["device_setting_name"] ?? null;
 								$array['devices'][0]['device_settings'][$y]['device_setting_value'] = $row["device_setting_value"] ?? null;
-								$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"] ?? 'false';
+								$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"] ?? false;
 								$array['devices'][0]['device_settings'][$y]['device_setting_description'] = $row["device_setting_description"];
 								$y++;
 							}
@@ -593,7 +593,7 @@
 	$device_lines[$x]['auth_id'] = '';
 	$device_lines[$x]['password'] = '';
 	$device_lines[$x]['shared_line'] = '';
-	$device_lines[$x]['enabled'] = '';
+	$device_lines[$x]['enabled'] = false;
 	$device_lines[$x]['sip_port'] = $settings->get('provision', 'line_sip_port', '5060');
 	$device_lines[$x]['sip_transport'] = $settings->get('provision', 'line_sip_transport', 'tcp');
 	$device_lines[$x]['register_expires'] = $settings->get('provision', 'line_register_expires', '120');
@@ -681,7 +681,7 @@
 	for ($x = 0; $x < $rows; $x++) {
 		$device_settings[$id]['device_setting_name'] = '';
 		$device_settings[$id]['device_setting_value'] = '';
-		$device_settings[$id]['device_setting_enabled'] = '';
+		$device_settings[$id]['device_setting_enabled'] = false;
 		$device_settings[$id]['device_setting_description'] = '';
 		$id++;
 	}
