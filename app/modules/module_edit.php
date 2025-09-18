@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -48,8 +48,6 @@
 	$module_description = '';
 	$module_category = '';
 	$module_order = '';
-	$module_enabled = '';
-	$module_default_enabled = '';
 
 //determin the action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -67,8 +65,8 @@
 		$module_description = $_POST["module_description"];
 		$module_category = $_POST["module_category"];
 		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"] ?? false;
-		$module_default_enabled = $_POST["module_default_enabled"] ?? false;
+		$module_enabled = $_POST["module_enabled"];
+		$module_default_enabled = $_POST["module_default_enabled"];
 	}
 
 //process the data
@@ -93,8 +91,8 @@
 			if (empty($module_name)) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
 			//if (empty($module_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (empty($module_category)) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
-			if (empty($module_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			if (empty($module_default_enabled)) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
+			// if (empty($module_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			// if (empty($module_default_enabled)) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -168,10 +166,6 @@
 		}
 		unset($sql, $parameters, $row);
 	}
-
-//set the defaults
-	if (empty($module_enabled)) { $module_enabled = true; }
-	if (empty($module_default_enabled)) { $module_default_enabled = true; }
 
 //create token
 	$object = new token;
@@ -253,17 +247,16 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='module_enabled' name='module_enabled' value='true' ".($module_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='module_enabled' name='module_enabled'>\n";
-		echo "		<option value='true' ".($module_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($module_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='module_enabled' name='module_enabled'>\n";
+	echo "		<option value='true' ".($module_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($module_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -273,17 +266,16 @@
 	echo "    ".$text['label-default_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='module_default_enabled' name='module_default_enabled' value='true' ".($module_default_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='module_default_enabled' name='module_default_enabled'>\n";
-		echo "		<option value='true' ".($module_default_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($module_default_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='module_default_enabled' name='module_default_enabled'>\n";
+	echo "		<option value='true' ".($module_default_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($module_default_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
