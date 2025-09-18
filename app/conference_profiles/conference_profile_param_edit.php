@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -64,7 +64,7 @@
 	if (!empty($_POST)) {
 		$profile_param_name = $_POST["profile_param_name"];
 		$profile_param_value = $_POST["profile_param_value"];
-		$profile_param_enabled = $_POST["profile_param_enabled"] ?? 'false';
+		$profile_param_enabled = $_POST["profile_param_enabled"];
 		$profile_param_description = $_POST["profile_param_description"];
 	}
 
@@ -123,7 +123,6 @@
 				}
 
 				if (is_uuid($array['conference_profile_params'][0]['conference_profile_param_uuid'])) {
-					$database = new database;
 					$database->app_name = 'conference_profiles';
 					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 					$database->save($array);
@@ -139,11 +138,15 @@
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_profile_param_uuid = $_GET["id"] ?? '';
-		$sql = "select * from v_conference_profile_params ";
+		$sql = "select ";
+		$sql .= "profile_param_name, ";
+		$sql .= "profile_param_value, ";
+		$sql .= "profile_param_enabled, ";
+		$sql .= "profile_param_description ";
+		$sql .= "from v_conference_profile_params ";
 		$sql .= "where conference_profile_param_uuid = :conference_profile_param_uuid ";
 		$parameters['conference_profile_param_uuid'] = $conference_profile_param_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
+		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (!empty($row)) {
 			$profile_param_name = $row["profile_param_name"];
 			$profile_param_value = $row["profile_param_value"];
@@ -152,9 +155,6 @@
 		}
 		unset($sql, $parameters);
 	}
-
-//set the defaults
-	if (empty($profile_param_enabled)) { $profile_param_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -206,17 +206,16 @@
 	echo "	".$text['label-profile_param_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='profile_param_enabled' name='profile_param_enabled' value='true' ".($profile_param_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='profile_param_enabled' name='profile_param_enabled'>\n";
-		echo "		<option value='true' ".($profile_param_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($profile_param_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='profile_param_enabled' name='profile_param_enabled'>\n";
+	echo "			<option value='true' ".($profile_param_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($profile_param_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-profile_param_enabled']."\n";
