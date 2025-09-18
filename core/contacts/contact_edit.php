@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -512,7 +512,7 @@
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_name'] = $row["contact_setting_name"];
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_value'] = $row["contact_setting_value"];
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_order'] = $row["contact_setting_order"];
-						$array['contacts'][0]['contact_settings'][$y]['contact_setting_enabled'] = $row["contact_setting_enabled"] ?? false;
+						$array['contacts'][0]['contact_settings'][$y]['contact_setting_enabled'] = $row["contact_setting_enabled"];
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_description'] = $row["contact_setting_description"];
 						$y++;
 					}
@@ -1712,7 +1712,7 @@ if (permission_exists('contact_phone_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['phone_primary'] == "1") {
+		if ($row['phone_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -1833,22 +1833,17 @@ if (permission_exists('contact_phone_view')) {
 		echo "			".$text['label-primary']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-
-		echo "			<select class='formfld' name='contact_phones[$x][phone_primary]' style='width: auto;'>\n";
-		echo "				<option value=''></option>\n";
-		if ($row['phone_primary'] == "1") {
-			echo "				<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "				<option value='1'>".$text['label-true']."</option>\n";
+		echo "				<select class='formfld' id='phone_primary' name='contact_phones[$x][phone_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['phone_primary'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['phone_primary'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
 		}
-		if ($row['phone_primary'] == "0") {
-			echo "				<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "				<option value='0'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		//echo 				$text['description-phone_primary']."\n";
 		echo "		</div>\n";
 
@@ -1905,7 +1900,7 @@ if (permission_exists('contact_address_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['address_primary'] == "1") {
+		if ($row['address_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2096,21 +2091,17 @@ if (permission_exists('contact_address_view')) {
 		echo "			".$text['label-primary']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		echo "			<select class='formfld' name='contact_addresses[$x][address_primary]' style='width: auto;'>\n";
-		echo "				<option value=''>".escape($text['label-address_primary'] ?? '')."</option>\n";
-		if ($row['address_primary'] == "1") {
-			echo "			<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "			<option value='1'>".$text['label-true']."</option>\n";
+		echo "				<select class='formfld' id='address_primary' name='contact_addresses[$x][address_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['address_primary'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['address_primary'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
 		}
-		if ($row['address_primary'] == "0") {
-			echo "			<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "			<option value='0'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		echo "		</div>\n";
 
 		echo "		<div class='label'>\n";
@@ -2155,7 +2146,7 @@ if (permission_exists('contact_email_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['email_primary'] == "1") {
+		if ($row['email_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2182,21 +2173,17 @@ if (permission_exists('contact_email_view')) {
 		echo "			".$text['label-primary']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		echo "			<select class='formfld' name='contact_emails[$x][email_primary]' style='width: auto;'>\n";
-		echo "				<option value=''>".escape($text['label-contact_emails'] ?? '')."</option>\n";
-		if ($row['email_primary'] == "1") {
-			echo "				<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "				<option value='1'>".$text['label-true']."</option>\n";
+		echo "				<select class='formfld' id='email_primary' name='contact_emails[$x][email_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['email_primary'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['email_primary'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
 		}
-		if ($row['email_primary'] == "0") {
-			echo "				<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "				<option value='0'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		//echo "				<br />\n";
 		//echo 				$text['description-email_primary']."\n";
 		echo "		</div>\n";
@@ -2248,7 +2235,7 @@ if (permission_exists('contact_url_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['url_primary'] == "1") {
+		if ($row['url_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2303,34 +2290,29 @@ if (permission_exists('contact_url_view')) {
 		echo "				".$text['label-primary']."\n";
 		echo "			</div>\n";
 		echo "			<div class='field no-wrap'>\n";
-		echo "				<select class='formfld' name='contact_urls[$x][url_primary]' style='width: auto;'>\n";
-		echo "					<option value=''></option>\n";
-		if ($row['url_primary'] == "1") {
-			echo "					<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "					<option value='1'>".$text['label-true']."</option>\n";
-		}
-		if ($row['url_primary'] == "0") {
-			echo "					<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "					<option value='0'>".$text['label-false']."</option>\n";
-		}
+		echo "				<select class='formfld' id='url_primary' name='contact_urls[$x][url_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['url_primary'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['url_primary'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
+		}
 		echo "			</div>\n";
-
 		echo "			<div class='label'>\n";
 		echo "				".$text['label-url_description']."\n";
 		echo "			</div>\n";
 		echo "			<div class='field no-wrap'>\n";
 		echo "				<input class='formfld' type='text' name='contact_urls[$x][url_description]' placeholder='' maxlength='255' value=\"".escape($row["url_description"])."\">\n";
 		echo "			</div>\n";
-		if (!empty($contact_urls) && @sizeof($contact_urls) > 1 && permission_exists('contact_url_delete')) {
-			if (is_uuid($row['contact_url_uuid'])) {
-				echo "			<input type='checkbox' name='contact_urls[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
-			}
-		}
+		// if (!empty($contact_urls) && @sizeof($contact_urls) > 1 && permission_exists('contact_url_delete')) {
+		// 	if (is_uuid($row['contact_url_uuid'])) {
+		// 		echo "			<input type='checkbox' name='contact_urls[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
+		// 	}
+		// }
 		//echo "			<br />\n";
 		//echo "			".$text['description-contact_organization']."\n";
 		echo "			<div class='label empty_row' style='grid-row: 6 / span 99;'>\n";
@@ -2511,17 +2493,16 @@ if (permission_exists('contact_setting_view')) {
 		echo "			".$text['label-enabled']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' name='contact_settings[$x][contact_setting_enabled]' value='true' ".(empty($row['contact_setting_enabled']) || $row['contact_setting_enabled'] == true ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span>\n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' name='contact_settings[$x][contact_setting_enabled]'>\n";
-			echo "		<option value='true'>".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".(!empty($row['contact_setting_enabled']) && $row['contact_setting_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "		<select class='formfld' id='contact_setting_enabled' name='contact_settings[$x][contact_setting_enabled]' style='width: auto;'>\n";
+		echo "			<option value='true' ".($row['contact_setting_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "			<option value='false' ".($row['contact_setting_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "		</div>\n";
 		echo "		<div class='label'>\n";
@@ -2561,7 +2542,7 @@ if (permission_exists('contact_attachment_view')) {
 		}
 		echo "	</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['attachment_primary'] == "1") {
+		if ($row['attachment_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2614,10 +2595,17 @@ if (permission_exists('contact_attachment_view')) {
 		echo "		".$text['label-primary']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<select class='formfld' name='contact_attachments[$x][attachment_primary]' id='attachment_primary' style='width: auto;'>\n";
-		echo "			<option value='0'>".$text['option-false']."</option>\n";
-		echo "			<option value='1' ".(($row['attachment_primary']) ? "selected" : null).">".$text['option-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
+		}
+		echo "		<select class='formfld' id='attachment_primary' name='contact_attachments[$x][attachment_primary]' style='width: auto;'>\n";
+		echo "			<option value='false' ".($row['attachment_primary'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "			<option value='true' ".($row['attachment_primary'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "		</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
+		}
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
