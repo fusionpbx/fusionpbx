@@ -196,7 +196,6 @@
 	$sql .= "e.forward_user_not_registered_destination, ";
 	$sql .= "e.forward_user_not_registered_enabled, ";
 	$sql .= "e.follow_me_uuid, ";
-	$sql .= "e.forward_caller_id_uuid, ";
 	$sql .= "e.follow_me_enabled, ";
 	$sql .= "e.follow_me_destinations, ";
 	$sql .= "cast(e.enabled as text), ";
