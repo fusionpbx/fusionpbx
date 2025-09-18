@@ -665,9 +665,6 @@
 	if ($input_toggle_style_switch) {
 		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	not found\n";
-	}
 	echo "	<select class='formfld' id='domain_enabled' name='domain_enabled'>\n";
 	echo "		<option value='true' ".($domain_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 	echo "		<option value='false' ".($domain_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
