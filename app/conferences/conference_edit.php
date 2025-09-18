@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -70,7 +70,7 @@
 		$conference_account_code = $_POST["conference_account_code"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
-		$conference_enabled = $_POST["conference_enabled"] ?? false;
+		$conference_enabled = $_POST["conference_enabled"];
 
 		//set the context for users that do not have the permission
 		if (permission_exists('conference_context')) {
@@ -234,7 +234,7 @@
 					}
 					$array['dialplans'][0]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
-					$array['dialplans'][0]['dialplan_continue'] = false;
+					$array['dialplans'][0]['dialplan_continue'] = "false";
 					$array['dialplans'][0]['dialplan_order'] = '333';
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
@@ -288,7 +288,20 @@
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_uuid = $_GET["id"];
-		$sql = "select * from v_conferences ";
+		$sql = "select ";
+		$sql .= "dialplan_uuid, ";
+		$sql .= "conference_name, ";
+		$sql .= "conference_extension, ";
+		$sql .= "conference_pin_number, ";
+		$sql .= "conference_profile, ";
+		$sql .= "conference_flags, ";
+		$sql .= "conference_email_address, ";
+		$sql .= "conference_account_code, ";
+		$sql .= "conference_order, ";
+		$sql .= "conference_description, ";
+		$sql .= "conference_context, ";
+		$sql .= "conference_enabled ";
+		$sql .= "from v_conferences ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and conference_uuid = :conference_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -315,7 +328,6 @@
 
 //set the defaults
 	if (empty($conference_context)) { $conference_context = $_SESSION['domain_name']; }
-	if (empty($conference_enabled)) { $conference_enabled = true; }
 
 //get the conference profiles
 	$sql = "select * ";
@@ -556,17 +568,16 @@
 	echo "	".$text['table-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='conference_enabled' name='conference_enabled' value='true' ".($conference_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='conference_enabled' name='conference_enabled'>\n";
-		echo "		<option value='true' ".($conference_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($conference_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='conference_enabled' name='conference_enabled'>\n";
+	echo "			<option value='true' ".($conference_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($conference_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo "".$text['description-conference-enable']."\n";
