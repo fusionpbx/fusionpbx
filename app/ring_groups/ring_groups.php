@@ -137,13 +137,13 @@
 	if ($show == "all" && permission_exists('ring_group_all')) {
 		$sql = "select r.ring_group_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
 		$sql .= "r.ring_group_forward_destination, cast(r.ring_group_forward_enabled as text), r.ring_group_description ";
-		$sql .= from v_ring_groups as r ";
+		$sql .= "from v_ring_groups as r ";
 		$sql .= "where true ";
 	}
 	elseif (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
 		$sql = "select r.ring_group_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
 		$sql .= "r.ring_group_forward_destination, cast(r.ring_group_forward_enabled as text), r.ring_group_description ";
-		$sql .= from v_ring_groups as r ";
+		$sql .= "from v_ring_groups as r ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
