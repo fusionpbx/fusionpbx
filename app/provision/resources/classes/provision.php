@@ -337,7 +337,7 @@
 							if (is_array($row) && sizeof($row) != 0) {
 
 								//checks either device enabled
-									if ($row['device_enabled'] != true) {
+									if ($row['device_enabled'] === false) {
 										syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempted but the device is not enabled for ".escape($device_address));
 										if ($this->settings->get('provision','debug', false)) {
 											echo "<br/>device disabled<br/>";
@@ -631,7 +631,7 @@
 				if (is_uuid($device_uuid)) {
 					$sql = "select * from v_device_settings ";
 					$sql .= "where device_uuid = :device_uuid ";
-					$sql .= "and device_setting_enabled = 'true' ";
+					$sql .= "and device_setting_enabled = true ";
 					$parameters['device_uuid'] = $device_uuid;
 					$device_settings = $this->database->select($sql, $parameters, 'all');
 					if (is_array($device_settings) && sizeof($device_settings) != 0) {
@@ -685,7 +685,7 @@
 						//get the device lines array
 							$sql = "select * from v_device_lines ";
 							$sql .= "where device_uuid = :device_uuid ";
-							$sql .= "and (enabled = 'true' or enabled is null or enabled = '') ";
+							$sql .= "and (enabled = true or enabled is null) ";
 							$parameters['device_uuid'] = $device_uuid;
 							//$database_device_lines = $this->database->select($sql, $parameters, 'all');
 							foreach ($this->database->select($sql, $parameters, 'all') as $row) {
@@ -925,7 +925,7 @@
 							$sql .= "number_alias, extension, call_group ";
 							$sql .= "from v_extensions ";
 							$sql .= "where domain_uuid = :domain_uuid ";
-							$sql .= "and enabled = 'true' ";
+							$sql .= "and enabled = true ";
 							$sql .= "and directory_visible = 'true' ";
 							$sql .= "order by directory_first_name, effective_caller_id_name asc ";
 							$parameters['domain_uuid'] = $domain_uuid;
