@@ -352,7 +352,21 @@
 
 //pre-populate the form
 	if (!empty($_GET) && count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
-		$sql = "select * from v_dialplans ";
+		$sql = "select ";
+		$sql .= "domain_uuid, ";
+		$sql .= "dialplan_uuid, ";
+		$sql .= "app_uuid, ";
+		$sql .= "hostname, ";
+		$sql .= "dialplan_context, ";
+		$sql .= "dialplan_name, ";
+		$sql .= "dialplan_number, ";
+		$sql .= "dialplan_destination, ";
+		$sql .= "dialplan_continue, ";
+		$sql .= "dialplan_xml, ";
+		$sql .= "dialplan_order, ";
+		$sql .= "dialplan_enabled, ";
+		$sql .= "dialplan_description ";
+		$sql .= "from v_dialplans ";
 		$sql .= "where dialplan_uuid = :dialplan_uuid ";
 		$parameters['dialplan_uuid'] = $dialplan_uuid;
 		$row = $database->select($sql, $parameters, 'row');
@@ -636,17 +650,16 @@
 	echo "		".$text['label-continue']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='dialplan_continue' value='true' ".(!empty($dialplan_continue) && $dialplan_continue == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='dialplan_continue'>\n";
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(!empty($dialplan_continue) && $dialplan_continue == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='dialplan_continue' name='dialplan_continue'>\n";
+	echo "		<option value='true' ".($dialplan_continue === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($dialplan_continue === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "	</td>\n";
 	echo "	</tr>\n";
@@ -740,17 +753,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".(!empty($dialplan_enabled) && $dialplan_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
-		echo "		<option value='true' ".($dialplan_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($dialplan_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+	echo "		<option value='true' ".($dialplan_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($dialplan_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "	</td>\n";
 	echo "	</tr>\n";
