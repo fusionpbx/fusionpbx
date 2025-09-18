@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,7 +55,6 @@
 	$sip_profile_uuid = '';
 	$sip_profile_name = '';
 	$sip_profile_hostname = '';
-	$sip_profile_enabled = false;
 	$sip_profile_description = '';
 	$sip_profile_domains = [];
 	$sip_profile_settings = [];
@@ -87,7 +86,7 @@
 			$sip_profile_uuid = $_POST["sip_profile_uuid"];
 			$sip_profile_name = $_POST["sip_profile_name"];
 			$sip_profile_hostname = $_POST["sip_profile_hostname"];
-			$sip_profile_enabled = $_POST["sip_profile_enabled"] ?? false;
+			$sip_profile_enabled = $_POST["sip_profile_enabled"];
 			$sip_profile_description = $_POST["sip_profile_description"];
 			$sip_profile_domains = $_POST["sip_profile_domains"];
 			$sip_profile_settings = $_POST["sip_profile_settings"];
@@ -116,7 +115,6 @@
 			//if (empty($sip_profile_uuid)) { $msg .= $text['message-required']." ".$text['label-sip_profile_uuid']."<br>\n"; }
 			if (empty($sip_profile_name)) { $msg .= $text['message-required']." ".$text['label-sip_profile_name']."<br>\n"; }
 			//if (empty($sip_profile_hostname)) { $msg .= $text['message-required']." ".$text['label-sip_profile_hostname']."<br>\n"; }
-			if (empty($sip_profile_enabled)) { $msg .= $text['message-required']." ".$text['label-sip_profile_enabled']."<br>\n"; }
 			if (empty($sip_profile_description)) { $msg .= $text['message-required']." ".$text['label-sip_profile_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -291,9 +289,6 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set the defaults
-	if (empty($sip_profile_enabled)) { $sip_profile_enabled = true; }
-
 //get the child data
 	$sql = "select * from v_sip_profile_settings ";
 	$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
@@ -363,7 +358,7 @@
 //show the header
 	$document['title'] = $text['title-sip_profile'];
 	require_once "resources/header.php";
-	
+
 //helper scripts
 	echo "<script language='javascript'>\n";
 
@@ -382,7 +377,7 @@
 	unset($js_sip_profile_names);
 
 	echo "</script>\n";
-	
+
 //show the content
 	echo "<form name='frm' id='frm' method='post'>\n";
 
@@ -631,17 +626,16 @@
 	echo "	".$text['label-sip_profile_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='sip_profile_enabled' name='sip_profile_enabled' value='true' ".($sip_profile_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='sip_profile_enabled' name='sip_profile_enabled'>\n";
-		echo "		<option value='true' ".($sip_profile_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($sip_profile_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='sip_profile_enabled' name='sip_profile_enabled'>\n";
+	echo "		<option value='true' ".($sip_profile_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($sip_profile_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-sip_profile_enabled']."\n";
