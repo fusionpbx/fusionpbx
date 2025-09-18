@@ -1277,7 +1277,7 @@
 			echo "	</span>";
 		}
 		echo "&nbsp;";
-		echo 	"<input class='formfld' style='margin-top: -21px;' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
+		echo 	"<input class='formfld' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
 		echo "<br />\n";
 		echo $text['description-ring-group-forward']."\n";
 		echo "</td>\n";
