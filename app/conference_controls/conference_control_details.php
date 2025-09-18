@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -98,6 +98,7 @@
 	$sql .= $sql_search ?? '';
 	$parameters['conference_control_uuid'] = $conference_control_uuid ?? '';
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
