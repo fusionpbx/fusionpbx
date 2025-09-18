@@ -242,9 +242,6 @@ class plugin_database {
 			}
 			$sql .= "and (user_enabled = true or user_enabled is null) ";
 			$row = $settings->database()->select($sql, $parameters, 'row');
-//view_array($row);
-//view_array($settings->database()->message);
-//exit;
 			if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 
 				//validate the password
