@@ -430,6 +430,11 @@
 
 		//add the message
 			message::add($text['confirm-update']);
+
+		// redirect
+			header('Location: call_forward_edit.php?id='.$extension_uuid);
+			exit;
+
 	}
 
 //show the header
@@ -546,28 +551,28 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<script>\n";
-	echo "		function changed_call_forward(element) {\n";
-	echo "			select_value = element.querySelector('select').value;\n";
-	echo "			if ((element.className == 'vtable' && select_value == 'true') || (element.className == 'switch' && select_value == 'false')){\n";
+	echo "		function changed_call_forward() {\n";
+	echo "			if (document.getElementById('forward_all_enabled').value == 'true'){\n";
+	echo "				document.getElementById('forward_all_destination').focus();\n";
 	echo "          	document.getElementById('follow_me_enabled').value = 'false';\n";
 	echo "          	document.getElementById('do_not_disturb').value = 'false';\n";
 	echo "				$('#div_follow_me_settings').slideUp('fast');\n";
 	echo "          }\n";
 	echo "		}\n";
 	echo "	</script>\n";
-	if ($input_toggle_style_switch == 'switch') {
-		echo "	<span class='switch' onclick='changed_call_forward(this);'>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	echo "		<select class='formfld' id='forward_all_enabled' name='forward_all_enabled' onchange='changed_call_forward(this.parentElement);'>\n";
+	echo "		<select class='formfld' id='forward_all_enabled' name='forward_all_enabled' onchange='changed_call_forward();'>\n";
 	echo "			<option value='true' ".($forward_all_enabled === true ? "selected='selected'" : '').">".$text['option-true']."</option>\n";
 	echo "			<option value='false' ".($forward_all_enabled === false ? "selected='selected'" : '').">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
 		echo "	</span>\n";
+		echo "&nbsp;";
 	}
-	echo "&nbsp;";
-	echo "	<input class='formfld' type='text' name='forward_all_destination' id='forward_all_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_all_destination)."\">\n";
+	echo "	<input class='formfld' type='text' name='forward_all_destination' id='forward_all_destination' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_all_destination)."\">\n";
 	echo "	<br />".$text['description-call_forward']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -577,19 +582,27 @@
 	echo "	".$text['label-on-busy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	echo "	<script>\n";
+	echo "		function changed_forward_on_busy() {\n";
+	echo "			if (document.getElementById('forward_busy_enabled').value == 'true') {\n";
+	echo "				document.getElementById('do_not_disturb').value = 'false';\n";
+	echo "				document.getElementById('forward_busy_destination').focus();\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	</script>\n";
+	if ($input_toggle_style_switch) {
 		echo "	<span class='switch'>\n";
 	}
-	echo "		<select class='formfld' id='forward_busy_enabled' name='forward_busy_enabled'>\n";
+	echo "		<select class='formfld' id='forward_busy_enabled' name='forward_busy_enabled' onchange='changed_forward_on_busy();'>\n";
 	echo "			<option value='true' ".($forward_busy_enabled === true ? "selected='selected'" : '').">".$text['option-true']."</option>\n";
 	echo "			<option value='false' ".($forward_busy_enabled === false ? "selected='selected'" : '').">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
 		echo "	</span>\n";
+		echo "&nbsp;";
 	}
-	echo "&nbsp;";
-	echo "	<input class='formfld' type='text' name='forward_busy_destination' id='forward_busy_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_busy_destination)."\">\n";
+	echo "	<input class='formfld' type='text' name='forward_busy_destination' id='forward_busy_destination' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_busy_destination)."\">\n";
 	echo "	<br />".$text['description-on-busy']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -599,19 +612,27 @@
 	echo "	".$text['label-no_answer']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	echo "	<script>\n";
+	echo "		function changed_forward_no_answer() {\n";
+	echo "			if (document.getElementById('forward_no_answer_enabled').value == 'true') {\n";
+	echo "				document.getElementById('do_not_disturb').value = 'false';\n";
+	echo "				document.getElementById('forward_no_answer_destination').focus();\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	</script>\n";
+	if ($input_toggle_style_switch) {
 		echo "	<span class='switch'>\n";
 	}
-	echo "		<select class='formfld' id='forward_no_answer_enabled' name='forward_no_answer_enabled'>\n";
+	echo "		<select class='formfld' id='forward_no_answer_enabled' name='forward_no_answer_enabled' onchange='changed_forward_no_answer();'>\n";
 	echo "			<option value='true' ".($forward_no_answer_enabled === true ? "selected='selected'" : '').">".$text['option-true']."</option>\n";
 	echo "			<option value='false' ".($forward_no_answer_enabled === false ? "selected='selected'" : '').">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
 		echo "	</span>\n";
+		echo "&nbsp;";
 	}
-	echo "&nbsp;";
-	echo "	<input class='formfld' type='text' name='forward_no_answer_destination' id='forward_no_answer_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_no_answer_destination)."\">\n";
+	echo "	<input class='formfld' type='text' name='forward_no_answer_destination' id='forward_no_answer_destination' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_no_answer_destination)."\">\n";
 	echo "	<br />".$text['description-no_answer']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -621,19 +642,26 @@
 	echo "	".$text['label-not_registered']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	echo "	<script>\n";
+	echo "		function changed_forward_not_registered() {\n";
+	echo "			if (document.getElementById('forward_user_not_registered_enabled').value == 'true') {\n";
+	echo "				document.getElementById('forward_user_not_registered_destination').focus();\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	</script>\n";
+	if ($input_toggle_style_switch) {
 		echo "	<span class='switch'>\n";
 	}
-	echo "		<select class='formfld' id='forward_user_not_registered_enabled' name='forward_user_not_registered_enabled'>\n";
+	echo "		<select class='formfld' id='forward_user_not_registered_enabled' name='forward_user_not_registered_enabled' onchange='changed_forward_not_registered(this);'>\n";
 	echo "			<option value='true' ".($forward_user_not_registered_enabled === true ? "selected='selected'" : '').">".$text['option-true']."</option>\n";
 	echo "			<option value='false' ".($forward_user_not_registered_enabled === false ? "selected='selected'" : '').">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
 		echo "	</span>\n";
+		echo "&nbsp;";
 	}
-	echo "&nbsp;";
-	echo "	<input class='formfld' type='text' name='forward_user_not_registered_destination' id='forward_user_not_registered_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_user_not_registered_destination)."\">\n";
+	echo "	<input class='formfld' type='text' name='forward_user_not_registered_destination' id='forward_user_not_registered_destination' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($forward_user_not_registered_destination)."\">\n";
 	echo "	<br />".$text['description-not_registered']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -647,9 +675,8 @@
 	echo "</td>\n";
 	echo "<td id='td_follow_me' width='70%' class='vtable' align='left'>\n";
 	echo "	<script>\n";
-	echo "		function changed_follow_me(element) {\n";
-	echo "			select_value = element.querySelector('select').value;\n";
-	echo "			if ((element.className == 'vtable' && select_value == 'true') || (element.className == 'switch' && select_value == 'false')){\n";
+	echo "		function changed_follow_me() {\n";
+	echo "			if (document.getElementById('follow_me_enabled').value == 'true'){\n";
 	echo "          	$('#div_follow_me_settings').slideDown('fast');\n";
 	echo "          	document.getElementById('forward_all_enabled').value = 'false';\n";
 	echo "          	document.getElementById('do_not_disturb').value = 'false';\n";
@@ -658,14 +685,14 @@
 	echo "          }\n";
 	echo "		}\n";
 	echo "	</script>\n";
-	if ($input_toggle_style_switch == 'switch') {
-		echo "	<span class='switch' onclick='changed_follow_me(this);'>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	echo "		<select class='formfld' id='follow_me_enabled' name='follow_me_enabled' onchange='changed_follow_me(this.parentElement);'>\n";
+	echo "		<select class='formfld' id='follow_me_enabled' name='follow_me_enabled' onchange='changed_follow_me();'>\n";
 	echo "			<option value='true' ".($follow_me_enabled === true ? "selected='selected'" : '').">".$text['option-true']."</option>\n";
 	echo "			<option value='false' ".($follow_me_enabled === false ? "selected='selected'" : '').">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
 		echo "	</span>\n";
 	}
@@ -673,8 +700,7 @@
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	if (!empty($follow_me_enabled) && $follow_me_enabled === true && $do_not_disturb !== true && $forward_all_enabled !== true) { $style = ''; } else { $style = 'display: none;'; }
-	echo "<div id='div_follow_me_settings' style='$style'>\n";
+	echo "<div id='div_follow_me_settings' ".(empty($follow_me_enabled) || $follow_me_enabled !== true ? "style='display: none;'" : null).">\n";
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -727,14 +753,14 @@
 			echo 				$text['label-ignore_busy'];
 			echo "			</td>\n";
 			echo "			<td class='vtable' align='left'>\n";
-			if ($input_toggle_style_switch == 'switch') {
+			if ($input_toggle_style_switch) {
 				echo "	<span class='switch'>\n";
 			}
 			echo "		<select class='formfld' id='follow_me_ignore_busy' name='follow_me_ignore_busy'>\n";
 			echo "			<option value='true' ".($follow_me_ignore_busy === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 			echo "			<option value='false' ".($follow_me_ignore_busy === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "		</select>\n";
-			if ($input_toggle_style_switch == 'switch') {
+			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";
 				echo "	</span>\n";
 			}
@@ -782,24 +808,21 @@
 	echo "	<strong>".$text['label-dnd']."</strong>\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "<script>\n";
-	echo "function changed_do_not_disturb(el) {\n";
-	echo "	let select_value = el.querySelector('select').value;";
-	echo "	if ((el.className == 'switch' && select_value == 'false') || (el.className == 'vtable' && select_value == 'true')) {\n";
-	echo "		document.getElementById('forward_all_enabled').value = 'false';\n";
-	echo "      document.getElementById('follow_me_enabled').value = 'false';\n";
-	echo "		$('#div_follow_me_settings').slideUp('fast');\n";
-	echo "	}\n";
-	echo "}\n";
-	echo "</script>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	echo "	<script>\n";
+	echo "		function changed_do_not_disturb(el) {\n";
+	echo "			if (document.getElementById('do_not_disturb').value == 'true') {\n";
+	echo "				document.getElementById('forward_all_enabled').value = 'false';\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	</script>\n";
+	if ($input_toggle_style_switch) {
 		echo "	<span class='switch' onclick='changed_do_not_disturb(this);'>\n";
 	}
-	echo "		<select class='formfld' id='do_not_disturb' name='do_not_disturb' onchange='changed_do_not_disturb(this.parentElement);'>\n";
+	echo "		<select class='formfld' id='do_not_disturb' name='do_not_disturb' onchange='changed_do_not_disturb();'>\n";
 	echo "			<option value='true' ".($do_not_disturb === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 	echo "			<option value='false' ".($do_not_disturb === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
-	if ($input_toggle_style_switch == 'switch') {
+	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
 		echo "	</span>\n";
 	}

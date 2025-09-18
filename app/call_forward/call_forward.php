@@ -305,7 +305,7 @@
 	if (!empty($extensions)) {
 		$x = 0;
 		foreach ($extensions as $row) {
-			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=" . $row['extension_uuid'] . "&return_url=" . urlencode($_SERVER['REQUEST_URI']);
+			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid'];
 			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 			}
