@@ -101,15 +101,15 @@
 			$voicemail_alternate_greet_id = $_POST["voicemail_alternate_greet_id"];
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_sms_to = $_POST["voicemail_sms_to"] ?? null;
-			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"] ?? null;
+			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
-			$voicemail_local_after_email = $_POST["voicemail_local_after_email"] ?? null;
+			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$voicemail_destination = $_POST["voicemail_destination"];
-			$voicemail_enabled = $_POST["voicemail_enabled"] ?? false;
+			$voicemail_enabled = $_POST["voicemail_enabled"];
 			$voicemail_description = $_POST["voicemail_description"];
-			$voicemail_tutorial = $_POST["voicemail_tutorial"] ?? null;
-			$voicemail_recording_instructions = $_POST["voicemail_recording_instructions"] ?? null;
-			$voicemail_recording_options = $_POST["voicemail_recording_options"] ?? null;
+			$voicemail_tutorial = $_POST["voicemail_tutorial"];
+			$voicemail_recording_instructions = $_POST["voicemail_recording_instructions"];
+			$voicemail_recording_options = $_POST["voicemail_recording_options"];
 			$voicemail_options_delete = $_POST["voicemail_options_delete"] ?? null;
 			$voicemail_destinations_delete = $_POST["voicemail_destinations_delete"] ?? null;
 
@@ -174,18 +174,18 @@
 					$array['voicemails'][0]['voicemail_mail_to'] = $voicemail_mail_to;
 					$array['voicemails'][0]['voicemail_sms_to'] = $voicemail_sms_to;
 					$array['voicemails'][0]['voicemail_transcription_enabled'] = $voicemail_transcription_enabled;
-					$array['voicemails'][0]['voicemail_tutorial'] = $voicemail_tutorial ?? false;
+					$array['voicemails'][0]['voicemail_tutorial'] = $voicemail_tutorial;
 					if (permission_exists('voicemail_recording_instructions')) {
-						$array['voicemails'][0]['voicemail_recording_instructions'] = $voicemail_recording_instructions ?? false;
+						$array['voicemails'][0]['voicemail_recording_instructions'] = $voicemail_recording_instructions;
 					}
 					if (permission_exists('voicemail_recording_options')) {
-						$array['voicemails'][0]['voicemail_recording_options'] = $voicemail_recording_options ?? false;
+						$array['voicemails'][0]['voicemail_recording_options'] = $voicemail_recording_options;
 					}
 					if (permission_exists('voicemail_file')) {
 						$array['voicemails'][0]['voicemail_file'] = $voicemail_file;
 					}
 					if (permission_exists('voicemail_local_after_email')) {
-						$array['voicemails'][0]['voicemail_local_after_email'] = $voicemail_local_after_email ?? false;
+						$array['voicemails'][0]['voicemail_local_after_email'] = $voicemail_local_after_email;
 					}
 					$array['voicemails'][0]['voicemail_enabled'] = $voicemail_enabled;
 					$array['voicemails'][0]['voicemail_description'] = $voicemail_description;
@@ -339,13 +339,13 @@
 		$sql .= "voicemail_alternate_greet_id, ";
 		$sql .= "voicemail_mail_to, ";
 		$sql .= "voicemail_sms_to, ";
-		$sql .= "cast(voicemail_transcription_enabled as text), ";
-		$sql .= "cast(voicemail_tutorial as text), ";
-		$sql .= "cast(voicemail_recording_instructions as text), ";
-		$sql .= "cast(voicemail_recording_options as text), ";
+		$sql .= "voicemail_transcription_enabled, ";
+		$sql .= "voicemail_tutorial, ";
+		$sql .= "voicemail_recording_instructions, ";
+		$sql .= "voicemail_recording_options, ";
 		$sql .= "voicemail_file, ";
 		$sql .= "voicemail_local_after_email, ";
-		$sql .= "cast(voicemail_enabled as text), ";
+		$sql .= "voicemail_enabled, ";
 		$sql .= "voicemail_description ";
 		$sql .= "from v_voicemails ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -443,7 +443,7 @@
 		$sql .= "from v_voicemails as v, v_voicemail_destinations as d ";
 		$sql .= "where d.voicemail_uuid_copy = v.voicemail_uuid and ";
 		$sql .= "v.domain_uuid = :domain_uuid and ";
-		$sql .= "v.voicemail_enabled = 'true' and ";
+		$sql .= "v.voicemail_enabled = true and ";
 		$sql .= "d.voicemail_uuid = :voicemail_uuid ";
 		$sql .= "order by v.voicemail_id asc";
 		$parameters['domain_uuid'] = $domain_uuid;
@@ -461,7 +461,7 @@
 	$sql = "select v.voicemail_id, v.voicemail_uuid ";
 	$sql .= "from v_voicemails as v ";
 	$sql .= "where v.domain_uuid = :domain_uuid and ";
-	$sql .= "v.voicemail_enabled = 'true' ";
+	$sql .= "v.voicemail_enabled = true ";
 	if (is_uuid($voicemail_uuid ?? '')) {
 		$sql .= "and v.voicemail_uuid <> :voicemail_uuid ";
 	}
@@ -594,17 +594,16 @@
 	echo "	".$text['label-voicemail_tutorial']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='voicemail_tutorial' name='voicemail_tutorial' value='true' ".($voicemail_tutorial == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span> \n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='voicemail_tutorial' name='voicemail_tutorial'>\n";
-		echo "		<option value='true' ".($voicemail_tutorial == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($voicemail_tutorial == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='voicemail_tutorial' name='voicemail_tutorial'>\n";
+	echo "		<option value='true' ".($voicemail_tutorial === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($voicemail_tutorial === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-voicemail_tutorial']."\n";
@@ -702,17 +701,16 @@
 		echo "	".$text['label-recording_instructions']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='voicemail_recording_instructions' name='voicemail_recording_instructions' value='true' ".($voicemail_recording_instructions == true ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span> \n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='voicemail_recording_instructions' name='voicemail_recording_instructions'>\n";
-			echo "		<option value='true' ".($voicemail_recording_instructions == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($voicemail_recording_instructions == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='voicemail_recording_instructions' name='voicemail_recording_instructions'>\n";
+		echo "		<option value='true' ".($voicemail_recording_instructions === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($voicemail_recording_instructions === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-recording_instructions']."\n";
@@ -726,17 +724,16 @@
 		echo "	".$text['label-recording_options']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='voicemail_recording_options' name='voicemail_recording_options' value='true' ".($voicemail_recording_options == true ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span> \n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='voicemail_recording_options' name='voicemail_recording_options'>\n";
-			echo "		<option value='true' ".($voicemail_recording_options == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($voicemail_recording_options == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='voicemail_recording_options' name='voicemail_recording_options'>\n";
+		echo "		<option value='true' ".($voicemail_recording_options === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($voicemail_recording_options === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-recording_options']."\n";
@@ -855,17 +852,16 @@
 		echo "	".$text['label-voicemail_transcription_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled' value='true' ".($voicemail_transcription_enabled == true ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span> \n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled'>\n";
-			echo "		<option value='true' ".($voicemail_transcription_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($voicemail_transcription_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled'>\n";
+		echo "		<option value='true' ".($voicemail_transcription_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($voicemail_transcription_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-voicemail_transcription_enabled']."\n";
@@ -896,17 +892,16 @@
 		echo "	".$text['label-voicemail_local_after_email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='voicemail_local_after_email' name='voicemail_local_after_email' value='true' ".($voicemail_local_after_email == true ? "checked='checked'" : null)." onchange=\"if (!this.checked) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-			echo "		<span class='slider'></span> \n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='voicemail_local_after_email' name='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-			echo "		<option value='true' ".($voicemail_local_after_email == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($voicemail_local_after_email == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='voicemail_local_after_email' name='voicemail_local_after_email' onchange=\"if (this.value == 'false') { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
+		echo "		<option value='true' ".($voicemail_local_after_email === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($voicemail_local_after_email === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-voicemail_local_after_email']."\n";
@@ -969,17 +964,16 @@
 	echo "	".$text['label-voicemail_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='voicemail_enabled' name='voicemail_enabled' value='true' ".($voicemail_enabled == true ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='voicemail_enabled' name='voicemail_enabled'>\n";
-		echo "		<option value='true' ".($voicemail_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($voicemail_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='voicemail_enabled' name='voicemail_enabled'>\n";
+	echo "		<option value='true' ".($voicemail_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($voicemail_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-voicemail_enabled']."\n";
