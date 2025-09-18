@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -85,6 +85,7 @@
 	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
 	$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -97,6 +98,7 @@
 
 //get the list
 	$sql = "select ";
+	$sql .= "conference_profile_param_uuid, ";
 	$sql .= "conference_profile_uuid, ";
 	$sql .= "profile_param_name, ";
 	$sql .= "profile_param_value, ";
