@@ -598,7 +598,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enable SSL or TLS encryption.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_email_connection_validate";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Validate certificate or not.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_email_connection_username";
