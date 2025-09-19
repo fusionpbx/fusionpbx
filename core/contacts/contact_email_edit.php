@@ -125,7 +125,7 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 
 				//if primary, unmark other primary emails
 					if ($email_primary) {
-						$sql = "update v_contact_emails set email_primary = 0 ";
+						$sql = "update v_contact_emails set email_primary = false ";
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and contact_uuid = :contact_uuid ";
 						$parameters['domain_uuid'] = $domain_uuid;
