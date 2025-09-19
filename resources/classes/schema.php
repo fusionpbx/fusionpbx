@@ -661,7 +661,7 @@
 																	break;
 																case 'timestamptz': $using = $field_name . "::timestamp with time zone";
 																	break;
-																case 'boolean': $using = $field_name . "::boolean";
+																case 'boolean': $using = $field_name . "::text::boolean";
 																	break;
 																default: unset($using);
 															}
