@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -96,10 +96,10 @@
 		$dialplan_name = $_POST["dialplan_name"];
 		$dialplan_number = $_POST["dialplan_number"];
 		$dialplan_order = $_POST["dialplan_order"];
-		$dialplan_continue = $_POST["dialplan_continue"] ?? false;
+		$dialplan_continue = $_POST["dialplan_continue"];
 		$dialplan_details = $_POST["dialplan_details"] ?? null;
 		$dialplan_context = $_POST["dialplan_context"];
-		$dialplan_enabled = $_POST["dialplan_enabled"] ?? false;
+		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
 		$dialplan_details_delete = $_POST["dialplan_details_delete"] ?? null;
 		if (!empty($dialplan_details_delete)) {
@@ -265,7 +265,7 @@
 			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
 			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
 			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
-			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"] ?? false;
+			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"];
 			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
 			$y = 0;
 			if (!empty($_POST["dialplan_details"]) && is_array($_POST["dialplan_details"])) {
@@ -399,7 +399,7 @@
 //get the dialplan details in an array
 	$sql = "select ";
 	$sql .= "domain_uuid, dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, ";
-	$sql .= "dialplan_detail_break, dialplan_detail_inline, dialplan_detail_group, dialplan_detail_order, cast(dialplan_detail_enabled as text) ";
+	$sql .= "dialplan_detail_break, dialplan_detail_inline, dialplan_detail_group, dialplan_detail_order, dialplan_detail_enabled ";
 	$sql .= "from v_dialplan_details ";
 	$sql .= "where dialplan_uuid = :dialplan_uuid ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
@@ -487,7 +487,7 @@
 					$details[$group][$x]['dialplan_detail_inline'] = '';
 					$details[$group][$x]['dialplan_detail_group'] = $group;
 					$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
-					$details[$group][$x]['dialplan_detail_enabled'] = 'true';
+					$details[$group][$x]['dialplan_detail_enabled'] = true;
 
 			}
 		}
@@ -846,11 +846,6 @@
 								$dialplan_detail_order = $row['dialplan_detail_order'];
 								$dialplan_detail_enabled = $row['dialplan_detail_enabled'];
 
-							//default to enabled true
-								if (empty($dialplan_detail_enabled)) {
-									$dialplan_detail_enabled = true;
-								}
-
 							//no border on last row
 								$no_border = ($index == 999) ? "border: none;" : null;
 
@@ -1045,13 +1040,13 @@
 								echo "</td>\n";
 							//enabled
 								echo "<td class='vtablerow' style='".$no_border." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_enabled_".$x."','dialplan_detail_enabled_".$x."');\" nowrap='nowrap'>\n";
+								$label_dialplan_detail_enabled = $text['label-'.($dialplan_detail_enabled === true ? 'true' : 'false')];
 								if ($element['hidden']) {
-									echo "	<label id=\"label_dialplan_detail_enabled_".$x."\">".escape($dialplan_detail_enabled)."</label>\n";
+									echo "	<label id=\"label_dialplan_detail_enabled_".$x."\">".$label_dialplan_detail_enabled."</label>\n";
 								}
 								echo "	<select id='dialplan_detail_enabled_".$x."' name='dialplan_details[".$x."][dialplan_detail_enabled]' class='formfld' style='width: auto; ".$element['visibility']."'>\n";
-								echo "	<option></option>\n";
-								echo "	<option value='true' ".($dialplan_detail_enabled == true ? $selected : null).">".$text['option-true']."</option>\n";
-								echo "	<option value='false' ".($dialplan_detail_enabled == false ? $selected : null).">".$text['option-false']."</option>\n";
+								echo "	<option value='true' ".($dialplan_detail_enabled === true ? $selected : null).">".$text['option-true']."</option>\n";
+								echo "	<option value='false' ".($dialplan_detail_enabled === false ? $selected : null).">".$text['option-false']."</option>\n";
 								echo "	</select>\n";
 								echo "</td>\n";
 							//tools
