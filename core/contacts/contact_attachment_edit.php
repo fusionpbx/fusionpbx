@@ -79,7 +79,7 @@
 		//unflag others as primary
 		$allowed_primary_attachment = false;
 		if ($attachment_primary && ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png')) {
-			$sql = "update v_contact_attachments set attachment_primary = 0 ";
+			$sql = "update v_contact_attachments set attachment_primary = false ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and contact_uuid = :contact_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
