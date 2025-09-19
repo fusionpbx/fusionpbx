@@ -575,7 +575,7 @@
 	$x = 0;
 	foreach ($sip_profile_settings as $row) {
 		$bottom_border = empty($row['sip_profile_setting_uuid']) ? "border-bottom: none;" : null;
-		$label_sip_profile_setting_enabled = $row["sip_profile_setting_enabled"] !== '' ? $text['label-'.($row["sip_profile_setting_enabled"] === true ? 'true' : 'false')] : '';
+		$label_sip_profile_setting_enabled = $text['label-'.($row["sip_profile_setting_enabled"] === true ? 'true' : 'false')];
 
 		echo "			<tr>\n";
 		echo "				<input type='hidden' name='sip_profile_settings[$x][sip_profile_setting_uuid]' value='".(is_uuid($row["sip_profile_setting_uuid"]) ? $row["sip_profile_setting_uuid"] : uuid())."'>\n";
