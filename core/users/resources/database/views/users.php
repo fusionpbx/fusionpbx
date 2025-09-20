@@ -1,8 +1,8 @@
 <?php
 
 	$view['name'] = "view_users";
-	$view['version'] = "20250919.1";
-	$view['description'] = "view_users";
+	$view['version'] = "20250919";
+	$view['description'] = "Show the users with the domain name, and contact details";
 	$view['sql'] = "	select u.domain_uuid, u.user_uuid, d.domain_name, u.username, u.user_status, u.user_enabled, u.add_date, \n";
 	$view['sql'] .= "	c.contact_uuid, c.contact_organization, c.contact_name_given ||' '|| c.contact_name_family as contact_name, c.contact_name_given, c.contact_name_family, c.contact_note, \n";
 	$view['sql'] .= "	( \n";
