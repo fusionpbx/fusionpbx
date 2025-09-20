@@ -82,7 +82,7 @@ local sql = "SELECT * FROM v_email_templates ";
 	sql = sql .. "WHERE template_category = :category ";
 	sql = sql .. "AND template_subcategory = :subcategory ";
 	sql = sql .. "AND template_enabled = :status ";
-	local params = {category = 'plugin', subcategory = 'emergency', status = true}
+	local params = {category = 'plugin', subcategory = 'emergency', status = 'true'}
 	dbh:query(sql, params, function(row)
 		subject = row.template_subject;
 		body = row.template_body;
