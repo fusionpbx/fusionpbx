@@ -3460,6 +3460,87 @@ class database {
 	}
 
 	/**
+	 * Gets a list of database views from the file system.
+	 * @param string $action options: list, update, drop
+	 * @return array shows list of views, list of views that were updated
+	 */
+	public function views(string $action) {
+
+		$files = glob(dirname(__DIR__, 2) . "/*/*/resources/database/views/*.php");
+		foreach($files as $id => $file) {
+			$view = array();
+			try {
+				include $file;
+				$views[$id] = $view;
+			} catch (\Exception $e) {
+				$views[$id]['error'] = $e->getMessage();
+			} finally {
+				$views[$id]['file'] = $file;
+			}
+		}
+
+		//view list
+		if ($action === 'list') {
+			return $views;
+		}
+
+		//update views
+		if ($action === 'update') {
+			$array = array();
+			foreach($views as $id => $row) {
+				if (!empty($row['name']) && !empty($row['sql'])) {
+					//set the variables
+					$view_name = $row['name'];
+					$view_sql = $row['sql'];
+					//$view_version = $row['version'];
+					//$view_description = $row['description'];
+
+					//create and run the view sql
+					$sql = "CREATE OR REPLACE VIEW ".$view_name." AS (\n";
+					$sql .= $view_sql."\n";
+					$sql .= ")\n";
+					$this->execute($sql);
+
+					//build the return array
+					$views[$id]['result'] = $this->message;
+				}
+				else {
+					//build the return array
+					$views[$id]['result'] = 'Name or SQL empty';
+				}
+			}
+
+			//return views array
+			return $views;
+		}
+
+		//drop views
+		if ($action === 'drop') {
+			$array = array();
+			foreach($views as $id => $row) {
+				if (!empty($row['name'])) {
+					//set the variables
+					$view_name = $row['name'];
+
+					//create and run the view sql
+					$sql = "DROP VIEW ".$view_name.";";
+					$this->execute($sql);
+
+					//build the return array
+					$views[$id]['result'] = 'Dropped';
+				}
+				else {
+					//build the return array
+					$views[$id]['result'] = 'Name or SQL empty';
+				}
+			}
+
+			//return views array
+			return $views;
+		}
+	}
+
+	/**
 	 * Returns a sanitized string value safe for database or table name.
 	 * @param string $value To be sanitized
 	 * @return string Sanitized using preg_replace('#[^a-zA-Z0-9_\-]#', '')
