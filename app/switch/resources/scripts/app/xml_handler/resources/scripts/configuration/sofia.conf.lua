@@ -70,7 +70,7 @@
 
 		--gt the global settings
 			sql = "select * from v_sofia_global_settings ";
-			sql = sql .. "where global_setting_enabled = 'true' ";
+			sql = sql .. "where global_setting_enabled = true ";
 			sql = sql .. "order by global_setting_name asc ";
 			local params = {};
 			x = 0;
