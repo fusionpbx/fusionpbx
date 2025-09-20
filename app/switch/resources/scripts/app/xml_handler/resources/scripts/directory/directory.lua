@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2021 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@
 	--event_calling_function = params:getHeader("Event-Calling-Function");
 
 --set the variables as a string
-	vm_mailto = "";
+	vm_mailto = '';
 
 --include json library
 	local json
@@ -367,10 +367,26 @@
 								forward_no_answer_destination = row.forward_no_answer_destination;
 								forward_user_not_registered_enabled = row.forward_user_not_registered_enabled;
 								forward_user_not_registered_destination = row.forward_user_not_registered_destination;
+								follow_me_uuid = row.follow_me_uuid;
+								follow_me_enabled = row.follow_me_enabled;
 								do_not_disturb = row.do_not_disturb;
 								extension_language = row.extension_language;
 								extension_dialect = row.extension_dialect;
 								extension_voice = row.extension_voice;
+								--dial_string = row.dial_string;
+
+							--set the boolean values as true or false strings
+								directory_visible = directory_visible and "true" or "false";
+								directory_exten_visible = directory_exten_visible and "true" or "false";
+								forward_all_enabled = forward_all_enabled and "true" or "false";
+								forward_busy_enabled = forward_busy_enabled and "true" or "false";
+								forward_no_answer_enabled = forward_no_answer_enabled and "true" or "false";
+								call_screen_enabled = call_screen_enabled and "true" or "false";
+								forward_user_not_registered_enabled = forward_user_not_registered_enabled and "true" or "false";
+								force_ping = force_ping and "true" or "false";
+								follow_me_enabled = follow_me_enabled and "true" or "false";
+								virtual_extension = virtual_extension and "true" or "false";
+								do_not_disturb = do_not_disturb and "true" or "false";
 
 							--if the extension is virtual set register to false
 								if (row.extension_type == 'virtual') then
@@ -378,12 +394,9 @@
 								end
 
 							-- get the follow me information
-								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
-									follow_me_uuid = row.follow_me_uuid;
+								if (follow_me_uuid ~= nil and string.len(follow_me_uuid) > 0) then
 									if (do_not_disturb == "true" or forward_all_enabled == "true") then
 										follow_me_enabled = "false";
-									else
-										follow_me_enabled = row.follow_me_enabled;
 									end
 								end
 
@@ -432,7 +445,7 @@
 					if (extension_uuid) then
 						local sql = "SELECT * FROM v_extension_settings "
 							.. "WHERE extension_uuid = :extension_uuid "
-							.. "and extension_setting_enabled = 'true' ";
+							.. "and extension_setting_enabled = true ";
 						local params = {extension_uuid=extension_uuid};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -461,25 +474,13 @@
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
 						dbh:query(sql, params, function(row)
-							if (string.len(row.voicemail_enabled) > 0) then
-								vm_enabled = row.voicemail_enabled;
-							end
-							vm_password = row.voicemail_password;
-							vm_attach_file = "true";
-							if (string.len(row.voicemail_attach_file) > 0) then
-								vm_attach_file = row.voicemail_attach_file;
-							end
-							vm_keep_local_after_email = "true";
-							if (string.len(row.voicemail_local_after_email) > 0) then
-								vm_keep_local_after_email = row.voicemail_local_after_email;
-							end
-							if (string.len(row.voicemail_mail_to) > 0) then
-								vm_mailto = row.voicemail_mail_to;
-							else
-								vm_mailto = "";
-							end
+							vm_keep_local_after_email = voicemail_local_after_email and "true" or "false";
+							vm_enabled = voicemail_enabled and "true" or "false";
+							vm_attach_file = voicemail_attach_file and "true" or "false";
+							vm_password = row.voicemail_password and row.voicemail_password or '';
+							vm_mailto = row.voicemail_mail_to and row.voicemail_mail_to or '';
 						end);
-				end
+					end
 
 				--if the extension does not exist set continue to false;
 					if (extension_uuid == nil) then
@@ -570,7 +571,7 @@
 							if (call_group ~= nil) and (string.len(call_group) > 0) then
 								xml:append([[								<variable name="call_group" value="]] ..  xml.sanitize(call_group) .. [["/>]]);
 							end
-							if (call_screen_enabled ~= nil) and (string.len(call_screen_enabled) > 0) then
+							if (call_screen_enabled ~= nil) and (call_screen_enabled == 'true') then
 								xml:append([[								<variable name="call_screen_enabled" value="]] ..  xml.sanitize(call_screen_enabled) .. [["/>]]);
 							end
 							if (user_record ~= nil) and (string.len(user_record) > 0) then
@@ -613,10 +614,10 @@
 							if (directory_full_name ~= nil) and (string.len(directory_full_name) > 0) then
 								xml:append([[								<variable name="directory_full_name" value="]] ..  xml.sanitize(directory_full_name) .. [["/>]]);
 							end
-							if (directory_visible ~= nil) and (string.len(directory_visible) > 0) then
+							if (directory_visible ~= nil) and (directory_visible == 'true') then
 								xml:append([[								<variable name="directory-visible" value="]] ..  xml.sanitize(directory_visible) .. [["/>]]);
 							end
-							if (directory_exten_visible ~= nil) and (string.len(directory_exten_visible) > 0) then
+							if (directory_exten_visible ~= nil) and (directory_exten_visible == 'true') then
 								xml:append([[								<variable name="directory-exten-visible" value="]] ..  xml.sanitize(directory_exten_visible) .. [["/>]]);
 							end
 							if (limit_max ~= nil) and (string.len(limit_max) > 0) then
@@ -639,7 +640,7 @@
 							if (absolute_codec_string ~= nil) and (string.len(absolute_codec_string) > 0) then
 								xml:append([[								<variable name="absolute_codec_string" value="]] ..  xml.sanitize(absolute_codec_string) .. [["/>]]);
 							end
-							if (force_ping ~= nil) and (string.len(force_ping) > 0) then
+							if (force_ping ~= nil) and (force_ping == 'true') then
 								xml:append([[								<variable name="force_ping" value="]] ..  xml.sanitize(force_ping) .. [["/>]]);
 							end
 							if (sip_bypass_media ~= nil) and (sip_bypass_media == "bypass-media") then
@@ -651,37 +652,37 @@
 							if (sip_bypass_media ~= nil) and (sip_bypass_media == "proxy-media") then
 								xml:append([[								<variable name="proxy_media" value="true"/>]]);
 							end
-							if (forward_all_enabled ~= nil) and (string.len(forward_all_enabled) > 0) then
+							if (forward_all_enabled ~= nil) and (forward_all_enabled == 'true') then
 								xml:append([[								<variable name="forward_all_enabled" value="]] ..  xml.sanitize(forward_all_enabled) .. [["/>]]);
 							end
 							if (forward_all_destination ~= nil) and (string.len(forward_all_destination) > 0) then
 								xml:append([[								<variable name="forward_all_destination" value="]] ..  xml.sanitize(forward_all_destination) .. [["/>]]);
 							end
-							if (forward_busy_enabled ~= nil) and (string.len(forward_busy_enabled) > 0) then
+							if (forward_busy_enabled ~= nil) and (forward_busy_enabled == 'true') then
 								xml:append([[								<variable name="forward_busy_enabled" value="]] ..  xml.sanitize(forward_busy_enabled) .. [["/>]]);
 							end
 							if (forward_busy_destination ~= nil) and (string.len(forward_busy_destination) > 0) then
 								xml:append([[								<variable name="forward_busy_destination" value="]] ..  xml.sanitize(forward_busy_destination) .. [["/>]]);
 							end
-							if (forward_no_answer_enabled ~= nil) and (string.len(forward_no_answer_enabled) > 0) then
+							if (forward_no_answer_enabled ~= nil) and (forward_no_answer_enabled == 'true') then
 								xml:append([[								<variable name="forward_no_answer_enabled" value="]] ..  xml.sanitize(forward_no_answer_enabled) .. [["/>]]);
 							end
 							if (forward_no_answer_destination ~= nil) and (string.len(forward_no_answer_destination) > 0) then
 								xml:append([[								<variable name="forward_no_answer_destination" value="]] ..  xml.sanitize(forward_no_answer_destination) .. [["/>]]);
 							end
-							if (forward_user_not_registered_enabled ~= nil) and (string.len(forward_user_not_registered_enabled) > 0) then
+							if (forward_user_not_registered_enabled ~= nil) and (forward_user_not_registered_enabled == 'true') then
 								xml:append([[								<variable name="forward_user_not_registered_enabled" value="]] ..  xml.sanitize(forward_user_not_registered_enabled) .. [["/>]]);
 							end
 							if (forward_user_not_registered_destination ~= nil) and (string.len(forward_user_not_registered_destination) > 0) then
 								xml:append([[								<variable name="forward_user_not_registered_destination" value="]] ..  xml.sanitize(forward_user_not_registered_destination) .. [["/>]]);
 							end
-							if (follow_me_enabled ~= nil) and (string.len(follow_me_enabled) > 0) then
+							if (follow_me_enabled ~= nil) and (follow_me_enabled == 'true') then
 								xml:append([[								<variable name="follow_me_enabled" value="]] ..  xml.sanitize(follow_me_enabled) .. [["/>]]);
 							end
 							--if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
 							--	xml:append([[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
 							--end
-							if (do_not_disturb ~= nil) and (string.len(do_not_disturb) > 0) then
+							if (do_not_disturb ~= nil) and (do_not_disturb == 'true') then
 								xml:append([[								<variable name="do_not_disturb" value="]] .. xml.sanitize(do_not_disturb) .. [["/>]]);
 							end
 							if (extension_language ~= nil) and (string.len(extension_language) > 0) then
