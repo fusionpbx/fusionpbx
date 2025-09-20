@@ -80,7 +80,7 @@
 --start the conference profiles
 	xml:append([[			<profiles>]]);
 	sql = [[SELECT * FROM v_conference_profiles
-		WHERE profile_enabled = 'true' ]];
+		WHERE profile_enabled = true ]];
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "\n");
 	end
@@ -116,7 +116,7 @@
 		freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 	end
 
---send the xml to the console
+--send the XML to the console
 	if (debug["xml_string"]) then
 		local file = assert(io.open(temp_dir .."/conference.conf.xml", "w"));
 		file:write(XML_STRING);
