@@ -1,6 +1,5 @@
 <?php
 
-
 	$view['name'] = "view_call_recordings";
 	$view['version'] = "20250919";
 	$view['description'] = "Show the call recordings details from the call detail records database.";
