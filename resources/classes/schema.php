@@ -442,19 +442,6 @@
 			//includes files
 			require dirname(__DIR__, 2) . "/resources/require.php";
 
-			//drop views so that alter table statements complete use application defaults will recreate the views
-			$views[] = 'view_users';
-			$views[] = 'view_groups';
-			$views[] = 'view_call_block';
-			$views[] = 'view_call_recordings';
-			$views[] = 'view_domains';
-			$views[] = 'view_contacts';
-			foreach ($views as $view) {
-				$sql = "DROP VIEW " . $view . ";";
-				$response .= $sql;
-				$this->database->execute($sql);
-			}
-
 			//add multi-lingual support
 			if (!isset($text)) {
 				$language = new text;
@@ -833,17 +820,25 @@
 				}
 				//$this->db->beginTransaction();
 				$update_array = explode(";", $sql_update);
-				foreach ($update_array as $sql) {
-					if (strlen(trim($sql))) {
-						try {
-							$this->database->db->query(trim($sql));
-							if ($format == "text") {
-								$response .= "	$sql;\n";
+				if (is_array($update_array) && count($update_array)) {
+					//drop views so that alter table statements complete
+					$result = $this->database->views('drop');
+
+					foreach ($update_array as $sql) {
+						if (strlen(trim($sql))) {
+							try {
+								$this->database->db->query(trim($sql));
+								if ($format == "text") {
+									$response .= "	$sql;\n";
+								}
+							} catch (PDOException $error) {
+								$response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
 							}
-						} catch (PDOException $error) {
-							$response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
 						}
 					}
+
+					//recreate the views
+					$result = $this->database->views('create');
 				}
 				//$this->db->commit();
 				$response .= "\n";

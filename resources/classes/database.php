@@ -3461,7 +3461,7 @@ class database {
 
 	/**
 	 * Gets a list of database views from the file system.
-	 * @param string $action options: list, update, drop
+	 * @param string $action options: list, create, drop
 	 * @return array shows list of views, list of views that were updated
 	 */
 	public function views(string $action) {
@@ -3485,7 +3485,7 @@ class database {
 		}
 
 		//update views
-		if ($action === 'update') {
+		if ($action === 'create') {
 			$array = array();
 			foreach($views as $id => $row) {
 				if (!empty($row['name']) && !empty($row['sql'])) {
