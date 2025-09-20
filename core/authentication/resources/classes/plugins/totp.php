@@ -349,7 +349,7 @@ class plugin_totp {
 					$sql .= "	v_users as u ";
 					if ($contacts_exists) {
 						$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid and u.contact_uuid is not null ";
-						$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = 1 and a.attachment_filename is not null and a.attachment_content is not null ";
+						$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = true and a.attachment_filename is not null and a.attachment_content is not null ";
 					}
 					$sql .= "where ";
 					$sql .= "	u.user_uuid = :user_uuid ";

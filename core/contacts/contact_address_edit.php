@@ -144,7 +144,7 @@
 
 				//if primary, unmark other primary addresses
 					if ($email_primary) {
-						$sql = "update v_contact_addresses set address_primary = 0 ";
+						$sql = "update v_contact_addresses set address_primary = false ";
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and contact_uuid = :contact_uuid ";
 						$parameters['domain_uuid'] = $domain_uuid;

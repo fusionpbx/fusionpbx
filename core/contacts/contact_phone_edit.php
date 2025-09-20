@@ -145,7 +145,7 @@
 
 				//if primary, unmark other primary numbers
 					if ($phone_primary) {
-						$sql = "update v_contact_phones set phone_primary = 0 ";
+						$sql = "update v_contact_phones set phone_primary = false ";
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and contact_uuid = :contact_uuid ";
 						$parameters['domain_uuid'] = $domain_uuid;
