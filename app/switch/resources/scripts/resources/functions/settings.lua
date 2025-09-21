@@ -55,7 +55,7 @@
 
 		--get the default settings
 			local sql = "SELECT * FROM v_default_settings ";
-			sql = sql .. "WHERE default_setting_enabled = 'true' ";
+			sql = sql .. "WHERE default_setting_enabled = true ";
 			sql = sql .. "AND default_setting_category is not null ";
 			sql = sql .. "AND default_setting_subcategory is not null ";
 			sql = sql .. "AND default_setting_name is not null ";
@@ -99,7 +99,7 @@
 			if (domain_uuid ~= nil) then
 				local sql = "SELECT * FROM v_domain_settings ";
 				sql = sql .. "WHERE domain_uuid = :domain_uuid ";
-				sql = sql .. "AND domain_setting_enabled = 'true' ";
+				sql = sql .. "AND domain_setting_enabled = true ";
 				sql = sql .. "AND domain_setting_category is not null ";
 				sql = sql .. "AND domain_setting_subcategory is not null ";
 				sql = sql .. "AND domain_setting_name is not null ";
@@ -159,3 +159,4 @@
 	--for i, ext in ipairs(array.fax.allowed_extension) do
 	--  freeswitch.consoleLog("notice", "allowed_extension #" .. i .. ": " .. ext .. "\n");
 	--end
+
