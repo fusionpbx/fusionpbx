@@ -284,12 +284,72 @@
 
 				--get the extension from the database
 					if (continue) then
-						local sql = "SELECT e.*, random() FROM v_extensions as e, v_domains as d "
-							.. "WHERE e.domain_uuid = :domain_uuid "
-							.. "AND d.domain_uuid = :domain_uuid "
-							.. "AND d.domain_enabled = true "
-							.. "AND (e.extension = :user or e.number_alias = :user) "
-							.. "AND e.enabled = true ";
+						local sql = "SELECT "
+						sql = sql .. "e.extension_uuid, ";
+						sql = sql .. "e.domain_uuid, ";
+						sql = sql .. "e.extension, ";
+						sql = sql .. "e.number_alias, ";
+						sql = sql .. "e.password, ";
+						sql = sql .. "e.accountcode, ";
+						sql = sql .. "e.effective_caller_id_name, ";
+						sql = sql .. "e.effective_caller_id_number, ";
+						sql = sql .. "e.outbound_caller_id_name, ";
+						sql = sql .. "e.outbound_caller_id_number, ";
+						sql = sql .. "e.emergency_caller_id_name, ";
+						sql = sql .. "e.emergency_caller_id_number, ";
+						sql = sql .. "e.directory_first_name, ";
+						sql = sql .. "e.directory_last_name, ";
+						sql = sql .. "cast(e.directory_visible as text), ";
+						sql = sql .. "cast(e.directory_exten_visible as text), ";
+						sql = sql .. "e.limit_max, ";
+						sql = sql .. "e.limit_destination, ";
+						sql = sql .. "e.missed_call_app, ";
+						sql = sql .. "e.missed_call_data, ";
+						sql = sql .. "e.user_context, ";
+						sql = sql .. "e.toll_allow, ";
+						sql = sql .. "e.call_timeout, ";
+						sql = sql .. "e.call_group, ";
+						sql = sql .. "cast(e.call_screen_enabled as text), ";
+						sql = sql .. "e.user_record, ";
+						sql = sql .. "e.hold_music, ";
+						sql = sql .. "e.auth_acl, ";
+						sql = sql .. "e.cidr, ";
+						sql = sql .. "e.sip_force_contact, ";
+						sql = sql .. "e.nibble_account, ";
+						sql = sql .. "e.sip_force_expires, ";
+						sql = sql .. "e.mwi_account, ";
+						sql = sql .. "e.sip_bypass_media, ";
+						sql = sql .. "e.unique_id, ";
+						sql = sql .. "e.dial_string, ";
+						sql = sql .. "e.dial_user, ";
+						sql = sql .. "e.dial_domain, ";
+						sql = sql .. "cast(e.do_not_disturb as text), ";
+						sql = sql .. "e.forward_all_destination, ";
+						sql = sql .. "cast(e.forward_all_enabled as text), ";
+						sql = sql .. "e.forward_busy_destination, ";
+						sql = sql .. "cast(e.forward_busy_enabled as text), ";
+						sql = sql .. "e.forward_no_answer_destination, ";
+						sql = sql .. "cast(e.forward_no_answer_enabled as text), ";
+						sql = sql .. "e.forward_user_not_registered_destination, ";
+						sql = sql .. "cast(e.forward_user_not_registered_enabled as text), ";
+						sql = sql .. "e.follow_me_uuid, ";
+						sql = sql .. "cast(e.follow_me_enabled as text), ";
+						sql = sql .. "e.follow_me_destinations, ";
+						sql = sql .. "cast(e.enabled as text), ";
+						sql = sql .. "e.description, ";
+						sql = sql .. "e.absolute_codec_string, ";
+						sql = sql .. "cast(e.force_ping as text), ";
+						sql = sql .. "e.max_registrations, ";
+						sql = sql .. "e.extension_type, ";
+						sql = sql .. "e.extension_language, ";
+						sql = sql .. "e.extension_dialect, ";
+						sql = sql .. "e.extension_voice, ";
+						sql = sql .. "random() FROM v_extensions as e, v_domains as d "
+						sql = sql .. "WHERE e.domain_uuid = :domain_uuid "
+						sql = sql .. "AND d.domain_uuid = :domain_uuid "
+						sql = sql .. "AND d.domain_enabled = true "
+						sql = sql .. "AND (e.extension = :user or e.number_alias = :user) "
+						sql = sql .. "AND e.enabled = true ";
 						local params = {domain_uuid=domain_uuid, user=user};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -375,19 +435,6 @@
 								extension_voice = row.extension_voice;
 								--dial_string = row.dial_string;
 
-							--set the boolean values as true or false strings
-								directory_visible = directory_visible and "true" or "false";
-								directory_exten_visible = directory_exten_visible and "true" or "false";
-								forward_all_enabled = forward_all_enabled and "true" or "false";
-								forward_busy_enabled = forward_busy_enabled and "true" or "false";
-								forward_no_answer_enabled = forward_no_answer_enabled and "true" or "false";
-								call_screen_enabled = call_screen_enabled and "true" or "false";
-								forward_user_not_registered_enabled = forward_user_not_registered_enabled and "true" or "false";
-								force_ping = force_ping and "true" or "false";
-								follow_me_enabled = follow_me_enabled and "true" or "false";
-								virtual_extension = virtual_extension and "true" or "false";
-								do_not_disturb = do_not_disturb and "true" or "false";
-
 							--if the extension is virtual set register to false
 								if (row.extension_type == 'virtual') then
 									auth_acl = 'virtual.' .. row.random;
@@ -463,7 +510,16 @@
 				--get the voicemail from the database
 					if (continue) then
 						vm_enabled = "true";
-						local sql = "SELECT * FROM v_voicemails WHERE domain_uuid = :domain_uuid and voicemail_id = :voicemail_id ";
+						local sql = "SELECT ";
+						sql = sql .. " cast(voicemail_local_after_email as text), ";
+						sql = sql .. " cast(voicemail_enabled as text), ";
+						sql = sql .. " cast(voicemail_attach_file as text), ";
+						sql = sql .. " voicemail_password, ";
+						sql = sql .. " voicemail_mail_to, ";
+						sql = sql .. " voicemail_enabled ";
+						sql = sql .. "FROM v_voicemails ";
+						sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+						sql = sql .. "and voicemail_id = :voicemail_id ";
 						local params = {domain_uuid = domain_uuid};
 						if number_alias and #number_alias > 0 then
 							params.voicemail_id = number_alias;
@@ -474,11 +530,11 @@
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
 						dbh:query(sql, params, function(row)
-							vm_keep_local_after_email = voicemail_local_after_email and "true" or "false";
-							vm_enabled = voicemail_enabled and "true" or "false";
-							vm_attach_file = voicemail_attach_file and "true" or "false";
-							vm_password = row.voicemail_password and row.voicemail_password or '';
-							vm_mailto = row.voicemail_mail_to and row.voicemail_mail_to or '';
+							vm_keep_local_after_email = row.voicemail_local_after_email;
+							vm_enabled = row.voicemail_enabled;
+							vm_attach_file = row.voicemail_attach_file;
+							vm_password = row.voicemail_password;
+							vm_mailto = row.voicemail_mail_to;
 						end);
 					end
 
