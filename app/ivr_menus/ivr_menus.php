@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -110,7 +110,6 @@
 		$sql .= "and (";
 		$sql .= "	lower(ivr_menu_name) like :search ";
 		$sql .= "	or lower(ivr_menu_extension) like :search ";
-		$sql .= "	or lower(ivr_menu_enabled) like :search ";
 		$sql .= "	or lower(ivr_menu_description) like :search ";
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';
@@ -129,7 +128,14 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_ivr_menus ";
+	$sql = "select ";
+	$sql .= "ivr_menu_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "ivr_menu_name, ";
+	$sql .= "ivr_menu_extension, ";
+	$sql .= "cast(ivr_menu_enabled as text), ";
+	$sql .= "ivr_menu_description ";
+	$sql .= "from v_ivr_menus ";
 	if ($show == "all" && permission_exists('ivr_menu_all')) {
 		$sql .= "where true ";
 	}
@@ -142,7 +148,6 @@
 		$sql .= "and (";
 		$sql .= "	lower(ivr_menu_name) like :search ";
 		$sql .= "	or lower(ivr_menu_extension) like :search ";
-		$sql .= "	or lower(ivr_menu_enabled) like :search ";
 		$sql .= "	or lower(ivr_menu_description) like :search ";
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';

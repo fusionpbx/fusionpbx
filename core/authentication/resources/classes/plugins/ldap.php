@@ -169,7 +169,7 @@ class plugin_ldap {
 						$array['users'][0]['salt'] = $salt;
 						$array['users'][0]['add_date'] = now();
 						$array['users'][0]['add_user'] = strtolower($this->username);
-						$array['users'][0]['user_enabled'] = 'true';
+						$array['users'][0]['user_enabled'] = true;
 
 					//build user group insert array
 						$array['user_groups'][0]['user_group_uuid'] = uuid();

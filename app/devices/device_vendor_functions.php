@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2024
+ Portions created by the Initial Developer are Copyright (C) 2016-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -76,18 +76,20 @@
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
 
+//get the search term
+	$search = strtolower($_GET["search"] ?? '');
+
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendor_functions ";
 	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	label like :search ";
 		$sql .= "	or type like :search ";
 		$sql .= "	or subtype like :search ";
-		$sql .= "	or enabled like :search ";
 		$sql .= "	or description like :search ";
 		$sql .= ")";
-		$parameters['search'] = '%'.$_GET["search"].'%';
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$database = new database;
@@ -106,18 +108,25 @@
 	}
 
 //get the list
-	$sql = "select * from v_device_vendor_functions ";
+	$sql = "select ";
+	$sql .= "device_vendor_function_uuid, ";
+	$sql .= "device_vendor_uuid, ";
+	$sql .= "type, ";
+	$sql .= "subtype, ";
+	$sql .= "value, ";
+	$sql .= "cast(enabled as text), ";
+	$sql .= "description ";
+	$sql .= "from v_device_vendor_functions ";
 	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	label like :search ";
 		$sql .= "	or type like :search ";
 		$sql .= "	or subtype like :search ";
 		$sql .= "	or value like :search ";
-		$sql .= "	or enabled like :search ";
 		$sql .= "	or description like :search ";
 		$sql .= ")";
-		$parameters['search'] = '%'.$_GET["search"].'%';
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$sql .= order_by($order_by, $order, 'type', 'asc');
@@ -293,4 +302,3 @@
 	echo "</script>\n";
 
 ?>
-

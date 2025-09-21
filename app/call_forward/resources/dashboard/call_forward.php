@@ -52,7 +52,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= "and enabled = 'true' ";
+	$sql .= "and enabled = true ";
 	if (!permission_exists('extension_edit')) {
 		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
@@ -84,13 +84,13 @@
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
 			if (permission_exists('call_forward')) {
-				$stats['call_forward'] += $row['forward_all_enabled'] == 'true' && $row['forward_all_destination'] ? 1 : 0;
+				$stats['call_forward'] += $row['forward_all_enabled'] == true && $row['forward_all_destination'] ? 1 : 0;
 			}
 			if (permission_exists('follow_me')) {
-				$stats['follow_me'] += $row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid']) ? 1 : 0;
+				$stats['follow_me'] += $row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid']) ? 1 : 0;
 			}
 			if (permission_exists('do_not_disturb')) {
-				$stats['dnd'] += $row['do_not_disturb'] == 'true' ? 1 : 0;
+				$stats['dnd'] += $row['do_not_disturb'] == true ? 1 : 0;
 			}
 		}
 		$stats['active'] = @sizeof($extensions) - $stats['call_forward'] - $stats['follow_me'] - $stats['dnd'];
@@ -223,7 +223,7 @@
 				if (permission_exists('follow_me')) {
 					//get destination count
 					$follow_me_destination_count = 0;
-					if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+					if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 						$sql = "select count(*) from v_follow_me_destinations ";
 						$sql .= "where follow_me_uuid = :follow_me_uuid ";
 						$sql .= "and domain_uuid = :domain_uuid ";

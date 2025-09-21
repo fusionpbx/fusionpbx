@@ -591,7 +591,7 @@ local function outbound_route_to_bridge(dbh, domain_uuid, fields, actions)
 				local n = #actions
 				extension_to_bridge(extension, actions, fields)
 				-- if we found bridge or add any action and there no continue flag
-				if actions.bridge or (n > #actions and route.dialplan_continue == 'false') then
+				if actions.bridge or (n > #actions and route.dialplan_continue == false) then
 					extension = nil
 					return 1
 				end

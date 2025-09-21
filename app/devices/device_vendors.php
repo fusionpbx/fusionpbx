@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -74,20 +74,19 @@
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
 
-//add the search term
+//set the search term
 	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_where = "where (";
-		$sql_where .= "lower(name) like :search ";
-		$sql_where .= "or lower(enabled) like :search ";
-		$sql_where .= "or lower(description) like :search ";
-		$sql_where .= ")";
-		$parameters['search'] = '%'.$search.'%';
-	}
 
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendors ";
-	$sql .= $sql_where ?? null;
+	if (!empty($search)) {
+		$sql .= "where (";
+		$sql .= " lower(name) like :search ";
+		$sql .= " or lower(enabled) like :search ";
+		$sql .= " or lower(description) like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
@@ -101,7 +100,20 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "device_vendor_uuid, ";
+	$sql .= "name, ";
+	$sql .= "cast(enabled as text), ";
+	$sql .= "description ";
+	$sql .= "from v_device_vendors ";
+	if (!empty($search)) {
+		$sql .= "where (";
+		$sql .= " lower(name) like :search ";
+		$sql .= " or lower(enabled) like :search ";
+		$sql .= " or lower(description) like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, 'name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -226,4 +238,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

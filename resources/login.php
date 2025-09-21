@@ -128,7 +128,7 @@
 								$sql .= "and template_category = 'password_reset' ";
 								$sql .= "and template_subcategory = 'default' ";
 								$sql .= "and template_type = 'html' ";
-								$sql .= "and template_enabled = 'true' ";
+								$sql .= "and template_enabled = true ";
 								$parameters['template_language'] = $user_language_code ? $user_language_code : $settings->get('domain', 'language', 'en-us');
 								$parameters['domain_uuid'] = $domain_uuid;
 								$row = $database->select($sql, $parameters, 'row');

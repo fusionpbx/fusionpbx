@@ -202,7 +202,7 @@
 				$domain_exists = true;
 			}
 
-			//if the domain name does not exist then add the domain name
+			//if the domain name does not exist, then add the domain name
 			if (!$domain_exists) {
 				//add the domain permission
 				$p = permissions::new();
@@ -226,7 +226,7 @@
 				$p->delete("domain_add", "temp");
 			}
 
-			//set the session domain id and name
+			//set the session domain ID and name
 			$_SESSION['domain_uuid'] = $domain_uuid;
 			$_SESSION['domain_name'] = $domain_name;
 

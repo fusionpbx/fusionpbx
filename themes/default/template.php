@@ -706,6 +706,18 @@
 			})(jQuery);
 			{/literal}
 
+		//slide toggle
+			{literal}
+			var switches = document.getElementsByClassName('switch');
+			var toggle = function(){
+				this.children[0].value = (this.children[0].value == 'false' ? 'true' : 'false');
+				this.children[0].dispatchEvent(new Event('change'));
+				};
+			for (var i = 0; i < switches.length; i++) {
+				switches[i].addEventListener('click', toggle, false);
+			}
+			{/literal}
+
 	{literal}
 	}); //document ready end
 	{/literal}

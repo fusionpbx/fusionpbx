@@ -85,7 +85,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the profile name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the profile.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_description";
@@ -144,7 +144,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the value.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_param_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the parameter.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_param_description";

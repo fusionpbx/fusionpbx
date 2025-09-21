@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -65,16 +65,19 @@
 				$register_proxy = $row["register_proxy"];
 				$outbound_proxy = $row["outbound_proxy"];
 				$expire_seconds = $row["expire_seconds"];
-				$register = $row["register"];
+				$register = $row["register"] ?? false;
 				$register_transport = $row["register_transport"];
 				$contact_params = $row["contact_params"];
 				$retry_seconds = $row["retry_seconds"];
 				$extension = $row["extension"];
 				$codec_prefs = $row["codec_prefs"];
 				$ping = $row["ping"];
-				$channels = $row["channels"];
-				$caller_id_in_from = $row["caller_id_in_from"];
-				$supress_cng = $row["supress_cng"];
+				$ping_min = $row["ping_min"];
+				$ping_max = $row["ping_max"];
+				$contact_in_ping = $row["contact_in_ping"] ?? false;
+				// $channels = $row["channels"];
+				$caller_id_in_from = $row["caller_id_in_from"] ?? false;
+				$supress_cng = $row["supress_cng"] ?? false;
 				$sip_cid_type = $row["sip_cid_type"];
 				$extension_in_contact = $row["extension_in_contact"];
 				$effective_caller_id_name = $row["effective_caller_id_name"];
@@ -83,7 +86,7 @@
 				$outbound_caller_id_number = $row["outbound_caller_id_number"];
 				$context = $row["context"];
 				$profile = $row["profile"];
-				$enabled = $row["enabled"];
+				$enabled = $row["enabled"] ?? false;
 				$description = $row["description"]." (".$text['label-copy'].")";
 			}
 			unset($sql, $parameters, $row);
@@ -118,6 +121,9 @@
 			$array['gateways'][0]['extension'] = $extension;
 			$array['gateways'][0]['codec_prefs'] = $codec_prefs;
 			$array['gateways'][0]['ping'] = $ping;
+			$array['gateways'][0]['ping_min'] = $ping_min;
+			$array['gateways'][0]['ping_max'] = $ping_max;
+			$array['gateways'][0]['contact_in_ping'] = $contact_in_ping;
 			//$array['gateways'][0]['channels'] = $channels;
 			$array['gateways'][0]['caller_id_in_from'] = $caller_id_in_from;
 			$array['gateways'][0]['supress_cng'] = $supress_cng;
@@ -135,7 +141,7 @@
 			unset($array);
 
 		//add new gateway to session variable
-			if ($enabled == 'true') {
+			if ($enabled == true) {
 				$_SESSION['gateways'][$gateway_uuid] = $gateway;
 			}
 

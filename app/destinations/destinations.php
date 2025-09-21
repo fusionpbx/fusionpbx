@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -164,14 +164,12 @@
 			$sql .= "or lower(destination_caller_id_name) like :search ";
 			$sql .= "or destination_caller_id_number like :search ";
 		}
-		$sql .= "or lower(destination_enabled) like :search ";
 		$sql .= "or lower(destination_description) like :search ";
 		$sql .= "or lower(destination_data) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['destination_type'] = $destination_type;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -206,7 +204,7 @@
 	$sql .= " d.destination_context, ";
 	$sql .= " d.destination_caller_id_name, ";
 	$sql .= " d.destination_caller_id_number, ";
-	$sql .= " d.destination_enabled, ";
+	$sql .= " cast(d.destination_enabled as text), ";
 	$sql .= " d.destination_description ";
 	$sql .= "from v_destinations as d ";
 	if ($show == "all" && permission_exists('destination_all')) {
@@ -230,7 +228,6 @@
 			$sql .= " or lower(destination_caller_id_name) like :search ";
 			$sql .= " or destination_caller_id_number like :search ";
 		}
-		$sql .= " or lower(destination_enabled) like :search ";
 		$sql .= " or lower(destination_description) like :search ";
 		$sql .= " or lower(destination_data) like :search ";
 		$sql .= ") ";
@@ -238,7 +235,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'destination_number, destination_order ', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$destinations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -463,4 +459,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

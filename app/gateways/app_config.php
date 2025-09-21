@@ -37,7 +37,7 @@
 		$apps[$x]['destinations'][$y]['name'] = "gateways";
 		$apps[$x]['destinations'][$y]['sql'] = "select g.gateway_uuid as destination, g.gateway as name, d.domain_name from v_gateways as g ";
 		$apps[$x]['destinations'][$y]['sql'] .= "inner join v_domains as d on g.domain_uuid = d.domain_uuid ";
-		$apps[$x]['destinations'][$y]['where'] = "where g.domain_uuid = '\${domain_uuid}' and g.enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where g.domain_uuid = '\${domain_uuid}' and g.enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "gateway asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "gateway";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "gateway_uuid";
@@ -129,7 +129,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "distinct_to";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "auth_username";
@@ -171,7 +171,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "register";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "register_transport";
@@ -203,15 +203,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_in_ping";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "caller_id_in_from";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "supress_cng";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_cid_type";
@@ -244,7 +244,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(255)";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "description";

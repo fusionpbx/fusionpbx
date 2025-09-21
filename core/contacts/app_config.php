@@ -403,7 +403,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Custom label for an address.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "address_primary";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Designate a primary address.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "address_street";
@@ -536,7 +536,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the extension.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_primary";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Designate a primary number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_description";
@@ -811,7 +811,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_setting_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_setting_description";
@@ -940,7 +940,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Custom label for the email address.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "email_primary";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Designate a primary address.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "email_address";
@@ -1013,7 +1013,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Custom label for the url.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "url_primary";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Designate a primary address.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "url_address";
@@ -1152,7 +1152,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "attachment_primary";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Primary attachments are used as the Contact photo and sent with Messages.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "attachment_filename";

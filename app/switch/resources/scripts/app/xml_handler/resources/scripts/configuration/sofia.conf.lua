@@ -70,7 +70,7 @@
 
 		--gt the global settings
 			sql = "select * from v_sofia_global_settings ";
-			sql = sql .. "where global_setting_enabled = 'true' ";
+			sql = sql .. "where global_setting_enabled = true ";
 			sql = sql .. "order by global_setting_name asc ";
 			local params = {};
 			x = 0;
@@ -87,8 +87,8 @@
 		--run the query
 			sql = "select p.sip_profile_uuid, p.sip_profile_name, p.sip_profile_description, s.sip_profile_setting_name, s.sip_profile_setting_value ";
 			sql = sql .. "from v_sip_profiles as p, v_sip_profile_settings as s ";
-			sql = sql .. "where s.sip_profile_setting_enabled = 'true' ";
-			sql = sql .. "and p.sip_profile_enabled = 'true' ";
+			sql = sql .. "where s.sip_profile_setting_enabled = true ";
+			sql = sql .. "and p.sip_profile_enabled = true ";
 			sql = sql .. "and (p.sip_profile_hostname = :hostname or p.sip_profile_hostname is null or p.sip_profile_hostname = '') ";
 			sql = sql .. "and p.sip_profile_uuid = s.sip_profile_uuid ";
 			sql = sql .. "order by p.sip_profile_name asc ";
@@ -119,9 +119,23 @@
 						--xml:append([[						<X-PRE-PROCESS cmd="include" data="]] .. xml.sanitize(sip_profile_name) .. [[/*.xml"/>]]);
 
 						--get the gateways
-							sql = "select * from v_gateways ";
+							sql = "select ";
+							sql = sql .. "gateway_uuid, domain_uuid, gateway, username, password, ";
+							sql = sql .. "cast(distinct_to as text), auth_username, realm, from_user, from_domain, ";
+							sql = sql .. "proxy, register_proxy,outbound_proxy,expire_seconds, ";
+							sql = sql .. "register, register_transport, contact_params, retry_seconds, ";
+							sql = sql .. "extension, ping, ping_min, ping_max, ";
+							sql = sql .. "cast(contact_in_ping as text) , ";
+							sql = sql .. "cast(caller_id_in_from as text), ";
+							sql = sql .. "cast(supress_cng as text),
+							sql = sql .. "sip_cid_type, codec_prefs, channels, ";
+							sql = sql .. "cast(extension_in_contact as text), ";
+							sql = sql .. "context, profile, hostname, ";
+							sql = sql .. "cast(enabled as text), ";
+							sql = sql .. "description ";
+							sql = sql .. "from v_gateways ";
 							sql = sql .. "where profile = :profile ";
-							sql = sql .. "and enabled = 'true' ";
+							sql = sql .. "and enabled = true ";
 							sql = sql .. "and (hostname = :hostname or hostname is null or hostname = '') ";
 							local params = {profile = sip_profile_name, hostname = hostname};
 							if (debug["sql"]) then

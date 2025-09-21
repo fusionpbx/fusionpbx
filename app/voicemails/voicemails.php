@@ -113,8 +113,8 @@
 		$sql_search = "and (";
 		$sql_search .= "	lower(cast(voicemail_id as text)) like :search ";
 		$sql_search .= " 	or lower(voicemail_mail_to) like :search ";
-		$sql_search .= " 	or lower(voicemail_local_after_email) like :search ";
-		$sql_search .= " 	or lower(voicemail_enabled) like :search ";
+		$sql_search .= " 	or lower(cast(voicemail_local_after_email as text)) like :search ";
+		$sql_search .= " 	or lower(cast(voicemail_enabled as text)) like :search ";
 		$sql_search .= " 	or lower(voicemail_description) like :search ";
 		$sql_search .= ") ";
 	}
@@ -161,7 +161,35 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(voicemail_uuid)', '*', $sql);
+	$sql = "select domain_uuid, voicemail_uuid, voicemail_id, voicemail_mail_to, voicemail_file, ";
+	$sql .= "cast(voicemail_local_after_email as text), cast(voicemail_transcription_enabled as text), cast(voicemail_enabled as text), voicemail_description ";
+	$sql .= "from v_voicemails ";
+	$sql .= "where true ";
+	$parameters = null;
+	if ($show != "all" || !permission_exists('voicemail_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!permission_exists('voicemail_domain')) {
+		if (is_array($voicemail_uuids) && sizeof($voicemail_uuids) != 0) {
+			$sql .= "and (";
+			foreach ($voicemail_uuids as $x => $row) {
+				$sql_where_or[] = 'voicemail_uuid = :voicemail_uuid_'.$x;
+				$parameters['voicemail_uuid_'.$x] = $row['voicemail_uuid'];
+			}
+			if (is_array($sql_where_or) && sizeof($sql_where_or) != 0) {
+				$sql .= implode(' or ', $sql_where_or);
+			}
+			$sql .= ")";
+		}
+		else {
+			$sql .= "and voicemail_uuid is null ";
+		}
+	}
+	if (!empty($sql_search)) {
+		$sql .= $sql_search;
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$voicemails = $database->select($sql, $parameters, 'all');
@@ -282,7 +310,7 @@
 	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order, null, "class='center hide-md-dn'");
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order, null, "class='center hide-md-dn'");
 	if (permission_exists('voicemail_transcription_enabled') && $settings->get('transcribe', 'enabled', false) === true) {
-		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcription_enabled'], $order_by, $order);
+		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcription_enabled'], $order_by, $order, null, "class='center'");
 	}
 	if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
 		echo "<th>".$text['label-tools']."</th>\n";
@@ -333,7 +361,7 @@
 			echo "	<td class='center hide-md-dn'>".($row['voicemail_file'] == 'attach' ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td class='center hide-md-dn'>".ucwords(escape($row['voicemail_local_after_email']))."&nbsp;</td>\n";
 			if (permission_exists('voicemail_transcription_enabled') && $settings->get('transcribe', 'enabled', false) === true) {
-				echo "	<td>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
+				echo "	<td class='center'>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
 			}
 			if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
 				echo "	<td class='no-link no-wrap'>\n";
@@ -376,5 +404,3 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
-

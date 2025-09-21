@@ -95,7 +95,7 @@
 			end
 
 		--send the ring group event
-		    event = freeswitch.Event("CUSTOM", "RING_GROUPS");
+			event = freeswitch.Event("CUSTOM", "RING_GROUPS");
 			event:addHeader("domain_uuid", domain_uuid);
 			event:addHeader("domain_name", domain_name);
 			event:addHeader("ring_group_uuid", ring_group_uuid);
@@ -227,9 +227,31 @@
 --get the ring group
 	ring_group_forward_enabled = '';
 	ring_group_forward_destination = '';
-	sql = "SELECT d.domain_name, r.* FROM v_ring_groups as r, v_domains as d ";
-	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
-	sql = sql .. "and r.domain_uuid = d.domain_uuid ";
+	sql = "SELECT d.domain_name, ";
+	sql = sql .. "d.domain_uuid, ";
+	sql = sql .. "d.domain_name, ";
+	sql = sql .. "r.ring_group_name, ";
+	sql = sql .. "r.ring_group_extension, ";
+	sql = sql .. "r.ring_group_greeting, ";
+	sql = sql .. "cast(r.ring_group_forward_enabled as text), ";
+	sql = sql .. "r.ring_group_forward_destination, ";
+	sql = sql .. "r.ring_group_forward_toll_allow, ";
+	sql = sql .. "r.ring_group_timeout_app, ";
+	sql = sql .. "r.ring_group_timeout_data, ";
+	sql = sql .. "r.ring_group_exit_key, ";
+	sql = sql .. "r.ring_group_call_timeout, ";
+	sql = sql .. "r.ring_group_caller_id_name, ";
+	sql = sql .. "r.ring_group_caller_id_number, ";
+	sql = sql .. "r.ring_group_cid_name_prefix, ";
+	sql = sql .. "r.ring_group_cid_number_prefix, ";
+	sql = sql .. "cast(r.ring_group_call_screen_enabled as text), ";
+	sql = sql .. "cast(r.ring_group_call_forward_enabled as text), ";
+	sql = sql .. "cast(r.ring_group_follow_me_enabled as text), ";
+	sql = sql .. "r.ring_group_missed_call_app, ";
+	sql = sql .. "r.ring_group_missed_call_data ";
+	sql = sql .. "FROM v_ring_groups as r, v_domains as d ";
+	sql = sql .. "WHERE r.ring_group_uuid = :ring_group_uuid ";
+	sql = sql .. "AND r.domain_uuid = d.domain_uuid ";
 	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
@@ -438,7 +460,7 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'missed' ";
-					sql = sql .. "AND template_enabled = 'true' ";
+					sql = sql .. "AND template_enabled = true ";
 					sql = sql .. "ORDER BY domain_uuid DESC ";
 					local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
 					if (debug["sql"]) then
@@ -533,7 +555,7 @@
 	end
 
 --process the ring group
-	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
+	if (ring_group_forward_enabled == true and string.len(ring_group_forward_destination) > 0) then
 
 		--set the outbound caller id
 			if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
@@ -578,11 +600,9 @@
 				WHERE
 					ring_group_uuid = :ring_group_uuid
 					AND r.domain_uuid = :domain_uuid
-					AND r.ring_group_enabled = 'true'
+					AND r.ring_group_enabled = true
 			]];
-
 			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
-
 			dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
@@ -590,10 +610,13 @@
 					else
 						sql_order = 'random() * 1000000' --both postgresql and sqlite uses random() instead of rand()
 					end
-				else
-					sql_order='d.destination_delay, d.destination_number asc'
 				end
 			end);
+
+		--if the sql_order is not then set a default
+			if (sql_order == nil) then
+					sql_order = 'd.destination_delay, d.destination_number asc';
+			end
 
 		--get the ring group destinations
 			sql = [[
@@ -615,8 +638,8 @@
 					d.ring_group_uuid = r.ring_group_uuid
 					AND d.ring_group_uuid = :ring_group_uuid
 					AND r.domain_uuid = :domain_uuid
-					AND r.ring_group_enabled = 'true'
-					AND d.destination_enabled = 'true'
+					AND r.ring_group_enabled = true
+					AND d.destination_enabled = true
 				ORDER BY
 					]]..sql_order..[[
 			]];
@@ -639,7 +662,7 @@
 				end
 
 				--follow the forwards
-				if (ring_group_call_forward_enabled == "true") then
+				if (ring_group_call_forward_enabled == true) then
 					count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
 				else
 					destination_number = row.destination_number;
@@ -696,7 +719,7 @@
 		---add follow me destinations
 			for key, row in pairs(destinations) do
 
-				if (ring_group_follow_me_enabled == "true") then
+				if (ring_group_follow_me_enabled == true) then
 					cmd = "user_data ".. row.destination_number .."@" ..row.domain_name.." var follow_me_enabled";
 					if (api:executeString(cmd) == "true") then
 
@@ -910,7 +933,7 @@
 						user_exists = row.user_exists;
 
 					--follow the forwards
-						if (row.ring_group_call_forward_enabled == "true") then
+						if (row.ring_group_call_forward_enabled == true) then
 							count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
 						end
 
