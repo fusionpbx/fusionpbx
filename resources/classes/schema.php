@@ -836,9 +836,6 @@
 							}
 						}
 					}
-
-					//recreate the views
-					$result = $this->database->views('create');
 				}
 				//$this->db->commit();
 				$response .= "\n";
@@ -860,16 +857,14 @@
 				}
 			}
 
+			//create views so that alter table statements complete
+			$this->database->views('create');
+
 			//handle response
-			//if ($output == "echo") {
-			//	echo $response;
-			//}
-			//else if ($output == "return") {
 			return $response;
-			//}
+
 		} //end function
 	}
-
 
 //example use
 //$obj = new schema;
