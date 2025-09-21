@@ -106,6 +106,9 @@
 		context = row.user_context;
 	end);
 
+	forward_all_enabled = forward_all_enabled and "true" or "false";
+	do_not_disturb = do_not_disturb and "true" or "false";
+
 --send information to the console
 	if (session:ready()) then
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] do_not_disturb "..do_not_disturb.."\n");

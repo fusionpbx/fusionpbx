@@ -76,7 +76,7 @@
 				FROM v_voicemail_messages as m, v_voicemails as v, v_domains as d
 				WHERE v.voicemail_uuid = m.voicemail_uuid
 				AND v.domain_uuid = d.domain_uuid
-				AND v.voicemail_enabled = 'true'
+				AND v.voicemail_enabled = true
 				GROUP BY v.voicemail_id, v.voicemail_uuid, v.domain_uuid, d.domain_name;]];
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");

@@ -432,7 +432,7 @@
 			end
 
 		--direct dial
-			if ivr_menu_direct_dial == true and #digits > 0 and #digits < 6 then
+			if (ivr_menu_direct_dial and #digits > 0 and #digits < 6) then
 				-- remove *#
 					digits = digits:gsub("[*#]", "");
 

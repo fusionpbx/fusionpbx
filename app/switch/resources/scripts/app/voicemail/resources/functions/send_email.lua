@@ -60,9 +60,9 @@ function send_email(id, uuid)
 		if (voicemail_file == nil or voicemail_file == '') then
 			voicemail_file = "listen";
 		end
-		if (voicemail_local_after_email == nil or voicemail_local_after_email == '') then
-			voicemail_local_after_email = "true";
-		end
+
+	--set the boolean values as a string
+		voicemail_local_after_email = voicemail_local_after_email and "true" or "false";
 
 	--require the email address to send the email
 		if (string.len(voicemail_mail_to) > 2) then
@@ -92,7 +92,7 @@ function send_email(id, uuid)
 						us.user_setting_category = 'domain' and
 						us.user_setting_subcategory = 'time_zone' and
 						us.user_setting_name = 'name' and
-						us.user_setting_enabled = 'true'
+						us.user_setting_enabled = true
 					order by
 						eu.insert_date asc
 					limit 1
@@ -203,6 +203,9 @@ function send_email(id, uuid)
 
 			--get the link_address
 				link_address = http_protocol.."://"..domain_name..project_path;
+
+			--set the boolean values as a string
+				voicemail_local_after_email = voicemail_local_after_email and "true" or "false";
 
 			--set proper delete status
 				local local_after_email = '';

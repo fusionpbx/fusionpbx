@@ -1,6 +1,6 @@
 --	conference_center/index.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2021 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -417,7 +417,8 @@
 		--conference center details
 			local sql = [[SELECT * FROM v_conference_centers
 				WHERE domain_uuid = :domain_uuid
-				AND conference_center_extension = :destination_number]];
+				AND conference_center_extension = :destination_number
+				AND conference_center_enabled = true]];
 			local params = {domain_uuid = domain_uuid, destination_number = destination_number};
 			dbh:query(sql, params, function(row)
 				conference_center_uuid = string.lower(row["conference_center_uuid"]);
@@ -498,7 +499,7 @@
 						local sql = [[SELECT * FROM v_conference_rooms 
 							WHERE domain_uuid = :domain_uuid
 							AND (moderator_pin = :pin_number or participant_pin = :pin_number)
-							AND enabled = 'true'
+							AND enabled = true
 							AND (
 									( start_datetime <> '' AND start_datetime is not null AND start_datetime <= :timestamp ) OR
 									( start_datetime = '' OR start_datetime is null )
@@ -546,7 +547,7 @@
 					WHERE domain_uuid = :domain_uuid
 					AND conference_center_uuid = :conference_center_uuid
 					AND (moderator_pin = :pin_number or participant_pin = :pin_number)
-					AND enabled = 'true'
+					AND enabled = true
 				]];
 				local params = {
 					domain_uuid = domain_uuid;
@@ -560,7 +561,7 @@
 					conference_room_uuid = string.lower(row["conference_room_uuid"]);
 					conference_room_name = string.lower(row["conference_room_name"]);
 					--meeting_uuid = string.lower(row["meeting_uuid"]);
-					record = string.lower(row["record"]);
+					record = row["record"];
 					profile = string.lower(row["profile"]);
 					max_members = row["max_members"];
 					wait_mod = row["wait_mod"];
@@ -580,6 +581,18 @@
 				end);
 				freeswitch.consoleLog("INFO","conference_room_uuid: " .. conference_room_uuid .. "\n");
 			end
+
+		--set the boolean settings to a true or false string
+			record = record and "true" or "false";
+			wait_mod = wait_mod and "true" or "false";
+			sounds = sounds and "true" or "false";
+			mute = mute and "true" or "false";
+			enabled = enabled and "true" or "false";
+			announce_name = announce_name and "true" or "false";
+			announce_count = announce_count and "true" or "false";
+			announce_recording = announce_recording and "true" or "false";
+			moderator_endconf = moderator_endconf and "true" or "false";
+
 
 		--set the member type
 			if (pin_number == moderator_pin) then
