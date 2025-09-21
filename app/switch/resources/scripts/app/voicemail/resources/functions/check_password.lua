@@ -47,7 +47,7 @@
 						local sql = [[SELECT * FROM v_voicemails
 							WHERE domain_uuid = :domain_uuid
 							AND voicemail_id = :voicemail_id
-							AND voicemail_enabled = 'true' ]];
+							AND voicemail_enabled = true ]];
 						local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");

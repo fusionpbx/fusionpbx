@@ -291,7 +291,7 @@
 						local sql = [[SELECT * FROM v_voicemails
 							WHERE domain_uuid = :domain_uuid
 							AND voicemail_id = :voicemail_id
-							AND voicemail_enabled = 'true' ]];
+							AND voicemail_enabled = true ]];
 						local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -309,16 +309,11 @@
 							voicemail_tutorial = row["voicemail_tutorial"];
 						end);
 
-					--set default values
-						if (voicemail_attach_file == nil) then
-							voicemail_attach_file = "true";
-						end
-						if (voicemail_local_after_email == nil) then
-							voicemail_local_after_email = "true";
-						end
-						if (voicemail_local_after_forward == nil) then
-							voicemail_local_after_forward = "true";
-						end
+					--set boolean values as a string
+						voicemail_attach_file = voicemail_attach_file and "true" or "false";
+						voicemail_local_after_email = voicemail_local_after_email and "true" or "false";
+						voicemail_local_after_forward = voicemail_local_after_forward and "true" or "false";
+						voicemail_tutorial = voicemail_tutorial and "true" or "false";
 
 					--valid voicemail
 						if (voicemail_uuid ~= nil and string.len(voicemail_uuid) > 0) then
@@ -417,13 +412,10 @@
 					voicemail_local_after_forward = row["voicemail_local_after_forward"];
 				end);
 
-			--set default values
-				if (voicemail_local_after_email == nil) then
-					voicemail_local_after_email = "true";
-				end
-				if (voicemail_local_after_forward == nil) then
-					voicemail_local_after_forward = "true";
-				end
+			--set the boolean values as a string
+				voicemail_local_after_email = voicemail_local_after_email and "true" or "false";
+				voicemail_local_after_forward = voicemail_local_after_forward and "true" or "false";
+				voicemail_local_after_forward = voicemail_local_after_forward and "true" or "false";
 
 			--get the message count and send the mwi event
 				if (voicemail_local_after_email == 'true' or voicemail_local_after_forward == 'true') then

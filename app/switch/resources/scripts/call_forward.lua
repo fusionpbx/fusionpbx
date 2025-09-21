@@ -143,7 +143,7 @@
 	extension = row.extension;
 	local number_alias = row.number_alias or '';
 	local accountcode = row.accountcode;
-	local forward_all_enabled = row.forward_all_enabled;
+	local forward_all_enabled = row.forward_all_enabled and "true" or "false";
 	local last_forward_all_destination = row.forward_all_destination;
 	local toll_allow = row.toll_allow or '';
 

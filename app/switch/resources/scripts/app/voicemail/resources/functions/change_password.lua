@@ -100,7 +100,7 @@
 						set voicemail_password = :password
 						WHERE domain_uuid = :domain_uuid
 						AND voicemail_id = :voicemail_id 
-						AND voicemail_enabled = 'true' ]];
+						AND voicemail_enabled = true ]];
 					local params = {password = password, domain_uuid = domain_uuid,
 						voicemail_id = voicemail_id};
 					if (debug["sql"]) then
