@@ -75,7 +75,7 @@
 		$default_setting_name = strtolower($_POST["default_setting_name"] ?? '');
 		$default_setting_value = $_POST["default_setting_value"] ?? '';
 		$default_setting_order = $_POST["default_setting_order"] ?? '';
-		$default_setting_enabled = $_POST["default_setting_enabled"] ?? 'false';
+		$default_setting_enabled = $_POST["default_setting_enabled"];
 		$default_setting_description = $_POST["default_setting_description"] ?? '';
 	}
 
@@ -250,7 +250,7 @@
 //pre-populate the form
 	if (count($_GET) > 0 && empty($_POST["persistformvar"])) {
 		$default_setting_uuid = $_GET["id"] ?? '';
-		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
+		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, default_setting_order, default_setting_enabled, default_setting_description ";
 		$sql .= "from v_default_settings ";
 		$sql .= "where default_setting_uuid = :default_setting_uuid ";
 		$parameters['default_setting_uuid'] = $default_setting_uuid;
@@ -266,9 +266,6 @@
 		}
 		unset($sql, $parameters);
 	}
-
-//set the defaults
-	if (empty($default_setting_enabled)) { $default_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -689,7 +686,7 @@
 	}
 	elseif ($category == "theme" && $subcategory == "input_toggle_style" && $name == "text" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
-		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='select'>".$text['option-select_box']."</option>\n";
 		echo "    	<option value='switch_round' ".(($default_setting_value == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
 		echo "    	<option value='switch_square' ".(($default_setting_value == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
 		echo "	</select>\n";
@@ -770,6 +767,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+
 	echo "<div id='tr_order' ".(($default_setting_name != 'array') ? "style='display: none;'" : null).">\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -799,23 +797,23 @@
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='default_setting_enabled' name='default_setting_enabled' value='true' ".($default_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='default_setting_enabled' name='default_setting_enabled'>\n";
-		echo "		<option value='true' ".($default_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($default_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='default_setting_enabled' name='default_setting_enabled'>\n";
+	echo "			<option value='true' ".($default_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($default_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";

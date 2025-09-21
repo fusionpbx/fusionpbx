@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -110,7 +110,7 @@ if ($domains_processed == 1) {
 			$sql .= "	from v_users as u, v_contact_emails as e ";
 			$sql .= "	where u.contact_uuid is not null ";
 			$sql .= "	and u.contact_uuid = e.contact_uuid ";
-			$sql .= "	and e.email_primary = 1 ";
+			$sql .= "	and e.email_primary = true ";
 			$sql .= ") ";
 			$sql .= "update v_users ";
 			$sql .= "set user_email = users.email_address ";
@@ -195,7 +195,7 @@ if ($domains_processed == 1) {
 				$array['email_templates'][$x]['template_body'] .= "</body>\n";
 				$array['email_templates'][$x]['template_body'] .= "</html>\n";
 				$array['email_templates'][$x]['template_type'] = 'html';
-				$array['email_templates'][$x]['template_enabled'] = 'true';
+				$array['email_templates'][$x]['template_enabled'] = true;
 				$array['email_templates'][$x]['template_description'] = 'Default password reset email template.';
 				$x++;
 

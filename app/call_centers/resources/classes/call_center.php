@@ -97,9 +97,9 @@
 					$dialplan["dialplan_name"] = ($this->queue_name != '') ? $this->queue_name : format_phone($this->destination_number);
 					$dialplan["dialplan_number"] = $this->destination_number;
 					$dialplan["dialplan_context"] = $_SESSION['domain_name'];
-					$dialplan["dialplan_continue"] = "false";
+					$dialplan["dialplan_continue"] = false;
 					$dialplan["dialplan_order"] = "210";
-					$dialplan["dialplan_enabled"] = "true";
+					$dialplan["dialplan_enabled"] = true;
 					$dialplan["dialplan_description"] = $this->queue_description;
 					$dialplan_detail_order = 10;
 

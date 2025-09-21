@@ -377,7 +377,11 @@
 	end
 
 --get the extensions from the database
-	local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true') ORDER BY directory_first_name, effective_caller_id_name asc; ";
+	local sql = "SELECT extension, effective_caller_id_name, ";
+	sql = sql .. "directory_first_name, directory_last_name, directory_exten_visible, user_context ";
+	sql = sql .. "FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = true ";
+	sql = sql .. "AND (directory_visible is null or directory_visible = true) ";
+	sql = sql .. "ORDER BY directory_first_name, effective_caller_id_name asc; ";
 	local params = {domain_uuid = domain_uuid};
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -141,7 +141,6 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$total_gateways = $database->select($sql, $parameters ?? '', 'column');
 	$num_rows = $total_gateways;
 
@@ -155,7 +154,20 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * ";
+	$sql = "select ";
+	$sql .= "gateway_uuid, domain_uuid, gateway, username, password, ";
+	$sql .= "cast(distinct_to as text), auth_username, realm, from_user, from_domain, ";
+	$sql .= "proxy, register_proxy,outbound_proxy,expire_seconds, ";
+	$sql .= "cast(register as text), register_transport, contact_params, retry_seconds, ";
+	$sql .= "extension, ping, ping_min, ping_max, ";
+	$sql .= "cast(contact_in_ping as text) , ";
+	$sql .= "cast(caller_id_in_from as text), ";
+	$sql .= "cast(supress_cng as text), ";
+	$sql .= "sip_cid_type, codec_prefs, channels, ";
+	$sql .= "cast(extension_in_contact as text), ";
+	$sql .= "context, profile, hostname, ";
+	$sql .= "cast(enabled as text), ";
+	$sql .= "description ";
 	$sql .= "from v_gateways ";
 	$sql .= "where true ";
 	if (!($show == "all" && permission_exists('gateway_all'))) {
@@ -179,7 +191,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'gateway', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$gateways = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
@@ -395,4 +406,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -159,7 +159,7 @@
 			//$device_uuid = $_POST["device_uuid"];
 			//$device_line = $_POST["device_line"];
 			$voicemail_password = $_POST["voicemail_password"];
-			$voicemail_enabled = $_POST["voicemail_enabled"] ?? 'false';
+			$voicemail_enabled = $_POST["voicemail_enabled"];
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
@@ -186,7 +186,7 @@
 			$dial_string = $_POST["dial_string"];
 			$extension_language = $_POST["extension_language"];
 			$extension_type = $_POST["extension_type"];
-			$enabled = $_POST["enabled"] ?? 'false';
+			$enabled = $_POST["enabled"];
 			$description = $_POST["description"];
 
 			//set defaults
@@ -375,9 +375,6 @@
 		//check for all required data
 			$msg = '';
 			if (empty($extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-			if (permission_exists('extension_enabled')) {
-				if (empty($enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			}
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -695,7 +692,7 @@
 													if (!empty($device_templates[$d])) {
 														$array["devices"][$j]["device_template"] = $device_templates[$d];
 													}
-													$array["devices"][$j]["device_enabled"] = "true";
+													$array["devices"][$j]["device_enabled"] = true;
 													$array["devices"][$j]["device_lines"][0]["device_uuid"] = $device_uuids[$d];
 													$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
 													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $domain_uuid;
@@ -754,7 +751,7 @@
 										//if voicemail_uuid does not exist then get a new uuid
 											if (!is_uuid($voicemail_uuid)) {
 												$voicemail_uuid = uuid();
-												$voicemail_tutorial = 'true';
+												$voicemail_tutorial = true;
 												//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
 												if (!permission_exists('voicemail_transcription_enabled')) {
 													$voicemail_transcription_enabled = $voicemail_transcription_enabled_default;
@@ -1021,7 +1018,7 @@
 //get the device vendors
 	$sql = "select name ";
 	$sql .= "from v_device_vendors ";
-	$sql .= "where enabled = 'true' ";
+	$sql .= "where enabled = true ";
 	$sql .= "order by name asc ";
 	$device_vendors = $database->select($sql, null, 'all');
 	unset($sql);
@@ -1031,7 +1028,7 @@
 		$sql = "select u.username, e.user_uuid ";
 		$sql .= "from v_extension_users as e, v_users as u ";
 		$sql .= "where e.user_uuid = u.user_uuid  ";
-		$sql .= "and u.user_enabled = 'true' ";
+		$sql .= "and u.user_enabled = true ";
 		$sql .= "and e.domain_uuid = :domain_uuid ";
 		$sql .= "and e.extension_uuid = :extension_uuid ";
 		$sql .= "order by u.username asc ";
@@ -1055,7 +1052,7 @@
 			$parameters['user_uuid_'.$index] = $assigned_user_uuid;
 		}
 	}
-	$sql .= "and user_enabled = 'true' ";
+	$sql .= "and user_enabled = true ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$users = $database->select($sql, $parameters, 'all');
@@ -1099,18 +1096,27 @@
 		}
 	}
 
-//set the defaults
+//set the defaults - extension
 	if (empty($user_context)) { $user_context = $domain_name; }
 	if (empty($max_registrations)) { $max_registrations = $extension_max_registrations ?? ''; }
 	if (empty($accountcode)) { $accountcode = get_accountcode(); }
 	if (empty($limit_max)) { $limit_max = $extension_limit_max; }
 	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
 	if (empty($call_timeout)) { $call_timeout = $extension_call_timeout; }
-	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
 	if (empty($user_record)) { $user_record = $extension_user_record_default; }
-	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $voicemail_transcription_enabled_default; }
-	if (empty($voicemail_enabled)) { $voicemail_enabled = $voicemail_enabled_default; }
-	if (empty($enabled)) { $enabled = 'true'; }
+	if (!isset($directory_visible)) { $directory_visible = false; }
+	if (!isset($directory_exten_visible)) { $directory_exten_visible = false; }
+	if (!isset($call_screen_enabled)) { $call_screen_enabled = false; }
+	if (!isset($force_ping)) { $force_ping = false; }
+	if (!isset($enabled)) { $enabled = true; }
+
+//set the defaults - voicemail
+	if (!isset($voicemail_local_after_email)) { $voicemail_local_after_email = $settings->get('voicemail','keep_local', true); }
+	if (!isset($voicemail_enabled)) { $voicemail_enabled = $settings->get('voicemail', 'enabled_default', true); }
+	if (!isset($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $settings->get('voicemail', 'transcription_enabled_default', false); }
+	if (!isset($voicemail_tutorial)) { $voicemail_tutorial = false; }
+	if (!isset($voicemail_recording_instructions)) { $voicemail_recording_instructions = true; }
+	if (!isset($voicemail_recording_options)) { $voicemail_recording_options = true; }
 
 //create token
 	$object = new token;
@@ -1714,17 +1720,16 @@
 		echo "    ".$text['label-directory_visible']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='directory_visible' name='directory_visible' value='true' ".($directory_visible == 'true' ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span>\n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='directory_visible' name='directory_visible'>\n";
-			echo "		<option value='true' ".($directory_visible == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($directory_visible == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='directory_visible' name='directory_visible'>\n";
+		echo "		<option value='true' ".($directory_visible === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($directory_visible === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-directory_visible']."\n";
@@ -1736,17 +1741,16 @@
 		echo "    ".$text['label-directory_exten_visible']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='directory_exten_visible' name='directory_exten_visible' value='true' ".($directory_exten_visible == 'true' ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span>\n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='directory_exten_visible' name='directory_exten_visible'>\n";
-			echo "		<option value='true' ".($directory_exten_visible == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($directory_exten_visible == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='directory_exten_visible' name='directory_exten_visible'>\n";
+		echo "		<option value='true' ".($directory_exten_visible === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($directory_exten_visible === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-directory_exten_visible']."\n";
@@ -1797,17 +1801,16 @@
 		echo "    ".$text['label-voicemail_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='voicemail_enabled' name='voicemail_enabled' value='true' ".($voicemail_enabled == 'true' ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span>\n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='voicemail_enabled' name='voicemail_enabled'>\n";
-			echo "		<option value='true' ".($voicemail_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($voicemail_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='voicemail_enabled' name='voicemail_enabled'>\n";
+		echo "		<option value='true' ".($voicemail_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($voicemail_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-voicemail_enabled']."\n";
@@ -1831,17 +1834,16 @@
 			echo "	".$text['label-voicemail_transcription_enabled']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled' value='true' ".($voicemail_transcription_enabled == true ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span> \n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled'>\n";
-				echo "		<option value='true'>".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($voicemail_transcription_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled'>\n";
+			echo "		<option value='true' ".($voicemail_transcription_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($voicemail_transcription_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "<br />\n";
 			echo $text['description-voicemail_transcription_enabled']."\n";
@@ -1872,17 +1874,16 @@
 			echo "    ".$text['label-voicemail_local_after_email']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='voicemail_local_after_email' name='voicemail_local_after_email' value='true' ".($voicemail_local_after_email == 'true' ? "checked='checked'" : null)." onchange=\"if (!this.checked) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-				echo "		<span class='slider'></span> \n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='voicemail_local_after_email' name='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-				echo "		<option value='true'>".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($voicemail_local_after_email == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='voicemail_local_after_email' name='voicemail_local_after_email'>\n";
+			echo "		<option value='true' ".($voicemail_local_after_email === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($voicemail_local_after_email === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "<br />\n";
 			echo $text['description-voicemail_local_after_email']."\n";
@@ -1984,21 +1985,17 @@
 		echo "    ".$text['label-call_screen_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='call_screen_enabled'>\n";
-		echo "    <option value=''></option>\n";
-		if ($call_screen_enabled == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='call_screen_enabled' name='call_screen_enabled'>\n";
+		echo "		<option value='true' ".($call_screen_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_screen_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if ($call_screen_enabled == "false") {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-call_screen_enabled']."\n";
 		echo "</td>\n";
@@ -2283,11 +2280,17 @@
 			echo "    ".$text['label-force_ping']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <select class='formfld' name='force_ping'>\n";
-			echo "    	<option value=''></option>\n";
-			echo "    	<option value='true' ".(!empty($force_ping) && $force_ping == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "    	<option value='false' ".(!empty($force_ping) && $force_ping == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "    </select>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='force_ping' name='force_ping'>\n";
+			echo "		<option value='true' ".($force_ping === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($force_ping === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo $text['description-force_ping']."\n";
 			echo "</td>\n";
@@ -2322,17 +2325,16 @@
 		echo "    ".$text['label-enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span>\n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='enabled' name='enabled'>\n";
-			echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+		echo "		<option value='true' ".($enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-enabled']."\n";

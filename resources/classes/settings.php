@@ -1,10 +1,10 @@
 <?php
 
 /**
- * settings class is used to load settings using hierarchical overriding
+ * The settings class is used to load settings using hierarchical overriding
  *
  * The settings are loaded from the database tables default_settings, domain_settings, and user_settings in that order with
- * each setting overriding the setting from the previous table.
+ * Each setting overrides the setting from the previous table.
  *
  * @access public
  * @author Mark Crane <mark@fusionpbx.com>
@@ -402,11 +402,10 @@ class settings implements clear_cache {
 	private function device_profile_settings() {
 
 		//get the device profile settings
-		$sql = "select profile_setting_name, profile_setting_value from v_device_profile_settings"
-			. " where device_profile_uuid = :device_profile_uuid"
-			. " and domain_uuid = :domain_uuid"
-			. " and profile_setting_enabled = 'true'"
-		;
+		$sql = "select profile_setting_name, profile_setting_value from v_device_profile_settings ";
+		$sql .= "where device_profile_uuid = :device_profile_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$sql .= "and profile_setting_enabled = true ";
 		$params = [];
 		$params['device_profile_uuid'] = $this->device_profile_uuid;
 		$params['domain_uuid'] = $this->domain_uuid;
@@ -428,11 +427,10 @@ class settings implements clear_cache {
 	private function device_settings() {
 
 		//get the device settings
-		$sql = "select device_setting_subcategory, device_setting_value from v_device_settings"
-			. " where device_setting_uuid = :device_uuid"
-			. " and domain_uuid = :domain_uuid"
-			. " and device_setting_enabled = 'true'"
-		;
+		$sql = "select device_setting_subcategory, device_setting_value from v_device_settings ";
+		$sql .= "where device_setting_uuid = :device_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$sql .= "and device_setting_enabled = true ";
 		$params = [];
 		$params['device_uuid'] = $this->device_uuid;
 		$params['domain_uuid'] = $this->domain_uuid;

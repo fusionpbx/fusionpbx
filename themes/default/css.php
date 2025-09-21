@@ -2329,7 +2329,7 @@ else { //default: white
 		<?php unset($br); ?>
 		}
 
-	.switch > input {
+	.switch > select {
 		display: none;
 		}
 
@@ -2399,14 +2399,14 @@ else { //default: white
 		transition: all 0.25s ease;
 		}
 
-	input:checked + .slider { /* when enabled */
+	select:has(option[value="true"]:checked) + .slider { /* when enabled */
 		background: <?=$input_toggle_switch_background_color_true?>;
 		}
 
-	input:focus + .slider { /* when focused, required for switch movement */
+	select:focus + .slider { /* when focused, required for switch movement */
 		}
 
-	input:checked + .slider:before { /* distance switch moves horizontally */
+	select:has(option[value="true"]:checked) + .slider:before { /* distance switch moves horizontally */
 		<?php if ($input_toggle_switch_handle_symbol === 'true') { ?>
 			text-align: center;
 			<?php if ($input_toggle_style == 'switch_square') { ?>
@@ -2549,6 +2549,7 @@ else { //default: white
 		border-bottom: 1px solid <?=$form_table_field_border_color?>;
 		padding: <?=$form_table_field_padding?>;
 		text-align: left;
+		text-wrap: wrap;
 		vertical-align: middle;
 		color: <?=$form_table_field_text_color?>;
 		font-family: <?=$form_table_field_text_font?>;

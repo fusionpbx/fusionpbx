@@ -45,7 +45,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -61,7 +61,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Lä nge \${message_duration}\n";
 		$array['email_templates'][$x]['template_body'] .= "Nachricht \${message}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -81,7 +81,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -97,7 +97,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Lä nge \${message_duration}\n";
 		$array['email_templates'][$x]['template_body'] .= "Nachricht \${message}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -112,7 +112,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -132,7 +132,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -148,7 +148,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Length \${message_duration}\n";
 		$array['email_templates'][$x]['template_body'] .= "Message \${message}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -171,7 +171,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -190,7 +190,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Transcription\n";
 		$array['email_templates'][$x]['template_body'] .= "\${message_text}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -210,7 +210,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -226,7 +226,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Length \${message_duration}\n";
 		$array['email_templates'][$x]['template_body'] .= "Message \${message}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -249,7 +249,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -268,7 +268,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Transcription\n";
 		$array['email_templates'][$x]['template_body'] .= "\${message_text}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -283,7 +283,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -294,7 +294,7 @@
 		$array['email_templates'][$x]['template_subject'] = 'Missed Call from ${caller_id_name} <${caller_id_number}>';
 		$array['email_templates'][$x]['template_body'] = "Missed Call from \${caller_id_name} &lt;\${caller_id_number}&gt; to \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -309,7 +309,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -320,7 +320,7 @@
 		$array['email_templates'][$x]['template_subject'] = 'Missed Call from ${caller_id_name} <${caller_id_number}>';
 		$array['email_templates'][$x]['template_body'] = "Missed Call from \${caller_id_name} &lt;\${caller_id_number}&gt; to \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -340,7 +340,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -356,7 +356,7 @@
 		$array['email_templates'][$x]['template_body'] .= "Longueur \${message_duration}\n";
 		$array['email_templates'][$x]['template_body'] .= "Message \${message}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -371,7 +371,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -382,7 +382,7 @@
 		$array['email_templates'][$x]['template_subject'] = 'Appel manqué de ${caller_id_name} <${caller_id_number}>';
 		$array['email_templates'][$x]['template_body'] = "Appel manqué de \${caller_id_name} &lt;\${caller_id_number}&gt; À \${sip_to_user} ext \${dialed_user}\n";
 		$array['email_templates'][$x]['template_type'] = 'text';
-		$array['email_templates'][$x]['template_enabled'] = 'false';
+		$array['email_templates'][$x]['template_enabled'] = false;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -397,7 +397,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -412,7 +412,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -427,7 +427,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -442,7 +442,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -457,7 +457,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -472,7 +472,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -487,7 +487,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -502,7 +502,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -522,7 +522,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -542,7 +542,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
 
@@ -560,7 +560,7 @@
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
 		$array['email_templates'][$x]['template_type'] = 'html';
-		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_enabled'] = true;
 		$array['email_templates'][$x]['template_description'] = 'Message sent by the Email Test feature found at the top of the Email Queue app.';
 
 		//build array of email template uuids

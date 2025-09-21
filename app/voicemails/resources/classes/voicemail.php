@@ -819,7 +819,7 @@
 			$sql .= "	and template_category = 'voicemail' ";
 			$sql .= "	and template_subcategory = '".(!empty($message['message_transcription']) ? 'transcription' : 'default')."' ";
 			$sql .= "	and template_type = 'html' ";
-			$sql .= "	and template_enabled = 'true' ";
+			$sql .= "	and template_enabled = true ";
 			$sql .= "	and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 			$sql .= "limit 1 ";
 			$parameters['template_language'] = $language_dialect;

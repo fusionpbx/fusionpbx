@@ -242,7 +242,7 @@
 			$sql .= "	and domain_uuid = :domain_uuid ";
 			$sql .= ")	";
 			$sql .= "and dialplan_detail_data like 'provider_prefix%' ";
-			$sql .= "and dialplan_detail_enabled = 'true' ";
+			$sql .= "and dialplan_detail_enabled = true ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$row = $database->select($sql, $parameters, 'row');
 			$dialplan_detail_data = $row["dialplan_detail_data"];
@@ -490,7 +490,7 @@
 					$sql .= "and template_language = :template_language ";
 					$sql .= "and template_category = :template_category ";
 					$sql .= "and template_type = :template_type ";
-					$sql .= "and template_enabled = 'true' ";
+					$sql .= "and template_enabled = true ";
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['template_language'] = $language_code;
 					$parameters['template_category'] = 'fax';

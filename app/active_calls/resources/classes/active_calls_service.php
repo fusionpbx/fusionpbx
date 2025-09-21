@@ -881,7 +881,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return array
 	 */
 	private static function get_domain_names(database $database): array {
-		return array_column($database->execute("select domain_name, domain_uuid from v_domains where domain_enabled='true'") ?: [], 'domain_name', 'domain_uuid');
+		return array_column($database->execute("select domain_name, domain_uuid from v_domains where domain_enabled= true ") ?: [], 'domain_name', 'domain_uuid');
 	}
 
 	/**
@@ -890,7 +890,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return string
 	 */
 	private static function get_domain_name_by_uuid(database $database, string $domain_uuid): string {
-		return $database->execute("select domain_name from v_domains where domain_enabled='true' and domain_uuid = :domain_uuid limit 1", ['domain_uuid' => $domain_uuid], 'column') ?: '';
+		return $database->execute("select domain_name from v_domains where domain_enabled = true and domain_uuid = :domain_uuid limit 1", ['domain_uuid' => $domain_uuid], 'column') ?: '';
 	}
 
 	/**
@@ -899,6 +899,6 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return string
 	 */
 	private static function get_domain_uuid_by_name(database $database, string $domain_name): string {
-		return $database->execute("select domain_uuid from v_domains where domain_enabled='true' and domain_name = :domain_name limit 1", ['domain_name' => $domain_name], 'column') ?: '';
+		return $database->execute("select domain_uuid from v_domains where domain_enabled = true and domain_name = :domain_name limit 1", ['domain_name' => $domain_name], 'column') ?: '';
 	}
 }

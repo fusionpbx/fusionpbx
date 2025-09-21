@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,7 +47,7 @@
 		$quick_select = $_REQUEST['quick_select'];
 		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
 		$start_stamp_end = $_REQUEST['start_stamp_end'];
-		$include_internal = $_REQUEST['include_internal'] ?? '0';
+		$include_internal = $_REQUEST['include_internal'];
 	}
 	else {
 		$quick_select = 3; //set default
@@ -154,17 +154,16 @@
 		echo "			".$text['label-include_internal']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "		<label class='switch'>\n";
-			echo "			<input type='checkbox' id='include_internal' name='include_internal' value='1' ".(!empty($include_internal) && $include_internal == 1 ? "checked='checked'" : null).">\n";
-			echo "			<span class='slider'></span>\n";
-			echo "		</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='switch'>\n";
 		}
-		else {
-			echo "		<select class='formfld' id='include_internal' name='include_internal'>\n";
-			echo "			<option value='0'>".$text['option-false']."</option>\n";
-			echo "			<option value='1' ".(!empty($include_internal) && $include_internal == 1 ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		</select>\n";
+		echo "			<select class='formfld' id='include_internal' name='include_internal'>\n";
+		echo "				<option value='false' ".($include_internal === 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				<option value='true' ".($include_internal === 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "			</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='slider'></span>\n";
+			echo "		</span>\n";
 		}
 		echo "		</div>\n";
 

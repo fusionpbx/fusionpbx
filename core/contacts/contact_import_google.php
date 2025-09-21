@@ -80,7 +80,7 @@ if ($_POST['a'] == 'import') {
 			$sql .= "and contact_setting_category = 'google' ";
 			$sql .= "and contact_setting_subcategory = 'id' ";
 			$sql .= "and contact_setting_value = :contact_setting_value ";
-			$sql .= "and contact_setting_enabled = 'true' ";
+			$sql .= "and contact_setting_enabled = true ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['contact_setting_value'] = $contact_id;
 			$database = new database;

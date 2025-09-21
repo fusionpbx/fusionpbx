@@ -180,7 +180,7 @@
 						session:flushDigits();
 					--update play tutorial in the datebase
 						local sql = [[UPDATE v_voicemails
-							set voicemail_tutorial = 'false'
+							set voicemail_tutorial = false
 							WHERE domain_uuid = :domain_uuid
 							AND voicemail_id = :voicemail_id 
 							AND voicemail_enabled = 'true' ]];

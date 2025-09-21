@@ -158,7 +158,7 @@
 
 			//rescan each sip profile
 			$sql = "select sip_profile_name from v_sip_profiles ";
-			$sql .= "where sip_profile_enabled = 'true'; ";
+			$sql .= "where sip_profile_enabled = true; ";
 			$sip_profiles = $database->select($sql, null, 'all');
 			if (is_array($sip_profiles)) {
 				foreach ($sip_profiles as $row) {

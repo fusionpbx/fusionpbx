@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,7 +82,7 @@
 			$conference_center_extension = $_POST["conference_center_extension"];
 			$conference_center_greeting = $_POST["conference_center_greeting"];
 			$conference_center_pin_length = $_POST["conference_center_pin_length"];
-			$conference_center_enabled = $_POST["conference_center_enabled"] ?? 'false';
+			$conference_center_enabled = $_POST["conference_center_enabled"];
 			$conference_center_description = $_POST["conference_center_description"];
 
 		//validate the token
@@ -233,7 +233,6 @@
 	}
 
 //set defaults
-	if (empty($conference_center_enabled)) { $conference_center_enabled = "true"; }
 	if (empty($conference_center_pin_length)) { $conference_center_pin_length = 9; }
 
 //get the sounds
@@ -453,17 +452,16 @@
 	echo "	".$text['label-conference_center_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='conference_center_enabled' name='conference_center_enabled' value='true' ".($conference_center_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
-		echo "		<option value='true' ".($conference_center_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($conference_center_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
+	echo "			<option value='true' ".($conference_center_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($conference_center_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-conference_center_enabled']."\n";

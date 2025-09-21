@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2019-2024 All Rights Reserved.
+	Copyright (C) 2019-2025 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -118,7 +118,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -137,10 +136,21 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "device_profile_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "device_profile_name, ";
+	$sql .= "cast(device_profile_enabled as text), ";
+	$sql .= "device_profile_description ";
+	$sql .= "from v_device_profiles ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('device_profile_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'device_profile_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$device_profiles = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -302,4 +312,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

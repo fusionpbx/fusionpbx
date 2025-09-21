@@ -326,7 +326,7 @@
 													$array['dialplans'][$x]['dialplan_enabled'] = $dialplan['@attributes']['enabled'];
 												}
 												else {
-													$array['dialplans'][$x]['dialplan_enabled'] = "true";
+													$array['dialplans'][$x]['dialplan_enabled'] = true;
 												}
 												$array['dialplans'][$x]['dialplan_description'] = $dialplan['@attributes']['description'] ?? null;
 
@@ -351,7 +351,7 @@
 															$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row['@attributes']['enabled'];
 														}
 														else {
-															$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+															$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = true;
 														}
 														$y++;
 
@@ -391,7 +391,7 @@
 																		$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
 																	}
 																	else {
-																		$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+																		$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = true;
 																	}
 																	$y++;
 
@@ -418,7 +418,7 @@
 																		$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
 																	}
 																	else {
-																		$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+																		$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = true;
 																	}
 																	$y++;
 
@@ -499,7 +499,7 @@
 							$sql .= "or d.domain_uuid is null ";
 							$sql .= ") ";
 							$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-							$sql .= "and d.dialplan_enabled = 'true' ";
+							$sql .= "and d.dialplan_enabled = true ";
 							$sql .= "and d.dialplan_uuid = s.dialplan_uuid ";
 							$sql .= "order by ";
 							$sql .= "d.dialplan_order asc, ";
@@ -603,7 +603,7 @@
 				foreach($database_array['dialplans'] as $row) {
 					if (!empty($row['dialplan_details'])) {
 						foreach($row['dialplan_details'] as $detail) {
-							if ($detail['dialplan_detail_enabled'] == 'true') {
+							if ($detail['dialplan_detail_enabled'] == true) {
 								$array[$id]['domain_uuid'] = $row['domain_uuid'];
 								$array[$id]['dialplan_uuid'] = $row['dialplan_uuid'];
 								$array[$id]['app_uuid'] = $row['app_uuid'];
@@ -668,7 +668,7 @@
 									else {
 										$sql .= "where (dialplan_context = :dialplan_context or dialplan_context = '\${domain_name}' or dialplan_context = 'global') ";
 									}
-									$sql .= "and dialplan_enabled = 'true' ";
+									$sql .= "and dialplan_enabled = true ";
 									$parameters['dialplan_context'] = $this->context;
 								}
 							}
@@ -728,7 +728,7 @@
 									$sql .= "and p.dialplan_uuid = :dialplan_uuid \n";
 									$parameters['dialplan_uuid'] = $this->uuid;
 								}
-								$sql .= "and (s.dialplan_detail_enabled = 'true' or s.dialplan_detail_enabled is null) \n";
+								$sql .= "and (s.dialplan_detail_enabled = true or s.dialplan_detail_enabled is null) \n";
 								$sql .= "order by \n";
 								$sql .= "p.dialplan_order asc, \n";
 								$sql .= "p.dialplan_name asc, \n";

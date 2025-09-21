@@ -197,7 +197,7 @@
 
 //get the email template from the database
 	$sql = "select template_subject, template_body from v_email_templates ";
-	$sql .= "where template_enabled = 'true' ";
+	$sql .= "where template_enabled = true ";
 	$sql .= "and template_language = :template_language ";
 	$sql .= "and template_category = :template_category ";
 	$sql .= "and template_subcategory = :template_subcategory ";

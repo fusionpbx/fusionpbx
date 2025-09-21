@@ -287,10 +287,21 @@
 		echo "					".$text['label-email_connection_validate']."\n";
 		echo "				</td>\n";
 		echo "				<td class='vtable' align='left'>\n";
-		echo "					<select class='formfld' name='fax_email_connection_validate'>\n";
-		echo "						<option value='true'>".$text['option-true']."</option>\n";
-		echo "						<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
-		echo "					</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='fax_email_connection_validate' name='fax_email_connection_validate'>\n";
+	echo "		<option value='true' ".($fax_email_connection_validate === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($fax_email_connection_validate === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
+//		echo "					<select class='formfld' name='fax_email_connection_validate'>\n";
+//		echo "						<option value='true'>".$text['option-true']."</option>\n";
+//		echo "						<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
+//		echo "					</select>\n";
 		echo "				<br />\n";
 		echo "					".$text['description-email_connection_validate']."\n";
 		echo "				</td>\n";

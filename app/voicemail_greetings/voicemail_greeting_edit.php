@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,13 +41,8 @@
 	$language = new text;
 	$text = $language->get();
 
-//set the variables
-	$domain_uuid = $_SESSION['domain_uuid'];
-	$domain_name = $_SESSION['domain_name'];
-	$user_uuid = $_SESSION['user_uuid'];
-
 //add the settings object
-	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 
 //as long as the class exists, enable speech using default settings
 	$speech_enabled = class_exists('speech') && $settings->get('speech', 'enabled', false);
@@ -68,7 +63,6 @@
 	if ($speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
-		$greeting_format = $speech->get_format();
 		//$speech_models = $speech->get_models();
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
@@ -162,8 +156,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "from v_voicemail_greetings where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_id = :voicemail_id ";
 		$sql .= "order by greeting_id asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_id'] = $voicemail_id;
+		$database = new database;
 		$rows = $database->select($sql, $parameters, 'all');
 		$greeting_ids = array();
 		if (!empty($rows) && is_array($rows)) {
@@ -177,7 +172,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$greeting_format = $greeting_format ?? 'wav';
 
 		//build the setting object and get the recording path
-		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$domain_name.'/'.$voicemail_id.'/';
+		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/';
 
 		if ($action == 'add') {
 			//find the next available greeting id
@@ -198,6 +193,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			if ($speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
 				$speech->audio_path = $greeting_path;
 				$speech->audio_filename = $greeting_filename;
+				$speech->audio_format = $greeting_format;
 				//$speech->audio_model = $greeting_model ?? '';
 				$speech->audio_voice = $greeting_voice;
 				//$speech->audio_language = $greeting_language;
@@ -230,7 +226,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 			//build data array
 			$array['voicemail_greetings'][0]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-			$array['voicemail_greetings'][0]['domain_uuid'] = $domain_uuid;
+			$array['voicemail_greetings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 			$array['voicemail_greetings'][0]['voicemail_id'] = $voicemail_id;
 			$array['voicemail_greetings'][0]['greeting_id'] = $greeting_id;
 			$array['voicemail_greetings'][0]['greeting_name'] = $greeting_name;
@@ -240,6 +236,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			$array['voicemail_greetings'][0]['greeting_description'] = $greeting_description;
 
 			//execute query
+			$database = new database;
 			$database->app_name = 'voicemail_greetings';
 			$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 			$database->save($array);
@@ -257,12 +254,17 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 }
 
 //pre-populate the form
-	if ($action == 'update' && !empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
+	if (
+		$action == 'update' &&
+		!empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid) &&
+		(empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")
+		) {
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$greeting_id = $row["greeting_id"];
@@ -389,17 +391,16 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "	".$text['label-translate']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='translate' name='translate' value='true' ".($translate == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='translate' name='translate'>\n";
-				echo "		<option value='true' ".($translate == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($translate == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='translate' name='translate'>\n";
+			echo "		<option value='true' ".($translate === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($translate === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "<br />\n";
 			echo $text['description-translate']."\n";
@@ -418,6 +419,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";

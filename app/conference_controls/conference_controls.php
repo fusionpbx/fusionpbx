@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -98,6 +98,7 @@
 	$sql .= $sql_search ?? '';
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -108,7 +109,13 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(conference_control_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= "conference_control_uuid, ";
+	$sql .= "control_name, ";
+	$sql .= "cast(control_enabled as text), ";
+	$sql .= "control_description ";
+	$sql .= "from v_conference_controls ";
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'control_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;

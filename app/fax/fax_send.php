@@ -195,7 +195,7 @@ if (!function_exists('fax_split_dtmf')) {
 	$sql = "select domain_enabled::text from v_domains where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$row = $database->select($sql, $parameters, 'row');
-	if ($row['domain_enabled'] == "true") {
+	if ($row['domain_enabled']) {
 		$domain_enabled = true;
 	}
 	else {
@@ -732,7 +732,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$sql .= "	and domain_uuid = :domain_uuid ";
 		$sql .= ")	";
 		$sql .= "and dialplan_detail_data like 'provider_prefix%' ";
-		$sql .= "and dialplan_detail_enabled = 'true' ";
+		$sql .= "and dialplan_detail_enabled = true ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		$dialplan_detail_data = $row["dialplan_detail_data"];

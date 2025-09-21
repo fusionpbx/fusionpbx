@@ -159,7 +159,7 @@
 						}
 						unset($sub_sql, $sub_result, $sub_row);
 
-						if ($ivr_menu_direct_dial == "true") {
+						if ($ivr_menu_direct_dial == true) {
 							$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\d{3,6}$)/\" param=\"transfer $1 XML ".$ivr_menu_context."\"/>\n";
 						}
 						$tmp .= "	</menu>\n";

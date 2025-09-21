@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "dialplans";
 		$apps[$x]['destinations'][$y]['name'] = "dialplans";
 		$apps[$x]['destinations'][$y]['sql'] = "select d.domain_name, e.dialplan_name, e.dialplan_number as destination, e.dialplan_description as description from v_dialplans as e, v_domains as d ";
-		$apps[$x]['destinations'][$y]['where'] = "where e.domain_uuid = '\${domain_uuid}' and e.domain_uuid = d.domain_uuid and e.dialplan_destination = 'true' and e.dialplan_number <> '' and e.dialplan_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where e.domain_uuid = '\${domain_uuid}' and e.domain_uuid = d.domain_uuid and e.dialplan_destination = true and e.dialplan_number <> '' and e.dialplan_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "dialplan_order asc";
 		$apps[$x]['destinations'][$y]['field']['domain_name'] = "domain_name";
 		$apps[$x]['destinations'][$y]['field']['dialplan_name'] = "dialplan_name";
@@ -158,12 +158,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_destination";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_continue";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_xml";
@@ -177,7 +176,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_description";

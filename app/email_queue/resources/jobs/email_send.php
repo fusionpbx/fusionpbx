@@ -181,7 +181,7 @@
 		//$voicemail_name_base64 = $row["voicemail_name_base64"];
 		//$voicemail_tutorial = $row["voicemail_tutorial"];
 		if (gettype($voicemail_transcription_enabled) === 'string') {
-			$voicemail_transcription_enabled = ($voicemail_transcription_enabled === 'true') ? true : false;
+			$voicemail_transcription_enabled = ($voicemail_transcription_enabled === true) ? true : false;
 		}
 	}
 	unset($parameters);

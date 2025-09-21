@@ -146,7 +146,7 @@ if ($domains_processed == 1) {
 						$array['vars'][$x]['var_name'] = 'default_country';
 						$array['vars'][$x]['var_value'] = $country["isocode"];
 						$array['vars'][$x]['var_category'] = 'Defaults';
-						$array['vars'][$x]['var_enabled'] = 'true';
+						$array['vars'][$x]['var_enabled'] = true;
 						$array['vars'][$x]['var_order'] = $x;
 						$array['vars'][$x]['var_description'] = null;
 						$x++;
@@ -165,7 +165,7 @@ if ($domains_processed == 1) {
 						$array['vars'][$x]['var_name'] = 'default_countrycode';
 						$array['vars'][$x]['var_value'] = $country["countrycode"];
 						$array['vars'][$x]['var_category'] = 'Defaults';
-						$array['vars'][$x]['var_enabled'] = 'true';
+						$array['vars'][$x]['var_enabled'] = true;
 						$array['vars'][$x]['var_order'] = $x;
 						$array['vars'][$x]['var_description'] = null;
 						$x++;
@@ -184,7 +184,7 @@ if ($domains_processed == 1) {
 						$array['vars'][$x]['var_name'] = 'default_exitcode';
 						$array['vars'][$x]['var_value'] = $country["exitcode"];
 						$array['vars'][$x]['var_category'] = 'Defaults';
-						$array['vars'][$x]['var_enabled'] = 'true';
+						$array['vars'][$x]['var_enabled'] = true;
 						$array['vars'][$x]['var_order'] = $x;
 						$array['vars'][$x]['var_description'] = null;
 						$x++;

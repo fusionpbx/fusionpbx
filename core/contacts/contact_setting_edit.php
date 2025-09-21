@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2024
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -75,7 +75,7 @@
 		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
 		$contact_setting_value = $_POST["contact_setting_value"];
 		$contact_setting_order = $_POST["contact_setting_order"] ?? null;
-		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]) ?? 'false';
+		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]) ?? false;
 		$contact_setting_description = $_POST["contact_setting_description"];
 	}
 
@@ -312,17 +312,16 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='contact_setting_enabled' value='true' ".(empty($contact_setting_enabled) || $contact_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='contact_setting_enabled'>\n";
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(!empty($contact_setting_enabled) && $contact_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='contact_setting_enabled' name='contact_setting_enabled'>\n";
+	echo "			<option value='false' ".($contact_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($contact_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";

@@ -163,7 +163,7 @@
 	else {
 		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH24:MI:SS am') as time_formatted, \n";
 	}
-	$sql .= " call_block_enabled, call_block_description, insert_date, insert_user, update_date, update_user ";
+	$sql .= " cast(call_block_enabled as text), call_block_description, insert_date, insert_user, update_date, update_user ";
 	$sql .= "from view_call_block ";
 	$sql .= "where true ";
 	$parameters['time_zone'] = $time_zone;

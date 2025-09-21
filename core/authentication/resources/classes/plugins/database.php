@@ -212,20 +212,9 @@ class plugin_database {
 			$sql .= "	u.salt, ";
 			$sql .= "	u.api_key, ";
 			$sql .= "	u.domain_uuid ";
-			if ($contacts_exists) {
-				$sql .= ",";
-				$sql .= "c.contact_organization, ";
-				$sql .= "c.contact_name_given, ";
-				$sql .= "c.contact_name_family, ";
-				$sql .= "a.contact_attachment_uuid ";
-			}
 			$sql .= "from ";
 			$sql .= "	v_domains as d, ";
 			$sql .= "	v_users as u ";
-			if ($contacts_exists) {
-				$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid and u.contact_uuid is not null ";
-				$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = 1 and a.attachment_filename is not null and a.attachment_content is not null ";
-			}
 			$sql .= "where ";
 			$sql .= "	u.domain_uuid = d.domain_uuid ";
 			$sql .= "	and (";
@@ -251,7 +240,7 @@ class plugin_database {
 				$sql .= "and u.domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
-			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+			$sql .= "and (user_enabled = true or user_enabled is null) ";
 			$row = $settings->database()->select($sql, $parameters, 'row');
 			if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 
@@ -296,11 +285,29 @@ class plugin_database {
 							$this->username = $row['username'];
 							$this->user_email = $row['user_email'];
 							$this->contact_uuid = $row['contact_uuid'];
+
+						//get the user contact details
 							if ($contacts_exists) {
-								$this->contact_organization = $row['contact_organization'];
-								$this->contact_name_given = $row['contact_name_given'];
-								$this->contact_name_family = $row['contact_name_family'];
-								$this->contact_image = $row['contact_attachment_uuid'];
+								$sql = "select ";
+								$sql .= " c.contact_organization, ";
+								$sql .= " c.contact_name_given, ";
+								$sql .= " c.contact_name_family, ";
+								$sql .= " a.contact_attachment_uuid, ";
+								$sql .= "from v_contacts as c ";
+								$sql .= "where contact_uuid = :contact_uuid ";
+								$sql .= "left join v_contact_attachments as a ";
+								$sql .= " on c.contact_uuid = a.contact_uuid ";
+								$sql .= "and a.attachment_primary = true ";
+								$sql .= "and a.attachment_filename is not null ";
+								$sql .= "and a.attachment_content is not null ";
+								$sql .= "and c.domain_uuid = :domain_uuid ";
+								$parameters['domain_uuid'] = $this->domain_uuid;
+								$parameters['contact_uuid'] = $this->contact_uuid;
+								$contact = $settings->database()->select($sql, $parameters, 'row');
+								$this->contact_organization = $contact['contact_organization'];
+								$this->contact_name_given = $contact['contact_name_given'];
+								$this->contact_name_family = $contact['contact_name_family'];
+								$this->contact_image = $contact['contact_attachment_uuid'];
 							}
 
 						//debug info

@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "fifo";
 		$apps[$x]['destinations'][$y]['name'] = "fifo";
 		$apps[$x]['destinations'][$y]['sql'] = "select fifo_uuid as uuid, fifo_name as name, fifo_extension as extension, fifo_enabled from v_fifo ";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and fifo_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and fifo_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(fifo_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "name";

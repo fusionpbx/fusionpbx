@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2024
+	Portions created by the Initial Developer are Copyright (C) 2010-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,7 +91,6 @@
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters, 'column');
 
 //get filtered ring group count
@@ -118,12 +117,10 @@
 		$sql .= "lower(ring_group_name) like :search ";
 		$sql .= "or lower(ring_group_extension) like :search ";
 		$sql .= "or lower(ring_group_description) like :search ";
-		$sql .= "or lower(ring_group_enabled) like :search ";
 		$sql .= "or lower(ring_group_strategy) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -138,17 +135,21 @@
 
 //get the list
 	if ($show == "all" && permission_exists('ring_group_all')) {
-		$sql = "select * from v_ring_groups ";
+		$sql = "select r.ring_group_uuid, r.domain_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
+		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, cast(r.ring_group_enabled as text), r.ring_group_description ";
+		$sql .= "from v_ring_groups as r ";
 		$sql .= "where true ";
 	}
-	elseif (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
-		$sql = "select * from v_ring_groups ";
+	else if (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
+		$sql = "select r.ring_group_uuid, r.domain_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
+		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, cast(r.ring_group_enabled as text), r.ring_group_description ";
+		$sql .= "from v_ring_groups as r ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
-		$sql = "select r.ring_group_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
-		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, r.ring_group_description ";
+		$sql = "select r.ring_group_uuid, r.domain_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
+		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, cast(r.ring_group_enabled as text), r.ring_group_description ";
 		$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.domain_uuid = :domain_uuid ";
 		$sql .= "and r.ring_group_uuid = u.ring_group_uuid ";
@@ -161,7 +162,6 @@
 		$sql .= "lower(ring_group_name) like :search ";
 		$sql .= "or lower(ring_group_extension) like :search ";
 		$sql .= "or lower(ring_group_description) like :search ";
-		$sql .= "or lower(ring_group_enabled) like :search ";
 		$sql .= "or lower(ring_group_strategy) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -284,7 +284,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['ring_group_extension'])."&nbsp;</td>\n";
 			echo "	<td>".$text['option-'.escape($row['ring_group_strategy'])]."&nbsp;</td>\n";
-			echo "	<td>".($row['ring_group_forward_enabled'] == 'true' ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
+			echo "	<td>".($row['ring_group_forward_enabled'] === true && !empty($row['ring_group_forward_destination']) ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
 			if (permission_exists('ring_group_edit')) {
 				echo "	<td class='no-link center'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['ring_group_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);

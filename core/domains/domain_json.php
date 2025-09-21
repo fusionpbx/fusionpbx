@@ -66,7 +66,7 @@
 		$sql = "select * ";
 		$sql .= "from v_domains ";
 		$sql .= "where true ";
-		$sql .= "and domain_enabled = 'true' \n";
+		$sql .= "and domain_enabled = true \n";
 		if (isset($search)) {
 			$sql .= "	and ( ";
 			$sql .= "		lower(domain_name) like :search ";

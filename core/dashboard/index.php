@@ -53,7 +53,7 @@
 		unset($_SESSION['login']['message']['text']);
 
 		$sql = "update v_default_settings ";
-		$sql .= "set default_setting_enabled = 'false' ";
+		$sql .= "set default_setting_enabled = false ";
 		$sql .= "where ";
 		$sql .= "default_setting_category = 'login' ";
 		$sql .= "and default_setting_subcategory = 'message' ";
@@ -75,7 +75,7 @@
 //get the dashboard uuid
 	$sql = "select dashboard_uuid ";
 	$sql .= "from v_dashboards ";
-	$sql .= "where dashboard_enabled = 'true' ";
+	$sql .= "where dashboard_enabled = true ";
 	$sql .= "and (";
 	$sql .= "	domain_uuid = :domain_uuid ";
 	$sql .= "	or domain_uuid is null ";
@@ -127,7 +127,7 @@
 	$sql .= "cast(widget_enabled as text), ";
 	$sql .= "widget_description ";
 	$sql .= "from v_dashboard_widgets as d ";
-	$sql .= "where widget_enabled = 'true' ";
+	$sql .= "where widget_enabled = true ";
 	$sql .= "and dashboard_widget_uuid in ( ";
 	$sql .= "	select dashboard_widget_uuid from v_dashboard_widget_groups where group_uuid in ( ";
 	$sql .= "		".$group_uuids_in." ";
@@ -322,7 +322,7 @@ foreach ($widgets as $row) {
 		echo "	color: ".$row['widget_icon_color'].";\n";
 		echo "}\n";
 	}
-	if ($row['widget_label_enabled'] == 'false' && $row['widget_path'] != 'dashboard/parent') {
+	if ($row['widget_label_enabled'] === false && $row['widget_path'] != 'dashboard/parent') {
 		echo "#".$widget_id." .hud_title:first-of-type {\n";
 		echo "	display: none;\n";
 		echo "}\n";

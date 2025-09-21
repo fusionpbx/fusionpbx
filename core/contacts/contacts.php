@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -245,7 +245,7 @@
 
 //get the list
 	$sql = "select *, ";
-	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1 limit 1) as contact_attachment_uuid ";
+	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = true limit 1) as contact_attachment_uuid ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('contact_all')) {
@@ -472,5 +472,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
-

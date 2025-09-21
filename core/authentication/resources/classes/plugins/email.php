@@ -222,7 +222,7 @@ class plugin_email {
 				$sql .= "and template_category = :template_category ";
 				$sql .= "and template_subcategory = :template_subcategory ";
 				$sql .= "and template_type = :template_type ";
-				$sql .= "and template_enabled = 'true' ";
+				$sql .= "and template_enabled = true ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				$parameters['template_language'] = $language_code;
 				$parameters['template_category'] = 'authentication';
@@ -423,7 +423,7 @@ class plugin_email {
 					$sql .= "	v_users as u ";
 					if ($contacts_exists) {
 						$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid and u.contact_uuid is not null ";
-						$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = 1 and a.attachment_filename is not null and a.attachment_content is not null ";
+						$sql .= "left join v_contact_attachments as a on u.contact_uuid = a.contact_uuid and u.contact_uuid is not null and a.attachment_primary = true and a.attachment_filename is not null and a.attachment_content is not null ";
 					}
 					$sql .= "where ";
 					$sql .= "	u.user_uuid = :user_uuid ";

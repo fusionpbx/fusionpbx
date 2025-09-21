@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -83,7 +83,7 @@
 		$agent_wrap_up_time = $_POST["agent_wrap_up_time"];
 		$agent_reject_delay_time = $_POST["agent_reject_delay_time"];
 		$agent_busy_delay_time = $_POST["agent_busy_delay_time"];
-		$agent_record = $_POST["agent_record"] ?? 'false';
+		$agent_record = $_POST["agent_record"];
 		//$agent_logout = $_POST["agent_logout"];
 	}
 
@@ -265,7 +265,23 @@
 //pre-populate the form
 	if (!empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_center_agent_uuid = $_GET["id"];
-		$sql = "select * from v_call_center_agents ";
+		$sql = "select ";
+		$sql .= "call_center_agent_uuid, ";
+		$sql .= "user_uuid, ";
+		$sql .= "agent_name, ";
+		$sql .= "agent_type, ";
+		$sql .= "agent_call_timeout, ";
+		$sql .= "agent_id, ";
+		$sql .= "agent_password, ";
+		$sql .= "agent_status, ";
+		$sql .= "agent_contact, ";
+		$sql .= "agent_no_answer_delay_time, ";
+		$sql .= "agent_max_no_answer, ";
+		$sql .= "agent_wrap_up_time, ";
+		$sql .= "agent_reject_delay_time, ";
+		$sql .= "agent_busy_delay_time, ";
+		$sql .= "agent_record ";
+		$sql .= "from v_call_center_agents ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and call_center_agent_uuid = :call_center_agent_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -495,17 +511,16 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='agent_record' value='true' ".(empty($agent_record) || $agent_record == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='agent_record'>\n";
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(!empty($agent_record) && $agent_record != 'true' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='agent_record' name='agent_record'>\n";
+	echo "			<option value='true' ".($agent_record === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($agent_record === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";

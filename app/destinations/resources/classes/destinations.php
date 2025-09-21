@@ -1240,7 +1240,7 @@
 					$sql .= "and d.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "and destination_type = 'inbound' \n";
-				$sql .= "and destination_enabled = 'true' \n";
+				$sql .= "and destination_enabled = true \n";
 				$sql .= "group by d.domain_uuid, d.destination_uuid, d.dialplan_uuid, n.domain_name, d.destination_type, d.destination_prefix, d.destination_number \n";
 				$sql .= "order by destination_number asc \n";
 				if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('destination_summary_all'))) {

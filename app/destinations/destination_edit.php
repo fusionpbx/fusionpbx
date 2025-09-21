@@ -120,7 +120,7 @@
 			$user_uuid = $_POST["user_uuid"];
 			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
-			$destination_enabled = $_POST["destination_enabled"] ?? 'false';
+			$destination_enabled = $_POST["destination_enabled"];
 			$destination_description = $_POST["destination_description"];
 			$destination_sell = check_float($_POST["destination_sell"] ?? '');
 			$currency = $_POST["currency"] ?? null;
@@ -207,7 +207,6 @@
 			//if (empty($destination_prefix) && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
 			if (empty($destination_number)) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (empty($destination_context)) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
-			if (empty($destination_enabled)) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
 		//check for duplicates
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number && $settings->get('destinations', 'unique', false)) {
@@ -449,7 +448,7 @@
 								$dialplan["dialplan_name"] = (!empty($dialplan_name)) ? $dialplan_name : format_phone($destination_area_code.$destination_number);
 								$dialplan["dialplan_number"] = $destination_area_code.$destination_number;
 								$dialplan["dialplan_context"] = $destination_context;
-								$dialplan["dialplan_continue"] = "false";
+								$dialplan["dialplan_continue"] = 'false';
 								$dialplan["dialplan_order"] = $destination_order;
 								$dialplan["dialplan_enabled"] = $destination_enabled;
 								$dialplan["dialplan_description"] = (!empty($dialplan_description)) ? $dialplan_description : $destination_description;
@@ -1326,7 +1325,6 @@
 	$currency_buy = $currency_buy ?? '';
 	$destination_carrier = $destination_carrier ?? '';
 	$destination_order = $destination_order ?? '';
-	$destination_enabled = $destination_enabled ?? '';
 	$destination_description = $destination_description ?? '';
 	$destination_email = $destination_email ?? '';
 	$select_style = $select_style ?? '';
@@ -1335,7 +1333,39 @@
 	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
 	 	if (is_uuid($_GET["id"])) {
 	 		$destination_uuid = $_GET["id"];
-			$sql = "select * from v_destinations ";
+			$sql = "select ";
+			$sql .= "domain_uuid, ";
+			$sql .= "dialplan_uuid, ";
+			$sql .= "destination_type, ";
+			$sql .= "destination_number, ";
+			$sql .= "destination_condition_field, ";
+			$sql .= "destination_prefix, ";
+			$sql .= "destination_trunk_prefix, ";
+			$sql .= "destination_area_code, ";
+			$sql .= "destination_caller_id_name, ";
+			$sql .= "destination_caller_id_number, ";
+			$sql .= "destination_cid_name_prefix, ";
+			$sql .= "destination_hold_music, ";
+			$sql .= "destination_distinctive_ring, ";
+			$sql .= "destination_record, ";
+			$sql .= "destination_ringback, ";
+			$sql .= "destination_accountcode, ";
+			$sql .= "destination_type_voice, ";
+			$sql .= "destination_type_fax, ";
+			$sql .= "destination_type_text, ";
+			$sql .= "destination_type_emergency, ";
+			$sql .= "destination_context, ";
+			$sql .= "destination_conditions, ";
+			$sql .= "destination_actions, ";
+			$sql .= "fax_uuid, ";
+			$sql .= "provider_uuid, ";
+			$sql .= "user_uuid, ";
+			$sql .= "group_uuid, ";
+			$sql .= "destination_order, ";
+			$sql .= "destination_enabled, ";
+			$sql .= "destination_description, ";
+			$sql .= "destination_email ";
+			$sql .= "from v_destinations ";
 			$sql .= "where destination_uuid = :destination_uuid ";
 			$parameters['destination_uuid'] = $destination_uuid;
 			$row = $database->select($sql, $parameters, 'row');
@@ -1462,7 +1492,6 @@
 	if (empty($destination_order)) { $destination_order = '100'; }
 	if (empty($destination_type)) { $destination_type = 'inbound'; }
 	if (empty($destination_context)) { $destination_context = 'public'; }
-	if (empty($destination_enabled)) { $destination_enabled = 'true'; }
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
@@ -1489,7 +1518,7 @@
 	if (permission_exists('user_edit')) {
 		$sql = "select * from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and user_enabled = 'true' ";
+		$sql .= "and user_enabled = true ";
 		$sql .= "order by username asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$users = $database->select($sql, $parameters, 'all');
@@ -2135,22 +2164,16 @@
 	echo "	".$text['label-destination_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($settings->get('theme', 'input_toggle_style', ''), 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='destination_enabled' name='destination_enabled' value='true' ".($destination_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='destination_enabled'>\n";
-		switch ($destination_enabled) {
-			case "true" :	$selected[1] = "selected='selected'";	break;
-			case "false" :	$selected[2] = "selected='selected'";	break;
-		}
-		echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
-		echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
-		unset($selected);
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='destination_enabled' name='destination_enabled'>\n";
+	echo "		<option value='true' ".($destination_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($destination_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-destination_enabled']."\n";

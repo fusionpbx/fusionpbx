@@ -61,7 +61,7 @@
 	if (!empty($_POST)) {
 		$global_setting_name = $_POST["global_setting_name"];
 		$global_setting_value = $_POST["global_setting_value"];
-		$global_setting_enabled = $_POST["global_setting_enabled"] ?? "false";
+		$global_setting_enabled = $_POST["global_setting_enabled"];
 		$global_setting_description = $_POST["global_setting_description"];
 	}
 
@@ -113,7 +113,6 @@
 			$msg = '';
 			if (empty($global_setting_name)) { $msg .= $text['message-required']." ".$text['label-global_setting_name']."<br>\n"; }
 			if (empty($global_setting_value)) { $msg .= $text['message-required']." ".$text['label-global_setting_value']."<br>\n"; }
-			if (empty($global_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-global_setting_enabled']."<br>\n"; }
 			//if (empty($global_setting_description)) { $msg .= $text['message-required']." ".$text['label-global_setting_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -161,7 +160,7 @@
 		$sql .= " sofia_global_setting_uuid, ";
 		$sql .= " global_setting_name, ";
 		$sql .= " global_setting_value, ";
-		$sql .= " cast(global_setting_enabled as text), ";
+		$sql .= " global_setting_enabled, ";
 		$sql .= " global_setting_description ";
 		$sql .= "from v_sofia_global_settings ";
 		$sql .= "where sofia_global_setting_uuid = :sofia_global_setting_uuid ";
@@ -176,9 +175,6 @@
 		}
 		unset($sql, $parameters, $row);
 	}
-
-//set the defaults
-	if (empty($global_setting_enabled)) { $global_setting_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -251,17 +247,16 @@
 	echo "	".$text['label-global_setting_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='global_setting_enabled' name='global_setting_enabled' value='true' ".(!empty($global_setting_enabled) && $global_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='global_setting_enabled'>\n";
-		echo "		<option value='true' ".($global_setting_enabled == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "		<option value='false' ".($global_setting_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='global_setting_enabled' name='global_setting_enabled'>\n";
+	echo "		<option value='true' ".($global_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($global_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-global_setting_enabled']."\n";

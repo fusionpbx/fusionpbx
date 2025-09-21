@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
 		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid, call_flow_uuid as uuid, call_flow_extension as destination, call_flow_extension as extension, call_flow_context as context from v_call_flows ";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(call_flow_extension) asc";
 		$apps[$x]['destinations'][$y]['field']['call_flow_uuid'] = "call_flow_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "call_flow_name";
@@ -51,7 +51,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
 		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid, call_flow_uuid as uuid, call_flow_feature_code as extension, call_flow_feature_code as destination, call_flow_context as context from v_call_flows ";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_feature_code is not null and call_flow_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_feature_code is not null and call_flow_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(call_flow_feature_code) asc";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "name";
@@ -200,7 +200,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the alernate application data.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to enable or disable the call flow";
 		$z++;

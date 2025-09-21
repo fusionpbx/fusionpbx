@@ -66,7 +66,7 @@
 		$group_name_previous = $_POST["group_name_previous"];
 		$domain_uuid = $_POST["domain_uuid"];
 		$group_level = $_POST["group_level"] ?? '10';
-		$group_protected = $_POST["group_protected"] ?? 'false';
+		$group_protected = $_POST["group_protected"] ?? false;
 		$group_description = $_POST["group_description"] ?? '';
 	}
 
@@ -110,7 +110,6 @@
 			if (empty($group_name)) { $msg .= $text['message-required']." ".$text['label-group_name']."<br>\n"; }
 			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 			if (empty($group_level)) { $msg .= $text['message-required']." ".$text['label-group_level']."<br>\n"; }
-			//if (empty($group_protected)) { $msg .= $text['message-required']." ".$text['label-group_protected']."<br>\n"; }
 			//if (empty($group_description)) { $msg .= $text['message-required']." ".$text['label-group_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -300,17 +299,16 @@
 	echo "	".$text['label-group_protected']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='group_protected' value='true' ".(!empty($group_protected) && $group_protected == "true" ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='group_protected'>\n";
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-		echo "		<option value='true' ".(!empty($group_protected) && $group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='group_protected' name='group_protected'>\n";
+	echo "		<option value='true' ".($group_protected === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($group_protected === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	//echo $text['description-group_protected']."\n";

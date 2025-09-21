@@ -327,7 +327,7 @@ class authentication {
 		$sql = "select * from v_user_settings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and user_uuid = :user_uuid ";
-		$sql .= "and user_setting_enabled = 'true' ";
+		$sql .= "and user_setting_enabled = true ";
 		$parameters['domain_uuid'] = $result["domain_uuid"];
 		$parameters['user_uuid'] = $result["user_uuid"];
 		$user_settings = $database->select($sql, $parameters, 'all');

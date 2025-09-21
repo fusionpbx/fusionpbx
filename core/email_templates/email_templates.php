@@ -100,14 +100,15 @@
 		$sql_search .= " or lower(template_subject) like :search ";
 		$sql_search .= " or lower(template_body) like :search ";
 		$sql_search .= " or lower(template_type) like :search ";
-		$sql_search .= " or lower(template_enabled) like :search ";
 		$sql_search .= " or lower(template_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 
 //prepare to page the results
-	$sql = "select count(*) from v_email_templates where true ";
+	$sql = "select count(*) ";
+	$sql .= "from v_email_templates ";
+	$sql .= "where true ";
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 		if (!empty($sql_search)) {
 			$sql .= "and ".$sql_search;
@@ -121,7 +122,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$sql .= $sql_category ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
@@ -136,7 +136,32 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "email_template_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "template_language, ";
+	$sql .= "template_category, ";
+	$sql .= "template_subcategory, ";
+	$sql .= "template_subject, ";
+	$sql .= "template_body, ";
+	$sql .= "template_type, ";
+	$sql .= "cast(template_enabled as text), ";
+	$sql .= "template_description ";
+	$sql .= "from v_email_templates ";
+	$sql .= "where true ";
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+	}
+	else {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= $sql_category ?? '';
 	if ($order_by) {
 		$sql .= order_by($order_by, $order);
 	}
@@ -144,14 +169,12 @@
 		$sql .= "order by domain_uuid, template_language asc, template_category asc, template_subcategory asc, template_type asc, template_description asc ";
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? '', 'all');
 	unset($sql, $parameters);
 
 //get email template categories
 	$sql = "select distinct template_category from v_email_templates ";
 	$sql .= "order by template_category asc ";
-	$database = new database;
 	$rows = $database->select($sql, $parameters ?? '', 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
@@ -327,4 +350,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

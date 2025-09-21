@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -84,8 +84,8 @@
 	$sql .= "from v_conference_profile_params ";
 	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
 	$parameters['conference_profile_uuid'] = $conference_profile_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -97,10 +97,18 @@
 	}
 
 //get the list
-	$sql = str_replace('count(conference_profile_param_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= "conference_profile_param_uuid, ";
+	$sql .= "conference_profile_uuid, ";
+	$sql .= "profile_param_name, ";
+	$sql .= "profile_param_value, ";
+	$sql .= "cast(profile_param_enabled as text), ";
+	$sql .= "profile_param_description ";
+	$sql .= "from v_conference_profile_params ";
+	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
+	$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 	$sql .= order_by($order_by, $order, 'profile_param_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

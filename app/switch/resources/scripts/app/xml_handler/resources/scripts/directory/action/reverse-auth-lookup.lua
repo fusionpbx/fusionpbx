@@ -55,6 +55,7 @@
 		if (domain_name ~= nil) then
 			local sql = "SELECT domain_uuid FROM v_domains ";
 			sql = sql .. "WHERE domain_name = :domain_name ";
+			sql = sql .. "and domain_enabled = true ";
 			local params = {domain_name = domain_name}
 			if (debug["sql"]) then
 				log.noticef("SQL: %s; params %s", sql, json.encode(params));
@@ -69,7 +70,7 @@
 	if (domain_uuid ~= nil) then
 		local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid "
 			.. "and (extension = :user or number_alias = :user) "
-			.. "and enabled = 'true' ";
+			.. "and enabled = true ";
 		local params = {domain_uuid=domain_uuid, user=user};
 		if (debug["sql"]) then
 			log.noticef("SQL: %s; params %s", sql, json.encode(params));

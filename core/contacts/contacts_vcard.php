@@ -94,7 +94,7 @@ if (!empty($_GET)) {
 		$sql = "select url_address from v_contact_urls ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_uuid = :contact_uuid ";
-		$sql .= "and url_primary = 1 ";
+		$sql .= "and url_primary = true ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
