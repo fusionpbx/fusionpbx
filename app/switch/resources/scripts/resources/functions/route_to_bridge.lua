@@ -68,7 +68,7 @@ FROM v_dialplans as d, v_dialplan_details as s
 WHERE  (d.domain_uuid = :domain_uuid OR d.domain_uuid IS NULL)
 	AND (d.hostname = :hostname OR d.hostname IS NULL)
 	AND d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-	AND d.dialplan_enabled = 'true'
+	AND d.dialplan_enabled = true
 	AND d.dialplan_uuid = s.dialplan_uuid
 ORDER BY
 	d.dialplan_order ASC,
