@@ -38,7 +38,14 @@ function send_email(id, uuid)
 		local email_queue_enabled = "true";
 
 	--get voicemail message details
-		local sql = [[SELECT * FROM v_voicemails
+		local sql = [[SELECT 
+			 voicemail_uuid,
+			 voicemail_mail_to,
+			 cast(voicemail_transcription_enabled as text),
+			 voicemail_file,
+			 cast(voicemail_local_after_email as text),
+			 voicemail_description
+			FROM v_voicemails
 			WHERE domain_uuid = :domain_uuid
 			AND voicemail_id = :voicemail_id]]
 		local params = {domain_uuid = domain_uuid, voicemail_id = id};
@@ -60,9 +67,6 @@ function send_email(id, uuid)
 		if (voicemail_file == nil or voicemail_file == '') then
 			voicemail_file = "listen";
 		end
-
-	--set the boolean values as a string
-		voicemail_local_after_email = voicemail_local_after_email and "true" or "false";
 
 	--require the email address to send the email
 		if (string.len(voicemail_mail_to) > 2) then
@@ -203,9 +207,6 @@ function send_email(id, uuid)
 
 			--get the link_address
 				link_address = http_protocol.."://"..domain_name..project_path;
-
-			--set the boolean values as a string
-				voicemail_local_after_email = voicemail_local_after_email and "true" or "false";
 
 			--set proper delete status
 				local local_after_email = '';

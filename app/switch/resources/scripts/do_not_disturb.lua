@@ -89,7 +89,19 @@
 	end
 
 --determine whether to update the dial string
-	local sql = "select * from v_extensions ";
+	local sql = "select ";
+	sql = sql .. " extension_uuid, ";
+	sql = sql .. " extension, ";
+	sql = sql .. " number_alias, ";
+	sql = sql .. " accountcode, ";
+	sql = sql .. " cast(do_not_disturb as text), ";
+	sql = sql .. " cast(forward_all_enabled as text), ";
+	sql = sql .. " forward_all_destination, ";
+	sql = sql .. " toll_allow, ";
+	sql = sql .. " context, ";
+	sql = sql .. " outbound_caller_id_name, ";
+	sql = sql .. " outbound_caller_id_number ";
+	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
 	local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
@@ -105,9 +117,6 @@
 		forward_all_enabled = row.forward_all_enabled;
 		context = row.user_context;
 	end);
-
-	forward_all_enabled = forward_all_enabled and "true" or "false";
-	do_not_disturb = do_not_disturb and "true" or "false";
 
 --send information to the console
 	if (session:ready()) then
