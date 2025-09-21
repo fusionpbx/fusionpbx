@@ -543,7 +543,26 @@
 				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
 			if (pin_number ~= nil) then
-				local sql = [[SELECT * FROM v_conference_rooms
+				local sql = [[SELECT 
+					 conference_room_uuid,
+					 conference_room_name,
+					 cast(record as text),
+					 profile,
+					 max_members,
+					 cast(wait_mod as text),
+					 cast(moderator_endconf as text),
+					 moderator_pin,
+					 participant_pin,
+					 cast(announce_name as text),
+					 cast(announce_count as text),
+					 cast(announce_recording as text),
+					 cast(mute as text),
+					 cast(sounds as text),
+					 created,
+					 created_by,
+					 cast(enabled as text),
+					 description
+					FROM v_conference_rooms
 					WHERE domain_uuid = :domain_uuid
 					AND conference_center_uuid = :conference_center_uuid
 					AND (moderator_pin = :pin_number or participant_pin = :pin_number)
@@ -560,7 +579,6 @@
 				dbh:query(sql, params, function(row)
 					conference_room_uuid = string.lower(row["conference_room_uuid"]);
 					conference_room_name = string.lower(row["conference_room_name"]);
-					--meeting_uuid = string.lower(row["meeting_uuid"]);
 					record = row["record"];
 					profile = string.lower(row["profile"]);
 					max_members = row["max_members"];
@@ -581,18 +599,6 @@
 				end);
 				freeswitch.consoleLog("INFO","conference_room_uuid: " .. conference_room_uuid .. "\n");
 			end
-
-		--set the boolean settings to a true or false string
-			record = record and "true" or "false";
-			wait_mod = wait_mod and "true" or "false";
-			sounds = sounds and "true" or "false";
-			mute = mute and "true" or "false";
-			enabled = enabled and "true" or "false";
-			announce_name = announce_name and "true" or "false";
-			announce_count = announce_count and "true" or "false";
-			announce_recording = announce_recording and "true" or "false";
-			moderator_endconf = moderator_endconf and "true" or "false";
-
 
 		--set the member type
 			if (pin_number == moderator_pin) then

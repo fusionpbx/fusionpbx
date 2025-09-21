@@ -123,7 +123,17 @@
 --determine whether to update the dial string
 	if not session:ready() then return end
 
-	local sql = "select * from v_extensions ";
+	local sql = "select ";
+	sql = sql .. " extension_uuid, ";
+	sql = sql .. " extension, ";
+	sql = sql .. " number_alias, ";
+	sql = sql .. " accountcode, ";
+	sql = sql .. " cast(forward_all_enabled as text), ";
+	sql = sql .. " forward_all_destination, ";
+	sql = sql .. " toll_allow, ";
+	sql = sql .. " outbound_caller_id_name, ";
+	sql = sql .. " outbound_caller_id_number ";
+	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	local params = {domain_uuid = domain_uuid};
 	if (extension_uuid ~= nil) then
@@ -143,7 +153,7 @@
 	extension = row.extension;
 	local number_alias = row.number_alias or '';
 	local accountcode = row.accountcode;
-	local forward_all_enabled = row.forward_all_enabled and "true" or "false";
+	local forward_all_enabled = row.forward_all_enabled;
 	local last_forward_all_destination = row.forward_all_destination;
 	local toll_allow = row.toll_allow or '';
 

@@ -16,15 +16,31 @@ function feature_event_notify.get_db_values(user, domain_name)
 			end);
 
 			--get extension information
-				local sql = "select * from v_extensions ";
+				local sql = "select ";
+				sql = sql .. " extension_uuid, ";
+				sql = sql .. " extension, ";
+				sql = sql .. " number_alias, ";
+				sql = sql .. " accountcode, ";
+				sql = sql .. " follow_me_uuid, ";
+				sql = sql .. " cast(do_not_disturb as text), ";
+				sql = sql .. " cast(forward_all_enabled as text), ";
+				sql = sql .. " forward_all_destination, ";
+				sql = sql .. " cast(forward_busy_enabled as text), ";
+				sql = sql .. " forward_busy_destination, ";
+				sql = sql .. " cast(forward_no_answer_enabled as text), ";
+				sql = sql .. " forward_no_answer_destination, ";
+				sql = sql .. " cast(forward_user_not_registered_enabled as text), ";
+				sql = sql .. " forward_user_not_registered_destination, ";
+				sql = sql .. " toll_allow, ";
+				sql = sql .. " call_timeout ";
+				sql = sql .. "from v_extensions ";
 				sql = sql .. "where domain_uuid = :domain_uuid ";
 				sql = sql .. "and (extension = :extension or number_alias = :extension) ";
 				sql = sql .. "and enabled true ";
 				local params = {domain_uuid = domain_uuid, extension = user};
-			--	if (debug["sql"]) then
-			--		freeswitch.consoleLog("notice", "[feature_event] " .. sql .. "; params:" .. json.encode(params) .. "\n");
-			--	end
-				
+				-- if (debug["sql"]) then
+				-- 	freeswitch.consoleLog("notice", "[feature_event] " .. sql .. "; params:" .. json.encode(params) .. "\n");
+				-- end
 				dbh:query(sql, params, function(row)
 					extension_uuid                          = row.extension_uuid;
 					extension                               = row.extension;
@@ -47,12 +63,6 @@ function feature_event_notify.get_db_values(user, domain_name)
 				end);
 
 		--set some defaults if values in database are NULL
-			forward_all_enabled = forward_all_enabled and "true" or "false";
-			forward_busy_enabled = forward_busy_enabled and "true" or "false";
-			forward_no_answer_enabled = forward_no_answer_enabled and "true" or "false";
-			forward_user_not_registered_enabled = forward_user_not_registered_enabled and "true" or "false";
-			follow_me_enabled = follow_me_enabled and "true" or "false";
-			do_not_disturb = do_not_disturb and "true" or "false";
 			if (call_timeout == "") then call_timeout = "30"; end
 
 			return do_not_disturb, forward_all_enabled, forward_all_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, call_timeout
