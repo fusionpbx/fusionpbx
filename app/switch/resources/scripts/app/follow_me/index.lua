@@ -15,7 +15,7 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2019 - 2020
+--	Portions created by the Initial Developer are Copyright (C) 2019 - 2025
 --	the Initial Developer. All Rights Reserved.
 
 --includes
@@ -75,78 +75,78 @@
 	api = freeswitch.API();
 
 --check the missed calls
-        function missed()
-                if (missed_call_app ~= nil and missed_call_data ~= nil) then
-                        if (missed_call_app == "email") then
-                                --set the sounds path for the language, dialect and voice
-                                        default_language = session:getVariable("default_language");
-                                        default_dialect = session:getVariable("default_dialect");
-                                        default_voice = session:getVariable("default_voice");
-                                        if (not default_language) then default_language = 'en'; end
-                                        if (not default_dialect) then default_dialect = 'us'; end
-                                        if (not default_voice) then default_voice = 'callie'; end
+	function missed()
+		if (missed_call_app ~= nil and missed_call_data ~= nil) then
+			if (missed_call_app == "email") then
+				--set the sounds path for the language, dialect and voice
+				default_language = session:getVariable("default_language");
+				default_dialect = session:getVariable("default_dialect");
+				default_voice = session:getVariable("default_voice");
+				if (not default_language) then default_language = 'en'; end
+				if (not default_dialect) then default_dialect = 'us'; end
+				if (not default_voice) then default_voice = 'callie'; end
 
-                                --connect to the database
-                                        local Database = require "resources.functions.database";
-                                        local dbh = Database.new('system');
+				--connect to the database
+				local Database = require "resources.functions.database";
+				local dbh = Database.new('system');
 
-                                --get the templates
-                                        local sql = "SELECT * FROM v_email_templates ";
-                                        sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
-                                        sql = sql .. "AND template_language = :template_language ";
-                                        sql = sql .. "AND template_category = 'missed' "
-                                        sql = sql .. "AND template_enabled = 'true' "
-                                        sql = sql .. "ORDER BY domain_uuid DESC "
-                                        local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
-                                        if (debug["sql"]) then
-                                                freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-                                        end
-                                        dbh:query(sql, params, function(row)
-                                                subject = row["template_subject"];
-                                                body = row["template_body"];
-                                        end);
+				--get the templates
+				local sql = "SELECT * FROM v_email_templates ";
+				sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				sql = sql .. "AND template_language = :template_language ";
+				sql = sql .. "AND template_category = 'missed' "
+				sql = sql .. "AND template_enabled = true "
+				sql = sql .. "ORDER BY domain_uuid DESC "
+				local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+				end
+				dbh:query(sql, params, function(row)
+					subject = row["template_subject"];
+					body = row["template_body"];
+				end);
 
-                                --prepare the headers
-                                        local headers = {}
-                                        headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
-                                        headers["X-FusionPBX-Domain-Name"] = domain_name;
-                                        headers["X-FusionPBX-Call-UUID"]   = uuid;
-                                        headers["X-FusionPBX-Email-Type"]  = 'missed';
+				--prepare the headers
+				local headers = {}
+				headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+				headers["X-FusionPBX-Domain-Name"] = domain_name;
+				headers["X-FusionPBX-Call-UUID"]   = uuid;
+				headers["X-FusionPBX-Email-Type"]  = 'missed';
 
-                                --prepare the subject
-                                        subject = subject:gsub("${caller_id_name}", caller_id_name);
-                                        subject = subject:gsub("${caller_id_number}", caller_id_number);
-                                        subject = subject:gsub("${sip_to_user}", sip_to_user);
-                                        subject = subject:gsub("${dialed_user}", dialed_user);
-                                        subject = trim(subject);
-                                        subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
+				--prepare the subject
+				subject = subject:gsub("${caller_id_name}", caller_id_name);
+				subject = subject:gsub("${caller_id_number}", caller_id_number);
+				subject = subject:gsub("${sip_to_user}", sip_to_user);
+				subject = subject:gsub("${dialed_user}", dialed_user);
+				subject = trim(subject);
+				subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
-                                --prepare the body
-                                        body = body:gsub("${caller_id_name}", caller_id_name);
-                                        body = body:gsub("${caller_id_number}", caller_id_number);
-                                        body = body:gsub("${sip_to_user}", sip_to_user);
-                                        body = body:gsub("${dialed_user}", dialed_user);
-                                        body = body:gsub(" ", "&nbsp;");
-                                        body = body:gsub("%s+", "");
-                                        body = body:gsub("&nbsp;", " ");
-                                        body = body:gsub("\n", "");
-                                        body = body:gsub("\n", "");
-                                        body = body:gsub("'", "&#39;");
-                                        body = body:gsub([["]], "&#34;");
-                                        body = trim(body);
+				--prepare the body
+				body = body:gsub("${caller_id_name}", caller_id_name);
+				body = body:gsub("${caller_id_number}", caller_id_number);
+				body = body:gsub("${sip_to_user}", sip_to_user);
+				body = body:gsub("${dialed_user}", dialed_user);
+				body = body:gsub(" ", "&nbsp;");
+				body = body:gsub("%s+", "");
+				body = body:gsub("&nbsp;", " ");
+				body = body:gsub("\n", "");
+				body = body:gsub("\n", "");
+				body = body:gsub("'", "&#39;");
+				body = body:gsub([["]], "&#34;");
+				body = trim(body);
 
-                                --send the emails
-                                        send_mail(headers,
-                                                missed_call_data,
-                                                {subject, body}
-                                        );
+				--send the emails
+				send_mail(headers,
+					missed_call_data,
+					{subject, body}
+				);
 
-                                        if (debug["info"]) then
-                                                freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
-                                        end
-                        end
-                end
-        end
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
+				end
+			end
+		end
+	end
 
 --get the destination and follow the forward
 	function get_forward_all(count, destination_number, domain_name)
@@ -157,24 +157,24 @@
 			---check to see if the new destination is forwarded
 				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
 				if (api:executeString(cmd) == "true") then
-					--get the toll_allow var	
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var toll_allow";
-						toll_allow = api:executeString(cmd);
-						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
-					
+					--get the toll_allow var
+					cmd = "user_data ".. destination_number .."@" ..domain_name.." var toll_allow";
+					toll_allow = api:executeString(cmd);
+					--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
+
 					--get the extensions accountcode
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var accountcode";
-						accountcode = api:executeString(cmd);
+					cmd = "user_data ".. destination_number .."@" ..domain_name.." var accountcode";
+					accountcode = api:executeString(cmd);
 
 					--get the new destination 
-						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
-						destination_number = api:executeString(cmd);
+					cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
+					destination_number = api:executeString(cmd);
 
-						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
-						count = count + 1;
-						if (count < 5) then
-							count, destination_number, toll_allow, accountcode = get_forward_all(count, destination_number, domain_name);
-						end
+					--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
+					count = count + 1;
+					if (count < 5) then
+					count, destination_number, toll_allow, accountcode = get_forward_all(count, destination_number, domain_name);
+					end
 				end
 		end
 		return count, destination_number, toll_allow, accountcode;
