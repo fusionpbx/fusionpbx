@@ -108,7 +108,7 @@ function Settings:_load(category, subcategory, name)
 		local sql = "SELECT user_setting_uuid,user_setting_category,user_setting_subcategory,user_setting_name,user_setting_value "
 		sql = sql .. "FROM v_user_settings ";
 		sql = sql .. "WHERE user_uuid = :user_uuid ";
-		sql = sql .. "AND user_setting_enabled = 'true' ";
+		sql = sql .. "AND user_setting_enabled = true ";
 		sql = sql .. "AND user_setting_category = :category ";
 		sql = sql .. "AND user_setting_subcategory = :subcategory ";
 		sql = sql .. "AND user_setting_name = :name ";
@@ -137,7 +137,7 @@ function Settings:_load(category, subcategory, name)
 		local sql = "SELECT domain_setting_uuid,domain_setting_category,domain_setting_subcategory,domain_setting_name,domain_setting_value "
 		sql = sql .. "FROM v_domain_settings ";
 		sql = sql .. "WHERE domain_uuid = :domain_uuid ";
-		sql = sql .. "AND domain_setting_enabled = 'true' ";
+		sql = sql .. "AND domain_setting_enabled = true ";
 		sql = sql .. "AND domain_setting_category = :category ";
 		sql = sql .. "AND domain_setting_subcategory = :subcategory ";
 		sql = sql .. "AND domain_setting_name = :name ";
@@ -165,7 +165,7 @@ function Settings:_load(category, subcategory, name)
 	if not found then
 		local sql = "SELECT default_setting_uuid,default_setting_category,default_setting_subcategory,default_setting_name,default_setting_value "
 		sql = sql .. "FROM v_default_settings ";
-		sql = sql .. "WHERE default_setting_enabled = 'true' ";
+		sql = sql .. "WHERE default_setting_enabled = true ";
 		sql = sql .. "AND default_setting_category = :category ";
 		sql = sql .. "AND default_setting_subcategory = :subcategory ";
 		sql = sql .. "AND default_setting_name = :name ";
