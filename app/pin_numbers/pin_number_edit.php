@@ -58,7 +58,7 @@
 		$description = $_POST["description"];
 	}
 
-if (count($_POST)>0 && empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -76,7 +76,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	//check for all required data
 		if (empty($pin_number)) { $msg .= $text['message-required']." ".$text['label-pin_number']."<br>\n"; }
 		//if (empty($accountcode)) { $msg .= $text['message-required']." ".$text['label-accountcode']."<br>\n"; }
-		if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
 		//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
 		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
@@ -116,7 +115,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 					$array['pin_numbers'][0]['enabled'] = $enabled;
 					$array['pin_numbers'][0]['description'] = $description;
 				//save data
-					$database = new database;
 					$database->app_name = 'pin_numbers';
 					$database->app_uuid = '4b88ccfb-cb98-40e1-a5e5-33389e14a388';
 					$database->save($array);
@@ -137,7 +135,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		$sql .= "and pin_number_uuid = :pin_number_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['pin_number_uuid'] = $pin_number_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$pin_number = $row["pin_number"];
@@ -198,10 +195,17 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+	echo "		<option value='true' ".($enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";
