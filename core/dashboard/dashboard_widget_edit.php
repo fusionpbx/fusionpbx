@@ -500,7 +500,7 @@
 
 //get the groups
 	$sql = "SELECT group_uuid, domain_uuid, group_name FROM v_groups ";
-	$sql .= "WHERE (domain_uuid = :domain_uuid or domain_uuid is null)";
+	$sql .= "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	$sql .= "ORDER BY domain_uuid desc, group_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$groups = $database->execute($sql, $parameters, 'all');
@@ -508,9 +508,10 @@
 
 //get the dashboards
 	$sql = "SELECT dashboard_widget_uuid, widget_name FROM v_dashboard_widgets ";
-	$sql .= "WHERE dashboard_widget_parent_uuid is null ";
+	$sql .= "WHERE widget_path = 'dashboard/parent' ";
+	$sql .= "AND dashboard_uuid = :dashboard_uuid ";
 	$sql .= "ORDER by widget_order, widget_name asc ";
-	$parameters = null;
+	$parameters['dashboard_uuid'] = $dashboard_uuid;
 	$widget_parents = $database->execute($sql, $parameters, 'all');
 	unset ($sql, $parameters);
 
