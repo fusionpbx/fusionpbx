@@ -127,7 +127,7 @@
 							sql = sql .. "extension, ping, ping_min, ping_max, ";
 							sql = sql .. "cast(contact_in_ping as text) , ";
 							sql = sql .. "cast(caller_id_in_from as text), ";
-							sql = sql .. "cast(supress_cng as text),
+							sql = sql .. "cast(supress_cng as text), ";
 							sql = sql .. "sip_cid_type, codec_prefs, channels, ";
 							sql = sql .. "cast(extension_in_contact as text), ";
 							sql = sql .. "context, profile, hostname, ";
@@ -339,7 +339,7 @@
 			end
 	end --if XML_STRING
 
---send the xml to the console
+--send the XML to the console
 	if (debug["xml_string"]) then
 		local file = assert(io.open(temp_dir .. "/sofia.conf.xml", "w"));
 		file:write(XML_STRING);
