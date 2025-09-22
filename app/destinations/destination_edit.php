@@ -541,7 +541,7 @@
 								if (!empty($destination_cid_name_prefix)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"true\"/>\n";
 								}
-								if (!empty($destination_record) && $destination_record == 'true') {
+								if (!empty($destination_record) && $destination_record === true) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_name=\${uuid}.".$record_extension."\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_append=true\" inline=\"true\"/>\n";
@@ -935,7 +935,7 @@
 										}
 
 									//add option record to the dialplan
-										if ($destination_record == "true") {
+										if ($destination_record === true) {
 
 											//add a variable
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
@@ -1913,21 +1913,17 @@
 		echo "	".$text['label-destination_email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='destination_email'>\n";
-		echo "	<option value=''></option>\n";
-		if (!empty($destination_email) && $destination_email == "true") {
-			echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<select class='formfld' id='destination_email' name='destination_email'>\n";
+		echo "			<option value='false' ".($destination_email === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "			<option value='true' ".($destination_email === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if (!empty($destination_email) && $destination_email == "false") {
-			echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-		}
-		else {
-			echo "	<option value='false'>".$text['option-false']."</option>\n";
-		}
-		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-destination_email']."\n";
 		echo "</td>\n";
@@ -2000,21 +1996,17 @@
 		echo "<tr id='tr_destination_record'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-destination_record']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='destination_record'>\n";
-		echo "	<option value=''></option>\n";
-		if ($destination_record == "true") {
-			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		echo "		<select class='formfld' id='destination_record' name='destination_record'>\n";
+		echo "			<option value='false' ".($destination_record === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "			<option value='true' ".($destination_record === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if ($destination_record == "false") {
-			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "	<option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-destination_record']."\n";
 		echo "</td>\n";
