@@ -158,16 +158,25 @@
 	}
 
 //delete the group from the sub table
-	if (isset($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && permission_exists("dashboard_widget_group_delete") && is_uuid($_GET["dashboard_widget_group_uuid"]) && is_uuid($_GET["dashboard_widget_uuid"])) {
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("dashboard_widget_group_delete") && is_uuid($_POST["dashboard_widget_group_uuid"]) && is_uuid($_POST["dashboard_widget_uuid"])) {
 		//get the uuid
-			$widget_group_uuid = $_GET["dashboard_widget_group_uuid"];
-			$widget_uuid = $_GET["dashboard_widget_uuid"];
-		//delete the group from the users
+			$widget_group_uuid = $_POST['dashboard_widget_group_uuid'];
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dashboard_edit.php?id='.urlencode($dashboard_uuid));
+				exit;
+			}
+
+		//delete the group from the widget
 			$array['dashboard_widget_groups'][0]['dashboard_widget_group_uuid'] = $widget_group_uuid;
 			$database->app_name = 'dashboard';
 			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->delete($array);
 			unset($array);
+
 		//redirect the user
 			message::add($text['message-delete']);
 			header("Location: dashboard_widget_edit.php?id=".urlencode($dashboard_uuid)."&widget_uuid=".urlencode($widget_uuid));
@@ -180,7 +189,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: dashboard.php');
+				header('Location: dashboard_edit.php?id='.urlencode($dashboard_uuid));
 				exit;
 			}
 
@@ -988,18 +997,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (is_array($widget_groups) && sizeof($widget_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+		if (permission_exists('dashboard_widget_group_delete')) {
+			echo "	<input type='hidden' id='action' name='action' value=''>\n";
+			echo "	<input type='hidden' id='dashboard_widget_group_uuid' name='dashboard_widget_group_uuid' value=''>\n";
+		}
+		$x = 0;
 		foreach($widget_groups as $field) {
 			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>\n";
 				echo $field['group_name'].((!empty($field['domain_uuid'])) ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
-				if (permission_exists('dashboard_widget_group_delete') || if_group("superadmin")) {
+				if (permission_exists('dashboard_widget_group_delete')) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>\n";
-					echo 		"<a href='dashboard_widget_edit.php?id=".escape($field['dashboard_widget_group_uuid'])."&dashboard_widget_group_uuid=".escape($field['dashboard_widget_group_uuid'])."&dashboard_widget_uuid=".escape($widget_uuid)."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+					echo button::create(['type'=>'button','icon'=>'fas fa-minus','id'=>'btn_delete','class'=>'default list_control_icon','name'=>'btn_delete','onclick'=>"modal_open('modal-delete-group-$x','btn_delete');"]);
+					echo modal::create(['id'=>'modal-delete-group-'.$x,'type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); document.getElementById('dashboard_widget_group_uuid').value = '".escape($field['dashboard_widget_group_uuid'])."'; list_form_submit('frm');"])]);
 					echo "	</td>\n";
 				}
 				echo "</tr>\n";
+				$x++;
 			}
 		}
 		echo "</table>\n";
