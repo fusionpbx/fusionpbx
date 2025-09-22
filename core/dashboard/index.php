@@ -106,7 +106,7 @@
 	$sql .= "widget_content_text_align, ";
 	$sql .= "widget_content_details, ";
 	$sql .= "widget_chart_type, ";
-	$sql .= "cast(widget_label_enabled as text), ";
+	$sql .= "widget_label_enabled, ";
 	$sql .= "widget_label_text_color, ";
 	$sql .= "widget_label_text_color_hover, ";
 	$sql .= "widget_label_background_color, ";

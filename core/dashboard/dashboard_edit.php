@@ -63,7 +63,7 @@
 	if (!empty($_POST)) {
 		$domain_uuid = permission_exists('dashboard_domain') ? $_POST["domain_uuid"] : $_SESSION['domain_uuid'];
 		$dashboard_name = $_POST["dashboard_name"] ?? '';
-		$dashboard_enabled = $_POST["dashboard_enabled"] ?? 'false';
+		$dashboard_enabled = $_POST["dashboard_enabled"];
 		$dashboard_description = $_POST["dashboard_description"] ?? '';
 
 		//define the regex patterns
@@ -152,7 +152,7 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
 			$dashboard_name = $row["dashboard_name"];
-			$dashboard_enabled = $row["dashboard_enabled"] ?? 'false';
+			$dashboard_enabled = $row["dashboard_enabled"];
 			$dashboard_description = $row["dashboard_description"];
 		}
 		unset($sql, $parameters, $row);

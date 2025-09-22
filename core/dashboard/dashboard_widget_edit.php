@@ -421,7 +421,7 @@
 			$widget_details_state = $row["widget_details_state"];
 			$widget_parent_uuid = $row["dashboard_widget_parent_uuid"];
 			$widget_order = $row["widget_order"];
-			$widget_enabled = $row["widget_enabled"] ?? 'false';
+			$widget_enabled = $row["widget_enabled"];
 			$widget_description = $row["widget_description"];
 		}
 		unset($sql, $parameters, $row);
@@ -773,7 +773,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('widget_url').addEventListener('change', adjust_form_url);
 	document.getElementById('widget_target').addEventListener('change', adjust_form_url);
 	document.getElementById('widget_label_enabled').addEventListener('change', toggle_label_settings);
-	document.querySelector('.switch:has(#widget_label_enabled)').addEventListener('click', toggle_label_settings);
+	document.querySelectorAll('.switch:has(#widget_label_enabled)').addEventListener('click', toggle_label_settings);
 });
 
 </script>
