@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -366,7 +366,7 @@
 												}
 
 											//enable call recordings
-												if ($destination_record == "true") {
+												if ($destination_record === true) {
 
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -810,16 +810,17 @@
 			echo "	".$text['label-destination_record']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='destination_record' id='destination_record'>\n";
-			echo "	<option value=''></option>\n";
-			switch ($destination_record) {
-				case "true" : 	$selected[1] = "selected='selected'";	break;
-				case "false" : 	$selected[2] = "selected='selected'";	break;
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			echo "	<option value='true' ".($selected[1] ?? null).">".$text['option-true']."</option>\n";
-			echo "	<option value='false' ".($selected[2] ?? null).">".$text['option-false']."</option>\n";
-			unset($selected);
-			echo "	</select>\n";
+			echo "		<select class='formfld' id='destination_record' name='destination_record'>\n";
+			echo "			<option value='false' ".($destination_record === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "			<option value='true' ".($destination_record === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo ($text['description-destination_record'] ?? null)."\n";
 			echo "</td>\n";
@@ -888,17 +889,17 @@
 			echo "	".$text['label-destination_enabled']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='destination_enabled'>\n";
-			if (!empty($destination_enabled)) {
-				switch ($destination_enabled) {
-					case "true": $selected[1] = "selected='selected'"; break;
-					case "false": $selected[2] = "selected='selected'"; break;
-				}
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			echo "	<option value='true' ".($selected[1] ?? null).">".$text['label-true']."</option>\n";
-			echo "	<option value='false' ".($selected[2] ?? null).">".$text['label-false']."</option>\n";
-			unset($selected);
-			echo "	</select>\n";
+			echo "		<select class='formfld' id='destination_enabled' name='destination_enabled'>\n";
+			echo "			<option value='true' ".($destination_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "			<option value='false' ".($destination_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo ($text['description-destination_enabled'] ?? null)."\n";
 			echo "</td>\n";
