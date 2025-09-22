@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -198,7 +198,6 @@
 	$sql .= "d.device_template, ";
 	$sql .= "d.device_username, ";
 	$sql .= "d.device_password, ";
-	$sql .= "d.device_time_zone, ";
 	$sql .= "d.device_description, ";
 	$sql .= "d.device_profile_uuid, ";
 	$sql .= "d.device_uuid_alternate, ";
