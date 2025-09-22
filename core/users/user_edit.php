@@ -81,23 +81,26 @@
 	}
 
 //delete the group from the user
-	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && is_uuid($_GET["group_uuid"]) && is_uuid($user_uuid) && permission_exists("user_delete")) {
-		//set the variables
-			$group_uuid = $_GET["group_uuid"];
-		//delete the group from the users
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("user_group_delete") && is_uuid($_POST["group_uuid"]) && is_uuid($user_uuid)) {
+		//get the uuid
+			$group_uuid = $_POST['group_uuid'];
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header("Location: users.php");
+				exit;
+			}
+
+		//delete the group from the user
 			$array['user_groups'][0]['group_uuid'] = $group_uuid;
 			$array['user_groups'][0]['user_uuid'] = $user_uuid;
-
-			$p = permissions::new();
-			$p->add('user_group_delete', 'temp');
-
 			$database->delete($array);
 			unset($array);
 
-			$p->delete('user_group_delete', 'temp');
-
 		//redirect the user
-			message::add($text['message-update']);
+			message::add($text['message-delete']);
 			header("Location: user_edit.php?id=".urlencode($user_uuid));
 			exit;
 	}
@@ -993,15 +996,21 @@
 		$user_groups = $database->select($sql, $parameters, 'all');
 		if (is_array($user_groups)) {
 			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+			if (permission_exists('user_group_delete')) {
+				echo "	<input type='hidden' id='action' name='action' value=''>\n";
+				echo "	<input type='hidden' id='group_uuid' name='group_uuid' value=''>\n";
+			}
+			$x = 0;
 			foreach($user_groups as $field) {
 				if (!empty($field['group_name'])) {
 					echo "<tr>\n";
 					echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 					echo escape($field['group_name']).((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 					echo "	</td>\n";
-					if (permission_exists('user_group_delete') || if_group("superadmin")) {
+					if (permission_exists('user_group_delete')) {
 						echo "	<td class='list_control_icons' style='width: 25px;'>\n";
-						echo "		<a href='user_edit.php?id=".urlencode($user_uuid)."&domain_uuid=".urlencode($domain_uuid)."&group_uuid=".urlencode($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+						echo button::create(['type'=>'button','icon'=>'fas fa-minus','id'=>'btn_delete','class'=>'default list_control_icon','name'=>'btn_delete','onclick'=>"modal_open('modal-delete-group-$x','btn_delete');"]);
+						echo modal::create(['id'=>'modal-delete-group-'.$x,'type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); document.getElementById('group_uuid').value = '".escape($field['group_uuid'])."'; list_form_submit('frm');"])]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";
@@ -1009,6 +1018,7 @@
 						$assigned_groups[] = $field['group_uuid'];
 					}
 				}
+				$x++;
 			}
 			echo "</table>\n";
 		}
