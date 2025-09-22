@@ -258,6 +258,7 @@
 		$view->assign('container_close', '</div>');
 		$view->assign('document_body', $body);
 		$view->assign('current_year', date('Y'));
+
 	//login logo
 		//determine logo source
 			if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
@@ -285,10 +286,16 @@
 		$view->assign('login_logo_source', $login_logo_source);
 		$view->assign('login_logo_width', $login_logo_width);
 		$view->assign('login_logo_height', $login_logo_height);
-//login page
-	//$view->assign('login_page', $login_page);
+
+	//login page
+		//$view->assign('login_page', $login_page);
+
 	//messages
 		$view->assign('messages', message::html(true, '		'));
+
+	//set the input toggle style options: select, switch_round, switch_square
+		$view->assign('input_toggle_style_switch', $input_toggle_style_switch);
+
 	//session timer
 		if ($authenticated &&
 			file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/app/session_timer/session_timer.php') &&

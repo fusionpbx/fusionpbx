@@ -337,7 +337,7 @@
 							if (is_array($row) && sizeof($row) != 0) {
 
 								//checks either device enabled
-									if ($row['device_enabled'] != 'true') {
+									if ($row['device_enabled'] === false) {
 										syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempted but the device is not enabled for ".escape($device_address));
 										if ($this->settings->get('provision','debug', false)) {
 											echo "<br/>device disabled<br/>";
@@ -384,7 +384,7 @@
 							if (empty($device_template)) {
 								$sql = "select * from v_devices ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and device_enabled = 'true' ";
+								$sql .= "and device_enabled = true ";
 								$sql .= "limit 1 ";
 								$parameters['domain_uuid'] = $domain_uuid;
 								$row = $this->database->select($sql, $parameters, 'row');
@@ -544,7 +544,7 @@
 								$array['devices'][$x]['device_uuid'] = $device_uuid;
 								$array['devices'][$x]['device_address'] = $device_address;
 								$array['devices'][$x]['device_vendor'] = $device_vendor;
-								$array['devices'][$x]['device_enabled'] = 'true';
+								$array['devices'][$x]['device_enabled'] = true;
 								$array['devices'][$x]['device_template'] = $device_template;
 								$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
 
@@ -573,7 +573,7 @@
 				if (is_uuid($device_uuid)) {
 					$sql = "select * from v_devices ";
 					$sql .= "where device_uuid = :device_uuid ";
-					$sql .= "and device_enabled = 'true' ";
+					$sql .= "and device_enabled = true ";
 					$parameters['device_uuid'] = $device_uuid;
 					$row = $this->database->select($sql, $parameters, 'row');
 					if (is_array($row) && sizeof($row) != 0) {
@@ -589,7 +589,7 @@
 							$parameters['device_uuid'] = $device_uuid;
 							$row = $this->database->select($sql, $parameters, 'row');
 							if (is_array($row) && sizeof($row) != 0) {
-								if ($row["device_enabled"] == "true") {
+								if ($row["device_enabled"]) {
 									$device_label = $row["device_label"];
 
 									//if the device vendor match then use the alternate device template
@@ -614,7 +614,7 @@
 				if (is_uuid($device_uuid) && is_uuid($device_profile_uuid)) {
 					$sql = "select * from v_device_profile_settings ";
 					$sql .= "where device_profile_uuid = :device_profile_uuid ";
-					$sql .= "and profile_setting_enabled = 'true' ";
+					$sql .= "and profile_setting_enabled = true ";
 					$parameters['device_profile_uuid'] = $device_profile_uuid;
 					$device_profile_settings = $this->database->select($sql, $parameters, 'all');
 					if (is_array($device_profile_settings) && sizeof($device_profile_settings) != 0) {
@@ -631,7 +631,7 @@
 				if (is_uuid($device_uuid)) {
 					$sql = "select * from v_device_settings ";
 					$sql .= "where device_uuid = :device_uuid ";
-					$sql .= "and device_setting_enabled = 'true' ";
+					$sql .= "and device_setting_enabled = true ";
 					$parameters['device_uuid'] = $device_uuid;
 					$device_settings = $this->database->select($sql, $parameters, 'all');
 					if (is_array($device_settings) && sizeof($device_settings) != 0) {
@@ -661,17 +661,31 @@
 				$view->cache_dir = sys_get_temp_dir();
 				$view->init();
 
-			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
+			//replace the variables in the template in the future, loop through all the line numbers to do a replace for each possible line number
 
-				//create a device address with back slashes for backwards compatability
+				//create a device address with backslashes for backwards compatibility
 					//$address_dash = substr($device_address, 0,2).'-'.substr($device_address, 2,2).'-'.substr($device_address, 4,2).'-'.substr($device_address, 6,2).'-'.substr($device_address, 8,2).'-'.substr($device_address, 10,2);
 
 				//get the provisioning information
 					if (is_uuid($device_uuid)) {
+						//get the extensions from the database
+							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
+							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
+							$sql .= "number_alias, extension, call_group ";
+							$sql .= "from v_extensions ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "order by extension asc ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$extensions = $this->database->select($sql, $parameters, 'all');
+							foreach($extensions as $row) {
+								$extension_labels[$row['extension']]['caller_id_name'] = $row['effective_caller_id_name'];
+							}
+							unset($sql, $parameters);
+
 						//get the device lines array
 							$sql = "select * from v_device_lines ";
 							$sql .= "where device_uuid = :device_uuid ";
-							$sql .= "and (enabled = 'true' or enabled is null or enabled = '') ";
+							$sql .= "and (enabled = true or enabled is null) ";
 							$parameters['device_uuid'] = $device_uuid;
 							//$database_device_lines = $this->database->select($sql, $parameters, 'all');
 							foreach ($this->database->select($sql, $parameters, 'all') as $row) {
@@ -797,6 +811,20 @@
 							}
 							unset($sql, $parameters, $keys);
 
+						//replace the ${caller_id_name} with the extensions caller id name
+							if (is_array($device_keys)) {
+								foreach($device_keys as $row) {
+									//set the variables
+									$id = $row['device_key_id'];
+									$category = $row['device_key_category'];
+
+									//build the device keys array
+									if ($row['device_key_label'] == '${caller_id_name}' && is_numeric($row['device_key_value'])) {
+										$device_keys[$category][$id]['device_key_label'] = $extension_labels[$row['device_key_value']]['caller_id_name'];
+									}
+								}
+							}
+
 						//set the variables
 							if (is_array($device_lines) && sizeof($device_lines) != 0) {
 								foreach($device_lines as $row) {
@@ -897,7 +925,7 @@
 							$sql .= "number_alias, extension, call_group ";
 							$sql .= "from v_extensions ";
 							$sql .= "where domain_uuid = :domain_uuid ";
-							$sql .= "and enabled = 'true' ";
+							$sql .= "and enabled = true ";
 							$sql .= "and directory_visible = 'true' ";
 							$sql .= "order by directory_first_name, effective_caller_id_name asc ";
 							$parameters['domain_uuid'] = $domain_uuid;
@@ -1381,7 +1409,7 @@
 												//destination file path
 													$dest_path = path_join($directory, $file_name);
 
-													if ($device_enabled == 'true') {
+													if ($device_enabled) {
 														//output template to string for header processing
 															$file_contents = $this->render();
 

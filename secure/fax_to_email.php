@@ -308,7 +308,7 @@ if (!function_exists('fax_split_dtmf')) {
 //get the enabled domains from the database
 	//$domains = domains::fetch($database);
 	$domains = [];
-	$result = $database->select("select domain_uuid, domain_name from v_domains where domain_enabled = 'true'");
+	$result = $database->select("select domain_uuid, domain_name from v_domains where domain_enabled = true ");
 	if (is_array($result) && @sizeof($result) != 0) {
 		foreach ($result as $row) {
 			//set the domain variables
@@ -476,7 +476,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$sql .= "and template_category = :template_category ";
 			$sql .= "and template_subcategory = :template_subcategory ";
 			$sql .= "and template_type = :template_type ";
-			$sql .= "and template_enabled = 'true' ";
+			$sql .= "and template_enabled = true ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['template_language'] = $language_code;
 			$parameters['template_category'] = 'fax';

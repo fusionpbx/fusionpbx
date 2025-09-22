@@ -245,7 +245,7 @@
 				}
 				else {
 					echo "	<td class='hide-xs'>\n";
-					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice ?? null);
+					echo $row['module_enabled'] === true ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice ?? null);
 					echo "	</td>\n";
 					if (permission_exists('module_edit')) {
 						echo "	<td class='no-link center'>";
@@ -259,11 +259,11 @@
 			}
 			if (permission_exists('module_edit')) {
 				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['module_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['module_enabled'] ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>";
-				echo $text['label-'.$row['module_enabled']];
+				echo $text['label-'.($row['module_enabled'] ? 'true' : 'false')];
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row["module_description"])."&nbsp;</td>\n";

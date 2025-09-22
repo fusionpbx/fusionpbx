@@ -396,11 +396,11 @@
 					d.domain_uuid = :domain_uuid and
 					d.app_uuid = '430737df-5385-42d1-b933-22600d3fb79e' and
 					d.dialplan_name = 'recordings' and
-					d.dialplan_enabled = 'true' and
+					d.dialplan_enabled = true and
 					dd.dialplan_detail_tag = 'action' and
 					dd.dialplan_detail_type = 'set' and
 					dd.dialplan_detail_data like 'pin_number=%' and
-					dd.dialplan_detail_enabled = 'true' ";
+					dd.dialplan_detail_enabled = true ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$recording_password = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);

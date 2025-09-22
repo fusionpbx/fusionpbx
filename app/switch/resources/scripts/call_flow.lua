@@ -62,8 +62,8 @@ if not call_flow_uuid then
 end
 
 --get the call flow details
-local sql = "SELECT * FROM v_call_flows where call_flow_uuid = :call_flow_uuid"
-	-- .. "and call_flow_enabled = 'true'"
+local sql = "SELECT * FROM v_call_flows where call_flow_uuid = :call_flow_uuid ";
+	sql = sql .. "and call_flow_enabled = true "
 local params = {call_flow_uuid = call_flow_uuid};
 --log.notice("SQL: %s", sql);
 dbh:query(sql, params, function(row)

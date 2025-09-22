@@ -18,7 +18,7 @@
 
   The Initial Developer of the Original Code is
   Mark J Crane <markjcrane@fusionpbx.com>
-  Copyright (C) 2013 - 2023
+  Copyright (C) 2013 - 2025
   All Rights Reserved.
 
   Contributor(s):
@@ -648,7 +648,7 @@
 																	break;
 																case 'timestamptz': $using = $field_name . "::timestamp with time zone";
 																	break;
-																case 'boolean': $using = $field_name . "::boolean";
+																case 'boolean': $using = $field_name . "::text::boolean";
 																	break;
 																default: unset($using);
 															}
@@ -820,15 +820,20 @@
 				}
 				//$this->db->beginTransaction();
 				$update_array = explode(";", $sql_update);
-				foreach ($update_array as $sql) {
-					if (strlen(trim($sql))) {
-						try {
-							$this->database->db->query(trim($sql));
-							if ($format == "text") {
-								$response .= "	$sql;\n";
+				if (is_array($update_array) && count($update_array)) {
+					//drop views so that alter table statements complete
+					$result = $this->database->views('drop');
+
+					foreach ($update_array as $sql) {
+						if (strlen(trim($sql))) {
+							try {
+								$this->database->db->query(trim($sql));
+								if ($format == "text") {
+									$response .= "	$sql;\n";
+								}
+							} catch (PDOException $error) {
+								$response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
 							}
-						} catch (PDOException $error) {
-							$response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
 						}
 					}
 				}
@@ -852,16 +857,14 @@
 				}
 			}
 
+			//create views so that alter table statements complete
+			$this->database->views('create');
+
 			//handle response
-			//if ($output == "echo") {
-			//	echo $response;
-			//}
-			//else if ($output == "return") {
 			return $response;
-			//}
+
 		} //end function
 	}
-
 
 //example use
 //$obj = new schema;

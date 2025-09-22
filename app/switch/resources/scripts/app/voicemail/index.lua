@@ -288,10 +288,21 @@
 			if (voicemail_id ~= nil) then
 				if (session ~= nil and session:ready()) then
 					--get the information from the database
-						local sql = [[SELECT * FROM v_voicemails
-							WHERE domain_uuid = :domain_uuid
-							AND voicemail_id = :voicemail_id
-							AND voicemail_enabled = 'true' ]];
+						local sql = [[SELECT
+							voicemail_uuid, 
+							voicemail_password, 
+							greeting_id, 
+							voicemail_alternate_greet_id, 
+							voicemail_mail_to, 
+							cast(voicemail_attach_file as text), 
+							cast(voicemail_local_after_email as text), 
+							cast(voicemail_local_after_forward as text), 
+							cast(voicemail_transcription_enabled as text), 
+							cast(voicemail_tutorial as text) 
+							FROM v_voicemails 
+							WHERE domain_uuid = :domain_uuid 
+							AND voicemail_id = :voicemail_id 
+							AND voicemail_enabled = true ]];
 						local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -308,17 +319,6 @@
 							voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 							voicemail_tutorial = row["voicemail_tutorial"];
 						end);
-
-					--set default values
-						if (voicemail_attach_file == nil) then
-							voicemail_attach_file = "true";
-						end
-						if (voicemail_local_after_email == nil) then
-							voicemail_local_after_email = "true";
-						end
-						if (voicemail_local_after_forward == nil) then
-							voicemail_local_after_forward = "true";
-						end
 
 					--valid voicemail
 						if (voicemail_uuid ~= nil and string.len(voicemail_uuid) > 0) then
@@ -405,9 +405,16 @@
 
 		--get voicemail message details
 			if (voicemail_id) then
-				local sql = [[SELECT * FROM v_voicemails
-					WHERE domain_uuid = :domain_uuid
-					AND voicemail_id = :voicemail_id]]
+				local sql = "SELECT ";
+				sql = sql .. " cast(voicemail_local_after_email as text), ";
+				sql = sql .. " cast(voicemail_local_after_forward as text), ";
+				sql = sql .. " cast(voicemail_attach_file as text), ";
+				sql = sql .. " voicemail_password, ";
+				sql = sql .. " voicemail_mail_to, ";
+				sql = sql .. " cast(voicemail_enabled as text) ";
+				sql = sql .. "FROM v_voicemails ";
+				sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+				sql = sql .. "AND voicemail_id = :voicemail_id ";
 				local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -416,14 +423,6 @@
 					voicemail_local_after_email = row["voicemail_local_after_email"];
 					voicemail_local_after_forward = row["voicemail_local_after_forward"];
 				end);
-
-			--set default values
-				if (voicemail_local_after_email == nil) then
-					voicemail_local_after_email = "true";
-				end
-				if (voicemail_local_after_forward == nil) then
-					voicemail_local_after_forward = "true";
-				end
 
 			--get the message count and send the mwi event
 				if (voicemail_local_after_email == 'true' or voicemail_local_after_forward == 'true') then

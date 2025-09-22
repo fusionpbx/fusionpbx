@@ -126,13 +126,16 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_streams ";
+	$sql = "select ";
+	$sql .= "stream_uuid, domain_uuid, stream_name, stream_location, ";
+	$sql .= "cast(stream_enabled as text), stream_description ";
+	$sql .= "from v_streams ";
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(stream_name) like :search ";
 		$sql .= "	or lower(stream_location) like :search ";
-		$sql .= "	or lower(stream_enabled) like :search ";
+		$sql .= "	or lower(cast(stream_enabled as text)) like :search ";
 		$sql .= "	or lower(stream_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';

@@ -118,7 +118,6 @@
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -134,10 +133,40 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "domain_uuid, ";
+	$sql .= "conference_uuid, ";
+	$sql .= "dialplan_uuid, ";
+	$sql .= "conference_name, ";
+	$sql .= "conference_extension, ";
+	$sql .= "conference_pin_number, ";
+	$sql .= "conference_profile, ";
+	$sql .= "conference_email_address, ";
+	$sql .= "conference_account_code, ";
+	$sql .= "conference_flags, ";
+	$sql .= "conference_order, ";
+	$sql .= "conference_description, ";
+	$sql .= "conference_context, ";
+	$sql .= "cast(conference_enabled as text) ";
+	if (permission_exists('conference_view')) {
+		//show all extensions
+		$sql .= "from v_conferences as c ";
+		$sql .= "where true ";
+		if ($show != "all" || !permission_exists('conference_all')) {
+			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
+	}
+	else {
+		//show only assigned extensions
+		$sql .= "from v_conferences as c, v_conference_users as u ";
+		$sql .= "where c.conference_uuid = u.conference_uuid ";
+		$sql .= "and c.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$conferences = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

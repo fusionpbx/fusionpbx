@@ -124,12 +124,12 @@
 
 			//get the default settings
 				$sql = "select sip_profile_name from v_sip_profiles ";
-				$sql .= "where sip_profile_enabled = 'true' ";
+				$sql .= "where true ";
 				if (!empty($profile) && $profile != 'all') {
 					$sql .= "and sip_profile_name = :sip_profile_name ";
 					$parameters['sip_profile_name'] = $profile;
 				}
-				$sql .= "and sip_profile_enabled = 'true' ";
+				$sql .= "and sip_profile_enabled = true ";
 				$sip_profiles = $this->database->select($sql, $parameters ?? null, 'all');
 
 				if (!empty($sip_profiles)) {

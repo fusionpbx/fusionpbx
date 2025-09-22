@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -111,7 +111,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(sip_profile_uuid)', '*', $sql);
+	$sql = str_replace('count(sip_profile_uuid)', 'sip_profile_uuid, sip_profile_name, sip_profile_hostname, cast(sip_profile_enabled as text), sip_profile_description', $sql);
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;

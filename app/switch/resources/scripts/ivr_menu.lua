@@ -105,7 +105,7 @@
 --get the ivr menu from the database
 	sql = [[SELECT * FROM v_ivr_menus
 		WHERE ivr_menu_uuid = :ivr_menu_uuid
-		AND ivr_menu_enabled = 'true' ]];
+		AND ivr_menu_enabled = true ]];
 	local params = {ivr_menu_uuid = ivr_menu_uuid};
 	if (debug["sql"]) then
 		log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));
@@ -339,7 +339,7 @@
 					v_ivr_menu_options
 				WHERE
 					ivr_menu_uuid = :ivr_menu_uuid
-					AND ivr_menu_option_enabled = 'true'
+					AND ivr_menu_option_enabled = true
 				ORDER BY
 					ivr_menu_option_order asc
 			]];
@@ -432,7 +432,7 @@
 			end
 
 		--direct dial
-			if ivr_menu_direct_dial == "true" and #digits > 0 and #digits < 6 then
+			if (ivr_menu_direct_dial and #digits > 0 and #digits < 6) then
 				-- remove *#
 					digits = digits:gsub("[*#]", "");
 

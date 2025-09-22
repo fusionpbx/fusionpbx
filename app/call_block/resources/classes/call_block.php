@@ -314,7 +314,7 @@
 								$sql .= "from v_destinations as d ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and destination_prefix <> '' ";
-								$sql .= "and destination_enabled = 'true' ";
+								$sql .= "and destination_enabled = true ";
 								$sql .= "order by count desc limit 1; ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$destination_country_code = $this->database->select($sql, $parameters ?? null, 'column');
@@ -378,7 +378,7 @@
 											$array['call_block'][$x]['call_block_count'] = 0;
 											$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
 											$array['call_block'][$x]['call_block_data'] = $this->call_block_data;
-											$array['call_block'][$x]['call_block_enabled'] = 'true';
+											$array['call_block'][$x]['call_block_enabled'] = true;
 											$array['call_block'][$x]['date_added'] = time();
 											$x++;
 										}
@@ -402,7 +402,7 @@
 														$array['call_block'][$x]['call_block_count'] = 0;
 														$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
 														$array['call_block'][$x]['call_block_data'] = $this->call_block_data;
-														$array['call_block'][$x]['call_block_enabled'] = 'true';
+														$array['call_block'][$x]['call_block_enabled'] = true;
 														$array['call_block'][$x]['date_added'] = time();
 														$x++;
 													}
@@ -420,13 +420,13 @@
 									$sql = "select dialplan_uuid from v_dialplans ";
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and app_uuid = '".$this->app_uuid."' ";
-									$sql .= "and dialplan_enabled <> 'true' ";
+									$sql .= "and dialplan_enabled <> true ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$rows = $this->database->select($sql, $parameters);
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $x => $row) {
 											$array['dialplans'][$x]['dialplan_uuid'] = $row['dialplan_uuid'];
-											$array['dialplans'][$x]['dialplan_enabled'] = 'true';
+											$array['dialplans'][$x]['dialplan_enabled'] = true;
 										}
 									}
 									unset($rows, $parameters);

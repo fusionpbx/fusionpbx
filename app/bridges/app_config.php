@@ -46,7 +46,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "bridges";
 		$apps[$x]['destinations'][$y]['name'] = "bridges";
 		//$apps[$x]['destinations'][$y]['sql'] = "select bridge_name, bridge_destination, bridge_description from v_bridges ";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and bridge_enabled = 'true'";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and bridge_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "bridge_name asc";
 		$apps[$x]['destinations'][$y]['field']['bridge_uuid'] = "bridge_uuid";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "bridge_uuid";
@@ -89,7 +89,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the destination.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_enabled';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'boolean';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select to enable or disable.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_description';

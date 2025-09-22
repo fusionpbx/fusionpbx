@@ -38,9 +38,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -50,7 +47,7 @@
 	$domain_description = '';
 
 //action add or update
-	if (!permission_exists('domain_add') || (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_all'))) {
+	if (!permission_exists('domain_add') || (file_exists(dirname(__DIR__, 2)."/app/domains/") && !permission_exists('domain_all'))) {
 		//admin editing own domain/settings
 		$domain_uuid = $_SESSION['domain_uuid'];
 		$action = "update";
@@ -68,7 +65,7 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$domain_name = strtolower($_POST["domain_name"]);
-		$domain_enabled = $_POST["domain_enabled"] ?? 'false';
+		$domain_enabled = $_POST["domain_enabled"];
 		$domain_description = $_POST["domain_description"];
 	}
 
@@ -133,8 +130,7 @@
 
 					if ($num_rows == 0) {
 
-						//add the domain name
-						$domain_enabled = 'true';
+						//add the domain uuid
 						$domain_uuid = uuid();
 
 						//build the domain array
@@ -152,7 +148,7 @@
 						$database->save($array);
 
 						//add dialplans to the domain
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
+						if (file_exists(dirname(__DIR__, 2)."/app/dialplans/app_config.php")) {
 							//import the dialplans
 							$dialplan = new dialplan;
 							$dialplan->import($domain_array['domains']);
@@ -209,7 +205,7 @@
 						$database->save($array);
 
 					//add dialplans to the domain
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
+						if (file_exists(dirname(__DIR__, 2)."/app/dialplans/app_config.php")) {
 							//import the dialplans
 							$dialplan = new dialplan;
 							$dialplan->import($array['domains'] ?? null);
@@ -227,7 +223,7 @@
 					if ($original_domain_name != $domain_name) {
 
 						//update dialplans
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/dialplans/app_config.php")) {
 								$sql = "update v_dialplans set ";
 								$sql .= "dialplan_context = replace(dialplan_context, :domain_name_old, :domain_name_new), ";
 								$sql .= "dialplan_xml = replace(dialplan_xml, :domain_name_old, :domain_name_new) ";
@@ -249,7 +245,7 @@
 							}
 
 						//update destinations
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/destinations/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/destinations/app_config.php")) {
 								$sql = "update v_destinations set ";
 								$sql .= "destination_data = replace(destination_data, :destination_data_old, :destination_data_new), ";
 								$sql .= "destination_conditions = replace(destination_conditions::text, :destination_data_old, :destination_data_new)::json, ";
@@ -263,7 +259,7 @@
 							}
 
 						//update extensions (accountcode, user_context, dial_domain)
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/extensions/app_config.php")) {
 								$sql = "update v_extensions set ";
 								$sql .= "user_context = replace(user_context, :domain_name_old, :domain_name_new), ";
 								$sql .= "accountcode = replace(accountcode, :domain_name_old, :domain_name_new), ";
@@ -277,7 +273,7 @@
 							}
 
 						//update ivr_menus (ivr_menu_context, ivr_menu_greet_long, ivr_menu_greet_short) and ivr_menu_options (ivr_menu_option_param)
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ivr_menus/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/ivr_menus/app_config.php")) {
 								$sql = "update v_ivr_menus set ";
 								$sql .= "ivr_menu_context = replace(ivr_menu_context, :domain_name_old, :domain_name_new), ";
 								$sql .= "ivr_menu_greet_long = replace(ivr_menu_greet_long, :domain_name_old, :domain_name_new), ";
@@ -300,7 +296,7 @@
 							}
 
 						//update ring_groups (ring_group_context, ring_group_forward_destination, ring_group_timeout_data)
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/ring_groups/app_config.php")) {
 								$sql = "update v_ring_groups set ";
 								$sql .= "ring_group_context = replace(ring_group_context, :domain_name_old, :domain_name_new), ";
 								$sql .= "ring_group_forward_destination = replace(ring_group_forward_destination, :domain_name_old, :domain_name_new), ";
@@ -314,7 +310,7 @@
 							}
 
 						//update cdr records (domain_name, context)
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/xml_cdr/app_config.php")){
+							if (file_exists(dirname(__DIR__, 2)."/app/xml_cdr/app_config.php")){
 								$sql = "update v_xml_cdr set ";
 								$sql .= "domain_name = :domain_name_new ";
 								$sql .= "where domain_name = :domain_name_old ";
@@ -337,7 +333,7 @@
 							}
 
 						//update conference session recording paths
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/conference_centers/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/conference_centers/app_config.php")) {
 								$sql = "update v_conference_sessions set ";
 								$sql .= "recording = replace(recording, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -349,7 +345,7 @@
 							}
 
 						//update conference center greetings
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/conference_centers/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/conference_centers/app_config.php")) {
 								$sql = "update v_conference_centers set ";
 								$sql .= "conference_center_greeting = replace(conference_center_greeting, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -361,7 +357,7 @@
 							}
 
 						//update call center queue record templates
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_queues set ";
 								$sql .= "queue_record_template = replace(queue_record_template, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -373,7 +369,7 @@
 							}
 
 						//update call center agent contacts
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/call_centers/app_config.php")) {
 								$sql = "update v_call_center_agents set ";
 								$sql .= "agent_contact = replace(agent_contact, :domain_name_old, :domain_name_new) ";
 								$sql .= "where domain_uuid = :domain_uuid ";
@@ -385,7 +381,7 @@
 							}
 
 						//update call flows data, alternate-data and contexts
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_flows/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/call_flows/app_config.php")) {
 								$sql = "update v_call_flows set ";
 								$sql .= "call_flow_data = replace(call_flow_data, :domain_name_old, :domain_name_new), ";
 								$sql .= "call_flow_alternate_data = replace(call_flow_alternate_data, :domain_name_old, :domain_name_new), ";
@@ -399,7 +395,7 @@
 							}
 
 						//update device lines server_address, server_address_primary, server_address_secondary, outbound_proxy_primary, outbound_proxy_secondary
-							if (file_exists($_SERVER["PROJECT_ROOT"]."/app/devices/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 2)."/app/devices/app_config.php")) {
 								$sql = "update v_device_lines set ";
 								$sql .= "server_address = replace(server_address, :domain_name_old, :domain_name_new), ";
 								$sql .= "server_address_primary = replace(server_address_primary, :domain_name_old, :domain_name_new), ";
@@ -528,7 +524,7 @@
 		$sql = "select ";
 		$sql .= "domain_uuid, ";
 		$sql .= "domain_name, ";
-		$sql .= "cast(domain_enabled as text), ";
+		$sql .= "domain_enabled, ";
 		$sql .= "domain_description ";
 		$sql .= "from v_domains ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -541,9 +537,6 @@
 		}
 		unset($sql, $parameters, $row);
 	}
-
-//set the defaults
-	if (empty($domain_enabled)) { $domain_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -669,17 +662,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='domain_enabled' name='domain_enabled' value='true' ".($domain_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='domain_enabled' name='domain_enabled'>\n";
-		echo "		<option value='true' ".($domain_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($domain_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='domain_enabled' name='domain_enabled'>\n";
+	echo "		<option value='true' ".($domain_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($domain_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-domain_enabled']."\n";

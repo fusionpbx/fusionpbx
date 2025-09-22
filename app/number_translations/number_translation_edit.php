@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -58,7 +58,7 @@
 	if (!empty($_POST)) {
 		$number_translation_name = $_POST["number_translation_name"];
 		$number_translation_details = $_POST["number_translation_details"];
-		$number_translation_enabled = $_POST["number_translation_enabled"] ?? 'false';
+		$number_translation_enabled = $_POST["number_translation_enabled"];
 		$number_translation_description = $_POST["number_translation_description"];
 	}
 
@@ -119,7 +119,7 @@
 			$msg = '';
 			if (empty($number_translation_name)) { $msg .= $text['message-required']." ".$text['label-number_translation_name']."<br>\n"; }
 			//if (empty($number_translation_details)) { $msg .= $text['message-required']." ".$text['label-number_translation_details']."<br>\n"; }
-			if (empty($number_translation_enabled)) { $msg .= $text['message-required']." ".$text['label-number_translation_enabled']."<br>\n"; }
+			//if (empty($number_translation_enabled)) { $msg .= $text['message-required']." ".$text['label-number_translation_enabled']."<br>\n"; }
 			//if (empty($number_translation_description)) { $msg .= $text['message-required']." ".$text['label-number_translation_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -337,17 +337,16 @@
 	echo "	".$text['label-number_translation_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='number_translation_enabled' name='number_translation_enabled' value='true' ".($number_translation_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='number_translation_enabled' name='number_translation_enabled'>\n";
-		echo "		<option value='true' ".($number_translation_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($number_translation_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='number_translation_enabled' name='number_translation_enabled'>\n";
+	echo "		<option value='true' ".($number_translation_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($number_translation_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-number_translation_enabled']."\n";

@@ -115,7 +115,6 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -131,10 +130,35 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql ?? '');
+	$sql = "select ";
+	$sql .= "call_flow_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "dialplan_uuid, ";
+	$sql .= "call_flow_name, ";
+	$sql .= "call_flow_extension, ";
+	$sql .= "call_flow_feature_code, ";
+	$sql .= "call_flow_context, ";
+	$sql .= "call_flow_status, ";
+	$sql .= "call_flow_pin_number, ";
+	$sql .= "call_flow_label, ";
+	$sql .= "call_flow_sound, ";
+	$sql .= "call_flow_app, ";
+	$sql .= "call_flow_data, ";
+	$sql .= "call_flow_alternate_label, ";
+	$sql .= "call_flow_alternate_sound, ";
+	$sql .= "call_flow_alternate_app, ";
+	$sql .= "call_flow_alternate_data, ";
+	$sql .= "cast(call_flow_enabled as text), ";
+	$sql .= "call_flow_description ";
+	$sql .= "from v_call_flows ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('call_flow_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'call_flow_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$call_flows = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

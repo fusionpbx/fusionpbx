@@ -193,7 +193,7 @@
 				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid IS NULL) ";
 				sql = sql .. ") ";
 				sql = sql .. "AND (p.hostname = :hostname OR p.hostname IS NULL) ";
-				sql = sql .. "AND p.dialplan_enabled = 'true' ";
+				sql = sql .. "AND p.dialplan_enabled = true ";
 				sql = sql .. "ORDER BY p.dialplan_order ASC ";
 				local params = {destination_number = destination_number, hostname = hostname};
 				if (debug["sql"]) then
@@ -252,7 +252,7 @@
 					sql = sql .. "where p.dialplan_context in (:call_context, '${domain_name}', 'global') ";
 				end
 				sql = sql .. "and (p.hostname = :hostname or p.hostname is null) ";
-				sql = sql .. "and p.dialplan_enabled = 'true' ";
+				sql = sql .. "and p.dialplan_enabled = true ";
 				sql = sql .. "order by p.dialplan_order asc ";
 				local params = {call_context = call_context, hostname = hostname};
 				if (debug["sql"]) then

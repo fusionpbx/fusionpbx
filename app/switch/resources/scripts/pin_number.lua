@@ -104,7 +104,7 @@
 				local sql = [[SELECT * FROM v_pin_numbers
 					WHERE pin_number = :digits
 					AND domain_uuid = :domain_uuid
-					AND enabled = 'true' ]];
+					AND enabled = true ]];
 				local params = {digits = digits, domain_uuid = domain_uuid};
 				if (debug["sql"]) then
 					freeswitch.consoleLog("NOTICE", "[pin_number] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
@@ -130,7 +130,7 @@
 					WHERE voicemail_id = :user_ext
 					AND voicemail_password = :digits
 					AND domain_uuid = :domain_uuid 
-					AND voicemail_enabled = 'true' ]];
+					AND voicemail_enabled = true ]];
 				local params = {user_ext = user_ext, digits = digits, domain_uuid = domain_uuid};
 				if (debug["sql"]) then
 					freeswitch.consoleLog("NOTICE", "[pin_number] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");

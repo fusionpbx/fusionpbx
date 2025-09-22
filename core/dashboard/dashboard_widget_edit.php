@@ -55,7 +55,7 @@
 	$widget_content_text_align = '';
 	$widget_content_details = '';
 	$widget_groups = [];
-	$widget_label_enabled = 'true';
+	$widget_label_enabled = '';
 	$widget_label_text_color = '';
 	$widget_label_text_color_hover = '';
 	$widget_label_background_color = '';
@@ -67,7 +67,7 @@
 	$widget_details_state = '';
 	$widget_parent_uuid = '';
 	$widget_order = '';
-	$widget_enabled = 'true';
+	$widget_enabled = '';
 	$widget_description = '';
 
 //action add or update
@@ -96,7 +96,7 @@
 		$widget_content_details = $_POST["widget_content_details"] ?? '';
 		$widget_groups = $_POST["dashboard_widget_groups"] ?? '';
 		$widget_chart_type = $_POST["widget_chart_type"] ?? '';
-		$widget_label_enabled = $_POST["widget_label_enabled"] ?? 'false';
+		$widget_label_enabled = $_POST["widget_label_enabled"];
 		$widget_label_text_color = $_POST["widget_label_text_color"] ?? '';
 		$widget_label_text_color_hover = $_POST["widget_label_text_color_hover"] ?? '';
 		$widget_label_background_color = $_POST["widget_label_background_color"] ?? '';
@@ -114,7 +114,7 @@
 		$widget_details_state = $_POST["widget_details_state"] ?? '';
 		$widget_parent_uuid = $_POST["dashboard_widget_parent_uuid"] ?? '';
 		$widget_order = $_POST["widget_order"] ?? '';
-		$widget_enabled = $_POST["widget_enabled"] ?? 'false';
+		$widget_enabled = $_POST["widget_enabled"];
 		$widget_description = $_POST["widget_description"] ?? '';
 
 		//define the regex patterns
@@ -366,7 +366,7 @@
 		$sql .= " widget_content_text_align, ";
 		$sql .= " widget_content_details, ";
 		$sql .= " widget_chart_type, ";
-		$sql .= " cast(widget_label_enabled as text), ";
+		$sql .= " widget_label_enabled, ";
 		$sql .= " widget_label_text_color, ";
 		$sql .= " widget_label_text_color_hover, ";
 		$sql .= " widget_label_background_color, ";
@@ -635,7 +635,7 @@
 			$items_to_remove[] = 'widget_width';
 			$items_to_remove[] = 'widget_height';
 		}
-		if ($widget_label_enabled == "false") {
+		if ($widget_label_enabled === false) {
 			$items_to_remove[] = 'widget_label_text_color';
 			$items_to_remove[] = 'widget_label_text_color_hover';
 			$items_to_remove[] = 'widget_label_background_color';
@@ -772,6 +772,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('widget_url').addEventListener('change', adjust_form_url);
 	document.getElementById('widget_target').addEventListener('change', adjust_form_url);
 	document.getElementById('widget_label_enabled').addEventListener('change', toggle_label_settings);
+	document.querySelector('.switch:has(#widget_label_enabled)').addEventListener('click', toggle_label_settings);
 });
 
 </script>
@@ -1078,17 +1079,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='widget_label_enabled' name='widget_label_enabled' value='true' ".(empty($widget_label_enabled) || $widget_label_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='widget_label_enabled' name='widget_label_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".(empty($widget_label_enabled) || $widget_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='widget_label_enabled' name='widget_label_enabled'>\n";
+	echo "			<option value='true' ".($widget_label_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($widget_label_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-widget_label_enabled']."\n";
@@ -1402,17 +1402,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "	".$text['label-widget_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='widget_enabled' name='widget_enabled' value='true' ".($widget_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='widget_enabled' name='widget_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($widget_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='widget_enabled' name='widget_enabled'>\n";
+	echo "			<option value='true' ".($widget_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($widget_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-widget_enabled']."\n";

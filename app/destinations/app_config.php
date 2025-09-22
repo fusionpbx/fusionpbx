@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "destinations";
 		$apps[$x]['destinations'][$y]['name'] = "destinations";
 		$apps[$x]['destinations'][$y]['sql'] = "select destination_uuid, destination_uuid as uuid, destination_number, destination_context, destination_description from v_destinations ";
-		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and (destination_type = 'outbound' or destination_type = 'local') and destination_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and (destination_type = 'outbound' or destination_type = 'local') and destination_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
 		$apps[$x]['destinations'][$y]['field']['destination_uuid'] = "destination_uuid";
 		$apps[$x]['destinations'][$y]['field']['destination_number'] = "destination_number";
@@ -393,7 +393,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the destination order.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_description";

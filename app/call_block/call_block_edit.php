@@ -71,7 +71,7 @@
 		$call_block_name = $_POST["call_block_name"] ?? null;
 		$call_block_country_code = $_POST["call_block_country_code"] ?? null;
 		$call_block_number = $_POST["call_block_number"] ?? null;
-		$call_block_enabled = $_POST["call_block_enabled"] ?? 'false';
+		$call_block_enabled = $_POST["call_block_enabled"];
 		$call_block_description = $_POST["call_block_description"] ?? null;
 
 		//get the call block app and data
@@ -154,7 +154,7 @@
 							$sql .= "and domain_uuid = :domain_uuid ";
 						}
 						$sql .= "and app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' ";
-						$sql .= "and dialplan_enabled <> 'true' ";
+						$sql .= "and dialplan_enabled <> true ";
 						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
 							$parameters['domain_uuid'] = $domain_uuid;
 						}
@@ -163,7 +163,7 @@
 						if (!empty($rows)) {
 							foreach ($rows as $index => $row) {
 								$array['dialplans'][$index]['dialplan_uuid'] = $row['dialplan_uuid'];
-								$array['dialplans'][$index]['dialplan_enabled'] = 'true';
+								$array['dialplans'][$index]['dialplan_enabled'] = true;
 							}
 
 							$p = permissions::new();
@@ -291,9 +291,6 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set the defaults
-	if (empty($call_block_enabled)) { $call_block_enabled = 'true'; }
-
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
 		$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
@@ -303,7 +300,7 @@
 			$sql .= "	or domain_uuid is null ";
 		}
 		$sql .= ") ";
-		$sql .= "and enabled = 'true' ";
+		$sql .= "and enabled = true ";
 		$sql .= "order by extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$extensions = $database->select($sql, $parameters);
@@ -561,17 +558,16 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='call_block_enabled' name='call_block_enabled' value='true' ".($call_block_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='call_block_enabled' name='call_block_enabled'>\n";
-		echo "		<option value='true' ".($call_block_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($call_block_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='call_block_enabled' name='call_block_enabled'>\n";
+	echo "			<option value='true' ".($call_block_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($call_block_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enable']."\n";

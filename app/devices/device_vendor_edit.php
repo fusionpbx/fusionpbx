@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,7 +53,7 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$name = $_POST["name"];
-		$enabled = $_POST["enabled"] ?? 'false';
+		$enabled = $_POST["enabled"];
 		$description = $_POST["description"];
 	}
 
@@ -76,7 +76,6 @@
 		//check for all required data
 			$msg = '';
 			if (empty($name)) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
 			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -123,7 +122,12 @@
 //pre-populate the form
 	if (!empty($_GET) && count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$device_vendor_uuid = $_GET["id"];
-		$sql = "select * from v_device_vendors ";
+		$sql = "select ";
+		$sql .= "device_vendor_uuid, ";
+		$sql .= "name, ";
+		$sql .= "enabled, ";
+		$sql .= "description ";
+		$sql .= "from v_device_vendors ";
 		$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
 		$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 		$database = new database;
@@ -135,9 +139,6 @@
 		}
 		unset($sql, $parameters, $row);
 	}
-
-//set the defaults
-	if (empty($enabled)) { $enabled = true; }
 
 //create token
 	$object = new token;
@@ -178,17 +179,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='enabled' name='enabled'>\n";
-		echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+	echo "		<option value='true' ".($enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";

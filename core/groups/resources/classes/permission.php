@@ -63,7 +63,7 @@
 					$sql .= "where group_name in ( ";
 					$sql .= "	select group_name ";
 					$sql .= "	from v_groups ";
-					$sql .= "	where group_protected <> 'true' ";
+					$sql .= "	where group_protected <> true ";
 					$sql .= "	and group_name in (".$group_names.") ";
 					$sql .= ")";
 					$sql .= "and (permission_protected <> 'true' or permission_protected is null)";
@@ -76,7 +76,7 @@
 					$sql .= "where group_name in ( ";
 					$sql .= "	select group_name ";
 					$sql .= "	from v_groups ";
-					$sql .= "	where group_protected <> 'true' ";
+					$sql .= "	where group_protected <> true ";
 					$sql .= "	and group_name in (".$group_names.") ";
 					$sql .= ");";
 					$database = new database;
@@ -145,12 +145,12 @@
 									foreach ($permission['groups'] as $group_name) {
 										//check group protection
 										$group_uuid = null;
-										$group_protected = null;
+										$group_protected = false;
 										if (is_array($groups)) {
 											foreach ($groups as $group) {
 												if ($group['group_name'] == $group_name) {
 													$group_uuid = $group['group_uuid'];
-													$group_protected = $group['group_protected'] == 'true' ? true : false;
+													$group_protected = $group['group_protected'];
 													break;
 												}
 											}

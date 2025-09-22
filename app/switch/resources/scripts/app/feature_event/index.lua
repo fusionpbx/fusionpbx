@@ -190,7 +190,7 @@
 
 		--Call Forward All disable
 			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_immediate") then
-				--set a variable				
+				--set a variable
 					forward_all_destination = action_value;
 					forward_all_enabled = "false";
 					forward_immediate_enabled = "false";
@@ -320,8 +320,8 @@
 
 				--send notify to the phone
 					notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
-			end			
-	
+			end
+
 	--No feature event (phone boots): Send all values
 		if (feature_enabled == nil) then
 			--Do Not Disturb

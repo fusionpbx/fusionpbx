@@ -68,7 +68,7 @@
 		$type = $_POST["type"];
 		$subtype = $_POST["subtype"];
 		$value = $_POST["value"];
-		$enabled = $_POST["enabled"] ?? 'false';
+		$enabled = $_POST["enabled"];
 		$description = $_POST["description"];
 	}
 
@@ -120,7 +120,6 @@
 			//if (empty($label)) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
 			if (empty($type)) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
 			if (empty($value)) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
-			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
 			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -159,7 +158,6 @@
 						$array['device_vendor_functions'][0]['enabled'] = $enabled;
 						$array['device_vendor_functions'][0]['description'] = $description;
 
-						$database = new database;
 						$database->app_name = 'devices';
 						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
@@ -186,7 +184,6 @@
 								$p = permissions::new();
 								$p->add('device_vendor_function_group_add', 'temp');
 
-								$database = new database;
 								$database->app_name = 'devices';
 								$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 								$database->save($array);
@@ -206,13 +203,19 @@
 //pre-populate the form
 	if (!empty($_GET) && count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$device_vendor_function_uuid = $_GET["id"] ?? null;
-		$sql = "select * from v_device_vendor_functions ";
+		$sql = "select ";
+		$sql .= "device_vendor_function_uuid, ";
+		$sql .= "device_vendor_uuid, ";
+		$sql .= "type, ";
+		$sql .= "subtype, ";
+		$sql .= "value, ";
+		$sql .= "enabled, ";
+		$sql .= "description ";
+		$sql .= "from v_device_vendor_functions ";
 		$sql .= "where device_vendor_function_uuid = :device_vendor_function_uuid ";
 		$parameters['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
-			//$label = $row["label"];
 			$type = $row["type"];
 			$subtype = $row["subtype"];
 			$value = $row["value"];
@@ -237,7 +240,6 @@
 	$sql .= "g.group_name asc ";
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$parameters['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-	$database = new database;
 	$function_groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -251,7 +253,14 @@
 	}
 
 //get the groups
-	$sql = "select * from v_groups ";
+	$sql = "select ";
+	$sql .= "group_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "group_name, ";
+	$sql .= "group_protected, ";
+	$sql .= "group_level, ";
+	$sql .= "group_description ";
+	$sql .= "from v_groups ";
 	if (!empty($assigned_groups) && is_array($assigned_groups) && @sizeof($assigned_groups) != 0) {
 		$sql .= "where ";
 		foreach ($assigned_groups as $index => $group_uuid) {
@@ -263,7 +272,6 @@
 		}
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
-	$database = new database;
 	$groups = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters, $sql_where, $index);
 
@@ -373,17 +381,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='enabled' value='true' ".(empty($enabled) || $enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='enabled'>\n";
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(empty($enabled) || $enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+	echo "		<option value='true' ".($enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";

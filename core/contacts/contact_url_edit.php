@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -128,7 +128,7 @@
 
 				//if primary, unmark other primary urls
 				if ($url_primary) {
-					$sql = "update v_contact_urls set url_primary = 0 ";
+					$sql = "update v_contact_urls set url_primary = false ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and contact_uuid = :contact_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
@@ -294,10 +294,17 @@
 	echo "	".$text['label-primary']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='url_primary' id='url_primary'>\n";
-	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(($url_primary) ? "selected" : null).">".$text['option-true']."</option>\n";
-	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='url_primary' name='url_primary'>\n";
+	echo "			<option value='false' ".($url_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($url_primary === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-url_primary']."\n";
 	echo "</td>\n";

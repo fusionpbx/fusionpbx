@@ -81,7 +81,7 @@
 								//print_r($p);
 								$profile_param_name = $p['@attributes']['name'];
 								$profile_param_value = $p['@attributes']['value'];
-								$profile_param_enabled = 'true';
+								$profile_param_enabled = true;
 
 							//add the coference profile params
 								$conference_profile_param_uuid = uuid();
