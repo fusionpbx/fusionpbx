@@ -22,17 +22,17 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	//get the network details
-	if (stristr(PHP_OS, 'Linux')) {
-		$result = shell_exec("ls /sys/class/net | tr '\n' ' '");
-		$cards = array_map('trim', explode(' ', $result));
-		$selected_card = $settings->get('dashboard', 'network_interface', 'eno1');
-		if (!in_array($selected_card, $cards, true)) {
-			// Selected card not in list
-			return;
-		}
-		
-	}
+//	//get the network details
+//	if (stristr(PHP_OS, 'Linux')) {
+//		$result = shell_exec("ls /sys/class/net | tr '\n' ' '");
+//		$cards = array_map('trim', explode(' ', $result));
+//		$selected_card = $settings->get('dashboard', 'network_interface', 'eno1');
+//		if (!in_array($selected_card, $cards, true)) {
+//			// Selected card not in list
+//			return;
+//		}
+//
+//	}
 
 	$token = (new token())->create($_SERVER['PHP_SELF']);
 
