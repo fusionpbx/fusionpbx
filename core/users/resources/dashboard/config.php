@@ -48,7 +48,7 @@ $x++;
 //user profile icon
 $array['dashboard_widgets'][$x]['dashboard_uuid'] = '3e2cbaa4-2bec-41b2-a626-999a59b8b19c';
 $array['dashboard_widgets'][$x]['dashboard_widget_uuid'] = '8aa9bb66-7a62-4a90-b52e-68bd4ccf325f';
-$array['dashboard_widgets'][$x]['widget_name'] = 'Account Settings';
+$array['dashboard_widgets'][$x]['widget_name'] = 'User Profile';
 $array['dashboard_widgets'][$x]['widget_path'] = 'dashboard/icon';
 $array['dashboard_widgets'][$x]['widget_icon'] = 'fa-solid fa-user-gear';
 $array['dashboard_widgets'][$x]['widget_icon_color'] = '#0292FF';
