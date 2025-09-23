@@ -1329,7 +1329,7 @@
 						$html .= "		<div class='mt-2' style='font-size: 90%;'><i class='fa-solid fa-phone' style='margin-right: 5px; color: #00b043;'></i><strong>".$_SESSION['user']['extension'][0]['destination']."</strong></div>\n";
 					}
 					$html .= "			<div class='pt-2 mt-3' style='border-top: 1px solid ".color_adjust($this->settings->get('theme', 'body_header_shadow_color'), 0.05).";'>\n";
-					$html .= "				<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$this->text['title-account_settings']."</a><br>\n";
+					$html .= "				<a href='".PROJECT_PATH."/core/users/user_profile.php'>".$this->text['title-user_profile']."</a><br>\n";
 					$html .= "				<a href='".PROJECT_PATH."/logout.php'>".$this->text['title-logout']."</a>\n";
 					$html .= "			</div>";
 					$html .= "		</div>";
@@ -1462,7 +1462,7 @@
 					$html .= "		<div class='mt-2' style='font-size: 90%;'><i class='fa-solid fa-phone' style='margin-right: 5px; color: #00b043;'></i><strong>".$_SESSION['user']['extension'][0]['destination']."</strong></div>\n";
 				}
 				$html .= "			<div class='pt-2 mt-3' style='border-top: 1px solid ".color_adjust($this->settings->get('theme', 'body_header_shadow_color'), 0.05).";'>\n";
-				$html .= "				<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$this->text['title-account_settings']."</a><br>\n";
+				$html .= "				<a href='".PROJECT_PATH."/core/users/user_profile.php'>".$this->text['title-user_profile']."</a><br>\n";
 				$html .= "				<a href='".PROJECT_PATH."/logout.php'>".$this->text['title-logout']."</a>\n";
 				$html .= "			</div>";
 				$html .= "		</div>";
