@@ -24,10 +24,6 @@
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
 
-//start the session
-	ini_set("session.cookie_httponly", True);
-	if (!isset($_SESSION)) { session_start(); }
-
 //includes files
 	require_once __DIR__ . "/resources/require.php";
 
