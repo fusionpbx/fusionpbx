@@ -246,7 +246,7 @@
 	echo "	<div class='actions'>\n";
 	echo "		<form id='dashboard' method='post' _onsubmit='setFormSubmitting()'>\n";
 	if ($settings->get('theme', 'menu_style', '') != 'side') {
-		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
+		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_profile.php'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
 	}
 	if (permission_exists('dashboard_edit')) {
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','name'=>'btn_back','style'=>'display: none;','onclick'=>"edit_mode('off');"]);
