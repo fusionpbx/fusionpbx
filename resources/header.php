@@ -27,12 +27,6 @@
 //includes files
 	require_once __DIR__ . "/require.php";
 
-//start the session
-	if (!isset($_SESSION)) {
-		ini_set("session.cookie_httponly", true);
-		session_start();
-	}
-
 //connect to the database if not initialized
 	$database = database::new();
 
