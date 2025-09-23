@@ -29,28 +29,24 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
+//check permissions
+	if (!permission_exists('user_view') && !permission_exists('user_add') && !permission_exists('user_edit')) {
+		echo "access denied";
+		exit;
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//create a single database object
-	$database = new database;
-	$database->app_name = 'users';
-	$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
-
 //get user uuid
-	if (!empty($_REQUEST["id"]) && ((is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) || (is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid']))) {
+	if (permission_exists('user_edit') && !empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$user_uuid = $_REQUEST["id"];
 		$action = 'edit';
 	}
 	elseif (permission_exists('user_add') && !isset($_REQUEST["id"])) {
 		$user_uuid = uuid();
 		$action = 'add';
-	}
-	else {
-		// load users own account
-		header("Location: user_edit.php?id=".urlencode($_SESSION['user_uuid']));
-		exit;
 	}
 
 //get total user count from the database, check limit, if defined
