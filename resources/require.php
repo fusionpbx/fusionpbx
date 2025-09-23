@@ -91,6 +91,9 @@
 //start the session if not using the command line
 	global $no_session;
 	if (!defined('STDIN') && empty($no_session)) {
+		ini_set('session.cookie_httponly', 'true');
+		ini_set('session.cookie_secure', 'true');
+		ini_set('session.cookie_samesite', 'Lax');
 		session_start();
 	}
 
