@@ -67,10 +67,10 @@
 				];
 
 				// ---- Chart state ----
-				const max_points = 60;			// seconds of history (one point per update)
+				const max_network_points = 60;			// seconds of history (one point per update)
 				let ring_index = 0;
-				const rx_history = Array.from({ length: max_points }, () => 0);
-				const tx_history = Array.from({ length: max_points }, () => 0);
+				const rx_history = Array.from({ length: max_network_points }, () => 0);
+				const tx_history = Array.from({ length: max_network_points }, () => 0);
 
 				function to_units(bps) {
 					if (bps == null || isNaN(bps)) return { val: 0, unit: "bps" }
@@ -111,7 +111,7 @@
 				window.system_network_status_chart = new Chart(ctx, {
 					type: 'line',
 					data: {
-						labels: Array.from({ length: max_points }, () => ''),
+						labels: Array.from({ length: max_network_points }, () => ''),
 						datasets: [
 							{
 								label: 'RX',
@@ -176,7 +176,7 @@
 					rx_history[ring_index] = rx_bps;
 					tx_history[ring_index] = tx_bps;
 
-					ring_index = (ring_index + 1) % max_points;
+					ring_index = (ring_index + 1) % max_network_points;
 
 					const rotate = (arr) => arr.slice(ring_index).concat(arr.slice(0, ring_index));
 					chart.data.datasets[0].data = rotate(rx_history);
