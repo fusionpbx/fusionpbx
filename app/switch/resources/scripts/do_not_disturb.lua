@@ -98,7 +98,7 @@
 	sql = sql .. " cast(forward_all_enabled as text), ";
 	sql = sql .. " forward_all_destination, ";
 	sql = sql .. " toll_allow, ";
-	sql = sql .. " context, ";
+	sql = sql .. " user_context, ";
 	sql = sql .. " outbound_caller_id_name, ";
 	sql = sql .. " outbound_caller_id_number ";
 	sql = sql .. "from v_extensions ";
