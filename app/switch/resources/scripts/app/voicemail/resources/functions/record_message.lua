@@ -68,7 +68,7 @@
 		--get recording instructions and options settings
 			local sql = [[SELECT 
 				cast(voicemail_recording_instructions as text), 
-				cast(voicemail_recording_options as text),
+				cast(voicemail_recording_options as text)
 				FROM v_voicemails
 				WHERE domain_uuid = :domain_uuid
 				AND voicemail_id = :voicemail_id ]];
