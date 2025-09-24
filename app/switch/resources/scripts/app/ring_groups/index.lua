@@ -662,7 +662,7 @@
 				end
 
 				--follow the forwards
-				if (ring_group_call_forward_enabled == true) then
+				if (ring_group_call_forward_enabled == 'true') then
 					count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
 				else
 					destination_number = row.destination_number;
@@ -719,7 +719,7 @@
 		---add follow me destinations
 			for key, row in pairs(destinations) do
 
-				if (ring_group_follow_me_enabled == true) then
+				if (ring_group_follow_me_enabled == 'true') then
 					cmd = "user_data ".. row.destination_number .."@" ..row.domain_name.." var follow_me_enabled";
 					if (api:executeString(cmd) == "true") then
 
@@ -933,7 +933,7 @@
 						user_exists = row.user_exists;
 
 					--follow the forwards
-						if (row.ring_group_call_forward_enabled == true) then
+						if (row.ring_group_call_forward_enabled == 'true') then
 							count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
 						end
 
