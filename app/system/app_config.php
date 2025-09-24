@@ -182,5 +182,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "freeswitch, nginx, postgresql, sshd";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "A comma separated list of additional system services to monitor the status of in the system services dashboard card";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "158187f6-4914-49b7-95ac-6bf26afada6d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "system";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "network_interface";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Network interface used to show traffic on dashboard";
 
 ?>
