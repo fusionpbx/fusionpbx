@@ -700,21 +700,17 @@
 	echo "		".$text['label-destination']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<select class='formfld' name='dialplan_destination'>\n";
-	echo "			<option value=''></option>\n";
-	if ($dialplan_destination == true) {
-		echo "			<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "			<option value='true'>".$text['option-true']."</option>\n";
+	echo "	<select class='formfld' id='dialplan_destination' name='dialplan_destination'>\n";
+	echo "		<option value='true' ".($dialplan_destination === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($dialplan_destination === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($dialplan_destination == false) {
-		echo "			<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "			<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
