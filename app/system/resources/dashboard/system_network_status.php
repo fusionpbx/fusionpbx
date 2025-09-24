@@ -25,7 +25,7 @@
 //	if (stristr(PHP_OS, 'Linux')) {
 //		$result = shell_exec("ls /sys/class/net | tr '\n' ' '");
 //		$cards = array_map('trim', explode(' ', $result));
-//		$selected_card = $settings->get('dashboard', 'network_interface', 'eno1');
+//		$selected_card = $settings->get('system', 'network_interface', '');
 //		if (!in_array($selected_card, $cards, true)) {
 //			// Selected card not in list
 //			return;
