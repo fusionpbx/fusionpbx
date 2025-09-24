@@ -14,7 +14,7 @@ class ws_client {
 		let message;
 		let switch_event;
 		try {
-			console.log(ev.data);
+			//console.log(ev.data);
 			message = JSON.parse(ev.data);
 			// check for authentication request
 			if (message.status_code === 407) {
