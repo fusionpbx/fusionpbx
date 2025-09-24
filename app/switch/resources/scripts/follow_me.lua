@@ -48,7 +48,7 @@
 	local domain_name = session:getVariable("domain_name");
 	local extension_uuid = session:getVariable("extension_uuid");
 
---set the sounds path for the language, dialect and voice
+--set the sounds path for the language, dialect, and voice
 	local sounds_dir = session:getVariable("sounds_dir");
 	local default_language = session:getVariable("default_language") or 'en';
 	local default_dialect = session:getVariable("default_dialect") or 'us';
@@ -117,13 +117,13 @@
 
 --update the extension
 	sql = "update v_extensions set ";
-	sql = sql .. "do_not_disturb = 'false', ";
+	sql = sql .. "do_not_disturb = false, ";
 	if (follow_me_enabled) then
-		sql = sql .. "follow_me_enabled = 'false', ";
+		sql = sql .. "follow_me_enabled = false, ";
 	else
-		sql = sql .. "follow_me_enabled = 'true', ";
+		sql = sql .. "follow_me_enabled = true, ";
 	end
-	sql = sql .. "forward_all_enabled = 'false' ";
+	sql = sql .. "forward_all_enabled = false ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
 	local params = {domain_uuid=domain_uuid, extension_uuid=extension_uuid};
