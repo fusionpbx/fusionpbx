@@ -9,8 +9,7 @@
 		//access granted
 	}
 	else {
-		echo "access denied";
-		exit;
+		return;
 	}
 
 	//add multi-lingual support
@@ -61,9 +60,8 @@
 
 				// Use your theme colors: [main, accent1, accent2]
 				const dashboard_network_usage_chart_main_color = [
-					'<?php echo ($settings->get('theme', 'dashboard_network_usage_chart_main_color')[0] ?? '#03c04a'); ?>',
-					'<?php echo ($settings->get('theme', 'dashboard_network_usage_chart_main_color')[1] ?? '#ff9933'); ?>',
-					'<?php echo ($settings->get('theme', 'dashboard_network_usage_chart_main_color')[2] ?? '#ea4c46'); ?>'
+					'<?php echo ($settings->get('theme', 'dashboard_network_usage_chart_main_color')[0] ?? '#03c04a'); ?>',  // green default
+					'<?php echo ($settings->get('theme', 'dashboard_network_usage_chart_main_color')[1] ?? '#ff9933'); ?>'   // orange default
 				];
 
 				// ---- Chart state ----
@@ -105,7 +103,7 @@
 				// ---- Chart init ----
 				const ctx = document.getElementById('system_network_status_chart').getContext('2d');
 				const rxColor = dashboard_network_usage_chart_main_color[0];
-				const txColor = dashboard_network_usage_chart_main_color[1] ?? '#ff9933';
+				const txColor = dashboard_network_usage_chart_main_color[1];
 				var current_unit = 'bps';
 
 				window.system_network_status_chart = new Chart(ctx, {
