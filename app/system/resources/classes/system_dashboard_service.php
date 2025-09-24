@@ -60,7 +60,7 @@ class system_dashboard_service extends base_websocket_system_service {
 		$this->network_status_refresh_interval = $this->settings->get('dashboard', 'network_status_refresh_interval', 3);
 
 		// get the network card to watch
-		$this->network_interface = $this->settings->get('dashboard', 'network_interface', 'eno1');
+		$this->network_interface = $this->settings->get('system', 'network_interface', 'eno1');
 	}
 
 	/**
