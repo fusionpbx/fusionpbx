@@ -89,7 +89,32 @@
 
 		--write the queues
 			xml:append([[                    <queues>]]);
-			sql = "select * from v_call_center_queues as q, v_domains as d ";
+			sql = "select ";
+			sql = sql .. " call_center_queue_uuid, ";
+			sql = sql .. " q.domain_uuid, ";
+			sql = sql .. " d.domain_name, ";
+			sql = sql .. " q.queue_name, ";
+			sql = sql .. " q.queue_extension, ";
+			sql = sql .. " q.queue_language, ";
+			sql = sql .. " q.queue_dialect, ";
+			sql = sql .. " q.queue_voice, ";
+			sql = sql .. " q.queue_strategy, ";
+			sql = sql .. " q.queue_moh_sound, ";
+			sql = sql .. " q.queue_record_template, ";
+			sql = sql .. " q.queue_time_base_score, ";
+			sql = sql .. " q.queue_max_wait_time, ";
+			sql = sql .. " q.queue_max_wait_time_with_no_agent, ";
+			sql = sql .. " q.queue_max_wait_time_with_no_agent_time_reached, ";
+			sql = sql .. " cast(q.queue_tier_rules_apply as text), ";
+			sql = sql .. " q.queue_tier_rule_wait_second, ";
+			sql = sql .. " cast(q.queue_tier_rule_wait_multiply_level as text), ";
+			sql = sql .. " cast(q.queue_tier_rule_no_agent_no_wait as text), ";
+			sql = sql .. " q.queue_discard_abandoned_after, ";
+			sql = sql .. " cast(q.queue_abandoned_resume_allowed as text), ";
+			sql = sql .. " q.queue_announce_sound, ";
+			sql = sql .. " q.queue_announce_frequency, ";
+			sql = sql .. " q.queue_description ";
+			sql = sql .. "from v_call_center_queues as q, v_domains as d ";
 			sql = sql .. "where d.domain_uuid = q.domain_uuid; ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
