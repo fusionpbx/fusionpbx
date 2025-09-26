@@ -596,8 +596,11 @@
 
 //set the defaults
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
-	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');;
+	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
 	if (empty($ring_group_call_timeout)) { $ring_group_call_timeout = '30'; }
+	if ($ring_group_call_screen_enabled === null) { $ring_group_call_screen_enabled = false; }
+	if ($ring_group_call_forward_enabled === null) { $ring_group_call_forward_enabled = false; }
+	if ($ring_group_follow_me_enabled === null) { $ring_group_follow_me_enabled = false; }
 
 //get the ring group destination array
 	if ($action == "add") {
