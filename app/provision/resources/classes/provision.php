@@ -819,8 +819,26 @@
 									$category = $row['device_key_category'];
 
 									//build the device keys array
-									if ($row['device_key_label'] == '${caller_id_name}' && is_numeric($row['device_key_value'])) {
-										$device_keys[$category][$id]['device_key_label'] = $extension_labels[$row['device_key_value']]['caller_id_name'];
+									if (in_array($device_key_vendor, ['cisco', 'spa']) && $row['device_key_type'] == 'disabled') {
+										$device_key_array = explode(';', $row['device_key_value']);
+										foreach($device_key_array as $sub_row) {
+											list($key, $value) = explode('=', $sub_row);
+											if ($key == 'sub') {
+												$extension = explode('@', $value)[0]; //remove the @PROXY
+												$caller_id_name = $extension_labels[$extension]['caller_id_name'];
+												$device_key_label = str_replace('${caller_id_name}', $caller_id_name, $row['device_key_label']);
+												$device_key_label = str_replace('${extension}', $extension, $device_key_label);
+												$device_key_label = str_replace('${user}', $extension, $device_key_label);
+												$device_keys[$category][$id]['device_key_label'] = $device_key_label;
+											}
+										}
+									} elseif (is_numeric($row['device_key_value'])) {
+										$extension = $row['device_key_value'];
+										$caller_id_name = $extension_labels[$row['device_key_value']]['caller_id_name'];
+										$device_key_label = str_replace('${caller_id_name}', $caller_id_name, $row['device_key_label']);
+										$device_key_label = str_replace('${extension}', $extension, $device_key_label);
+										$device_key_label = str_replace('${user}', $extension, $device_key_label);
+										$device_keys[$category][$id]['device_key_label'] = $device_key_label;
 									}
 								}
 							}
