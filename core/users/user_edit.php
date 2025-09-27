@@ -836,7 +836,7 @@
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
 			$selected = (isset($user_language) && $code == $user_language) || (isset($user_settings['domain']['language']['code']) && $code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
-			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? null)." [".escape($code ?? null)."]</option>\n";
+			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? $language_codes[explode('-', $code)[0]] ?? null)." [".escape($code ?? null)."]</option>\n";
 		}
 	}
 	echo "		</select>\n";
