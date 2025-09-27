@@ -74,6 +74,13 @@
 
 		}
 
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
+		}
+
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}

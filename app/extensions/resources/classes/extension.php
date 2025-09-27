@@ -79,6 +79,7 @@
 		 */
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -91,21 +92,28 @@
 		 */
 		public function __construct() {
 
-			//connect to the database
-				if (!isset($database)) {
-					$this->database = new database;
-				}
-
 			//assign private variables
-				$this->app_name = 'extensions';
-				$this->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-				$this->permission_prefix = 'extension_';
-				$this->list_page = 'extensions.php';
-				$this->table = 'extensions';
-				$this->uuid_prefix = 'extension_';
-				$this->toggle_field = 'enabled';
-				$this->toggle_values = ['true','false'];
+			$this->app_name = 'extensions';
+			$this->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+			$this->permission_prefix = 'extension_';
+			$this->list_page = 'extensions.php';
+			$this->table = 'extensions';
+			$this->uuid_prefix = 'extension_';
+			$this->toggle_field = 'enabled';
+			$this->toggle_values = ['true','false'];
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		public function exists($domain_uuid, $extension) {

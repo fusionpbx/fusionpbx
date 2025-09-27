@@ -35,6 +35,7 @@
 		private $xml;
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -53,6 +54,18 @@
 			$this->table = 'music_on_hold';
 			$this->uuid_prefix = 'music_on_hold_';
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		public function select($name, $selected, $options) {
@@ -101,8 +114,7 @@
 					$sql .= "and stream_enabled = 'true' ";
 					$sql .= "order by stream_name asc ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$database = new database;
-					$streams = $database->select($sql, $parameters, 'all');
+					$streams = $this->database->select($sql, $parameters, 'all');
 					if (is_array($streams) && @sizeof($streams) != 0) {
 						$select .= "	<optgroup label='".$text['label-streams']."'>";
 						foreach($streams as $row){
@@ -138,8 +150,7 @@
 				$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
 				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$database = new database;
-				return $database->select($sql, $parameters, 'all');
+				return $this->database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 		}
 
@@ -232,15 +243,13 @@
 		public function import() {
 			//get the domains
 				$sql = "select * from v_domains ";
-				$database = new database;
-				$domains = $database->select($sql, null, 'all');
+				$domains = $this->database->select($sql, null, 'all');
 				unset($sql);
 
 			//get the music_on_hold array
 				$sql = "select * from v_music_on_hold ";
 				$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
-				$database = new database;
-				$music_on_hold = $database->select($sql, null, 'all');
+				$music_on_hold = $this->database->select($sql, null, 'all');
 				unset($sql);
 
 			//build an array of the sound files
@@ -302,11 +311,10 @@
 				$p = permissions::new();
 				$p->add('music_on_hold_add', 'temp');
 
-				$database = new database;
-				$database->app_name = 'music_on_hold';
-				$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
-				$database->save($array);
-				//echo $database->message;
+				$this->database->app_name = 'music_on_hold';
+				$this->database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
+				$this->database->save($array);
+				//echo $this->database->message;
 				unset($array);
 
 				$p->delete('music_on_hold_add', 'temp');	
@@ -358,8 +366,7 @@
 									$sql .= "where (domain_uuid = :domain_uuid ".(!permission_exists('music_on_hold_domain') ? "": "or domain_uuid is null ").") ";
 									$sql .= "and music_on_hold_uuid in ('".implode("','", array_keys($moh))."') ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $row) {
 											$streams[$row['music_on_hold_uuid']] = $row;
@@ -414,10 +421,9 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//set flag

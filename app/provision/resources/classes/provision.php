@@ -28,105 +28,131 @@
 //define the provision class
 	class provision {
 
+		/**
+		 * declare public variables
+		 */
 		public $domain_uuid;
 		public $domain_name;
 		public $template_dir;
 		public $device_address;
 		public $device_template;
+
+		/**
+		 * declare private variables
+		 */
+		private $app_uuid;
+		private $app_name;
 		private $settings;
 		private $database;
 
+		/**
+		 * called when the object is created
+		 */
 		public function __construct($params = []) {
 
+			//assign private variables
+			$this->app_name = 'provision';
+			$this->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
+
 			//preset the the values
-				$settings = null;
-				$domain_uuid = null;
+			$settings = null;
+			$domain_uuid = null;
 
 			//use the parameters to set the values if they exist
-				if (isset($params['database'])) {
-					$this->database = $params['database'];
-				}
-				if (isset($params['settings'])) {
-					$settings = $params['settings'];
-				}
-				if (isset($params['domain_uuid'])) {
-					$domain_uuid = $params['domain_uuid'];
-				}
+			if (isset($params['database'])) {
+				$this->database = $params['database'];
+			}
+			if (isset($params['settings'])) {
+				$settings = $params['settings'];
+			}
+			if (isset($params['domain_uuid'])) {
+				$domain_uuid = $params['domain_uuid'];
+			}
 
 			//check if we can use the settings object to get the database object
-				if (!empty($settings) && empty($this->database)) {
-					$this->database = $settings->database();
-				}
+			if (!empty($settings) && empty($this->database)) {
+				$this->database = $settings->database();
+			}
 
 			//fill in missing
-				if (empty($this->database)) {
-					$this->database = database::new();
-				}
-				if (empty($settings)) {
-					$settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
-				}
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+			if (empty($settings)) {
+				$settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
+			}
 
 			//assign to the object
-				$this->settings = $settings;
-				$this->domain_uuid = $domain_uuid;
+			$this->settings = $settings;
+			$this->domain_uuid = $domain_uuid;
 
 			//get the project root
-				$project_root = dirname(__DIR__, 4);
+			$project_root = dirname(__DIR__, 4);
 
 			//set the default template directory
-				if (PHP_OS == "Linux") {
-					//set the default template dir
-						if (empty($this->template_dir)) {
-							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
-								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
-							}
-							elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
-								$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
+			if (PHP_OS == "Linux") {
+				//set the default template dir
+					if (empty($this->template_dir)) {
+						if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+							$this->template_dir = '/usr/share/fusionpbx/templates/provision';
 						}
-				}
-				elseif (PHP_OS == "FreeBSD") {
-					//if the FreeBSD port is installed use the following paths by default.
-						if (empty($this->template_dir)) {
-							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
-								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
-							}
-							elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-								$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
+						elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+							$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
 						}
-				}
-				else if (PHP_OS == "NetBSD") {
-					//set the default template_dir
-						if (empty($this->template_dir)) {
+						else {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
-				}
-				else if (PHP_OS == "OpenBSD") {
-					//set the default template_dir
-						if (empty($this->template_dir)) {
+					}
+			}
+			elseif (PHP_OS == "FreeBSD") {
+				//if the FreeBSD port is installed use the following paths by default.
+					if (empty($this->template_dir)) {
+						if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+							$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
+						}
+						elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+							$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
+						}
+						else {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
-				}
-				else {
-					//set the default template_dir
-						if (empty($this->template_dir)) {
-							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-						}
-				}
+					}
+			}
+			else if (PHP_OS == "NetBSD") {
+				//set the default template_dir
+					if (empty($this->template_dir)) {
+						$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+					}
+			}
+			else if (PHP_OS == "OpenBSD") {
+				//set the default template_dir
+					if (empty($this->template_dir)) {
+						$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+					}
+			}
+			else {
+				//set the default template_dir
+					if (empty($this->template_dir)) {
+						$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+					}
+			}
 
 			//normalize the device address
-				if (isset($this->device_address)) {
-					$this->device_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $this->device_address));
-				}
+			if (isset($this->device_address)) {
+				$this->device_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $this->device_address));
+			}
 		}
 
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
+		}
+
+		/**
+		 * get the domain uuid
+		 */
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}

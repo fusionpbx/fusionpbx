@@ -68,44 +68,51 @@
 		public function __construct(array $params = []) {
 
 			//set the domain_uuid if not provided
-				if (!empty($params['domain_uuid']) && is_uuid($params['domain_uuid'])) {
-					$this->domain_uuid = $params['domain_uuid'];
-				} else {
-					$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
-				}
+			if (!empty($params['domain_uuid']) && is_uuid($params['domain_uuid'])) {
+				$this->domain_uuid = $params['domain_uuid'];
+			} else {
+				$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
+			}
 
 			//set the user_uuid if not provided
-				if (!empty($params['user_uuid']) && is_uuid($params['user_uuid'])) {
-					$this->user_uuid = $params['user_uuid'];
-				} else {
-					$this->user_uuid = $_SESSION['user_uuid'] ?? '';
-				}
+			if (!empty($params['user_uuid']) && is_uuid($params['user_uuid'])) {
+				$this->user_uuid = $params['user_uuid'];
+			} else {
+				$this->user_uuid = $_SESSION['user_uuid'] ?? '';
+			}
 
 			//database connection
-				if (empty($params['database'])) {
-					$this->database = database::new();
-				} else {
-					$this->database = $params['database'];
-				}
+			if (empty($params['database'])) {
+				$this->database = database::new();
+			} else {
+				$this->database = $params['database'];
+			}
 
 			//assign the settings object
-				if (empty($params['settings'])) {
-					$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-				}
-				else {
-					$this->settings = $params['settings'];
-				}
+			if (empty($params['settings'])) {
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+			}
+			else {
+				$this->settings = $params['settings'];
+			}
 
 			//assign private variables
-				$this->app_name = 'voicemail';
-				$this->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
-				$this->permission_prefix = 'voicemail_';
-				$this->list_page = 'voicemails.php';
-				$this->table = 'voicemails';
-				$this->uuid_prefix = 'voicemail_';
-				$this->toggle_field = 'voicemail_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->app_name = 'voicemail';
+			$this->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+			$this->permission_prefix = 'voicemail_';
+			$this->list_page = 'voicemails.php';
+			$this->table = 'voicemails';
+			$this->uuid_prefix = 'voicemail_';
+			$this->toggle_field = 'voicemail_enabled';
+			$this->toggle_values = ['true','false'];
 
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		public function get_voicemail_id() {

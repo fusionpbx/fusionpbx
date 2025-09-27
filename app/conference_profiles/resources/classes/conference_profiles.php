@@ -51,8 +51,15 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'conference_profiles';
-				$this->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+			$this->app_name = 'conference_profiles';
+			$this->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**

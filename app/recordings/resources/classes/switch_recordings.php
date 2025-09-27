@@ -38,6 +38,7 @@
 		 */
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -49,16 +50,29 @@
 		 * called when the object is created
 		 */
 		public function __construct() {
+			//assign public variables
 			$this->domain_uuid = $_SESSION['domain_uuid'];
 
 			//assign private variables
-				$this->app_name = 'recordings';
-				$this->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
-				$this->permission_prefix = 'recording_';
-				$this->list_page = 'recordings.php';
-				$this->table = 'recordings';
-				$this->uuid_prefix = 'recording_';
+			$this->app_name = 'recordings';
+			$this->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
+			$this->permission_prefix = 'recording_';
+			$this->list_page = 'recordings.php';
+			$this->table = 'recordings';
+			$this->uuid_prefix = 'recording_';
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**
@@ -69,8 +83,7 @@
 			$sql .= "from v_recordings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
+			$result = $this->database->select($sql, $parameters, 'all');
 			if (!empty($result)) {
 				foreach ($result as $row) {
 					$recordings[$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']."/".$row['recording_filename']] = $row['recording_filename'];
@@ -114,8 +127,7 @@
 										$sql .= "and recording_uuid = :recording_uuid ";
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 										$parameters['recording_uuid'] = $record['uuid'];
-										$database = new database;
-										$filenames[] = $database->select($sql, $parameters, 'column');
+										$filenames[] = $this->database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
 
 									//build delete array
@@ -128,10 +140,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//delete recording files

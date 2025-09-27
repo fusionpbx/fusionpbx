@@ -57,30 +57,37 @@
 		public function __construct($setting_array = []) {
 
 			//open a database connection
-				if (empty($setting_array['database'])) {
-					$this->database = database::new();
-				} else {
-					$this->database = $setting_array['database'];
-				}
+			if (empty($setting_array['database'])) {
+				$this->database = database::new();
+			} else {
+				$this->database = $setting_array['database'];
+			}
 
 			//set the domain details
 			$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
 			$this->user_uuid = $_SESSION['user_uuid'] ?? '';
 
 			//get the settings object
-				if (empty($setting_array['settings'])) {
-					$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-				} else {
-					$this->settings = $setting_array['settings'];
-				}
+			if (empty($setting_array['settings'])) {
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+			} else {
+				$this->settings = $setting_array['settings'];
+			}
 
 			//assign private variables
-				$this->app_name = 'destinations';
-				$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
-				$this->permission_prefix = 'destination_';
-				$this->list_page = 'destinations.php';
-				$this->table = 'destinations';
-				$this->uuid_prefix = 'destination_';
+			$this->app_name = 'destinations';
+			$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+			$this->permission_prefix = 'destination_';
+			$this->list_page = 'destinations.php';
+			$this->table = 'destinations';
+			$this->uuid_prefix = 'destination_';
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**

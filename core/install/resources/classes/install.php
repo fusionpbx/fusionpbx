@@ -24,6 +24,13 @@
 		}
 
 		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
+		}
+
+		/**
 		 * <p>Used to create the config.conf file.</p>
 		 * <p>BSD /usr/local/etc/fusionpbx</p>
 		 * <p>Linux /etc/fusionpbx</p>

@@ -32,6 +32,7 @@
 		 */
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -45,15 +46,27 @@
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'bridges';
-				$this->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-				$this->permission_prefix = 'bridge_';
-				$this->list_page = 'bridges.php';
-				$this->table = 'bridges';
-				$this->uuid_prefix = 'bridge_';
-				$this->toggle_field = 'bridge_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->app_name = 'bridges';
+			$this->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+			$this->permission_prefix = 'bridge_';
+			$this->list_page = 'bridges.php';
+			$this->table = 'bridges';
+			$this->uuid_prefix = 'bridge_';
+			$this->toggle_field = 'bridge_enabled';
+			$this->toggle_values = ['true','false'];
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**
@@ -89,10 +102,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//clear the destinations session array
@@ -140,8 +152,7 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -162,10 +173,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//clear the destinations session array
@@ -216,8 +226,7 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
 
@@ -237,10 +246,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//set message

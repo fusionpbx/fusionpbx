@@ -28,10 +28,16 @@
 	class phrases {
 
 		/**
+		 * declare public variables
+		 */
+		public $phrase_uuid;
+
+		/**
 		 * declare private variables
 		 */
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -40,25 +46,32 @@
 		private $toggle_values;
 
 		/**
-		 * declare public variables
-		 */
-		public $phrase_uuid;
-
-		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'phrases';
-				$this->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
-				$this->permission_prefix = 'phrase_';
-				$this->list_page = 'phrases.php';
-				$this->table = 'phrases';
-				$this->uuid_prefix = 'phrase_';
-				$this->toggle_field = 'phrase_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->app_name = 'phrases';
+			$this->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+			$this->permission_prefix = 'phrase_';
+			$this->list_page = 'phrases.php';
+			$this->table = 'phrases';
+			$this->uuid_prefix = 'phrase_';
+			$this->toggle_field = 'phrase_enabled';
+			$this->toggle_values = ['true','false'];
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**
@@ -95,8 +108,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$phrase_languages[$row['uuid']] = $row['lang'];
@@ -125,10 +137,9 @@
 									$p->add('phrase_detail_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -194,8 +205,7 @@
 								$sql .= "and phrase_uuid = :phrase_uuid ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$parameters['phrase_uuid'] = $this->phrase_uuid;
-								$database = new database;
-								$phrase_language = $database->select($sql, $parameters, 'column');
+								$phrase_language = $this->database->select($sql, $parameters, 'column');
 								unset($sql, $parameters, $rows, $row);
 							}
 
@@ -207,10 +217,9 @@
 									$p->add('phrase_detail_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -260,8 +269,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -283,10 +291,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//clear the cache
@@ -348,8 +355,7 @@
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {
@@ -365,8 +371,7 @@
 											//details sub table
 												$sql_2 = "select * from v_phrase_details where phrase_uuid = :phrase_uuid";
 												$parameters_2['phrase_uuid'] = $row['phrase_uuid'];
-												$database = new database;
-												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
@@ -401,10 +406,9 @@
 									$p->add('phrase_detail_add', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

@@ -10,13 +10,13 @@
 		 */
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
-		private $database;
 
 		/**
 		 * declare public variables
@@ -31,19 +31,28 @@
 		 */
 		public function __construct() {
 
-			//initialize the database
-				$this->database = new database;
-
 			//assign private variables
-				$this->app_name = 'call_block';
-				$this->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
-				$this->permission_prefix = 'call_block_';
-				$this->list_page = 'call_block.php';
-				$this->table = 'call_block';
-				$this->uuid_prefix = 'call_block_';
-				$this->toggle_field = 'call_block_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->app_name = 'call_block';
+			$this->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+			$this->permission_prefix = 'call_block_';
+			$this->list_page = 'call_block.php';
+			$this->table = 'call_block';
+			$this->uuid_prefix = 'call_block_';
+			$this->toggle_field = 'call_block_enabled';
+			$this->toggle_values = ['true','false'];
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**

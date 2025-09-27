@@ -34,6 +34,7 @@
 		*/
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -45,13 +46,25 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'user_logs';
-				$this->app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
-				$this->name = 'user_log';
-				$this->table = 'user_logs';
-				$this->toggle_field = '';
-				$this->toggle_values = ['true','false'];
-				$this->location = 'user_logs.php';
+			$this->app_name = 'user_logs';
+			$this->app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
+			$this->name = 'user_log';
+			$this->table = 'user_logs';
+			$this->toggle_field = '';
+			$this->toggle_values = ['true','false'];
+			$this->location = 'user_logs.php';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**
@@ -84,13 +97,12 @@
 				$p->add("user_log_add", 'temp');
 
 			//save to the data
-				$database = new database;
-				$database->app_name = 'authentication';
-				$database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
+				$this->database->app_name = 'authentication';
+				$this->database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
 				if (strlen($user_log_uuid ?? '')>0)
-					$database->uuid($user_log_uuid);
-				$database->save($array, false);
-				$message = $database->message;
+					$this->database->uuid($user_log_uuid);
+				$this->database->save($array, false);
+				$message = $this->database->message;
 
 			//remove the temporary permission
 				$p->delete("user_log_add", 'temp');
@@ -132,10 +144,9 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//set message

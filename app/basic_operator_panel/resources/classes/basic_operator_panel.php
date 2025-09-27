@@ -30,17 +30,41 @@
 	class basic_operator_panel {
 
 		/**
-		 * Define the variables
+		 * declare public variables
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare private variables
+		 */
+		private $app_name;
+		private $app_uuid;
+		private $database;
 
 		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
+			//assign public variables
 			if (!isset($this->domain_uuid)) {
 				$this->domain_uuid = $_SESSION['domain_uuid'];
 			}
+
+			//assign private variables
+			$this->app_name = 'operator_panel';
+			$this->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**
@@ -71,8 +95,7 @@
 				$sql .= "order by ";
 				$sql .= "e.extension asc ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$database = new database;
-				$extensions = $database->select($sql, $parameters);
+				$extensions = $this->database->select($sql, $parameters);
 
 			//store extension status by user uuid
 				if (isset($extensions)) {

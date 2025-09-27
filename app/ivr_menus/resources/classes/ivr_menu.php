@@ -38,6 +38,7 @@
 		 */
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -55,6 +56,18 @@
 			$this->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 			$this->list_page = 'ivr_menus.php';
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		public function find() {
@@ -68,8 +81,7 @@
 				$sql .= $this->order_by;
 			}
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
-			return $database->select($sql, $parameters, 'all');
+			return $this->database->select($sql, $parameters, 'all');
 		}
 
 		/**
@@ -114,8 +126,7 @@
 							$sql .= "where (domain_uuid = :domain_uuid) ";
 							$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-							$database = new database;
-							$rows = $database->select($sql, $parameters, 'all');
+							$rows = $this->database->select($sql, $parameters, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $row) {
 									$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -143,10 +154,9 @@
 								$p->add('dialplan_delete', 'temp');
 
 							//execute delete
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
-								$database->delete($array);
+								$this->database->app_name = $this->app_name;
+								$this->database->app_uuid = $this->app_uuid;
+								$this->database->delete($array);
 								unset($array);
 
 							//revoke temporary permissions
@@ -218,8 +228,7 @@
 							$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
 							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 							$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
-							$database = new database;
-							$ivr_menu_context = $database->select($sql, $parameters, 'column');
+							$ivr_menu_context = $this->database->select($sql, $parameters, 'column');
 							unset($sql, $parameters);
 						}
 
@@ -227,10 +236,9 @@
 						if (!empty($array)) {
 
 							//execute delete
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
-								$database->delete($array);
+								$this->database->app_name = $this->app_name;
+								$this->database->app_uuid = $this->app_uuid;
+								$this->database->delete($array);
 								unset($array);
 
 							//clear the cache
@@ -286,8 +294,7 @@
 							$sql .= "where domain_uuid = :domain_uuid ";
 							$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-							$database = new database;
-							$rows = $database->select($sql, $parameters, 'all');
+							$rows = $this->database->select($sql, $parameters, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $row) {
 									$ivr_menus[$row['uuid']]['state'] = $row['toggle'];
@@ -315,10 +322,9 @@
 								$p->add('dialplan_edit', 'temp');
 
 							//save the array
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
-								$database->save($array);
+								$this->database->app_name = $this->app_name;
+								$this->database->app_uuid = $this->app_uuid;
+								$this->database->save($array);
 								unset($array);
 
 							//revoke temporary permissions
@@ -388,8 +394,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									$y = $z = 0;
 									foreach ($rows as $x => $row) {
@@ -407,8 +412,7 @@
 										//ivr menu options sub table
 											$sql_2 = "select * from v_ivr_menu_options where ivr_menu_uuid = :ivr_menu_uuid";
 											$parameters_2['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
-											$database = new database;
-											$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+											$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 											if (!empty($rows_2)) {
 												foreach ($rows_2 as $row_2) {
 
@@ -429,8 +433,7 @@
 										//ivr menu dialplan record
 											$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 											$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-											$database = new database;
-											$dialplan = $database->select($sql_3, $parameters_3, 'row');
+											$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 											if (!empty($dialplan)) {
 
 												//copy data
@@ -463,10 +466,9 @@
 								$p->add('dialplan_add', 'temp');
 
 							//save the array
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
-								$database->save($array);
+								$this->database->app_name = $this->app_name;
+								$this->database->app_uuid = $this->app_uuid;
+								$this->database->save($array);
 								unset($array);
 
 							//revoke temporary permissions

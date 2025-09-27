@@ -98,6 +98,13 @@
 		}
 
 		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
+		}
+
+		/**
 		 * get the registrations
 		 */
 		public function get($profile = 'all') {

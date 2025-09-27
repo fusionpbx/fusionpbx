@@ -48,18 +48,25 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'call_recordings';
-				$this->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
-				$this->name = 'call_recording';
-				$this->table = 'call_recordings';
-				$this->description_field = 'call_recording_description';
-				$this->location = 'call_recordings.php';
+			$this->app_name = 'call_recordings';
+			$this->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
+			$this->name = 'call_recording';
+			$this->table = 'call_recordings';
+			$this->description_field = 'call_recording_description';
+			$this->location = 'call_recordings.php';
 
 			//allow global
-				$this->database = database::new();
+			$this->database = database::new();
 
 			//initialize the settings object
-				$this->settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+			$this->settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**

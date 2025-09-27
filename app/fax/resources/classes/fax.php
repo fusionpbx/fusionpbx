@@ -48,6 +48,7 @@
 		*/
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -62,9 +63,21 @@
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'fax';
-				$this->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+			$this->app_name = 'fax';
+			$this->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**
@@ -112,10 +125,9 @@
 						$p->add('dialplan_detail_delete', 'temp');
 
 					//execute delete
-						$database = new database;
-						$database->app_name = 'fax';
-						$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-						$database->delete($array);
+						$this->database->app_name = 'fax';
+						$this->database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+						$this->database->delete($array);
 						unset($array);
 
 					//revoke temporary permissions
@@ -182,11 +194,10 @@
 				$p->add("dialplan_detail_edit", 'temp');
 
 			//save the dialplan
-				$database = new database;
-				$database->app_name = 'fax';
-				$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-				$database->save($array);
-				//$message = $database->message;
+				$this->database->app_name = 'fax';
+				$this->database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+				$this->database->save($array);
+				//$message = $this->database->message;
 
 			//remove the temporary permission
 				$p->delete("dialplan_add", 'temp');
@@ -244,8 +255,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$faxes[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -260,8 +270,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										if ($row['fax_mode'] == 'rx') { $fax_files[$row['uuid']]['folder'] = 'inbox'; }
@@ -330,10 +339,9 @@
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -402,8 +410,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										if ($row['fax_mode'] == 'rx') { $fax_files[$row['uuid']]['folder'] = 'inbox'; }
@@ -451,10 +458,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -502,10 +508,9 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -559,8 +564,7 @@
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {
@@ -585,8 +589,7 @@
 												$sql_2 .= "and e.fax_uuid = :fax_uuid ";
 												$parameters_2['domain_uuid'] = $_SESSION['domain_uuid'];
 												$parameters_2['fax_uuid'] = $row['fax_uuid'];
-												$database = new database;
-												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
@@ -607,8 +610,7 @@
 											//fax dialplan record
 												$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 												$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-												$database = new database;
-												$dialplan = $database->select($sql_3, $parameters_3, 'row');
+												$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 													//copy data
@@ -639,10 +641,9 @@
 									$p->add('dialplan_add', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -697,8 +698,7 @@
 									//get current read state
 									$sql = "select read_date from v_fax_files where fax_file_uuid = :fax_file_uuid";
 									$parameters['fax_file_uuid'] = $record['uuid'];
-									$database = new database;
-									$read_date = $database->select($sql, $parameters, 'column');
+									$read_date = $this->database->select($sql, $parameters, 'column');
 									unset($sql, $parameters);
 
 									//toggle read state
@@ -714,10 +714,9 @@
 							if (!empty($array) && is_array($array)) {
 
 								//execute save
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array, false);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array, false);
 									unset($array);
 
 								//return toggled count

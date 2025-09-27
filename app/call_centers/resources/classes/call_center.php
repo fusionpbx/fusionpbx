@@ -29,6 +29,7 @@
  */
 //define the call center class
 		class call_center {
+
 			/**
 			 * define the variables
 			 */
@@ -45,6 +46,7 @@
 			*/
 			private $app_name;
 			private $app_uuid;
+			private $database;
 			private $permission_prefix;
 			private $list_page;
 			private $table;
@@ -55,8 +57,20 @@
 			 */
 			public function __construct() {
 				//assign private variables
-					$this->app_name = 'call_center';
-					$this->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+				$this->app_name = 'call_center';
+				$this->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+
+				//connect to the database
+				if (empty($this->database)) {
+					$this->database = database::new();
+				}
+			}
+
+			/**
+			 * get the application uuid
+			 */
+			public function get_app_uuid() {
+				return $this->app_uuid;
 			}
 
 			/**
@@ -80,10 +94,9 @@
 							$p->add('dialplan_detail_delete', 'temp');
 
 						//execute delete
-							$database = new database;
-							$database->app_name = 'call_centers';
-							$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-							$database->delete($array);
+							$this->database->app_name = 'call_centers';
+							$this->database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+							$this->database->delete($array);
 							unset($array);
 
 						//revoke temporary permissions
@@ -220,11 +233,10 @@
 					$p->add("dialplan_detail_edit", 'temp');
 
 				//save the dialplan
-					$database = new database;
-					$database->app_name = 'call_centers';
-					$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-					$database->save($array);
-					$dialplan_response = $database->message;
+					$this->database->app_name = 'call_centers';
+					$this->database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+					$this->database->save($array);
+					$dialplan_response = $this->database->message;
 					$this->dialplan_uuid = $dialplan_response['uuid'];
 					unset($array);
 
@@ -243,10 +255,9 @@
 					$p->add('call_center_queue_edit', 'temp');
 
 				//execute update
-					$database = new database;
-					$database->app_name = 'call_centers';
-					$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-					$database->save($array);
+					$this->database->app_name = 'call_centers';
+					$this->database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+					$this->database->save($array);
 					unset($array);
 
 				//revoke temporary permissions
@@ -302,8 +313,7 @@
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $row) {
 											$call_center_queues[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -352,10 +362,9 @@
 										$p->add('dialplan_detail_delete', 'temp');
 
 									//execute delete
-										$database = new database;
-										$database->app_name = $this->app_name;
-										$database->app_uuid = $this->app_uuid;
-										$database->delete($array);
+										$this->database->app_name = $this->app_name;
+										$this->database->app_uuid = $this->app_uuid;
+										$this->database->delete($array);
 										unset($array);
 
 									//revoke temporary permissions
@@ -447,10 +456,9 @@
 										$p->add('call_center_tier_delete', 'temp');
 
 									//execute delete
-										$database = new database;
-										$database->app_name = $this->app_name;
-										$database->app_uuid = $this->app_uuid;
-										$database->delete($array);
+										$this->database->app_name = $this->app_name;
+										$this->database->app_uuid = $this->app_uuid;
+										$this->database->delete($array);
 										unset($array);
 
 									//revoke temporary permissions
@@ -510,8 +518,7 @@
 									//primary table
 										$sql = "select * from v_".$this->table." ";
 										$sql .= "where ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
-										$database = new database;
-										$rows = $database->select($sql, $parameters, 'all');
+										$rows = $this->database->select($sql, $parameters, 'all');
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
@@ -529,8 +536,7 @@
 												//call center tiers sub table
 													$sql_2 = "select * from v_call_center_tiers where call_center_queue_uuid = :call_center_queue_uuid";
 													$parameters_2['call_center_queue_uuid'] = $row['call_center_queue_uuid'];
-													$database = new database;
-													$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+													$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 													if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 														foreach ($rows_2 as $row_2) {
 
@@ -549,8 +555,7 @@
 												//call center queue dialplan record
 													$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 													$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-													$database = new database;
-													$dialplan = $database->select($sql_3, $parameters_3, 'row');
+													$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 													if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 														//copy data
@@ -580,10 +585,9 @@
 										$p->add('dialplan_add', 'temp');
 
 									//save the array
-										$database = new database;
-										$database->app_name = $this->app_name;
-										$database->app_uuid = $this->app_uuid;
-										$database->save($array);
+										$this->database->app_name = $this->app_name;
+										$this->database->app_uuid = $this->app_uuid;
+										$this->database->save($array);
 										unset($array);
 
 									//revoke temporary permissions

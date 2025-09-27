@@ -34,6 +34,7 @@
 		*/
 		private $app_name;
 		private $app_uuid;
+		private $database;
 		private $name;
 		private $table;
 		private $tables;
@@ -48,16 +49,28 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'dashboard';
-				$this->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
-				$this->tables[] = 'dashboards';
-				$this->tables[] = 'dashboard_widgets';
-				$this->tables[] = 'dashboard_widget_groups';
-				$this->toggle_field = 'dashboard_enabled';
-				$this->toggle_values = ['true','false'];
-				$this->description_field = 'dashboard_description';
-				$this->location = 'dashboard.php';
-				$this->uuid_prefix = 'dashboard_';
+			$this->app_name = 'dashboard';
+			$this->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
+			$this->tables[] = 'dashboards';
+			$this->tables[] = 'dashboard_widgets';
+			$this->tables[] = 'dashboard_widget_groups';
+			$this->toggle_field = 'dashboard_enabled';
+			$this->toggle_values = ['true','false'];
+			$this->description_field = 'dashboard_description';
+			$this->location = 'dashboard.php';
+			$this->uuid_prefix = 'dashboard_';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public function get_app_uuid() {
+			return $this->app_uuid;
 		}
 
 		/**
@@ -101,20 +114,17 @@
 
 								//grant temp permissions
 									$p = permissions::new();
-									$database = new database;
 									foreach ($this->tables as $table) {
 										$p->add(database::singular($table).'_delete', 'temp');
 									}
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temp permissions
-									$database = new database;
 									foreach ($this->tables as $table) {
 										$p->delete(database::singular($table).'_delete', 'temp');
 									}
@@ -160,8 +170,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -184,10 +193,9 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -234,8 +242,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where dashboard_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
@@ -256,10 +263,9 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -307,10 +313,9 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -352,8 +357,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -376,10 +380,9 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -417,8 +420,7 @@
 								$sql = "select group_name, group_uuid from v_groups	";
 								$sql .= "where group_uuid = :group_uuid	";
 								$parameters['group_uuid'] = $group_uuid;
-								$database = new database;
-								$group = $database->select($sql, $parameters, 'row');
+								$group = $this->database->select($sql, $parameters, 'row');
 							}
 
 						//build the delete array
@@ -443,8 +445,7 @@
 						if (!empty($array) && @sizeof($array) != 0) {
 							$sql = "select dashboard_uuid, ".$this->name."_uuid, ";
 							$sql .= "group_uuid from v_".$this->name."_groups ";
-							$database = new database;
-							$dashboard_widget_groups = $database->select($sql, null, 'all');
+							$dashboard_widget_groups = $this->database->select($sql, null, 'all');
 							$array[$this->name.'_groups'] = array_filter($array[$this->name.'_groups'], function($ar) use ($dashboard_widget_groups) {
 								foreach ($dashboard_widget_groups as $existing_array_item) {
 									if ($ar['dashboard_uuid'] == $existing_array_item['dashboard_uuid'] && $ar[$this->name.'_uuid'] == $existing_array_item[$this->name.'_uuid'] && $ar['group_uuid'] == $existing_array_item['group_uuid']) {
@@ -459,10 +460,9 @@
 						//add the checked rows from group
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute save
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->app_name = $this->app_name;
+									$this->database->app_uuid = $this->app_uuid;
+									$this->database->save($array);
 									unset($array);
 								//set message
 									message::add($text['message-add']);
@@ -498,8 +498,7 @@
 								$sql = "select group_name, group_uuid from v_groups	";
 								$sql .= "where group_uuid = :group_uuid	";
 								$parameters['group_uuid'] = $group_uuid;
-								$database = new database;
-								$group = $database->select($sql, $parameters, 'row');
+								$group = $this->database->select($sql, $parameters, 'row');
 							}
 
 						//build the delete array
@@ -523,8 +522,7 @@
 							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select dashboard_uuid, ".$this->name."_uuid from v_".$this->table." ";
 								$sql .= "where ".$this->name."_parent_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, null, 'all');
+								$rows = $this->database->select($sql, null, 'all');
 								if (!empty($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										//assign dashboard widget groups
@@ -546,10 +544,9 @@
 								$p->add('dashboard_widget_group_delete', 'temp');
 
 							//execute delete
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
-								$database->delete($array);
+								$this->database->app_name = $this->app_name;
+								$this->database->app_uuid = $this->app_uuid;
+								$this->database->delete($array);
 								unset($array);
 
 							//revoke temporary permissions

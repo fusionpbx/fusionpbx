@@ -108,6 +108,13 @@
 				}
 			}
 
+			/**
+			 * get the application uuid
+			 */
+			public function get_app_uuid() {
+				return $this->app_uuid;
+			}
+
 			public function dialplan_add() {
 				//build insert array
 					$array['dialplans'][0]['dialplan_uuid'] = $this->dialplan_uuid;
