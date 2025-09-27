@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Copyright (C) 2010 - 2023
+	  Copyright (C) 2010 - 2025
 	  All Rights Reserved.
 
 	  Contributor(s):
@@ -31,16 +31,9 @@
 //define the call_forward class
 	class call_forward {
 
-		// set class constants
-		const APP_NAME = 'calls';
-		const APP_UUID = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-		const PERMISSION = 'call_forward';
-		const LIST_PAGE = 'calls.php';
-		const TABLE = 'extensions';
-		const UUID_PREFIX = 'extension_';
-		const TOGGLE_FIELD = 'forward_all_enabled';
-		const TOGGLE_VALUES = ['true', 'false'];
-
+		/**
+		 * declare public variables
+		 */
 		public $debug;
 		public $domain_uuid;
 		public $domain_name;
@@ -54,9 +47,24 @@
 		/**
 		 * declare private variables
 		 */
+		private $app_name;
+		private $app_uuid;
 		private $extension;
 		private $number_alias;
 		private $toll_allow;
+
+		/**
+		 * called when the object is created
+		 */
+		public function __construct() {
+
+			//assign private variables
+			$this->app_name = 'call_forward';
+			$this->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+			$this->toggle_field = 'forward_all_enabled';
+			$this->toggle_values = ['true', 'false'];
+
+		}
 
 		public function set() {
 			//create the database connection
@@ -93,8 +101,8 @@
 			$p->add('extension_add', 'temp');
 
 			//execute update
-			$database->app_name = 'calls';
-			$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+			$database->app_name = $this->app_name;
+			$database->app_uuid = $this->app_uuid;
 			$database->save($array);
 			unset($array);
 
@@ -119,7 +127,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . self::LIST_PAGE);
+				header('Location: calls.php');
 				exit;
 			}
 
@@ -127,7 +135,7 @@
 			if (count($records) < 1) return;
 
 			//check we have permission for this action
-			if (permission_exists(self::PERMISSION)) {
+			if (permission_exists('call_forward')) {
 
 				//create the database connection
 				$database = new database;
@@ -136,7 +144,6 @@
 				$language = new text;
 				$text = $language->get();
 
-				
 				// initialize an empty array
 				$uuids = [];
 				$extensions = [];
@@ -150,15 +157,15 @@
 
 				//toggle the checked records
 				if (count($uuids) > 0) {
-					$sql = "select " . self::UUID_PREFIX . "uuid as uuid, extension, number_alias, ";
+					$sql = "select extension_uuid as uuid, extension, number_alias, ";
 					$sql .= "call_timeout, do_not_disturb, ";
 					$sql .= "forward_all_enabled, forward_all_destination, ";
 					$sql .= "forward_busy_enabled, forward_busy_destination, ";
 					$sql .= "forward_no_answer_enabled, forward_no_answer_destination, ";
-					$sql .= self::TOGGLE_FIELD . " as toggle, follow_me_uuid ";
-					$sql .= "from v_" . self::TABLE . " ";
+					$sql .= $this->toggle_field . " as toggle, follow_me_uuid ";
+					$sql .= "from v_extensions ";
 					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql .= "and " . self::UUID_PREFIX . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and extension_uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$rows = $database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
@@ -188,21 +195,21 @@
 					$destination_exists = $extension['forward_all_destination'] != '' ? true : false;
 
 					//determine new state
-					$new_state = $extension['state'] == self::TOGGLE_VALUES[1] && $destination_exists ? self::TOGGLE_VALUES[0] : self::TOGGLE_VALUES[1];
+					$new_state = $extension['state'] == $this->toggle_values[1] && $destination_exists ? $this->toggle_values[0] : $this->toggle_values[1];
 
 					//toggle feature
 					if ($new_state != $extension['state']) {
-						$array[self::TABLE][$x][self::UUID_PREFIX . 'uuid'] = $uuid;
-						$array[self::TABLE][$x][self::TOGGLE_FIELD] = $new_state;
+						$array['extensions'][$x]['extension_uuid'] = $uuid;
+						$array['extensions'][$x][$this->toggle_field] = $new_state;
 					}
 
 					//disable other features
-					if ($new_state == self::TOGGLE_VALUES[0]) { //true
-						$array[self::TABLE][$x]['do_not_disturb'] = self::TOGGLE_VALUES[1]; //false
-						$array[self::TABLE][$x]['follow_me_enabled'] = self::TOGGLE_VALUES[1]; //false
+					if ($new_state == $this->toggle_values[0]) { //true
+						$array['extensions'][$x]['do_not_disturb'] = $this->toggle_values[1]; //false
+						$array['extensions'][$x]['follow_me_enabled'] = $this->toggle_values[1]; //false
 						if (is_uuid($extension['follow_me_uuid'])) {
 							$array['follow_me'][$x]['follow_me_uuid'] = $extension['follow_me_uuid'];
-							$array['follow_me'][$x]['follow_me_enabled'] = self::TOGGLE_VALUES[1]; //false
+							$array['follow_me'][$x]['follow_me_enabled'] = $this->toggle_values[1]; //false
 						}
 					}
 
@@ -218,8 +225,8 @@
 					$p->add('extension_edit', 'temp');
 
 					//save the array
-					$database->app_name = self::APP_NAME;
-					$database->app_uuid = self::APP_UUID;
+					$database->app_name = $this->app_name;
+					$database->app_uuid = $this->app_uuid;
 					$database->save($array);
 					unset($array);
 
@@ -269,8 +276,6 @@
 			}
 		}
 
-//function
 	}
 
-	// class
 ?>
