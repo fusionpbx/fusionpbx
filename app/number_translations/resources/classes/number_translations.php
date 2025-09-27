@@ -33,10 +33,15 @@
 		public $number_translation_uuid;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'number_translations';
+		const app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -52,8 +57,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'number_translations';
-			$this->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
 			$this->permission_prefix = 'number_translation_';
 			$this->list_page = 'number_translations.php';
 			$this->table = 'number_translations';
@@ -71,8 +74,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -190,8 +193,6 @@
 									$p->add('number_translation_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -242,8 +243,6 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -304,8 +303,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -398,8 +396,7 @@
 									$p->add('number_translation_detail_add', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

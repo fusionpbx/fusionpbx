@@ -28,10 +28,15 @@
 	class conferences {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'conferences';
+		const app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -45,8 +50,6 @@
 		 */
 		public function __construct() {
 			//assign private variables
-			$this->app_name = 'conferences';
-			$this->app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 			$this->permission_prefix = 'conference_';
 			$this->list_page = 'conferences.php';
 			$this->table = 'conferences';
@@ -63,8 +66,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -124,8 +127,6 @@
 									$p->add('dialplan_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -215,8 +216,7 @@
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -350,8 +350,7 @@
 									$p->add('dialplan_add', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

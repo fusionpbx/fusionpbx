@@ -30,10 +30,15 @@
 	class conference_controls {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'conference_controls';
+		const app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $name;
 		private $table;
@@ -51,10 +56,6 @@
 		 * called when the object is created
 		 */
 		public function __construct() {
-			//assign the variables
-			$this->app_name = 'conference_controls';
-			$this->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
-
 			//connect to the database
 			if (empty($this->database)) {
 				$this->database = database::new();
@@ -64,8 +65,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -115,8 +116,6 @@
 									$p->add('conference_control_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -172,8 +171,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -245,8 +242,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -317,8 +313,7 @@
 						//save the changes
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -411,8 +406,7 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

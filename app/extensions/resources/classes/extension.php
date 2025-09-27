@@ -75,10 +75,14 @@
 		private $database;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'extensions';
+		const app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -93,8 +97,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'extensions';
-			$this->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 			$this->permission_prefix = 'extension_';
 			$this->list_page = 'extensions.php';
 			$this->table = 'extensions';
@@ -112,8 +114,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		public function exists($domain_uuid, $extension) {
@@ -660,8 +662,6 @@
 									$p->add('extension_setting_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -762,8 +762,7 @@
 									$p->add('extension_edit', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

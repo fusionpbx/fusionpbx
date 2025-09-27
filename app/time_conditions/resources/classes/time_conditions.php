@@ -28,6 +28,12 @@
 		class time_conditions {
 
 			/**
+			 * declare constant variables
+			 */
+			const app_name = 'time_conditions';
+			const app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
+
+			/**
 			* declare public/private properties
 			*/
 			private $app_name;
@@ -46,8 +52,6 @@
 				$this->dialplan_global = false;
 
 				//assign property defaults
-				$this->app_name = 'time_conditions';
-				$this->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
 				$this->permission_prefix = 'time_condition_';
 				$this->list_page = 'time_conditions.php';
 				$this->table = 'dialplans';
@@ -116,8 +120,6 @@
 										$p->add('dialplan_detail_delete', 'temp');
 
 									//execute delete
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->delete($array);
 
 									//revoke temporary permissions
@@ -206,8 +208,7 @@
 										$p->add('dialplan_edit', 'temp');
 
 									//save the array
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
+
 										$this->database->save($array);
 										unset($array);
 
@@ -321,8 +322,6 @@
 										$p->add('dialplan_detail_add', 'temp');
 
 									//save the array
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->save($array);
 										unset($array);
 

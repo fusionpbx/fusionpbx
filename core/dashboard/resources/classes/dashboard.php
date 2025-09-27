@@ -30,10 +30,14 @@
 	class dashboard {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'dashboard';
+		const app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
 		private $database;
 		private $name;
 		private $table;
@@ -49,8 +53,6 @@
 		 */
 		public function __construct() {
 			//assign the variables
-			$this->app_name = 'dashboard';
-			$this->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$this->tables[] = 'dashboards';
 			$this->tables[] = 'dashboard_widgets';
 			$this->tables[] = 'dashboard_widget_groups';
@@ -69,8 +71,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -119,8 +121,6 @@
 									}
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -193,8 +193,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -263,8 +262,7 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -313,8 +311,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -380,8 +376,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -460,8 +455,7 @@
 						//add the checked rows from group
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute save
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 								//set message
@@ -544,8 +538,6 @@
 								$p->add('dashboard_widget_group_delete', 'temp');
 
 							//execute delete
-								$this->database->app_name = $this->app_name;
-								$this->database->app_uuid = $this->app_uuid;
 								$this->database->delete($array);
 								unset($array);
 

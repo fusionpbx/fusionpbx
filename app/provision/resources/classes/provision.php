@@ -29,6 +29,12 @@
 	class provision {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'provision';
+		const app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
+
+		/**
 		 * declare public variables
 		 */
 		public $domain_uuid;
@@ -40,8 +46,6 @@
 		/**
 		 * declare private variables
 		 */
-		private $app_uuid;
-		private $app_name;
 		private $settings;
 		private $database;
 
@@ -49,10 +53,6 @@
 		 * called when the object is created
 		 */
 		public function __construct($params = []) {
-
-			//assign private variables
-			$this->app_name = 'provision';
-			$this->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 
 			//preset the the values
 			$settings = null;
@@ -146,8 +146,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**

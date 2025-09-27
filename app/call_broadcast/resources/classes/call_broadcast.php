@@ -31,10 +31,15 @@
 	class call_broadcast {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_broadcast';
+		const app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -47,8 +52,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'call_broadcast';
-			$this->app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
 			$this->permission_prefix = 'call_broadcast_';
 			$this->list_page = 'call_broadcast.php';
 			$this->table = 'call_broadcasts';
@@ -64,8 +67,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -101,8 +104,6 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -168,8 +169,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

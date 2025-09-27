@@ -28,10 +28,15 @@
 	class sip_profiles {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'sip_profiles';
+		const app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -51,8 +56,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'sip_profiles';
-			$this->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
 			$this->permission_prefix = 'sip_profile_';
 			$this->list_page = 'sip_profiles.php';
 			$this->table = 'sip_profiles';
@@ -70,8 +73,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -132,8 +135,6 @@
 									$p->add('sip_profile_setting_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -232,8 +233,6 @@
 							if (!empty($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -308,8 +307,6 @@
 							if (!empty($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -391,8 +388,7 @@
 							if (!empty($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

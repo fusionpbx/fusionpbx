@@ -28,20 +28,21 @@
 	class permission {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'groups';
+		const app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 
 		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
-
-			//assign private variables
-			$this->app_name = 'groups';
-			$this->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 
 			//assign the database
 			if (empty($this->database)) {

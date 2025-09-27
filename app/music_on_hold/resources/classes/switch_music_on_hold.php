@@ -30,6 +30,12 @@
 	class switch_music_on_hold {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'music_on_hold';
+		const app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
+
+		/**
 		 * declare private variables
 		 */
 		private $xml;
@@ -47,8 +53,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'music_on_hold';
-			$this->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
 			$this->permission_prefix = 'music_on_hold_';
 			$this->list_page = 'music_on_hold.php';
 			$this->table = 'music_on_hold';
@@ -64,8 +68,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		public function select($name, $selected, $options) {
@@ -421,8 +425,6 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 

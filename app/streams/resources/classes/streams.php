@@ -28,10 +28,15 @@
 	class streams {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'streams';
+		const app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -46,8 +51,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'streams';
-			$this->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
 			$this->permission_prefix = 'stream_';
 			$this->list_page = 'streams.php';
 			$this->table = 'streams';
@@ -65,8 +68,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -101,8 +104,6 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -167,8 +168,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -235,8 +235,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

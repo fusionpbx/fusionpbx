@@ -6,10 +6,14 @@
 	class access_controls {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'access_controls';
+		const app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -22,8 +26,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'access_controls';
-			$this->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$this->list_page = 'access_controls.php';
 
 			//connect to the database
@@ -35,8 +37,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -82,8 +84,6 @@
 						$p->add('access_control_node_delete', 'temp');
 
 						//execute delete
-						$this->database->app_name = $this->app_name;
-						$this->database->app_uuid = $this->app_uuid;
 						$this->database->delete($array);
 						unset($array);
 
@@ -140,8 +140,6 @@
 					if (is_array($array) && @sizeof($array) != 0) {
 
 						//execute delete
-						$this->database->app_name = $this->app_name;
-						$this->database->app_uuid = $this->app_uuid;
 						$this->database->delete($array);
 						unset($array);
 
@@ -245,8 +243,6 @@
 						$p->add('access_control_node_add', 'temp');
 
 						//save the array
-						$this->database->app_name = $this->app_name;
-						$this->database->app_uuid = $this->app_uuid;
 						$this->database->save($array);
 						unset($array);
 

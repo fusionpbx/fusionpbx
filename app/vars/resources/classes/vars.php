@@ -28,10 +28,15 @@
 	class vars {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'vars';
+		const app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -46,8 +51,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'vars';
-			$this->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 			$this->permission_prefix = 'var_';
 			$this->list_page = 'vars.php';
 			$this->table = 'vars';
@@ -64,8 +67,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -100,8 +103,6 @@
 							if (!empty($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -170,8 +171,7 @@
 							if (!empty($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -242,8 +242,7 @@
 							if (!empty($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

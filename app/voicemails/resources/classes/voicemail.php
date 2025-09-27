@@ -42,10 +42,15 @@
 		public $type;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'voicemail';
+		const app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -63,7 +68,7 @@
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
-		private $database;
+		private $this->database;
 
 		public function __construct(array $params = []) {
 
@@ -97,8 +102,6 @@
 			}
 
 			//assign private variables
-			$this->app_name = 'voicemail';
-			$this->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 			$this->permission_prefix = 'voicemail_';
 			$this->list_page = 'voicemails.php';
 			$this->table = 'voicemails';
@@ -111,8 +114,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		public function get_voicemail_id() {
@@ -437,8 +440,6 @@
 									$p->add('voicemail_greeting_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -499,8 +500,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 							}
@@ -549,8 +548,6 @@
 									$p->add('voicemail_destination_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -625,8 +622,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -720,8 +716,6 @@
 				$p->add('voicemail_message_delete', 'temp');
 
 			//execute delete
-				$this->database->app_name = $this->app_name;
-				$this->database->app_name = $this->app_uuid;
 				$this->database->delete($array);
 				unset($array);
 
@@ -758,8 +752,6 @@
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update
-				$this->database->app_name = $this->app_name;
-				$this->database->app_name = $this->app_uuid;
 				$this->database->save($array);
 				unset($array);
 
@@ -1002,8 +994,6 @@
 			$p->add('email_queue_attachment_add', 'temp');
 
 			//execute update
-			$this->database->app_name = $this->app_name;
-			$this->database->app_name = $this->app_uuid;
 			$this->database->save($array);
 			unset($array);
 
@@ -1106,8 +1096,6 @@
 					$p->add('voicemail_message_edit', 'temp');
 
 					//execute update
-					$this->database->app_name = $this->app_name;
-					$this->database->app_name = $this->app_uuid;
 					$this->database->save($array);
 					unset($array);
 
@@ -1146,8 +1134,6 @@
 				$p->add('voicemail_message_edit', 'temp');
 
 			//execute update
-				$this->database->app_name = $this->app_name;
-				$this->database->app_name = $this->app_uuid;
 				$this->database->save($array);
 				unset($array);
 
@@ -1477,14 +1463,11 @@
 			//$table = self::TABLE;
 			$table = 'voicemail_messages';
 
-			//get a database connection
-			$database = $settings->database();
-
 			//get a list of domains
-			$domains = maintenance::get_domains($database);
+			$domains = maintenance::get_domains($this->database);
 			foreach ($domains as $domain_uuid => $domain_name) {
 				//get domain settings
-				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+				$domain_settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
 
 				//ensure we have a retention day
 				$retention_days = $domain_settings->get('voicemail', maintenance::DATABASE_SUBCATEGORY, '');
@@ -1492,12 +1475,12 @@
 					//clear out old records
 					$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
 					. " and domain_uuid = '{$domain_uuid}'";
-					$database->execute($sql);
-					$code = $database->message['code'] ?? 0;
-					if ($database->message['code'] == 200) {
+					$this->database->execute($sql);
+					$code = $this->database->message['code'] ?? 0;
+					if ($this->database->message['code'] == 200) {
 						maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 					} else {
-						$message = $database->message['message'] ?? "An unknown error has occurred";
+						$message = $this->database->message['message'] ?? "An unknown error has occurred";
 						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 					}
 				}

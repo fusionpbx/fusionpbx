@@ -70,14 +70,18 @@
 			/**
 			* declare public/private properties
 			*/
-			private $app_name;
-			public $app_uuid;
 			private $permission_prefix;
 			public $list_page;
 			private $table;
 			private $uuid_prefix;
 			private $toggle_field;
 			private $toggle_values;
+
+			/**
+			 * declare constant variables
+			 */
+			const app_name = 'dialplans';
+			const app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 
 			/**
 			* Set in the constructor. Must be a database object and cannot be null.
@@ -112,7 +116,7 @@
 			 * get the application uuid
 			 */
 			public function get_app_uuid() {
-				return $this->app_uuid;
+				return self::app_uuid;
 			}
 
 			public function dialplan_add() {
@@ -1556,8 +1560,6 @@
 										$p->add('dialplan_detail_add', 'temp');
 
 									//save the array
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->save($array);
 										//view_array($this->database->message);
 										unset($array);

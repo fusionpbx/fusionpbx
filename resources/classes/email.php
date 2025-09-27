@@ -30,13 +30,10 @@
  */
 	class email {
 
-		/**
-		* declare the variables
-		*/
-		private $app_name;
-		private $app_uuid;
-		private $name;
 
+		/**
+		* declare public variables
+		*/
 		public $domain_uuid;
 		public $method;
 		public $recipients;
@@ -50,6 +47,17 @@
 		public $read_confirmation;
 		public $error;
 		public $response;
+
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'email';
+		const app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
+
+		/**
+		* declare private variables
+		*/
+		private $name;
 		private $settings;
 
 		/**
@@ -57,9 +65,7 @@
 		 */
 		public function __construct($params = []) {
 			//assign the variables
-			$this->app_name = 'email';
 			$this->name = 'email';
-			$this->app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
 			$this->priority = 0;
 			$this->debug_level = 3;
 			$this->read_confirmation = false;

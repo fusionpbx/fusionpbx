@@ -6,10 +6,15 @@
 	class call_block {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_block';
+		const app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -32,8 +37,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'call_block';
-			$this->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 			$this->permission_prefix = 'call_block_';
 			$this->list_page = 'call_block.php';
 			$this->table = 'call_block';
@@ -51,8 +54,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -117,8 +120,6 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -190,8 +191,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -264,8 +264,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -445,8 +444,7 @@
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									$response = $this->database->message;
 									unset($array);

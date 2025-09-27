@@ -28,10 +28,15 @@
 	class contacts {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'contacts';
+		const app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -49,8 +54,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = "contacts";
-			$this->app_uuid = "04481e0e-a478-c559-adad-52bd4174574c";
 			$this->permission_prefix = 'contact_';
 			$this->list_page = 'contacts.php';
 			$this->tables[] = 'contact_addresses';
@@ -77,8 +80,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -124,8 +127,6 @@
 									}
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -178,8 +179,6 @@
 					//delete the checked rows
 						if (is_array($array) && @sizeof($array) != 0) {
 							//execute delete
-							$this->database->app_name = $this->app_name;
-							$this->database->app_uuid = $this->app_uuid;
 							$this->database->delete($array);
 							unset($array);
 						}
@@ -223,8 +222,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 							}
@@ -269,8 +266,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-								$this->database->app_name = $this->app_name;
-								$this->database->app_uuid = $this->app_uuid;
 								$this->database->delete($array);
 								unset($array);
 							}

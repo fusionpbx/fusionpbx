@@ -45,11 +45,16 @@
 		public $outbound_caller_id_number;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_forward';
+		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
-		private $this->database;
+
+		private $database;
 		private $extension;
 		private $number_alias;
 		private $toll_allow;
@@ -58,10 +63,7 @@
 		 * called when the object is created
 		 */
 		public function __construct() {
-
 			//assign private variables
-			$this->app_name = 'call_forward';
-			$this->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 			$this->toggle_field = 'forward_all_enabled';
 			$this->toggle_values = ['true', 'false'];
 
@@ -74,8 +76,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		public function set() {
@@ -111,8 +113,6 @@
 			$p->add('extension_add', 'temp');
 
 			//execute update
-			$this->database->app_name = $this->app_name;
-			$this->database->app_uuid = $this->app_uuid;
 			$this->database->save($array);
 			unset($array);
 
@@ -232,8 +232,6 @@
 					$p->add('extension_edit', 'temp');
 
 					//save the array
-					$this->database->app_name = $this->app_name;
-					$this->database->app_uuid = $this->app_uuid;
 					$this->database->save($array);
 					unset($array);
 

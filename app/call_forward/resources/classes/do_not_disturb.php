@@ -38,20 +38,21 @@
 		public $enabled;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_forward';
+		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 
 		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
-
-			//assign private variables
-			$this->app_name = 'call_forward';
-			$this->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 
 			//connect to the database
 			if (empty($this->database)) {
@@ -63,8 +64,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		//update the user_status
@@ -149,8 +150,7 @@
 		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $permission;
 		private $list_page;
 		private $table;
@@ -164,8 +164,6 @@
 		public function toggle($records) {
 
 			//assign private variables
-				$this->app_name = 'calls';
-				$this->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 				$this->permission = 'do_not_disturb';
 				$this->list_page = 'calls.php';
 				$this->table = 'extensions';
@@ -258,8 +256,7 @@
 									$p->add('extension_edit', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

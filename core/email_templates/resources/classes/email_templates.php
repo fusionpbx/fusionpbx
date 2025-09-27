@@ -28,10 +28,15 @@
 	class email_templates {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'email_templates';
+		const app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -46,8 +51,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'email_templates';
-			$this->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
 			$this->permission_prefix = 'email_template_';
 			$this->list_page = 'email_templates.php';
 			$this->table = 'email_templates';
@@ -65,8 +68,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -101,8 +104,6 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -167,8 +168,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -235,8 +235,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

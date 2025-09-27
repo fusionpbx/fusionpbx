@@ -33,10 +33,15 @@
 		public $toggle_field;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_flows';
+		const app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -50,8 +55,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'call_flows';
-			$this->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 			$this->permission_prefix = 'call_flow_';
 			$this->list_page = 'call_flows.php';
 			$this->table = 'call_flows';
@@ -68,8 +71,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -137,8 +140,6 @@
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -236,8 +237,7 @@
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -384,8 +384,7 @@
 									$p->add('dialplan_add', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

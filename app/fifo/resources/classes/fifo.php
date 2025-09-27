@@ -6,6 +6,12 @@
 	class fifo {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'fifo';
+		const app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
+
+		/**
 		* declare the variables
 		*/
 		private $app_name;
@@ -23,8 +29,6 @@
 		 */
 		public function __construct() {
 			//assign the variables
-			$this->app_name = 'fifo';
-			$this->app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
 			$this->name = 'fifo';
 			$this->table = 'fifo';
 			$this->uuid_prefix = 'fifo_';
@@ -42,8 +46,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -123,8 +127,6 @@
 									$p->add('dialplan_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -194,8 +196,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -268,8 +269,7 @@
 									$p->add('fifo_member_add', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

@@ -28,10 +28,15 @@
 	class voicemail_greetings {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'voicemail_greetings';
+		const app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -49,8 +54,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'voicemail_greetings';
-			$this->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 			$this->permission_prefix = 'voicemail_greeting_';
 			if (is_numeric($this->voicemail_id)) {
 				$this->list_page = 'voicemail_greetings.php?id='.urlencode($this->voicemail_id).'&back='.urlencode(PROJECT_PATH.'/app/voicemail/voicemails.php');
@@ -71,8 +74,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -150,8 +153,6 @@
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 										$parameters['voicemail_id'] = $voicemail_id;
 										$parameters['greeting_id'] = $greeting_id;
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->execute($sql, $parameters);
 										unset($sql, $parameters);
 									}
@@ -161,8 +162,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 								//set message

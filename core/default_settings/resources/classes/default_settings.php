@@ -30,10 +30,14 @@
 	class default_settings {
 
 		/**
-		* declare the variables
+		 * declare constant variables
+		 */
+		const app_name = 'default_settings';
+		const app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+
+		/**
+		* declare private variables
 		*/
-		private $app_name;
-		private $app_uuid;
 		private $database;
 		private $name;
 		private $table;
@@ -47,8 +51,6 @@
 		 */
 		public function __construct() {
 			//assign the variables
-			$this->app_name = 'default_settings';
-			$this->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 			$this->name = 'default_setting';
 			$this->table = 'default_settings';
 			$this->toggle_field = 'default_setting_enabled';
@@ -64,8 +66,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -103,8 +105,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -168,8 +168,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

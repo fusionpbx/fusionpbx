@@ -30,10 +30,14 @@
 	class extension_settings {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'extension_settings';
+		const app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
 		private $database;
 		private $name;
 		private $table;
@@ -47,8 +51,6 @@
 		 */
 		public function __construct() {
 			//assign the variables
-			$this->app_name = 'extension_settings';
-			$this->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$this->name = 'extension_setting';
 			$this->table = 'extension_settings';
 			$this->toggle_field = 'extension_setting_enabled';
@@ -65,8 +67,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -105,8 +107,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 								
@@ -182,8 +182,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 									
@@ -259,8 +258,7 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

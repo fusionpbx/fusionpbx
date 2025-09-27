@@ -33,10 +33,15 @@
 		public $phrase_uuid;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'phrases';
+		const app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -51,8 +56,6 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'phrases';
-			$this->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 			$this->permission_prefix = 'phrase_';
 			$this->list_page = 'phrases.php';
 			$this->table = 'phrases';
@@ -70,8 +73,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -137,8 +140,6 @@
 									$p->add('phrase_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -217,8 +218,6 @@
 									$p->add('phrase_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -291,8 +290,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -406,8 +404,7 @@
 									$p->add('phrase_detail_add', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

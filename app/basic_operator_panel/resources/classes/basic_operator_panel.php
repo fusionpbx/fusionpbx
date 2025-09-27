@@ -30,6 +30,12 @@
 	class basic_operator_panel {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'basic_operator_panel';
+		const app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
+
+		/**
 		 * declare public variables
 		 */
 		public $domain_uuid;
@@ -37,8 +43,6 @@
 		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
 		private $database;
 
 		/**
@@ -50,10 +54,6 @@
 				$this->domain_uuid = $_SESSION['domain_uuid'];
 			}
 
-			//assign private variables
-			$this->app_name = 'operator_panel';
-			$this->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
-
 			//connect to the database
 			if (empty($this->database)) {
 				$this->database = database::new();
@@ -63,8 +63,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**

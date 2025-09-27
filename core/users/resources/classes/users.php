@@ -30,6 +30,12 @@
 	class users {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'users';
+		const app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
+
+		/**
 		* declare the variables
 		*/
 		private $app_name;
@@ -46,8 +52,6 @@
 		 */
 		public function __construct() {
 			//assign the variables
-			$this->app_name = 'users';
-			$this->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
 			$this->name = 'user';
 			$this->table = 'users';
 			$this->toggle_field = 'user_enabled';
@@ -63,8 +67,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -142,8 +146,6 @@
 									$p->add('user_group_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -210,8 +212,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -276,8 +277,7 @@
 						//save the changes and set the message
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

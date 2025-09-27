@@ -43,10 +43,15 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		public $toggle_field;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'conference_centers';
+		const app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -60,10 +65,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		 */
 		public function __construct() {
 
-			//assign private variables
-			$this->app_name = 'conference_centers';
-			$this->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
-
 			//connect to the database
 			if (empty($this->database)) {
 				$this->database = database::new();
@@ -74,8 +75,8 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -360,8 +361,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add('dialplan_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -435,8 +434,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add('conference_room_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -498,8 +495,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add('conference_user_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -584,8 +579,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add("dialplan_edit", "temp");
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -702,8 +696,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 							if (!empty($array)) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -779,8 +772,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 							if (!empty($array)) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

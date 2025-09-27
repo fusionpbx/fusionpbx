@@ -34,6 +34,12 @@
 		public $ringtones_list;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'ringbacks';
+		const app_uuid = 'b63db353-e1c6-4401-8f10-101a6ee73b74';
+
+		/**
 		 * declare private variables
 		 */
 		private $tones_list;
@@ -48,10 +54,6 @@
 		public function __construct() {
 			//set the domain_uuid
 			$this->domain_uuid = $_SESSION['domain_uuid'];
-
-			//assign private variables
-			$this->app_name = 'ringbacks';
-			$this->app_uuid = 'b63db353-e1c6-4401-8f10-101a6ee73b74';
 
 			//connect to the database
 			if (empty($this->database)) {
@@ -122,6 +124,13 @@
 				$this->streams = $streams;
 				unset($sql, $parameters, $streams, $row);
 			}
+		}
+
+		/**
+		 * get the application uuid
+		 */
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		public function valid($value) {

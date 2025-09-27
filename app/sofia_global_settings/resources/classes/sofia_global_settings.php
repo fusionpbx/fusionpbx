@@ -30,10 +30,14 @@
 	class sofia_global_settings {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'sofia_global_settings';
+		const app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
 		private $database;
 		private $name;
 		private $table;
@@ -47,8 +51,6 @@
 		 */
 		public function __construct() {
 			//assign the variables
-			$this->app_name = 'sofia_global_settings';
-			$this->app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
 			$this->name = 'sofia_global_setting';
 			$this->table = 'sofia_global_settings';
 			$this->toggle_field = 'global_setting_enabled';
@@ -65,8 +67,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -104,8 +106,6 @@
 						//delete the checked rows
 							if (!empty($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -169,8 +169,7 @@
 						//save the changes
 							if (!empty($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -236,8 +235,7 @@
 						//save the changes and set the message
 							if (!empty($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

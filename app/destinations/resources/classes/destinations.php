@@ -30,6 +30,12 @@
 	class destinations {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'destinations';
+		const app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+
+		/**
 		 * declare public variables
 		 */
 		public $destinations;
@@ -75,8 +81,6 @@
 			}
 
 			//assign private variables
-			$this->app_name = 'destinations';
-			$this->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 			$this->permission_prefix = 'destination_';
 			$this->list_page = 'destinations.php';
 			$this->table = 'destinations';
@@ -86,8 +90,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -1087,8 +1091,6 @@
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 

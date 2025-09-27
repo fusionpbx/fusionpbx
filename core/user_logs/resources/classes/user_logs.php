@@ -30,10 +30,14 @@
 	class user_logs {
 
 		/**
-		* declare the variables
-		*/
-		private $app_name;
-		private $app_uuid;
+		 * declare constant variables
+		 */
+		const app_name = 'user_logs';
+		const app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
+
+		/**
+		 * declare private variables
+		 */
 		private $database;
 		private $name;
 		private $table;
@@ -46,8 +50,6 @@
 		 */
 		public function __construct() {
 			//assign the variables
-			$this->app_name = 'user_logs';
-			$this->app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
 			$this->name = 'user_log';
 			$this->table = 'user_logs';
 			$this->toggle_field = '';
@@ -63,8 +65,8 @@
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -144,8 +146,6 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 

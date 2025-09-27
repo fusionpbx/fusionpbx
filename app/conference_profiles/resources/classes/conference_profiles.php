@@ -30,10 +30,15 @@
 	class conference_profiles {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'conference_profiles';
+		const app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -50,16 +55,17 @@
 		 * called when the object is created
 		 */
 		public function __construct() {
-			//assign the variables
-			$this->app_name = 'conference_profiles';
-			$this->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 		}
 
 		/**
 		 * get the application uuid
 		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
+		public static function get_app_uuid() {
+			return self::app_uuid;
 		}
 
 		/**
@@ -109,9 +115,7 @@
 									$p->add('conference_profile_param_delete', 'temp');
 
 								//execute delete
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->$database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -163,9 +167,7 @@
 						//delete the checked rows
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->$database->delete($array);
 									unset($array);
 
 								//set message
@@ -213,7 +215,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->$database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -236,9 +238,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->$database->save($array);
 									unset($array);
 
 								//set message
@@ -283,7 +283,7 @@
 							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->$database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -308,9 +308,7 @@
 						//save the changes
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->$database->save($array);
 									unset($array);
 
 								//set message
@@ -362,7 +360,7 @@
 								//primary table
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-									$rows = $database->select($sql, $parameters ?? null, 'all');
+									$rows = $this->$database->select($sql, $parameters ?? null, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {
@@ -378,7 +376,7 @@
 											//params sub table
 												$sql_2 = "select * from v_conference_profile_params where conference_profile_uuid = :conference_profile_uuid";
 												$parameters_2['conference_profile_uuid'] = $row['conference_profile_uuid'];
-												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												$rows_2 = $this->$database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
@@ -408,9 +406,7 @@
 									$p->add('conference_profile_param_add', 'temp');
 
 								//save the array
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->$database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

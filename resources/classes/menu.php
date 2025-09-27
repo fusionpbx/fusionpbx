@@ -30,24 +30,32 @@
 	class menu {
 
 		/**
-		* declare the variables
+		* declare private variables
 		*/
-		private $app_name;
-		private $app_uuid;
-		private $name;
-		private $table;
-		private $toggle_field;
-		private $toggle_values;
-		private $location;
 		public $menu_uuid;
 		public $menu_language;
 		public $text;
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'menus';
+		const app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+
+		/**
+		* declare private variables
+		*/
+		private $name;
+		private $table;
+		private $toggle_field;
+		private $toggle_values;
+		private $location;
+
+		/**
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
-		private $database;
+		private $this->database;
 
 		/**
 		 * Settings object set in the constructor. Must be a settings object and cannot be null.
@@ -72,8 +80,6 @@
 		 */
 		public function __construct($setting_array = []) {
 			//assign the variables
-			$this->app_name = 'menus';
-			$this->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$this->location = 'menus.php';
 
 			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
@@ -147,8 +153,6 @@
 									$p->add('menu_language_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -227,8 +231,6 @@
 									$p->add('menu_item_group_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -301,8 +303,7 @@
 						//save the changes
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -389,8 +390,7 @@
 								$sql = "select group_name, group_uuid from v_groups	";
 								$sql .= "where group_uuid = :group_uuid	";
 								$parameters['group_uuid'] = $group_uuid;
-								$database = new database;
-								$group = $database->select($sql, $parameters, 'row');
+								$group = $this->database->select($sql, $parameters, 'row');
 							}
 
 						//build the delete array
@@ -416,8 +416,7 @@
 						if (!empty($array) && @sizeof($array) != 0) {
 							$sql = "select menu_uuid, menu_item_uuid, ";
 							$sql .= "group_uuid from v_menu_item_groups ";
-							$database = new database;
-							$menu_item_groups = $database->select($sql, null, 'all');
+							$menu_item_groups = $this->database->select($sql, null, 'all');
 							$array['menu_item_groups'] = array_filter($array['menu_item_groups'], function($ar) use ($menu_item_groups) {
 								foreach ($menu_item_groups as $existingArrayItem) {
 									if ($ar['menu_uuid'] == $existingArrayItem['menu_uuid'] && $ar['menu_item_uuid'] == $existingArrayItem['menu_item_uuid'] && $ar['group_uuid'] == $existingArrayItem['group_uuid']) {
@@ -432,10 +431,7 @@
 						//add the checked rows fro group
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute save
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->save($array);
 									unset($array);
 								//set message
 									message::add($text['message-add']);
@@ -471,8 +467,7 @@
 								$sql = "select group_name, group_uuid from v_groups	";
 								$sql .= "where group_uuid = :group_uuid	";
 								$parameters['group_uuid'] = $group_uuid;
-								$database = new database;
-								$group = $database->select($sql, $parameters, 'row');
+								$group = $this->database->select($sql, $parameters, 'row');
 							}
 
 						//build the delete array
@@ -497,8 +492,7 @@
 							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select menu_uuid, menu_item_uuid as uuid from v_".$this->table." ";
 								$sql .= "where menu_item_parent_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, null, 'all');
+								$rows = $this->database->select($sql, null, 'all');
 								if (!empty($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										//assign menu item groups
@@ -522,10 +516,7 @@
 								$p->add('menu_item_group_delete', 'temp');
 
 							//execute delete
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
-								$database->delete($array);
+								$this->database->delete($array);
 								unset($array);
 
 							//revoke temporary permissions

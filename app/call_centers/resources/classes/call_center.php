@@ -31,7 +31,7 @@
 		class call_center {
 
 			/**
-			 * define the variables
+			 * define public variables
 			 */
 			public $domain_uuid;
 			public $call_center_queue_uuid;
@@ -42,10 +42,14 @@
 			public $queue_cc_exit_keys;
 
 			/**
+			 * declare constant variables
+			 */
+			const app_name = 'call_center';
+			const app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+
+			/**
 			* declare private variables
 			*/
-			private $app_name;
-			private $app_uuid;
 			private $database;
 			private $permission_prefix;
 			private $list_page;
@@ -56,21 +60,10 @@
 			 * Called when the object is created
 			 */
 			public function __construct() {
-				//assign private variables
-				$this->app_name = 'call_center';
-				$this->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-
 				//connect to the database
 				if (empty($this->database)) {
 					$this->database = database::new();
 				}
-			}
-
-			/**
-			 * get the application uuid
-			 */
-			public function get_app_uuid() {
-				return $this->app_uuid;
 			}
 
 			/**
@@ -94,8 +87,6 @@
 							$p->add('dialplan_detail_delete', 'temp');
 
 						//execute delete
-							$this->database->app_name = 'call_centers';
-							$this->database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 							$this->database->delete($array);
 							unset($array);
 
@@ -233,8 +224,6 @@
 					$p->add("dialplan_detail_edit", 'temp');
 
 				//save the dialplan
-					$this->database->app_name = 'call_centers';
-					$this->database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 					$this->database->save($array);
 					$dialplan_response = $this->database->message;
 					$this->dialplan_uuid = $dialplan_response['uuid'];
@@ -255,8 +244,6 @@
 					$p->add('call_center_queue_edit', 'temp');
 
 				//execute update
-					$this->database->app_name = 'call_centers';
-					$this->database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 					$this->database->save($array);
 					unset($array);
 
@@ -362,8 +349,6 @@
 										$p->add('dialplan_detail_delete', 'temp');
 
 									//execute delete
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->delete($array);
 										unset($array);
 
@@ -456,8 +441,6 @@
 										$p->add('call_center_tier_delete', 'temp');
 
 									//execute delete
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->delete($array);
 										unset($array);
 
@@ -585,8 +568,6 @@
 										$p->add('dialplan_add', 'temp');
 
 									//save the array
-										$this->database->app_name = $this->app_name;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->save($array);
 										unset($array);
 
