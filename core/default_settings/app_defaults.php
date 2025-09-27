@@ -111,6 +111,7 @@
 				$sql .= "('".uuid()."', 'FYRO Macedonia', 'mk'), ";
 				$sql .= "('".uuid()."', 'Gaelic - Ireland', 'gd-ie'), ";
 				$sql .= "('".uuid()."', 'Gaelic - Scotland', 'gd'), ";
+				$sql .= "('".uuid()."', 'Georgian', 'ka-ge'), ";
 				$sql .= "('".uuid()."', 'German - Austria', 'de-at'), ";
 				$sql .= "('".uuid()."', 'German - Germany', 'de-de'), ";
 				$sql .= "('".uuid()."', 'German - Liechtenstein', 'de-li'), ";
@@ -495,7 +496,7 @@
 			$database->execute($sql);
 			unset($sql);
 
-		//update login destination 
+		//update login destination
 			$sql = "update v_default_settings set ";
 			$sql .= "default_setting_uuid = 'e2b9406f-37cf-4226-8111-e5d11d0bfd73', ";
 			$sql .= "default_setting_name = 'text' ";
