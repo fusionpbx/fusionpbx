@@ -74,6 +74,9 @@
 		 */
 		public static function add($result, $details = '') {
 
+			//create the database object
+				$database = database::new();
+
 			//prepare the array
 				$array = [];
 				$array['user_logs'][0]["timestamp"] = 'now()';
@@ -99,12 +102,8 @@
 				$p->add("user_log_add", 'temp');
 
 			//save to the data
-				$this->database->app_name = 'authentication';
-				$this->database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
-				if (strlen($user_log_uuid ?? '')>0)
-					$this->database->uuid($user_log_uuid);
-				$this->database->save($array, false);
-				$message = $this->database->message;
+				$database->save($array, false);
+				$message = $database->message;
 
 			//remove the temporary permission
 				$p->delete("user_log_add", 'temp');
