@@ -36,7 +36,7 @@ function feature_event_notify.get_db_values(user, domain_name)
 				sql = sql .. "from v_extensions ";
 				sql = sql .. "where domain_uuid = :domain_uuid ";
 				sql = sql .. "and (extension = :extension or number_alias = :extension) ";
-				sql = sql .. "and enabled true ";
+				sql = sql .. "and enabled = true ";
 				local params = {domain_uuid = domain_uuid, extension = user};
 				-- if (debug["sql"]) then
 				-- 	freeswitch.consoleLog("notice", "[feature_event] " .. sql .. "; params:" .. json.encode(params) .. "\n");
