@@ -28,6 +28,12 @@
 	class extension {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'extensions';
+		const app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+
+		/**
 		 * declare public variables
 		 */
 		public $domain_uuid;
@@ -72,13 +78,6 @@
 		public $enabled;
 		public $description;
 		public $delete_voicemail;
-		private $database;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'extensions';
-		const app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 
 		/**
 		 * declare private variables
