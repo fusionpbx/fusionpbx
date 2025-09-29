@@ -124,13 +124,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * cdr process logging
 		 */
 		public function log($message) {

@@ -126,13 +126,6 @@
 			}
 		}
 
-		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
 		public function valid($value) {
 			foreach($this->ringtones_list as $ringtone_value => $ringtone_name) {
 				if ($value == "\${".$ringtone_value."}") {

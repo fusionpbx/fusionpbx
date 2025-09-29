@@ -73,13 +73,6 @@
 			}
 		}
 
-		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
 		public function set() {
 
 			//determine whether to update the dial string

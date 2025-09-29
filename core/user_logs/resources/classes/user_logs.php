@@ -63,13 +63,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * add user_logs
 		 */
 		public static function add($result, $details = '') {

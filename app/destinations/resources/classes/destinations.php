@@ -88,13 +88,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		* Convert destination number to a regular expression
 		* @var string $array destination_prefix, destination_trunk_prefix, destination_area_code, destination_number
 		*/

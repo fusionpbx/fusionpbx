@@ -76,13 +76,6 @@
 
 		}
 
-		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}

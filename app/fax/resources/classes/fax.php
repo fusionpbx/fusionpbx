@@ -74,13 +74,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		* Add a dialplan for call center
 		* @var string $domain_uuid		the multi-tenant id
 		* @var string $value	string to be cached

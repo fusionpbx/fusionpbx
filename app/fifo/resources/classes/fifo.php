@@ -44,13 +44,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * called when there are no references to a particular object
 		 * unset the variables used in the class
 		 */

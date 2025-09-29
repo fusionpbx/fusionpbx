@@ -110,13 +110,6 @@
 
 		}
 
-		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
 		public function exists($domain_uuid, $extension) {
 			$sql = "select count(*) from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";

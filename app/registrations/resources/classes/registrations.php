@@ -101,13 +101,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * get the registrations
 		 */
 		public function get($profile = 'all') {

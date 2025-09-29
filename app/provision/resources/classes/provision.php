@@ -144,13 +144,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * get the domain uuid
 		 */
 		public function get_domain_uuid() {

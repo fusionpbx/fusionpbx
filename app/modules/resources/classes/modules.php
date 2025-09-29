@@ -80,13 +80,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * get the additional information about a specific module
 		 */
 		public function info($name) {

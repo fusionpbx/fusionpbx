@@ -61,13 +61,6 @@
 
 		}
 
-		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
 		//update the user_status
 		public function user_status() {
 			//update the status

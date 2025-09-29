@@ -101,13 +101,6 @@
 			}
 		}
 
-		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
 		public function add() {
 
 			//build follow me insert array

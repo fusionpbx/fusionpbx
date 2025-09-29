@@ -73,13 +73,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * count the conference rooms
 		 */
 		public function room_count() {

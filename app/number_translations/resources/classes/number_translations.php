@@ -72,13 +72,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * Check to see if the number translation already exists
 		 */
 		public function number_translation_exists($name) {

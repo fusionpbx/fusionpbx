@@ -26,13 +26,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
-		/**
 		 * <p>Used to create the config.conf file.</p>
 		 * <p>BSD /usr/local/etc/fusionpbx</p>
 		 * <p>Linux /etc/fusionpbx</p>

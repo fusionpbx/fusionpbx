@@ -66,13 +66,6 @@
 
 		}
 
-		/**
-		 * get the application uuid
-		 */
-		public static function get_app_uuid() {
-			return self::app_uuid;
-		}
-
 		public function find() {
 			$sql = "select * from v_ivr_menus ";
 			$sql .= "where domain_uuid = :domain_uuid ";
