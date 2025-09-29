@@ -39,7 +39,7 @@
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
-		private $this->database;
+		private $database;
 
 		/**
 		 * Set in the constructor. This can be null.

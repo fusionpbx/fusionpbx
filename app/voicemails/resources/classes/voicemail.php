@@ -68,7 +68,7 @@
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
-		private $this->database;
+		private $database;
 
 		public function __construct(array $params = []) {
 

@@ -55,7 +55,7 @@
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
-		private $this->database;
+		private $database;
 
 		/**
 		 * Settings object set in the constructor. Must be a settings object and cannot be null.

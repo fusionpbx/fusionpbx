@@ -88,7 +88,7 @@
 		 * declare private variables
 		 */
 
-		private $this->database;
+		private $database;
 
 		/**
 		 * called when the object is created
