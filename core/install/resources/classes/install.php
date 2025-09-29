@@ -3,6 +3,12 @@
 	class install {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'install';
+		const app_uuid = '75507e6e-891e-11e5-af63-feff819cdc9f';
+
+		/**
 		 * declare public variables
 		 */
 		public $message;
@@ -11,12 +17,6 @@
 		public $database_name;
 		public $database_username;
 		public $database_password;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'install';
-		const app_uuid = '75507e6e-891e-11e5-af63-feff819cdc9f';
 
 		/**
 		 * called when the object is created

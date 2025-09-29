@@ -31,16 +31,16 @@
 	class groups {
 
 		/**
-		 * declare public variables
-		 */
-		public  $group_uuid;
-		public  $group_level;
-
-		/**
 		 * declare constant variables
 		 */
 		const app_name = 'groups';
 		const app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+
+		/**
+		 * declare public variables
+		 */
+		public  $group_uuid;
+		public  $group_level;
 
 		/**
 		* declare private variables

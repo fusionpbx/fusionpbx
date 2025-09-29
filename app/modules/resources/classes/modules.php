@@ -28,18 +28,18 @@
 	class modules {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'modules';
+		const app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
+
+		/**
 		 * declare public variables
 		 */
 		public $dir;
 		public $esl;
 		public $modules;
 		public $msg;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'modules';
-		const app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
 
 		/**
 		 * declare private variables

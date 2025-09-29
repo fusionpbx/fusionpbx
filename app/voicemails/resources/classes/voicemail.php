@@ -28,6 +28,12 @@
 	class voicemail {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'voicemail';
+		const app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+
+		/**
 		 * declare public variables
 		 */
 		public $domain_uuid;
@@ -42,15 +48,8 @@
 		public $type;
 
 		/**
-		 * declare constant variables
-		 */
-		const app_name = 'voicemail';
-		const app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
-
-		/**
 		 * declare private variables
 		 */
-
 		private $permission_prefix;
 		private $list_page;
 		private $table;

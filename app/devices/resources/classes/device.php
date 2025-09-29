@@ -26,12 +26,6 @@
 
 //define the device class
 	class device {
-		public $db;
-		public $domain_uuid;
-		public $template_dir;
-		public $device_uuid;
-		public $device_vendor_uuid;
-		public $device_profile_uuid;
 
 		/**
 		 * declare constant variables
@@ -40,9 +34,17 @@
 		const app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 
 		/**
+		 * declare public variables
+		 */
+		public $domain_uuid;
+		public $template_dir;
+		public $device_uuid;
+		public $device_vendor_uuid;
+		public $device_profile_uuid;
+
+		/**
 		 * declare private variables
 		 */
-
 		private $permission_prefix;
 		private $list_page;
 		private $table;

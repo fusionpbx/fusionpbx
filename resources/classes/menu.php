@@ -30,17 +30,17 @@
 	class menu {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'menus';
+		const app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+
+		/**
 		* declare private variables
 		*/
 		public $menu_uuid;
 		public $menu_language;
 		public $text;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'menus';
-		const app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 
 		/**
 		* declare private variables

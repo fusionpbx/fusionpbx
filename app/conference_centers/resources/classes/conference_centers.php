@@ -29,6 +29,12 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	class conference_centers {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'conference_centers';
+		const app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+
+		/**
 		 * declare public variables
 		 */
 		public $domain_uuid;
@@ -41,12 +47,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		public $count;
 		public $created_by;
 		public $toggle_field;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'conference_centers';
-		const app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 
 		/**
 		 * declare private variables

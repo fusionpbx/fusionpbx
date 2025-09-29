@@ -28,6 +28,12 @@
 	class fax {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'fax';
+		const app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+
+		/**
 		* define the variables
 		*/
 		public $domain_uuid;
@@ -42,12 +48,6 @@
 		public $order_by;
 		public $order;
 		public $download;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'fax';
-		const app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 
 		/**
 		* declare private variables

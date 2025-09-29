@@ -28,15 +28,15 @@
 	class number_translations {
 
 		/**
-		 * declare public variables
-		 */
-		public $number_translation_uuid;
-
-		/**
 		 * declare constant variables
 		 */
 		const app_name = 'number_translations';
 		const app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
+
+		/**
+		 * declare public variables
+		 */
+		public $number_translation_uuid;
 
 		/**
 		 * declare private variables

@@ -35,7 +35,6 @@
 		/**
 		 * declare private variables
 		 */
-
 		private $permission_prefix;
 		private $list_page;
 		public $show;

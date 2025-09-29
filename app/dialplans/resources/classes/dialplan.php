@@ -27,7 +27,15 @@
 //define the dialplan class
 		class dialplan {
 
-			//variables
+			/**
+			 * declare constant variables
+			 */
+			const app_name = 'dialplans';
+			const app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+
+			/**
+			* declare public/private properties
+			*/
 			public $domain_uuid;
 			public $dialplan_uuid;
 			public $dialplan_detail_uuid;
@@ -38,7 +46,6 @@
 			public $bridges;
 			public $variables;
 
-			//dialplans
 			public $dialplan_details;
 			public $dialplan_name;
 			public $dialplan_number;
@@ -50,7 +57,6 @@
 			public $dialplan_enabled;
 			public $dialplan_description;
 
-			//dialplan_details
 			public $dialplan_detail_tag;
 			public $dialplan_detail_order;
 			public $dialplan_detail_type;
@@ -59,7 +65,6 @@
 			public $dialplan_detail_inline;
 			public $dialplan_detail_group;
 
-			//xml
 			public $uuid;
 			public $context;
 			public $source;
@@ -76,12 +81,6 @@
 			private $uuid_prefix;
 			private $toggle_field;
 			private $toggle_values;
-
-			/**
-			 * declare constant variables
-			 */
-			const app_name = 'dialplans';
-			const app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 
 			/**
 			* Set in the constructor. Must be a database object and cannot be null.

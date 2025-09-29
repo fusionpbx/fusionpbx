@@ -29,15 +29,15 @@
 	class switch_recordings {
 
 		/**
-		 * declare public variables
-		 */
-		public $domain_uuid;
-
-		/**
 		 * declare constant variables
 		 */
 		const app_name = 'recordings';
 		const app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
+
+		/**
+		 * declare public variables
+		 */
+		public $domain_uuid;
 
 		/**
 		 * declare private variables

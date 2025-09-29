@@ -28,16 +28,16 @@
 	class ivr_menu {
 
 		/**
-		 * declare public variables
-		 */
-		public $domain_uuid;
-		public $ivr_menu_uuid;
-
-		/**
 		 * declare constant variables
 		 */
 		const app_name = 'ivr_menus';
 		const app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+
+		/**
+		 * declare public variables
+		 */
+		public $domain_uuid;
+		public $ivr_menu_uuid;
 
 		/**
 		 * declare private variables

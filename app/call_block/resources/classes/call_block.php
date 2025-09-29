@@ -14,7 +14,6 @@
 		/**
 		 * declare private variables
 		 */
-
 		private $database;
 		private $permission_prefix;
 		private $list_page;

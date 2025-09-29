@@ -28,15 +28,15 @@
 	class phrases {
 
 		/**
-		 * declare public variables
-		 */
-		public $phrase_uuid;
-
-		/**
 		 * declare constant variables
 		 */
 		const app_name = 'phrases';
 		const app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+
+		/**
+		 * declare public variables
+		 */
+		public $phrase_uuid;
 
 		/**
 		 * declare private variables

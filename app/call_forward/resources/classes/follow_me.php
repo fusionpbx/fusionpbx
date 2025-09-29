@@ -30,8 +30,17 @@
 
 //define the follow me class
 	class follow_me {
+
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_forward';
+		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+
+		/**
+		 * declare public variables
+		 */
 		public $domain_uuid;
-		private $domain_name;
 		public $db_type;
 		public $follow_me_uuid;
 		public $cid_name_prefix;
@@ -41,9 +50,6 @@
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
-		private $extension;
-		private $number_alias;
-		private $toll_allow;
 
 		public $destination_data_1;
 		public $destination_type_1;
@@ -79,16 +85,13 @@
 		public $destination_order = 1;
 
 		/**
-		 * declare constant variables
-		 */
-		const app_name = 'call_forward';
-		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-
-		/**
 		 * declare private variables
 		 */
-
 		private $database;
+		private $toll_allow;
+		private $domain_name;
+		private $extension;
+		private $number_alias;
 
 		/**
 		 * called when the object is created

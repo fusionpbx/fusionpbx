@@ -28,6 +28,12 @@
 	class do_not_disturb {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_forward';
+		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+
+		/**
 		 * declare public variables
 		 */
 		public $debug;
@@ -36,12 +42,6 @@
 		public $extension_uuid;
 		public $extension;
 		public $enabled;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'call_forward';
-		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 
 		/**
 		 * declare private variables

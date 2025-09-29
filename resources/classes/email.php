@@ -30,6 +30,11 @@
  */
 	class email {
 
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'email';
+		const app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
 
 		/**
 		* declare public variables
@@ -47,12 +52,6 @@
 		public $read_confirmation;
 		public $error;
 		public $response;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'email';
-		const app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
 
 		/**
 		* declare private variables

@@ -28,16 +28,16 @@
 	class ringbacks {
 
 		/**
-		 * declare public variables
-		 */
-		public $domain_uuid;
-		public $ringtones_list;
-
-		/**
 		 * declare constant variables
 		 */
 		const app_name = 'ringbacks';
 		const app_uuid = 'b63db353-e1c6-4401-8f10-101a6ee73b74';
+
+		/**
+		 * declare public variables
+		 */
+		public $domain_uuid;
+		public $ringtones_list;
 
 		/**
 		 * declare private variables

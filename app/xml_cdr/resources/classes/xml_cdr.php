@@ -30,6 +30,40 @@
 	class xml_cdr {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'xml_cdr';
+		const app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+
+		/**
+		 * declare public variables
+		 */
+		public $array;
+		public $fields;
+		public $setting;
+		public $domain_uuid;
+		public $call_details;
+		public $call_direction;
+		public $status;
+		public $billsec;
+		public $recording_uuid;
+		public $binary;
+
+		/**
+		 * user summary
+		 */
+		public $quick_select;
+		public $start_stamp_begin;
+		public $start_stamp_end;
+		public $include_internal;
+		public $extensions;
+
+		/**
+		 * Used by read_files, xml_array, and save methods
+		 */
+		public $file;
+
+		/**
 		 * Internal array structure that is populated from the database
 		 * @var array Array of settings loaded from Default Settings
 		 */
@@ -48,38 +82,6 @@
 		private $destinations;
 
 		/**
-		 * define variables
-		 */
-		public $array;
-		public $fields;
-		public $setting;
-		public $domain_uuid;
-		public $call_details;
-		public $call_direction;
-		public $status;
-		public $billsec;
-		private $username;
-		private $password;
-		private $json;
-		public $recording_uuid;
-		public $binary;
-
-		/**
-		 * user summary
-		 */
-		public $quick_select;
-		public $start_stamp_begin;
-		public $start_stamp_end;
-		public $include_internal;
-		public $extensions;
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'xml_cdr';
-		const app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
-
-		/**
 		 * delete method
 		 */
 		private $permission_prefix;
@@ -88,9 +90,11 @@
 		private $uuid_prefix;
 
 		/**
-		 * Used by read_files, xml_array, and save methods
+		 * additional private variables
 		 */
-		public $file;
+		private $username;
+		private $password;
+		private $json;
 
 		/**
 		 * Called when the object is created

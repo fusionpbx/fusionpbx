@@ -31,6 +31,12 @@
 		class call_center {
 
 			/**
+			 * declare constant variables
+			 */
+			const app_name = 'call_center';
+			const app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+
+			/**
 			 * define public variables
 			 */
 			public $domain_uuid;
@@ -40,12 +46,6 @@
 			public $queue_description;
 			public $destination_number;
 			public $queue_cc_exit_keys;
-
-			/**
-			 * declare constant variables
-			 */
-			const app_name = 'call_center';
-			const app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 
 			/**
 			* declare private variables
