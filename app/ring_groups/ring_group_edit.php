@@ -290,7 +290,7 @@
 		//check for all required data
 			$msg = '';
 			if (empty($ring_group_name)) { $msg .= $text['message-name']."<br>\n"; }
-			if (empty($ring_group_extension)) { $msg .= $text['message-extension']."<br>\n"; }
+			//if (empty($ring_group_extension)) { $msg .= $text['message-extension']."<br>\n"; }
 			//if (empty($ring_group_greeting)) { $msg .= $text['message-greeting']."<br>\n"; }
 			if (empty($ring_group_strategy)) { $msg .= $text['message-strategy']."<br>\n"; }
 			if (empty($ring_group_call_timeout)) { $msg .= $text['message-call_timeout']."<br>\n"; }
