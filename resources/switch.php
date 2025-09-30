@@ -506,31 +506,6 @@ function get_recording_filename($id) {
 	unset($sql, $parameters, $row);
 }
 
-function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid) {
-	//build insert array
-		$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
-		$array['dialplans'][0]['domain_uuid'] = $domain_uuid;
-		if (is_uuid($app_uuid)) {
-			$array['dialplans'][0]['app_uuid'] = $app_uuid;
-		}
-		$array['dialplans'][0]['dialplan_name'] = $dialplan_name;
-		$array['dialplans'][0]['dialplan_order'] = $dialplan_order;
-		$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
-		$array['dialplans'][0]['dialplan_enabled'] = $dialplan_enabled;
-		$array['dialplans'][0]['dialplan_description'] = $dialplan_description;
-	//grant temporary permissions
-		$p = permissions::new();
-		$p->add('dialplan_add', 'temp');
-	//execute insert
-		$database = new database;
-		$database->app_name = 'switch-function-dialplan_add';
-		$database->app_uuid = '2fa2243c-47a1-41a0-b144-eb2b609219e0';
-		$database->save($array);
-		unset($array);
-	//revoke temporary permissions
-		$p->delete('dialplan_add', 'temp');
-}
-
 if (!function_exists('phone_letter_to_number')) {
 	function phone_letter_to_number($tmp) {
 		$tmp = strtolower($tmp);

@@ -1291,6 +1291,14 @@ class database {
 			$x = 0;
 			foreach ($array as $parent_name => $tables) {
 				if (is_array($tables)) {
+
+					//get the application name and uuid
+					if (class_exists($parent_name) && defined("$parent_name::$app_name")) {
+						$this->app_name = $parent_name::app_name;
+						$this->app_uuid = $parent_name::app_uuid;
+					}
+
+					//process the array
 					foreach ($tables as $id => $row) {
 
 						//prepare the variables
@@ -1454,7 +1462,13 @@ class database {
 
 				//delete the current data
 					foreach($new_array as $table_name => $rows) {
-						//echo "table: ".$table_name."\n";
+						//get the application name and uuid
+						if (class_exists($parent_name)) {
+							$this->app_name = $table_name::app_name;
+							$this->app_uuid = $table_name::app_uuid;
+						}
+				
+						//build and run the delete SQL statements
 						foreach($rows as $row) {
 							if (permission_exists(self::singular($table_name).'_delete')) {
 								$sql = "delete from ".self::TABLE_PREFIX.$table_name." ";
@@ -2273,6 +2287,13 @@ class database {
 				//loop through the array
 					if (is_array($array)) foreach ($array as $parent_name => $parent_array) {
 
+						//get the application name and uuid
+						if (class_exists($parent_name) && defined("$parent_name::$app_name")) {
+							$this->app_name = $parent_name::app_name;
+							$this->app_uuid = $parent_name::app_uuid;
+						}
+
+						//process the parent array, use it to create insert and update SQL statements
 						if (is_array($parent_array)) foreach ($parent_array as $row_id => $parent_field_array) {
 
 							//set the variables
