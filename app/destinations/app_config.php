@@ -271,6 +271,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_groups";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "group_uuid";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "provider_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_providers";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "provider_uuid";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_type";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
