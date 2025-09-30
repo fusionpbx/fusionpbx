@@ -117,7 +117,7 @@
 					$sql .= "set queue_moh_sound = :stream_location ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and queue_moh_sound = :original_stream_location ";
-					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['stream_location'] = $stream_location;
 					$parameters['original_stream_location'] = $original_stream_location;
 					$database->execute($sql, $parameters);
@@ -130,7 +130,7 @@
 					$sql .= "set destination_hold_music = :stream_location ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and destination_hold_music = :original_stream_location ";
-					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['stream_location'] = $stream_location;
 					$parameters['original_stream_location'] = $original_stream_location;
 					$database->execute($sql, $parameters);
@@ -143,7 +143,7 @@
 					$sql .= "set hold_music = :stream_location ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and hold_music = :original_stream_location ";
-					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['stream_location'] = $stream_location;
 					$parameters['original_stream_location'] = $original_stream_location;
 					$database->execute($sql, $parameters);
@@ -156,7 +156,7 @@
 					$sql .= "set ivr_menu_ringback = :stream_location ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and ivr_menu_ringback = :original_stream_location ";
-					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['stream_location'] = $stream_location;
 					$parameters['original_stream_location'] = $original_stream_location;
 					$database->execute($sql, $parameters);
@@ -169,7 +169,7 @@
 					$sql .= "set ring_group_ringback = :stream_location ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and ring_group_ringback = :original_stream_location ";
-					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['stream_location'] = $stream_location;
 					$parameters['original_stream_location'] = $original_stream_location;
 					$database->execute($sql, $parameters);
