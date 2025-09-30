@@ -301,8 +301,8 @@ abstract class service {
 	 * @return bool|int PID or false if not running
 	 */
 	protected static function get_service_pid() {
-		if (file_exists(self::$pid_file)) {
-			$pid = file_get_contents(self::$pid_file);
+		if (file_exists(static::get_pid_filename())) {
+			$pid = file_get_contents(static::get_pid_filename());
 			if (function_exists('posix_getsid')) {
 				if (posix_getsid($pid) !== false) {
 					//return the pid for reloading configuration
@@ -540,12 +540,12 @@ abstract class service {
 	public static function send_signal($posix_signal) {
 		$signal_name = "";
 		switch ($posix_signal) {
-			case SIGHUP:
-			case SIGUSR1:
+			case 1:   //SIGHUP
+			case 10:  //SIGUSR1
 				$signal_name = "Reload";
 				break;
-			case SIGTERM:
-			case SIGUSR2:
+			case 12:  //SIGUSR2
+			case 15:  //SIGTERM
 				$signal_name = "Shutdown";
 				break;
 		}
@@ -589,7 +589,7 @@ abstract class service {
 
 	public static function send_reload() {
 		if (self::is_any_running()) {
-			self::send_signal(SIGUSR1);
+			self::send_signal(10);
 		} else {
 			die("Service Not Started\n");
 		}
