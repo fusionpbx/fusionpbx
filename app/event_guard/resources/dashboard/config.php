@@ -34,9 +34,9 @@ $array['dashboard_widgets'][$x]['widget_order'] = '50';
 $array['dashboard_widgets'][$x]['widget_enabled'] = 'true';
 $array['dashboard_widgets'][$x]['widget_description'] = '';
 $y = 0;
+$array['dashboard_widgets'][$x]['dashboard_widget_groups'][$y]['dashboard_uuid'] = '3e2cbaa4-2bec-41b2-a626-999a59b8b19c';
 $array['dashboard_widgets'][$x]['dashboard_widget_groups'][$y]['dashboard_widget_group_uuid'] = '3dd0334b-efb4-4d82-891c-375c938b4a3d';
 $array['dashboard_widgets'][$x]['dashboard_widget_groups'][$y]['dashboard_widget_uuid'] = 'e95f0221-d956-4baf-90c5-e38e16a20a4c';
-$array['dashboard_widgets'][$x]['dashboard_widget_groups'][$y]['dashboard_uuid'] = '3e2cbaa4-2bec-41b2-a626-999a59b8b19c';
 $array['dashboard_widgets'][$x]['dashboard_widget_groups'][$y]['group_name'] = 'superadmin';
 $y++;
 
