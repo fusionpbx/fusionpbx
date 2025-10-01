@@ -8,7 +8,7 @@
 class plugin_ldap {
 
 	/**
-	 * Define variables and their scope
+	 * Declare public variables
 	 */
 	public $debug;
 	public $domain_name;
@@ -16,6 +16,16 @@ class plugin_ldap {
 	public $password;
 	public $user_uuid;
 	public $contact_uuid;
+
+	/**
+	 * Called when the object is created
+	 */
+	public function __construct() {
+		//connect to the database
+		if (empty($this->database)) {
+			$this->database = database::new();
+		}
+	}
 
 	/**
 	 * ldap checks a local or remote ldap database to authenticate the user
@@ -132,8 +142,7 @@ class plugin_ldap {
 				}
 				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $this->username;
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					if ($settings['users']['unique'] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
 						//get the domain uuid
@@ -183,10 +192,7 @@ class plugin_ldap {
 						$p->add('user_group_add', 'temp');
 
 					//execute insert
-						$database = new database;
-						$database->app_name = 'authentication';
-						$database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
-						$database->save($array);
+						$this->database->save($array);
 						unset($array);
 
 					//revoke temporary permissions

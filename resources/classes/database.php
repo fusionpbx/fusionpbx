@@ -2242,7 +2242,7 @@ class database {
 
 	/**
 	 * <p>Save an array to the database.</p>
-	 * <p>Usage Example:<br><code>$database = new database();<br>$database->app_name = "MyApp";<br>$database->app_uuid = "12345678-1234-1234-1234-123456789abc";<br>$row = 0;<br>$array['mytable'][$row]['mycolumn'] = "myvalue";<br>if ($database->save($array)) { <br>&nbsp;&nbsp;echo "Saved Successfully.";<br> } else {<br>&nbsp;&nbsp;echo "Save Failed.";<br>}</code></p>
+	 * <p>Usage Example:<br><code><br>$row = 0;<br>$array['mytable'][$row]['mycolumn'] = "myvalue";<br>if ($database->save($array)) { <br>&nbsp;&nbsp;echo "Saved Successfully.";<br> } else {<br>&nbsp;&nbsp;echo "Save Failed.";<br>}</code></p>
 	 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'. Second dimension in the row value as int. Third dimension is the column name.
 	 * @param bool $transaction_save
 	 * @return returns and array wih result details
@@ -3649,7 +3649,6 @@ class database {
 /*
 //example usage
 	//find
-		$database = new database;
 		$database->domain_uuid = $_SESSION["domain_uuid"];
 		$database->type = $db_type;
 		$database->table = "v_extensions";
@@ -3665,7 +3664,6 @@ class database {
 		$database->find();
 		print_r($database->result);
 	//insert
-		$database = new database;
 		$database->domain_uuid = $_SESSION["domain_uuid"];
 		$database->table = "v_ivr_menus";
 		$fields[0]['name'] = 'domain_uuid';
