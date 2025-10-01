@@ -44,23 +44,19 @@
 
 //flush everything
 	$sql = "delete from v_device_vendors";
-	$database = new database;
 	$database->execute($sql);
 	unset($sql);
 
 	$sql = "delete from v_device_vendor_functions";
-	$database = new database;
 	$database->execute($sql);
 	unset($sql);
 
 	$sql = "delete from v_device_vendor_function_groups";
-	$database = new database;
 	$database->execute($sql);
 	unset($sql);
 
 //add device vendor functions to the database
 	$sql = "select count(*) from v_device_vendors; ";
-	$database = new database;
 	$num_rows = $database->select($sql, null, 'column');
 	unset($sql);
 
@@ -72,7 +68,6 @@
 
 		//get the groups and create an array to use the name to get the uuid
 			$sql = "select * from v_groups ";
-			$database = new database;
 			$groups = $database->select($sql, null, 'all');
 			if (is_array($groups) && @sizeof($groups) != 0) {
 				foreach ($groups as $row) {
@@ -135,9 +130,6 @@
 			$p->add('device_vendor_function_group_add', 'temp');
 
 		//process array
-			$database = new database;
-			$database->app_name = 'devices';
-			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 			$database->save($array);
 			unset($array);
 

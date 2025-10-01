@@ -52,7 +52,7 @@
 //dashboard icon
 	echo "<div class='hud_box'>\n";
 	echo "	<div class='hud_content' ".(empty($widget_details_state) || $widget_details_state != "disabled" ? "onclick=\"$('#hud_icon_details').slideToggle('fast');\"" : null).">\n";
-	echo "		<span class='hud_title' onclick=\"window.open('".$widget_url."', '".$widget_target."', '".$window_parameters."')\">".escape($widget_label)."</span>";
+	echo "		<span class='hud_title'><a onclick=\"window.open('".$widget_url."', '".$widget_target."', '".$window_parameters."')\">".escape($widget_label)."</a></span>";
 	echo "		<div style='position: relative; display: inline-block;'>\n";
 	echo "			<span class='hud_stat' onclick=\"window.open('".$widget_url."', '".$widget_target."', '".$window_parameters."')\"><i class=\"fas ".$widget_icon."\"></i></span>\n";
 	echo "			<span style=\"background-color: ".(!empty($widget_number_background_color) ? $widget_number_background_color : '#5d5ce3')."; color: ".(!empty($widget_number_text_color) ? $widget_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 22px; left: 25px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$active_registrations." / ".($active_registrations + $inactive_registrations)."</span>\n";

@@ -26,7 +26,16 @@
 
 //define the device class
 	class device {
-		public $db;
+
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'devices';
+		const app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+
+		/**
+		 * declare public variables
+		 */
 		public $domain_uuid;
 		public $template_dir;
 		public $device_uuid;
@@ -36,8 +45,6 @@
 		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -68,9 +75,6 @@
 				$this->database = $setting_array['database'];
 			}
 
-			//assign private variables
-			$this->app_name = 'devices';
-			$this->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 
 		}
 
@@ -528,8 +532,6 @@
 									$p->add('device_key_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -590,8 +592,6 @@
 						//delete the checked rows
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 							}
@@ -636,8 +636,6 @@
 						//delete the checked rows
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 							}
@@ -682,8 +680,6 @@
 						//delete the checked rows
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 							}
@@ -737,8 +733,6 @@
 									$p->add('device_vendor_function_group_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -798,8 +792,6 @@
 									$p->add('device_vendor_function_group_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -860,8 +852,6 @@
 									$p->add('device_profile_setting_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 									unset($array);
 
@@ -912,8 +902,6 @@
 
 						//execute delete
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								$this->database->app_name = $this->app_name;
-								$this->database->app_uuid = $this->app_uuid;
 								$this->database->delete($array);
 								unset($array);
 							}
@@ -957,8 +945,6 @@
 
 						//execute delete
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								$this->database->app_name = $this->app_name;
-								$this->database->app_uuid = $this->app_uuid;
 								$this->database->delete($array);
 								unset($array);
 							}
@@ -1030,8 +1016,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -1108,8 +1093,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -1179,8 +1163,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -1252,8 +1235,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -1385,8 +1367,7 @@
 									$p->add('device_profile_setting_add', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

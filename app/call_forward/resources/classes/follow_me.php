@@ -30,8 +30,17 @@
 
 //define the follow me class
 	class follow_me {
+
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_forward';
+		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+
+		/**
+		 * declare public variables
+		 */
 		public $domain_uuid;
-		private $domain_name;
 		public $db_type;
 		public $follow_me_uuid;
 		public $cid_name_prefix;
@@ -41,9 +50,6 @@
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
-		private $extension;
-		private $number_alias;
-		private $toll_allow;
 
 		public $destination_data_1;
 		public $destination_type_1;
@@ -78,6 +84,26 @@
 		public $destination_timeout = 0;
 		public $destination_order = 1;
 
+		/**
+		 * declare private variables
+		 */
+		private $database;
+		private $toll_allow;
+		private $domain_name;
+		private $extension;
+		private $number_alias;
+
+		/**
+		 * called when the object is created
+		 */
+		public function __construct() {
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+		}
+
 		public function add() {
 
 			//build follow me insert array
@@ -94,10 +120,7 @@
 				$p = permissions::new();
 				$p->add('follow_me_add', 'temp');
 			//execute insert
-				$database = new database;
-				$database->app_name = 'calls';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-				$database->save($array);
+				$this->database->save($array);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('follow_me_add', 'temp');
@@ -118,10 +141,7 @@
 				$p = permissions::new();
 				$p->add('follow_me_add', 'temp');
 			//execute update
-				$database = new database;
-				$database->app_name = 'calls';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-				$database->save($array);
+				$this->database->save($array);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('follow_me_add', 'temp');
@@ -138,10 +158,7 @@
 					$p = permissions::new();
 					$p->add('follow_me_destination_delete', 'temp');
 				//execute delete
-					$database = new database;
-					$database->app_name = 'calls';
-					$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-					$database->delete($array);
+					$this->database->delete($array);
 					unset($array);
 				//revoke temporary permissions
 					$p->delete('follow_me_destination_delete', 'temp');
@@ -213,10 +230,7 @@
 						$p = permissions::new();
 						$p->add('follow_me_destination_add', 'temp');
 					//execute insert
-						$database = new database;
-						$database->app_name = 'calls';
-						$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-						$database->save($array);
+						$this->database->save($array);
 						unset($array);
 					//revoke temporary permissions
 						$p->delete('follow_me_destination_add', 'temp');
@@ -229,8 +243,7 @@
 				$parameters['follow_me_uuid'] = $this->follow_me_uuid;
 				$sql = "select extension_uuid from v_extensions ";
 				$sql .= "where follow_me_uuid = :follow_me_uuid ";
-				$database = new database;
-				$result = $database->select($sql, $parameters);
+				$result = $this->database->select($sql, $parameters);
 				$extension_uuid = $result[0]['extension_uuid'];
 
 			//grant temporary permissions
@@ -249,10 +262,7 @@
 				$array['extensions'][0]["follow_me_enabled"] = $this->follow_me_enabled;
 
 			//save the destination
-				$database = new database;
-				$database->app_name = 'follow_me';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-				$database->save($array);
+				$this->database->save($array);
 
 			//remove the temporary permission
 				$p->delete("follow_me_edit", 'temp');
@@ -260,12 +270,10 @@
 
 		} //function
 
-
 		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $permission;
 		private $list_page;
 		private $table;
@@ -279,8 +287,6 @@
 		public function toggle($records) {
 
 			//assign private variables
-				$this->app_name = 'calls';
-				$this->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 				$this->permission = 'follow_me';
 				$this->list_page = 'calls.php';
 				$this->table = 'extensions';
@@ -322,8 +328,7 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$extensions[$row['uuid']]['extension'] = $row['extension'];
@@ -355,8 +360,7 @@
 										) {
 										$sql = "select count(*) from v_follow_me_destinations where follow_me_uuid = :follow_me_uuid";
 										$parameters['follow_me_uuid'] = $extension['follow_me_uuid'];
-										$database = new database;
-										$num_rows = $database->select($sql, $parameters, 'column');
+										$num_rows = $this->database->select($sql, $parameters, 'column');
 										$destinations_exist = $num_rows ? true : false;
 										unset($sql, $parameters, $num_rows);
 									}
@@ -394,10 +398,8 @@
 									$p->add('follow_me_edit', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

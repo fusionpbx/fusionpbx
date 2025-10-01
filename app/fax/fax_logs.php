@@ -91,7 +91,6 @@
 	$sql .= $sql_search ?? '';
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['fax_uuid'] = $fax_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -108,7 +107,6 @@
 	$sql = str_replace('count(fax_log_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'fax_epoch', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset ?? 0);
-	$database = new database;
 	$fax_logs = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

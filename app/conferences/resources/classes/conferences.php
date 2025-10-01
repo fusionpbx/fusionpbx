@@ -28,10 +28,16 @@
 	class conferences {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'conferences';
+		const app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -43,18 +49,20 @@
 		 * called when the object is created
 		 */
 		public function __construct() {
-
 			//assign private variables
-				$this->app_name = 'conferences';
-				$this->app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
-				$this->permission_prefix = 'conference_';
-				$this->list_page = 'conferences.php';
-				$this->table = 'conferences';
-				$this->uuid_prefix = 'conference_';
-				$this->toggle_field = 'conference_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->permission_prefix = 'conference_';
+			$this->list_page = 'conferences.php';
+			$this->table = 'conferences';
+			$this->uuid_prefix = 'conference_';
+			$this->toggle_field = 'conference_enabled';
+			$this->toggle_values = ['true','false'];
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 		}
+
 		/**
 		 * delete records
 		 */
@@ -86,8 +94,7 @@
 										$sql .= "and conference_uuid = :conference_uuid ";
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 										$parameters['conference_uuid'] = $record['uuid'];
-										$database = new database;
-										$dialplan_uuid = $database->select($sql, $parameters, 'column');
+										$dialplan_uuid = $this->database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
 
 									//build array
@@ -113,10 +120,7 @@
 									$p->add('dialplan_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -177,8 +181,7 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$conferences[$row['uuid']]['state'] = $row['toggle'];
@@ -206,10 +209,8 @@
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -270,8 +271,7 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$y = 0;
 									foreach ($rows as $x => $row) {
@@ -292,8 +292,7 @@
 											$sql_2 .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 											$parameters_2['conference_uuid'] = $row['conference_uuid'];
 											$parameters_2['domain_uuid'] = $_SESSION['domain_uuid'];
-											$database = new database;
-											$conference_users = $database->select($sql_2, $parameters_2, 'all');
+											$conference_users = $this->database->select($sql_2, $parameters_2, 'all');
 											if (is_array($conference_users) && @sizeof($conference_users) != 0) {
 												foreach ($conference_users as $conference_user) {
 
@@ -314,8 +313,7 @@
 										//conference dialplan record
 											$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 											$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-											$database = new database;
-											$dialplan = $database->select($sql_3, $parameters_3, 'row');
+											$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 											if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 												//copy data
@@ -345,10 +343,8 @@
 									$p->add('dialplan_add', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

@@ -42,9 +42,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = new database;
-
 //set the defaults
 	$agent_id = '';
 	$agent_name = '';

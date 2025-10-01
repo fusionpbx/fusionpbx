@@ -28,10 +28,21 @@
 	class number_translations {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'number_translations';
+		const app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
+
+		/**
+		 * declare public variables
+		 */
+		public $number_translation_uuid;
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -41,24 +52,22 @@
 		public  $xml;
 
 		/**
-		 * declare public variables
-		 */
-		public $number_translation_uuid;
-
-		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'number_translations';
-				$this->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
-				$this->permission_prefix = 'number_translation_';
-				$this->list_page = 'number_translations.php';
-				$this->table = 'number_translations';
-				$this->uuid_prefix = 'number_translation_';
-				$this->toggle_field = 'number_translation_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->permission_prefix = 'number_translation_';
+			$this->list_page = 'number_translations.php';
+			$this->table = 'number_translations';
+			$this->uuid_prefix = 'number_translation_';
+			$this->toggle_field = 'number_translation_enabled';
+			$this->toggle_values = ['true','false'];
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 
 		}
 
@@ -69,8 +78,7 @@
 			$sql = "select count(*) from v_number_translations ";
 			$sql .= "where number_translation_name = :number_translation_name ";
 			$parameters['number_translation_name'] = $name;
-			$database = new database;
-			return $database->select($sql, $parameters, 'column') != 0 ? true : false;
+			return $this->database->select($sql, $parameters, 'column') != 0 ? true : false;
 			unset($sql, $parameters);
 		}
 
@@ -122,14 +130,13 @@
 						$p->add('number_translation_add', 'temp');
 						$p->add('number_translation_detail_add', 'temp');
 					//execute insert
-						$database = new database;
-						$database->app_name = 'number_translations';
-						$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
-						$database->save($array);
+						$this->database->app_name = 'number_translations';
+						$this->database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
+						$this->database->save($array);
 						unset($array);
 						if (!empty($this->display_type) && $this->display_type == "text") {
-							if ($database->message['code'] != '200') { 
-								echo "number_translation:".$number_translation['@attributes']['name'].":	failed: ".$database->message['message']."\n";
+							if ($this->database->message['code'] != '200') { 
+								echo "number_translation:".$number_translation['@attributes']['name'].":	failed: ".$this->database->message['message']."\n";
 							}
 							else {
 								echo "number_translation:".$number_translation['@attributes']['name'].":	added with ".(($order/5)-1)." entries\n";
@@ -179,10 +186,7 @@
 									$p->add('number_translation_detail_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -232,10 +236,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 							}
@@ -274,8 +275,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -296,10 +296,8 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -345,8 +343,7 @@
 								//primary table
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {
@@ -362,8 +359,7 @@
 											//nodes sub table
 												$sql_2 = "select * from v_number_translation_details where number_translation_uuid = :number_translation_uuid";
 												$parameters_2['number_translation_uuid'] = $row['number_translation_uuid'];
-												$database = new database;
-												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
@@ -393,10 +389,8 @@
 									$p->add('number_translation_detail_add', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

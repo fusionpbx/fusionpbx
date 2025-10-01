@@ -118,9 +118,6 @@
 				$p = permissions::new();
 				$p->add('contact_edit', 'temp');
 
-				$database = new database;
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->save($array);
 				unset($array);
 
@@ -133,7 +130,6 @@
 					$sql .= "and contact_uuid = :contact_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['contact_uuid'] = $contact_uuid;
-					$database = new database;
 					$database->execute($sql, $parameters ?? null);
 					unset($sql, $parameters);
 				}
@@ -159,9 +155,6 @@
 					$array['contact_urls'][0]['url_primary'] = $url_primary ? 1 : 0;
 					$array['contact_urls'][0]['url_description'] = $url_description;
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 				}
@@ -180,7 +173,6 @@
 		$sql .= "and contact_url_uuid = :contact_url_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_url_uuid'] = $contact_url_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$url_label = $row["url_label"];

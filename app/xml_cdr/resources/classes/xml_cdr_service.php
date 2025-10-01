@@ -77,39 +77,48 @@ class xml_cdr_service extends service {
 			$this->notice('Settings Reloaded');
 		else
 			$this->notice('Settings Loaded');
+
+		//recreate the call detail records object
+		$this->cdr = new xml_cdr;
+
+		// Reload any existing files after reloading settings
+		$this->process_in_bulk();
+
 	}
 
 	protected function create_xml_cdr_paths($xml_cdr_dir) {
 		//rename the directory
 		if (file_exists($xml_cdr_dir . '/failed/invalid_xml')) {
+			$this->debug("Found old 'invalid_xml' directory. Moving to new name 'xml'");
 			rename($xml_cdr_dir . '/failed/invalid_xml', $xml_cdr_dir . '/failed/xml');
 		}
 
 		//create the invalid xml directory
 		if (!file_exists($xml_cdr_dir . '/failed/xml')) {
+			$this->debug("Creating missing 'xml' failed folder");
 			mkdir($xml_cdr_dir . '/failed/xml', 0770, true);
 		}
 
 		//create the invalid size directory
 		if (!file_exists($xml_cdr_dir . '/failed/size')) {
+			$this->debug("Creating missing 'size' failed folder");
 			mkdir($xml_cdr_dir . '/failed/size', 0770, true);
 		}
 
 		//create the invalid sql directory
 		if (!file_exists($xml_cdr_dir . '/failed/sql')) {
+			$this->debug("Creating missing 'sql' failed folder");
 			mkdir($xml_cdr_dir . '/failed/sql', 0770, true);
 		}
 
-		//update permissions to correct systems with the wrong permissions
-		if (file_exists($xml_cdr_dir . '/failed')) {
-			exec('chmod 770 -R ' . $xml_cdr_dir . '/failed');
-		}
+//		// XML CDR runs as www-data now so settings permissions don't work
+//		if (file_exists($xml_cdr_dir . '/failed')) {
+//			exec('chmod 770 -R ' . $xml_cdr_dir . '/failed');
+//		}
 
 		//save the xml_cdr directory in the object
 		$this->xml_cdr_dir = $xml_cdr_dir;
 
-		//import the call detail records from HTTP POST or file system
-		$this->cdr = new xml_cdr;
 	}
 
 	protected static function display_version(): void {
@@ -154,7 +163,15 @@ class xml_cdr_service extends service {
 
 		$this->initialized = true;
 
-		$this->process_existing_files();
+		// Check for inotify php extension
+		if (!function_exists('inotify_init')) {
+			$this->warning('Missing inotify extension. Please install php' . substr(PHP_VERSION, 0, 3). '-inotify package');
+			while ($this->running) {
+				$this->process_in_bulk();
+				sleep(5);
+			}
+			return 0;
+		}
 
 		$inotify_instance = inotify_init();
 		stream_set_blocking($inotify_instance, false);
@@ -172,65 +189,64 @@ class xml_cdr_service extends service {
 				$events = inotify_read($inotify_instance) ?: [];
 				foreach ($events as $event) {
 					$mask = $event['mask'];
-					if (($mask & IN_CLOSE_WRITE) || $mask & IN_MOVED_TO) {
-						$this->process_xml_cdr_file($event['name']);
+					if ($mask & IN_Q_OVERFLOW) {
+						//more than 20,000 files will cause an overflow so process all files in the directory
+						$this->warning('Too many files created. Processing in bulk.');
+						$this->process_in_bulk();
+						// clear the queue by removing and re-adding the watch
+						inotify_rm_watch($inotify_instance, IN_CLOSE_WRITE | IN_MOVED_TO);
+						inotify_add_watch($inotify_instance, $this->xml_cdr_dir, IN_CLOSE_WRITE | IN_MOVED_TO);
+						break;
+					} elseif (($mask & IN_CLOSE_WRITE) || $mask & IN_MOVED_TO) {
+						//process individual file
+						$this->process_file($event['name']);
 					} else {
 						$this->debug('Detected event: ' . $this->mask_debug($mask));
+						var_dump($event);
+						exit();
 					}
 				}
 			}
-
-//			//current memory
-//			$memory_usage = round(memory_get_usage() / 1024);
-//			//peak memory
-//			$memory_peak = round(memory_get_peak_usage() / 1024);
-//			//debug info
-//			$this->debug("Current memory: $memory_usage KB");
-//			$this->debug("Current memory: $memory_usage KB");
-//			$this->debug("Peak memory: $memory_peak KB");
 		}
 
 		return 0;
 	}
 
-	private function process_existing_files(): void {
-		$this->notice('Cleaning up any existing files');
+	private function process_in_bulk(): void {
 		do {
 			// Clean the existing files with the fastest method
 			$handle = opendir($this->xml_cdr_dir);
-			if ($handle) {
-				while (false !== ($file = readdir($handle))) {
-					$xml_cdr_file = $this->xml_cdr_dir . DIRECTORY_SEPARATOR . $file;
-					if (!is_dir($xml_cdr_file)) {
-						$this->process_xml_cdr_file($xml_cdr_file);
-					}
-				}
-				closedir($handle);
+			if (!$handle) return;
+			$processing = false;
+			while (false !== ($file = readdir($handle))) {
+				$xml_cdr_file = $this->xml_cdr_dir . DIRECTORY_SEPARATOR . $file;
+				if (is_dir($xml_cdr_file)) continue;
+				$processing = true;
+				$this->process_file($xml_cdr_file);
 			}
-			// Check for files created after clean up
-			$files = glob($this->xml_cdr_dir . DIRECTORY_SEPARATOR . '*.cdr.xml');
+			closedir($handle);
 		} while ($processing);
-
-//		do {
-//			$files = array_slice(glob($this->xml_cdr_dir . DIRECTORY_SEPARATOR . '*.cdr.xml'), 0, 1000);
-//			foreach ($files as $file) {
-//				$this->process_xml_cdr_file($file);
-//			}
-//		} while (!empty($files));
-
 	}
 
-	public function process_xml_cdr_file($xml_cdr_file) {
+	private function process_file($xml_cdr_file) {
 		if (!str_ends_with($xml_cdr_file, '.cdr.xml')) {
-			$this->debug("Skipped $xml_cdr_file");
+			$this->debug("Skipped '$xml_cdr_file'");
 			return;
 		}
-		$this->debug("Processing $xml_cdr_file");
+		$this->debug("Processing '$xml_cdr_file'");
 
 		$size = filesize($xml_cdr_file);
 
+		if ($size < 1) {
+			$this->debug("Moving zero byte file '$xml_cdr_file' to 'failed/size'");
+			$this->move($xml_cdr_file, 'size');
+			// Next file
+			return;
+		}
+
 		//move files zero bytes or over 3 MB to the failed size directory
-		if ($size > 3145727 || $size < 1) {
+		if ($size > 3145727) {
+			$this->debug("Moving oversize file '$xml_cdr_file' to 'failed/size'");
 			$this->move($xml_cdr_file, 'size');
 			// Next file
 			return;
@@ -290,10 +306,10 @@ class xml_cdr_service extends service {
 
 		$destination .= '/' . basename($file);
 
-		$this->debug("Moving $source to $destination");
 		// Move file to failed directory
 		if (!rename($source, $destination)) {
-			throw new \RuntimeException("Failed to move $source to $destination", 4872);
+			$this->error("Failed to move $source to $destination");
+			return;
 		}
 
 		return;

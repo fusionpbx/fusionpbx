@@ -30,14 +30,18 @@
 	class call_recordings {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'follow_me';
+		const app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
-		private $name;
-		private $table;
 		private $settings;
 		private $database;
+		private $name;
+		private $table;
 		private $description_field;
 		private $location;
 		public $recording_uuid;
@@ -48,18 +52,16 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'call_recordings';
-				$this->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
-				$this->name = 'call_recording';
-				$this->table = 'call_recordings';
-				$this->description_field = 'call_recording_description';
-				$this->location = 'call_recordings.php';
+			$this->name = 'call_recording';
+			$this->table = 'call_recordings';
+			$this->description_field = 'call_recording_description';
+			$this->location = 'call_recordings.php';
 
 			//allow global
-				$this->database = database::new();
+			$this->database = database::new();
 
 			//initialize the settings object
-				$this->settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+			$this->settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 		}
 
 		/**

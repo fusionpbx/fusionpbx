@@ -113,9 +113,6 @@
 					$p = permissions::new();
 					$p->add('contact_edit', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 
@@ -152,9 +149,6 @@
 						$array['contact_relations'][0]['relation_label'] = $relation_label;
 						$array['contact_relations'][0]['relation_contact_uuid'] = $relation_contact_uuid;
 
-						$database = new database;
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}
@@ -174,7 +168,6 @@
 		$sql .= "and contact_relation_uuid = :contact_relation_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_relation_uuid'] = $contact_relation_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$relation_label = $row["relation_label"];
@@ -191,7 +184,6 @@
 	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_relation_uuid;
-	$database = new database;
 	$contacts = $database->select($sql, $parameters, 'all');
 	if (!empty($contacts) && is_uuid($row['relation_contact_uuid'])) {
 		foreach($contacts as $field) {

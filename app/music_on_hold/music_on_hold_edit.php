@@ -146,9 +146,6 @@
 						$array['music_on_hold'][0]['music_on_hold_chime_max'] = strlen($music_on_hold_chime_max) != 0 ? $music_on_hold_chime_max : null;
 
 					//execute
-						$database = new database;
-						$database->app_name = 'music_on_hold';
-						$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
 						$database->save($array);
 						unset($array);
 
@@ -180,7 +177,6 @@
 		$sql .= "and music_on_hold_uuid = :music_on_hold_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['music_on_hold_uuid'] = $music_on_hold_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -367,7 +363,6 @@
 		$tmp_selected = false;
 		$sql = "select recording_name, recording_filename from v_recordings where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$recordings = $database->select($sql, $parameters, 'all');
 		if (is_array($recordings) && @sizeof($recordings) != 0) {
 			echo "<optgroup label='Recordings'>\n";
@@ -393,7 +388,6 @@
 	//phrases
 		$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (is_array($result) && @sizeof($result) != 0) {
 			echo "<optgroup label='Phrases'>\n";
