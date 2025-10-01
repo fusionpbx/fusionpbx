@@ -75,7 +75,6 @@
 		$sql .= "and t.database_transaction_uuid = :database_transaction_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['database_transaction_uuid'] = $database_transaction_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 
 		if (!empty($row)) {
@@ -101,11 +100,8 @@
 			$array = json_decode($transaction_old, true);
 
 		//save to the data
-			$database = new database;
-			$database->app_name = $app_name;
-			$database->app_uuid = $app_uuid;
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 
 		//redirect the user
 			$_SESSION["message"] = $text['message-update'];

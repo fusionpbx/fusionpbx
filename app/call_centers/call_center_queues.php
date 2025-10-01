@@ -101,7 +101,6 @@
 	if (!empty($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -120,7 +119,6 @@
 	$sql = str_replace('count(*)', '*', $sql ?? '');
 	$sql .= order_by($order_by, $order, 'queue_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

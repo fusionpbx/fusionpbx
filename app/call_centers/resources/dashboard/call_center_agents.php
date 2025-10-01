@@ -45,11 +45,6 @@
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
-
 //setup the event socket connection
 	$esl = event_socket::create();
 

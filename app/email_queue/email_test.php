@@ -60,7 +60,6 @@
 		$sql .= "limit 1 ";
 		$parameters['template_language'] = $language_dialect;
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$template = $database->select($sql, $parameters, 'row');
 		unset($sql, $parameters);
 	}

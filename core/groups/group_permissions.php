@@ -42,9 +42,6 @@
 		$group_uuid = $_GET['group_uuid'];
 	}
 
-//connect to the database
-	$database = new database;
-
 //get the group_name
 	if (isset($group_uuid) && is_uuid($group_uuid)) {
 		$sql = "select group_name from v_groups ";

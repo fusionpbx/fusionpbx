@@ -30,11 +30,6 @@
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/devices');
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
-
 //get the vendor functions
 	$sql = "select v.name as vendor_name, f.type, f.value ";
 	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";

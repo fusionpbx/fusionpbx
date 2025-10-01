@@ -49,7 +49,6 @@
 	$sql .= "order by url_primary desc, url_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_urls = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

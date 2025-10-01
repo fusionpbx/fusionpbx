@@ -50,7 +50,6 @@
 	$sql = "select * from v_device_profiles ";
 	$sql .= "where device_profile_uuid = :device_profile_uuid ";
 	$parameters['device_profile_uuid'] = $device_profile_uuid;
-	$database = new database;
 	$device_profiles = $database->select($sql, $parameters);
 	unset($sql, $parameters);
 
@@ -66,7 +65,6 @@
 	$sql .= "else 100 end, ";
 	$sql .= "profile_key_id asc ";
 	$parameters['device_profile_uuid'] = $device_profile_uuid;
-	$database = new database;
 	$device_profile_keys = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -75,7 +73,6 @@
 	$sql .= "where device_profile_uuid = :device_profile_uuid ";
 	$sql .= "order by profile_setting_name asc ";
 	$parameters['device_profile_uuid'] = $device_profile_uuid;
-	$database = new database;
 	$device_profile_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -117,9 +114,6 @@
 	}
 
 //copy the device
-	$database = new database;
-	$database->app_name = 'devices';
-	$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 	$database->save($array);
 	unset($array);
 

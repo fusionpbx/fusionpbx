@@ -583,7 +583,6 @@
 	$sql .= "	group by s.s_id, s.start_date, s.end_date, s.s_hour \n";
 	$sql .= "	order by s.s_id asc \n";
 	$sql .= ") as d; \n";
-	$database = new database;
 	$stats = $database->select($sql, $parameters, 'all');
 
 //set the hours

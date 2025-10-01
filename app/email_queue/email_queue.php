@@ -73,11 +73,6 @@
 			$x++;
 		}
 
-		//prepare the database object
-		$database = new database;
-		$database->app_name = 'email_queue';
-		$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
-
 		//send the array to the database class
 		switch ($action) {
 			case 'resend':
@@ -138,7 +133,6 @@
 	//	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	//	$parameters['domain_uuid'] = $domain_uuid;
 	//}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -186,7 +180,6 @@
 	$sql .= order_by($order_by, $order, 'email_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['time_zone'] = $time_zone;
-	$database = new database;
 	$email_queue = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

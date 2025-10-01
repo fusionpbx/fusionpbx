@@ -127,7 +127,6 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -172,7 +171,6 @@
 	$sql .= "and u.domain_uuid = d.domain_uuid ";
 	$sql .= order_by($order_by, $order, '', '');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$fifo = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

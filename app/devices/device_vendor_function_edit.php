@@ -87,9 +87,6 @@
 
 		//delete the device vendor function group
 			$array['device_vendor_function_groups'][0]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
-			$database = new database;
-			$database->app_name = 'devices';
-			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 			$database->delete($array);
 			unset($array);
 

@@ -135,9 +135,6 @@
 					$p = permissions::new();
 					$p->add('contact_edit', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 
@@ -150,7 +147,6 @@
 						$sql .= "and contact_uuid = :contact_uuid ";
 						$parameters['domain_uuid'] = $domain_uuid;
 						$parameters['contact_uuid'] = $contact_uuid;
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
@@ -169,7 +165,6 @@
 							}
 							$parameters['phone_speed_dial'] = $phone_speed_dial;
 							$parameters['domain_uuid'] = $domain_uuid;
-							$database = new database;
 							if (!empty($database->execute($sql, $parameters, 'column'))) {
 								$phone_speed_dial_exists = true;
 							}
@@ -212,9 +207,6 @@
 						$array['contact_phones'][0]['phone_primary'] = $phone_primary ? 1 : 0;
 						$array['contact_phones'][0]['phone_description'] = $phone_description;
 
-						$database = new database;
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}
@@ -234,7 +226,6 @@
 		$sql .= "and contact_phone_uuid = :contact_phone_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_phone_uuid'] = $contact_phone_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$phone_label = $row["phone_label"];

@@ -45,9 +45,6 @@
 //additional includes
 	require_once "resources/check_auth.php";
 
-//initialize the database
-	$database = new database;
-
 //disable login message
 	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {
 		unset($_SESSION['login']['message']['text']);

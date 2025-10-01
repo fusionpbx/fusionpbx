@@ -34,9 +34,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -382,7 +379,6 @@
 								}
 								$parameters['phone_speed_dial'] = $row["phone_speed_dial"];
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
 								if (!empty($database->execute($sql, $parameters, 'column'))) {
 									$phone_speed_dial_exists = true;
 								}

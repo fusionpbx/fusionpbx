@@ -99,7 +99,6 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -114,7 +113,6 @@
 	$sql = str_replace('count(sip_profile_uuid)', 'sip_profile_uuid, sip_profile_name, sip_profile_hostname, cast(sip_profile_enabled as text), sip_profile_description', $sql);
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$sip_profiles = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

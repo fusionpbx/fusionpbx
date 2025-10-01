@@ -51,7 +51,6 @@
 	$sql .= ", contact_setting_order asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
