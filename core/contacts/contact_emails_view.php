@@ -44,7 +44,6 @@
 	$sql .= "order by email_primary desc, email_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_emails = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

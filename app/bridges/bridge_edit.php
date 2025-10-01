@@ -167,9 +167,6 @@
 			$array['bridges'][0]['bridge_description'] = $bridge_description;
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'bridges';
-			$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
 			$database->save($array);
 			$message = $database->message;
 
@@ -197,7 +194,6 @@
 		$sql = "select * from v_bridges ";
 		$sql .= "where bridge_uuid = :bridge_uuid ";
 		$parameters['bridge_uuid'] = $bridge_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (!empty($row)) {
 			$bridge_name = $row["bridge_name"];
@@ -337,14 +333,12 @@
 		$sql .= "and domain_uuid = :domain_uuid ";
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$gateways = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get the domains
 	$sql = "select * from v_domains ";
 	$sql .= "where domain_enabled = true ";
-	$database = new database;
 	$domains = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -353,7 +347,6 @@
 	$sql .= "from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = true ";
 	$sql .= "order by sip_profile_name asc ";
-	$database = new database;
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
 

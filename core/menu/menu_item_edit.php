@@ -41,9 +41,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = new database;
-
 //define the variables
 	$menu_uuid = null;
 	$menu_item_uuid = null;

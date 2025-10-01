@@ -100,7 +100,6 @@
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql);
 
@@ -116,7 +115,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'profile_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
-	$database = new database;
 	$conference_profiles = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

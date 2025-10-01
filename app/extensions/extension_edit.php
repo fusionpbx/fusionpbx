@@ -57,9 +57,6 @@
 		return is_array($value) ? $value[0] : $value;
 	}
 
-//initialize the database object
-	$database = new database;
-
 //initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 

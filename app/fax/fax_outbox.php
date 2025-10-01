@@ -68,7 +68,6 @@
 			$parameters['fax_uuid'] = $fax_uuid;
 			$parameters['user_uuid'] = $_SESSION['user_uuid'];
 		}
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			//set database fields as variables
@@ -90,7 +89,6 @@
 	$sql .= "and fax_mode = 'tx' ";
 	$parameters['fax_uuid'] = $_REQUEST["id"];
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$fax_files = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

@@ -50,7 +50,6 @@
 		$sql .= "from view_call_recordings ";
 		$sql .= "where call_recording_uuid = :call_recording_uuid ";
 		$parameters['call_recording_uuid'] = $_GET['id'];
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$call_recording_name = $row['call_recording_name'];

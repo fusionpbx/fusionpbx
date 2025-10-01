@@ -132,7 +132,6 @@
 					$sql = "select * from v_dialplans ";
 					$sql .= "where dialplan_uuid = :dialplan_uuid ";
 					$parameters['dialplan_uuid'] = $dialplan_uuid;
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$domain_uuid = $row["domain_uuid"];
@@ -165,9 +164,6 @@
 					$p->add('dialplan_detail_delete', 'temp');
 
 				//execute delete
-					$database = new database;
-					$database->app_name = 'time_conditions';
-					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
 					$database->delete($array);
 					unset($array);
 
@@ -196,9 +192,6 @@
 					$array['dialplans'][0]['dialplan_description'] = $dialplan_description;
 
 				//execute insert/update
-					$database = new database;
-					$database->app_name = 'time_conditions';
-					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
 					$database->save($array);
 					unset($array);
 
@@ -486,9 +479,6 @@
 					$p->add('dialplan_detail_edit', 'temp');
 
 				//execute insert
-					$database = new database;
-					$database->app_name = 'time_conditions';
-					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
 					$database->save($array);
 					unset($array);
 
@@ -536,7 +526,6 @@
 			$sql .= "and domain_uuid = :domain_uuid ";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$domain_uuid = $row["domain_uuid"];
@@ -570,7 +559,6 @@
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$dialplan_details = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 

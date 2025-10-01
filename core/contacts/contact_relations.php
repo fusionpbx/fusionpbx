@@ -61,7 +61,6 @@
 	$sql .= "c.contact_name_family asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_relations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

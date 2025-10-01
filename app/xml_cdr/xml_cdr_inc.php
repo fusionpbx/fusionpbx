@@ -278,7 +278,6 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= ".$sql_where;
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 	}

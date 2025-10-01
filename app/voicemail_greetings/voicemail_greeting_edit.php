@@ -158,7 +158,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "order by greeting_id asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_id'] = $voicemail_id;
-		$database = new database;
 		$rows = $database->select($sql, $parameters, 'all');
 		$greeting_ids = array();
 		if (!empty($rows) && is_array($rows)) {
@@ -236,9 +235,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			$array['voicemail_greetings'][0]['greeting_description'] = $greeting_description;
 
 			//execute query
-			$database = new database;
-			$database->app_name = 'voicemail_greetings';
-			$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 			$database->save($array);
 			unset($array);
 
@@ -264,7 +260,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$greeting_id = $row["greeting_id"];

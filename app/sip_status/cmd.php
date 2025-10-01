@@ -46,7 +46,6 @@
 	$sql = "select sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_name = :profile_name ";
 	$parameters['profile_name'] = $profile;
-	$database = new database;
 	$profile_name = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 

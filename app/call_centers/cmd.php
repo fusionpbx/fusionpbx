@@ -65,7 +65,6 @@
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
-		$database = new database;
 		$queue_extension = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 	}

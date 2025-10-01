@@ -41,11 +41,6 @@
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
-
 //clear initial stat
 	unset($hud_stat);
 
