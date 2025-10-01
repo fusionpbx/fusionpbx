@@ -94,13 +94,6 @@
 		}
 
 		/**
-		 * get the application uuid
-		 */
-		public function get_app_uuid() {
-			return $this->app_uuid;
-		}
-
-		/**
 		 * get the list of groups the user is assigned to
 		 */
 		public function get_groups() {

@@ -66,13 +66,6 @@
 			}
 
 			/**
-			 * get the application uuid
-			 */
-			public function get_app_uuid() {
-				return $this->app_uuid;
-			}
-
-			/**
 			* delete records
 			*/
 			public function delete($records) {

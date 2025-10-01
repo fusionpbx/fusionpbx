@@ -419,7 +419,7 @@
 								//ensure call block is enabled in the dialplan (build update array)
 									$sql = "select dialplan_uuid from v_dialplans ";
 									$sql .= "where domain_uuid = :domain_uuid ";
-									$sql .= "and app_uuid = '".$this->app_uuid."' ";
+									$sql .= "and app_uuid = '".self::app_uuid."' ";
 									$sql .= "and dialplan_enabled <> true ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$rows = $this->database->select($sql, $parameters);

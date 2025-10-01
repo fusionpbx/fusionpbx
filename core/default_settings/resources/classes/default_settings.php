@@ -272,8 +272,6 @@
 
 										//execute
 										if (is_uuid($array['domain_settings'][$x]['domain_setting_uuid'])) {
-											$this->database->app_name = $this->table;
-											$this->database->app_uuid = $this->app_uuid;
 											$this->database->save($array);
 											$message = $this->database->message;
 											unset($array);
@@ -297,8 +295,6 @@
 										unset($array['default_settings'][$x]['update_user']);
 
 										//execute
-										$this->database->app_name = $this->table;
-										$this->database->app_uuid = $this->app_uuid;
 										$this->database->save($array);
 										$message = $this->database->message;
 										unset($array);
