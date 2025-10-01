@@ -27,13 +27,17 @@
 //define the contacts class
 	class contacts {
 
-		const APP_NAME = "contacts";
-		const APP_UUID = "04481e0e-a478-c559-adad-52bd4174574c";
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'contacts';
+		const app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+
 		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $tables;
@@ -50,23 +54,26 @@
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = self::APP_NAME;
-				$this->app_uuid = self::APP_UUID;
-				$this->permission_prefix = 'contact_';
-				$this->list_page = 'contacts.php';
-				$this->tables[] = 'contact_addresses';
-				$this->tables[] = 'contact_attachments';
-				$this->tables[] = 'contact_emails';
-				$this->tables[] = 'contact_groups';
-				$this->tables[] = 'contact_notes';
-				$this->tables[] = 'contact_phones';
-				$this->tables[] = 'contact_relations';
-				$this->tables[] = 'contact_settings';
-				$this->tables[] = 'contact_times';
-				$this->tables[] = 'contact_urls';
-				$this->tables[] = 'contact_users';
-				$this->tables[] = 'contacts';
-				$this->uuid_prefix = 'contact_';
+			$this->permission_prefix = 'contact_';
+			$this->list_page = 'contacts.php';
+			$this->tables[] = 'contact_addresses';
+			$this->tables[] = 'contact_attachments';
+			$this->tables[] = 'contact_emails';
+			$this->tables[] = 'contact_groups';
+			$this->tables[] = 'contact_notes';
+			$this->tables[] = 'contact_phones';
+			$this->tables[] = 'contact_relations';
+			$this->tables[] = 'contact_settings';
+			$this->tables[] = 'contact_times';
+			$this->tables[] = 'contact_urls';
+			$this->tables[] = 'contact_users';
+			$this->tables[] = 'contacts';
+			$this->uuid_prefix = 'contact_';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 
 		}
 
@@ -108,20 +115,15 @@
 
 								//grant temp permissions
 									$p = permissions::new();
-									$database = new database;
 									foreach ($this->tables as $table) {
 										$p->add(database::singular($table).'_delete', 'temp');
 									}
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temp permissions
-									$database = new database;
 									foreach ($this->tables as $table) {
 										$p->delete(database::singular($table).'_delete', 'temp');
 									}
@@ -153,7 +155,6 @@
 					//check permissions and build the delete array
 						$x = 0;
 						foreach ($records as $property_name => $properties) {
-							$database = new database;
 							if (permission_exists(database::singular($property_name).'_delete')) {
 								if (is_array($properties) && @sizeof($properties) != 0) {
 									foreach ($properties as $property) {
@@ -171,11 +172,8 @@
 					//delete the checked rows
 						if (is_array($array) && @sizeof($array) != 0) {
 							//execute delete
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
-								$database->delete($array);
-								unset($array);
+							$this->database->delete($array);
+							unset($array);
 						}
 						unset($records);
 				}
@@ -217,10 +215,7 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 							}
 							unset($records);
@@ -264,11 +259,8 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
-									unset($array);
+								$this->database->delete($array);
+								unset($array);
 							}
 							unset($records);
 					}

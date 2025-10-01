@@ -27,10 +27,14 @@
 	class registrations {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'registrations';
+		const app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
 		private $permission_prefix;
 		private $list_page;
 		public $show;
@@ -81,8 +85,6 @@
 			}
 
 			//assign private variables
-			$this->app_name = 'registrations';
-			$this->app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
 			$this->permission_prefix = 'registration_';
 			$this->list_page = 'registrations.php';
 			$this->show = 'local';

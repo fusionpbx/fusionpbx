@@ -3,10 +3,14 @@
 	class install {
 
 		/**
-		* declare the variables
-		*/
-		private $app_name;
-		private $app_uuid;
+		 * declare constant variables
+		 */
+		const app_name = 'install';
+		const app_uuid = '75507e6e-891e-11e5-af63-feff819cdc9f';
+
+		/**
+		 * declare public variables
+		 */
 		public $message;
 		public $database_host;
 		public $database_port;
@@ -18,9 +22,7 @@
 		 * called when the object is created
 		 */
 		public function __construct() {
-			//assign the variables
-			$this->app_name = 'install';
-			$this->app_uuid = '75507e6e-891e-11e5-af63-feff819cdc9f';
+
 		}
 
 		/**

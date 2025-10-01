@@ -44,6 +44,16 @@ class plugin_totp {
 	private $user_totp_secret;
 
 	/**
+	 * Called when the object is created
+	 */
+	public function __construct() {
+		//connect to the database
+		if (empty($this->database)) {
+			$this->database = database::new();
+		}
+	}
+
+	/**
 	 * time based one time password aka totp
 	 * @return array [authorized] => true or false
 	 */
@@ -144,8 +154,7 @@ class plugin_totp {
 				}
 				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $this->username;
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
 					//clear submitted usernames
 					unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
@@ -228,10 +237,7 @@ class plugin_totp {
 					$p->add("user_edit", "temp");
 
 					//save the data
-					$database = new database;
-					$database->app_name = 'users';
-					$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
-					$database->save($array);
+					$this->database->save($array);
 
 					//remove the temporary permission
 					$p->delete("user_edit", "temp");
@@ -305,8 +311,7 @@ class plugin_totp {
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				}
 				$parameters['username'] = $_SESSION["username"];
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				$this->user_uuid = $row['user_uuid'];
 				$this->user_email = $row['user_email'];
 				$this->contact_uuid = $row['contact_uuid'];
@@ -359,8 +364,7 @@ class plugin_totp {
 						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 					}
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
-					$database = new database;
-					$row = $database->select($sql, $parameters, 'row');
+					$row = $this->database->select($sql, $parameters, 'row');
 					unset($parameters);
 				}
 				else {
@@ -399,8 +403,7 @@ class plugin_totp {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 					$parameters['user_uuid'] = $this->user_uuid;
 					$parameters['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-					$database = new database;
-					$user_log_count = $database->select($sql, $parameters, 'all');
+					$user_log_count = $this->database->select($sql, $parameters, 'all');
 					//view_array($user_log_count);
 					unset($sql, $parameters);
 				*/

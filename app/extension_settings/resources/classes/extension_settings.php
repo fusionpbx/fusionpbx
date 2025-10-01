@@ -30,10 +30,15 @@
 	class extension_settings {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'extension_settings';
+		const app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
+		private $database;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -46,14 +51,17 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'extension_settings';
-				$this->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-				$this->name = 'extension_setting';
-				$this->table = 'extension_settings';
-				$this->toggle_field = 'extension_setting_enabled';
-				$this->toggle_values = ['true','false'];
-				$this->description_field = 'extension_setting_description';
-				$this->location = 'extension_settings.php';
+			$this->name = 'extension_setting';
+			$this->table = 'extension_settings';
+			$this->toggle_field = 'extension_setting_enabled';
+			$this->toggle_values = ['true','false'];
+			$this->description_field = 'extension_setting_description';
+			$this->location = 'extension_settings.php';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 		}
 
 		/**
@@ -92,18 +100,14 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 								
 								//clear the cache	
 									$sql = "select extension, number_alias, user_context from v_extensions ";
 									$sql .= "where extension_uuid = :extension_uuid ";
 									$parameters['extension_uuid'] = $this->extension_uuid;
-									$database = new database;
-									$extension = $database->select($sql, $parameters, 'row');
+									$extension = $this->database->select($sql, $parameters, 'row');
 									$cache = new cache;
 									$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
 									$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
@@ -147,8 +151,7 @@
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$extension_uuid = $rows[0]['extension_uuid'];
 									foreach ($rows as $row) {
@@ -172,18 +175,15 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 									
 								//clear the cache	
 									$sql = "select extension, number_alias, user_context from v_extensions ";
 									$sql .= "where extension_uuid = :extension_uuid ";
 									$parameters['extension_uuid'] = $extension_uuid;
-									$database = new database;
-									$extension = $database->select($sql, $parameters, 'row');
+									$extension = $this->database->select($sql, $parameters, 'row');
 									$cache = new cache;
 									$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
 									$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
@@ -230,8 +230,7 @@
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
 // 										var_dump($row); exit;
@@ -252,10 +251,8 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message

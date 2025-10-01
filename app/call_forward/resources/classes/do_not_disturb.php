@@ -26,12 +26,40 @@
 
 //define the dnd class
 	class do_not_disturb {
+
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_forward';
+		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+
+		/**
+		 * declare public variables
+		 */
 		public $debug;
 		public $domain_uuid;
 		public $domain_name;
 		public $extension_uuid;
 		public $extension;
 		public $enabled;
+
+		/**
+		 * declare private variables
+		 */
+
+		private $database;
+
+		/**
+		 * called when the object is created
+		 */
+		public function __construct() {
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+
+		}
 
 		//update the user_status
 		public function user_status() {
@@ -54,8 +82,7 @@
 						$parameters['user_status'] = "Do Not Disturb";
 						$parameters['domain_uuid'] = $this->domain_uuid;
 						$parameters['username'] = $_SESSION['username'];
-						$database = new database;
-						$database->execute($sql);
+						$this->database->execute($sql);
 				}
 		}
 
@@ -73,8 +100,7 @@
 					$parameters['extension'] = $this->extension;
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					if (is_uuid($this->extension_uuid)) {
 						$this->extension_uuid = $row["extension_uuid"];
@@ -99,10 +125,7 @@
 				$p->add('extension_edit', 'temp');
 
 			//execute update
-				$database = new database;
-				$database->app_name = 'calls';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-				$database->save($array);
+				$this->database->save($array);
 				unset($array);
 
 			//revoke temporary permissions
@@ -120,8 +143,7 @@
 		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
 		private $permission;
 		private $list_page;
 		private $table;
@@ -135,8 +157,6 @@
 		public function toggle($records) {
 
 			//assign private variables
-				$this->app_name = 'calls';
-				$this->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 				$this->permission = 'do_not_disturb';
 				$this->list_page = 'calls.php';
 				$this->table = 'extensions';
@@ -178,8 +198,7 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$extensions[$row['uuid']]['extension'] = $row['extension'];
@@ -230,10 +249,8 @@
 									$p->add('extension_edit', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

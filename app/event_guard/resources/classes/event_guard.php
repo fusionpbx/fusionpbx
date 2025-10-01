@@ -30,10 +30,15 @@
 	class event_guard {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'event_guard';
+		const app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
+		private $database;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -45,13 +50,16 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'event_guard';
-				$this->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-				$this->name = 'event_guard_log';
-				$this->table = 'event_guard_logs';
-				$this->toggle_field = '';
-				$this->toggle_values = ['block','pending'];
-				$this->location = 'event_guard_logs.php';
+			$this->name = 'event_guard_log';
+			$this->table = 'event_guard_logs';
+			$this->toggle_field = '';
+			$this->toggle_values = ['block','pending'];
+			$this->location = 'event_guard_logs.php';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 		}
 
 		/**
@@ -89,10 +97,7 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -139,10 +144,7 @@
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+									$this->database->save($array);
 									unset($array);
 
 								//initialize the settings object
@@ -192,8 +194,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -216,10 +217,8 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -262,8 +261,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where event_guard_log_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
@@ -283,10 +281,8 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message

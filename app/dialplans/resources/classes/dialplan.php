@@ -27,7 +27,15 @@
 //define the dialplan class
 	class dialplan {
 
-		//variables
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'dialplans';
+		const app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+
+		/**
+		 * declare public variables
+		 */
 		public $domain_uuid;
 		public $dialplan_uuid;
 		public $dialplan_detail_uuid;
@@ -38,7 +46,6 @@
 		public $bridges;
 		public $variables;
 
-		//dialplans
 		public $dialplan_details;
 		public $dialplan_name;
 		public $dialplan_number;
@@ -50,7 +57,6 @@
 		public $dialplan_enabled;
 		public $dialplan_description;
 
-		//dialplan_details
 		public $dialplan_detail_tag;
 		public $dialplan_detail_order;
 		public $dialplan_detail_type;
@@ -59,21 +65,18 @@
 		public $dialplan_detail_inline;
 		public $dialplan_detail_group;
 
-		//xml
 		public $uuid;
 		public $context;
 		public $source;
 		public $destination;
 		public $is_empty;
 		public $array;
+		public $list_page;
 
 		/**
-		* declare public/private properties
-		*/
-		private $app_name;
-		public $app_uuid;
+		 * declare private variables
+		 */
 		private $permission_prefix;
-		public $list_page;
 		private $table;
 		private $uuid_prefix;
 		private $toggle_field;
@@ -91,8 +94,6 @@
 			$this->dialplan_global = false;
 
 			//assign property defaults
-			$this->app_name = 'dialplans';
-			$this->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db'; //dialplans
 			$this->permission_prefix = 'dialplan_';
 			$this->list_page = 'dialplans.php';
 			$this->table = 'dialplans';
@@ -108,75 +109,6 @@
 			}
 		}
 
-		public function dialplan_add() {
-			//build insert array
-				$array['dialplans'][0]['dialplan_uuid'] = $this->dialplan_uuid;
-				$array['dialplans'][0]['domain_uuid'] = !$this->dialplan_global ? $this->domain_uuid : null;
-				$array['dialplans'][0]['app_uuid'] = $this->app_uuid;
-				$array['dialplans'][0]['dialplan_name'] = $this->dialplan_name;
-				$array['dialplans'][0]['dialplan_number'] = $this->dialplan_number;
-				$array['dialplans'][0]['dialplan_destination'] = $this->dialplan_destination;
-				$array['dialplans'][0]['dialplan_continue'] = $this->dialplan_continue;
-				$array['dialplans'][0]['dialplan_order'] = $this->dialplan_order;
-				$array['dialplans'][0]['dialplan_context'] = $this->dialplan_context;
-				$array['dialplans'][0]['dialplan_enabled'] = $this->dialplan_enabled;
-				$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
-
-			//grant temporary permissions
-				$p = permissions::new();
-				$p->add('dialplan_add', 'temp');
-
-			//execute insert
-				$this->database->app_name = 'dialplans';
-				$this->database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-				$this->database->save($array);
-				unset($array);
-
-			//clear the destinations session array
-				if (isset($_SESSION['destinations']['array'])) {
-					unset($_SESSION['destinations']['array']);
-				}
-
-			//revoke temporary permissions
-				$p->delete('dialplan_add', 'temp');
-		}
-
-		public function dialplan_update() {
-			//build update array
-				$array['dialplans'][0]['dialplan_uuid'] = $this->dialplan_uuid;
-				$array['dialplans'][0]['dialplan_name'] = $this->dialplan_name;
-				if (!empty($this->dialplan_continue)) {
-					$array['dialplans'][0]['dialplan_continue'] = $this->dialplan_continue;
-				}
-
-				$array['dialplans'][0]['dialplan_order'] = $this->dialplan_order;
-				$array['dialplans'][0]['dialplan_context'] = $this->dialplan_context;
-				$array['dialplans'][0]['dialplan_enabled'] = $this->dialplan_enabled;
-				$array['dialplans'][0]['dialplan_description'] = $this->dialplan_description;
-
-			//grant temporary permissions
-				$p = permissions::new();
-				$p->add('dialplan_edit', 'temp');
-
-			//execute update
-				$this->database->app_name = 'dialplans';
-				$this->database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-				$this->database->save($array);
-				unset($array);
-
-			//revoke temporary permissions
-				$p->delete('dialplan_edit', 'temp');
-		}
-
-		private function app_uuid_exists() {
-			$sql = "select count(*) from v_dialplans ";
-			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-			$sql .= "and app_uuid = :app_uuid ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			$parameters['app_uuid'] = $this->app_uuid;
-			return $this->database->select($sql, $parameters ?? null, 'column') != 0 ? true : false;
-			unset($sql, $parameters);
-		}
 
 		public function dialplan_exists() {
 			$sql = "select count(*) from v_dialplans ";
@@ -459,8 +391,6 @@
 
 						//save the data
 							if (!empty($array)) {
-								$this->database->app_name = 'dialplans';
-								$this->database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 								$this->database->save($array);
 								unset($array);
 							}
@@ -1068,8 +998,6 @@
 								$p->add('dialplan_edit', 'temp');
 
 								//execute update
-								$this->database->app_name = 'dialplans';
-								$this->database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 								$this->database->save($array);
 								unset($array);
 
@@ -1127,27 +1055,6 @@
 		*/
 		public function delete($records) {
 
-			//determine app and permission prefix
-				if ($this->app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
-					$this->app_name = 'dialplan_inbound';
-					$this->permission_prefix = 'inbound_route_';
-				}
-				else if ($this->app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
-					$this->app_name = 'dialplan_outbound';
-					$this->permission_prefix = 'outbound_route_';
-				}
-				else if ($this->app_uuid == '16589224-c876-aeb3-f59f-523a1c0801f7') {
-					$this->app_name = 'fifo';
-					$this->permission_prefix = 'fifo_';
-				}
-				else if ($this->app_uuid == '4b821450-926b-175a-af93-a03c441818b1') {
-					$this->app_name = 'time_conditions';
-					$this->permission_prefix = 'time_condition_';
-				}
-				else {
-					//use default in constructor
-				}
-
 			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
@@ -1192,8 +1099,6 @@
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 
 								//revoke temporary permissions
@@ -1226,30 +1131,10 @@
 
 		public function delete_details($records) {
 			//set private variables
-				$this->table = 'dialplan_details';
-				$this->uuid_prefix = 'dialplan_detail_';
+			$this->table = 'dialplan_details';
+			$this->uuid_prefix = 'dialplan_detail_';
 
-			//determine app and permission prefix
-				if ($this->app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
-					$this->app_name = 'dialplan_inbound';
-					$this->permission_prefix = 'inbound_route_';
-				}
-				else if ($this->app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
-					$this->app_name = 'dialplan_outbound';
-					$this->permission_prefix = 'outbound_route_';
-				}
-				else if ($this->app_uuid == '16589224-c876-aeb3-f59f-523a1c0801f7') {
-					$this->app_name = 'fifo';
-					$this->permission_prefix = 'fifo_';
-				}
-				else if ($this->app_uuid == '4b821450-926b-175a-af93-a03c441818b1') {
-					$this->app_name = 'time_conditions';
-					$this->permission_prefix = 'time_condition_';
-				}
-				else {
-					$this->permission_prefix = 'dialplan_detail_';
-				}
-
+			//check the delete permission
 			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
@@ -1293,8 +1178,6 @@
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($array);
 
 								//revoke temporary permissions
@@ -1320,27 +1203,6 @@
 		* toggle records
 		*/
 		public function toggle($records) {
-
-			//determine app and permission prefix
-				if ($this->app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
-					$this->app_name = 'dialplan_inbound';
-					$this->permission_prefix = 'inbound_route_';
-				}
-				else if ($this->app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
-					$this->app_name = 'dialplan_outbound';
-					$this->permission_prefix = 'outbound_route_';
-				}
-				else if ($this->app_uuid == '16589224-c876-aeb3-f59f-523a1c0801f7') {
-					$this->app_name = 'fifo';
-					$this->permission_prefix = 'fifo_';
-				}
-				else if ($this->app_uuid == '4b821450-926b-175a-af93-a03c441818b1') {
-					$this->app_name = 'time_conditions';
-					$this->permission_prefix = 'time_condition_';
-				}
-				else {
-					//use default in constructor
-				}
 
 			if (permission_exists($this->permission_prefix.'edit')) {
 
@@ -1398,8 +1260,6 @@
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->save($array);
 									unset($array);
 
@@ -1435,26 +1295,6 @@
 		public function copy($records) {
 
 			//determine app and permission prefix
-				if ($this->app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
-					$this->app_name = 'dialplan_inbound';
-					$this->permission_prefix = 'inbound_route_';
-				}
-				else if ($this->app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
-					$this->app_name = 'dialplan_outbound';
-					$this->permission_prefix = 'outbound_route_';
-				}
-				else if ($this->app_uuid == '16589224-c876-aeb3-f59f-523a1c0801f7') {
-					$this->app_name = 'fifo';
-					$this->permission_prefix = 'fifo_';
-				}
-				else if ($this->app_uuid == '4b821450-926b-175a-af93-a03c441818b1') {
-					$this->app_name = 'time_conditions';
-					$this->permission_prefix = 'time_condition_';
-				}
-				else {
-					//use default in constructor
-				}
-
 			if (permission_exists($this->permission_prefix.'add')) {
 
 				//add multi-lingual support
@@ -1549,10 +1389,7 @@
 									$p->add('dialplan_detail_add', 'temp');
 
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->save($array);
-									//view_array($this->database->message);
 									unset($array);
 
 								//revoke temporary permissions
