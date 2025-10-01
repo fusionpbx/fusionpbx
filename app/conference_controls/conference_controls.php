@@ -96,7 +96,6 @@
 //get the count
 	$sql = "select count(conference_control_uuid) from v_conference_controls ";
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql);
 
@@ -118,7 +117,6 @@
 	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'control_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$conference_controls = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

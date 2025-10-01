@@ -37,9 +37,6 @@
 		exit;
 	}
 
-//initialize the database
-	$database = new database;
-
 //get the http post data
 	if (!empty($_POST['menu_items'])) {
 		$action = $_POST['action'];
@@ -246,7 +243,6 @@
 
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
-	$database = new database;
 	$groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

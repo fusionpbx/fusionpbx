@@ -27,7 +27,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['user_log_uuid'] = $user_log_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -55,7 +54,6 @@
 	$sql .= "WHERE domain_uuid = :domain_uuid ";
 	$sql .= "ORDER by username asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$users = $database->execute($sql, $parameters, 'all');
 	unset ($sql, $parameters);
 

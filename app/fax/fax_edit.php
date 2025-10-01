@@ -178,9 +178,6 @@
 			$p = permissions::new();
 			$p->add('fax_user_delete', 'temp');
 
-			$database = new database;
-			$database->app_name = 'fax';
-			$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 			$database->delete($array);
 			unset($array);
 
@@ -206,9 +203,6 @@
 			$p = permissions::new();
 			$p->add('fax_user_add', 'temp');
 
-			$database = new database;
-			$database->app_name = 'fax';
-			$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 			$database->save($array);
 			unset($array);
 
@@ -365,9 +359,6 @@
 						$array['fax'][0]['fax_description'] = $fax_description;
 
 					//execute
-						$database = new database;
-						$database->app_name = 'fax';
-						$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 						$database->save($array);
 						unset($array);
 
@@ -388,7 +379,6 @@
 					$sql .= "and fax_uuid = :fax_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['fax_uuid'] = $fax_uuid;
-					$database = new database;
 					$dialplan_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 
@@ -425,7 +415,6 @@
 		$sql .= "and fax_uuid = :fax_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -458,7 +447,6 @@
 		$sql .= "and e.fax_uuid = :fax_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$fax_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -475,7 +463,6 @@
 		$sql .= ")\n";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$available_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}

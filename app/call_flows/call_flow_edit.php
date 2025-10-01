@@ -242,9 +242,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'call_flows';
-			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 			if (!empty($call_flow_uuid)) {
 				$database->uuid($call_flow_uuid);
 			}
@@ -317,7 +314,6 @@
 		$sql .= "and call_flow_uuid = :call_flow_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_flow_uuid'] = $call_flow_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		foreach ($result as $row) {
 			//set the php variables

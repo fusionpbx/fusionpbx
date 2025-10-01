@@ -13,11 +13,6 @@
 		exit;
 	}
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');

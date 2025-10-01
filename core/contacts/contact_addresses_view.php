@@ -44,7 +44,6 @@
 	$sql .= "order by address_primary desc, address_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_addresses = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

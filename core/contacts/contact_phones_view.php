@@ -44,7 +44,6 @@
 	$sql .= "order by phone_primary desc, phone_label asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_phones = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -67,7 +66,6 @@
 			$sql .= "and (dialplan_detail_enabled = true or dialplan_detail_enabled is null) ";
 			$sql .= "limit 1";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$speed_dial_condition = $database->select($sql, $parameters, 'column');
 			if (!empty($speed_dial_condition)) {
 				$speed_dial_prefix = str_replace('(.*)', '', trim($speed_dial_condition,'^\$')); // default: ^\*0(.*)$

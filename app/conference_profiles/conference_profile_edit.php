@@ -113,9 +113,6 @@
 				}
 
 				if (is_uuid($array['conference_profiles'][0]['conference_profile_uuid'])) {
-					$database = new database;
-					$database->app_name = 'conference_profiles';
-					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 					$database->save($array);
 					unset($array);
 				}
@@ -138,7 +135,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$profile_name = $row["profile_name"];

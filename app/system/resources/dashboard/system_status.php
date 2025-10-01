@@ -356,7 +356,6 @@
 			}
 
 			if (!empty($sql_current) && !empty($sql_max)) {
-				if (!isset($database)) { $database = new database; }
 
 				// Get current connections
 				$current_connections = $database->select($sql_current, null, 'column');

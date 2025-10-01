@@ -77,20 +77,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('event_guard_log_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('event_guard_log_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('event_guard_log_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -140,9 +137,6 @@
 			$array['event_guard_logs'][0]['log_status'] = $log_status;
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'event guard';
-			$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
 			$database->save($array);
 
 		//redirect the user
@@ -173,7 +167,6 @@
 		$sql .= "from v_event_guard_logs ";
 		$sql .= "where event_guard_log_uuid = :event_guard_log_uuid ";
 		$parameters['event_guard_log_uuid'] = $event_guard_log_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$hostname = $row["hostname"];

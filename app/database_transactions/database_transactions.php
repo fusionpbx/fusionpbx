@@ -86,7 +86,6 @@
 		$parameters['search'] = '%'.$search.'%';
 	};
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($parameters);
 
@@ -126,7 +125,6 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$sql .= order_by($order_by, $order, 't.transaction_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$transactions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -135,7 +133,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by username ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$rows = $database->select($sql, $parameters, 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {

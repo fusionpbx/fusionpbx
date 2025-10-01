@@ -272,7 +272,6 @@
 
 				//database version
 				$sql = "select version(); ";
-				$database = new database;
 				$database_name = $database->select($sql, null, 'column');
 				$database_array = explode(' ', $database_name);
 

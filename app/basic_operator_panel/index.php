@@ -72,9 +72,6 @@
 				$array['users'][0]['user_uuid'] = $_SESSION['user']['user_uuid'];
 				$array['users'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 				$array['users'][0]['user_status'] = $user_status;
-				$database = new database;
-				$database->app_name = 'operator_panel';
-				$database->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
 				$database->save($array);
 
 				//remove the temporary permission
@@ -91,7 +88,6 @@
 					$sql .= "and user_uuid = :user_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
-					$database = new database;
 					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 
@@ -157,9 +153,6 @@
 					$p->add('extension_edit', 'temp');
 
 				//execute update
-					$database = new database;
-					$database->app_name = 'calls';
-					$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 					$database->save($array);
 					unset($array);
 

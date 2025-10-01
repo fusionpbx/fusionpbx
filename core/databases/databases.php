@@ -59,14 +59,12 @@
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('database_add')) {
-					$obj = new databases;
-					$obj->copy($databases);
+					$database->copy($databases);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('database_delete')) {
-					$obj = new databases;
-					$obj->delete($databases);
+					$database->delete($databases);
 				}
 				break;
 		}

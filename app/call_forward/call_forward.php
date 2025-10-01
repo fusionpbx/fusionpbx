@@ -123,7 +123,6 @@
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
 
@@ -190,7 +189,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'extension', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($parameters);
 
@@ -353,7 +351,6 @@
 				//	$sql .= "and domain_uuid = :domain_uuid ";
 				//	$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 				//	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				//	$database = new database;
 				//	$follow_me_destination_count = $database->select($sql, $parameters, 'column');
 				//	$button_label = $follow_me_destination_count ? $text['label-enabled'].' ('.$follow_me_destination_count.')' : $text['label-invalid'];
 				//	unset($sql, $parameters);
@@ -376,7 +373,6 @@
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$database = new database;
 					$follow_me_destination_count = $database->select($sql, $parameters ?? null, 'column');
 					unset($sql, $parameters);
 				}

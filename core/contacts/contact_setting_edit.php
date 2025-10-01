@@ -132,9 +132,6 @@
 					$p = permissions::new();
 					$p->add('contact_edit', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 
@@ -167,9 +164,6 @@
 						$array['contact_settings'][0]['contact_setting_enabled'] = $contact_setting_enabled;
 						$array['contact_settings'][0]['contact_setting_description'] = $contact_setting_description;
 
-						$database = new database;
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}
@@ -188,7 +182,6 @@
 		$sql .= "and contact_setting_uuid = :contact_setting_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_setting_uuid'] = $contact_setting_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$contact_setting_category = escape($row["contact_setting_category"]);

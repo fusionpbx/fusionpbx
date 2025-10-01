@@ -35,11 +35,6 @@
 			$language = new text;
 			$text = $language->get($_SESSION['domain']['language']['code'], 'app/extensions');
 
-		//connect to the database
-			if (!isset($database)) {
-				$database = new database;
-			}
-
 		//add or update the database
 			if (isset($_POST['extensions']) && is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {
 

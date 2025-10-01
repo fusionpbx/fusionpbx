@@ -131,9 +131,6 @@
 					$array['modules'][0]['module_enabled'] = $module_enabled;
 					$array['modules'][0]['module_default_enabled'] = $module_default_enabled;
 
-					$database = new database;
-					$database->app_name = 'modules';
-					$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
 					$database->save($array);
 					unset($array);
 
@@ -153,7 +150,6 @@
 		$sql = "select * from v_modules ";
 		$sql .= "where module_uuid = :module_uuid ";
 		$parameters['module_uuid'] = $module_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$module_label = $row["module_label"];

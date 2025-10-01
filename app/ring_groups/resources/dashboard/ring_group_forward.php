@@ -41,11 +41,6 @@
 		$domain_uuid = $_SESSION['user']['domain_uuid'];
 	}
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
-
 //find the path
 	switch ($_SERVER['REQUEST_URI']) {
 		case PROJECT_PATH."/core/dashboard/index.php":

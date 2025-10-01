@@ -13,11 +13,6 @@
 		exit;
 	}
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
@@ -70,7 +65,6 @@
 		}
 	}
 	$sql .= order_by($order_by ?? null, $order ?? null, 'extension', 'asc');
-	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($parameters);
 
@@ -229,7 +223,6 @@
 						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-						$database = new database;
 						$follow_me_destination_count = $database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 					}

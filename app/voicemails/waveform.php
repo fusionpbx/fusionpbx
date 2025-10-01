@@ -84,7 +84,6 @@
 						$parameters['voicemail_uuid'] = $voicemail_uuid;
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$parameters['voicemail_message_uuid'] = $_GET['id'];
-						$database = new database;
 						$message_base64 = $database->select($sql, $parameters, 'column');
 						if (!empty($message_base64)) {
 							$message_decoded = base64_decode($message_base64);
@@ -173,7 +172,6 @@
 				$sql .= "and voicemail_id = :voicemail_id ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$parameters['voicemail_id'] = $voicemail_id;
-				$database = new database;
 				$selected_greeting_id = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
@@ -187,7 +185,6 @@
 				$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 					$greeting_filename = $row['greeting_filename'];

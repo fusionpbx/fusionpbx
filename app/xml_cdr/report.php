@@ -132,7 +132,6 @@ for ($y = 0; $y < 4; $y++) {
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['last_month'] = $last_month;
 		$parameters['this_month'] = $this_month;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		unset($sql);
 		$max = sizeof($result) - 1;

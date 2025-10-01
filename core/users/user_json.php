@@ -43,9 +43,6 @@
 		$search =  strtolower($_GET["search"]);
 	}
 
-//connect to the database
-	$database = new database;
-
 //check to see if contact details are in the view
 	$sql = "select * from view_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";

@@ -101,7 +101,6 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -137,7 +136,6 @@
 	}
 	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by var_category, var_order asc, var_name asc ";
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$vars = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql);
 

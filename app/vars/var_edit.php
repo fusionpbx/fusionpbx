@@ -141,9 +141,6 @@
 						$array['vars'][0]['var_description'] = $var_description;
 
 					//execute insert/update
-						$database = new database;
-						$database->app_name = 'vars';
-						$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 						$database->save($array);
 						unset($array);
 
@@ -167,7 +164,6 @@
 		$sql = "select * from v_vars ";
 		$sql .= "where var_uuid = :var_uuid ";
 		$parameters['var_uuid'] = $var_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$var_category = $row["var_category"];

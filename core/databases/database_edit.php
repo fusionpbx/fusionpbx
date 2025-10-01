@@ -37,9 +37,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -91,8 +88,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 					$array[0]['checked'] = 'true';
 					$array[0]['uuid'] = $database_uuid;
 				//delete
-					$obj = new databases;
-					$obj->delete($array);
+					$database->delete($array);
 				//redirect
 					header('Location: databases.php');
 					exit;

@@ -76,11 +76,6 @@
 			$x++;
 		}
 
-		//prepare the database object
-		$database = new database;
-		$database->app_name = 'access_controls';
-		$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-
 		//send the array to the database class
 		switch ($action) {
 			case 'copy':
@@ -125,7 +120,6 @@
 		$sql .= "	or lower(access_control_description) like :search ";
 		$sql .= ") ";
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //get the list
@@ -143,7 +137,6 @@
 		$sql .= ") ";
 	}
 	$sql .= order_by($order_by, $order, 'access_control_name', 'asc');
-	$database = new database;
 	$access_controls = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

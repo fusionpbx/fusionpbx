@@ -46,7 +46,6 @@
 	$sql = "select * from v_call_center_tiers ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$tiers = $database->select($sql, $parameters, 'all');
 	if (!empty($_SESSION['call_center']['queue_login']['text']) && $_SESSION['call_center']['queue_login']['text'] == 'dynamic') {
 		$per_queue_login = true;
@@ -64,7 +63,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by agent_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$agents = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -86,7 +84,6 @@
 	$sql .= "and q.domain_uuid = d.domain_uuid ";
 	$sql .= "order by queue_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$call_center_queues = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	//view_array($call_center_queues, false);
@@ -175,11 +172,8 @@
 								$p = permissions::new();
 								$p->add('user_edit', 'temp');
 
-								$database = new database;
-								$database->app_name = 'call_centers';
-								$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 								$database->save($array);
-								$response = $database->message;
+								//$response = $database->message;
 								unset($array);
 
 								$p->delete('user_edit', 'temp');
@@ -273,7 +267,6 @@
 							$sql .= "and call_center_agent_uuid = :call_center_agent_uuid ";
 							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 							$parameters['call_center_agent_uuid'] = $row['agent_uuid'];
-							$database = new database;
 							$agent_name = $database->select($sql, $parameters, 'all');
 							unset($sql, $parameters);
 

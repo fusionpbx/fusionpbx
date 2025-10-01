@@ -55,7 +55,6 @@
 			$sql = "select * from v_ivr_menus ";
 			$sql .= " where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
@@ -138,7 +137,6 @@
 						$sub_sql .= "order by ivr_menu_option_order asc ";
 						$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
 						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
 						$sub_result = $database->select($sub_sql, $parameters, 'all');
 						if (is_array($sub_result) && @sizeof($sub_result) != 0) {
 							foreach ($sub_result as $sub_row) {

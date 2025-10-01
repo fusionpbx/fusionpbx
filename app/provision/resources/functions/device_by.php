@@ -5,7 +5,6 @@ function device_by_mac($device_address) {
 	$sql .= "where device_address = :device_address ";
 	$sql .= "and device_enabled = true ";
 	$parameters['device_address'] = $device_address;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	return is_array($row) && @sizeof($row) != 0 ? $row : false;
 }
@@ -21,7 +20,6 @@ function device_by_ext($ext, $domain) {
 	$sql .= "and t1.device_enabled = true ";
 	$parameters['ext'] = $ext;
 	$parameters['domain'] = $domain;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	return is_array($row) && @sizeof($row) != 0 ? $row : false;
 }

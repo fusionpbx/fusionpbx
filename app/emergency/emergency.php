@@ -25,11 +25,6 @@ if (!empty($_POST['emergency_logs']) && is_array($_POST['emergency_logs'])) {
 	$emergency_logs = $_POST['emergency_logs'];
 }
 
-//prepare the database object
-$database = new database;
-$database->app_name = 'emergency_logs';
-$database->app_uuid = 'de63b1ae-7750-11ee-b3a5-005056a27559';
-
 //set permissions for CDR details and call recordings
 $permission = array();
 $permission['xml_cdr_hangup_cause'] = permission_exists('xml_cdr_hangup_cause');

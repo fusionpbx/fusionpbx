@@ -40,9 +40,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the database object
-	$database = new database;
-
 //set the defaults
 	$call_block_name = '';
 	$call_block_country_code = '';

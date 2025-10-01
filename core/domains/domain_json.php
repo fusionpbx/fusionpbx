@@ -37,9 +37,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //get posted data
 	if (!empty($_POST['search'])) {
 		$search = $_POST['search'];

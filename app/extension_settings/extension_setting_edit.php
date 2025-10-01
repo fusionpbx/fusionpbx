@@ -92,20 +92,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('extension_setting_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('extension_setting_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('extension_setting_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -155,16 +152,12 @@
 			$array['extension_settings'][0]['extension_setting_description'] = $extension_setting_description;
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'extension settings';
-			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$database->save($array);
 
 		//clear the cache
 			$sql = "select extension, number_alias, user_context from v_extensions ";
 			$sql .= "where extension_uuid = :extension_uuid ";
 			$parameters['extension_uuid'] = $extension_uuid;
-			$database = new database;
 			$extension = $database->select($sql, $parameters, 'row');
 			$cache = new cache;
 			$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
@@ -200,7 +193,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['extension_setting_uuid'] = $extension_setting_uuid ?? '';
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			if (!empty($row["extension_uuid"]) && is_uuid($row["extension_uuid"])) {

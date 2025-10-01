@@ -61,9 +61,6 @@
 		}
 
 		if (!empty($array)) {
-			$database = new database;
-			$database->app_name = 'contacts';
-			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 			$database->save($array);
 			unset($array);
 		}
@@ -82,7 +79,6 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$contact_organization = $row["contact_organization"];
@@ -108,7 +104,6 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$contact_time_uuid = $row["contact_time_uuid"];

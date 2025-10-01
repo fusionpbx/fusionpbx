@@ -99,7 +99,6 @@
 			$sql .= "and destination_uuid = :destination_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['destination_uuid'] = $destination_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$destination_number = $row["destination_number"];
@@ -266,7 +265,6 @@
 					$sql .= "and fax_uuid = :fax_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['fax_uuid'] = $fax_uuid;
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$fax_extension = $row["fax_extension"];
@@ -407,11 +405,8 @@
 			}
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'inbound_routes';
-			$database->app_uuid = $app_uuid;
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 			unset($array);
 
 		//remove temp permission, if exists
@@ -676,7 +671,6 @@
 		$sql .= "and destination_type = 'inbound' ";
 		$sql .= "order by destination_number asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (is_array($result) && @sizeof($result) != 0) {
 			echo "	<select name='destination_uuid' id='destination_uuid' class='formfld' >\n";

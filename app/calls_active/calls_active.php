@@ -51,7 +51,6 @@
 
 //load gateways into a session variable
 	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
-	$database = new database;
 	$gateways = $database->select($sql, $parameters ?? null, 'all');
 	foreach ($gateways as $row) {
 		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];

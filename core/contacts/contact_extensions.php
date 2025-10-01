@@ -50,7 +50,6 @@
 	$sql .= "order by e.extension asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

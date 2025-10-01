@@ -92,7 +92,6 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -131,7 +130,6 @@
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$sql .= order_by($order_by, $order, 'type', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset ?? null);
-	$database = new database;
 	$vendor_functions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -209,7 +207,6 @@
 				$sql .= "g.group_name asc ";
 				$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 				$parameters['device_vendor_function_uuid'] = $row['device_vendor_function_uuid'];
-				$database = new database;
 				$vendor_function_groups = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 				unset($group_list);

@@ -148,7 +148,6 @@
 	$sql = "select domain_uuid from v_domains ";
 	$sql .= "where domain_name = :domain_name ";
 	$parameters['domain_name'] = $domain_name;
-	$database = new database;
 	$domain_uuid = $database->select($sql, $parameters, 'column');
 	unset($parameters);
 
@@ -208,7 +207,6 @@
 	$parameters['template_category'] = $template_category;
 	$parameters['template_subcategory'] = $template_subcategory;
 	$parameters['template_type'] = $template_type;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$email_subject = $row['template_subject'];

@@ -105,7 +105,6 @@
 		$sql .= ")\n";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -140,7 +139,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'dashboard_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
-	$database = new database;
 	$dashboards = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

@@ -54,7 +54,6 @@
 	$sql .= "and extension = :extension ";
 	$parameters['extension'] = $user;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$domain_name = $row['domain_name'];

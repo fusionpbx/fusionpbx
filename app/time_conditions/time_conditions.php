@@ -106,7 +106,6 @@
 	}
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 	$sql .= $sql_search ?? null;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page data
@@ -124,7 +123,6 @@
 	$sql = str_replace('count(dialplan_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$dialplans = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

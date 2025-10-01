@@ -346,7 +346,6 @@ function do_upgrade_menu() {
 	$sql = "select menu_uuid, menu_language from v_menus ";
 	$sql .= "where menu_name = :menu_name ";
 	$parameters['menu_name'] = 'default';
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$menu_uuid = $row["menu_uuid"];

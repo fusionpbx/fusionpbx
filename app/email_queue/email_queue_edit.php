@@ -84,20 +84,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('email_queue_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('email_queue_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('email_queue_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -190,9 +187,6 @@
 			$array['email_queue'][0]['email_response'] = $email_response;
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'email queue';
-			$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
 			$database->save($array);
 
 		//redirect the user
@@ -216,7 +210,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$email_date = $row["email_date"];

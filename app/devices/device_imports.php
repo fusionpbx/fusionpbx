@@ -253,11 +253,6 @@
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
-		//open the database
-			$database = new database;
-			$database->app_name = 'devices';
-			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-
 		//get the users
 			$sql = "select * from v_users where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;

@@ -84,20 +84,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('sofia_global_setting_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('sofia_global_setting_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('sofia_global_setting_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -135,9 +132,6 @@
 			$array['sofia_global_settings'][0]['global_setting_description'] = $global_setting_description;
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'sofia_global_settings';
-			$database->app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
 			$database->save($array);
 
 		//redirect the user
@@ -165,7 +159,6 @@
 		$sql .= "from v_sofia_global_settings ";
 		$sql .= "where sofia_global_setting_uuid = :sofia_global_setting_uuid ";
 		$parameters['sofia_global_setting_uuid'] = $sofia_global_setting_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$global_setting_name = $row["global_setting_name"];
