@@ -1293,7 +1293,7 @@ class database {
 				if (is_array($tables)) {
 
 					//get the application name and uuid
-					if (class_exists($parent_name) && defined("$parent_name::$app_name")) {
+					if (class_exists($parent_name) && defined("$parent_name::app_name")) {
 						$this->app_name = $parent_name::app_name;
 						$this->app_uuid = $parent_name::app_uuid;
 					}
@@ -1357,7 +1357,7 @@ class database {
 				}
 			}
 
-		//if not checked then copy the array to delete array
+		//if not checked, then copy the array to the delete array
 			if (!$checked) {
 				$new_array = $array;
 			}
@@ -1463,7 +1463,7 @@ class database {
 				//delete the current data
 					foreach($new_array as $table_name => $rows) {
 						//get the application name and uuid
-						if (class_exists($parent_name)) {
+						if (class_exists($parent_name) && defined("$parent_name::app_name")) {
 							$this->app_name = $table_name::app_name;
 							$this->app_uuid = $table_name::app_uuid;
 						}
@@ -2288,7 +2288,7 @@ class database {
 					if (is_array($array)) foreach ($array as $parent_name => $parent_array) {
 
 						//get the application name and uuid
-						if (class_exists($parent_name) && defined("$parent_name::$app_name")) {
+						if (class_exists($parent_name) && defined("$parent_name::app_name")) {
 							$this->app_name = $parent_name::app_name;
 							$this->app_uuid = $parent_name::app_uuid;
 						}
@@ -2302,7 +2302,7 @@ class database {
 								$parent_key_name = self::singular($parent_name)."_uuid";
 								$parent_key_name = self::sanitize($parent_key_name);
 
-							//if the uuid is set then set parent key exists and value
+							//if the UUID is set, then set parent key exists and value
 								//determine if the parent_key_exists
 								$parent_key_exists = false;
 								if (isset($parent_field_array[$parent_key_name])) {
@@ -2319,7 +2319,7 @@ class database {
 									}
 								}
 
-							//allow characters found in the uuid only.
+							//allow characters found in the UUID only.
 								$parent_key_value = self::sanitize($parent_key_value);
 
 							//get the parent field names
@@ -2332,7 +2332,7 @@ class database {
 									}
 								}
 
-							//determine action update or delete and get the original data
+							//determine action update or delete, and get the original data
 								if ($parent_key_exists) {
 									$sql = "SELECT ".implode(", ", $parent_field_names)." FROM ".$table_name." ";
 									$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."'; ";
