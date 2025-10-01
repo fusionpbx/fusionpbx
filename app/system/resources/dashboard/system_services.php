@@ -56,7 +56,7 @@
 //function to check for running process: returns [running, pid, etime]
 	if (!function_exists('is_running')) {
 		function is_running(string $name) {
-			$name = escapeshellarg($name);
+			$name = escapeshellarg(basename($name));
 			$pid = trim(shell_exec("ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1"));
 			if ($pid && is_numeric($pid)) {
 				$etime = trim(shell_exec("ps -p $pid -o etime= | tr -d '\n'"));
@@ -99,18 +99,18 @@
 
 //friendly labels
 	$service_labels = [
-		'email_queue'	 => 'Email Queue',
-		'event_guard'	 => 'Event Guard',
-		'fax_queue'		 => 'Fax Queue',
+		'email_queue'    => 'Email Queue',
+		'event_guard'    => 'Event Guard',
+		'fax_queue'      => 'Fax Queue',
+		'message_events' => 'Message Events',
+		'message_queue'  => 'Message Queue',
+		'xml_cdr'        => 'XML CDR',
+		'freeswitch'     => 'FreeSWITCH',
+		'nginx'          => 'Nginx',
+		'postgresql'     => 'PostgreSQL',
+		'event_guard'    => 'Event Guard',
+		'sshd'           => 'SSH Server',
 		'maintenance_service' => 'Maintenance Service',
-		'message_events'			=> 'Message Events',
-		'message_queue'			 => 'Message Queue',
-		'xml_cdr'			 => 'XML CDR',
-		'freeswitch'		=> 'FreeSWITCH',
-		'nginx'				 => 'Nginx',
-		'postgresql'		=> 'PostgreSQL',
-		'event_guard'	 => 'Event Guard',
-		'sshd'		=> 'SSH Server'
 	];
 
 	$files = glob(PROJECT_ROOT . '/*/*/resources/service/*.service');
@@ -158,6 +158,49 @@
 	$text = (new text())->get($settings->get('domain','language','en-us'), 'core/user_settings');
 
 //show the results
+?>
+<script>
+function reload_xml_cdr(el) {
+	// UI: lock + show progress
+	const original_text = el.textContent;
+	el.textContent = 'Reloading…';
+	el.style.pointerEvents = 'none';
+	el.setAttribute('aria-busy', 'true');
+
+	// Optional: pull CSRF from a meta tag if your app sets one
+	const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+	fetch('/app/system/reload_xml_cdr.php', {
+		method: 'GET', // change to 'POST' if your endpoint expects it
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest',
+			'Accept': 'application/json',
+			'X-CSRF-Token': csrf
+		},
+		credentials: 'same-origin'
+	})
+	.then(async (res) => {
+		let msg = 'XML CDR reloaded.';
+		if (res.headers.get('content-type')?.includes('application/json')) {
+			try {
+				const data = await res.json();
+				if (data?.message) msg = data.message;
+			} catch {}
+		}
+		if (!res.ok) throw new Error('HTTP ' + res.status);
+		alert(msg); // swap for your toast/snackbar
+	})
+	.catch((err) => {
+		alert('Reload failed: ' + err.message);
+	})
+	.finally(() => {
+		// UI: unlock + restore
+		el.textContent = original_text;
+		el.style.pointerEvents = '';
+		el.removeAttribute('aria-busy');
+	});
+}
+</script><?php
 echo "<div class='hud_box'>\n";
 echo "	<div class='hud_content' ".($widget_details_state == 'disabled' ?: "onclick=\"$('#hud_system_services_details').slideToggle('fast');\""). ">\n";
 echo "		<span class='hud_title'>System Services</span>\n";
@@ -234,7 +277,7 @@ if ($widget_details_state != 'disabled') {
 	foreach ($services as $info) {
 		$label = $info['label'];
 		$status = $info['running']
-			? "<span style='background-color: #28a745; color: white; padding: 2px 8px; border-radius: 10px;'>Yes</span>"
+			? "<span role='button' style='background-color: #28a745; color: white; padding: 2px 8px; border-radius: 10px;' onclick='reload_xml_cdr(this)'>Yes</span>"
 			: "<span style='background-color: #dc3545; color: white; padding: 2px 8px; border-radius: 10px;'>No</span>";
 		$etime = isset($info['etime']) ? format_etime($info['etime']) : '-';
 		$pid = $info['pid'] ?? '';
@@ -244,12 +287,13 @@ if ($widget_details_state != 'disabled') {
 		echo "	<td class='{$row_style[$c]}' hud_text $tooltip_attr>$label</td>\n";
 		echo "	<td class='{$row_style[$c]}' hud_text style='text-align: center;' $tooltip_attr>$status</td>\n";
 		echo "	<td class='{$row_style[$c]}' hud_text style='text-align: center;' $tooltip_attr>$etime</td>\n";
+		echo "	<td class='{$row_style[$c]}' hud_text style='text-align: center;' $tooltip_attr><span role='button' onclick='reload_xml_cdr(this)'>Reload</span></td>\n";
 		echo "			</tr>\n";
 		$c = !$c;
 	}
 
 	echo "		</table>\n";
 	echo "	</div>\n";
-	echo "<span class='hud_expander' onclick=\"$('#hud_system_services_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
+	echo "<span class='hud_expander' onclick=\"$('#hud_system_services_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>\n";
 }
 echo "</div>\n";
