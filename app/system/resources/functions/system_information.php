@@ -84,7 +84,7 @@
 
 //system information
 	function system_information(): array {
-		global $db_type;
+		global $database, $db_type;
 		$system_information = [];
 		$esl = event_socket::create();
 
