@@ -26,6 +26,10 @@
 
 //define the directory class
 	class switch_directory {
+
+		/**
+		 * declare public variables
+		 */
 		public $domain_uuid;
 		public $domain_name;
 		public $db_type;
@@ -60,41 +64,55 @@
 		public $enabled;
 		public $description;
 
+		/**
+		 * Called when the object is created
+		 */
+		public function __construct() {
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
+		}
+
 		// get domain_uuid
-			public function get_domain_uuid() {
-				return $this->domain_uuid;
-			}
+		public function get_domain_uuid() {
+			return $this->domain_uuid;
+		}
+
 		// set domain_uuid
-			public function set_domain_uuid($domain_uuid){
-				$this->domain_uuid = $domain_uuid;
-			}
+		public function set_domain_uuid($domain_uuid){
+			$this->domain_uuid = $domain_uuid;
+		}
 
 		// get domain_name
-			public function get_domain_name() {
-				return $this->domain_name;
-			}
+		public function get_domain_name() {
+			return $this->domain_name;
+		}
+	
 		// set domain_name
-			public function set_domain_name($domain_name){
-				$this->domain_name = $domain_name;
-			}
+		public function set_domain_name($domain_name){
+			$this->domain_name = $domain_name;
+		}
 
 		// get db_type
-			public function get_db_type() {
-				return $this->db_type;
-			}
+		public function get_db_type() {
+			return $this->db_type;
+		}
+
 		// set db_type
-			public function set_db_type($db_type){
-				$this->db_type = $db_type;
-			}
+		public function set_db_type($db_type){
+			$this->db_type = $db_type;
+		}
 
 		// get extension
-			public function get_extension() {
-				return $this->extension;
-			}
+		public function get_extension() {
+			return $this->extension;
+		}
+
 		// set extension
-			public function set_extension($extension){
-				$this->extension = $extension;
-			}
+		public function set_extension($extension){
+			$this->extension = $extension;
+		}
 
 		public function add() {
 			$domain_uuid = $this->domain_uuid;
@@ -183,10 +201,7 @@
 						$p->add('extension_add', 'temp');
 
 					//execute insert
-						$database = new database;
-						$database->app_name = 'switch_directory';
-						$database->app_uuid = 'efc9cdbf-8616-435d-9d21-ae8d4e6b5225';
-						$database->save($array);
+						$this->database->save($array);
 						unset($array);
 
 					//revoke temporary permissions
@@ -286,10 +301,7 @@
 				$p->add('extension_edit', 'temp');
 
 			//execute insert
-				$database = new database;
-				$database->app_name = 'switch_directory';
-				$database->app_uuid = 'efc9cdbf-8616-435d-9d21-ae8d4e6b5225';
-				$database->save($array);
+				$this->database->save($array);
 				unset($array);
 
 			//revoke temporary permissions
@@ -307,10 +319,7 @@
 					$p = permissions::new();
 					$p->add('extension_delete', 'temp');
 				//execute delete
-					$database = new database;
-					$database->app_name = 'switch_directory';
-					$database->app_uuid = 'efc9cdbf-8616-435d-9d21-ae8d4e6b5225';
-					$database->delete($array);
+					$this->database->delete($array);
 					unset($array);
 				//revoke temporary permissions
 					$p->delete('extension_delete', 'temp');
@@ -488,8 +497,7 @@
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "order by call_group asc ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
-			$rows = $database->select($sql, $parameters, 'all');
+			$rows = $this->database->select($sql, $parameters, 'all');
 			$i = 0;
 			$extension_xml_condensed = false;
 			if ($extension_xml_condensed) {

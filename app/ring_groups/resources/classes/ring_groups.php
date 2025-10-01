@@ -28,10 +28,15 @@
 	class ring_groups {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'ring_groups';
+		const app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -50,14 +55,17 @@
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'ring_groups';
-				$this->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-				$this->permission_prefix = 'ring_group_';
-				$this->list_page = 'ring_groups.php';
-				$this->table = 'ring_groups';
-				$this->uuid_prefix = 'ring_group_';
-				$this->toggle_field = 'ring_group_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->permission_prefix = 'ring_group_';
+			$this->list_page = 'ring_groups.php';
+			$this->table = 'ring_groups';
+			$this->uuid_prefix = 'ring_group_';
+			$this->toggle_field = 'ring_group_enabled';
+			$this->toggle_values = ['true','false'];
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 
 		}
 
@@ -95,8 +103,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$ring_groups[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -131,10 +138,7 @@
 									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -206,8 +210,7 @@
 								$sql .= "and ring_group_uuid = :ring_group_uuid ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$parameters['ring_group_uuid'] = $this->ring_group_uuid;
-								$database = new database;
-								$ring_group_context = $database->select($sql, $parameters, 'column');
+								$ring_group_context = $this->database->select($sql, $parameters, 'column');
 								unset($sql, $parameters);
 							}
 
@@ -225,10 +228,7 @@
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//apply settings reminder
@@ -278,8 +278,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$ring_groups[$row['uuid']]['state'] = $row['toggle'];
@@ -308,10 +307,8 @@
 									$p->add('dialplan_edit', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -379,8 +376,7 @@
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = $z = 0;
 										foreach ($rows as $x => $row) {
@@ -398,8 +394,7 @@
 											//users sub table
 												$sql_2 = "select * from v_ring_group_users where ring_group_uuid = :ring_group_uuid";
 												$parameters_2['ring_group_uuid'] = $row['ring_group_uuid'];
-												$database = new database;
-												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
@@ -420,8 +415,7 @@
 											//destinations sub table
 												$sql_3 = "select * from v_ring_group_destinations where ring_group_uuid = :ring_group_uuid";
 												$parameters_3['ring_group_uuid'] = $row['ring_group_uuid'];
-												$database = new database;
-												$rows_3 = $database->select($sql_3, $parameters_3, 'all');
+												$rows_3 = $this->database->select($sql_3, $parameters_3, 'all');
 												if (is_array($rows_3) && @sizeof($rows_3) != 0) {
 													foreach ($rows_3 as $row_3) {
 
@@ -442,8 +436,7 @@
 											//ring group dialplan record
 												$sql_4 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 												$parameters_4['dialplan_uuid'] = $row['dialplan_uuid'];
-												$database = new database;
-												$dialplan = $database->select($sql_4, $parameters_4, 'row');
+												$dialplan = $this->database->select($sql_4, $parameters_4, 'row');
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 													//copy data
@@ -477,10 +470,8 @@
 									$p->add("dialplan_add", "temp");
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,7 +30,7 @@
 class plugin_email {
 
 	/**
-	 * Define variables and their scope
+	 * Declare public variables
 	 */
 	public $domain_name;
 	public $domain_uuid;
@@ -40,6 +40,16 @@ class plugin_email {
 	public $user_email;
 	public $contact_uuid;
 	public $debug;
+
+	/**
+	 * Called when the object is created
+	 */
+	public function __construct() {
+		//connect to the database
+		if (empty($this->database)) {
+			$this->database = database::new();
+		}
+	}
 
 	/**
 	 * time based one time password with email
@@ -126,8 +136,7 @@ class plugin_email {
 				}
 				$sql .= "and (user_type = 'default' or user_type is null) ";
 				$parameters['username'] = $_REQUEST['username'];
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				unset($parameters);
 
 				//set class variables
@@ -198,7 +207,7 @@ class plugin_email {
 				//$sql .= "where user_uuid = :user_uuid;";
 				//$parameters['auth_code'] = $auth_code_hash;
 				//$parameters['user_uuid'] = $this->user_uuid;
-				//$database->execute($sql, $parameters);
+				//$this->database->execute($sql, $parameters);
 				//unset($sql);
 
 				//email settings
@@ -228,8 +237,7 @@ class plugin_email {
 				$parameters['template_category'] = 'authentication';
 				$parameters['template_subcategory'] = 'email';
 				$parameters['template_type'] = 'html';
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				$email_subject = $row['template_subject'];
 				$email_body = $row['template_body'];
 				unset($sql, $parameters, $row);
@@ -273,11 +281,8 @@ class plugin_email {
 					$array['email_queue'][0]["email_uuid"] = $email_uuid;
 					$array['email_queue'][0]["email_action_before"] = null;
 					$array['email_queue'][0]["email_action_after"] = null;
-					$database = new database;
-					$database->app_name = 'email queue';
-					$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
-					$database->save($array);
-					$err = $database->message;
+					$this->database->save($array);
+					$err = $this->database->message;
 					unset($array);
 
 					//remove the temporary permission
@@ -378,8 +383,7 @@ class plugin_email {
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				}
 				$parameters['username'] = $_SESSION["username"];
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				$this->user_uuid = $row['user_uuid'];
 				$this->user_email = $row['user_email'];
 				$this->contact_uuid = $row['contact_uuid'];
@@ -433,8 +437,7 @@ class plugin_email {
 						$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 					}
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
-					$database = new database;
-					$row = $database->select($sql, $parameters, 'row');
+					$row = $this->database->select($sql, $parameters, 'row');
 					unset($parameters);
 
 					//set a few session variables
@@ -479,8 +482,7 @@ class plugin_email {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 					$parameters['user_uuid'] = $this->user_uuid;
 					$parameters['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-					$database = new database;
-					$user_log_count = $database->select($sql, $parameters, 'all');
+					$user_log_count = $this->database->select($sql, $parameters, 'all');
 					//view_array($user_log_count);
 					unset($sql, $parameters);
 				*/

@@ -15,10 +15,13 @@ class sounds {
 	public $full_path;
 
 	/**
-	* Class constructor
-	*/
+	 * Called when the object is created
+	 */
 	public function __construct() {
-
+		//connect to the database
+		if (empty($this->database)) {
+			$this->database = database::new();
+		}
 	}
 
 	/**
@@ -45,8 +48,7 @@ class sounds {
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "order by recording_name asc ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-				$database = new database;
-				$recordings = $database->select($sql, $parameters, 'all');
+				$recordings = $this->database->select($sql, $parameters, 'all');
 				if (is_array($recordings) && @sizeof($recordings) != 0) {
 					foreach ($recordings as $x => $row) {
 						$recording_name = $row["recording_name"];
@@ -63,8 +65,7 @@ class sounds {
 				$sql = "select * from v_phrases ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-				$database = new database;
-				$phrases = $database->select($sql, $parameters, 'all');
+				$phrases = $this->database->select($sql, $parameters, 'all');
 				if (is_array($phrases) && @sizeof($phrases) != 0) {
 					foreach ($phrases as $row) {
 						$array['phrases'][$x]['name'] = "phrase:".$row["phrase_name"];

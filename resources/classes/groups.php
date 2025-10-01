@@ -31,14 +31,22 @@
 	class groups {
 
 		/**
-		* declare the variables
+		 * declare constant variables
+		 */
+		const app_name = 'groups';
+		const app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+
+		/**
+		 * declare public variables
+		 */
+		public  $group_uuid;
+		public  $group_level;
+
+		/**
+		* declare private variables
 		*/
 		private $database;
-		private $app_name;
-		private $app_uuid;
-		public  $group_uuid;
 		private $groups;
-		public  $group_level;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -51,16 +59,13 @@
 		 * called when the object is created
 		 */
 		public function __construct(database $database = null, $domain_uuid = null, $user_uuid = null) {
-			//assign the variables
-			$this->app_name = 'groups';
-			$this->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 
 			//handle the database object
 			if (isset($database)) {
 				$this->database = $database;
 			}
 			else {
-				$this->database = new database;
+				$this->database = database::new();
 			}
 
 			//set the domain_uuid

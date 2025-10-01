@@ -29,6 +29,12 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	class conference_centers {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'conference_centers';
+		const app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+
+		/**
 		 * declare public variables
 		 */
 		public $domain_uuid;
@@ -40,30 +46,29 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		public $search;
 		public $count;
 		public $created_by;
-
 		public $toggle_field;
 
 		/**
 		 * declare private variables
 		 */
-		private $fields;
 
-		private $app_name;
-		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
 		private $toggle_values;
+		private $fields;
 
 		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
 
-			//assign private variables
-				$this->app_name = 'conference_centers';
-				$this->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 
 		}
 
@@ -96,8 +101,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 					$parameters['created_by'] = $this->created_by;
 				}
 				$parameters['domain_uuid'] = $this->domain_uuid;
-				$database = new database;
-				return $database->select($sql, $parameters, 'column');
+				return $this->database->select($sql, $parameters, 'column');
 		}
 
 		/**
@@ -170,8 +174,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['rows_per_page'] = $this->rows_per_page;
 				$parameters['offset'] = $this->offset;
-				$database = new database;
-				$conference_rooms = $database->select($sql, $parameters, 'all');
+				$conference_rooms = $this->database->select($sql, $parameters, 'all');
 
 				if (!empty($conference_rooms)) {
 					$x = 0;
@@ -226,8 +229,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 						//$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['conference_session_uuid'] = $conference_session_uuid;
 						//$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$conference_sessions = $database->select($sql, $parameters, 'all');
+						$conference_sessions = $this->database->select($sql, $parameters, 'all');
 						if (is_array($conference_sessions)) {
 							foreach ($conference_sessions as $row) {
 								$recording = $row['recording'];
@@ -330,8 +332,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 										$sql .= "and conference_center_uuid = :conference_center_uuid ";
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 										$parameters['conference_center_uuid'] = $record['uuid'];
-										$database = new database;
-										$dialplan_uuid = $database->select($sql, $parameters, 'column');
+										$dialplan_uuid = $this->database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
 
 									//create array
@@ -353,10 +354,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add('dialplan_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -429,10 +427,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add('conference_room_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -493,10 +488,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add('conference_user_delete', 'temp');
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -552,8 +544,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									foreach ($rows as $row) {
 										$conference_centers[$row['uuid']]['state'] = $row['toggle'];
@@ -581,10 +572,8 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 									$p->add("dialplan_edit", "temp");
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -658,8 +647,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -701,10 +689,8 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 							if (!empty($array)) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -759,8 +745,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									foreach ($rows as $x => $row) {
 
@@ -780,10 +765,8 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 							if (!empty($array)) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message

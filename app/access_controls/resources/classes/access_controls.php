@@ -6,10 +6,15 @@
 	class access_controls {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'access_controls';
+		const app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -21,9 +26,12 @@
 		public function __construct() {
 
 			//assign private variables
-			$this->app_name = 'access_controls';
-			$this->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$this->list_page = 'access_controls.php';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 		}
 
 		/**
@@ -69,10 +77,7 @@
 						$p->add('access_control_node_delete', 'temp');
 
 						//execute delete
-						$database = new database;
-						$database->app_name = $this->app_name;
-						$database->app_uuid = $this->app_uuid;
-						$database->delete($array);
+						$this->database->delete($array);
 						unset($array);
 
 						//revoke temporary permissions
@@ -128,10 +133,7 @@
 					if (is_array($array) && @sizeof($array) != 0) {
 
 						//execute delete
-						$database = new database;
-						$database->app_name = $this->app_name;
-						$database->app_uuid = $this->app_uuid;
-						$database->delete($array);
+						$this->database->delete($array);
 						unset($array);
 
 						//clear the cache
@@ -189,8 +191,7 @@
 						//primary table
 						$sql = "select * from v_" . $this->table . " ";
 						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-						$database = new database;
-						$rows = $database->select($sql, $parameters, 'all');
+						$rows = $this->database->select($sql, $parameters, 'all');
 						if (is_array($rows) && @sizeof($rows) != 0) {
 							$y = 0;
 							foreach ($rows as $x => $row) {
@@ -206,8 +207,7 @@
 								//nodes sub table
 								$sql_2 = "select * from v_access_control_nodes where access_control_uuid = :access_control_uuid";
 								$parameters_2['access_control_uuid'] = $row['access_control_uuid'];
-								$database = new database;
-								$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+								$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 								if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 									foreach ($rows_2 as $row_2) {
 
@@ -236,10 +236,7 @@
 						$p->add('access_control_node_add', 'temp');
 
 						//save the array
-						$database = new database;
-						$database->app_name = $this->app_name;
-						$database->app_uuid = $this->app_uuid;
-						$database->save($array);
+						$this->database->save($array);
 						unset($array);
 
 						//revoke temporary permissions

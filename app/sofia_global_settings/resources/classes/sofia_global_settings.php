@@ -30,10 +30,15 @@
 	class sofia_global_settings {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'sofia_global_settings';
+		const app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
+		private $database;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -46,14 +51,17 @@
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'sofia_global_settings';
-				$this->app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
-				$this->name = 'sofia_global_setting';
-				$this->table = 'sofia_global_settings';
-				$this->toggle_field = 'global_setting_enabled';
-				$this->toggle_values = ['true','false'];
-				$this->description_field = 'global_setting_description';
-				$this->location = 'sofia_global_settings.php';
+			$this->name = 'sofia_global_setting';
+			$this->table = 'sofia_global_settings';
+			$this->toggle_field = 'global_setting_enabled';
+			$this->toggle_values = ['true','false'];
+			$this->description_field = 'global_setting_description';
+			$this->location = 'sofia_global_settings.php';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 		}
 
 		/**
@@ -91,10 +99,7 @@
 						//delete the checked rows
 							if (!empty($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -134,8 +139,7 @@
 							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, null, 'all');
+								$rows = $this->database->select($sql, null, 'all');
 								if (!empty($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -158,10 +162,8 @@
 						//save the changes
 							if (!empty($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -204,8 +206,7 @@
 							if (!empty($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where sofia_global_setting_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, null, 'all');
+								$rows = $this->database->select($sql, null, 'all');
 								if (!empty($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
@@ -227,10 +228,8 @@
 						//save the changes and set the message
 							if (!empty($array) && @sizeof($array) != 0) {
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message

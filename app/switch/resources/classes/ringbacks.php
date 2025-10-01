@@ -27,87 +27,103 @@
 
 	class ringbacks {
 
-		//define variables
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'ringbacks';
+		const app_uuid = 'b63db353-e1c6-4401-8f10-101a6ee73b74';
+
+		/**
+		 * declare public variables
+		 */
 		public $domain_uuid;
 		public $ringtones_list;
+
+		/**
+		 * declare private variables
+		 */
 		private $tones_list;
 		private $music_list;
 		private $recordings_list;
 		private $default_ringback_label;
 		private $streams;
-		
-		//class constructor
+
+		/**
+		 * called when the object is created
+		 */
 		public function __construct() {
 			//set the domain_uuid
-				$this->domain_uuid = $_SESSION['domain_uuid'];
+			$this->domain_uuid = $_SESSION['domain_uuid'];
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 
 			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
+			$language = new text;
+			$text = $language->get();
 
 			//get the ringtones
-				$sql = "select * from v_vars ";
-				$sql .= "where var_category = 'Ringtones' ";
-				$sql .= "order by var_name asc ";
-				$database = new database;
-				$ringtones = $database->select($sql, null, 'all');
-				if (!empty($ringtones)) {
-					foreach ($ringtones as $ringtone) {
-						$ringtone = $ringtone['var_name'];
-						if (isset($text['label-'.$ringtone])) {
-							$label = $text['label-'.$ringtone];
-						}
-						else {
-							$label = $ringtone;
-						}
-						$ringtones_list[$ringtone] = $label;
+			$sql = "select * from v_vars ";
+			$sql .= "where var_category = 'Ringtones' ";
+			$sql .= "order by var_name asc ";
+			$ringtones = $this->database->select($sql, null, 'all');
+			if (!empty($ringtones)) {
+				foreach ($ringtones as $ringtone) {
+					$ringtone = $ringtone['var_name'];
+					if (isset($text['label-'.$ringtone])) {
+						$label = $text['label-'.$ringtone];
 					}
+					else {
+						$label = $ringtone;
+					}
+					$ringtones_list[$ringtone] = $label;
 				}
-				$this->ringtones_list = $ringtones_list ?? '';
-				unset($sql, $ringtones, $ringtone, $ringtones_list);
+			}
+			$this->ringtones_list = $ringtones_list ?? '';
+			unset($sql, $ringtones, $ringtone, $ringtones_list);
 
 			//get the default_ringback label
-				/*
-				$sql = "select * from v_vars where var_name = 'ringback' ";
-				$database = new database;
-				$row = $database->select($sql, null, 'row');
-				unset($sql);
-				$default_ringback = (string) $row['var_value'];
-				$default_ringback = preg_replace('/\A\$\${/',"",$default_ringback);
-				$default_ringback = preg_replace('/}\z/',"",$default_ringback);
-				#$label = $text['label-'.$default_ringback];
-				#if($label == "") {
-					$label = $default_ringback;
-				#}
-				$this->default_ringback_label = $label;
-				unset($results, $default_ringback, $label);
-				*/
+			/*
+			$sql = "select * from v_vars where var_name = 'ringback' ";
+			$row = $this->database->select($sql, null, 'row');
+			unset($sql);
+			$default_ringback = (string) $row['var_value'];
+			$default_ringback = preg_replace('/\A\$\${/',"",$default_ringback);
+			$default_ringback = preg_replace('/}\z/',"",$default_ringback);
+			#$label = $text['label-'.$default_ringback];
+			#if($label == "") {
+				$label = $default_ringback;
+			#}
+			$this->default_ringback_label = $label;
+			unset($results, $default_ringback, $label);
+			*/
 
 			//get the tones
-				$tones = new tones;
-				$this->tones_list = $tones->tones_list();
+			$tones = new tones;
+			$this->tones_list = $tones->tones_list();
 
 			//get music on hold	and recordings
-				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
-					$music = new switch_music_on_hold;
-					$this->music_list = $music->get();
-				}
-				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
-					$recordings = new switch_recordings;
-					$this->recordings_list = $recordings->list_recordings();
-				}
+			if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
+				$music = new switch_music_on_hold;
+				$this->music_list = $music->get();
+			}
+			if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
+				$recordings = new switch_recordings;
+				$this->recordings_list = $recordings->list_recordings();
+			}
 
-				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
-					$sql = "select * from v_streams ";
-					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql .= "and stream_enabled = 'true' ";
-					$sql .= "order by stream_name asc ";
-					$parameters['domain_uuid'] = $this->domain_uuid;
-					$database = new database;
-					$streams = $database->select($sql, $parameters, 'all');
-					$this->streams = $streams;
-					unset($sql, $parameters, $streams, $row);
-				}
+			if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
+				$sql = "select * from v_streams ";
+				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$sql .= "and stream_enabled = 'true' ";
+				$sql .= "order by stream_name asc ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$streams = $this->database->select($sql, $parameters, 'all');
+				$this->streams = $streams;
+				unset($sql, $parameters, $streams, $row);
+			}
 		}
 
 		public function valid($value) {

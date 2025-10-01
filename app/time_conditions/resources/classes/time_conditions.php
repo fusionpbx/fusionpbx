@@ -28,10 +28,17 @@
 		class time_conditions {
 
 			/**
+			 * declare constant variables
+			 */
+			const app_name = 'time_conditions';
+			const app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
+
+			/**
 			* declare public/private properties
 			*/
 			private $app_name;
 			private $app_uuid;
+			private $database;
 			private $permission_prefix;
 			private $list_page;
 			private $table;
@@ -45,14 +52,17 @@
 				$this->dialplan_global = false;
 
 				//assign property defaults
-					$this->app_name = 'time_conditions';
-					$this->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
-					$this->permission_prefix = 'time_condition_';
-					$this->list_page = 'time_conditions.php';
-					$this->table = 'dialplans';
-					$this->uuid_prefix = 'dialplan_';
-					$this->toggle_field = 'dialplan_enabled';
-					$this->toggle_values = ['true','false'];
+				$this->permission_prefix = 'time_condition_';
+				$this->list_page = 'time_conditions.php';
+				$this->table = 'dialplans';
+				$this->uuid_prefix = 'dialplan_';
+				$this->toggle_field = 'dialplan_enabled';
+				$this->toggle_values = ['true','false'];
+
+				//connect to the database
+				if (empty($this->database)) {
+					$this->database = database::new();
+				}
 			}
 
 			/**
@@ -88,8 +98,7 @@
 											$sql = "select dialplan_context from v_dialplans ";
 											$sql .= "where dialplan_uuid = :dialplan_uuid ";
 											$parameters['dialplan_uuid'] = $record['uuid'];
-											$database = new database;
-											$dialplan_contexts[] = $database->select($sql, $parameters, 'column');
+											$dialplan_contexts[] = $this->database->select($sql, $parameters, 'column');
 											unset($sql, $parameters);
 
 									}
@@ -104,10 +113,7 @@
 										$p->add('dialplan_detail_delete', 'temp');
 
 									//execute delete
-										$database = new database;
-										$database->app_name = $this->app_name;
-										$database->app_uuid = $this->app_uuid;
-										$database->delete($array);
+										$this->database->delete($array);
 
 									//revoke temporary permissions
 										$p->delete('dialplan_delete', 'temp');
@@ -169,8 +175,7 @@
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
-									$rows = $database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $row) {
 											$states[$row['uuid']] = $row['toggle'];
@@ -196,10 +201,8 @@
 										$p->add('dialplan_edit', 'temp');
 
 									//save the array
-										$database = new database;
-										$database->app_name = $this->app_name;
-										$database->app_uuid = $this->app_uuid;
-										$database->save($array);
+
+										$this->database->save($array);
 										unset($array);
 
 									//revoke temporary permissions
@@ -262,8 +265,7 @@
 									//primary table
 										$sql = "select * from v_".$this->table." ";
 										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-										$database = new database;
-										$rows = $database->select($sql, $parameters ?? null, 'all');
+										$rows = $this->database->select($sql, $parameters ?? null, 'all');
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
@@ -279,8 +281,7 @@
 												//details sub table
 													$sql_2 = "select * from v_dialplan_details where dialplan_uuid = :dialplan_uuid";
 													$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
-													$database = new database;
-													$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+													$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 													if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 														foreach ($rows_2 as $row_2) {
 
@@ -314,10 +315,7 @@
 										$p->add('dialplan_detail_add', 'temp');
 
 									//save the array
-										$database = new database;
-										$database->app_name = $this->app_name;
-										$database->app_uuid = $this->app_uuid;
-										$database->save($array);
+										$this->database->save($array);
 										unset($array);
 
 									//revoke temporary permissions

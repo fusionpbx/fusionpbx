@@ -32,10 +32,14 @@
 	class domains {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'domains';
+		const app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
+
+		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -53,8 +57,6 @@
 		 */
 		public function __construct($setting_array = []) {
 			//assign the variables
-			$this->app_name = 'domains';
-			$this->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 			$this->name = 'domain';
 			$this->table = 'domains';
 			$this->toggle_field = 'domain_enabled';
@@ -271,8 +273,6 @@
 						//delete the checked rows
 							if (is_array($domain_array) && @sizeof($domain_array) != 0) {
 								//execute delete
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
 									$this->database->delete($domain_array);
 
 								//set message
@@ -338,8 +338,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 
@@ -404,8 +403,7 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->database->app_name = $this->app_name;
-									$this->database->app_uuid = $this->app_uuid;
+
 									$this->database->save($array);
 									unset($array);
 

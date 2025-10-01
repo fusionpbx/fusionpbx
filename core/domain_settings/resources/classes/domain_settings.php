@@ -28,10 +28,16 @@
 	class domain_settings {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'domain_settings';
+		const app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -51,15 +57,17 @@
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'domain_settings';
-				$this->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-				$this->permission_prefix = 'domain_setting_';
-				$this->list_page = PROJECT_PATH."/core/domains/domain_edit.php?id=".urlencode($this->domain_uuid ?? '');
-				$this->table = 'domain_settings';
-				$this->uuid_prefix = 'domain_setting_';
-				$this->toggle_field = 'domain_setting_enabled';
-				$this->toggle_values = ['true','false'];
+			$this->permission_prefix = 'domain_setting_';
+			$this->list_page = PROJECT_PATH."/core/domains/domain_edit.php?id=".urlencode($this->domain_uuid ?? '');
+			$this->table = 'domain_settings';
+			$this->uuid_prefix = 'domain_setting_';
+			$this->toggle_field = 'domain_setting_enabled';
+			$this->toggle_values = ['true','false'];
 
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 		}
 
 		/**
@@ -95,10 +103,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -141,8 +146,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $this->domain_uuid;
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -165,10 +169,8 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -220,8 +222,7 @@
 											$sql = "select * from v_domain_settings ";
 											$sql .= "where domain_setting_uuid = :domain_setting_uuid ";
 											$parameters['domain_setting_uuid'] = $uuid;
-											$database = new database;
-											$row = $database->select($sql, $parameters, 'row');
+											$row = $this->database->select($sql, $parameters, 'row');
 											if (is_array($row) && sizeof($row) != 0) {
 												$domain_setting_category = $row["domain_setting_category"];
 												$domain_setting_subcategory = $row["domain_setting_subcategory"];
@@ -250,8 +251,7 @@
 												$parameters['domain_setting_category'] = $domain_setting_category;
 												$parameters['domain_setting_subcategory'] = $domain_setting_subcategory;
 												$parameters['domain_setting_name'] = $domain_setting_name;
-												$database = new database;
-												$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
+												$target_domain_setting_uuid = $this->database->select($sql, $parameters, 'column');
 
 												$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
 												unset($sql, $parameters);
@@ -285,10 +285,9 @@
 
 											//execute
 											if (is_uuid($array['domain_settings'][0]['domain_setting_uuid'])) {
-												$database = new database;
-												$database->app_name = 'domain_settings';
-												$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-												$database->save($array);
+												$this->database->app_name = 'domain_settings';
+												$this->database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+												$this->database->save($array);
 												unset($array);
 
 												$settings_copied++;
@@ -305,8 +304,7 @@
 											$sql = "select * from v_domain_settings ";
 											$sql .= "where domain_setting_uuid = :domain_setting_uuid ";
 											$parameters['domain_setting_uuid'] = $uuid;
-											$database = new database;
-											$row = $database->select($sql, $parameters, 'row');
+											$row = $this->database->select($sql, $parameters, 'row');
 											if (is_array($row) && sizeof($row) != 0) {
 												$domain_setting_category = $row["domain_setting_category"];
 												$domain_setting_subcategory = $row["domain_setting_subcategory"];
@@ -332,8 +330,7 @@
 											$parameters['default_setting_category'] = $domain_setting_category;
 											$parameters['default_setting_subcategory'] = $domain_setting_subcategory;
 											$parameters['default_setting_name'] = $domain_setting_name;
-											$database = new database;
-											$target_default_setting_uuid = $database->select($sql, $parameters, 'column');
+											$target_default_setting_uuid = $this->database->select($sql, $parameters, 'column');
 
 											$action = is_uuid($target_default_setting_uuid) ? 'update' : 'add';
 											unset($sql, $parameters);
@@ -361,10 +358,9 @@
 
 											//execute
 											if (is_uuid($array['default_settings'][0]['default_setting_uuid'])) {
-												$database = new database;
-												$database->app_name = 'domain_settings';
-												$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
-												$database->save($array);
+												$this->database->app_name = 'domain_settings';
+												$this->database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
+												$this->database->save($array);
 												unset($array);
 
 												$settings_copied++;

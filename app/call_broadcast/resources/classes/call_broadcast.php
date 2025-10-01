@@ -31,10 +31,16 @@
 	class call_broadcast {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_broadcast';
+		const app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
+
+		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -46,12 +52,15 @@
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'call_broadcast';
-				$this->app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
-				$this->permission_prefix = 'call_broadcast_';
-				$this->list_page = 'call_broadcast.php';
-				$this->table = 'call_broadcasts';
-				$this->uuid_prefix = 'call_broadcast_';
+			$this->permission_prefix = 'call_broadcast_';
+			$this->list_page = 'call_broadcast.php';
+			$this->table = 'call_broadcasts';
+			$this->uuid_prefix = 'call_broadcast_';
+
+			//connect to the database
+			if (empty($this->database)) {
+				$this->database = database::new();
+			}
 
 		}
 
@@ -88,10 +97,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -136,8 +142,7 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
 
@@ -157,10 +162,8 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message
