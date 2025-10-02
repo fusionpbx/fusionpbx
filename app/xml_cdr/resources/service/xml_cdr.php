@@ -110,8 +110,20 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
+//make sure the database connection is available
+	while (!$database->is_connected()) {
+		//connect to the database
+		$database->connect();
+
+		//reload settings after connection to the database
+		$settings = new settings(['database' => $database]);
+
+		//sleep for a moment
+		sleep(3);
+	}
+
 //get the xml_cdr directory
-	$xml_cdr_dir = $settings->get('switch', 'log').'/xml_cdr';
+	$xml_cdr_dir = $settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
 
 //rename the directory
 	if (file_exists($xml_cdr_dir.'/failed/invalid_xml')) {
@@ -153,6 +165,9 @@
 			while (!$database->is_connected()) {
 				//connect to the database
 				$database->connect();
+
+				//reload settings after connection to the database
+				$settings = new settings(['database' => $database]);
 
 				//sleep for a moment
 				sleep(3);
