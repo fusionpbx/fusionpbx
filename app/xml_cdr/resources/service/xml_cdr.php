@@ -144,20 +144,20 @@
 //service loop
 	while (true) {
 
-		//make sure the database connection is available
-		while (!$database->is_connected()) {
-			//connect to the database
-			$database->connect();
-
-			//sleep for a moment
-			sleep(3);
-		}
-
 		//get the list of call detail records, and limit the number of records
 		$xml_cdr_array = array_slice(glob($xml_cdr_dir . '/*.cdr.xml'), 0, 100);
 
 		//process the call detail records
 		if (!empty($xml_cdr_array)) {
+			//make sure the database connection is available
+			while (!$database->is_connected()) {
+				//connect to the database
+				$database->connect();
+
+				//sleep for a moment
+				sleep(3);
+			}
+
 			foreach ($xml_cdr_array as $xml_cdr_file) {
 				//move the files that are too large or zero file size to the failed size directory
 				if (filesize($xml_cdr_file) >= (3 * 1024 * 1024) || filesize($xml_cdr_file) == 0) {
