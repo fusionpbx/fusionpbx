@@ -287,7 +287,7 @@
 						}
 						rename($this->xml_cdr_dir.'/'.$this->file, $this->xml_cdr_dir.'/failed/sql/'.$this->file);
 					}
-					elseif (!file_exists($this->xml_cdr_dir.'/failed') {
+					elseif (!file_exists($this->xml_cdr_dir.'/failed')) {
 						mkdir($this->xml_cdr_dir.'/failed', 0770, true);
 						//echo "Failed to create ".$this->xml_cdr_dir."/failed\n";
 						rename($this->xml_cdr_dir.'/'.$this->file, $this->xml_cdr_dir.'/failed/'.$this->file);
@@ -366,7 +366,7 @@
 				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				if ($xml === false) {
 					//failed to load the XML, move the XML file to the failed directory
-					if (file_exists($this->xml_cdr_dir) {
+					if (file_exists($this->xml_cdr_dir)) {
 						rename($this->xml_cdr_dir.'/'.$this->file, $this->xml_cdr_dir.'/failed/xml/'.$this->file);
 					}
 
