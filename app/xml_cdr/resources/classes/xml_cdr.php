@@ -88,6 +88,7 @@
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
+		private $xml_cdr_dir;
 
 		/**
 		 * additional private variables
@@ -102,18 +103,17 @@
 		public function __construct($setting_array = []) {
 
 			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
+			$this->database = database::new();
 
 			//get the settings object
 			if (empty($setting_array['settings'])) {
-				$this->settings = new settings();
+				$this->settings = new settings(['database' => $this->database]);
 			} else {
 				$this->settings = $setting_array['settings'];
 			}
+
+			//set the directory
+			$this->xml_cdr_dir = $this->settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
 
 			//get the destinations object
 			if (!empty($setting_array['destinations'])) {
@@ -260,11 +260,6 @@
 
 			if (!empty($this->array)) {
 
-				//set the directory
-				if (!empty($this->settings->get('switch', 'log'))) {
-					$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
-				}
-
 				//add the temporary permission
 				$p = permissions::new();
 				$p->add("xml_cdr_add", "temp");
@@ -279,29 +274,27 @@
 				$response = $this->database->save($this->array, false);
 				if ($response['code'] == '200') {
 					//delete the file after it is saved to the database
-					if (!empty($xml_cdr_dir) && file_exists($xml_cdr_dir.'/'.$this->file)) {
-						unlink($xml_cdr_dir.'/'.$this->file);
+					if (file_exists($this->xml_cdr_dir.'/'.$this->file)) {
+						unlink($this->xml_cdr_dir.'/'.$this->file);
 					}
 				}
 				else {
 					//move the file to a failed directory
-					if (!empty($xml_cdr_dir) && !$response) {
-						if (!file_exists($xml_cdr_dir.'/failed/sql')) {
-							mkdir($xml_cdr_dir.'/failed/sql', 0770, true);
-							//echo "Failed to create ".$xml_cdr_dir."/failed/sql\n";
+					if (!$response) {
+						if (!file_exists($this->xml_cdr_dir.'/failed/sql')) {
+							mkdir($this->xml_cdr_dir.'/failed/sql', 0770, true);
+							//echo "Failed to create ".$this->xml_cdr_dir."/failed/sql\n";
 						}
-						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/sql/'.$this->file);
+						rename($this->xml_cdr_dir.'/'.$this->file, $this->xml_cdr_dir.'/failed/sql/'.$this->file);
 					}
-					elseif (!empty($xml_cdr_dir)) {
-						if (!file_exists($xml_cdr_dir.'/failed')) {
-							mkdir($xml_cdr_dir.'/failed', 0770, true);
-							//echo "Failed to create ".$xml_cdr_dir."/failed\n";
-						}
-						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/'.$this->file);
+					elseif (!file_exists($this->xml_cdr_dir.'/failed') {
+						mkdir($this->xml_cdr_dir.'/failed', 0770, true);
+						//echo "Failed to create ".$this->xml_cdr_dir."/failed\n";
+						rename($this->xml_cdr_dir.'/'.$this->file, $this->xml_cdr_dir.'/failed/'.$this->file);
 					}
 
 					//send an error message
-					//echo "failed file moved to ".$xml_cdr_dir."/failed/".$this->file."\n";
+					//echo "failed file moved to ".$this->xml_cdr_dir."/failed/".$this->file."\n";
 				}
 
 				//clear the array
@@ -328,12 +321,12 @@
 
 			//set the directory
 				if (!empty($this->settings->get('switch', 'log'))) {
-					$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
+					$this->xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
 				}
 
 			//xml string is empty
-				if (empty($xml_string) && !empty($xml_cdr_dir) && !empty($this->file)) {
-					unlink($xml_cdr_dir.'/'.$this->file);
+				if (empty($xml_string) && !empty($this->file)) {
+					unlink($this->xml_cdr_dir.'/'.$this->file);
 					return false;
 				}
 
@@ -373,8 +366,8 @@
 				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				if ($xml === false) {
 					//failed to load the XML, move the XML file to the failed directory
-					if (!empty($xml_cdr_dir)) {
-						rename($xml_cdr_dir.'/'.$this->file, $xml_cdr_dir.'/failed/xml/'.$this->file);
+					if (file_exists($this->xml_cdr_dir) {
+						rename($this->xml_cdr_dir.'/'.$this->file, $this->xml_cdr_dir.'/failed/xml/'.$this->file);
 					}
 
 					//return without saving the invalid xml
@@ -384,12 +377,10 @@
 			//skip call detail records for calls blocked by call block
 				if (isset($xml->variables->call_block) && $xml->variables->call_block == 'true' && !$this->settings->get('call_block', 'save_call_detail_record', true)) {
 					//delete the xml cdr file
-					if (!empty($this->settings->get('switch', 'log'))) {
-						$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
-						if (file_exists($xml_cdr_dir.'/'.$this->file)) {
-							unlink($xml_cdr_dir.'/'.$this->file);
-						}
+					if (file_exists($this->xml_cdr_dir.'/'.$this->file)) {
+						unlink($this->xml_cdr_dir.'/'.$this->file);
 					}
+
 
 					//return without saving
 					return false;
@@ -413,12 +404,10 @@
 						$duplicate_uuid = true;
 
 						//remove the file as the record already exists in the database
-						if (!empty($this->settings->get('switch', 'log'))) {
-							$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
-							if (file_exists($xml_cdr_dir.'/'.$this->file)) {
-								unlink($xml_cdr_dir.'/'.$this->file);
-							}
+						if (file_exists($this->xml_cdr_dir.'/'.$this->file)) {
+							unlink($this->xml_cdr_dir.'/'.$this->file);
 						}
+
 
 						//return without saving
 						return false;
@@ -1578,20 +1567,18 @@
 		}
 
 		public function move_to_failed($failed_file) {
-			$xml_cdr_dir = $this->settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
-			if (!file_exists($xml_cdr_dir.'/failed')) {
-				mkdir($xml_cdr_dir.'/failed', 0770, true);
-				//echo "Failed to create ".$xml_cdr_dir."/failed\n";
+			if (!file_exists($this->xml_cdr_dir.'/failed')) {
+				mkdir($this->xml_cdr_dir.'/failed', 0770, true);
+				//echo "Failed to create ".$this->xml_cdr_dir."/failed\n";
 			}
-			rename($xml_cdr_dir.'/'.$failed_file, $xml_cdr_dir.'/failed/'.$failed_file);
+			rename($this->xml_cdr_dir.'/'.$failed_file, $this->xml_cdr_dir.'/failed/'.$failed_file);
 		}
 
 		/**
 		 * get xml from the filesystem and save it to the database
 		 */
 		public function read_files() {
-			$xml_cdr_dir = $this->settings->get('switch', 'log').'/xml_cdr';
-			$dir_handle = opendir($xml_cdr_dir);
+			$dir_handle = opendir($this->xml_cdr_dir);
 			$x = 0;
 			while($file = readdir($dir_handle)) {
 				if ($file != '.' && $file != '..') {
@@ -1599,7 +1586,7 @@
 					//$file = 'a_aa76e0af-461e-4d46-be23-433260307ede.cdr.xml';
 
 					//process the XML files
-					if ( !is_dir($xml_cdr_dir . '/' . $file) ) {
+					if (!is_dir($this->xml_cdr_dir . '/' . $file)) {
 						//get the leg of the call and the file prefix
 							if (substr($file, 0, 2) == "a_") {
 								$leg = "a";
@@ -1632,23 +1619,21 @@
 							}
 
 						//move the files that are too large or zero file size to the failed directory
-							if ($import && (filesize($xml_cdr_dir.'/'.$file) >= 3000000 || filesize($xml_cdr_dir.'/'.$file) == 0)) {
+							if ($import && (filesize($this->xml_cdr_dir.'/'.$file) >= 3000000 || filesize($this->xml_cdr_dir.'/'.$file) == 0)) {
 								//echo "WARNING: File too large or zero file size. Moving $file to failed\n";
-								if (!empty($xml_cdr_dir)) {
-									if (!file_exists($xml_cdr_dir.'/failed')) {
-										mkdir($xml_cdr_dir.'/failed', 0770, true);
-										//echo "Failed to create ".$xml_cdr_dir."/failed\n";
-									}
-									if (rename($xml_cdr_dir.'/'.$file, $xml_cdr_dir.'/failed/'.$file)) {
-										//echo "Moved $file successfully\n";
-									}
+								if (!file_exists($this->xml_cdr_dir.'/failed')) {
+									mkdir($this->xml_cdr_dir.'/failed', 0770, true);
+									//echo "Failed to create ".$this->xml_cdr_dir."/failed\n";
+								}
+								if (rename($this->xml_cdr_dir.'/'.$file, $this->xml_cdr_dir.'/failed/'.$file)) {
+									//echo "Moved $file successfully\n";
 								}
 							}
 
 						//import the call detail files are less than 3 mb - 3 million bytes
 							if ($import) {
 								//get the xml cdr string
-									$call_details = file_get_contents($xml_cdr_dir.'/'.$file);
+									$call_details = file_get_contents($this->xml_cdr_dir.'/'.$file);
 
 								//set the file
 									$this->file = $file;
