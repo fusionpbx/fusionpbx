@@ -2276,32 +2276,35 @@
 			//set table name for query
 			$table = 'xml_cdr';
 
+			//get a database connection
+			$database = $settings->database();
+
 			//get a list of domains
-			$domains = maintenance::get_domains($this->database);
+			$domains = maintenance::get_domains($database);
 			foreach ($domains as $domain_uuid => $domain_name) {
 
 				//get domain settings
-				$domain_settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 				//get the retention days for xml cdr table using 'cdr' and 'database_retention_days'
 				$xml_cdr_retention_days = $domain_settings->get('cdr', 'database_retention_days', '');
 
 				//get the retention days for xml cdr flow table
-				if ($this->database->table_exists('xml_cdr_flow')) {
+				if ($database->table_exists('xml_cdr_flow')) {
 					$xml_cdr_flow_retention_days = $domain_settings->get('cdr', 'flow_database_retention_days', $xml_cdr_retention_days);
 				} else {
 					$xml_cdr_flow_retention_days = null;
 				}
 
 				//get the retention days for xml cdr json table
-				if ($this->database->table_exists('xml_cdr_json')) {
+				if ($database->table_exists('xml_cdr_json')) {
 					$xml_cdr_json_retention_days = $domain_settings->get('cdr', 'json_database_retention_days', $xml_cdr_retention_days);
 				} else {
 					$xml_cdr_json_retention_days = null;
 				}
 
 				//get the retention days for xml cdr logs table
-				if ($this->database->table_exists('xml_cdr_logs')) {
+				if ($database->table_exists('xml_cdr_logs')) {
 					$xml_cdr_logs_retention_days = $domain_settings->get('cdr', 'logs_database_retention_days', $xml_cdr_retention_days);
 				} else {
 					$xml_cdr_logs_retention_days = null;
@@ -2313,13 +2316,13 @@
 					//clear out old xml_cdr records
 					$sql = "delete from v_{$table} WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_retention_days} days'"
 						. " and domain_uuid = '{$domain_uuid}'";
-					$this->database->execute($sql);
-					$code = $this->database->message['code'] ?? 0;
+					$database->execute($sql);
+					$code = $database->message['code'] ?? 0;
 					//record result
 					if ($code == 200) {
 						maintenance_service::log_write(self::class, "Successfully removed entries older than $xml_cdr_retention_days", $domain_uuid);
 					} else {
-						$message = $this->database->message['message'] ?? "An unknown error has occurred";
+						$message = $database->message['message'] ?? "An unknown error has occurred";
 						maintenance_service::log_write(self::class, "XML CDR " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 					}
 
@@ -2327,13 +2330,13 @@
 					if (!empty($xml_cdr_flow_retention_days)) {
 						$sql = "delete from v_xml_cdr_flow WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_flow_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}";
-						$this->database->execute($sql);
-						$code = $this->database->message['code'] ?? 0;
+						$database->execute($sql);
+						$code = $database->message['code'] ?? 0;
 						//record result
-						if ($this->database->message['code'] == 200) {
+						if ($database->message['code'] == 200) {
 							maintenance_service::log_write(self::class, "Successfully removed XML CDR FLOW entries from $domain_name", $domain_uuid);
 						} else {
-							$message = $this->database->message['message'] ?? "An unknown error has occurred";
+							$message = $database->message['message'] ?? "An unknown error has occurred";
 							maintenance_service::log_write(self::class, "XML CDR FLOW " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 						}
 					}
@@ -2342,13 +2345,13 @@
 					if (!empty($xml_cdr_json_retention_days)) {
 						$sql = "DELETE FROM v_xml_cdr_json WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_json_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}";
-						$this->database->execute($sql);
-						$code = $this->database->message['code'] ?? 0;
+						$database->execute($sql);
+						$code = $database->message['code'] ?? 0;
 						//record result
-						if ($this->database->message['code'] == 200) {
+						if ($database->message['code'] == 200) {
 							maintenance_service::log_write(self::class, "Successfully removed XML CDR JSON entries from $domain_name", $domain_uuid);
 						} else {
-							$message = $this->database->message['message'] ?? "An unknown error has occurred";
+							$message = $database->message['message'] ?? "An unknown error has occurred";
 							maintenance_service::log_write(self::class, "XML CDR JSON " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 						}
 					}
@@ -2357,13 +2360,13 @@
 					if (!empty($xml_cdr_logs_retention_days)) {
 						$sql = "DELETE FROM v_xml_cdr_logs WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_logs_retention_days} days'"
 							. " and domain_uuid = '{$domain_uuid}'";
-						$this->database->execute($sql);
-						$code = $this->database->message['code'] ?? 0;
+						$database->execute($sql);
+						$code = $database->message['code'] ?? 0;
 						//record result
-						if ($this->database->message['code'] === 200) {
+						if ($database->message['code'] === 200) {
 							maintenance_service::log_write(self::class, "Successfully removed XML CDR LOG entries from $domain_name", $domain_uuid);
 						} else {
-							$message = $this->database->message['message'] ?? "An unknown error has occurred";
+							$message = $database->message['message'] ?? "An unknown error has occurred";
 							maintenance_service::log_write(self::class, "XML CDR LOG " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 						}
 					}
