@@ -558,7 +558,6 @@
 	if (!empty($_GET) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_center_queue_uuid = $_GET["id"];
 		$sql = "select ";
-		$sql = "select ";
 		$sql .= "queue_name, ";
 		$sql .= "dialplan_uuid, ";
 		$sql .= "queue_extension, ";
@@ -701,6 +700,11 @@
 	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
 	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
 	if (empty($queue_context)) { $queue_context = $domain_name; }
+	if ($queue_record_template === null) { $queue_record_template = 'false'; }
+	if ($queue_tier_rules_apply === null) { $queue_tier_rules_apply = false; }
+	if ($queue_tier_rule_wait_multiply_level === null) { $queue_tier_rule_wait_multiply_level = true; }
+	if ($queue_tier_rule_no_agent_no_wait === null) { $queue_tier_rule_no_agent_no_wait = true; }
+	if ($queue_abandoned_resume_allowed === null) { $queue_abandoned_resume_allowed = false; }
 
 //create token
 	$object = new token;
