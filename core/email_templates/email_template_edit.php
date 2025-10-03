@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018-2023
+ Portions created by the Initial Developer are Copyright (C) 2018-2025
  the Initial Developer. All Rights Reserved.
 */
 
@@ -54,7 +54,6 @@
 	$template_subject = '';
 	$template_body = '';
 	$template_type = '';
-	$template_enabled = false;
 	$template_description = '';
 
 //get http post variables and set them to php variables
@@ -66,7 +65,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?? false;
+		$template_enabled = $_POST["template_enabled"];
 		$template_description = $_POST["template_description"];
 	}
 
@@ -188,6 +187,9 @@
 	$setting_invisibles = isset($_SESSION['editor']['invisibles']['text']) ? $_SESSION['editor']['invisibles']["text"] : 'false';
 	$setting_indenting = isset($_SESSION['editor']['indent_guides']['text']) ? $_SESSION['editor']['indent_guides']["text"]: 'false';
 	$setting_numbering = isset($_SESSION['editor']['line_numbers']['text']) ? $_SESSION['editor']['line_numbers']["text"] : 'true';
+
+//set the defaults
+	if ($template_enabled === null) { $template_enabled = true; }
 
 //create token
 	$object = new token;
