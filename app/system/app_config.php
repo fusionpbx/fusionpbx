@@ -190,5 +190,19 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Network interface used to show traffic on dashboard";
-
-?>
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2e9e5b8e-aef3-4a57-b0f6-041b14b6db44";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "system";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "network_status_refresh_interval";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Network interface used to show traffic on dashboard";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5998a3b8-e7cc-4a93-8657-e1a65b1ddaf8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "system";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "cpu_status_refresh_interval";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Network interface used to show traffic on dashboard";
