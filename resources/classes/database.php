@@ -2514,22 +2514,43 @@ class database {
 											$i = 0;
 											foreach ($parent_field_array as $array_key => $array_value) {
 												//skip child array
-												if (is_array($array_value)) { continue;	}
+												if (is_array($array_value)) { continue; }
 
-												//normalize the boolean data
-												if ($array_value === 'true' || $array_value === 'false') {
-													if ($parent_results[$i][$array_key] === 0) {
-														$parent_results[$i][$array_key] = 'false';
+												//get the variable type of the value
+												$database_field_type = gettype($parent_results[$i][$array_key]);
+												$user_field_type = gettype($array_value);
+
+												//normalize the data to match the database
+												if ($database_field_type !== $user_field_type) {
+													//normalize null
+													if ($array_value === '') {
+														$array_value = null;
 													}
-													if ($parent_results[$i][$array_key] === 1) {
-														$parent_results[$i][$array_key] = 'true';
+
+													//normalize string
+													if ($database_field_type === 'string') {
+														$array_value = (string)$array_value;
+													}
+
+													//normalize numeric
+													if ($database_field_type === 'numeric') {
+														$array_value = intval($array_value);
+													}
+
+													//normalize boolean
+													if ($database_field_type === 'boolean') {
+														if ($array_value === 'true') {
+															$array_value = true;
+														} else {
+															$array_value = false;
+														}
 													}
 												}
 
 												//verify if the data in the database has been modified
 												if ($parent_results[$i][$array_key] !== $array_value) {
 													//echo "no match\n";
-													//echo "$parent_name.$array_key ".($parent_results[0][$array_key])." != ".$array_value."\n\n";
+													//echo "$parent_name.$array_key ".($parent_results[$i][$array_key])." != ".$array_value."\n\n";
 													$data_modified = true;
 													break;
 												}
@@ -2541,7 +2562,6 @@ class database {
 
 										//parent data - process the modified data
 										if ($data_modified) {
-
 											//remove the child array and update the special values
 											if (is_array($parent_field_array)) {
 												foreach ($parent_field_array as $array_key => $array_value) {
