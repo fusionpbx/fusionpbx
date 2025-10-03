@@ -53,7 +53,6 @@
 	$phone_country_code = '';
 	$phone_number = '';
 	$phone_extension = '';
-	$phone_primary = '';
 	$phone_description = '';
 
 //action add or update
@@ -243,6 +242,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if ($phone_primary === null) { $phone_primary = false; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -395,8 +397,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='phone_primary' name='phone_primary'>\n";
-	echo "			<option value='false' ".($phone_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "			<option value='true' ".($phone_primary === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($phone_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
