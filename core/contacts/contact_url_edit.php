@@ -46,7 +46,6 @@
 	$url_label = '';
 	$url_label_custom = '';
 	$url_address = '';
-	$url_primary = '';
 	$url_description = '';
 
 //action add or update
@@ -182,6 +181,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	if ($url_primary === null) { $url_primary = false; }
 
 //create token
 	$object = new token;

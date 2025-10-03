@@ -740,7 +740,7 @@
 		$contact_phones[$x]['phone_country_code'] = '';
 		$contact_phones[$x]['phone_number'] = '';
 		$contact_phones[$x]['phone_extension'] = '';
-		$contact_phones[$x]['phone_primary'] = '';
+		$contact_phones[$x]['phone_primary'] = false;
 		$contact_phones[$x]['phone_description'] = '';
 	}
 
@@ -778,7 +778,7 @@
 		$contact_addresses[$x]['address_country'] = '';
 		$contact_addresses[$x]['address_latitude'] = '';
 		$contact_addresses[$x]['address_longitude'] = '';
-		$contact_addresses[$x]['address_primary'] = '';
+		$contact_addresses[$x]['address_primary'] = false;
 		$contact_addresses[$x]['address_description'] = '';
 	}
 
@@ -806,7 +806,7 @@
 		$contact_emails[$x]['contact_email_uuid'] = uuid();
 		$contact_emails[$x]['email_label'] = '';
 		$contact_emails[$x]['email_address'] = '';
-		$contact_emails[$x]['email_primary'] = '';
+		$contact_emails[$x]['email_primary'] = false;
 		$contact_emails[$x]['email_description'] = '';
 	}
 
@@ -836,7 +836,7 @@
 		$contact_urls[$x]['url_type'] = '';
 		$contact_urls[$x]['url_label'] = '';
 		$contact_urls[$x]['url_address'] = '';
-		$contact_urls[$x]['url_primary'] = '';
+		$contact_urls[$x]['url_primary'] = false;
 		$contact_urls[$x]['url_description'] = '';
 	}
 
