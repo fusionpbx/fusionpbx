@@ -1443,7 +1443,7 @@ class database {
 										$sql = "delete from ".self::TABLE_PREFIX.$child_table." ";
 										$sql .= "where ".$relation['field']." = :".$relation['field'];
 										$parameters[$relation['field']] = $row[$relation['field']];
-//												$this->execute($sql, $parameters);
+//											$this->execute($sql, $parameters);
 									}
 									unset($parameters);
 								}
@@ -1463,11 +1463,18 @@ class database {
 				//delete the current data
 					foreach($new_array as $table_name => $rows) {
 						//get the application name and uuid
-						if (class_exists($parent_name) && defined("$parent_name::app_name")) {
+						if (class_exists($table_name) && defined("$table_name::app_name")) {
 							$this->app_name = $table_name::app_name;
 							$this->app_uuid = $table_name::app_uuid;
 						}
-				
+						if (empty($this->app_name)) {
+							$app_name_singular = self::singular($table_name);
+							if (class_exists($app_name_singular) && defined("$app_name_singular::app_name")) {
+								$this->app_name = $app_name_singular::app_name;
+								$this->app_uuid = $app_name_singular::app_uuid;
+							}
+						}
+
 						//build and run the delete SQL statements
 						foreach($rows as $row) {
 							if (permission_exists(self::singular($table_name).'_delete')) {
