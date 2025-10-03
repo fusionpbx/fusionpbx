@@ -1047,14 +1047,13 @@
 
 			echo "<td class='formfld' align='left'>\n";
 			echo "	<select name='ivr_menu_options[".$x."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
-			//echo "	<option></option>\n";
-			if (strlen(htmlspecialchars($field['ivr_menu_option_order']))> 0) {
-				if (strlen($field['ivr_menu_option_order']) == 1) { $field['ivr_menu_option_order'] = "00".$field['ivr_menu_option_order']; }
-				if (strlen($field['ivr_menu_option_order']) == 2) { $field['ivr_menu_option_order'] = "0".$field['ivr_menu_option_order']; }
-				echo "	<option value='".escape($field['ivr_menu_option_order'])."'>".escape($field['ivr_menu_option_order'])."</option>\n";
+			if (strlen(htmlspecialchars($field['ivr_menu_option_order'])) > 0) {
+				if (strlen($field['ivr_menu_option_order']) == 1) { $ivr_menu_option_order_label = "00".$field['ivr_menu_option_order']; }
+				if (strlen($field['ivr_menu_option_order']) == 2) { $ivr_menu_option_order_label = "0".$field['ivr_menu_option_order']; }
 			}
 			for ($i = 0; $i <= 999; $i++) {
-				echo "	<option value='".str_pad($i, 3, '0', STR_PAD_LEFT)."'>".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
+				if ($i == $field['ivr_menu_option_order']) { $selected = "selected='true' "; } else {$selected = ''; }
+				echo "	<option value='".$i."' $selected>".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
 			}
 			echo "	</select>\n";
 			echo "</td>\n";
