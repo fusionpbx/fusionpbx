@@ -544,6 +544,9 @@
 	$domains = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
 
+//set the defaults
+	if ($device_enabled === null) { $device_enabled = true; }
+
 //use the device address to get the vendor
 	if (empty($device_vendor)) {
 		//get the device vendor using the device address
@@ -593,7 +596,7 @@
 	$device_lines[$x]['auth_id'] = '';
 	$device_lines[$x]['password'] = '';
 	$device_lines[$x]['shared_line'] = '';
-	$device_lines[$x]['enabled'] = false;
+	$device_lines[$x]['enabled'] = true;
 	$device_lines[$x]['sip_port'] = $settings->get('provision', 'line_sip_port', '5060');
 	$device_lines[$x]['sip_transport'] = $settings->get('provision', 'line_sip_transport', 'tcp');
 	$device_lines[$x]['register_expires'] = $settings->get('provision', 'line_register_expires', '120');
@@ -681,7 +684,7 @@
 	for ($x = 0; $x < $rows; $x++) {
 		$device_settings[$id]['device_setting_name'] = '';
 		$device_settings[$id]['device_setting_value'] = '';
-		$device_settings[$id]['device_setting_enabled'] = false;
+		$device_settings[$id]['device_setting_enabled'] = true;
 		$device_settings[$id]['device_setting_description'] = '';
 		$id++;
 	}

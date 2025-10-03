@@ -334,7 +334,7 @@
 		$device_profile_keys[$id]['profile_key_line'] = '';
 		$device_profile_keys[$id]['profile_key_value'] = '';
 		$device_profile_keys[$id]['profile_key_extension'] = '';
-		$device_profile_keys[$id]['profile_key_protected'] = '';
+		$device_profile_keys[$id]['profile_key_protected'] = false;
 		$device_profile_keys[$id]['profile_key_label'] = '';
 		$device_profile_keys[$id]['profile_key_icon'] = '';
 		$id++;
@@ -371,6 +371,9 @@
 	if (empty($device_profile_uuid) || !is_uuid($device_profile_uuid)) {
 		$device_profile_uuid = null;
 	}
+
+//set the defaults
+	if ($device_profile_enabled === null) { $device_profile_enabled = true; }
 
 //create token
 	$object = new token;
