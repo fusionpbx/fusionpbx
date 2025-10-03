@@ -332,6 +332,12 @@
 	if (empty($profile)) { $profile = ''; }
 	if (empty($hostname)) { $hostname = ''; }
 	if (empty($description)) { $description = ''; }
+	if ($register === null) { $register = true; }
+	if ($distinct_to === null) { $distinct_to = false; }
+	if ($caller_id_in_from === null) { $caller_id_in_from = false; }
+	if ($supress_cng === null) { $supress_cng = false; }
+	if ($contact_in_ping === null) { $contact_in_ping = true; }
+	if ($enabled === null) { $enabled = true; }
 
 //create token
 	$object = new token;
