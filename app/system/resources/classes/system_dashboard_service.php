@@ -54,28 +54,13 @@ class system_dashboard_service extends base_websocket_system_service {
 		$this->settings = new settings(['database' => $database]);
 
 		// get the cpu interval
-		$this->cpu_status_refresh_interval = $this->settings->get('dashboard', 'cpu_status_refresh_interval', 3);
+		$this->cpu_status_refresh_interval = intval($this->settings->get('system', 'cpu_status_refresh_interval', 3));
 
 		// get the network interval
-		$this->network_status_refresh_interval = $this->settings->get('dashboard', 'network_status_refresh_interval', 3);
+		$this->network_status_refresh_interval = intval($this->settings->get('system', 'network_status_refresh_interval', 3));
 
 		// get the network card to watch
-		$this->network_interface = $this->settings->get('system', 'network_interface', 'eno1');
-	}
-
-	/**
-	 * @override base_websocket_system_service
-	 * @return void
-	 */
-	protected function on_timer(): void {
-		// Send the CPU status
-		$this->on_cpu_status();
-
-		// Send the network average
-		$this->on_network_status();
-
-		// Reset the timer
-		$this->set_timer($this->cpu_status_refresh_interval);
+		$this->network_interface = $this->settings->get('system', 'network_interface', 'eth0');
 	}
 
 	/**
@@ -94,17 +79,18 @@ class system_dashboard_service extends base_websocket_system_service {
 		$this->on_topic(self::CPU_STATUS_TOPIC, [$this, 'on_cpu_status']);
 
 		// Register the call back to respond to network_status requests
-		$this->on_topic(self::NETWORK_STATUS_TOPIC, [$this, 'on_cpu_status']);
+		$this->on_topic(self::NETWORK_STATUS_TOPIC, [$this, 'on_network_status']);
 
-		// Set a timer
-		$this->set_timer($this->cpu_status_refresh_interval);
+		// Set timer callbacks
+		$this->set_timer($this->cpu_status_refresh_interval, [$this, 'on_cpu_status']);
+		$this->set_timer($this->network_status_refresh_interval, [$this, 'on_network_status']);
 
 		// Notify the user of the interval
 		$this->info("Broadcasting CPU Status every {$this->cpu_status_refresh_interval}s");
 		$this->info("Broadcasting Network Status every {$this->network_status_refresh_interval}s");
 	}
 
-	public function on_network_status($message = null): void {
+	public function on_network_status($message = null): int {
 		// Get RX (receive) and TX (transmit) bps
 		$network_rates = self::$system_information->get_network_speed($this->network_interface);
 
@@ -143,6 +129,9 @@ class system_dashboard_service extends base_websocket_system_service {
 			}
 			$this->warn("Websocket server connected");
 		}
+
+		// return a timer value so another timer will be set
+		return $this->network_status_refresh_interval;
 	}
 
 	public function on_network_interface_select($message = null): void {
@@ -154,7 +143,7 @@ class system_dashboard_service extends base_websocket_system_service {
 		}
 	}
 
-	public function on_cpu_status($message = null): void {
+	public function on_cpu_status($message = null): int {
 		// Get total and per-core CPU usage
 		$cpu_percent_total = self::$system_information->get_cpu_percent();
 		$cpu_percent_per_core = self::$system_information->get_cpu_percent_per_core();
@@ -198,9 +187,10 @@ class system_dashboard_service extends base_websocket_system_service {
 			}
 			$this->warn("Websocket server connected");
 		}
+
+		// return a timer value so another timer will be set
+		return $this->cpu_status_refresh_interval;
 	}
-
-
 
 	public static function get_service_name(): string {
 		return "dashboard.system.information";
