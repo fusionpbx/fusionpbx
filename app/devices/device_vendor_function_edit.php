@@ -272,6 +272,9 @@
 	$groups = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters, $sql_where, $index);
 
+//set the defaults
+	if ($enabled === null) { $enabled = true; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
