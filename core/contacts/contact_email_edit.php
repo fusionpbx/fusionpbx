@@ -180,6 +180,9 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if ($email_primary === null) { $email_primary = false; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
