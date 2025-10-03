@@ -112,6 +112,11 @@
 		$conf .= "php.dir = ".$php_dir."\n";
 		$conf .= "php.bin = php\n";
 		$conf .= "\n";
+		$conf .= "#session settings\n";
+		$conf .= "session.cookie_httponly = true\n";
+		$conf .= "session.cookie_secure = true\n";
+		$conf .= "session.cookie_samesite = Lax\n";
+		$conf .= "\n";
 		$conf .= "#cache settings\n";
 		$conf .= "cache.method = file\n";
 		$conf .= "cache.location = ".$cache_location."\n";
@@ -627,7 +632,7 @@ function update_file_permissions($text, settings $settings) {
 
 			//skip /dev/shm directory
 			if (strpos($dir, '/dev/shm') !== false) {
-				continue; 
+				continue;
 			}
 
 			//execute
@@ -709,4 +714,3 @@ function find_service_name(string $file) {
 function is_root(): bool {
 	return posix_getuid() === 0;
 }
-
