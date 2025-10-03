@@ -48,7 +48,6 @@
 	$contact_setting_name = '';
 	$contact_setting_value = '';
 	$contact_setting_order = '';
-	$contact_setting_enabled = '';
 	$contact_setting_description = '';
 
 //action add or update
@@ -75,7 +74,7 @@
 		$contact_setting_name = strtolower($_POST["contact_setting_name"]);
 		$contact_setting_value = $_POST["contact_setting_value"];
 		$contact_setting_order = $_POST["contact_setting_order"] ?? null;
-		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]) ?? false;
+		$contact_setting_enabled = strtolower($_POST["contact_setting_enabled"]);
 		$contact_setting_description = $_POST["contact_setting_description"];
 	}
 
@@ -195,6 +194,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if ($contact_setting_enabled === null) { $contact_setting_enabled = true; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -309,8 +311,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='contact_setting_enabled' name='contact_setting_enabled'>\n";
-	echo "			<option value='false' ".($contact_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "			<option value='true' ".($contact_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($contact_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

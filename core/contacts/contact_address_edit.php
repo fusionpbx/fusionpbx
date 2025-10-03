@@ -217,6 +217,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if ($address_primary === null) { $address_primary = false; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

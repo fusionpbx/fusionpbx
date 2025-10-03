@@ -182,6 +182,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	if ($attachment_primary === null) { $attachment_primary = false; }
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
