@@ -1094,177 +1094,6 @@ class database {
 			}
 	}
 
-	public function add() {
-		//connect to the database if needed
-			if (!$this->db) {
-				$this->connect();
-			}
-
-		//sanitize the table name
-			//$this->table = self::sanitize($this->table); // no longer needed
-
-		//count the fields
-			$field_count = count($this->fields);
-
-		//add data to the database
-			$sql = "insert into ".$this->table;
-			$sql .= " (";
-			$i = 1;
-			if (is_array($this->fields)) {
-				foreach($this->fields as $name => $value) {
-					$name = self::sanitize($name);
-					if (count($this->fields) == $i) {
-						$sql .= $name." \n";
-					}
-					else {
-						$sql .= $name.", \n";
-					}
-					$i++;
-				}
-			}
-			$sql .= ") \n";
-			$sql .= "values \n";
-			$sql .= "(\n";
-			$i = 1;
-			if (is_array($this->fields)) {
-				foreach($this->fields as $name => $value) {
-					$name = self::sanitize($name);
-					if ($field_count == $i) {
-						if (isset($value) && $value != '') {
-							//$sql .= "'".$value."' ";
-							$sql .= ":".$name." \n";
-							$params[$name] = trim($value);
-						}
-						else {
-							$sql .= "null \n";
-						}
-					}
-					else {
-						if (isset($value) && $value != '') {
-							//$sql .= "'".$value."', ";
-							$sql .= ":".$name.", \n";
-							$params[$name] = trim($value);
-						}
-						else {
-							$sql .= "null, \n";
-						}
-					}
-					$i++;
-				}
-			}
-			$sql .= ")\n";
-
-		//run the query, show exceptions
-			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-		//reduce prepared statement latency
-			if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-				$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
-			}
-
-		//prepare the sql and parameters and then run the query
-			try {
-				//$this->db->exec($sql);
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute($params);
-			}
-			catch(PDOException $e) {
-				$message['message'] = $e->getMessage();
-				$message['code'] = $e->getCode();
-				$message['line'] = $e->getLine();
-				$message['file'] = $e->getFile();
-				$message['trace'] = $e->getTraceAsString();
-				$message['debug'] = debug_backtrace();
-				$this->message = $message;
-			}
-			unset($sql, $prep_statement, $this->fields);
-	}
-
-	public function update() {
-		//connect to the database if needed
-			if (!$this->db) {
-				$this->connect();
-			}
-
-		//sanitize the table name
-			//$this->table = self::sanitize($this->table); // no longer needed
-
-		//udate the database
-			$sql = "update ".$this->table." set ";
-			$i = 1;
-			if (is_array($this->fields)) {
-				foreach($this->fields as $name => $value) {
-					$name = self::sanitize($name);
-					if (count($this->fields) == $i) {
-						if (!empty($name) && $value == null) {
-							$sql .= $name." = null ";
-						}
-						else {
-							//$sql .= $name." = '".$value."' ";
-							$sql .= $name." = :".$name." ";
-							$params[$name] = trim($value);
-						}
-					}
-					else {
-						if (!empty($name) && $value == null) {
-							$sql .= $name." = null, ";
-						}
-						else {
-							//$sql .= $name." = '".$value."', ";
-							$sql .= $name." = :".$name.", ";
-							$params[$name] = trim($value);
-						}
-					}
-					$i++;
-				}
-			}
-			$i = 0;
-			if (is_array($this->where)) {
-				foreach($this->where as $row) {
-
-					//sanitize the name
-					$row['name'] = self::sanitize($row['name']);
-
-					//validate the operator
-					switch ($row['operator']) {
-						case "<": break;
-						case ">": break;
-						case "<=": break;
-						case ">=": break;
-						case "=": break;
-						case "<>": break;
-						case "!=": break;
-						default:
-							//invalid operator
-							return false;
-					}
-
-					//build the sql
-					if ($i == 0) {
-						//$sql .= $row['name']." ".$row['operator']." '".$row['value']."' ";
-						$sql .= "where ".$row['name']." ".$row['operator']." :".$row['name']." ";
-					}
-					else {
-						//$sql .= $row['name']." ".$row['operator']." '".$row['value']."' ";
-						$sql .= "and ".$row['name']." ".$row['operator']." :".$row['name']." ";
-					}
-
-					//add the name and value to the params array
-					$params[$row['name']] = $row['value'];
-
-					//increment $i
-					$i++;
-				}
-			}
-			//$this->db->exec(check_sql($sql));
-			$prep_statement = $this->db->prepare($sql);
-			$prep_statement->execute($params);
-			unset($prep_statement);
-			unset($this->fields);
-			unset($this->where);
-			unset($sql);
-	}
-
 	public function delete(array $array) {
 		//set the default value
 			$retval = true;
@@ -2252,7 +2081,7 @@ class database {
 	 * <p>Usage Example:<br><code><br>$row = 0;<br>$array['mytable'][$row]['mycolumn'] = "myvalue";<br>if ($database->save($array)) { <br>&nbsp;&nbsp;echo "Saved Successfully.";<br> } else {<br>&nbsp;&nbsp;echo "Save Failed.";<br>}</code></p>
 	 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'. Second dimension in the row value as int. Third dimension is the column name.
 	 * @param bool $transaction_save
-	 * @return returns and array wih result details
+	 * @return returns an array with result details
 	 */
 	public function save(array &$array, bool $transaction_save = true) {
 
@@ -2407,7 +2236,8 @@ class database {
 											$sql .= "VALUES ";
 											$sql .= "(";
 											if (!$parent_key_exists) {
-												$sql .= "'".$parent_key_value."', ";
+												$sql .= ":parent_key_value, ";
+												$params['parent_key_value'] = $parent_key_value;
 											}
 											if (is_array($parent_field_array)) {
 												foreach ($parent_field_array as $array_key => $array_value) {
@@ -2430,10 +2260,19 @@ class database {
 																$sql .= ':'.$array_key.", ";
 																$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 															}
+															elseif (gettype($array_value) === 'boolean') {
+																if ($array_value) {
+																	$sql .= $array_key." = true, ";
+																} else {
+																	$sql .= $array_key." = false, ";
+																}
+															}
 															else {
-																$array_value = $array_value ?? '';
 																$sql .= ':'.$array_key.", ";
-																$params[$array_key] = trim($array_value);
+																if (gettype($array_value) === 'string') {
+																	$array_value = trim($array_value);
+																}
+																$params[$array_key] = $array_value;
 															}
 														}
 													}
@@ -2593,7 +2432,10 @@ class database {
 														$temp_array[$array_key] = $_SERVER['REMOTE_ADDR'];
 													}
 													else {
-														$temp_array[$array_key] = trim($array_value);
+														if (gettype($array_value) === 'string') {
+															$array_value = trim($array_value);
+														}
+														$temp_array[$array_key] = $array_value;
 													}
 												}
 											}
@@ -2627,9 +2469,19 @@ class database {
 															$sql .= $array_key." = :".$array_key.", ";
 															$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 														}
+														elseif (gettype($array_value) === 'boolean') {
+															if ($array_value) {
+																$sql .= $array_key." = true, ";
+															} else {
+																$sql .= $array_key." = false, ";
+															}
+														}
 														else {
 															$sql .= $array_key." = :".$array_key.", ";
-															$params[$array_key] = trim($array_value);
+															if (gettype($array_value) === 'string') {
+																$array_value = trim($array_value);
+															}
+															$params[$array_key] = $array_value;
 														}
 													}
 												}
@@ -2641,7 +2493,8 @@ class database {
 											$params['update_user'] = $this->user_uuid ?? null;
 
 											//add the where with the parent name and value
-											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."'; ";
+											$sql .= "WHERE ".$parent_key_name." = :parent_key_value; ";
+											$params['parent_key_value'] = $parent_key_value;
 											$sql = str_replace(", WHERE", " WHERE", $sql);
 
 											//add update user parameter
@@ -2737,7 +2590,10 @@ class database {
 														if (is_array($row)) foreach ($row as $k => $v) {
 															if ($child_key_name == $k) {
 																if (strlen($v) > 0) {
-																	$child_key_value = trim($v);
+																	if (gettype($v) === 'string') {
+																		$v = trim($v);
+																	}
+																	$child_key_value = $v;
 																	$uuid_exists = true;
 																	break;
 																}
@@ -2877,7 +2733,10 @@ class database {
 																				$temp_array[$k] = $_SERVER['REMOTE_ADDR'];
 																			}
 																			else {
-																				$temp_array[$k] = isset($v) ? trim($v) : null;
+																				if (gettype($v) === 'string') {
+																					$v = trim($v);
+																				}
+																				$temp_array[$k] = $v;
 																			}
 																		}
 																	}
@@ -2909,9 +2768,19 @@ class database {
 																					$sql .= $k." = :".$k.", ";
 																					$params[$k] = $_SERVER['REMOTE_ADDR'];
 																				}
+																				elseif (gettype($v) === 'boolean') {
+																					if ($v) {
+																						$sql .= $k." = true, ";
+																					} else {
+																						$sql .= $k." = false, ";
+																					}
+																				}
 																				else {
 																					$sql .= $k." = :".$k.", ";
-																					$params[$k] = isset($v) ? trim($v) : null;
+																					if (gettype($v) === 'string') {
+																						$v = trim($v);
+																					}
+																					$params[$k] = $v;
 																				}
 																			}
 																		}
@@ -2923,8 +2792,10 @@ class database {
 																	$params['update_user'] = $this->user_uuid ?? null;
 
 																	//add the where with the parent name and value
-																	$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
-																	$sql .= "AND ".$child_key_name." = '".$child_key_value."'; ";
+																	$sql .= "WHERE ".$parent_key_name." = :parent_key_value ";
+																	$sql .= "AND ".$child_key_name." = :child_key_value; ";
+																	$params['parent_key_value'] = $parent_key_value;
+																	$params['child_key_value'] = $child_key_value;
 																	$sql = str_replace(", WHERE", " WHERE", $sql);
 
 																	//set the error mode
@@ -2935,9 +2806,7 @@ class database {
 																		$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 																	}
 
-																	//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
 																	try {
-																		//$this->db->query(check_sql($sql));
 																		$prep_statement = $this->db->prepare($sql);
 																		$prep_statement->execute($params);
 																		unset($prep_statement);
@@ -3006,7 +2875,10 @@ class database {
 																	}
 																	if ($k == $child_key_name) {
 																		$child_key_exists = true;
-																		$child_key_value = trim($v);
+																		if (gettype($v) === 'string') {
+																			$v = trim($v);
+																		}
+																		$child_key_value = $v;
 																	}
 																}
 															}
@@ -3046,10 +2918,12 @@ class database {
 															$sql .= "VALUES ";
 															$sql .= "(";
 															if (!$parent_key_exists) {
-																$sql .= "'".$parent_key_value."', ";
+																$sql .= ":parent_key_value, ";
+																$params['parent_key_value'] = $parent_key_value;
 															}
 															if (!$child_key_exists) {
-																$sql .= "'".$child_key_value."', ";
+																$sql .= ":child_key_value, ";
+																$params['child_key_value'] = $child_key_value;
 															}
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
@@ -3072,6 +2946,13 @@ class database {
 																				$sql .= ':'.$k.", ";
 																				$params[$k] = $_SERVER['REMOTE_ADDR'];
 																			}
+																			elseif (gettype($v) === 'boolean') {
+																				if ($v) {
+																					$sql .= $k." = true, ";
+																				} else {
+																					$sql .= $k." = false, ";
+																				}
+																			}
 																			else {
 																				$k = self::sanitize($k);
 																				if ($k != 'insert_user' &&
@@ -3079,7 +2960,10 @@ class database {
 																				$k != 'update_user' &&
 																				$k != 'update_date') {
 																					$sql .= ':'.$k.", ";
-																					$params[$k] = trim($v);
+																					if (gettype($v) === 'string') {
+																						$v = trim($v);
+																					}
+																					$params[$k] = $v;
 																				}
 																			}
 																		}
