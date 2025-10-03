@@ -22,6 +22,8 @@ abstract class base_websocket_system_service extends service implements websocke
 	 */
 	protected $ws_client;
 
+	private $timers;
+
 	//abstract protected function reload_settings(): void;
 
 	protected static function display_version(): void {
@@ -29,25 +31,14 @@ abstract class base_websocket_system_service extends service implements websocke
 	}
 
 	/**
-	 * Set a timer to trigger the on_timer function every $seconds. To stop the timer, set the value to null
+	 * Set a timer to trigger the defined function every $seconds. To stop the timer, set the value to null
 	 * @param int $seconds
 	 * @return void
 	 * @see on_timer
 	 */
-	protected function set_timer(?int $seconds): void {
-		if ($seconds !== null) $this->timer_expire_time = time() + $seconds;
-		else $this->timer_expire_time = null;
-	}
-
-	/**
-	 * When the set_timer is used to set a timer, this function will run. Override
-	 * the function in the child class.
-	 * @return void
-	 * @see set_timer
-	 */
-	protected function on_timer(): void {
-		return;
-	}
+	protected function set_timer(int $seconds, callable $callable): void {
+		$this->timers[] = ['expire_time' => time() + $seconds, 'callable' => $callable];
+    }
 
 	protected static function set_command_options() {
 		parent::append_command_option(
@@ -79,6 +70,9 @@ abstract class base_websocket_system_service extends service implements websocke
 	}
 
 	public function run(): int {
+		// set the timers property as an array
+		$this->timers = [];
+
 		// re-read the config file to get any possible changes
 		parent::$config->read();
 
@@ -140,8 +134,23 @@ abstract class base_websocket_system_service extends service implements websocke
 			}
 
 			// Timers can be set by child classes
-			if ($this->timer_expire_time !== null && time() >= $this->timer_expire_time) {
-				$this->on_timer();
+			if (!empty($this->timers)) {
+				// Check all timers
+				foreach($this->timers as $key => $array) {
+					// Check if the timer should be run
+					if (time() >= $array['expire_time']) {
+						// Get the callback function
+						$callable = $array['callable'];
+						// Call the callback and see if it returns a value for the next timer
+						$next_timer = call_user_func($callable);
+						if ($next_timer !== null && is_numeric($next_timer)) {
+							// Set the timer again when requested by called function returning a value
+							$this->set_timer($next_timer, $callable);
+						}
+						// Remove the expired timer from tracking list
+						unset($this->timers[$key]);
+					}
+				}
 			}
 		}
 		return 0;
