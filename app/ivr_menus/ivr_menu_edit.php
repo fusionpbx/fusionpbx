@@ -1052,7 +1052,7 @@
 				if (strlen($field['ivr_menu_option_order']) == 2) { $ivr_menu_option_order_label = "0".$field['ivr_menu_option_order']; }
 			}
 			for ($i = 0; $i <= 999; $i++) {
-				if ($i == $field['ivr_menu_option_order']) { $selected = "selected='true' "; } else {$selected = ''; }
+				if ($i == $field['ivr_menu_option_order']) { $selected = "selected='selected' "; } else {$selected = ''; }
 				echo "	<option value='".$i."' $selected>".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
 			}
 			echo "	</select>\n";
