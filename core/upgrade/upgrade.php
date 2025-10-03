@@ -113,9 +113,9 @@
 		$conf .= "php.bin = php\n";
 		$conf .= "\n";
 		$conf .= "#session settings\n";
-		$conf .= "#session.cookie_httponly = true\n";
-		$conf .= "#session.cookie_secure = true\n";
-		$conf .= "#session.cookie_samesite = Lax\n";
+		$conf .= "session.cookie_httponly = true\n";
+		$conf .= "session.cookie_secure = true\n";
+		$conf .= "session.cookie_samesite = Lax\n";
 		$conf .= "\n";
 		$conf .= "#cache settings\n";
 		$conf .= "cache.method = file\n";
