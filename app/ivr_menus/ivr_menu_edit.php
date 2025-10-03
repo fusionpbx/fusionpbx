@@ -614,6 +614,8 @@
 	if (empty($ivr_menu_digit_len)) { $ivr_menu_digit_len = '5'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
+	if ($ivr_menu_direct_dial === null) { $ivr_menu_direct_dial = false; }
+	if ($ivr_menu_enabled === null) { $ivr_menu_enabled = true; }
 
 //get installed languages
 	$language_paths = glob($settings->get('switch', 'sounds')."/*/*/*");
