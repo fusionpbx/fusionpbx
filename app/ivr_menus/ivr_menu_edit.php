@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -614,6 +614,8 @@
 	if (empty($ivr_menu_digit_len)) { $ivr_menu_digit_len = '5'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
+	if ($ivr_menu_direct_dial === null) { $ivr_menu_direct_dial = false; }
+	if ($ivr_menu_enabled === null) { $ivr_menu_enabled = true; }
 
 //get installed languages
 	$language_paths = glob($settings->get('switch', 'sounds')."/*/*/*");
