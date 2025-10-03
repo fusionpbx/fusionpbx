@@ -2520,6 +2520,15 @@ class database {
 												$database_field_type = gettype($parent_results[$i][$array_key]);
 												$user_field_type = gettype($array_value);
 
+												//trim the string and update the value
+												if ($user_field_type === 'string') {
+													//trim the string
+													$array_value = trim($array_value);
+
+													//update the user value
+													$parent_field_array[$array_key] = $array_value;
+												}
+
 												//normalize the data to match the database
 												if ($database_field_type !== $user_field_type) {
 													//normalize null
@@ -2545,11 +2554,14 @@ class database {
 															$array_value = false;
 														}
 													}
+
+													//update the user value
+													$parent_field_array[$array_key] = $array_value;
 												}
 
 												//verify if the data in the database has been modified
 												if ($parent_results[$i][$array_key] !== $array_value) {
-													//echo "no match\n";
+													//not matched
 													//echo "$parent_name.$array_key ".($parent_results[$i][$array_key])." != ".$array_value."\n\n";
 													$data_modified = true;
 													break;
@@ -2562,6 +2574,7 @@ class database {
 
 										//parent data - process the modified data
 										if ($data_modified) {
+
 											//remove the child array and update the special values
 											if (is_array($parent_field_array)) {
 												foreach ($parent_field_array as $array_key => $array_value) {
@@ -2794,22 +2807,48 @@ class database {
 																$data_modified = false;
 																if (is_array($row)) {
 																	foreach ($row as $k => $v) {
-																		//santize the data
+																		//sanitize the key
 																		$k = self::sanitize($k);
 
-																		//normalize the boolean data
-																		if ($v === 'true' || $v === 'false') {
-																			if ($parent_results[$k] === 0) {
-																				$parent_results[$k] = 'false';
+																		//get the variable type of the value
+																		$database_field_type = gettype($child_results[$k]);
+																		$user_field_type = gettype($v);
+
+																		//trim the string
+																		if ($user_field_type === 'string') {
+																			$v = trim($v);
+																		}
+
+																		//normalize the data to match the database
+																		if ($database_field_type !== $user_field_type) {
+																			//normalize null
+																			if ($v === '') {
+																				$v = null;
 																			}
-																			if ($child_results[$k] === 1) {
-																				$child_results[$k] = 'true';
+
+																			//normalize string
+																			if ($database_field_type === 'string') {
+																				$v = (string)$v;
+																			}
+
+																			//normalize numeric
+																			if ($database_field_type === 'numeric') {
+																				$v = intval($v);
+																			}
+
+																			//normalize boolean
+																			if ($database_field_type === 'boolean') {
+																				if ($v === 'true') {
+																					$v = true;
+																				} else {
+																					$v = false;
+																				}
 																			}
 																		}
 
 																		//verify if the data in the database has been modified
 																		if ($child_results[$k] !== $v) {
-																			//echo "no match\n";
+																			//not matched
 																			//echo "$child_name.$k ".($child_results[$k])." != ".$v."\n\n";
 																			$data_modified = true;
 																			break;
