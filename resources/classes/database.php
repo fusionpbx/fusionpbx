@@ -2718,8 +2718,10 @@ class database {
 																	//update the special values
 																	if (is_array($row)) {
 																		foreach ($row as $k => $v) {
-																			if (!is_array($v)) { continue; }
+																			//sanitize the key
 																			$k = self::sanitize($k);
+
+																			//save the key value pairs to the temp_array
 																			if (!isset($v) || (isset($v) && $v == '')) {
 																				$temp_array[$k] = null;
 																			}
@@ -2731,6 +2733,14 @@ class database {
 																			}
 																			elseif ($v === "remote_address()") {
 																				$temp_array[$k] = $_SERVER['REMOTE_ADDR'];
+																			}
+																			if (gettype($v) === 'boolean') {
+																				if ($v) {
+																					$v = true;
+																				} else {
+																					$v = false;
+																				}
+																				$temp_array[$k] = $v;
 																			}
 																			else {
 																				if (gettype($v) === 'string') {
