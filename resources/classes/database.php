@@ -3000,6 +3000,7 @@ class database {
 																$prep_statement = $this->db->prepare($sql);
 																$prep_statement->execute($params);
 																unset($prep_statement);
+																$message["code"] = "200";
 																$message["details"][$m]["name"] = $key;
 																$message["details"][$m]["message"] = "OK";
 																$message["details"][$m]["code"] = "200";
@@ -3095,12 +3096,18 @@ class database {
 			//view_array($new_array, false);
 			//exit;
 
-		//check to see if the database was updated
+		//check to see if the database was updated; update the message code if needed
 			$database_updated = false;
-			foreach($this->message['details'] as $row) {
-				if ($row['code'] == '200') {
-					$database_updated = true;
-					break;
+			if ($this->message['code'] === '200') {
+				$database_updated = true;
+			}
+			if (!$database_updated) {
+				foreach($this->message['details'] as $row) {
+					if ($row['code'] === '200') {
+						$database_updated = true;
+						$message["code"] = '200';
+						break;
+					}
 				}
 			}
 
