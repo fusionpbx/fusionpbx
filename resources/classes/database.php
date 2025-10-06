@@ -2390,9 +2390,6 @@ class database {
 															$array_value = false;
 														}
 													}
-
-													//update the user value
-													$parent_field_array[$array_key] = $array_value;
 												}
 
 												//verify if the data in the database has been modified
