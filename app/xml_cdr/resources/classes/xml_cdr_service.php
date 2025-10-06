@@ -127,7 +127,7 @@ class xml_cdr_service extends service {
 
 	protected static function set_command_options() {
 		self::append_command_option(command_option::new()
-				->short_option('H:')
+				->short_option('n:')
 				->long_option('hostname:')
 				->function_append('set_hostname')
 				->description('Set the hostname. Defaults to use the php function gethostname()')
