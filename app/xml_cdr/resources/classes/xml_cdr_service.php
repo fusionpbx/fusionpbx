@@ -165,7 +165,7 @@ class xml_cdr_service extends service {
 
 		// Check for inotify php extension
 		if (!function_exists('inotify_init')) {
-			$this->warning('Missing inotify extension. Please install php' . substr(PHP_VERSION, 0, 3). '-inotify package');
+			$this->warning('Missing inotify extension. Please install php' . substr(PHP_VERSION, 0, 3). '-inotify package for better performance');
 			while ($this->running) {
 				$this->process_in_bulk();
 				sleep(5);
