@@ -2261,11 +2261,8 @@ class database {
 																$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 															}
 															elseif (gettype($array_value) === 'boolean') {
-																if ($array_value) {
-																	$sql .= $array_key." = true, ";
-																} else {
-																	$sql .= $array_key." = false, ";
-																}
+																$sql .= ':'.$array_key.", ";
+																$params[$array_key] = $array_value;
 															}
 															else {
 																$sql .= ':'.$array_key.", ";
@@ -2470,11 +2467,8 @@ class database {
 															$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 														}
 														elseif (gettype($array_value) === 'boolean') {
-															if ($array_value) {
-																$sql .= $array_key." = true, ";
-															} else {
-																$sql .= $array_key." = false, ";
-															}
+															$sql .= $array_key." = :".$array_key.", ";
+															$params[$array_key] = $array_value;
 														}
 														else {
 															$sql .= $array_key." = :".$array_key.", ";
@@ -2779,11 +2773,8 @@ class database {
 																					$params[$k] = $_SERVER['REMOTE_ADDR'];
 																				}
 																				elseif (gettype($v) === 'boolean') {
-																					if ($v) {
-																						$sql .= $k." = true, ";
-																					} else {
-																						$sql .= $k." = false, ";
-																					}
+																					$sql .= $k." = :".$k.", ";
+																					$params[$k] = $v;
 																				}
 																				else {
 																					$sql .= $k." = :".$k.", ";
@@ -2957,11 +2948,8 @@ class database {
 																				$params[$k] = $_SERVER['REMOTE_ADDR'];
 																			}
 																			elseif (gettype($v) === 'boolean') {
-																				if ($v) {
-																					$sql .= $k." = true, ";
-																				} else {
-																					$sql .= $k." = false, ";
-																				}
+																				$sql .= ':'.$k.", ";
+																				$params[$k] = $v;
 																			}
 																			else {
 																				$k = self::sanitize($k);
