@@ -127,14 +127,14 @@ class xml_cdr_service extends service {
 
 	protected static function set_command_options() {
 		self::append_command_option(command_option::new()
-				->short_option('H')
-				->long_option('hostname')
+				->short_option('H:')
+				->long_option('hostname:')
 				->function_append('set_hostname')
 				->description('Set the hostname. Defaults to use the php function gethostname()')
 		);
 		self::append_command_option(command_option::new()
-				->short_option('m')
-				->long_option('max_records')
+				->short_option('m:')
+				->long_option('max_records:')
 				->function_append('set_max_records')
 				->description('Set the maximum records to process on each iteration. Default 100')
 		);
