@@ -341,7 +341,7 @@ function do_upgrade_schema(bool $data_types = false) {
  * Restore the default menu
  */
 function do_upgrade_menu() {
-	global $included, $sel_menu, $menu_uuid, $menu_language;
+	global $included, $sel_menu, $menu_uuid, $menu_language, $database;
 	//get the menu uuid and language
 	$sql = "select menu_uuid, menu_language from v_menus ";
 	$sql .= "where menu_name = :menu_name ";
