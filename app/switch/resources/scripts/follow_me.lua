@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2021
+--	Copyright (C) 2010-2025
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -54,9 +54,6 @@
 	local default_dialect = session:getVariable("default_dialect") or 'us';
 	local default_voice = session:getVariable("default_voice") or 'callie';
 
---a moment to sleep
-	session:sleep(1000);
-
 --check if the session is ready
 	if not session:ready() then return end
 
@@ -64,7 +61,9 @@
 	local dbh = Database.new('system');
 
 --determine whether to update the dial string
-	local sql = "select extension, number_alias, accountcode, follow_me_uuid, follow_me_enabled ";
+	local sql = "select extension, number_alias, ";
+	sql = sql .. "accountcode, follow_me_uuid, ";
+	sql = sql .. "cast(follow_me_enabled as text) ";
 	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
@@ -83,7 +82,7 @@
 	local follow_me_enabled = row.follow_me_enabled;
 
 --set follow me
-	if (not follow_me_enabled) then
+	if (follow_me_enabled == 'false') then
 		--update the display and play a message
 		channel_display(session:get_uuid(), "Activated")
 		session:execute("sleep", "2000");
@@ -92,7 +91,7 @@
 	end
 
 --unset follow me
-	if (follow_me_enabled) then
+	if (follow_me_enabled == 'true') then
 		--update the display and play a message
 		channel_display(session:get_uuid(), "Cancelled")
 		session:execute("sleep", "2000");
@@ -102,7 +101,7 @@
 
 --enable or disable follow me
 	sql = "update v_follow_me set ";
-	if (follow_me_enabled) then
+	if (follow_me_enabled == 'true') then
 		sql = sql .. "follow_me_enabled = false ";
 	else
 		sql = sql .. "follow_me_enabled = true ";
@@ -118,7 +117,7 @@
 --update the extension
 	sql = "update v_extensions set ";
 	sql = sql .. "do_not_disturb = false, ";
-	if (follow_me_enabled) then
+	if (follow_me_enabled == 'true') then
 		sql = sql .. "follow_me_enabled = false, ";
 	else
 		sql = sql .. "follow_me_enabled = true, ";
