@@ -57,11 +57,6 @@ else {
 	exit;
 }
 
-//increase limits
-set_time_limit(0);
-ini_set('max_execution_time', 0);
-ini_set('memory_limit', '512M');
-
 try {
 	$xml_cdr_service = xml_cdr_service::create();
 	// Exit using whatever status run returns
