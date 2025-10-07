@@ -33,12 +33,19 @@
  */
 class xml_cdr_service extends service {
 
-	static $hostname = null;
-	static $max_records = null;
+	private static $cli_hostname = null;
+	private static $cli_full_scan_seconds = null;
+	private static $cli_idle_time = null;
+	private static $cli_max_file_size = null;
+
 	private $xml_cdr_dir;
 	private $database;
 	private $cdr;
 	private $initialized = false;
+	private $idle_time;
+	private $full_scan_expire_time;
+	private $full_scan_seconds;
+	private $max_file_size;
 
 	protected function reload_settings(): void {
 		if (!$this->initialized)
@@ -60,33 +67,73 @@ class xml_cdr_service extends service {
 		$this->create_xml_cdr_paths($xml_cdr_dir);
 
 		// Set the hostname
-		$hostname = $this->settings->get('cdr', 'hostname', null);
-		if ($hostname !== null && $hostname !== self::$hostname) {
-			self::set_hostname($hostname);
-			$this->info("Set hostname: $hostname");
+		if (self::$cli_hostname !== null) {
+			// command line overrides global settings
+			$hostname = self::$cli_hostname;
+		} else {
+			$hostname = $this->settings->get('cdr', 'hostname', null);
 		}
+		$this->set_hostname($hostname);
+		$this->info("Set hostname: $hostname");
 
-		// Set a max records to process
-		$max_records = $this->settings->get('cdr', 'process_max', null);
-		if ($max_records !== null && $max_records !== self::$max_records) {
-			self::set_max_records($max_records);
-			$this->info("Set max processing records: $max_records");
+		// Set the max file size
+		if (self::$cli_max_file_size !== null) {
+			$max_file_size = self::$cli_max_file_size;
+		} else {
+			$max_file_size = $this->settings->get('cdr', 'max_file_size', 3145727);
 		}
+		$this->info("Set max file size to $max_file_size");
+		$this->set_max_file_size($max_file_size);
 
-		if ($this->initialized)
-			$this->notice('Settings Reloaded');
-		else
-			$this->notice('Settings Loaded');
+		// Check for inotify:
+		//   When the inotify PHP extension is available we use the full_scan_expire_time
+		//   Otherwise, we will use the idle_time_seconds
+		if (function_exists('inotify_init')) {
+			// Get the full scan seconds from command line first
+			if (self::$cli_full_scan_seconds !== null) {
+				$this->full_scan_seconds = intval(self::$cli_full_scan_seconds);
+			} else {
+				$this->full_scan_seconds = intval($this->settings->get('cdr', 'full_scan_seconds', 600));
+			}
+			$this->info("Set full scan to every $this->full_scan_seconds seconds");
+			$this->set_full_scan_expire_time($this->full_scan_seconds);
+		} else {
+			// Get the idle time when inotify is not available
+			if (self::$cli_idle_time !== null) {
+				// Command line overrides default settings
+				$idle_time = self::$cli_idle_time;
+			} else {
+				// Not set from command line so get from default settings
+				$idle_time = $this->settings->get('cdr', 'idle_time_seconds', 3);
+			}
+			$this->info("Set idle time $idle_time seconds");
+
+			// set the idle time using a setter
+			$this->set_idle_time($idle_time);
+		}
 
 		//recreate the call detail records object
-		$this->cdr = new xml_cdr;
+		$this->cdr = new xml_cdr();
+
+		// Notify user we are ready
+		if ($this->initialized) {
+			$this->notice('Settings Reloaded');
+		} else {
+			$this->notice('Settings Loaded');
+		}
 
 		// Reload any existing files after reloading settings
-		$this->process_in_bulk();
+		$this->info('Scanning for existing files');
+		$this->process_all_files();
 
 	}
 
 	protected function create_xml_cdr_paths($xml_cdr_dir) {
+		//unable to continue if we can't create directories
+		if (!is_writable($xml_cdr_dir . '/failed')) {
+			throw new \RuntimeException("Unable to write to $xml_cdr_dir/failed", 4008);
+		}
+
 		//rename the directory
 		if (file_exists($xml_cdr_dir . '/failed/invalid_xml')) {
 			$this->debug("Found old 'invalid_xml' directory. Moving to new name 'xml'");
@@ -111,11 +158,6 @@ class xml_cdr_service extends service {
 			mkdir($xml_cdr_dir . '/failed/sql', 0770, true);
 		}
 
-//		// XML CDR runs as www-data now so settings permissions don't work
-//		if (file_exists($xml_cdr_dir . '/failed')) {
-//			exec('chmod 770 -R ' . $xml_cdr_dir . '/failed');
-//		}
-
 		//save the xml_cdr directory in the object
 		$this->xml_cdr_dir = $xml_cdr_dir;
 
@@ -129,46 +171,120 @@ class xml_cdr_service extends service {
 		self::append_command_option(command_option::new()
 				->short_option('n:')
 				->long_option('hostname:')
-				->function_append('set_hostname')
+				->function_append('set_cli_hostname')
 				->description('Set the hostname. Defaults to use the php function gethostname()')
 		);
 		self::append_command_option(command_option::new()
 				->short_option('m:')
-				->long_option('max_records:')
-				->function_append('set_max_records')
-				->description('Set the maximum records to process on each iteration. Default 100')
+				->long_option('max_file_size:')
+				->function_append('set_cli_max_file_size')
+				->description('Set the maximum filesize to process. Defaults to 3145727 bytes or 3 MB')
+		);
+		self::append_command_option(command_option::new()
+				->short_option('s:')
+				->long_option('full_scan_interval:')
+				->function_append('set_cli_full_scan_expire_seconds')
+				->description('Set the number of seconds to rescan the entire directory for XML CDR files. Default 600 (ten minutes)')
+		);
+		self::append_command_option(command_option::new()
+				->short_option('i:')
+				->long_option('idle_time:')
+				->function_append('set_cli_idle_time')
+				->description('Set the number of seconds to wait before scanning the entire directory if the inotify extension is not available. Default 3 seconds.')
 		);
 	}
 
-	protected static function set_hostname($hostname) {
-		self::$hostname = $hostname;
+	protected static function set_cli_hostname($hostname) {
+		self::$cli_hostname = $hostname;
 	}
 
-	public static function set_max_records($max_records) {
-		self::$max_records = intval($max_records);
+	protected function set_hostname($hostname) {
+		if (empty($hostname)) {
+			// Quietly set the hostname to the one detected by php
+			$hostname = gethostname();
+		}
+		$this->hostname = $hostname;
+	}
+
+	protected static function set_cli_full_scan_expire_seconds($seconds) {
+		self::$cli_full_scan_seconds = intval($seconds);
+
+		// Don't allow the program to start if the number given on the command line is invalid
+		if (!is_numeric(self::$cli_full_scan_seconds) || empty(self::$cli_full_scan_seconds)) {
+			throw new \RuntimeException("Idle time must be a number greater than zero", 4092);
+		}
+
+	}
+
+	protected function set_full_scan_expire_time($seconds) {
+		// convert to a true number
+		$seconds = intval($seconds);
+
+		// during runtime we will correct the number without exiting
+		if (!is_numeric($seconds) || empty($seconds)) {
+			$seconds = 600;
+			// Warn the user the settings was not correct
+			$this->warning("The number of seconds to rescan the XML CDR directory is invalid. Setting to $seconds.");
+		}
+
+		// set the time to a now valid number
+		$this->full_scan_expire_time = time() + $seconds;
+	}
+
+	protected static function set_cli_idle_time($seconds) {
+		// convert to a real number
+		self::$cli_idle_time = intval($seconds);
+
+		// Don't allow the program to start if the number given on the command line is invalid
+		if (!is_numeric(self::$cli_idle_time) || empty(self::$cli_idle_time)) {
+			throw new \RuntimeException("Idle time must be a number greater than zero", 4092);
+		}
+	}
+
+	protected function set_idle_time($seconds) {
+		// Make sure it is always a number
+		$seconds = intval($seconds);
+
+		// During runtime we will correct the number with a warning instead of exiting
+		if (!is_numeric($seconds) || empty($seconds)) {
+			$seconds = 3;
+			$this->warning("The idle time must be set to a number greater than zero. Setting idle time to $seconds");
+		}
+		$this->idle_time = $seconds;
+	}
+
+	protected function set_cli_max_file_size($max_file_size) {
+		// convert to a real number
+		self::$cli_max_file_size = intval($max_file_size);
+
+		// Don't allow the program to start if the number given on the command line is invalid
+		if (!is_numeric(self::$cli_max_file_size) || empty(self::$cli_max_file_size)) {
+			throw new \RuntimeException("Idle time must be a number greater than zero", 4092);
+		}
+	}
+
+	protected function set_max_file_size($max_file_size) {
+		$max_file_size = intval($max_file_size);
+		if (!is_numeric($max_file_size) || empty($max_file_size)) {
+			$max_file_size = 3145727;
+			$this->warning("Max file size must be a number greater than zero. Setting to $max_file_size");
+		}
+		$this->max_file_size = $max_file_size;
 	}
 
 	public function run(): int {
-		// Set a default
-		if (self::$hostname === null) {
-			self::$hostname = gethostname();
-		}
-
-		// Set a default
-		if (self::$max_records === null) {
-			self::$max_records = 100;
-		}
-
+		// Load the settings
 		$this->reload_settings();
 
+		// Set a flag for notifications
 		$this->initialized = true;
 
 		// Check for inotify php extension
 		if (!function_exists('inotify_init')) {
 			$this->warning('Missing inotify extension. Please install php' . substr(PHP_VERSION, 0, 3). '-inotify package for better performance');
 			while ($this->running) {
-				$this->process_in_bulk();
-				sleep(5);
+				$this->process_all_files();
+				sleep($this->idle_time);
 			}
 			return 0;
 		}
@@ -185,36 +301,57 @@ class xml_cdr_service extends service {
 			$read = [$inotify_instance];
 			$write = null;
 			$except = null;
+
+			// Block for event
 			if (stream_select($read, $write, $except, null) > 0) {
 				$events = inotify_read($inotify_instance) ?: [];
 				foreach ($events as $event) {
 					$mask = $event['mask'];
+
+					// Check the event type (mask) inotify detected
 					if ($mask & IN_Q_OVERFLOW) {
-						//more than 20,000 files will cause an overflow so process all files in the directory
+						// More than 20,000 files will cause an overflow so process all files in the directory
 						$this->warning('Too many files created. Processing in bulk.');
-						$this->process_in_bulk();
-						// clear the queue by removing and re-adding the watch
+						$this->process_all_files();
+
+						// Clear the queue by removing and re-adding the watch
 						inotify_rm_watch($inotify_instance, IN_CLOSE_WRITE | IN_MOVED_TO);
 						inotify_add_watch($inotify_instance, $this->xml_cdr_dir, IN_CLOSE_WRITE | IN_MOVED_TO);
+
+						// Stop processing foreach loop
 						break;
 					} elseif (($mask & IN_CLOSE_WRITE) || $mask & IN_MOVED_TO) {
-						//process individual file
+						// Process individual file detected
 						$this->process_file($event['name']);
 					} else {
-						$this->debug('Detected event: ' . $this->mask_debug($mask));
-						var_dump($event);
-						exit();
+						// Debug any extra events detected
+						$this->debug('Detected event: ' . self::inotify_to_string($mask));
 					}
 				}
 			}
+
+			// Check if we need to do a full scan
+			if ($this->full_scan_expire_time >= time()) {
+				$this->process_all_files();
+				//set a new timer
+				$this->set_full_scan_expire_time($this->full_scan_seconds);
+			}
 		}
 
+		//exit process without error
 		return 0;
 	}
 
-	private function process_in_bulk(): void {
+	/**
+	 * Reads files from the xml cdr directory.
+	 * The files are read until the readdir command returns false. This means any failed files MUST be moved to another
+	 * location so that the directory can be empty so this function can return.
+	 * @return void
+	 * @link https://php.net/readdir Readdir documentation
+	 */
+	private function process_all_files(): void {
 		do {
-			// Clean the existing files with the fastest method
+			// Read the existing files with the fastest method
 			$handle = opendir($this->xml_cdr_dir);
 			if (!$handle) return;
 			$processing = false;
@@ -245,7 +382,7 @@ class xml_cdr_service extends service {
 		}
 
 		//move files zero bytes or over 3 MB to the failed size directory
-		if ($size > 3145727) {
+		if ($size > $this->max_file_size) {
 			$this->debug("Moving oversize file '$xml_cdr_file' to 'failed/size'");
 			$this->move($xml_cdr_file, 'size');
 			// Next file
@@ -300,7 +437,7 @@ class xml_cdr_service extends service {
 
 		if (!is_dir($destination)) {
 			if (!mkdir($destination, 0751, true)) {
-				throw new \RuntimeException("Failed to create directory $destination", 4871);
+				$this->error("Failed to create directory $destination");
 			}
 		}
 
@@ -308,48 +445,61 @@ class xml_cdr_service extends service {
 
 		// Move file to failed directory
 		if (!rename($source, $destination)) {
-			$this->error("Failed to move $source to $destination");
+			$this->warning("Failed to move $source to $destination. Moving file to system temp folder.");
+			// Try moving to the temp folder so the process doesn't hang
+			if (!rename($source, sys_get_temp_dir())) {
+				$this->error("Failed to relocate file $source to system temp folder");
+				// We are unable to remove the file from the xml_cdr directory so we have to stop
+				throw new \RuntimeException("Failed to remove file $source", 4871);
+			}
 			return;
 		}
 
 		return;
 	}
 
-	protected function debug(string $message = '') {
+	protected function debug(string $message = ''): void {
 		self::log($message, LOG_DEBUG);
 	}
 
-	protected function info(string $message = '') {
+	protected function info(string $message = ''): void {
 		self::log($message, LOG_INFO);
 	}
 
-	protected function notice(string $message = '') {
+	protected function notice(string $message = ''): void {
 		self::log($message, LOG_NOTICE);
 	}
 
-	protected function warning(string $message = '') {
+	protected function warning(string $message = ''): void {
 		self::log($message, LOG_WARNING);
 	}
 
-	protected function error(string $message = '') {
+	protected function error(string $message = ''): void {
 		self::log($message, LOG_ERR);
 	}
 
-	function mask_debug(int $mask): string {
+	public static function inotify_to_string(int $mask): string {
 		$flags = [];
 		$map = [
 			IN_ACCESS => 'ACCESS',
+			IN_MODIFY => 'MODIFY',
 			IN_ATTRIB => 'ATTRIB',
-			IN_CLOSE_NOWRITE => 'CLOSE_NOWRITE',
 			IN_CLOSE_WRITE => 'CLOSE_WRITE',
+			IN_CLOSE_NOWRITE => 'CLOSE_NOWRITE',
+			IN_OPEN => 'OPEN',
+			IN_MOVED_TO => 'MOVED_TO',
+			IN_MOVED_FROM => 'MOVED_FROM',
 			IN_CREATE => 'CREATE',
 			IN_DELETE => 'DELETE',
 			IN_DELETE_SELF => 'DELETE_SELF',
-			IN_MODIFY => 'MODIFY',
 			IN_MOVE_SELF => 'MOVE_SELF',
-			IN_MOVED_FROM => 'MOVED_FROM',
-			IN_MOVED_TO => 'MOVED_TO',
-			IN_OPEN => 'OPEN',
+			IN_UNMOUNT => 'UNMOUNT',
+			IN_Q_OVERFLOW => 'Q_OVERFLOW',
+			IN_ISDIR => 'SUBJECT IS DIRECTORY',
+			IN_ONLYDIR => 'PATHNAME ONLY',
+			IN_DONT_FOLLOW => 'DONT_FOLLOW',
+			IN_MASK_ADD => 'MASK_ADD',
+			IN_ONESHOT => 'ONESHOT',
 		];
 		foreach ($map as $bit => $name) {
 			if ($mask & $bit)
