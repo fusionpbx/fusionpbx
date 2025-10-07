@@ -813,16 +813,6 @@ abstract class service {
 			}
 		}
 
-		//TODO remove updated settings object after merge
-		if (file_exists( __DIR__ . '/settings.php')) {
-			require_once __DIR__ . '/settings.php';
-		}
-
-		//TODO remove global functions after merge
-		if (file_exists(dirname(__DIR__).'/functions.php')) {
-			require_once dirname(__DIR__).'/functions.php';
-		}
-
 		//create the config object if not already created
 		if (self::$config === null) {
 			self::$config = new config(self::$config_file);
@@ -841,6 +831,169 @@ abstract class service {
 		return $service;
 	}
 
+	//////////////////////
+	// Helper functions //
+	//////////////////////
+
+	/**
+	 * Gets the user information for the user that spawned the process.
+	 * @return array Returns an associative array with id, name, home, and shell as keys. Values can be null.
+	 */
+	protected function get_system_user_real(): array {
+		if (function_exists('posix_getpwuid')) {
+			$uid = posix_getuid();
+			$info = posix_getpwuid($uid);
+			return [
+				'id' => $uid,
+				'name' => $info['name'] ?? null,
+				'home' => $info['dir'] ?? null,
+				'shell' => $info['shell'] ?? null
+			];
+		}
+
+		// Fallback for Windows
+		$user = getenv('USERNAME') ?: getenv('USER') ?: get_current_user();
+		return [
+			'id' => null,
+			'name' => $user,
+			'home' => getenv('HOMEPATH') ?: null,
+			'shell' => null
+		];
+	}
+
+	/**
+	 * Gets the current user information or what user PHP is acting as currently.
+	 * @return array Returns an associative array with id, name, home, and shell as keys. Values can be null.
+	 */
+	protected function get_system_user_effective(): array {
+		if (function_exists('posix_getpwuid')) {
+			$euid = posix_geteuid();
+			$info = posix_getpwuid($euid);
+			return [
+				'id' => $euid,
+				'name' => $info['name'] ?? null,
+				'home' => $info['dir'] ?? null,
+				'shell' => $info['shell'] ?? null
+			];
+		}
+
+		// Fallback for Windows (same as real)
+		return get_user();
+	}
+
+	/**
+	 * Gets the group information for the user that spawned the process.
+	 * @return array Returns an associative array with id, name, and members as keys. Values can be null. Members is an array or empty array.
+	 */
+	protected function get_system_group_real(): array {
+		if (function_exists('posix_getgrgid')) {
+			$gid = posix_getgid();
+			$info = posix_getgrgid($gid);
+			return [
+				'id' => $gid,
+				'name' => $info['name'] ?? null,
+				'members' => $info['members'] ?? []
+			];
+		}
+
+		// Fallback for Windows
+		return [
+			'id' => null,
+			'name' => getenv('USERDOMAIN') ?: 'N/A',
+			'members' => []
+		];
+	}
+
+	/**
+	 * Gets the group information of the effective user or what group the process is running under now.
+	 * @return array Returns an associative array with id, name, and members as keys. Values can be null. Members is an array or empty array.
+	 */
+	protected function get_system_group_effective(): array {
+		if (function_exists('posix_getgrgid')) {
+			$egid = posix_getegid();
+			$info = posix_getgrgid($egid);
+			return [
+				'id' => $egid,
+				'name' => $info['name'] ?? null,
+				'members' => $info['members'] ?? []
+			];
+		}
+
+		// Fallback for Windows
+		return get_group();
+	}
+
+	/**
+	 * Send a debug message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function debug(string $message = ''): void {
+		self::log($message, LOG_DEBUG);
+	}
+
+	/**
+	 * Send an info message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function info(string $message = ''): void {
+		self::log($message, LOG_INFO);
+	}
+
+	/**
+	 * Send a notice message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function notice(string $message = ''): void {
+		self::log($message, LOG_NOTICE);
+	}
+
+	/**
+	 * Send a warning message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function warning(string $message = ''): void {
+		self::log($message, LOG_WARNING);
+	}
+
+	/**
+	 * Send an error message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function error(string $message = ''): void {
+		self::log($message, LOG_ERR);
+	}
+
+	/**
+	 * Send a critical message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function critical(string $message = ''): void {
+		self::log($message, LOG_CRIT);
+	}
+
+	/**
+	 * Sends an alert message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function alert(string $message = ''): void {
+		self::log($message, LOG_ALERT);
+	}
+
+	/**
+	 * Sends an emergency message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function emergency(string $message = ''): void {
+		self::log($message, LOG_EMERG);
+	}
 }
 
 /*
