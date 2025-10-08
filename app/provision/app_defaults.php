@@ -151,6 +151,7 @@ if ($domains_processed == 1) {
 	$sql .= "		or default_setting_subcategory like 'flyingvoice_%' ";
 	$sql .= "	) ";
 	$sql .= "); ";
+	$database->execute($sql);
 
 }
 
