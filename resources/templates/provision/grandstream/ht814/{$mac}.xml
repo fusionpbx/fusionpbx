@@ -1,12 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Grandstream XML Provisioning Configuration -->
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
   <config version="1">
-    <!-- ######################################################################################### -->
-    <!-- ## Configuration template for HT814 firmware version 1.0.10.6                          ## -->
-    <!-- ##                                                                                     ## -->
-    <!-- ## FusionPBX variables set. Profile 2 disabled. All other settings are defaults.       ## -->
-    <!-- ######################################################################################### -->
+    <!-- ################################################################################### -->
+    <!-- ## Configuration template for HT81x firmware version 1.0.63.3                    ## -->
+    <!-- ################################################################################### -->
+    <!-- ## FusionPBX variables set. Profile 2 disabled. All other settings are defaults  ## -->
+    <!-- ################################################################################### -->
 
     <!-- ############################################################################## -->
     <!-- ##  Advanced Settings.                                                      ## -->
@@ -16,7 +17,6 @@
     <!-- # String; between ascii values 33 and 126 -->
     <!-- # Mandatory -->
     <P2>{$admin_password|escape: 'html'}</P2>
-
 
     <!-- # Layer 2 QoS.  -->
     <!-- #802.1Q/VLAN Tag (VLAN classification for RTP) -->
@@ -78,28 +78,16 @@
     {if isset($grandstream_firmware_upgrade_protocol) }
     <P212>{$grandstream_firmware_upgrade_protocol}</P212>
     {else}
-    <P212>1</P212>
+    <P212>2</P212>
     {/if}
 
     <!-- # Firmware Server Path -->
     <!-- # Server address -->
-    {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/gxw4004/{$firmware_version}</P192>
-    {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/gxw4004</P192>
-    {else}
-    <P192>{$domain_name}{$project_path}/app/provision</P192>
-    {/if}
+    <P192>{$grandstream_firmware_path}/ht814/</P192>
 
     <!-- # Config Server Path -->
     <!-- # Server address;  -->
-    {if $grandstream_config_server_path=="none"}
-    <P237></P237>
-    {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-    {elseif isset($domain_name)}
-    <P237>{$domain_name}{$project_path}/app/provision</P237>
-    {/if}
 
     <!-- # XML Config File Password -->
     <!-- # String; between ascii values 33 and 126 -->
@@ -112,7 +100,7 @@
 
     <!-- # HTTP/HTTPS Password -->
     <!-- # String; between ascii values 33 and 126 -->
-    <P1361>{$http_auth_password|escape: 'html'}</P1361>
+    <P1361>{$http_auth_password}</P1361>
 
     <!-- # Firmware File Prefix -->
     <!-- # String; between ascii values 33 and 126 -->
@@ -219,7 +207,6 @@
 <P1409>0</P1409>
 {/if}
 
-
     <!-- # ACS URL -->
     <!-- #P4503= -->
 
@@ -239,7 +226,6 @@
 {else}
 <P4506>0</P4506>
 {/if}
-
 
     <!-- # Periodic Inform Interval (default is 300) -->
     <!-- # Number: 1-99999 -->
@@ -273,8 +259,6 @@
     <!-- # Number: 162 or 1025 to 65535 -->
     <!-- # Mandatory -->
     <P21903>162</P21903>
-
-
 
     <!-- # SNMP Trap IP Address -->
     <!-- # Max String Length: 64 -->
@@ -559,7 +543,6 @@
 	{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
     <P130>{$tp}</P130>
 
-
     <!-- # SIP URI Scheme When Using TLS. 0 - No, 1 - Yes. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
@@ -570,7 +553,6 @@
     <!-- # Mandatory -->
     <P2331>0</P2331>
 
-
     <!-- # NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
@@ -580,7 +562,6 @@
     <P52>0</P52>
     {/if}
 
-
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
@@ -589,7 +570,6 @@
     {else}
     <P103>0</P103>
     {/if}
-
 
     <!-- # DNS SRV use Registered IP. When enabled, outbound call when registered to Second SRV will use registered IP first instead of first SRV record. 0 - No, 1 - Yes, default is 0 - No. -->
     <!-- # Number: 0, 1 -->
@@ -814,7 +794,6 @@
     <P850>101</P850>
     {/if}
 
-
     <!-- # Priority 2 -->
     <!-- # Number: 100, 101, 102 -->
     <!-- # Mandatory -->
@@ -966,7 +945,7 @@
     <!-- # No Key Entry Timeout. Default - 4 seconds. -->
     <!-- # Number: 1-15 -->
     <!-- # Mandatory -->
-    <P85>4</P85>
+    <P85>{$grandstream_dial_timeout}</P85>
 
     <!-- # Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response) -->
     <!-- # Number: 0, 1 -->
@@ -989,11 +968,11 @@
 
     <!-- # Dial Plan -->
     <!-- # String -->
-    {if isset($grandstream_dial_plan) }
-    <P4200>{$grandstream_dial_plan|escape: 'html'}</P4200>
-    {else}
-    <P4200>{literal}{ x+ | *x+ | *xx*x+ }{/literal}</P4200>
-    {/if}
+	{if isset($grandstream_dial_plan) }
+	<P4200>{$grandstream_dial_plan}</P4200>
+	{else}
+	<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
+	{/if}
 
     <!-- # SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -1406,9 +1385,8 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
     <P401>0</P401>
-    
-    <!-- ##  All other Profile 2 settings are typically not used in FusionPBX   ## -->    
 
+    <!-- ##  All other Profile 2 settings are typically not used in FusionPBX   ## -->
 
     <!-- ############################################################################## -->
     <!-- ##  FXS Ports                                                               ## -->
@@ -1484,7 +1462,7 @@
     {else}
     <P4596>0</P4596>
     {/if}
-   
+
     <!-- # String Max Length: 64  -->
     <P4211></P4211>
 
@@ -1524,7 +1502,7 @@
     {else}
     <P4597>0</P4597>
     {/if}
-   
+
     <!-- # String Max Length: 64  -->
     <P4212></P4212>
 
@@ -1582,22 +1560,22 @@
     <!-- # Web Session Timeout. In 1 to 60 minutes range. Default value is 10 -->
     <!-- # Number: 1 to 60 -->
     <!-- # Mandatory -->
-    <P28116>10</P28116>
+    <P28116>15</P28116>
 
     <!-- # Web Access Attempt Limit. Default value is 5 -->
     <!-- # Number: 1 to 10 -->
     <!-- # Mandatory -->
-    <P28117>5</P28117>
+    <P28117>10</P28117>
 
     <!-- # Web Lockout Duration. In 0 to 60 minutes range. Default value is 15 -->
     <!-- # Number: 0 to 60 -->
     <!-- # Mandatory -->
-    <P1683>15</P1683>
+    <P1683>10</P1683>
 
     <!-- # Web Access Mode. 0 - HTTPS, 1 - HTTP. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1650>0</P1650>
+    <P1650>{$grandstream_web_access_mode}</P1650>
 
     <!-- # HTTP Web Port. Default HTTP is 80. -->
     <!-- # Number: 1 to 65535 -->
