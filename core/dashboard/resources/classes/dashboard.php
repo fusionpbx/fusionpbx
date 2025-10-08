@@ -232,21 +232,41 @@
 
 						//create the array from existing data
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where dashboard_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters ?? null, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									$x = 0;
-									foreach ($rows as $row) {
-										//copy data
-											$array[$this->table][$x] = $row;
+								foreach ($uuids as $uuid) {
+									$dashboard_uuid = uuid();
+									foreach ($this->tables as $table) {
+										$sql = "select * from v_".$table." ";
+										$sql .= "where dashboard_uuid = ".$uuid." ";
+										$database = new database;
+										$rows = $database->select($sql, $parameters ?? null, 'all');
+										if (is_array($rows) && @sizeof($rows) != 0) {
+											$x = 0;
+											foreach ($rows as $row) {
+												//prevent copying these fields
+													unset($row['insert_date'], $row['insert_user']);
+													unset($row['update_date'], $row['update_user']);
+												
+												//convert boolean values to a string
+													foreach($row as $key => $value) {
+														if (gettype($value) == 'boolean') {
+															$value = $value ? 'true' : 'false';
+															$row[$key] = $value;
+														}
+													}
 
-										//add copy to the description
-											$array[$this->table][$x]['dashboard_uuid'] = uuid();
-											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+												//copy data
+													$array[$table][$x] = $row;
 
-										//increment the id
-											$x++;
+												//add copy to the description
+													$array[$table][$x]['dashboard_uuid'] = $dashboard_uuid;
+													if ($table === $this->table) {
+														$array[$table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+													}
+
+												//increment the id
+													$x++;
+											}
+										}
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -255,7 +275,6 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-
 									$this->database->save($array);
 									unset($array);
 
