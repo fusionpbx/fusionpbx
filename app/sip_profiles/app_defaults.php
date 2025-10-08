@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -33,21 +33,7 @@
 			unset($sql);
 
 			if ($num_rows == 0) {
-				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles')) {
-					$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
-				}
-				elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
-					$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
-				}
-				elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
-					$sip_profile_dir = '/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
-				}
-				elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
-					$sip_profile_dir = '/var/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
-				}
-				else {
-					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/sip_profiles/*.xml.noload';
-				}
+				$sip_profile_dir = dirname(__DIR__, 2).'/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				$xml_files = glob($sip_profile_dir);
 				foreach ($xml_files as $x => $xml_file) {
 					//load the sip profile xml and save it into an array
@@ -56,8 +42,7 @@
 					$json = json_encode($xml);
 					$sip_profile = json_decode($json, true);
 					$sip_profile_name = $sip_profile['@attributes']['name'];
-					$sip_profile_enabled = $sip_profile['@attributes']['enabled'];
-					//echo "sip profile name: ".$sip_profile_name."\n";
+					$sip_profile_enabled = $sip_profile['@attributes']['enabled'] ?? 'true';
 
 					if ($sip_profile_name != "{v_sip_profile_name}") {
 
@@ -92,6 +77,7 @@
 									$sip_profile_uuid = uuid();
 									$array['sip_profiles'][$x]['sip_profile_uuid'] = $sip_profile_uuid;
 									$array['sip_profiles'][$x]['sip_profile_name'] = $sip_profile_name;
+									$array['sip_profiles'][$x]['sip_profile_enabled'] = $sip_profile_enabled;
 									$array['sip_profiles'][$x]['sip_profile_description'] = $sip_profile_description;
 
 								//add the sip profile domains name, alias and parse
@@ -109,7 +95,7 @@
 										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_uuid'] = $sip_profile_uuid;
 										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_name'] = $row['@attributes']['name'];
 										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_value'] = $row['@attributes']['value'];
-										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_enabled'] = $row['@attributes']['enabled'] != false ? true : $row['@attributes']['enabled'];
+										$array['sip_profiles'][$x]['sip_profile_settings'][$y]['sip_profile_setting_enabled'] = $row['@attributes']['enabled'] ?? 'true';
 									}
 
 							}
@@ -149,21 +135,7 @@
 			unset($sql);
 
 			if ($num_rows == 0) {
-				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles')) {
-					$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
-				}
-				elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
-					$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
-				}
-				elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
-					$sip_profile_dir = '/usr/local/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
-				}
-				elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/sip_profiles')) {
-					$sip_profile_dir = '/var/www/fusionpbx/app/switch/resources/conf/sip_profiles/*.xml.noload';
-				}
-				else {
-					$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/switch/resources/conf/sip_profiles/*.xml.noload';
-				}
+				$sip_profile_dir = dirname(__DIR__, 2).'/app/switch/resources/conf/sip_profiles/*.xml.noload';
 				$xml_files = glob($sip_profile_dir);
 				foreach ($xml_files as $x => $xml_file) {
 					//load the sip profile xml and save it into an array
@@ -216,12 +188,10 @@
 
 			}
 
-
 		//if empty, set enabled to true
 			$sql = "update v_sip_profiles set ";
 			$sql .= "sip_profile_enabled = true ";
 			$sql .= "where sip_profile_enabled is null ";
-			$sql .= "or sip_profile_enabled = '' ";
 			$database->execute($sql);
 			unset($sql);
 
