@@ -86,7 +86,7 @@
 							}
 
 						//add the sip profile if it is not false
-							if ($sip_profile_enabled != false) {
+							if ($sip_profile_enabled != 'false') {
 
 								//add profile name and description
 									$sip_profile_uuid = uuid();
