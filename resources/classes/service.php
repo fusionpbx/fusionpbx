@@ -813,16 +813,6 @@ abstract class service {
 			}
 		}
 
-		//TODO remove updated settings object after merge
-		if (file_exists( __DIR__ . '/settings.php')) {
-			require_once __DIR__ . '/settings.php';
-		}
-
-		//TODO remove global functions after merge
-		if (file_exists(dirname(__DIR__).'/functions.php')) {
-			require_once dirname(__DIR__).'/functions.php';
-		}
-
 		//create the config object if not already created
 		if (self::$config === null) {
 			self::$config = new config(self::$config_file);
@@ -841,6 +831,77 @@ abstract class service {
 		return $service;
 	}
 
+	/**
+	 * Send a debug message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function debug(string $message = ''): void {
+		self::log($message, LOG_DEBUG);
+	}
+
+	/**
+	 * Send an info message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function info(string $message = ''): void {
+		self::log($message, LOG_INFO);
+	}
+
+	/**
+	 * Send a notice message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function notice(string $message = ''): void {
+		self::log($message, LOG_NOTICE);
+	}
+
+	/**
+	 * Send a warning message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function warning(string $message = ''): void {
+		self::log($message, LOG_WARNING);
+	}
+
+	/**
+	 * Send an error message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function error(string $message = ''): void {
+		self::log($message, LOG_ERR);
+	}
+
+	/**
+	 * Send a critical message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function critical(string $message = ''): void {
+		self::log($message, LOG_CRIT);
+	}
+
+	/**
+	 * Sends an alert message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function alert(string $message = ''): void {
+		self::log($message, LOG_ALERT);
+	}
+
+	/**
+	 * Sends an emergency message to the log
+	 * @param string $message
+	 * @return void
+	 */
+	protected function emergency(string $message = ''): void {
+		self::log($message, LOG_EMERG);
+	}
 }
 
 /*
