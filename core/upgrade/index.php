@@ -47,9 +47,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
 //set a default message_timeout
 	$message_timeout = 4*1000;
 

@@ -126,8 +126,6 @@
 			}
 
 		//save to the data
-			$database->app_name = 'conference_rooms';
-			$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 			$database->save($array);
 			$message = $database->message;
 			unset($array);

@@ -360,8 +360,7 @@
 	if (!function_exists('permission_exists')) {
 
 		function permission_exists($permission_name) {
-			global $domain_uuid, $user_uuid;
-			$database = database::new();
+			global $database, $domain_uuid, $user_uuid;
 			$permission = permissions::new($database, $domain_uuid, $user_uuid);
 			return $permission->exists($permission_name);
 		}
@@ -383,10 +382,9 @@
 	if (!function_exists('superadmin_list')) {
 
 		function superadmin_list() {
-			global $domain_uuid;
+			global $database, $domain_uuid;
 			$sql = "select * from v_user_groups ";
 			$sql .= "where group_name = 'superadmin' ";
-			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			$superadmin_list = "||";
 			if (is_array($result) && @sizeof($result) != 0) {
@@ -417,7 +415,7 @@
 
 		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $sql_order_by = null, $label_other = 'Other...') {
 			//html select other: build a select box from distinct items in db with option for other
-			global $domain_uuid;
+			global $database, $domain_uuid;
 			$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 
@@ -431,7 +429,6 @@
 			$sql = "select distinct(" . $field_name . ") as " . $field_name . " ";
 			$sql .= "from " . $table_name . " " . $sql_where_optional . " ";
 			$sql .= "order by " . (!empty($sql_order_by) ? $sql_order_by : $field_name . ' asc');
-			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as $field) {
@@ -461,7 +458,7 @@
 
 		function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $on_change = '') {
 			//html select: build a select box from distinct items in db
-			global $domain_uuid;
+			global $database, $domain_uuid;
 
 			$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
@@ -479,7 +476,6 @@
 				$sql = "select distinct(" . $field_name . ") as " . $field_name . " from " . $table_name . " " . $sql_where_optional . " ";
 			}
 
-			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as $field) {
@@ -713,13 +709,12 @@
 	if (!function_exists('username_exists')) {
 
 		function username_exists($username) {
-			global $domain_uuid;
+			global $database, $domain_uuid;
 			$sql = "select count(*) from v_users ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and username = :username ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['username'] = $username;
-			$database = database::new();
 			$num_rows = $database->select($sql, $parameters, 'column');
 			return $num_rows > 0 ? true : false;
 		}
@@ -729,14 +724,13 @@
 	if (!function_exists('add_extension_user')) {
 
 		function add_extension_user($extension_uuid, $username) {
-			global $domain_uuid;
+			global $database, $domain_uuid;
 			//get the user_uuid by using the username
 			$sql = "select user_uuid from v_users ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and username = :username ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['username'] = $username;
-			$database = database::new();
 			$user_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -747,7 +741,6 @@
 				$sql .= "and user_uuid = :user_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
 				$parameters['user_uuid'] = $user_uuid;
-				$database = database::new();
 				$num_rows = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 
@@ -763,9 +756,6 @@
 					$p = permissions::new();
 					$p->add('extension_user_add', 'temp');
 					//execute insert
-					$database = database::new();
-					$database->app_name = 'function-add_extension_user';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array);
 					unset($array);
 					//revoke temporary permissions
@@ -779,7 +769,7 @@
 	if (!function_exists('user_add')) {
 
 		function user_add($username, $password, $user_email = '') {
-			global $domain_uuid;
+			global $database, $domain_uuid;
 			if (empty($username)) {
 				return false;
 			}
@@ -812,12 +802,11 @@
 				$p = permissions::new();
 				$p->add('user_add', 'temp');
 				$p->add('user_group_add', 'temp');
-				//execute insert
-				$database = database::new();
-				$database->app_name = 'function-user_add';
-				$database->app_uuid = '15a8d74b-ac7e-4468-add4-3e6ebdcb8e22';
+
+				//save the data insert
 				$database->save($array);
 				unset($array);
+
 				//revoke temporary permissions
 				$p->delete('user_add', 'temp');
 				$p->delete('user_group_add', 'temp');
@@ -2036,8 +2025,8 @@
 	if (!function_exists('get_countries')) {
 
 		function get_countries() {
+			global $database;
 			$sql = "select * from v_countries order by country asc";
-			$database = database::new();
 			$result = $database->select($sql, null, 'all');
 			unset($sql);
 

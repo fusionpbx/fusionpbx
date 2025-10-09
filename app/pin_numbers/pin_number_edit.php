@@ -115,8 +115,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$array['pin_numbers'][0]['enabled'] = $enabled;
 					$array['pin_numbers'][0]['description'] = $description;
 				//save data
-					$database->app_name = 'pin_numbers';
-					$database->app_uuid = '4b88ccfb-cb98-40e1-a5e5-33389e14a388';
 					$database->save($array);
 					unset($array);
 				//redirect

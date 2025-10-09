@@ -347,8 +347,6 @@
 								if ($row_id === 1000) {
 
 									//save to the data
-										$database->app_name = 'users';
-										$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 										$database->save($array);
 										//$message = $database->message;
 
@@ -373,8 +371,6 @@
 
 				//save to the data
 					if (!empty($array)) {
-						$database->app_name = 'users';
-						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
 						//$message = $database->message;
 						unset($array);

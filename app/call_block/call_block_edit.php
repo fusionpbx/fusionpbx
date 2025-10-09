@@ -196,8 +196,6 @@
 						$array['call_block'][0]['date_added'] = time();
 						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-						$database->app_name = 'call_block';
-						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 						$database->save($array);
 						unset($array);
 
@@ -247,8 +245,6 @@
 						$array['call_block'][0]['date_added'] = time();
 						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-						$database->app_name = 'call_block';
-						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 						$database->save($array);
 						unset($array);
 

@@ -46,8 +46,6 @@ if ($domains_processed == 1) {
 				$p = permissions::new();
 				$p->add('device_add', 'temp');
 			//execute update
-				$database->app_name = 'provision';
-				$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 				$database->save($array, false);
 				unset($array);
 			//revoke temporary permissions
@@ -71,8 +69,6 @@ if ($domains_processed == 1) {
 			$p->add('default_setting_edit', 'temp');
 
 		//execute update
-			$database->app_name = 'provision';
-			$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 			$database->save($array, false);
 			unset($array);
 

@@ -37,9 +37,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = database::new();
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -118,10 +115,8 @@
 					$p->add('xml_cdr_edit', 'temp');
 
 				//remove record_path, record_name and record_length
-					$database->app_name = 'xml_cdr';
-					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 					$database->save($array, false);
-					$message = $database->message;
+					//$message = $database->message;
 					unset($array);
 
 				//remove the temporary permissions

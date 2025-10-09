@@ -41,9 +41,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the database object
-	$database = database::new();
-
 //initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
@@ -1204,8 +1201,6 @@
 					$p->add("dialplan_detail_edit", 'temp');
 
 				//save the dialplan
-					$database->app_name = 'destinations';
-					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$response = $database->save($array);
 
 				//remove the temporary permission
@@ -1267,8 +1262,6 @@
 					}
 
 				//save the destination
-					$database->app_name = 'destinations';
-					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$database->save($array);
 					$dialplan_response = $database->message;
 					unset($array);

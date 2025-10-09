@@ -40,9 +40,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = database::new();
-
 //set permissions
 	$permission = array();
 	$permission['xml_cdr_view'] = permission_exists('xml_cdr_view');

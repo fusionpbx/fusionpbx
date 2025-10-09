@@ -97,8 +97,6 @@ if ($domains_processed == 1) {
 		$p->add('voicemail_greeting_add', 'temp');
 
 		//execute update
-		$database->app_name = 'voicemail_greetings';
-		$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 		$message = $database->save($array, false);
 		unset($array);
 
@@ -128,8 +126,6 @@ if ($domains_processed == 1) {
 			$p->add('voicemail_greeting_edit', 'temp');
 
 			//execute
-			$database->app_name = 'voicemail_greetings';
-			$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 			$database->save($array, false);
 			unset($array);
 
@@ -176,8 +172,6 @@ if ($domains_processed == 1) {
 				$p->add('voicemail_greeting_edit', 'temp');
 
 				//execute update
-				$database->app_name = 'voicemail_greetings';
-				$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 				$database->save($array, false);
 				unset($array);
 
@@ -223,8 +217,6 @@ if ($domains_processed == 1) {
 				$p->add('voicemail_greeting_edit', 'temp');
 
 				//execute update
-				$database->app_name = 'voicemail_greetings';
-				$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 				$database->save($array, false);
 				unset($array);
 

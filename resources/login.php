@@ -31,9 +31,6 @@
 	$language = new text;
 	$text = $language->get(null,'core/user_settings');
 
-//connect to the database
-	$database = database::new();
-
 //set the current domain_uuid
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 

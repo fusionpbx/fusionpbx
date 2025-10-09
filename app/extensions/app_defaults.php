@@ -53,8 +53,6 @@
 					$p = permissions::new();
 					$p->add('extension_edit', 'temp');
 
-					$database->app_name = 'extensions';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array, false);
 					unset($array);
 

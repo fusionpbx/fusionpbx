@@ -123,8 +123,6 @@
 				}
 
 				if (is_uuid($array['conference_profile_params'][0]['conference_profile_param_uuid'])) {
-					$database->app_name = 'conference_profiles';
-					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 					$database->save($array);
 					unset($array);
 				}

@@ -18,9 +18,6 @@
 	//ini_set('max_execution_time',1800); //30 minutes
 	ini_set('memory_limit', '512M');
 
-//connect to the database
-	$database = database::new();
-
 //save the arguments to variables
 	$script_name = $argv[0];
 	if (!empty($argv[1])) {
@@ -446,9 +443,6 @@
 			$p->add('email_queue_add', 'temp');
 			$p->add('email_queue_update', 'temp');
 		//execute insert
-			$database->app_name = 'email_queue';
-			$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
-			print_r($array);
 			$message = $database->save($array);
 			print_r($message);
 			unset($array);
@@ -477,8 +471,6 @@
 		$p->add('email_queue_add', 'temp');
 
 		//execute insert
-		$database->app_name = 'email_queue';
-		$database->app_uuid = 'ba41954e-9d21-4b10-bbc2-fa5ceabeb184';
 		$database->save($array);
 		unset($array);
 
@@ -530,8 +522,6 @@
 					$p = permissions::new();
 					$p->add('email_log_add', 'temp');
 				//execute insert
-					$database->app_name = 'v_mailto';
-					$database->app_uuid = 'ba41954e-9d21-4b10-bbc2-fa5ceabeb184';
 					$database->save($array);
 					unset($array);
 				//revoke temporary permissions

@@ -207,8 +207,6 @@
 			$p->add("email_template_edit", 'temp');
 
 			//save the data
-			$database->app_name = 'email_templates';
-			$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
 			$database->save($array);
 			//$message = $database->message;
 

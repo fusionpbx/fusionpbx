@@ -36,7 +36,6 @@
 	$file_count = 0;
 	$row_count = 0;
 	$device_template = '';
-	$database = database::new(); //use an existing connection if possible
 
 //define PHP variables from the HTTP values
 	if (isset($_REQUEST['address'])) {

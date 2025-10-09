@@ -37,9 +37,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the database connection
-	$database = database::new();
-
 //get the session settings
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'];
@@ -207,8 +204,6 @@
 						$p = permissions::new();
 						$p->add('recording_edit', 'temp');
 					//execute update
-						$database->app_name = 'recordings';
-						$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 						$database->save($array);
 						unset($array);
 					//remove temporary permissions
@@ -244,8 +239,6 @@
 							$p = permissions::new();
 							$p->add('recording_add', 'temp');
 						//execute insert
-							$database->app_name = 'recordings';
-							$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 							$database->save($array);
 							unset($array);
 						//remove temporary permissions
@@ -265,8 +258,6 @@
 										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//execute update
-										$database->app_name = 'recordings';
-										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array);
 										unset($array);
 									//remove temporary permissions

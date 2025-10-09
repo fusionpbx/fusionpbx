@@ -54,10 +54,6 @@ if (!($config instanceof config)) {
 	$config = config::load();
 }
 
-if (!($database instanceof database)) {
-	$database = database::new();
-}
-
 if (!($settings instanceof settings)) {
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 }

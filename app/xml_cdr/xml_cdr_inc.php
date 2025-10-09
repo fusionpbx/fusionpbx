@@ -103,9 +103,6 @@
 		$_GET['show'] = 'false';
 	}
 
-//connect to database
-	$database = database::new();
-
 //get post or get variables from http
 	if (!empty($_REQUEST)) {
 		$cdr_id = $_REQUEST["cdr_id"] ?? '';

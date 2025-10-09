@@ -112,8 +112,6 @@
 							$p->add('sip_profile_setting_add', 'temp');
 
 						//execute insert
-							$database->app_name = 'sip_profiles';
-							$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
 							$database->save($array, false);
 							unset($array);
 
@@ -174,8 +172,6 @@
 							$p->add('sip_profile_domain_add', 'temp');
 
 						//execute insert
-							$database->app_name = 'sip_profiles';
-							$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
 							$database->save($array, false);
 							unset($array);
 

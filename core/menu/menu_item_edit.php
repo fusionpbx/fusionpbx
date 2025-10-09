@@ -83,8 +83,6 @@
 
 		//delete the group from the menu item
 			$array['menu_item_groups'][0]['menu_item_group_uuid'] = $menu_item_group_uuid;
-			$database->app_name = 'menu';
-			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$database->delete($array);
 			unset($array);
 
@@ -196,8 +194,6 @@
 					}
 					$array['menu_items'][0]['menu_item_add_user'] = $_SESSION["username"];
 					$array['menu_items'][0]['menu_item_add_date'] = 'now()';
-					$database->app_name = 'menu';
-					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
 					unset($array);
 				}
@@ -222,8 +218,6 @@
 					}
 					$array['menu_items'][0]['menu_item_add_user'] = $_SESSION["username"];
 					$array['menu_items'][0]['menu_item_add_date'] = 'now()';
-					$database->app_name = 'menu';
-					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
 					unset($array);
 				}
@@ -250,8 +244,6 @@
 							$array['menu_item_groups'][0]['menu_item_uuid'] = $menu_item_uuid;
 							$array['menu_item_groups'][0]['group_name'] = $group_name;
 							$array['menu_item_groups'][0]['group_uuid'] = $group_uuid;
-							$database->app_name = 'menu';
-							$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 							$database->save($array);
 							unset($array);
 						}
@@ -271,8 +263,6 @@
 						$array['menu_languages'][0]['menu_item_uuid'] = $menu_item_uuid;
 						$array['menu_languages'][0]['menu_language'] = $menu_language;
 						$array['menu_languages'][0]['menu_item_title'] = $menu_item_title;
-						$database->app_name = 'menu';
-						$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 						$database->save($array);
 						unset($array);
 					}

@@ -39,9 +39,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 
@@ -342,8 +339,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save the data
-			$database->app_name = 'fifo';
-			$database->app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
 			$result = $database->save($array);
 
 		//remove the temporary permission

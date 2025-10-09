@@ -188,8 +188,6 @@
 				$p = permissions::new();
 				$p->add('conference_room_user_delete', 'temp');
 
-				$database->app_name = 'conference_centers';
-				$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 				$database->delete($array);
 				unset($array);
 
@@ -333,8 +331,6 @@
 						$array['conference_rooms'][0]['enabled'] = $enabled;
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database->app_name = 'conference_centers';
-						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
 						unset($array);
 
@@ -349,8 +345,6 @@
 							$p = permissions::new();
 							$p->add('conference_room_user_add', 'temp');
 
-							$database->app_name = 'conference_centers';
-							$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 							$database->save($array);
 							unset($array);
 
@@ -411,8 +405,6 @@
 						}
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database->app_name = 'conference_centers';
-						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
 						unset($array);
 
@@ -431,8 +423,6 @@
 					$p = permissions::new();
 					$p->add('conference_room_user_add', 'temp');
 
-					$database->app_name = 'conference_centers';
-					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 					$database->save($array);
 					unset($array);
 

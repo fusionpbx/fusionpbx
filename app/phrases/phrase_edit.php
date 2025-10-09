@@ -163,8 +163,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database->app_name = 'phrases';
-						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
 						unset($array);
 
@@ -226,8 +224,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database->app_name = 'phrases';
-						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
 						unset($array);
 

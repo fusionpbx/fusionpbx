@@ -144,8 +144,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 			//add new uuid
 				$array['databases'][0]['database_uuid'] = uuid();
 
-				$database->app_name = 'databases';
-				$database->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
 				$database->save($array);
 				unset($array);
 
@@ -162,8 +160,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 			//add uuid to update
 				$array['databases'][0]['database_uuid'] = $database_uuid;
 
-				$database->app_name = 'databases';
-				$database->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
+			//save to the database
 				$database->save($array);
 				unset($array);
 

@@ -382,8 +382,6 @@
 							//process a chunk of the array
 								if ($row_id === 1000) {
 									//save to the data
-										$database->app_name = 'contacts';
-										$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 										$database->save($array);
 
 									//clear the array
@@ -405,8 +403,6 @@
 
 				//save to the data
 					if (!empty($array)) {
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}

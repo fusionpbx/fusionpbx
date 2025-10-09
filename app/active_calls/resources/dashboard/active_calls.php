@@ -40,11 +40,6 @@ $c = 0;
 $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
-//connect to the database
-if (!isset($database)) {
-	$database = database::new();
-}
-
 //set the dashboard icon to a solid color phone
 $widget_icon = 'fa-solid fa-phone';
 

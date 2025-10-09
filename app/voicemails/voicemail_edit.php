@@ -243,8 +243,6 @@
 					}
 
 				//execute insert/update
-					$database->app_name = 'voicemails';
-					$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 					$database->save($array);
 					unset($array);
 

@@ -68,8 +68,6 @@
 		$p = permissions::new();
 		$p->add('user_group_add', 'temp');
 
-		$database->app_name = 'groups';
-		$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 		$database->save($array);
 		unset($array);
 

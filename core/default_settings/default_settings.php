@@ -142,7 +142,6 @@
 		$sql .= "lower(default_setting_category) = :default_setting_category ";
 		$parameters['default_setting_category'] = strtolower($default_setting_category);
 	}
-	$database = database::new();
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //get the list

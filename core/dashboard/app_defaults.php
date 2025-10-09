@@ -188,8 +188,6 @@ if ($domains_processed == 1) {
 //exit;
 	//save the data
 		if (!empty($array)) {
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->save($array, false);
 		}
 		unset($array);
@@ -288,11 +286,8 @@ if ($domains_processed == 1) {
 
 	//save the data
 		if (!empty($array)) {
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->save($array, false);
 			//$result = $database->message;
-			//view_array($result);
 		}
 
 	//delete the temporary permissions

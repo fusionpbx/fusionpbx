@@ -57,8 +57,6 @@ if ($domains_processed == 1) {
 			$p = permissions::new();
 			$p->add('ivr_menu_edit', 'temp');
 
-			$database->app_name = 'ivr_menus';
-			$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 			$database->save($array, false);
 			unset($array);
 	

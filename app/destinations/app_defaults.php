@@ -87,8 +87,6 @@ if ($domains_processed == 1) {
 						$p->add('destination_edit', 'temp');
 
 						//create the database object and save the data
-						$database->app_name = 'destinations';
-						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 						$database->save($array, false);
 						unset($array);
 
@@ -113,8 +111,6 @@ if ($domains_processed == 1) {
 				$p->add('destination_edit', 'temp');
 
 				//create the database object and save the data
-				$database->app_name = 'destinations';
-				$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 				$database->save($array, false);
 				unset($array);
 
@@ -173,8 +169,6 @@ if ($domains_processed == 1) {
 						$p->add('destination_edit', 'temp');
 
 						//create the database object and save the data
-						$database->app_name = 'destinations';
-						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 						//$database->save($array, false);
 						unset($array);
 
@@ -199,8 +193,6 @@ if ($domains_processed == 1) {
 				$p->add('destination_edit', 'temp');
 
 				//create the database object and save the data
-				$database->app_name = 'destinations';
-				$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 				$database->save($array, false);
 				unset($array);
 

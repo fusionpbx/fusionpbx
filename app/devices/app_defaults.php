@@ -65,8 +65,6 @@ if ($domains_processed == 1) {
 				$p = permissions::new();
 				$p->add('device_key_edit', 'temp');
 
-				$database->app_name = 'devices';
-				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 				$database->save($array);
 				$response = $database->message;
 				unset($array);
@@ -110,8 +108,6 @@ if ($domains_processed == 1) {
 					$p = permissions::new();
 					$p->add('device_profile_key_add', 'temp');
 
-					$database->app_name = 'devices';
-					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 					$database->save($array);
 					$response = $database->message;
 					unset($array);
@@ -150,8 +146,6 @@ if ($domains_processed == 1) {
 					$p = permissions::new();
 					$p->add('device_profile_setting_add', 'temp');
 
-					$database->app_name = 'devices';
-					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 					$database->save($array);
 					$response = $database->message;
 					unset($array);
@@ -234,8 +228,6 @@ if ($domains_processed == 1) {
 					$p->add('device_vendor_function_add', 'temp');
 					$p->add('device_vendor_function_group_add', 'temp');
 
-					$database->app_name = 'devices';
-					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 					$database->save($array);
 					unset($array);
 

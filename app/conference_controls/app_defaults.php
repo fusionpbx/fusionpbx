@@ -68,8 +68,6 @@
 						$p = permissions::new();
 						$p->add('conference_control_add', 'temp');
 
-						$database->app_name = 'conference_controls';
-						$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 						$database->save($array);
 						unset($array);
 
@@ -99,8 +97,6 @@
 								$p = permissions::new();
 								$p->add('conference_control_detail_add', 'temp');
 
-								$database->app_name = 'conference_controls';
-								$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 								$database->save($array);
 								unset($array);
 

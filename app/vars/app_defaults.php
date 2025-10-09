@@ -101,8 +101,6 @@ if ($domains_processed == 1) {
 
 			//execute insert
 				if (!empty($array)) {
-					$database->app_name = 'vars';
-					$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 					$database->save($array, false);
 				}
 
@@ -198,8 +196,6 @@ if ($domains_processed == 1) {
 						$p->add("var_add", "temp");
 
 					//execute inserts
-						$database->app_name = 'vars';
-						$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 						$database->save($array, false);
 						unset($array);
 
