@@ -332,6 +332,7 @@ class xml_cdr_service extends service {
 
 			// Check if we need to do a full scan
 			if ($this->full_scan_expire_time >= time()) {
+				$this->info('Timer expired running full scan');
 				$this->process_all_files();
 				//set a new timer
 				$this->set_full_scan_expire_time($this->full_scan_seconds);
@@ -371,6 +372,10 @@ class xml_cdr_service extends service {
 			return;
 		}
 		$this->debug("Processing '$xml_cdr_file'");
+
+		if (!str_starts_with($xml_cdr_file, $this->xml_cdr_dir)) {
+			$xml_cdr_file = $this->xml_cdr_dir . '/' . $xml_cdr_file;
+		}
 
 		$size = filesize($xml_cdr_file);
 
@@ -413,7 +418,11 @@ class xml_cdr_service extends service {
 			}
 
 			//parse the xml and insert the data into the db
-			$this->cdr->xml_array(0, $leg, $call_details);
+			$result = $this->cdr->xml_array(0, $leg, $call_details);
+			if ($result === false) {
+				//processing failed in the xml_cdr class
+				$this->warning("Result when processing file returned false. Unable to process $xml_cdr_file.");
+			}
 		} else {
 			$this->warning("Failed to read contents of $xml_cdr_file");
 			$this->move($xml_cdr_file, 'failed');
