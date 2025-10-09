@@ -331,7 +331,7 @@ class xml_cdr_service extends service {
 			}
 
 			// Check if we need to do a full scan
-			if ($this->full_scan_expire_time >= time()) {
+			if (time() >= $this->full_scan_expire_time) {
 				$this->info('Timer expired running full scan');
 				$this->process_all_files();
 				//set a new timer
