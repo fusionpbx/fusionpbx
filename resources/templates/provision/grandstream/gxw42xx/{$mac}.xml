@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!-- Grandstream XML Provisioning Configuration -->
 <gs_provision version="1">
-	<config version="1">
-
+<mac>{$mac|replace:'-':''}</mac>
+  <config version="1">
 <!-- Configuration template for GXW42XX firmware version 1.0.4.7 -->
-
-
 
 <!-- Maintenance-Network setting -->
 
@@ -165,23 +164,11 @@
 {/if}
 
 <!-- Firmware Server Path -->
-{if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/gxw40xx/{$firmware_version}</P192>
-{elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/gxw40xx</P192>
-{else}
-<P192>{$domain_name}{$project_path}/app/provision</P192>
-{/if}
+<P192>{$grandstream_firmware_path}/gxw42xx/</P192>
 
 <!-- Config Server Path -->
 <!-- String: serveraddress -->
-{if $grandstream_config_server_path=="none"}
-<P237></P237>
-{elseif isset($grandstream_config_server_path)}
 <P237>{$grandstream_config_server_path}</P237>
-{elseif isset($domain_name)}
-<P237>{$domain_name}{$project_path}/app/provision</P237>
-{/if}
 
 <!-- Firmware File Prefix -->
 <!-- String Max Length: 32; between ascii values 33 and 126 -->
@@ -251,7 +238,7 @@
 <P276>0</P276>
 
 <!-- User Password -->
-<!-- P196=123 -->
+<!-- P196=-->
 
 <!-- Admin password -->
 <!-- String Max Length: 30; between ascii values 33 and 126 -->
@@ -529,15 +516,11 @@
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P271>1</P271>
+{if isset($account.1.password)}<P271>1</P271>{else}<P271>0</P271>{/if}
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
-{if $account.1.sip_transport != 'dns srv'}
-<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
-{else}
 <P47>{$account.1.server_address}</P47>
-{/if}
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress -->
@@ -546,21 +529,17 @@
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P4567>0</P4567>
+<P4567>1</P4567>
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress -->
-
 {if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
     <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
 {else}
 <P48>{$account.1.outbound_proxy_primary}</P48>
-{/if}	
-
+{/if}
 
 <!-- Profile 1-Network Settings -->
-
-
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory -->
@@ -586,7 +565,6 @@
 <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-
 {if isset($grandstream_nat_traversal)}
 <P52>{$grandstream_nat_traversal}</P52>
 {else}
@@ -601,35 +579,23 @@
 <!-- String: ipaddress -->
 <P197></P197>
 
-
 <!-- Profile 1-SIP Settings -->
 
-
 <!-- Basic Settings -->
-
-<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
-<!-- Number: 0,1,2 -->
-<!-- Mandatory -->
-
-{$tp=0}
+<!-- # SIP Transport 0 - UDP, 1 - TCP, 2 - TLS -->
+<!-- # Number: 0, 1, 2 -->
+<!-- # Mandatory -->
+{$tp1=0}
 {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.1.sip_transport == 'dns srv'}
-    {if isset($grandstream_dnssrv_transport)}
-        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}
-        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}
-        {else}{$tp=1}
-        {/if}
-	{else}{$tp=1}
-	{/if}
-{/if}
-<P130>{$tp}</P130>
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp1}</P130>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P31>1</P31>
+{if isset($account.1.password)}<P31>1</P31>{else}<P31>0</P31>{/if}
 
 <!-- Unregister On Reboot. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -1043,9 +1009,7 @@
 <!-- Mandatory -->
 <P824>0</P824>
 
-
 <!--Profile 1-Call Settings -->
-
 
 <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -1058,7 +1022,6 @@
 
 <!-- Dial Plan -->
 <!-- String Max Length: 1024 -->
-		
 {if isset($grandstream_dial_plan) }
 <P4200>{$grandstream_dial_plan}</P4200>
 {else}
@@ -1073,7 +1036,7 @@
 <!-- No Key Entry Timeout. Default - 4 seconds. -->
 <!-- Number: 1 to 15 -->
 <!-- Mandatory -->
-<P85>4</P85>
+<P85>{$grandstream_dial_timeout}</P85>
 
 <!-- Offhook Auto-Dial Delay (default is 0) -->
 <!-- String: 0 to 60 -->
@@ -1174,9 +1137,7 @@
 <!-- Mandatory -->
 <P198>100</P198>
 
-
 <!-- Profile 1-Ring Tones -->
-
 
 <!-- Distinctive Ring Tones -->
 
@@ -1256,15 +1217,14 @@
 
 <!-- Profile 2-General Settings -->
 
-
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P401>1</P401>
+{if isset($account.2.password)}<P401>1</P401>{else}<P401>0</P401>{/if}
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
-<P747>{$server_address_2}</P747>
+<P747>{$account.2.server_address}</P747>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress -->
@@ -1273,15 +1233,13 @@
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P4568>0</P4568>
+<P4568>1</P4568>
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress -->
 <P748></P748>
 
-
 <!-- Profile 2-Network Settings -->
-
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
@@ -1313,26 +1271,29 @@
 <!-- String: ipaddress -->
 <P792></P792>
 
-
 <!-- Profile 2-SIP Settings -->
-
 
 <!-- Basic Settings -->
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-<P830>0</P830>
+{$tp2=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P830>{$tp2}</P830>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P731>1</P731>
+{if isset($account.2.password)}<P731>1</P731>{else}<P731>0</P731>{/if}
 
 <!-- Unregister On Reboot. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P752>0</P752>
+<P752>1</P752>
 
 <!-- Outgoing call without Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -1725,9 +1686,7 @@
 <!-- Mandatory -->
 <P825>0</P825>
 
-
 <!-- Profile 2-Call Settings -->
-
 
 <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -1740,7 +1699,11 @@
 
 <!-- Dial Plan -->
 <!-- String Max Length: 1024 -->
-<P4201>{ x+ | *x+ }</P4201>
+{if isset($grandstream_dial_plan) }
+<P4201>{$grandstream_dial_plan}</P4201>
+{else}
+<P4201>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4201>
+{/if}
 
 <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -1750,7 +1713,7 @@
 <!-- No Key Entry Timeout. Default - 4 seconds. -->
 <!-- Number: 1 to 15 -->
 <!-- Mandatory -->
-<P292>4</P292>
+<P292>{$grandstream_dial_timeout}</P292>
 
 <!-- Offhook Auto-Dial Delay (default is 0) -->
 <!-- String: 0 to 60 -->
@@ -1928,16 +1891,14 @@
 
 
 <!-- Profile 3-General Settings -->
-
-
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P501>1</P501>
+{if isset($account.3.password)}<P501>1</P501>{else}<P501>0</P501>{/if}
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
-<P547>{$server_address_3}</P547>
+<P547>{$account.3.server_address}</P547>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress -->
@@ -1946,16 +1907,13 @@
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P4569>0</P4569>
+<P4569>1</P4569>
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress -->
 <P548></P548>
 
-
 <!-- Profile 3-Network Settings -->
-
-
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory -->
@@ -1986,26 +1944,29 @@
 <!-- String: ipaddress -->
 <P592></P592>
 
-
 <!-- Profile 3-SIP Settings -->
-
 
 <!-- Basic Settings -->
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-<P530>0</P530>
+{$tp3=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P530>{$tp3}</P530>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P531>1</P531>
+{if isset($account.3.password)}<P531>1</P531>{else}<P531>0</P531>{/if}
 
 <!-- Unregister On Reboot. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P552>0</P552>
+<P552>1</P552>
 
 <!-- Outgoing call without Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -2397,9 +2358,7 @@
 <!-- Mandatory -->
 <P4366>0</P4366>
 
-
 <!-- Profile 3-Call Settings -->
-
 
 <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -2412,7 +2371,11 @@
 
 <!-- Dial Plan -->
 <!-- String Max Length: 1024 -->
-<P4202>{ x+ | *x+ }</P4202>
+{if isset($grandstream_dial_plan) }
+<P4202>{$grandstream_dial_plan}</P4202>
+{else}
+<P4202>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4202>
+{/if}
 
 <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -2422,7 +2385,7 @@
 <!-- No Key Entry Timeout. Default - 4 seconds. -->
 <!-- Number: 1 to 15 -->
 <!-- Mandatory -->
-<P492>4</P492>
+<P492>{$grandstream_dial_timeout}</P492>
 
 <!-- Offhook Auto-Dial Delay (default is 0) -->
 <!-- String: 0 to 60 -->
@@ -2605,7 +2568,7 @@
 <!-- Profile Active.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P601>1</P601>
+{if isset($account.4.password)}<P601>1</P601>{else}<P601>0</P601>{/if}
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
@@ -2618,7 +2581,7 @@
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P4570>0</P4570>
+<P4570>1</P4570>
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress -->
@@ -2658,26 +2621,29 @@
 <!-- String: ipaddress -->
 <P618></P618>
 
-
 <!-- Profile 4-SIP Settings -->
-
 
 <!-- Basic Settings -->
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-<P4648>0</P4648>
+{$tp4=0}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P4648>{$tp4}</P4648>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P610>1</P610>
+{if isset($account.4.password)}<P610>1</P610>{else}<P610>0</P610>{/if}
 
 <!-- Unregister On Reboot. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P611>0</P611>
+<P611>1</P611>
 
 <!-- Outgoing call without Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -3069,9 +3035,7 @@
 <!-- Mandatory -->
 <P4355>0</P4355>
 
-
 <!-- Profile 4-Call Settings -->
-
 
 <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -3084,7 +3048,11 @@
 
 <!-- Dial Plan -->
 <!-- String Max Length: 1024 -->
-<P4203>{ x+ | *x+ }</P4203>
+{if isset($grandstream_dial_plan) }
+<P4203>{$grandstream_dial_plan}</P4203>
+{else}
+<P4203>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4203>
+{/if}
 
 <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -3094,7 +3062,7 @@
 <!-- No Key Entry Timeout. Default - 4 seconds. -->
 <!-- Number: 1 to 15 -->
 <!-- Mandatory -->
-<P4588>4</P4588>
+<P4588>{$grandstream_dial_timeout}</P4588>
 
 <!-- Offhook Auto-Dial Delay (default is 0) -->
 <!-- String: 0 to 60 -->
