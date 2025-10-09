@@ -26,24 +26,6 @@
  * Tim Fry <tim@fusionpbx.com>
  */
 
-/**
- * The purpose of this file is to subscribe to the switch events and then notify the web socket service of the event.
- *
- * Requirements:
- *   - PHP 7.1 or higher
- *
- * When an event is received from the switch, it is sent to the web socket service. The web socket service then
- * broadcasts the event to all subscribers that have subscribed to the service that broadcasted the event. The
- * web socket service only has information about who is connected. Each connection to the web socket service
- * is called a subscriber. Subscribers can be either a service or a web client. When a token is created and
- * given to the subscriber class using the "save_token" method, the subscriber is a web client. When the
- * method used is "save_service_token", the subscriber is still a subscriber but now has elevated privileges.
- * Each service can still subscribe to other events from other services just like regular subscribers. But,
- * services have the added ability to broadcast events to other subscribers.
- *
- * Line 1 of this file allows the script to be executable
- */
-
 if (version_compare(PHP_VERSION, '7.1.0', '<')) {
 	die("This script requires PHP 7.1.0 or higher. You are running " . PHP_VERSION . "\n");
 }
