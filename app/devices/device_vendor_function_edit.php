@@ -155,8 +155,6 @@
 						$array['device_vendor_functions'][0]['enabled'] = $enabled;
 						$array['device_vendor_functions'][0]['description'] = $description;
 
-						$database->app_name = 'devices';
-						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
 						unset($array);
 					}
@@ -181,8 +179,6 @@
 								$p = permissions::new();
 								$p->add('device_vendor_function_group_add', 'temp');
 
-								$database->app_name = 'devices';
-								$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 								$database->save($array);
 								unset($array);
 

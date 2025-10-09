@@ -27,9 +27,6 @@
 //includes files
 	require_once __DIR__ . "/require.php";
 
-//connect to the database if not initialized
-	$database = database::new();
-
 //set the domains session
 	if (!isset($_SESSION['domains'])) {
 		$domain = new domains();

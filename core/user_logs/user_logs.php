@@ -81,10 +81,6 @@
 			}
 		}
 
-		//prepare the database object
-		$database->app_name = 'user_logs';
-		$database->app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
-
 		//send the array to the database class
 		if (!empty($action) && $action == 'delete' && permission_exists('user_log_delete')) {
 			$database->delete($array);

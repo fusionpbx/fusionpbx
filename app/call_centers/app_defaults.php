@@ -61,10 +61,8 @@ if ($domains_processed == 1) {
 				$p = permissions::new();
 				$p->add('call_center_tier_edit', 'temp');
 
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->save($array, false);
-				$response = $database->message;
+				//$response = $database->message;
 				unset($array);
 
 				$p->delete('call_center_tier_edit', 'temp');
@@ -173,8 +171,6 @@ if ($domains_processed == 1) {
 				$p->add("dialplan_edit", "temp");
 
 			//save to the data
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->save($array, false);
 				$message = $database->message;
 

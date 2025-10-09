@@ -86,8 +86,6 @@ if ($domains_processed == 1) {
 					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
-					$database->app_name = 'phrases';
-					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					$database->save($array, false);
 					unset($array);
 
@@ -122,8 +120,6 @@ if ($domains_processed == 1) {
 					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
-					$database->app_name = 'phrases';
-					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					$database->save($array, false);
 					unset($array);
 

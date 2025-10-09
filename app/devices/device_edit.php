@@ -48,10 +48,7 @@
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$domain_name = $_SESSION['domain_name'] ?? '';
 
-//initialize the database object
-	$database = database::new();
-
-//initialize the settigns object
+//initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //action add or update
@@ -444,8 +441,6 @@
 
 
 				//save the device
-					$database->app_name = 'devices';
-					$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 					$database->save($array);
 
 				//remove checked lines

@@ -143,9 +143,6 @@
 		//if logged in, redirect to login destination
 			if (!isset($_REQUEST["key"])) {
 
-				//create database object
-				$database = database::new();
-
 				//connect to the settings object
 				$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 

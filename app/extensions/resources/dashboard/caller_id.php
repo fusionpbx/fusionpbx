@@ -88,8 +88,6 @@
 					$p->add("extension_edit", "temp");
 
 				//save to the data
-					$database->app_name = 'extensions';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$message = $database->save($array);
 
 				//update the session array

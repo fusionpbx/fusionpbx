@@ -38,9 +38,6 @@
 		exit;
 	}
 
-//connect to database
-	$database = database::new();
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();

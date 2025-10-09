@@ -126,13 +126,11 @@
 			$array['email_templates'][0]['template_description'] = $template_description;
 
 		//save to the data
-			$database->app_name = 'email_templates';
-			$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
 			if (!empty($email_template_uuid)) {
 				$database->uuid($email_template_uuid);
 			}
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 
 		//redirect the user
 			if (isset($action)) {

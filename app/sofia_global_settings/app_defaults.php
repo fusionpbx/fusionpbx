@@ -73,8 +73,6 @@ if ($domains_processed == 1) {
 				$p->add('sofia_global_setting_add', 'temp');
 
 			//execute insert
-				$database->app_name = 'sofia_global_settings';
-				$database->app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
 				$database->save($array, false);
 				unset($array);
 

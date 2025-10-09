@@ -44,7 +44,6 @@
 	$user_name = $_SESSION['username'] ?? '';
 
 //create database connection and settings object
-	$database = database::new();
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //add multi-lingual support

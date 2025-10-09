@@ -216,8 +216,6 @@
 				$p->add('voicemail_greeting_edit', 'temp');
 
 				//execute inserts/updates
-				$database->app_name = 'voicemail_greetings';
-				$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 				$database->save($array);
 				unset($array);
 

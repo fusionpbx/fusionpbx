@@ -39,9 +39,6 @@
 		exit;
 	}
 
-//initialize the database connection
-	$database = database::new();
-
 //create the waveform file
 	if (is_uuid($_GET['id']) || !empty($_GET['data'])) {
 

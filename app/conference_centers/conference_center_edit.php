@@ -166,10 +166,8 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database->app_name = "conference_centers";
-			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 			unset($array);
 
 		//remove the temporary permission

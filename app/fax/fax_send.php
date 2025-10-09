@@ -844,8 +844,6 @@ if (!function_exists('fax_split_dtmf')) {
 				$p->add('fax_queue_add', 'temp');
 
 				//save the data
-				$database->app_name = 'fax queue';
-				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 				$database->save($array);
 
 				//remove temporary permisison

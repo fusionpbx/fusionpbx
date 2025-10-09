@@ -45,9 +45,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//set up database object
-	$database = database::new();
-
 //get the settings
 	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 

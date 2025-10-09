@@ -178,8 +178,6 @@
 							$p->add('dialplan_detail_add', 'temp');
 						}
 						if (is_array($array) && sizeof($array) != 0) {
-							$database->app_name = 'default_settings';
-							$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 							$database->save($array);
 							unset($array);
 
@@ -216,8 +214,6 @@
 				$array['default_settings'][$x]['default_setting_description'] = $default_setting_description;
 
 				//save to the data
-				$database->app_name = 'default_settings';
-				$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 				$database->save($array);
 				$message = $database->message;
 

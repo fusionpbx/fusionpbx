@@ -81,8 +81,6 @@
 				$p = permissions::new();
 				$p->add('ring_group_edit', 'temp');
 
-				$database->app_name = 'ring_groups';
-				$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 				$database->save($array);
 				unset($array);
 

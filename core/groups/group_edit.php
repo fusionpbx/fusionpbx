@@ -37,9 +37,6 @@
 		exit;
 	}
 
-//connect to database
-	$database = database::new();
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -138,8 +135,6 @@
 			$array['groups'][0]['group_description'] = $group_description;
 
 		//save the data
-			$database->app_name = 'Group Manager';
-			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 			$database->save($array);
 
 		//update group name in group permissions if group name changed
@@ -151,8 +146,6 @@
 				$parameters['group_name'] = $group_name;
 				$parameters['group_name_previous'] = $group_name_previous;
 				$parameters['group_uuid'] = $group_uuid;
-				$database->app_name = 'Group Manager';
-				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 			}

@@ -452,8 +452,6 @@
 				$p->add('fax_queue_edit', 'temp');
 
 				//save the data
-				$database->app_name = 'fax queue';
-				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 				$database->save($array, false);
 				unset($array);
 
@@ -667,8 +665,6 @@
 			$p->add('fax_queue_edit', 'temp');
 
 		//save the data
-			$database->app_name = 'fax queue';
-			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 			$database->save($array, false);
 			unset($array);
 

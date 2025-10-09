@@ -238,8 +238,6 @@
 
 		//save the save array
 			if (!empty($array['save']) && is_array($array['save']) && @sizeof($array['save']) != 0) {
-				$database->app_name = 'groups';
-				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 				$database->save($array['save']);
 				$message = $database->message;
 			}
@@ -247,8 +245,6 @@
 		//delete the delete array
 			if (!empty($array['delete']) && is_array($array['delete']) && @sizeof($array['delete']) != 0) {
 				if (permission_exists('group_permission_delete')) {
-					$database->app_name = 'groups';
-					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 					$database->delete($array['delete']);
 				}
 			}

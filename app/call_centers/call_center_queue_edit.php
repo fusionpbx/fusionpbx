@@ -42,8 +42,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize database and settings
-	$database = database::new();
+//initialize settings object
 	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
@@ -205,8 +204,6 @@
 				$p = permissions::new();
 				$p->add('call_center_tier_delete', 'temp');
 
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->delete($array);
 				unset($array);
 
@@ -464,10 +461,8 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database->app_name = 'call_centers';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");

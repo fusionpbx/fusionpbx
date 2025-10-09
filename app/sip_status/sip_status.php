@@ -42,9 +42,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//create the database object
-	$database = database::new();
-
 //create event socket
 	$esl = event_socket::create();
 	if (!$esl->is_connected()) {
