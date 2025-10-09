@@ -396,6 +396,7 @@
 						unlink(session_save_path() . "/sess_" . $row['session_id']);
 					}
 				}
+				unset($sql, $parameters);
 
 				//create a one way hash for the user password
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
