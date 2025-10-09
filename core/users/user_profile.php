@@ -194,9 +194,6 @@
 				$array_delete['contact_attachments'][0]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
 				$array_delete['contact_attachments'][0]['domain_uuid'] = $domain_uuid;
 				$array_delete['contact_attachments'][0]['contact_attachment_uuid'] = $contact_attachment_uuid;
-				$database = new database;
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->delete($array_delete);
 				unset($array_delete);
 
