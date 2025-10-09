@@ -1664,6 +1664,14 @@
 		<!-- # Yes or No.  -->
 		<item name="users.testPasswordStrength.enable">No</item>
 
+		<!-- # Customized Station Label -->
+		<!-- # String -->
+		{if isset($grandstream_customized_station_label) }
+			<item name="lcd.customized.station.label">{$grandstream_customized_station_label}</item>
+		{else}
+			<item name="lcd.customized.station.label"></item>
+		{/if}
+		
 		<!-- # Enable Public Mode. No or Yes. -->
 		<item name="hotdesking.enable">No</item>
 
