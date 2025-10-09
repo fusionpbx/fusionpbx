@@ -1190,10 +1190,10 @@
 							$provision["daylight_savings_start_time"] = date('H', $daylight_savings_start);
 						}
 						if ($daylight_savings_end !== null) {
-							$provision["daylight_savings_end"] = date('Y-m-d H:i:s', $daylight_savings_end);
-							$provision["daylight_savings_end_month"] = date('m', $daylight_savings_end);
-							$provision["daylight_savings_end_day"] = date('d', $daylight_savings_end);
-							$provision["daylight_savings_end_time"] = date('H', $daylight_savings_end);
+							$provision["daylight_savings_stop"] = date('Y-m-d H:i:s', $daylight_savings_end);
+							$provision["daylight_savings_stop_month"] = date('m', $daylight_savings_end);
+							$provision["daylight_savings_stop_day"] = date('d', $daylight_savings_end);
+							$provision["daylight_savings_stop_time"] = date('H', $daylight_savings_end);
 						}
 
 						//add a generic gmt_offset
