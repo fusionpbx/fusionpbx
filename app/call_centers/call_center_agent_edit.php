@@ -167,9 +167,7 @@
 				$array['users'][0]['user_status'] = $agent_status;
 			}
 
-		//save to the data
-			$database->app_name = 'call_center';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+		//save to the database
 			$database->save($array);
 
 		//syncrhonize configuration

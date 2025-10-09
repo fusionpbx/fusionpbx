@@ -312,9 +312,6 @@
 			$array['dialplans'][$x]['dialplan_xml'] = $dialplan_array[$dialplan_uuid];
 
 		//add or update the database
-			$database->app_name = 'dialplans';
-			$database->app_uuid = $app_uuid ?? null;
-			$database->uuid($dialplan_uuid);
 			$database->save($array);
 			unset($array);
 

@@ -176,8 +176,6 @@
 			}
 
 		//save to the data
-			$database->app_name = 'Device Profiles';
-			$database->app_uuid = 'bb2531c3-97e6-428f-9a19-cbac1b96f5b7';
 			$database->save($array);
 
 		//remove checked keys

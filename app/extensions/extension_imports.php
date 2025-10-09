@@ -323,8 +323,6 @@
 								if ($row_id === 1000) {
 
 									//save to the data
-										$database->app_name = 'extensions';
-										$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 										$database->save($array);
 
 									//clear the array
@@ -342,8 +340,6 @@
 
 				//save to the data
 					if (!empty($array) && is_array($array)) {
-						$database->app_name = 'extensions';
-						$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 						$database->save($array);
 						unset($array);
 					}

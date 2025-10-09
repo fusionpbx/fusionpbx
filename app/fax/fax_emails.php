@@ -37,7 +37,6 @@ $sql .= "where fax_email_connection_host <> '' ";
 $sql .= "and f.domain_uuid = d.domain_uuid ";
 $sql .= "and fax_email_connection_host is not null ";
 $sql .= "and fax_email_outbound_subject_tag is not null ";
-$database = database::new();
 $result = $database->select($sql, null, 'all');
 unset($sql);
 

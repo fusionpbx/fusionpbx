@@ -259,8 +259,6 @@
 										$p->add('device_key_edit', 'temp');
 
 									//save the changes
-										$database->app_name = 'devices';
-										$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 										$result = $database->save($array);
 
 									//remove the temporary permissions

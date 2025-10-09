@@ -169,8 +169,6 @@
 
 		//delete the group from the widget
 			$array['dashboard_widget_groups'][0]['dashboard_widget_group_uuid'] = $widget_group_uuid;
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->delete($array);
 			unset($array);
 
@@ -329,8 +327,6 @@
 			}
 
 		//save the data
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$result = $database->save($array);
 
 		//redirect the user

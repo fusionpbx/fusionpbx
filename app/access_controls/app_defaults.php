@@ -77,8 +77,6 @@
 						$p = permissions::new();
 						$p->add('access_control_add', 'temp');
 
-						$database->app_name = 'access_controls';
-						$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 						$database->save($array, false);
 						unset($array);
 
@@ -109,8 +107,6 @@
 								$p = permissions::new();
 								$p->add('access_control_node_add', 'temp');
 
-								$database->app_name = 'access_controls';
-								$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 								$database->save($array, false);
 								unset($array);
 

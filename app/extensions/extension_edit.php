@@ -312,8 +312,6 @@
 			$p->add('extension_user_delete', 'temp');
 
 		//save the array
-			$database->app_name = 'extensions';
-			$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 			$database->delete($array);
 			unset($array);
 
@@ -339,8 +337,6 @@
 				$p->add('device_line_delete', 'temp');
 
 			//save the array
-				$database->app_name = 'extensions';
-				$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 				$database->delete($array);
 				unset($array);
 
@@ -831,9 +827,7 @@
 						unset($sql, $parameters);
 					}
 
-				//save to the data
-					$database->app_name = 'extensions';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+				//save to the data';
 					$message = $database->save($array);
 					unset($array);
 

@@ -42,8 +42,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize database and settings
-	$database = database::new();
+//initialize the settings object
 	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
@@ -413,8 +412,6 @@
 					}
 
 				//save to the data
-					$database->app_name = 'ivr_menus';
-					$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 					$database->save($array);
 					$message = $database->message;
 

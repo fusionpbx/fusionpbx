@@ -572,15 +572,9 @@
 				$p->add('contact_user_add', 'temp');
 				$p->add('contact_group_add', 'temp');
 
-				//view_array($array);
-
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->save($array);
-				$message = $database->message;
+				//$message = $database->message;
 				unset($array);
-
-				//view_array($message);
 
 				$p->delete('contact_add', 'temp');
 				$p->delete('contact_phone_add', 'temp');

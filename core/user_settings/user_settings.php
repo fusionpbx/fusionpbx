@@ -99,8 +99,6 @@
 		//update setting
 			$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuids[0];
 			$array['user_settings'][0]['user_setting_enabled'] = $enabled;
-			$database->app_name = 'user_settings';
-			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 			$database->save($array);
 			unset($array);
 

@@ -36,7 +36,6 @@
 	}
 
 //set defaults
-	$database = database::new();
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);

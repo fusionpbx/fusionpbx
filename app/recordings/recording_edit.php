@@ -269,8 +269,6 @@
 				$array['recordings'][0]['recording_description'] = $recording_description;
 
 				//execute update
-				$database->app_name = 'recordings';
-				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
 				unset($array);
 

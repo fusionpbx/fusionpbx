@@ -42,9 +42,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
 //define defaults
 	$action = '';
 	$search = '';

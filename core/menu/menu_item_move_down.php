@@ -67,8 +67,6 @@ if (count($_GET)>0) {
 			$sql .= "and menu_item_order = :menu_item_order ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['menu_item_order'] = $menu_item_order + 1;
-			$database->app_name = 'menu';
-			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
 
@@ -79,8 +77,6 @@ if (count($_GET)>0) {
 			$sql .= "and menu_item_id = :menu_item_id ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['menu_item_id'] = $menu_item_id;
-			$database->app_name = 'menu';
-			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
 

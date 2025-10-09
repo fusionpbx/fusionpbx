@@ -30,7 +30,6 @@
 //database and settings
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
-	$database = database::new();
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //set variables if not set

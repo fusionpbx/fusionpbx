@@ -143,8 +143,6 @@
 						$domain_array = $array;
 
 						//add the new domain
-						$database->app_name = 'domains';
-						$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 						$database->save($array);
 
 						//add dialplans to the domain
@@ -200,8 +198,6 @@
 						$array['domains'][0]['domain_name'] = $domain_name;
 						$array['domains'][0]['domain_enabled'] = $domain_enabled;
 						$array['domains'][0]['domain_description'] = $domain_description;
-						$database->app_name = 'domains';
-						$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 						$database->save($array);
 
 					//add dialplans to the domain
@@ -484,8 +480,6 @@
 								$sql .= "var_value = :var_value ";
 								$sql .= "where var_name = 'domain' ";
 								$parameters['var_value'] = $domain_name;
-								$database->app_name = 'domains';
-								$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);
 							}
