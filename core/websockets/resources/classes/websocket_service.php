@@ -562,7 +562,7 @@ class websocket_service extends service {
 						$this->disconnect_client($client_socket);
 						continue;
 					}
-					$this->err("UNKNOWN CONTROL FRAME: '$value'");
+					$this->error("UNKNOWN CONTROL FRAME: '$value'");
 				}
 
 				try {
@@ -585,8 +585,8 @@ class websocket_service extends service {
 					//
 					// Dump the details in the log
 					//
-					$this->err("ERROR FROM $subscriber_id: $message ($code) IN FILE $file (Line: $line)");
-					$this->err($se->getTraceAsString());
+					$this->error("ERROR FROM $subscriber_id: $message ($code) IN FILE $file (Line: $line)");
+					$this->error($se->getTraceAsString());
 					//
 					// Disconnect the subscriber
 					//
@@ -858,22 +858,6 @@ class websocket_service extends service {
 
 		// Return completed data frame
 		return $data;
-	}
-
-	private function debug(string $message) {
-		self::log($message, LOG_DEBUG);
-	}
-
-	private function warning(string $message) {
-		self::log($message, LOG_WARNING);
-	}
-
-	private function err(string $message) {
-		self::log($message, LOG_ERR);
-	}
-
-	private function info(string $message) {
-		self::log($message, LOG_INFO);
 	}
 
 	/**
