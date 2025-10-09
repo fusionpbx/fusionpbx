@@ -156,22 +156,6 @@ abstract class base_websocket_system_service extends service implements websocke
 		return 0;
 	}
 
-	protected function debug(string $message) {
-		self::log($message, LOG_DEBUG);
-	}
-
-	protected function warn(string $message) {
-		self::log($message, LOG_WARNING);
-	}
-
-	protected function error(string $message) {
-		self::log($message, LOG_ERR);
-	}
-
-	protected function info(string $message) {
-		self::log($message, LOG_INFO);
-	}
-
 	/**
 	 * Connects to the web socket server using a websocket_client object
 	 * @return bool True if connected and False if not able to connect
