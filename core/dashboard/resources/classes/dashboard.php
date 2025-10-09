@@ -234,6 +234,8 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								foreach ($uuids as $uuid) {
 									$dashboard_uuid = uuid();
+									$widget_uuids = [];
+
 									foreach ($this->tables as $table) {
 										$sql = "select * from v_".$table." ";
 										$sql .= "where dashboard_uuid = ".$uuid." ";
@@ -242,10 +244,15 @@
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$x = 0;
 											foreach ($rows as $row) {
+												//skip child widgets
+													if (!empty($row['dashboard_widget_parent_uuid'])) {
+														continue;
+													}
+
 												//prevent copying these fields
 													unset($row['insert_date'], $row['insert_user']);
 													unset($row['update_date'], $row['update_user']);
-												
+
 												//convert boolean values to a string
 													foreach($row as $key => $value) {
 														if (gettype($value) == 'boolean') {
@@ -261,6 +268,38 @@
 													$array[$table][$x]['dashboard_uuid'] = $dashboard_uuid;
 													if ($table === $this->table) {
 														$array[$table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+													}
+
+												//handle widget uuid
+													if (isset($row['dashboard_widget_uuid']) && !isset($row['dashboard_widget_group_uuid'])) {
+														$widget_uuid = uuid();
+														$widget_uuids[$array[$table][$x]['dashboard_widget_uuid']] = $widget_uuid;
+														$array[$table][$x]['dashboard_widget_uuid'] = $widget_uuid;
+														//add child widgets under parent widget
+														if ($row['widget_path'] === 'dashboard/parent') {
+															$x++;
+															foreach ($rows as $child) {
+																if ($child['dashboard_widget_parent_uuid'] == $row['dashboard_widget_uuid']) {
+																	unset($child['insert_date'], $child['insert_user']);
+																	unset($child['update_date'], $child['update_user']);
+
+																	$array[$table][$x] = $child;
+																	$array[$table][$x]['dashboard_uuid'] = $dashboard_uuid;
+
+																	$child_uuid = uuid();
+																	$widget_uuids[$array[$table][$x]['dashboard_widget_uuid']] = $child_uuid;
+																	$array[$table][$x]['dashboard_widget_uuid'] = $child_uuid;
+																	$array[$table][$x]['dashboard_widget_parent_uuid'] = $widget_uuids[$array[$table][$x]['dashboard_widget_parent_uuid']] ?? '';
+																}
+																$x++;
+															}
+														}
+													}
+
+												//handle widget group uuid
+													if (isset($row['dashboard_widget_group_uuid'])) {
+														$array[$table][$x]['dashboard_widget_group_uuid'] = uuid();
+														$array[$table][$x]['dashboard_widget_uuid'] = $widget_uuids[$array[$table][$x]['dashboard_widget_uuid']];
 													}
 
 												//increment the id
