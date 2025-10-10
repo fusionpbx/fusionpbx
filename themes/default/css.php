@@ -246,6 +246,9 @@ $message_alert_background_color = $settings->get('theme', 'message_alert_backgro
 $operator_panel_border_color = $settings->get('theme', 'operator_panel_border_color', '#b9c5d8');
 $operator_panel_sub_background_color = $settings->get('theme', 'operator_panel_sub_background_color', '#e5eaf5');
 $operator_panel_main_background_color = $settings->get('theme', 'operator_panel_main_background_color', '#fff');
+$operator_panel_user_info = $settings->get('theme', 'operator_panel_user_info', '#444');
+$operator_panel_caller_info = $settings->get('theme', 'operator_panel_caller_info', '#444');
+$operator_panel_call_info = $settings->get('theme', 'operator_panel_call_info', '#444');
 $dashboard_background_color = $settings->get('theme', 'dashboard_background_color', '');
 $dashboard_background_gradient_style = $settings->get('theme', 'dashboard_background_gradient_style', '');
 $dashboard_background_gradient_angle = $settings->get('theme', 'dashboard_background_gradient_angle', '');
@@ -2855,6 +2858,7 @@ else { //default: white
 		font-family: arial;
 		font-size: 10px;
 		display: inline-block;
+		color: <?=$operator_panel_user_info?>;
 		}
 
 	.op_user_info strong {
@@ -2866,6 +2870,7 @@ else { //default: white
 		margin-top: 4px;
 		font-family: arial;
 		font-size: 10px;
+		color: <?=$operator_panel_caller_info?>;
 		}
 
 	.op_call_info {
@@ -2873,6 +2878,7 @@ else { //default: white
 		padding: 0px;
 		font-family: arial;
 		font-size: 10px;
+		color: <?=$operator_panel_call_info?>;
 		}
 
 	#op_btn_status_available {
