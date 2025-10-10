@@ -317,6 +317,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	//declare the global variables
 	global $database;
 
+	//validate the destination number
 	$destination_number = trim($destination_number);
 	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
 	if (count($matches) > 0) {
@@ -328,19 +329,25 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		return $bridge_array;
 	}
 
+	//initialize the bridge array
+	$bridge_array = array();
+
 	//get the hostname
 	$hostname = trim(event_socket_request_cmd('api switchname'));
 	if (empty($hostname)) {
 		$hostname = 'unknown';
 	}
 
+	//get the outbound routes from the database, use the result to build the outbound_routes array
 	$sql = "select d.dialplan_uuid, ";
-	$sql .= "d.dialplan_name, "; 
+	$sql .= "d.dialplan_name, ";
+	$sql .= "d.dialplan_context, ";
+	$sql .= "d.dialplan_description, ";
 	$sql .= "dd.dialplan_detail_uuid, ";
 	$sql .= "dd.dialplan_detail_tag, ";
 	$sql .= "dd.dialplan_detail_type, ";
 	$sql .= "dd.dialplan_detail_data , ";
-	$sql .= "d.dialplan_continue ";
+	$sql .= "cast(d.dialplan_continue as text) ";
 	$sql .= "from v_dialplans d, v_dialplan_details dd  ";
 	$sql .= "where d.dialplan_uuid = dd.dialplan_uuid ";
 	if (is_uuid($domain_uuid)) {
@@ -352,83 +359,145 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	}
 	$sql .= "and (hostname = :hostname or hostname is null) ";
 	$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+	$sql .= "and dd.dialplan_detail_type not in ('set', 'unset', 'export', 'limit', '\${user_exists}') ";
 	$sql .= "and d.dialplan_enabled = true ";
 	$sql .= "and (dd.dialplan_detail_enabled = true or dd.dialplan_detail_enabled is null) ";
-	$sql .= "order by d.domain_uuid,  d.dialplan_order, dd.dialplan_detail_order ";
+	$sql .= "order by d.domain_uuid, d.dialplan_uuid, d.dialplan_order, dd.dialplan_detail_order ";
 	$parameters['hostname'] = $hostname;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	if (!empty($result)) {
+		$x = 0; $y = 0; 
+		$previous_dialplan_uuid = '';
 		foreach ($result as $row) {
-			$dialplan_uuid = $row["dialplan_uuid"];
-			$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
-			$outbound_routes[$dialplan_uuid][$dialplan_detail_uuid]["dialplan_detail_tag"] = $row["dialplan_detail_tag"];
-			$outbound_routes[$dialplan_uuid][$dialplan_detail_uuid]["dialplan_detail_type"] = $row["dialplan_detail_type"];
-			$outbound_routes[$dialplan_uuid][$dialplan_detail_uuid]["dialplan_detail_data"] = $row["dialplan_detail_data"];
-			$outbound_routes[$dialplan_uuid]["dialplan_continue"] = $row["dialplan_continue"];
+			//set the previous id and handle the array ordinal ids
+			if ($previous_dialplan_uuid != $row["dialplan_uuid"]) {
+				//set the previous dialplan uuid
+				$previous_dialplan_uuid = $row["dialplan_uuid"];
+
+				//increment the outbound route id
+				$x++;
+
+				//reset the dialplan detail row id
+				$y=0;
+			}
+
+			//build the outbound route array
+			$outbound_routes[$x]["dialplan_uuid"] = $row["dialplan_uuid"];
+			$outbound_routes[$x]["dialplan_name"] = $row["dialplan_name"];
+			$outbound_routes[$x]["dialplan_context"] = $row["dialplan_context"];
+			$outbound_routes[$x]["dialplan_continue"] = $row["dialplan_continue"];
+			$outbound_routes[$x]["dialplan_description"] = $row["dialplan_description"];
+			$outbound_routes[$x]["destination_number"] = $destination_number;
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_tag"] = $row["dialplan_detail_tag"];
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_type"] = $row["dialplan_detail_type"];
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_data"] = $row["dialplan_detail_data"];
+
+			//increment the value
+			$y++;
 		}
 	}
-	
+
+	//channel variable toll allow provided - remove outbound routes that don't match
+	if (!empty($outbound_routes) && !empty($channel_variables['toll_allow'])) {
+		$x = 0;
+		foreach ($outbound_routes as $id => $row) {
+			//set the default to false
+			$match = false;
+
+			//loop through all dialplan details find outbounds routes that match the toll_allow
+			foreach ($row['dialplan_details'] as $key => $detail) {
+				//check toll allow to see if it matches
+				if ($detail["dialplan_detail_type"] == '${toll_allow}') {
+					$pattern = '/'.$detail["dialplan_detail_data"].'/';
+					preg_match($pattern, $channel_variables['toll_allow'], $matches, PREG_OFFSET_CAPTURE);
+					if (count($matches) > 0) {
+						$match = true;
+					}
+				}
+			}
+
+			//remove outbound routes that didn't match the toll_allow
+			if (!$match) {
+				unset($outbound_routes[$id]);
+			}
+		}
+	}
+
+	//channel variable empty - remove outbound routes with toll allow
+	if (!empty($outbound_routes) && empty($channel_variables['toll_allow'])) {
+		$x = 0;
+		foreach ($outbound_routes as $id => $row) {
+			//set the default to false
+			$match = false;
+
+			//loop through all dialplan details find outbounds routes that use toll_allow
+			foreach ($row['dialplan_details'] as $key => $detail) {
+				if ($detail["dialplan_detail_type"] == '${toll_allow}') {
+					$match = true;
+				}
+			}
+
+			//remove outbound routes
+			if ($match) {
+				unset($outbound_routes[$id]);
+			}
+		}
+	}
+
+	//find outbound routes that match the destination number
 	if (!empty($outbound_routes)) {
 		$x = 0;
-		foreach ($outbound_routes as $dialplan) {
-			$condition_match = [];
-			foreach ($dialplan as $dialplan_details) {
-				if (!empty($dialplan_details['dialplan_detail_tag']) && $dialplan_details['dialplan_detail_tag'] == "condition") {
-					if ($dialplan_details['dialplan_detail_type'] == "destination_number") {
-							$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
-							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
-							if (count($matches) == 0) {
-								$condition_match[] = 'false';
-							}
-							else {
-								$condition_match[] = 'true';
-								$regex_match_1 = $matches[1][0] ?? '';
-								$regex_match_2 = $matches[2][0] ?? '';
-								$regex_match_3 = $matches[3][0] ?? '';
-								$regex_match_4 = $matches[4][0] ?? '';
-								$regex_match_5 = $matches[5][0] ?? '';
-							}
+		foreach ($outbound_routes as $id => $row) {
+			//set the default to false
+			$match = false;
+
+			//set the default to an empty string
+			$dialplan_detail_data = '';
+
+			//loop through all dialplan details find outbounds routes that use toll_allow
+			foreach ($row['dialplan_details'] as $key => $detail) {
+				//find destination_number that matches the regular expression
+				if ($detail["dialplan_detail_type"] == "destination_number") {
+					$pattern = '/'.$detail["dialplan_detail_data"].'/';
+					preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
+					if (count($matches) > 0) {
+						$match = true;
+						$regex_match_1 = $matches[1][0] ?? '';
+						$regex_match_2 = $matches[2][0] ?? '';
+						$regex_match_3 = $matches[3][0] ?? '';
+						$regex_match_4 = $matches[4][0] ?? '';
+						$regex_match_5 = $matches[5][0] ?? '';
 					}
-					elseif ($dialplan_details['dialplan_detail_type'] == "\${toll_allow}") {
-						$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
-						preg_match($pattern, $channel_variables['toll_allow'], $matches, PREG_OFFSET_CAPTURE);
-						if (count($matches) == 0) {
-							$condition_match[] = 'false';
-						} 
-						else {
-							$condition_match[] = 'true';
-						}
-					}
+				}
+
+				//find bridge statements to build the bridge_array
+				if ($match && !empty($detail['dialplan_detail_type']) && $detail['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+					$dialplan_detail_data = $detail['dialplan_detail_data'] ?? '';
+					$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
+					$bridge_array[$x] = $dialplan_detail_data;
+					$x++;
 				}
 			}
 
-			if (!in_array('false', $condition_match)) {
-				foreach ($dialplan as $dialplan_details) {
-					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
-					if (
-						!empty($dialplan_details['dialplan_detail_tag']) &&
-						$dialplan_details['dialplan_detail_tag'] == "action" &&
-						!empty($dialplan_details['dialplan_detail_type']) &&
-						$dialplan_details['dialplan_detail_type'] == "bridge" &&
-						$dialplan_detail_data != "\${enum_auto_route}"
-						) {
-						$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
-						$bridge_array[$x] = $dialplan_detail_data;
-						$x++;
-					}
-				}
+			// when dialplan_continue is set to false then skip the rest of the outbound routes
+			// if (!empty($bridge_array) && $dialplan["dialplan_continue"] === false) {
+			// 	break;
+			// }
 
-				if (!empty($bridge_array) && $dialplan["dialplan_continue"] == false) {
-					break;
-				}
+			//remove outbound routes that didn't match the toll_allow
+			if (!$match) {
+				unset($outbound_routes[$id]);
 			}
 		}
 	}
+
+	//return the bridge array
 	return $bridge_array ?? [];
 }
 //$destination_number = '1231234';
