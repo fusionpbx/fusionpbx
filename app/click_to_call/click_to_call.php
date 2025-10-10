@@ -210,7 +210,7 @@
 					//$uuid = substr($result, 4);
 					if ($rec == "true") {
 						//use the server's time zone to ensure it matches the time zone used by freeswitch
-							date_default_timezone_set($_SESSION['time_zone']['system']);
+							date_default_timezone_set(date_default_timezone_get());
 						//create the api record command and send it over event socket
 							if (is_uuid($origination_uuid) && file_exists($record_path)) {
 								$switch_cmd = "uuid_record $origination_uuid start $record_path/$record_name";

@@ -53,6 +53,24 @@
 		private $database;
 
 		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		 * called when the object is created
 		 */
 		public function __construct($setting_array = []) {
@@ -63,12 +81,24 @@
 			$this->toggle_values = ['true','false'];
 			$this->location = 'domains.php';
 
+			//set the domain and user uuids
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
 			//open a database connection
 			if (empty($setting_array['database'])) {
 				$this->database = database::new();
 			} else {
 				$this->database = $setting_array['database'];
 			}
+
+			//load the settings
+			if (empty($setting_array['settings'])) {
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+			} else {
+				$this->settings = $setting_array['settings'];
+			}
+
 		}
 
 		/**
@@ -573,15 +603,8 @@
 					}
 				}
 
-			//set the values from the session variables
-				if (!empty($_SESSION['domain']['time_zone']['name'])) {
-					//server time zone
-					$_SESSION['time_zone']['system'] = date_default_timezone_get();
-					//domain time zone set in system settings
-					$_SESSION['time_zone']['domain'] = $_SESSION['domain']['time_zone']['name'];
-					//set the domain time zone as the default time zone
-					date_default_timezone_set($_SESSION['domain']['time_zone']['name']);
-				}
+			//set the domain time zone as the default time zone
+				date_default_timezone_set($this->settings->get('domain', 'time_zone', date_default_timezone_get()));
 
 			//set the context
 				if (!empty($_SESSION["domain_name"])) {
