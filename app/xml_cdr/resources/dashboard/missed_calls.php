@@ -76,7 +76,7 @@
 	$sql .=	"start_epoch desc \n";
 	$sql .=	"limit :missed_limit \n";
 	$parameters['missed_limit'] = $missed_limit;
-	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
+	$parameters['time_zone'] = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = !empty($result) ? sizeof($result) : 0;

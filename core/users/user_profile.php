@@ -438,6 +438,13 @@
 			$p->delete("contact_attachment_edit", "temp");
 			$p->delete("contact_attachment_delete", "temp");
 
+		//clear the menu
+			unset($_SESSION["menu"]);
+
+		//get settings based on the user
+			$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'], 'user_uuid' => $_SESSION['user_uuid']]);
+			settings::clear_cache();
+
 		//if call center installed
 			if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 				//get the call center agent uuid

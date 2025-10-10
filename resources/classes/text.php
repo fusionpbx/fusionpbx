@@ -5,7 +5,17 @@
  *
  */
 class text {
+
+	/**
+	 * Contains the list of supported languages
+	 * @var array
+	 */
 	public $languages;
+
+	/**
+	 * Legacy older list of supported languages
+	 * @var array
+	 */
 	public $legacy_map = array(
 		'he' => 'he-il',
 		'pl' => 'pl-pl',
@@ -23,11 +33,53 @@ class text {
 	);
 
 	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 * @var database Database Object
+	 */
+	private $database;
+
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 * @var settings Settings Object
+	 */
+	private $settings;
+
+	/**
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
+	private $user_uuid;
+
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
+	private $domain_uuid;
+
+	/**
 	 * Called when the object is created
 	 */
-	public function __construct() {
+	public function __construct($setting_array = []) {
 		//define the text array
 			$text = array();
+
+		//set the domain and user uuids
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+		//open a database connection
+			if (empty($setting_array['database'])) {
+				$this->database = database::new();
+			} else {
+				$this->database = $setting_array['database'];
+			}
+
+		//load the settings
+			if (empty($setting_array['settings'])) {
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+			} else {
+				$this->settings = $setting_array['settings'];
+			}
 
 		//get the global app_languages.php so we can get the list of languages
 			if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
@@ -81,11 +133,8 @@ class text {
 			//}
 
 		//check the session language
-			if (isset($_SESSION['domain']) and $language_code == null) {
-				$language_code = $_SESSION['domain']['language']['code'];
-			}
-			elseif ($language_code == null) {
-				$language_code = 'en-us';
+			if ($language_code == null) {
+				$language_code = $this->settings->get('domain', 'language', 'en-us');
 			}
 
 		//check the language code
@@ -338,7 +387,7 @@ class text {
 					include $file . "/app_config.php";
 				$x++;
 			}
-		
+
 		//check every tag
 			foreach($apps as $app) {
 				$language_totals['app_descriptions']['total']++;
@@ -355,7 +404,7 @@ class text {
 					}
 				}
 			}
-			
+
 			return $language_totals;
 	}
 
