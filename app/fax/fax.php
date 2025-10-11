@@ -117,7 +117,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare paging
-	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('fax_extension_view_all')) {
 		$param .= "&show=all";

@@ -114,7 +114,7 @@
 	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('ivr_menu_all')) {
 		$param .= "&show=all";

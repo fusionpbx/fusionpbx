@@ -115,7 +115,7 @@
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	$param = ($show == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;

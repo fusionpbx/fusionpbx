@@ -809,7 +809,7 @@
 
 					case 'hour': //hours of day
 						<?php
-						if ( $settings->get('domain', 'time_format') =="24h") {
+						if ( $settings->get('domain', 'time_format') == "24h") {
 
 							for ($h = 0; $h <= 23; $h++) {
 								echo "sel_start.options[sel_start.options.length] = new Option(".$h.", ".$h.");\n";
@@ -828,7 +828,7 @@
 
 					case 'time-of-day': //time of day
 						<?php
-						if ( $settings->get('domain', 'time_format') =="24h") {
+						if ( $settings->get('domain', 'time_format') == "24h") {
 
 							for ($h = 0; $h <= 23; $h++) {
 								for ($m = 0; $m <= 59; $m++) {

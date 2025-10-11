@@ -173,7 +173,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);

@@ -107,7 +107,7 @@
 
 //prepare the paging
 	$param = '';
-	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	if (!empty($search)) {
 		$param .= "&search=".urlencode($search);
 	}

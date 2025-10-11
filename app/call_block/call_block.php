@@ -135,7 +135,7 @@
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		$param .= "&show=all";
