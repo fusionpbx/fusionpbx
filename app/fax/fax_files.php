@@ -250,7 +250,7 @@
 	$parameters['time_zone'] = $time_zone;
 
 //set the time format options: 12h, 24h
-	if (isset($settings->get('domain', 'time_format'))) {
+	if (!empty($settings->get('domain', 'time_format'))) {
 		if ($settings->get('domain', 'time_format') == '12h') {
 			$time_format = 'HH12:MI:SS am';
 		}

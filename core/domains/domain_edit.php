@@ -162,14 +162,14 @@
 						}
 
 						//create the recordings directory for the new domain.
-						if (isset($settings->get('switch', 'recordings')) && !empty($settings->get('switch', 'recordings'))) {
+						if (!empty($settings->get('switch', 'recordings')) && !empty($settings->get('switch', 'recordings'))) {
 							if (!file_exists($settings->get('switch', 'recordings')."/".$domain_name)) {
 								mkdir($settings->get('switch', 'recordings')."/".$domain_name, 0770);
 							}
 						}
 
 						//create the voicemail directory for the new domain.
-						if (isset($settings->get('switch', 'voicemail')) && !empty($settings->get('switch', 'voicemail'))) {
+						if (!empty($settings->get('switch', 'voicemail')) && !empty($settings->get('switch', 'voicemail'))) {
 							if (!file_exists($settings->get('switch', 'voicemail')."/default/".$domain_name)) {
 								mkdir($settings->get('switch', 'voicemail')."/default/".$domain_name, 0770);
 							}
@@ -407,17 +407,17 @@
 							}
 
 						//rename switch/storage/voicemail/default/[domain] (folder)
-							if (isset($settings->get('switch', 'voicemail')) && file_exists($settings->get('switch', 'voicemail')."/default/".$original_domain_name)) {
+							if (!empty($settings->get('switch', 'voicemail')) && file_exists($settings->get('switch', 'voicemail')."/default/".$original_domain_name)) {
 								@rename($settings->get('switch', 'voicemail')."/default/".$original_domain_name, $settings->get('switch', 'voicemail')."/default/".$domain_name); // folder
 							}
 
 						//rename switch/storage/fax/[domain] (folder)
-							if (isset($settings->get('switch', 'storage')) && file_exists($settings->get('switch', 'storage')."/fax/".$original_domain_name)) {
+							if (!empty($settings->get('switch', 'storage')) && file_exists($settings->get('switch', 'storage')."/fax/".$original_domain_name)) {
 								@rename($settings->get('switch', 'storage')."/fax/".$original_domain_name, $settings->get('switch', 'storage')."/fax/".$domain_name); // folder
 							}
 
 						//rename switch/conf/dialplan/[domain] (folder/file)
-							if (isset($settings->get('switch', 'dialplan'))) {
+							if (!empty($settings->get('switch', 'dialplan'))) {
 								if (file_exists($settings->get('switch', 'dialplan')."/".$original_domain_name)) {
 									@rename($settings->get('switch', 'dialplan')."/".$original_domain_name, $settings->get('switch', 'dialplan')."/".$domain_name); // folder
 								}
@@ -427,7 +427,7 @@
 							}
 
 						//rename switch/conf/dialplan/public/[domain] (folder/file)
-							if (isset($settings->get('switch', 'dialplan'))) {
+							if (!empty($settings->get('switch', 'dialplan'))) {
 								if (file_exists($settings->get('switch', 'dialplan')."/public/".$original_domain_name)) {
 									@rename($settings->get('switch', 'dialplan')."/public/".$original_domain_name, $settings->get('switch', 'dialplan')."/public/".$domain_name); // folder
 								}
@@ -437,7 +437,7 @@
 							}
 
 						//rename switch/conf/directory/[domain] (folder/file)
-							if (isset($settings->get('switch', 'extensions'))) {
+							if (!empty($settings->get('switch', 'extensions'))) {
 								if (file_exists($settings->get('switch', 'extensions')."/".$original_domain_name)) {
 									@rename($settings->get('switch', 'extensions')."/".$original_domain_name, $settings->get('switch', 'extensions')."/".$domain_name); // folder
 								}

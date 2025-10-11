@@ -262,7 +262,7 @@
 	echo "</div>\n";
 
 //display login message
-	//if (if_group("superadmin") && isset($settings->get('login', 'message')) && $settings->get('login', 'message') != '') {
+	//if (if_group("superadmin") && !empty($settings->get('login', 'message')) && $settings->get('login', 'message') != '') {
 	//	echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$settings->get('login', 'message')."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
 	//}
 

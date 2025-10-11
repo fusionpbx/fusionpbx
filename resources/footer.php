@@ -176,7 +176,7 @@
 			$view->assign('background_video', $_SESSION['theme']['background_video'][0]);
 		}
 	//document title
-		if (isset($settings->get('theme', 'title')) && $settings->get('theme', 'title') != '') {
+		if (!empty($settings->get('theme', 'title')) && $settings->get('theme', 'title') != '') {
 			$document_title = $settings->get('theme', 'title');
 		}
 		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).($document_title ?? '');
@@ -215,7 +215,7 @@
 		//build menu by style
 			switch ($settings->get('theme', 'menu_style')) {
 				case 'side':
-					$view->assign('menu_side_state', (isset($settings->get('theme', 'menu_side_state')) && $settings->get('theme', 'menu_side_state') != '' ? $settings->get('theme', 'menu_side_state') : 'expanded'));
+					$view->assign('menu_side_state', (!empty($settings->get('theme', 'menu_side_state')) && $settings->get('theme', 'menu_side_state') != '' ? $settings->get('theme', 'menu_side_state') : 'expanded'));
 					if ($settings->get('theme', 'menu_side_state') != 'hidden') {
 						$menu_side_toggle = $settings->get('theme', 'menu_side_toggle') == 'hover' ? " onmouseenter=\"clearTimeout(menu_side_contract_timer); if ($('#menu_side_container').width() < 100) { menu_side_expand_start(); }\" onmouseleave=\"clearTimeout(menu_side_expand_timer); if ($('#menu_side_container').width() > 100 && $('#menu_side_state_current').val() != 'expanded') { menu_side_contract_start(); }\"" : null;
 					}
@@ -260,23 +260,23 @@
 
 	//login logo
 		//determine logo source
-			if (isset($settings->get('theme', 'logo_login')) && $settings->get('theme', 'logo_login') != '') {
+			if (!empty($settings->get('theme', 'logo_login')) && $settings->get('theme', 'logo_login') != '') {
 				$login_logo_source = $settings->get('theme', 'logo_login');
 			}
-			else if (isset($settings->get('theme', 'logo')) && $settings->get('theme', 'logo') != '') {
+			else if (!empty($settings->get('theme', 'logo')) && $settings->get('theme', 'logo') != '') {
 				$login_logo_source = $settings->get('theme', 'logo');
 			}
 			else {
 				$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
 			}
 		//determine logo dimensions
-			if (isset($settings->get('theme', 'login_logo_width')) && $settings->get('theme', 'login_logo_width') != '') {
+			if (!empty($settings->get('theme', 'login_logo_width')) && $settings->get('theme', 'login_logo_width') != '') {
 				$login_logo_width = $settings->get('theme', 'login_logo_width');
 			}
 			else {
 				$login_logo_width = 'auto; max-width: 300px';
 			}
-			if (isset($settings->get('theme', 'login_logo_height')) && $settings->get('theme', 'login_logo_height') != '') {
+			if (!empty($settings->get('theme', 'login_logo_height')) && $settings->get('theme', 'login_logo_height') != '') {
 				$login_logo_height = $settings->get('theme', 'login_logo_height');
 			}
 			else {

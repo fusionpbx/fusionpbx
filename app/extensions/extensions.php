@@ -82,7 +82,7 @@
 	}
 
 //get total extension count for domain
-	if (isset($settings->get('limit', 'extensions'))) {
+	if (!empty($settings->get('limit', 'extensions'))) {
 		$sql = "select count(*) from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -288,14 +288,14 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-extensions']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('extension_import') && (!isset($settings->get('limit', 'extensions')) || $total_extensions < $settings->get('limit', 'extensions'))) {
+	if (permission_exists('extension_import') && (empty($settings->get('limit', 'extensions', 0)) || $total_extensions < $settings->get('limit', 'extensions'))) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'link'=>'extension_imports.php']);
 	}
 	if (permission_exists('extension_export')) {
 		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'link'=>'extension_download.php']);
 	}
 	$margin_left = permission_exists('extension_import') || permission_exists('extension_export') ? "margin-left: 15px;" : null;
-	if (permission_exists('extension_add') && (!isset($settings->get('limit', 'extensions')) || $total_extensions < $settings->get('limit', 'extensions'))) {
+	if (permission_exists('extension_add') && (empty($settings->get('limit', 'extensions', 0)) || $total_extensions < $settings->get('limit', 'extensions'))) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>($margin_left ?? ''),'link'=>'extension_edit.php']);
 		unset($margin_left);
 	}

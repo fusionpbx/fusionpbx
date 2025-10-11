@@ -182,9 +182,9 @@
 //load editor preferences/defaults
 	$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
 	$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
-	$setting_invisibles = isset($settings->get('editor', 'invisibles')) ? $settings->get('editor', 'invisibles') : 'false';
-	$setting_indenting = isset($settings->get('editor', 'indent_guides')) ? $settings->get('editor', 'indent_guides'): 'false';
-	$setting_numbering = isset($settings->get('editor', 'line_numbers')) ? $settings->get('editor', 'line_numbers') : 'true';
+	$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
+	$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
+	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
 
 //set the defaults
 	if ($template_enabled === null) { $template_enabled = true; }

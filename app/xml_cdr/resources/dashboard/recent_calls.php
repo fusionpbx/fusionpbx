@@ -204,7 +204,7 @@
 							"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
 							"&dest=".urlencode($dest ?? '').
 							"&rec=".(filter_var($settings->get('click_to_call', 'record') ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false').
-							"&ringback=".(isset($settings->get('click_to_call', 'ringback')) ? $settings->get('click_to_call', 'ringback') : "us-ring").
+							"&ringback=".$settings->get('click_to_call', 'ringback', 'us-ring').
 							"&auto_answer=".(filter_var($settings->get('click_to_call', 'auto_answer') ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false').
 							"');\" ".
 							"style='cursor: pointer;'";

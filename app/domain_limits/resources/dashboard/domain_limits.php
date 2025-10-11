@@ -52,10 +52,6 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
-		//set default values
-			if (!isset($settings->get('limit', 'extensions'))) { $settings->get('limit', 'extensions') = 0; }
-			if (!isset($settings->get('limit', 'destinations'))) { $settings->get('limit', 'destinations') = 0; }
-
 		//caller id
 			echo "<div class='hud_box'>\n";
 
@@ -95,13 +91,13 @@
 			if (permission_exists('extension_view')) {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
 				$hud_stat_used = $usage['extensions'];
-				$hud_stat_remaining = $settings->get('limit', 'extensions') - $usage['extensions'];
+				$hud_stat_remaining = $settings->get('limit', 'extensions', 0) - $usage['extensions'];
 				$hud_stat_title = $text['label-extensions'];
 			}
 			else if (permission_exists('destination_view')) {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/destinations/destinations.php'\"";
 				$hud_stat_used = $usage['destinations'];
-				$hud_stat_remaining = $settings->get('limit', 'destinations') - $usage['destinations'];
+				$hud_stat_remaining = $settings->get('limit', 'destinations', 0) - $usage['destinations'];
 				$hud_stat_title = $text['label-destinations'];
 			}
 

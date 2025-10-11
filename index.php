@@ -29,7 +29,7 @@
 
 //if logged in, redirect to login destination
 	if (isset($_SESSION["username"])) {
-		if (isset($settings->get('login', 'destination'))) {
+		if (!empty($settings->get('login', 'destination'))) {
 			header("Location: ".$settings->get('login', 'destination'));
 		}
 		elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {

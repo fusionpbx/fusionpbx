@@ -192,7 +192,7 @@
 				(permission_exists('user_add') && $action == 'add' && !empty($username))) {
 
 				$sql = "select count(*) from v_users ";
-				if (isset($settings->get('users', 'unique')) && $settings->get('users', 'unique') == "global") {
+				if (!empty($settings->get('users', 'unique')) && $settings->get('users', 'unique') == "global") {
 					$sql .= "where username = :username ";
 				}
 				else {
