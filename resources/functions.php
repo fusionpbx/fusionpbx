@@ -1048,8 +1048,8 @@
 		$password = '';
 		$chars = '';
 		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-			$length = (is_numeric($_SESSION["users"]["password_length"]["numeric"])) ? $_SESSION["users"]["password_length"]["numeric"] : 20;
-			$strength = (is_numeric($_SESSION["users"]["password_strength"]["numeric"])) ? $_SESSION["users"]["password_strength"]["numeric"] : 4;
+			$length = (is_numeric($settings->get('users', 'password_length'))) ? $settings->get('users', 'password_length') : 20;
+			$strength = (is_numeric($settings->get('users', 'password_strength'))) ? $settings->get('users', 'password_strength') : 4;
 		}
 		if ($strength >= 1) {
 			$chars .= "0123456789";
@@ -1571,8 +1571,8 @@
 			}
 
 			//get the from address and name
-			$email_from_address = (!empty($email_from_address)) ? $email_from_address : $_SESSION['email']['smtp_from']['text'];
-			$email_from_name = (!empty($email_from_name)) ? $email_from_name : $_SESSION['email']['smtp_from_name']['text'];
+			$email_from_address = (!empty($email_from_address)) ? $email_from_address : $settings->get('email', 'smtp_from');
+			$email_from_name = (!empty($email_from_name)) ? $email_from_name : $settings->get('email', 'smtp_from_name');
 
 			//send email
 			$email = new email;
@@ -1891,7 +1891,7 @@
 	if (!function_exists('get_available_fonts')) {
 
 		function get_available_fonts($sort = 'alpha') {
-			if (!empty($_SESSION['theme']['font_source_key']['text'])) {
+			if (!empty($settings->get('theme', 'font_source_key'))) {
 				if (!is_array($_SESSION['fonts_available']) || sizeof($_SESSION['fonts_available']) == 0) {
 					/*
 					  sort options:
@@ -1901,7 +1901,7 @@
 					  style 		- by number of styles available (family with most styles first)
 					  trending 	- by families seeing growth in usage (family seeing the most growth first)
 					 */
-					$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' . $_SESSION['theme']['font_source_key']['text'] . '&sort=' . $sort;
+					$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' . $settings->get('theme', 'font_source_key') . '&sort=' . $sort;
 					$response = file_get_contents($google_api_url);
 					if (!empty($response)) {
 						$data = json_decode($response, true);
@@ -2367,7 +2367,7 @@ function escape_textarea($string) {
 	if (!function_exists('get_accountcode')) {
 
 		function get_accountcode() {
-			if (!empty($accountcode = $_SESSION['domain']['accountcode']['text'] ?? '')) {
+			if (!empty($accountcode = $settings->get('domain', 'accountcode') ?? '')) {
 				if ($accountcode == "none") {
 					return;
 				}

@@ -230,7 +230,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('contact_all')) {
 		$param .= "&show=all";
@@ -284,8 +284,8 @@
 		$sql .= ", contact_organization asc ";
 	}
 	else {
-		$contact_default_sort_column = !empty($_SESSION['contacts']['default_sort_column']['text']) ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
-		$contact_default_sort_order = !empty($_SESSION['contacts']['default_sort_order']['text']) ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
+		$contact_default_sort_column = !empty($settings->get('contacts', 'default_sort_column')) ? $settings->get('contacts', 'default_sort_column') : "last_mod_date";
+		$contact_default_sort_order = !empty($settings->get('contacts', 'default_sort_order')) ? $settings->get('contacts', 'default_sort_order') : "desc";
 
 		$sql .= order_by($contact_default_sort_column, $contact_default_sort_order);
 		if ($db_type == "pgsql") {

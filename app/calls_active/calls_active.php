@@ -146,8 +146,8 @@
 //create token
 	$object = new token;
 	$token = $object->create('/app/calls_active/calls_active_inc.php');
-	$_SESSION['app']['calls_active']['token']['name'] = $token['name'];
-	$_SESSION['app']['calls_active']['token']['hash'] = $token['hash'];
+	$settings->get('app', 'calls_active')['name'] = $token['name'];
+	$settings->get('app', 'calls_active')['hash'] = $token['hash'];
 
 //show the content header
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -210,7 +210,7 @@
 	}
 
 	function get_record_cmd(uuid, prefix, name) {
-		cmd = \"uuid_record \"+uuid+\" start ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";
+		cmd = \"uuid_record \"+uuid+\" start ".$settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";
 		return escape(cmd);
 	}
 */

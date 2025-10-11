@@ -49,7 +49,7 @@
 
 //get the menu array and save it to the session
 	$menu = new menu;
-	$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+	$menu->menu_uuid = $settings->get('domain', 'menu');
 	$_SESSION['menu']['array'] = $menu->menu_array();
 	unset($menu);
 

@@ -15,7 +15,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/switch');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/switch');
 
 //switch status
 	echo "<div class='hud_box'>\n";

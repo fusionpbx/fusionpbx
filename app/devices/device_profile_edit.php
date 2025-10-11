@@ -313,11 +313,11 @@
 
 //add an empty row
 	if (empty($device_profile_keys) || !is_array($device_profile_keys) || count($device_profile_keys) == 0) {
-		$rows = $_SESSION['devices']['profile_key_add_rows']['numeric'];
+		$rows = $settings->get('devices', 'profile_key_add_rows');
 		$id = 0;
 	}
 	if (!empty($device_profile_keys) && is_array($device_profile_keys) && count($device_profile_keys) > 0) {
-		$rows = $_SESSION['devices']['profile_key_edit_rows']['numeric'];
+		$rows = $settings->get('devices', 'profile_key_edit_rows');
 		$id = count($device_profile_keys)+1;
 	}
 	for ($x = 0; $x < $rows; $x++) {

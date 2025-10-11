@@ -135,7 +135,7 @@
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
 	$param = "&search=".$search;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		$param .= "&show=all";
@@ -151,7 +151,7 @@
 	$sql .= " call_block_country_code, call_block_number, extension, number_alias, call_block_count, ";
 	$sql .= " call_block_app, call_block_data, ";
 	$sql .= " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, \n";
-	if (date(!empty($_SESSION['domain']['time_format']['text']) == '12h')) {
+	if (date(!empty($settings->get('domain', 'time_format')) == '12h')) {
 		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, \n";
 	}
 	else {
@@ -336,8 +336,8 @@
 			}
 			echo "	<td class='center'>";
 			switch ($row['call_block_direction']) {
-				case "inbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
-				case "outbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
+				case "inbound": echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
+				case "outbound": echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
 			}
 			echo "	</td>\n";
 			echo "	<td class='center'>";

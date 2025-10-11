@@ -76,8 +76,8 @@
 		$email_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
 	}
 
-	$email_from_address = $_SESSION['email']['smtp_from']['text'];
-	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
+	$email_from_address = $settings->get('email', 'smtp_from');
+	$email_from_name = $settings->get('email', 'smtp_from_name');
 
 //send email
 	$sent = 0;
@@ -138,7 +138,7 @@
 	echo "<b>".$text['header-connection']."</b>\n";
 	echo "<br><br>\n";
 
-	echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".($_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".($_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff')."; font-family: monospace; font-size: 85%;'>\n";
+	echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".($settings->get('theme', 'table_row_border_color') ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".($settings->get('theme', 'table_row_background_color_light') ?? '#fff')."; font-family: monospace; font-size: 85%;'>\n";
 
 	if (!empty($email_response) && is_array($email_response) && @sizeof($email_response) != 0) {
 		echo implode("<br>\n<hr style='margin: 3px 0;'>\n", $email_response);

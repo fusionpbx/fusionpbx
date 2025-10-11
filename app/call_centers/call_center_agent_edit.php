@@ -136,7 +136,7 @@
 			}
 
 		//change the contact string to loopback - Not recommended added for backwards comptability causes multiple problems
-			if ($_SESSION['call_center']['agent_contact_method']['text'] == 'loopback') {
+			if ($settings->get('call_center', 'agent_contact_method') == 'loopback') {
 				$agent_contact = str_replace("user/", "loopback/", $agent_contact);
 				$agent_contact = str_replace("@", "/", $agent_contact);
 			}

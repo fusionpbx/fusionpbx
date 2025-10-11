@@ -107,7 +107,7 @@
 
 //use the module class to get the list of modules from the db and add any missing modules
 	$module = new modules;
-	$module->dir = $_SESSION['switch']['mod']['dir'];
+	$module->dir = $settings->get('switch', 'mod');
 	$module->get_modules();
 	$modules = $module->modules;
 	$module_count = count($modules);

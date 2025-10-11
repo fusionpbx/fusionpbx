@@ -15,7 +15,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
 
 //system status
 	echo "<div class='hud_box'>\n";
@@ -222,7 +222,7 @@
 
 		//pbx version
 			echo "<tr class='tr_link_void'>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($settings->get('theme', 'title'))?$settings->get('theme', 'title'):'FusionPBX')."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software::version()."</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;

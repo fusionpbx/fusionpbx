@@ -62,16 +62,16 @@
 				//get the contents of the template and save it to the template variable
 				$template_full_path = $template_base_path.'/'.$template_rss_sub_category.'/template.php';
 				if (!file_exists($template_full_path)) {
-					$_SESSION['domain']['template']['name'] = 'default';
+					$settings->get('domain', 'template') = 'default';
 					$template_full_path = $template_base_path.'/default/template.php';
 				}
 				$_SESSION["template_full_path"] = $template_full_path;
 		}
 		else {
 			//get the contents of the template and save it to the template variable
-				$template_full_path = $template_base_path.'/'.$_SESSION['domain']['template']['name'].'/template.php';
+				$template_full_path = $template_base_path.'/'.$settings->get('domain', 'template').'/template.php';
 				if (!file_exists($template_full_path)) {
-					$_SESSION['domain']['template']['name'] = 'default';
+					$settings->get('domain', 'template') = 'default';
 					$template_full_path = $template_base_path.'/default/template.php';
 				}
 				$_SESSION["template_full_path"] = $template_full_path;
@@ -81,14 +81,14 @@
 //initialize a template object
 	$view = new template();
 	$view->engine = 'smarty';
-	$view->template_dir = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/themes/'.$_SESSION['domain']['template']['name'].'/';
+	$view->template_dir = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/themes/'.$settings->get('domain', 'template').'/';
 	$view->cache_dir = sys_get_temp_dir();
 	$view->init();
 
 //add multi-lingual support
 	$language = new text;
 	$text_default = $language->get();
-	$text_application = $language->get(null,'themes/'.$_SESSION['domain']['template']['name']);
+	$text_application = $language->get(null,'themes/'.$settings->get('domain', 'template'));
 	$text = array_merge($text_default, $text_application);
 
 //create token
@@ -110,7 +110,7 @@
 	//project path
 		$view->assign('project_path', PROJECT_PATH);
 	//domain menu
-		$view->assign('domain_menu', escape($_SESSION['domain']['menu']['uuid']));
+		$view->assign('domain_menu', escape($settings->get('domain', 'menu')));
 	//domain json token
 		$view->assign('domain_json_token_name', $domain_json_token['name']);
 		$view->assign('domain_json_token_hash', $domain_json_token['hash']);
@@ -176,8 +176,8 @@
 			$view->assign('background_video', $_SESSION['theme']['background_video'][0]);
 		}
 	//document title
-		if (isset($_SESSION['theme']['title']['text']) && $_SESSION['theme']['title']['text'] != '') {
-			$document_title = $_SESSION['theme']['title']['text'];
+		if (isset($settings->get('theme', 'title')) && $settings->get('theme', 'title') != '') {
+			$document_title = $settings->get('theme', 'title');
 		}
 		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).($document_title ?? '');
 		$view->assign('document_title', $document_title);
@@ -199,7 +199,7 @@
 	//domain selector row background colors
 		$view->assign('domain_selector_background_color_1', !empty($_SESSION['theme']['domain_inactive_background_color'][0]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
 		$view->assign('domain_selector_background_color_2', !empty($_SESSION['theme']['domain_inactive_background_color'][1]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
-		$view->assign('domain_active_background_color', !empty($_SESSION['theme']['domain_active_background_color']['text']) ? $_SESSION['theme']['domain_active_background_color']['text'] : '#eeffee');
+		$view->assign('domain_active_background_color', !empty($settings->get('theme', 'domain_active_background_color')) ? $settings->get('theme', 'domain_active_background_color') : '#eeffee');
 	//domain list
 		$view->assign('domains', $domains);
 	//domain uuid
@@ -208,27 +208,27 @@
 		//load menu array into the session
 			if (!isset($_SESSION['menu']['array'])) {
 				$menu = new menu;
-				$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+				$menu->menu_uuid = $settings->get('domain', 'menu');
 				$_SESSION['menu']['array'] = $menu->menu_array();
 				unset($menu);
 			}
 		//build menu by style
 			switch ($settings->get('theme', 'menu_style')) {
 				case 'side':
-					$view->assign('menu_side_state', (isset($_SESSION['theme']['menu_side_state']['text']) && $_SESSION['theme']['menu_side_state']['text'] != '' ? $_SESSION['theme']['menu_side_state']['text'] : 'expanded'));
-					if ($_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
-						$menu_side_toggle = $_SESSION['theme']['menu_side_toggle']['text'] == 'hover' ? " onmouseenter=\"clearTimeout(menu_side_contract_timer); if ($('#menu_side_container').width() < 100) { menu_side_expand_start(); }\" onmouseleave=\"clearTimeout(menu_side_expand_timer); if ($('#menu_side_container').width() > 100 && $('#menu_side_state_current').val() != 'expanded') { menu_side_contract_start(); }\"" : null;
+					$view->assign('menu_side_state', (isset($settings->get('theme', 'menu_side_state')) && $settings->get('theme', 'menu_side_state') != '' ? $settings->get('theme', 'menu_side_state') : 'expanded'));
+					if ($settings->get('theme', 'menu_side_state') != 'hidden') {
+						$menu_side_toggle = $settings->get('theme', 'menu_side_toggle') == 'hover' ? " onmouseenter=\"clearTimeout(menu_side_contract_timer); if ($('#menu_side_container').width() < 100) { menu_side_expand_start(); }\" onmouseleave=\"clearTimeout(menu_side_expand_timer); if ($('#menu_side_container').width() > 100 && $('#menu_side_state_current').val() != 'expanded') { menu_side_contract_start(); }\"" : null;
 					}
-					$container_open = "<div id='menu_side_container' style='width: ".(in_array($_SESSION['theme']['menu_side_state']['text'], ['expanded','hidden']) ? ($_SESSION['theme']['menu_side_width_expanded']['text'] ?? 225) : ($_SESSION['theme']['menu_side_width_contracted']['text'] ?? 60))."px; ".($_SESSION['theme']['menu_side_state']['text'] == 'hidden' ? "display: none;'" : "' class='hide-xs'").$menu_side_toggle." >\n";
+					$container_open = "<div id='menu_side_container' style='width: ".(in_array($settings->get('theme', 'menu_side_state'), ['expanded','hidden']) ? ($settings->get('theme', 'menu_side_width_expanded') ?? 225) : ($settings->get('theme', 'menu_side_width_contracted') ?? 60))."px; ".($settings->get('theme', 'menu_side_state') == 'hidden' ? "display: none;'" : "' class='hide-xs'").$menu_side_toggle." >\n";
 					$menu = new menu;
 					$menu->text = $text;
 					$menu_html = $menu->menu_vertical($_SESSION['menu']['array']);
 					unset($menu);
 					break;
 				case 'inline':
-					$container_open = "<div class='container-fluid' style='padding: 0;' align='".($_SESSION['theme']['logo_align']['text'] != '' ? $_SESSION['theme']['logo_align']['text'] : 'left')."'>\n";
+					$container_open = "<div class='container-fluid' style='padding: 0;' align='".($settings->get('theme', 'logo_align') != '' ? $settings->get('theme', 'logo_align') : 'left')."'>\n";
 					if ($_SERVER['PHP_SELF'] != PROJECT_PATH.'/core/install/install.php') {
-						$logo = "<a href='".PROJECT_PATH."/'><img src='".($_SESSION['theme']['logo']['text'] ?: PROJECT_PATH.'/themes/default/images/logo.png')."' style='padding: 15px 20px; ".($_SESSION['theme']['logo_style']['text'] ?: null)."'></a>";
+						$logo = "<a href='".PROJECT_PATH."/'><img src='".($settings->get('theme', 'logo') ?: PROJECT_PATH.'/themes/default/images/logo.png')."' style='padding: 15px 20px; ".($settings->get('theme', 'logo_style') ?: null)."'></a>";
 					}
 					$menu = new menu;
 					$menu->text = $text;
@@ -260,24 +260,24 @@
 
 	//login logo
 		//determine logo source
-			if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo_login']['text'];
+			if (isset($settings->get('theme', 'logo_login')) && $settings->get('theme', 'logo_login') != '') {
+				$login_logo_source = $settings->get('theme', 'logo_login');
 			}
-			else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
-				$login_logo_source = $_SESSION['theme']['logo']['text'];
+			else if (isset($settings->get('theme', 'logo')) && $settings->get('theme', 'logo') != '') {
+				$login_logo_source = $settings->get('theme', 'logo');
 			}
 			else {
 				$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
 			}
 		//determine logo dimensions
-			if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
-				$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
+			if (isset($settings->get('theme', 'login_logo_width')) && $settings->get('theme', 'login_logo_width') != '') {
+				$login_logo_width = $settings->get('theme', 'login_logo_width');
 			}
 			else {
 				$login_logo_width = 'auto; max-width: 300px';
 			}
-			if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
-				$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
+			if (isset($settings->get('theme', 'login_logo_height')) && $settings->get('theme', 'login_logo_height') != '') {
+				$login_logo_height = $settings->get('theme', 'login_logo_height');
 			}
 			else {
 				$login_logo_height = 'auto; max-height: 300px';

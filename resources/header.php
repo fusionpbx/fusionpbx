@@ -57,12 +57,12 @@
 	$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 
 //check if the template exists if it is missing then use the default
-	if (!file_exists($template_base_path.'/'.$_SESSION['domain']['template']['name'].'/template.php')) {
-		$_SESSION['domain']['template']['name'] = 'default';
+	if (!file_exists($template_base_path.'/'.$settings->get('domain', 'template').'/template.php')) {
+		$settings->get('domain', 'template') = 'default';
 	}
 
 //start the output buffer
-	include $template_base_path.'/'.$_SESSION['domain']['template']['name'].'/config.php';
+	include $template_base_path.'/'.$settings->get('domain', 'template').'/config.php';
 
 //start the output buffer
 	ob_start();
@@ -79,7 +79,7 @@
 	$sql = "select menu_item_parent_uuid from v_menu_items ";
 	$sql .= "where menu_uuid = :menu_uuid ";
 	$sql .= "and menu_item_link = :menu_item_link ";
-	$parameters['menu_uuid'] = $_SESSION['domain']['menu']['uuid'];
+	$parameters['menu_uuid'] = $settings->get('domain', 'menu');
 	$parameters['menu_item_link'] = $_SERVER["SCRIPT_NAME"];
 	$_SESSION["menu_item_parent_uuid"] = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
@@ -126,7 +126,7 @@
 	$button_icon_style = 'padding: 3px;';
 	$button_label_class = 'button-label';
 	$button_label_style = 'padding-left: 5px; padding-right: 3px;';
-	$button_icons = (!empty($_SESSION['theme']['button_icons']['text'])) ? $button_icons = $_SESSION['theme']['button_icons']['text'] : '';
+	$button_icons = (!empty($settings->get('theme', 'button_icons'))) ? $button_icons = $settings->get('theme', 'button_icons') : '';
 	switch ($button_icons) {
 		case 'auto':
 			$button_label_class .= ' hide-md-dn';

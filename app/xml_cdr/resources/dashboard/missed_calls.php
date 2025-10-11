@@ -15,7 +15,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
 
 //create assigned extensions array
 	if (is_array($_SESSION['user']['extension'])) {
@@ -30,8 +30,8 @@
 
 //set the sql time format
 	$sql_time_format = 'DD Mon HH12:MI am';
-	if (!empty($_SESSION['domain']['time_format']['text'])) {
-		$sql_time_format = $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
+	if (!empty($settings->get('domain', 'time_format'))) {
+		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
 	}
 
 //get the missed calls from call detail records
@@ -173,7 +173,7 @@
 
 			foreach ($result as $index => $row) {
 				$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
-				if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
+				if (!empty($_SESSION['domain']['time_format']) && $settings->get('domain', 'time_format') == '12h') {
 					$start_date_time = str_replace(' 0',' ', $start_date_time);
 				}
 				//set click-to-call variables
@@ -185,9 +185,9 @@
 						"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '').
 						"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
 						"&dest=".urlencode($row['caller_id_number'] ?? '').
-						"&rec=".(filter_var($_SESSION['click_to_call']['record']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
-						"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text']) ? $_SESSION['click_to_call']['ringback']['text'] : "us-ring").
-						"&auto_answer=".(filter_var($_SESSION['click_to_call']['auto_answer']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
+						"&rec=".(filter_var($settings->get('click_to_call', 'record') ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
+						"&ringback=".(isset($settings->get('click_to_call', 'ringback')) ? $settings->get('click_to_call', 'ringback') : "us-ring").
+						"&auto_answer=".(filter_var($settings->get('click_to_call', 'auto_answer') ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
 						"');\" ".
 						"style='cursor: pointer;'";
 				}
@@ -196,7 +196,7 @@
 				if ($theme_cdr_images_exist) {
 					$call_result = $row['status'];
 					if (isset($row['direction'])) {
-						echo "	<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						echo "	<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 					}
 				}
 				echo "</td>\n";

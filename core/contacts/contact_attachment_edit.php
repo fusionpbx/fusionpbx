@@ -91,7 +91,7 @@
 		}
 
 		//get the allowed extensions
-		$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
+		$allowed_extensions = array_keys(json_decode($settings->get('contact', 'allowed_attachment_types'), true));
 
 		//check the allowed extensions
 		if ($attachment['error'] == '0' && in_array($attachment_extension, $allowed_extensions)) {
@@ -236,7 +236,7 @@
 		}
 	}
 	else {
-		$allowed_attachment_types = json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true);
+		$allowed_attachment_types = json_decode($settings->get('contact', 'allowed_attachment_types'), true);
 		echo "	<input type='file' class='formfld' name='attachment' id='attachment' accept='.".implode(',.',array_keys($allowed_attachment_types))."'>\n";
 		echo "	<span style='display: inline-block; margin-top: 5px; font-size: 80%;'>".strtoupper(implode(', ', array_keys($allowed_attachment_types)))."</span>";
 	}

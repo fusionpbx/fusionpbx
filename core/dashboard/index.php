@@ -47,7 +47,7 @@
 
 //disable login message
 	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {
-		unset($_SESSION['login']['message']['text']);
+		unset($settings->get('login', 'message'));
 
 		$sql = "update v_default_settings ";
 		$sql .= "set default_setting_enabled = false ";
@@ -262,8 +262,8 @@
 	echo "</div>\n";
 
 //display login message
-	//if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
-	//	echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
+	//if (if_group("superadmin") && isset($settings->get('login', 'message')) && $settings->get('login', 'message') != '') {
+	//	echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$settings->get('login', 'message')."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
 	//}
 
 ?>
@@ -753,7 +753,7 @@ window.addEventListener('resize', update_parent_height);
 
 		.ghost {
 			border: 2px dashed rgba(0,0,0,1);
-			<?php $br = format_border_radius($_SESSION['theme']['dashboard_border_radius']['text'] ?? null, '5px'); ?>
+			<?php $br = format_border_radius($settings->get('theme', 'dashboard_border_radius') ?? null, '5px'); ?>
 			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;

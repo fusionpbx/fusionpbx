@@ -58,14 +58,14 @@
 
 //get total gateway count from the database, check limit, if defined
 	if ($action == 'add') {
-		if (!empty($_SESSION['limit']['gateways']['numeric'])) {
+		if (!empty($settings->get('limit', 'gateways'))) {
 			$sql = "select count(gateway_uuid) from v_gateways ";
 			$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$total_gateways = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
-			if ($total_gateways >= $_SESSION['limit']['gateways']['numeric']) {
-				message::add($text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'], 'negative');
+			if ($total_gateways >= $settings->get('limit', 'gateways')) {
+				message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
 				header('Location: gateways.php');
 				exit;
 			}
@@ -212,8 +212,8 @@
 					$message = $database->message;
 
 				//remove xml file (if any) if not enabled
-					if ($enabled != true && !empty($_SESSION['switch']['sip_profiles']['dir'])) {
-						$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
+					if ($enabled != true && !empty($settings->get('switch', 'sip_profiles'))) {
+						$gateway_xml_file = $settings->get('switch', 'sip_profiles')."/".$profile."/v_".$gateway_uuid.".xml";
 						if (file_exists($gateway_xml_file)) {
 							unlink($gateway_xml_file);
 						}

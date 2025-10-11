@@ -195,7 +195,7 @@
 <?php
 //determine refresh rate
 $refresh_default = 1500; //milliseconds
-$refresh = is_numeric($_SESSION['operator_panel']['refresh']['numeric']) ? $_SESSION['operator_panel']['refresh']['numeric'] : $refresh_default;
+$refresh = is_numeric($settings->get('operator_panel', 'refresh')) ? $settings->get('operator_panel', 'refresh') : $refresh_default;
 if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
 	$refresh = $refresh * 1000;
 }

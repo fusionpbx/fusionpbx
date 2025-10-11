@@ -116,7 +116,7 @@ function filename_safe($filename) {
 function save_gateway_xml() {
 
 	//skip saving the gateway xml if the directory is not set
-		if (empty($_SESSION['switch']['sip_profiles']['dir'])) {
+		if (empty($settings->get('switch', 'sip_profiles'))) {
 			return;
 		}
 
@@ -130,7 +130,7 @@ function save_gateway_xml() {
 		else {
 			$v_needle = 'v_';
 		}
-		$gateway_list = glob($_SESSION['switch']['sip_profiles']['dir'] . "/*/".$v_needle."*.xml");
+		$gateway_list = glob($settings->get('switch', 'sip_profiles') . "/*/".$v_needle."*.xml");
 		foreach ($gateway_list as $gateway_file) {
 			unlink($gateway_file);
 		}
@@ -149,7 +149,7 @@ function save_gateway_xml() {
 								$profile = "external";
 							}
 						//open the xml file
-							$fout = fopen($_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
+							$fout = fopen($settings->get('switch', 'sip_profiles')."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
 						//build the xml
 							$xml .= "<include>\n";
 							$xml .= "    <gateway name=\"" . strtolower($row['gateway_uuid']) . "\">\n";
@@ -259,12 +259,12 @@ function save_var_xml() {
 		global $database, $config, $domain_uuid;
 
 		//skip this function if the conf directory is empty
-		if (empty($_SESSION['switch']['conf']['dir'])) {
+		if (empty($settings->get('switch', 'conf'))) {
 			return false;
 		}
 
 		//open the vars.xml file
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
+		$fout = fopen($settings->get('switch', 'conf')."/vars.xml","w");
 
 		//get the hostname
 		$hostname = trim(event_socket_request_cmd('api switchname'));
@@ -548,7 +548,7 @@ function extension_presence_id($extension, $number_alias = false) {
 	}
 
 	if (!empty($number_alias)) {
-		if ($_SESSION['provision']['number_as_presence_id']['text'] === 'true') {
+		if ($settings->get('provision', 'number_as_presence_id') === 'true') {
 			return $number_alias;
 		}
 	}
@@ -591,7 +591,7 @@ if (!function_exists('save_call_center_xml')) {
 	function save_call_center_xml() {
 		global $database, $domain_uuid;
 
-		if (!empty($_SESSION['switch']['call_center']['dir'])) {
+		if (!empty($settings->get('switch', 'call_center'))) {
 
 			//get the call center queue array
 			$sql = "select * from v_call_center_queues ";
@@ -797,7 +797,7 @@ if (!function_exists('save_call_center_xml')) {
 					unset($v_tiers);
 
 				//write the XML config file
-					$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/callcenter.conf.xml","w");
+					$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/callcenter.conf.xml","w");
 					fwrite($fout, $file_contents);
 					fclose($fout);
 
@@ -858,7 +858,7 @@ if (!function_exists('switch_conf_xml')) {
 			unset ($v_mailer_app_args);
 
 		//write the XML config file
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/switch.conf.xml","w");
+			$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/switch.conf.xml","w");
 			fwrite($fout, $file_contents);
 			fclose($fout);
 
@@ -892,7 +892,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			unset ($v_pass);
 
 		//write the XML config file
-			$switch_configuration_dir = !empty($_SESSION['switch']['conf']['dir']) ? $_SESSION['switch']['conf']['dir'] : '/etc/freeswitch';
+			$switch_configuration_dir = !empty($settings->get('switch', 'conf')) ? $settings->get('switch', 'conf') : '/etc/freeswitch';
 			$fout = fopen($switch_configuration_dir . "/autoload_configs/xml_cdr.conf.xml","w");
 			fwrite($fout, $file_contents);
 			fclose($fout);
@@ -908,12 +908,12 @@ if (!function_exists('save_sip_profile_xml')) {
 			global $database;
 
 		//skip saving the sip profile xml if the directory is not set
-			if (empty($_SESSION['switch']['sip_profiles']['dir'])) {
+			if (empty($settings->get('switch', 'sip_profiles'))) {
 				return;
 			}
 
 		// make profile dir if needed
-			$profile_dir = $_SESSION['switch']['conf']['dir']."/sip_profiles";
+			$profile_dir = $settings->get('switch', 'conf')."/sip_profiles";
 			if (!is_readable($profile_dir)) {
 				mkdir($profile_dir, 0770, false);
 			}
@@ -986,13 +986,13 @@ if (!function_exists('save_sip_profile_xml')) {
 
 if (!function_exists('save_switch_xml')) {
 	function save_switch_xml() {
-		if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+		if (is_readable($settings->get('switch', 'extensions'))) {
 			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/resources/classes/extension.php")) {
 				$extension = new extension;
 				$extension->xml();
 			}
 		}
-		if (is_readable($_SESSION['switch']['conf']['dir'])) {
+		if (is_readable($settings->get('switch', 'conf'))) {
 			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 				save_setting_xml();
 			}

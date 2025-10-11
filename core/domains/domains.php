@@ -61,7 +61,7 @@
 			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 			$_SESSION['domain_uuid'] = $domain_uuid;
 			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-			$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
+			$settings->get('domain', 'template') = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 			$_SESSION["context"] = $_SESSION["domain_name"];
 
 		//clear the extension array so that it is regenerated for the selected domain
@@ -81,7 +81,7 @@
 
 				//get the menu array and save it to the session
 					$menu = new menu;
-					$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+					$menu->menu_uuid = $settings->get('domain', 'menu');
 					$_SESSION['menu']['array'] = $menu->menu_array();
 					unset($menu);
 			}
@@ -89,7 +89,7 @@
 		//redirect the user
 			if (!empty($_SESSION["login"]["destination"])) {
 				// to default, or domain specific, login destination
-				header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["text"]);
+				header("Location: ".PROJECT_PATH.$settings->get('login', 'destination'));
 			}
 			else {
 				header("Location: ".PROJECT_PATH."/core/dashboard/");
@@ -173,7 +173,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 50;
 	$param = $search ? "&search=".$search : null;
 	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);

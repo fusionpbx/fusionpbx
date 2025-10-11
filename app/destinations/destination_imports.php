@@ -72,7 +72,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/destinations-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/destinations-".$_SESSION['domain_name'].".csv";
 		file_put_contents($file, $_POST['data']);
 		$_SESSION['file'] = $file;
 		$_SESSION['file_name'] = $_FILES['ulfile']['name'];
@@ -82,11 +82,11 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
 		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name']);
+			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($_FILES['ulfile']['name']);
+			//system('chmod -R 744 '.$settings->get('server', 'temp').'*');
 			unset($_POST['txtCommand']);
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
 			$_SESSION['file'] = $file;
 		}
 	}
@@ -277,8 +277,8 @@
 										$dialplan_detail_order = $dialplan_detail_order + 10;
 
 									//set the dialplan detail type
-										if (!empty($_SESSION['dialplan']['destination']['text'])) {
-											$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
+										if (!empty($settings->get('dialplan', 'destination'))) {
+											$dialplan_detail_type = $settings->get('dialplan', 'destination');
 										}
 										else {
 											$dialplan_detail_type = "destination_number";
@@ -339,8 +339,8 @@
 											//check the destination number
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-												if (!empty($_SESSION['dialplan']['destination']['text'])) {
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
+												if (!empty($settings->get('dialplan', 'destination'))) {
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $settings->get('dialplan', 'destination');
 												}
 												else {
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";

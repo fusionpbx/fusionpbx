@@ -483,7 +483,7 @@
 				echo escape($row['default_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			if (isset($_SESSION['default_settings']['display_order']['text']) && $_SESSION['default_settings']['display_order']['text'] == 'inline') {
+			if (isset($settings->get('default_settings', 'display_order')) && $settings->get('default_settings', 'display_order') == 'inline') {
 				$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
 				echo "	<td class='hide-sm-dn' title=\"".escape($row['default_setting_order'])."\">".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))].($row['default_setting_name'] == 'array' && isset($row['default_setting_order']) ? ' ('.$row['default_setting_order'].')' : null)."</div></td>\n";
 			}

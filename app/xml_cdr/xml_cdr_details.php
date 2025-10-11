@@ -203,7 +203,7 @@
 		$tmp_year = date("Y", $tmp_time);
 		$tmp_month = date("M", $tmp_time);
 		$tmp_day = date("d", $tmp_time);
-		$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+		$tmp_dir = $settings->get('switch', 'log').'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 		if (file_exists($tmp_dir.'/'.$uuid.'.json')) {
 			$format = "json";
 			$json_string = file_get_contents($tmp_dir.'/'.$uuid.'.json');
@@ -452,14 +452,14 @@
 				$image_name .= '_b';
 			}
 			$image_name .= ".png";
-			echo "		<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+			echo "		<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template')."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 		}
 		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
 		//echo "	<td valign='top' class='".$row_style[$c]."'>".$language."</td>\n";
 		//echo "	<td valign='top' class='".$row_style[$c]."'>".$context."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>";
-		if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')) {
+		if (file_exists($settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')) {
 			//echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."\">\n";
 			//echo "	  </a>";
 
@@ -473,7 +473,7 @@
 		}
 		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>";
-		if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')) {
+		if (file_exists($settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')) {
 			echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."\">\n";
 			echo 	escape($caller_id_number).' ';
 			echo "	  </a>";
@@ -725,7 +725,7 @@
 					if ($key == "bridge_uuid" || $key == "signal_bond") {
 						echo "	<td valign='top' align='left' class='".$row_style[$c]."'>\n";
 						echo "		<a href='xml_cdr_details.php?id=".urlencode($value)."'>".escape($value)."</a>&nbsp;\n";
-						$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+						$tmp_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 						$tmp_name = '';
 						if (file_exists($tmp_dir.'/'.$value.'.wav')) {
 							$tmp_name = $value.".wav";
@@ -739,12 +739,12 @@
 						else if (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
 							$tmp_name = $value."_1.mp3";
 						}
-						if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+						if (!empty($tmp_name) && file_exists($settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 							echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 							echo "		play";
 							echo "	</a>&nbsp;";
 						}
-						if (!empty($tmp_name) && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+						if (!empty($tmp_name) && file_exists($settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 							echo "	<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
 							echo "		download";
 							echo "	</a>";

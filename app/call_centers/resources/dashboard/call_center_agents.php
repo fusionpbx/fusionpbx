@@ -39,7 +39,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_centers');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_centers');
 
 //get http variables and set as php variables
 	$order_by = $_GET["order_by"] ?? null;
