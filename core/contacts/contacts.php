@@ -284,8 +284,8 @@
 		$sql .= ", contact_organization asc ";
 	}
 	else {
-		$contact_default_sort_column = !empty($settings->get('contacts', 'default_sort_column')) ? $settings->get('contacts', 'default_sort_column') : "last_mod_date";
-		$contact_default_sort_order = !empty($settings->get('contacts', 'default_sort_order')) ? $settings->get('contacts', 'default_sort_order') : "desc";
+		$contact_default_sort_column = $settings->get('contact', 'default_sort_column', 'last_mod_date');
+		$contact_default_sort_order = $settings->get('contact', 'default_sort_order', 'desc');
 
 		$sql .= order_by($contact_default_sort_column, $contact_default_sort_order);
 		if ($db_type == "pgsql") {
