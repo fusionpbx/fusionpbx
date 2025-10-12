@@ -47,7 +47,7 @@
 
 //disable login message
 	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {
-		unset($settings->get('login', 'message'));
+		unset($_SESSION['login']['message']);
 
 		$sql = "update v_default_settings ";
 		$sql .= "set default_setting_enabled = false ";
