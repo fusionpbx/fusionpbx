@@ -52,11 +52,13 @@
 
 		//delete the permissions
 			function delete() {
+				global $settings;
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
 					foreach ($config_list as $config_path) {
+						//included file may use $settings
 						include($config_path);
 						$x++;
 					}
@@ -130,6 +132,7 @@
 
 		//restore the permissions
 			function restore() {
+				global $settings;
 
 				//if the are no groups add the default groups
 					$sql = "select * from v_groups ";
@@ -138,7 +141,7 @@
 
 				//delete the group permissions
 					$this->delete();
-					
+
 				//get the remaining group permissions
 					$sql = "select permission_name, group_name from v_group_permissions ";
 					$this->database_group_permissions = $this->database->select($sql, null, 'all');
@@ -147,6 +150,7 @@
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
 					foreach ($config_list as $config_path) {
+						//included file may use $settings
 						include($config_path);
 						$x++;
 					}
