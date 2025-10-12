@@ -62,7 +62,7 @@
 				//get the contents of the template and save it to the template variable
 				$template_full_path = $template_base_path.'/'.$template_rss_sub_category.'/template.php';
 				if (!file_exists($template_full_path)) {
-					$settings->get('domain', 'template') = 'default';
+					$_SESSION['domain']['template'] = 'default';
 					$template_full_path = $template_base_path.'/default/template.php';
 				}
 				$_SESSION["template_full_path"] = $template_full_path;
