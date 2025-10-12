@@ -553,7 +553,7 @@
 		public function all($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $db_type, $settings;
 
 			//set default values
 			$destination_name = '';
@@ -573,9 +573,10 @@
 				$x = 0;
 				foreach ($config_list as $config_path) {
 					try {
+						//included files may use $settings
 						include($config_path);
 					}
-					catch (Exception $e) {
+					catch (Throwable $e) {
 						//echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					$x++;
