@@ -765,7 +765,7 @@
 		public function get($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $db_type, $settings;
 
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
@@ -781,6 +781,7 @@
 				$x = 0;
 				foreach ($config_list as $config_path) {
 					try {
+						//included files may use $settings
 						include($config_path);
 					}
 					catch (Exception $e) {
