@@ -247,7 +247,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 				//set the path for the directory
 					$default_path = $this->settings->get('switch', 'call_recordings')."/".$this->domain_name;
-					
+
 				//get the file path and name
 					$record_path = dirname($recording);
 					$record_name = basename($recording);
