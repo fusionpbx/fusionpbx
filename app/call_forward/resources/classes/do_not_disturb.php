@@ -82,7 +82,7 @@
 						$esl = event_socket::create();
 						if ($esl->is_connected()) {
 							$switch_cmd .= "callcenter_config agent set status ".$this->username."@".$this->domain_name." '".$user_status."'";
-							$esl->command('api '.$switch_cmd);
+							$esl->request('api '.$switch_cmd);
 						}
 
 					//update the database user_status
