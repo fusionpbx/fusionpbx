@@ -44,24 +44,29 @@
 		private $table;
 		private $description_field;
 		private $location;
+		private $domain_uuid;
+		private $user_uuid;
 		public $recording_uuid;
 		public $binary;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+
 			//assign the variables
 			$this->name = 'call_recording';
 			$this->table = 'call_recordings';
 			$this->description_field = 'call_recording_description';
 			$this->location = 'call_recordings.php';
 
-			//allow global
-			$this->database = database::new();
-
-			//initialize the settings object
-			$this->settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 		}
 
 		/**
