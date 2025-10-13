@@ -138,13 +138,13 @@ class azure{
         return "https://speech.platform.bing.com/synthesize";
     }
 
-    private static function getSubscriptionKey(){
-        return $_SESSION['azure']['key']['text'];
+    private static function getSubscriptionKey(settings $settings){
+        return $settings->get('azure', 'key');
     }
 
-    private static function _getToken(){
+    private static function _getToken(settings $settings){
         $url = self::getTokenUrl();
-        $subscriptionKey = self::getSubscriptionKey();
+        $subscriptionKey = self::getSubscriptionKey($settings);
 
         $headers = array();
         $headers[] = 'Ocp-Apim-Subscription-Key: '. $subscriptionKey;
@@ -167,12 +167,12 @@ class azure{
         return $response;
     }
 
-    public static function synthesize($data,$formate_key){
+    public static function synthesize(settings $settings, $data, $format_key){
 
-        $lang = self::$formats[$formate_key]['lang'];
-        $gender = self::$formats[$formate_key]['gender'];
-        $name = self::$formats[$formate_key]['name'];
-        $token = self::_getToken();
+        $lang = self::$formats[$format_key]['lang'];
+        $gender = self::$formats[$format_key]['gender'];
+        $name = self::$formats[$format_key]['name'];
+        $token = self::_getToken($settings);
 
         $url = self::getApiUrl();
 
