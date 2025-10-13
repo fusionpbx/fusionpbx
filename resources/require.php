@@ -88,6 +88,10 @@
 	global $database;
 	$database = database::new(['config' => $config]);
 
+//security headers
+	header("X-Frame-Options: SAMEORIGIN");
+	header("Content-Security-Policy: frame-ancestors 'self';");
+
 //start the session if not using the command line
 	global $no_session;
 	if (!defined('STDIN') && empty($no_session)) {
