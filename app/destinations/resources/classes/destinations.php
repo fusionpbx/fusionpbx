@@ -54,31 +54,22 @@
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
+		private $user_uuid;
 		private $database;
 		private $settings;
 
-		/**
+	/**
 		* Called when the object is created
 		*/
-		public function __construct($setting_array = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
-
-			//set the domain details
-			$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
-			$this->user_uuid = $_SESSION['user_uuid'] ?? '';
-
-			//get the settings object
-			if (empty($setting_array['settings'])) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			} else {
-				$this->settings = $setting_array['settings'];
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'destination_';
