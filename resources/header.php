@@ -58,7 +58,7 @@
 
 //check if the template exists if it is missing then use the default
 	if (!file_exists($template_base_path.'/'.$settings->get('domain', 'template').'/template.php')) {
-		$settings->get('domain', 'template') = 'default';
+		$_SESSION['domain']['template'] = 'default';
 	}
 
 //start the output buffer

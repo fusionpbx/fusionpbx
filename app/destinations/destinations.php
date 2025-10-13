@@ -89,6 +89,7 @@
 
 //function to return the action names in the order defined
 	function action_name($destination_array, $destination_actions) {
+		global $settings;
 		$actions = [];
 		if (!empty($destination_array) && is_array($destination_array)) {
 			if (!empty($destination_actions) && is_array($destination_actions)) {

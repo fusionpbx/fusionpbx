@@ -553,7 +553,7 @@
 		public function all($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $db_type, $settings;
 
 			//set default values
 			$destination_name = '';
@@ -575,7 +575,7 @@
 					try {
 						include($config_path);
 					}
-					catch (Exception $e) {
+					catch (Throwable $e) {
 						//echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					$x++;
@@ -764,7 +764,7 @@
 		public function get($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $db_type, $settings;
 
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";
