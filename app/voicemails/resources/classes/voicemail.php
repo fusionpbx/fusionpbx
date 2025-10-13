@@ -69,36 +69,16 @@
 		 */
 		private $database;
 
-		public function __construct(array $params = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+			$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
-			//set the domain_uuid if not provided
-			if (!empty($params['domain_uuid']) && is_uuid($params['domain_uuid'])) {
-				$this->domain_uuid = $params['domain_uuid'];
-			} else {
-				$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
-			}
-
-			//set the user_uuid if not provided
-			if (!empty($params['user_uuid']) && is_uuid($params['user_uuid'])) {
-				$this->user_uuid = $params['user_uuid'];
-			} else {
-				$this->user_uuid = $_SESSION['user_uuid'] ?? '';
-			}
-
-			//database connection
-			if (empty($params['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $params['database'];
-			}
-
-			//assign the settings object
-			if (empty($params['settings'])) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			}
-			else {
-				$this->settings = $params['settings'];
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'voicemail_';
@@ -317,7 +297,7 @@
 				if (is_array($result)) {
 					foreach ($result as $i => $row) {
 						//set the greeting directory
-						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
+						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$this->domain_name.'/'.$row['voicemail_id'];
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
 							$result[$i]['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
 						}
@@ -387,7 +367,7 @@
 
 									//delete voicemail message recording and greeting files
 										if (is_numeric($voicemail_id)) {
-											$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id;
+											$file_path = $this->settings->get('switch', 'voicemail')."/default/".$this->domain_name."/".$voicemail_id;
 											foreach (glob($file_path."/*.*") as $file_name) {
 												@unlink($file_name);
 											}
@@ -658,7 +638,7 @@
 
 				$esl = event_socket::create();
 				if ($esl->is_connected()) {
-					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$this->domain_name;
 					$switch_result = event_socket::api($switch_cmd);
 				}
 		}
@@ -678,7 +658,7 @@
 				}
 
 			//delete the recording
-				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
+				$file_path = $this->settings->get('switch', 'voicemail')."/default/".$this->domain_name."/".$this->voicemail_id;
 				if (is_uuid($this->voicemail_message_uuid)) {
 					foreach (glob($file_path."/intro_msg_".$this->voicemail_message_uuid.".*") as $file_name) {
 						unlink($file_name);
@@ -1032,7 +1012,7 @@
 				unset($sql, $parameters);
 
 				//define voicemail message file path
-				$voicemail_message_path = $switch_voicemail.'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+				$voicemail_message_path = $switch_voicemail.'/default/'.$this->domain_name.'/'.$this->voicemail_id;
 
 				//determine voicemail message file properties (decode if base64)
 				if (
@@ -1143,9 +1123,7 @@
 		public function message_intro_download(string $domain_name = '') {
 
 			//check domain name
-			if (empty($domain_name)) {
-				$domain_name = $_SESSION['domain_name'] ?? '';
-			}
+			$domain_name = $this->domain_name;
 
 			//check if for valid input
 			if (!is_numeric($this->voicemail_id)
@@ -1251,9 +1229,7 @@
 		public function message_download(string $domain_name = '') {
 
 			//check domain name
-			if (empty($domain_name)) {
-				$domain_name = $_SESSION['domain_name'] ?? '';
-			}
+			$domain_name = $this->domain_name ?? '';
 
 			//check if for valid input
 			if (!is_numeric($this->voicemail_id)
