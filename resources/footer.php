@@ -56,39 +56,28 @@
 
 //set a default template
 	if (empty($_SESSION["template_full_path"])) { //build template if session template has no length
+		//set the template base path
 		$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
-		if (!empty($template_rss_sub_category)) {
-			//this template was assigned by the content manager
-				//get the contents of the template and save it to the template variable
-				$template_full_path = $template_base_path.'/'.$template_rss_sub_category.'/template.php';
-				if (!file_exists($template_full_path)) {
-					$_SESSION['domain']['template'] = 'default';
-					$template_full_path = $template_base_path.'/default/template.php';
-				}
-				$_SESSION["template_full_path"] = $template_full_path;
+
+		//get the contents of the template and save it to the template variable
+		$template_full_path = $template_base_path.'/'.$settings->get('domain', 'template', 'default').'/template.php';
+		if (!file_exists($template_full_path)) {
+			$template_full_path = $template_base_path.'/default/template.php';
 		}
-		else {
-			//get the contents of the template and save it to the template variable
-				$template_full_path = $template_base_path.'/'.$settings->get('domain', 'template').'/template.php';
-				if (!file_exists($template_full_path)) {
-					$_SESSION['domain']['template'] = 'default';
-					$template_full_path = $template_base_path.'/default/template.php';
-				}
-				$_SESSION["template_full_path"] = $template_full_path;
-		}
+		$_SESSION["template_full_path"] = $template_full_path;
 	}
 
 //initialize a template object
 	$view = new template();
 	$view->engine = 'smarty';
-	$view->template_dir = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/themes/'.$settings->get('domain', 'template').'/';
+	$view->template_dir = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/themes/'.$settings->get('domain', 'template', 'default').'/';
 	$view->cache_dir = sys_get_temp_dir();
 	$view->init();
 
 //add multi-lingual support
 	$language = new text;
 	$text_default = $language->get();
-	$text_application = $language->get(null,'themes/'.$settings->get('domain', 'template'));
+	$text_application = $language->get(null, 'themes/'.$settings->get('domain', 'template', 'default'));
 	$text = array_merge($text_default, $text_application);
 
 //create token
