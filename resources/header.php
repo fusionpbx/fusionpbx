@@ -56,13 +56,8 @@
 //set the template base directory path
 	$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 
-//check if the template exists if it is missing then use the default
-	if (!file_exists($template_base_path.'/'.$settings->get('domain', 'template').'/template.php')) {
-		$_SESSION['domain']['template'] = 'default';
-	}
-
 //start the output buffer
-	include $template_base_path.'/'.$settings->get('domain', 'template').'/config.php';
+	include $template_base_path.'/'.$settings->get('domain', 'template', 'default').'/config.php';
 
 //start the output buffer
 	ob_start();
