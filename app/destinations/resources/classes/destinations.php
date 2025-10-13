@@ -573,7 +573,6 @@
 				$x = 0;
 				foreach ($config_list as $config_path) {
 					try {
-						//included files may use $settings
 						include($config_path);
 					}
 					catch (Throwable $e) {
@@ -781,7 +780,6 @@
 				$x = 0;
 				foreach ($config_list as $config_path) {
 					try {
-						//included files may use $settings
 						include($config_path);
 					}
 					catch (Exception $e) {
