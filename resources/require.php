@@ -113,9 +113,9 @@
 	}
 
 //change language on the fly - for translate tool (if available)
-	if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
-		$_SESSION['domain']['language']['en-us'] = $_REQUEST['view_lang_code'];
-	}
+	//if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
+	//	$_SESSION['domain']['language']['en-us'] = $_REQUEST['view_lang_code'];
+	//}
 
 //change the domain
 	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
@@ -143,7 +143,6 @@
 
 		//update the domain session variables
 			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-			$_SESSION['domain']['template'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 			$_SESSION["context"] = $_SESSION["domain_name"];
 
 		//clear the extension array so that it is regenerated for the selected domain
