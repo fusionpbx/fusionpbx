@@ -36,9 +36,9 @@
 			/**
 			* declare public/private properties
 			*/
-			private $app_name;
-			private $app_uuid;
+			private $domain_uuid;
 			private $database;
+
 			private $permission_prefix;
 			private $list_page;
 			private $table;
@@ -46,8 +46,13 @@
 			private $toggle_field;
 			private $toggle_values;
 
-			//class constructor
-			public function __construct() {
+			public function __construct(array $setting_array = []) {
+				//set domain and user UUIDs
+				$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+				//set objects
+				$this->database = $setting_array['database'] ?? database::new();
+
 				//set the default value
 				$this->dialplan_global = false;
 
@@ -58,11 +63,6 @@
 				$this->uuid_prefix = 'dialplan_';
 				$this->toggle_field = 'dialplan_enabled';
 				$this->toggle_values = ['true','false'];
-
-				//connect to the database
-				if (empty($this->database)) {
-					$this->database = database::new();
-				}
 			}
 
 			/**
@@ -174,7 +174,7 @@
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_context from v_".$this->table." ";
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $row) {
