@@ -88,10 +88,8 @@
 		 * declare private variables
 		 */
 		private $database;
-		private $toll_allow;
 		private $domain_name;
 		private $extension;
-		private $number_alias;
 		private $permission;
 		private $list_page;
 		private $table;
@@ -99,7 +97,6 @@
 		private $toggle_field;
 		private $toggle_values;
 		private $user_uuid;
-		private $username;
 		private $settings;
 
 	/**
@@ -110,7 +107,6 @@
 			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
 			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
-			$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
 			//set objects
 			$this->database = $setting_array['database'] ?? database::new();
