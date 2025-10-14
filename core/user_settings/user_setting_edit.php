@@ -81,7 +81,7 @@
 		$user_setting_name = strtolower($_POST["user_setting_name"] ?? '');
 		$user_setting_value = $_POST["user_setting_value"] ?? '';
 		$user_setting_order = $_POST["user_setting_order"] ?? '';
-		$user_setting_enabled = $_POST["user_setting_enabled"];
+		$user_setting_enabled = $_POST["user_setting_enabled"] ?? true;
 		$user_setting_description = $_POST["user_setting_description"] ?? '';
 	}
 
