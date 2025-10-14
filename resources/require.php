@@ -91,6 +91,9 @@
 //security headers
 	header("X-Frame-Options: SAMEORIGIN");
 	header("Content-Security-Policy: frame-ancestors 'self';");
+	header("X-Content-Type-Options: nosniff");
+	header("Referrer-Policy: strict-origin-when-cross-origin");
+	//header("Strict-Transport-Security: max-age=63072000; includeSubDomains; preload");
 
 //start the session if not using the command line
 	global $no_session;
