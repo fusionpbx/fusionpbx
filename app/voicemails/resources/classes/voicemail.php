@@ -69,6 +69,30 @@
 		 */
 		private $database;
 
+		/**
+			* User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			* @var string
+			*/
+		private $user_uuid;
+
+		/**
+			* Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			* @var string
+			*/
+		private $username;
+
+		/**
+			* Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			* @var string
+			*/
+		private $domain_uuid;
+
+		/**
+			* Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			* @var string
+			*/
+		private $domain_name;
+
 		public function __construct(array $setting_array = []) {
 			//set domain and user UUIDs
 			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
