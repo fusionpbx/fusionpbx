@@ -36,15 +36,15 @@
 		const app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 
 		/**
-		* declare private variables
-		*/
+		 * declare private variables
+		 */
 		public $menu_uuid;
 		public $menu_language;
 		public $text;
 
 		/**
-		* declare private variables
-		*/
+		 * declare private variables
+		 */
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -70,10 +70,22 @@
 		private $user_uuid;
 
 		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
 		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $domain_uuid;
+
+		/**
+		* Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		* @var string
+		*/
+		private $domain_name;
 
 		/**
 		 * called when the object is created
