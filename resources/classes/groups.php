@@ -61,12 +61,7 @@
 		public function __construct(database $database = null, $domain_uuid = null, $user_uuid = null) {
 
 			//handle the database object
-			if (isset($database)) {
-				$this->database = $database;
-			}
-			else {
-				$this->database = database::new();
-			}
+			$this->database = $database ?? database::new();
 
 			//set the domain_uuid
 			if (is_uuid($domain_uuid)) {
@@ -79,7 +74,7 @@
 			}
 
 			//get the list of groups the user is a member of
-			if (!empty($domain_uuid) && !empty($user_uuid)) {
+			if (!empty($this->domain_uuid) && !empty($this->user_uuid)) {
 				//get the groups and save them to the groups variable
 				$this->groups = $this->assigned();
 
@@ -245,7 +240,7 @@
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -320,7 +315,7 @@
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;

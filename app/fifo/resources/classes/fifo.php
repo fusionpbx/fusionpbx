@@ -14,8 +14,6 @@
 		/**
 		* declare the variables
 		*/
-		private $app_name;
-		private $app_uuid;
 		private $database;
 		private $name;
 		private $table;
@@ -23,11 +21,18 @@
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $domain_uuid;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign the variables
 			$this->name = 'fifo';
 			$this->table = 'fifo';
@@ -36,11 +41,6 @@
 			$this->toggle_values = ['true','false'];
 			$this->description_field = 'fifo_description';
 			$this->location = 'fifo.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**
@@ -87,7 +87,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -102,11 +102,11 @@
 							foreach ($fifos as $fifo_uuid => $fifo) {
 								//add to the array
 									$array[$this->table][$x][$this->name.'_uuid'] = $fifo_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['fifo_members'][$x]['fifo_uuid'] = $fifo_uuid;
-									$array['fifo_members'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['fifo_members'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['dialplans'][$x]['dialplan_uuid'] = $fifo['dialplan_uuid'];
-									$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
 
 								//increment the id
 									$x++;
@@ -165,7 +165,7 @@
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -234,7 +234,7 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 
 								if (is_array($rows) && @sizeof($rows) != 0) {

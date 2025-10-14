@@ -23,15 +23,19 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$config = $setting_array['config'] ?? config::load();
+			$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
 
 			//assign private variables
 			$this->list_page = 'access_controls.php';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**

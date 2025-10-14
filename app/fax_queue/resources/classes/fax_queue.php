@@ -44,22 +44,24 @@
 		private $toggle_field;
 		private $toggle_values;
 		private $location;
+		private $domain_uuid;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign the variables
 			$this->name = 'fax_queue';
 			$this->table = 'fax_queue';
 			$this->toggle_field = '';
 			$this->toggle_values = ['true','false'];
 			$this->location = 'fax_queue.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**
@@ -88,7 +90,7 @@
 								//add to the array
 									if ($record['checked'] == 'true' && is_uuid($record['fax_queue_uuid'])) {
 										$array[$this->table][$x]['fax_queue_uuid'] = $record['fax_queue_uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									}
 
 								//increment the id
@@ -191,7 +193,7 @@
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -260,7 +262,7 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where fax_queue_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;

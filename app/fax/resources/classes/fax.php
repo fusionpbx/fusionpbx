@@ -60,17 +60,22 @@
 		private $toggle_field;
 		private $toggle_values;
 		private $forward_prefix;
+		private $domain_name;
+		private $user_uuid;
+		private $settings;
 
-		/**
+	/**
 		* Called when the object is created
 		*/
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		/**
@@ -131,15 +136,15 @@
 				$fax_name = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 
 			//set the  last fax
-				if (!empty($_SESSION['fax']['last_fax']['text'])) {
-					$last_fax = "last_fax=".xml::sanitize($_SESSION['fax']['last_fax']['text']);
+				if (!empty($this->settings->get('fax', 'last_fax'))) {
+					$last_fax = "last_fax=".xml::sanitize($this->settings->get('fax', 'last_fax'));
 				}
 				else {
 					$last_fax = "last_fax=\${caller_id_number}-\${strftime(%Y-%m-%d-%H-%M-%S)}";
 				}
 
 			//set the rx_fax
-				$rxfax_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.xml::sanitize($this->fax_extension).'/inbox/'.xml::sanitize($this->forward_prefix).'${last_fax}.tif';
+				$rxfax_data = $this->settings->get('switch', 'storage').'/fax/'.$this->domain_name.'/'.xml::sanitize($this->fax_extension).'/inbox/'.xml::sanitize($this->forward_prefix).'${last_fax}.tif';
 
 			//build the xml dialplan
 				$dialplan_xml = "<extension name=\"".xml::sanitize($fax_name)."\" continue=\"false\" uuid=\"".xml::sanitize($this->dialplan_uuid)."\">\n";
@@ -168,7 +173,7 @@
 				$dialplan["dialplan_uuid"] = $this->dialplan_uuid;
 				$dialplan["dialplan_name"] = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 				$dialplan["dialplan_number"] = $this->fax_extension;
-				$dialplan["dialplan_context"] = $_SESSION['domain_name'];
+				$dialplan["dialplan_context"] = $this->domain_name;
 				$dialplan["dialplan_continue"] = false;
 				$dialplan["dialplan_xml"] = $dialplan_xml;
 				$dialplan["dialplan_order"] = "40";
@@ -200,7 +205,7 @@
 
 			//clear the cache
 				$cache = new cache;
-				$cache->delete("dialplan:".$_SESSION['domain_name']);
+				$cache->delete("dialplan:".$this->domain_name);
 
 			//return the dialplan_uuid
 				return $dialplan_response ?? null;
@@ -247,7 +252,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -262,7 +267,7 @@
 								$sql = "select fax_file_uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_fax_files ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -304,17 +309,17 @@
 							if (!empty($faxes) && is_array($faxes) && @sizeof($faxes) != 0) {
 								foreach ($faxes as $fax_uuid => $fax) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['fax_users'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array['fax_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['fax_users'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['fax_files'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array['fax_files'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['fax_files'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['fax_logs'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array['fax_logs'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['fax_logs'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['dialplans'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
-									$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['dialplan_details'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
-									$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 									$x++;
 								}
 							}
@@ -348,7 +353,7 @@
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+									$cache->delete("dialplan:".$this->domain_name);
 
 								//clear the destinations session array
 									if (isset($_SESSION['destinations']['array'])) {
@@ -400,7 +405,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -441,7 +446,7 @@
 							$x = 0;
 							foreach ($fax_files as $fax_file_uuid => $fax_file) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $fax_file_uuid;
-								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								$x++;
 							}
 
@@ -489,7 +494,7 @@
 							foreach ($records as $x => $record) {
 								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -550,7 +555,7 @@
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
@@ -574,7 +579,7 @@
 												$sql_2 .= "where e.user_uuid = u.user_uuid  ";
 												$sql_2 .= "and e.domain_uuid = :domain_uuid ";
 												$sql_2 .= "and e.fax_uuid = :fax_uuid ";
-												$parameters_2['domain_uuid'] = $_SESSION['domain_uuid'];
+												$parameters_2['domain_uuid'] = $this->domain_uuid;
 												$parameters_2['fax_uuid'] = $row['fax_uuid'];
 												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
@@ -641,7 +646,7 @@
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+									$cache->delete("dialplan:".$this->domain_name);
 
 								//set message
 									message::add($text['message-copy']);
@@ -689,7 +694,7 @@
 
 									//toggle read state
 									$array['fax_files'][$x]['fax_file_uuid'] = $record['uuid'];
-									$array['fax_files'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['fax_files'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['fax_files'][$x]['read_date'] = empty($read_date) ? 'now()' : null;
 									$fax_files_toggled++;
 								}

@@ -24,10 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+
 //check permissions
 	if(!defined('STDIN')) {
-		//includes files
-		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('menu_restore')) {
 			//access granted

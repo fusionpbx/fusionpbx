@@ -42,17 +42,13 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
-
-			//assign the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 		}
 
 		//delete the permissions
 			function delete() {
-				global $settings;
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
@@ -131,7 +127,6 @@
 
 		//restore the permissions
 			function restore() {
-				global $settings;
 
 				//if the are no groups add the default groups
 					$sql = "select * from v_groups ";

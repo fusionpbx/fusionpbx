@@ -45,11 +45,20 @@
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $domain_uuid;
+		private $user_uuid;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign the variables
 			$this->name = 'extension_setting';
 			$this->table = 'extension_settings';
@@ -58,10 +67,6 @@
 			$this->description_field = 'extension_setting_description';
 			$this->location = 'extension_settings.php';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**
@@ -90,7 +95,7 @@
 								//add to the array
 									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									}
 
 								//increment the id
@@ -150,7 +155,7 @@
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle, extension_uuid from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$extension_uuid = $rows[0]['extension_uuid'];
@@ -229,7 +234,7 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {

@@ -51,7 +51,12 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->permission_prefix = 'contact_';
@@ -69,12 +74,6 @@
 			$this->tables[] = 'contact_users';
 			$this->tables[] = 'contacts';
 			$this->uuid_prefix = 'contact_';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -104,7 +103,7 @@
 									if (is_array($this->tables) && @sizeof($this->tables) != 0) {
 										foreach ($this->tables as $table) {
 											$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-											$array[$table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											$array[$table][$x]['domain_uuid'] = $this->domain_uuid;
 										}
 									}
 								}
@@ -161,7 +160,7 @@
 										if ($property['checked'] == 'true' && is_uuid($property['uuid'])) {
 											$array[$property_name][$x][database::singular($property_name).'_uuid'] = $property['uuid'];
 											$array[$property_name][$x]['contact_uuid'] = $this->contact_uuid;
-											$array[$property_name][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											$array[$property_name][$x]['domain_uuid'] = $this->domain_uuid;
 											$x++;
 										}
 									}

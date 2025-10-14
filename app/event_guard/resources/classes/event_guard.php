@@ -44,22 +44,26 @@
 		private $toggle_field;
 		private $toggle_values;
 		private $location;
+		private $domain_uuid;
+		private $user_uuid;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign the variables
 			$this->name = 'event_guard_log';
 			$this->table = 'event_guard_logs';
 			$this->toggle_field = '';
 			$this->toggle_values = ['block','pending'];
 			$this->location = 'event_guard_logs.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**

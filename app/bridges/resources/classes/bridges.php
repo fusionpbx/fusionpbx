@@ -36,18 +36,29 @@
 		/**
 		 * declare private variables
 		 */
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
+		private $domain_uuid;
+		private $user_uuid;
+		private $database;
+		private $settings;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$config = $setting_array['config'] ?? config::load();
+			$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 
@@ -57,11 +68,6 @@
 			$this->uuid_prefix = 'bridge_';
 			$this->toggle_field = 'bridge_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 
 		}
 
@@ -90,7 +96,7 @@
 							foreach ($records as $x => $record) {
 								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -145,7 +151,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -218,7 +224,7 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {

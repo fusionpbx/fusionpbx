@@ -29,11 +29,14 @@
  */
 	class switch_files {
 
-		/**
+	private $config;
+
+	/**
 		 * Called when the object is created
 		 */
-		public function __construct() {
-
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->config = $setting_array['config'] ?? config::load();
 		}
 
 		/**
@@ -55,9 +58,6 @@
 		 */
 		public function copy_scripts() {
 
-			//include files
-			require dirname(__DIR__, 4) . "/resources/require.php";
-
 			//get the source directory
 			if (file_exists('/usr/share/examples/fusionpbx/scripts')) {
 				$source_directory = '/usr/share/examples/fusionpbx/scripts';
@@ -73,8 +73,8 @@
 			}
 
 			//get the destination directory
-			if (file_exists($conf['switch.scripts.dir'])) {
-				$destination_directory = $conf['switch.scripts.dir'];
+			if (file_exists($this->config->get('switch.scripts.dir'))) {
+				$destination_directory = $this->config->get('switch.scripts.dir');
 			}
 			elseif (file_exists('/etc/freeswitch/scripts')) {
 				$destination_directory = '/etc/freeswitch/scripts';
@@ -110,9 +110,6 @@
 		 */
 		public function copy_languages() {
 
-			//include files
-			require dirname(__DIR__, 4) . "/resources/require.php";
-
 			//get the source directory
 			if (file_exists('/usr/share/examples/freeswitch/conf/languages')) {
 				$source_directory = '/usr/share/examples/fusionpbx/conf/languages';
@@ -128,8 +125,8 @@
 			}
 
 			//get the destination directory
-			if (file_exists($conf['switch.scripts.dir'])) {
-				$destination_directory = $conf['switch.conf.dir'].'/languages';
+			if (file_exists($this->config->get('switch.conf.dir').'/languages')) {
+				$destination_directory = $this->config->get('switch.conf.dir').'/languages';
 			}
 			elseif (file_exists('/etc/freeswitch/languages')) {
 				$destination_directory = '/usr/local/share/freeswitch/languages';

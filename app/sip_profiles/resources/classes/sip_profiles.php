@@ -36,7 +36,11 @@
 		/**
 		 * declare private variables
 		 */
+		private $domain_uuid;
+		private $user_uuid;
+		private $settings;
 		private $database;
+
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -49,10 +53,17 @@
 		 */
 		public $sip_profile_uuid;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'sip_profile_';
@@ -61,12 +72,6 @@
 			$this->uuid_prefix = 'sip_profile_';
 			$this->toggle_field = 'sip_profile_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -135,9 +140,10 @@
 									$p->delete('sip_profile_setting_delete', 'temp');
 
 								//delete the xml sip profile and directory
+									$switch_conf_dir = $this->settings->get('switch', 'conf');
 									foreach ($sip_profiles as $sip_profile_uuid => $sip_profile) {
-										@unlink($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile['name'].".xml");
-										@unlink($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile['name']);
+										@unlink($switch_conf_dir."/sip_profiles/".$sip_profile['name'].".xml");
+										@unlink($switch_conf_dir."/sip_profiles/".$sip_profile['name']);
 									}
 
 								//save the sip profile xml

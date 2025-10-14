@@ -50,7 +50,7 @@
 						$event .= "login: agent+".$this->agent_name."@".$this->domain_name."\n";
 						$event .= "unique-id: ".$this->agent_uuid."\n";
 						$event .= "answer-state: ".$this->answer_state."\n";
-						event_socket::command($event);
+						$esl->request('api ' . $event);
 						//echo $event."<br />";
 				}
 		} //function

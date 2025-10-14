@@ -57,8 +57,10 @@
 		 * @var database Database Object
 		 */
 		private $database;
+		private $domain_name;
+		private $user_uuid;
 
-		/**
+	/**
 		 * Create a settings object using key/value pairs in the $setting_array.
 		 *
 		 * Valid values are: database.
@@ -66,16 +68,15 @@
 		 * @depends database::new()
 		 * @access public
 		 */
-		public function __construct($setting_array = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
-
-
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		public function get_domain_uuid() {
@@ -471,8 +472,8 @@
 				}
 
 			//check to see if the domain name sub directory exists
-				if (is_dir($this->template_dir."/".$_SESSION["domain_name"])) {
-					$this->template_dir = $this->template_dir."/".$_SESSION["domain_name"];
+				if (is_dir($this->template_dir."/".$this->domain_name)) {
+					$this->template_dir = $this->template_dir."/".$this->domain_name;
 				}
 
 			//return the template directory
@@ -541,9 +542,9 @@
 									$p->delete('device_key_delete', 'temp');
 
 								//write the provision files
-									if (!empty($_SESSION['provision']['path']['text'])) {
+									if (!empty($this->settings->get('provision', 'path'))) {
 										$prov = new provision;
-										$prov->domain_uuid = $_SESSION['domain_uuid'];
+										$prov->domain_uuid = $this->domain_uuid;
 										$response = $prov->write();
 									}
 
@@ -994,7 +995,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -1021,9 +1022,9 @@
 									unset($array);
 
 								//write the provision files
-									if (!empty($_SESSION['provision']['path']['text'])) {
+									if (!empty($this->settings->get('provision', 'path'))) {
 										$prov = new provision;
-										$prov->domain_uuid = $_SESSION['domain_uuid'];
+										$prov->domain_uuid = $this->domain_uuid;
 										$response = $prov->write();
 									}
 
@@ -1288,7 +1289,7 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$y = $z = 0;
