@@ -34,10 +34,20 @@
 		const app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 
 		/**
-		 * declare public variables
-		 */
+		* Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		* @var string
+		*/
 		public $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		public $domain_name;
+
+		/**
+		 * declare additional public variables
+		 */
 		public $voicemail_uuid;
 		public $voicemail_id;
 		public $voicemail_message_uuid;
@@ -70,28 +80,17 @@
 		private $database;
 
 		/**
-			* User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-			* @var string
-			*/
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		private $user_uuid;
 
 		/**
-			* Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-			* @var string
-			*/
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		private $username;
 
-		/**
-			* Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-			* @var string
-			*/
-		private $domain_uuid;
-
-		/**
-			* Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-			* @var string
-			*/
-		private $domain_name;
 
 		public function __construct(array $setting_array = []) {
 			//set domain and user UUIDs
