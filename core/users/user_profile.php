@@ -35,6 +35,9 @@
 //get the user uuid
 	$user_uuid = $_SESSION['user_uuid'];
 
+//set the action
+	$action = 'edit';
+
 //retrieve password requirements
 	if (permission_exists('user_password')) {
 		$required['length'] = $settings->get('users', 'password_length', 12);
