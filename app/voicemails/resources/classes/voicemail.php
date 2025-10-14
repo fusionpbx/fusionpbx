@@ -46,12 +46,17 @@
 		public $domain_name;
 
 		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $user_uuid;
+
+		/**
 		 * declare additional public variables
 		 */
 		public $voicemail_uuid;
 		public $voicemail_id;
 		public $voicemail_message_uuid;
-		public $user_uuid;
 		public $order_by;
 		public $order;
 		public $offset;
@@ -68,12 +73,6 @@
 		 * @var database Database Object
 		 */
 		private $database;
-
-		/**
-		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $user_uuid;
 
 		/**
 		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
