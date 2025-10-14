@@ -828,7 +828,7 @@
 	echo "	<tr>\n";
 	echo "		<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-address_country']."</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
-	$countries = get_countries($db);
+	$countries = get_countries($database);
 	if (is_array($countries) && sizeof($countries) > 0) {
 		echo "		<select class='formfld' name='address_country' id='address_country' required='required'>\n";
 		echo "			<option value=''></option>\n";
