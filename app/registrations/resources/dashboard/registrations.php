@@ -25,6 +25,7 @@
 	$esl = event_socket::create();
 
 //registration count
+	$active_registrations = 0;
 	if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 		$registration = new registrations;
 		if (permission_exists("registration_all")) {
