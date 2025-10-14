@@ -140,7 +140,7 @@ class event_socket {
 		//set the event socket variables in the order of
 		//param passed to func, conf setting, old conf setting, default
 		$host = $host ?? $this->config->get('switch.event_socket.host') ?? $this->config->get('event_socket.ip_address') ?? '127.0.0.1';
-		$port = $port ?? $this->config->get('switch.event_socket.port') ?? $this->config->get('event_socket.port') ?? '8021';
+		$port = intval($port ?? $this->config->get('switch.event_socket.port') ?? $this->config->get('event_socket.port') ?? '8021');
 		$password = $password ?? $this->config->get('switch.event_socket.password') ?? $this->config->get('event_socket.password') ?? 'ClueCon';
 
 		//if a socket was provided in the constructor then don't create a new one
