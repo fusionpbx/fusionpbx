@@ -125,8 +125,8 @@
 			}
 
 			//get the destination directory
-			if (file_exists($this->config->get('switch.scripts.dir').'/languages')) {
-				$destination_directory = $this->config->get('switch.scripts.dir').'/languages';
+			if (file_exists($this->config->get('switch.conf.dir').'/languages')) {
+				$destination_directory = $this->config->get('switch.conf.dir').'/languages';
 			}
 			elseif (file_exists('/etc/freeswitch/languages')) {
 				$destination_directory = '/usr/local/share/freeswitch/languages';
