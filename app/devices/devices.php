@@ -103,6 +103,7 @@
 //get the devices profiles
 	$sql = "select * from v_device_profiles ";
 	$sql .= "where true ";
+	$parameters = [];
 	if (!permission_exists('device_profile_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
