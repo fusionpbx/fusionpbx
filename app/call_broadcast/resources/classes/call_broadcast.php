@@ -37,18 +37,32 @@
 		const app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $user_uuid;
-		private $domain_uuid;
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
 
-	/**
+		/**
 		 * called when the object is created
 		 */
 		public function __construct(array $setting_array = []) {
@@ -64,7 +78,6 @@
 			$this->list_page = 'call_broadcast.php';
 			$this->table = 'call_broadcasts';
 			$this->uuid_prefix = 'call_broadcast_';
-
 		}
 
 		/**

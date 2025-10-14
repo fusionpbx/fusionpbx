@@ -58,16 +58,6 @@
 		public $type;
 
 		/**
-		 * declare private variables
-		 */
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-
-		/**
 		 * Internal array structure that is populated from the database
 		 * @var array Array of settings loaded from Default Settings
 		 */
@@ -91,6 +81,15 @@
 		 */
 		private $username;
 
+		/**
+		 * declare private variables
+		 */
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+		private $toggle_field;
+		private $toggle_values;
 
 		public function __construct(array $setting_array = []) {
 			//set domain and user UUIDs

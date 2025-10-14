@@ -34,10 +34,26 @@
 		const app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $tables;

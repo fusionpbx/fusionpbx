@@ -34,31 +34,60 @@
 		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_name;
+
+		/**
 		 * declare public variables
 		 */
 		public $debug;
-		public $domain_uuid;
-		public $domain_name;
 		public $extension_uuid;
 		public $extension;
 		public $enabled;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission;
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
-		private $settings;
-		private $user_uuid;
-		private $username;
 
-	/**
+		/**
 		 * called when the object is created
 		 */
 		public function __construct(array $setting_array = []) {

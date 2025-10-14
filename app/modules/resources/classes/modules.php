@@ -42,10 +42,32 @@
 		public $msg;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -53,11 +75,8 @@
 		private $toggle_field;
 		private $toggle_values;
 		private $active_modules;
-		private $domain_uuid;
-		private $user_uuid;
-		private $settings;
 
-	/**
+		/**
 		 * called when the object is created
 		 */
 		public function __construct(array $setting_array = []) {

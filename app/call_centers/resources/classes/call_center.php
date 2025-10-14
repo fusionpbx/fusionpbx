@@ -37,9 +37,14 @@
 			const app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 
 			/**
-			 * define public variables
+			 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			 * @var string
 			 */
 			public $domain_uuid;
+
+			/**
+			 * define public variables
+			 */
 			public $call_center_queue_uuid;
 			public $dialplan_uuid;
 			public $queue_name;
@@ -48,17 +53,32 @@
 			public $queue_cc_exit_keys;
 
 			/**
+			 * Set in the constructor. Must be a database object and cannot be null.
+			 * @var database Database Object
+			 */
+			private $database;
+
+			/**
+			 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			 * @var string
+			 */
+			private $user_uuid;
+
+			/**
+			 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			 * @var string
+			 */
+			private $domain_name;
+
+			/**
 			* declare private variables
 			*/
-			private $domain_name;
-			private $user_uuid;
-			private $database;
 			private $permission_prefix;
 			private $list_page;
 			private $table;
 			private $uuid_prefix;
 
-	/**
+			/**
 			 * Called when the object is created
 			 */
 			public function __construct(array $setting_array = []) {
@@ -69,7 +89,6 @@
 
 				//set objects
 				$this->database = $setting_array['database'] ?? database::new();
-
 			}
 
 			/**

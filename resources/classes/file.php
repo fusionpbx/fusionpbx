@@ -11,10 +11,29 @@ class file {
 	public $recursive;
 	public $files;
 
-	private $domain_uuid;
-	private $user_uuid;
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 * @var database Database Object
+	 */
 	private $database;
+
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 * @var settings Settings Object
+	 */
 	private $settings;
+
+	/**
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
+	private $user_uuid;
+
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
+	private $domain_uuid;
 
 	/**
 	 * Called when the object is created

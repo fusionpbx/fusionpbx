@@ -34,12 +34,38 @@
 		const app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 
 		/**
-		 * declare private variables
+		 * Ring group primary key
+		 * @var uuid
 		 */
-		private $domain_uuid;
-		private $user_uuid;
+		public $ring_group_uuid;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
 		private $database;
 
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * declare private variables
+		 */
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -48,11 +74,6 @@
 		private $toggle_values;
 
 		/**
-		 * declare public variables
-		 */
-		public $ring_group_uuid;
-
-	/**
 		 * called when the object is created
 		 */
 		public function __construct(array $setting_array = []) {

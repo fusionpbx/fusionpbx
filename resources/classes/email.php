@@ -37,9 +37,14 @@
 		const app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
 		* declare public variables
 		*/
-		public $domain_uuid;
 		public $method;
 		public $recipients;
 		public $subject;
@@ -54,14 +59,29 @@
 		public $response;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
 		* declare private variables
 		*/
 		private $name;
-		private $user_uuid;
-		private $database;
-		private $settings;
 
-	/**
+		/**
 		 * called when the object is created
 		 */
 		public function __construct(array $setting_array = []) {
@@ -78,7 +98,6 @@
 			//set the objects
 			$this->database = $setting_array['database'] ?? database::new();
 			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-
 		}
 
 		/**

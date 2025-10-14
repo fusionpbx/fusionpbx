@@ -35,9 +35,14 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		const app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $conference_room_uuid;
 		public $order_by;
 		public $order;
@@ -49,21 +54,46 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		public $toggle_field;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
-		private $settings;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
 		private $toggle_values;
 		private $fields;
-		private $domain_name;
-		private $user_uuid;
 
-	/**
+		/**
 		 * Called when the object is created
 		 */
 		public function __construct(array $setting_array = []) {
@@ -75,7 +105,6 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 			//set objects
 			$this->database = $setting_array['database'] ?? database::new();
 			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-
 		}
 
 		/**
