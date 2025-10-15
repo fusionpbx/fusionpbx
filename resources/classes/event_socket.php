@@ -139,9 +139,9 @@ class event_socket {
 	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
 		//set the event socket variables in the order of
 		//param passed to func, conf setting, old conf setting, default
-		$host = $host ?? $this->config->get('switch.event_socket.host') ?? $this->config->get('event_socket.ip_address') ?? '127.0.0.1';
-		$port = intval($port ?? $this->config->get('switch.event_socket.port') ?? $this->config->get('event_socket.port') ?? '8021');
-		$password = $password ?? $this->config->get('switch.event_socket.password') ?? $this->config->get('event_socket.password') ?? 'ClueCon';
+		$host = $host ?? $this->config->get('switch.event_socket.host', null) ?? $this->config->get('event_socket.ip_address', null) ?? '127.0.0.1';
+		$port = intval($port ?? $this->config->get('switch.event_socket.port', null) ?? $this->config->get('event_socket.port', null) ?? '8021');
+		$password = $password ?? $this->config->get('switch.event_socket.password', null) ?? $this->config->get('event_socket.password', null) ?? 'ClueCon';
 
 		//if a socket was provided in the constructor then don't create a new one
 		if ($this->fp === false) {

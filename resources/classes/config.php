@@ -183,7 +183,7 @@ final class config {
 
 			//remove from the global namespace
 			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_sslmode, $db_secure, $db_cert_authority);
-		} 
+		}
 		else {
 			//save the loaded and parsed conf file to the object
 			$this->configuration = parse_ini_file($this->file);
@@ -250,11 +250,11 @@ final class config {
 
 	/**
 	 * Get a configuration value using a key in the configuration file
-	 * @param string|null $key Match key on the left hand side of the '=' in the config file. If $key is null the default value is returned
-	 * @param string $default_value if no matching key is found, then this value will be returned
-	 * @return string returns a value in the config.conf file or an empty string
+	 * @param string $key Match key on the left hand side of the '=' in the config file. If $key is null the default value is returned
+	 * @param string|null $default_value if no matching key is found, then this value will be returned
+	 * @return string|null returns a value in the config.conf file or an empty string
 	 */
-	public function get(string $key, string $default_value = ''): string {
+	public function get(string $key, ?string $default_value = ''): ?string {
 		if (!empty($this->__get($key))) {
 			return $this->__get($key);
 		}
