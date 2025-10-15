@@ -50,6 +50,7 @@
 //set additional variables
 	$search = $_GET["search"] ?? '';
 	$show = $_GET["show"] ?? '';
+	$result_count = 0;
 
 //get the http post data
 	if (!empty($_POST['call_recordings']) && is_array($_POST['call_recordings'])) {
