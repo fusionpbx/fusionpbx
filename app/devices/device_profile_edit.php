@@ -371,7 +371,7 @@
 	}
 
 //set the defaults
-	if ($device_profile_enabled === null) { $device_profile_enabled = true; }
+	$device_profile_enabled = $device_profile_enabled ?? true;
 
 //create token
 	$object = new token;

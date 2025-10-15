@@ -685,7 +685,7 @@
 		unset($sounds);
 	}
 
-//set default values
+//set the default values
 	if (empty($queue_strategy)) { $queue_strategy = "longest-idle-agent"; }
 	if (empty($queue_moh_sound)) { $queue_moh_sound = "\$\${hold_music}"; }
 	if (empty($queue_time_base_score)) { $queue_time_base_score = "system"; }
@@ -695,11 +695,11 @@
 	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
 	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
 	if (empty($queue_context)) { $queue_context = $domain_name; }
-	if ($queue_record_template === null) { $queue_record_template = 'false'; }
-	if ($queue_tier_rules_apply === null) { $queue_tier_rules_apply = false; }
-	if ($queue_tier_rule_wait_multiply_level === null) { $queue_tier_rule_wait_multiply_level = true; }
-	if ($queue_tier_rule_no_agent_no_wait === null) { $queue_tier_rule_no_agent_no_wait = true; }
-	if ($queue_abandoned_resume_allowed === null) { $queue_abandoned_resume_allowed = false; }
+	$queue_record_template = $queue_record_template ?? 'false';
+	$queue_tier_rules_apply = $queue_tier_rules_apply ?? false;
+	$queue_tier_rule_wait_multiply_level = $queue_tier_rule_wait_multiply_level ?? true;
+	$queue_tier_rule_no_agent_no_wait = $queue_tier_rule_no_agent_no_wait ?? true;
+	$queue_abandoned_resume_allowed = $queue_abandoned_resume_allowed ?? false;
 
 //create token
 	$object = new token;

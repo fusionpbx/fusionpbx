@@ -187,7 +187,7 @@
 	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
 
 //set the defaults
-	if ($template_enabled === null) { $template_enabled = true; }
+	$template_enabled = $template_enabled ?? true;
 
 //create token
 	$object = new token;

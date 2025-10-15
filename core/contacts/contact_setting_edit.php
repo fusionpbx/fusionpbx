@@ -195,7 +195,7 @@
 	}
 
 //set the defaults
-	if ($contact_setting_enabled === null) { $contact_setting_enabled = true; }
+	$contact_setting_enabled = $contact_setting_enabled ?? true;
 
 //create token
 	$object = new token;

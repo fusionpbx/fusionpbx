@@ -183,7 +183,7 @@
 	}
 
 //set the defaults
-	if ($attachment_primary === null) { $attachment_primary = false; }
+	$attachment_primary = $attachment_primary ?? false;
 
 //create token
 	$object = new token;
