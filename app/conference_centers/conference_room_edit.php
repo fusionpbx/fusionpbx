@@ -90,6 +90,10 @@
 		$participant_pin = preg_replace('{\D}', '', $participant_pin);
 	}
 
+//set the default values
+	$profile = $profile ?? 'default';
+	$max_members = $max_members ?? 0;
+
 //get the conference centers array and set a default conference center
 	$sql = "select * from v_conference_centers ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -296,10 +300,6 @@
 			if (empty($_POST["persistformvar"])) {
 
 				if ($action == "add" && permission_exists('conference_room_add')) {
-					//set default values
-						if (empty($profile)) { $profile = 'default'; }
-						if (empty($max_members)) { $max_members = 0; }
-
 					//add a conference room
 						$conference_room_uuid = uuid();
 						$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
