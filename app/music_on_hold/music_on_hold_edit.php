@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -440,6 +440,8 @@
 			unset($tmp_selected);
 		}
 	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-music_on_hold_chime_list']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
