@@ -118,6 +118,7 @@
 	echo "<table>\n";
 	foreach ($_SESSION['email'] as $name => $setting) {
 		foreach ($setting as $type => $value) {
+			$value = $value ?? '';
 			echo "<tr>\n";
 			if ($type == 'uuid') { $uuid = $value; continue; }
 			if ($name == 'smtp_password') { $value = str_repeat('*', strlen($value)); }
