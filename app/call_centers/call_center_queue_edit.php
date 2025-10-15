@@ -686,15 +686,15 @@
 	}
 
 //set the default values
-	if (empty($queue_strategy)) { $queue_strategy = "longest-idle-agent"; }
-	if (empty($queue_moh_sound)) { $queue_moh_sound = "\$\${hold_music}"; }
-	if (empty($queue_time_base_score)) { $queue_time_base_score = "system"; }
-	if (empty($queue_max_wait_time)) { $queue_max_wait_time = "0"; }
-	if (empty($queue_max_wait_time_with_no_agent)) { $queue_max_wait_time_with_no_agent = "90"; }
-	if (empty($queue_max_wait_time_with_no_agent_time_reached)) { $queue_max_wait_time_with_no_agent_time_reached = "30"; }
-	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
-	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
-	if (empty($queue_context)) { $queue_context = $domain_name; }
+	$queue_strategy = $queue_strategy ?? "longest-idle-agent";
+	$queue_moh_sound = $queue_moh_sound ?? "\$\${hold_music}";
+	$queue_time_base_score = $queue_time_base_score ?? "system";
+	$queue_max_wait_time = $queue_max_wait_time ?? "0";
+	$queue_max_wait_time_with_no_agent = $queue_max_wait_time_with_no_agent ?? "90";
+	$queue_max_wait_time_with_no_agent_time_reached = $queue_max_wait_time_with_no_agent_time_reached ?? "30";
+	$queue_tier_rule_wait_second = $queue_tier_rule_wait_second ?? "30";
+	$queue_discard_abandoned_after = $queue_discard_abandoned_after ?? "900";
+	$queue_context = $queue_context ?? $domain_name;
 	$queue_record_template = $queue_record_template ?? 'false';
 	$queue_tier_rules_apply = $queue_tier_rules_apply ?? false;
 	$queue_tier_rule_wait_multiply_level = $queue_tier_rule_wait_multiply_level ?? true;
