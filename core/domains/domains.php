@@ -61,7 +61,6 @@
 			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 			$_SESSION['domain_uuid'] = $domain_uuid;
 			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-			$settings->get('domain', 'template') = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 			$_SESSION["context"] = $_SESSION["domain_name"];
 
 		//clear the extension array so that it is regenerated for the selected domain
@@ -71,12 +70,12 @@
 			$domain = new domains();
 			$domain->set();
 
-		//initialize the settigns object
-			$settings = new settings(['database' => $database]);
+		//initialize the settings object
+			$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 		//reload domain on domain change, if enabled
 			if ($settings->get('menu', 'domain_change_reload', false)) {
-				//unset the sesssion menu array
+				//unset the session menu array
 					unset($_SESSION['menu']['array']);
 
 				//get the menu array and save it to the session
