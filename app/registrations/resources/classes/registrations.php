@@ -51,6 +51,12 @@
 		private $domain_uuid;
 
 		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * Set in the constructor. Must be an event_socket object and cannot be null.
 		 * @var event_socket Event Socket Connection Object
 		 */
