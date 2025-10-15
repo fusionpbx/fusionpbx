@@ -75,6 +75,7 @@
 		$start_stamp = trim($row["start_stamp"] ?? '');
 		$xml_string = trim($row["xml"] ?? '');
 		$json_string = trim($row["json"] ?? '');
+		$leg = trim($row["leg"] ?? '');
 		$call_flow = trim($row["call_flow"] ?? '');
 		$direction = trim($row["direction"] ?? '');
 		$call_direction = trim($row["direction"] ?? '');
@@ -448,11 +449,11 @@
 		echo "	<td style='width: 0' valign='top' class='".$row_style[$c]."'>\n";
 		if (!empty($call_direction)) {
 			$image_name = "icon_cdr_" . $call_direction . "_" . $status;
-			if ($row['leg'] == 'b') {
+			if ($leg == 'b') {
 				$image_name .= '_b';
 			}
 			$image_name .= ".png";
-			echo "		<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template')."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+			echo "		<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template')."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($leg=='b'?'(b)':'') . "'>\n";
 		}
 		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
