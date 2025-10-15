@@ -417,7 +417,7 @@
 		if (!empty($voicemail_options)) {
 			foreach ($voicemail_options as $x => $field) {
 				$voicemail_option_param = $field['voicemail_option_param'];
-				if (empty(trim($voicemail_option_param))) {
+				if (empty(trim($voicemail_option_param ?? ''))) {
 					$voicemail_option_param = $field['voicemail_option_action'];
 				}
 				$voicemail_option_param = str_replace("menu-", "", $voicemail_option_param);
