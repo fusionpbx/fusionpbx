@@ -589,6 +589,7 @@
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
 	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
 	$ring_group_call_timeout = $ring_group_call_timeout ?? '30';
+	$ring_group_greeting = $ring_group_greeting ?? '';
 	$ring_group_call_screen_enabled = $ring_group_call_screen_enabled ?? false;
 	$ring_group_call_forward_enabled = $ring_group_call_forward_enabled ?? false;
 	$ring_group_follow_me_enabled = $ring_group_follow_me_enabled ?? false;
