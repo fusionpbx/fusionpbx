@@ -34,9 +34,14 @@
 		const app_uuid = 'b63db353-e1c6-4401-8f10-101a6ee73b74';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $ringtones_list;
 
 		/**
@@ -62,12 +67,6 @@
 		 * @var string
 		 */
 		private $username;
-
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $domain_uuid;
 
 		/**
 		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
