@@ -471,13 +471,19 @@
 				}
 				echo "	</td>\n";
 			}
+
 			if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64') {
 				$file_size = byte_convert($row['greeting_size']);
 				echo "	<td class='center no-wrap hide-xs'>".$file_size."</td>\n";
 			}
 			else {
-				$file_size = byte_convert(filesize($greeting_dir.'/'.$row['greeting_filename']));
-				$file_date = date("M d, Y H:i:s", filemtime($greeting_dir.'/'.$row['greeting_filename']));
+				if (file_exists($greeting_dir.'/'.$row['greeting_filename'])) {
+					$file_size = byte_convert(filesize($greeting_dir.'/'.$row['greeting_filename']));
+					$file_date = date("M d, Y H:i:s", filemtime($greeting_dir.'/'.$row['greeting_filename']));
+				} else {
+					$file_size = 0;
+					$file_date = '';
+				}
 				echo "	<td class='center no-wrap hide-xs'>".$file_size."</td>\n";
 				echo "	<td class='center no-wrap hide-xs'>".$file_date."</td>\n";
 			}
