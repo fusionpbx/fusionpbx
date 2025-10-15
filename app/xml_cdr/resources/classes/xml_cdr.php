@@ -36,12 +36,17 @@
 		const app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
 		 * declare public variables
 		 */
 		public $array;
 		public $fields;
 		public $setting;
-		public $domain_uuid;
 		public $call_details;
 		public $call_direction;
 		public $status;
@@ -64,16 +69,28 @@
 		public $file;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
 		 * Internal array structure that is populated from the database
 		 * @var array Array of settings loaded from Default Settings
 		 */
 		private $settings;
 
 		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
-		private $database;
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
 
 		/**
 		 * Set in the constructor. This can be null.
@@ -91,42 +108,10 @@
 		private $xml_cdr_dir;
 
 		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
-
-		/**
-		 * Settings object set in the constructor. Must be a settings object and cannot be null.
-		 * @var settings Settings Object
-		 */
-		private $settings;
-
-		/**
-		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $user_uuid;
-
-		/**
-		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $username;
-
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $domain_uuid;
-
-		/**
 		 * additional private variables
 		 */
-		private $username;
 		private $password;
 		private $json;
-		private $user_uuid;
 
 		/**
 		 * Called when the object is created
@@ -1443,6 +1428,7 @@
 					}
 
 					//build the application urls
+					$application_url = '';
 					if (!empty($app['application'])) {
 						//build the source url
 						$source_url = '';
