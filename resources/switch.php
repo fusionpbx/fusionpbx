@@ -115,13 +115,13 @@ function filename_safe($filename) {
 
 function save_gateway_xml() {
 
+	//declare the global variables
+		global $database, $settings, $domain_uuid, $config;
+
 	//skip saving the gateway xml if the directory is not set
 		if (empty($settings->get('switch', 'sip_profiles'))) {
 			return;
 		}
-
-	//declare the global variables
-		global $database, $domain_uuid, $config;
 
 	//delete all old gateways to prepare for new ones
 		if (count($_SESSION["domains"]) > 1) {
@@ -525,7 +525,8 @@ function extension_exists($extension) {
 }
 
 function extension_presence_id($extension, $number_alias = false) {
-	global $database, $domain_uuid;
+	//declare the global variables
+	global $database, $domain_uuid, $settings;
 
 	if ($number_alias === false) {
 		$sql = "select extension, number_alias from v_extensions ";
@@ -556,6 +557,7 @@ function extension_presence_id($extension, $number_alias = false) {
 }
 
 function get_recording_filename($id) {
+	//declare the global variables
 	global $database, $domain_uuid;
 
 	$sql = "select * from v_recordings ";
@@ -589,7 +591,8 @@ if (!function_exists('phone_letter_to_number')) {
 
 if (!function_exists('save_call_center_xml')) {
 	function save_call_center_xml() {
-		global $database, $domain_uuid;
+		//declare the global variables
+		global $database, $domain_uuid, $settings;
 
 		if (!empty($settings->get('switch', 'call_center'))) {
 
@@ -812,6 +815,9 @@ if (!function_exists('save_call_center_xml')) {
 
 if (!function_exists('switch_conf_xml')) {
 	function switch_conf_xml() {
+		//declare the global variables
+			global $settings;
+
 		//get the contents of the template
 			if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
@@ -905,7 +911,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 if (!function_exists('save_sip_profile_xml')) {
 	function save_sip_profile_xml() {
 		//declare the global variables
-			global $database;
+			global $database, $settings;
 
 		//skip saving the sip profile xml if the directory is not set
 			if (empty($settings->get('switch', 'sip_profiles'))) {
@@ -986,6 +992,9 @@ if (!function_exists('save_sip_profile_xml')) {
 
 if (!function_exists('save_switch_xml')) {
 	function save_switch_xml() {
+		//define the global settings
+		global $settings;
+
 		if (is_readable($settings->get('switch', 'extensions'))) {
 			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/resources/classes/extension.php")) {
 				$extension = new extension;
