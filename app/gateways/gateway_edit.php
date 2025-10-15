@@ -303,41 +303,40 @@
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
 
-//set defaults
-	if (empty($gateway_uuid)) { $gateway_uuid = ""; }
-	if (empty($retry_seconds)) { $retry_seconds = "30"; }
-	if (empty($gateway)) { $gateway = ''; }
-	if (empty($username)) { $username = ''; }
-	if (empty($password)) { $password = ''; }
-	if (empty($auth_username)) { $auth_username = ''; }
-	if (empty($realm)) { $realm = ''; }
-	if (empty($from_user)) { $from_user = ''; }
-	if (empty($from_domain)) { $from_domain = ''; }
-	if (empty($proxy)) { $proxy = ''; }
-	if (empty($register_proxy)) { $register_proxy = ''; }
-	if (empty($outbound_proxy)) { $outbound_proxy = ''; }
-	if (empty($expire_seconds)) { $expire_seconds = ''; }
-	if (empty($register_transport)) { $register_transport = ''; }
-	if (empty($contact_params)) { $contact_params = ''; }
-	if (empty($retry_seconds)) { $retry_seconds = ''; }
-	if (empty($extension)) { $extension = ''; }
-	if (empty($ping)) { $ping = ''; }
-	if (empty($ping_min)) { $ping_min = ''; }
-	if (empty($ping_max)) { $ping_max = ''; }
-	if (empty($channels)) { $channels = ''; }
-	if (empty($sip_cid_type)) { $sip_cid_type = ''; }
-	if (empty($codec_prefs)) { $codec_prefs = ''; }
-	if (empty($extension_in_contact)) { $extension_in_contact = ''; }
-	if (empty($context)) { $context = ''; }
-	if (empty($profile)) { $profile = ''; }
-	if (empty($hostname)) { $hostname = ''; }
-	if (empty($description)) { $description = ''; }
-	if ($register === null) { $register = true; }
-	if ($distinct_to === null) { $distinct_to = false; }
-	if ($caller_id_in_from === null) { $caller_id_in_from = false; }
-	if ($supress_cng === null) { $supress_cng = false; }
-	if ($contact_in_ping === null) { $contact_in_ping = true; }
-	if ($enabled === null) { $enabled = true; }
+//set the defaults
+	$gateway_uuid = $gateway_uuid ?? '';
+	$retry_seconds = $retry_seconds ?? '30';
+	$gateway = $gateway ?? '';
+	$username = $username ?? '';
+	$password = $password ?? '';
+	$auth_username = $auth_username ?? '';
+	$realm = $realm ?? '';
+	$from_user = $from_user ?? '';
+	$from_domain = $from_domain ?? '';
+	$proxy = $proxy ?? '';
+	$register_proxy = $register_proxy ?? '';
+	$outbound_proxy = $outbound_proxy ?? '';
+	$expire_seconds = $expire_seconds ?? '';
+	$register_transport = $register_transport ?? '';
+	$contact_params = $contact_params ?? '';
+	$extension = $extension ?? '';
+	$ping = $ping ?? '';
+	$ping_min = $ping_min ?? '';
+	$ping_max = $ping_max ?? '';
+	$channels = $channels ?? '';
+	$sip_cid_type = $sip_cid_type ?? '';
+	$codec_prefs = $codec_prefs ?? '';
+	$extension_in_contact = $extension_in_contact ?? '';
+	$context = $context ?? '';
+	$profile = $profile ?? '';
+	$hostname = $hostname ?? '';
+	$description = $description ?? '';
+	$register = $register ?? false;
+	$distinct_to = $distinct_to ?? false;
+	$caller_id_in_from = $caller_id_in_from ?? false;
+	$supress_cng = $supress_cng ?? false;
+	$contact_in_ping = $contact_in_ping ?? false;
+	$enabled = $enabled ?? false;
 
 //create token
 	$object = new token;
