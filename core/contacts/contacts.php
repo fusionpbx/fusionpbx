@@ -125,11 +125,12 @@
 	unset($sql, $parameters, $result);
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_REQUEST["order_by"] ?? '';
+	$order = $_REQUEST["order"] ?? '';
 
 //add the search term
-	$search = strtolower(trim($_GET["search"]) ?? '');
+	$search = $_REQUEST["search"] ?? '';
+	$search = strtolower(trim($search ?? ''));
 	if (!empty($search)) {
 		if (is_numeric($search)) {
 			$sql_search = "and contact_uuid in ( ";
