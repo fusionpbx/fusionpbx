@@ -382,7 +382,7 @@
 	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
-	if ($transcribe_enabled && !empty($transcribe_engine) && empty($record_transcription)) {
+	if ($transcribe_enabled && !empty($transcribe_engine) && empty($record_transcription) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name)) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
 	}
 	echo "</td>\n";
@@ -519,8 +519,9 @@
 	echo "	</tr>\n";
 	$i = 1;
 	foreach ($call_flow_summary as $row) {
+		$application_icon = $row["application_icon"][$row["application_name"] ?? ''] ?? '';
 		echo "	<tr>\n";
-		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".$row["application_icon"][$row["application_name"]]."' style='opacity: 0.8;'></span></td>";
+		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".$application_icon."' style='opacity: 0.8;'></span></td>";
 		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
 		if ($call_direction == 'local' || $call_direction == 'outbound') {
 			echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";
@@ -784,7 +785,7 @@
 		echo "</tr>\n";
 
 		//foreach($array["variables"] as $key => $value) {
-		if (is_array($array["app_log"]["application"])) {
+		if (!empty($array["app_log"]["application"])) {
 			foreach ($array["app_log"]["application"] as $key=>$row) {
 				//single app
 				if ($key === "@attributes") {
