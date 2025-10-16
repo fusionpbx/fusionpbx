@@ -160,8 +160,8 @@
 			$parameters['extension_uuid'] = $extension_uuid;
 			$extension = $database->select($sql, $parameters, 'row');
 			$cache = new cache;
-			$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
-			$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
+			$cache->delete(gethostname().":directory:".$extension["extension"]."@".$extension["user_context"]);
+			$cache->delete(gethostname().":directory:".$extension["number_alias"]."@".$extension["user_context"]);
 
 		//redirect the user
 			if (isset($action)) {

@@ -56,9 +56,8 @@
 	unset($sql);
 
 //get the sip profiles
-	if ($esl->is_connected()) {
-		$hostname = trim(event_socket::api('switchname'));
-	}
+	$hostname = gethostname();
+
 	$sql = "select sip_profile_uuid, sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = true ";
 	if (!empty($hostname)) {

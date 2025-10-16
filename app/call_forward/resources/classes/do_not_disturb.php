@@ -174,9 +174,9 @@
 
 			//delete extension from the cache
 				$cache = new cache;
-				$cache->delete("directory:".$this->extension."@".$this->domain_name);
+				$cache->delete(gethostname().":directory:".$this->extension."@".$this->domain_name);
 				if(!empty($this->number_alias)){
-					$cache->delete("directory:".$this->number_alias."@".$this->domain_name);
+					$cache->delete(gethostname().":directory:".$this->number_alias."@".$this->domain_name);
 				}
 
 		} //function
@@ -316,9 +316,9 @@
 								//clear the cache
 									$cache = new cache;
 									foreach ($extensions as $uuid => $extension) {
-										$cache->delete("directory:".$extension['extension']."@".$this->domain_name);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$_SESSION['domain_name']);
 										if ($extension['number_alias'] != '') {
-											$cache->delete("directory:".$extension['number_alias']."@".$this->domain_name);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
 										}
 									}
 

@@ -419,9 +419,9 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("directory:".$extension."@".$_SESSION['domain_name']);
+			$cache->delete(gethostname().":directory:".$extension."@".$_SESSION['domain_name']);
 			if (!empty($number_alias)) {
-				$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
+				$cache->delete(gethostname().":directory:".$number_alias."@".$_SESSION['domain_name']);
 			}
 
 		//add the message
