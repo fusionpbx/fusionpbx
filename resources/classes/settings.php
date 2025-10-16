@@ -142,11 +142,11 @@ class settings implements clear_cache {
 
 	/**
 	 * Get the value utilizing the hierarchical overriding technique
-	 * @param string $category Returns all settings when empty or the default value if the settings array is null
-	 * @param string $subcategory Returns the array of category items when empty or the default value if the category array is null
+	 * @param string|null $category Returns all settings when empty or the default value if the settings array is null
+	 * @param string|null $subcategory Returns the array of category items when empty or the default value if the category array is null
 	 * @param mixed $default_value allows default value returned if category and subcategory not found
 	 */
-	public function get(string $category = null, string $subcategory = null, $default_value = null) {
+	public function get(?string $category = null, ?string $subcategory = null, $default_value = null) {
 
 		//incremental refinement from all settings to a single setting
 		if (empty($category)) {
