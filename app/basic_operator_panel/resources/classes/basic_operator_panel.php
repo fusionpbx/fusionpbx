@@ -36,28 +36,50 @@
 		const app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
 
 		/**
-		 * declare public variables
-		 */
-		public $domain_uuid;
-
-		/**
-		 * declare private variables
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
 		private $database;
 
 		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * Called when the object is created
 		 */
-		public function __construct() {
-			//assign public variables
-			if (!isset($this->domain_uuid)) {
-				$this->domain_uuid = $_SESSION['domain_uuid'];
-			}
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+			//set domain_name
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+
+			//set objects
+			$config = $setting_array['config'] ?? config::load();
+			$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		/**
@@ -87,7 +109,7 @@
 				$sql .= "e.domain_uuid = :domain_uuid ";
 				$sql .= "order by ";
 				$sql .= "e.extension asc ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['domain_uuid'] = $this->domain_uuid;
 				$extensions = $this->database->select($sql, $parameters);
 
 			//store extension status by user uuid
@@ -164,7 +186,7 @@
 									$presence_id = $presence[0];
 									$presence_domain = $presence[1] ?? '';
 									if ($user == $presence_id) {
-										if ($presence_domain == $_SESSION['domain_name']) {
+										if ($presence_domain == $this->domain_name) {
 											$found = true;
 											break;
 										}

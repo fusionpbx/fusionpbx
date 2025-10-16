@@ -44,7 +44,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_forward');
 
 //get posted data and set defaults
 	$action = $_POST['action'] ?? '';
@@ -127,7 +127,7 @@
 	unset($parameters);
 
 //prepare the paging
-	$rows_per_page = !empty($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = !empty($settings->get('domain', 'paging')) ? $settings->get('domain', 'paging') : 50;
 
 	if ($search) {
 		$params[] = "search=" . $search;

@@ -47,7 +47,7 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$tiers = $database->select($sql, $parameters, 'all');
-	if (!empty($_SESSION['call_center']['queue_login']['text']) && $_SESSION['call_center']['queue_login']['text'] == 'dynamic') {
+	if (!empty($settings->get('call_center', 'queue_login')) && $settings->get('call_center', 'queue_login') == 'dynamic') {
 		$per_queue_login = true;
 	}
 	else {

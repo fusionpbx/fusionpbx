@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -369,9 +369,9 @@
 			foreach ($recordings as $row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($music_on_hold_chime_list == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($music_on_hold_chime_list)) {
+				if ($music_on_hold_chime_list == $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/".$recording_filename && !empty($music_on_hold_chime_list)) {
 					$tmp_selected = true;
-					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
+					echo "	<option value='".escape($settings->get('switch', 'recordings'))."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else if ($music_on_hold_chime_list == $recording_filename && !empty($music_on_hold_chime_list)) {
 					$tmp_selected = true;
@@ -429,8 +429,8 @@
 		if (if_group("superadmin")) {
 			if (!$tmp_selected && !empty($music_on_hold_chime_list)) {
 				echo "<optgroup label='Selected'>\n";
-				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list)) {
-					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
+				if (file_exists($settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list)) {
+					echo "	<option value='".escape($settings->get('switch', 'recordings'))."/".escape($_SESSION['domain_name'])."/".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
 				}
 				else if (substr($music_on_hold_chime_list, -3) == "wav" || substr($music_on_hold_chime_list, -3) == "mp3") {
 					echo "	<option value='".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
@@ -440,6 +440,8 @@
 			unset($tmp_selected);
 		}
 	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-music_on_hold_chime_list']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

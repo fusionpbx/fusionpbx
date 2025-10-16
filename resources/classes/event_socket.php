@@ -51,14 +51,16 @@ class event_socket {
 	public $fp;
 
 	private static $socket = null;
+	private $config;
 
 	/**
 	 * Create a new connection to the socket
 	 * @param resource|false $fp
 	 */
-	public function __construct($fp = false) {
+	public function __construct($fp = false, ?config $config = null) {
 		$this->buffer = new buffer;
 		$this->fp = $fp;
+		$this->config = $config ?? config::load();
 	}
 
 	/**
@@ -135,14 +137,11 @@ class event_socket {
 	 * @return bool Returns true on success or false if not connected
 	 */
 	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
-
-		global $conf;
-
 		//set the event socket variables in the order of
 		//param passed to func, conf setting, old conf setting, default
-		$host = $host ?? $conf['switch.event_socket.host'] ?? $conf['event_socket.ip_address'] ?? '127.0.0.1';
-		$port = $port ?? $conf['switch.event_socket.port'] ?? $conf['event_socket.port'] ?? '8021';
-		$password = $password ?? $conf['switch.event_socket.password'] ?? $conf['event_socket.password'] ?? 'ClueCon';
+		$host = $host ?? $this->config->get('switch.event_socket.host', null) ?? $this->config->get('event_socket.ip_address', null) ?? '127.0.0.1';
+		$port = intval($port ?? $this->config->get('switch.event_socket.port', null) ?? $this->config->get('event_socket.port', null) ?? '8021');
+		$password = $password ?? $this->config->get('switch.event_socket.password', null) ?? $this->config->get('event_socket.password', null) ?? 'ClueCon';
 
 		//if a socket was provided in the constructor then don't create a new one
 		if ($this->fp === false) {

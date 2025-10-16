@@ -51,7 +51,10 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign the variables
 			$this->tables[] = 'dashboards';
 			$this->tables[] = 'dashboard_widgets';
@@ -61,11 +64,6 @@
 			$this->description_field = 'dashboard_description';
 			$this->location = 'dashboard.php';
 			$this->uuid_prefix = 'dashboard_';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**

@@ -101,7 +101,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&id=".!empty($conference_control_uuid);
 	if (isset($_GET['page'])) {
 		$page = isset($_GET['page']) ? $_GET['page'] : 0;

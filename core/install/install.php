@@ -330,9 +330,9 @@
 	ini_set('max_execution_time',3600);
 
 //set a default template
-	$_SESSION['domain']['template']['name'] = 'default';
-	$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
-	$_SESSION['theme']['menu_brand_type']['text'] = 'image';
+	$settings->get('domain', 'template') = 'default';
+	$settings->get('theme', 'menu_brand_image') = PROJECT_PATH.'/themes/default/images/logo.png';
+	$settings->get('theme', 'menu_brand_type') = 'image';
 
 //set a default step if not already set
 	if(empty($_REQUEST['step'])) {

@@ -57,6 +57,7 @@
 		 * show presence
 		 */
 		public function show() {
+			$array = [];
 			$json = event_socket::api('show calls as json');
 			$call_array = json_decode($json, true);
 			if (isset($call_array['rows'])) {

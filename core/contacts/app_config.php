@@ -1222,5 +1222,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b28a0d3d-64d4-4306-b38b-07fbf07d53b6";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "contact";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "default_sort_column";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "last_mod_date";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Order by field name used in list";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d7652f7f-1521-4e17-87a8-21d436e497ec";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "contact";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "default_sort_order";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "desc";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: asc, desc";
 ?>

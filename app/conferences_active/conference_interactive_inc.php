@@ -115,7 +115,7 @@
 
 		echo "<div style='float: right;'>\n";
 
-		$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+		$recording_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 		$recording_name = '';
 		if (!empty($recording_dir) && !empty($row['uuid'])) {
 			if (file_exists($recording_dir.'/'.$row['uuid'].'.wav')) {

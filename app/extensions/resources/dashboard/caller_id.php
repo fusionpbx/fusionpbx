@@ -33,7 +33,7 @@
 
 		//add multi-lingual support
 			$language = new text;
-			$text = $language->get($_SESSION['domain']['language']['code'], 'app/extensions');
+			$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/extensions');
 
 		//add or update the database
 			if (isset($_POST['extensions']) && is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {

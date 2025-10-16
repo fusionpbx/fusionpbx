@@ -424,7 +424,7 @@
 	echo "			<br>";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? '')."'>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		</td>\n";

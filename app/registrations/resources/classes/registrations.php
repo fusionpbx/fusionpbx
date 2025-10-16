@@ -33,18 +33,28 @@
 		const app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
 
 		/**
-		 * declare private variables
-		 */
-		private $permission_prefix;
-		private $list_page;
-		public $show;
-		private $domain_name;
-
-		/**
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
 		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
 
 		/**
 		 * Set in the constructor. Must be an event_socket object and cannot be null.
@@ -53,30 +63,23 @@
 		private $event_socket;
 
 		/**
+		 * declare private variables
+		 */
+		private $permission_prefix;
+		private $list_page;
+		public $show;
+
+		/**
 		 * called when the object is created
 		 */
-		public function __construct($setting_array = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
 
-			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			}
-			else {
-				$this->database = $setting_array['database'];
-			}
-
-			//trap passing a PDO object instead of the required database object
-			if (!($this->database instanceof database)) {
-				//should never happen but will trap it here just in case
-				throw new \InvalidArgumentException("Database object passed in the constructor is not a valid database object");
-			}
-
-			if (!empty($setting_array['event_socket'])) {
-				$this->event_socket = $setting_array['event_socket'];
-			}
-			else {
-				$this->event_socket = event_socket::create();
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->event_socket = $setting_array['event_socket'] ?? event_socket::create();
 
 			//trap passing an invalid connection object for communicating to the switch
 			if (!($this->event_socket instanceof event_socket)) {
@@ -88,15 +91,6 @@
 			$this->permission_prefix = 'registration_';
 			$this->list_page = 'registrations.php';
 			$this->show = 'local';
-
-			//get the domain_name
-			if (empty($setting_array['domain_name'])) {
-				$this->domain_name = $_SESSION['domain_name'];
-			}
-			else {
-				$this->domain_name = $setting_array['domain_name'];
-			}
-
 		}
 
 		/**

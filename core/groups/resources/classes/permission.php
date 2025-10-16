@@ -42,12 +42,9 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
-
-			//assign the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 		}
 
 		//delete the permissions
@@ -138,7 +135,7 @@
 
 				//delete the group permissions
 					$this->delete();
-					
+
 				//get the remaining group permissions
 					$sql = "select permission_name, group_name from v_group_permissions ";
 					$this->database_group_permissions = $this->database->select($sql, null, 'all');

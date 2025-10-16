@@ -618,7 +618,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		$sql .= "and direction <> 'local' ";
 		$sql .= $sql_where ?? null;
 		$sql .= "order by start_stamp desc ";
-		$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
+		$sql .= limit_offset($settings->get('call_block', 'recent_call_limit'));
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$recent_calls = $database->select($sql, $parameters);
 		unset($sql, $parameters);
@@ -685,7 +685,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 						$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all_".$direction."').checked = false; }";
 						$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
 						if (strlen($row['caller_id_number']) >= 7) {
-							if (!empty($_SESSION['domain']['time_format']['text']) && $_SESSION['domain']['time_format']['text'] == '24h') {
+							if (!empty($settings->get('domain', 'time_format')) && $settings->get('domain', 'time_format') == '24h') {
 								$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('H:i:s', $row['start_epoch']).'</span>';
 							}
 							else {
@@ -697,10 +697,10 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 							echo "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
 							echo "	</td>\n";
 							if (
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_voicemail.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png")
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound_voicemail.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound_answered.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound_failed.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound_answered.png")
 								) {
 								$title_mod = null;
 								echo "	<td class='center' ".$list_row_onclick_toggle.">";
@@ -713,7 +713,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 										else {
 											$file_mod = "_answered";
 										}
-										echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound".$file_mod.".png' style='border: none;' title='".$text['label-inbound'].$title_mod."'>\n";
+										echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound".$file_mod.".png' style='border: none;' title='".$text['label-inbound'].$title_mod."'>\n";
 										break;
 									case "outbound":
 										if ($row['billsec'] == 0) {
@@ -723,7 +723,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 										else {
 											$file_mod = "_answered";
 										}
-										echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound".$file_mod.".png' style='border: none;' title='".$text['label-outbound'].$title_mod."'>\n";
+										echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound".$file_mod.".png' style='border: none;' title='".$text['label-outbound'].$title_mod."'>\n";
 										break;
 								}
 								echo "	</td>\n";

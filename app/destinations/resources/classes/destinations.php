@@ -36,14 +36,42 @@
 		const app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_name;
+
+		/**
 		 * declare public variables
 		 */
 		public $destinations;
-		public $domain_uuid;
-		public $domain_name;
 		public $start_stamp_begin;
 		public $start_stamp_end;
 		public $quick_select;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
 
 		/**
 		* declare private variables
@@ -54,31 +82,19 @@
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
-		private $database;
-		private $settings;
 
 		/**
 		* Called when the object is created
 		*/
-		public function __construct($setting_array = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
-
-			//set the domain details
-			$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
-			$this->user_uuid = $_SESSION['user_uuid'] ?? '';
-
-			//get the settings object
-			if (empty($setting_array['settings'])) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			} else {
-				$this->settings = $setting_array['settings'];
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'destination_';
@@ -553,7 +569,7 @@
 		public function all($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $db_type, $settings;
 
 			//set default values
 			$destination_name = '';
@@ -575,7 +591,7 @@
 					try {
 						include($config_path);
 					}
-					catch (Exception $e) {
+					catch (Throwable $e) {
 						//echo 'Caught exception: ',  $e->getMessage(), "\n";
 					}
 					$x++;
@@ -764,7 +780,7 @@
 		public function get($destination_type) {
 
 			//set the global variables
-			global $db_type;
+			global $db_type, $settings;
 
 			//get the domain_name
 			$sql = "select domain_name from v_domains ";

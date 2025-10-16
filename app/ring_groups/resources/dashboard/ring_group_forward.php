@@ -30,7 +30,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/ring_groups');
 
 //get the list
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {

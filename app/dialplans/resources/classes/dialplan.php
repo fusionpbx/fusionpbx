@@ -34,9 +34,14 @@
 		const app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $dialplan_uuid;
 		public $dialplan_detail_uuid;
 		public $xml;
@@ -74,6 +79,24 @@
 		public $list_page;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
 		 * declare private variables
 		 */
 		private $permission_prefix;
@@ -82,14 +105,16 @@
 		private $toggle_field;
 		private $toggle_values;
 
-		/**
-		* Set in the constructor. Must be a database object and cannot be null.
-		* @var database Database Object
-		*/
-		private $database;
+	//class constructor
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-		//class constructor
-		public function __construct() {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+
 			//set the default value
 			$this->dialplan_global = false;
 
@@ -100,13 +125,6 @@
 			$this->uuid_prefix = 'dialplan_';
 			$this->toggle_field = 'dialplan_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
 		}
 
 
@@ -138,7 +156,7 @@
 					//prepare the xml
 					if (!empty($xml_string)) {
 						//replace the variables
-							$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
+							$length = (is_numeric($this->settings->get('security', 'pin_length'))) ? $this->settings->get('security', 'pin_length') : 8;
 							$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
 							$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
 						//convert the xml string to an xml object
@@ -179,7 +197,7 @@
 								//prepare the xml
 									if (!empty($xml_string)) {
 										//replace the variables
-											$length = (!empty($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
+											$length = (!empty($this->settings->get('security', 'pin_length'))) ? $this->settings->get('security', 'pin_length') : 8;
 											$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
 											$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
 
@@ -418,7 +436,7 @@
 				$destination_number = trim($destination_number);
 
 			//check the session array if it doesn't exist then build the array
-				if (empty($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
+				if (empty($_SESSION[$this->domain_uuid]['outbound_routes'])) {
 					//get the outbound routes from the database
 						$sql = "select * ";
 						$sql .= "from v_dialplans as d, ";
@@ -479,12 +497,12 @@
 						}
 
 					//set the session array
-						$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
+						$_SESSION[$this->domain_uuid]['outbound_routes'] = $array;
 				}
 
 			//find the matching outbound routes
-				if (isset($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
-					foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
+				if (isset($_SESSION[$this->domain_uuid]['outbound_routes'])) {
+					foreach ($_SESSION[$this->domain_uuid]['outbound_routes'] as $row) {
 						if (isset($row['dialplan_details'])) {
 							foreach ($row['dialplan_details'] as $field) {
 								if ($field['dialplan_detail_tag'] == "condition") {
@@ -1232,7 +1250,7 @@
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								if (!permission_exists('dialplan_all')) {
 									$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 								}
 								$rows = $this->database->select($sql, $parameters ?? null, 'all');
 								if (!empty($rows)) {

@@ -64,27 +64,27 @@
 
 //set default default log file
 	if (isset($_POST['log_file'])) {
-		$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+		$approved_files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 		if (is_array($approved_files)) {
 			foreach($approved_files as $approved_file) {
-				if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_POST['log_file']) {
+				if ($approved_file == $settings->get('switch', 'log').'/'.$_POST['log_file']) {
 					$log_file = $approved_file;
 				}
 			}
 		}
 	}
 	else {
-		$log_file = $_SESSION['switch']['log']['dir'].'/freeswitch.log';
+		$log_file = $settings->get('switch', 'log').'/freeswitch.log';
 	}
 
 //download the log
 	if (permission_exists('log_download')) {
 		if (isset($_GET['n'])) {
 			if (isset($filename)) { unset($filename); }
-			$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+			$approved_files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 			if (is_array($approved_files)) {
 				foreach($approved_files as $approved_file) {
-					if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_GET['n']) {
+					if ($approved_file == $settings->get('switch', 'log').'/'.$_GET['n']) {
 						$filename = $approved_file;
 					}
 				}
@@ -121,7 +121,7 @@
 	echo "	<div class='actions'>\n";
 	echo 		"<form name='frm' id='frm' class='inline' method='post'>\n";
 	echo "			".$text['label-log_file']." <select name='log_file' class='formfld' style='width: 150px; margin-right: 20px;'>";
-	$files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+	$files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 	if (is_array($files)) {
 		foreach($files as $file_name) {
 			$selected = ($file_name == $log_file) ? "selected='selected'" : "";

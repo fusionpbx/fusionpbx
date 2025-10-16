@@ -39,6 +39,7 @@
 		* declare the variables
 		*/
 		private $database;
+
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -46,10 +47,13 @@
 		private $description_field;
 		private $location;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign the variables
 			$this->name = 'sofia_global_setting';
 			$this->table = 'sofia_global_settings';
@@ -57,11 +61,6 @@
 			$this->toggle_values = ['true','false'];
 			$this->description_field = 'global_setting_description';
 			$this->location = 'sofia_global_settings.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**

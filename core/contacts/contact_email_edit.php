@@ -181,7 +181,7 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 	}
 
 //set the defaults
-	if ($email_primary === null) { $email_primary = false; }
+	$email_primary = $email_primary ?? false;
 
 //create token
 	$object = new token;

@@ -37,9 +37,14 @@
 		const app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
 		* declare public variables
 		*/
-		public $domain_uuid;
 		public $method;
 		public $recipients;
 		public $subject;
@@ -54,43 +59,45 @@
 		public $response;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
 		* declare private variables
 		*/
 		private $name;
-		private $settings;
 
 		/**
 		 * called when the object is created
 		 */
-		public function __construct($params = []) {
+		public function __construct(array $setting_array = []) {
 			//assign the variables
 			$this->name = 'email';
 			$this->priority = 0;
 			$this->debug_level = 3;
 			$this->read_confirmation = false;
 
-			//set the domain_uuid
-			$this->domain_uuid = $params['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			//set the domain and user uuids
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			if (isset($params['settings'])) {
-				$this->settings = $params['settings'];
-			}
-
-			//set the database from the settings object if available
-			if ($this->settings instanceof settings && !isset($this->database)) {
-				$this->database = $this->settings->database();
-			}
-
-			//ensure we have a valid database object
-			if (!($this->database instanceof database)) {
-				$this->database = $params['database'] ?? database::new();
-			}
-
-			//ensure we have a valid settings object
-			if (!($this->settings) instanceof settings) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
-			}
-
+			//set the objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		/**
@@ -435,13 +442,8 @@
 					if (!empty($this->settings->get('email','smtp_hostname'))) {
 						$smtp['hostname'] = $this->settings->get('email','smtp_hostname');
 					}
-					$smtp['host'] 		= (!empty($this->settings->get('email','smtp_host')) ? $this->settings->get('email','smtp_host'): '127.0.0.1');
-					if (!empty($this->settings->get('email','smtp_port'))) {
-						$smtp['port'] = (int)$this->settings->get('email','smtp_port');
-					}
-					else {
-						$smtp['port'] = 0;
-					}
+					$smtp['host'] = $this->settings->get('email','smtp_host', '127.0.0.1');
+					$smtp['port'] = (int)$this->settings->get('email','smtp_port', 0);
 					$smtp['secure'] 	= $this->settings->get('email','smtp_secure');
 					$smtp['auth'] 		= $this->settings->get('email','smtp_auth');
 					$smtp['username'] 	= $this->settings->get('email','smtp_username');

@@ -152,7 +152,7 @@
 			if (imap_delete($connection, $email_id, FT_UID)) {
 				if (imap_expunge($connection)) {
 					//clean up local inbox copy
-					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+					$fax_dir = $settings->get('switch', 'storage').'/fax/'.$_SESSION['domain_name'];
 					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment['name']);
 					//redirect user
 					message::add($text['message-delete']);

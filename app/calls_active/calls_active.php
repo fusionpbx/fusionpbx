@@ -210,7 +210,7 @@
 	}
 
 	function get_record_cmd(uuid, prefix, name) {
-		cmd = \"uuid_record \"+uuid+\" start ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";
+		cmd = \"uuid_record \"+uuid+\" start ".$settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";
 		return escape(cmd);
 	}
 */

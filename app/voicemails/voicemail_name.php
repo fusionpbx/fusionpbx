@@ -48,8 +48,8 @@
 	}
 
 //define name recording directory
-	if (!empty($_SESSION['switch']['storage']['dir'])) {
-		$recording_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
+	if (!empty($settings->get('switch', 'storage'))) {
+		$recording_dir = $settings->get('switch', 'storage').'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 	}
 
 //download the name recording

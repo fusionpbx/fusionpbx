@@ -45,8 +45,8 @@ class authentication {
 	/**
 	 * Called when the object is created
 	 */
-	public function __construct() {
-		$this->database = database::new();
+	public function __construct(array $setting_array = []) {
+		$this->database = $setting_array['database'] ?? database::new();
 		$this->user_uuid = null;
 	}
 

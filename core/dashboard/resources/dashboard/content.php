@@ -6,7 +6,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/dashboard');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/dashboard');
 
 //prepare the settings
 	$widget_content_length = strlen($widget_content);

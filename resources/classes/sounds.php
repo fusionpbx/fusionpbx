@@ -8,20 +8,32 @@
 class sounds {
 
 	/**
-	* Called when the object is created
-	*/
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
 	public $domain_uuid;
+
+	/**
+	* Additional public variables
+	*/
 	public $sound_types;
 	public $full_path;
 
 	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 * @var database Database Object
+	 */
+	private $database;
+
+	/**
 	 * Called when the object is created
 	 */
-	public function __construct() {
-		//connect to the database
-		if (empty($this->database)) {
-			$this->database = database::new();
-		}
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
 	}
 
 	/**

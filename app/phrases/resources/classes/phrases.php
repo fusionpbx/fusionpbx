@@ -39,10 +39,20 @@
 		public $phrase_uuid;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -53,7 +63,12 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->permission_prefix = 'phrase_';
@@ -62,12 +77,6 @@
 			$this->uuid_prefix = 'phrase_';
 			$this->toggle_field = 'phrase_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -103,7 +112,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, phrase_language as lang from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -118,9 +127,9 @@
 								$x = 0;
 								foreach ($phrase_languages as $phrase_uuid => $phrase_language) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $phrase_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['phrase_details'][$x][$this->uuid_prefix.'uuid'] = $phrase_uuid;
-									$array['phrase_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['phrase_details'][$x]['domain_uuid'] = $this->domain_uuid;
 									$x++;
 								}
 							}
@@ -188,7 +197,7 @@
 								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['phrase_uuid'] = $this->phrase_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -197,7 +206,7 @@
 								$sql = "select phrase_language as lang from v_phrases ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and phrase_uuid = :phrase_uuid ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$parameters['phrase_uuid'] = $this->phrase_uuid;
 								$phrase_language = $this->database->select($sql, $parameters, 'column');
 								unset($sql, $parameters, $rows, $row);
@@ -260,7 +269,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, phrase_language as lang from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -345,7 +354,7 @@
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;

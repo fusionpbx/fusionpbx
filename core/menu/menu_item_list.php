@@ -241,7 +241,7 @@
 
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
-	$groups = $database->select($sql, $parameters, 'all');
+	$groups = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
 
 //create token

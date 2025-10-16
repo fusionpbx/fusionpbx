@@ -54,7 +54,9 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->permission_prefix = 'number_translation_';
@@ -63,12 +65,6 @@
 			$this->uuid_prefix = 'number_translation_';
 			$this->toggle_field = 'number_translation_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -79,7 +75,6 @@
 			$sql .= "where number_translation_name = :number_translation_name ";
 			$parameters['number_translation_name'] = $name;
 			return $this->database->select($sql, $parameters, 'column') != 0 ? true : false;
-			unset($sql, $parameters);
 		}
 
 		/**
@@ -135,7 +130,7 @@
 						$this->database->save($array);
 						unset($array);
 						if (!empty($this->display_type) && $this->display_type == "text") {
-							if ($this->database->message['code'] != '200') { 
+							if ($this->database->message['code'] != '200') {
 								echo "number_translation:".$number_translation['@attributes']['name'].":	failed: ".$this->database->message['message']."\n";
 							}
 							else {
@@ -148,7 +143,7 @@
 				}
 				unset ($this->xml, $this->json);
 		}
-		
+
 		/**
 		 * delete records
 		 */

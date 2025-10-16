@@ -47,7 +47,7 @@
 	}
 
 //set the fax directory
-	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+	$fax_dir = $settings->get('switch', 'storage').'/fax/'.$_SESSION['domain_name'];
 
 //get the fax extension
 	if (!empty($fax_extension) && is_numeric($fax_extension)) {
@@ -57,8 +57,8 @@
 			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
-			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir'], 0770, true);
+			if (!is_dir($settings->get('switch', 'storage'))) {
+				mkdir($settings->get('switch', 'storage'), 0770, true);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
 				mkdir($fax_dir.'/'.$fax_extension, 0770, true);
@@ -549,7 +549,7 @@
 		echo "	".$text['label-extension']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_extension' maxlength='15' value=\"".escape($fax_extension ?? '')."\" required='required' placeholder=\"".($_SESSION['fax']['extension_range']['text'] ?? '')."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_extension' maxlength='15' value=\"".escape($fax_extension ?? '')."\" required='required' placeholder=\"".($settings->get('fax', 'extension_range') ?? '')."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-extension']."\n";
 		echo "</td>\n";

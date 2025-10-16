@@ -121,7 +121,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -221,9 +221,6 @@
 			$list_row_url = '';
 			if (permission_exists('number_translation_edit')) {
 				$list_row_url = "number_translation_edit.php?id=".urlencode($row['number_translation_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('number_translation_add') || permission_exists('number_translation_edit') || permission_exists('number_translation_delete')) {
@@ -273,4 +270,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

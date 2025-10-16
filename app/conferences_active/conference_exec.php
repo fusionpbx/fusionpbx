@@ -218,7 +218,7 @@
 						$switch_result = event_socket::api($switch_cmd.' '.$tmp_value);
 					}
 					elseif ($data == "record") {
-						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+						$recording_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 						$switch_cmd .= $recording_dir."/{$uuid}.wav";
 						if (!file_exists($switch_cmd)) {
 							$switch_result = event_socket::api($switch_cmd);
@@ -226,7 +226,7 @@
 					}
 					elseif ($data == "norecord") {
 						//stop recording and rename the file
-						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+						$recording_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 						$switch_cmd .= $recording_dir."/".$uuid.".wav";
 						$switch_result = event_socket::api($switch_cmd);
 					}

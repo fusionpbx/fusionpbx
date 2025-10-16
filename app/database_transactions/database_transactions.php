@@ -90,7 +90,7 @@
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "search=".$search;
 	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);

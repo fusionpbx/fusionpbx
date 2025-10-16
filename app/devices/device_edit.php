@@ -540,7 +540,7 @@
 	unset($sql, $parameters);
 
 //set the defaults
-	if ($device_enabled === null) { $device_enabled = true; }
+	$device_enabled = $device_enabled ?? true;
 
 //use the device address to get the vendor
 	if (empty($device_vendor)) {

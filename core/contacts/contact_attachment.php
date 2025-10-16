@@ -52,7 +52,7 @@
 
 		//determine mime type
 		$content_type = 'application/octet-stream'; //set default
-		$allowed_attachment_types = json_decode($_SESSION['contact']['allowed_attachment_types']['text'] ?? '', true);
+		$allowed_attachment_types = json_decode($settings->get('contact', 'allowed_attachment_types') ?? '', true);
 		if (!empty($allowed_attachment_types)) {
 			if ($allowed_attachment_types[$attachment_type] != '') {
 				$content_type = $allowed_attachment_types[$attachment_type];

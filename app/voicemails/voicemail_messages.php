@@ -279,7 +279,7 @@
 	$total_rows = $num_rows;
 
 //prepare to page the results
-	$rows_per_page = $_SESSION['domain']['paging']['numeric'] != '' ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging') != '' ? $settings->get('domain', 'paging') : 50;
 	$page = empty($_GET['page']) ? 0 : $_GET['page'];
 	$param = 'id='.urlencode($_REQUEST['id']).'&back='.$_SESSION['back'][$_SERVER['PHP_SELF']];
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -417,7 +417,7 @@
 				$col_count++;
 				echo th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "class='hide-xs right pct-15'");
 				$col_count++;
-				if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+				if (empty($settings->get('voicemail', 'storage_type')) || $settings->get('voicemail', 'storage_type') != 'base64') {
 					echo "<th class='right pct-15 hide-sm-dn'>".$text['label-message_size']."</th>\n";
 					$col_count++;
 				}
@@ -448,9 +448,9 @@
 					echo "	<td class='button center no-link no-wrap'>";
 					echo 		"<audio id='recording_audio_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_message_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&r=".uuid()."'></audio>";
 					if (
-						($_SESSION['voicemail']['storage_type']['text'] == 'base64' && !empty($row['message_intro_base64'])) ||
-						file_exists($_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$field['voicemail_id'].'/intro_'.$row['voicemail_message_uuid'].'.wav') ||
-						file_exists($_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$field['voicemail_id'].'/intro_'.$row['voicemail_message_uuid'].'.mp3')
+						($settings->get('voicemail', 'storage_type') == 'base64' && !empty($row['message_intro_base64'])) ||
+						file_exists($settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$field['voicemail_id'].'/intro_'.$row['voicemail_message_uuid'].'.wav') ||
+						file_exists($settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$field['voicemail_id'].'/intro_'.$row['voicemail_message_uuid'].'.mp3')
 						) {
 						echo 	"<audio id='recording_audio_intro_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' onended=\"recording_reset('intro_".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&intro&r=".uuid()."'></audio>";
 						echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'].' '.$text['label-introduction'],'icon'=>$settings->get('theme', 'button_icon_comment'),'id'=>'recording_button_intro_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('intro_".escape($row['voicemail_message_uuid'])."','".$row['voicemail_id'].'|'.$row['voicemail_uuid']."','message_intro');"]);
@@ -462,7 +462,7 @@
 					}
 					echo "	</td>\n";
 					echo "	<td class='right no-wrap hide-xs' style='".$bold."'>".escape($row['message_length_label'])."</td>\n";
-					if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+					if (empty($settings->get('voicemail', 'storage_type')) || $settings->get('voicemail', 'storage_type') != 'base64') {
 						echo "	<td class='right no-wrap hide-sm-dn' style='".$bold."'>".escape($row['file_size_label'])."</td>\n";
 					}
 					echo "</tr>\n";

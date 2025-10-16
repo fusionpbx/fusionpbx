@@ -44,7 +44,7 @@ $row_style["1"] = "row_style1";
 $widget_icon = 'fa-solid fa-phone';
 
 //add multi-lingual support
-$text = (new text)->get($_SESSION['domain']['language']['code'], 'app/active_calls');
+$text = (new text)->get($settings->get('domain', 'language', 'en-us'), 'app/active_calls');
 
 //show the widget
 echo "<div class='hud_box'>\n";

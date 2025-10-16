@@ -45,6 +45,7 @@
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $database;
 
 		/**
 		 * declare public variables
@@ -54,11 +55,9 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 		}
 
 		/**

@@ -12,9 +12,32 @@
 		const app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		* declare the variables
 		*/
-		private $database;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -24,18 +47,21 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+
 			//assign the variables
 			$this->name = 'email_queue';
 			$this->table = 'email_queue';
 			$this->toggle_field = '';
 			$this->toggle_values = ['true','false'];
 			$this->location = 'email_queue.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**
@@ -65,7 +91,7 @@
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 										$array['email_queue_attachments'][$x][$this->name.'_uuid'] = $record['uuid'];
-										//$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										//$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									}
 
 								//increment the id
@@ -165,7 +191,7 @@
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -234,7 +260,7 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;

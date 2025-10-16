@@ -270,7 +270,7 @@
 
 //count the records in the database
 	/*
-	if ($_SESSION['cdr']['limit']['numeric'] == 0) {
+	if ($settings->get('cdr', 'limit') == 0) {
 		$sql = "select count(*) from v_xml_cdr ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= ".$sql_where;
@@ -281,12 +281,12 @@
 	*/
 
 //limit the number of results
-	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
-		$num_rows = $_SESSION['cdr']['limit']['numeric'];
+	if (!empty($settings->get('cdr', 'limit')) && $settings->get('cdr', 'limit') > 0) {
+		$num_rows = $settings->get('cdr', 'limit');
 	}
 
 //set the default paging
-	//$rows_per_page = $_SESSION['domain']['paging']['numeric'];
+	//$rows_per_page = $settings->get('domain', 'paging');
 
 //prepare to page the results
 	//$rows_per_page = $settings->get('domain', 'paging', 50); //set on the page that includes this page
@@ -303,8 +303,8 @@
 
 //set the sql time format
 	$sql_time_format = 'HH12:MI am';
-	if (!empty($_SESSION['domain']['time_format']['text'])) {
-		$sql_time_format = $_SESSION['domain']['time_format']['text'] == '12h' ? "HH12:MI am" : "HH24:MI";
+	if (!empty($settings->get('domain', 'time_format'))) {
+		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "HH12:MI am" : "HH24:MI";
 	}
 
 //get the results from the db
@@ -637,7 +637,7 @@
 	if ($export_format !== "csv" && $export_format !== "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit :limit offset 0 \n";
-			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
+			$parameters['limit'] = $settings->get('cdr', 'limit');
 		}
 		else {
 			$sql .= " limit :limit offset :offset \n";

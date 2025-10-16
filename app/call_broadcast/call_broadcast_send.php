@@ -202,7 +202,7 @@
 							$response = event_socket::command($cmd);
 
 						//method 2
-							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
+							//cmd_async($settings->get('switch', 'bin')."/fs_cli -x \"".$cmd."\";");
 
 						//spread the calls out so that they are scheduled with different times
 							if (strlen($broadcast_concurrent_limit) > 0 && !empty($broadcast_timeout)) {

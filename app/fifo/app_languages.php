@@ -1127,4 +1127,31 @@ $text['label-member_enabled']['zh-cn'] = "已启用";
 $text['label-member_enabled']['ja-jp'] = "有効";
 $text['label-member_enabled']['ko-kr'] = "활성화됨";
 
+$text['description-agents']['en-us'] = "Select the agent, set the call timeout, wrap up time, and enabled.";
+$text['description-agents']['en-gb'] = "Select the agent, set the call timeout, wrap up time, and enabled.";
+$text['description-agents']['ar-eg'] = "حدد وكيل التحول، و 설정 الدخول، و الزمن المحدد، و التفعيل.";
+$text['description-agents']['de-at'] = "Wählen Sie den Agenten, stellen Sie die Anruferwartungszeit, die Abschlusszeit und den Status ein.";
+$text['description-agents']['de-ch'] = "Wählen Sie den Agenten, stellen Sie die Anruferwartungszeit, die Abschlusszeit und den Status ein.";
+$text['description-agents']['de-de'] = "Wählen Sie den Agenten, stellen Sie die Anruferwartungszeit, die Abschlusszeit und den Status ein.";
+$text['description-agents']['el-gr'] = "Επιλέξτε τον αρχικό, θετείτε το χρόνο αναμονής, το χρόνο ολοκλήρωσης και την ενεργοποίηση.";
+$text['description-agents']['es-cl'] = "Seleccione el agente, establezca el tiempo de espera, el tiempo de cierre y el estado.";
+$text['description-agents']['es-mx'] = "Seleccione el agente, establezca el tiempo de espera, el tiempo de cierre y el estado.";
+$text['description-agents']['fr-ca'] = "Sélectionnez l'agent, définissez le délai d'attente, le temps de clôture et l'état.";
+$text['description-agents']['fr-fr'] = "Sélectionnez l'agent, définissez le délai d'attente, le temps de clôture et l'état.";
+$text['description-agents']['he-il'] = "בחר את המנהל,設置 הwartime, זמן סיום ופעולה.";
+$text['description-agents']['it-it'] = "Seleziona l'agente, impostare il tempo di attesa, il tempo di chiusura e lo stato.";
+$text['description-agents']['ka-ge'] = "დაირჩეთ აგენტს, დადგენით გამომავლენი დრო, დამთავრების დრო და აქტიურობა.";
+$text['description-agents']['nl-nl'] = "Selecteer de agent, stel de wachtduur, afsluitduur en status in.";
+$text['description-agents']['pl-pl'] = "Wybierz agenta, ustaw czas oczekiwania, czas zakończenia i status.";
+$text['description-agents']['pt-br'] = "Selecione o agente, configure o tempo de espera, o tempo de encerramento e o status.";
+$text['description-agents']['pt-pt'] = "Selecione o agente, configure o tempo de espera, o tempo de encerramento e o status.";
+$text['description-agents']['ro-ro'] = "Selectați agentul, setați timpul de așteptare, timpul de închidere și starea.";
+$text['description-agents']['ru-ru'] = "Выберите агента, установите время ожидания, время завершения и включите.";
+$text['description-agents']['sv-se'] = "Välj agenten, ställ in väntetid, avslutningstid och status.";
+$text['description-agents']['uk-ua'] = "Оберіть агента, встановіть час очікування, час закінчення та включіть.";
+$text['description-agents']['tr-tr'] = "Ağcın seçin, bekletme süresini, sona erme süresini ve durumunu ayarlayın.";
+$text['description-agents']['zh-cn'] = "选择代理，设置等待时间，结束时间，并启用。";
+$text['description-agents']['ja-jp'] = "アーカイブを選択し、待ち時間、終了時間、有効化を設定します。";
+$text['description-agents']['ko-kr'] = "대리자를 선택하고 대기 시간, 종료 시간, 활성화를 설정하세요.";
+
 ?>

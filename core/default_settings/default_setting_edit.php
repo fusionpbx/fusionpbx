@@ -47,7 +47,7 @@
 	$default_setting_name = '';
 	$default_setting_value = '';
 	$default_setting_order = '';
-	$default_setting_enabled = '';
+	$default_setting_enabled = true;
 	$default_setting_description = '';
 	$search = '';
 
@@ -72,7 +72,7 @@
 		$default_setting_name = strtolower($_POST["default_setting_name"] ?? '');
 		$default_setting_value = $_POST["default_setting_value"] ?? '';
 		$default_setting_order = $_POST["default_setting_order"] ?? '';
-		$default_setting_enabled = $_POST["default_setting_enabled"];
+		$default_setting_enabled = $_POST["default_setting_enabled"] ?? true;
 		$default_setting_description = $_POST["default_setting_description"] ?? '';
 	}
 
@@ -120,7 +120,7 @@
 			if (empty($default_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 			//if (empty($default_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 			if (empty($default_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-			if (empty($default_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (empty($default_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			//if (empty($default_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -217,7 +217,7 @@
 				$database->save($array);
 				$message = $database->message;
 
-				//reset the cache for settings object
+				//reset the cache for the settings object
 				settings::clear_cache();
 
 				//reset others
@@ -745,7 +745,7 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $_SESSION['domain']['setting_value_input_type']['text'] == 'textarea') {
+		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
 			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
 		}
 		else {

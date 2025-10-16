@@ -28,7 +28,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/devices');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/devices');
 
 //get the vendor functions
 	$sql = "select v.name as vendor_name, f.type, f.value ";
@@ -270,7 +270,7 @@
 					}
 
 				//write the provision files
-					if (!empty($_SESSION['provision']['path']['text'])) {
+					if (!empty($settings->get('provision', 'path'))) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();

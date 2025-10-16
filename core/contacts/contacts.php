@@ -125,11 +125,12 @@
 	unset($sql, $parameters, $result);
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_REQUEST["order_by"] ?? '';
+	$order = $_REQUEST["order"] ?? '';
 
 //add the search term
-	$search = strtolower(trim($_GET["search"]) ?? '');
+	$search = $_REQUEST["search"] ?? '';
+	$search = strtolower(trim($search ?? ''));
 	if (!empty($search)) {
 		if (is_numeric($search)) {
 			$sql_search = "and contact_uuid in ( ";
@@ -230,7 +231,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('contact_all')) {
 		$param .= "&show=all";
@@ -284,8 +285,8 @@
 		$sql .= ", contact_organization asc ";
 	}
 	else {
-		$contact_default_sort_column = !empty($_SESSION['contacts']['default_sort_column']['text']) ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
-		$contact_default_sort_order = !empty($_SESSION['contacts']['default_sort_order']['text']) ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
+		$contact_default_sort_column = $settings->get('contact', 'default_sort_column', 'last_mod_date');
+		$contact_default_sort_order = $settings->get('contact', 'default_sort_order', 'desc');
 
 		$sql .= order_by($contact_default_sort_column, $contact_default_sort_order);
 		if ($db_type == "pgsql") {

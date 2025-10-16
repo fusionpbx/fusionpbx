@@ -3,121 +3,132 @@
 class azure{
 
   public static $formats = array (
-    'English-Zira' => 
+    'English-Zira' =>
       array (
         'lang' => 'en-US',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)'
       ),
-    'English-Jessa' => 
+    'English-Jessa' =>
       array (
         'lang' => 'en-US',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)'
       ),
-    'English-Benjamin' => 
+    'English-Benjamin' =>
       array (
         'lang' => 'en-US',
         'gender' => 'Male',
         'name' => 'Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)'
       ),
-    'British-Susan' => 
+    'British-Susan' =>
       array (
         'lang' => 'en-GB',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (en-GB, Susan, Apollo)'
       ),
-    'British-Hazel' => 
+    'British-Hazel' =>
       array (
         'lang' => 'en-GB',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (en-GB, HazelRUS)'
       ),
-    'British-George' => 
+    'British-George' =>
       array (
         'lang' => 'en-GB',
         'gender' => 'Male',
         'name' => 'Microsoft Server Speech Text to Speech Voice (en-GB, George, Apollo)'
       ),
-    'Australian-Catherine' => 
+    'Australian-Catherine' =>
       array (
         'lang' => 'en-AU',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)'
       ),
-    'Spanish-Helena' => 
+    'Spanish-Helena' =>
       array (
         'lang' => 'es-ES',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (es-ES, HelenaRUS)'
       ),
-    'Spanish-Laura' => 
+    'Spanish-Laura' =>
       array (
         'lang' => 'es-ES',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (es-ES, Laura, Apollo)'
       ),
-    'Spanish-Pablo' => 
+    'Spanish-Pablo' =>
       array (
         'lang' => 'es-ES',
         'gender' => 'Male',
         'name' => 'Microsoft Server Speech Text to Speech Voice (es-ES, Pablo, Apollo)'
       ),
-    'French-Julie' => 
+    'French-Julie' =>
       array (
         'lang' => 'fr-FR',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)'
       ),
-    'French-Hortense' => 
+    'French-Hortense' =>
       array (
         'lang' => 'fr-FR',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)'
       ),
-    'French-Paul' => 
+    'French-Paul' =>
       array (
         'lang' => 'fr-FR',
         'gender' => 'Male',
         'name' => 'Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)'
       ),
-    'German-Hedda' => 
+    'German-Hedda' =>
       array (
         'lang' => 'de-DE',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)'
       ),
-    'Russian-Irina' => 
+    'Russian-Irina' =>
       array (
         'lang' => 'ru-RU',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)'
       ),
-    'Russian-Pavel' => 
+    'Russian-Pavel' =>
       array (
         'lang' => 'ru-RU',
         'gender' => 'Male',
         'name' => 'Microsoft Server Speech Text to Speech Voice (ru-RU, Pavel, Apollo)'
       ),
-    'Chinese-Huihui' => 
+    'Chinese-Huihui' =>
       array (
         'lang' => 'zh-CN',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (zh-CN, HuihuiRUS)'
       ),
-    'Chinese-Yaoyao' => 
+    'Chinese-Yaoyao' =>
       array (
         'lang' => 'zh-CN',
         'gender' => 'Female',
         'name' => 'Microsoft Server Speech Text to Speech Voice (zh-CN, Yaoyao, Apollo)'
       ),
-    'Chinese-Kangkang' => 
+    'Chinese-Kangkang' =>
       array (
         'lang' => 'zh-CN',
         'gender' => 'Male',
         'name' => 'Microsoft Server Speech Text to Speech Voice (zh-CN, Kangkang, Apollo)'
       )
     );
+
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+		$user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+		//set objects
+		$config = $setting_array['config'] ?? config::load();
+		$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
+		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+	}
 
     private static function getTokenUrl(){
         return "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
@@ -127,13 +138,13 @@ class azure{
         return "https://speech.platform.bing.com/synthesize";
     }
 
-    private static function getSubscriptionKey(){
-        return $_SESSION['azure']['key']['text'];
+    private static function getSubscriptionKey(settings $settings){
+        return $settings->get('azure', 'key');
     }
 
-    private static function _getToken(){
+    private static function _getToken(settings $settings){
         $url = self::getTokenUrl();
-        $subscriptionKey = self::getSubscriptionKey();
+        $subscriptionKey = self::getSubscriptionKey($settings);
 
         $headers = array();
         $headers[] = 'Ocp-Apim-Subscription-Key: '. $subscriptionKey;
@@ -149,22 +160,22 @@ class azure{
         curl_setopt ( $ch, CURLOPT_VERBOSE, false);
         curl_setopt($ch, CURLOPT_POST, true);
         //curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
-        
+
         $response = curl_exec($ch);
 
         curl_close($ch);
         return $response;
     }
 
-    public static function synthesize($data,$formate_key){
+    public static function synthesize(settings $settings, $data, $format_key){
 
-        $lang = self::$formats[$formate_key]['lang'];
-        $gender = self::$formats[$formate_key]['gender'];
-        $name = self::$formats[$formate_key]['name'];
-        $token = self::_getToken();
+        $lang = self::$formats[$format_key]['lang'];
+        $gender = self::$formats[$format_key]['gender'];
+        $name = self::$formats[$format_key]['name'];
+        $token = self::_getToken($settings);
 
         $url = self::getApiUrl();
-        
+
         $headers = array();
         $headers[] = 'Authorization: Bearer '. $token;
         $headers[] = 'Content-Type: application/ssml+xml';
@@ -187,12 +198,12 @@ class azure{
         curl_setopt ( $ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
-        
+
         $response = curl_exec($ch);
         $filename = "tts_".time().".wav";
         file_put_contents("/var/www/html/fusionpbx/app/voiplyrecording/tts_record/".$filename, $response);
 
         curl_close($ch);
-        return $filename;  
+        return $filename;
     }
 }

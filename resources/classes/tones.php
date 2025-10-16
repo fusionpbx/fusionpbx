@@ -33,20 +33,18 @@
 		private $music_list;
 		private $recordings_list;
 		private $default_tone_label;
+		private $database;
 
-		/**
+	/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
 			//add multi-lingual support
 			$language = new text;
 			$text = $language->get();
 
 			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
+			$this->database = $setting_array['database'] ?? database::new();
 		}
 
 		public function tones_list() {

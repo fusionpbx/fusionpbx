@@ -2,8 +2,6 @@
 
 /**
  * cache class provides an abstracted cache
- *
- * @method string glob
  */
 class file {
 
@@ -14,10 +12,40 @@ class file {
 	public $files;
 
 	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 * @var database Database Object
+	 */
+	private $database;
+
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 * @var settings Settings Object
+	 */
+	private $settings;
+
+	/**
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
+	private $user_uuid;
+
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
+	private $domain_uuid;
+
+	/**
 	 * Called when the object is created
 	 */
-	public function __construct() {
-		//place holder
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 	}
 
 	/**
@@ -66,8 +94,8 @@ class file {
 		if (!isset($voice)) { $voice = 'callie'; }
 
 		//set the variables
-		if (!empty($_SESSION['switch']['sounds']['dir']) && file_exists($_SESSION['switch']['sounds']['dir'])) {
-			$dir = $_SESSION['switch']['sounds']['dir'].'/'.$language.'/'.$dialect.'/'.$voice;
+		if (!empty($this->settings->get('switch', 'sounds')) && file_exists($this->settings->get('switch', 'sounds'))) {
+			$dir = $this->settings->get('switch', 'sounds').'/'.$language.'/'.$dialect.'/'.$voice;
 			$rate = '8000';
 			$files = $this->glob($dir.'/*/'.$rate, true);
 		}

@@ -85,7 +85,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = '';
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -111,7 +111,7 @@
 	echo "	<div class='heading'><b>".$text['title-conference_session_details']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'conference_sessions.php']);
-	$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+	$tmp_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 	$tmp_name = '';
 	if (!empty($row['conference_session_uuid']) && file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
 		$tmp_name = $row['conference_session_uuid'].".mp3";

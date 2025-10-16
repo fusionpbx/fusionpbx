@@ -24,15 +24,9 @@ class cache {
 		$this->method = $this->setting('method');
 		$this->syslog = $this->setting('syslog');
 		$this->location = $this->setting('location');
-		if (empty($this->method)) {
-			$this->method = 'file';
-		}
-		if (empty($this->syslog)) {
-			$this->syslog = 'false';
-		}
-		if (empty($this->location)) {
-			$this->location = '/var/cache/fusionpbx';
-		}
+		$this->method = 'file';
+		$this->syslog = 'false';
+		$this->location = '/var/cache/fusionpbx';
 	}
 
 	private function setting($subcategory) {

@@ -269,7 +269,7 @@
 	unset($sql, $parameters, $sql_where, $index);
 
 //set the defaults
-	if ($enabled === null) { $enabled = true; }
+	$enabled = $enabled ?? true;
 
 //create token
 	$object = new token;

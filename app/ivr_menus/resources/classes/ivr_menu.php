@@ -34,16 +34,37 @@
 		const app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $ivr_menu_uuid;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
 
 		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -54,16 +75,16 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->list_page = 'ivr_menus.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		public function find() {
@@ -121,7 +142,7 @@
 							$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ivr_menu_context from v_".$this->table." ";
 							$sql .= "where (domain_uuid = :domain_uuid) ";
 							$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$parameters['domain_uuid'] = $this->domain_uuid;
 							$rows = $this->database->select($sql, $parameters, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $row) {
@@ -220,7 +241,7 @@
 							$sql = "select ivr_menu_context from v_ivr_menus ";
 							$sql .= "where (domain_uuid = :domain_uuid) ";
 							$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
-							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$parameters['domain_uuid'] = $this->domain_uuid;
 							$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
 							$ivr_menu_context = $this->database->select($sql, $parameters, 'column');
 							unset($sql, $parameters);
@@ -285,7 +306,7 @@
 							$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
 							$sql .= "where domain_uuid = :domain_uuid ";
 							$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$parameters['domain_uuid'] = $this->domain_uuid;
 							$rows = $this->database->select($sql, $parameters, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $row) {
@@ -322,7 +343,7 @@
 
 							//clear the cache
 								$cache = new cache;
-								$cache->delete("dialplan:".$_SESSION['domain_name']);
+								$cache->delete("dialplan:".$this->domain_name);
 								foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
 									$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
 								}
@@ -383,7 +404,7 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									$y = $z = 0;
@@ -466,7 +487,7 @@
 
 							//clear the cache
 								$cache = new cache;
-								$cache->delete("dialplan:".$_SESSION['domain_name']);
+								$cache->delete("dialplan:".$this->domain_name);
 
 							//set message
 								message::add($text['message-copy']);
