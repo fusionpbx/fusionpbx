@@ -62,7 +62,7 @@
 
 	if ($widget_chart_type === 'line') { ?>
 		<div class='hud_chart' style='width: 90%; height: 85%'><canvas id='system_cpu_status_chart'></canvas></div>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
 		<script src="https://cdn.jsdelivr.net/npm/luxon/build/global/luxon.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming"></script>
