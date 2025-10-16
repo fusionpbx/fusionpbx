@@ -50,8 +50,8 @@
 
 --get the cache
 	local cache = require "resources.functions.cache"
-	hostname = trim(api:execute("switchname", ""));
-	local cc_cache_key = "configuration:callcenter.conf:" .. hostname
+	hostname = trim(api:execute("hostname", ""));
+	local cc_cache_key = hostname .. ":configuration:callcenter.conf";
 	XML_STRING, err = cache.get(cc_cache_key)
 
 --set the cache

@@ -29,8 +29,8 @@
 
 --get the cache
 	local cache = require "resources.functions.cache"
-	local hostname = trim(api:execute("switchname", ""))
-	local sofia_cache_key = "configuration:sofia.conf:" .. hostname
+	local hostname = trim(api:execute("hostname", ""))
+	local sofia_cache_key = hostname .. ":configuration:sofia.conf"; 
 	XML_STRING, err = cache.get(sofia_cache_key)
 
 --set the cache
