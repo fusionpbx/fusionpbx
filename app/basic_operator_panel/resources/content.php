@@ -74,29 +74,29 @@ if ($valet_info !== false) {
 	}
 	//view_array($valet_matches, false);
 
-	//unset($_SESSION['valet']);
+	//unset($valet);
 	foreach($valet_matches as $row) {
-		if (!isset($_SESSION['valet']['uuid']['caller_id_name'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_name'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_name');
+		if (!isset($valet['uuid']['caller_id_name'])) {
+			$valet[$row[1]]['caller_id_name'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_name');
 		}
-		if (!isset($_SESSION['valet']['uuid']['caller_id_number'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_number'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_number');
+		if (!isset($valet['uuid']['caller_id_number'])) {
+			$valet[$row[1]]['caller_id_number'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_number');
 		}
 	}
 
 	//unset the array
-	//view_array($_SESSION['valet']);
+	//view_array($valet);
 
 	//reformat the array and add the caller ID name and numbers
 	$x = 0;
 	foreach($valet_matches as $row) {
 		$valet_array[$x]['uuid'] = $row[1];
 		$valet_array[$x]['extension'] = $row[2];
-		if (isset($_SESSION['valet'][$row[1]]['caller_id_name'])) {
-			$valet_array[$x]['caller_id_name'] = $_SESSION['valet'][$row[1]]['caller_id_name'];
+		if (isset($valet[$row[1]]['caller_id_name'])) {
+			$valet_array[$x]['caller_id_name'] = $valet[$row[1]]['caller_id_name'];
 		}
-		if (isset($_SESSION['valet'][$row[1]]['caller_id_number'])) {
-			$valet_array[$x]['caller_id_number'] = $_SESSION['valet'][$row[1]]['caller_id_number'];
+		if (isset($valet[$row[1]]['caller_id_number'])) {
+			$valet_array[$x]['caller_id_number'] = $valet[$row[1]]['caller_id_number'];
 		}
 		$x++;
 	}
@@ -475,7 +475,7 @@ if (is_array($activity)) {
 			//record
 			if (permission_exists('operator_panel_record') && $ext_state == 'active') {
 				$call_identifier_record = $ext['call_uuid'];
-				$rec_file = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
+				$rec_file = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
 				if (file_exists($rec_file)) {
 					$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">\n";
 				}

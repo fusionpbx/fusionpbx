@@ -34,9 +34,38 @@
 		const app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 
 		/**
-		 * declare private variables
+		 * Ring group primary key
+		 * @var uuid
+		 */
+		public $ring_group_uuid;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
 		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * declare private variables
+		 */
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -45,14 +74,15 @@
 		private $toggle_values;
 
 		/**
-		 * declare public variables
-		 */
-		public $ring_group_uuid;
-
-		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->permission_prefix = 'ring_group_';
@@ -61,12 +91,6 @@
 			$this->uuid_prefix = 'ring_group_';
 			$this->toggle_field = 'ring_group_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -102,7 +126,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ring_group_context from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -117,11 +141,11 @@
 							$x = 0;
 							foreach ($ring_groups as $ring_group_uuid => $ring_group) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
-								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								$array['ring_group_users'][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
-								$array['ring_group_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['ring_group_users'][$x]['domain_uuid'] = $this->domain_uuid;
 								$array['ring_group_destinations'][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
-								$array['ring_group_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['ring_group_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 								$array['dialplans'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
 								$array['dialplan_details'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
 								$x++;
@@ -208,7 +232,7 @@
 								$sql = "select ring_group_context from v_ring_groups ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ring_group_uuid = :ring_group_uuid ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$parameters['ring_group_uuid'] = $this->ring_group_uuid;
 								$ring_group_context = $this->database->select($sql, $parameters, 'column');
 								unset($sql, $parameters);
@@ -219,7 +243,7 @@
 								$x = 0;
 								foreach ($uuids as $uuid) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									$x++;
 								}
 							}
@@ -277,7 +301,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid, ring_group_context from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -375,7 +399,7 @@
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = $z = 0;

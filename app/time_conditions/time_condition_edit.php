@@ -45,7 +45,7 @@
 	$destination = new destinations;
 
 //load available presets
-	$preset_region = "preset_".$_SESSION['time_conditions']['region']['text'];
+	$preset_region = "preset_".$settings->get('time_conditions', 'region');
 	if (is_array($_SESSION['time_conditions'][$preset_region])) {
 		foreach ($_SESSION['time_conditions'][$preset_region] as $json) {
 			$json_array = json_decode($json, true);
@@ -809,7 +809,7 @@
 
 					case 'hour': //hours of day
 						<?php
-						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
+						if ( $settings->get('domain', 'time_format') == "24h") {
 
 							for ($h = 0; $h <= 23; $h++) {
 								echo "sel_start.options[sel_start.options.length] = new Option(".$h.", ".$h.");\n";
@@ -828,7 +828,7 @@
 
 					case 'time-of-day': //time of day
 						<?php
-						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
+						if ( $settings->get('domain', 'time_format') == "24h") {
 
 							for ($h = 0; $h <= 23; $h++) {
 								for ($m = 0; $m <= 59; $m++) {
@@ -986,7 +986,7 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-extension']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\" required='required' placeholder=\"".($_SESSION['time_conditions']['extension_range']['text'] ?? '')."\">\n";
+echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\" required='required' placeholder=\"".($settings->get('time_conditions', 'extension_range') ?? '')."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";

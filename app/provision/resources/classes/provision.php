@@ -35,56 +35,54 @@
 		const app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		public $domain_name;
+
+		/**
+		 * declare public variables
+		 */
 		public $template_dir;
 		public $device_address;
 		public $device_template;
 
 		/**
-		 * declare private variables
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
 		 */
 		private $settings;
-		private $database;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
 
 		/**
 		 * called when the object is created
 		 */
-		public function __construct($params = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//preset the the values
-			$settings = null;
-			$domain_uuid = null;
-
-			//use the parameters to set the values if they exist
-			if (isset($params['database'])) {
-				$this->database = $params['database'];
-			}
-			if (isset($params['settings'])) {
-				$settings = $params['settings'];
-			}
-			if (isset($params['domain_uuid'])) {
-				$domain_uuid = $params['domain_uuid'];
-			}
-
-			//check if we can use the settings object to get the database object
-			if (!empty($settings) && empty($this->database)) {
-				$this->database = $settings->database();
-			}
-
-			//fill in missing
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-			if (empty($settings)) {
-				$settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
-			}
-
-			//assign to the object
-			$this->settings = $settings;
-			$this->domain_uuid = $domain_uuid;
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//get the project root
 			$project_root = dirname(__DIR__, 4);
@@ -138,8 +136,8 @@
 			}
 
 			//normalize the device address
-			if (isset($this->device_address)) {
-				$this->device_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $this->device_address));
+			if (isset($setting_array['device_address'])) {
+				$this->device_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $setting_array['device_address']));
 			}
 		}
 

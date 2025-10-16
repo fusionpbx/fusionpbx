@@ -96,7 +96,7 @@
 					$default_language = 'en';
 					$default_dialect = 'us';
 					$default_voice = 'callie';
-					$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+					$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$settings->get('switch', 'sounds')."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 				//connect to event socket
 					$esl = event_socket::create();
 					if ($esl) {
@@ -178,7 +178,7 @@
 	$num_rows = $conference_center->room_count();
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = !empty($search) ? "&search=".$search : null;
 	if (isset($_GET['page'])) {
 		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;

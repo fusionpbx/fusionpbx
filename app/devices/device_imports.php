@@ -64,7 +64,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/devices-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/devices-".$_SESSION['domain_name'].".csv";
 		if (file_put_contents($file, $_POST['data'])) {
 			$_SESSION['file'] = $file;
 		}
@@ -74,7 +74,7 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_import')) {
 		if ($_POST['type'] == 'csv') {
-			$file = $_SESSION['server']['temp']['dir']."/devices-".$_SESSION['domain_name'].".csv";
+			$file = $settings->get('server', 'temp')."/devices-".$_SESSION['domain_name'].".csv";
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
 				$_SESSION['file'] = $file;
 			}
@@ -443,7 +443,7 @@
 						//view_array($message);
 					}
 
-					if (!empty($_SESSION['provision']['path']['text'])) {
+					if (!empty($settings->get('provision', 'path'))) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();

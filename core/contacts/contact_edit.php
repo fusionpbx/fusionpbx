@@ -55,7 +55,7 @@
 	$contact_attachments = [];
 
 //set from session variables
-	$body_text_color = !empty($_SESSION['theme']['body_text_color']['text']) ? $_SESSION['theme']['body_text_color']['text'] : 'false';
+	$body_text_color = !empty($settings->get('theme', 'body_text_color')) ? $settings->get('theme', 'body_text_color') : 'false';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -991,29 +991,29 @@
 <?php
 
 //determine qr branding
-	if (!empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
-		echo "<img id='img-buffer' style='display: none;' src='".$_SESSION["theme"]["qr_brand_image"]["text"]."'>";
+	if (!empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'image') {
+		echo "<img id='img-buffer' style='display: none;' src='".$settings->get('theme', 'qr_brand_image')."'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	elseif (empty($_SESSION['theme']['qr_brand_image']['text']) && !empty($_SESSION['theme']['qr_brand_type']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
+	elseif (empty($settings->get('theme', 'qr_brand_image')) && !empty($settings->get('theme', 'qr_brand_type')) && $settings->get('theme', 'qr_brand_type') == 'image') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'text') {
-		$qr_option = 'label: "'.$_SESSION['theme']['qr_brand_text']['text'].'"';
+	elseif (!empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'text') {
+		$qr_option = 'label: "'.$settings->get('theme', 'qr_brand_text').'"';
 		$qr_mode = '2';
 		$qr_size = '0.05';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'none') {
+	elseif (!empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'none') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
 	}
 	else {
-		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png'>";
+		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template')."/images/qr_code.png'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';
@@ -2561,7 +2561,7 @@ if (permission_exists('contact_attachment_view')) {
 			}
 		//}
 		//else {
-		//	$allowed_attachment_types = json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true);
+		//	$allowed_attachment_types = json_decode($settings->get('contact', 'allowed_attachment_types'), true);
 		//	echo "	<input type='file' class='formfld' name='attachment' id='attachment' accept='.".implode(',.',array_keys($allowed_attachment_types))."'>\n";
 		//	echo "	<span style='display: inline-block; margin-top: 5px; font-size: 80%;'>".strtoupper(implode(', ', array_keys($allowed_attachment_types)))."</span>";
 		//}

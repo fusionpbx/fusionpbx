@@ -35,6 +35,9 @@
 //get the user uuid
 	$user_uuid = $_SESSION['user_uuid'];
 
+//set the action
+	$action = 'edit';
+
 //retrieve password requirements
 	if (permission_exists('user_password')) {
 		$required['length'] = $settings->get('users', 'password_length', 12);
@@ -825,7 +828,7 @@
 	echo "	<tr>\n";
 	echo "		<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-address_country']."</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
-	$countries = get_countries($db);
+	$countries = get_countries($database);
 	if (is_array($countries) && sizeof($countries) > 0) {
 		echo "		<select class='formfld' name='address_country' id='address_country' required='required'>\n";
 		echo "			<option value=''></option>\n";

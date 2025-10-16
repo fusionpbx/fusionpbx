@@ -171,7 +171,7 @@
 					else {
 						$sip_profile_domain_uuid = uuid();
 					}
-					if (!empty($row["sip_profile_domain_alias"])) {
+					if (!empty($row["sip_profile_domain_name"])) {
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_uuid"] = $sip_profile_uuid;
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_uuid"] = $sip_profile_domain_uuid;
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_name"] = $row["sip_profile_domain_name"];

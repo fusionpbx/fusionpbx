@@ -125,7 +125,7 @@
 	$num_rows = $database->select($sql, $parameters ?? '', 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
 		$param .= "&show=all";
@@ -283,7 +283,7 @@
 			$list_row_url = '';
 			if (permission_exists('email_template_edit')) {
 				$list_row_url = "email_template_edit.php?id=".urlencode($row['email_template_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}

@@ -335,6 +335,16 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	$parameters['time_zone'] = $time_zone;
+
+//set the sql time format
+	$sql_time_format = 'HH12:MI am';
+	if (!empty($settings->get('domain', 'time_format'))) {
+		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "HH12:MI am" : "HH24:MI";
+	}
+
 //get the file size
 	if ($recording_storage_type == 'base64') {
 		switch ($db_type) {

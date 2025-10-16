@@ -273,7 +273,7 @@
 
 	echo "	</table>\n";
 	echo "</div>\n";
-	echo "<input type='hidden' name='".$_SESSION['app']['calls_active']['token']['name']."' value='".$_SESSION['app']['calls_active']['token']['hash']."'>\n";
+	echo "<input type='hidden' name='".$settings->get('app', 'calls_active')['name']."' value='".$settings->get('app', 'calls_active')['hash']."'>\n";
 	echo "</form>\n";
 
 ?>

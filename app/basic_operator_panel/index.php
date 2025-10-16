@@ -162,10 +162,10 @@
 				//delete extension from the cache
 					$cache = new cache;
 					if (!empty($extension)) {
-						$cache->delete("directory:".$extension."@".$this->domain_name);
+						$cache->delete("directory:".$extension."@".$domain_name);
 					}
 					if (!empty($number_alias)) {
-						$cache->delete("directory:".$number_alias."@".$this->domain_name);
+						$cache->delete("directory:".$number_alias."@".$domain_name);
 					}
 			}
 
@@ -195,7 +195,7 @@
 <?php
 //determine refresh rate
 $refresh_default = 1500; //milliseconds
-$refresh = is_numeric($_SESSION['operator_panel']['refresh']['numeric']) ? $_SESSION['operator_panel']['refresh']['numeric'] : $refresh_default;
+$refresh = is_numeric($settings->get('operator_panel', 'refresh')) ? $settings->get('operator_panel', 'refresh') : $refresh_default;
 if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
 	$refresh = $refresh * 1000;
 }

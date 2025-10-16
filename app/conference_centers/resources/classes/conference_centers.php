@@ -35,9 +35,14 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		const app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $conference_room_uuid;
 		public $order_by;
 		public $order;
@@ -49,10 +54,38 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		public $toggle_field;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -63,13 +96,15 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 		/**
 		 * Called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		/**
@@ -147,7 +182,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 				if ($not_admin) {
 					$sql .= "and r.conference_room_uuid = u.conference_room_uuid ";
 					$sql .= "and u.user_uuid = :user_uuid ";
-					$parameters['user_uuid'] = $_SESSION["user_uuid"];
+					$parameters['user_uuid'] = $this->user_uuid;
 				}
 				if (!empty($this->search)) {
 					$sql .= "and (";
@@ -240,8 +275,8 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 					}
 
 				//set the path for the directory
-					$default_path = $_SESSION['switch']['call_recordings']['dir']."/".$_SESSION['domain_name'];
-					
+					$default_path = $this->settings->get('switch', 'call_recordings')."/".$this->domain_name;
+
 				//get the file path and name
 					$record_path = dirname($recording);
 					$record_name = basename($recording);
@@ -288,7 +323,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 					}
 
 				//if base64, remove temp recording file
-					//if ($_SESSION['conference']['storage_type']['text'] == 'base64' && $row['conference_recording_base64'] != '') {
+					//if ($this->settings->get('conference', 'storage_type') == 'base64' && $row['conference_recording_base64'] != '') {
 					//	@unlink($record_path.'/'.$record_name);
 					//}
 			}
@@ -330,18 +365,18 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 										$sql = "select dialplan_uuid from v_conference_centers ";
 										$sql .= "where domain_uuid = :domain_uuid ";
 										$sql .= "and conference_center_uuid = :conference_center_uuid ";
-										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+										$parameters['domain_uuid'] = $this->domain_uuid;
 										$parameters['conference_center_uuid'] = $record['uuid'];
 										$dialplan_uuid = $this->database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
 
 									//create array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
-										$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
-										$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -363,7 +398,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+									$cache->delete("dialplan:".$this->domain_name);
 
 								//clear the destinations session array
 									if (isset($_SESSION['destinations']['array'])) {
@@ -412,9 +447,9 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 									//create array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['conference_room_users'][$x]['conference_room_uuid'] = $record['uuid'];
-										$array['conference_room_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['conference_room_users'][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -473,9 +508,9 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 									//create array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['conference_session_details'][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array['conference_session_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['conference_session_details'][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -543,7 +578,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									foreach ($rows as $row) {
@@ -584,7 +619,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+									$cache->delete("dialplan:".$this->domain_name);
 
 								//clear the destinations session array
 									if (isset($_SESSION['destinations']['array'])) {
@@ -646,7 +681,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									foreach ($rows as $row) {
@@ -669,9 +704,9 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 											$default_language = 'en';
 											$default_dialect = 'us';
 											$default_voice = 'callie';
-// 											$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
-//											$switch_cmd_record = "conference ".$meeting_uuid[$uuid]."@".$_SESSION['domain_name']." record ".$recording_dir.'/'.$meeting_uuid[$uuid].'.wav';
-											$switch_cmd_notice = "conference ".$meeting_uuid[$uuid]."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+// 											$recording_dir = $this->settings->get('switch', 'recordings').'/'.$this->domain_name.'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+//											$switch_cmd_record = "conference ".$meeting_uuid[$uuid]."@".$this->domain_name." record ".$recording_dir.'/'.$meeting_uuid[$uuid].'.wav';
+											$switch_cmd_notice = "conference ".$meeting_uuid[$uuid]."@".$this->domain_name." play ".$this->settings->get('switch', 'sounds')."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 										//execute api commands
 // 											if (!file_exists($recording_dir.'/'.$meeting_uuid[$uuid].'.wav')) {
 												$esl = event_socket::create();
@@ -744,7 +779,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									foreach ($rows as $x => $row) {
@@ -787,7 +822,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 //example conference center
 	/*
 	$conference_center = new conference_centers;
-	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
+	$conference_center->domain_uuid = $this->domain_uuid;
 	$conference_center->rows_per_page = 150;
 	$conference_center->offset = 0;
 	$conference_center->created_by = uuid;

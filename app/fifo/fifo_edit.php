@@ -577,7 +577,7 @@
 	echo "	".$text['label-strategy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='fifo_strategy' onchange=\"getElementById('destination_delayorder').innerHTML = (this.selectedIndex == 1 || this.selectedIndex == 3) ? '".$text['label-destination_order']."' : '".$text['label-destination_delay']."';\">\n";
+	echo "	<select class='formfld' name='fifo_strategy' onchange=\"\">\n";
 	echo "		<option value='longest_idle_agent' ".(($fifo_strategy == "'option-longest_idle_agent") ? "selected='selected'" : null).">".$text['option-longest_idle_agent']."</option>\n";
 	echo "		<option value='simultaneous' ".(($fifo_strategy == "simultaneous") ? "selected='selected'" : null).">".$text['option-simultaneous']."</option>\n";
 	echo "	</select>\n";
@@ -659,7 +659,7 @@
 	}
 	echo "	</table>\n";
 	echo "<br />\n";
-	echo $text['description-member_enabled']."\n";
+	echo $text['description-agents']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

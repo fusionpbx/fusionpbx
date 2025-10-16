@@ -42,10 +42,32 @@
 		public $msg;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -57,7 +79,15 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+			$this->esl = event_socket::create();
 
 			//assign private variables
 			$this->permission_prefix = 'module_';
@@ -67,16 +97,9 @@
 			$this->toggle_field = 'module_enabled';
 			$this->toggle_values = ['true','false'];
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 			//get the list of active modules
-			$this->esl = event_socket::create();
-			$json = $this->esl->api("show modules as json");
+			$json = $this->esl->request("api show modules as json");
 			$this->active_modules = json_decode($json, true);
-
 		}
 
 		/**
@@ -871,8 +894,8 @@
 				$xml .= "	</modules>\n";
 				$xml .= "</configuration>";
 
-				if (!empty($_SESSION['switch']['conf']['dir']) && is_writable($_SESSION['switch']['conf']['dir'].'/autoload_configs/modules.conf.xml')) {
-					$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/modules.conf.xml","w");
+				if (!empty($this->settings->get('switch', 'conf')) && is_writable($this->settings->get('switch', 'conf').'/autoload_configs/modules.conf.xml')) {
+					$fout = fopen($this->settings->get('switch', 'conf')."/autoload_configs/modules.conf.xml","w");
 					fwrite($fout, $xml);
 					unset($xml);
 					fclose($fout);
@@ -1168,7 +1191,7 @@
 
 /*
 $mod = new modules;
-$mod->dir = $_SESSION['switch']['mod']['dir'];
+$mod->dir = $this->settings->get('switch', 'mod');
 echo $mod->dir."\n";
 //get modules from the database
 	$mod->get_modules();

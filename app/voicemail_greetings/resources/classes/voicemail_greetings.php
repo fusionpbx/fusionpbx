@@ -34,10 +34,38 @@
 		const app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -51,7 +79,15 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'voicemail_greeting_';
@@ -63,12 +99,6 @@
 			}
 			$this->table = 'voicemail_greetings';
 			$this->uuid_prefix = 'voicemail_greeting_';
-			
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -120,7 +150,7 @@
 							}
 
 						//set the greeting directory
-							$greeting_directory = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name'].'/'.$this->voicemail_id;
+							$greeting_directory = $this->settings->get('switch', 'storage').'/voicemail/default/'.$this->domain_name.'/'.$this->voicemail_id;
 
 						//loop through greetings
 							if (is_array($greeting_filenames) && @sizeof($greeting_filenames) != 0) {
@@ -130,7 +160,7 @@
 										@unlink($greeting_directory.'/'.$greeting_filename);
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $voicemail_greeting_uuid;
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 										$x++;
 								}
 							}
@@ -143,7 +173,7 @@
 										$sql .= "where domain_uuid = :domain_uuid ";
 										$sql .= "and voicemail_id = :voicemail_id ";
 										$sql .= "and greeting_id = :greeting_id ";
-										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+										$parameters['domain_uuid'] = $this->domain_uuid;
 										$parameters['voicemail_id'] = $voicemail_id;
 										$parameters['greeting_id'] = $greeting_id;
 										$this->database->execute($sql, $parameters);

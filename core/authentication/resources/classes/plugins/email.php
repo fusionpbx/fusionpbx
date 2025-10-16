@@ -221,7 +221,7 @@ class plugin_email {
 				//$response = ob_get_clean();
 
 				//get the language code
-				$language_code = $_SESSION['domain']['language']['code'];
+				$language_code = $settings->get('domain', 'language', 'en-us');
 
 				//get the email template from the database
 				$sql = "select template_subject, template_body ";

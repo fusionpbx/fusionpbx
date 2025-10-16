@@ -218,7 +218,7 @@
 	}
 
 //set the defaults
-	if ($address_primary === null) { $address_primary = false; }
+	$address_primary = $address_primary ?? false;
 
 //create token
 	$object = new token;

@@ -101,16 +101,16 @@
 
 				//add record path and name
 				if ($rec == "true") {
-					$record_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
-					if (isset($_SESSION['recordings']['extension']['text'])) {
-						$record_extension = $_SESSION['recordings']['extension']['text'];
+					$record_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
+					if (!empty($settings->get('recordings', 'extension'))) {
+						$record_extension = $settings->get('recordings', 'extension');
 					}
 					else {
 						$record_extension = 'wav';
 					}
-					if (isset($_SESSION['recordings']['template']['text'])) {
+					if (!empty($settings->get('recordings', 'template'))) {
 						//${year}${month}${day}-${caller_id_number}-${caller_destination}-${uuid}.${record_extension}
-						$record_name = $_SESSION['recordings']['template']['text'];
+						$record_name = $settings->get('recordings', 'template');
 						$record_name = str_replace('${year}', date("Y"), $record_name);
 						$record_name = str_replace('${month}', date("M"), $record_name);
 						$record_name = str_replace('${day}', date("d"), $record_name);

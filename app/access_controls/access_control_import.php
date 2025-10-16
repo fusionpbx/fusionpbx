@@ -64,7 +64,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/access_control_nodes-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/access_control_nodes-".$_SESSION['domain_name'].".csv";
 		if (file_put_contents($file, $_POST['data'])) {
 			$_SESSION['file'] = $file;
 		}
@@ -74,7 +74,7 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) &&  is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('access_control_node_add')) {
 		if (!empty($_POST['type']) &&$_POST['type'] == 'csv') {
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
 				$_SESSION['file'] = $file;
 			}

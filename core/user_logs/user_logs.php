@@ -41,7 +41,7 @@
 
 //set config object
 	global $config;
-	if (!($confing instanceof config)) {
+	if (!($config instanceof config)) {
 		$config = config::load();
 	}
 
