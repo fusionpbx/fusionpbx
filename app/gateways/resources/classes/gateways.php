@@ -343,12 +343,9 @@
 									save_gateway_xml();
 
 								//clear the cache
-									$esl = event_socket::create();
-									if ($esl->is_connected()) {
-										$hostname = trim(event_socket::api('switchname'));
-										$cache = new cache;
-										$cache->delete("configuration:sofia.conf:".$hostname);
-									}
+
+									$cache = new cache;
+									$cache->delete(gethostname().":configuration:sofia.conf");
 
 								//rescan the sip profile to look for new or stopped gateways
 									$esl = event_socket::create();
@@ -463,10 +460,8 @@
 									save_gateway_xml();
 
 								//clear the cache
-									$esl = event_socket::create();
-									$hostname = trim(event_socket::api('switchname'));
 									$cache = new cache;
-									$cache->delete("configuration:sofia.conf:".$hostname);
+									$cache->delete(gethostname().":configuration:sofia.conf");
 
 								//create the event socket connection
 									$esl = event_socket::create();
@@ -586,10 +581,8 @@
 									save_gateway_xml();
 
 								//clear the cache
-									$esl = event_socket::create();
-									$hostname = trim(event_socket::api('switchname'));
 									$cache = new cache;
-									$cache->delete("configuration:sofia.conf:".$hostname);
+									$cache->delete(gethostname().":configuration:sofia.conf");
 
 								//set message
 									message::add($text['message-copy']);

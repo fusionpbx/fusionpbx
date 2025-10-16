@@ -67,10 +67,8 @@ function event_socket_request_cmd($cmd) {
 function remove_config_from_cache($name) {
 	$cache = new cache;
 	$cache->delete($name);
-	$hostname = trim(event_socket_request_cmd('api switchname'));
-	if ($hostname) {
-		$cache->delete($name . ':' . $hostname);
-	}
+	$cache->delete(gethostname() . ':' . $name);
+	$cache->delete($name . ':' . gethostname());
 }
 
 function ListFiles($dir) {

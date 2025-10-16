@@ -240,16 +240,13 @@
 			}
 
 		//get the hostname
-			if ($sip_profile_hostname == '') {
-				$esl = event_socket::create();
-				if ($esl->is_connected()) {
-					$sip_profile_hostname = event_socket::api('switchname');
-				}
+			if (empty($sip_profile_hostname) {
+				$sip_profile_hostname = gethostname();
 			}
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+			$cache->delete($sip_profile_hostname.":configuration:sofia.conf");
 
 		//save the sip profile xml
 			save_sip_profile_xml();

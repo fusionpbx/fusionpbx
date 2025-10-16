@@ -459,9 +459,9 @@
 								//clear the cache
 									$cache = new cache;
 									foreach ($extensions as $uuid => $extension) {
-										$cache->delete("directory:".$extension['extension']."@".$this->domain_name);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$_SESSION['domain_name']);
 										if ($extension['number_alias'] != '') {
-											$cache->delete("directory:".$extension['number_alias']."@".$this->domain_name);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
 										}
 									}
 

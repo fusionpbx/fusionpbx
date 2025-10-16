@@ -182,10 +182,7 @@
 										}
 									}
 									if ($empty_hostname) {
-										$esl = event_socket::create();
-										if ($esl->is_connected()) {
-											$hostnames[] = event_socket::api('switchname');
-										}
+										$hostnames[] = gethostname();
 									}
 
 								//clear the cache
@@ -193,7 +190,7 @@
 										$hostnames = array_unique($hostnames);
 										$cache = new cache;
 										foreach ($hostnames as $hostname) {
-											$cache->delete("configuration:sofia.conf:".$hostname);
+											$cache->delete($hostname.":configuration:sofia.conf");
 										}
 									}
 
@@ -261,16 +258,13 @@
 
 								//get system hostname if necessary
 									if (empty($sip_profile_hostname)) {
-										$esl = event_socket::create();
-										if ($esl->is_connected()) {
-											$sip_profile_hostname = event_socket::api('switchname');
-										}
+										$sip_profile_hostname = gethostname();
 									}
 
 								//clear the cache
 									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
-										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+										$cache->delete($sip_profile_hostname.":"configuration:sofia.conf");
 									}
 
 							}
@@ -335,16 +329,13 @@
 
 								//get system hostname if necessary
 									if (empty($sip_profile_hostname)) {
-										$esl = event_socket::create();
-										if ($esl->is_connected()) {
-											$sip_profile_hostname = event_socket::api('switchname');
-										}
+										$sip_profile_hostname = gethostname();
 									}
 
 								//clear the cache
 									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
-										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+										$cache->delete($sip_profile_hostname.":configuration:sofia.conf");
 									}
 
 							}
@@ -422,7 +413,7 @@
 									if ($empty_hostname) {
 										$esl = event_socket::create();
 										if ($esl->is_connected()) {
-											$hostnames[] = event_socket::api('switchname');
+											$hostnames[] = gethostname();
 										}
 									}
 
@@ -431,7 +422,7 @@
 										$hostnames = array_unique($hostnames);
 										$cache = new cache;
 										foreach ($hostnames as $hostname) {
-											$cache->delete("configuration:sofia.conf:".$hostname);
+											$cache->delete($hostname.":configuration:sofia.conf");
 										}
 									}
 
