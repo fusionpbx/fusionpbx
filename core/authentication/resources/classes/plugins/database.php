@@ -131,7 +131,8 @@ class plugin_database {
 							if (class_exists($open_id_class)) {
 								$banners[] = [
 									'name' => $open_id_class,
-									'image' => $open_id_class::get_banner_image(),
+									'image' => $open_id_class::get_banner_image($settings),
+									'class' => $open_id_class::get_banner_css_class($settings),
 									'url' => '/app/open_id/open_id.php?action=' . $open_id_class,
 								];
 							}
@@ -259,7 +260,7 @@ class plugin_database {
 					else {
 						//deprecated - compare the password provided by the user with the one in the database
 						if (md5($row["salt"].$this->password) === $row["password"]) {
-							$row["password"] = crypt($this->password, '$1$'.$password_salt.'$');
+							$row["password"] = crypt($this->password, '$1$'.$row['salt'].'$');
 							$valid_password = true;
 						}
 					}
@@ -304,10 +305,10 @@ class plugin_database {
 								$parameters['domain_uuid'] = $this->domain_uuid;
 								$parameters['contact_uuid'] = $this->contact_uuid;
 								$contact = $settings->database()->select($sql, $parameters, 'row');
-								$this->contact_organization = $contact['contact_organization'];
-								$this->contact_name_given = $contact['contact_name_given'];
-								$this->contact_name_family = $contact['contact_name_family'];
-								$this->contact_image = $contact['contact_attachment_uuid'];
+								$this->contact_organization = $contact['contact_organization'] ?? '';
+								$this->contact_name_given = $contact['contact_name_given'] ?? '';
+								$this->contact_name_family = $contact['contact_name_family'] ?? '';
+								$this->contact_image = $contact['contact_attachment_uuid'] ?? '';
 							}
 
 						//debug info
