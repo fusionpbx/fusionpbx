@@ -153,18 +153,22 @@
 		-- cleanup
 			XML_STRING = nil;
 
+		--get the caller hostname
+			hostname = trim(api:execute("hostname", ""));
+			--freeswitch.consoleLog("notice", "[xml_handler][directory] hostname is " .. hostname .. "\n");
+
 		-- get the cache. We can use cache only if we do not use `fs_path`
 		-- or we do not need dial-string. In other way we have to use database.
 			if (continue) and (not USE_FS_PATH) then
 				if (cache.support() and domain_name) then
-					local key, err = "directory:" .. (from_user or user) .. "@" .. domain_name
-					XML_STRING, err = cache.get(key);
+					local cache_key, err = hostname .. ":directory:" .. (from_user or user) .. "@" .. domain_name
+					XML_STRING, err = cache.get(cache_key);
 
 					if debug['cache'] then
 						if not XML_STRING then
-							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " fail: " .. tostring(err) .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. cache_key .. " fail: " .. tostring(err) .. "\n")
 						else
-							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " pass!" .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. cache_key .. " pass!" .. "\n")
 						end
 					end
 				end
@@ -236,9 +240,6 @@
 									end);
 								end
 
-							--get the caller hostname
-								local_hostname = trim(api:execute("switchname", ""));
-								--freeswitch.consoleLog("notice", "[xml_handler][directory] local_hostname is " .. local_hostname .. "\n");
 
 							--add the file_exists function
 								require "resources.functions.file_exists";
@@ -464,7 +465,7 @@
 										end
 									--set an alternative dial string if the hostnames don't match
 										if (USE_FS_PATH) then
-											if (local_hostname == database_hostname) then
+											if (hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler][directory] local_host and database_host are the same\n");
 											else
 												contact = trim(api:execute("sofia_contact", destination));
@@ -482,7 +483,7 @@
 
 									--show debug information
 										if (USE_FS_PATH) then
-											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
+											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
 								end
 						end);
