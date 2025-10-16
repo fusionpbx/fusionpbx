@@ -316,6 +316,7 @@ if (!function_exists('if_group')) {
 	function if_group($group) {
 		//set default false
 		$result = false;
+
 		//search for the permission
 		if (isset($_SESSION['groups']) && count($_SESSION["groups"]) > 0) {
 			foreach ($_SESSION["groups"] as $row) {
@@ -325,6 +326,7 @@ if (!function_exists('if_group')) {
 				}
 			}
 		}
+
 		//return the result
 		return $result;
 	}
@@ -333,7 +335,9 @@ if (!function_exists('if_group')) {
 //check if the permission exists
 if (!function_exists('permission_exists')) {
 	function permission_exists($permission_name) {
+		//define the global variables
 		global $database, $domain_uuid, $user_uuid;
+
 		$permission = permissions::new($database, $domain_uuid, $user_uuid);
 		return $permission->exists($permission_name);
 	}
@@ -351,7 +355,10 @@ if (!function_exists('if_group_member')) {
 
 if (!function_exists('superadmin_list')) {
 	function superadmin_list() {
+		//define the global variables
 		global $database, $domain_uuid;
+
+		//get the liset of users in the superadmin group
 		$sql = "select * from v_user_groups ";
 		$sql .= "where group_name = 'superadmin' ";
 		$result = $database->select($sql, null, 'all');
@@ -379,8 +386,10 @@ if (!function_exists('if_superadmin')) {
 
 if (!function_exists('html_select_other')) {
 	function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $sql_order_by = null, $label_other = 'Other...') {
-		//html select other: build a select box from distinct items in db with option for other
+		//define the global variables
 		global $database, $domain_uuid;
+
+		//html select other: build a select box from distinct items in db with option for other
 		$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
 		$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 
@@ -420,9 +429,11 @@ if (!function_exists('html_select_other')) {
 
 if (!function_exists('html_select')) {
 	function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $on_change = '') {
-		//html select: build a select box from distinct items in db
+
+		//define the global variables
 		global $database, $domain_uuid;
 
+		//html select: build a select box from distinct items in db
 		$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
 		$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 		$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
@@ -658,20 +669,27 @@ if (!function_exists('normalize_path_to_os')) {
 
 if (!function_exists('username_exists')) {
 	function username_exists($username) {
+		//define the global variables
 		global $database, $domain_uuid;
+
+		//get the number of rows for the user exists
 		$sql = "select count(*) from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and username = :username ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['username'] = $username;
 		$num_rows = $database->select($sql, $parameters, 'column');
+
+		//return whether the user exists
 		return $num_rows > 0 ? true : false;
 	}
 }
 
 if (!function_exists('add_extension_user')) {
 	function add_extension_user($extension_uuid, $username) {
+		//define the global variables
 		global $database, $domain_uuid;
+
 		//get the user_uuid by using the username
 		$sql = "select user_uuid from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -714,13 +732,18 @@ if (!function_exists('add_extension_user')) {
 
 if (!function_exists('user_add')) {
 	function user_add($username, $password, $user_email = '') {
+		//define the global variables
 		global $database, $domain_uuid;
+
+		//return false if the username and password were not provided
 		if (empty($username)) {
 			return false;
 		}
 		if (empty($password)) {
 			return false;
 		}
+
+		//check if the user exists
 		if (!username_exists($username)) {
 			//build user insert array
 			$user_uuid = uuid();
@@ -990,6 +1013,9 @@ function tail($file, $num_to_get = 10) {
 
 //generate a random password with upper, lowercase and symbols
 function generate_password($length = 0, $strength = 0) {
+	//define the global variables
+	global $settings;
+
 	$password = '';
 	$chars = '';
 	if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
@@ -1016,6 +1042,9 @@ function generate_password($length = 0, $strength = 0) {
 
 //check password strength against requirements (if any)
 function check_password_strength($password, $text, $type = 'default') {
+
+	//define the global variables
+	global $database, $settings;
 
 	//initialize the settigns object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid']]);
@@ -1405,69 +1434,72 @@ if (!function_exists('hsl_to_rgb')) {
 
 //function to send email
 if (!function_exists('send_email')) {
-	function send_email($email_recipients, $email_subject, $email_body, &$email_error = '', $email_from_address = '', $email_from_name = '', $email_priority = 3, $email_debug_level = 0, $email_attachments = '', $email_read_confirmation = false) {
 		/*
-		  RECIPIENTS NOTE:
+		RECIPIENTS NOTE:
 
-		  Pass in a single email address...
+		Pass in a single email address...
 
-		  user@domain.com
+		user@domain.com
 
-		  Pass in a comma or semi-colon delimited string of e-mail addresses...
+		Pass in a comma or semi-colon delimited string of e-mail addresses...
 
-		  user@domain.com,user2@domain2.com,user3@domain3.com
-		  user@domain.com;user2@domain2.com;user3@domain3.com
+		user@domain.com,user2@domain2.com,user3@domain3.com
+		user@domain.com;user2@domain2.com;user3@domain3.com
 
-		  Pass in a simple array of email addresses...
+		Pass in a simple array of email addresses...
 
-		  Array (
-		  [0] => user@domain.com
-		  [1] => user2@domain2.com
-		  [2] => user3@domain3.com
-		  )
+		Array (
+		[0] => user@domain.com
+		[1] => user2@domain2.com
+		[2] => user3@domain3.com
+		)
 
-		  Pass in a multi-dimentional array of addresses (delivery, address, name)...
+		Pass in a multi-dimentional array of addresses (delivery, address, name)...
 
-		  Array (
-		  [0] => Array (
-		  [delivery] => to
-		  [address] => user@domain.com
-		  [name] => user 1
-		  )
-		  [1] => Array (
-		  [delivery] => cc
-		  [address] => user2@domain2.com
-		  [name] => user 2
-		  )
-		  [2] => Array (
-		  [delivery] => bcc
-		  [address] => user3@domain3.com
-		  [name] => user 3
-		  )
-		  )
+		Array (
+			[0] => Array (
+				[delivery] => to
+				[address] => user@domain.com
+				[name] => user 1
+			)
+			[1] => Array (
+				[delivery] => cc
+				[address] => user2@domain2.com
+				[name] => user 2
+			)
+			[2] => Array (
+				[delivery] => bcc
+				[address] => user3@domain3.com
+				[name] => user 3
+			)
+		)
 
-		  ATTACHMENTS NOTE:
+		ATTACHMENTS NOTE:
 
-		  Pass in as many files as necessary in an array in the following format...
+		Pass in as many files as necessary in an array in the following format...
 
-		  Array (
-		  [0] => Array (
-		  [type] => file (or 'path')
-		  [name] => filename.ext
-		  [value] => /folder/filename.ext
-		  )
-		  [1] => Array (
-		  [type] => string
-		  [name] => filename.ext
-		  [value] => (string of file contents - if base64, will be decoded automatically)
-		  )
-		  )
+		Array (
+			[0] => Array (
+				[type] => file (or 'path')
+				[name] => filename.ext
+				[value] => /folder/filename.ext
+			)
+			[1] => Array (
+				[type] => string
+				[name] => filename.ext
+				[value] => (string of file contents - if base64, will be decoded automatically)
+			)
+		)
 
-		  ERROR RESPONSE:
+		ERROR RESPONSE:
 
-		  Error messages are stored in the variable passed into $email_error BY REFERENCE
+		Error messages are stored in the variable passed into $email_error BY REFERENCE
 
-		 */
+	 */
+	function send_email($email_recipients, $email_subject, $email_body, &$email_error = '', $email_from_address = '', $email_from_name = '', $email_priority = 3, $email_debug_level = 0, $email_attachments = '', $email_read_confirmation = false) {
+
+		//define the global variables
+		global $database, $settings;
 
 		//add the email recipients
 		$address_found = false;
@@ -1511,6 +1543,7 @@ if (!function_exists('send_email')) {
 		$email->debug_level = 3;
 		$sent = $email->send();
 		//$email_error = $email->email_error;
+
 	}
 }
 
@@ -1813,6 +1846,9 @@ if (!function_exists('string_to_regex')) {
 //dynamically load available web fonts
 if (!function_exists('get_available_fonts')) {
 	function get_available_fonts($sort = 'alpha') {
+		//define the global variables
+		global $settings;
+
 		if (!empty($settings->get('theme', 'font_source_key'))) {
 			if (!is_array($_SESSION['fonts_available']) || sizeof($_SESSION['fonts_available']) == 0) {
 				/*
@@ -1943,26 +1979,32 @@ if (!function_exists('import_fonts')) {
 //retrieve array of countries
 if (!function_exists('get_countries')) {
 	function get_countries() {
+		//define the global variables
 		global $database;
+
+		//get the list of countries
 		$sql = "select * from v_countries order by country asc";
 		$result = $database->select($sql, null, 'all');
 		unset($sql);
 
+		//return the array of countries
 		return is_array($result) && @sizeof($result) != 0 ? $result : false;
 	}
 }
 
 //make directory with event socket
 function event_socket_mkdir($dir) {
-	//connect to fs
+	//connect to event socket
 	$esl = event_socket::create();
 	if (!$esl->is_connected()) {
 		return false;
 	}
+
 	//send the mkdir command to freeswitch
 	//build and send the mkdir command to freeswitch
 	$switch_cmd = "lua mkdir.lua " . escapeshellarg($dir);
 	$switch_result = event_socket::api($switch_cmd);
+
 	//check result
 	if (trim($switch_result) == "-ERR no reply") {
 		return true;
@@ -2261,6 +2303,9 @@ if (!function_exists('array_key_first')) {
 //get accountcode
 if (!function_exists('get_accountcode')) {
 	function get_accountcode() {
+		//define the global variables
+		global $database, $settings;
+
 		if (!empty($accountcode = $settings->get('domain', 'accountcode') ?? '')) {
 			if ($accountcode == "none") {
 				return;
