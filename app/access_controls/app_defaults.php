@@ -144,7 +144,7 @@
 			//clear the cache
 			$cache = new cache;
 			$cache->delete("configuration:acl.conf");
-			$cache->delete("configuration:sofia.conf:".gethostname());
+			$cache->delete(gethostname().":configuration:sofia.conf");
 
 			//create the event socket connection
 			$esl = event_socket::create();

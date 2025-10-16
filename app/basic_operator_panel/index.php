@@ -116,10 +116,10 @@
 							//delete extension from the cache
 							$cache = new cache;
 							if (!empty($row['extension'])) {
-								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
 							}
 							if (!empty($number_alias)) {
-								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
 							//incrment
@@ -137,10 +137,10 @@
 							//delete extension from the cache
 							$cache = new cache;
 							if (!empty($row['extension'])) {
-								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
 							}
 							if (!empty($number_alias)) {
-								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
 							//incrment
@@ -162,10 +162,11 @@
 				//delete extension from the cache
 					$cache = new cache;
 					if (!empty($extension)) {
+						$cache->delete(gethostname().":directory:".$extension."@".$this->domain_name);
 						$cache->delete("directory:".$extension."@".$domain_name);
 					}
 					if (!empty($number_alias)) {
-						$cache->delete("directory:".$number_alias."@".$domain_name);
+						$cache->delete(gethostname().":directory:".$number_alias."@".$this->domain_name);
 					}
 			}
 

@@ -696,9 +696,9 @@
 								//clear the cache
 									foreach ($extensions as $x => $extension) {
 										$cache = new cache;
-										$cache->delete("directory:".$extension['extension']."@".$extension['user_context']);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$extension['user_context']);
 										if (permission_exists('number_alias') && !empty($extension['number_alias'])) {
-											$cache->delete("directory:".$extension['number_alias']."@".$extension['user_context']);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$extension['user_context']);
 										}
 									}
 									unset($extensions);
@@ -807,9 +807,9 @@
 								//clear the cache
 									foreach ($extensions as $uuid => $extension) {
 										$cache = new cache;
-										$cache->delete("directory:".$extension['extension']."@".$extension['user_context']);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$extension['user_context']);
 										if (permission_exists('number_alias') && !empty($extension['number_alias'])) {
-											$cache->delete("directory:".$extension['number_alias']."@".$extension['user_context']);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$extension['user_context']);
 										}
 									}
 									unset($extensions);
