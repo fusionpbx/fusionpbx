@@ -61,7 +61,11 @@
 	subscriber::save_token($token, [system_dashboard_service::get_service_name()]);
 
 	if ($widget_chart_type === 'line') { ?>
-		<div class='hud_chart' style='width: 90%;'><canvas id='system_cpu_status_chart'></canvas></div>
+		<div class='hud_chart' style='width: 90%; height: 85%'><canvas id='system_cpu_status_chart'></canvas></div>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/luxon/build/global/luxon.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming"></script>
 
 		<script>
 			const cpu_status_auth_token = {
@@ -110,20 +114,13 @@
 				const chart = window.system_cpu_status_chart;
 				if (!chart) return;
 
-				// Store into ring buffer
-				cores.forEach((val, i) => {
-					cpu_history[i][cpu_index] = Math.round(val);
+				const now = Date.now();
+
+				// push one point per core dataset
+				chart.data.datasets.forEach((ds, i) => {
+					const y = Math.max(0, Math.min(100, Math.round(cores[i] ?? 0)));
+					ds.data.push({ x: now, y });
 				});
-
-				cpu_index = (cpu_index + 1) % max_points;
-
-				// Rotate each dataset's ring buffer to match chart order
-				chart.data.datasets.forEach((dataset, i) => {
-					const rotated = cpu_history[i].slice(cpu_index).concat(cpu_history[i].slice(0, cpu_index));
-					dataset.data = rotated;
-				});
-
-				chart.update();
 
 				// Optional: update total CPU %
 				const td_cpu_status = document.getElementById('td_system_cpu_status_chart');
@@ -142,55 +139,61 @@
 			// Color palette (distinct and visually stacked)
 			const cpu_colors = ['#00bcd4', '#8bc34a', '#ffc107', '#e91e63'];
 
-			// Initialize the chart
 			window.system_cpu_status_chart = new Chart(
 				document.getElementById('system_cpu_status_chart').getContext('2d'),
 				{
 					type: 'line',
 					data: {
-						labels: Array.from({ length: max_points }, (_, i) => i + 1),
 						datasets: Array.from({ length: num_cores }, (_, i) => ({
 							label: `CPU ${i}`,
-							data: [...cpu_history[i]],
+							data: [],
 							fill: true,
 							borderColor: cpu_colors[i % cpu_colors.length],
-							backgroundColor: cpu_colors[i % cpu_colors.length],
+							backgroundColor: (cpu_colors[i % cpu_colors.length]) + '33', // light fill
 							tension: 0.3,
-							pointRadius: 0
+							pointRadius: 0,
+							spanGaps: true,
+							// enable stacking
+							stack: 'cpu',
 						}))
 					},
 					options: {
 						animation: false,
+						parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+						maintainAspectRatio: false,
 						scales: {
+							x: {
+								type: 'realtime',
+								realtime: {
+									duration: 60000,   // show last 60s
+									refresh: 1000,     // redraw/add points every 1s
+									delay: 2000        // draw with slight delay
+								},
+								grid: { drawOnChartArea: false },
+								ticks: { display: false },
+								title: { display: false }
+							},
 							y: {
 								beginAtZero: true,
 								stacked: true,
 								min: 0,
 								max: num_cores * 100,
 								ticks: {
-									stepSize: 100
-								}
-							},
-							x: {
-								ticks: {
+									stepSize: 100,
 									autoSkip: true,
-									callback: function (val, index) {
-										return (index % 100 === 0 ? ' ' : ' ');
-									}
-								},
-								grid: {
-									drawOnChartArea: false
+									callback: (v) => v + '%'
 								}
 							}
 						},
 						plugins: {
+							legend: { display: false },
 							tooltip: {
 								mode: 'index',
-								intersect: false
+								intersect: false,
+								callbacks: {
+									label: (ctx) => `${ctx.dataset.label}: ${Math.round(ctx.parsed.y)}%`
+								}
 							},
-							legend: {
-								display: false
-							}
 						}
 					}
 				}
