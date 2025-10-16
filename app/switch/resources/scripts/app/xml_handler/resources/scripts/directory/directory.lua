@@ -774,23 +774,23 @@
 
 						--set the cache
 							if cache.support() then
-								local key = "directory:" .. sip_from_number .. "@" .. domain_name
+								local cache_key = hostname .. ":directory:" .. sip_from_number .. "@" .. domain_name
 								if debug['cache'] then
-									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
+									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 								end
-								local ok, err = cache.set(key, XML_STRING, expire["directory"])
+								local ok, err = cache.set(cache_key, XML_STRING, expire["directory"])
 								if debug["cache"] and not ok then
-									freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+									freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. cache_key .. " fail: " .. tostring(err) .. "\n");
 								end
 
 								if sip_from_number ~= sip_from_user then
-									key = "directory:" .. sip_from_user .. "@" .. domain_name
+									cache_key = hostname .. ":directory:" .. sip_from_user .. "@" .. domain_name
 									if debug['cache'] then
-										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
+										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 									end
-									ok, err = cache.set(key, XML_STRING, expire["directory"])
+									ok, err = cache.set(cache_key, XML_STRING, expire["directory"])
 									if debug["cache"] and not ok then
-										freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+										freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. cache_key .. " fail: " .. tostring(err) .. "\n");
 									end
 								end
 							end
@@ -830,8 +830,8 @@
 				</section>
 			</document>]];
 		--set the cache
-			--local key = "directory:" .. user .. "@" .. domain_name;
-			--ok, err = cache.set(key, XML_STRING, expire["directory"]);
+			--local cache_key = "directory:" .. user .. "@" .. domain_name;
+			--ok, err = cache.set(cache_key, XML_STRING, expire["directory"]);
 			--freeswitch.consoleLog("notice", "[xml_handler] " .. user .. "@" .. domain_name .. "\n");
 	end
 
