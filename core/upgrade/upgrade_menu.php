@@ -110,11 +110,11 @@ function show_upgrade_menu() {
 				do_upgrade_code();
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1a':
 				do_upgrade_code();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1b':
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
