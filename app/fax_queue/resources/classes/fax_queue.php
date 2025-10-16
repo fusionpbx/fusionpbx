@@ -281,7 +281,7 @@
 											$array[$this->table][$x] = $row;
 
 										//add copy to the description
-											$array[$this->table][$x][fax_queue.'_uuid'] = uuid();
+											$array[$this->table][$x]['fax_queue_uuid'] = uuid();
 
 										//increment the id
 											$x++;
