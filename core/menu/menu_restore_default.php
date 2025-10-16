@@ -51,19 +51,18 @@
 		$menu_language = $_REQUEST["menu_language"];
 	}
 
-//menu restore default
-	$menu = new menu;
+//create the menu object
+ 	$menu = new menu;
+
+ //menu restore default
 	$menu->menu_uuid = $menu_uuid;
 	$menu->menu_language = $menu_language;
 	$menu->restore_delete();
 	$menu->restore_default();
-	unset($menu);
 
 //get the menu array and save it to the session
-	$menu = new menu;
 	$menu->menu_uuid = $settings->get('domain', 'menu') ?? null;
 	$_SESSION['menu']['array'] = $menu->menu_array();
-	unset($menu);
 
 //redirect
 	if(!defined('STDIN')) {
