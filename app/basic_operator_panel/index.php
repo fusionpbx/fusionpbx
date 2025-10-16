@@ -163,7 +163,7 @@
 					$cache = new cache;
 					if (!empty($extension)) {
 						$cache->delete(gethostname().":directory:".$extension."@".$this->domain_name);
-						$cache->delete("directory:".$extension."@".$domain_name);
+						$cache->delete(gethostname().":directory:".$extension."@".$domain_name);
 					}
 					if (!empty($number_alias)) {
 						$cache->delete(gethostname().":directory:".$number_alias."@".$this->domain_name);

@@ -182,9 +182,7 @@
 										}
 									}
 									if ($empty_hostname) {
-
-											$hostnames[] = gethostname();
-
+										$hostnames[] = gethostname();
 									}
 
 								//clear the cache
@@ -266,7 +264,7 @@
 								//clear the cache
 									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
-										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+										$cache->delete($sip_profile_hostname.":"configuration:sofia.conf");
 									}
 
 							}
@@ -331,7 +329,7 @@
 
 								//get system hostname if necessary
 									if (empty($sip_profile_hostname)) {
-											$sip_profile_hostname = gethostname();
+										$sip_profile_hostname = gethostname();
 									}
 
 								//clear the cache
@@ -424,7 +422,7 @@
 										$hostnames = array_unique($hostnames);
 										$cache = new cache;
 										foreach ($hostnames as $hostname) {
-											$cache->delete("configuration:sofia.conf:".$hostname);
+											$cache->delete($hostname.":configuration:sofia.conf");
 										}
 									}
 
