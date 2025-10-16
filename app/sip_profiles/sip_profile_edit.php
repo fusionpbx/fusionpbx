@@ -241,7 +241,7 @@
 
 		//get the hostname
 			if (empty($sip_profile_hostname) {
-					$sip_profile_hostname = gethostname();
+				$sip_profile_hostname = gethostname();
 			}
 
 		//clear the cache
