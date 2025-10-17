@@ -11,9 +11,15 @@ if (permission_exists('system_view_network')) {
 	return;
 }
 
+//convert to a key
+$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 $language = new text;
 $text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/system');
+
+//get the dashboard label
+$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //set the row style class names
 $c = 0;
@@ -42,7 +48,7 @@ echo "<div class='hud_box'>\n";
 echo "<input id='token' type='hidden' name='" . $token['name'] . "' value='" . $token['hash'] . "'>\n";
 echo "<div class='hud_content'>\n";
 echo "<span class='hud_title'>\n";
-echo "<a onclick=\"document.location.href='" . PROJECT_PATH . "/app/system/system.php'\">" . $text['label-network_usage'] . "</a>\n";
+echo "<a onclick=\"document.location.href='" . PROJECT_PATH . "/app/system/system.php'\">" . escape($widget_label) . "</a>\n";
 echo "</span>\n";
 //if ($dashboard_chart_type === 'line') { ?>
 	<div class='hud_chart' style='width: 100%; height: 85%'>
