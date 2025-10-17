@@ -50,7 +50,7 @@ $widget_key = str_replace(' ', '_', strtolower($widget_name));
 $text = (new text)->get($settings->get('domain', 'language', 'en-us'), 'app/active_calls');
 
 //get the dashboard label
-$widget_label = $text['title-'.$widget_key] ?? $widget_name;
+$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //show the widget
 echo "<div class='hud_box'>\n";
