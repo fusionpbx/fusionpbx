@@ -47,6 +47,12 @@ class buffer {
  * @depends buffer::class
  */
 class event_socket {
+	/**
+	 * Used as a flag to determine if the socket should be created automatically
+	 * @var bool
+	 */
+	protected $auto_create;
+
 	private $buffer;
 	public $fp;
 
@@ -59,6 +65,7 @@ class event_socket {
 	 */
 	public function __construct($fp = false, ?config $config = null) {
 		$this->buffer = new buffer;
+		$this->auto_create = $fp === false;
 		$this->fp = $fp;
 		$this->config = $config ?? config::load();
 	}
@@ -143,7 +150,7 @@ class event_socket {
 		$password = $password ?? $this->config->get('switch.event_socket.password', null) ?? $this->config->get('event_socket.password', null) ?? 'ClueCon';
 
 		//if a socket was provided in the constructor, then don't create a new one
-		if ($this->fp === false || !$this->connected()) {
+		if ($this->fp === false || $this->auto_create) {
 			//open the socket connection
 			$this->fp = @fsockopen($host, $port, $errno, $errdesc, 3);
 		}
