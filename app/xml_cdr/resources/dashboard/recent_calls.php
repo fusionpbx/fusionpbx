@@ -13,9 +13,15 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //create assigned extensions array
 	if (is_array($_SESSION['user']['extension'])) {
@@ -87,7 +93,7 @@
 	echo "<div class='hud_box'>\n";
 
 	echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\"").">\n";
-	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</a></span>\n";
+	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".escape($widget_label)."</a></span>\n";
 
 	if ($widget_chart_type == "doughnut") {
 		//add doughnut chart

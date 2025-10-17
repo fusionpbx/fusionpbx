@@ -28,9 +28,15 @@
 //includes files
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/ring_groups');
+
+//get the dashboard label
+	$widget_label = $text['header-'.$widget_key] ?? $widget_name;
 
 //get the list
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
@@ -147,7 +153,7 @@
 	echo "<div class='hud_box'>\n";
 
 	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\"").">\n";
-	echo "		<span class='hud_title'>".$text['header-ring-group-forward']."</span>\n";
+	echo "		<span class='hud_title'>".escape($widget_label)."</span>\n";
 
 //doughnut chart
 	if (empty($widget_chart_type) ||$widget_chart_type == "doughnut") {

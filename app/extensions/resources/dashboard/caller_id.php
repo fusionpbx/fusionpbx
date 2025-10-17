@@ -31,9 +31,15 @@
 //check permissions
 	if (permission_exists('extension_caller_id')) {
 
+		//convert to a key
+			$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 		//add multi-lingual support
 			$language = new text;
 			$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/extensions');
+
+		//get the dashboard label
+			$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 		//add or update the database
 			if (isset($_POST['extensions']) && is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {
@@ -166,7 +172,7 @@
 			echo "<div class='hud_box'>\n";
 
 			echo "	<div class='hud_content'  ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast');\"").">\n";
-			echo "		<span class='hud_title'>".$text['label-caller_id_number']."</span>\n";
+			echo "		<span class='hud_title'>".escape($widget_label)."</span>";
 
 		//doughnut chart
 			if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
