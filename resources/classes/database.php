@@ -1537,7 +1537,7 @@ class database {
      * @param string $return_type Values can be set to <i>all</i>, <i>row</i>, or <i>column</i>.
      * @return mixed Returned values can be array, string, boolean, int, or false. This is dependent on <i>$return_type</i>.
      */
-	public function select(string $sql, ?array $parameters = [], string $return_type = 'all'): mixed {
+	public function select(string $sql, ?array $parameters = [], string $return_type = 'all') {
 
 		//connect to the database if needed
 			if (!$this->db) {
