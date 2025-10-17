@@ -12,10 +12,7 @@
 	$text = $language->get($settings->get('domain', 'language', 'en-us'), dirname($widget_url));
 
 //get the dashboard label
-	$widget_label = $text['title-'.$widget_key];
-	if (empty($widget_label)) {
-		$widget_label = $widget_name;
-	}
+	$widget_label = $text['title-'.$widget_key] ?? $widget_name;
 
 //prepare variables
 	$widget_target = ($widget_target == 'new') ? '_blank' : '_self';
