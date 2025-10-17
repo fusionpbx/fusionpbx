@@ -129,11 +129,10 @@ class event_socket {
 	 * Connect to the FreeSWITCH (c) event socket server
 	 * <p>If the configuration is not loaded then the defaults of
 	 * host 127.0.0.1, port of 8021, and default password of ClueCon will be used</p>
-	 * @global array $conf Global configuration used in fusionpbx/config.conf
-	 * @param string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
-	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
-	 * @param string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
-	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket
+	 * @param null|string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
+	 * @param null|string|int $port Port number of FreeSWITCH event socket server. Defaults to 8021
+	 * @param null|string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket. Defaults to 30,000
 	 * @return bool Returns true on success or false if not connected
 	 */
 	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
@@ -143,8 +142,8 @@ class event_socket {
 		$port = intval($port ?? $this->config->get('switch.event_socket.port', null) ?? $this->config->get('event_socket.port', null) ?? '8021');
 		$password = $password ?? $this->config->get('switch.event_socket.password', null) ?? $this->config->get('event_socket.password', null) ?? 'ClueCon';
 
-		//if a socket was provided in the constructor then don't create a new one
-		if ($this->fp === false) {
+		//if a socket was provided in the constructor, then don't create a new one
+		if ($this->fp === false || !$this->connected()) {
 			//open the socket connection
 			$this->fp = @fsockopen($host, $port, $errno, $errdesc, 3);
 		}
@@ -156,7 +155,7 @@ class event_socket {
 		socket_set_timeout($this->fp, 0, $timeout_microseconds);
 		socket_set_blocking($this->fp, true);
 
-		//wait auth request and send response
+		//wait auth request and send a response
 		while ($this->connected()) {
 			$event = $this->read_event();
 			if(($event['Content-Type'] ?? '') === 'auth/request'){
