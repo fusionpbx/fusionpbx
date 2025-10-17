@@ -3848,4 +3848,30 @@ $text['button-wallboard']['zh-cn'] = "墙板";
 $text['button-wallboard']['ja-jp'] = "ウォールボード";
 $text['button-wallboard']['ko-kr'] = "벽판";
 
+$text['label-call_center_agents']['en-us'] = "Call Center Queues";
+$text['label-call_center_agents']['en-gb'] = "Call Center Queues";
+$text['label-call_center_agents']['ar-eg'] = "قوائم انتظار مركز الاتصال";
+$text['label-call_center_agents']['de-at'] = "Callcenter Warteschlangen";
+$text['label-call_center_agents']['de-ch'] = "Callcenter Warteschlangen";
+$text['label-call_center_agents']['de-de'] = "Callcenter Warteschlangen";
+$text['label-call_center_agents']['el-gr'] = "Ουρές τηλεφωνικών κέντρων";
+$text['label-call_center_agents']['es-cl'] = "Colas de Centro de Llamados";
+$text['label-call_center_agents']['es-mx'] = "Colas de Centro de Llamados";
+$text['label-call_center_agents']['fr-ca'] = "File d'attente du centre d'appels";
+$text['label-call_center_agents']['fr-fr'] = "File d'attente du centre d'appels";
+$text['label-call_center_agents']['he-il'] = "תורים למוקד טלפוני";
+$text['label-call_center_agents']['it-it'] = "Code del Call Center";
+$text['label-call_center_agents']['ka-ge'] = "ქოლცენტრის რიგები";
+$text['label-call_center_agents']['nl-nl'] = "Call-Center wachtrij";
+$text['label-call_center_agents']['pl-pl'] = "Kolejki w  Call Center ";
+$text['label-call_center_agents']['pt-br'] = "Filas do call center";
+$text['label-call_center_agents']['pt-pt'] = "Filas do Call Center";
+$text['label-call_center_agents']['ro-ro'] = "Cozi la Call Center";
+$text['label-call_center_agents']['ru-ru'] = "Очереди Колл-центра";
+$text['label-call_center_agents']['sv-se'] = "Callcenter Kö:er";
+$text['label-call_center_agents']['uk-ua'] = "Черги кол-центру";
+$text['label-call_center_agents']['zh-cn'] = "呼叫中心队列";
+$text['label-call_center_agents']['ja-jp'] = "コールセンターの待ち行列";
+$text['label-call_center_agents']['ko-kr'] = "콜센터 대기열";
+
 ?>
