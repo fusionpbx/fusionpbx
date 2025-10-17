@@ -43,8 +43,14 @@ $row_style["1"] = "row_style1";
 //set the dashboard icon to a solid color phone
 $widget_icon = 'fa-solid fa-phone';
 
+//convert to a key
+$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 $text = (new text)->get($settings->get('domain', 'language', 'en-us'), 'app/active_calls');
+
+//get the dashboard label
+$widget_label = $text['title-'.$widget_key] ?? $widget_name;
 
 //show the widget
 echo "<div class='hud_box'>\n";
@@ -64,7 +70,7 @@ $row_style["1"] = "row_style1";
 
 //icon and count
 echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast');\"").">\n";
-	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".$text['title']."</a></span>\n";
+	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".escape($widget_label)."</a></span>\n";
 	echo "<div style='position: relative; display: inline-block;'>\n";
 		echo "<span class='hud_stat'><i class=\"fas ".$widget_icon." \"></i></span>\n";
 		echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($widget_number_background_color) ? $widget_number_background_color : '#03c04a')."; color: ".(!empty($widget_number_text_color) ? $widget_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
