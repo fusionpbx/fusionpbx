@@ -1530,14 +1530,14 @@ class database {
 
 	} //count
 
-	/**
-	 * Performs a select query on database using the <b>$sql</b> statement supplied.
-	 * @param type $sql Valid SQL statement.
-	 * @param type $parameters Value can be <i>array</i>, empty string, or <i>null</i>.
-	 * @param type $return_type Values can be set to <i>all</i>, <i>row</i>, or <i>column</i>.
-	 * @return mixed Returned values can be array, string, boolean, int, or false. This is dependent on <i>$return_type</i>.
-	 */
-	public function select($sql, $parameters = '', $return_type = 'all') {
+    /**
+     * Performs a select query on database using the <b>$sql</b> statement supplied.
+     * @param string $sql Valid SQL statement.
+     * @param array|null $parameters Value can be <i>array</i>, empty string, or <i>null</i>.
+     * @param string $return_type Values can be set to <i>all</i>, <i>row</i>, or <i>column</i>.
+     * @return mixed Returned values can be array, string, boolean, int, or false. This is dependent on <i>$return_type</i>.
+     */
+	public function select(string $sql, ?array $parameters = [], string $return_type = 'all'): mixed {
 
 		//connect to the database if needed
 			if (!$this->db) {
