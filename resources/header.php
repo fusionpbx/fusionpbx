@@ -79,43 +79,6 @@
 	$_SESSION["menu_item_parent_uuid"] = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
-//get the content
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/content/app_config.php")) {
-		$sql = "select * from v_rss ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and rss_category = 'content' ";
-		$sql .= "and rss_link = :content ";
-		$sql .= "and ( ";
-		$sql .= "length(rss_del_date) = 0 ";
-		$sql .= "or rss_del_date is null ";
-		$sql .= ") ";
-		$sql .= "order by rss_order asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['content'] = empty($content) ? $_SERVER["PHP_SELF"] : $content;
-		$content_result = $database->select($sql, $parameters, 'all');
-		if (is_array($content_result) && @sizeof($content_result) != 0) {
-			foreach($content_result as $content_row) {
-				$template_rss_sub_category = $content_row['rss_sub_category'];
-				if (empty($content_row['rss_group'])) {
-					//content is public
-					$content_from_db = &$content_row['rss_description'];
-					if (!empty($content_row['rss_title'])) {
-						$page["title"] = $content_row['rss_title'];
-					}
-				}
-				else {
-					if (if_group($content_row[rss_group])) { //viewable only to designated group
-						$content_from_db = &$content_row[rss_description];
-						if (!empty($content_row['rss_title'])) {
-							$page["title"] = $content_row['rss_title'];
-						}
-					}
-				}
-			}
-		}
-		unset($sql, $parameters, $content_result, $content_row);
-	}
-
 //button css class and styles
 	$button_icon_class = '';
 	$button_icon_style = 'padding: 3px;';

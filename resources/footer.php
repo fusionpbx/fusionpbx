@@ -33,9 +33,6 @@
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //set variables if not set
-	//if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
-	if (!isset($document)) { $document = null; }
-	if (!isset($v_menu)) { $v_menu = null; }
 	if (!isset($_SESSION["menu"])) { $_SESSION["menu"] = null; }
 	if (!isset($_SESSION["username"])) { $_SESSION["username"] = null; }
 
@@ -46,13 +43,8 @@
 	$domain_count = count($domains);
 
 //get the output from the buffer
-	$body = ($content_from_db ?? '').ob_get_contents();
+	$body = ob_get_contents();
 	ob_end_clean(); //clean the buffer
-
-//clear the template
-	//if (!$settings->get('theme', 'cache', false)) {
-	//	$_SESSION["template_content"] = '';
-	//}
 
 //set a default template
 	if (empty($_SESSION["template_full_path"])) { //build template if session template has no length
