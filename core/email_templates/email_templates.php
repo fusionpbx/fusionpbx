@@ -122,7 +122,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$sql .= $sql_category ?? '';
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
@@ -169,13 +169,13 @@
 		$sql .= "order by domain_uuid, template_language asc, template_category asc, template_subcategory asc, template_type asc, template_description asc ";
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
-	$result = $database->select($sql, $parameters ?? '', 'all');
+	$result = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //get email template categories
 	$sql = "select distinct template_category from v_email_templates ";
 	$sql .= "order by template_category asc ";
-	$rows = $database->select($sql, $parameters ?? '', 'all');
+	$rows = $database->select($sql, $parameters ?? [], 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$template_categories[$row['template_category']] = ucwords(str_replace('_',' ',$row['template_category']));

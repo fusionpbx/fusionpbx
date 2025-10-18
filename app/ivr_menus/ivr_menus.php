@@ -111,7 +111,7 @@
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
@@ -151,7 +151,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$ivr_menus = $database->select($sql, $parameters ?? '', 'all');
+	$ivr_menus = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
