@@ -240,7 +240,7 @@
 			}
 
 		//get the hostname
-			if (empty($sip_profile_hostname) {
+			if (empty($sip_profile_hostname)) {
 				$sip_profile_hostname = gethostname();
 			}
 
