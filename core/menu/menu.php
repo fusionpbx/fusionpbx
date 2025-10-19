@@ -158,6 +158,7 @@
 
 	if (!empty($menus)) {
 		$x = 0;
+		$button_icon_edit = $settings->get('theme', 'button_icon_edit');
 		foreach ($menus as $row) {
 			if (permission_exists('menu_edit')) {
 				$list_row_url = "menu_edit.php?id=".urlencode($row['menu_uuid']);
