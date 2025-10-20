@@ -148,8 +148,8 @@
 				$settings_array['theme']['footer'] = isset($settings_array['theme']['footer']) ? $settings_array['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
 				$settings_array['theme']['menu_side_item_main_sub_icon_contract'] = !empty($settings_array['theme']['menu_side_item_main_sub_icon_contract']) ? explode(' ', $settings_array['theme']['menu_side_item_main_sub_icon_contract'])[1] : null;
 				$settings_array['theme']['menu_side_item_main_sub_icon_expand'] = !empty($settings_array['theme']['menu_side_item_main_sub_icon_expand']) ? explode(' ', $settings_array['theme']['menu_side_item_main_sub_icon_expand'])[1] : null;
-				$settings_array['theme']['menu_brand_type'] = $settings->get('theme', 'menu_brand_type', '');
-			//assign the setings
+				$settings_array['theme']['menu_brand_type'] = $settings->get('theme', 'menu_brand_type', 'image');
+			//assign the settings
 				$view->assign('settings', $settings_array);
 		}
 	//background video

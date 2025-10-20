@@ -336,8 +336,8 @@
 			}
 			echo "	<td class='center'>";
 			switch ($row['call_block_direction']) {
-				case "inbound": echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
-				case "outbound": echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
+				case "inbound": echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
+				case "outbound": echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
 			}
 			echo "	</td>\n";
 			echo "	<td class='center'>";

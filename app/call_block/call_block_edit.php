@@ -697,10 +697,10 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 							echo "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
 							echo "	</td>\n";
 							if (
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound_voicemail.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound_answered.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound_failed.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound_answered.png")
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_voicemail.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_answered.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_failed.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_answered.png")
 								) {
 								$title_mod = null;
 								echo "	<td class='center' ".$list_row_onclick_toggle.">";
@@ -713,7 +713,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 										else {
 											$file_mod = "_answered";
 										}
-										echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_inbound".$file_mod.".png' style='border: none;' title='".$text['label-inbound'].$title_mod."'>\n";
+										echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound".$file_mod.".png' style='border: none;' title='".$text['label-inbound'].$title_mod."'>\n";
 										break;
 									case "outbound":
 										if ($row['billsec'] == 0) {
@@ -723,7 +723,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 										else {
 											$file_mod = "_answered";
 										}
-										echo "<img src='/themes/".$settings->get('domain', 'template')."/images/icon_cdr_outbound".$file_mod.".png' style='border: none;' title='".$text['label-outbound'].$title_mod."'>\n";
+										echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound".$file_mod.".png' style='border: none;' title='".$text['label-outbound'].$title_mod."'>\n";
 										break;
 								}
 								echo "	</td>\n";

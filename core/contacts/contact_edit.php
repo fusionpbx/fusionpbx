@@ -1013,7 +1013,7 @@
 		$qr_size = '0';
 	}
 	else {
-		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template')."/images/qr_code.png'>";
+		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/qr_code.png'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';

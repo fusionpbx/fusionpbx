@@ -453,7 +453,7 @@
 				$image_name .= '_b';
 			}
 			$image_name .= ".png";
-			echo "		<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template')."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($leg=='b'?'(b)':'') . "'>\n";
+			echo "		<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$call_direction].": ".$text['label-'.$status]. ($leg=='b'?'(b)':'') . "'>\n";
 		}
 		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($uuid)."'>".escape($direction)."</a></td>\n";
