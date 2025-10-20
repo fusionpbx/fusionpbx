@@ -310,7 +310,7 @@
 	if extension and #extension > 0 and cache.support() then
 		cache.del(hostname..":directory:"..extension.."@"..domain_name);
 		if #number_alias > 0 then
-			cache.del(hostname.."directory:"..number_alias.."@"..domain_name);
+			cache.del(hostname..":directory:"..number_alias.."@"..domain_name);
 		end
 	end
 
