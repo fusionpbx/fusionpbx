@@ -90,13 +90,13 @@
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //get the list
 	$sql = str_replace('count(menu_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'menu_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
-	$menus = $database->select($sql, $parameters ?? '', 'all');
+	$menus = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
