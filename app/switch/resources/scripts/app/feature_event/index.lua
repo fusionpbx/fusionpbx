@@ -358,5 +358,5 @@
 	end
 	--clear the cache
 		if (feature_enabled ~= nil) then
-			cache.del(hostname.."directory:"..user.."@"..host)
+			cache.del(hostname..":directory:"..user.."@"..host)
 		end
