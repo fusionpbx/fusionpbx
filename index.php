@@ -43,7 +43,7 @@
 	else {
 		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
 		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".($settings->get('domain', 'template') ?? '')."/index.php")) {
-			require_once "themes/".$settings->get('domain', 'template')."/index.php";
+			require_once "themes/".$settings->get('domain', 'template', 'default')."/index.php";
 		}
 		else {
 			//login prompt
