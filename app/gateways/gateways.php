@@ -141,7 +141,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$total_gateways = $database->select($sql, $parameters ?? '', 'column');
+	$total_gateways = $database->select($sql, $parameters ?? [], 'column');
 	$num_rows = $total_gateways;
 
 //prepare to page the results
@@ -191,7 +191,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'gateway', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$gateways = $database->select($sql, $parameters ?? '', 'all');
+	$gateways = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token

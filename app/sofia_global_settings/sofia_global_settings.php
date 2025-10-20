@@ -102,7 +102,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
@@ -131,7 +131,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'global_setting_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$sofia_global_settings = $database->select($sql, $parameters ?? '', 'all');
+	$sofia_global_settings = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
