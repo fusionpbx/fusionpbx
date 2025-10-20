@@ -25,7 +25,12 @@
 --set default variables
 	max_tries = "3";
 	digit_timeout = "5000";
+
+--create the api object
 	api = freeswitch.API();
+
+--get the hostname
+	local hostname = api:execute("hostname", "");
 
 --set the debug level
 	debug["sql"] = false;
@@ -230,17 +235,17 @@ if ( session:ready() ) then
 	--clear the cache
 		if (user_name ~= nil and context ~= nil) then
 			if (cache.support()) then
-				cache.del("directory:"..user_name.."@"..context);
+				cache.del(hostname..":directory:"..user_name.."@"..context);
 				if #number_alias > 0 then
-					cache.del("directory:"..number_alias.."@"..domain_name);
+					cache.del(hostname..":directory:"..number_alias.."@"..domain_name);
 				end
 			end
 		end
 		if (db_extension ~= nil and context ~= nil) then
 			if (cache.support()) then
-				cache.del("directory:"..db_extension.."@"..context);
+				cache.del(hostname..":directory:"..db_extension.."@"..context);
 				if #number_alias > 0 then
-					cache.del("directory:"..number_alias.."@"..domain_name);
+					cache.del(hostname..":directory:"..number_alias.."@"..domain_name);
 				end
 			end
 		end
