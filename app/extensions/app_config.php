@@ -391,6 +391,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#e21b1b";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the color of the status icon when the extension is unregistered.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0d9946f-1f35-419e-a343-59babdaaa94e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "default";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Sets the default value for the 'Type' field when adding a new extension. Options: default, virtual";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${domain_name}";
