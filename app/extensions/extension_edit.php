@@ -60,7 +60,7 @@
 //initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
-//set defaults
+//set the defaults
 	$limit_extensions							= $settings->get('limit', 'extensions', null);
 	$limit_devices								= $settings->get('limit', 'devices', null);
 	$extension_limit_max						= $settings->get('extension', 'limit_max', 5);
@@ -69,7 +69,7 @@
 	$extension_password_length					= $settings->get('extension', 'password_length', 20);       //set default to 20
 	$extension_password_strength				= $settings->get('extension', 'password_strength', 4);      //set default to use numbers, Upper/Lowercase letters, special characters
 	$extension_user_record_default				= $settings->get('extension', 'user_record_default', '');
-	$extension_type								= $settings->get('extension', 'type', '');
+	$extension_type								= $settings->get('extension', 'type', 'default');
 	$provision_path								= $settings->get('provision', 'path', '');
 	$provision_line_label						= $settings->get('provision','line_label', null);
 	$provision_line_display_name				= $settings->get('provision','line_display_name', null);
