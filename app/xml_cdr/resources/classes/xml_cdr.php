@@ -76,7 +76,7 @@
 
 		/**
 		 * Internal array structure that is populated from the database
-		 * @var array Array of settings loaded from Default Settings
+		 * @var settings A settings object loaded from Default Settings
 		 */
 		private $settings;
 
