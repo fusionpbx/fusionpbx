@@ -60,33 +60,34 @@
 //initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
-//set defaults
-	$limit_extensions                     = $settings->get('limit', 'extensions', null);
-	$limit_devices                        = $settings->get('limit', 'devices', null);
-	$extension_limit_max                  = $settings->get('extension', 'limit_max', 5);
-	$extension_call_timeout               = $settings->get('extension', 'call_timeout', 30);
-	$extension_max_registrations          = $settings->get('extension', 'max_registrations', null);
-	$extension_password_length            = $settings->get('extension', 'password_length', 20);       //set default to 20
-	$extension_password_strength          = $settings->get('extension', 'password_strength', 4);      //set default to use numbers, Upper/Lowercase letters, special characters
-	$extension_user_record_default        = $settings->get('extension', 'user_record_default', '');
-	$provision_path                       = $settings->get('provision', 'path', '');
-	$provision_line_label                 = $settings->get('provision','line_label', null);
-	$provision_line_display_name          = $settings->get('provision','line_display_name', null);
-	$provision_outbound_proxy_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_secondary', null);
-	$provision_server_address_primary     = $settings->get('provision','server_address_primary', null);
-	$provision_server_address_secondary   = $settings->get('provision','server_address_secondary', null);
-	$provision_line_sip_port              = $settings->get('provision','line_sip_port', null);
-	$provision_line_sip_transport         = $settings->get('provision','line_sip_transport', null);
-	$provision_line_register_expires      = $settings->get('provision','line_register_expires', null);
-	$theme_input_toggle_style             = $settings->get('theme','input_toggle_style', '');                       //set default to empty string
-	$voicemail_password_length            = $settings->get('voicemail', 'password_length', 6);                      //set default to 6
-	$voicemail_transcription_enabled_default = $settings->get('voicemail', 'transcription_enabled_default', false); //set default to false
-	$voicemail_enabled_default               = $settings->get('voicemail', 'enabled_default', true);
-	$switch_voicemail                        = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . "/default/$domain_name";
-	$switch_extensions                       = $settings->get('switch', 'extensions', '/etc/freeswitch/directory');
-	$switch_sounds                           = $settings->get('switch', 'sounds', '/usr/share/freeswitch/sounds');
-	$transcribe_enabled                      = $settings->get('transcribe', 'enabled', false);
+//set the defaults
+	$limit_extensions							= $settings->get('limit', 'extensions', null);
+	$limit_devices								= $settings->get('limit', 'devices', null);
+	$extension_limit_max						= $settings->get('extension', 'limit_max', 5);
+	$extension_call_timeout						= $settings->get('extension', 'call_timeout', 30);
+	$extension_max_registrations				= $settings->get('extension', 'max_registrations', null);
+	$extension_password_length					= $settings->get('extension', 'password_length', 20);       //set default to 20
+	$extension_password_strength				= $settings->get('extension', 'password_strength', 4);      //set default to use numbers, Upper/Lowercase letters, special characters
+	$extension_user_record_default				= $settings->get('extension', 'user_record_default', '');
+	$extension_type								= $settings->get('extension', 'type', 'default');
+	$provision_path								= $settings->get('provision', 'path', '');
+	$provision_line_label						= $settings->get('provision','line_label', null);
+	$provision_line_display_name				= $settings->get('provision','line_display_name', null);
+	$provision_outbound_proxy_primary			= $settings->get('provision','outbound_proxy_primary', null);
+	$provision_outbound_proxy_secondary			= $settings->get('provision','outbound_proxy_secondary', null);
+	$provision_server_address_primary			= $settings->get('provision','server_address_primary', null);
+	$provision_server_address_secondary			= $settings->get('provision','server_address_secondary', null);
+	$provision_line_sip_port					= $settings->get('provision','line_sip_port', null);
+	$provision_line_sip_transport				= $settings->get('provision','line_sip_transport', null);
+	$provision_line_register_expires			= $settings->get('provision','line_register_expires', null);
+	$theme_input_toggle_style					= $settings->get('theme','input_toggle_style', '');                       //set default to empty string
+	$voicemail_password_length					= $settings->get('voicemail', 'password_length', 6);                      //set default to 6
+	$voicemail_transcription_enabled_default	= $settings->get('voicemail', 'transcription_enabled_default', false); //set default to false
+	$voicemail_enabled_default					= $settings->get('voicemail', 'enabled_default', true);
+	$switch_voicemail							= $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . "/default/$domain_name";
+	$switch_extensions							= $settings->get('switch', 'extensions', '/etc/freeswitch/directory');
+	$switch_sounds								= $settings->get('switch', 'sounds', '/usr/share/freeswitch/sounds');
+	$transcribe_enabled							= $settings->get('transcribe', 'enabled', false);
 
 //cast to integers if they have values
 	if ($limit_extensions !== null) $limit_extensions = intval($limit_extensions);
@@ -2084,7 +2085,6 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='extension_type' id='extension_type'>\n";
-		echo "		<option value=''></option>\n";
 		echo "		<option value='default' ".(($extension_type == "default") ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
 		echo "		<option value='virtual' ".(($extension_type == "virtual") ? "selected='selected'" : null).">".$text['label-virtual']."</option>\n";
 		echo "	</select>\n";
