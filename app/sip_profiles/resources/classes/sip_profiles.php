@@ -264,7 +264,7 @@
 								//clear the cache
 									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
-										$cache->delete($sip_profile_hostname.":"configuration:sofia.conf");
+										$cache->delete($sip_profile_hostname.":configuration:sofia.conf");
 									}
 
 							}
