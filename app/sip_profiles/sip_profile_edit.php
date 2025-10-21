@@ -580,8 +580,8 @@
 		echo "				<td class='vtablerow' style='".$bottom_border." text-align: center;' ".(permission_exists('sip_profile_setting_edit') ? "onclick=\"label_to_form('label_sip_profile_setting_enabled_$x','sip_profile_setting_enabled_$x');\"" : null)." nowrap='nowrap'>\n";
 		echo "					<label id='label_sip_profile_setting_enabled_$x'>".$label_sip_profile_setting_enabled."</label>\n";
 		echo "					<select id='sip_profile_setting_enabled_$x' class='formfld' style='display: none;' name='sip_profile_settings[$x][sip_profile_setting_enabled].'>\n";
-		echo "						<option value='true' ".($row['sip_profile_setting_enabled'] === true ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "						<option value='false' ".($row['sip_profile_setting_enabled'] === false ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "						<option value='true' ".($row['sip_profile_setting_enabled'] ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "						<option value='false' ".(!$row['sip_profile_setting_enabled'] ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "					</select>\n";
 		echo "				</td>\n";
 		echo "				<td class='vtablerow' style='".$bottom_border."' ".(permission_exists('sip_profile_setting_edit') ? "onclick=\"label_to_form('label_sip_profile_setting_description_$x','sip_profile_setting_description_$x');\"" : null)." nowrap='nowrap'>\n";
