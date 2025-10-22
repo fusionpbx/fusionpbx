@@ -50,7 +50,7 @@
 //get posted data
 	if (!empty($_POST['ivr_menus'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$ivr_menus = $_POST['ivr_menus'];
 	}
 
@@ -77,7 +77,7 @@
 				break;
 		}
 
-		header('Location: ivr_menus.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: ivr_menus.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

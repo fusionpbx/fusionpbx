@@ -45,7 +45,7 @@
 //get common submitted data
 	if (!empty($_REQUEST)) {
 		$show = $_REQUEST['show'] ?? null;
-		$search = $_REQUEST['search'] ?? null;
+		$search = $_REQUEST['search'] ?? '';
 		$profile = $_REQUEST['profile'] ?? null;
 	}
 

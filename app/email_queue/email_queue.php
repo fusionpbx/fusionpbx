@@ -45,7 +45,7 @@
 //get the http post data
 	if (!empty($_POST['email_queue']) && is_array($_POST['email_queue'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$email_queue = $_POST['email_queue'];
 	}
 
@@ -90,7 +90,7 @@
 		}
 
 		//redirect the user
-		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

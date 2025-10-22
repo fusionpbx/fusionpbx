@@ -51,7 +51,7 @@
 //get posted data
 	if (!empty($_POST['call_blocks'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_blocks = $_POST['call_blocks'];
 	}
 
@@ -78,7 +78,7 @@
 				break;
 		}
 
-		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

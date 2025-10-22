@@ -79,7 +79,7 @@
 				break;
 		}
 
-		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

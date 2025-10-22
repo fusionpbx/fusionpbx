@@ -52,7 +52,7 @@
 	if (!empty($_POST['conference_rooms'])) {
 		$action = $_POST['action'];
 		$toggle_field = $_POST['toggle_field'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$conference_rooms = $_POST['conference_rooms'];
 	}
 
@@ -74,7 +74,7 @@
 				break;
 		}
 
-		header('Location: conference_rooms.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: conference_rooms.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

@@ -45,7 +45,7 @@
 //get the http post data
 	if (!empty($_POST['time_conditions']) && is_array($_POST['time_conditions'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$time_conditions = $_POST['time_conditions'];
 	}
 
@@ -72,7 +72,7 @@
 				break;
 		}
 
-		header('Location: time_conditions.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: time_conditions.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

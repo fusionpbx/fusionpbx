@@ -62,7 +62,7 @@
 
 //get the search variable
 	if (!empty($_REQUEST['search'])) {
-		$search = $_REQUEST['search'];
+		$search = $_REQUEST['search'] ?? '';
 	}
 
 //get http post variables and set them to php variables

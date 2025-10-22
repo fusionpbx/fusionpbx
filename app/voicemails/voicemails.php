@@ -70,7 +70,7 @@
 				break;
 		}
 
-		header('Location: voicemails.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: voicemails.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

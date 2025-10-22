@@ -45,7 +45,7 @@
 //get posted data
 	if (!empty($_POST['fax_servers']) && is_array($_POST['fax_servers'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$fax_servers = $_POST['fax_servers'];
 	}
 
@@ -66,7 +66,7 @@
 				break;
 		}
 
-		header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

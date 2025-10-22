@@ -71,7 +71,7 @@
 				break;
 		}
 
-		header('Location: groups.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: groups.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

@@ -44,7 +44,7 @@
 //get the http post data
 	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$event_guard_logs = $_POST['event_guard_logs'];
 	}
 
@@ -73,7 +73,7 @@
 		}
 
 		//redirect the user
-		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

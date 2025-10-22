@@ -46,7 +46,7 @@
 	if (!empty($_POST['email_templates'])) {
 		$action = $_POST['action'];
 		$category = $_POST['category'] ?? null;
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$email_templates = $_POST['email_templates'];
 	}
 
@@ -73,7 +73,7 @@
 				break;
 		}
 
-		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : null).(!empty($category) ? '&category='.urlencode($category) : null));
+		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : '').(!empty($category) ? '&category='.urlencode($category) : null));
 		exit;
 	}
 

@@ -51,7 +51,7 @@
 //get posted data
 	if (!empty($_POST['conferences'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$conferences = $_POST['conferences'];
 	}
 
@@ -78,7 +78,7 @@
 				break;
 		}
 
-		header('Location: conferences.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: conferences.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

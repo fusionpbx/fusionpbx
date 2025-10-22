@@ -48,7 +48,7 @@
 //get the http post data
 	if (!empty($_POST['fifo']) && is_array($_POST['fifo'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$fifo = $_POST['fifo'];
 	}
 
@@ -86,7 +86,7 @@
 		}
 
 		//redirect the user
-		header('Location: fifo.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: fifo.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

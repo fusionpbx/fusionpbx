@@ -139,7 +139,7 @@
 				break;
 		}
 
-		header('Location: domains.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: domains.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

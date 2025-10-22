@@ -66,7 +66,7 @@
 				break;
 		}
 
-		header('Location: menu.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: menu.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

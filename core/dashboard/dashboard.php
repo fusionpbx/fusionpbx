@@ -45,7 +45,7 @@
 //get the http post data
 	if (!empty($_POST['dashboards'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$dashboards = $_POST['dashboards'];
 	}
 
@@ -73,7 +73,7 @@
 		}
 
 		//redirect the user
-		header('Location: dashboard.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: dashboard.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

@@ -49,7 +49,7 @@
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get search
-	$search = $_REQUEST['search'] ?? null;
+	$search = $_REQUEST['search'] ?? '';
 
 //get posted data
 	if (!empty($_POST['call_flows'])) {
@@ -82,7 +82,7 @@
 				break;
 		}
 
-		header('Location: call_flows.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_flows.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

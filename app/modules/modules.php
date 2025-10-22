@@ -56,7 +56,7 @@
 		$action = $_POST['action'];
 	}
 	if (!empty($_POST['search'])) {
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 	}
 
 //set from session variables
@@ -93,7 +93,7 @@
 		}
 
 		//redirect to display updates
-		header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

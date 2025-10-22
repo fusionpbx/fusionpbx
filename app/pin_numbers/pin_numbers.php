@@ -45,7 +45,7 @@
 //get posted data
 	if (is_array($_POST['pin_numbers'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$pin_numbers = $_POST['pin_numbers'];
 	}
 
@@ -72,7 +72,7 @@
 				break;
 		}
 
-		header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
