@@ -115,7 +115,9 @@
 		$sql .= ") ";
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['group_uuid'] = $_SESSION['group_uuid'] ?? '';
+	if (!empty($_SESSION['group_uuid'])) {
+		$parameters['group_uuid'] = $_SESSION['group_uuid'];
+	}
 	$result = $database->select($sql, $parameters, 'all');
 	if (!empty($result)) {
 		foreach($result as $row) {
