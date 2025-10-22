@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010-2025
 	All Rights Reserved.
 
 	Contributor(s):
@@ -1323,6 +1323,14 @@
 									foreach ($rows as $x => $row) {
 										$primary_uuid = uuid();
 
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
+
 										//copy data
 											$array[$this->table][$x] = $row;
 
@@ -1346,6 +1354,14 @@
 											if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 												foreach ($rows_2 as $row_2) {
 
+													//convert boolean values to a string
+														foreach($row_2 as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$row_2[$key] = $value;
+															}
+														}
+
 													//copy data
 														$array['device_profile_keys'][$y] = $row_2;
 
@@ -1366,6 +1382,14 @@
 											$rows_3 = $this->database->select($sql_3, $parameters_3, 'all');
 											if (is_array($rows_3) && @sizeof($rows_3) != 0) {
 												foreach ($rows_3 as $row_3) {
+
+													//convert boolean values to a string
+														foreach($row_3 as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$row_3[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['device_profile_settings'][$z] = $row_3;

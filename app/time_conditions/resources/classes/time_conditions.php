@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2019
+	Copyright (C) 2010-2025
 	All Rights Reserved.
 
 	Contributor(s):
@@ -304,6 +304,14 @@
 											foreach ($rows as $x => $row) {
 												$primary_uuid = uuid();
 
+												//convert boolean values to a string
+													foreach($row as $key => $value) {
+														if (gettype($value) == 'boolean') {
+															$value = $value ? 'true' : 'false';
+															$row[$key] = $value;
+														}
+													}
+
 												//copy data
 													$array[$this->table][$x] = $row;
 
@@ -317,6 +325,14 @@
 													$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 													if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 														foreach ($rows_2 as $row_2) {
+
+															//convert boolean values to a string
+																foreach($row_2 as $key => $value) {
+																	if (gettype($value) == 'boolean') {
+																		$value = $value ? 'true' : 'false';
+																		$row_2[$key] = $value;
+																	}
+																}
 
 															//copy data
 																$array['dialplan_details'][$y] = $row_2;

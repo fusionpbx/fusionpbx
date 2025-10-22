@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018-2023
+ Portions created by the Initial Developer are Copyright (C) 2018-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -244,6 +244,14 @@
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
+
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
 
 										//copy data
 											$array[$this->table][$x] = $row;

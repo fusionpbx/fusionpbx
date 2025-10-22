@@ -222,6 +222,14 @@
 							foreach ($rows as $x => $row) {
 								$primary_uuid = uuid();
 
+								//convert boolean values to a string
+								foreach($row as $key => $value) {
+									if (gettype($value) == 'boolean') {
+										$value = $value ? 'true' : 'false';
+										$row[$key] = $value;
+									}
+								}
+
 								//copy data
 								$array[$this->table][$x] = $row;
 
