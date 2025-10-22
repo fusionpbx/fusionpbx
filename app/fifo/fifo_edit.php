@@ -280,6 +280,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_extension)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".xml::sanitize($fifo_music)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_extension)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				if ($fifo_strategy == 'longest_idle_agent') {
 					$dialplan_xml .= "		<action application=\"set\" data=\"fifo_strategy=waiting_longer\" inline=\"true\"/>\n";
 				}
@@ -309,6 +310,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_agent_status_xml)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_name=".xml::sanitize($queue_name)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_agent_status)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"user_name=\${caller_id_number}@\${domain_name}\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"lua\" data=\"app/fifo/resources/scripts/member.lua\"/>\n";
@@ -316,6 +318,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_agent_queue_xml)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".xml::sanitize($fifo_music)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_agent_queue)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 				$dialplan_xml .= "		<action application=\"fifo\" data=\"".xml::sanitize($queue_name)." out wait\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
