@@ -149,6 +149,7 @@
 		$sql .= "order by extension asc, number_alias asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$extensions = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the ring groups
@@ -159,6 +160,7 @@
 		$sql .= "order by ring_group_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ring_groups = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the ivr menus
@@ -169,6 +171,7 @@
 		$sql .= "order by ivr_menu_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ivr_menus = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the call center queues
@@ -178,6 +181,7 @@
 		$sql .= "order by queue_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$call_center_queues = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //include the header
