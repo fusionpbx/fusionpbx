@@ -80,7 +80,7 @@
 		$call_block_data = $action_array[1] ?? null;
 
 		//sanitize the data
-		$extension_uuid = preg_replace("#[^a-fA-F0-9./]#", "", $extension_uuid);
+		$extension_uuid = (!empty($extension_uuid) && is_uuid($extension_uuid)) ? $extension_uuid : null;
 		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code ?? '');
 		$call_block_number = preg_replace('#[^0-9./]#', '', $call_block_number ?? '');
 	}
@@ -186,9 +186,7 @@
 						$array['call_block'][0]['call_block_uuid'] = uuid();
 						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
-						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
-							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
-						}
+						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
 						$array['call_block'][0]['call_block_country_code'] = $call_block_country_code;
 						$array['call_block'][0]['call_block_number'] = $call_block_number;
@@ -238,9 +236,7 @@
 						$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
 						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
-						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
-							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
-						}
+						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
 						$array['call_block'][0]['call_block_country_code'] = $call_block_country_code;
 						$array['call_block'][0]['call_block_number'] = $call_block_number;
