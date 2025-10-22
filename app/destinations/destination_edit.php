@@ -1114,7 +1114,9 @@
 								if (permission_exists("destination_distinctive_ring")) {
 									$array['destinations'][$x]["destination_distinctive_ring"] = $destination_distinctive_ring;
 								}
-								$array['destinations'][$x]["destination_record"] = $destination_record;
+								if (permission_exists("destination_record")) {
+									$array['destinations'][$x]["destination_record"] = $destination_record;
+								}
 								$array['destinations'][$x]["destination_email"] = $destination_email;
 								if (!empty($destination_ringback) && $ringbacks->valid($destination_ringback)) {
 									$array['destinations'][$x]["destination_ringback"] = $destination_ringback;
@@ -1298,7 +1300,7 @@
 	$destination_cid_name_prefix = $destination_cid_name_prefix ?? '';
 	$destination_hold_music = $destination_hold_music ?? '';
 	$destination_distinctive_ring = $destination_distinctive_ring ?? '';
-	$destination_record = $destination_record ?? '';
+	$destination_record = $destination_record ?? false;
 	$destination_ringback = $destination_ringback ?? '';
 	$destination_accountcode = $destination_accountcode ?? '';
 	$destination_type_voice = $destination_type_voice ?? '';
