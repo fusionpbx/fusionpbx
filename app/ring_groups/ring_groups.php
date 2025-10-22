@@ -52,7 +52,7 @@
 //get posted data
 	if (!empty($_POST['ring_groups'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$ring_groups = $_POST['ring_groups'];
 	}
 
@@ -73,7 +73,7 @@
 				break;
 		}
 
-		header('Location: ring_groups.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: ring_groups.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

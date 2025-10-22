@@ -42,7 +42,7 @@
 	$text = $language->get();
 
 //get submitted variables
-	$search = $_REQUEST['search'];
+	$search = $_REQUEST['search'] ?? '';
 	$default_setting_uuids = $_REQUEST["id"];
 
 //toggle the setting

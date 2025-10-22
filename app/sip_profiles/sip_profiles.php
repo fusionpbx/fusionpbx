@@ -50,7 +50,7 @@
 //get the http post data
 	if (!empty($_POST['sip_profiles'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$sip_profiles = $_POST['sip_profiles'];
 	}
 
@@ -71,7 +71,7 @@
 				break;
 		}
 
-		header('Location: sip_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: sip_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

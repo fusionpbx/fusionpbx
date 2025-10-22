@@ -76,7 +76,7 @@
 				break;
 		}
 
-		header('Location: vars.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: vars.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

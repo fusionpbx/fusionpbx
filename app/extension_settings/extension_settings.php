@@ -49,7 +49,7 @@
 //get the http post data
 	if (!empty($_POST['extension_settings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$extension_settings = $_POST['extension_settings'];
 	}
 
@@ -93,7 +93,7 @@
 		}
 
 		//redirect the user
-		header('Location: extension_settings.php?id='.urlencode($extension_uuid).'&'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: extension_settings.php?id='.urlencode($extension_uuid).'&'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

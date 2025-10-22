@@ -49,7 +49,7 @@
 //get the http post data
 	if (!empty($_POST['sofia_global_settings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$sofia_global_settings = $_POST['sofia_global_settings'];
 	}
 
@@ -78,7 +78,7 @@
 		}
 
 		//redirect the user
-		header('Location: sofia_global_settings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: sofia_global_settings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

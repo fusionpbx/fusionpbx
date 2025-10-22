@@ -55,7 +55,7 @@
 //get the http post data
 	if (!empty($_POST['call_recordings']) && is_array($_POST['call_recordings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_recordings = $_POST['call_recordings'];
 	}
 
@@ -83,7 +83,7 @@
 		}
 
 		//redirect the user
-		header('Location: call_recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

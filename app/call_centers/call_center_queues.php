@@ -51,7 +51,7 @@
 //get posted data
 	if (!empty($_POST['call_center_queues']) && is_array($_POST['call_center_queues'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_center_queues = $_POST['call_center_queues'];
 	}
 
@@ -72,7 +72,7 @@
 				break;
 		}
 
-		header('Location: call_center_queues.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_center_queues.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

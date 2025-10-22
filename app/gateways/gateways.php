@@ -85,7 +85,7 @@
 				break;
 		}
 
-		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

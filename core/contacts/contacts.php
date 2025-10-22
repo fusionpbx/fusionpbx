@@ -51,7 +51,7 @@
 //get posted data
 	if (!empty($_POST['contacts'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$contacts = $_POST['contacts'];
 	}
 
@@ -66,7 +66,7 @@
 				break;
 		}
 
-		header('Location: contacts.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: contacts.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

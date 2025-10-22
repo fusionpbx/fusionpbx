@@ -57,7 +57,7 @@
 //get the http post data
 	if (!empty($_POST['user_logs']) && is_array($_POST['user_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$user_logs = $_POST['user_logs'];
 	}
 
@@ -87,7 +87,7 @@
 		}
 
 		//redirect the user
-		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

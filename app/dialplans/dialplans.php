@@ -60,7 +60,7 @@
 		$action = $_POST['action'];
 		$dialplans = $_POST['dialplans'];
 		$context = $_POST['context'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$order_by = $_POST['order_by'];
 		$order = $_POST['order'];
 	}

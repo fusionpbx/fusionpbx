@@ -48,7 +48,7 @@
 //get posted data
 	if (!empty($_POST['call_center_agents'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_center_agents = $_POST['call_center_agents'];
 	}
 
@@ -63,7 +63,7 @@
 				break;
 		}
 
-		header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

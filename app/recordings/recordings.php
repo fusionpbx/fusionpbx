@@ -295,7 +295,7 @@
 				break;
 		}
 
-		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

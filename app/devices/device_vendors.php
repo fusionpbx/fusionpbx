@@ -45,7 +45,7 @@
 //get posted data
 	if (!empty($_POST['vendors']) && is_array($_POST['vendors'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$vendors = $_POST['vendors'];
 	}
 
@@ -66,7 +66,7 @@
 				break;
 		}
 
-		header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

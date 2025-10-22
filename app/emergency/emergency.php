@@ -21,7 +21,7 @@ $text = $language->get();
 //get the http post data
 if (!empty($_POST['emergency_logs']) && is_array($_POST['emergency_logs'])) {
 	$action = $_POST['action'];
-	$search = $_POST['search'];
+	$search = $_POST['search'] ?? '';
 	$emergency_logs = $_POST['emergency_logs'];
 }
 
@@ -59,7 +59,7 @@ if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @
 	}
 
 	//redirect the user
-	header('Location: emergency.php'.($search != '' ? '?search='.urlencode($search) : null));
+	header('Location: emergency.php'.($search != '' ? '?search='.urlencode($search) : ''));
 	exit;
 }
 

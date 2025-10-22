@@ -48,7 +48,7 @@
 //get the http post data
 	if (!empty($_POST['streams'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$streams = $_POST['streams'];
 	}
 
@@ -75,7 +75,7 @@
 				break;
 		}
 
-		header('Location: streams.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: streams.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

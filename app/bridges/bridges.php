@@ -52,7 +52,7 @@
 //get the http post data
 	if (!empty($_POST['bridges'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$bridges = $_POST['bridges'];
 	}
 
@@ -79,7 +79,7 @@
 				break;
 		}
 
-		header('Location: bridges.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: bridges.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

@@ -51,7 +51,7 @@
 //get the http post data
 	if (!empty($_POST['number_translations'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$number_translations = $_POST['number_translations'];
 	}
 
@@ -95,7 +95,7 @@
 		}
 
 		//redirect the user
-		header('Location: number_translations.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: number_translations.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
