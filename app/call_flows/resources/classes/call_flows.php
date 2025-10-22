@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -363,6 +363,14 @@
 											$new_call_flow_uuid = uuid();
 											$new_dialplan_uuid = uuid();
 
+											//convert boolean values to a string
+												foreach($row as $key => $value) {
+													if (gettype($value) == 'boolean') {
+														$value = $value ? 'true' : 'false';
+														$row[$key] = $value;
+													}
+												}
+
 											//copy data
 												$array[$this->table][$x] = $row;
 
@@ -376,6 +384,14 @@
 												$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
 												$dialplan = $this->database->select($sql_2, $parameters_2, 'row');
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+													//convert boolean values to a string
+														foreach($dialplan as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$dialplan[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['dialplans'][$x] = $dialplan;
