@@ -64,7 +64,7 @@
 
 		/**
 		 * Internal array structure that is populated from the database
-		 * @var array Array of settings loaded from Default Settings
+		 * @var settings A settings object loaded from Default Settings
 		 */
 		private $settings;
 
@@ -845,7 +845,7 @@
 			}
 
 			//encode subject
-			$template['template_subject'] = trim(iconv_mime_encode(null, $template['template_subject'], ['scheme'=>'B','output-charset'=>'utf-8', 'line-break-chars'=>"\n"]), ': ');
+			$template['template_subject'] = trim(iconv_mime_encode('', $template['template_subject'], ['scheme'=>'B','output-charset'=>'utf-8', 'line-break-chars'=>"\n"]), ': ');
 
 			//determine voicemail message file path and type
 			$voicemail_message_path = $switch_voicemail.'/default/'.$message['domain_name'].'/'.$message['voicemail_id'];
@@ -1451,12 +1451,13 @@
 			//set table name for query
 			//$table = self::TABLE;
 			$table = 'voicemail_messages';
+			$database = $settings->database();
 
 			//get a list of domains
-			$domains = maintenance::get_domains($this->database);
+			$domains = maintenance::get_domains($database);
 			foreach ($domains as $domain_uuid => $domain_name) {
 				//get domain settings
-				$domain_settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 				//ensure we have a retention day
 				$retention_days = $domain_settings->get('voicemail', maintenance::DATABASE_SUBCATEGORY, '');
@@ -1464,12 +1465,12 @@
 					//clear out old records
 					$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
 					. " and domain_uuid = '{$domain_uuid}'";
-					$this->database->execute($sql);
-					$code = $this->database->message['code'] ?? 0;
-					if ($this->database->message['code'] == 200) {
+					$database->execute($sql);
+					$code = $database->message['code'] ?? 0;
+					if ($database->message['code'] == 200) {
 						maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 					} else {
-						$message = $this->database->message['message'] ?? "An unknown error has occurred";
+						$message = $database->message['message'] ?? "An unknown error has occurred";
 						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 					}
 				}
