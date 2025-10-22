@@ -3465,6 +3465,7 @@ class database {
 					//set the variables
 					$view_name = $row['name'];
 					$view_sql = $row['sql'];
+					$view_sql = str_replace(';', '', $view_sql);
 					//$view_version = $row['version'];
 					//$view_description = $row['description'];
 
