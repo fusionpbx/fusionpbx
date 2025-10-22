@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,7 +71,30 @@
 	}
 
 //get the device
-	$sql = "select * from v_devices ";
+	$sql = "select ";
+	$sql .= "device_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "device_profile_uuid, ";
+	$sql .= "device_address, ";
+	$sql .= "device_label, ";
+	$sql .= "device_vendor, ";
+	$sql .= "device_location, ";
+	$sql .= "device_model, ";
+	$sql .= "device_firmware_version, ";
+	$sql .= "cast(device_enabled as text), ";
+	$sql .= "device_enabled_date, ";
+	$sql .= "device_template, ";
+	$sql .= "device_user_uuid, ";
+	$sql .= "device_username, ";
+	$sql .= "device_password, ";
+	$sql .= "device_uuid_alternate, ";
+	$sql .= "device_description, ";
+	$sql .= "device_provisioned_date, ";
+	$sql .= "device_provisioned_method, ";
+	$sql .= "device_provisioned_ip, ";
+	$sql .= "device_provisioned_agent, ";
+	$sql .= "device_serial_number ";
+	$sql .= "from v_devices ";
 	$sql .= "where device_uuid = :device_uuid ";
 	$parameters['device_uuid'] = $device_uuid;
 	$devices = $database->select($sql, $parameters, 'all');

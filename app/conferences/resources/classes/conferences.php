@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -303,6 +303,14 @@
 										$new_conference_uuid = uuid();
 										$new_dialplan_uuid = uuid();
 
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
+
 										//copy data
 											$array[$this->table][$x] = $row;
 
@@ -320,6 +328,14 @@
 											$conference_users = $this->database->select($sql_2, $parameters_2, 'all');
 											if (is_array($conference_users) && @sizeof($conference_users) != 0) {
 												foreach ($conference_users as $conference_user) {
+
+													//convert boolean values to a string
+														foreach($conference_user as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$conference_user[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['conference_users'][$y] = $conference_user;
@@ -340,6 +356,14 @@
 											$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
 											$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 											if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+												//convert boolean values to a string
+													foreach($dialplan as $key => $value) {
+														if (gettype($value) == 'boolean') {
+															$value = $value ? 'true' : 'false';
+															$dialplan[$key] = $value;
+														}
+													}
 
 												//copy data
 													$array['dialplans'][$x] = $dialplan;

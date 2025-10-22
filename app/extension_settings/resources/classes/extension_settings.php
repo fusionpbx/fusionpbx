@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021-2023
+	Portions created by the Initial Developer are Copyright (C) 2021-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -128,8 +128,8 @@
 								//execute delete
 									$this->database->delete($array);
 									unset($array);
-								
-								//clear the cache	
+
+								//clear the cache
 									$sql = "select extension, number_alias, user_context from v_extensions ";
 									$sql .= "where extension_uuid = :extension_uuid ";
 									$parameters['extension_uuid'] = $this->extension_uuid;
@@ -204,8 +204,8 @@
 
 									$this->database->save($array);
 									unset($array);
-									
-								//clear the cache	
+
+								//clear the cache
 									$sql = "select extension, number_alias, user_context from v_extensions ";
 									$sql .= "where extension_uuid = :extension_uuid ";
 									$parameters['extension_uuid'] = $extension_uuid;
@@ -260,6 +260,14 @@
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
 // 										var_dump($row); exit;
+
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
 
 										//copy data
 											$array[$this->table][$x] = $row;

@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2010-2023
+ Portions created by the Initial Developer are Copyright (C) 2010-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -407,6 +407,14 @@
 											$new_ring_group_uuid = uuid();
 											$new_dialplan_uuid = uuid();
 
+											//convert boolean values to a string
+												foreach($row as $key => $value) {
+													if (gettype($value) == 'boolean') {
+														$value = $value ? 'true' : 'false';
+														$row[$key] = $value;
+													}
+												}
+
 											//copy data
 												$array[$this->table][$x] = $row;
 
@@ -421,6 +429,14 @@
 												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
+
+														//convert boolean values to a string
+															foreach($row_2 as $key => $value) {
+																if (gettype($value) == 'boolean') {
+																	$value = $value ? 'true' : 'false';
+																	$row_2[$key] = $value;
+																}
+															}
 
 														//copy data
 															$array['ring_group_users'][$y] = $row_2;
@@ -443,6 +459,14 @@
 												if (is_array($rows_3) && @sizeof($rows_3) != 0) {
 													foreach ($rows_3 as $row_3) {
 
+														//convert boolean values to a string
+															foreach($row_3 as $key => $value) {
+																if (gettype($value) == 'boolean') {
+																	$value = $value ? 'true' : 'false';
+																	$row_3[$key] = $value;
+																}
+															}
+
 														//copy data
 															$array['ring_group_destinations'][$z] = $row_3;
 
@@ -462,6 +486,14 @@
 												$parameters_4['dialplan_uuid'] = $row['dialplan_uuid'];
 												$dialplan = $this->database->select($sql_4, $parameters_4, 'row');
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+													//convert boolean values to a string
+														foreach($dialplan as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$dialplan[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['dialplans'][$x] = $dialplan;

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,8 +71,8 @@
 		//prepare the array
 		$x = 0;
 		foreach ($access_controls as $row) {
-			$array['access_controls'][$x]['checked'] = $row['checked'] ?? null;
-			$array['access_controls'][$x]['access_control_uuid'] = $row['access_control_uuid'];
+			$array[$x]['checked'] = $row['checked'] ?? null;
+			$array[$x]['uuid'] = $row['access_control_uuid'];
 			$x++;
 		}
 
@@ -80,17 +80,20 @@
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('access_control_add')) {
-					$database->copy($array);
+					$obj = new access_controls;
+					$obj->copy($array);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('access_control_edit')) {
-					$database->toggle($array);
+					$obj = new access_controls;
+					$obj->toggle($array);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('access_control_delete')) {
-					$database->delete($array);
+					$obj = new access_controls;
+					$obj->delete($array);
 				}
 				break;
 		}

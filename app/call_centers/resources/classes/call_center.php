@@ -533,6 +533,14 @@
 												$new_call_center_queue_uuid = uuid();
 												$new_dialplan_uuid = uuid();
 
+												//convert boolean values to a string
+													foreach($row as $key => $value) {
+														if (gettype($value) == 'boolean') {
+															$value = $value ? 'true' : 'false';
+															$row[$key] = $value;
+														}
+													}
+
 												//copy data
 													$array[$this->table][$x] = $row;
 
@@ -565,6 +573,14 @@
 													$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
 													$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 													if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+														//convert boolean values to a string
+															foreach($dialplan as $key => $value) {
+																if (gettype($value) == 'boolean') {
+																	$value = $value ? 'true' : 'false';
+																	$dialplan[$key] = $value;
+																}
+															}
 
 														//copy data
 															$array['dialplans'][$x] = $dialplan;

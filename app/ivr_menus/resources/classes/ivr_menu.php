@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -109,7 +109,7 @@
 				$this->permission_prefix = 'ivr_menu_';
 				$this->table = 'ivr_menus';
 				$this->uuid_prefix = 'ivr_menu_';
-				
+
 			//return if permission does not exist
 				if (!permission_exists($this->permission_prefix.'delete')) {
 					return false;
@@ -412,6 +412,14 @@
 										$new_ivr_menu_uuid = uuid();
 										$new_dialplan_uuid = uuid();
 
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
+
 										//copy data
 											$array[$this->table][$x] = $row;
 
@@ -426,6 +434,13 @@
 											$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 											if (!empty($rows_2)) {
 												foreach ($rows_2 as $row_2) {
+													//convert boolean values to a string
+														foreach($row_2 as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$row_2[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['ivr_menu_options'][$y] = $row_2;
@@ -446,6 +461,13 @@
 											$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
 											$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 											if (!empty($dialplan)) {
+												//convert boolean values to a string
+													foreach($dialplan as $key => $value) {
+														if (gettype($value) == 'boolean') {
+															$value = $value ? 'true' : 'false';
+															$dialplan[$key] = $value;
+														}
+													}
 
 												//copy data
 													$array['dialplans'][$z] = $dialplan;
