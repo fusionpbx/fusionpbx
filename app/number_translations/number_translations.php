@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -57,39 +57,23 @@
 
 //process the http post data by action
 	if (!empty($action) && !empty($number_translations)) {
-
-		//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: number_translations.php');
-			exit;
-		}
-
-		//prepare the array
-		$x = 0;
-		foreach ($number_translations as $row) {
-			$array['number_translations'][$x]['checked'] = $row['checked'] ?? null;
-			$array['number_translations'][$x]['number_translation_uuid'] = $row['number_translation_uuid'];
-			$array['number_translations'][$x]['number_translation_enabled'] = $row['number_translation_enabled'];
-			$x++;
-		}
-
-		//send the array to the database class
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('number_translation_add')) {
-					$database->copy($array);
+					$obj = new number_translations;
+					$obj->copy($number_translations);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('number_translation_edit')) {
-					$database->toggle($array);
+					$obj = new number_translations;
+					$obj->toggle($number_translations);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('number_translation_delete')) {
-					$database->delete($array);
+					$obj = new number_translations;
+					$obj->delete($number_translations);
 				}
 				break;
 		}
@@ -226,7 +210,7 @@
 			if (permission_exists('number_translation_add') || permission_exists('number_translation_edit') || permission_exists('number_translation_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='number_translations[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='number_translations[$x][number_translation_uuid]' value='".escape($row['number_translation_uuid'])."' />\n";
+				echo "		<input type='hidden' name='number_translations[$x][uuid]' value='".escape($row['number_translation_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td>\n";
