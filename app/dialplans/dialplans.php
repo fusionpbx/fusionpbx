@@ -25,7 +25,8 @@
 */
 
 //includes files
-	require_once dirname(__DIR__, 2) . "/resources/require.php";
+global $settings, $domain_uuid, $database;
+require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -113,7 +114,7 @@
 			exit;
 	}
 
-//get order and order by and sanatize the values
+//get order and order by and sanitize the values
 	$order_by = (!empty($_GET["order_by"])) ? $_GET["order_by"] : '';
 	$order = (!empty($_GET["order"])) ? $_GET["order"] : '';
 
@@ -144,12 +145,16 @@
 	$button_icon_reset = $settings->get('theme', 'button_icon_reset') ?? '';
 
 //get the number of rows in the dialplan
-	$sql = "select count(*) from v_dialplans ";
+	$sql = "select count(dialplan_uuid) from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "where (domain_uuid = :domain_uuid ";
+		if (permission_exists('dialplan_global')) {
+			$sql .= "or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (empty($app_uuid)) {
@@ -160,7 +165,7 @@
 			//$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	}
 	else {
-		if (!empty($app_uuid) && $app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+		if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
 			$sql .= "and (app_uuid = :app_uuid or dialplan_context = 'public') ";
 		}
 		else {
