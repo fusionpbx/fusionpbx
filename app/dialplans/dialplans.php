@@ -150,7 +150,11 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where (domain_uuid = :domain_uuid ";
+		if (permission_exists('dialplan_global')) {
+			$sql .= "or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (empty($app_uuid)) {
