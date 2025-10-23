@@ -31,7 +31,7 @@ class plugin_ldap {
 	 * ldap checks a local or remote ldap database to authenticate the user
 	 * @return array [authorized] => true or false
 	 */
-	function ldap() {
+	function ldap(authentication $auth, settings $settings) {
 
 		//show the authentication code view
 			if ($_REQUEST["username"]) {
