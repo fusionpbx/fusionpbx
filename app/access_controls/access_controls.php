@@ -59,41 +59,23 @@
 
 //process the http post data by action
 	if (!empty($action) && !empty($access_controls) && count($access_controls) > 0) {
-
-		//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: access_controls.php');
-			exit;
-		}
-
-		//prepare the array
-		$x = 0;
-		foreach ($access_controls as $row) {
-			$array[$x]['checked'] = $row['checked'] ?? null;
-			$array[$x]['uuid'] = $row['access_control_uuid'];
-			$x++;
-		}
-
-		//send the array to the database class
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('access_control_add')) {
 					$obj = new access_controls;
-					$obj->copy($array);
+					$obj->copy($access_controls);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('access_control_edit')) {
 					$obj = new access_controls;
-					$obj->toggle($array);
+					$obj->toggle($access_controls);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('access_control_delete')) {
 					$obj = new access_controls;
-					$obj->delete($array);
+					$obj->delete($access_controls);
 				}
 				break;
 		}
@@ -218,7 +200,7 @@
 			if (permission_exists('access_control_add') || permission_exists('access_control_edit') || permission_exists('access_control_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='access_controls[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='access_controls[$x][access_control_uuid]' value='".escape($row['access_control_uuid'])."' />\n";
+				echo "		<input type='hidden' name='access_controls[$x][uuid]' value='".escape($row['access_control_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td>\n";
