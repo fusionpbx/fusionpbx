@@ -113,7 +113,7 @@
 			exit;
 	}
 
-//get order and order by and sanatize the values
+//get order and order by and sanitize the values
 	$order_by = (!empty($_GET["order_by"])) ? $_GET["order_by"] : '';
 	$order = (!empty($_GET["order"])) ? $_GET["order"] : '';
 
@@ -145,12 +145,16 @@
 	$button_icon_reset = $settings->get('theme', 'button_icon_reset') ?? '';
 
 //get the number of rows in the dialplan
-	$sql = "select count(*) from v_dialplans ";
+	$sql = "select count(dialplan_uuid) from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "where (domain_uuid = :domain_uuid ";
+		if (permission_exists('dialplan_global')) {
+			$sql .= "or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (empty($app_uuid)) {
