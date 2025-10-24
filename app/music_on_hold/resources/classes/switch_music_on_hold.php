@@ -204,7 +204,7 @@
 
 		public function xml() {
 			//build the list of categories
-				$music_on_hold_dir = $settings->get('switch', 'sounds').'/music';
+				$music_on_hold_dir = $this->settings->get('switch', 'sounds').'/music';
 			//default category (note: GLOB_BRACE doesn't work on some systems)
 				$array_1 = glob($music_on_hold_dir."/8000".$class_name.".php", GLOB_ONLYDIR);
 				$array_2 = glob($music_on_hold_dir."/16000".$class_name.".php", GLOB_ONLYDIR);
@@ -286,7 +286,7 @@
 				unset($sql);
 
 			//build an array of the sound files
-				$music_directory =  $settings->get('switch', 'sounds').'/music';
+				$music_directory =  $this->settings->get('switch', 'sounds').'/music';
 				if (file_exists($music_directory)) {
 					$files = array_merge(glob($music_directory.'/*/*/*.wav'), glob($music_directory.'/*/*/*/*.wav'), glob($stream_path.'/*/*/*/*.mp3'), glob($stream_path.'/*/*/*/*.ogg'));
 				}
@@ -409,12 +409,11 @@
 
 								//delete files, folders, build delete array
 									$x = 0;
-// 									view_array($moh);
 									foreach ($moh as $music_on_hold_uuid => $row) {
 
 										//prepare path
 											$stream_path = $streams[$music_on_hold_uuid]['music_on_hold_path'];
-											$stream_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $stream_path);
+											$stream_path = str_replace('$${sounds_dir}', $this->settings->get('switch', 'sounds'), $stream_path);
 
 										//delete checked files
 											foreach ($row as $key => $stream_file) {
