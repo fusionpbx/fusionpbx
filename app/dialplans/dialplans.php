@@ -373,12 +373,13 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 	echo "</b><div class='count'>".number_format($num_rows)."</div>";
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
+	$button_add_url = '';
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_add')) { $button_add_url = PROJECT_PATH."/app/dialplan_inbound/dialplan_inbound_add.php"; }
 	else if ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3" && permission_exists('outbound_route_add')) { $button_add_url = PROJECT_PATH."/app/dialplan_outbound/dialplan_outbound_add.php"; }
 	else if ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7" && permission_exists('fifo_add')) { $button_add_url = PROJECT_PATH."/app/fifo/fifo_add.php"; }
 	else if ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_add')) { $button_add_url = PROJECT_PATH."/app/time_conditions/time_condition_edit.php"; }
 	else if (permission_exists('dialplan_add')) { $button_add_url = PROJECT_PATH."/app/dialplans/dialplan_add.php"; }
-	if ($button_add_url) {
+	if (!empty($button_add_url)) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$button_icon_add,'id'=>'btn_add','link'=>$button_add_url]);
 	}
 	if (!empty($dialplans)) {
@@ -581,9 +582,6 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid'] ?? '').'&domain_change=true';
 				}
-			}
-			else {
-				unset($list_row_url);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (
