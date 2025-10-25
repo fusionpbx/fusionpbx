@@ -135,7 +135,7 @@ abstract class base_websocket_system_service extends service implements websocke
 
 			if ($this->ws_client !== null && $this->ws_client->is_connected()) {
 				// Combine the websocket client and the listeners into a single array
-				$read = array_merge($listeners, $this->ws_client->socket());
+				$read = array_merge($listeners, [$this->ws_client->socket()]);
 				// Reset the suppress message flag
 				$suppress_ws_message = false;
 			}
