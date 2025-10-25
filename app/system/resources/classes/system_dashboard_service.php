@@ -122,12 +122,12 @@ class system_dashboard_service extends base_websocket_system_service {
 			// wait until we connect again
 			while (!$this->connect_to_ws_server()) {
 				if ($show_disconnect_message) {
-					$this->warn("Websocket server disconnected");
+					$this->warning("Websocket server disconnected");
 					$show_disconnect_message = false;
 				}
 				sleep(1);
 			}
-			$this->warn("Websocket server connected");
+			$this->warning("Websocket server connected");
 		}
 
 		// return a timer value so another timer will be set
@@ -180,12 +180,12 @@ class system_dashboard_service extends base_websocket_system_service {
 			// wait until we connect again
 			while (!$this->connect_to_ws_server()) {
 				if ($show_disconnect_message) {
-					$this->warn("Websocket server disconnected");
+					$this->warning("Websocket server disconnected");
 					$show_disconnect_message = false;
 				}
 				sleep(1);
 			}
-			$this->warn("Websocket server connected");
+			$this->warning("Websocket server connected");
 		}
 
 		// return a timer value so another timer will be set
