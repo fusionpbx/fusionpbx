@@ -308,19 +308,19 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with a connected message
-	 * @param type $request_id
-	 * @return type
+	 * @param string|int $request_id
+	 * @return string
 	 */
-	public static function connected($request_id = '') {
+	public static function connected($request_id = ''): string {
 		return static::request_authentication($request_id);
 	}
 
 	/**
 	 * Helper function to respond with a authentication message
-	 * @param type $request_id
-	 * @return type
+	 * @param string|int $request_id
+	 * @return string
 	 */
-	public static function request_authentication($request_id = '') {
+	public static function request_authentication($request_id = ''): string {
 		$class = static::class;
 		return (new $class())
 			->request_id($request_id)
@@ -334,12 +334,12 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with a bad request message
-	 * @param type $request_id
-	 * @param type $service
-	 * @param type $topic
-	 * @return type
+	 * @param string|int $request_id
+	 * @param string $service
+	 * @param string $topic
+	 * @return string
 	 */
-	public static function request_is_bad($request_id = '', $service = '', $topic = '') {
+	public static function request_is_bad($request_id = '', string $service = '', string $topic = ''): string {
 		$class = static::class;
 		return (new $class())
 			->request_id($request_id)
@@ -352,12 +352,12 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with an authenticated message
-	 * @param type $request_id
-	 * @param type $service
-	 * @param type $topic
-	 * @return type
+	 * @param string|int $request_id
+	 * @param string $service
+	 * @param string $topic
+	 * @return string
 	 */
-	public static function request_authenticated($request_id = '', $service = '', $topic = 'authenticated') {
+	public static function request_authenticated($request_id = '', string $service = '', string $topic = 'authenticated'): string {
 		$class = static::class;
 		return (new $class())
 				->request_id($request_id)
@@ -371,12 +371,12 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with an unauthorized request message
-	 * @param type $request_id
-	 * @param type $service
-	 * @param type $topic
-	 * @return type
+	 * @param string|int $request_id
+	 * @param string $service
+	 * @param string $topic
+	 * @return string
 	 */
-	public static function request_unauthorized($request_id = '', $service = '', $topic = 'unauthorized') {
+	public static function request_unauthorized($request_id = '', string $service = '', string $topic = 'unauthorized'): string {
 		$class = static::class;
 		return (new $class())
 			->request_id($request_id)
@@ -389,12 +389,12 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with a forbidden message
-	 * @param type $request_id
-	 * @param type $service
-	 * @param type $topic
-	 * @return type
+	 * @param string|int $request_id
+	 * @param string $service
+	 * @param string $topic
+	 * @return string
 	 */
-	public static function request_forbidden($request_id = '', $service = '', $topic = 'forbidden') {
+	public static function request_forbidden($request_id = '', string $service = '', string $topic = 'forbidden'): string {
 		$class = static::class;
 		return (new $class())
 			->request_id($request_id)
@@ -411,7 +411,7 @@ class websocket_message extends base_message {
 	 * @return static|null Returns a new websocket_message object (or child object)
 	 * @throws \InvalidArgumentException
 	 */
-	public static function create_from_json_message($websocket_message_json) {
+	public static function create_from_json_message($websocket_message_json): ?websocket_message {
 		if (empty($websocket_message_json)) {
 			// Nothing to do
 			return null;
