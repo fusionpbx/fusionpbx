@@ -1611,6 +1611,9 @@ class database {
 	 */
 	public function find_new(array $array) {
 
+		//define the message ordinal id
+		$m = 0;
+
 		//connect to the database if needed
 		if (!$this->db) {
 			$this->connect();
