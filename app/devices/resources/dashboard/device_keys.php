@@ -428,7 +428,7 @@
 //show the content
 	echo "<div class='hud_box'>";
 
-	echo "<div class='hud_content' style='display: block;'>\n";
+	echo "<div class='hud_content' style='display: block; overflow-x: auto;'>\n";
 	echo "	<div class='action_bar sub'>\n";
 	echo "		<div class='heading' style='padding-left: 5px;'><b>".escape($widget_label)."</b></div>\n";
 	echo "		<div class='actions' style='padding-top: 2px;'>\n";

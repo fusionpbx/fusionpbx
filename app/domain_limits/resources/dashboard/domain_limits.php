@@ -51,7 +51,7 @@
 	unset($hud_stat);
 
 //domain limits
-	if (!empty($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+//	if (!empty($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 
 		//set the row style
 			$c = 0;
@@ -240,6 +240,6 @@
 				echo "<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 			}
 			echo "</div>\n";
-	}
+//	}
 
 ?>

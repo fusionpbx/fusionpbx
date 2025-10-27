@@ -42,7 +42,6 @@
 	$domain_uuid = '';
 	$dashboard_uuid = '';
 	$dashboard_name = '';
-	$dashboard_enabled = 'true';
 	$dashboard_description = '';
 
 //action add or update
@@ -152,6 +151,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$dashboard_enabled = $dashboard_enabled ?? true;
 
 //create token
 	$object = new token;
