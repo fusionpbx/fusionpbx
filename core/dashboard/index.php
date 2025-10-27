@@ -434,6 +434,7 @@ foreach ($widgets as $row) {
 	}
 	$row_span = $row['widget_row_span'] * 4;
 	$expanded_row_span = $row_span + 13;
+	//has detail expand button
 	if ($row['widget_details_state'] === "expanded" || $row['widget_details_state'] === "contracted") {
 		$row_span += 1;
 		$expanded_row_span += 1;
@@ -671,7 +672,7 @@ window.addEventListener('resize', update_parent_height);
 		$widget_label_text_color = $row['widget_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
 		$widget_number_text_color = $row['widget_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
 		$widget_number_background_color = $row['widget_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
-		$widget_details_state = $row['widget_details_state'] ?? 'hidden';
+		$widget_details_state = $row['widget_details_state'] ?? 'disabled';
 		$widget_row_span = $row['widget_row_span'] ?? '';
 
 		//define the regex patterns
