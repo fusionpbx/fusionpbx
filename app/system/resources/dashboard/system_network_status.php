@@ -61,9 +61,6 @@ echo "</span>\n";
 
 	<!-- 3) Adapter for Luxon -->
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
-
-	<!-- 4) Streaming plugin -->
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming"></script>
 	<script>
 		const network_status_auth_token = {
 			name: "<?= $token['name']; ?>",
