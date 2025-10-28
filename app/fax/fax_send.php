@@ -374,7 +374,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$fax_instance_uuid = uuid();
 
 		//generate cover page, merge with pdf
-		if (!empty($fax_subject) || !empty($fax_message) ) {
+		if ((!empty($fax_subject) || !empty($fax_message)) and ($settings->get('fax','use_cover_page') ?? '') == 'true') {
 
 			//load pdf libraries
 			require_once("resources/tcpdf/tcpdf.php");

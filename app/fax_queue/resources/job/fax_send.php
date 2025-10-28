@@ -613,7 +613,7 @@
 				$email_body = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_body);
 
 				//send the email
-				if (isset($fax_email_address) && !empty($fax_email_address)) {
+				if ((isset($fax_email_address) && !empty($fax_email_address)) && (($settings->get('fax','send_sent_confirmation') ?? '') == "true")) {
 					//add the attachment
 					if (!empty($fax_file_name)) {
 						$email_attachments[0]['type'] = 'file';

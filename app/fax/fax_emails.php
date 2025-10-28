@@ -171,8 +171,16 @@ if (!empty($result) && @sizeof($result) != 0) {
 					//sent sender address (used in api call)
 					$mailto_address_user = $metadata[0]['from'];
 
+					// use decoding for subject in case subject is base64 encoded which caused a failure
+					$decoded_subject_parts = imap_mime_header_decode($metadata[0]['subject']);
+					$fax_subject = '';
+					foreach ($decoded_subject_parts as $part) {
+						$fax_subject .= $part->text;
+					}
+
 					//parse recipient fax number(s)
-					$fax_subject = $metadata[0]['subject'];
+					//$fax_subject = $metadata[0]['subject'];
+					print('   Subject: ' . $fax_subject . "\n")
 					$tmp = explode(']', $fax_subject); //closing bracket of subject tag
 					$tmp = $tmp[1];
 					$tmp = str_replace(':', ',', $tmp);
