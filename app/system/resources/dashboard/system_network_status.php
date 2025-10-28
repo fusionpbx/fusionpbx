@@ -54,13 +54,6 @@ echo "</span>\n";
 	<div class='hud_chart' style='width: 100%; height: 85%'>
 		<canvas id='system_network_status_chart'></canvas>
 	</div>
-	<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
-
-	<!-- 2) Luxon -->
-	<script src="https://cdn.jsdelivr.net/npm/luxon/build/global/luxon.min.js"></script>
-
-	<!-- 3) Adapter for Luxon -->
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
 	<script>
 		const network_status_auth_token = {
 			name: "<?= $token['name']; ?>",
