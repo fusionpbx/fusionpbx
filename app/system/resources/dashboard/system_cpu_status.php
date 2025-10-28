@@ -71,7 +71,6 @@
 		<!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
 		<script src="https://cdn.jsdelivr.net/npm/luxon/build/global/luxon.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming"></script>
 
 		<script>
 			const cpu_status_auth_token = {

@@ -216,6 +216,7 @@
 
 //include chart.js
 	echo "<script src='/resources/chartjs/chart.min.js'></script>";
+	echo "<script src='/resources/chartjs/chartjs-plugin-streaming.js'></script>";
 
 //chart variables
 	echo "<script>\n";
