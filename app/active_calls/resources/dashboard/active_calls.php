@@ -108,8 +108,6 @@ $version = md5(file_get_contents($project_root . '/app/active_calls/resources/ja
 echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'></script>\n";
 
 ?>
-<script src="https://cdn.jsdelivr.net/npm/luxon/build/global/luxon.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
 <script>
 	const timers = [];
 	const callsMap = new Map();
