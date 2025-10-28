@@ -264,7 +264,7 @@
 			message_length_formatted = format_seconds(message_length);
 
 		--if the recording is below the minimal length then re-record the message
-			if (message_length > message_silence_seconds) then
+			if (message_length > tonumber(message_silence_seconds)) then
 				session:setVariable("voicemail_message_seconds", message_length);
 			else
 				if (session:ready()) then
