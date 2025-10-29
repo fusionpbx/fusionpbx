@@ -178,6 +178,7 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 		$parameters['dialplan_context'] = $context;
 	}
 	if (!empty($search)) {
+		$search = strtolower($search);
 		$sql .= "and (";
 		$sql .= " 	lower(dialplan_context) like :search ";
 		$sql .= " 	or lower(dialplan_name) like :search ";
