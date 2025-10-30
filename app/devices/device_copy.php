@@ -82,7 +82,6 @@
 	$sql .= "device_model, ";
 	$sql .= "device_firmware_version, ";
 	$sql .= "cast(device_enabled as text), ";
-	$sql .= "device_enabled_date, ";
 	$sql .= "device_template, ";
 	$sql .= "device_user_uuid, ";
 	$sql .= "device_username, ";
