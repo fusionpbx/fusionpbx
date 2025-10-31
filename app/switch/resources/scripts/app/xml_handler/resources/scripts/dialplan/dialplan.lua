@@ -175,7 +175,7 @@
 			if (context_name == 'public' and dialplan_mode == 'single') then
 				--get the single inbound destination dialplan xml  from the database
 				sql = "SELECT (SELECT domain_name FROM v_domains WHERE domain_uuid = p.domain_uuid) as domain_name, "
-				sql = sql .. "(SELECT domain_enabled FROM v_domains WHERE domain_uuid = p.domain_uuid) as domain_enabled, p.dialplan_xml ";
+				sql = sql .. "(SELECT cast(domain_enabled as text) FROM v_domains WHERE domain_uuid = p.domain_uuid) as domain_enabled, p.dialplan_xml ";
 				sql = sql .. "FROM v_dialplans AS p ";
 				sql = sql .. "WHERE ( ";
 				sql = sql .. "	p.dialplan_uuid IN ( ";
@@ -206,7 +206,7 @@
 					else
 						xml:append(row.dialplan_xml);
 					end
-					if (row.domain_enabled == true) then
+					if (row.domain_enabled == "true") then
 						xml:append(row.dialplan_xml);
 					end
 				end);
