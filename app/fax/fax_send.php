@@ -1010,7 +1010,7 @@ if (!defined('STDIN')) {
 		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
 
-		if ($domain_enabled) {
+		if (!$domain_enabled) {
 			echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
 		}
 
