@@ -64,6 +64,11 @@ function event_socket_request_cmd($cmd) {
 	return event_socket::command($cmd);
 }
 
+/**
+ * Summary of remove_config_from_cache
+ * @param mixed $name
+ * @return void
+ */
 function remove_config_from_cache($name) {
 	$cache = new cache;
 	$cache->delete($name);
@@ -71,6 +76,11 @@ function remove_config_from_cache($name) {
 	$cache->delete($name . ':' . gethostname());
 }
 
+/**
+ * Summary of ListFiles
+ * @param mixed $dir
+ * @return array
+ */
 function ListFiles($dir) {
 	if ($dh = opendir($dir)) {
 		$files = Array();
@@ -92,6 +102,11 @@ function ListFiles($dir) {
 	}
 }
 
+/**
+ * Summary of filename_safe
+ * @param mixed $filename
+ * @return string
+ */
 function filename_safe($filename) {
 	//lower case
 		$filename = strtolower($filename);
@@ -111,6 +126,10 @@ function filename_safe($filename) {
 		return $result;
 }
 
+/**
+ * Summary of save_gateway_xml
+ * @return void
+ */
 function save_gateway_xml() {
 
 	//declare the global variables
@@ -251,6 +270,10 @@ function save_gateway_xml() {
 
 }
 
+/**
+ * Summary of save_var_xml
+ * @return bool
+ */
 function save_var_xml() {
 	//declare the global variables
 	global $database, $config, $settings, $domain_uuid;
@@ -311,7 +334,14 @@ function save_var_xml() {
 
 }
 
-function outbound_route_to_bridge($domain_uuid, $destination_number, array $channel_variables=null) {
+/**
+ * Summary of outbound_route_to_bridge
+ * @param mixed $domain_uuid
+ * @param mixed $destination_number
+ * @param array $channel_variables
+ * @return array<array|string>
+ */
+function outbound_route_to_bridge($domain_uuid, $destination_number, array $channel_variables = []) {
 	//declare the global variables
 	global $database;
 
@@ -365,7 +395,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	if (!empty($result)) {
-		$x = 0; $y = 0; 
+		$x = 0; $y = 0;
 		$previous_dialplan_uuid = '';
 		foreach ($result as $row) {
 			//set the previous id and handle the array ordinal ids
@@ -504,6 +534,11 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 //	echo "bridge: ".$bridge."<br />";
 //}
 
+/**
+ * Summary of extension_exists
+ * @param mixed $extension
+ * @return bool
+ */
 function extension_exists($extension) {
 	//declare the global variables
 	global $database, $domain_uuid;
@@ -522,6 +557,11 @@ function extension_exists($extension) {
 	return $num_rows > 0 ? true : false;
 }
 
+/**
+ * Summary of extension_presence_id
+ * @param mixed $extension
+ * @param mixed $number_alias
+ */
 function extension_presence_id($extension, $number_alias = false) {
 	//declare the global variables
 	global $database, $domain_uuid, $settings;
@@ -554,6 +594,10 @@ function extension_presence_id($extension, $number_alias = false) {
 	return $extension;
 }
 
+/**
+ * Summary of get_recording_filename
+ * @param mixed $id
+ */
 function get_recording_filename($id) {
 	//declare the global variables
 	global $database, $domain_uuid;
@@ -574,6 +618,11 @@ function get_recording_filename($id) {
 }
 
 if (!function_exists('phone_letter_to_number')) {
+	/**
+	 * Summary of phone_letter_to_number
+	 * @param mixed $tmp
+	 * @return int
+	 */
 	function phone_letter_to_number($tmp) {
 		$tmp = strtolower($tmp);
 		if ($tmp == "a" | $tmp == "b" | $tmp == "c") { return 2; }
@@ -588,6 +637,10 @@ if (!function_exists('phone_letter_to_number')) {
 }
 
 if (!function_exists('save_call_center_xml')) {
+	/**
+	 * Summary of save_call_center_xml
+	 * @return void
+	 */
 	function save_call_center_xml() {
 		//declare the global variables
 		global $database, $domain_uuid, $settings;
@@ -812,6 +865,10 @@ if (!function_exists('save_call_center_xml')) {
 }
 
 if (!function_exists('switch_conf_xml')) {
+	/**
+	 * Summary of switch_conf_xml
+	 * @return void
+	 */
 	function switch_conf_xml() {
 		//declare the global variables
 			global $settings;
@@ -872,6 +929,10 @@ if (!function_exists('switch_conf_xml')) {
 }
 
 if (!function_exists('xml_cdr_conf_xml')) {
+	/**
+	 * Summary of xml_cdr_conf_xml
+	 * @return void
+	 */
 	function xml_cdr_conf_xml() {
 		//get the contents of the template
 		 	if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
@@ -907,6 +968,10 @@ if (!function_exists('xml_cdr_conf_xml')) {
 }
 
 if (!function_exists('save_sip_profile_xml')) {
+	/**
+	 * Summary of save_sip_profile_xml
+	 * @return void
+	 */
 	function save_sip_profile_xml() {
 		//declare the global variables
 			global $database, $settings;
@@ -933,7 +998,7 @@ if (!function_exists('save_sip_profile_xml')) {
 					$sip_profile_name = $row['sip_profile_name'];
 					$sip_profile_enabled = $row['sip_profile_enabled'];
 
-					if ($sip_profile_enabled == false) {
+					if (!$sip_profile_enabled) {
 						$fout = fopen($profile_dir.'/'.$sip_profile_name.".xml","w");
 						if ($fout) {
 							fclose($fout);
@@ -989,6 +1054,10 @@ if (!function_exists('save_sip_profile_xml')) {
 }
 
 if (!function_exists('save_switch_xml')) {
+	/**
+	 * Summary of save_switch_xml
+	 * @return void
+	 */
 	function save_switch_xml() {
 		//define the global settings
 		global $settings;
@@ -1028,6 +1097,11 @@ if (!function_exists('save_switch_xml')) {
 }
 
 if (!function_exists('path_join')) {
+	/**
+	 * Summary of path_join
+	 * @param array $
+	 * @return string
+	 */
 	function path_join() {
 		$args = func_get_args();
 		$paths = array();
@@ -1055,6 +1129,12 @@ if (!function_exists('path_join')) {
 }
 
 if (!function_exists('win_find_php')) {
+	/**
+	 * Summary of win_find_php_in_root
+	 * @param mixed $root
+	 * @param mixed $bin
+	 * @return bool|string
+	 */
 	function win_find_php_in_root($root, $bin) {
 		while(true) {
 			$php_bin = path_join($root, $bin);
@@ -1072,12 +1152,22 @@ if (!function_exists('win_find_php')) {
 
 	//Tested on WAMP and OpenServer
 	//Can get wrong result if `extension_dir` set as relative path.
+	/**
+	 * Summary of win_find_php_by_extension
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
 	function win_find_php_by_extension($bin_name) {
 		$bin_dir = get_cfg_var('extension_dir');
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
 	// Works since PHP 5.4
+	/**
+	 * Summary of win_find_php_by_binary
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
 	function win_find_php_by_binary($bin_name) {
 		if (!defined('PHP_BINARY')) {
 			return false;
@@ -1090,6 +1180,11 @@ if (!function_exists('win_find_php')) {
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
+	/**
+	 * Summary of win_find_php_by_phprc
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
 	function win_find_php_by_phprc($bin_name) {
 		$bin_dir = getenv(PHPRC);
 		if (!$bin_dir) {
@@ -1099,8 +1194,13 @@ if (!function_exists('win_find_php')) {
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
-	//on Windows PHP_BIN set in compile time to c:\php
-	//It possible redifine it in env, but not all installation do it
+	/**
+	 * Summary of win_find_php_by_bin
+	 * on Windows PHP_BIN set in compile time to c:\php
+	 * It possible redifine it in env, but not all installation do it
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
 	function win_find_php_by_bin($bin_name) {
 		if (!defined('PHP_BIN')) {
 			return false;
@@ -1113,6 +1213,11 @@ if (!function_exists('win_find_php')) {
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
+	/**
+	 * Summary of win_find_php
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
 	function win_find_php($bin_name) {
 		$php_bin = win_find_php_by_binary($bin_name);
 		if ($php_bin) return $php_bin;
