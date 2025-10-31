@@ -192,15 +192,9 @@ if (!function_exists('fax_split_dtmf')) {
 	}
 
 //check if the domain is enabled
-	$sql = "select domain_enabled::text from v_domains where domain_uuid = :domain_uuid ";
+	$sql = "select domain_enabled from v_domains where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$row = $database->select($sql, $parameters, 'row');
-	if ($row['domain_enabled']) {
-		$domain_enabled = true;
-	}
-	else {
-		$domain_enabled = false;
-	}
+	$domain_enabled = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters, $row);
 
 //initialize database and settings
@@ -212,7 +206,7 @@ if (!function_exists('fax_split_dtmf')) {
 //send the fax
 	$continue = false;
 	if (!defined('STDIN')) {
-		if (!empty($_POST['action']) && $_POST['action'] == "send" && $domain_enabled == true) {
+		if (!empty($_POST['action']) && $_POST['action'] == "send" && $domain_enabled) {
 			//get the values from the HTTP POST
 				$fax_numbers = $_POST['fax_numbers'];
 				$fax_uuid = $_POST["id"];
@@ -1006,9 +1000,9 @@ if (!defined('STDIN')) {
 		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";
 		echo "	<div class='actions'>\n";
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme','button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'fax.php']);
-		if ($domain_enabled == true) {
-		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'icon'=>'eye','name'=>'submit','value'=>'preview']);
-		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','id'=>'btn_save','name'=>'submit','value'=>'send','style'=>'margin-left: 15px;']);
+		if ($domain_enabled) {
+			echo button::create(['type'=>'submit','label'=>$text['button-preview'],'icon'=>'eye','name'=>'submit','value'=>'preview']);
+			echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','id'=>'btn_save','name'=>'submit','value'=>'send','style'=>'margin-left: 15px;']);
 		}
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
@@ -1016,8 +1010,8 @@ if (!defined('STDIN')) {
 		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
 
-		if ($domain_enabled == false) {
-		echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
+		if ($domain_enabled) {
+			echo "<div class='warning_bar'>".$text['notice-sending-disabled']."</div>\n";
 		}
 
 		echo "<div class='card'>\n";

@@ -310,7 +310,7 @@
 
 		//if dnd or call forward are enabled process them last
 			if ($follow_me_enabled != true) {
-				if ($forward_all_enabled == true) {
+				if ($forward_all_enabled) {
 					//dnd
 						$dnd->set();
 						$dnd->user_status();
