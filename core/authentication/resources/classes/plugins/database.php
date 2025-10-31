@@ -131,7 +131,8 @@ class plugin_database {
 							if (class_exists($open_id_class)) {
 								$banners[] = [
 									'name' => $open_id_class,
-									'image' => $open_id_class::get_banner_image(),
+									'image' => $open_id_class::get_banner_image($settings),
+									'class' => $open_id_class::get_banner_css_class($settings),
 									'url' => '/app/open_id/open_id.php?action=' . $open_id_class,
 								];
 							}
