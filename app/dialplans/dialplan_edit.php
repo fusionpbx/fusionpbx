@@ -89,6 +89,9 @@
 	if (!empty($_REQUEST["app_uuid"]) && is_uuid($_REQUEST["app_uuid"])) {
 		$app_uuid = $_REQUEST["app_uuid"];
 	}
+	else {
+		$app_uuid = null;
+	}
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
@@ -300,7 +303,7 @@
 				}
 			}
 
-		//update the dialplan xml by using the array
+		//update the dialplan_xml by using the array
 			$dialplans = new dialplan;
 			$dialplans->source = "details";
 			$dialplans->destination = "array";
