@@ -38,6 +38,7 @@
 		 * @var string
 		 */
 		public $domain_uuid;
+		public $app_uuid;
 
 		/**
 		 * declare public variables
@@ -551,10 +552,10 @@
 			foreach($database_array['dialplans'] as $row) {
 				if (!empty($row['dialplan_details'])) {
 					foreach($row['dialplan_details'] as $detail) {
-						if ($detail['dialplan_detail_enabled'] == true) {
+						if ($detail['dialplan_detail_enabled'] == 'true') {
 							$array[$id]['domain_uuid'] = $row['domain_uuid'];
 							$array[$id]['dialplan_uuid'] = $row['dialplan_uuid'];
-							$array[$id]['app_uuid'] = $row['app_uuid'];
+							$array[$id]['app_uuid'] = $row['app_uuid'] ?? '';
 							$array[$id]['dialplan_context'] = $row['dialplan_context'];
 							$array[$id]['dialplan_name'] = $row['dialplan_name'];
 							$array[$id]['dialplan_number'] = $row['dialplan_number'];
