@@ -382,6 +382,17 @@
 		unset($sql, $parameters, $row);
 	}
 
+//get the dialplan details in an array
+	$sql = "select ";
+	$sql .= "domain_uuid, dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, ";
+	$sql .= "dialplan_detail_break, dialplan_detail_inline, dialplan_detail_group, dialplan_detail_order, dialplan_detail_enabled ";
+	$sql .= "from v_dialplan_details ";
+	$sql .= "where dialplan_uuid = :dialplan_uuid ";
+	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
+	$parameters['dialplan_uuid'] = $dialplan_uuid;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 //set the defaults
 	if (empty($dialplan_context)) {
 		$dialplan_context = $_SESSION['domain_name'];
@@ -393,16 +404,13 @@
 		$dialplan_destination = false;
 	}
 
-//get the dialplan details in an array
-	$sql = "select ";
-	$sql .= "domain_uuid, dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, ";
-	$sql .= "dialplan_detail_break, dialplan_detail_inline, dialplan_detail_group, dialplan_detail_order, dialplan_detail_enabled ";
-	$sql .= "from v_dialplan_details ";
-	$sql .= "where dialplan_uuid = :dialplan_uuid ";
-	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
-	$parameters['dialplan_uuid'] = $dialplan_uuid;
-	$result = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+//define the maximum dialplan order number
+	$dialplan_order_max = 999;
+
+//outbound routes - limit the dialplan order no more than 300 to prevent loop with call-forward-all
+	if ($app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
+		$dialplan_order_max = 300;
+	}
 
 //create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
 	//set the array index
@@ -673,8 +681,7 @@
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left' width='70%'>\n";
 	echo "		<select name='dialplan_order' class='formfld'>\n";
-	$i=0;
-	while($i<=999) {
+	for ($i = 0; $i <= $dialplan_order_max; $i++) {
 		$selected = ($i == $dialplan_order) ? "selected" : null;
 		if (strlen($i) == 1) {
 			echo "			<option value='00$i' ".$selected.">00$i</option>\n";

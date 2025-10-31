@@ -435,7 +435,7 @@
 						}
 
 						if (empty($dialplan_order)) {
-							$dialplan_order ='333';
+							$dialplan_order ='300';
 						}
 						$dialplan_context = $_SESSION['domain_name'];
 						$dialplan_continue = false;
@@ -895,6 +895,9 @@
 		unset($sql, $parameters);
 	}
 
+//define the maximum dialplan order number - maximum order set to 300 to prevent loops with call-forward-all
+	$dialplan_order_max = 300;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -1311,16 +1314,13 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
-	//echo "		<option></option>\n";
 	if (!empty($dialplan_order) && strlen(htmlspecialchars($dialplan_order))> 0) {
 		echo "		<option selected='yes' value='".escape($dialplan_order)."'>".escape($dialplan_order)."</option>\n";
 	}
-	$i = 100;
-	while($i <= 999) {
+	for ($i = 100; $i <= $dialplan_order_max; $i+=10) {
 		if (strlen($i) == 1) { echo "		<option value='00$i'>00$i</option>\n"; }
 		if (strlen($i) == 2) { echo "		<option value='0$i'>0$i</option>\n"; }
 		if (strlen($i) == 3) { echo "		<option value='$i'>$i</option>\n"; }
-		$i = $i + 10;
 	}
 	echo "	</select>\n";
 	echo "	<br />\n";
