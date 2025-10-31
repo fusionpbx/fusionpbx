@@ -882,7 +882,7 @@
 						if ($prev_module_cat != $row['module_category']) {
 							$xml .= "\n		<!-- ".$row['module_category']." -->\n";
 						}
-						if ($row['module_enabled'] == true){
+						if ($row['module_enabled']){
 							$xml .= "		<load module=\"".$row['module_name']."\"/>\n";
 						}
 						$prev_module_cat = $row['module_category'];
