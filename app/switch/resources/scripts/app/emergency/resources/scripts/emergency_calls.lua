@@ -39,8 +39,8 @@ max_digits = 1;
 max_tries = 1;
 
 --get recent calls from the emergency_logs
-local sql = "SELECT domain_uuid, extension ";
-sql = sql .. " extension, event, ";
+local sql = "SELECT ";
+sql = sql .. " domain_uuid, extension, event, ";
 sql = sql .. " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, ";
 sql = sql .. " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, ";
 sql = sql .. " extract(epoch from insert_date) as epoch, insert_date ";
