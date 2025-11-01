@@ -42,9 +42,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//create the database object
-	$database = database::new();
-
 //create event socket
 	$esl = event_socket::create();
 	if (!$esl->is_connected()) {
@@ -59,9 +56,8 @@
 	unset($sql);
 
 //get the sip profiles
-	if ($esl->is_connected()) {
-		$hostname = trim(event_socket::api('switchname'));
-	}
+	$hostname = gethostname();
+
 	$sql = "select sip_profile_uuid, sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = true ";
 	if (!empty($hostname)) {
@@ -175,7 +171,7 @@
 				foreach ($xml->profile as $row) {
 					unset($list_row_url);
 					$profile_name = (string) $row->name;
-					$list_row_url = is_uuid($sip_profiles[$profile_name]) && permission_exists('sip_profile_edit') ? PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name] : null;
+					$list_row_url = is_uuid($sip_profiles[$profile_name] ?? '') && permission_exists('sip_profile_edit') ? PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name] : null;
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
 					if ($list_row_url) {

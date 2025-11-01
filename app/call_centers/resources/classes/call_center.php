@@ -37,9 +37,14 @@
 			const app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 
 			/**
-			 * define public variables
+			 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			 * @var string
 			 */
 			public $domain_uuid;
+
+			/**
+			 * define public variables
+			 */
 			public $call_center_queue_uuid;
 			public $dialplan_uuid;
 			public $queue_name;
@@ -48,9 +53,26 @@
 			public $queue_cc_exit_keys;
 
 			/**
+			 * Set in the constructor. Must be a database object and cannot be null.
+			 * @var database Database Object
+			 */
+			private $database;
+
+			/**
+			 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			 * @var string
+			 */
+			private $user_uuid;
+
+			/**
+			 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+			 * @var string
+			 */
+			private $domain_name;
+
+			/**
 			* declare private variables
 			*/
-			private $database;
 			private $permission_prefix;
 			private $list_page;
 			private $table;
@@ -59,11 +81,14 @@
 			/**
 			 * Called when the object is created
 			 */
-			public function __construct() {
-				//connect to the database
-				if (empty($this->database)) {
-					$this->database = database::new();
-				}
+			public function __construct(array $setting_array = []) {
+				//set domain and user UUIDs
+				$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+				$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+				$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+				//set objects
+				$this->database = $setting_array['database'] ?? database::new();
 			}
 
 			/**
@@ -100,7 +125,7 @@
 					$dialplan["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_name"] = ($this->queue_name != '') ? $this->queue_name : format_phone($this->destination_number);
 					$dialplan["dialplan_number"] = $this->destination_number;
-					$dialplan["dialplan_context"] = $_SESSION['domain_name'];
+					$dialplan["dialplan_context"] = $this->domain_name;
 					$dialplan["dialplan_continue"] = false;
 					$dialplan["dialplan_order"] = "210";
 					$dialplan["dialplan_enabled"] = true;
@@ -190,7 +215,7 @@
 					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "callcenter";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $this->queue_name.'@'.$_SESSION["domain_name"];
+					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $this->queue_name.'@'.$this->domain_name;
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
@@ -252,7 +277,7 @@
 
 				//clear the cache
 					$cache = new cache;
-					$cache->delete("dialplan:".$_SESSION['domain_name']);
+					$cache->delete("dialplan:".$this->domain_name);
 
 				//return the dialplan_uuid
 					return $dialplan_response;
@@ -299,7 +324,7 @@
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, queue_name, queue_extension from v_".$this->table." ";
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and ".$this->uuid_prefix."uuid in ('".implode("','", $uuids)."') ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $row) {
@@ -315,16 +340,16 @@
 								$x = 0;
 								foreach ($call_center_queues as $call_center_queue_uuid => $call_center_queue) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $call_center_queue_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['dialplans'][$x]['dialplan_uuid'] = $call_center_queue['dialplan_uuid'];
-									$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['dialplan_details'][$x]['dialplan_uuid'] = $call_center_queue['dialplan_uuid'];
-									$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 									$array['call_center_tiers'][$x][$this->uuid_prefix.'uuid'] = $call_center_queue_uuid;
-									$array['call_center_tiers'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['call_center_tiers'][$x]['domain_uuid'] = $this->domain_uuid;
 									$x++;
-									$array['call_center_tiers'][$x]['queue_name'] = $call_center_queue['queue_extension']."@".$_SESSION['domain_name'];
-									$array['call_center_tiers'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['call_center_tiers'][$x]['queue_name'] = $call_center_queue['queue_extension']."@".$this->domain_name;
+									$array['call_center_tiers'][$x]['domain_uuid'] = $this->domain_uuid;
 									$x++;
 								}
 
@@ -337,7 +362,7 @@
 									//delete the queue in the switch
 										if ($esl->is_connected()) {
 											foreach ($uuids as $uuid) {
-												$cmd = "callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$_SESSION['domain_name'];
+												$cmd = "callcenter_config queue unload ".$call_center_queues[$uuid]['queue_extension']."@".$this->domain_name;
 												$response = event_socket::api($cmd);
 											}
 										}
@@ -359,7 +384,7 @@
 
 									//clear the cache
 										$cache = new cache;
-										$cache->delete("dialplan:".$_SESSION["domain_name"]);
+										$cache->delete("dialplan:".$this->domain_name);
 										remove_config_from_cache('configuration:callcenter.conf');
 
 									//clear the destinations session array
@@ -417,9 +442,9 @@
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
 									foreach ($uuids as $x => $uuid) {
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['call_center_tiers'][$x]['call_center_agent_uuid'] = $uuid;
-										$array['call_center_tiers'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['call_center_tiers'][$x]['domain_uuid'] = $this->domain_uuid;
 									}
 								}
 
@@ -508,6 +533,14 @@
 												$new_call_center_queue_uuid = uuid();
 												$new_dialplan_uuid = uuid();
 
+												//convert boolean values to a string
+													foreach($row as $key => $value) {
+														if (gettype($value) == 'boolean') {
+															$value = $value ? 'true' : 'false';
+															$row[$key] = $value;
+														}
+													}
+
 												//copy data
 													$array[$this->table][$x] = $row;
 
@@ -540,6 +573,14 @@
 													$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
 													$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 													if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+														//convert boolean values to a string
+															foreach($dialplan as $key => $value) {
+																if (gettype($value) == 'boolean') {
+																	$value = $value ? 'true' : 'false';
+																	$dialplan[$key] = $value;
+																}
+															}
 
 														//copy data
 															$array['dialplans'][$x] = $dialplan;
@@ -580,7 +621,7 @@
 
 									//clear the cache
 										$cache = new cache;
-										$cache->delete("dialplan:".$_SESSION["domain_name"]);
+										$cache->delete("dialplan:".$this->domain_name);
 
 									//set message
 										message::add($text['message-copy']);

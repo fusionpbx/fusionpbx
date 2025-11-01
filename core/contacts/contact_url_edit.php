@@ -183,7 +183,7 @@
 	}
 
 //set the defaults
-	if ($url_primary === null) { $url_primary = false; }
+	$url_primary = $url_primary ?? false;
 
 //create token
 	$object = new token;

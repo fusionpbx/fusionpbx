@@ -35,6 +35,9 @@
 //get the user uuid
 	$user_uuid = $_SESSION['user_uuid'];
 
+//set the action
+	$action = 'edit';
+
 //retrieve password requirements
 	if (permission_exists('user_password')) {
 		$required['length'] = $settings->get('users', 'password_length', 12);
@@ -50,16 +53,28 @@
 		//get the HTTP values and set as variables
 			$password = $_POST["password"];
 			$password_confirm = $_POST["password_confirm"];
+			$contact_name_given = $_POST['contact_name_given'];
+			$contact_name_family = $_POST['contact_name_family'];
+			$contact_email_uuid = $_POST['contact_email_uuid'];
 			$user_email = $_POST["user_email"];
+			$contact_phone_uuid = $_POST['contact_phone_uuid'];
+			$phone_number = $_POST['phone_number'];
+			$contact_address_uuid = $_POST['contact_address_uuid'];
+			$address_locality = $_POST['address_locality'];
+			$address_region = $_POST['address_region'];
+			$address_country = $_POST['address_country'];
 			$user_status = $_POST["user_status"] ?? '';
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
-			//if (permission_exists('api_key')) {
-			//	$api_key = $_POST["api_key"];
-			//}
+			$contact_attachment_uuid = $_POST['contact_attachment_uuid'];
+			$contact_attachment = $_FILES['contact_attachment'];
+
 			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
+
+		//remove any phone number formatting
+			$phone_number = preg_replace('{(?!^\+)[\D]}', '', $phone_number);
 
 		//validate the token
 			$token = new token;
@@ -133,6 +148,127 @@
 						$invalid[] = $text['label-special_characters'];
 					}
 				}
+			}
+
+		//save contact
+			$array['contacts'][$c]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+			$array['contacts'][$c]['domain_uuid'] = $domain_uuid;
+			$array['contacts'][$c]['contact_type'] = 'user';
+			$array['contacts'][$c]['contact_name_given'] = $contact_name_given ?? null;
+			$array['contacts'][$c]['contact_name_family'] = $contact_name_family ?? null;
+			$array['contacts'][$c]['contact_nickname'] = $_SESSION['username'];
+			$c++;
+
+		//save email
+			$array['contact_emails'][$n]['contact_email_uuid'] = is_uuid($contact_email_uuid) ? $contact_email_uuid : uuid();
+			$array['contact_emails'][$n]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+			$array['contact_emails'][$n]['domain_uuid'] = $domain_uuid;
+			$array['contact_emails'][$n]['email_address'] = $user_email;
+			$array['contact_emails'][$n]['email_primary'] = 'true';
+			$n++;
+
+		//save phone
+			if (!empty($phone_number)) {
+				$array['contact_phones'][$y]['contact_phone_uuid'] = is_uuid($contact_phone_uuid) ? $contact_phone_uuid : uuid();
+				$array['contact_phones'][$y]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+				$array['contact_phones'][$y]['domain_uuid'] = $domain_uuid;
+				$array['contact_phones'][$y]['phone_number'] = $phone_number;
+				$array['contact_phones'][$y]['phone_primary'] = 'true';
+				$y++;
+			}
+
+		//save address
+			if (!empty($address_locality) || !empty($address_region) || !empty($address_country)) {
+				$array['contact_addresses'][$y]['contact_address_uuid'] = is_uuid($contact_address_uuid) ? $contact_address_uuid : uuid();
+				$array['contact_addresses'][$y]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+				$array['contact_addresses'][$y]['domain_uuid'] = $domain_uuid;
+				$array['contact_addresses'][$y]['address_locality'] = $address_locality ?? null;
+				$array['contact_addresses'][$y]['address_region'] = $address_region ?? null;
+				$array['contact_addresses'][$y]['address_country'] = $address_country ?? null;
+				$array['contact_addresses'][$y]['address_primary'] = 'true';
+				$y++;
+			}
+
+		//delete current profile photo (contact attachment)
+			if (!empty($contact_attachment_uuid) && is_uuid($contact_attachment_uuid)) {
+				$p = permissions::new();
+				$p->add('contact_attachment_delete', 'temp');
+
+				$array_delete['contact_attachments'][0]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+				$array_delete['contact_attachments'][0]['domain_uuid'] = $domain_uuid;
+				$array_delete['contact_attachments'][0]['contact_attachment_uuid'] = $contact_attachment_uuid;
+				$database->delete($array_delete);
+				unset($array_delete);
+
+				$p->delete('contact_attachment_delete', 'temp');
+			}
+		//handle new profile photo
+			else if (is_array($contact_attachment) && sizeof($contact_attachment) != 0 && $contact_attachment['error'] === 0) {
+				$contact_attachment_extension = strtolower(pathinfo($contact_attachment['name'], PATHINFO_EXTENSION));
+				if (in_array($contact_attachment_extension, ['jpg','jpeg','gif','png','webp'])) {
+
+					//unflag others as primary
+					$sql = "update v_contact_attachments set attachment_primary = false ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and contact_uuid = :contact_uuid ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+					$database->execute($sql, $parameters);
+					unset($sql, $parameters);
+
+					//get the attachment content
+					$contact_attachment_content = file_get_contents($contact_attachment['tmp_name']);
+
+					//create the image object from the content string
+					$image = imagecreatefromstring($contact_attachment_content);
+
+					//start output buffering to capture the image data
+					ob_start();
+
+					//output the image without the EXIF data
+					switch ($contact_attachment_extension) {
+						case 'png':
+							imagealphablending($image, false);
+							imagesavealpha($image, true);
+							imagepng($image);
+							break;
+						case 'jpg':
+						case 'jpeg':
+							imagejpeg($image);
+							break;
+						case 'gif':
+							imagesavealpha($image, true);
+							imagegif($image);
+							break;
+						case 'webp':
+							imagewebp($image);
+							break;
+					}
+
+					//get the image from the buffer
+					$contact_attachment_content = ob_get_contents();
+
+					//end the buffering
+					ob_end_clean();
+
+					//free up the memory
+					imagedestroy($image);
+
+					//prepare the array
+					$array['contact_attachments'][0]['contact_attachment_uuid'] = is_uuid($contact_attachment_uuid) ? $contact_attachment_uuid : uuid();
+					$array['contact_attachments'][0]['domain_uuid'] = $domain_uuid;
+					$array['contact_attachments'][0]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+					$array['contact_attachments'][0]['attachment_primary'] = 'true';
+					$array['contact_attachments'][0]['attachment_filename'] = $contact_attachment['name'];
+					$array['contact_attachments'][0]['attachment_content'] = base64_encode($contact_attachment_content);
+					if ($action == 'add') {
+						$array['contact_attachments'][0]['attachment_uploaded_date'] = 'now()';
+						$array['contact_attachments'][0]['attachment_uploaded_user_uuid'] = $_SESSION['user_uuid'];
+					}
+				}
+			}
+			else {
+				unset($contact_attachment);
 			}
 
 		//return if error
@@ -263,6 +399,7 @@
 						unlink(session_save_path() . "/sess_" . $row['session_id']);
 					}
 				}
+				unset($sql, $parameters);
 
 				//create a one way hash for the user password
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
@@ -287,6 +424,9 @@
 			$p->add("user_setting_edit", "temp");
 			$p->add("user_edit", "temp");
 			$p->add('user_group_add', 'temp');
+			$p->add("contact_attachment_add", "temp");
+			$p->add("contact_attachment_edit", "temp");
+			$p->add("contact_attachment_delete", "temp");
 
 		//save the data
 			$database->save($array);
@@ -297,6 +437,16 @@
 			$p->delete("user_setting_edit", "temp");
 			$p->delete("user_edit", "temp");
 			$p->delete('user_group_add', 'temp');
+			$p->delete("contact_attachment_add", "temp");
+			$p->delete("contact_attachment_edit", "temp");
+			$p->delete("contact_attachment_delete", "temp");
+
+		//clear the menu
+			unset($_SESSION["menu"]);
+
+		//get settings based on the user
+			$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'], 'user_uuid' => $_SESSION['user_uuid']]);
+			settings::clear_cache();
 
 		//if call center installed
 			if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
@@ -325,12 +475,12 @@
 			}
 
 		//response message
-			if ($action == 'edit') {
-				message::add($text['message-update'],'positive');
-			}
-			else {
-				message::add($text['message-add'],'positive');
-			}
+			message::add($text['message-update'],'positive');
+
+		//redirect
+			header('Location: user_profile.php');
+			exit;
+
 	}
 
 //populate form
@@ -341,30 +491,67 @@
 			persistent_form_values('clear');
 	}
 	else {
+
 		//populate the form with values from db
-			$sql = "select domain_uuid, user_uuid, username, user_email, api_key, user_totp_secret, ";
-			$sql .= "user_type, contact_uuid, user_enabled, user_status ";
-			$sql .= "from v_users ";
-			$sql .= "where user_uuid = :user_uuid ";
+			$sql = "select ";
+			$sql .= "u.domain_uuid, ";
+			$sql .= "u.user_uuid, ";
+			$sql .= "u.username, ";
+			$sql .= "u.user_email, ";
+			$sql .= "u.user_totp_secret, ";
+			$sql .= "u.user_type, ";
+			$sql .= "u.contact_uuid, ";
+			$sql .= "u.user_enabled, ";
+			$sql .= "u.user_status, ";
+			$sql .= "c.contact_name_given, ";
+			$sql .= "c.contact_name_family, ";
+			$sql .= "ce.contact_email_uuid, ";
+			$sql .= "cp.contact_phone_uuid, ";
+			$sql .= "cp.phone_number, ";
+			$sql .= "ca1.contact_address_uuid, ";
+			$sql .= "ca1.address_locality, ";
+			$sql .= "ca1.address_region, ";
+			$sql .= "ca1.address_country, ";
+			$sql .= "ca2.contact_attachment_uuid, ";
+			$sql .= "ca2.attachment_filename, ";
+			$sql .= "ca2.attachment_content ";
+			$sql .= "from ";
+			$sql .= "v_users as u ";
+			$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid ";
+			$sql .= "left join v_contact_emails as ce on u.contact_uuid = ce.contact_uuid and ce.email_primary = true ";
+			$sql .= "left join v_contact_phones as cp on u.contact_uuid = cp.contact_uuid and cp.phone_primary = true ";
+			$sql .= "left join v_contact_addresses as ca1 on u.contact_uuid = ca1.contact_uuid and ca1.address_primary = true ";
+			$sql .= "left join v_contact_attachments as ca2 on u.contact_uuid = ca2.contact_uuid and ca2.attachment_primary = true ";
+			$sql .= "where u.user_uuid = :user_uuid ";
 			if (!permission_exists('user_all')) {
 				$sql .= "and domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
 			}
 			$parameters['user_uuid'] = $user_uuid;
+			// echo $sql; view_array($parameters);
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && sizeof($row) > 0) {
 				$domain_uuid = $row["domain_uuid"];
 				$user_uuid = $row["user_uuid"];
 				$username = $row["username"];
 				$user_email = $row["user_email"];
-				$api_key = $row["api_key"];
 				$user_totp_secret = $row["user_totp_secret"];
 				$user_type = $row["user_type"];
 				$user_enabled = $row["user_enabled"];
-				if (permission_exists('contact_view')) {
-					$contact_uuid = $row["contact_uuid"];
-				}
 				$user_status = $row["user_status"];
+				$contact_uuid = $row["contact_uuid"];
+				$contact_name_given = $row["contact_name_given"];
+				$contact_name_family = $row["contact_name_family"];
+				$contact_email_uuid = $row["contact_email_uuid"];
+				$contact_phone_uuid = $row["contact_phone_uuid"];
+				$phone_number = $row["phone_number"];
+				$contact_address_uuid = $row["contact_address_uuid"];
+				$address_locality = $row["address_locality"];
+				$address_region = $row["address_region"];
+				$address_country = $row["address_country"];
+				$contact_attachment_uuid = $row["contact_attachment_uuid"];
+				$attachment_filename = $row["attachment_filename"];
+				$attachment_content = $row["attachment_content"];
 			}
 			else {
 				message::add($text['message-invalid_user'], 'negative', 7500);
@@ -409,7 +596,7 @@
 
 //include the header
 	require_once "resources/header.php";
-	$document['title'] = $text['title-user_edit'];
+	$document['title'] = $text['title-user_profile'];
 
 //show the content
 	if (permission_exists('user_password')) {
@@ -444,7 +631,10 @@
 		echo "</script>\n";
 	}
 
-	echo "<form name='frm' id='frm' method='post'>\n";
+	echo "<form name='frm' id='frm' method='post' enctype='multipart/form-data'>\n";
+	echo "<input type='hidden' name='contact_email_uuid' value='".$contact_email_uuid."'>\n";
+	echo "<input type='hidden' name='contact_phone_uuid' value='".$contact_phone_uuid."'>\n";
+	echo "<input type='hidden' name='contact_address_uuid' value='".$contact_address_uuid."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-user_profile']."</b></div>\n";
@@ -466,7 +656,7 @@
 	echo "<br /><br />\n";
 
 	echo "<div class='card'>\n";
-	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
+	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' class='mb-4'>";
 
 	echo "	<tr>";
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
@@ -520,128 +710,6 @@
 		echo "		</td>";
 		echo "	</tr>";
 	}
-
-	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-email']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email ?? '')."' required='required'></td>";
-	echo "	</tr>";
-
-	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
-	echo "		".$text['label-user_language']."\n";
-	echo "	</td>\n";
-	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
-	echo "		<option value=''></option>\n";
-	if (!empty($languages) && is_array($languages) && sizeof($languages) != 0) {
-		foreach ($languages as $row) {
-			$language_codes[$row["code"]] = $row["language"];
-		}
-	}
-	unset($sql, $languages, $row);
-	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
-		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = (isset($user_language) && $code == $user_language) || (isset($user_settings['domain']['language']['code']) && $code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
-			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? $language_codes[explode('-', $code)[0]] ?? null)." [".escape($code ?? null)."]</option>\n";
-		}
-	}
-	echo "		</select>\n";
-	echo "		<br />\n";
-	echo "		".$text['description-user_language']."<br />\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
-
-	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
-	echo "		".$text['label-time_zone']."\n";
-	echo "	</td>\n";
-	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
-	echo "		<option value=''></option>\n";
-	//$list = DateTimeZone::listAbbreviations();
-	$time_zone_identifiers = DateTimeZone::listIdentifiers();
-	$previous_category = '';
-	$x = 0;
-	foreach ($time_zone_identifiers as $key => $row) {
-		$time_zone = explode("/", $row);
-		$category = $time_zone[0];
-		if ($category != $previous_category) {
-			if ($x > 0) {
-				echo "		</optgroup>\n";
-			}
-			echo "		<optgroup label='".$category."'>\n";
-		}
-		$selected = (isset($user_time_zone) && $row == $user_time_zone) || (!empty($user_settings['domain']['time_zone']) && $row == $user_settings['domain']['time_zone']['name']) ? "selected='selected'" : null;
-		echo "			<option value='".escape($row)."' ".$selected.">".escape($row)."</option>\n";
-		$previous_category = $category;
-		$x++;
-	}
-	echo "		</select>\n";
-	echo "		<br />\n";
-	echo "		".$text['description-time_zone']."<br />\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
-
-	if (permission_exists("user_status")) {
-		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
-		echo "		".$text['label-status']."\n";
-		echo "	</td>\n";
-		echo "	<td class=\"vtable\">\n";
-		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
-		echo "			<option value=''></option>\n";
-		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
-		echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
-		echo "			<option value='Logged Out' ".(($user_status == "Logged Out") ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
-		echo "			<option value='On Break' ".(($user_status == "On Break") ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
-		echo "			<option value='Do Not Disturb' ".(($user_status == "Do Not Disturb") ? "selected='selected'" : null).">".$text['option-do_not_disturb']."</option>\n";
-		echo "		</select>\n";
-		echo "		<br />\n";
-		echo "		".$text['description-status']."<br />\n";
-		echo "	</td>\n";
-		echo "	</tr>\n";
-	}
-
-	//if (permission_exists('api_key')) {
-	//	echo "	<tr>";
-	//	echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
-	//	echo "		<td class='vtable'>\n";
-	//	echo "			<input type='text' class='formfld' style='width: 250px; display: none;' name='api_key' id='api_key' value=\"".escape($api_key ?? '')."\" >";
-	//	if (empty($api_key)) {
-	//		//generate api key
-	//		echo button::create(['type'=>'button',
-	//			'label'=>$text['button-generate'],
-	//			'icon'=>'key',
-	//			'style'=>'margin-top: 1px; margin-bottom: 1px;',
-	//			'onclick'=>"document.getElementById('api_key').value = '".generate_password(32,3)."';
-	//				document.getElementById('frm').submit();"]);
-	//	}
-	//	else {
-	//		//view the api key
-	//		echo button::create(['type'=>'button',
-	//			'label'=>$text['button-view'],
-	//			'id'=>'button-api_key_view',
-	//			'icon'=>'key',
-	//			'style'=>'margin-top: 1px; margin-bottom: 1px;',
-	//			'onclick'=>"document.getElementById ('button-api_key_view').style.display = 'none';
-	//				document.getElementById('api_key').style.display = 'inline';
-	//				document.getElementById('button-api_key_hide').style.display = 'inline';
-	//				document.getElementById('button-api_key_view').style.display = 'none';"]);
-	//		echo button::create(['type'=>'button',
-	//			'label'=>$text['button-hide'],
-	//			'id'=>'button-api_key_hide',
-	//			'icon'=>'key',
-	//			'style'=>'display: none;',
-	//			'onclick'=>"document.getElementById('api_key').style.display = 'none';
-	//				document.getElementById('button-api_key_hide').style.display = 'none';
-	//				document.getElementById('button-api_key_view').style.display = 'inline';"]);
-	//	}
-	//	if (!empty($text['description-api_key'])) {
-	//		echo "			<br />".$text['description-api_key']."<br />\n";
-	//	}
-	//	echo "		</td>";
-	//	echo "	</tr>";
-	//
 
 	//user time based one time password secret
 	if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
@@ -722,6 +790,149 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	echo "</table>\n";
+
+	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
+
+	echo "	<tr>";
+	echo "		<td width='30%' class='vncell'>".$text['label-first_name']."</td>";
+	echo "		<td widht='70%' class='vtable'><input type='text' class='formfld' name='contact_name_given' id='contact_name_given' required='required' value='".escape($contact_name_given)."'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-last_name']."</td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' id='contact_name_family' required='required' value='".escape($contact_name_family)."'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncellreq'>".$text['label-email']."</td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='".escape($user_email ?? '')."' required='required'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-phone']."</td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='phone_number' id='phone_number' required='required' value='".escape(format_phone($phone_number))."'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>\n";
+	echo "		<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-address_locality']."</td>\n";
+	echo "		<td class='vtable' align='left'><input class='formfld' type='text' name='address_locality' maxlength='255' value=\"".escape($address_locality)."\"></td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "		<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-region']."</td>\n";
+	echo "		<td class='vtable' align='left'><input class='formfld' type='text' name='address_region' maxlength='255' required='required' value=\"".escape($address_region)."\"></td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "		<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-address_country']."</td>\n";
+	echo "		<td class='vtable' align='left'>\n";
+	$countries = get_countries($database);
+	if (is_array($countries) && sizeof($countries) > 0) {
+		echo "		<select class='formfld' name='address_country' id='address_country' required='required'>\n";
+		echo "			<option value=''></option>\n";
+		foreach ($countries as $country) {
+			$selected = ($address_country == $country['iso_a3']) ? "selected='selected'" : null;
+			echo "		<option value='".escape($country['iso_a3'])."' ".$selected.">".escape($country['country'])." (".escape($country['iso_a3']).")</option>\n";
+		}
+		echo "		</select>\n";
+	}
+	else {
+		echo "		<input class='formfld' type='text' name='address_country' id='address_country' maxlength='255' value=\"".escape($address_country)."\" required='required'>\n";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+	echo "		".$text['label-user_language']."\n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\" align='left'>\n";
+	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
+	echo "		<option value=''></option>\n";
+	if (!empty($languages) && is_array($languages) && sizeof($languages) != 0) {
+		foreach ($languages as $row) {
+			$language_codes[$row["code"]] = $row["language"];
+		}
+	}
+	unset($sql, $languages, $row);
+	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
+		foreach ($_SESSION['app']['languages'] as $code) {
+			$selected = (isset($user_language) && $code == $user_language) || (isset($user_settings['domain']['language']['code']) && $code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
+			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? $language_codes[explode('-', $code)[0]] ?? null)." [".escape($code ?? null)."]</option>\n";
+		}
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-user_language']."<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+	echo "		".$text['label-time_zone']."\n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\" align='left'>\n";
+	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
+	echo "		<option value=''></option>\n";
+	//$list = DateTimeZone::listAbbreviations();
+	$time_zone_identifiers = DateTimeZone::listIdentifiers();
+	$previous_category = '';
+	$x = 0;
+	foreach ($time_zone_identifiers as $key => $row) {
+		$time_zone = explode("/", $row);
+		$category = $time_zone[0];
+		if ($category != $previous_category) {
+			if ($x > 0) {
+				echo "		</optgroup>\n";
+			}
+			echo "		<optgroup label='".$category."'>\n";
+		}
+		$selected = (isset($user_time_zone) && $row == $user_time_zone) || (!empty($user_settings['domain']['time_zone']) && $row == $user_settings['domain']['time_zone']['name']) ? "selected='selected'" : null;
+		echo "			<option value='".escape($row)."' ".$selected.">".escape($row)."</option>\n";
+		$previous_category = $category;
+		$x++;
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-time_zone']."<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	if (permission_exists("user_status")) {
+		echo "	<tr>\n";
+		echo "	<td class=\"vncell\" valign='top'>\n";
+		echo "		".$text['label-status']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"vtable\">\n";
+		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
+		echo "			<option value=''></option>\n";
+		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
+		echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
+		echo "			<option value='Logged Out' ".(($user_status == "Logged Out") ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
+		echo "			<option value='On Break' ".(($user_status == "On Break") ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
+		echo "			<option value='Do Not Disturb' ".(($user_status == "Do Not Disturb") ? "selected='selected'" : null).">".$text['option-do_not_disturb']."</option>\n";
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		".$text['description-status']."<br />\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+	}
+
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-photo']."</td>\n";
+	echo "	<td class='vtable' align='left'>";
+	if (!empty($attachment_filename) && !empty($attachment_content)) {
+		$attachment_type = strtolower(pathinfo($attachment_filename, PATHINFO_EXTENSION));
+		echo "	<label class='mt-1' for='contact_attachment_uuid'><input type='checkbox' name='contact_attachment_uuid' id='contact_attachment_uuid' value='".$contact_attachment_uuid."'> ".$text['label-delete']."</label><br>\n";
+		echo "	<img id='contact_attachment' style='width: 100%; max-width: 300px; height: auto; border-radius: ".$settings->get('theme', 'input_border_radius', '3px').";' src='data:image/".$attachment_type.";base64,".$attachment_content."'>\n";
+	}
+	else {
+		echo "	<input class='formfld' type='file' name='contact_attachment'>\n";
+	}
+	echo "	</td>\n";
+	echo "	</tr>\n";
 
 	echo "</table>";
 	echo "</div>\n";

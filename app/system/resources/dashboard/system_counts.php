@@ -13,9 +13,15 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //system counts
 	//domains
@@ -291,7 +297,7 @@
 	if ($show_stat) {
 
 		echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"").">\n";
-		echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</a></span>\n";
+		echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".escape($widget_label)."</a></span>\n";
 
 		if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 			//add doughnut chart

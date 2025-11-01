@@ -489,8 +489,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "timestamptz";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "deprecated";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_template";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_template";
@@ -528,7 +527,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_time_zone";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_time_zone";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "deprecated";
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_description";

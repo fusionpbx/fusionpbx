@@ -81,7 +81,7 @@
 		$user_setting_name = strtolower($_POST["user_setting_name"] ?? '');
 		$user_setting_value = $_POST["user_setting_value"] ?? '';
 		$user_setting_order = $_POST["user_setting_order"] ?? '';
-		$user_setting_enabled = $_POST["user_setting_enabled"];
+		$user_setting_enabled = $_POST["user_setting_enabled"] ?? true;
 		$user_setting_description = $_POST["user_setting_description"] ?? '';
 	}
 
@@ -173,8 +173,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 							$array['dialplan_details'][0]['dialplan_detail_group'] = 0;
 						}
 						if (is_array($array) && sizeof($array) != 0) {
-							$database->app_name = 'user_settings';
-							$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 							$database->save($array);
 							unset($array);
 
@@ -205,8 +203,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$array['user_settings'][0]['user_setting_enabled'] = $user_setting_enabled;
 					$array['user_settings'][0]['user_setting_description'] = $user_setting_description;
 
-					$database->app_name = 'user_settings';
-					$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 					$database->save($array);
 					unset($array);
 				}
@@ -266,8 +262,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 									$p = permissions::new();
 									$p->add('dialplan_detail_add', 'temp');
 
-									$database->app_name = 'user_settings';
-									$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 									$database->save($array);
 									unset($array);
 
@@ -284,8 +278,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 									$p = permissions::new();
 									$p->add('dialplan_detail_edit', 'temp');
 
-									$database->app_name = 'user_settings';
-									$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 									$database->save($array);
 									unset($array);
 
@@ -697,7 +689,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $_SESSION['domain']['setting_value_input_type']['text'] == 'textarea') {
+		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
 			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='user_setting_value' name='user_setting_value'>".($user_setting_value ?? '')."</textarea>\n";
 		}
 		else {

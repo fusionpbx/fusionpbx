@@ -28,9 +28,15 @@
 //includes files
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/ring_groups');
+
+//get the dashboard label
+	$widget_label = $text['header-'.$widget_key] ?? $widget_name;
 
 //get the list
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
@@ -81,8 +87,6 @@
 				$p = permissions::new();
 				$p->add('ring_group_edit', 'temp');
 
-				$database->app_name = 'ring_groups';
-				$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 				$database->save($array);
 				unset($array);
 
@@ -149,7 +153,7 @@
 	echo "<div class='hud_box'>\n";
 
 	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_ring_group_forward_details').slideToggle('fast');\"").">\n";
-	echo "		<span class='hud_title'>".$text['header-ring-group-forward']."</span>\n";
+	echo "		<span class='hud_title'>".escape($widget_label)."</span>\n";
 
 //doughnut chart
 	if (empty($widget_chart_type) ||$widget_chart_type == "doughnut") {

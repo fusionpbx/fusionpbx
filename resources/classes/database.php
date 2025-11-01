@@ -1530,14 +1530,14 @@ class database {
 
 	} //count
 
-	/**
-	 * Performs a select query on database using the <b>$sql</b> statement supplied.
-	 * @param type $sql Valid SQL statement.
-	 * @param type $parameters Value can be <i>array</i>, empty string, or <i>null</i>.
-	 * @param type $return_type Values can be set to <i>all</i>, <i>row</i>, or <i>column</i>.
-	 * @return mixed Returned values can be array, string, boolean, int, or false. This is dependent on <i>$return_type</i>.
-	 */
-	public function select($sql, $parameters = '', $return_type = 'all') {
+    /**
+     * Performs a select query on database using the <b>$sql</b> statement supplied.
+     * @param string $sql Valid SQL statement.
+     * @param array|null $parameters Value can be <i>array</i>, empty string, or <i>null</i>.
+     * @param string $return_type Values can be set to <i>all</i>, <i>row</i>, or <i>column</i>.
+     * @return mixed Returned values can be array, string, boolean, int, or false. This is dependent on <i>$return_type</i>.
+     */
+	public function select(string $sql, ?array $parameters = [], string $return_type = 'all') {
 
 		//connect to the database if needed
 			if (!$this->db) {
@@ -1610,6 +1610,9 @@ class database {
 	 * @return database Returns the database object or null.
 	 */
 	public function find_new(array $array) {
+
+		//define the message ordinal id
+		$m = 0;
 
 		//connect to the database if needed
 		if (!$this->db) {
@@ -3465,6 +3468,7 @@ class database {
 					//set the variables
 					$view_name = $row['name'];
 					$view_sql = $row['sql'];
+					$view_sql = str_replace(';', '', $view_sql);
 					//$view_version = $row['version'];
 					//$view_description = $row['description'];
 

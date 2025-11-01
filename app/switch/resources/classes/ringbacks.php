@@ -34,10 +34,45 @@
 		const app_uuid = 'b63db353-e1c6-4401-8f10-101a6ee73b74';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $ringtones_list;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
 
 		/**
 		 * declare private variables
@@ -51,14 +86,15 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
-			//set the domain_uuid
-			$this->domain_uuid = $_SESSION['domain_uuid'];
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+			$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//add multi-lingual support
 			$language = new text;
@@ -142,7 +178,7 @@
 			foreach($this->music_list as $row) {
 				$name = '';
 				if (!empty($row['domain_uuid'])) {
-					$name = $row['domain_name'].'/';	
+					$name = $row['domain_name'].'/';
 				}
 				$name .= $row['music_on_hold_name'];
 				if ($value == "local_stream://".$name) {
@@ -182,7 +218,7 @@
 						if ($previous_name != $row['music_on_hold_name']) {
 							$name = '';
 							if (!empty($row['domain_uuid'])) {
-								$name = $row['domain_name'].'/';	
+								$name = $row['domain_name'].'/';
 							}
 							$name .= $row['music_on_hold_name'];
 							$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";

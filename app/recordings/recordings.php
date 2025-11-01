@@ -37,9 +37,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the database connection
-	$database = database::new();
-
 //get the session settings
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'];
@@ -207,8 +204,6 @@
 						$p = permissions::new();
 						$p->add('recording_edit', 'temp');
 					//execute update
-						$database->app_name = 'recordings';
-						$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 						$database->save($array);
 						unset($array);
 					//remove temporary permissions
@@ -244,8 +239,6 @@
 							$p = permissions::new();
 							$p->add('recording_add', 'temp');
 						//execute insert
-							$database->app_name = 'recordings';
-							$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 							$database->save($array);
 							unset($array);
 						//remove temporary permissions
@@ -265,8 +258,6 @@
 										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//execute update
-										$database->app_name = 'recordings';
-										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array);
 										unset($array);
 									//remove temporary permissions
@@ -304,7 +295,7 @@
 				break;
 		}
 
-		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -343,6 +334,16 @@
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	$parameters['time_zone'] = $time_zone;
+
+//set the sql time format
+	$sql_time_format = 'HH12:MI am';
+	if (!empty($settings->get('domain', 'time_format'))) {
+		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "HH12:MI am" : "HH24:MI";
+	}
 
 //get the file size
 	if ($recording_storage_type == 'base64') {

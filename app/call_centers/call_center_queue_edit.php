@@ -42,8 +42,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize database and settings
-	$database = database::new();
+//initialize settings object
 	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
@@ -205,8 +204,6 @@
 				$p = permissions::new();
 				$p->add('call_center_tier_delete', 'temp');
 
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->delete($array);
 				unset($array);
 
@@ -464,10 +461,8 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database->app_name = 'call_centers';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
@@ -690,21 +685,21 @@
 		unset($sounds);
 	}
 
-//set default values
-	if (empty($queue_strategy)) { $queue_strategy = "longest-idle-agent"; }
-	if (empty($queue_moh_sound)) { $queue_moh_sound = "\$\${hold_music}"; }
-	if (empty($queue_time_base_score)) { $queue_time_base_score = "system"; }
-	if (empty($queue_max_wait_time)) { $queue_max_wait_time = "0"; }
-	if (empty($queue_max_wait_time_with_no_agent)) { $queue_max_wait_time_with_no_agent = "90"; }
-	if (empty($queue_max_wait_time_with_no_agent_time_reached)) { $queue_max_wait_time_with_no_agent_time_reached = "30"; }
-	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
-	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
-	if (empty($queue_context)) { $queue_context = $domain_name; }
-	if ($queue_record_template === null) { $queue_record_template = 'false'; }
-	if ($queue_tier_rules_apply === null) { $queue_tier_rules_apply = false; }
-	if ($queue_tier_rule_wait_multiply_level === null) { $queue_tier_rule_wait_multiply_level = true; }
-	if ($queue_tier_rule_no_agent_no_wait === null) { $queue_tier_rule_no_agent_no_wait = true; }
-	if ($queue_abandoned_resume_allowed === null) { $queue_abandoned_resume_allowed = false; }
+//set the default values
+	$queue_strategy = $queue_strategy ?? "longest-idle-agent";
+	$queue_moh_sound = $queue_moh_sound ?? "\$\${hold_music}";
+	$queue_time_base_score = $queue_time_base_score ?? "system";
+	$queue_max_wait_time = $queue_max_wait_time ?? "0";
+	$queue_max_wait_time_with_no_agent = $queue_max_wait_time_with_no_agent ?? "90";
+	$queue_max_wait_time_with_no_agent_time_reached = $queue_max_wait_time_with_no_agent_time_reached ?? "30";
+	$queue_tier_rule_wait_second = $queue_tier_rule_wait_second ?? "30";
+	$queue_discard_abandoned_after = $queue_discard_abandoned_after ?? "900";
+	$queue_context = $queue_context ?? $domain_name;
+	$queue_record_template = $queue_record_template ?? 'false';
+	$queue_tier_rules_apply = $queue_tier_rules_apply ?? false;
+	$queue_tier_rule_wait_multiply_level = $queue_tier_rule_wait_multiply_level ?? true;
+	$queue_tier_rule_no_agent_no_wait = $queue_tier_rule_no_agent_no_wait ?? true;
+	$queue_abandoned_resume_allowed = $queue_abandoned_resume_allowed ?? false;
 
 //create token
 	$object = new token;

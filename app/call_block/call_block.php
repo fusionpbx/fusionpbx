@@ -51,7 +51,7 @@
 //get posted data
 	if (!empty($_POST['call_blocks'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_blocks = $_POST['call_blocks'];
 	}
 
@@ -78,7 +78,7 @@
 				break;
 		}
 
-		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -92,12 +92,7 @@
 	}
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
@@ -140,7 +135,7 @@
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		$param .= "&show=all";
@@ -156,7 +151,7 @@
 	$sql .= " call_block_country_code, call_block_number, extension, number_alias, call_block_count, ";
 	$sql .= " call_block_app, call_block_data, ";
 	$sql .= " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, \n";
-	if (date(!empty($_SESSION['domain']['time_format']['text']) == '12h')) {
+	if (date(!empty($settings->get('domain', 'time_format')) == '12h')) {
 		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, \n";
 	}
 	else {
@@ -341,8 +336,8 @@
 			}
 			echo "	<td class='center'>";
 			switch ($row['call_block_direction']) {
-				case "inbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
-				case "outbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
+				case "inbound": echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
+				case "outbound": echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
 			}
 			echo "	</td>\n";
 			echo "	<td class='center'>";

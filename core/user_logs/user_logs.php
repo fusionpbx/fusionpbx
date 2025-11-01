@@ -41,7 +41,7 @@
 
 //set config object
 	global $config;
-	if (!($confing instanceof config)) {
+	if (!($config instanceof config)) {
 		$config = config::load();
 	}
 
@@ -57,7 +57,7 @@
 //get the http post data
 	if (!empty($_POST['user_logs']) && is_array($_POST['user_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$user_logs = $_POST['user_logs'];
 	}
 
@@ -81,17 +81,13 @@
 			}
 		}
 
-		//prepare the database object
-		$database->app_name = 'user_logs';
-		$database->app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
-
 		//send the array to the database class
 		if (!empty($action) && $action == 'delete' && permission_exists('user_log_delete')) {
 			$database->delete($array);
 		}
 
 		//redirect the user
-		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

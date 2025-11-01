@@ -142,7 +142,6 @@
 		$sql .= "lower(default_setting_category) = :default_setting_category ";
 		$parameters['default_setting_category'] = strtolower($default_setting_category);
 	}
-	$database = database::new();
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //get the list
@@ -302,7 +301,7 @@
 	echo "	<div class='heading'><b>".$text['title-default_settings']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['label-domain'],'icon'=>$settings->get('theme', 'button_icon_domain'),'style'=>'','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.$domain_uuid]);
-	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.(!empty($search) ? '?search='.urlencode($search) : null),'style'=>'margin-right: 15px;']);
+	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.(!empty($search) ? '?search='.urlencode($search) : ''),'style'=>'margin-right: 15px;']);
 	if ($permission['default_setting_add']) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'default_setting_edit.php?'.$query_string]);
 	}
@@ -484,7 +483,7 @@
 				echo escape($row['default_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			if (isset($_SESSION['default_settings']['display_order']['text']) && $_SESSION['default_settings']['display_order']['text'] == 'inline') {
+			if (!empty($settings->get('default_settings', 'display_order')) && $settings->get('default_settings', 'display_order') == 'inline') {
 				$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
 				echo "	<td class='hide-sm-dn' title=\"".escape($row['default_setting_order'])."\">".$setting_types[array_search(strtolower($row['default_setting_name']), array_map('strtolower',$setting_types))].($row['default_setting_name'] == 'array' && isset($row['default_setting_order']) ? ' ('.$row['default_setting_order'].')' : null)."</div></td>\n";
 			}

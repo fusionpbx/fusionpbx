@@ -51,7 +51,7 @@
 //get posted data
 	if (!empty($_POST['conference_centers'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$conference_centers = $_POST['conference_centers'];
 	}
 
@@ -80,7 +80,7 @@
 				break;
 		}
 
-		header('Location: conference_centers.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: conference_centers.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -112,7 +112,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('conference_center_all')) {
 		$param .= "&show=all";

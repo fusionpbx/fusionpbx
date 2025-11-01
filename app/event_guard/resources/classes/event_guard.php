@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019-2023
+	Portions created by the Initial Developer are Copyright (C) 2019-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -36,9 +36,32 @@
 		const app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		* declare the variables
 		*/
-		private $database;
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -48,18 +71,20 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign the variables
 			$this->name = 'event_guard_log';
 			$this->table = 'event_guard_logs';
 			$this->toggle_field = '';
 			$this->toggle_values = ['block','pending'];
 			$this->location = 'event_guard_logs.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**
@@ -265,6 +290,14 @@
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
+
 										//copy data
 											$array[$this->table][$x] = $row;
 

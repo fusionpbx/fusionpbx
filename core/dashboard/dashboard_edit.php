@@ -42,7 +42,6 @@
 	$domain_uuid = '';
 	$dashboard_uuid = '';
 	$dashboard_name = '';
-	$dashboard_enabled = 'true';
 	$dashboard_description = '';
 
 //action add or update
@@ -116,8 +115,6 @@
 			$array['dashboards'][0]['dashboard_description'] = $dashboard_description;
 
 		//save the data
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$result = $database->save($array);
 
 		//redirect the user
@@ -154,6 +151,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$dashboard_enabled = $dashboard_enabled ?? true;
 
 //create token
 	$object = new token;

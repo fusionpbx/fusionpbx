@@ -44,7 +44,7 @@
 
 		//get call recording details from database
 		$sql = "select call_recording_name, call_recording_path ";
-		if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+		if (!empty($settings->get('call_recordings', 'storage_type')) && $settings->get('call_recordings', 'storage_type') == 'base64' && !empty($row['call_recording_base64'])) {
 			$sql = ", call_recording_base64 ";
 		}
 		$sql .= "from view_call_recordings ";
@@ -54,7 +54,7 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$call_recording_name = $row['call_recording_name'];
 			$call_recording_path = $row['call_recording_path'];
-			if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+			if (!empty($settings->get('call_recordings', 'storage_type')) && $settings->get('call_recordings', 'storage_type') == 'base64' && !empty($row['call_recording_base64'])) {
 				file_put_contents($call_recording_path.'/'.$call_recording_name, base64_decode($row['call_recording_base64']));
 			}
 		}
@@ -78,13 +78,13 @@
 				$waveform = new Waveform($full_recording_path);
 				Waveform::$linesPerPixel = 1; // default: 8
 				Waveform::$samplesPerLine = 512; // default: 512
-				Waveform::$colorA = !empty($_SESSION['theme']['audio_player_waveform_color_a_leg']['text']) ? color_to_rgba_array($_SESSION['theme']['audio_player_waveform_color_a_leg']['text']) : [32,134,37,0.6]; // array rgba,  left (a-leg) wave color
-				Waveform::$colorB = !empty($_SESSION['theme']['audio_player_waveform_color_b_leg']['text']) ? color_to_rgba_array($_SESSION['theme']['audio_player_waveform_color_b_leg']['text']) : [0,125,232,0.6]; // array rgba, right (b-leg) wave color
-				Waveform::$backgroundColor = !empty($_SESSION['theme']['audio_player_waveform_color_background']['text']) ? color_to_rgba_array($_SESSION['theme']['audio_player_waveform_color_background']['text']) : [0,0,0,0]; // array rgba, default: transparent
-				Waveform::$axisColor = !empty($_SESSION['theme']['audio_player_waveform_color_axis']['text']) ? color_to_rgba_array($_SESSION['theme']['audio_player_waveform_color_axis']['text']) : [0,0,0,0.3]; // array rgba
-				Waveform::$singlePhase = filter_var($_SESSION['theme']['audio_player_waveform_single_phase']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? 'true': 'false'; // positive phase only - left (a-leg) top, right (b-leg) bottom
-				Waveform::$singleAxis = filter_var($_SESSION['theme']['audio_player_waveform_single_axis']['boolean'] ?? true, FILTER_VALIDATE_BOOL) ? 'true': 'false'; // combine channels into single axis
-				$height = !empty($_SESSION['theme']['audio_player_waveform_height']['text']) && is_numeric(str_replace('px','',$_SESSION['theme']['audio_player_waveform_height']['text'])) ? 2.2 * (int) str_replace('px','',$_SESSION['theme']['audio_player_waveform_height']['text']) : null;
+				Waveform::$colorA = !empty($settings->get('theme', 'audio_player_waveform_color_a_leg')) ? color_to_rgba_array($settings->get('theme', 'audio_player_waveform_color_a_leg')) : [32,134,37,0.6]; // array rgba,  left (a-leg) wave color
+				Waveform::$colorB = !empty($settings->get('theme', 'audio_player_waveform_color_b_leg')) ? color_to_rgba_array($settings->get('theme', 'audio_player_waveform_color_b_leg')) : [0,125,232,0.6]; // array rgba, right (b-leg) wave color
+				Waveform::$backgroundColor = !empty($settings->get('theme', 'audio_player_waveform_color_background')) ? color_to_rgba_array($settings->get('theme', 'audio_player_waveform_color_background')) : [0,0,0,0]; // array rgba, default: transparent
+				Waveform::$axisColor = !empty($settings->get('theme', 'audio_player_waveform_color_axis')) ? color_to_rgba_array($settings->get('theme', 'audio_player_waveform_color_axis')) : [0,0,0,0.3]; // array rgba
+				Waveform::$singlePhase = filter_var($settings->get('theme', 'audio_player_waveform_single_phase') ?? false, FILTER_VALIDATE_BOOL) ? 'true': 'false'; // positive phase only - left (a-leg) top, right (b-leg) bottom
+				Waveform::$singleAxis = filter_var($settings->get('theme', 'audio_player_waveform_single_axis') ?? true, FILTER_VALIDATE_BOOL) ? 'true': 'false'; // combine channels into single axis
+				$height = !empty($settings->get('theme', 'audio_player_waveform_height')) && is_numeric(str_replace('px','',$settings->get('theme', 'audio_player_waveform_height'))) ? 2.2 * (int) str_replace('px','',$settings->get('theme', 'audio_player_waveform_height')) : null;
 				$wf = $waveform->getWaveform($temp_filename, 1600, $height ?? 180); // input: png filename returns boolean true/false, or 'base64' returns base64 string
 			}
 
@@ -111,7 +111,7 @@
 		}
 
 		//if base64, remove temp recording file
-		if (!empty($_SESSION['call_recordings']['storage_type']['text']) && $_SESSION['call_recordings']['storage_type']['text'] == 'base64' && !empty($row['call_recording_base64'])) {
+		if (!empty($settings->get('call_recordings', 'storage_type')) && $settings->get('call_recordings', 'storage_type') == 'base64' && !empty($row['call_recording_base64'])) {
 			@unlink($full_recording_path);
 		}
 		unset($row);

@@ -153,18 +153,22 @@
 		-- cleanup
 			XML_STRING = nil;
 
+		--get the caller hostname
+			hostname = trim(api:execute("hostname", ""));
+			--freeswitch.consoleLog("notice", "[xml_handler][directory] hostname is " .. hostname .. "\n");
+
 		-- get the cache. We can use cache only if we do not use `fs_path`
 		-- or we do not need dial-string. In other way we have to use database.
 			if (continue) and (not USE_FS_PATH) then
 				if (cache.support() and domain_name) then
-					local key, err = "directory:" .. (from_user or user) .. "@" .. domain_name
-					XML_STRING, err = cache.get(key);
+					local cache_key, err = hostname .. ":directory:" .. (from_user or user) .. "@" .. domain_name
+					XML_STRING, err = cache.get(cache_key);
 
 					if debug['cache'] then
 						if not XML_STRING then
-							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " fail: " .. tostring(err) .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. cache_key .. " fail: " .. tostring(err) .. "\n")
 						else
-							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " pass!" .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. cache_key .. " pass!" .. "\n")
 						end
 					end
 				end
@@ -236,9 +240,6 @@
 									end);
 								end
 
-							--get the caller hostname
-								local_hostname = trim(api:execute("switchname", ""));
-								--freeswitch.consoleLog("notice", "[xml_handler][directory] local_hostname is " .. local_hostname .. "\n");
 
 							--add the file_exists function
 								require "resources.functions.file_exists";
@@ -464,7 +465,7 @@
 										end
 									--set an alternative dial string if the hostnames don't match
 										if (USE_FS_PATH) then
-											if (local_hostname == database_hostname) then
+											if (hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler][directory] local_host and database_host are the same\n");
 											else
 												contact = trim(api:execute("sofia_contact", destination));
@@ -482,7 +483,7 @@
 
 									--show debug information
 										if (USE_FS_PATH) then
-											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
+											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
 								end
 						end);
@@ -773,23 +774,23 @@
 
 						--set the cache
 							if cache.support() then
-								local key = "directory:" .. sip_from_number .. "@" .. domain_name
+								local cache_key = hostname .. ":directory:" .. sip_from_number .. "@" .. domain_name
 								if debug['cache'] then
-									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
+									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 								end
-								local ok, err = cache.set(key, XML_STRING, expire["directory"])
+								local ok, err = cache.set(cache_key, XML_STRING, expire["directory"])
 								if debug["cache"] and not ok then
-									freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+									freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. cache_key .. " fail: " .. tostring(err) .. "\n");
 								end
 
 								if sip_from_number ~= sip_from_user then
-									key = "directory:" .. sip_from_user .. "@" .. domain_name
+									cache_key = hostname .. ":directory:" .. sip_from_user .. "@" .. domain_name
 									if debug['cache'] then
-										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
+										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 									end
-									ok, err = cache.set(key, XML_STRING, expire["directory"])
+									ok, err = cache.set(cache_key, XML_STRING, expire["directory"])
 									if debug["cache"] and not ok then
-										freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+										freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. cache_key .. " fail: " .. tostring(err) .. "\n");
 									end
 								end
 							end
@@ -829,8 +830,8 @@
 				</section>
 			</document>]];
 		--set the cache
-			--local key = "directory:" .. user .. "@" .. domain_name;
-			--ok, err = cache.set(key, XML_STRING, expire["directory"]);
+			--local cache_key = "directory:" .. user .. "@" .. domain_name;
+			--ok, err = cache.set(cache_key, XML_STRING, expire["directory"]);
 			--freeswitch.consoleLog("notice", "[xml_handler] " .. user .. "@" .. domain_name .. "\n");
 	end
 

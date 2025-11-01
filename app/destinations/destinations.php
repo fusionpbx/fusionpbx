@@ -79,7 +79,7 @@
 				break;
 		}
 
-		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -89,6 +89,7 @@
 
 //function to return the action names in the order defined
 	function action_name($destination_array, $destination_actions) {
+		global $settings;
 		$actions = [];
 		if (!empty($destination_array) && is_array($destination_array)) {
 			if (!empty($destination_actions) && is_array($destination_actions)) {
@@ -102,7 +103,7 @@
 											if (!isset($language2) && !isset($text2)) {
 												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_languages.php")) {
 													$language2 = new text;
-													$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/dialplans');
+													$text2 = $language2->get($settings->get('domain', 'language', 'en-us'), 'app/dialplans');
 												}
 											}
 											$actions[] = trim($text2['title-other'].' &#x203A; '.$text2['option-'.str_replace('&lowbar;','_',$key)]);
@@ -110,7 +111,7 @@
 										else {
 											if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
 												$language3 = new text;
-												$text3 = $language3->get($_SESSION['domain']['language']['code'], 'app/'.$group);
+												$text3 = $language3->get($settings->get('domain', 'language', 'en-us'), 'app/'.$group);
 												$actions[] = trim($text3['title-'.$group].' &#x203A; '.$key);
 											}
 										}

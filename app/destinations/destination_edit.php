@@ -41,9 +41,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the database object
-	$database = database::new();
-
 //initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
@@ -1117,7 +1114,9 @@
 								if (permission_exists("destination_distinctive_ring")) {
 									$array['destinations'][$x]["destination_distinctive_ring"] = $destination_distinctive_ring;
 								}
-								$array['destinations'][$x]["destination_record"] = $destination_record;
+								if (permission_exists("destination_record")) {
+									$array['destinations'][$x]["destination_record"] = $destination_record;
+								}
 								$array['destinations'][$x]["destination_email"] = $destination_email;
 								if (!empty($destination_ringback) && $ringbacks->valid($destination_ringback)) {
 									$array['destinations'][$x]["destination_ringback"] = $destination_ringback;
@@ -1204,8 +1203,6 @@
 					$p->add("dialplan_detail_edit", 'temp');
 
 				//save the dialplan
-					$database->app_name = 'destinations';
-					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$response = $database->save($array);
 
 				//remove the temporary permission
@@ -1267,8 +1264,6 @@
 					}
 
 				//save the destination
-					$database->app_name = 'destinations';
-					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$database->save($array);
 					$dialplan_response = $database->message;
 					unset($array);
@@ -1305,7 +1300,7 @@
 	$destination_cid_name_prefix = $destination_cid_name_prefix ?? '';
 	$destination_hold_music = $destination_hold_music ?? '';
 	$destination_distinctive_ring = $destination_distinctive_ring ?? '';
-	$destination_record = $destination_record ?? '';
+	$destination_record = $destination_record ?? false;
 	$destination_ringback = $destination_ringback ?? '';
 	$destination_accountcode = $destination_accountcode ?? '';
 	$destination_type_voice = $destination_type_voice ?? '';
@@ -1635,7 +1630,7 @@
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type)]);
-	if (permission_exists('destination_add') || permission_exists('destination_add')) {
+	if (permission_exists('destination_add') || permission_exists('destination_edit')) {
 		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	}
 	echo "	</div>\n";

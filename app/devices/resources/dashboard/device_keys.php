@@ -26,9 +26,15 @@
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/devices');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/devices');
+
+//get the dashboard label
+	$widget_label = $text['title-'.$widget_key] ?? $widget_name;
 
 //get the vendor functions
 	$sql = "select v.name as vendor_name, f.type, f.value ";
@@ -259,8 +265,6 @@
 										$p->add('device_key_edit', 'temp');
 
 									//save the changes
-										$database->app_name = 'devices';
-										$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 										$result = $database->save($array);
 
 									//remove the temporary permissions
@@ -272,7 +276,7 @@
 					}
 
 				//write the provision files
-					if (!empty($_SESSION['provision']['path']['text'])) {
+					if (!empty($settings->get('provision', 'path'))) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();
@@ -424,9 +428,9 @@
 //show the content
 	echo "<div class='hud_box'>";
 
-	echo "<div class='hud_content' style='display: block;'>\n";
+	echo "<div class='hud_content' style='display: block; overflow-x: auto;'>\n";
 	echo "	<div class='action_bar sub'>\n";
-	echo "		<div class='heading' style='padding-left: 5px;'><b>".$text['title-device_keys']."</b></div>\n";
+	echo "		<div class='heading' style='padding-left: 5px;'><b>".escape($widget_label)."</b></div>\n";
 	echo "		<div class='actions' style='padding-top: 2px;'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-apply'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".($user_id ?? '')."@".($server_address ?? '')."&domain=".($server_address ?? '')."&agent=".($device_key_vendor ?? '')."';"]);
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"list_form_submit('form_list_device_keys');"]);

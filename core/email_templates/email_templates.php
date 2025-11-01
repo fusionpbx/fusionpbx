@@ -46,7 +46,7 @@
 	if (!empty($_POST['email_templates'])) {
 		$action = $_POST['action'];
 		$category = $_POST['category'] ?? null;
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$email_templates = $_POST['email_templates'];
 	}
 
@@ -73,7 +73,7 @@
 				break;
 		}
 
-		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : null).(!empty($category) ? '&category='.urlencode($category) : null));
+		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : '').(!empty($category) ? '&category='.urlencode($category) : null));
 		exit;
 	}
 
@@ -122,10 +122,10 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$sql .= $sql_category ?? '';
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
 		$param .= "&show=all";
@@ -169,13 +169,13 @@
 		$sql .= "order by domain_uuid, template_language asc, template_category asc, template_subcategory asc, template_type asc, template_description asc ";
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
-	$result = $database->select($sql, $parameters ?? '', 'all');
+	$result = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //get email template categories
 	$sql = "select distinct template_category from v_email_templates ";
 	$sql .= "order by template_category asc ";
-	$rows = $database->select($sql, $parameters ?? '', 'all');
+	$rows = $database->select($sql, $parameters ?? [], 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$template_categories[$row['template_category']] = ucwords(str_replace('_',' ',$row['template_category']));
@@ -283,7 +283,7 @@
 			$list_row_url = '';
 			if (permission_exists('email_template_edit')) {
 				$list_row_url = "email_template_edit.php?id=".urlencode($row['email_template_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}

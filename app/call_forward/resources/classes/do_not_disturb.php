@@ -34,31 +34,72 @@
 		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_name;
+
+		/**
 		 * declare public variables
 		 */
 		public $debug;
-		public $domain_uuid;
-		public $domain_name;
 		public $extension_uuid;
 		public $extension;
 		public $enabled;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
+		private $permission;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+		private $toggle_field;
+		private $toggle_values;
 
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+			$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		//update the user_status
@@ -69,8 +110,8 @@
 						$user_status = "Logged Out";
 						$esl = event_socket::create();
 						if ($esl->is_connected()) {
-							$switch_cmd .= "callcenter_config agent set status ".$_SESSION['username']."@".$this->domain_name." '".$user_status."'";
-							$switch_result = event_socket::api($switch_cmd);
+							$switch_cmd .= "callcenter_config agent set status ".$this->username."@".$this->domain_name." '".$user_status."'";
+							$esl->request('api '.$switch_cmd);
 						}
 
 					//update the database user_status
@@ -81,7 +122,7 @@
 						$sql .= "and username = :username ";
 						$parameters['user_status'] = "Do Not Disturb";
 						$parameters['domain_uuid'] = $this->domain_uuid;
-						$parameters['username'] = $_SESSION['username'];
+						$parameters['username'] = $this->username;
 						$this->database->execute($sql);
 				}
 		}
@@ -133,25 +174,14 @@
 
 			//delete extension from the cache
 				$cache = new cache;
-				$cache->delete("directory:".$this->extension."@".$this->domain_name);
+				$cache->delete(gethostname().":directory:".$this->extension."@".$this->domain_name);
 				if(!empty($this->number_alias)){
-					$cache->delete("directory:".$this->number_alias."@".$this->domain_name);
+					$cache->delete(gethostname().":directory:".$this->number_alias."@".$this->domain_name);
 				}
 
 		} //function
 
-		/**
-		 * declare private variables
-		 */
-
-		private $permission;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-
-		/**
+	/**
 		 * toggle records
 		 */
 		public function toggle($records) {
@@ -197,7 +227,7 @@
 								$sql .= "from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -257,10 +287,10 @@
 									$p->delete('extension_edit', 'temp');
 
 								//send feature event notify to the phone
-									if ($settings->get('device', 'feature_sync', false)) {
+									if ($this->settings->get('device', 'feature_sync', false)) {
 										foreach ($extensions as $uuid => $extension) {
 											$feature_event_notify = new feature_event_notify;
-											$feature_event_notify->domain_name = $_SESSION['domain_name'];
+											$feature_event_notify->domain_name = $this->domain_name;
 											$feature_event_notify->extension = $extension['extension'];
 											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'] == "true" ? "false" : "true";
 											$feature_event_notify->ring_count = ceil($extension['call_timeout'] / 6);
@@ -277,7 +307,7 @@
 									}
 
 								//synchronize configuration
-									if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($this->settings->get('switch', 'extensions')) && is_readable($this->settings->get('switch', 'extensions'))) {
 										$ext = new extension;
 										$ext->xml();
 										unset($ext);
@@ -286,9 +316,9 @@
 								//clear the cache
 									$cache = new cache;
 									foreach ($extensions as $uuid => $extension) {
-										$cache->delete("directory:".$extension['extension']."@".$_SESSION['domain_name']);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$_SESSION['domain_name']);
 										if ($extension['number_alias'] != '') {
-											$cache->delete("directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
 										}
 									}
 

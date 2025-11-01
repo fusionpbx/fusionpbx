@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -54,7 +54,9 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->permission_prefix = 'number_translation_';
@@ -63,12 +65,6 @@
 			$this->uuid_prefix = 'number_translation_';
 			$this->toggle_field = 'number_translation_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -79,7 +75,6 @@
 			$sql .= "where number_translation_name = :number_translation_name ";
 			$parameters['number_translation_name'] = $name;
 			return $this->database->select($sql, $parameters, 'column') != 0 ? true : false;
-			unset($sql, $parameters);
 		}
 
 		/**
@@ -135,7 +130,7 @@
 						$this->database->save($array);
 						unset($array);
 						if (!empty($this->display_type) && $this->display_type == "text") {
-							if ($this->database->message['code'] != '200') { 
+							if ($this->database->message['code'] != '200') {
 								echo "number_translation:".$number_translation['@attributes']['name'].":	failed: ".$this->database->message['message']."\n";
 							}
 							else {
@@ -148,7 +143,7 @@
 				}
 				unset ($this->xml, $this->json);
 		}
-		
+
 		/**
 		 * delete records
 		 */
@@ -349,6 +344,14 @@
 										foreach ($rows as $x => $row) {
 											$primary_uuid = uuid();
 
+											//convert boolean values to a string
+												foreach($row as $key => $value) {
+													if (gettype($value) == 'boolean') {
+														$value = $value ? 'true' : 'false';
+														$row[$key] = $value;
+													}
+												}
+
 											//copy data
 												$array[$this->table][$x] = $row;
 
@@ -362,6 +365,13 @@
 												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
+														//convert boolean values to a string
+															foreach($row_2 as $key => $value) {
+																if (gettype($value) == 'boolean') {
+																	$value = $value ? 'true' : 'false';
+																	$row_2[$key] = $value;
+																}
+															}
 
 														//copy data
 															$array['number_translation_details'][$y] = $row_2;

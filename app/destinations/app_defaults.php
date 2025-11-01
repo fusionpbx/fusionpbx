@@ -50,6 +50,20 @@ if ($domains_processed == 1) {
 		}
 		unset($extensions, $row, $array);
 
+	//update destination_context if the type is inbound and context is empty, then use public
+		$sql = "select count(destination_uuid) as count from v_destinations ";
+		$sql .= "where destination_context is null ";
+		$sql .= "and destination_type = 'inbound' ";
+		$destination_count = $database->select($sql, null, 'column');
+		if ($destination_count > 0) {
+			$sql = "update v_destinations ";
+			$sql .= "set destination_context = 'public' ";
+			$sql .= "where destination_context is null ";
+			$sql .= "and destination_type = 'inbound' ";
+			$database->execute($sql, null);
+			unset($sql, $parameters);
+		}
+
 	//update destinations actions
 		$sql = "select * from v_destinations ";
 		$sql .= "where destination_actions is null ";
@@ -87,8 +101,6 @@ if ($domains_processed == 1) {
 						$p->add('destination_edit', 'temp');
 
 						//create the database object and save the data
-						$database->app_name = 'destinations';
-						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 						$database->save($array, false);
 						unset($array);
 
@@ -113,8 +125,6 @@ if ($domains_processed == 1) {
 				$p->add('destination_edit', 'temp');
 
 				//create the database object and save the data
-				$database->app_name = 'destinations';
-				$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 				$database->save($array, false);
 				unset($array);
 
@@ -173,8 +183,6 @@ if ($domains_processed == 1) {
 						$p->add('destination_edit', 'temp');
 
 						//create the database object and save the data
-						$database->app_name = 'destinations';
-						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 						//$database->save($array, false);
 						unset($array);
 
@@ -199,8 +207,6 @@ if ($domains_processed == 1) {
 				$p->add('destination_edit', 'temp');
 
 				//create the database object and save the data
-				$database->app_name = 'destinations';
-				$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 				$database->save($array, false);
 				unset($array);
 

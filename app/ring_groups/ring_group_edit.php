@@ -39,9 +39,6 @@
 		exit;
 	}
 
-//connect to database
-	$database = database::new();
-
 //create the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 
@@ -122,8 +119,6 @@
 			$p->add('ring_group_user_delete', 'temp');
 
 			//execute delete
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->delete($array);
 			unset($array);
 
@@ -261,8 +256,6 @@
 		$p->add('ring_group_user_add', 'temp');
 
 		//execute delete
-		$database->app_name = 'ring_groups';
-		$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 		$database->save($array);
 		unset($array);
 
@@ -505,8 +498,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database->app_name = 'ring_groups';
-			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 			$database->save($array);
 			$message = $database->message;
 
@@ -597,10 +588,11 @@
 //set the defaults
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
 	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
-	if (empty($ring_group_call_timeout)) { $ring_group_call_timeout = '30'; }
-	if ($ring_group_call_screen_enabled === null) { $ring_group_call_screen_enabled = false; }
-	if ($ring_group_call_forward_enabled === null) { $ring_group_call_forward_enabled = false; }
-	if ($ring_group_follow_me_enabled === null) { $ring_group_follow_me_enabled = false; }
+	$ring_group_call_timeout = $ring_group_call_timeout ?? '30';
+	$ring_group_greeting = $ring_group_greeting ?? '';
+	$ring_group_call_screen_enabled = $ring_group_call_screen_enabled ?? false;
+	$ring_group_call_forward_enabled = $ring_group_call_forward_enabled ?? false;
+	$ring_group_follow_me_enabled = $ring_group_follow_me_enabled ?? false;
 
 //get the ring group destination array
 	if ($action == "add") {

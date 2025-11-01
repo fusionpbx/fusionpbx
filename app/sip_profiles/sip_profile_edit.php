@@ -171,7 +171,7 @@
 					else {
 						$sip_profile_domain_uuid = uuid();
 					}
-					if (!empty($row["sip_profile_domain_alias"])) {
+					if (!empty($row["sip_profile_domain_name"])) {
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_uuid"] = $sip_profile_uuid;
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_uuid"] = $sip_profile_domain_uuid;
 						$array['sip_profiles'][0]['sip_profile_domains'][$y]["sip_profile_domain_name"] = $row["sip_profile_domain_name"];
@@ -240,16 +240,13 @@
 			}
 
 		//get the hostname
-			if ($sip_profile_hostname == '') {
-				$esl = event_socket::create();
-				if ($esl->is_connected()) {
-					$sip_profile_hostname = event_socket::api('switchname');
-				}
+			if (empty($sip_profile_hostname)) {
+				$sip_profile_hostname = gethostname();
 			}
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+			$cache->delete($sip_profile_hostname.":configuration:sofia.conf");
 
 		//save the sip profile xml
 			save_sip_profile_xml();
@@ -583,8 +580,8 @@
 		echo "				<td class='vtablerow' style='".$bottom_border." text-align: center;' ".(permission_exists('sip_profile_setting_edit') ? "onclick=\"label_to_form('label_sip_profile_setting_enabled_$x','sip_profile_setting_enabled_$x');\"" : null)." nowrap='nowrap'>\n";
 		echo "					<label id='label_sip_profile_setting_enabled_$x'>".$label_sip_profile_setting_enabled."</label>\n";
 		echo "					<select id='sip_profile_setting_enabled_$x' class='formfld' style='display: none;' name='sip_profile_settings[$x][sip_profile_setting_enabled].'>\n";
-		echo "						<option value='true' ".($row['sip_profile_setting_enabled'] === true ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "						<option value='false' ".($row['sip_profile_setting_enabled'] === false ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "						<option value='true' ".($row['sip_profile_setting_enabled'] ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "						<option value='false' ".(!$row['sip_profile_setting_enabled'] ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "					</select>\n";
 		echo "				</td>\n";
 		echo "				<td class='vtablerow' style='".$bottom_border."' ".(permission_exists('sip_profile_setting_edit') ? "onclick=\"label_to_form('label_sip_profile_setting_description_$x','sip_profile_setting_description_$x');\"" : null)." nowrap='nowrap'>\n";

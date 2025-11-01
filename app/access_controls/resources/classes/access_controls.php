@@ -12,9 +12,32 @@
 		const app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 
 		/**
-		 * declare private variables
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
 		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * declare private variables
+		 */
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -23,15 +46,17 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$config = $setting_array['config'] ?? config::load();
+			$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
 
 			//assign private variables
 			$this->list_page = 'access_controls.php';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**
@@ -196,6 +221,14 @@
 							$y = 0;
 							foreach ($rows as $x => $row) {
 								$primary_uuid = uuid();
+
+								//convert boolean values to a string
+								foreach($row as $key => $value) {
+									if (gettype($value) == 'boolean') {
+										$value = $value ? 'true' : 'false';
+										$row[$key] = $value;
+									}
+								}
 
 								//copy data
 								$array[$this->table][$x] = $row;

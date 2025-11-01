@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,44 +59,29 @@
 
 //process the http post data by action
 	if (!empty($action) && !empty($access_controls) && count($access_controls) > 0) {
-
-		//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: access_controls.php');
-			exit;
-		}
-
-		//prepare the array
-		$x = 0;
-		foreach ($access_controls as $row) {
-			$array['access_controls'][$x]['checked'] = $row['checked'] ?? null;
-			$array['access_controls'][$x]['access_control_uuid'] = $row['access_control_uuid'];
-			$x++;
-		}
-
-		//send the array to the database class
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('access_control_add')) {
-					$database->copy($array);
+					$obj = new access_controls;
+					$obj->copy($access_controls);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('access_control_edit')) {
-					$database->toggle($array);
+					$obj = new access_controls;
+					$obj->toggle($access_controls);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('access_control_delete')) {
-					$database->delete($array);
+					$obj = new access_controls;
+					$obj->delete($access_controls);
 				}
 				break;
 		}
 
 		//redirect the user
-		header('Location: access_controls.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: access_controls.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -152,7 +137,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-access_controls']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'access_controls_reload.php'.(!empty($search) ? '?search='.urlencode($search) : null),'style'=>'margin-right: 15px;']);
+	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'access_controls_reload.php'.(!empty($search) ? '?search='.urlencode($search) : ''),'style'=>'margin-right: 15px;']);
 	if (permission_exists('access_control_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'access_control_edit.php']);
 	}
@@ -207,7 +192,7 @@
 			$list_row_url = '';
 			if (permission_exists('access_control_view')) {
 				$list_row_url = "access_control_edit.php?id=".urlencode($row['access_control_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -215,7 +200,7 @@
 			if (permission_exists('access_control_add') || permission_exists('access_control_edit') || permission_exists('access_control_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='access_controls[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='access_controls[$x][access_control_uuid]' value='".escape($row['access_control_uuid'])."' />\n";
+				echo "		<input type='hidden' name='access_controls[$x][uuid]' value='".escape($row['access_control_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td>\n";

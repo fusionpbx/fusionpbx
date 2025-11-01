@@ -34,6 +34,9 @@
 --create the api object
 	api = freeswitch.API();
 
+--get the hostname
+	local hostname = api:execute("hostname", "");
+
 --includes
 	require "resources.functions.config";
 	require "resources.functions.channel_utils";
@@ -305,9 +308,9 @@
 
 --clear the cache
 	if extension and #extension > 0 and cache.support() then
-		cache.del("directory:"..extension.."@"..domain_name);
+		cache.del(hostname..":directory:"..extension.."@"..domain_name);
 		if #number_alias > 0 then
-			cache.del("directory:"..number_alias.."@"..domain_name);
+			cache.del(hostname..":directory:"..number_alias.."@"..domain_name);
 		end
 	end
 

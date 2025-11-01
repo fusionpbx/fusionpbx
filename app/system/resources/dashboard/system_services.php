@@ -57,9 +57,9 @@
 	if (!function_exists('is_running')) {
 		function is_running(string $name) {
 			$name = escapeshellarg($name);
-			$pid = trim(shell_exec("ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1"));
+			$pid = trim(shell_exec("ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1") ?? '');
 			if ($pid && is_numeric($pid)) {
-				$etime = trim(shell_exec("ps -p $pid -o etime= | tr -d '\n'"));
+				$etime = trim(shell_exec("ps -p $pid -o etime= | tr -d '\n'") ?? '');
 				return ['running' => true, 'pid' => $pid, 'etime' => $etime];
 			}
 			return ['running' => false, 'pid' => null, 'etime' => null];
@@ -154,13 +154,19 @@
 //track total installed services for charts
 	$total_services = count($services);
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$text = (new text())->get($settings->get('domain','language','en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //show the results
 echo "<div class='hud_box'>\n";
 echo "	<div class='hud_content' ".($widget_details_state == 'disabled' ?: "onclick=\"$('#hud_system_services_details').slideToggle('fast');\""). ">\n";
-echo "		<span class='hud_title'>System Services</span>\n";
+echo "		<span class='hud_title'>".escape($widget_label)."</span>\n";
 
 //doughnut chart
 if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {

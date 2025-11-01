@@ -58,14 +58,14 @@
 
 //get total gateway count from the database, check limit, if defined
 	if ($action == 'add') {
-		if (!empty($_SESSION['limit']['gateways']['numeric'])) {
+		if (!empty($settings->get('limit', 'gateways'))) {
 			$sql = "select count(gateway_uuid) from v_gateways ";
 			$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$total_gateways = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
-			if ($total_gateways >= $_SESSION['limit']['gateways']['numeric']) {
-				message::add($text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'], 'negative');
+			if ($total_gateways >= $settings->get('limit', 'gateways')) {
+				message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
 				header('Location: gateways.php');
 				exit;
 			}
@@ -212,8 +212,8 @@
 					$message = $database->message;
 
 				//remove xml file (if any) if not enabled
-					if ($enabled != true && !empty($_SESSION['switch']['sip_profiles']['dir'])) {
-						$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
+					if ($enabled != true && !empty($settings->get('switch', 'sip_profiles'))) {
+						$gateway_xml_file = $settings->get('switch', 'sip_profiles')."/".$profile."/v_".$gateway_uuid.".xml";
 						if (file_exists($gateway_xml_file)) {
 							unlink($gateway_xml_file);
 						}
@@ -223,10 +223,8 @@
 					save_gateway_xml();
 
 				//clear the cache
-					$esl = event_socket::create();
-					$hostname = trim(event_socket::api('switchname'));
 					$cache = new cache;
-					$cache->delete("configuration:sofia.conf:".$hostname);
+					$cache->delete(gethostname().":configuration:sofia.conf");
 
 				//rescan the external profile to look for new or stopped gateways
 					//create the event socket connection
@@ -303,41 +301,40 @@
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
 
-//set defaults
-	if (empty($gateway_uuid)) { $gateway_uuid = ""; }
-	if (empty($retry_seconds)) { $retry_seconds = "30"; }
-	if (empty($gateway)) { $gateway = ''; }
-	if (empty($username)) { $username = ''; }
-	if (empty($password)) { $password = ''; }
-	if (empty($auth_username)) { $auth_username = ''; }
-	if (empty($realm)) { $realm = ''; }
-	if (empty($from_user)) { $from_user = ''; }
-	if (empty($from_domain)) { $from_domain = ''; }
-	if (empty($proxy)) { $proxy = ''; }
-	if (empty($register_proxy)) { $register_proxy = ''; }
-	if (empty($outbound_proxy)) { $outbound_proxy = ''; }
-	if (empty($expire_seconds)) { $expire_seconds = ''; }
-	if (empty($register_transport)) { $register_transport = ''; }
-	if (empty($contact_params)) { $contact_params = ''; }
-	if (empty($retry_seconds)) { $retry_seconds = ''; }
-	if (empty($extension)) { $extension = ''; }
-	if (empty($ping)) { $ping = ''; }
-	if (empty($ping_min)) { $ping_min = ''; }
-	if (empty($ping_max)) { $ping_max = ''; }
-	if (empty($channels)) { $channels = ''; }
-	if (empty($sip_cid_type)) { $sip_cid_type = ''; }
-	if (empty($codec_prefs)) { $codec_prefs = ''; }
-	if (empty($extension_in_contact)) { $extension_in_contact = ''; }
-	if (empty($context)) { $context = ''; }
-	if (empty($profile)) { $profile = ''; }
-	if (empty($hostname)) { $hostname = ''; }
-	if (empty($description)) { $description = ''; }
-	if ($register === null) { $register = true; }
-	if ($distinct_to === null) { $distinct_to = false; }
-	if ($caller_id_in_from === null) { $caller_id_in_from = false; }
-	if ($supress_cng === null) { $supress_cng = false; }
-	if ($contact_in_ping === null) { $contact_in_ping = true; }
-	if ($enabled === null) { $enabled = true; }
+//set the defaults
+	$gateway_uuid = $gateway_uuid ?? '';
+	$retry_seconds = $retry_seconds ?? '30';
+	$gateway = $gateway ?? '';
+	$username = $username ?? '';
+	$password = $password ?? '';
+	$auth_username = $auth_username ?? '';
+	$realm = $realm ?? '';
+	$from_user = $from_user ?? '';
+	$from_domain = $from_domain ?? '';
+	$proxy = $proxy ?? '';
+	$register_proxy = $register_proxy ?? '';
+	$outbound_proxy = $outbound_proxy ?? '';
+	$expire_seconds = $expire_seconds ?? '';
+	$register_transport = $register_transport ?? '';
+	$contact_params = $contact_params ?? '';
+	$extension = $extension ?? '';
+	$ping = $ping ?? '';
+	$ping_min = $ping_min ?? '';
+	$ping_max = $ping_max ?? '';
+	$channels = $channels ?? '';
+	$sip_cid_type = $sip_cid_type ?? '';
+	$codec_prefs = $codec_prefs ?? '';
+	$extension_in_contact = $extension_in_contact ?? '';
+	$context = $context ?? '';
+	$profile = $profile ?? '';
+	$hostname = $hostname ?? '';
+	$description = $description ?? '';
+	$register = $register ?? false;
+	$distinct_to = $distinct_to ?? false;
+	$caller_id_in_from = $caller_id_in_from ?? false;
+	$supress_cng = $supress_cng ?? false;
+	$contact_in_ping = $contact_in_ping ?? false;
+	$enabled = $enabled ?? false;
 
 //create token
 	$object = new token;

@@ -13,12 +13,18 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //used for missed and recent calls
-	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
+	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/";
 
 //voicemail
 	echo "<div class='hud_box'>\n";
@@ -50,7 +56,7 @@
 	}
 
 	echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_voicemail_details').slideToggle('fast');\"").">\n";
-	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".$text['label-new_messages']."</a></span>";
+	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\">".escape($widget_label)."</a></span>";
 
 	if (isset($widget_chart_type) && $widget_chart_type == "doughnut") {
 		//add doughnut chart

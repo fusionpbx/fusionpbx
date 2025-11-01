@@ -45,7 +45,7 @@
 //get posted data
 	if (!empty($_POST['fax_servers']) && is_array($_POST['fax_servers'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$fax_servers = $_POST['fax_servers'];
 	}
 
@@ -66,7 +66,7 @@
 				break;
 		}
 
-		header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -117,7 +117,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare paging
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('fax_extension_view_all')) {
 		$param .= "&show=all";
@@ -294,7 +294,7 @@
 			if (permission_exists('fax_log_view')) {
 				echo "		<a href='fax_logs.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-log']."</a>&nbsp;&nbsp;";
 			}
-			if (file_exists(__DIR__ . '/fax_active.php') && permission_exists('fax_active_view') && isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
+			if (file_exists(__DIR__ . '/fax_active.php') && permission_exists('fax_active_view') && !empty($settings->get('fax', 'send_mode')) && $settings->get('fax', 'send_mode') == 'queue') {
 				echo "		<a href='fax_active.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-active']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('fax_queue_view')) {

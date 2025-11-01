@@ -52,7 +52,7 @@
 //get posted data
 	if (!empty($_POST['ring_groups'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$ring_groups = $_POST['ring_groups'];
 	}
 
@@ -73,7 +73,7 @@
 				break;
 		}
 
-		header('Location: ring_groups.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: ring_groups.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -183,10 +183,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-ring_groups']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('ring_group_add') && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+	if (permission_exists('ring_group_add') && (empty($settings->get('limit', 'ring_groups', 0)) || ($total_ring_groups < $settings->get('limit', 'ring_groups')))) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ring_group_edit.php']);
 	}
-	if (permission_exists('ring_group_add') && $ring_groups && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+	if (permission_exists('ring_group_add') && $ring_groups && (empty($settings->get('limit', 'ring_groups', 0)) || ($total_ring_groups < $settings->get('limit', 'ring_groups')))) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('ring_group_edit') && $ring_groups) {
@@ -215,7 +215,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('ring_group_add') && $ring_groups && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+	if (permission_exists('ring_group_add') && $ring_groups && (empty($settings->get('limit', 'ring_groups', 0)) || ($total_ring_groups < $settings->get('limit', 'ring_groups')))) {
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('ring_group_edit') && $ring_groups) {

@@ -108,8 +108,6 @@
 			$array['conference_controls'][0]['control_description'] = $control_description;
 
 		//save to the data
-			$database->app_name = 'conference_controls';
-			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 			if (!empty($conference_control_uuid)) {
 				$database->uuid($conference_control_uuid);
 			}

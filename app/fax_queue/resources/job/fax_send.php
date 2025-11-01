@@ -346,11 +346,16 @@
 				$common_variables .= "sip_req_user=".$fax_number.",";
 			}
 
+		//prepare the channel variables
+			$channel_variables = [];
+			if (!empty($fax_toll_allow)) {
+				$channel_variables["toll_allow"] = $fax_toll_allow;
+			}
 
-		//prepare the fax command
-			$channel_variables["toll_allow"] = !empty($fax_toll_allow) ? $fax_toll_allow : null;
+		//get the outbound route array
 			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
 
+		//prepare the fax_uri
 			if (empty($route_array)) {
 				//send the internal call to the registered extension
 				if (count($route_array) == 0) {
@@ -452,8 +457,6 @@
 				$p->add('fax_queue_edit', 'temp');
 
 				//save the data
-				$database->app_name = 'fax queue';
-				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 				$database->save($array, false);
 				unset($array);
 
@@ -667,8 +670,6 @@
 			$p->add('fax_queue_edit', 'temp');
 
 		//save the data
-			$database->app_name = 'fax queue';
-			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 			$database->save($array, false);
 			unset($array);
 

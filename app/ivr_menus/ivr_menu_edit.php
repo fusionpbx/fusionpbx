@@ -42,8 +42,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize database and settings
-	$database = database::new();
+//initialize the settings object
 	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
@@ -413,8 +412,6 @@
 					}
 
 				//save to the data
-					$database->app_name = 'ivr_menus';
-					$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 					$database->save($array);
 					$message = $database->message;
 
@@ -614,8 +611,8 @@
 	if (empty($ivr_menu_digit_len)) { $ivr_menu_digit_len = '5'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
-	if ($ivr_menu_direct_dial === null) { $ivr_menu_direct_dial = false; }
-	if ($ivr_menu_enabled === null) { $ivr_menu_enabled = true; }
+	$ivr_menu_direct_dial = $ivr_menu_direct_dial ?? false;
+	$ivr_menu_enabled = $ivr_menu_enabled ?? true;
 
 //get installed languages
 	$language_paths = glob($settings->get('switch', 'sounds')."/*/*/*");

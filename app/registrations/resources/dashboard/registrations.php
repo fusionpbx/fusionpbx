@@ -9,7 +9,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], dirname($widget_url));
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), dirname($widget_url));
 
 //get the dashboard label
 	$widget_label = $text['title-'.$widget_key] ?? $widget_name;
@@ -25,6 +25,7 @@
 	$esl = event_socket::create();
 
 //registration count
+	$active_registrations = 0;
 	if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 		$registration = new registrations;
 		if (permission_exists("registration_all")) {

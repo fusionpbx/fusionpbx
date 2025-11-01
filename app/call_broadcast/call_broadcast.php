@@ -52,7 +52,7 @@
 //get posted data
 	if (!empty($_POST['call_broadcasts'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_broadcasts = $_POST['call_broadcasts'];
 	}
 
@@ -73,7 +73,7 @@
 				break;
 		}
 
-		header('Location: call_broadcast.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_broadcast.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -107,7 +107,7 @@
 
 //prepare the paging
 	$param = '';
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	if (!empty($search)) {
 		$param .= "&search=".urlencode($search);
 	}

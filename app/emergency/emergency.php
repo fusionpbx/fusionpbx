@@ -21,7 +21,7 @@ $text = $language->get();
 //get the http post data
 if (!empty($_POST['emergency_logs']) && is_array($_POST['emergency_logs'])) {
 	$action = $_POST['action'];
-	$search = $_POST['search'];
+	$search = $_POST['search'] ?? '';
 	$emergency_logs = $_POST['emergency_logs'];
 }
 
@@ -59,7 +59,7 @@ if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @
 	}
 
 	//redirect the user
-	header('Location: emergency.php'.($search != '' ? '?search='.urlencode($search) : null));
+	header('Location: emergency.php'.($search != '' ? '?search='.urlencode($search) : ''));
 	exit;
 }
 
@@ -110,12 +110,7 @@ list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_pe
 $offset = $rows_per_page * $page;
 
 //set the time zone
-if (isset($_SESSION['domain']['time_zone']['name'])) {
-	$time_zone = $_SESSION['domain']['time_zone']['name'];
-}
-else {
-	$time_zone = date_default_timezone_get();
-}
+$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
 //get the list
 $sql = "select e.emergency_log_uuid, ";

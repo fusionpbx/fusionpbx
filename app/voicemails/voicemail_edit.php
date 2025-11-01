@@ -243,8 +243,6 @@
 					}
 
 				//execute insert/update
-					$database->app_name = 'voicemails';
-					$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 					$database->save($array);
 					unset($array);
 
@@ -419,7 +417,7 @@
 		if (!empty($voicemail_options)) {
 			foreach ($voicemail_options as $x => $field) {
 				$voicemail_option_param = $field['voicemail_option_param'];
-				if (empty(trim($voicemail_option_param))) {
+				if (empty(trim($voicemail_option_param ?? ''))) {
 					$voicemail_option_param = $field['voicemail_option_action'];
 				}
 				$voicemail_option_param = str_replace("menu-", "", $voicemail_option_param);

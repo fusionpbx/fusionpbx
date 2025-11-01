@@ -38,9 +38,14 @@
 		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $db_type;
 		public $follow_me_uuid;
 		public $cid_name_prefix;
@@ -85,23 +90,52 @@
 		public $destination_order = 1;
 
 		/**
-		 * declare private variables
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
 		private $database;
-		private $toll_allow;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		private $domain_name;
+
+		/**
+		 * declare private variables
+		 */
 		private $extension;
-		private $number_alias;
+		private $permission;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+		private $toggle_field;
+		private $toggle_values;
 
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		public function add() {
@@ -270,18 +304,7 @@
 
 		} //function
 
-		/**
-		 * declare private variables
-		 */
-
-		private $permission;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-
-		/**
+	/**
 		 * toggle records
 		 */
 		public function toggle($records) {
@@ -327,7 +350,7 @@
 								$sql .= "from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -410,7 +433,7 @@
 									if ($settings->get('device', 'feature_sync', false)) {
 										foreach ($extensions as $uuid => $extension) {
 											$feature_event_notify = new feature_event_notify;
-											$feature_event_notify->domain_name = $_SESSION['domain_name'];
+											$feature_event_notify->domain_name = $this->domain_name;
 											$feature_event_notify->extension = $extension['extension'];
 											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'];
 											$feature_event_notify->ring_count = ceil($extension['call_timeout'] / 6);
@@ -427,7 +450,7 @@
 									}
 
 								//synchronize configuration
-									if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($this->settings->get('switch', 'extensions')) && is_readable($this->settings->get('switch', 'extensions'))) {
 										$ext = new extension;
 										$ext->xml();
 										unset($ext);
@@ -436,9 +459,9 @@
 								//clear the cache
 									$cache = new cache;
 									foreach ($extensions as $uuid => $extension) {
-										$cache->delete("directory:".$extension['extension']."@".$_SESSION['domain_name']);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$_SESSION['domain_name']);
 										if ($extension['number_alias'] != '') {
-											$cache->delete("directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
 										}
 									}
 

@@ -101,16 +101,16 @@
 
 				//add record path and name
 				if ($rec == "true") {
-					$record_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
-					if (isset($_SESSION['recordings']['extension']['text'])) {
-						$record_extension = $_SESSION['recordings']['extension']['text'];
+					$record_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
+					if (!empty($settings->get('recordings', 'extension'))) {
+						$record_extension = $settings->get('recordings', 'extension');
 					}
 					else {
 						$record_extension = 'wav';
 					}
-					if (isset($_SESSION['recordings']['template']['text'])) {
+					if (!empty($settings->get('recordings', 'template'))) {
 						//${year}${month}${day}-${caller_id_number}-${caller_destination}-${uuid}.${record_extension}
-						$record_name = $_SESSION['recordings']['template']['text'];
+						$record_name = $settings->get('recordings', 'template');
 						$record_name = str_replace('${year}', date("Y"), $record_name);
 						$record_name = str_replace('${month}', date("M"), $record_name);
 						$record_name = str_replace('${day}', date("d"), $record_name);
@@ -210,7 +210,7 @@
 					//$uuid = substr($result, 4);
 					if ($rec == "true") {
 						//use the server's time zone to ensure it matches the time zone used by freeswitch
-							date_default_timezone_set($_SESSION['time_zone']['system']);
+							date_default_timezone_set(date_default_timezone_get());
 						//create the api record command and send it over event socket
 							if (is_uuid($origination_uuid) && file_exists($record_path)) {
 								$switch_cmd = "uuid_record $origination_uuid start $record_path/$record_name";

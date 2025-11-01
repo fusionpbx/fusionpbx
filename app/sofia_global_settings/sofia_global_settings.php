@@ -49,7 +49,7 @@
 //get the http post data
 	if (!empty($_POST['sofia_global_settings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$sofia_global_settings = $_POST['sofia_global_settings'];
 	}
 
@@ -78,7 +78,7 @@
 		}
 
 		//redirect the user
-		header('Location: sofia_global_settings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: sofia_global_settings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -102,7 +102,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
@@ -131,7 +131,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'global_setting_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$sofia_global_settings = $database->select($sql, $parameters ?? '', 'all');
+	$sofia_global_settings = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -210,7 +210,7 @@
 			$list_row_url = '';
 			if (permission_exists('sofia_global_setting_edit')) {
 				$list_row_url = "sofia_global_setting_edit.php?id=".urlencode($row['sofia_global_setting_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}

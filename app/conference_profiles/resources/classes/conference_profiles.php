@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019-2023
+	Portions created by the Initial Developer are Copyright (C) 2019-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,7 @@
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $database;
 
 		/**
 		 * declare public variables
@@ -54,11 +55,9 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 		}
 
 		/**
@@ -108,7 +107,7 @@
 									$p->add('conference_profile_param_delete', 'temp');
 
 								//execute delete
-									$this->$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -160,7 +159,7 @@
 						//delete the checked rows
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$this->$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -208,7 +207,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->$database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -231,7 +230,7 @@
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->$database->save($array);
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -276,7 +275,7 @@
 							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->$database->select($sql, $parameters ?? null, 'all');
+								$rows = $this->database->select($sql, $parameters ?? null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -301,7 +300,7 @@
 						//save the changes
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
-									$this->$database->save($array);
+									$this->database->save($array);
 									unset($array);
 
 								//set message
@@ -353,11 +352,19 @@
 								//primary table
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-									$rows = $this->$database->select($sql, $parameters ?? null, 'all');
+									$rows = $this->database->select($sql, $parameters ?? null, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {
 											$primary_uuid = uuid();
+
+											//convert boolean values to a string
+												foreach($row as $key => $value) {
+													if (gettype($value) == 'boolean') {
+														$value = $value ? 'true' : 'false';
+														$row[$key] = $value;
+													}
+												}
 
 											//copy data
 												$array[$this->table][$x] = $row;
@@ -369,9 +376,17 @@
 											//params sub table
 												$sql_2 = "select * from v_conference_profile_params where conference_profile_uuid = :conference_profile_uuid";
 												$parameters_2['conference_profile_uuid'] = $row['conference_profile_uuid'];
-												$rows_2 = $this->$database->select($sql_2, $parameters_2, 'all');
+												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
+
+														//convert boolean values to a string
+															foreach($row_2 as $key => $value) {
+																if (gettype($value) == 'boolean') {
+																	$value = $value ? 'true' : 'false';
+																	$row_2[$key] = $value;
+																}
+															}
 
 														//copy data
 															$array['conference_profile_params'][$y] = $row_2;
@@ -399,7 +414,7 @@
 									$p->add('conference_profile_param_add', 'temp');
 
 								//save the array
-									$this->$database->save($array);
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions

@@ -243,7 +243,7 @@
 	}
 
 //set the defaults
-	if ($phone_primary === null) { $phone_primary = false; }
+	$phone_primary = $phone_primary ?? false;
 
 //create token
 	$object = new token;

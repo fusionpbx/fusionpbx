@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -39,10 +39,38 @@
 		const app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -52,7 +80,14 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->permission_prefix = 'call_flow_';
@@ -60,12 +95,6 @@
 			$this->table = 'call_flows';
 			$this->uuid_prefix = 'call_flow_';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -101,7 +130,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, call_flow_context from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -116,11 +145,11 @@
 							$x = 0;
 							foreach ($call_flows as $call_flow_uuid => $call_flow) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $call_flow_uuid;
-								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								$array['dialplans'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
-								$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
 								$array['dialplan_details'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
-								$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 								$x++;
 							}
 
@@ -197,7 +226,7 @@
 								$sql .= "dialplan_uuid, call_flow_feature_code, call_flow_context from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (!empty($rows)) {
 									foreach ($rows as $row) {
@@ -265,8 +294,8 @@
 									//prepare the event
 									$cmd = "sendevent PRESENCE_IN\n";
 									$cmd .= "proto: flow\n";
-									$cmd .= "login: ".$row['call_flow_feature_code']."@".$_SESSION['domain_name']."\n";
-									$cmd .= "from: ".$row['call_flow_feature_code']."@".$_SESSION['domain_name']."\n";
+									$cmd .= "login: ".$row['call_flow_feature_code']."@".$this->domain_name."\n";
+									$cmd .= "from: ".$row['call_flow_feature_code']."@".$this->domain_name."\n";
 									$cmd .= "status: Active (1 waiting)\n";
 									$cmd .= "rpid: unknown\n";
 									$cmd .= "event_type: presence\n";
@@ -327,12 +356,20 @@
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $x => $row) {
 											$new_call_flow_uuid = uuid();
 											$new_dialplan_uuid = uuid();
+
+											//convert boolean values to a string
+												foreach($row as $key => $value) {
+													if (gettype($value) == 'boolean') {
+														$value = $value ? 'true' : 'false';
+														$row[$key] = $value;
+													}
+												}
 
 											//copy data
 												$array[$this->table][$x] = $row;
@@ -347,6 +384,14 @@
 												$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
 												$dialplan = $this->database->select($sql_2, $parameters_2, 'row');
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+													//convert boolean values to a string
+														foreach($dialplan as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$dialplan[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['dialplans'][$x] = $dialplan;

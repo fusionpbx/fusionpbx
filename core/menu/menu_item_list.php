@@ -216,8 +216,6 @@
 					$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 					$array['menu_items'][0]['menu_item_title'] = $row2['menu_item_title'];
 					$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
-					$database->app_name = 'menu';
-					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
 					unset($array);
 				}
@@ -243,7 +241,7 @@
 
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
-	$groups = $database->select($sql, $parameters, 'all');
+	$groups = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -427,8 +425,6 @@
 					$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 					$array['menu_items'][0]['menu_item_title'] = $row['menu_item_title'];
 					$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
-					//$database->app_name = 'menu';
-					//$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					//$database->save($array);
 					unset($array);
 				}

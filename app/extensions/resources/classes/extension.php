@@ -34,10 +34,20 @@
 		const app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		public $domain_name;
+
+		/**
+		 * declare public variables
+		 */
 		public $extension_uuid;
 		public $extension;
 		public $voicemail_id;
@@ -80,9 +90,26 @@
 		public $delete_voicemail;
 
 		/**
-		 * declare private variables
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
 		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * declare private variables
+		 */
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -93,7 +120,15 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'extension_';
@@ -102,12 +137,6 @@
 			$this->uuid_prefix = 'extension_';
 			$this->toggle_field = 'enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		public function exists($domain_uuid, $extension) {
@@ -188,7 +217,7 @@
 		}
 
 		public function xml() {
-			if (isset($_SESSION['switch']['extensions']['dir'])) {
+			if (!empty($this->settings->get('switch', 'extensions'))) {
 				//declare global variables
 					global $config, $domain_uuid;
 
@@ -197,7 +226,7 @@
 					$user_context = $domain_name;
 
 				//delete all old extensions to prepare for new ones
-					$dialplan_list = glob($_SESSION['switch']['extensions']['dir']."/".$user_context."/v_*.xml");
+					$dialplan_list = glob($this->settings->get('switch', 'extensions')."/".$user_context."/v_*.xml");
 					foreach($dialplan_list as $name => $value) {
 						unlink($value);
 					}
@@ -243,8 +272,8 @@
 								$extension = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension);
 								$dial_string = $row['dial_string'];
 								if (empty($dial_string)) {
-									if (!empty($_SESSION['domain']['dial_string']['text'])) {
-										$dial_string = $_SESSION['domain']['dial_string']['text'];
+									if (!empty($this->settings->get('domain', 'dial_string'))) {
+										$dial_string = $this->settings->get('domain', 'dial_string');
 									}
 									else {
 										$dial_string = "{sip_invite_domain=\${domain_name},leg_timeout=".$call_timeout.",presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}";
@@ -318,8 +347,8 @@
 								$xml .= "      <param name=\"dial-string\" value=\"" . $dial_string . "\"/>\n";
 								$xml .= "    </params>\n";
 								$xml .= "    <variables>\n";
-								$xml .= "      <variable name=\"domain_name\" value=\"" . $_SESSION['domain_name'] . "\"/>\n";
-								$xml .= "      <variable name=\"domain_uuid\" value=\"" . $_SESSION['domain_uuid'] . "\"/>\n";
+								$xml .= "      <variable name=\"domain_name\" value=\"" . $this->domain_name . "\"/>\n";
+								$xml .= "      <variable name=\"domain_uuid\" value=\"" . $this->domain_uuid . "\"/>\n";
 								$xml .= "      <variable name=\"extension_uuid\" value=\"" . $extension_uuid . "\"/>\n";
 								if (!empty($row['call_group'])) {
 									$xml .= "      <variable name=\"call_group\" value=\"" . $row['call_group'] . "\"/>\n";
@@ -428,11 +457,11 @@
 								$xml .= "    </variables>\n";
 								$xml .= "  </user>\n";
 
-								if (!is_readable($_SESSION['switch']['extensions']['dir']."/".$row['user_context'])) {
-									mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context'], 0770, false);
+								if (!is_readable($this->settings->get('switch', 'extensions')."/".$row['user_context'])) {
+									mkdir($this->settings->get('switch', 'extensions')."/".$row['user_context'], 0770, false);
 								}
 								if (!empty($extension)) {
-									$fout = fopen($_SESSION['switch']['extensions']['dir']."/".$row['user_context']."/v_".$extension.".xml","w");
+									$fout = fopen($this->settings->get('switch', 'extensions')."/".$row['user_context']."/v_".$extension.".xml","w");
 								}
 								$xml .= "</include>\n";
 								fwrite($fout, $xml);
@@ -444,7 +473,7 @@
 					unset($rows, $row);
 
 				//prepare extension
-					$extension_dir = realpath($_SESSION['switch']['extensions']['dir']);
+					$extension_dir = realpath($this->settings->get('switch', 'extensions'));
 					$user_context = str_replace(" ", "_", $user_context);
 					$user_context = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $user_context);
 
@@ -568,7 +597,7 @@
 										$sql = "select extension, number_alias, user_context, follow_me_uuid from v_extensions ";
 										$sql .= "where domain_uuid = :domain_uuid ";
 										$sql .= "and extension_uuid = :extension_uuid ";
-										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+										$parameters['domain_uuid'] = $this->domain_uuid;
 										$parameters['extension_uuid'] = $record['uuid'];
 										$row = $this->database->select($sql, $parameters, 'row');
 										if (is_array($row) && @sizeof($row) != 0) {
@@ -589,10 +618,10 @@
 											//include ring group destinations, if exists
 												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
 													$array['ring_group_destinations'][$x]['destination_number'] = $extensions[$x]['extension'];
-													$array['ring_group_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+													$array['ring_group_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 													if (is_numeric($extensions[$x]['number_alias'])) {
 														$array['ring_group_destinations'][$y]['destination_number'] = $extensions[$x]['number_alias'];
-														$array['ring_group_destinations'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+														$array['ring_group_destinations'][$y]['domain_uuid'] = $this->domain_uuid;
 													}
 													$y++;
 												}
@@ -600,7 +629,7 @@
 											//include extension settings, if exists
 												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extension_settings/app_config.php")) {
 													$array['extension_settings'][$x]['extension_uuid'] = $record['uuid'];
-													$array['extension_settings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+													$array['extension_settings'][$x]['domain_uuid'] = $this->domain_uuid;
 												}
 
 											//create array of voicemail ids
@@ -629,7 +658,7 @@
 											$sql = "select voicemail_uuid as uuid from v_voicemails ";
 											$sql .= "where domain_uuid = :domain_uuid ";
 											$sql .= "and voicemail_id in ('".implode("','", $voicemail_ids)."') ";
-											$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+											$parameters['domain_uuid'] = $this->domain_uuid;
 											$rows = $this->database->select($sql, $parameters, 'all');
 											if (is_array($rows) && @sizeof($rows) != 0) {
 												foreach ($rows as $r => $row) {
@@ -667,15 +696,15 @@
 								//clear the cache
 									foreach ($extensions as $x => $extension) {
 										$cache = new cache;
-										$cache->delete("directory:".$extension['extension']."@".$extension['user_context']);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$extension['user_context']);
 										if (permission_exists('number_alias') && !empty($extension['number_alias'])) {
-											$cache->delete("directory:".$extension['number_alias']."@".$extension['user_context']);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$extension['user_context']);
 										}
 									}
 									unset($extensions);
 
 								//synchronize configuration
-									if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($this->settings->get('switch', 'extensions')) && is_writable($this->settings->get('switch', 'extensions'))) {
 										$this->xml();
 									}
 
@@ -724,7 +753,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, extension, number_alias, user_context from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -762,15 +791,15 @@
 									$p->delete('extension_edit', 'temp');
 
 								//synchronize configuration
-									if (!empty($_SESSION['switch']['extensions']['dir']) && is_writable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($this->settings->get('switch', 'extensions')) && is_writable($this->settings->get('switch', 'extensions'))) {
 										$this->xml();
 									}
 
 								//write the provision files
-									if (!empty($_SESSION['provision']['path']['text'])) {
+									if (!empty($this->settings->get('provision', 'path'))) {
 										if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
 											$prov = new provision;
-											$prov->domain_uuid = $_SESSION['domain_uuid'];
+											$prov->domain_uuid = $this->domain_uuid;
 											$response = $prov->write();
 										}
 									}
@@ -778,9 +807,9 @@
 								//clear the cache
 									foreach ($extensions as $uuid => $extension) {
 										$cache = new cache;
-										$cache->delete("directory:".$extension['extension']."@".$extension['user_context']);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$extension['user_context']);
 										if (permission_exists('number_alias') && !empty($extension['number_alias'])) {
-											$cache->delete("directory:".$extension['number_alias']."@".$extension['user_context']);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$extension['user_context']);
 										}
 									}
 									unset($extensions);

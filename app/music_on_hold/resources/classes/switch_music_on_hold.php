@@ -36,12 +36,47 @@
 		const app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * declare private variables
 		 */
 		private $xml;
 		private $app_name;
 		private $app_uuid;
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -50,19 +85,20 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'music_on_hold_';
 			$this->list_page = 'music_on_hold.php';
 			$this->table = 'music_on_hold';
 			$this->uuid_prefix = 'music_on_hold_';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		public function select($name, $selected, $options) {
@@ -110,7 +146,7 @@
 					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$sql .= "and stream_enabled = 'true' ";
 					$sql .= "order by stream_name asc ";
-					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['domain_uuid'] = $this->domain_uuid;
 					$streams = $this->database->select($sql, $parameters, 'all');
 					if (is_array($streams) && @sizeof($streams) != 0) {
 						$select .= "	<optgroup label='".$text['label-streams']."'>";
@@ -146,7 +182,7 @@
 				$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
 				$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
 				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['domain_uuid'] = $this->domain_uuid;
 				return $this->database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 		}
@@ -168,7 +204,7 @@
 
 		public function xml() {
 			//build the list of categories
-				$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
+				$music_on_hold_dir = $this->settings->get('switch', 'sounds').'/music';
 			//default category (note: GLOB_BRACE doesn't work on some systems)
 				$array_1 = glob($music_on_hold_dir."/8000".$class_name.".php", GLOB_ONLYDIR);
 				$array_2 = glob($music_on_hold_dir."/16000".$class_name.".php", GLOB_ONLYDIR);
@@ -218,7 +254,7 @@
 				}
 			//check where the default music is stored
 				$default_moh_prefix = 'music/default';
-				if(file_exists($_SESSION['switch']['sounds']['dir'].'/music/8000')) {
+				if(file_exists($settings->get('switch', 'sounds').'/music/8000')) {
 					$default_moh_prefix = 'music';
 				}
 			//replace the variables
@@ -226,7 +262,7 @@
 				$file_contents = preg_replace("/[\t ]*(?:<!--)?{v_moh_categories}(?:-->)?/", $this->xml, $file_contents);
 
 			//write the XML config file
-				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
+				$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/local_stream.conf.xml","w");
 				fwrite($fout, $file_contents);
 				fclose($fout);
 
@@ -250,7 +286,7 @@
 				unset($sql);
 
 			//build an array of the sound files
-				$music_directory =  $_SESSION['switch']['sounds']['dir'].'/music';
+				$music_directory =  $this->settings->get('switch', 'sounds').'/music';
 				if (file_exists($music_directory)) {
 					$files = array_merge(glob($music_directory.'/*/*/*.wav'), glob($music_directory.'/*/*/*/*.wav'), glob($stream_path.'/*/*/*/*.mp3'), glob($stream_path.'/*/*/*/*.ogg'));
 				}
@@ -362,7 +398,7 @@
 									$sql = "select * from v_music_on_hold ";
 									$sql .= "where (domain_uuid = :domain_uuid ".(!permission_exists('music_on_hold_domain') ? "": "or domain_uuid is null ").") ";
 									$sql .= "and music_on_hold_uuid in ('".implode("','", array_keys($moh))."') ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $row) {
@@ -373,12 +409,11 @@
 
 								//delete files, folders, build delete array
 									$x = 0;
-// 									view_array($moh);
 									foreach ($moh as $music_on_hold_uuid => $row) {
 
 										//prepare path
 											$stream_path = $streams[$music_on_hold_uuid]['music_on_hold_path'];
-											$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+											$stream_path = str_replace('$${sounds_dir}', $this->settings->get('switch', 'sounds'), $stream_path);
 
 										//delete checked files
 											foreach ($row as $key => $stream_file) {
@@ -396,7 +431,7 @@
 												//build delete array
 													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $music_on_hold_uuid;
 													if (!permission_exists('music_on_hold_domain')) {
-														$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+														$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 													}
 													$x++;
 

@@ -196,8 +196,6 @@
 			$array['streams'][0]['stream_description'] = $stream_description;
 
 		//save to the data
-			$database->app_name = 'streams';
-			$database->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
 			$database->save($array);
 			$message = $database->message;
 

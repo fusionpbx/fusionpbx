@@ -25,7 +25,8 @@
 */
 
 //includes files
-	require_once dirname(__DIR__, 2) . "/resources/require.php";
+global $settings, $domain_uuid, $database;
+require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
@@ -60,7 +61,7 @@
 		$action = $_POST['action'];
 		$dialplans = $_POST['dialplans'];
 		$context = $_POST['context'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$order_by = $_POST['order_by'];
 		$order = $_POST['order'];
 	}
@@ -113,7 +114,7 @@
 			exit;
 	}
 
-//get order and order by and sanatize the values
+//get order and order by and sanitize the values
 	$order_by = (!empty($_GET["order_by"])) ? $_GET["order_by"] : '';
 	$order = (!empty($_GET["order"])) ? $_GET["order"] : '';
 
@@ -144,12 +145,16 @@
 	$button_icon_reset = $settings->get('theme', 'button_icon_reset') ?? '';
 
 //get the number of rows in the dialplan
-	$sql = "select count(*) from v_dialplans ";
+	$sql = "select count(dialplan_uuid) from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "where (domain_uuid = :domain_uuid ";
+		if (permission_exists('dialplan_global')) {
+			$sql .= "or domain_uuid is null ";
+		}
+		$sql .= ") ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (empty($app_uuid)) {
@@ -160,7 +165,7 @@
 			//$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	}
 	else {
-		if (!empty($app_uuid) && $app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+		if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
 			$sql .= "and (app_uuid = :app_uuid or dialplan_context = 'public') ";
 		}
 		else {
@@ -173,6 +178,7 @@
 		$parameters['dialplan_context'] = $context;
 	}
 	if (!empty($search)) {
+		$search = strtolower($search);
 		$sql .= "and (";
 		$sql .= " 	lower(dialplan_context) like :search ";
 		$sql .= " 	or lower(dialplan_name) like :search ";
@@ -368,12 +374,13 @@
 	echo "</b><div class='count'>".number_format($num_rows)."</div>";
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
+	$button_add_url = '';
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_add')) { $button_add_url = PROJECT_PATH."/app/dialplan_inbound/dialplan_inbound_add.php"; }
 	else if ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3" && permission_exists('outbound_route_add')) { $button_add_url = PROJECT_PATH."/app/dialplan_outbound/dialplan_outbound_add.php"; }
 	else if ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7" && permission_exists('fifo_add')) { $button_add_url = PROJECT_PATH."/app/fifo/fifo_add.php"; }
 	else if ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_add')) { $button_add_url = PROJECT_PATH."/app/time_conditions/time_condition_edit.php"; }
 	else if (permission_exists('dialplan_add')) { $button_add_url = PROJECT_PATH."/app/dialplans/dialplan_add.php"; }
-	if ($button_add_url) {
+	if (!empty($button_add_url)) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$button_icon_add,'id'=>'btn_add','link'=>$button_add_url]);
 	}
 	if (!empty($dialplans)) {
@@ -574,11 +581,8 @@
 				) {
 				$list_row_url = "dialplan_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid'] ?? '').'&domain_change=true';
 				}
-			}
-			else {
-				unset($list_row_url);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (

@@ -34,18 +34,51 @@
 		const app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 
 		/**
-		 * declare public variables
-		 */
+		* Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		* @var string
+		*/
 		public $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		public $domain_name;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $user_uuid;
+
+		/**
+		 * declare additional public variables
+		 */
 		public $voicemail_uuid;
 		public $voicemail_id;
 		public $voicemail_message_uuid;
-		public $user_uuid;
 		public $order_by;
 		public $order;
 		public $offset;
 		public $type;
+
+		/**
+		 * Internal array structure that is populated from the database
+		 * @var settings A settings object loaded from Default Settings
+		 */
+		private $settings;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
 
 		/**
 		 * declare private variables
@@ -57,48 +90,16 @@
 		private $toggle_field;
 		private $toggle_values;
 
-		/**
-		 * Internal array structure that is populated from the database
-		 * @var array Array of settings loaded from Default Settings
-		 */
-		private $settings;
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+			$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
-		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
-
-		public function __construct(array $params = []) {
-
-			//set the domain_uuid if not provided
-			if (!empty($params['domain_uuid']) && is_uuid($params['domain_uuid'])) {
-				$this->domain_uuid = $params['domain_uuid'];
-			} else {
-				$this->domain_uuid = $_SESSION['domain_uuid'] ?? '';
-			}
-
-			//set the user_uuid if not provided
-			if (!empty($params['user_uuid']) && is_uuid($params['user_uuid'])) {
-				$this->user_uuid = $params['user_uuid'];
-			} else {
-				$this->user_uuid = $_SESSION['user_uuid'] ?? '';
-			}
-
-			//database connection
-			if (empty($params['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $params['database'];
-			}
-
-			//assign the settings object
-			if (empty($params['settings'])) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			}
-			else {
-				$this->settings = $params['settings'];
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'voicemail_';
@@ -317,7 +318,7 @@
 				if (is_array($result)) {
 					foreach ($result as $i => $row) {
 						//set the greeting directory
-						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
+						$path = $this->settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage').'/default/'.$this->domain_name.'/'.$row['voicemail_id'];
 						if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
 							$result[$i]['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
 						}
@@ -387,7 +388,7 @@
 
 									//delete voicemail message recording and greeting files
 										if (is_numeric($voicemail_id)) {
-											$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id;
+											$file_path = $this->settings->get('switch', 'voicemail')."/default/".$this->domain_name."/".$voicemail_id;
 											foreach (glob($file_path."/*.*") as $file_name) {
 												@unlink($file_name);
 											}
@@ -658,7 +659,7 @@
 
 				$esl = event_socket::create();
 				if ($esl->is_connected()) {
-					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+					$switch_cmd = "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$this->domain_name;
 					$switch_result = event_socket::api($switch_cmd);
 				}
 		}
@@ -678,7 +679,7 @@
 				}
 
 			//delete the recording
-				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
+				$file_path = $this->settings->get('switch', 'voicemail')."/default/".$this->domain_name."/".$this->voicemail_id;
 				if (is_uuid($this->voicemail_message_uuid)) {
 					foreach (glob($file_path."/intro_msg_".$this->voicemail_message_uuid.".*") as $file_name) {
 						unlink($file_name);
@@ -844,7 +845,7 @@
 			}
 
 			//encode subject
-			$template['template_subject'] = trim(iconv_mime_encode(null, $template['template_subject'], ['scheme'=>'B','output-charset'=>'utf-8', 'line-break-chars'=>"\n"]), ': ');
+			$template['template_subject'] = trim(iconv_mime_encode('', $template['template_subject'], ['scheme'=>'B','output-charset'=>'utf-8', 'line-break-chars'=>"\n"]), ': ');
 
 			//determine voicemail message file path and type
 			$voicemail_message_path = $switch_voicemail.'/default/'.$message['domain_name'].'/'.$message['voicemail_id'];
@@ -1032,7 +1033,7 @@
 				unset($sql, $parameters);
 
 				//define voicemail message file path
-				$voicemail_message_path = $switch_voicemail.'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+				$voicemail_message_path = $switch_voicemail.'/default/'.$this->domain_name.'/'.$this->voicemail_id;
 
 				//determine voicemail message file properties (decode if base64)
 				if (
@@ -1143,9 +1144,7 @@
 		public function message_intro_download(string $domain_name = '') {
 
 			//check domain name
-			if (empty($domain_name)) {
-				$domain_name = $_SESSION['domain_name'] ?? '';
-			}
+			$domain_name = $this->domain_name;
 
 			//check if for valid input
 			if (!is_numeric($this->voicemail_id)
@@ -1251,9 +1250,7 @@
 		public function message_download(string $domain_name = '') {
 
 			//check domain name
-			if (empty($domain_name)) {
-				$domain_name = $_SESSION['domain_name'] ?? '';
-			}
+			$domain_name = $this->domain_name ?? '';
 
 			//check if for valid input
 			if (!is_numeric($this->voicemail_id)
@@ -1454,12 +1451,13 @@
 			//set table name for query
 			//$table = self::TABLE;
 			$table = 'voicemail_messages';
+			$database = $settings->database();
 
 			//get a list of domains
-			$domains = maintenance::get_domains($this->database);
+			$domains = maintenance::get_domains($database);
 			foreach ($domains as $domain_uuid => $domain_name) {
 				//get domain settings
-				$domain_settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
+				$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 				//ensure we have a retention day
 				$retention_days = $domain_settings->get('voicemail', maintenance::DATABASE_SUBCATEGORY, '');
@@ -1467,12 +1465,12 @@
 					//clear out old records
 					$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
 					. " and domain_uuid = '{$domain_uuid}'";
-					$this->database->execute($sql);
-					$code = $this->database->message['code'] ?? 0;
-					if ($this->database->message['code'] == 200) {
+					$database->execute($sql);
+					$code = $database->message['code'] ?? 0;
+					if ($database->message['code'] == 200) {
 						maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 					} else {
-						$message = $this->database->message['message'] ?? "An unknown error has occurred";
+						$message = $database->message['message'] ?? "An unknown error has occurred";
 						maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 					}
 				}

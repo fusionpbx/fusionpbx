@@ -44,7 +44,6 @@
 	$user_name = $_SESSION['username'] ?? '';
 
 //create database connection and settings object
-	$database = database::new();
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //add multi-lingual support
@@ -114,7 +113,6 @@
 	$available_columns['devices'][] = 'device_label';
 	$available_columns['devices'][] = 'device_vendor';
 	$available_columns['devices'][] = 'device_template';
-	$available_columns['devices'][] = 'device_enabled_date';
 	$available_columns['devices'][] = 'device_username';
 	$available_columns['devices'][] = 'device_password';
 	$available_columns['devices'][] = 'device_uuid_alternate';

@@ -45,8 +45,8 @@ class authentication {
 	/**
 	 * Called when the object is created
 	 */
-	public function __construct() {
-		$this->database = database::new();
+	public function __construct(array $setting_array = []) {
+		$this->database = $setting_array['database'] ?? database::new();
 		$this->user_uuid = null;
 	}
 
@@ -113,13 +113,9 @@ class authentication {
 						$object->username = $this->username;
 						$object->password = $this->password;
 					}
-					//database plugin requires the authentication object and settings
-					if ($name == 'database') {
-						$array = $object->$name($this, $settings);
-					} else {
-						//get the array from the plugin
-						$array = $object->$name();
-					}
+					//initialize the plugin send the authentication object and settings
+					$array = $object->$name($this, $settings);
+
 					//build a result array
 					if (!empty($array) && is_array($array)) {
 						$result['plugin'] = $array["plugin"];

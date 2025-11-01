@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -34,10 +34,32 @@
 		const app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -48,7 +70,15 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+
 			//assign private variables
 			$this->permission_prefix = 'conference_';
 			$this->list_page = 'conferences.php';
@@ -56,11 +86,6 @@
 			$this->uuid_prefix = 'conference_';
 			$this->toggle_field = 'conference_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**
@@ -92,20 +117,20 @@
 										$sql = "select dialplan_uuid from v_conferences ";
 										$sql .= "where domain_uuid = :domain_uuid ";
 										$sql .= "and conference_uuid = :conference_uuid ";
-										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+										$parameters['domain_uuid'] = $this->domain_uuid;
 										$parameters['conference_uuid'] = $record['uuid'];
 										$dialplan_uuid = $this->database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
 
 									//build array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['conference_users'][$x]['conference_uuid'] = $record['uuid'];
-										$array['conference_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['conference_users'][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
-										$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
 										$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
-										$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 
 								}
 							}
@@ -133,7 +158,7 @@
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+									$cache->delete("dialplan:".$this->domain_name);
 
 								//clear the destinations session array
 									if (isset($_SESSION['destinations']['array'])) {
@@ -180,7 +205,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -221,7 +246,7 @@
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+									$cache->delete("dialplan:".$this->domain_name);
 
 								//clear the destinations session array
 									if (isset($_SESSION['destinations']['array'])) {
@@ -270,13 +295,21 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$y = 0;
 									foreach ($rows as $x => $row) {
 										$new_conference_uuid = uuid();
 										$new_dialplan_uuid = uuid();
+
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
 
 										//copy data
 											$array[$this->table][$x] = $row;
@@ -291,10 +324,18 @@
 											$sql_2 .= "where conference_uuid = :conference_uuid ";
 											$sql_2 .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 											$parameters_2['conference_uuid'] = $row['conference_uuid'];
-											$parameters_2['domain_uuid'] = $_SESSION['domain_uuid'];
+											$parameters_2['domain_uuid'] = $this->domain_uuid;
 											$conference_users = $this->database->select($sql_2, $parameters_2, 'all');
 											if (is_array($conference_users) && @sizeof($conference_users) != 0) {
 												foreach ($conference_users as $conference_user) {
+
+													//convert boolean values to a string
+														foreach($conference_user as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$conference_user[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['conference_users'][$y] = $conference_user;
@@ -315,6 +356,14 @@
 											$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
 											$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 											if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+												//convert boolean values to a string
+													foreach($dialplan as $key => $value) {
+														if (gettype($value) == 'boolean') {
+															$value = $value ? 'true' : 'false';
+															$dialplan[$key] = $value;
+														}
+													}
 
 												//copy data
 													$array['dialplans'][$x] = $dialplan;
@@ -356,7 +405,7 @@
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+									$cache->delete("dialplan:".$this->domain_name);
 
 								//set message
 									message::add($text['message-copy']);

@@ -27,9 +27,6 @@
 //includes files
 	require_once __DIR__ . "/require.php";
 
-//connect to the database if not initialized
-	$database = database::new();
-
 //set the domains session
 	if (!isset($_SESSION['domains'])) {
 		$domain = new domains();
@@ -59,13 +56,8 @@
 //set the template base directory path
 	$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 
-//check if the template exists if it is missing then use the default
-	if (!file_exists($template_base_path.'/'.$_SESSION['domain']['template']['name'].'/template.php')) {
-		$_SESSION['domain']['template']['name'] = 'default';
-	}
-
 //start the output buffer
-	include $template_base_path.'/'.$_SESSION['domain']['template']['name'].'/config.php';
+	include $template_base_path.'/'.$settings->get('domain', 'template', 'default').'/config.php';
 
 //start the output buffer
 	ob_start();
@@ -82,54 +74,17 @@
 	$sql = "select menu_item_parent_uuid from v_menu_items ";
 	$sql .= "where menu_uuid = :menu_uuid ";
 	$sql .= "and menu_item_link = :menu_item_link ";
-	$parameters['menu_uuid'] = $_SESSION['domain']['menu']['uuid'];
+	$parameters['menu_uuid'] = $settings->get('domain', 'menu');
 	$parameters['menu_item_link'] = $_SERVER["SCRIPT_NAME"];
 	$_SESSION["menu_item_parent_uuid"] = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
-
-//get the content
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/content/app_config.php")) {
-		$sql = "select * from v_rss ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and rss_category = 'content' ";
-		$sql .= "and rss_link = :content ";
-		$sql .= "and ( ";
-		$sql .= "length(rss_del_date) = 0 ";
-		$sql .= "or rss_del_date is null ";
-		$sql .= ") ";
-		$sql .= "order by rss_order asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['content'] = empty($content) ? $_SERVER["PHP_SELF"] : $content;
-		$content_result = $database->select($sql, $parameters, 'all');
-		if (is_array($content_result) && @sizeof($content_result) != 0) {
-			foreach($content_result as $content_row) {
-				$template_rss_sub_category = $content_row['rss_sub_category'];
-				if (empty($content_row['rss_group'])) {
-					//content is public
-					$content_from_db = &$content_row['rss_description'];
-					if (!empty($content_row['rss_title'])) {
-						$page["title"] = $content_row['rss_title'];
-					}
-				}
-				else {
-					if (if_group($content_row[rss_group])) { //viewable only to designated group
-						$content_from_db = &$content_row[rss_description];
-						if (!empty($content_row['rss_title'])) {
-							$page["title"] = $content_row['rss_title'];
-						}
-					}
-				}
-			}
-		}
-		unset($sql, $parameters, $content_result, $content_row);
-	}
 
 //button css class and styles
 	$button_icon_class = '';
 	$button_icon_style = 'padding: 3px;';
 	$button_label_class = 'button-label';
 	$button_label_style = 'padding-left: 5px; padding-right: 3px;';
-	$button_icons = (!empty($_SESSION['theme']['button_icons']['text'])) ? $button_icons = $_SESSION['theme']['button_icons']['text'] : '';
+	$button_icons = (!empty($settings->get('theme', 'button_icons'))) ? $button_icons = $settings->get('theme', 'button_icons') : '';
 	switch ($button_icons) {
 		case 'auto':
 			$button_label_class .= ' hide-md-dn';

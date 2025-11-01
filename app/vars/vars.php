@@ -76,7 +76,7 @@
 				break;
 		}
 
-		header('Location: vars.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: vars.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -222,20 +222,18 @@
 		$previous_category = '';
 		foreach ($vars as $x => $row) {
 			//write category and column headings
-				if ($previous_category != $row["var_category"]) {
-					echo "<tr>\n";
-					echo "<td colspan='7' class='no-link'>\n";
-					echo ($previous_category != '' ? '<br />' : null)."<b>".$row["var_category"]."</b>";
-					echo "</td>\n";
-					echo "</tr>\n";
-					write_header($row["var_category"]);
-				}
+			if ($previous_category != $row["var_category"]) {
+				echo "<tr>\n";
+				echo "<td colspan='7' class='no-link'>\n";
+				echo ($previous_category != '' ? '<br />' : null)."<b>".$row["var_category"]."</b>";
+				echo "</td>\n";
+				echo "</tr>\n";
+				write_header($row["var_category"]);
+			}
+
 			$list_row_url = '';
 			if (permission_exists('var_edit')) {
 				$list_row_url = "var_edit.php?id=".urlencode($row['var_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('var_add') || permission_exists('var_edit') || permission_exists('var_delete')) {

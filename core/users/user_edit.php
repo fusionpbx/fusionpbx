@@ -50,7 +50,7 @@
 	}
 
 //get total user count from the database, check limit, if defined
-	if (permission_exists('user_add') && $action == 'add' && !empty($_SESSION['limit']['users']['numeric'])) {
+	if (permission_exists('user_add') && $action == 'add' && !empty($settings->get('limit', 'users'))) {
 		$sql = "select count(*) ";
 		$sql .= "from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -58,8 +58,8 @@
 		$num_rows = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 
-		if ($num_rows >= $_SESSION['limit']['users']['numeric']) {
-			message::add($text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'], 'negative');
+		if ($num_rows >= $settings->get('limit', 'users')) {
+			message::add($text['message-maximum_users'].' '.$settings->get('limit', 'users'), 'negative');
 			header('Location: users.php');
 			exit;
 		}
@@ -178,10 +178,10 @@
 			}
 
 			//require a username format: any, email, no_email
-			if (!empty($_SESSION['users']['username_format']['text']) && $_SESSION['users']['username_format']['text'] != 'any') {
+			if (!empty($settings->get('users', 'username_format')) && $settings->get('users', 'username_format') != 'any') {
 				if (
-					($_SESSION['users']['username_format']['text'] == 'email' && !valid_email($username)) ||
-					($_SESSION['users']['username_format']['text'] == 'no_email' && valid_email($username))
+					($settings->get('users', 'username_format') == 'email' && !valid_email($username)) ||
+					($settings->get('users', 'username_format') == 'no_email' && valid_email($username))
 					) {
 					message::add($text['message-username_format_invalid'], 'negative', 7500);
 				}
@@ -192,7 +192,7 @@
 				(permission_exists('user_add') && $action == 'add' && !empty($username))) {
 
 				$sql = "select count(*) from v_users ";
-				if (isset($_SESSION["users"]["unique"]["text"]) && $_SESSION["users"]["unique"]["text"] == "global") {
+				if (!empty($settings->get('users', 'unique')) && $settings->get('users', 'unique') == "global") {
 					$sql .= "where username = :username ";
 				}
 				else {
@@ -569,6 +569,13 @@
 			$p->delete("user_setting_edit", "temp");
 			$p->delete("user_edit", "temp");
 			$p->delete('user_group_add', 'temp');
+
+		//clear the menu
+			unset($_SESSION["menu"]);
+
+		//get settings based on the user
+			$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+			settings::clear_cache();
 
 		//if call center installed
 			if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {

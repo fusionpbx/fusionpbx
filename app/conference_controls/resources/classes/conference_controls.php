@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019-2023
+	Portions created by the Initial Developer are Copyright (C) 2019-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,11 +55,9 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
+		public function __construct(array $setting_array = []) {
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 		}
 
 		/**
@@ -365,6 +363,14 @@
 										foreach ($rows as $x => $row) {
 											$primary_uuid = uuid();
 
+											//convert boolean values to a string
+												foreach($row as $key => $value) {
+													if (gettype($value) == 'boolean') {
+														$value = $value ? 'true' : 'false';
+														$row[$key] = $value;
+													}
+												}
+
 											//copy data
 												$array[$this->table][$x] = $row;
 
@@ -378,6 +384,14 @@
 												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
+
+														//convert boolean values to a string
+															foreach($row_2 as $key => $value) {
+																if (gettype($value) == 'boolean') {
+																	$value = $value ? 'true' : 'false';
+																	$row_2[$key] = $value;
+																}
+															}
 
 														//copy data
 															$array['conference_control_details'][$y] = $row_2;
@@ -399,7 +413,6 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-
 									$this->database->save($array);
 									unset($array);
 

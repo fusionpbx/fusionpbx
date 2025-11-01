@@ -44,7 +44,7 @@
 //get posted data
 	if (!empty($_POST['profiles']) && is_array($_POST['profiles'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$profiles = $_POST['profiles'];
 	}
 

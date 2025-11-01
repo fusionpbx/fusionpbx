@@ -24,10 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+
 //check permissions
 	if(!defined('STDIN')) {
-		//includes files
-		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('menu_restore')) {
 			//access granted
@@ -50,19 +51,18 @@
 		$menu_language = $_REQUEST["menu_language"];
 	}
 
-//menu restore default
-	$menu = new menu;
+//create the menu object
+ 	$menu = new menu;
+
+ //menu restore default
 	$menu->menu_uuid = $menu_uuid;
 	$menu->menu_language = $menu_language;
 	$menu->restore_delete();
 	$menu->restore_default();
-	unset($menu);
 
 //get the menu array and save it to the session
-	$menu = new menu;
-	$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'] ?? null;
+	$menu->menu_uuid = $settings->get('domain', 'menu') ?? null;
 	$_SESSION['menu']['array'] = $menu->menu_array();
-	unset($menu);
 
 //redirect
 	if(!defined('STDIN')) {

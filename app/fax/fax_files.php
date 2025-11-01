@@ -123,8 +123,8 @@
 	}
 
 //set the fax directory
-	if (!empty($_SESSION['switch']['storage']['dir'])) {
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+	if (!empty($settings->get('switch', 'storage'))) {
+		$fax_dir = $settings->get('switch', 'storage').'/fax/'.$_SESSION['domain_name'];
 	}
 
 //download the fax
@@ -204,8 +204,8 @@
 			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
-			if (!empty($_SESSION['switch']['storage']['dir']) && !is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir'], 0770, false);
+			if (!empty($settings->get('switch', 'storage')) && !is_dir($settings->get('switch', 'storage'))) {
+				mkdir($settings->get('switch', 'storage'), 0770, false);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
 				mkdir($fax_dir.'/'.$fax_extension, 0770, false);
@@ -246,20 +246,15 @@
 	$offset = $rows_per_page * $page;
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['time_zone'] = $time_zone;
 
 //set the time format options: 12h, 24h
-	if (isset($_SESSION['domain']['time_format']['text'])) {
-		if ($_SESSION['domain']['time_format']['text'] == '12h') {
+	if (!empty($settings->get('domain', 'time_format'))) {
+		if ($settings->get('domain', 'time_format') == '12h') {
 			$time_format = 'HH12:MI:SS am';
 		}
-		elseif ($_SESSION['domain']['time_format']['text'] == '24h') {
+		elseif ($settings->get('domain', 'time_format') == '24h') {
 			$time_format = 'HH24:MI:SS';
 		}
 	}

@@ -249,8 +249,6 @@
 			$p->add("extension_edit", "temp");
 
 		//save the data
-			$database->app_name = 'call_forward';
-			$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 			$database->save($array);
 			unset($array);
 
@@ -262,8 +260,6 @@
 				foreach ($follow_me_delete_uuids as $follow_me_delete_uuid) {
 					$array['follow_me_destinations'][]['follow_me_destination_uuid'] = $follow_me_delete_uuid;
 				}
-				$database->app_name = 'call_forward';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 				$database->delete($array);
 				unset($array);
 			}
@@ -314,7 +310,7 @@
 
 		//if dnd or call forward are enabled process them last
 			if ($follow_me_enabled != true) {
-				if ($forward_all_enabled == true) {
+				if ($forward_all_enabled) {
 					//dnd
 						$dnd->set();
 						$dnd->user_status();
@@ -423,9 +419,9 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("directory:".$extension."@".$_SESSION['domain_name']);
+			$cache->delete(gethostname().":directory:".$extension."@".$_SESSION['domain_name']);
 			if (!empty($number_alias)) {
-				$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
+				$cache->delete(gethostname().":directory:".$number_alias."@".$_SESSION['domain_name']);
 			}
 
 		//add the message

@@ -35,15 +35,38 @@
 		const app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
 
 		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -54,21 +77,21 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
-			//assign public variables
-			$this->domain_uuid = $_SESSION['domain_uuid'];
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'recording_';
 			$this->list_page = 'recordings.php';
 			$this->table = 'recordings';
 			$this->uuid_prefix = 'recording_';
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -81,8 +104,9 @@
 			$parameters['domain_uuid'] = $this->domain_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
 			if (!empty($result)) {
+				$switch_recordings_domain_dir = $this->settings->get('switch', 'recordings').'/'.$this->domain_name;
 				foreach ($result as $row) {
-					$recordings[$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']."/".$row['recording_filename']] = $row['recording_filename'];
+					$recordings[$switch_recordings_domain_dir."/".$row['recording_filename']] = $row['recording_filename'];
 				}
 			}
 			else {
@@ -121,14 +145,14 @@
 										$sql = "select recording_filename from v_recordings ";
 										$sql .= "where domain_uuid = :domain_uuid ";
 										$sql .= "and recording_uuid = :recording_uuid ";
-										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+										$parameters['domain_uuid'] = $this->domain_uuid;
 										$parameters['recording_uuid'] = $record['uuid'];
 										$filenames[] = $this->database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
 
 									//build delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -141,9 +165,10 @@
 
 								//delete recording files
 									if (is_array($filenames) && @sizeof($filenames) != 0) {
+										$switch_recordings_domain_dir = $this->settings->get('switch', 'recordings')."/".$this->domain_name;
 										foreach ($filenames as $filename) {
-											if (isset($filename) && !empty($filename) && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename)) {
-												@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename);
+											if (!empty($filename) && file_exists($switch_recordings_domain_dir."/".$filename)) {
+												@unlink($switch_recordings_domain_dir."/".$filename);
 											}
 										}
 									}

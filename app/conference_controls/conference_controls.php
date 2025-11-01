@@ -48,7 +48,7 @@
 //get the http post data
 	if (!empty($_POST['conference_controls'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$conference_controls = $_POST['conference_controls'];
 	}
 
@@ -75,7 +75,7 @@
 				break;
 		}
 
-		header('Location: conference_controls.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: conference_controls.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -100,7 +100,7 @@
 	unset($sql);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);

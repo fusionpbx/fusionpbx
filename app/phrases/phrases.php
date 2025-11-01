@@ -48,7 +48,7 @@
 //get posted data
 	if (!empty($_POST['phrases'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$phrases = $_POST['phrases'];
 	}
 
@@ -78,7 +78,7 @@
 				break;
 		}
 
-		header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

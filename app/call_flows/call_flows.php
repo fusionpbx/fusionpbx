@@ -49,7 +49,7 @@
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get search
-	$search = $_REQUEST['search'] ?? null;
+	$search = $_REQUEST['search'] ?? '';
 
 //get posted data
 	if (!empty($_POST['call_flows'])) {
@@ -82,7 +82,7 @@
 				break;
 		}
 
-		header('Location: call_flows.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_flows.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -118,7 +118,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('call_flow_all')) {
 		$param .= "&show=all";

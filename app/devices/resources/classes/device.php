@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010-2025
 	All Rights Reserved.
 
 	Contributor(s):
@@ -34,13 +34,48 @@
 		const app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 
 		/**
-		 * declare public variables
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
 		 */
 		public $domain_uuid;
+
+		/**
+		 * declare public variables
+		 */
 		public $template_dir;
 		public $device_uuid;
 		public $device_vendor_uuid;
 		public $device_profile_uuid;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
 
 		/**
 		 * declare private variables
@@ -53,12 +88,6 @@
 		private $toggle_values;
 
 		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
-
-		/**
 		 * Create a settings object using key/value pairs in the $setting_array.
 		 *
 		 * Valid values are: database.
@@ -66,16 +95,15 @@
 		 * @depends database::new()
 		 * @access public
 		 */
-		public function __construct($setting_array = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
-
-
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 		}
 
 		public function get_domain_uuid() {
@@ -471,8 +499,8 @@
 				}
 
 			//check to see if the domain name sub directory exists
-				if (is_dir($this->template_dir."/".$_SESSION["domain_name"])) {
-					$this->template_dir = $this->template_dir."/".$_SESSION["domain_name"];
+				if (is_dir($this->template_dir."/".$this->domain_name)) {
+					$this->template_dir = $this->template_dir."/".$this->domain_name;
 				}
 
 			//return the template directory
@@ -541,9 +569,9 @@
 									$p->delete('device_key_delete', 'temp');
 
 								//write the provision files
-									if (!empty($_SESSION['provision']['path']['text'])) {
+									if (!empty($this->settings->get('provision', 'path'))) {
 										$prov = new provision;
-										$prov->domain_uuid = $_SESSION['domain_uuid'];
+										$prov->domain_uuid = $this->domain_uuid;
 										$response = $prov->write();
 									}
 
@@ -994,7 +1022,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -1021,9 +1049,9 @@
 									unset($array);
 
 								//write the provision files
-									if (!empty($_SESSION['provision']['path']['text'])) {
+									if (!empty($this->settings->get('provision', 'path'))) {
 										$prov = new provision;
-										$prov->domain_uuid = $_SESSION['domain_uuid'];
+										$prov->domain_uuid = $this->domain_uuid;
 										$response = $prov->write();
 									}
 
@@ -1288,12 +1316,20 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$y = $z = 0;
 									foreach ($rows as $x => $row) {
 										$primary_uuid = uuid();
+
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
 
 										//copy data
 											$array[$this->table][$x] = $row;
@@ -1318,6 +1354,14 @@
 											if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 												foreach ($rows_2 as $row_2) {
 
+													//convert boolean values to a string
+														foreach($row_2 as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$row_2[$key] = $value;
+															}
+														}
+
 													//copy data
 														$array['device_profile_keys'][$y] = $row_2;
 
@@ -1338,6 +1382,14 @@
 											$rows_3 = $this->database->select($sql_3, $parameters_3, 'all');
 											if (is_array($rows_3) && @sizeof($rows_3) != 0) {
 												foreach ($rows_3 as $row_3) {
+
+													//convert boolean values to a string
+														foreach($row_3 as $key => $value) {
+															if (gettype($value) == 'boolean') {
+																$value = $value ? 'true' : 'false';
+																$row_3[$key] = $value;
+															}
+														}
 
 													//copy data
 														$array['device_profile_settings'][$z] = $row_3;

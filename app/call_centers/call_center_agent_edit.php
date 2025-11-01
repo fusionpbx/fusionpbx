@@ -122,13 +122,13 @@
 			}
 
 		//set default values
-			if (empty($agent_call_timeout)) { $agent_call_timeout = "20"; }
-			if (empty($agent_max_no_answer)) { $agent_max_no_answer = "0"; }
-			if (empty($agent_wrap_up_time)) { $agent_wrap_up_time = "10"; }
-			if (empty($agent_no_answer_delay_time)) { $agent_no_answer_delay_time = "30"; }
-			if (empty($agent_reject_delay_time)) { $agent_reject_delay_time = "90"; }
-			if (empty($agent_busy_delay_time)) { $agent_busy_delay_time = "90"; }
-			if ($agent_record === null) { $agent_record = false; }
+			$agent_call_timeout = $agent_call_timeout ?? "20";
+			$agent_max_no_answer = $agent_max_no_answer ?? "0";
+			$agent_wrap_up_time = $agent_wrap_up_time ?? "10";
+			$agent_no_answer_delay_time = $agent_no_answer_delay_time ?? "30";
+			$agent_reject_delay_time = $agent_reject_delay_time ?? "90";
+			$agent_busy_delay_time = $agent_busy_delay_time ?? "90";
+			$agent_record = $agent_record ?? false;
 
 		//add the call_center_agent_uuid
 			if (empty($call_center_agent_uuid)) {
@@ -136,7 +136,7 @@
 			}
 
 		//change the contact string to loopback - Not recommended added for backwards comptability causes multiple problems
-			if ($_SESSION['call_center']['agent_contact_method']['text'] == 'loopback') {
+			if ($settings->get('call_center', 'agent_contact_method') == 'loopback') {
 				$agent_contact = str_replace("user/", "loopback/", $agent_contact);
 				$agent_contact = str_replace("@", "/", $agent_contact);
 			}
@@ -167,9 +167,7 @@
 				$array['users'][0]['user_status'] = $agent_status;
 			}
 
-		//save to the data
-			$database->app_name = 'call_center';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+		//save to the database
 			$database->save($array);
 
 		//syncrhonize configuration

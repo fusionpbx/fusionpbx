@@ -73,8 +73,6 @@
 			}
 			$array['groups'][0]['group_name'] = $new_group_name;
 			$array['groups'][0]['group_description'] = $new_group_desc;
-			$database->app_name = 'groups';
-			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 			$database->save($array);
 			unset($array);
 
@@ -114,8 +112,6 @@
 					$p->add('group_permission_add', 'temp');
 
 					//execute insert
-					$database->app_name = 'groups';
-					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 					$database->save($array);
 					unset($array);
 

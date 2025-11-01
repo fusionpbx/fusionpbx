@@ -35,7 +35,7 @@
 			else {
 				$v_needle = 'v_';
 			}
-			if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus/")) {
+			if($dh = opendir($settings->get('switch', 'conf')."/ivr_menus/")) {
 				$files = Array();
 				while($file = readdir($dh)) {
 					if($file != "." && $file != ".." && $file[0] != '.') {
@@ -44,7 +44,7 @@
 						} else {
 							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
 								//echo "file: $file<br />\n";
-								unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
+								unlink($settings->get('switch', 'conf')."/ivr_menus/".$file);
 							}
 						}
 					}
@@ -169,10 +169,10 @@
 
 						//write the file
 							if (count($_SESSION["domains"]) > 1) {
-								$fout = fopen($_SESSION['switch']['conf']['dir']."/ivr_menus/v_".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."_".$ivr_menu_name.".xml","w");
+								$fout = fopen($settings->get('switch', 'conf')."/ivr_menus/v_".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."_".$ivr_menu_name.".xml","w");
 							}
 							else {
-								$fout = fopen($_SESSION['switch']['conf']['dir']."/ivr_menus/v_".$ivr_menu_name.".xml","w");
+								$fout = fopen($settings->get('switch', 'conf')."/ivr_menus/v_".$ivr_menu_name.".xml","w");
 							}
 							fwrite($fout, $tmp);
 							fclose($fout);

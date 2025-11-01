@@ -32,13 +32,6 @@ defined('STDIN') or die('Unauthorized');
 //include files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 
-//create a database connection using default config
-$config = config::load();
-$database = database::new(['config' => $config]);
-
-//load global defaults
-$settings = new settings(['database' => $database]);
-
 //get the language code from global defaults
 $language_code = $settings->get('domain', 'language');
 
@@ -117,11 +110,11 @@ function show_upgrade_menu() {
 				do_upgrade_code();
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1a':
 				do_upgrade_code();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1b':
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
@@ -341,7 +334,9 @@ function do_upgrade_schema(bool $data_types = false) {
  * Restore the default menu
  */
 function do_upgrade_menu() {
-	global $included, $sel_menu, $menu_uuid, $menu_language, $database;
+	//define the global variables
+	global $database, $settings, $included, $sel_menu, $menu_uuid, $menu_language;
+
 	//get the menu uuid and language
 	$sql = "select menu_uuid, menu_language from v_menus ";
 	$sql .= "where menu_name = :menu_name ";
@@ -362,7 +357,7 @@ function do_upgrade_menu() {
 	if (!isset($argv[2]) || $argv[2] == 'default') {
 		//restore the menu
 		$included = true;
-		require_once dirname(__DIR__, 2) . "/core/menu/menu_restore_default.php";
+		require dirname(__DIR__, 2) . "/core/menu/menu_restore_default.php";
 		unset($sel_menu);
 		$text = (new text)->get(null, 'core/upgrade');
 		//send message to the console
@@ -374,10 +369,12 @@ function do_upgrade_menu() {
  * Restore the default permissions
  */
 function do_upgrade_permissions() {
-	global $included;
+	//define the global variables
+	global $database, $settings, $included;
+
 	//default the permissions
 	$included = true;
-	require_once dirname(__DIR__, 2) . "/core/groups/permissions_default.php";
+	require dirname(__DIR__, 2) . "/core/groups/permissions_default.php";
 
 	//send message to the console
 	$text = (new text)->get(null, 'core/upgrade');

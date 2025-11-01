@@ -166,10 +166,8 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database->app_name = "conference_centers";
-			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 			unset($array);
 
 		//remove the temporary permission
@@ -354,7 +352,7 @@
 	echo "	".$text['label-conference_center_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required' placeholder=\"".($_SESSION['conference_center']['extension_range']['text'] ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required' placeholder=\"".($settings->get('conference_center', 'extension_range') ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-conference_center_extension']."\n";
 	echo "</td>\n";
@@ -381,8 +379,8 @@
 				if ($key == 'recordings') {
 					if (
 						!empty($instance_value) &&
-						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
-						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						($instance_value == $row["value"] || $instance_value == $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
 						) {
 						$selected = "selected='selected'";
 						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);

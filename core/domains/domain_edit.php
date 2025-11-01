@@ -143,8 +143,6 @@
 						$domain_array = $array;
 
 						//add the new domain
-						$database->app_name = 'domains';
-						$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 						$database->save($array);
 
 						//add dialplans to the domain
@@ -164,16 +162,16 @@
 						}
 
 						//create the recordings directory for the new domain.
-						if (isset($_SESSION['switch']['recordings']['dir']) && !empty($_SESSION['switch']['recordings']['dir'])) {
-							if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
-								mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
+						if (!empty($settings->get('switch', 'recordings')) && !empty($settings->get('switch', 'recordings'))) {
+							if (!file_exists($settings->get('switch', 'recordings')."/".$domain_name)) {
+								mkdir($settings->get('switch', 'recordings')."/".$domain_name, 0770);
 							}
 						}
 
 						//create the voicemail directory for the new domain.
-						if (isset($_SESSION['switch']['voicemail']['dir']) && !empty($_SESSION['switch']['voicemail']['dir'])) {
-							if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
-								mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
+						if (!empty($settings->get('switch', 'voicemail')) && !empty($settings->get('switch', 'voicemail'))) {
+							if (!file_exists($settings->get('switch', 'voicemail')."/default/".$domain_name)) {
+								mkdir($settings->get('switch', 'voicemail')."/default/".$domain_name, 0770);
 							}
 						}
 
@@ -200,8 +198,6 @@
 						$array['domains'][0]['domain_name'] = $domain_name;
 						$array['domains'][0]['domain_enabled'] = $domain_enabled;
 						$array['domains'][0]['domain_description'] = $domain_description;
-						$database->app_name = 'domains';
-						$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 						$database->save($array);
 
 					//add dialplans to the domain
@@ -411,69 +407,69 @@
 							}
 
 						//rename switch/storage/voicemail/default/[domain] (folder)
-							if (isset($_SESSION['switch']['voicemail']['dir']) && file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$original_domain_name)) {
-								@rename($_SESSION['switch']['voicemail']['dir']."/default/".$original_domain_name, $_SESSION['switch']['voicemail']['dir']."/default/".$domain_name); // folder
+							if (!empty($settings->get('switch', 'voicemail')) && file_exists($settings->get('switch', 'voicemail')."/default/".$original_domain_name)) {
+								@rename($settings->get('switch', 'voicemail')."/default/".$original_domain_name, $settings->get('switch', 'voicemail')."/default/".$domain_name); // folder
 							}
 
 						//rename switch/storage/fax/[domain] (folder)
-							if (isset($_SESSION['switch']['storage']['dir']) && file_exists($_SESSION['switch']['storage']['dir']."/fax/".$original_domain_name)) {
-								@rename($_SESSION['switch']['storage']['dir']."/fax/".$original_domain_name, $_SESSION['switch']['storage']['dir']."/fax/".$domain_name); // folder
+							if (!empty($settings->get('switch', 'storage')) && file_exists($settings->get('switch', 'storage')."/fax/".$original_domain_name)) {
+								@rename($settings->get('switch', 'storage')."/fax/".$original_domain_name, $settings->get('switch', 'storage')."/fax/".$domain_name); // folder
 							}
 
 						//rename switch/conf/dialplan/[domain] (folder/file)
-							if (isset($_SESSION['switch']['dialplan']['dir'])) {
-								if (file_exists($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name)) {
-									@rename($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name, $_SESSION['switch']['dialplan']['dir']."/".$domain_name); // folder
+							if (!empty($settings->get('switch', 'dialplan'))) {
+								if (file_exists($settings->get('switch', 'dialplan')."/".$original_domain_name)) {
+									@rename($settings->get('switch', 'dialplan')."/".$original_domain_name, $settings->get('switch', 'dialplan')."/".$domain_name); // folder
 								}
-								if (file_exists($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name.".xml")) {
-									@rename($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name.".xml", $_SESSION['switch']['dialplan']['dir']."/".$domain_name.".xml"); // file
+								if (file_exists($settings->get('switch', 'dialplan')."/".$original_domain_name.".xml")) {
+									@rename($settings->get('switch', 'dialplan')."/".$original_domain_name.".xml", $settings->get('switch', 'dialplan')."/".$domain_name.".xml"); // file
 								}
 							}
 
 						//rename switch/conf/dialplan/public/[domain] (folder/file)
-							if (isset($_SESSION['switch']['dialplan']['dir'])) {
-								if (file_exists($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name)) {
-									@rename($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name, $_SESSION['switch']['dialplan']['dir']."/public/".$domain_name); // folder
+							if (!empty($settings->get('switch', 'dialplan'))) {
+								if (file_exists($settings->get('switch', 'dialplan')."/public/".$original_domain_name)) {
+									@rename($settings->get('switch', 'dialplan')."/public/".$original_domain_name, $settings->get('switch', 'dialplan')."/public/".$domain_name); // folder
 								}
-								if (file_exists($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name.".xml")) {
-									@rename($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name.".xml", $_SESSION['switch']['dialplan']['dir']."/public/".$domain_name.".xml"); // file
+								if (file_exists($settings->get('switch', 'dialplan')."/public/".$original_domain_name.".xml")) {
+									@rename($settings->get('switch', 'dialplan')."/public/".$original_domain_name.".xml", $settings->get('switch', 'dialplan')."/public/".$domain_name.".xml"); // file
 								}
 							}
 
 						//rename switch/conf/directory/[domain] (folder/file)
-							if (isset($_SESSION['switch']['extensions']['dir'])) {
-								if (file_exists($_SESSION['switch']['extensions']['dir']."/".$original_domain_name)) {
-									@rename($_SESSION['switch']['extensions']['dir']."/".$original_domain_name, $_SESSION['switch']['extensions']['dir']."/".$domain_name); // folder
+							if (!empty($settings->get('switch', 'extensions'))) {
+								if (file_exists($settings->get('switch', 'extensions')."/".$original_domain_name)) {
+									@rename($settings->get('switch', 'extensions')."/".$original_domain_name, $settings->get('switch', 'extensions')."/".$domain_name); // folder
 								}
-								if (file_exists($_SESSION['switch']['extensions']['dir']."/".$original_domain_name.".xml")) {
-									@rename($_SESSION['switch']['extensions']['dir']."/".$original_domain_name.".xml", $_SESSION['switch']['extensions']['dir']."/".$domain_name.".xml"); // file
+								if (file_exists($settings->get('switch', 'extensions')."/".$original_domain_name.".xml")) {
+									@rename($settings->get('switch', 'extensions')."/".$original_domain_name.".xml", $settings->get('switch', 'extensions')."/".$domain_name.".xml"); // file
 								}
 							}
 
 						//rename switch/recordings/[domain] (folder)
-							if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'])) {
-								$switch_recordings_dir = str_replace("/".$_SESSION["domain_name"], "", $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']);
+							if (file_exists($settings->get('switch', 'recordings')."/".$_SESSION['domain_name'])) {
+								$switch_recordings_dir = str_replace("/".$_SESSION["domain_name"], "", $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']);
 								if (file_exists($switch_recordings_dir."/".$original_domain_name)) {
 									@rename($switch_recordings_dir."/".$original_domain_name, $switch_recordings_dir."/".$domain_name); // folder
 								}
 							}
 
 						//update dialplan, dialplan/public xml files
-							$dialplan_xml = file_get_contents($_SESSION['switch']['dialplan']['dir']."/".$domain_name.".xml");
+							$dialplan_xml = file_get_contents($settings->get('switch', 'dialplan')."/".$domain_name.".xml");
 							$dialplan_xml = str_replace($original_domain_name, $domain_name, $dialplan_xml);
-							file_put_contents($_SESSION['switch']['dialplan']['dir']."/".$domain_name.".xml", $dialplan_xml);
+							file_put_contents($settings->get('switch', 'dialplan')."/".$domain_name.".xml", $dialplan_xml);
 							unset($dialplan_xml);
 
-							$dialplan_public_xml = file_get_contents($_SESSION['switch']['dialplan']['dir']."/public/".$domain_name.".xml");
+							$dialplan_public_xml = file_get_contents($settings->get('switch', 'dialplan')."/public/".$domain_name.".xml");
 							$dialplan_public_xml = str_replace($original_domain_name, $domain_name, $dialplan_public_xml);
-							file_put_contents($_SESSION['switch']['dialplan']['dir']."/public/".$domain_name.".xml", $dialplan_public_xml);
+							file_put_contents($settings->get('switch', 'dialplan')."/public/".$domain_name.".xml", $dialplan_public_xml);
 							unset($dialplan_public_xml);
 
 						//update session domain name
 							$_SESSION['domains'][$domain_uuid]['domain_name'] = $domain_name;
 
 						//recreate dialplan and extension xml files
-							if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+							if (is_readable($settings->get('switch', 'extensions'))) {
 								$extension = new extension;
 								$extension->xml();
 							}
@@ -484,8 +480,6 @@
 								$sql .= "var_value = :var_value ";
 								$sql .= "where var_name = 'domain' ";
 								$parameters['var_value'] = $domain_name;
-								$database->app_name = 'domains';
-								$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);
 							}

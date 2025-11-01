@@ -24,7 +24,20 @@ abstract class base_websocket_system_service extends service implements websocke
 
 	private $timers;
 
-	//abstract protected function reload_settings(): void;
+	/**
+	 * Array of topics and their callbacks
+	 * @var array
+	 */
+	protected $topics;
+
+	/**
+	 * Array of listeners
+	 * Listener is an array of socket and callback used to listen for events on the socket. When a listener is added,
+	 * the socket is added to the array of listeners. When the socket is closed, the listener is removed from the
+	 * array of listeners. When an event is received on the respective socket, the provided callback is called.
+	 * @var array
+	 */
+	protected $listeners;
 
 	protected static function display_version(): void {
 		echo "System Dashboard Service 1.0\n";
@@ -69,9 +82,23 @@ abstract class base_websocket_system_service extends service implements websocke
 		self::$websocket_host = $host;
 	}
 
+	/**
+	 * Add a socket listener
+	 *
+	 * @param $socket
+	 * @param callable $callback
+	 * @return void
+	 */
+	protected function add_listener($socket, callable $callback): void {
+		$this->listeners[] = [$socket, $callback];
+	}
+
 	public function run(): int {
 		// set the timers property as an array
 		$this->timers = [];
+
+		// Set the listeners property as an array
+		$this->listeners = [];
 
 		// re-read the config file to get any possible changes
 		parent::$config->read();
@@ -94,7 +121,9 @@ abstract class base_websocket_system_service extends service implements websocke
 		$suppress_ws_message = false;
 
 		while ($this->running) {
-			$read = [];
+			// Get the array of sockets to read from
+			$listeners = array_column($this->listeners, 0);
+
 			// reconnect to websocket server
 			if ($this->ws_client === null || !$this->ws_client->is_connected()) {
 				// reconnect failed
@@ -105,7 +134,9 @@ abstract class base_websocket_system_service extends service implements websocke
 			}
 
 			if ($this->ws_client !== null && $this->ws_client->is_connected()) {
-				$read[] = $this->ws_client->socket();
+				// Combine the websocket client and the listeners into a single array
+				$read = array_merge($listeners, [$this->ws_client->socket()]);
+				// Reset the suppress message flag
 				$suppress_ws_message = false;
 			}
 
@@ -129,6 +160,14 @@ abstract class base_websocket_system_service extends service implements websocke
 							$this->handle_websocket_event($this->ws_client);
 							continue;
 						}
+						// Other listeners
+						foreach ($this->listeners as $listener) {
+							if ($resource === $listener[0]) {
+								// Call the callback function provided by the add_listener function
+								call_user_func($listener[1]);
+								continue;
+							}
+						}
 					}
 				}
 			}
@@ -143,7 +182,7 @@ abstract class base_websocket_system_service extends service implements websocke
 						$callable = $array['callable'];
 						// Call the callback and see if it returns a value for the next timer
 						$next_timer = call_user_func($callable);
-						if ($next_timer !== null && is_numeric($next_timer)) {
+						if (is_numeric($next_timer)) {
 							// Set the timer again when requested by called function returning a value
 							$this->set_timer($next_timer, $callable);
 						}
@@ -154,22 +193,6 @@ abstract class base_websocket_system_service extends service implements websocke
 			}
 		}
 		return 0;
-	}
-
-	protected function debug(string $message) {
-		self::log($message, LOG_DEBUG);
-	}
-
-	protected function warn(string $message) {
-		self::log($message, LOG_WARNING);
-	}
-
-	protected function error(string $message) {
-		self::log($message, LOG_ERR);
-	}
-
-	protected function info(string $message) {
-		self::log($message, LOG_INFO);
 	}
 
 	/**
@@ -260,8 +283,8 @@ abstract class base_websocket_system_service extends service implements websocke
 
 	/**
 	 * Allows the service to register a callback so when the topic arrives the callable is called
-	 * @param type $topic
-	 * @param type $callable
+	 * @param string $topic
+	 * @param callable $callable
 	 */
 	protected function on_topic($topic, $callable) {
 		if (!isset($this->topics[$topic])) {

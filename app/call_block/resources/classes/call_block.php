@@ -12,9 +12,38 @@
 		const app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 
 		/**
-		 * declare private variables
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
 		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
+		 * declare private variables
+		 */
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -33,7 +62,16 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$config = $setting_array['config'] ?? config::load();
+			$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'call_block_';
@@ -42,12 +80,6 @@
 			$this->uuid_prefix = 'call_block_';
 			$this->toggle_field = 'call_block_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -88,7 +120,7 @@
 								}
 								$sql .= ") ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -103,7 +135,7 @@
 							foreach ($call_block_numbers as $call_block_uuid => $call_block_number) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $call_block_uuid;
 								if (!permission_exists('call_block_domain')) {
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 								$x++;
 							}
@@ -118,7 +150,7 @@
 								//clear the cache
 									$cache = new cache;
 									foreach ($call_block_numbers as $call_block_number) {
-										$cache->delete("app:call_block:".$_SESSION['domain_name'].":".$call_block_number);
+										$cache->delete("app:call_block:".$this->domain_name.":".$call_block_number);
 									}
 
 								//set message
@@ -160,7 +192,7 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, call_block_number from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -190,7 +222,7 @@
 								//clear the cache
 									$cache = new cache;
 									foreach ($call_block_numbers as $call_block_number) {
-										$cache->delete("app:call_block:".$_SESSION['domain_name'].":".$call_block_number);
+										$cache->delete("app:call_block:".$this->domain_name.":".$call_block_number);
 									}
 
 								//set message
@@ -235,10 +267,18 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
+
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
 
 										//copy data
 											$array[$this->table][$x] = $row;
@@ -307,7 +347,7 @@
 							}
 
 						//get the caller id info from call detail records
-							if (isset($_SESSION['domain_uuid']) && is_uuid($_SESSION['domain_uuid'])) {
+							if (is_uuid($this->domain_uuid)) {
 								//get the destination country code
 								$sql = "select distinct(destination_prefix), ";
 								$sql .= "(select count(destination_prefix) from v_destinations where domain_uuid = :domain_uuid and destination_prefix = d.destination_prefix) as count ";
@@ -316,7 +356,7 @@
 								$sql .= "and destination_prefix <> '' ";
 								$sql .= "and destination_enabled = true ";
 								$sql .= "order by count desc limit 1; ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['domain_uuid'] = $this->domain_uuid;
 								$destination_country_code = $this->database->select($sql, $parameters ?? null, 'column');
 								unset($sql, $parameters);
 
@@ -331,14 +371,14 @@
 							if (!permission_exists('call_block_extension')) {
 								$sql = "select extension_uuid from v_extension_users ";
 								$sql .= "where user_uuid = :user_uuid ";
-								$parameters['user_uuid'] = $_SESSION['user_uuid'];
+								$parameters['user_uuid'] = $this->user_uuid;
 								$user_extensions = $this->database->select($sql, $parameters ?? null, 'all');
 								unset($sql, $parameters);
 							}
 
 						//get the country code from default settings
-							if (!empty($_SESSION['domain']['country_code']['numeric'])) {
-								$country_code = $_SESSION['domain']['country_code']['numeric'];
+							if ($this->settings->get('domain', 'country_code', null) !== null) {
+								$country_code = $this->settings->get('domain', 'country_code');
 							}
 
 						//loop through records
@@ -361,7 +401,7 @@
 									//build insert array
 										if (permission_exists('call_block_extension')) {
 											$array['call_block'][$x]['call_block_uuid'] = uuid();
-											$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											$array['call_block'][$x]['domain_uuid'] = $this->domain_uuid;
 											$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
 											if (is_uuid($this->extension_uuid)) {
 												$array['call_block'][$x]['extension_uuid'] = $this->extension_uuid;
@@ -387,7 +427,7 @@
 												foreach ($user_extensions as $field) {
 													if (is_uuid($field['extension_uuid'])) {
 														$array['call_block'][$x]['call_block_uuid'] = uuid();
-														$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+														$array['call_block'][$x]['domain_uuid'] = $this->domain_uuid;
 														$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
 														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
 														if ($this->call_block_direction == 'inbound') {
@@ -421,7 +461,7 @@
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and app_uuid = '".self::app_uuid."' ";
 									$sql .= "and dialplan_enabled <> true ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$parameters['domain_uuid'] = $this->domain_uuid;
 									$rows = $this->database->select($sql, $parameters);
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										foreach ($rows as $x => $row) {

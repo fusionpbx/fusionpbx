@@ -37,6 +37,9 @@
 --create the api object
 	api = freeswitch.API();
 
+--get the hostname
+	local hostname = api:execute("hostname", "");
+
 --include config.lua
 	require "resources.functions.config";
 
@@ -262,9 +265,9 @@
 
 --clear the cache
 	if extension and #extension > 0 and cache.support() then
-		cache.del("directory:"..extension.."@"..context);
+		cache.del(hostname..":directory:"..extension.."@"..context);
 		if #number_alias > 0 then
-			cache.del("directory:"..number_alias.."@"..context);
+			cache.del(hostname..":directory:"..number_alias.."@"..context);
 		end
 	end
 

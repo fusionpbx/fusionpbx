@@ -36,15 +36,15 @@
 		const app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 
 		/**
-		* declare private variables
-		*/
+		 * declare private variables
+		 */
 		public $menu_uuid;
 		public $menu_language;
 		public $text;
 
 		/**
-		* declare private variables
-		*/
+		 * declare private variables
+		 */
 		private $name;
 		private $table;
 		private $toggle_field;
@@ -70,10 +70,22 @@
 		private $user_uuid;
 
 		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
 		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $domain_uuid;
+
+		/**
+		* Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		* @var string
+		*/
+		private $domain_name;
 
 		/**
 		 * called when the object is created
@@ -83,21 +95,15 @@
 			$this->location = 'menus.php';
 
 			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
 			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+			$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
 			//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//load the settings
-			if (empty($setting_array['settings'])) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			} else {
-				$this->settings = $setting_array['settings'];
-			}
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//add multi-lingual support
 			$this->text = (new text)->get();
@@ -303,7 +309,6 @@
 						//save the changes
 							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 								//save the array
-
 									$this->database->save($array);
 									unset($array);
 
@@ -681,8 +686,6 @@
 							$p->add('menu_item_add', 'temp');
 							$p->add('menu_language_add', 'temp');
 						//execute insert
-							$this->database->app_name = 'menu';
-							$this->database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 							$this->database->save($array);
 							unset($array);
 						//revoke temporary permissions
@@ -745,8 +748,6 @@
 							$p = permissions::new();
 							$p->add('menu_item_group_add', 'temp');
 						//execute insert
-							$this->database->app_name = 'menu';
-							$this->database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 							$this->database->save($array);
 							unset($array);
 						//revoke temporary permissions
@@ -800,10 +801,7 @@
 					if ($menu_item_level == 0) {
 						$menu_html  = "<ul class='menu_main'>\n";
 						$menu_html .= "<li>\n";
-						if (!isset($_SESSION["username"])) {
-							$_SESSION["username"] = '';
-						}
-						if (empty($_SESSION["username"])) {
+						if (empty($this->username)) {
 							$menu_html .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
 						}
 						else {
@@ -1080,8 +1078,6 @@
 						$p->add('menu_add', 'temp');
 
 					//execute insert
-						$this->database->app_name = 'menu';
-						$this->database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 						$this->database->save($array);
 						unset($array);
 
@@ -1132,7 +1128,7 @@
 				if ($menu_brand) {
 					//define menu brand mark
 						$menu_brand_text = escape($this->settings->get('theme', 'menu_brand_text', 'FusionPBX'));
-						switch ($this->settings->get('theme', 'menu_brand_type', '')) {
+						switch ($this->settings->get('theme', 'menu_brand_type', 'image')) {
 							case 'text':
 								$html .= "			<a class='navbar-brand-text' href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
 								break;
@@ -1248,7 +1244,7 @@
 				$html .= "			<ul class='navbar-nav ml-auto'>\n";
 				//current user (latter condition for backward compatibility)
 					if (
-						!empty($_SESSION['username']) &&
+						!empty($this->username) &&
 							$this->settings->get('theme', 'header_user_visible', 'true') == 'true' &&	//app_defaults schema data type is 'text' but should be boolean here
 							$this->settings->get('theme', 'user_visible', 'true') == 'true'				//app_defaults schema data type is 'text' but should be boolean here
 					) {
@@ -1260,22 +1256,22 @@
 							$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: 15px; height: 15px; border-radius: 50%; margin-top: -2px; background-image: url('".PROJECT_PATH."/core/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 						}
 						$html .= "		<li class='nav-item'>\n";
-						$html .= "			<a class='nav-link header_user d-block d-sm-none' href='show:usermenu' title=\"".$_SESSION['username']."\" style='border-top: 1px solid ".($this->settings->get('theme', 'menu_sub_background_color') ?? 'rgba(0,0,0,0.90)')."' data-toggle='collapse' data-target='#main_navbar' onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span style='margin-left: 7px;'>".escape($_SESSION['username'])."</span></a>";
-						$html .= "			<a class='nav-link header_user d-none d-sm-block' href='show:usermenu' title=\"".$_SESSION['username']."\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span class='d-none d-md-inline' style='margin-left: 7px;'>".escape($_SESSION['username'])."</span></a>";
+						$html .= "			<a class='nav-link header_user d-block d-sm-none' href='show:usermenu' title=\"".$this->username."\" style='border-top: 1px solid ".($this->settings->get('theme', 'menu_sub_background_color') ?? 'rgba(0,0,0,0.90)')."' data-toggle='collapse' data-target='#main_navbar' onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span style='margin-left: 7px;'>".escape($this->username)."</span></a>";
+						$html .= "			<a class='nav-link header_user d-none d-sm-block' href='show:usermenu' title=\"".$this->username."\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span class='d-none d-md-inline' style='margin-left: 7px;'>".escape($this->username)."</span></a>";
 						$html .= "		</li>\n";
 					}
 
 				//domain name/selector
-					if (permission_exists('domain_select') && $this->settings->get('theme', 'domain_visible', 'true') == 'true' && !empty($_SESSION['username']) && !empty($_SESSION['domains']) && count($_SESSION['domains']) > 1) {
+					if (permission_exists('domain_select') && $this->settings->get('theme', 'domain_visible', 'true') == 'true' && !empty($this->username) && !empty($_SESSION['domains']) && count($_SESSION['domains']) > 1) {
 						$html .= "		<li class='nav-item'>\n";
-						$html .= "			<a class='nav-link header_domain header_domain_selector_domain d-block d-sm-none' href='select:domain' onclick='event.preventDefault();' data-toggle='collapse' data-target='#main_navbar' title='".$this->text['theme-label-open_selector']."'><span class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')."'></span><span style='margin-left: 7px;'>".escape($_SESSION['domain_name'])."</span></a>";
-						$html .= "			<a class='nav-link header_domain header_domain_selector_domain d-none d-sm-block' href='select:domain' onclick='event.preventDefault();' title='".$this->text['theme-label-open_selector']."'><span class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')."'></span><span class='d-none d-md-inline' style='margin-left: 7px;'>".escape($_SESSION['domain_name'])."</span></a>";
+						$html .= "			<a class='nav-link header_domain header_domain_selector_domain d-block d-sm-none' href='select:domain' onclick='event.preventDefault();' data-toggle='collapse' data-target='#main_navbar' title='".$this->text['theme-label-open_selector']."'><span class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')."'></span><span style='margin-left: 7px;'>".escape($this->domain_name)."</span></a>";
+						$html .= "			<a class='nav-link header_domain header_domain_selector_domain d-none d-sm-block' href='select:domain' onclick='event.preventDefault();' title='".$this->text['theme-label-open_selector']."'><span class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')."'></span><span class='d-none d-md-inline' style='margin-left: 7px;'>".escape($this->domain_name)."</span></a>";
 						$html .= "		</li>\n";
 					}
 
 				//logout icon
-					if (!empty($_SESSION['username']) && isset($_SESSION['theme']['logout_icon_visible']) && $this->settings->get('theme', 'logout_icon_visible', 'false') == "true") {
-						$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
+					if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible', 'false') == "true") {
+						$username_full = $this->username.((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
 						$html .= "		<li class='nav-item'>\n";
 						$html .= "			<a class='logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fa-solid fa-right-from-bracket'></span></a>";
 						$html .= "		</li>\n";
@@ -1328,7 +1324,7 @@
 					$html .= "</div>";
 
 				//modal for logout icon (above)
-					if (!empty($_SESSION['username']) && isset($_SESSION['theme']['logout_icon_visible']) && $this->settings->get('theme', 'logout_icon_visible', 'false') == "true") {
+					if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible', 'false') == "true") {
 						$html .= modal::create(['id'=>'modal-logout','type'=>'general','message'=>$this->text['theme-confirm-logout'],'actions'=>button::create(['type'=>'button','label'=>$this->text['theme-label-logout'],'icon'=>'fa-solid fa-right-from-bracket','id'=>'btn_logout','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>PROJECT_PATH.'/logout.php','onclick'=>"modal_close();"])]);
 					}
 
@@ -1346,12 +1342,12 @@
 			//menu brand image and/or text
 				$html = "	<div id='menu_side_control_container'>\n";
 				$html .= "		<div class='menu_side_control_state' style='float: right; ".($menu_side_state != 'expanded' ? "display: none;" : null)."'>\n";
-				if ($this->settings->get('theme', 'menu_brand_type') != 'none') {
+				if ($this->settings->get('theme', 'menu_brand_type', 'image') != 'none') {
 					$html .= "		<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='height: 60px; padding: 19px 16px 8px 16px !important; ".($menu_side_state != 'expanded' ? "display: none;" : null)."'><i class='fa-solid fa-bars fa-fw'></i></a>";
 				}
 				$html .= "		</div>\n";
 				$menu_brand_text = escape($this->settings->get('theme', 'menu_brand_text', 'FusionPBX'));
-				switch ($this->settings->get('theme', 'menu_brand_type', '')) {
+				switch ($this->settings->get('theme', 'menu_brand_type', 'image')) {
 					case 'none':
 						$html .= "<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='".($menu_side_state != 'expanded' ? "display: none;" : null)." height: 60px; min-width: ".intval($this->settings->get('theme', 'menu_side_width_contracted', 60))."px;' title=\"".$this->text['theme-label-contract_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 11px;'></i></a>";
 						$html .= "<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();' style='".($menu_side_state == 'expanded' ? "display: none;" : null)." height: 60px;' title=\"".$this->text['theme-label-expand_menu']."\"><i class='fa-solid fa-bars fa-fw' style='z-index: 99800; padding-left: 1px; padding-top: 11px;'></i></a>";
@@ -1488,23 +1484,23 @@
 						$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: ".$user_graphic_size."px; height: ".$user_graphic_size."px; border-radius: 50%; margin-right: 7px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-4')."px; background-image: url('".PROJECT_PATH."/core/contacts/contact_attachment.php?id=".$_SESSION['user']['contact_image']."&action=download&sid=".session_id()."'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 					}
 					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
-					$html .= "	<a href='show:usermenu' title=\"".$_SESSION['username']."\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span class='d-none d-sm-inline'>".escape($_SESSION['username'])."</span></a>";
+					$html .= "	<a href='show:usermenu' title=\"".$this->username."\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">".($user_graphic ?? null)."<span class='d-none d-sm-inline'>".escape($this->username)."</span></a>";
 					$html .= "</span>\n";
 				//domain name/selector (sm+)
-					if (!empty($_SESSION['username']) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $this->settings->get('theme', 'domain_visible') == 'true') {
+					if (!empty($this->username) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $this->settings->get('theme', 'domain_visible') == 'true') {
 						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
-						$html .= "	<a href='select:domain' onclick='event.preventDefault();' title='".$this->text['theme-label-open_selector']."' class='header_domain_selector_domain'><i class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')." fa-fw' style='vertical-align: middle; font-size: ".($user_graphic_size - 1)."px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-3')."px; margin-right: 3px; line-height: 40%;'></i><span class='d-none d-sm-inline'>".escape($_SESSION['domain_name'])."</span></a>";
+						$html .= "	<a href='select:domain' onclick='event.preventDefault();' title='".$this->text['theme-label-open_selector']."' class='header_domain_selector_domain'><i class='".$this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas')." fa-fw' style='vertical-align: middle; font-size: ".($user_graphic_size - 1)."px; margin-top: ".($user_graphic_size > 18 ? '-'.(ceil(($user_graphic_size - 18) / 2) - 4) : '-3')."px; margin-right: 3px; line-height: 40%;'></i><span class='d-none d-sm-inline'>".escape($this->domain_name)."</span></a>";
 						$html .= "</span>\n";
 					}
 				//logout icon
-					if (!empty($_SESSION['username']) && $this->settings->get('theme', 'logout_icon_visible') == "true") {
+					if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible') == "true") {
 						$html .= "<a id='header_logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fa-solid fa-right-from-bracket'></span></a>";
 					}
 				$html .= "</div>";
 			$html .= "	</div>\n";
 
 			//modal for logout icon (above)
-				if (!empty($_SESSION['username']) && $this->settings->get('theme', 'logout_icon_visible') == "true") {
+				if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible') == "true") {
 					$html .= modal::create(['id'=>'modal-logout','type'=>'general','message'=>$this->text['theme-confirm-logout'],'actions'=>button::create(['type'=>'button','label'=>$this->text['theme-label-logout'],'icon'=>'fa-solid fa-right-from-bracket','id'=>'btn_logout','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>PROJECT_PATH.'/logout.php','onclick'=>"modal_close();"])]);
 				}
 

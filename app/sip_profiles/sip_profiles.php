@@ -50,7 +50,7 @@
 //get the http post data
 	if (!empty($_POST['sip_profiles'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$sip_profiles = $_POST['sip_profiles'];
 	}
 
@@ -71,7 +71,7 @@
 				break;
 		}
 
-		header('Location: sip_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: sip_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -102,7 +102,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -189,9 +189,6 @@
 			$list_row_url = '';
 			if (permission_exists('sip_profile_edit')) {
 				$list_row_url = "sip_profile_edit.php?id=".urlencode($row['sip_profile_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('sip_profile_add') || permission_exists('sip_profile_edit') || permission_exists('sip_profile_delete')) {
@@ -241,4 +238,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

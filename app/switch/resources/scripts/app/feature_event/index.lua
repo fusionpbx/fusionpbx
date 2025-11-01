@@ -44,6 +44,9 @@
 --prepare the api object
 	api = freeswitch.API();
 
+--get the hostname
+    local hostname = api:execute("hostname", "");
+
 --define the functions
 	require "resources.functions.trim";
 	require "resources.functions.explode";
@@ -355,5 +358,5 @@
 	end
 	--clear the cache
 		if (feature_enabled ~= nil) then
-			cache.del("directory:"..user.."@"..host)
+			cache.del(hostname..":directory:"..user.."@"..host)
 		end

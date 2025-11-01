@@ -50,8 +50,8 @@
 
 --get the cache
 	local cache = require "resources.functions.cache"
-	hostname = trim(api:execute("switchname", ""));
-	local cc_cache_key = "configuration:callcenter.conf:" .. hostname
+	hostname = trim(api:execute("hostname", ""));
+	local cc_cache_key = hostname .. ":configuration:callcenter.conf";
 	XML_STRING, err = cache.get(cc_cache_key)
 
 --set the cache
@@ -218,7 +218,11 @@
 			sql = "select SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) as extension,  ";
 			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = a.domain_uuid ";
 			sql = sql .. "and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) limit 1) as extension_uuid, ";
-			sql = sql .. "a.*, d.domain_name  ";
+			sql = sql .. "a.call_center_agent_uuid, a.domain_uuid, a.agent_name, a.agent_type, a.agent_call_timeout, ";
+			sql = sql .. "a.agent_contact, a.agent_status, a.agent_no_answer_delay_time, ";
+			sql = sql .. "a.agent_max_no_answer, a.agent_wrap_up_time, a.agent_reject_delay_time, ";
+			sql = sql .. "a.agent_busy_delay_time, cast(a.agent_record as text), ";
+			sql = sql .. "d.domain_name ";
 			sql = sql .. "from v_call_center_agents as a, v_domains as d ";
 			sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
 			--sql = "select * from v_call_center_agents as a, v_domains as d ";
@@ -257,7 +261,7 @@
 						--if you change this variable also change app/call_center/call_center_agent_edit.php
 						confirm = ""..sound_prefix..",group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
 						local record = "";
-						if (agent_record) then
+						if (agent_record == "true") then
 							record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)
 						end
 						if (string.find(agent_contact, '}') == nil) then

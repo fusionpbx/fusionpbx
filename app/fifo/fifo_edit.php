@@ -39,9 +39,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 
@@ -280,6 +277,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_extension)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".xml::sanitize($fifo_music)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_extension)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				if ($fifo_strategy == 'longest_idle_agent') {
 					$dialplan_xml .= "		<action application=\"set\" data=\"fifo_strategy=waiting_longer\" inline=\"true\"/>\n";
 				}
@@ -309,6 +307,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_agent_status_xml)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_name=".xml::sanitize($queue_name)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_agent_status)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"user_name=\${caller_id_number}@\${domain_name}\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"lua\" data=\"app/fifo/resources/scripts/member.lua\"/>\n";
@@ -316,6 +315,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_agent_queue_xml)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".xml::sanitize($fifo_music)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_agent_queue)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 				$dialplan_xml .= "		<action application=\"fifo\" data=\"".xml::sanitize($queue_name)." out wait\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
@@ -342,8 +342,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save the data
-			$database->app_name = 'fifo';
-			$database->app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
 			$result = $database->save($array);
 
 		//remove the temporary permission
@@ -582,7 +580,7 @@
 	echo "	".$text['label-strategy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='fifo_strategy' onchange=\"getElementById('destination_delayorder').innerHTML = (this.selectedIndex == 1 || this.selectedIndex == 3) ? '".$text['label-destination_order']."' : '".$text['label-destination_delay']."';\">\n";
+	echo "	<select class='formfld' name='fifo_strategy' onchange=\"\">\n";
 	echo "		<option value='longest_idle_agent' ".(($fifo_strategy == "'option-longest_idle_agent") ? "selected='selected'" : null).">".$text['option-longest_idle_agent']."</option>\n";
 	echo "		<option value='simultaneous' ".(($fifo_strategy == "simultaneous") ? "selected='selected'" : null).">".$text['option-simultaneous']."</option>\n";
 	echo "	</select>\n";
@@ -664,7 +662,7 @@
 	}
 	echo "	</table>\n";
 	echo "<br />\n";
-	echo $text['description-member_enabled']."\n";
+	echo $text['description-agents']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

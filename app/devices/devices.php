@@ -44,8 +44,7 @@
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
 	$user_name = $_SESSION['username'] ?? '';
 
-//create database connection and settings object
-	$database = database::new();
+//create the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //add multi-lingual support
@@ -104,6 +103,7 @@
 //get the devices profiles
 	$sql = "select * from v_device_profiles ";
 	$sql .= "where true ";
+	$parameters = [];
 	if (!permission_exists('device_profile_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
@@ -205,7 +205,6 @@
 	$sql .= "d.device_provisioned_date, ";
 	$sql .= "d.device_provisioned_method, ";
 	$sql .= "d.device_provisioned_ip, ";
-	$sql .= "d.device_enabled_date, ";
 	$sql .= "d.device_provisioned_agent, ";
 	$sql .= "d.device_location, ";
 	$sql .= "d.device_serial_number, ";
@@ -322,7 +321,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-profiles'],'icon'=>'clone','link'=>'device_profiles.php']);
 	}
 	$margin_left = permission_exists('device_import') || permission_exists('device_export') || permission_exists('device_vendor_view') || permission_exists('device_profile_view') ? "margin-left: 15px;" : null;
-	if (permission_exists('device_add') && (empty($_SESSION['limit']['devices']['numeric']) || ($total_devices < $_SESSION['limit']['devices']['numeric']))) {
+	if (permission_exists('device_add') && (empty($settings->get('limit', 'devices')) || ($total_devices < $settings->get('limit', 'devices')))) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>$margin_left,'link'=>'device_edit.php']);
 		unset($margin_left);
 	}

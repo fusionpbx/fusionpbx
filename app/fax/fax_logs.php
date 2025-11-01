@@ -193,7 +193,7 @@
 				echo "		<input type='hidden' name='fax_logs[$x][uuid]' value='".escape($row['fax_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td><a href='".$list_row_url."'>".(!empty($_SESSION['domain']['time_format']['text']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']))."</a>&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".(!empty($settings->get('domain', 'time_format')) && $settings->get('domain', 'time_format') == '12h' ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']))."</a>&nbsp;</td>\n";
 			echo "	<td>".$row['fax_success']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_code']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_text']."&nbsp;</td>\n";

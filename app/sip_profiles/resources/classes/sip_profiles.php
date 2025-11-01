@@ -34,9 +34,32 @@
 		const app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
 
 		/**
-		 * declare private variables
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
 		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * declare private variables
+		 */
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -52,7 +75,14 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
 			$this->permission_prefix = 'sip_profile_';
@@ -61,12 +91,6 @@
 			$this->uuid_prefix = 'sip_profile_';
 			$this->toggle_field = 'sip_profile_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
-
 		}
 
 		/**
@@ -135,9 +159,10 @@
 									$p->delete('sip_profile_setting_delete', 'temp');
 
 								//delete the xml sip profile and directory
+									$switch_conf_dir = $this->settings->get('switch', 'conf');
 									foreach ($sip_profiles as $sip_profile_uuid => $sip_profile) {
-										@unlink($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile['name'].".xml");
-										@unlink($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile['name']);
+										@unlink($switch_conf_dir."/sip_profiles/".$sip_profile['name'].".xml");
+										@unlink($switch_conf_dir."/sip_profiles/".$sip_profile['name']);
 									}
 
 								//save the sip profile xml
@@ -157,10 +182,7 @@
 										}
 									}
 									if ($empty_hostname) {
-										$esl = event_socket::create();
-										if ($esl->is_connected()) {
-											$hostnames[] = event_socket::api('switchname');
-										}
+										$hostnames[] = gethostname();
 									}
 
 								//clear the cache
@@ -168,7 +190,7 @@
 										$hostnames = array_unique($hostnames);
 										$cache = new cache;
 										foreach ($hostnames as $hostname) {
-											$cache->delete("configuration:sofia.conf:".$hostname);
+											$cache->delete($hostname.":configuration:sofia.conf");
 										}
 									}
 
@@ -236,16 +258,13 @@
 
 								//get system hostname if necessary
 									if (empty($sip_profile_hostname)) {
-										$esl = event_socket::create();
-										if ($esl->is_connected()) {
-											$sip_profile_hostname = event_socket::api('switchname');
-										}
+										$sip_profile_hostname = gethostname();
 									}
 
 								//clear the cache
 									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
-										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+										$cache->delete($sip_profile_hostname.":configuration:sofia.conf");
 									}
 
 							}
@@ -310,16 +329,13 @@
 
 								//get system hostname if necessary
 									if (empty($sip_profile_hostname)) {
-										$esl = event_socket::create();
-										if ($esl->is_connected()) {
-											$sip_profile_hostname = event_socket::api('switchname');
-										}
+										$sip_profile_hostname = gethostname();
 									}
 
 								//clear the cache
 									if (!empty($sip_profile_hostname)) {
 										$cache = new cache;
-										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+										$cache->delete($sip_profile_hostname.":configuration:sofia.conf");
 									}
 
 							}
@@ -397,7 +413,7 @@
 									if ($empty_hostname) {
 										$esl = event_socket::create();
 										if ($esl->is_connected()) {
-											$hostnames[] = event_socket::api('switchname');
+											$hostnames[] = gethostname();
 										}
 									}
 
@@ -406,7 +422,7 @@
 										$hostnames = array_unique($hostnames);
 										$cache = new cache;
 										foreach ($hostnames as $hostname) {
-											$cache->delete("configuration:sofia.conf:".$hostname);
+											$cache->delete($hostname.":configuration:sofia.conf");
 										}
 									}
 

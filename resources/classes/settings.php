@@ -114,6 +114,8 @@ class settings implements clear_cache {
 	 * Reloads the settings from the database
 	 */
 	public function reload() {
+
+		//clear settings
 		$this->settings = [];
 
 		//set the default settings
@@ -121,6 +123,8 @@ class settings implements clear_cache {
 
 		//set the domain settings
 		if (!empty($this->domain_uuid)) {
+
+			//get the domain settings
 			$this->domain_settings();
 
 			//set the user settings only when the domain_uuid was set
@@ -142,11 +146,11 @@ class settings implements clear_cache {
 
 	/**
 	 * Get the value utilizing the hierarchical overriding technique
-	 * @param string $category Returns all settings when empty or the default value if the settings array is null
-	 * @param string $subcategory Returns the array of category items when empty or the default value if the category array is null
+	 * @param string|null $category Returns all settings when empty or the default value if the settings array is null
+	 * @param string|null $subcategory Returns the array of category items when empty or the default value if the category array is null
 	 * @param mixed $default_value allows default value returned if category and subcategory not found
 	 */
-	public function get(string $category = null, string $subcategory = null, $default_value = null) {
+	public function get(?string $category = null, ?string $subcategory = null, $default_value = null) {
 
 		//incremental refinement from all settings to a single setting
 		if (empty($category)) {
@@ -295,8 +299,21 @@ class settings implements clear_cache {
 	 * Update the internal settings array with the domain settings from the database
 	 * @access private
 	 */
-	private function domain_settings() {
-		$key = 'settings_domain_'.$this->domain_uuid;
+	private function domain_settings($domain_uuid = '', $i = 0) {
+		if (empty($domain_uuid)) {
+			$domain_uuid = $this->domain_uuid;
+		}
+
+		$uuid = '';
+		if (class_exists('domain')) {
+			$uuid = domain::get_uuid($this->database, $domain_uuid);
+		}
+		if (!empty($uuid) && $i < 3) {
+			$this->domain_settings($uuid, $i++);
+		}
+
+		$key = 'settings_domain_'.$domain_uuid;
+
 		$result = '';
 		//if the apcu extension is loaded get the cached database result
 		if ($this->apcu_enabled && apcu_exists($key)) {
@@ -305,7 +322,7 @@ class settings implements clear_cache {
 			$sql = "select * from v_domain_settings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and domain_setting_enabled = true ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
+			$parameters['domain_uuid'] = $domain_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
 			//if the apcu extension is loaded store the result
 			if ($this->apcu_enabled) {

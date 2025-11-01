@@ -42,9 +42,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
 //define defaults
 	$action = '';
 	$search = '';
@@ -53,7 +50,7 @@
 //get posted data
 	if (!empty($_POST['ivr_menus'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$ivr_menus = $_POST['ivr_menus'];
 	}
 
@@ -80,7 +77,7 @@
 				break;
 		}
 
-		header('Location: ivr_menus.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: ivr_menus.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -114,10 +111,10 @@
 		$sql .= ")";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('ivr_menu_all')) {
 		$param .= "&show=all";
@@ -154,7 +151,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$ivr_menus = $database->select($sql, $parameters ?? '', 'all');
+	$ivr_menus = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -169,10 +166,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-ivr_menus']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('ivr_menu_add') && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $num_rows < $_SESSION['limit']['ivr_menus']['numeric'])) {
+	if (permission_exists('ivr_menu_add') && (empty($settings->get('limit', 'ivr_menus')) || $num_rows < $settings->get('limit', 'ivr_menus'))) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ivr_menu_edit.php']);
 	}
-	if (permission_exists('ivr_menu_add') && $ivr_menus && (empty($_SESSION['limit']['ivr_menus']['numeric']) || $num_rows < $_SESSION['limit']['ivr_menus']['numeric'])) {
+	if (permission_exists('ivr_menu_add') && $ivr_menus && (empty($settings->get('limit', 'ivr_menus')) || $num_rows < $settings->get('limit', 'ivr_menus'))) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('ivr_menu_edit') && $ivr_menus) {

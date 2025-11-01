@@ -69,7 +69,7 @@
 				break;
 		}
 
-		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

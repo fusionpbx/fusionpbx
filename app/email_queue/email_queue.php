@@ -45,7 +45,7 @@
 //get the http post data
 	if (!empty($_POST['email_queue']) && is_array($_POST['email_queue'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$email_queue = $_POST['email_queue'];
 	}
 
@@ -90,17 +90,12 @@
 		}
 
 		//redirect the user
-		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
 //get order and order by
 	$order_by = $_GET["order_by"] ?? null;
@@ -326,7 +321,7 @@
 			$list_row_url = '';
 			if (permission_exists('email_queue_edit')) {
 				$list_row_url = "email_queue_edit.php?id=".urlencode($row['email_queue_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -353,7 +348,7 @@
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
 			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
-			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'])."</td>\n";
+			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'] ?? '')."</td>\n";
 // 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";

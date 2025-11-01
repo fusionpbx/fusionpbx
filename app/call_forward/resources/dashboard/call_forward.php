@@ -13,9 +13,15 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_forward');
+
+//get the dashboard label
+	$widget_label = $text['header-'.$widget_key] ?? $widget_name;
 
 //extensions link
 	$extension_link = '#';
@@ -97,7 +103,7 @@
 	echo "<div class='hud_box'>\n";
 
 	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_call_forward_details').slideToggle('fast');\"").">\n";
-	echo "		<span class='hud_title'>".$text['header-call_forward']."</span>\n";
+	echo "		<span class='hud_title'>".escape($widget_label)."</span>\n";
 
 //doughnut chart
 	if (empty($widget_chart_type) || $widget_chart_type == "doughnut") {

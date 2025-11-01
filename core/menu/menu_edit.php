@@ -98,8 +98,6 @@
 					$array['menus'][0]['menu_name'] = $menu_name;
 					$array['menus'][0]['menu_language'] = $menu_language;
 					$array['menus'][0]['menu_description'] = $menu_description;
-					$database->app_name = 'menu';
-					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
 					unset($array);
 
@@ -115,8 +113,6 @@
 					$array['menus'][0]['menu_name'] = $menu_name;
 					$array['menus'][0]['menu_language'] = $menu_language;
 					$array['menus'][0]['menu_description'] = $menu_description;
-					$database->app_name = 'menu';
-					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
 					unset($array);
 

@@ -36,12 +36,17 @@
 		const app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
 
 		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_uuid;
+
+		/**
 		 * declare public variables
 		 */
 		public $array;
 		public $fields;
 		public $setting;
-		public $domain_uuid;
 		public $call_details;
 		public $call_direction;
 		public $status;
@@ -64,16 +69,28 @@
 		public $file;
 
 		/**
-		 * Internal array structure that is populated from the database
-		 * @var array Array of settings loaded from Default Settings
-		 */
-		private $settings;
-
-		/**
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
 		private $database;
+
+		/**
+		 * Internal array structure that is populated from the database
+		 * @var settings A settings object loaded from Default Settings
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
 
 		/**
 		 * Set in the constructor. This can be null.
@@ -93,24 +110,20 @@
 		/**
 		 * additional private variables
 		 */
-		private $username;
 		private $password;
 		private $json;
 
 		/**
 		 * Called when the object is created
 		 */
-		public function __construct($setting_array = []) {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//open a database connection
-			$this->database = database::new();
-
-			//get the settings object
-			if (empty($setting_array['settings'])) {
-				$this->settings = new settings(['database' => $this->database]);
-			} else {
-				$this->settings = $setting_array['settings'];
-			}
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//set the directory
 			$this->xml_cdr_dir = $this->settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
@@ -1189,12 +1202,7 @@
 		public function call_flow_summary($call_flow_array) {
 
 			//set the time zone
-			if (!empty($this->settings->get('domain', 'time_zone'))) {
-				$time_zone = $this->settings->get('domain', 'time_zone');
-			}
-			else {
-				$time_zone = date_default_timezone_get();
-			}
+			$time_zone = $this->settings->get('domain', 'time_zone', date_default_timezone_get());
 
 			//set the time zone for php
 			date_default_timezone_set($time_zone);
@@ -1420,6 +1428,7 @@
 					}
 
 					//build the application urls
+					$application_url = '';
 					if (!empty($app['application'])) {
 						//build the source url
 						$source_url = '';
@@ -1766,12 +1775,7 @@
 		public function user_summary() {
 
 			//set the time zone
-				if (!empty($this->settings->get('domain', 'time_zone'))) {
-					$time_zone = $this->settings->get('domain', 'time_zone');
-				}
-				else {
-					$time_zone = date_default_timezone_get();
-				}
+				$time_zone = $this->settings->get('domain', 'time_zone', date_default_timezone_get());
 
 			//set the time zone for php
 				date_default_timezone_set($time_zone);

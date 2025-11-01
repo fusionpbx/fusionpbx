@@ -195,7 +195,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "system";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "network_status_refresh_interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Network interface used to show traffic on dashboard";
 		$y++;
@@ -203,6 +203,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "system";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "cpu_status_refresh_interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Network interface used to show traffic on dashboard";

@@ -1,15 +1,15 @@
 <?php
 	
 	//application details
-	$apps[$x]['name'] = "Websockets Service";
+	$apps[$x]['name'] = "Active Calls";
 	$apps[$x]['uuid'] = "c43e956a-cd38-4b27-838b-db43dc3f3204";
-	$apps[$x]['category'] = "";
+	$apps[$x]['category'] = "switch";
 	$apps[$x]['subcategory'] = "";
 	$apps[$x]['version'] = "1.0";
 	$apps[$x]['license'] = "Mozilla Public License 1.1";
 	$apps[$x]['url'] = "http://www.fusionpbx.com";
-	$apps[$x]['description']['en-us'] = "Web sockets service";
-	$apps[$x]['description']['en-gb'] = "Web sockets service";
+	$apps[$x]['description']['en-us'] = "Show realtime view of active calls.";
+	$apps[$x]['description']['en-gb'] = "Show realtime view of active calls.";
 	$apps[$x]['description']['ar-eg'] = "";
 	$apps[$x]['description']['de-at'] = "";
 	$apps[$x]['description']['de-ch'] = "";

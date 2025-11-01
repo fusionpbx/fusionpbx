@@ -34,10 +34,31 @@
 		const app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 
 		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		public $domain_name;
+
+		/**
+		 * declare public variables
+		 */
+		public $domain_uuid_target;
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
 		 * declare private variables
 		 */
-
-		private $database;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -46,15 +67,14 @@
 		private $toggle_values;
 
 		/**
-		 * declare public variables
-		 */
-		public $domain_uuid;
-		public $domain_uuid_target;
-
-		/**
 		 * called when the object is created
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//assign private variables
 			$this->permission_prefix = 'domain_setting_';
@@ -63,11 +83,6 @@
 			$this->uuid_prefix = 'domain_setting_';
 			$this->toggle_field = 'domain_setting_enabled';
 			$this->toggle_values = ['true','false'];
-
-			//connect to the database
-			if (empty($this->database)) {
-				$this->database = database::new();
-			}
 		}
 
 		/**

@@ -13,9 +13,15 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //create assigned extensions array
 	if (is_array($_SESSION['user']['extension'])) {
@@ -30,8 +36,8 @@
 
 //set the sql time format
 	$sql_time_format = 'DD Mon HH12:MI am';
-	if (!empty($_SESSION['domain']['time_format']['text'])) {
-		$sql_time_format = $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
+	if (!empty($settings->get('domain', 'time_format'))) {
+		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
 	}
 
 //get the recent calls from call detail records
@@ -73,7 +79,7 @@
 	$sql .= "order by start_epoch desc ";
 	$sql .= "limit :recent_limit ";
 	$parameters['recent_limit'] = $recent_limit;
-	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
+	$parameters['time_zone'] = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = !empty($result) ? sizeof($result) : 0;
@@ -87,7 +93,7 @@
 	echo "<div class='hud_box'>\n";
 
 	echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\"").">\n";
-	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</a></span>\n";
+	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".escape($widget_label)."</a></span>\n";
 
 	if ($widget_chart_type == "doughnut") {
 		//add doughnut chart
@@ -179,7 +185,7 @@
 
 			foreach ($result as $index => $row) {
 				$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
-				if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
+				if (!empty($_SESSION['domain']['time_format']) && $settings->get('domain', 'time_format') == '12h') {
 					$start_date_time = str_replace(' 0',' ', $start_date_time);
 				}
 
@@ -203,9 +209,9 @@
 							"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '').
 							"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
 							"&dest=".urlencode($dest ?? '').
-							"&rec=".(filter_var($_SESSION['click_to_call']['record']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false').
-							"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text']) ? $_SESSION['click_to_call']['ringback']['text'] : "us-ring").
-							"&auto_answer=".(filter_var($_SESSION['click_to_call']['auto_answer']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false').
+							"&rec=".(filter_var($settings->get('click_to_call', 'record') ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false').
+							"&ringback=".$settings->get('click_to_call', 'ringback', 'us-ring').
+							"&auto_answer=".(filter_var($settings->get('click_to_call', 'auto_answer') ?? false, FILTER_VALIDATE_BOOL) ? 'true' : 'false').
 							"');\" ".
 							"style='cursor: pointer;'";
 					}
@@ -215,7 +221,7 @@
 					if ($theme_cdr_images_exist) {
 						$call_result = $row['status'];
 						if (isset($row['direction'])) {
-							echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+							echo "<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 						}
 					}
 					echo "</td>\n";

@@ -39,7 +39,7 @@
 
 //get posted data
 	if (!empty($_POST['search'])) {
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 	}
 
 //add the search term

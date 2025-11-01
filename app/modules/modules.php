@@ -56,7 +56,7 @@
 		$action = $_POST['action'];
 	}
 	if (!empty($_POST['search'])) {
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 	}
 
 //set from session variables
@@ -93,7 +93,7 @@
 		}
 
 		//redirect to display updates
-		header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -107,7 +107,7 @@
 
 //use the module class to get the list of modules from the db and add any missing modules
 	$module = new modules;
-	$module->dir = $_SESSION['switch']['mod']['dir'];
+	$module->dir = $settings->get('switch', 'mod');
 	$module->get_modules();
 	$modules = $module->modules;
 	$module_count = count($modules);
@@ -200,20 +200,18 @@
 		$previous_category = '';
 		foreach ($modules as $x => $row) {
 			//write category and column headings
-				if ($previous_category != $row["module_category"]) {
-					echo "<tr>\n";
-					echo "<td colspan='7' class='no-link'>\n";
-					echo ($previous_category != '' ? '<br />' : null)."<b>".$row["module_category"]."</b>";
-					echo "</td>\n";
-					echo "</tr>\n";
-					write_header($row["module_category"]);
-				}
+			if ($previous_category != $row["module_category"]) {
+				echo "<tr>\n";
+				echo "<td colspan='7' class='no-link'>\n";
+				echo ($previous_category != '' ? '<br />' : null)."<b>".$row["module_category"]."</b>";
+				echo "</td>\n";
+				echo "</tr>\n";
+				write_header($row["module_category"]);
+			}
+
 			$list_row_url = '';
 			if (permission_exists('module_edit')) {
 				$list_row_url = "module_edit.php?id=".urlencode($row['module_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('module_edit') || permission_exists('module_delete')) {

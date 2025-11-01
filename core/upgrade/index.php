@@ -47,9 +47,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
 //set a default message_timeout
 	$message_timeout = 4*1000;
 
@@ -63,7 +60,7 @@
 			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
 			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
 			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
-			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
+			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$settings->get('domain', 'language', 'en-us')];
 			unset($apps, $updateable_repos[$app_path][0]);
 		}
 	}
@@ -244,7 +241,7 @@
 
 //adjust color and initialize step counter
 	$step = 1;
-	$step_color = isset($_SESSION['theme']['upgrade_step_color']['text']) ? $_SESSION['theme']['upgrade_step_color']['text'] : color_adjust((!empty($_SESSION['theme']['form_table_label_background_color']['text']) ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'), -0.1);
+	$step_color = !empty($settings->get('theme', 'upgrade_step_color')) ? $settings->get('theme', 'upgrade_step_color') : color_adjust((!empty($settings->get('theme', 'form_table_label_background_color')) ? $settings->get('theme', 'form_table_label_background_color') : '#e5e9f0'), -0.1);
 	$step_container_style = "width: 30px; height: 30px; border: 2px solid ".$step_color."; border-radius: 50%; float: left; text-align: center; vertical-align: middle;";
 	$step_number_style = "font-size: 150%; font-weight: 600; color: ".$step_color.";";
 
@@ -300,7 +297,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"if (document.getElementById('do_source')) { document.getElementById('do_source').checked = !document.getElementById('do_source').checked; if (document.getElementById('do_source').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-		echo "		".(isset($_SESSION['theme']['title']['text']) ? $_SESSION['theme']['title']['text'] : 'FusionPBX')."\n";
+		echo "		".$settings->get('theme', 'title', 'FusionPBX')."\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
@@ -317,7 +314,7 @@
 		}
 		if ($branch_return_value == 0 && $commit_return_value == 0) {
 			echo "	<a href='https://github.com/fusionpbx/fusionpbx/compare/".$git_current_commit."...".$git_current_branch."' target='_blank' title='".$git_current_commit."' onclick=\"event.stopPropagation();\"><i>".$git_current_branch."</i></a>";
-			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core','".(isset($_SESSION['theme']['title']['text']) ? $_SESSION['theme']['title']['text'] : 'FusionPBX')."');\">".$text['button-preview']."</button>\n";
+			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core','".$settings->get('theme', 'title', 'FusionPBX')."');\">".$text['button-preview']."</button>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";

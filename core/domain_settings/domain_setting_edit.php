@@ -176,8 +176,6 @@
 							}
 
 							if (!empty($array)) {
-								$database->app_name = 'domain_settings';
-								$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 								$database->save($array);
 								unset($array);
 
@@ -223,8 +221,6 @@
 						$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
 						$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
 						$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
-						$database->app_name = 'domain_settings';
-						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 						$database->save($array);
 						unset($array);
 					}
@@ -296,8 +292,6 @@
 
 								//execute
 									if (!empty($array)) {
-										$database->app_name = 'domain_settings';
-										$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 										$database->save($array);
 										unset($array);
 
@@ -781,7 +775,7 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $_SESSION['domain']['setting_value_input_type']['text'] == 'textarea') {
+		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
 			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
 		}
 		else {

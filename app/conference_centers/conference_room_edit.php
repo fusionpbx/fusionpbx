@@ -90,6 +90,10 @@
 		$participant_pin = preg_replace('{\D}', '', $participant_pin);
 	}
 
+//set the default values
+	$profile = $profile ?? 'default';
+	$max_members = $max_members ?? 0;
+
 //get the conference centers array and set a default conference center
 	$sql = "select * from v_conference_centers ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -141,7 +145,7 @@
 		$default_language = 'en';
 		$default_dialect = 'us';
 		$default_voice = 'callie';
-		$switch_cmd = "conference ".$conference_room_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+		$switch_cmd = "conference ".$conference_room_uuid."@".$_SESSION['domain_name']." play ".$settings->get('switch', 'sounds')."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 
 		//connect to event socket
 		$esl = event_socket::create();
@@ -188,8 +192,6 @@
 				$p = permissions::new();
 				$p->add('conference_room_user_delete', 'temp');
 
-				$database->app_name = 'conference_centers';
-				$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 				$database->delete($array);
 				unset($array);
 
@@ -298,10 +300,6 @@
 			if (empty($_POST["persistformvar"])) {
 
 				if ($action == "add" && permission_exists('conference_room_add')) {
-					//set default values
-						if (empty($profile)) { $profile = 'default'; }
-						if (empty($max_members)) { $max_members = 0; }
-
 					//add a conference room
 						$conference_room_uuid = uuid();
 						$array['conference_rooms'][0]['conference_room_uuid'] = $conference_room_uuid;
@@ -333,8 +331,6 @@
 						$array['conference_rooms'][0]['enabled'] = $enabled;
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database->app_name = 'conference_centers';
-						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
 						unset($array);
 
@@ -349,8 +345,6 @@
 							$p = permissions::new();
 							$p->add('conference_room_user_add', 'temp');
 
-							$database->app_name = 'conference_centers';
-							$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 							$database->save($array);
 							unset($array);
 
@@ -411,8 +405,6 @@
 						}
 						$array['conference_rooms'][0]['description'] = $description;
 
-						$database->app_name = 'conference_centers';
-						$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 						$database->save($array);
 						unset($array);
 
@@ -431,8 +423,6 @@
 					$p = permissions::new();
 					$p->add('conference_room_user_add', 'temp');
 
-					$database->app_name = 'conference_centers';
-					$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 					$database->save($array);
 					unset($array);
 
