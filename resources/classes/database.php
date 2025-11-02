@@ -3086,7 +3086,7 @@ class database {
 
 		//check to see if the database was updated; update the message code if needed
 			$database_updated = false;
-			if ($this->message['code'] === '200') {
+			if (!empty($this->message['code']) && $this->message['code'] === '200') {
 				$database_updated = true;
 			}
 			if (!$database_updated) {
