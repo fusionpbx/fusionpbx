@@ -50,6 +50,20 @@
 //include the header
 	require_once "resources/header.php";
 
+//predefine the variables
+	$src = '';
+	$src_cid_name = '';
+	$src_cid_number = '';
+
+	$dest = '';
+	$dest_cid_name = '';
+	$dest_cid_number = '';
+
+	$auto_answer = ''; //true,false
+	$rec = ''; //true,false
+	$ringback = '';
+	$context = $_SESSION['domain_name'];
+
 //send the call
 	if (is_array($_GET) && isset($_GET['src']) && isset($_GET['dest'])) {
 
