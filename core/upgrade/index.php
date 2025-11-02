@@ -130,7 +130,7 @@
 
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
-			$obj = new schema();
+			$obj = new schema(['database' => $database]);
 			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
 				$obj->data_types = true;
 			}
