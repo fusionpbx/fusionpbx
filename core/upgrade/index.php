@@ -159,7 +159,7 @@
 				$autoload->reload_classes();
 				$autoload->update_cache();
 			}
-			$sel_menu = explode('|', check_str($_POST["sel_menu"]));
+			$sel_menu = explode('|', $_POST["sel_menu"] ?? '');
 			$menu_uuid = $sel_menu[0];
 			$menu_language = $sel_menu[1];
 			$included = true;

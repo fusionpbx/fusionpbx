@@ -54,17 +54,17 @@
 	if (is_array($_GET) && isset($_GET['src']) && isset($_GET['dest'])) {
 
 		//retrieve submitted variables
-			$src = check_str($_GET['src']);
-			$src_cid_name = check_str($_GET['src_cid_name']);
-			$src_cid_number = check_str($_GET['src_cid_number']);
+			$src = $_GET['src'] ?? '';
+			$src_cid_name = $_GET['src_cid_name'] ?? '';
+			$src_cid_number = $_GET['src_cid_number'] ?? '';
 
-			$dest = check_str($_GET['dest']);
-			$dest_cid_name = check_str($_GET['dest_cid_name']);
-			$dest_cid_number = check_str($_GET['dest_cid_number']);
+			$dest = $_GET['dest'] ?? '';
+			$dest_cid_name = $_GET['dest_cid_name'] ?? '';
+			$dest_cid_number = $_GET['dest_cid_number'] ?? '';
 
-			$auto_answer = check_str($_GET['auto_answer']); //true,false
-			$rec = check_str($_GET['rec']); //true,false
-			$ringback = check_str($_GET['ringback']);
+			$auto_answer = $_GET['auto_answer'] ?? ''; //true,false
+			$rec = $_GET['rec'] ?? ''; //true,false
+			$ringback = $_GET['ringback'] ?? '';
 			$context = $_SESSION['domain_name'];
 
 		//clean up variable values
