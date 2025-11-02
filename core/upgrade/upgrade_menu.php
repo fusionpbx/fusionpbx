@@ -400,7 +400,6 @@ function do_upgrade_defaults() {
 
 	//run all app_defaults.php files
 	$domain = new domains;
-	$domain->display_type = 'text';
 	$domain->upgrade();
 
 	echo "\n";
