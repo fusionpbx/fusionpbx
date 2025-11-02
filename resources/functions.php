@@ -83,6 +83,13 @@ if (!function_exists('check_float')) {
 }
 
 if (!function_exists('check_str')) {
+	/**
+	 * check_str function
+	 * @param  mixed   $string
+	 * @param  boolean $trim
+	 * @return void
+	 * @deprecated 5.0
+	 */
 	function check_str($string, $trim = true) {
 		global $db_type, $db;
 		//when code in db is urlencoded the ' does not need to be modified
