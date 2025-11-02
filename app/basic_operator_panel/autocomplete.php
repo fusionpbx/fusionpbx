@@ -37,7 +37,7 @@
 	}
 
 //search term
-	$term = check_str($_GET['term']);
+	$term = $_GET['term'] ?? '';
 	if (isset($_GET['debug'])) {
 		echo "Search Term: ".escape($term)."<br><br>";
 	}

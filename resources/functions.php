@@ -433,6 +433,9 @@ if (!function_exists('html_select')) {
 		//define the global variables
 		global $database, $domain_uuid;
 
+		//define the variable
+		$html = '';
+
 		//html select: build a select box from distinct items in db
 		$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
 		$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
@@ -713,10 +716,10 @@ if (!function_exists('add_extension_user')) {
 			if ($num_rows == 0) {
 				//build insert array
 				$extension_user_uuid = uuid();
-				$array['extension_users'][$x]['extension_user_uuid'] = $extension_user_uuid;
-				$array['extension_users'][$x]['domain_uuid'] = $domain_uuid;
-				$array['extension_users'][$x]['extension_uuid'] = $extension_uuid;
-				$array['extension_users'][$x]['user_uuid'] = $row["user_uuid"];
+				$array['extension_users'][0]['extension_user_uuid'] = $extension_user_uuid;
+				$array['extension_users'][0]['domain_uuid'] = $domain_uuid;
+				$array['extension_users'][0]['extension_uuid'] = $extension_uuid;
+				$array['extension_users'][0]['user_uuid'] = $user_uuid;
 				//grant temporary permissions
 				$p = permissions::new();
 				$p->add('extension_user_add', 'temp');
@@ -1338,8 +1341,8 @@ if (!function_exists('rgb_to_hsl')) {
 		$max = max($r, $g, $b);
 		$min = min($r, $g, $b);
 
-		$h;
-		$s;
+		$h = 0;
+		$s = 0;
 		$l = ($max + $min) / 2;
 		$d = $max - $min;
 
@@ -1370,9 +1373,9 @@ if (!function_exists('rgb_to_hsl')) {
 //function to convert an hsl color array to an rgb color array
 if (!function_exists('hsl_to_rgb')) {
 	function hsl_to_rgb($h, $s, $l) {
-		$r;
-		$g;
-		$b;
+		$r = 0;
+		$g = 0;
+		$b = 0;
 
 		$c = (1 - abs((2 * $l) - 1)) * $s;
 		$x = $c * (1 - abs(fmod(($h / 60), 2) - 1));
@@ -2203,7 +2206,8 @@ if (!function_exists('limit_offset')) {
 //add a random_bytes function when it doesn't exist for old versions of PHP
 if (!function_exists('random_bytes')) {
 	function random_bytes($length) {
-		$chars .= "0123456789";
+		$string = '';
+		$chars = "0123456789";
 		$chars .= "abcdefghijkmnopqrstuvwxyz";
 		$chars .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
 		for ($i = 0; $i < $length; $i++) {

@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //get and prepare the conference name
-	$conference_name = check_str(trim($_REQUEST["c"]));
+	$conference_name = trim($_REQUEST["c"] ?? '');
 	$conference_display_name = str_replace("-", " ", $conference_name);
 	$conference_display_name = str_replace("_", " ", $conference_display_name);
 
