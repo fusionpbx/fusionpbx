@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('access_control_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('access_control_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -64,12 +61,6 @@
 				if (permission_exists('access_control_add')) {
 					$obj = new access_controls;
 					$obj->copy($access_controls);
-				}
-				break;
-			case 'toggle':
-				if (permission_exists('access_control_edit')) {
-					$obj = new access_controls;
-					$obj->toggle($access_controls);
 				}
 				break;
 			case 'delete':

@@ -35,10 +35,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('click_to_call_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('click_to_call_view')) {
 		echo "access denied";
 		exit;
 	}

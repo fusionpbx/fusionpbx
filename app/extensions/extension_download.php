@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('extension_export')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('extension_export')) {
 		echo "access denied";
 		exit;
 	}

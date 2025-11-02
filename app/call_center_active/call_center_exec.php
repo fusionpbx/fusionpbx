@@ -32,10 +32,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_active_options')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_center_active_options')) {
 		echo "access denied";
 		exit;
 	}
@@ -53,7 +50,7 @@
 	if (!is_numeric($extension)) {
 		$extension = null;
 	}
-	
+
 //validate the uuid
 	if (!is_uuid($uuid)) {
 		$uuid = null;

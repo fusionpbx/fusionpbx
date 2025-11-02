@@ -152,10 +152,7 @@
 	}
 	else {
 		require_once "resources/check_auth.php";
-		if (permission_exists('upgrade_schema') || permission_exists('upgrade_source') || if_group("superadmin")) {
-			//echo "access granted";
-		}
-		else {
+		if (!permission_exists('upgrade_schema') || !permission_exists('upgrade_source')) {
 			echo "access denied";
 			exit;
 		}

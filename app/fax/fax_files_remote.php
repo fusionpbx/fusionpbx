@@ -32,10 +32,7 @@
 	require_once "resources/functions/parse_message.php";
 
 //check permissions
-	if (permission_exists('fax_inbox_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_inbox_view')) {
 		echo "access denied";
 		exit;
 	}

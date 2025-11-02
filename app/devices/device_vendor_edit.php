@@ -26,13 +26,10 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('device_vendor_add') || permission_exists('device_vendor_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_vendor_add') || !permission_exists('device_vendor_edit')) {
 		echo "access denied";
 		exit;
 	}

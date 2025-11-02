@@ -49,19 +49,18 @@
 	//additional include
 		require_once "resources/check_auth.php";
 
+	//check permissions
+		if (!permission_exists('fax_send')) {
+			echo "access denied";
+			exit;
+		}
+
 	//set the domain_uuid and domain_name
 		$domain_uuid = $_SESSION['domain_uuid'];
 		$domain_name = $_SESSION['domain_name'];
 		$user_uuid = $_SESSION['user_uuid'];
 
-	//check permissions
-		if (permission_exists('fax_send')) {
-			//access granted
-		}
-		else {
-			echo "access denied";
-			exit;
-		}
+
 
 	//add multi-lingual support
 		$language = new text;

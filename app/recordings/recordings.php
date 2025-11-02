@@ -173,10 +173,7 @@
 	}
 
 //check the permission
-	if (permission_exists('recording_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('recording_view')) {
 		echo "access denied";
 		exit;
 	}

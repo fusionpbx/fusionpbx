@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_note_edit') || permission_exists('contact_note_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_note_edit') || !permission_exists('contact_note_add')) {
 		echo "access denied";
 		exit;
 	}

@@ -32,10 +32,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('inbound_route_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('inbound_route_add')) {
 		echo $text['label-access-denied'];
 		exit;
 	}

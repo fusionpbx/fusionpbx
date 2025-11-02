@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists("device_key_add") || permission_exists("device_key_edit") || if_group("superadmin")) {
-		//access granted
-	}
-	else {
+	if (!permission_exists("device_key_add") || !permission_exists("device_key_edit")) {
 		echo "access denied";
 		exit;
 	}

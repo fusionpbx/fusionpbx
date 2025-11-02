@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('destination_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('destination_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -65,12 +62,6 @@
 //process the http post data by action
 	if (!empty($action) && !empty($destinations)) {
 		switch ($action) {
-			case 'toggle':
-				if (permission_exists('destination_edit')) {
-					$obj = new destinations;
-					$obj->toggle($destinations);
-				}
-				break;
 			case 'delete':
 				if (permission_exists('destination_delete')) {
 					$obj = new destinations;

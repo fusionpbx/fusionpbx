@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_import')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('extension_import')) {
 		echo "access denied";
 		exit;
 	}

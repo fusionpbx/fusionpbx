@@ -82,7 +82,7 @@
 	}
 
 //get the command line parameters
-	$options = getopt(null, $long_options);
+	$options = getopt('', $long_options);
 
 //set the values from the command line parameters
 	foreach($options as $option_key => $option_value) {

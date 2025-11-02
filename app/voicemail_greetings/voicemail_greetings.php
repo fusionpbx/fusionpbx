@@ -239,10 +239,7 @@
 	}
 
 //check the permission
-	if (permission_exists('voicemail_greeting_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('voicemail_greeting_view')) {
 		echo "access denied";
 		exit;
 	}

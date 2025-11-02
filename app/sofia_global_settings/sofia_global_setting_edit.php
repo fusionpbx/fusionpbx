@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('sofia_global_setting_add') || permission_exists('sofia_global_setting_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('sofia_global_setting_add') || !permission_exists('sofia_global_setting_edit')) {
 		echo "access denied";
 		exit;
 	}

@@ -29,14 +29,11 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 //check permissions
-	if (permission_exists('system_view_info')
-		|| permission_exists('system_view_cpu')
-		|| permission_exists('system_view_hdd')
-		|| permission_exists('system_view_ram')
-		|| permission_exists('system_view_backup')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('system_view_info')
+		|| !permission_exists('system_view_cpu')
+		|| !permission_exists('system_view_hdd')
+		|| !permission_exists('system_view_ram')
+		|| !permission_exists('system_view_backup')) {
 		echo "access denied";
 		exit;
 	}

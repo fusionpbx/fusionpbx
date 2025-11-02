@@ -29,10 +29,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('dialplan_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('dialplan_add')) {
 		echo "access denied";
 		exit;
 	}

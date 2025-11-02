@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('fax_extension_advanced')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_extension_advanced')) {
 		echo "access denied";
 		exit;
 	}

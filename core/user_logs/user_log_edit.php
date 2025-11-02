@@ -5,10 +5,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('user_log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('user_log_view')) {
 		echo "access denied";
 		exit;
 	}

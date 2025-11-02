@@ -31,19 +31,16 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('dialplan_add')
-		|| permission_exists('dialplan_edit')
-		|| permission_exists('inbound_route_add')
-		|| permission_exists('inbound_route_edit')
-		|| permission_exists('outbound_route_add')
-		|| permission_exists('outbound_route_edit')
-		|| permission_exists('fifo_add')
-		|| permission_exists('fifo_edit')
-		|| permission_exists('time_condition_add')
-		|| permission_exists('time_condition_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('dialplan_add')
+		|| !permission_exists('dialplan_edit')
+		|| !permission_exists('inbound_route_add')
+		|| !permission_exists('inbound_route_edit')
+		|| !permission_exists('outbound_route_add')
+		|| !permission_exists('outbound_route_edit')
+		|| !permission_exists('fifo_add')
+		|| !permission_exists('fifo_edit')
+		|| !permission_exists('time_condition_add')
+		|| !permission_exists('time_condition_edit')) {
 		echo "access denied";
 		exit;
 	}

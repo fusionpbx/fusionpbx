@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_export')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_export')) {
 		echo "access denied";
 		exit;
 	}

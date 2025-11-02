@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('destination_import')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('destination_import')) {
 		echo "access denied";
 		exit;
 	}

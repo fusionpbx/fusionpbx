@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_queue_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_center_queue_view')) {
 		echo "access denied";
 		exit;
 	}

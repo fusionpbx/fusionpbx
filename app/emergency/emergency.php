@@ -6,10 +6,7 @@ require_once "resources/check_auth.php";
 require_once "resources/paging.php";
 
 //check permissions
-if (permission_exists('emergency_logs_view')) {
-	//access granted
-}
-else {
+if (!permission_exists('emergency_logs_view')) {
 	echo "access denied";
 	exit;
 }
@@ -20,9 +17,9 @@ $text = $language->get();
 
 //get the http post data
 if (!empty($_POST['emergency_logs']) && is_array($_POST['emergency_logs'])) {
-	$action = $_POST['action'];
+	$action = $_POST['action'] ?? '';
 	$search = $_POST['search'] ?? '';
-	$emergency_logs = $_POST['emergency_logs'];
+	$emergency_logs = $_POST['emergency_logs'] ?? '';
 }
 
 //set permissions for CDR details and call recordings

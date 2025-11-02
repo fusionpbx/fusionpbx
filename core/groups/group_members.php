@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_member_view') || if_group("superadmin")) {
-		//access allowed
-	}
-	else {
+	if (!permission_exists('group_member_view')) {
 		echo "access denied";
 		return;
 	}
