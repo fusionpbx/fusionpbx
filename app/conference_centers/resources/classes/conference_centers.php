@@ -124,7 +124,7 @@ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 				if ($not_admin) {
 					$sql .= "and r.conference_room_uuid = u.conference_room_uuid ";
 					$sql .= "and u.user_uuid = :user_uuid ";
-					$parameters['user_uuid'] = $user_uuid;
+					$parameters['user_uuid'] = $this->user_uuid;
 				}
 				if (isset($this->conference_room_uuid)) {
 					$sql .= "and r.conference_room_uuid = :conference_room_uuid ";

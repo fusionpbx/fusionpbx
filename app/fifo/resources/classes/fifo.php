@@ -32,6 +32,7 @@
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $uuid_prefix;
 
 		/**
 		 * called when the object is created

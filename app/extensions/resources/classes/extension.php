@@ -246,6 +246,7 @@
 							$call_group = $row['call_group'] ?? '';
 							$call_group = str_replace(";", ",", $call_group);
 							$tmp_array = explode(",", $call_group);
+							$call_group_array = [];
 							foreach ($tmp_array as $tmp_call_group) {
 								$tmp_call_group = trim($tmp_call_group);
 								if (!empty($tmp_call_group)) {

@@ -59,6 +59,7 @@
 		/**
 		 * declare private variables
 		 */
+		private $domain_uuid;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -211,7 +212,7 @@
 					$token = new token;
 					if (!$token->validate('/core/domain_settings/domain_settings.php')) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
+						header('Location: '.$this->list_page);
 						exit;
 					}
 

@@ -295,7 +295,7 @@ class text {
 											}
 										}
 									}
-									if(empty($append) && array_key_exists($comment, $lang_label) && array_key_exists($comment[$lang_label], $lang_code)) {
+									if(empty($append) && array_key_exists($comment[$lang_label], $lang_code)) {
 										$append = " //$comment[$lang_label][$lang_code]";
 									}
 									fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");

@@ -84,6 +84,8 @@
 		private $extension;
 		private $number_alias;
 		private $toll_allow;
+		private $toggle_field;
+		private $toggle_values;
 
 		/**
 		 * called when the object is created
@@ -156,6 +158,10 @@
 		 */
 		public function toggle(array $records) {
 
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
 			//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -170,14 +176,10 @@
 			//check we have permission for this action
 			if (permission_exists('call_forward')) {
 
-				//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
 				// initialize an empty array
 				$uuids = [];
 				$extensions = [];
-				
+
 				//get current toggle state
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -262,7 +264,7 @@
 					$p->delete('extension_edit', 'temp');
 
 					//send feature event notify to the phone
-					if ($settings->get('device', 'feature_sync', false)) {
+					if ($this->settings->get('device', 'feature_sync', false)) {
 						foreach ($extensions as $uuid => $extension) {
 							$feature_event_notify = new feature_event_notify;
 							$feature_event_notify->domain_name = $this->domain_name;

@@ -48,25 +48,25 @@
 		private $settings;
 
 		/**
-		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * User UUID set in the constructor. This can be passed in through the $this->settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $user_uuid;
 
 		/**
-		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * Username set in the constructor. This can be passed in through the $this->settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $username;
 
 		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * Domain UUID set in the constructor. This can be passed in through the $this->settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $domain_uuid;
 
 		/**
-		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * Domain name set in the constructor. This can be passed in through the $this->settings_array associative array or set in the session global array
 		 * @var string
 		 */
 		private $domain_name;
@@ -188,59 +188,23 @@
 		}
 
 		public function reload() {
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+
 			//if the handle does not exist create it
 				$esl = event_socket::create();
+
 			//if the handle still does not exist show an error message
 				if (!$esl->is_connected()) {
 					$msg = "<div align='center'>".$text['message-event-socket']."<br /></div>";
 				}
+
 			//send the api command to check if the module exists
 				if ($esl->is_connected()) {
 					$cmd = "reload mod_local_stream";
 					$switch_result = event_socket::api($cmd);
 					unset($cmd);
-				}
-		}
-
-		public function xml() {
-			//build the list of categories
-				$music_on_hold_dir = $this->settings->get('switch', 'sounds').'/music';
-			//default category (note: GLOB_BRACE doesn't work on some systems)
-				$array_1 = glob($music_on_hold_dir."/8000".$class_name.".php", GLOB_ONLYDIR);
-				$array_2 = glob($music_on_hold_dir."/16000".$class_name.".php", GLOB_ONLYDIR);
-				$array_3 = glob($music_on_hold_dir."/32000".$class_name.".php", GLOB_ONLYDIR);
-				$array_4 = glob($music_on_hold_dir."/48000".$class_name.".php", GLOB_ONLYDIR);
-				$array = array_merge((array)$array_1,(array)$array_2,(array)$array_3,(array)$array_4);
-				unset($array_1,$array_2,$array_3,$array_4);
-			//other categories
-				if (count($_SESSION['domains']) > 1) {
-					$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
-				}
-				else {
-					$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
-				}
-			//list the categories
-				$xml = "";
-				foreach($array as $moh_dir) {
-					//set the directory
-						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
-					//get and set the rate
-						$sub_array = explode("/", $moh_dir);
-						$moh_rate = end($sub_array);
-					//set the name
-						$moh_name = $moh_dir;
-						if ($moh_dir == $moh_rate) {
-							$moh_name = "default/$moh_rate";
-						}
-					//build the xml
-						$xml .= "	<directory name=\"$moh_name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
-						$xml .= "		<param name=\"rate\" value=\"".$moh_rate."\"/>\n";
-						$xml .= "		<param name=\"shuffle\" value=\"true\"/>\n";
-						$xml .= "		<param name=\"channels\" value=\"1\"/>\n";
-						$xml .= "		<param name=\"interval\" value=\"20\"/>\n";
-						$xml .= "		<param name=\"timer-name\" value=\"soft\"/>\n";
-						$xml .= "	</directory>\n";
-						$this->xml = $xml;
 				}
 		}
 
@@ -254,7 +218,7 @@
 				}
 			//check where the default music is stored
 				$default_moh_prefix = 'music/default';
-				if(file_exists($settings->get('switch', 'sounds').'/music/8000')) {
+				if(file_exists($this->settings->get('switch', 'sounds').'/music/8000')) {
 					$default_moh_prefix = 'music';
 				}
 			//replace the variables
@@ -262,7 +226,7 @@
 				$file_contents = preg_replace("/[\t ]*(?:<!--)?{v_moh_categories}(?:-->)?/", $this->xml, $file_contents);
 
 			//write the XML config file
-				$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/local_stream.conf.xml","w");
+				$fout = fopen($this->settings->get('switch', 'conf')."/autoload_configs/local_stream.conf.xml","w");
 				fwrite($fout, $file_contents);
 				fclose($fout);
 
@@ -288,7 +252,7 @@
 			//build an array of the sound files
 				$music_directory =  $this->settings->get('switch', 'sounds').'/music';
 				if (file_exists($music_directory)) {
-					$files = array_merge(glob($music_directory.'/*/*/*.wav'), glob($music_directory.'/*/*/*/*.wav'), glob($stream_path.'/*/*/*/*.mp3'), glob($stream_path.'/*/*/*/*.ogg'));
+					$files = array_merge(glob($music_directory.'/*/*/*.wav'), glob($music_directory.'/*/*/*/*.wav'));
 				}
 
 			//build a new file array
@@ -309,10 +273,9 @@
 						foreach($a2 as $sample_rate => $file_path) {
 							//echo "domain_name ".$domain_name."<br />\n";
 							//echo "category_name ".$category_name."<br />\n";
-							foreach($domains as $domain) {
-								//view_array($field, false);
+							foreach($domains as $field) {
 								if ($field['domain_name'] === $domain_name) {
-									$domain_uuid = $domain['domain_uuid'];
+									$domain_uuid = $field['domain_uuid'];
 									//echo "domain_uuid ".$domain_uuid."<br />\n";
 								}
 							}
@@ -320,7 +283,6 @@
 							if ($domain_name == 'global' || $domain_name == 'default') {
 								$domain_uuid = null;
 							}
-							//view_array($row, false);
 
 							$array['music_on_hold'][$i]['music_on_hold_uuid'] = uuid();
 							$array['music_on_hold'][$i]['domain_uuid'] = $domain_uuid;
@@ -350,7 +312,7 @@
 				//echo $this->database->message;
 				unset($array);
 
-				$p->delete('music_on_hold_add', 'temp');	
+				$p->delete('music_on_hold_add', 'temp');
 		}
 
 		/**
@@ -375,7 +337,6 @@
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//filter checked records
-// 							view_array($records, 0);
 							foreach ($records as $music_on_hold_uuid => $record) {
 								if (is_uuid($music_on_hold_uuid)) {
 									if ($record['checked'] == 'true') {

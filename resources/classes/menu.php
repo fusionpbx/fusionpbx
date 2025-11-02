@@ -785,16 +785,16 @@
 					$menu_tags = '';
 					switch ($menu_item_category) {
 						case "internal":
-							$menu_tags = "href='".PROJECT_PATH.$submenu_item_link."'";
+							$menu_tags = "href='".PROJECT_PATH.$menu_item_link."'";
 							break;
 						case "external":
-							if (substr($submenu_item_link, 0,1) == "/") {
-								$submenu_item_link = PROJECT_PATH.$submenu_item_link;
+							if (substr($menu_item_link, 0,1) == "/") {
+								$menu_item_link = PROJECT_PATH.$menu_item_link;
 							}
-							$menu_tags = "href='".$submenu_item_link."' target='_blank'";
+							$menu_tags = "href='".$menu_item_link."' target='_blank'";
 							break;
 						case "email":
-							$menu_tags = "href='mailto:".$submenu_item_link."'";
+							$menu_tags = "href='mailto:".$menu_item_link."'";
 							break;
 					}
 
@@ -805,11 +805,11 @@
 							$menu_html .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
 						}
 						else {
-							if ($submenu_item_link == "/login.php" || $submenu_item_link == "/users/signup.php") {
+							if ($menu_item_link == "/login.php" || $menu_item_link == "/users/signup.php") {
 								//hide login and sign-up when the user is logged in
 							}
 							else {
-								if (empty($submenu_item_link)) {
+								if (empty($menu_item_link)) {
 									$menu_html .= "<h2 align='center' style=''>".$menu_item_title."</h2>\n";
 								}
 								else {

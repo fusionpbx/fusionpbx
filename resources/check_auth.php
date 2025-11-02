@@ -120,7 +120,7 @@
 			}
 
 		//validate the username and password
-			$auth = new authentication;
+			$auth = new authentication(['settings' => $settings]);
 			$result = $auth->validate();
 
 		//if not authorized

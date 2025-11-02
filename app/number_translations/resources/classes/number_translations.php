@@ -41,7 +41,6 @@
 		/**
 		 * declare private variables
 		 */
-
 		private $database;
 		private $permission_prefix;
 		private $list_page;
@@ -49,7 +48,10 @@
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
-		public  $xml;
+		private $json;
+		private  $xml;
+		private $display_type;
+
 
 		/**
 		 * called when the object is created
@@ -270,7 +272,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -338,7 +340,7 @@
 								//primary table
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$rows = $this->database->select($sql, $parameters, 'all');
+									$rows = $this->database->select($sql, null, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
 										foreach ($rows as $x => $row) {

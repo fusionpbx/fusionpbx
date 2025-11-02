@@ -36,13 +36,13 @@
 		public $data_types;
 
 		//class constructor
-		public function __construct() {
+		public function __construct($setting_array) {
 
 			//includes files
 			require dirname(__DIR__, 2) . "/resources/require.php";
 
-			//connect to the database
-			$this->database = database::new();
+			//open a database connection
+			$this->database = $setting_array['database'] ?? database::new();
 
 			//get the list of installed apps from the core and mod directories
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -122,7 +122,7 @@
 				$this->database->beginTransaction();
 				//execute the sql query
 				try {
-					$this->database->query($sql);
+					$this->database->execute($sql, null);
 				} catch (PDOException $error) {
 					echo "error: " . $error->getMessage() . " sql: $sql<br/>";
 				}
@@ -138,7 +138,7 @@
 					return true;
 				}
 			}
-			return $false;
+			return false;
 		}
 
 		//check if a column exists
@@ -208,7 +208,7 @@
 		//database table exists alternate
 		private function db_table_exists_alternate($db_type, $table_name) {
 			$sql = "select count(*) from $table_name ";
-			$result = $this->database->query($sql);
+			$result = $this->database->execute($sql, null);
 			if ($result > 0) {
 				return true; //table exists
 			} else {
@@ -282,7 +282,7 @@
 					return true;
 				}
 			}
-			return $false;
+			return false;
 		}
 
 		//database column exists
@@ -839,7 +839,7 @@
 					foreach ($update_array as $sql) {
 						if (strlen(trim($sql))) {
 							try {
-								$this->database->db->query(trim($sql));
+								$this->database->execute(trim($sql), null);
 								if ($format == "text") {
 									$response .= "	$sql;\n";
 								}

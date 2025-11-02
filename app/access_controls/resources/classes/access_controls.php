@@ -216,7 +216,7 @@
 						//primary table
 						$sql = "select * from v_" . $this->table . " ";
 						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-						$rows = $this->database->select($sql, $parameters, 'all');
+						$rows = $this->database->select($sql, null, 'all');
 						if (is_array($rows) && @sizeof($rows) != 0) {
 							$y = 0;
 							foreach ($rows as $x => $row) {

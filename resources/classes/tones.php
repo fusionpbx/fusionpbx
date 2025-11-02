@@ -35,7 +35,7 @@
 		private $default_tone_label;
 		private $database;
 
-	/**
+		/**
 		 * called when the object is created
 		 */
 		public function __construct(array $setting_array = []) {
@@ -47,6 +47,11 @@
 			$this->database = $setting_array['database'] ?? database::new();
 		}
 
+		/**
+		 * tones_list function
+		 *
+		 * @return array
+		 */
 		public function tones_list() {
 			//get the tones
 			$sql = "select * from v_vars ";
@@ -68,6 +73,6 @@
 			unset($sql, $tones, $tone);
 
 			//return the tones
-			return $tone_list ?? '';
+			return $tone_list ?? [];
 		}
 	}

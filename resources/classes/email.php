@@ -57,6 +57,10 @@
 		public $read_confirmation;
 		public $error;
 		public $response;
+		public $headers;
+		public $content_type;
+		public $reply_to;
+		public $date;
 
 		/**
 		 * Set in the constructor. Must be a database object and cannot be null.
@@ -554,19 +558,19 @@
 						$this->recipients = explode(';', $this->recipients); // convert to array of addresses
 					}
 
-					foreach ($this->recipients as $this->recipient) {
-						if (is_array($this->recipient)) { // check if each recipient has multiple fields
-							if ($this->recipient["address"] != '' && valid_email($this->recipient["address"])) { // check if valid address
-								switch ($this->recipient["delivery"]) {
-									case "cc" :		$mail->AddCC($this->recipient["address"], ($this->recipient["name"]) ? $this->recipient["name"] : $this->recipient["address"]);			break;
-									case "bcc" :	$mail->AddBCC($this->recipient["address"], ($this->recipient["name"]) ? $this->recipient["name"] : $this->recipient["address"]);			break;
-									default :		$mail->AddAddress($this->recipient["address"], ($this->recipient["name"]) ? $this->recipient["name"] : $this->recipient["address"]);
+					foreach ($this->recipients as $recipient) {
+						if (is_array($recipient)) { // check if each recipient has multiple fields
+							if ($recipient["address"] != '' && valid_email($recipient["address"])) { // check if valid address
+								switch ($recipient["delivery"]) {
+									case "cc" :		$mail->AddCC($recipient["address"], ($recipient["name"]) ? $recipient["name"] : $recipient["address"]);			break;
+									case "bcc" :	$mail->AddBCC($recipient["address"], ($recipient["name"]) ? $recipient["name"] : $recipient["address"]);			break;
+									default :		$mail->AddAddress($recipient["address"], ($recipient["name"]) ? $recipient["name"] : $recipient["address"]);
 								}
 								$address_found = true;
 							}
 						}
-						else if ($this->recipient != '' && valid_email($this->recipient)) { // check if recipient value is simply (only) an address
-							$mail->AddAddress($this->recipient);
+						else if ($recipient != '' && valid_email($recipient)) { // check if recipient value is simply (only) an address
+							$mail->AddAddress($recipient);
 							$address_found = true;
 						}
 					}

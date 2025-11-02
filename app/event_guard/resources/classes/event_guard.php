@@ -219,7 +219,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -286,7 +286,7 @@
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where event_guard_log_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
@@ -302,7 +302,7 @@
 											$array[$this->table][$x] = $row;
 
 										//add copy to the description
-											$array[$this->table][$x][event_guard_log.'_uuid'] = uuid();
+											$array[$this->table][$x]['event_guard_log_uuid'] = uuid();
 
 										//increment the id
 											$x++;

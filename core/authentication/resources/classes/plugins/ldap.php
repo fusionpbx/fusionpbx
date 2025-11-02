@@ -8,14 +8,24 @@
 class plugin_ldap {
 
 	/**
-	 * Declare public variables
+	 * Declare Public variables
+	 *
+	 * @var mixed
 	 */
 	public $debug;
 	public $domain_name;
+	public $domain_uuid;
 	public $username;
 	public $password;
 	public $user_uuid;
 	public $contact_uuid;
+
+	/**
+	 * Declare Private variables
+	 *
+	 * @var mixed
+	 */
+	private $database;
 
 	/**
 	 * Called when the object is created
@@ -37,13 +47,14 @@ class plugin_ldap {
 			if ($_REQUEST["username"]) {
 
 				//pre-process some settings
-					$settings['theme']['favicon'] = !empty($_SESSION['theme']['favicon']['text']) ? $_SESSION['theme']['favicon']['text'] : PROJECT_PATH.'/themes/default/favicon.ico';
-					$settings['login']['destination'] = !empty($_SESSION['login']['destination']['text']) ? $_SESSION['login']['destination']['text'] : '';
-					$settings['users']['unique'] = !empty($_SESSION['users']['unique']['text']) ? $_SESSION['users']['unique']['text'] : '';
-					$settings['theme']['logo'] = !empty($_SESSION['theme']['logo']['text']) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH.'/themes/default/images/logo_login.png';
-					$settings['theme']['login_logo_width'] = !empty($_SESSION['theme']['login_logo_width']['text']) ? $_SESSION['theme']['login_logo_width']['text'] : 'auto; max-width: 300px';
-					$settings['theme']['login_logo_height'] = !empty($_SESSION['theme']['login_logo_height']['text']) ? $_SESSION['theme']['login_logo_height']['text'] : 'auto; max-height: 300px';
-					$settings['theme']['background_video'] = isset($_SESSION['theme']['background_video'][0]) ? $_SESSION['theme']['background_video'][0] : null;
+					$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH.'/themes/default/favicon.ico');
+					$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH.'/themes/default/images/logo_login.png');
+					$login_destination = $settings->get('login', 'destination');
+					$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
+					$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
+					$background_videos = $settings->get('theme', 'background_video', null);
+					$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
+					$users_unique = $settings->get('users', 'unique', '');
 
 				//get the domain
 					$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -72,12 +83,12 @@ class plugin_ldap {
 
 				//assign default values to the template
 					$view->assign("project_path", PROJECT_PATH);
-					$view->assign("login_destination_url", $settings['login']['destination']);
-					$view->assign("favicon", $settings['theme']['favicon']);
-					$view->assign("login_logo_width", $settings['theme']['login_logo_width']);
-					$view->assign("login_logo_height", $settings['theme']['login_logo_height']);
-					$view->assign("login_logo_source", $settings['theme']['logo']);
-					$view->assign("background_video", $settings['theme']['background_video']);
+					$view->assign("login_destination_url", $login_destination);
+					$view->assign("favicon", $theme_favicon);
+					$view->assign("login_logo_width", $theme_login_logo_width);
+					$view->assign("login_logo_height", $theme_login_logo_height);
+					$view->assign("login_logo_source", $theme_logo);
+					$view->assign("background_video", $theme_background_video);
 
 				//add the token name and hash to the view
 					//$view->assign("token_name", $token['name']);
@@ -90,16 +101,16 @@ class plugin_ldap {
 			}
 
 		//use ldap to validate the user credentials
-			if (isset($_SESSION["ldap"]["certpath"])) {
-				$s = "LDAPTLS_CERT=" . $_SESSION["ldap"]["certpath"]["text"];
+			if (!empty($settings->get('ldap', 'certpath', ''))) {
+				$s = "LDAPTLS_CERT=" . $settings->get('ldap', 'certpath', '');
 				putenv($s);
 			}
-			if (isset($_SESSION["ldap"]["certkey"])) {
-				$s = "LDAPTLS_KEY=" . $_SESSION["ldap"]["certkey"]["text"];
+			if (!empty($settings->get('ldap', 'certkey', ''))) {
+				$s = "LDAPTLS_KEY=" . $settings->get('ldap', 'certkey', '');
 				 putenv($s);
 			}
-			$host = $_SESSION["ldap"]["server_host"]["text"];
-			$port = $_SESSION["ldap"]["server_port"]["numeric"];
+			$host = $settings->get('ldap', 'server_host', '');
+			$port = $settings->get('ldap', 'server_port', '');
 			$connect = ldap_connect($host, $port)
 				or die("Could not connect to the LDAP server.");
 			//ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
@@ -110,13 +121,13 @@ class plugin_ldap {
 			$user_authorized = false;
 
 		//provide backwards compatability
-			if (!empty($_SESSION["ldap"]["user_dn"]["text"])) {
-				$_SESSION["ldap"]["user_dn"][] = $_SESSION["ldap"]["user_dn"]["text"];
+			if (!empty($settings->get('ldap', 'user_dn', ''))) {
+				$ldap_user_dn[] = $settings->get('ldap', 'user_dn', '');
 			}
 
 		//check all user_dn in the array
-			foreach ($_SESSION["ldap"]["user_dn"] as $user_dn) {
-				$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$this->username.",".$user_dn;
+			foreach ($ldap_user_dn as $user_dn) {
+				$bind_dn = $settings->get('ldap', 'user_attribute', '')."=".$this->username.",".$user_dn;
 				$bind_pw = $this->password;
 				//Note: As of 4/16, the call below will fail randomly. PHP debug reports ldap_bind
 				//called below with all arguments '*uninitialized*'. However, the debugger
@@ -135,7 +146,7 @@ class plugin_ldap {
 			 if ($user_authorized) {
 				$sql = "select * from v_users ";
 				$sql .= "where username = :username ";
-				if ($settings['users']['unique'] != "global") {
+				if (!empty($users_unique) && $users_unique != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
@@ -144,10 +155,14 @@ class plugin_ldap {
 				$parameters['username'] = $this->username;
 				$row = $this->database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
-					if ($settings['users']['unique'] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
-						//get the domain uuid
+					if (!empty($users_unique) && $users_unique == "global" && $row["domain_uuid"] != $this->domain_uuid) {
+						//set the domain uuid
 							$this->domain_uuid = $row["domain_uuid"];
-							$this->domain_name = $_SESSION['domains'][$this->domain_uuid]['domain_name'];
+
+						//set the domain name
+							$sql .= "select domain_name from v_domains where domain_uuid = :domain_uuid ";
+							$parameters['domain_uuid'] = $this->domain_uuid;
+							$this->domain_name = $this->database->select($sql, $parameters, 'column');
 
 						//set the domain session variables
 							$_SESSION["domain_uuid"] = $this->domain_uuid;
@@ -176,7 +191,7 @@ class plugin_ldap {
 						$array['users'][0]['username'] = strtolower($this->username);
 						$array['users'][0]['password'] = md5($salt.$password);
 						$array['users'][0]['salt'] = $salt;
-						$array['users'][0]['add_date'] = now();
+						$array['users'][0]['add_date'] = 'now()';
 						$array['users'][0]['add_user'] = strtolower($this->username);
 						$array['users'][0]['user_enabled'] = true;
 

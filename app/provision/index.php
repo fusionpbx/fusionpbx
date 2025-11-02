@@ -217,7 +217,7 @@
 
 //send a request to a remote server to validate the MAC address and secret
 	if (!empty($_SERVER['auth_server'])) {
-		$result = send_http_request($_SERVER['auth_server'], 'mac='.url_encode($_REQUEST['mac']).'&secret='.url_encode($_REQUEST['secret']));
+		$result = send_http_request($_SERVER['auth_server'], 'mac='.urlencode($_REQUEST['mac']).'&secret='.urlencode($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".escape($_REQUEST['mac']));
 			http_error('404');

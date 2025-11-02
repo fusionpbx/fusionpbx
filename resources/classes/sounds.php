@@ -94,7 +94,7 @@ class sounds {
 				if (is_array($sound_files) && @sizeof($sound_files) != 0) {
 					foreach ($sound_files as $value) {
 						if (substr($value, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-							$value = substr($var, 71);
+							$value = substr($value, 71);
 						}
 						$array['sounds'][$x]['name'] = $value;
 						$array['sounds'][$x]['value'] = $value;

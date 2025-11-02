@@ -33,20 +33,39 @@
 class authentication {
 
 	/**
-	 * Define variables and their scope
+	 * Declare Public variables
+	 *
+	 * @var mixed
 	 */
-	private $database;
 	public $domain_uuid;
 	public $user_uuid;
 	public $domain_name;
 	public $username;
 	public $password;
+	public $key;
+
+	/**
+	 * Declare Private variables
+	 *
+	 * @var mixed
+	 */
+	private $database;
+	private $settings;
 
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct(array $setting_array = []) {
-		$this->database = $setting_array['database'] ?? database::new();
+		//set the config object
+		$config = $setting_array['config'] ?? config::load();
+
+		//set the database connection
+		$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
+
+		//set the settings object
+		$this->settings = $setting_array['settings'];
+
+		//intialize the object
 		$this->user_uuid = null;
 	}
 
@@ -68,7 +87,7 @@ class authentication {
 			}
 
 		//create a settings object to pass to plugins
-			$settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
+			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
 
 		//start the session if its not started
 			if (session_status() === PHP_SESSION_NONE) {
@@ -114,7 +133,7 @@ class authentication {
 						$object->password = $this->password;
 					}
 					//initialize the plugin send the authentication object and settings
-					$array = $object->$name($this, $settings);
+					$array = $object->$name($this, $this->settings);
 
 					//build a result array
 					if (!empty($array) && is_array($array)) {
@@ -187,11 +206,11 @@ class authentication {
 		//user is authorized - get user settings, check user cidr
 			if ($authorized) {
 				//get the cidr restrictions from global, domain, and user default settings
-				$settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-				$cidr_list = $settings->get('domain', 'cidr', []);
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+				$cidr_list = $this->settings->get('domain', 'cidr', []);
 				if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
 					//user passed the cidr check
-					self::create_user_session($result, $settings);
+					self::create_user_session($result, $this->settings);
 				} else {
 					//user failed the cidr check - no longer authorized
 					$authorized = false;
@@ -456,12 +475,10 @@ class authentication {
 			}
 
 		//set a default value for unqiue
-			if (empty($_SESSION["users"]["unique"]["text"])) {
-				$_SESSION["users"]["unique"]["text"] = 'false';
-			}
+			$_SESSION["users"]["unique"]["text"] = $this->settings->get('users', 'unique', '');
 
 		//get the domain name from the username
-			if (!empty($_SESSION['username']) && $_SESSION["users"]["unique"]["text"] != "global") {
+			if (!empty($_SESSION['username']) && $this->settings->get('users', 'unique', '') != "global") {
 				$username_array = explode("@", $_SESSION['username']);
 				if (count($username_array) > 1) {
 					//get the domain name

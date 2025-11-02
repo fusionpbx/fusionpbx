@@ -52,8 +52,9 @@ class file {
 	 * Glob search for a list of files
 	 * @var string $dir			this is the directory to scan
 	 * @var boolean $recursive	get the sub directories
+	 * @return array list of files or an empty array if not found
 	 */
-	public function glob($dir, $recursive) {
+	public function glob($dir, $recursive): array {
 		$files = [];
 		if ($dir != '' || $dir != '/') {
 			$tree = glob(rtrim($dir, '/') . '/*');
@@ -69,12 +70,6 @@ class file {
 						}
 					}
 				}
-				else {
-					$files[] = $file;
-				}
-			}
-			else {
-				$files[] = $file;
 			}
 			return $files;
 		}
