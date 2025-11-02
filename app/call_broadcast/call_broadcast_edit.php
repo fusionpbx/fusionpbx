@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_broadcast_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_broadcast_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -76,7 +73,7 @@
 				{
 					$count++;
 					if ($count == 1) { continue; }
-					$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);
+					$getData = preg_split('/[ ,|]/', $getData[0], '', PREG_SPLIT_NO_EMPTY);
 					$separator = $getData[0];
 					$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
 					$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';

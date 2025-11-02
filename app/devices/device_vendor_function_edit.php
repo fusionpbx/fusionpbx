@@ -26,6 +26,13 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (!permission_exists('device_vendor_function_add') || !permission_exists('device_vendor_function_edit')) {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -33,16 +40,6 @@
 
 //set the defaults
 	$device_vendor_function_uuid = '';
-
-//check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {

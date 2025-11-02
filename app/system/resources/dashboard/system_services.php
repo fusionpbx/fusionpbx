@@ -28,13 +28,10 @@
 
 //includes files
 	require_once dirname(__DIR__, 4) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('xml_cdr_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_view')) {
 		echo "access denied";
 		exit;
 	}

@@ -29,10 +29,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('conference_session_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_session_view')) {
 		echo "access denied";
 		exit;
 	}

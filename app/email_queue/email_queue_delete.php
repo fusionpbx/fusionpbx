@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('email_queue_delete')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('email_queue_delete')) {
 		echo "access denied";
 		exit;
 	}

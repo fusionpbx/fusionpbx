@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('dashboard_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('dashboard_view')) {
 		echo "access denied";
 		exit;
 	}

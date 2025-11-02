@@ -27,15 +27,12 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('device_vendor_restore')) {
-			//access granted
-	}
-	else {
-			echo "access denied";
-			exit;
+	if (!permission_exists('device_vendor_restore')) {
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support

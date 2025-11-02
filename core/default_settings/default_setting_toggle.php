@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('default_setting_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('default_setting_edit')) {
 		echo "access denied";
 		exit;
 	}

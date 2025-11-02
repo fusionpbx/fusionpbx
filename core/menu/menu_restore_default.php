@@ -30,10 +30,7 @@
 //check permissions
 	if(!defined('STDIN')) {
 		require_once "resources/check_auth.php";
-		if (permission_exists('menu_restore')) {
-			//access granted
-		}
-		else {
+		if (!permission_exists('menu_restore')) {
 			echo "access denied";
 			return;
 		}

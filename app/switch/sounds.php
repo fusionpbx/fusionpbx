@@ -32,10 +32,7 @@
 	require_once "resources/check_auth.php";
 
 //check the permission
-	if (permission_exists('recording_play') || permission_exists('recording_download')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('recording_play') || !permission_exists('recording_download')) {
 		echo "access denied";
 		exit;
 	}

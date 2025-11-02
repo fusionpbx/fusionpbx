@@ -42,6 +42,7 @@
 		/**
 		 * declare public variables
 		 */
+		public $domain_uuid;
 		public $domain_uuid_target;
 
 		/**
@@ -59,7 +60,6 @@
 		/**
 		 * declare private variables
 		 */
-		private $domain_uuid;
 		private $permission_prefix;
 		private $list_page;
 		private $table;

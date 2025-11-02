@@ -29,10 +29,7 @@ require_once dirname(__DIR__, 3) . "/resources/require.php";
 require_once "resources/check_auth.php";
 
 //check permissions
-if (permission_exists('operator_panel_view')) {
-	//access granted
-}
-else {
+if (!permission_exists('operator_panel_view')) {
 	echo "access denied";
 	exit;
 }

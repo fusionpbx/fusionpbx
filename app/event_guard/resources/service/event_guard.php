@@ -447,7 +447,7 @@
 		if ($firewall_name == 'iptables') {
 			$command = $firewall_path.'/./iptables -L '.$filter.' -n --line-numbers | grep "'.$ip_address.' " | cut -d " " -f1';
 			$line_number = trim(shell($command));
-			echo "\n". $command . " line ".__line__." result ".$result."\n";
+			echo "\n". $command . " line ".__line__."\n";
 			if (is_numeric($line_number)) {
 				//$result = shell('iptables -D INPUT '.$line_number);
 				$command = $firewall_path.'/./iptables -D '.$filter.' '.$line_number;

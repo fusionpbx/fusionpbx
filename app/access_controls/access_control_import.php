@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('access_control_node_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('access_control_node_add')) {
 		echo "access denied";
 		exit;
 	}

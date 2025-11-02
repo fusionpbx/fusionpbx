@@ -27,10 +27,7 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('device_add') || permission_exists('device_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_add') || !permission_exists('device_edit')) {
 		echo "access denied";
 		exit;
 	}

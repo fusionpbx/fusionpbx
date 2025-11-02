@@ -27,10 +27,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('sofia_global_setting_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('sofia_global_setting_view')) {
 		echo "access denied";
 		exit;
 	}

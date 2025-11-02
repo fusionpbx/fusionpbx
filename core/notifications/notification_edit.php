@@ -30,9 +30,6 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 //check permissions
 	if (if_group('superadmin')) {
-		//access granted
-	}
-	else {
 		echo "access denied";
 		exit;
 	}

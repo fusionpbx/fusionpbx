@@ -2,13 +2,10 @@
 
 //includes files
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('follow_me') || !permission_exists('call_forward') || !permission_exists('do_not_disturb')) {
 		echo "access denied";
 		exit;
 	}

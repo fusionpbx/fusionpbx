@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('menu_add') || !permission_exists('menu_edit') || !permission_exists('menu_delete')) {
 		echo "access denied";
 		exit;
 	}
@@ -90,7 +87,9 @@
 
 //add the build db child menu list
 	function build_db_child_menu_list ($database, $menu_item_level, $menu_item_uuid) {
-		global $menu_uuid, $list_row_edit_button, $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete, $page, $text, $x;
+		global $settings, $menu_uuid, $list_row_edit_button;
+		global $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete;
+		global $page, $text, $x;
 
 		//check for sub menus
 		$menu_item_level = $menu_item_level+1;

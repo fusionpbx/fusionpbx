@@ -30,10 +30,7 @@
 	require_once "xml_cdr_statistics_inc.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_statistics')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_statistics')) {
 		echo "access denied";
 		exit;
 	}

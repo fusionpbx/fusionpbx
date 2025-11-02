@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_flow_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_flow_view')) {
 		echo "access denied";
 		exit;
 	}

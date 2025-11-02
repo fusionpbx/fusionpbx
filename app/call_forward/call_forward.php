@@ -34,10 +34,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('follow_me') || !permission_exists('call_forward') || !permission_exists('do_not_disturb')) {
 		echo "access denied";
 		exit;
 	}

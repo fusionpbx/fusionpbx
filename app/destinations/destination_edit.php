@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('destination_add') || permission_exists('destination_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('destination_add') || !permission_exists('destination_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -577,8 +574,8 @@
 										if (isset($action_array[0]) && !empty($action_array[0])) {
 											if ($destination->valid($action_array[0].':'.$action_array[1])) {
 												//set variables from the action array
-												$action_app = $action_array[0];
-												$action_data = $action_array[1];
+												$action_app = $action_array[0] ?? '';
+												$action_data = $action_array[1] ?? '';
 
 												//allow specific api commands
 												$allowed_commands = array();
@@ -589,7 +586,7 @@
 												}
 												$action_data = xml::sanitize($action_data);
 												foreach ($allowed_commands as $allowed_command) {
-													$action_data = str_replace('#{'.$allowed_command, '${'.$allowed_command, $action_data);
+													$action_data = str_replace('#{'.$allowed_command, '${'.$allowed_command, $action_data ?? '');
 												}
 
 												//add the action to the dialplan xml

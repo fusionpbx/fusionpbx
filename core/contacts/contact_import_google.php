@@ -31,10 +31,7 @@
 	require_once "resources/functions/google_get_contacts.php";
 
 //check permissions
-	if (permission_exists('contact_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_add')) {
 		echo "access denied";
 		exit;
 	}

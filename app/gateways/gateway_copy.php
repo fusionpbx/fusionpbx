@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('gateway_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('gateway_add')) {
 		echo "access denied";
 		exit;
 	}

@@ -36,6 +36,11 @@
 		const app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 
 		/**
+		* declare the public variables
+		*/
+		public $extension_uuid;
+
+		/**
 		 * Set in the constructor. Must be a database object and cannot be null.
 		 * @var database Database Object
 		 */
@@ -60,7 +65,7 @@
 		private $domain_uuid;
 
 		/**
-		* declare the variables
+		* declare the private variables
 		*/
 		private $name;
 		private $table;
@@ -68,7 +73,6 @@
 		private $toggle_values;
 		private $description_field;
 		private $location;
-		private $extension_uuid;
 
 		/**
 		 * called when the object is created

@@ -34,7 +34,8 @@
 
 //check permissions
 	if (!permission_exists('call_block_view')) {
-		echo "access denied"; exit;
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support

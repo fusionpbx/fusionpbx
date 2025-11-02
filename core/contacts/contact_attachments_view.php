@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_attachment_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_attachment_view')) {
 		echo "access denied";
 		exit;
 	}
