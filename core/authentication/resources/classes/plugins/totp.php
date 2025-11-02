@@ -32,15 +32,25 @@
 class plugin_totp {
 
 	/**
-	 * Define variables and their scope
+	 * Declare Public variables
+	 *
+	 * @var mixed
 	 */
 	public $debug;
 	public $domain_name;
+	public $domain_uuid;
 	public $username;
 	public $password;
 	public $user_uuid;
 	public $user_email;
 	public $contact_uuid;
+
+	/**
+	 * Declare Private variables
+	 *
+	 * @var mixed
+	 */
+	private $database;
 	private $user_totp_secret;
 
 	/**
@@ -62,6 +72,9 @@ class plugin_totp {
 		//pre-process some settings
 			$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH.'/themes/default/favicon.ico');
 			$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH.'/themes/default/images/logo_login.png');
+			$theme_login_type = $settings->get('theme', 'login_brand_type', '');
+			$theme_login_image = $settings->get('theme', 'login_brand_image', '');
+			$theme_login_text = $settings->get('theme', 'login_brand_text', '');
 			$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
 			$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
 			$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
@@ -71,7 +84,7 @@ class plugin_totp {
 			//$login_domain_name = $settings->get('login', 'domain_name');
 			$login_destination = $settings->get('login', 'destination');
 			$users_unique = $settings->get('users', 'unique', '');
-		
+
 		//get the username
 			if (isset($_SESSION["username"])) {
 				$this->username = $_SESSION["username"];

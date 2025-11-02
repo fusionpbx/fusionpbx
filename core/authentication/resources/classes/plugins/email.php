@@ -42,6 +42,13 @@ class plugin_email {
 	public $debug;
 
 	/**
+	 * Declare Private variables
+	 *
+	 * @var mixed
+	 */
+	private $database;
+
+	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
@@ -60,6 +67,9 @@ class plugin_email {
 		//pre-process some settings
 			$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH.'/themes/default/favicon.ico');
 			$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH.'/themes/default/images/logo_login.png');
+			$theme_login_type = $settings->get('theme', 'login_brand_type', '');
+			$theme_login_image = $settings->get('theme', 'login_brand_image', '');
+			$theme_login_text = $settings->get('theme', 'login_brand_text', '');
 			$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
 			$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
 			$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
@@ -69,7 +79,7 @@ class plugin_email {
 			//$login_domain_name = $settings->get('login', 'domain_name');
 			$login_destination = $settings->get('login', 'destination');
 			$users_unique = $settings->get('users', 'unique', '');
-		
+
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];

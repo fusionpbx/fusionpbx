@@ -40,9 +40,16 @@
 		public $domain_uuid;
 
 		/**
-		 * declare public variables
+		 * declare ivr menu primary uuid key
+		 * @var string
 		 */
 		public $ivr_menu_uuid;
+
+		/**
+		 * declare order_by variables
+		 * @var string
+		 */
+		public $order_by;
 
 		/**
 		 * Set in the constructor. Must be a database object and cannot be null.

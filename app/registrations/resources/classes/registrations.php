@@ -98,6 +98,10 @@
 		 */
 		public function get($profile = 'all') {
 
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get(null, '/app/registrations');
+
 			//initialize the id used in the registrations array
 				$id = 0;
 
@@ -115,8 +119,6 @@
 							return null;
 						}
 				}
-
-
 
 			//get the default settings
 				$sql = "select sip_profile_name from v_sip_profiles ";
@@ -142,10 +144,6 @@
 
 						//show an error message
 							if ($xml_response == "Invalid Profile!") {
-								//add multi-lingual support
-								$language = new text;
-								$text = $language->get(null, '/app/registrations');
-
 								//show the error message
 								$xml_response = "<error_msg>".escape($text['label-message'])."</error_msg>";
 							}
@@ -407,6 +405,7 @@
 
 								//set message
 									if (is_array($response_api)) {
+										$message = '';
 										foreach ($response_api as $registration_user => $response) {
 											if (is_array($response['command'])) {
 												foreach($response['command'] as $command) {

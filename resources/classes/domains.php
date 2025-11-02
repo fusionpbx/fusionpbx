@@ -411,7 +411,7 @@ class domains {
 						if (is_array($uuids) && @sizeof($uuids) != 0) {
 							$sql = "select * from v_".$this->table." ";
 							$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-							$rows = $this->database->select($sql, $parameters, 'all');
+							$rows = $this->database->select($sql, null, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								$x = 0;
 								foreach ($rows as $row) {

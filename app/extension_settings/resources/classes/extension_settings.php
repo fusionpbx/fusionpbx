@@ -68,6 +68,7 @@
 		private $toggle_values;
 		private $description_field;
 		private $location;
+		private $extension_uuid;
 
 		/**
 		 * called when the object is created
@@ -117,6 +118,20 @@
 									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 										$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+
+										if (empty($this->extension_uuid)) {
+											$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle, extension_uuid ";
+											$sql .= "from v_".$this->table." ";
+											$sql .= "where ".$this->name."_uuid in :uuid ";
+											$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+											$parameters['domain_uuid'] = $this->domain_uuid;
+											$parameters['uuid'] = $record['uuid'];
+											$rows = $this->database->select($sql, $parameters, 'all');
+											if (is_array($rows) && @sizeof($rows) != 0) {
+												$this->extension_uuid = $rows[0]['extension_uuid'];
+											}
+											unset($sql, $parameters);
+										}
 									}
 
 								//increment the id
@@ -130,13 +145,15 @@
 									unset($array);
 
 								//clear the cache
-									$sql = "select extension, number_alias, user_context from v_extensions ";
-									$sql .= "where extension_uuid = :extension_uuid ";
-									$parameters['extension_uuid'] = $this->extension_uuid;
-									$extension = $this->database->select($sql, $parameters, 'row');
-									$cache = new cache;
-									$cache->delete(gethostname().":directory:".$extension["extension"]."@".$extension["user_context"]);
-									$cache->delete(gethostname().":directory:".$extension["number_alias"]."@".$extension["user_context"]);
+									if (!empty($this->extension_uuid)) {
+										$sql = "select extension, number_alias, user_context from v_extensions ";
+										$sql .= "where extension_uuid = :extension_uuid ";
+										$parameters['extension_uuid'] = $this->extension_uuid;
+										$extension = $this->database->select($sql, $parameters, 'row');
+										$cache = new cache;
+										$cache->delete(gethostname().":directory:".$extension["extension"]."@".$extension["user_context"]);
+										$cache->delete(gethostname().":directory:".$extension["number_alias"]."@".$extension["user_context"]);
+									}
 
 								//set message
 									message::add($text['message-delete']);
@@ -179,7 +196,7 @@
 								$parameters['domain_uuid'] = $this->domain_uuid;
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
-									$extension_uuid = $rows[0]['extension_uuid'];
+									$this->extension_uuid = $rows[0]['extension_uuid'];
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
 									}
@@ -208,7 +225,7 @@
 								//clear the cache
 									$sql = "select extension, number_alias, user_context from v_extensions ";
 									$sql .= "where extension_uuid = :extension_uuid ";
-									$parameters['extension_uuid'] = $extension_uuid;
+									$parameters['extension_uuid'] = $this->extension_uuid;
 									$extension = $this->database->select($sql, $parameters, 'row');
 									$cache = new cache;
 									$cache->delete(gethostname().":directory:".$extension["extension"]."@".$extension["user_context"]);
@@ -259,8 +276,6 @@
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
-// 										var_dump($row); exit;
-
 										//convert boolean values to a string
 											foreach($row as $key => $value) {
 												if (gettype($value) == 'boolean') {
@@ -285,7 +300,6 @@
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
 								//save the array
-
 									$this->database->save($array);
 									unset($array);
 

@@ -335,6 +335,7 @@
 								$call_recording_time = $row['call_recording_time'];
 								$call_recording_date_formatted = $row['call_recording_date_formatted'];
 								$call_recording_time_formatted = $row['call_recording_time_formatted'];
+								$call_recording_base64 = $row['call_recording_base64'];
 								if (!empty($storage_type) && $storage_type == 'base64' && !empty($row['call_recording_base64'])) {
 									file_put_contents($call_recording_path.'/'.$call_recording_name, base64_decode($row['call_recording_base64']));
 								}
@@ -398,7 +399,7 @@
 						}
 
 					//if base64, remove temp recording file
-						if (!empty($storage_type) && $storage_type == 'base64' && !empty($row['call_recording_base64'])) {
+						if (!empty($storage_type) && $storage_type == 'base64' && !empty($call_recording_base64)) {
 							@unlink($full_recording_path);
 						}
 
@@ -446,7 +447,7 @@
 							$sql .= "TO_CHAR(timezone(:time_zone, call_recording_date), 'HH24MISS') AS call_recording_time, ";
 							$sql .= "TO_CHAR(timezone(:time_zone, call_recording_date), 'DD Mon YYYY') as call_recording_date_formatted, ";
 							$sql .= "TO_CHAR(timezone(:time_zone, call_recording_date), 'HH12:MI:SS am') as call_recording_time_formatted ";
-							if (!empty($storage_type) && $storage_type == 'base64' && $row['call_recording_base64'] != '') {
+							if (!empty($storage_type) && $storage_type == 'base64') {
 								$sql .= ", call_recording_base64 ";
 							}
 							$sql .= "from view_call_recordings ";

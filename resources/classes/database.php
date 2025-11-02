@@ -739,11 +739,11 @@ class database {
 	 * <p><b>Note:</b><br>
 	 * Table name must be sanitized. Otherwise, a warning will be
 	 * emitted and false will be returned.</p>
-	 * @param type $table_name Sanitized name of the table to search for.
+	 * @param string $table_name Sanitized name of the table to search for.
 	 * @return boolean Returns <i>true</i> if the table exists and <i>false</i> if it does not.
 	 * @depends connect()
 	 */
-	public function table_exists ($table_name) {
+	public function table_exists (string $table_name) {
 		if (self::sanitize($table_name) != $table_name) {
 			trigger_error('Table Name must be sanitized', E_USER_WARNING);
 			return false;
@@ -793,12 +793,12 @@ class database {
 	 * <p><b>Note:</b><br>
 	 * Tables and Column names must be sanitized. Otherwise, a warning will be
 	 * emitted and false will be returned.</p>
-	 * @param type $table_name Sanitized name of the table to search for.
-	 * @param type $column_name Sanitized name of the column to search for.
+	 * @param string $table_name Sanitized name of the table to search for.
+	 * @param string $column_name Sanitized name of the column to search for.
 	 * @return boolean Returns <i>true</i> if the column exists and <i>false</i> if it does not.
 	 * @depends connect()
 	 */
-	public function column_exists ($table_name, $column_name) {
+	public function column_exists (string $table_name, string $column_name) {
 		//sanitize the table name
 		if (self::sanitize($table_name) != $table_name) {
 			trigger_error('Table Name must be sanitized', E_USER_WARNING);
@@ -955,7 +955,7 @@ class database {
 				if (is_array($this->where)) {
 					foreach($this->where as $row) {
 						//sanitize the name
-						$array['name'] = self::sanitize($array['name']);
+						$row['name'] = self::sanitize($row['name']);
 
 						//validate the operator
 						switch ($row['operator']) {
@@ -1997,7 +1997,7 @@ class database {
 										foreach ($field_value as $sub_row) {
 
 											//build the delete array
-											if ($action == 'delete' && $sub_row['checked'] == 'true') {
+											if ($sub_row['checked'] == 'true') {
 												//delete the child data
 												$delete_array[$child_name][$y][$child_key_name] = $sub_row[$child_key_name];
 

@@ -52,6 +52,7 @@
 		public $template_dir;
 		public $device_address;
 		public $device_template;
+		public $file;
 
 		/**
 		 * Set in the constructor. Must be a database object and cannot be null.
@@ -555,33 +556,38 @@
 								//get a new primary key
 								$device_uuid = uuid();
 
-								//prepare the array
-								$x = 0;
-								$array['devices'][$x]['domain_uuid'] = $domain_uuid;
-								$array['devices'][$x]['device_uuid'] = $device_uuid;
-								$array['devices'][$x]['device_address'] = $device_address;
-								$array['devices'][$x]['device_vendor'] = $device_vendor;
-								$array['devices'][$x]['device_enabled'] = true;
-								$array['devices'][$x]['device_template'] = $device_template;
-								$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
+								//prepare the auto insert enabled
+								if (!empty($device_address)) {
+									$device_vendor = device::get_vendor($device_address);
 
-								//add the dialplan permission
-								$p = permissions::new();
-								$p->add("device_add", "temp");
-								$p->add("device_edit", "temp");
+									//prepare the array
+									$x = 0;
+									$array['devices'][$x]['domain_uuid'] = $domain_uuid;
+									$array['devices'][$x]['device_uuid'] = $device_uuid;
+									$array['devices'][$x]['device_address'] = $device_address;
+									$array['devices'][$x]['device_vendor'] = $device_vendor;
+									$array['devices'][$x]['device_enabled'] = true;
+									$array['devices'][$x]['device_template'] = $device_template;
+									$array['devices'][$x]['device_description'] = $_SERVER['HTTP_USER_AGENT'];
 
-								//save to the data
-								$this->database->app_name = 'devices';
-								$this->database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-								if (!empty($device_uuid)) {
-									$this->database->uuid($device_uuid);
+									//add the dialplan permission
+									$p = permissions::new();
+									$p->add("device_add", "temp");
+									$p->add("device_edit", "temp");
+
+									//save to the data
+									$this->database->app_name = 'devices';
+									$this->database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+									if (!empty($device_uuid)) {
+										$this->database->uuid($device_uuid);
+									}
+									$this->database->save($array);
+									$message = $this->database->message;
+
+									//remove the temporary permission
+									$p->delete("device_add", "temp");
+									$p->delete("device_edit", "temp");
 								}
-								$this->database->save($array);
-								$message = $this->database->message;
-
-								//remove the temporary permission
-								$p->delete("device_add", "temp");
-								$p->delete("device_edit", "temp");
 							}
 					}
 				//}

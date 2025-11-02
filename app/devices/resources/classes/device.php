@@ -86,6 +86,7 @@
 		private $uuid_prefix;
 		private $toggle_field;
 		private $toggle_values;
+		private $tables;
 
 		/**
 		 * Create a settings object using key/value pairs in the $setting_array.

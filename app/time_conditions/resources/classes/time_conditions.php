@@ -78,6 +78,7 @@
 			private $uuid_prefix;
 			private $toggle_field;
 			private $toggle_values;
+			private $dialplan_global;
 
 			public function __construct(array $setting_array = []) {
 				//set domain and user UUIDs

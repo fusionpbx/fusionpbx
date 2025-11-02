@@ -38,6 +38,7 @@
 		 */
 
 		private $database;
+		private $database_group_permissions;
 
 		/**
 		 * called when the object is created

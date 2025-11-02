@@ -328,47 +328,49 @@
 				$this->name = 'dashboard_widget';
 				$this->table = 'dashboard_widgets';
 
-			if (permission_exists($this->name.'_delete')) {
+			//permission not found return false
+				if (!permission_exists($this->name.'_delete')) {
+					return false;
+				}
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
-						message::add($this->text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
-					}
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//validate the token
+				$token = new token;
+				if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: '.$this->location);
+					exit;
+				}
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-						//build the delete array
-							$x = 0;
-							foreach ($records as $record) {
-								//add to the array
-									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
-										$array[$this->table][$x]['dashboard_widget_uuid'] = $record['dashboard_widget_uuid'];
-										$array[$this->name.'_groups'][$x]['dashboard_widget_uuid'] = $record['dashboard_widget_uuid'];
-									}
+			//delete multiple records
+				if (is_array($records) && @sizeof($records) != 0) {
+					//build the delete array
+						$x = 0;
+						foreach ($records as $record) {
+							//add to the array
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
+									$array[$this->table][$x]['dashboard_widget_uuid'] = $record['dashboard_widget_uuid'];
+									$array[$this->name.'_groups'][$x]['dashboard_widget_uuid'] = $record['dashboard_widget_uuid'];
+								}
 
-								//increment the id
-									$x++;
-							}
+							//increment the id
+								$x++;
+						}
 
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
+					//delete the checked rows
+						if (is_array($array) && @sizeof($array) != 0) {
+							//execute delete
+								$this->database->delete($array);
+								unset($array);
 
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records);
-					}
-			}
+							//set message
+								message::add($text['message-delete']);
+						}
+						unset($records);
+				}
 		}
 
 		public function toggle_widgets($records) {
@@ -377,64 +379,66 @@
 				$this->table = 'dashboard_widgets';
 				$this->toggle_field = 'widget_enabled';
 
-			if (permission_exists($this->name.'_edit')) {
+			//permission not found return false
+				if (!permission_exists($this->name.'_edit')) {
+					return false;
+				}
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
-						message::add($this->text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
-					}
+			//validate the token
+				$token = new token;
+				if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: '.$this->location);
+					exit;
+				}
 
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-						//get current toggle state
-							foreach($records as $record) {
-								if (isset($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
-									$uuids[] = "'".$record['dashboard_widget_uuid']."'";
+			//toggle the checked records
+				if (is_array($records) && @sizeof($records) != 0) {
+					//get current toggle state
+						foreach($records as $record) {
+							if (isset($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
+								$uuids[] = "'".$record['dashboard_widget_uuid']."'";
+							}
+						}
+						if (is_array($uuids) && @sizeof($uuids) != 0) {
+							$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
+							$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
+							$rows = $this->database->select($sql, $parameters ?? null, 'all');
+							if (is_array($rows) && @sizeof($rows) != 0) {
+								foreach ($rows as $row) {
+									$states[$row['uuid']] = $row['toggle'];
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters ?? null, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
+							unset($sql, $parameters, $rows, $row);
+						}
 
-						//build update array
-							$x = 0;
-							foreach($states as $uuid => $state) {
-								//create the array
-									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
-									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					//build update array
+						$x = 0;
+						foreach($states as $uuid => $state) {
+							//create the array
+								$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
+								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
-								//increment the id
-									$x++;
-							}
+							//increment the id
+								$x++;
+						}
 
-						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
-								//save the array
+					//save the changes
+						if (is_array($array) && @sizeof($array) != 0) {
+							//save the array
 
-									$this->database->save($array);
-									unset($array);
+								$this->database->save($array);
+								unset($array);
 
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
-					}
-			}
+							//set message
+								message::add($text['message-toggle']);
+						}
+						unset($records, $states);
+				}
 		}
 
 		public function assign_widgets($records, $dashboard_uuid, $group_uuid) {
@@ -442,76 +446,78 @@
 				$this->name = 'dashboard_widget';
 				$this->table = 'dashboard_widgets';
 
-			if (permission_exists($this->name.'_add')) {
+			//permission not found return false
+				if (!permission_exists($this->name.'_add')) {
+					return false;
+				}
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
-					}
+			//validate the token
+				$token = new token;
+				if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: '.$this->location);
+					exit;
+				}
 
-					//assign multiple records
-					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
+			//assign multiple records
+				if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
 
-						//define the group_name and group_uuid
-							if (!empty($records) && @sizeof($records) != 0) {
-								$sql = "select group_name, group_uuid from v_groups	";
-								$sql .= "where group_uuid = :group_uuid	";
-								$parameters['group_uuid'] = $group_uuid;
-								$group = $this->database->select($sql, $parameters, 'row');
-							}
-
-						//build the delete array
-							$x = 0;
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
-									//build array
-										$uuids[] = "'".$record['dashboard_widget_uuid']."'";
-									//assign dashboard widget groups
-										$array[$this->name.'_groups'][$x][$this->name.'_group_uuid'] = uuid();
-										$array[$this->name.'_groups'][$x]['dashboard_uuid'] = $dashboard_uuid;
-										$array[$this->name.'_groups'][$x][$this->name.'_uuid'] = $record['dashboard_widget_uuid'];
-										$array[$this->name.'_groups'][$x]['group_uuid'] = $group['group_uuid'];
-									//increment
-										$x++;
-								}
-							}
-
-							unset($records);
-
-						//exlude exist rows
-						if (!empty($array) && @sizeof($array) != 0) {
-							$sql = "select dashboard_uuid, ".$this->name."_uuid, ";
-							$sql .= "group_uuid from v_".$this->name."_groups ";
-							$dashboard_widget_groups = $this->database->select($sql, null, 'all');
-							$array[$this->name.'_groups'] = array_filter($array[$this->name.'_groups'], function($ar) use ($dashboard_widget_groups) {
-								foreach ($dashboard_widget_groups as $existing_array_item) {
-									if ($ar['dashboard_uuid'] == $existing_array_item['dashboard_uuid'] && $ar[$this->name.'_uuid'] == $existing_array_item[$this->name.'_uuid'] && $ar['group_uuid'] == $existing_array_item['group_uuid']) {
-										return false;
-									}
-								}
-								return true;
-							});
-							unset($dashboard_widget_groups);
+					//define the group_name and group_uuid
+						if (!empty($records) && @sizeof($records) != 0) {
+							$sql = "select group_name, group_uuid from v_groups	";
+							$sql .= "where group_uuid = :group_uuid	";
+							$parameters['group_uuid'] = $group_uuid;
+							$group = $this->database->select($sql, $parameters, 'row');
 						}
 
-						//add the checked rows from group
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								//execute save
-
-									$this->database->save($array);
-									unset($array);
-								//set message
-									message::add($text['message-add']);
+					//build the delete array
+						$x = 0;
+						foreach ($records as $record) {
+							if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
+								//build array
+									$uuids[] = "'".$record['dashboard_widget_uuid']."'";
+								//assign dashboard widget groups
+									$array[$this->name.'_groups'][$x][$this->name.'_group_uuid'] = uuid();
+									$array[$this->name.'_groups'][$x]['dashboard_uuid'] = $dashboard_uuid;
+									$array[$this->name.'_groups'][$x][$this->name.'_uuid'] = $record['dashboard_widget_uuid'];
+									$array[$this->name.'_groups'][$x]['group_uuid'] = $group['group_uuid'];
+								//increment
+									$x++;
 							}
+						}
+
+						unset($records);
+
+					//exlude exist rows
+					if (!empty($array) && @sizeof($array) != 0) {
+						$sql = "select dashboard_uuid, ".$this->name."_uuid, ";
+						$sql .= "group_uuid from v_".$this->name."_groups ";
+						$dashboard_widget_groups = $this->database->select($sql, null, 'all');
+						$array[$this->name.'_groups'] = array_filter($array[$this->name.'_groups'], function($ar) use ($dashboard_widget_groups) {
+							foreach ($dashboard_widget_groups as $existing_array_item) {
+								if ($ar['dashboard_uuid'] == $existing_array_item['dashboard_uuid'] && $ar[$this->name.'_uuid'] == $existing_array_item[$this->name.'_uuid'] && $ar['group_uuid'] == $existing_array_item['group_uuid']) {
+									return false;
+								}
+							}
+							return true;
+						});
+						unset($dashboard_widget_groups);
 					}
-			}
+
+					//add the checked rows from group
+						if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+							//execute save
+								$this->database->save($array);
+								unset($array);
+
+							//set message
+								message::add($text['message-add']);
+						}
+				}
 		}
 
 		public function unassign_widgets($records, $dashboard_uuid, $group_uuid) {
@@ -519,85 +525,87 @@
 				$this->name = 'dashboard_widget';
 				$this->table = 'dashboard_widgets';
 
-			if (permission_exists($this->name.'_add')) {
+			//permission not found return now
+				if (!permission_exists($this->name.'_add')) {
+					return false;
+				}
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
-					}
+			//validate the token
+				$token = new token;
+				if (!$token->validate('/core/dashboard/dashboard_widget_list.php')) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: '.$this->location);
+					exit;
+				}
 
-					//assign multiple records
-					if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
+			//assign multiple records
+				if (is_array($records) && @sizeof($records) != 0 && !empty($group_uuid)) {
 
-						//define the group_name and group_uuid
-							if (!empty($records) && @sizeof($records) != 0) {
-								$sql = "select group_name, group_uuid from v_groups	";
-								$sql .= "where group_uuid = :group_uuid	";
-								$parameters['group_uuid'] = $group_uuid;
-								$group = $this->database->select($sql, $parameters, 'row');
+					//define the group_name and group_uuid
+						if (!empty($records) && @sizeof($records) != 0) {
+							$sql = "select group_name, group_uuid from v_groups	";
+							$sql .= "where group_uuid = :group_uuid	";
+							$parameters['group_uuid'] = $group_uuid;
+							$group = $this->database->select($sql, $parameters, 'row');
+						}
+
+					//build the delete array
+						$x = 0;
+						foreach ($records as $record) {
+							if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
+								//build array
+									$uuids[] = "'".$record['dashboard_widget_uuid']."'";
+								//assign dashboard widget groups
+										$array[$this->name.'_groups'][$x]['dashboard_uuid'] = $dashboard_uuid;
+										$array[$this->name.'_groups'][$x][$this->name.'_uuid'] = $record['dashboard_widget_uuid'];
+										$array[$this->name.'_groups'][$x]['group_uuid'] = $group['group_uuid'];
+								//increment
+										$x++;
 							}
+						}
 
-						//build the delete array
-							$x = 0;
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['dashboard_widget_uuid'])) {
-									//build array
-										$uuids[] = "'".$record['dashboard_widget_uuid']."'";
+						unset($records);
+
+					//include child dashboard widgets and their dasboard_uuid too
+						if (!empty($uuids) && @sizeof($uuids) != 0) {
+							$sql = "select dashboard_uuid, ".$this->name."_uuid from v_".$this->table." ";
+							$sql .= "where ".$this->name."_parent_uuid in (".implode(', ', $uuids).") ";
+							$rows = $this->database->select($sql, null, 'all');
+							if (!empty($rows) && @sizeof($rows) != 0) {
+								foreach ($rows as $row) {
 									//assign dashboard widget groups
-											$array[$this->name.'_groups'][$x]['dashboard_uuid'] = $dashboard_uuid;
-											$array[$this->name.'_groups'][$x][$this->name.'_uuid'] = $record['dashboard_widget_uuid'];
-											$array[$this->name.'_groups'][$x]['group_uuid'] = $group['group_uuid'];
+										$array[$this->name.'_groups'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
+										$array[$this->name.'_groups'][$x][$this->name.'_uuid'] = $row['dashboard_widget_uuid'];
+										$array[$this->name.'_groups'][$x]['group_uuid'] = $group['group_uuid'];
 									//increment
-											$x++;
+										$x++;
 								}
 							}
+						}
 
-							unset($records);
+						unset($uuids);
 
-						//include child dashboard widgets and their dasboard_uuid too
-							if (!empty($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select dashboard_uuid, ".$this->name."_uuid from v_".$this->table." ";
-								$sql .= "where ".$this->name."_parent_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, null, 'all');
-								if (!empty($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										//assign dashboard widget groups
-											$array[$this->name.'_groups'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
-											$array[$this->name.'_groups'][$x][$this->name.'_uuid'] = $row['dashboard_widget_uuid'];
-											$array[$this->name.'_groups'][$x]['group_uuid'] = $group['group_uuid'];
-										//increment
-											$x++;
-									}
-								}
-							}
+					//add the checked rows from group
+						if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+						//grant temporary permissions
+							$p = new permissions;
+							$p->add('dashboard_widget_group_delete', 'temp');
 
-							unset($uuids);
+						//execute delete
+							$this->database->delete($array);
+							unset($array);
 
-						//add the checked rows from group
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-							//grant temporary permissions
-								$p = new permissions;
-								$p->add('dashboard_widget_group_delete', 'temp');
+						//revoke temporary permissions
+							$p->delete('dashboard_widget_group_delete', 'temp');
 
-							//execute delete
-								$this->database->delete($array);
-								unset($array);
-
-							//revoke temporary permissions
-								$p->delete('dashboard_widget_group_delete', 'temp');
-
-							//set message
-								message::add($text['message-delete']);
-							}
-					}
-			}
+						//set message
+							message::add($text['message-delete']);
+						}
+				}
 		}
 
 	}

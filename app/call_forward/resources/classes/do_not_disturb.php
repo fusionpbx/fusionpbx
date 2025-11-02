@@ -51,6 +51,7 @@
 		public $debug;
 		public $extension_uuid;
 		public $extension;
+		public $number_alias;
 		public $enabled;
 
 		/**
@@ -110,7 +111,7 @@
 						$user_status = "Logged Out";
 						$esl = event_socket::create();
 						if ($esl->is_connected()) {
-							$switch_cmd .= "callcenter_config agent set status ".$this->username."@".$this->domain_name." '".$user_status."'";
+							$switch_cmd = "callcenter_config agent set status ".$this->username."@".$this->domain_name." '".$user_status."'";
 							$esl->request('api '.$switch_cmd);
 						}
 

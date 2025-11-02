@@ -57,6 +57,7 @@
 		private $permission_prefix;
 		private $list_page;
 		private $tables;
+		private $table;
 		private $uuid_prefix;
 
 		/**
