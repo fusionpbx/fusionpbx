@@ -119,7 +119,7 @@
 						if ($previous_name != $row['music_on_hold_name']) {
 							$name = '';
 							if (!empty($row['domain_uuid'])) {
-								$name = $row['domain_name'].'/';	
+								$name = $row['domain_name'].'/';
 							}
 							$name .= $row['music_on_hold_name'];
 							$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
@@ -170,21 +170,16 @@
 		}
 
 		public function get() {
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get(null, 'app/music_on_hold');
-
 			//get moh records, build array
-				$sql = "select ";
-				$sql .= "d.domain_name, ";
-				$sql .= "m.* ";
-				$sql .= "from v_music_on_hold as m ";
-				$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
-				$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
-				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
-				$parameters['domain_uuid'] = $this->domain_uuid;
-				return $this->database->select($sql, $parameters, 'all');
-				unset($sql, $parameters);
+			$sql = "select ";
+			$sql .= "d.domain_name, ";
+			$sql .= "m.* ";
+			$sql .= "from v_music_on_hold as m ";
+			$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
+			$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
+			$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			return $this->database->select($sql, $parameters, 'all');
 		}
 
 		public function reload() {
