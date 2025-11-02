@@ -36,7 +36,7 @@
 		public $data_types;
 
 		//class constructor
-		public function __construct($setting_array) {
+		public function __construct($setting_array = []) {
 
 			//includes files
 			require dirname(__DIR__, 2) . "/resources/require.php";
@@ -879,8 +879,8 @@
 	}
 
 //example use
-//$obj = new schema;
-//$obj->db_type = $db_type;
-//$obj->schema();
+//$schema = new schema();
+//$schema->db_type = $db_type;
+//$schema->schema();
 //$result_array = $schema->obj['sql'];
 //print_r($result_array);

@@ -316,7 +316,6 @@ function do_upgrade_code_submodules() {
  */
 function do_upgrade_domains() {
 	$domain = new domains;
-	$domain->display_type = 'text';
 	$domain->upgrade();
 }
 
@@ -325,7 +324,7 @@ function do_upgrade_domains() {
  */
 function do_upgrade_schema(bool $data_types = false) {
 	//get the database schema put it into an array then compare and update the database as needed.
-	$obj = new schema;
+	$obj = new schema();
 	$obj->data_types = $data_types;
 	echo $obj->schema('text');
 }

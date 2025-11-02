@@ -172,6 +172,9 @@
 		}
 	}
 
+//initiliaze the schema object
+	$schema = new schema(['database' => $database]);
+
 //use upgrade language file
 	$language = new text;
 	$text = $language->get(null, 'core/upgrade');
@@ -230,11 +233,10 @@
 		}
 
 		//get the database schema put it into an array then compare and update the database as needed.
-		$obj = new schema;
 		if (isset($argv[2]) && $argv[2] == 'data_types') {
-			$obj->data_types = true;
+			$schema->data_types = true;
 		}
-		$response = $obj->schema($format ?? '');
+		$response = $schema->schema($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
 				echo "        ".trim($row)."\n";
@@ -250,9 +252,8 @@
 		}
 
 		//get the database schema put it into an array then compare and update the database as needed.
-		$obj = new schema;
-		$obj->data_types = true;
-		$response = $obj->schema($format ?? '');
+		$schema->data_types = true;
+		$response = $schema->schema($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
 				echo "        ".trim($row)."\n";
@@ -323,7 +324,6 @@
 
 		// upgrade application defaults
 		$domain = new domains;
-		$domain->display_type = $display_type;
 		$domain->upgrade();
 	}
 
@@ -439,8 +439,7 @@
 			}
 
 		//Update the table and field structure.
-			$obj = new schema;
-			$response = $obj->schema("text");
+			$response = $schema->schema("text");
 			if ($display_type === 'text') {
 				foreach(explode("\n", $response) as $row) {
 					echo "        ".trim($row)."\n";
