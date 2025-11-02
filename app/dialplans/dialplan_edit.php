@@ -36,11 +36,7 @@
 		|| !permission_exists('inbound_route_add')
 		|| !permission_exists('inbound_route_edit')
 		|| !permission_exists('outbound_route_add')
-		|| !permission_exists('outbound_route_edit')
-		|| !permission_exists('fifo_add')
-		|| !permission_exists('fifo_edit')
-		|| !permission_exists('time_condition_add')
-		|| !permission_exists('time_condition_edit')) {
+		|| !permission_exists('outbound_route_edit')) {
 		echo "access denied";
 		exit;
 	}
