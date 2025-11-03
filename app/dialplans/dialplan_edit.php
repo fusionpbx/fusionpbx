@@ -688,7 +688,6 @@
 		if (strlen($i) == 3) {
 			echo "			<option value='$i' ".$selected.">$i</option>\n";
 		}
-		$i++;
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
