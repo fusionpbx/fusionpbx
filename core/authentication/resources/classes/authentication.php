@@ -89,11 +89,6 @@ class authentication {
 		//create a settings object to pass to plugins
 			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
 
-		//start the session if its not started
-			if (session_status() === PHP_SESSION_NONE) {
-				session_start();
-			}
-
 		//set the default authentication method to the database
 			if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods'])) {
 				$_SESSION['authentication']['methods'][] = 'database';
