@@ -89,7 +89,7 @@
 	$database = database::new(['config' => $config]);
 
 //security headers
-	if (!defined('STDIN')) {
+	if (!defined('STDIN') && session_status() === PHP_SESSION_NONE) {
 		header("X-Frame-Options: SAMEORIGIN");
 		header("Content-Security-Policy: frame-ancestors 'self';");
 		header("X-Content-Type-Options: nosniff");
@@ -99,7 +99,7 @@
 
 //start the session if not using the command line
 	global $no_session;
-	if (!defined('STDIN') && empty($no_session)) {
+	if (!defined('STDIN') && empty($no_session) && session_status() === PHP_SESSION_NONE) {
 		ini_set('session.cookie_httponly', !isset($conf['session.cookie_httponly']) ? 'true' : (!empty($config->get('session.cookie_httponly')) ? 'true' : 'false'));
 		ini_set('session.cookie_secure', !isset($conf['session.cookie_secure']) ? 'true' : (!empty($config->get('session.cookie_secure')) ? 'true' : 'false'));
 		ini_set('session.cookie_samesite', $config->get('session.cookie_samesite', 'Lax'));
