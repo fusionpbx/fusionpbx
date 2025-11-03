@@ -63,7 +63,7 @@ class authentication {
 		$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
 
 		//set the settings object
-		$this->settings = $setting_array['settings'];
+		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database]);
 
 		//intialize the object
 		$this->user_uuid = null;
