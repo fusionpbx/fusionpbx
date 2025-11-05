@@ -39,13 +39,11 @@
 	$action = 'edit';
 
 //retrieve password requirements
-	if (permission_exists('user_password')) {
-		$required['length'] = $settings->get('users', 'password_length', 12);
-		$required['number'] = $settings->get('users', 'password_number', false);
-		$required['lowercase'] = $settings->get('users', 'password_lowercase', false);
-		$required['uppercase'] = $settings->get('users', 'password_uppercase', false);
-		$required['special'] = $settings->get('users', 'password_special', false);
-	}
+	$required['length'] = $settings->get('users', 'password_length', 12);
+	$required['number'] = $settings->get('users', 'password_number', false);
+	$required['lowercase'] = $settings->get('users', 'password_lowercase', false);
+	$required['uppercase'] = $settings->get('users', 'password_uppercase', false);
+	$required['special'] = $settings->get('users', 'password_special', false);
 
 //process the http post
 	if (!empty($_POST)) {
@@ -69,6 +67,7 @@
 			$contact_attachment_uuid = $_POST['contact_attachment_uuid'];
 			$contact_attachment = $_FILES['contact_attachment'];
 
+		//get the totp secret
 			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
@@ -107,12 +106,9 @@
 			}
 
 			//require passwords not allowed to be empty
-			if (permission_exists('user_password') && permission_exists('user_add') && $action == 'add') {
+			if ($action == 'add') {
 				if (empty($password)) {
 					message::add($text['message-password_blank'], 'negative', 7500);
-				}
-				if (empty($group_uuid_name)) {
-					$invalid[] = $text['label-group'];
 				}
 			}
 
@@ -122,7 +118,7 @@
 			}
 
 			//require passwords with the defined required attributes: length, number, lower case, upper case, and special characters
-			if (permission_exists('user_password') && !empty($password)) {
+			if (!empty($password)) {
 				if (!empty($required['length']) && is_numeric($required['length']) && $required['length'] != 0) {
 					if (strlen($password) < $required['length']) {
 						$invalid[] = $text['label-characters'];
@@ -150,8 +146,11 @@
 				}
 			}
 
+		//set the contact_uuid
+			$contact_uuid = $_SESSION['user']['contact_uuid'] ?? uuid();
+
 		//save contact
-			$array['contacts'][$c]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+			$array['contacts'][$c]['contact_uuid'] = $contact_uuid;
 			$array['contacts'][$c]['domain_uuid'] = $domain_uuid;
 			$array['contacts'][$c]['contact_type'] = 'user';
 			$array['contacts'][$c]['contact_name_given'] = $contact_name_given ?? null;
@@ -161,7 +160,7 @@
 
 		//save email
 			$array['contact_emails'][$n]['contact_email_uuid'] = is_uuid($contact_email_uuid) ? $contact_email_uuid : uuid();
-			$array['contact_emails'][$n]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+			$array['contact_emails'][$n]['contact_uuid'] = $contact_uuid;
 			$array['contact_emails'][$n]['domain_uuid'] = $domain_uuid;
 			$array['contact_emails'][$n]['email_address'] = $user_email;
 			$array['contact_emails'][$n]['email_primary'] = 'true';
@@ -170,7 +169,7 @@
 		//save phone
 			if (!empty($phone_number)) {
 				$array['contact_phones'][$y]['contact_phone_uuid'] = is_uuid($contact_phone_uuid) ? $contact_phone_uuid : uuid();
-				$array['contact_phones'][$y]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+				$array['contact_phones'][$y]['contact_uuid'] = $contact_uuid;
 				$array['contact_phones'][$y]['domain_uuid'] = $domain_uuid;
 				$array['contact_phones'][$y]['phone_number'] = $phone_number;
 				$array['contact_phones'][$y]['phone_primary'] = 'true';
@@ -180,7 +179,7 @@
 		//save address
 			if (!empty($address_locality) || !empty($address_region) || !empty($address_country)) {
 				$array['contact_addresses'][$y]['contact_address_uuid'] = is_uuid($contact_address_uuid) ? $contact_address_uuid : uuid();
-				$array['contact_addresses'][$y]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+				$array['contact_addresses'][$y]['contact_uuid'] = $contact_uuid;
 				$array['contact_addresses'][$y]['domain_uuid'] = $domain_uuid;
 				$array['contact_addresses'][$y]['address_locality'] = $address_locality ?? null;
 				$array['contact_addresses'][$y]['address_region'] = $address_region ?? null;
@@ -194,7 +193,7 @@
 				$p = permissions::new();
 				$p->add('contact_attachment_delete', 'temp');
 
-				$array_delete['contact_attachments'][0]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+				$array_delete['contact_attachments'][0]['contact_uuid'] = $contact_uuid;
 				$array_delete['contact_attachments'][0]['domain_uuid'] = $domain_uuid;
 				$array_delete['contact_attachments'][0]['contact_attachment_uuid'] = $contact_attachment_uuid;
 				$database->delete($array_delete);
@@ -212,7 +211,7 @@
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and contact_uuid = :contact_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
-					$parameters['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+					$parameters['contact_uuid'] = $contact_uuid;
 					$database->execute($sql, $parameters);
 					unset($sql, $parameters);
 
@@ -257,7 +256,7 @@
 					//prepare the array
 					$array['contact_attachments'][0]['contact_attachment_uuid'] = is_uuid($contact_attachment_uuid) ? $contact_attachment_uuid : uuid();
 					$array['contact_attachments'][0]['domain_uuid'] = $domain_uuid;
-					$array['contact_attachments'][0]['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+					$array['contact_attachments'][0]['contact_uuid'] = $contact_uuid;
 					$array['contact_attachments'][0]['attachment_primary'] = 'true';
 					$array['contact_attachments'][0]['attachment_filename'] = $contact_attachment['name'];
 					$array['contact_attachments'][0]['attachment_content'] = base64_encode($contact_attachment_content);
@@ -387,7 +386,7 @@
 		//add user setting to array for update
 			$array['users'][$x]['user_uuid'] = $user_uuid;
 
-			if (permission_exists('user_password') && !empty($password) && $password == $password_confirm) {
+			if (!empty($password) && $password == $password_confirm) {
 				//remove the session id files
 				$sql = "select session_id from v_user_logs ";
 				$sql .= "where user_uuid = :user_uuid ";
@@ -407,23 +406,31 @@
 			}
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
-			if (permission_exists('user_add') || permission_exists('user_edit')) {
-				if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
-					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
-				}
-				if ($action == 'add') {
-					$array['users'][$x]['add_user'] = $_SESSION["user"]["username"];
-					$array['users'][$x]['add_date'] = date("Y-m-d H:i:s.uO");
-				}
+			$array['users'][$x]['contact_uuid'] = $contact_uuid;
+			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+				$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
+			}
+			if ($action == 'add') {
+				$array['users'][$x]['add_user'] = $_SESSION["user"]["username"];
+				$array['users'][$x]['add_date'] = date("Y-m-d H:i:s.uO");
 			}
 			$x++;
 
+
 		//add the user_edit permission
 			$p = permissions::new();
+
+			$p->add("user_edit", "temp");
 			$p->add("user_setting_add", "temp");
 			$p->add("user_setting_edit", "temp");
-			$p->add("user_edit", "temp");
-			$p->add('user_group_add', 'temp');
+			$p->add('contact_add', 'temp');
+			$p->add('contact_edit', 'temp');
+			$p->add('contact_email_add', 'temp');
+			$p->add('contact_email_edit', 'temp');
+			$p->add('contact_phone_add', 'temp');
+			$p->add('contact_phone_edit', 'temp');
+			$p->add('contact_address_add', 'temp');
+			$p->add('contact_address_edit', 'temp');
 			$p->add("contact_attachment_add", "temp");
 			$p->add("contact_attachment_edit", "temp");
 			$p->add("contact_attachment_delete", "temp");
@@ -433,10 +440,17 @@
 			//$message = $database->message;
 
 		//remove the temporary permission
+			$p->delete("user_edit", "temp");
 			$p->delete("user_setting_add", "temp");
 			$p->delete("user_setting_edit", "temp");
-			$p->delete("user_edit", "temp");
-			$p->delete('user_group_add', 'temp');
+			$p->delete("contact_add", "temp");
+			$p->delete("contact_edit", "temp");
+			$p->delete("contact_email_add", "temp");
+			$p->delete("contact_email_edit", "temp");
+			$p->delete("contact_phone_add", "temp");
+			$p->delete("contact_phone_edit", "temp");
+			$p->delete("contact_address_add", "temp");
+			$p->delete("contact_address_edit", "temp");
 			$p->delete("contact_attachment_add", "temp");
 			$p->delete("contact_attachment_edit", "temp");
 			$p->delete("contact_attachment_delete", "temp");
@@ -449,7 +463,7 @@
 			settings::clear_cache();
 
 		//if call center installed
-			if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
+			if ($action == 'edit' && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
 				//get the call center agent uuid
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";
@@ -594,37 +608,35 @@
 	$document['title'] = $text['title-user_profile'];
 
 //show the content
-	if (permission_exists('user_password')) {
-		echo "<script>\n";
-		echo "	function compare_passwords() {\n";
-		echo "		if (document.getElementById('password') === document.activeElement || document.getElementById('password_confirm') === document.activeElement) {\n";
-		echo "			if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
-		echo "				if ($('#password').val() != $('#password_confirm').val()) {\n";
-		echo "					$('#password').removeClass('formfld_highlight_good');\n";
-		echo "					$('#password_confirm').removeClass('formfld_highlight_good');\n";
-		echo "					$('#password').addClass('formfld_highlight_bad');\n";
-		echo "					$('#password_confirm').addClass('formfld_highlight_bad');\n";
-		echo "				}\n";
-		echo "				else {\n";
-		echo "					$('#password').removeClass('formfld_highlight_bad');\n";
-		echo "					$('#password_confirm').removeClass('formfld_highlight_bad');\n";
-		echo "					$('#password').addClass('formfld_highlight_good');\n";
-		echo "					$('#password_confirm').addClass('formfld_highlight_good');\n";
-		echo "				}\n";
-		echo "			}\n";
-		echo "		}\n";
-		echo "		else {\n";
-		echo "			$('#password').removeClass('formfld_highlight_bad');\n";
-		echo "			$('#password_confirm').removeClass('formfld_highlight_bad');\n";
-		echo "			$('#password').removeClass('formfld_highlight_good');\n";
-		echo "			$('#password_confirm').removeClass('formfld_highlight_good');\n";
-		echo "		}\n";
-		echo "	}\n";
-		echo "	function show_strength_meter() {\n";
-		echo "		$('#pwstrength_progress').slideDown();\n";
-		echo "	}\n";
-		echo "</script>\n";
-	}
+	echo "<script>\n";
+	echo "	function compare_passwords() {\n";
+	echo "		if (document.getElementById('password') === document.activeElement || document.getElementById('password_confirm') === document.activeElement) {\n";
+	echo "			if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
+	echo "				if ($('#password').val() != $('#password_confirm').val()) {\n";
+	echo "					$('#password').removeClass('formfld_highlight_good');\n";
+	echo "					$('#password_confirm').removeClass('formfld_highlight_good');\n";
+	echo "					$('#password').addClass('formfld_highlight_bad');\n";
+	echo "					$('#password_confirm').addClass('formfld_highlight_bad');\n";
+	echo "				}\n";
+	echo "				else {\n";
+	echo "					$('#password').removeClass('formfld_highlight_bad');\n";
+	echo "					$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+	echo "					$('#password').addClass('formfld_highlight_good');\n";
+	echo "					$('#password_confirm').addClass('formfld_highlight_good');\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('#password').removeClass('formfld_highlight_bad');\n";
+	echo "			$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+	echo "			$('#password').removeClass('formfld_highlight_good');\n";
+	echo "			$('#password_confirm').removeClass('formfld_highlight_good');\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "	function show_strength_meter() {\n";
+	echo "		$('#pwstrength_progress').slideDown();\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 	echo "<form name='frm' id='frm' method='post' enctype='multipart/form-data'>\n";
 	echo "<input type='hidden' name='contact_email_uuid' value='".$contact_email_uuid."'>\n";
@@ -639,10 +651,8 @@
 	}
 
 	$button_margin = 'margin-left: 15px;';
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
 
-	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
-	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -660,51 +670,50 @@
 	echo "		</td>";
 	echo "	</tr>";
 
-	if (permission_exists('user_password')) {
-		echo "	<tr>";
-		echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-password']."</td>";
-		echo "		<td class='vtable'>";
-		echo "			<input type='password' style='display: none;' disabled='disabled'>"; //help defeat browser auto-fill
-		echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value=\"".escape($password ?? null)."\" ".($action == 'add' ? "required='required'" : null)." onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
-		echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div><br />\n";
-		if ((!empty($required['length']) && is_numeric($required['length']) && $required['length'] != 0) || $required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
-			echo $text['label-required'].': ';
-			if (is_numeric($required['length']) && $required['length'] != 0) {
-				echo $required['length']." ".$text['label-characters'];
-				if ($required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
-					echo " (";
-				}
+
+	echo "	<tr>";
+	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-password']."</td>";
+	echo "		<td class='vtable'>";
+	echo "			<input type='password' style='display: none;' disabled='disabled'>"; //help defeat browser auto-fill
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password' id='password' value=\"".escape($password ?? null)."\" ".($action == 'add' ? "required='required'" : null)." onkeypress='show_strength_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div><br />\n";
+	if ((!empty($required['length']) && is_numeric($required['length']) && $required['length'] != 0) || $required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
+		echo $text['label-required'].': ';
+		if (is_numeric($required['length']) && $required['length'] != 0) {
+			echo $required['length']." ".$text['label-characters'];
+			if ($required['number'] || $required['lowercase'] || $required['uppercase'] || $required['special']) {
+				echo " (";
 			}
-			if ($required['number']) {
-				$required_temp[] = $text['label-number'];
-			}
-			if ($required['lowercase']) {
-				$required_temp[] = $text['label-lowercase'];
-			}
-			if ($required['uppercase']) {
-				$required_temp[] = $text['label-uppercase'];
-			}
-			if ($required['special']) {
-				$required_temp[] = $text['label-special'];
-			}
-			if (!empty($required_temp)) {
-				echo implode(', ',$required_temp);
-				if (is_numeric($required['length']) && $required['length'] != 0) {
-					echo ")";
-				}
-			}
-			unset($required_temp);
 		}
-		echo "		</td>";
-		echo "	</tr>";
-		echo "	<tr>";
-		echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-confirm_password']."</td>";
-		echo "		<td class='vtable'>";
-		echo "			<input type='password' autocomplete='new-password' class='formfld' name='password_confirm' id='password_confirm' value=\"".escape($password_confirm ?? null)."\" ".($action == 'add' ? "required='required'" : null)." onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
-		echo "			".$text['message-green_border_passwords_match']."\n";
-		echo "		</td>";
-		echo "	</tr>";
+		if ($required['number']) {
+			$required_temp[] = $text['label-number'];
+		}
+		if ($required['lowercase']) {
+			$required_temp[] = $text['label-lowercase'];
+		}
+		if ($required['uppercase']) {
+			$required_temp[] = $text['label-uppercase'];
+		}
+		if ($required['special']) {
+			$required_temp[] = $text['label-special'];
+		}
+		if (!empty($required_temp)) {
+			echo implode(', ',$required_temp);
+			if (is_numeric($required['length']) && $required['length'] != 0) {
+				echo ")";
+			}
+		}
+		unset($required_temp);
 	}
+	echo "		</td>";
+	echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td class='vncell".(($action == 'add') ? 'req' : null)."' valign='top'>".$text['label-confirm_password']."</td>";
+	echo "		<td class='vtable'>";
+	echo "			<input type='password' autocomplete='new-password' class='formfld' name='password_confirm' id='password_confirm' value=\"".escape($password_confirm ?? null)."\" ".($action == 'add' ? "required='required'" : null)." onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
+	echo "			".$text['message-green_border_passwords_match']."\n";
+	echo "		</td>";
+	echo "	</tr>";
 
 	//user time based one time password secret
 	if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
@@ -895,25 +904,23 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
-	if (permission_exists("user_status")) {
-		echo "	<tr>\n";
-		echo "	<td class=\"vncell\" valign='top'>\n";
-		echo "		".$text['label-status']."\n";
-		echo "	</td>\n";
-		echo "	<td class=\"vtable\">\n";
-		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
-		echo "			<option value=''></option>\n";
-		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
-		echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
-		echo "			<option value='Logged Out' ".(($user_status == "Logged Out") ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
-		echo "			<option value='On Break' ".(($user_status == "On Break") ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
-		echo "			<option value='Do Not Disturb' ".(($user_status == "Do Not Disturb") ? "selected='selected'" : null).">".$text['option-do_not_disturb']."</option>\n";
-		echo "		</select>\n";
-		echo "		<br />\n";
-		echo "		".$text['description-status']."<br />\n";
-		echo "	</td>\n";
-		echo "	</tr>\n";
-	}
+	echo "	<tr>\n";
+	echo "	<td class=\"vncell\" valign='top'>\n";
+	echo "		".$text['label-status']."\n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\">\n";
+	echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
+	echo "			<option value=''></option>\n";
+	echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
+	echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
+	echo "			<option value='Logged Out' ".(($user_status == "Logged Out") ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
+	echo "			<option value='On Break' ".(($user_status == "On Break") ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
+	echo "			<option value='Do Not Disturb' ".(($user_status == "Do Not Disturb") ? "selected='selected'" : null).">".$text['option-do_not_disturb']."</option>\n";
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-status']."<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
 
 	echo "	<tr>\n";
 	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-photo']."</td>\n";
