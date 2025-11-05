@@ -524,7 +524,7 @@
 			$sql .= "left join v_contact_attachments as ca2 on u.contact_uuid = ca2.contact_uuid and ca2.attachment_primary = true ";
 			$sql .= "where u.user_uuid = :user_uuid ";
 			if (!permission_exists('user_all')) {
-				$sql .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and u.domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
 			}
 			$parameters['user_uuid'] = $user_uuid;
@@ -552,11 +552,6 @@
 				$contact_attachment_uuid = $row["contact_attachment_uuid"];
 				$attachment_filename = $row["attachment_filename"];
 				$attachment_content = $row["attachment_content"];
-			}
-			else {
-				message::add($text['message-invalid_user'], 'negative', 7500);
-				header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
-				exit;
 			}
 			unset($sql, $parameters, $row);
 
