@@ -408,6 +408,9 @@
 					if (preg_replace('/^.*?(polycom).*$/i', '$1', $agent) == "polycom") {
 						return "polycom";
 					}
+					if (preg_replace('/^.*?(poly).*$/i', '$1', $agent) == "poly") {
+						return "poly";
+					}
 					if (preg_replace('/^.*?(yealink).*$/i', '$1', $agent) == "yealink") {
 						return "yealink";
 					}
