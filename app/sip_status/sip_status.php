@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('system_status_sofia_status') || !permission_exists('system_status_sofia_status_profile')) {
+	if (!(permission_exists('system_status_sofia_status') || permission_exists('system_status_sofia_status_profile'))) {
 		echo "access denied";
 		exit;
 	}

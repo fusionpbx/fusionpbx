@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('device_vendor_add') || !permission_exists('device_vendor_edit')) {
+	if (!(permission_exists('device_vendor_add') || permission_exists('device_vendor_edit'))) {
 		echo "access denied";
 		exit;
 	}

@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('call_center_agent_add') || !permission_exists('call_center_agent_edit')) {
+	if (!(permission_exists('call_center_agent_add') || permission_exists('call_center_agent_edit'))) {
 		echo "access denied";
 		exit;
 	}

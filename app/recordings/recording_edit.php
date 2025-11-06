@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('recording_add') || !permission_exists('recording_edit')) {
+	if (!(permission_exists('recording_add') || permission_exists('recording_edit'))) {
 		echo "access denied";
 		exit;
 	}

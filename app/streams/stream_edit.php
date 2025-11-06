@@ -26,7 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('stream_add') || !permission_exists('stream_edit')) {
+	if (!(permission_exists('stream_add') || permission_exists('stream_edit'))) {
 		echo "access denied";
 		exit;
 	}

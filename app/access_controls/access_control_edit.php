@@ -58,7 +58,7 @@
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//check permissions
-			if (!permission_exists('access_control_add') || !permission_exists('access_control_edit')) {
+			if (!(permission_exists('access_control_add') || permission_exists('access_control_edit'))) {
 				echo "access denied";
 				exit;
 			}
