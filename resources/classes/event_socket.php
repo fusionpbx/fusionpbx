@@ -47,6 +47,12 @@ class buffer {
  * @depends buffer::class
  */
 class event_socket {
+	/**
+	 * Used as a flag to determine if the socket should be created automatically
+	 * @var bool
+	 */
+	protected $auto_create;
+
 	private $buffer;
 	public $fp;
 
@@ -58,6 +64,7 @@ class event_socket {
 	 */
 	public function __construct($fp = false) {
 		$this->buffer = new buffer;
+		$this->auto_create = $fp === false;
 		$this->fp = $fp;
 	}
 
@@ -127,25 +134,21 @@ class event_socket {
 	 * Connect to the FreeSWITCH (c) event socket server
 	 * <p>If the configuration is not loaded then the defaults of
 	 * host 127.0.0.1, port of 8021, and default password of ClueCon will be used</p>
-	 * @global array $conf Global configuration used in fusionpbx/config.conf
-	 * @param string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
-	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
-	 * @param string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
-	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket
+	 * @param null|string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
+	 * @param null|string|int $port Port number of FreeSWITCH event socket server. Defaults to 8021
+	 * @param null|string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket. Defaults to 30,000
 	 * @return bool Returns true on success or false if not connected
 	 */
 	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
-
-		global $conf;
-
 		//set the event socket variables in the order of
 		//param passed to func, conf setting, old conf setting, default
 		$host = $host ?? $conf['switch.event_socket.host'] ?? $conf['event_socket.ip_address'] ?? '127.0.0.1';
 		$port = $port ?? $conf['switch.event_socket.port'] ?? $conf['event_socket.port'] ?? '8021';
 		$password = $password ?? $conf['switch.event_socket.password'] ?? $conf['event_socket.password'] ?? 'ClueCon';
 
-		//if a socket was provided in the constructor then don't create a new one
-		if ($this->fp === false) {
+		//if a socket was provided in the constructor, then don't create a new one
+		if ($this->fp === false || $this->auto_create) {
 			//open the socket connection
 			$this->fp = @fsockopen($host, $port, $errno, $errdesc, 3);
 		}
