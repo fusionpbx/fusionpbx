@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('destination_add') || !permission_exists('destination_edit')) {
+	if (!(permission_exists('destination_add') || permission_exists('destination_edit'))) {
 		echo "access denied";
 		exit;
 	}

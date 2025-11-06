@@ -26,7 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('contact_add') || !permission_exists('contact_edit')) {
+	if (!(permission_exists('contact_add') || permission_exists('contact_edit'))) {
 		echo "access denied";
 		exit;
 	}

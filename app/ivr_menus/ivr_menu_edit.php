@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('ivr_menu_add') || !permission_exists('ivr_menu_edit')) {
+	if (!(permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit'))) {
 		echo "access denied";
 		exit;
 	}

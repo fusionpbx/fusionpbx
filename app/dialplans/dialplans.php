@@ -31,7 +31,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (!permission_exists('dialplan_view') || !permission_exists('inbound_route_view') || !permission_exists('outbound_route_view')) {
+	if (!(permission_exists('dialplan_view') || !permission_exists('inbound_route_view') || permission_exists('outbound_route_view'))) {
 		echo "access denied";
 		exit;
 	}

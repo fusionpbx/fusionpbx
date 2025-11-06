@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('module_add') || !permission_exists('module_edit')) {
+	if (!(permission_exists('module_add') || permission_exists('module_edit'))) {
 		echo "access denied";
 		exit;
 	}

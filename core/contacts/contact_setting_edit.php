@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('contact_setting_edit') || !permission_exists('contact_setting_add')) {
+	if (!(permission_exists('contact_setting_edit') || permission_exists('contact_setting_add'))) {
 		echo "access denied";
 		exit;
 	}

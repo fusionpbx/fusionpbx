@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists("registration_domain") || !permission_exists("registration_all")) {
+	if (!(permission_exists('registration_domain') || permission_exists('registration_all'))) {
 		echo "access denied";
 		exit;
 	}

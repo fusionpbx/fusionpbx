@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('number_translation_add') || !permission_exists('number_translation_edit')) {
+	if (!(permission_exists('number_translation_add') || permission_exists('number_translation_edit'))) {
 		echo "access denied";
 		exit;
 	}

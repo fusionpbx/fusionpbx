@@ -27,7 +27,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('fax_queue_add') || !permission_exists('fax_queue_edit')) {
+	if (!(permission_exists('fax_queue_add') || permission_exists('fax_queue_edit'))) {
 		echo "access denied";
 		exit;
 	}

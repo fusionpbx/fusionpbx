@@ -26,7 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('email_template_add') || !permission_exists('email_template_edit')) {
+	if (!(permission_exists('email_template_add') || permission_exists('email_template_edit'))) {
 		echo "access denied";
 		exit;
 	}

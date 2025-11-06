@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('conference_room_add') || !permission_exists('conference_room_edit')) {
+	if (!(permission_exists('conference_room_add') || permission_exists('conference_room_edit'))) {
 		echo "access denied";
 		exit;
 	}

@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('gateway_add') || !permission_exists('gateway_edit')) {
+	if (!(permission_exists('gateway_add') || permission_exists('gateway_edit'))) {
 		echo "access denied";
 		exit;
 	}

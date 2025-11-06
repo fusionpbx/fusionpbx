@@ -30,7 +30,7 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (!permission_exists('call_flow_add') || !permission_exists('call_flow_edit')) {
+	if (!(permission_exists('call_flow_add') || permission_exists('call_flow_edit'))) {
 		echo "access denied";
 		exit;
 	}

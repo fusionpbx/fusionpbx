@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('voicemail_add') || !permission_exists('voicemail_edit')) {
+	if (!(permission_exists('voicemail_add') || permission_exists('voicemail_edit'))) {
 		echo "access denied";
 		exit;
 	}

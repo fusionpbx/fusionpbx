@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('database_transaction_add') || !permission_exists('database_transaction_edit')) {
+	if (!(permission_exists('database_transaction_add') || permission_exists('database_transaction_edit'))) {
 		echo "access denied";
 		exit;
 	}
