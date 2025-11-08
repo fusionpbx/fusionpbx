@@ -69,26 +69,31 @@ if (!function_exists('str_ends_with')) {
 	}
 }
 
-if (!function_exists('mb_strtoupper')) {
-	function mb_strtoupper($string) {
-		return strtoupper($string);
-	}
-}
-
 if (!function_exists('check_float')) {
-	function check_float($string) {
+	/**
+	 * Converts a given string to float format and trims whitespace.
+	 *
+	 * @param string $string The input string to convert. If not provided, an empty string is used.
+	 *
+	 * @return string The converted float string with whitespace trimmed.
+	 */
+	function check_float($string): string {
 		$string = str_replace(",", ".", $string ?? '');
 		return trim($string);
 	}
 }
 
 if (!function_exists('check_str')) {
+
 	/**
-	 * check_str function
-	 * @param  mixed   $string
-	 * @param  boolean $trim
-	 * @return void
+	 * Escapes and trims a given string based on the database type.
+	 *
+	 * @param string $string The input string to process.
+	 * @param bool   $trim   Whether to trim the string. Defaults to true.
+	 *
+	 * @return string The processed string.
 	 * @deprecated 5.0
+	 * @internal Use parameterized queries
 	 */
 	function check_str($string, $trim = true) {
 		global $db_type, $db;
@@ -123,7 +128,17 @@ if (!function_exists('check_str')) {
 }
 
 if (!function_exists('check_sql')) {
+	/**
+	 * Alias of trim
+	 *
+	 * @param  string $string
+	 *
+	 * @return void
+	 * @see trim()
+	 * @deprecated 5.0
+	 */
 	function check_sql($string) {
+		trigger_error('check_sql should not be used. Use parameterized queries instead.', E_USER_WARNING);
 		return trim($string); //remove white space
 	}
 }
@@ -133,9 +148,10 @@ if (!function_exists('check_cidr')) {
 	 * Checks if the $ip_address is within the range of the given $cidr
 	 * @param string|array $cidr
 	 * @param string $ip_address
+	 *
 	 * @return bool return true if the IP address is in CIDR or if it is empty
 	 */
-	function check_cidr($cidr, $ip_address) {
+	function check_cidr($cidr, string $ip_address): bool {
 
 		//no cidr restriction
 		if (empty($cidr)) {
@@ -152,7 +168,7 @@ if (!function_exists('check_cidr')) {
 			}
 		} else {
 			//cidr is a string
-			list ($subnet, $mask) = explode('/', $cidr);
+			[$subnet, $mask] = explode('/', $cidr);
 			return (ip2long($ip_address) & ~((1 << (32 - $mask)) - 1)) == ip2long($subnet);
 		}
 
@@ -162,10 +178,17 @@ if (!function_exists('check_cidr')) {
 }
 
 if (!function_exists('fix_postback')) {
-	function fix_postback($post_array) {
+	/**
+	 * Processes an array to replace certain characters in its values to prevent issues during postback.
+	 *
+	 * @param array $post_array The input array to be processed. It may contain nested arrays or string values.
+	 *
+	 * @return array The processed array with specific characters replaced in all string values.
+	 */
+	function fix_postback(array $post_array): array {
 		foreach ($post_array as $index => $value) {
 			if (is_array($value)) {
-				fix_postback($value);
+				$post_array[$index] = fix_postback($value);
 			} else {
 				$value = str_replace('"', "&#34;", $value);
 				$value = str_replace("'", "&#39;", $value);
@@ -177,7 +200,19 @@ if (!function_exists('fix_postback')) {
 }
 
 if (!function_exists('uuid')) {
-	function uuid() {
+	/**
+	 * Generates a unique identifier (UUID) based on the operating system.
+	 *
+	 * This function tries to generate a UUID using platform-specific methods:
+	 * - On FreeBSD, it uses `uuidgen`.
+	 * - On Linux, it first attempts to read from `/proc/sys/kernel/random/uuid`, then falls back to `uuidgen`.
+	 * - On Windows, it uses the `com_create_guid()` function.
+	 *
+	 * If none of these methods succeed, an error message is displayed, and the script exits.
+	 *
+	 * @return string The generated UUID as a string.
+	 */
+	function uuid(): string {
 		$uuid = null;
 		if (PHP_OS === 'FreeBSD') {
 			$uuid = trim(shell_exec("uuidgen"));
@@ -212,10 +247,18 @@ if (!function_exists('uuid')) {
 			}
 		}
 	}
+
 }
 
 if (!function_exists('is_uuid')) {
-	function is_uuid($str) {
+	/**
+	 * Checks if a given string is a valid UUID (Universally Unique Identifier).
+	 *
+	 * @param mixed $str The input string to be checked.
+	 *
+	 * @return bool True if the input string is a valid UUID, false otherwise.
+	 */
+	function is_uuid($str): bool {
 		$is_uuid = false;
 		if (gettype($str) == 'string') {
 			if (substr_count($str, '-') != 0 && strlen($str) == 36) {
@@ -231,7 +274,14 @@ if (!function_exists('is_uuid')) {
 }
 
 if (!function_exists('is_xml')) {
-	function is_xml($string) {
+	/**
+	 * Checks if the given string is a well-formed XML.
+	 *
+	 * @param string $string The input string to check.
+	 *
+	 * @return bool True if the string is a well-formed XML, false otherwise.
+	 */
+	function is_xml($string): bool {
 		$pattern = '/^<\?xml(?:\s+[^>]+\s*)?\?>\s*<(\w+)>.*<\/\1>\s*$/s';
 		return preg_match($pattern, $string) === 1;
 	}
@@ -240,6 +290,15 @@ if (!function_exists('is_xml')) {
 if (!function_exists('recursive_copy')) {
 	if (file_exists('/bin/cp')) {
 
+		/**
+		 * Recursively copies the source directory or file to the destination location.
+		 *
+		 * @param string $source      The path of the source directory or file to copy.
+		 * @param string $destination The path where the source will be copied.
+		 * @param string $options     Optional command-line options for the 'cp' command. Defaults to an empty string.
+		 *
+		 * @return void
+		 */
 		function recursive_copy($source, $destination, $options = '') {
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
 				//copy -R recursive, preserve attributes for SUN
@@ -253,6 +312,17 @@ if (!function_exists('recursive_copy')) {
 
 	} elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 
+		/**
+		 * Recursively copies a source directory to a destination directory.
+		 *
+		 * @param string $source      The path of the source directory to copy.
+		 * @param string $destination The path of the destination directory where the source will be copied.
+		 * @param array  $options     An associative array of options:
+		 *                            - overwrite (bool) Whether to overwrite existing files. Default is false.
+		 *                            - preserve_permissions (bool) Whether to preserve file permissions. Default is true.
+		 *
+		 * @return bool True if the copy was successful, false otherwise.
+		 */
 		function recursive_copy($source, $destination, $options = '') {
 			$source = normalize_path_to_os($source);
 			$destination = normalize_path_to_os($destination);
@@ -261,6 +331,16 @@ if (!function_exists('recursive_copy')) {
 
 	} else {
 
+		/**
+		 * Recursively copies a source directory to a destination directory.
+		 *
+		 * @param string $source      The path of the source directory.
+		 * @param string $destination The path where the copy will be created.
+		 * @param array  $options     An associative array of options. Currently not used.
+		 *
+		 * @return void
+		 * @throws Exception If the source directory does not exist or if it fails to create the destination directory.
+		 */
 		function recursive_copy($source, $destination, $options = '') {
 			$dir = opendir($source);
 			if (!$dir) {
@@ -288,6 +368,13 @@ if (!function_exists('recursive_copy')) {
 
 if (!function_exists('recursive_delete')) {
 	if (file_exists('/usr/bin/find')) {
+		/**
+		 * Recursively deletes all files and directories within the given directory.
+		 *
+		 * @param string $directory The directory path to delete files from.
+		 *
+		 * @return void This function does not return a value.
+		 */
 		function recursive_delete($directory) {
 			if (isset($directory) && strlen($directory) > 8) {
 				exec('/usr/bin/find ' . $directory . '/* -name "*" -delete');
@@ -296,6 +383,13 @@ if (!function_exists('recursive_delete')) {
 			}
 		}
 	} elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		/**
+		 * Recursively deletes the given directory and all its contents.
+		 *
+		 * @param string $directory The directory to delete. If the path is not normalized, it will be converted using normalize_path_to_os().
+		 *
+		 * @return bool True if the deletion was successful, false otherwise.
+		 */
 		function recursive_delete($directory) {
 			$directory = normalize_path_to_os($directory);
 			//$this->write_debug("del /S /F /Q \"$dir\"");
@@ -303,6 +397,13 @@ if (!function_exists('recursive_delete')) {
 			clearstatcache();
 		}
 	} else {
+		/**
+		 * Recursively deletes files and directories in the given directory.
+		 *
+		 * @param string $directory The path to the directory containing files/directories to delete.
+		 *
+		 * @return bool True if all files/directories were successfully deleted, false otherwise.
+		 */
 		function recursive_delete($directory) {
 			foreach (glob($directory) as $file) {
 				if (is_dir($file)) {
@@ -320,7 +421,14 @@ if (!function_exists('recursive_delete')) {
 }
 
 if (!function_exists('if_group')) {
-	function if_group($group) {
+	/**
+	 * Checks if the user belongs to the specified group.
+	 *
+	 * @param string $group The name of the group to check for.
+	 *
+	 * @return bool True if the user is in the specified group, false otherwise.
+	 */
+	function if_group($group): bool {
 		//set default false
 		$result = false;
 
@@ -341,7 +449,14 @@ if (!function_exists('if_group')) {
 
 //check if the permission exists
 if (!function_exists('permission_exists')) {
-	function permission_exists($permission_name) {
+	/**
+	 * Checks if a permission with the given name exists.
+	 *
+	 * @param string $permission_name The name of the permission to check for existence.
+	 *
+	 * @return bool True if the permission exists, false otherwise.
+	 */
+	function permission_exists($permission_name): bool {
 		//define the global variables
 		global $database, $domain_uuid, $user_uuid;
 
@@ -351,6 +466,14 @@ if (!function_exists('permission_exists')) {
 }
 
 if (!function_exists('if_group_member')) {
+	/**
+	 * Checks if a given group exists in the list of group members.
+	 *
+	 * @param string $group_members A double pipe-separated string of group members, formatted as "||group1||group2||group3||".
+	 * @param string $group         The name of the group to search for.
+	 *
+	 * @return bool True if the group is found in the group members list, false otherwise.
+	 */
 	function if_group_member($group_members, $group) {
 		if (stripos($group_members, "||" . $group . "||") === false) {
 			return false; //group does not exist
@@ -361,28 +484,40 @@ if (!function_exists('if_group_member')) {
 }
 
 if (!function_exists('superadmin_list')) {
-	function superadmin_list() {
+	/**
+	 * Retrieves a double pipe-separated list of UUIDs for users in the 'superadmin' group.
+	 *
+	 * @return string The list of superadmins as a double pipe-separated string of UUIDs, prefixed and suffixed with "||".
+	 */
+	function superadmin_list(): string {
 		//define the global variables
 		global $database, $domain_uuid;
-
-		//get the liset of users in the superadmin group
+		$superadmin_list = '';
+		//get the list of users in the superadmin group
 		$sql = "select * from v_user_groups ";
 		$sql .= "where group_name = 'superadmin' ";
 		$result = $database->select($sql, null, 'all');
-		$superadmin_list = "||";
 		if (is_array($result) && @sizeof($result) != 0) {
+			$superadmin_list .= "||";
 			foreach ($result as $field) {
 				//get the list of superadmins
 				$superadmin_list .= $field['user_uuid'] . "||";
 			}
 		}
-		unset($sql, $result, $field);
 		return $superadmin_list;
 	}
 }
 
 if (!function_exists('if_superadmin')) {
-	function if_superadmin($superadmin_list, $user_uuid) {
+	/**
+	 * Checks if the given user UUID exists in the superadmin list.
+	 *
+	 * @param string $superadmin_list The comma-separated list of superadmin UUIDs.
+	 * @param string $user_uuid       The user UUID to search for in the list.
+	 *
+	 * @return bool True if the user UUID is found in the superadmin list, false otherwise.
+	 */
+	function if_superadmin($superadmin_list, $user_uuid): bool {
 		if (stripos($superadmin_list, "||" . $user_uuid . "||") === false) {
 			return false;
 		} else {
@@ -392,7 +527,19 @@ if (!function_exists('if_superadmin')) {
 }
 
 if (!function_exists('html_select_other')) {
-	function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $sql_order_by = null, $label_other = 'Other...') {
+	/**
+	 * Generates an HTML select box with distinct items from a database table and an 'Other' option.
+	 *
+	 * @param string      $table_name          The name of the database table to retrieve distinct values from.
+	 * @param string      $field_name          The name of the field in the table to retrieve distinct values from.
+	 * @param string|null $sql_where_optional  An optional SQL WHERE clause to filter records.
+	 * @param string      $field_current_value The current value of the select box.
+	 * @param string|null $sql_order_by        An optional SQL ORDER BY clause to sort retrieved values. Defaults to ordering by the field name in ascending order if not provided.
+	 * @param string      $label_other         The label for the 'Other' option. Defaults to 'Other...'.
+	 *
+	 * @return string The generated HTML select box as a string.
+	 */
+	function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value, $sql_order_by = null, $label_other = 'Other...'): string {
 		//define the global variables
 		global $database, $domain_uuid;
 
@@ -435,7 +582,20 @@ if (!function_exists('html_select_other')) {
 }
 
 if (!function_exists('html_select')) {
-	function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $on_change = '') {
+	/**
+	 * Generates an HTML select element based on distinct values from a database field.
+	 *
+	 * @param string $table_name          The name of the table in the database.
+	 * @param string $field_name          The name of the field to retrieve distinct values from.
+	 * @param string $sql_where_optional  An optional SQL WHERE clause to filter results.
+	 * @param mixed  $field_current_value The current value to be selected by default. If not provided, no 'selected' attribute will be added.
+	 * @param string $field_value         Optional. The name of the field whose values should be used as the option's value. Defaults to $field_name.
+	 * @param string $style               Optional. The inline style for the select element.
+	 * @param string $on_change           Optional. JavaScript code to execute when the selected option changes.
+	 *
+	 * @return string The generated HTML select element as a string.
+	 */
+	function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $on_change = ''): string {
 
 		//define the global variables
 		global $database, $domain_uuid;
@@ -478,18 +638,32 @@ if (!function_exists('html_select')) {
 }
 
 if (!function_exists('th_order_by')) {
-	//html table header order by
-	function th_order_by($field_name, $column_title, $order_by, $order, $app_uuid = '', $css = '', $http_get_params = '', $description = '') {
+	//HTML table header order by
+	/**
+	 * Generates the HTML for a table header cell with ordering functionality.
+	 *
+	 * @param string $field_name      The name of the field used for ordering.
+	 * @param string $column_title    The title to display in the column header.
+	 * @param string $order_by        The current order by field.
+	 * @param string $order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
+	 * @param string $app_uuid        Optional application UUID parameter. Default is an empty string.
+	 * @param string $css             Optional CSS classes for the table header cell. Default is an empty string.
+	 * @param string $http_get_params Optional additional HTTP GET parameters to include in the ordering URL. Default is an empty string.
+	 * @param string $description     Optional description text to be included in the title attribute of the column header link. Default is an empty string.
+	 *
+	 * @return string The generated HTML for the table header cell with ordering functionality.
+	 */
+	function th_order_by(string $field_name, string $column_title, string $order_by, string $order, string $app_uuid = '', string $css = '', string $http_get_params = '', string $description = ''): string {
 		global $text;
 		if (is_uuid($app_uuid) > 0) {
 			$app_uuid = "&app_uuid=" . urlencode($app_uuid);
-		} // accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
+		} // accommodate the need to pass app_uuid where necessary (inbound/outbound routes lists)
 
 		$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 		$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value ?? '');
 
 		$sanitized_parameters = '';
-		if (isset($http_get_params) && !empty($http_get_params)) {
+		if (!empty($http_get_params)) {
 			$parameters = explode('&', $http_get_params);
 			if (is_array($parameters)) {
 				foreach ($parameters as $parameter) {
@@ -543,29 +717,42 @@ if (!function_exists('th_order_by')) {
 }
 
 if (!function_exists('get_ext')) {
-	function get_ext($filename) {
+
+	/**
+	 * Retrieves the file extension from the given filename.
+	 *
+	 * @param string $filename The input filename to extract the extension from.
+	 *
+	 * @return string The extracted file extension or an empty string if no extension is found.
+	 */
+	function get_ext(string $filename): string {
 		preg_match('/[^?]*/', $filename, $matches);
 		$string = $matches[0];
 
 		$pattern = preg_split('/\./', $string, -1, PREG_SPLIT_OFFSET_CAPTURE);
-
-		// check if there is any extension
-		if (count($pattern) == 1) {
-			//echo 'No File Extension Present';
-			return '';
-		}
 
 		if (count($pattern) > 1) {
 			$filenamepart = $pattern[count($pattern) - 1][0];
 			preg_match('/[^?]*/', $filenamepart, $matches);
 			return $matches[0];
 		}
+		return '';
 	}
 	//echo "ext: ".get_ext('test.txt');
 }
 
 if (!function_exists('file_upload')) {
-	function file_upload($field = '', $file_type = '', $dest_dir = '') {
+	/**
+	 * Uploads a file to the specified destination directory.
+	 *
+	 * @param string $field     The name of the input field where the file was uploaded. Default is an empty string.
+	 * @param string $file_type The type of files allowed for upload ('img' or 'file'). Default is an empty string.
+	 * @param string $dest_dir  The destination directory to save the uploaded file. Default is an empty string.
+	 *
+	 * @return string|bool The original name of the uploaded file if successful, false otherwise. If the file already exists in
+	 *                    the destination directory, it will be renamed with an incremented number until a unique filename is found.
+	 */
+	function file_upload(string $field = '', string $file_type = '', string $dest_dir = '') {
 
 		$uploadtempdir = $_ENV["TEMP"] . "\\";
 		ini_set('upload_tmp_dir', $uploadtempdir);
@@ -644,7 +831,15 @@ if (!function_exists('file_upload')) {
 }
 
 if (!function_exists('sys_get_temp_dir')) {
-	function sys_get_temp_dir() {
+	/**
+	 * Retrieves the system's temporary directory.
+	 *
+	 * Attempts to retrieve the temporary directory from environment variables ('TMP', 'TEMP', or 'TMPDIR').
+	 * If not found in environment variables, creates a temporary file and uses its directory as fallback.
+	 *
+	 * @return string|null The temporary directory path on success, null if unable to determine the temp dir.
+	 */
+	function sys_get_temp_dir(): ?string {
 		if ($temp = getenv('TMP')) {
 			return $temp;
 		}
@@ -666,24 +861,45 @@ if (!function_exists('sys_get_temp_dir')) {
 
 if (!function_exists('normalize_path')) {
 	//don't use DIRECTORY_SEPARATOR as it will change on a per platform basis and we need consistency
-	function normalize_path($path) {
+	/**
+	 * Normalizes the given file path by replacing all occurrences of backslashes with forward slashes.
+	 *
+	 * @param string $path The input file path to normalize.
+	 *
+	 * @return string The normalized file path with uniform directory separators ('/').
+	 */
+	function normalize_path(string $path): string {
 		return str_replace(array('/', '\\'), '/', $path);
 	}
 }
 
 if (!function_exists('normalize_path_to_os')) {
-	function normalize_path_to_os($path) {
+	/**
+	 * Normalizes the given path to the operating system's directory separator.
+	 *
+	 * @param string $path The input path to normalize.
+	 *
+	 * @return string The normalized path with appropriate directory separator for the OS.
+	 */
+	function normalize_path_to_os(string $path): string {
 		return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
 	}
 }
 
 if (!function_exists('username_exists')) {
-	function username_exists($username) {
+	/**
+	 * Checks if a username already exists in the system.
+	 *
+	 * @param string $username The username to search for.
+	 *
+	 * @return bool True if the username exists, false otherwise.
+	 */
+	function username_exists(string $username): bool {
 		//define the global variables
 		global $database, $domain_uuid;
 
 		//get the number of rows for the user exists
-		$sql = "select count(*) from v_users ";
+		$sql = "select count(user_uuid) from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and username = :username ";
 		$parameters['domain_uuid'] = $domain_uuid;
@@ -691,12 +907,20 @@ if (!function_exists('username_exists')) {
 		$num_rows = $database->select($sql, $parameters, 'column');
 
 		//return whether the user exists
-		return $num_rows > 0 ? true : false;
+		return $num_rows > 0;
 	}
 }
 
 if (!function_exists('add_extension_user')) {
-	function add_extension_user($extension_uuid, $username) {
+	/**
+	 * Adds an extension user association based on the provided extension UUID and username.
+	 *
+	 * @param string $extension_uuid The UUID of the extension to be associated with the user.
+	 * @param string $username       The username of the user to associate with the extension.
+	 *
+	 * @return void This method does not return a value.
+	 */
+	function add_extension_user(string $extension_uuid, string $username) {
 		//define the global variables
 		global $database, $domain_uuid;
 
@@ -711,7 +935,7 @@ if (!function_exists('add_extension_user')) {
 
 		if (is_uuid($user_uuid)) {
 			//check if the user_uuid exists in v_extension_users
-			$sql = "select count(*) from v_extension_users ";
+			$sql = "select count(extension_user_uuid) from v_extension_users ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and user_uuid = :user_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
@@ -741,7 +965,16 @@ if (!function_exists('add_extension_user')) {
 }
 
 if (!function_exists('user_add')) {
-	function user_add($username, $password, $user_email = '') {
+	/**
+	 * Adds a new user with the provided username and password.
+	 *
+	 * @param string $username   The username for the new user.
+	 * @param string $password   The password for the new user.
+	 * @param string $user_email Optional email address for the new user (default is empty).
+	 *
+	 * @return bool True if the user was added successfully, false otherwise. If the username or password are not provided, false will be returned immediately.
+	 */
+	function user_add(string $username, string $password, string $user_email = ''): bool {
 		//define the global variables
 		global $database, $domain_uuid;
 
@@ -788,11 +1021,21 @@ if (!function_exists('user_add')) {
 			//revoke temporary permissions
 			$p->delete('user_add', 'temp');
 			$p->delete('user_group_add', 'temp');
+			return true;
 		}
+		return false;
 	}
 }
 
-function switch_module_is_running($mod, event_socket $esl = null) {
+/**
+ * Checks if a given FreeSwitch module is running.
+ *
+ * @param string            $mod The name of the module to check.
+ * @param event_socket|null $esl An optional event_socket object. If not provided, a new one will be created.
+ *
+ * @return bool True if the module is running, false otherwise or if not connected to FreeSwitch.
+ */
+function switch_module_is_running($mod, event_socket $esl = null): bool {
 	//if the object does not exist create it
 	if ($esl === null) {
 		$esl = event_socket::create();
@@ -808,7 +1051,20 @@ function switch_module_is_running($mod, event_socket $esl = null) {
 //print (switch_module_is_running('mod_spidermonkey') ? "true" : "false");
 
 //format a number (n) replace with a number (r) remove the number
-function format_string($format, $data) {
+/**
+ * Formats a given string based on a provided format string.
+ *
+ * The format string can contain the following characters:
+ * - 'x': includes the next character from the data string.
+ * - 'R' or 'r': skips the next character from the data string.
+ * - Any other character: inserts the character into the formatted string as-is.
+ *
+ * @param string $format The format string to use for formatting. Empty strings will return the input data unchanged.
+ * @param string $data   The input string to format.
+ *
+ * @return string The formatted string, or the original input if the format string does not match the input length or is empty.
+ */
+function format_string(string $format, string $data): string {
 	//nothing to do so return
 	if (empty($format)) {
 		return $data;
@@ -845,7 +1101,14 @@ function format_string($format, $data) {
 }
 
 //get the format and use it to format the phone number
-function format_phone($phone_number) {
+/**
+ * Formats a given phone number based on user-defined formats stored in session.
+ *
+ * @param string $phone_number The phone number to format.
+ *
+ * @return string The formatted phone number if the input matches any defined format, otherwise the original input.
+ */
+function format_phone(string $phone_number): string {
 	if (is_numeric(trim($phone_number ?? '', ' +'))) {
 		if (isset($_SESSION["format"]["phone"])) {
 			$phone_number = trim($phone_number, ' +');
@@ -864,7 +1127,14 @@ function format_phone($phone_number) {
 }
 
 //format seconds into hh:mm:ss
-function format_hours($seconds) {
+/**
+ * Formats the given number of seconds into hours, minutes, and seconds with leading zeros.
+ *
+ * @param int|string $seconds The number of seconds to format.
+ *
+ * @return string The formatted time in HH:MM:SS format.
+ */
+function format_hours($seconds): string {
 	$seconds = (int) $seconds; //convert seconds to an integer
 	$hours = floor($seconds / 3600);
 	$minutes = floor(floor($seconds / 60) % 60);
@@ -873,12 +1143,28 @@ function format_hours($seconds) {
 }
 
 //format seconds
-function format_seconds($seconds) {
+/**
+ * Formats given seconds into a GM date string (HH:MM:SS).
+ *
+ * @param int|null $seconds The number of seconds to format.
+ *
+ * @return string The formatted time as HH:MM:SS, or "00:00:00" if $seconds is negative or zero.
+ */
+function format_seconds(?int $seconds): string {
     return gmdate("H:i:s", $seconds);
 }
 
-//browser detection without browscap.ini dependency
-function http_user_agent($info = '') {
+/**
+ * Retrieves and analyzes the user agent string from $_SERVER['HTTP_USER_AGENT'] without browscap.ini dependency.
+ *
+ * @param string $info The specific information to retrieve. Can be one of 'agent', 'name', 'name_short',
+ *                     'version', 'platform', 'mobile', or 'pattern'. Defaults to returning an associative array
+ *                     containing all the analyzed data if no parameter is provided.
+ *
+ * @return mixed The requested user agent information based on the $info parameter. If no parameter is provided,
+ *                     returns an associative array containing all the analyzed data.
+ */
+function http_user_agent(string $info = '') {
 
 	//set default values
 	$user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -984,8 +1270,15 @@ function http_user_agent($info = '') {
 	}
 }
 
-//tail php function for non posix systems
-function tail($file, $num_to_get = 10) {
+/**
+ * tail php function for non posix systems
+ *
+ * @param string $file       The path to the file.
+ * @param int    $num_to_get Number of lines to retrieve (default is 10).
+ *
+ * @return string The retrieved lines concatenated with newline characters.
+ */
+function tail(string $file, int $num_to_get = 10): string {
 	$esl = fopen($file, 'r');
 	$position = filesize($file);
 	$chunklen = 4096;
@@ -1022,7 +1315,21 @@ function tail($file, $num_to_get = 10) {
 }
 
 //generate a random password with upper, lowercase and symbols
-function generate_password($length = 0, $strength = 0) {
+/**
+ * Generates a random password of specified length and strength.
+ *
+ * @param int $length   The desired length of the password. Defaults to default settings if not provided or zero.
+ * @param int $strength The desired strength level of the password. Defaults to default settings if not provided or
+ *                      zero.
+ *                      - Level 1: Numeric
+ *                      - Level 2: Lowercase letters
+ *                      - Level 3: Uppercase letters
+ *                      - Level 4: Special characters (!^$%*?.)
+ *
+ * @return string The generated password.
+ * @throws \Random\RandomException
+ */
+function generate_password(int $length = 0, int $strength = 0): string {
 	//define the global variables
 	global $settings;
 
@@ -1051,12 +1358,21 @@ function generate_password($length = 0, $strength = 0) {
 }
 
 //check password strength against requirements (if any)
-function check_password_strength($password, $text, $type = 'default') {
+/**
+ * Checks the strength of the given password based on configured requirements.
+ *
+ * @param string $password The input password to check.
+ * @param array $text      Language text object containing message labels.
+ * @param string $type     The type of password requirements ('default' or 'user'). Default is 'default'.
+ *
+ * @return bool True if the password meets the strength requirements, false otherwise. If the password is empty, it will return true without checking.
+ */
+function check_password_strength(string $password, array $text, string $type = 'default'): bool {
 
 	//define the global variables
 	global $database, $settings;
 
-	//initialize the settigns object
+	//initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid']]);
 
 	if (!empty($password)) {
@@ -1100,7 +1416,18 @@ function check_password_strength($password, $text, $type = 'default') {
 
 //based on Wez Furlong do_post_request
 if (!function_exists('send_http_request')) {
-	function send_http_request($url, $data, $method = "POST", $optional_headers = null) {
+	/**
+	 * Sends an HTTP request to the specified URL with optional data and method.
+	 *
+	 * @param string            $url              The URL to send the request to.
+	 * @param mixed             $data             The data to send with the request. This can be a string or an array, depending on the content type.
+	 * @param string            $method           The HTTP method to use for the request. Defaults to "POST".
+	 * @param string|array|null $optional_headers Optional headers to include in the request. Defaults to null.
+	 *
+	 * @return string The response from the server as a string.
+	 * @throws Exception If there is a problem with the request or reading the response.
+	 */
+	function send_http_request($url, $data, string $method = "POST", $optional_headers = null): string {
 		$params = array('http' => array(
 				'method' => $method,
 				'content' => $data
@@ -1123,7 +1450,15 @@ if (!function_exists('send_http_request')) {
 
 //convert the string to a named array
 if (!function_exists('csv_to_named_array')) {
-	function csv_to_named_array($tmp_str, $tmp_delimiter) {
+	/**
+	 * Converts a CSV string into an associative array with named keys.
+	 *
+	 * @param string $tmp_str       The input CSV string.
+	 * @param string $tmp_delimiter The delimiter used in the CSV string. Defaults to ",".
+	 *
+	 * @return array An associative array where keys are the first row of the CSV as column headers and values are arrays representing each row.
+	 */
+	function csv_to_named_array(string $tmp_str, string $tmp_delimiter): array {
 		$tmp_array = explode("\n", $tmp_str);
 		$result = array();
 		if (trim(strtoupper($tmp_array[0])) !== "+OK") {
@@ -1149,7 +1484,16 @@ if (!function_exists('csv_to_named_array')) {
 	}
 }
 
-function get_time_zone_offset($remote_tz, $origin_tz = 'UTC') {
+/**
+ * Calculates the time zone offset between a remote time zone and an origin time zone.
+ *
+ * @param string $remote_tz The ID of the remote time zone.
+ * @param string $origin_tz The ID of the origin time zone. Defaults to 'UTC'.
+ *
+ * @return int The difference in seconds between the remote time zone and the origin time zone.
+ * @throws \DateInvalidTimeZoneException
+ */
+function get_time_zone_offset(string $remote_tz, string $origin_tz = 'UTC'): int {
 	$origin_dtz = new DateTimeZone($origin_tz);
 	$remote_dtz = new DateTimeZone($remote_tz);
 	$origin_dt = new DateTime("now", $origin_dtz);
@@ -1158,20 +1502,45 @@ function get_time_zone_offset($remote_tz, $origin_tz = 'UTC') {
 	return $offset;
 }
 
-function number_pad($number, $n) {
+/**
+ * Pads a number with leading zeros to reach a specified length.
+ *
+ * @param int $number The number to pad.
+ * @param int $n      The desired total length of the padded number.
+ *
+ * @return string        The padded number as a string.
+ */
+function number_pad($number, $n): string {
 	return str_pad((int) $number, $n, "0", STR_PAD_LEFT);
 }
 
 // validate email address syntax
 if (!function_exists('valid_email')) {
-	function valid_email($email) {
+	/**
+	 * Validates an email address using PHP's built-in filter_var function.
+	 *
+	 * @param string $email The email address to validate.
+	 *
+	 * @return bool True if the email is valid, false otherwise.
+	 */
+	function valid_email(string $email): bool {
 		return (filter_var($email, FILTER_VALIDATE_EMAIL)) ? true : false;
 	}
 }
 
 //function to convert hexidecimal color value to rgb string/array value
 if (!function_exists('hex_to_rgb')) {
-	function hex_to_rgb($hex, $delim = null, $include_alpha = false, $alpha = 1) {
+	/**
+	 * Converts a hexadecimal color code to an RGB representation.
+	 *
+	 * @param string      $hex           The hexadecimal color code. If it's a 3-digit hex, each digit will be doubled.
+	 * @param string|null $delim         Optional delimiter for the RGB values if returned as a string. Default is null (return array).
+	 * @param bool        $include_alpha Whether to include an alpha channel in the output. Default is false.
+	 * @param float       $alpha         The value of the alpha channel if included. Default is 1 (opaque).
+	 *
+	 * @return array|string RGB values as an array or a delimited string depending on $delim parameter.
+	 */
+	function hex_to_rgb(string $hex, ?string $delim = null, bool $include_alpha = false, $alpha = 1) {
 		$hex = str_replace("#", "", $hex);
 
 		if (strlen($hex) == 3) {
@@ -1198,7 +1567,16 @@ if (!function_exists('hex_to_rgb')) {
 
 //function to convert a hex or rgb/a color to an rgba array
 if (!function_exists('color_to_rgba_array')) {
-	function color_to_rgba_array($string, $alpha = null) {
+	/**
+	 * Converts a color string to an RGB(A) array.
+	 *
+	 * @param string     $string The input color string (hex or rgb/a).
+	 * @param float|null $alpha  The desired alpha value. If null, it will be omitted from the output array.
+	 *
+	 * @return array|bool An associative array containing 'r', 'g', 'b', and optionally 'a' keys with their respective color values,
+	 *                           or false if the input string is invalid.
+	 */
+	function color_to_rgba_array(string $string, ?float $alpha = null) {
 		if (!empty($string)) {
 			if (strpos($string, '#') === 0) { //is hex
 				return hex_to_rgb($string, null, true, $alpha);
@@ -1223,6 +1601,13 @@ if (!function_exists('color_to_rgba_array')) {
 
 //function to get a color's luminence level -- dependencies: rgb_to_hsl()
 if (!function_exists('get_color_luminence')) {
+	/**
+	 * Retrieves the luminosity of a given color.
+	 *
+	 * @param string|array $color The input color as either a hexadecimal string or RGB array. If an array, it must contain 3 elements: red, green, blue.
+	 *
+	 * @return float|null The luminosity value if the input is valid, otherwise null.
+	 */
 	function get_color_luminence($color) {
 		//convert hex to rgb
 		if (substr_count($color, ',') == 0) {
@@ -1257,6 +1642,22 @@ if (!function_exists('get_color_luminence')) {
 
 //function to lighten or darken a hexidecimal, rgb, or rgba color value by a percentage -- dependencies: rgb_to_hsl(), hsl_to_rgb()
 if (!function_exists('color_adjust')) {
+	/**
+	 * Adjusts the brightness of a given color by a specified percentage.
+	 *
+	 * @param string|array $color   The input color in hexadecimal (#RRGGBB) or RGB(a)(r, g, b, a)
+	 *                              format. If array is provided, it should contain three elements:
+	 *                              red, green, blue values.
+	 * @param float        $percent The percentage by which to adjust the brightness of the color. A positive
+	 *                              value lightens the color, while a negative value darkens it.
+	 *
+	 * @return string|array The adjusted color in the same format as the input color.
+	 *
+	 * Example usage:
+	 * - To lighten a color by 20%: `color_adjust('#3f4265', 0.2)`
+	 * - To darken a color by 20%: `color_adjust('#3f4265', -0.2)`
+	 * - To adjust RGB(a) colors: `color_adjust('rgb(234,120,6)', 0.2)`, `color_adjust('rgba(234,120,6,0.3)', -0.2)`
+	 */
 	function color_adjust($color, $percent) {
 		/*
 		  USAGE
@@ -1340,6 +1741,15 @@ if (!function_exists('color_adjust')) {
 
 //function to convert an rgb color array to an hsl color array
 if (!function_exists('rgb_to_hsl')) {
+	/**
+	 * Converts RGB color to HSL.
+	 *
+	 * @param int $r The red component (0-255).
+	 * @param int $g The green component (0-255).
+	 * @param int $b The blue component (0-255).
+	 *
+	 * @return array An array containing the HSL components: [hue, saturation, lightness].
+	 */
 	function rgb_to_hsl($r, $g, $b) {
 		$r /= 255;
 		$g /= 255;
@@ -1379,6 +1789,15 @@ if (!function_exists('rgb_to_hsl')) {
 
 //function to convert an hsl color array to an rgb color array
 if (!function_exists('hsl_to_rgb')) {
+	/**
+	 * Converts HSL color to RGB.
+	 *
+	 * @param float $h Hue component in degrees (0-360).
+	 * @param float $s Saturation component (0-1).
+	 * @param float $l Lightness component (0-1).
+	 *
+	 * @return array An array representing the RGB color values ([red, green, blue]), each value ranging from 0 to 255.
+	 */
 	function hsl_to_rgb($h, $s, $l) {
 		$r = 0;
 		$g = 0;
@@ -1506,7 +1925,23 @@ if (!function_exists('send_email')) {
 		Error messages are stored in the variable passed into $email_error BY REFERENCE
 
 	 */
-	function send_email($email_recipients, $email_subject, $email_body, &$email_error = '', $email_from_address = '', $email_from_name = '', $email_priority = 3, $email_debug_level = 0, $email_attachments = '', $email_read_confirmation = false) {
+	/**
+	 * Sends an email with the given recipients, subject, body, and optional parameters.
+	 *
+	 * @param array|string $email_recipients        An array of recipient emails or a single/delimited string of email addresses.
+	 * @param string       $email_subject           The subject of the email.
+	 * @param string       $email_body              The body content of the email.
+	 * @param string &     $email_error             (optional) A reference variable to store any error messages that occur during sending. Default is an empty string.
+	 * @param string       $email_from_address      (optional) The email address of the sender. Defaults to the SMTP from address in settings if not provided.
+	 * @param string       $email_from_name         (optional) The name of the sender. Defaults to the SMTP from name in settings if not provided.
+	 * @param int          $email_priority          (optional) The priority of the email (1: Low, 3: Normal, 5: High). Default is 3.
+	 * @param int          $email_debug_level       (optional) The debug level for sending emails. Default is 0.
+	 * @param string|array $email_attachments       (optional) A string path to an attachment file or an array of attachments. Default is no attachments.
+	 * @param bool         $email_read_confirmation (optional) Whether to enable read receipts. Default is false.
+	 *
+	 * @return bool True if the email was sent successfully, false otherwise. If any errors occur, they will be stored in the provided `$email_error` variable.
+	 */
+	function send_email($email_recipients, $email_subject, $email_body, &$email_error = '', $email_from_address = '', $email_from_name = '', $email_priority = 3, $email_debug_level = 0, $email_attachments = '', bool $email_read_confirmation = false): bool {
 
 		//define the global variables
 		global $database, $settings;
@@ -1552,14 +1987,23 @@ if (!function_exists('send_email')) {
 		$email->attachments = $email_attachments;
 		$email->debug_level = 3;
 		$sent = $email->send();
-		//$email_error = $email->email_error;
-
+		$email_error = $email->email_error;
+		return true;
 	}
+	return false;
 }
 
 //encrypt a string
 if (!function_exists('encrypt')) {
-	function encrypt($key, $data) {
+	/**
+	 * Encrypts the given data using AES-256-CBC with the provided key.
+	 *
+	 * @param string $key  The encryption key. Should be a base64 encoded string.
+	 * @param string $data The data to encrypt.
+	 *
+	 * @return string The encrypted data along with initialization vector (IV). Result is a base64 encoded string formatted as 'encrypted_data::iv'.
+	 */
+	function encrypt($key, $data): string {
 		$encryption_key = base64_decode($key);
 		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
 		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
@@ -1569,23 +2013,46 @@ if (!function_exists('encrypt')) {
 
 //decrypt a string
 if (!function_exists('decrypt')) {
+	/**
+	 * Decrypts the given encrypted data using the provided encryption key.
+	 *
+	 * @param string $key  The base64 encoded encryption key.
+	 * @param string $data The base64 encoded encrypted data with IV (separated by '::').
+	 *
+	 * @return string The decrypted data.
+	 * @throws Exception If openssl_decrypt fails or if $data does not contain both encrypted_data and iv separated by '::'.
+	 */
 	function decrypt($key, $data) {
 		$encryption_key = base64_decode($key);
-		list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
+		[$encrypted_data, $iv] = explode('::', base64_decode($data), 2);
 		return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 	}
 }
 
 //json detection
 if (!function_exists('is_json')) {
-	function is_json($str) {
-		return is_string($str) && is_array(json_decode($str, true)) ? true : false;
+	/**
+	 * Checks if the given string is a valid JSON.
+	 *
+	 * @param string $str The input string to check.
+	 *
+	 * @return bool True if the string is valid JSON, false otherwise.
+	 */
+	function is_json($str): bool {
+		return is_string($str) && is_array(json_decode($str, true));
 	}
 }
 
 // PHP versions lower than 8.3 need the json_validate function
 if (!function_exists('json_validate')) {
-	function json_validate($json) {
+	/**
+	 * Validates if the given string is a valid JSON.
+	 *
+	 * @param string $json The input JSON string to validate.
+	 *
+	 * @return bool True if the string is a valid JSON, false otherwise.
+	 */
+	function json_validate($json): bool {
 		// decode the JSON data
 		$data = json_decode($json);
 
@@ -1600,14 +2067,26 @@ if (!function_exists('json_validate')) {
 
 //mac detection
 if (!function_exists('is_mac')) {
-	function is_mac($str) {
-		return preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1 && strlen(preg_replace("#[^a-fA-F0-9]#", '', $str)) == 12 ? true : false;
+	/**
+	 * Checks if the given string is a MAC address.
+	 *
+	 * @param string $str The input string to check.
+	 *
+	 * @return bool True if the string is a valid MAC address, false otherwise.
+	 */
+	function is_mac($str): bool {
+		return preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1 && strlen(preg_replace("#[^a-fA-F0-9]#", '', $str)) === 12;
 	}
 }
 
 //detect if php is running as command line interface
 if (!function_exists('is_cli')) {
-	function is_cli() {
+	/**
+	 * Checks if the current script is running from the command line interface.
+	 *
+	 * @return bool True if running from CLI, false otherwise.
+	 */
+	function is_cli(): bool {
 		if (defined('STDIN')) {
 			return true;
 		}
@@ -1620,6 +2099,15 @@ if (!function_exists('is_cli')) {
 
 //format device address
 if (!function_exists('format_device_address')) {
+	/**
+	 * Formats a device address string.
+	 *
+	 * @param string $str   The input device address string.
+	 * @param string $delim The delimiter to use for MAC addresses (default is '-').
+	 * @param string $case  The case to convert the formatted string to ('lower' or 'upper', default is 'lower').
+	 *
+	 * @return string|false The formatted device address string, or false if the input string is empty.
+	 */
 	function format_device_address($str, $delim = '-', $case = 'lower') {
 		if (empty($str)) {
 			return false;
@@ -1638,6 +2126,15 @@ if (!function_exists('format_device_address')) {
 //transparent gif
 if (!function_exists('img_spacer')) {
 
+	/**
+	 * Creates an invisible spacer image with specified dimensions.
+	 *
+	 * @param string      $width  The desired width of the image. Default is '1px'.
+	 * @param string      $height The desired height of the image. Default is '1px'.
+	 * @param string|null $custom Additional custom styles to apply to the image. Optional.
+	 *
+	 * @return string The HTML for the spacer image.
+	 */
 	function img_spacer($width = '1px', $height = '1px', $custom = null) {
 		return "<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='width: " . $width . "; height: " . $height . "; " . $custom . "'>";
 	}
@@ -1645,26 +2142,53 @@ if (!function_exists('img_spacer')) {
 }
 
 //lower case
-function lower_case($string) {
+/**
+ * Converts a given string to lowercase giving preference to using multibyte UTF-8 encoding.
+ *
+ * @param string $string The input string to convert.
+ *
+ * @return string The converted string in lowercase.
+ */
+function lower_case($string): string {
 	if (function_exists('mb_strtolower')) {
-		return mb_strtolower($string, 'UTF-8');
+		return mb_strtolower($string ?? '', 'UTF-8');
 	} else {
-		return strtolower($string);
+		return strtolower($string ?? '');
 	}
 }
 
 //upper case
-function upper_case($string) {
+/**
+ * Converts a given string to uppercase giving preference to using multibyte UTF-8 encoding.
+ *
+ * @param string $string The input string to convert.
+ *
+ * @return string The converted string in uppercase.
+ */
+function upper_case($string): string {
 	if (function_exists('mb_strtoupper')) {
-		return mb_strtoupper($string, 'UTF-8');
+		return mb_strtoupper($string ?? '', 'UTF-8');
 	} else {
-		return strtoupper($string);
+		return strtoupper($string ?? '');
 	}
 }
 
 //write javascript function that detects select key combinations to perform designated actions
 if (!function_exists('key_press')) {
-	function key_press($key, $direction = 'up', $subject = 'document', $exceptions = array(), $prompt = null, $action = null, $script_wrapper = true) {
+	/**
+	 * Handles key press events based on the given parameters.
+	 *
+	 * @param string      $key            The key to listen for. Can be a single character or a special key like 'escape', 'delete', etc.
+	 * @param string      $direction      The direction of the event, either 'up' (keyup), 'down' (keydown), 'press' (keypress). Defaults to 'up'.
+	 * @param string      $subject        The element to attach the event listener to. Can be an ID, class, or one of the special keywords 'window' or 'document'. Defaults to 'document'.
+	 * @param array       $exceptions     An optional array of selectors for elements that should not trigger the event.
+	 * @param null|string $prompt         An optional prompt message to display before executing the action. If provided, a confirm dialog will be displayed.
+	 * @param null|string $action         The action to execute when the key is pressed and there are no exceptions. Defaults to displaying an alert with the key name if no other action is specified.
+	 * @param bool        $script_wrapper Whether to wrap the output script in `<script>` tags. Defaults to true.
+	 *
+	 * @return void This function outputs a JavaScript event listener script based on the provided parameters.
+	 */
+	function key_press($key, $direction = 'up', $subject = 'document', $exceptions = [], $prompt = null, $action = null, $script_wrapper = true) {
 		//determine key code
 		switch (strtolower($key)) {
 			case 'escape':
@@ -1745,6 +2269,17 @@ if (!function_exists('key_press')) {
 
 //format border radius values
 if (!function_exists('format_border_radius')) {
+	/**
+	 * Formats a border radius value into an associative array with top-left, top-right, bottom-right, and bottom-left values.
+	 *
+	 * If the input is empty or null, it defaults to 5px.
+	 *
+	 * @param string|int|float $radius_value The border radius value. Can be in pixels (px) or percentage (%).
+	 * @param int              $default      The default border radius value if the input is empty or null. Defaults to 5.
+	 *
+	 * @return array An associative array containing the formatted border radius values with keys 'tl', 'tr', 'br', and 'bl' for top-left, top-right, bottom-right, and bottom-left respectively.
+	 *                                       Each key contains an associative array with keys 'n' for the numeric value and 'u' for the unit (px or %).
+	 */
 	function format_border_radius($radius_value, $default = 5) {
 		$radius_value = (!empty($radius_value)) ? $radius_value : $default;
 		$br_a = explode(' ', $radius_value);
@@ -1794,6 +2329,14 @@ if (!function_exists('format_border_radius')) {
 
 //converts a string to a regular expression
 if (!function_exists('string_to_regex')) {
+	/**
+	 * Converts a given string to a regular expression pattern.
+	 *
+	 * @param string $string The input string to convert. It can contain special characters like N, X, Z for numeric ranges.
+	 * @param string $prefix Optional prefix to add to the regex pattern. If not empty and less than 4 characters, it will be converted to a non-capturing group.
+	 *
+	 * @return string The resulting regular expression pattern as a string.
+	 */
 	function string_to_regex($string, $prefix = '') {
 		$original_string = $string;
 		//escape the plus
@@ -1855,6 +2398,14 @@ if (!function_exists('string_to_regex')) {
 
 //dynamically load available web fonts
 if (!function_exists('get_available_fonts')) {
+	/**
+	 * Retrieves available font families from Google Fonts API.
+	 *
+	 * @param string $sort  Optional parameter to sort the returned font families. Default is 'alpha'.
+	 *                      Possible values are 'alpha', 'date', 'popularity', 'style', and 'trending'.
+	 *
+	 * @return array|bool An array of available font family names if successful, otherwise false if no API key is set.
+	 */
 	function get_available_fonts($sort = 'alpha') {
 		//define the global variables
 		global $settings;
@@ -1891,6 +2442,19 @@ if (!function_exists('get_available_fonts')) {
 
 //dynamically import web fonts (by reading static css file)
 if (!function_exists('import_fonts')) {
+	/**
+	 * Imports Google Fonts used in a CSS file.
+	 *
+	 * This function reads the contents of the specified file, beginning at an optional line number,
+	 * and attempts to parse the specified google fonts used. It assumes that each curly brace
+	 * will be on its own line, each CSS style (attribute: value;) will be on its own line,
+	 * a single Google Fonts name will be used per selector, and it will be surrounded by SINGLE quotes.
+	 *
+	 * @param string   $file_to_parse     The path to the CSS file containing the font styles.
+	 * @param int|null $line_styles_begin Optional. The starting line number for parsing font styles. Default is null (parse from the beginning of the file).
+	 *
+	 * @return void This function does not return a value; it outputs the generated @import string directly using 'echo'.
+	 */
 	function import_fonts($file_to_parse, $line_styles_begin = null) {
 		/*
 		  This function reads the contents of $file_to_parse, beginning at $line_styles_begin (if set),
@@ -1988,6 +2552,11 @@ if (!function_exists('import_fonts')) {
 
 //retrieve array of countries
 if (!function_exists('get_countries')) {
+	/**
+	 * Retrieves an ordered list of all countries from the database.
+	 *
+	 * @return array|false An array of country records if successful, or false if no countries are found.
+	 */
 	function get_countries() {
 		//define the global variables
 		global $database;
@@ -2003,6 +2572,14 @@ if (!function_exists('get_countries')) {
 }
 
 //make directory with event socket
+/**
+ * Creates a new directory using the Event Socket API.
+ *
+ * @param string $dir The name of the directory to create. Must be an absolute path.
+ *
+ * @return bool True if the directory was successfully created, false otherwise.
+ *              Returns true even if the directory already exists.
+ */
 function event_socket_mkdir($dir) {
 	//connect to event socket
 	$esl = event_socket::create();
@@ -2058,6 +2635,15 @@ function escape_textarea($string) {
 
 //output pre-formatted array keys and values
 if (!function_exists('view_array')) {
+	/**
+	 * Formats and displays an array as HTML for viewing.
+	 *
+	 * @param array $array  The array to view.
+	 * @param bool  $exit   Optional. Whether to exit the script after displaying the array. Defaults to true.
+	 * @param bool  $return Optional. Whether to return the formatted HTML string instead of echoing it. Defaults to false.
+	 *
+	 * @return string|null Returns the formatted HTML string if `$return` is set to true, otherwise null.
+	 */
 	function view_array($array, $exit = true, $return = false) {
 		$html = "<br><pre style='text-align: left;'>" . print_r($array, true) . '</pre><br>';
 		if ($return) {
@@ -2071,6 +2657,15 @@ if (!function_exists('view_array')) {
 
 //format db date and/or time to local date and/or time
 if (!function_exists('format_when_local')) {
+	/**
+	 * Formats a given time string when local.
+	 *
+	 * @param string $when            The input time string to format (can be date, time, or date-time).
+	 * @param string $format          The desired output format ('d' for date only, 't' for time only, 'dt' for date-time). Defaults to 'dt'.
+	 * @param bool   $include_seconds Whether to include seconds in the formatted time. Defaults to false.
+	 *
+	 * @return mixed The formatted time string based on the specified format, or false if the input string is empty.
+	 */
 	function format_when_local($when, $format = 'dt', $include_seconds = false) {
 		if (!empty($when)) {
 			// determine when format
@@ -2125,6 +2720,17 @@ if (!function_exists('format_when_local')) {
 
 //define email button (src: https://buttons.cm)
 if (!function_exists('email_button')) {
+	/**
+	 * Generates an HTML email button.
+	 *
+	 * @param string $text     The text displayed on the button (default is 'Click Here!').
+	 * @param string $link     The URL linked to the button (default is 'URL').
+	 * @param string $bg_color The background color of the button (default is '#dddddd').
+	 * @param string $fg_color The foreground color of the text on the button (default is '#000000').
+	 * @param string $radius   The border radius of the button corners. If a space-separated string is provided, only the first value will be used. Non-numeric characters are removed and the remaining value is used to calculate the MS arc size percentage (default is '3px', which results in an arcsize of 20%).
+	 *
+	 * @return string The HTML code for the email button.
+	 */
 	function email_button($text = 'Click Here!', $link = 'URL', $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
 
 		// default button radius
@@ -2160,6 +2766,17 @@ if (!function_exists('email_button')) {
 
 //validate and format order by clause of select statement
 if (!function_exists('order_by')) {
+	/**
+	 * Generates an SQL ORDER BY clause based on the provided column and direction.
+	 *
+	 * @param string       $col         The column to order by. Can contain wildcards (*).
+	 * @param string       $dir         The ordering direction ('asc' or 'desc'). If not specified, defaults to 'asc'.
+	 * @param mixed        $col_default An alternative column(s) to order by if the primary column is empty. Can be an array for multiple columns.
+	 * @param string|array $dir_default The default ordering direction(s) for each alternative column ('asc' or 'desc'). If not specified, defaults to 'asc'.
+	 * @param string       $sort        The sort type ('natural'), only applicable when using PostgreSQL database and with text data types.
+	 *
+	 * @return string The generated ORDER BY clause. Returns an empty string if no valid ordering parameters are provided.
+	 */
 	function order_by($col, $dir, $col_default = '', $dir_default = 'asc', $sort = '') {
 		global $db_type;
 		$order_by = ' order by ';
@@ -2193,6 +2810,14 @@ if (!function_exists('order_by')) {
 
 //validate and format limit and offset clause of select statement
 if (!function_exists('limit_offset')) {
+	/**
+	 * Generates a SQL LIMIT clause with optional OFFSET.
+	 *
+	 * @param int|null $limit  The maximum number of records to return. If null, no limit is applied.
+	 * @param int      $offset The number of records to skip before returning results. Defaults to 0 if not specified.
+	 *
+	 * @return string The generated LIMIT clause with optional OFFSET, prefixed with a space. If neither limit nor offset are provided, an empty string is returned.
+	 */
 	function limit_offset($limit = null, $offset = 0) {
 		$regex = '#[^0-9]#';
 		if (!empty($limit)) {
@@ -2210,33 +2835,16 @@ if (!function_exists('limit_offset')) {
 	}
 }
 
-//add a random_bytes function when it doesn't exist for old versions of PHP
-if (!function_exists('random_bytes')) {
-	function random_bytes($length) {
-		$string = '';
-		$chars = "0123456789";
-		$chars .= "abcdefghijkmnopqrstuvwxyz";
-		$chars .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
-		for ($i = 0; $i < $length; $i++) {
-			$string .= $chars[random_int(0, strlen($chars) - 1)];
-		}
-		return $string . ' ';
-	}
-}
-
-//add a hash_equals function when it doesn't exist for old versions of PHP
-if (!function_exists('hash_equals')) {
-	function hash_equals($var1, $var2) {
-		if ($var1 == $var2) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-}
-
 //convert bytes to readable human format
 if (!function_exists('byte_convert')) {
+	/**
+	 * Converts bytes into human-readable format with optional precision.
+	 *
+	 * @param int $bytes     The number of bytes to convert.
+	 * @param int $precision Optional. The number of decimal places for rounding. Default is 2.
+	 *
+	 * @return string The converted byte count in human-readable format (e.g., "10 KB", "2 MB").
+	 */
 	function byte_convert($bytes, $precision = 2) {
 		static $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 		$step = 1024;
@@ -2249,15 +2857,22 @@ if (!function_exists('byte_convert')) {
 	}
 }
 
-//convert bytes to readable human format
-if (!function_exists('random_int')) {
-	function random_int($min, $max) {
-		return rand($min, $max);
-	}
-}
-
 //manage submitted form values in a session array
 if (!function_exists('persistent_form_values')) {
+	/**
+	 * Manages persistent form values using the session.
+	 *
+	 * @param string $action The action to perform on the persistent form values. Possible actions are:
+	 *                       - 'store': Stores an array of key/value pairs in the session.
+	 *                       - 'exists': Checks if persistent form values exist for the current script.
+	 *                       - 'load': Loads persistent form values into global variables or a specified array.
+	 *                       - 'view': Views the persistent form values.
+	 *                       - 'clear': Clears the persistent form values for the current script.
+	 *
+	 * @param mixed  $array  The input array to store (for 'store' action) or the name of an array to load the form values into (for 'load' action). Defaults to null.
+	 *
+	 * @return bool|void Returns true if persistent form values exist ('exists' action), otherwise it returns void.
+	 */
 	function persistent_form_values($action, $array = null) {
 		switch ($action) {
 			case 'store':
@@ -2313,9 +2928,14 @@ if (!function_exists('array_key_first')) {
 
 //get accountcode
 if (!function_exists('get_accountcode')) {
+	/**
+	 * Retrieves the account code from either the settings or the session.
+	 *
+	 * @return string The account code. If not found, an empty string is returned.
+	 */
 	function get_accountcode() {
 		//define the global variables
-		global $database, $settings;
+		global $settings;
 
 		if (!empty($accountcode = $settings->get('domain', 'accountcode') ?? '')) {
 			if ($accountcode == "none") {
@@ -2330,6 +2950,14 @@ if (!function_exists('get_accountcode')) {
 
 //user exists
 if (!function_exists('user_exists')) {
+	/**
+	 * Checks if a user exists in the FreeSwitch system.
+	 *
+	 * @param string      $login       The username to search for.
+	 * @param string|null $domain_name The domain name under which to search. If null, uses the domain from the session.
+	 *
+	 * @return bool True if the user exists, false otherwise.
+	 */
 	function user_exists($login, $domain_name = null) {
 		//connect to freeswitch
 		$esl = event_socket::create();
@@ -2340,14 +2968,22 @@ if (!function_exists('user_exists')) {
 		if (is_null($domain_name)) {
 			$domain_name = $_SESSION['domain_name'];
 		}
-		$switch_cmd = "user_exists id '$login' '$domain_name'";
-		$switch_result = event_socket::api($switch_cmd);
-		return ($switch_result == 'true' ? true : false);
+		$switch_cmd = "api user_exists id '$login' '$domain_name'";
+		$switch_result = $esl->request($switch_cmd);
+		return $switch_result == 'true';
 	}
 }
 
 //git pull
 if (!function_exists('git_pull')) {
+	/**
+	 * Performs a git pull operation on the specified path.
+	 * If the git directory is not listed as 'safe', the directory will be added to the global 'safe.directory' in git config
+	 *
+	 * @param string $path The local path to the Git repository.
+	 *
+	 * @return array An associative array with keys 'result' (boolean indicating success) and 'message' (array of response lines).
+	 */
 	function git_pull($path) {
 
 		//set the realpath
@@ -2444,6 +3080,13 @@ function is_git_safe_directory($directory) {
 
 //git repo validation
 if (!function_exists('is_git_repo')) {
+	/**
+	 * Checks if the given path is a Git repository.
+	 *
+	 * @param string $path The file system path to check.
+	 *
+	 * @return bool True if the path points to a valid Git repository, false otherwise.
+	 */
 	function is_git_repo($path) {
 		//normalize the path
 		$path = realpath($path);
@@ -2468,6 +3111,19 @@ if (!function_exists('is_git_repo')) {
 
 //git repo version information
 if (!function_exists('git_repo_info')) {
+	/**
+	 * Retrieves information about a Git repository at the specified path.
+	 *
+	 * @param string $path The local or remote path to the Git repository.
+	 *
+	 * @return array|bool An associative array containing 'branch', 'commit', 'url', and 'path' keys, if successful; false otherwise.
+	 *     - branch (string): The current branch name.
+	 *     - commit (string): The SHA-1 hash of the current commit.
+	 *     - url (string): The remote URL for fetching updates.
+	 *     - path (string): The local path to the repository.
+	 *
+	 * @throws RuntimeException If the given path is not a valid or accessible directory.
+	 */
 	function git_repo_info($path) {
 
 		//return false if the path is invalid or inaccessible
@@ -2513,6 +3169,13 @@ if (!function_exists('git_repo_info')) {
 
 //git locate app repositories
 if (!function_exists('git_find_repos')) {
+	/**
+	 * Finds and returns an array of Git repositories located in the given path.
+	 *
+	 * @param string $path The directory path to search for Git repositories.
+	 *
+	 * @return array An associative array where keys are the full paths to Git repositories and values are arrays containing the repository names.
+	 */
 	function git_find_repos($path) {
 
 		//scan the directories
@@ -2541,6 +3204,13 @@ if (!function_exists('git_find_repos')) {
 
 //get contents of the supplied url
 if (!function_exists('url_get_contents')) {
+	/**
+	 * Retrieves the content of a URL using cURL.
+	 *
+	 * @param string $URL The URL to retrieve content from.
+	 *
+	 * @return string|false The contents of the URL on success, or false on failure.
+	 */
 	function url_get_contents($URL){
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
@@ -2554,6 +3224,23 @@ if (!function_exists('url_get_contents')) {
 
 //get system memory details
 if (!function_exists('get_memory_details')) {
+	/**
+	 * Retrieves memory details for the current system.
+	 *
+	 * On Linux systems, it reads `/proc/meminfo` and extracts total, available,
+	 * used memory, along with memory usage percentage. On FreeBSD systems, it uses
+	 * `sysctl` to retrieve similar information.
+	 *
+	 * @return array|bool An associative array containing memory details if successful,
+	 *                    or false if the operation fails or the system is neither Linux nor FreeBSD.
+	 *
+	 * The returned array has the following keys:
+	 * - total_memory: Total memory in KB.
+	 * - available_memory: Available memory in KB.
+	 * - used_memory: Used memory in KB.
+	 * - memory_usage: Memory usage percentage (as a decimal).
+	 * - memory_percent: Memory usage percentage (as a string with '%' suffix, e.g., '54.23%').
+	 */
 	function get_memory_details() {
 		if (PHP_OS == 'Linux') {
 			$meminfo = file_get_contents("/proc/meminfo");
