@@ -44,6 +44,9 @@
 		verto_enabled = session:getVariable("verto_enabled") or '';
 	end
 
+--set bind digit action
+	session:execute("bind_digit_action", "local,*7,exec:execute_extension,xfer"..sip_to_user..",both,peer");
+
 --set caller id
 	if (effective_caller_id_name ~= nil) then
 		caller_id_name = effective_caller_id_name;
