@@ -666,7 +666,7 @@ class database {
 			if ($this->type == "mssql") {
 				$sql = "SELECT * FROM sys.Tables order by name asc";
 			}
-			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement = $this->db->prepare($sql);
 			$prep_statement->execute();
 			$tmp = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			if ($this->type == "pgsql" || $this->type == "sqlite" || $this->type == "mssql") {
@@ -2295,7 +2295,6 @@ class database {
 
 											//run the query and return the results
 											try {
-												//$this->db->query(check_sql($sql));
 												$prep_statement = $this->db->prepare($sql);
 												$prep_statement->execute($params);
 												unset($prep_statement);
@@ -2506,7 +2505,6 @@ class database {
 											try {
 												$prep_statement = $this->db->prepare($sql);
 												$prep_statement->execute($params);
-												//$this->db->query(check_sql($sql));
 												$message["message"] = "OK";
 												$message["code"] = "200";
 												$message["uuid"] = $parent_key_value;

@@ -127,22 +127,6 @@ if (!function_exists('check_str')) {
 	}
 }
 
-if (!function_exists('check_sql')) {
-	/**
-	 * Alias of trim
-	 *
-	 * @param  string $string
-	 *
-	 * @return void
-	 * @see trim()
-	 * @deprecated 5.0
-	 */
-	function check_sql($string) {
-		trigger_error('check_sql should not be used. Use parameterized queries instead.', E_USER_WARNING);
-		return trim($string); //remove white space
-	}
-}
-
 if (!function_exists('check_cidr')) {
 	/**
 	 * Checks if the $ip_address is within the range of the given $cidr
