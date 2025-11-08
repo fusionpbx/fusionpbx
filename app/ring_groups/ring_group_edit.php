@@ -55,8 +55,13 @@
 	$ring_group_forward_destination = '';
 	$ring_group_forward_toll_allow = '';
 	$ring_group_description = '';
-	$ring_group_ringback = $settings->get('ring_group', 'default_ringback', '');
 	$onkeyup = '';
+	$ring_group_ringback = $settings->get('ring_group', 'default_ringback', '');
+	$ring_group_call_screen_enabled = $settings->get('ring_group', 'call_screen_enabled', false);
+	$ring_group_call_forward_enabled = $settings->get('ring_group', 'call_forward_enabled', false);
+	$ring_group_follow_me_enabled = $settings->get('ring_group', 'follow_me_enabled', false);
+	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
+	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
 
 //initialize the destinations object
 	$destination = new destinations;
@@ -583,13 +588,8 @@
 	}
 
 //set the defaults
-	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
-	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
 	$ring_group_call_timeout = $ring_group_call_timeout ?? '30';
 	$ring_group_greeting = $ring_group_greeting ?? '';
-	$ring_group_call_screen_enabled = $settings->get('ring_group', 'call_screen_enabled', false);
-	$ring_group_call_forward_enabled = $settings->get('ring_group', 'call_forward_enabled', false);
-	$ring_group_follow_me_enabled = $settings->get('ring_group', 'follow_me_enabled', false);
 
 //get the ring group destination array
 	if ($action == "add") {
