@@ -3271,7 +3271,7 @@ if (!function_exists('get_memory_details')) {
 			exec('sysctl -n hw.physmem hw.pagesize vm.stats.vm.v_free_count vm.stats.vm.v_inactive_count vm.stats.vm.v_cache_count vm.stats.vm.v_wire_count', $output);
 
 			if (count($output) === 6) {
-				[$array['total_memory'], $page_size, $free_pages, $inactive_pages, $cache_pages, $wired_pages] = $output;
+				list($array['total_memory'], $page_size, $free_pages, $inactive_pages, $cache_pages, $wired_pages) = $output;
 
 				// total memory in bytes
 				$array['total_memory'] = (int)$array['total_memory'];
