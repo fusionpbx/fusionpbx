@@ -230,6 +230,7 @@ if (!function_exists('uuid')) {
 				exit;
 			}
 		}
+		return '';
 	}
 
 }
@@ -1974,7 +1975,7 @@ if (!function_exists('send_email')) {
 		$email_error = $email->email_error;
 		return true;
 	}
-	return false;
+
 }
 
 //encrypt a string
