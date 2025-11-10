@@ -629,16 +629,16 @@ if (!function_exists('th_order_by')) {
 	 *
 	 * @param string $field_name      The name of the field used for ordering.
 	 * @param string $column_title    The title to display in the column header.
-	 * @param string $order_by        The current order by field.
-	 * @param string $order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
-	 * @param string $app_uuid        Optional application UUID parameter. Default is an empty string.
-	 * @param string $css             Optional CSS classes for the table header cell. Default is an empty string.
-	 * @param string $http_get_params Optional additional HTTP GET parameters to include in the ordering URL. Default is an empty string.
-	 * @param string $description     Optional description text to be included in the title attribute of the column header link. Default is an empty string.
+	 * @param string|null $order_by        The current order by field.
+	 * @param string|null $order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
+	 * @param string|null $app_uuid        Optional application UUID parameter. Default is an empty string.
+	 * @param string|null $css             Optional CSS classes for the table header cell. Default is an empty string.
+	 * @param string|null $http_get_params Optional additional HTTP GET parameters to include in the ordering URL. Default is an empty string.
+	 * @param string|null $description     Optional description text to be included in the title attribute of the column header link. Default is an empty string.
 	 *
 	 * @return string The generated HTML for the table header cell with ordering functionality.
 	 */
-	function th_order_by(string $field_name, string $column_title, string $order_by, string $order, ?string $app_uuid = '', ?string $css = '', ?string $http_get_params = '', ?string $description = ''): string {
+	function th_order_by(string $field_name, string $column_title, ?string $order_by, ?string $order, ?string $app_uuid = '', ?string $css = '', ?string $http_get_params = '', ?string $description = ''): string {
 		global $text;
 		if (is_uuid($app_uuid) > 0) {
 			$app_uuid = "&app_uuid=" . urlencode($app_uuid);
