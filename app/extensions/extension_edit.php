@@ -77,8 +77,8 @@
 	$provision_line_sip_port					= $settings->get('provision','line_sip_port', null);
 	$provision_line_sip_transport				= $settings->get('provision','line_sip_transport', null);
 	$provision_line_register_expires			= $settings->get('provision','line_register_expires', null);
-	$theme_input_toggle_style					= $settings->get('theme','input_toggle_style', '');                       //set default to empty string
-	$voicemail_password_length					= $settings->get('voicemail', 'password_length', 6);                      //set default to 6
+	$theme_input_toggle_style					= $settings->get('theme','input_toggle_style', '');                    //set default to empty string
+	$voicemail_password_length					= $settings->get('voicemail', 'password_length', 6);                   //set default to 6
 	$voicemail_transcription_enabled_default	= $settings->get('voicemail', 'transcription_enabled_default', false); //set default to false
 	$voicemail_enabled_default					= $settings->get('voicemail', 'enabled_default', true);
 	$switch_voicemail							= $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . "/default/$domain_name";
