@@ -309,7 +309,7 @@
 	if (empty($agent_no_answer_delay_time)) { $agent_no_answer_delay_time = "30"; }
 	if (empty($agent_reject_delay_time)) { $agent_reject_delay_time = "90"; }
 	if (empty($agent_busy_delay_time)) { $agent_busy_delay_time = "90"; }
-	if ($agent_record === null) { $agent_record = false; }
+	$agent_record = $agent_record ?? false;
 
 //create token
 	$object = new token;

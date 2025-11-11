@@ -224,8 +224,9 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set defaults
-	if (empty($conference_center_pin_length)) { $conference_center_pin_length = 9; }
+//set the defaults
+	$conference_center_pin_length = $conference_center_pin_length ?? 9;
+	$conference_center_enabled = $conference_center_enabled ?? true;
 
 //get the sounds
 	$sounds = new sounds;

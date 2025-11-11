@@ -682,7 +682,8 @@
 		unset($sounds);
 	}
 
-//set the default values
+//set default values
+	$queue_greeting = $queue_greeting ?? '';
 	$queue_strategy = $queue_strategy ?? "longest-idle-agent";
 	$queue_moh_sound = $queue_moh_sound ?? "\$\${hold_music}";
 	$queue_time_base_score = $queue_time_base_score ?? "system";
@@ -691,12 +692,13 @@
 	$queue_max_wait_time_with_no_agent_time_reached = $queue_max_wait_time_with_no_agent_time_reached ?? "30";
 	$queue_tier_rule_wait_second = $queue_tier_rule_wait_second ?? "30";
 	$queue_discard_abandoned_after = $queue_discard_abandoned_after ?? "900";
-	$queue_context = $queue_context ?? $domain_name;
 	$queue_record_template = $queue_record_template ?? 'false';
 	$queue_tier_rules_apply = $queue_tier_rules_apply ?? false;
 	$queue_tier_rule_wait_multiply_level = $queue_tier_rule_wait_multiply_level ?? true;
 	$queue_tier_rule_no_agent_no_wait = $queue_tier_rule_no_agent_no_wait ?? true;
 	$queue_abandoned_resume_allowed = $queue_abandoned_resume_allowed ?? false;
+	$queue_announce_sound = $queue_announce_sound ?? '';
+	$queue_context = $queue_context ?? $domain_name;
 
 //create token
 	$object = new token;

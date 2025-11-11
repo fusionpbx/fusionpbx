@@ -646,7 +646,8 @@
 	}
 
 //set the defaults
-	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
+	$dialplan_context = $dialplan_context ?? $_SESSION['domain_name'];
+	$dialplan_enabled = $dialplan_enabled ?? true;
 
 //create token
 	$object = new token;

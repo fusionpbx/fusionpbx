@@ -588,8 +588,13 @@
 	}
 
 //set the defaults
+	$ring_group_exit_key = $ring_group_exit_key ?? '';
 	$ring_group_call_timeout = $ring_group_call_timeout ?? '30';
 	$ring_group_greeting = $ring_group_greeting ?? '';
+	$ring_group_forward_enabled = $ring_group_forward_enabled ?? false;
+	$ring_group_context = $ring_group_context ?? $domain_name;
+	$ring_group_enabled = $ring_group_enabled ?? true;
+	$destination_enabled = $row['destination_enabled'] ?? false;
 
 //get the ring group destination array
 	if ($action == "add") {
@@ -649,11 +654,6 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
-
-//set the default ring group context
-	if (empty($ring_group_context)) {
-		$ring_group_context = $domain_name;
-	}
 
 //get the ring backs
 	$ringbacks = new ringbacks;
@@ -983,8 +983,8 @@
 			echo "				<span class='switch'>\n";
 		}
 		echo "					<select class='formfld' id='ring_group_destinations_".$x."_destination_enabled' name='ring_group_destinations[".$x."][destination_enabled]'>\n";
-		echo "						<option value='false' ".($row['destination_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "						<option value='true' ".($row['destination_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "						<option value='true' ".($destination_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "						<option value='false' ".($destination_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "					</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "					<span class='slider'></span>\n";
@@ -1252,8 +1252,8 @@
 			echo "	<span class='switch'>\n";
 		}
 		echo "	<select class='formfld' id='ring_group_forward_enabled' name='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">\n";
-		echo "		<option value='false' ".($ring_group_forward_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".($ring_group_forward_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($ring_group_forward_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "		<span class='slider'></span>\n";

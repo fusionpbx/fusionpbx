@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,6 +37,9 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//set the defaults
+	$fax_file = '';
 
 //get the fax_extension and save it as a variable
 	if (isset($_REQUEST["fax_extension"])) {

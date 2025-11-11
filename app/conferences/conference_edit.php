@@ -313,7 +313,9 @@
 	}
 
 //set the defaults
-	if (empty($conference_context)) { $conference_context = $_SESSION['domain_name']; }
+	$conference_profile = $conference_profile ?? 'default';
+	$conference_context = $conference_context ?? $_SESSION['domain_name'];
+	$conference_enabled = $conference_enabled ?? true;
 
 //get the conference profiles
 	$sql = "select * ";
@@ -341,9 +343,6 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$users = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
-
-//set the default
-	if (empty($conference_profile)) { $conference_profile = "default"; }
 
 //create token
 	$object = new token;

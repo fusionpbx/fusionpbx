@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -299,6 +299,9 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//set the defaults
+	$phrase_enabled = $phrase_enabled ?? true;
 
 //create token
 	$object = new token;

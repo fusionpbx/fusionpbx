@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2024
+	Portions created by the Initial Developer are Copyright (C) 2024-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -35,6 +35,11 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//set the defaults
+	$fifo_strategy = '';
+	$fifo_exit_key = '';
+	$fifo_exit_action = '';
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
@@ -418,6 +423,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$fifo_enabled = $fifo_enabled ?? true;
 
 //get the child data
 	if (!empty($fifo_uuid) && is_uuid($fifo_uuid)) {

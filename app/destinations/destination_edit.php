@@ -1484,8 +1484,9 @@
 	if (empty($destination_order)) { $destination_order = '100'; }
 	if (empty($destination_type)) { $destination_type = 'inbound'; }
 	if (empty($destination_context)) { $destination_context = 'public'; }
-	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
-	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type == "outbound") { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type == "local") { $destination_context = $_SESSION['domain_name']; }
+	$destination_enabled = $destination_enabled ?? true;
 
 //initialize the destinations object
 	if (permission_exists('destination_domain') && is_uuid($domain_uuid)) {

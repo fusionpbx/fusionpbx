@@ -681,6 +681,9 @@
 
 //set the defaults
 	if (empty($user_totp_secret)) { $user_totp_secret = ""; }
+	$user_status = $user_status ?? '';
+	$user_type = $user_type ?? 'default';
+	$user_enabled = $user_enabled ?? true;
 
 //create token
 	$object = new token;

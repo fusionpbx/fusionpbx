@@ -326,12 +326,12 @@
 	$profile = $profile ?? '';
 	$hostname = $hostname ?? '';
 	$description = $description ?? '';
-	$register = $register ?? false;
+	$register = $register ?? true;
 	$distinct_to = $distinct_to ?? false;
 	$caller_id_in_from = $caller_id_in_from ?? false;
 	$supress_cng = $supress_cng ?? false;
 	$contact_in_ping = $contact_in_ping ?? false;
-	$enabled = $enabled ?? false;
+	$enabled = $enabled ?? true;
 
 //create token
 	$object = new token;

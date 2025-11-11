@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -310,6 +310,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$broadcast_avmd = $broadcast_avmd ?? true;
 
 //create token
 	$object = new token;

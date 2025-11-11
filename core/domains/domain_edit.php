@@ -529,6 +529,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	$domain_enabled = $domain_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

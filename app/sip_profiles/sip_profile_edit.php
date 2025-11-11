@@ -355,6 +355,9 @@
 	}
 	unset($sql);
 
+//set the defaults
+	$sip_profile_enabled = $sip_profile_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

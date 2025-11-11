@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -179,6 +179,9 @@
 		}
 		unset ($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$group_protected = $group_protected ?? true;
 
 //create token
 	$object = new token;
