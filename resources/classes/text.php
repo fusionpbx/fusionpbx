@@ -4,7 +4,7 @@
  * Get the text for the correct translation
  *
  */
-class text {
+class text implements clear_cache {
 
 	/**
 	 * Contains the list of supported languages
@@ -57,11 +57,24 @@ class text {
 	private $domain_uuid;
 
 	/**
+	 * Translated flattened text array using the file path as key
+	 * @var array
+	 */
+	private static $tanslated;
+	/**
+	 * @var bool
+	 */
+	private $apcu_enabled;
+
+	/**
 	 * Called when the object is created
 	 */
 	public function __construct($setting_array = []) {
 		//define the text array
 			$text = array();
+
+		//check for apcu caching
+			$this->apcu_enabled = function_exists('apcu_enabled') && apcu_enabled();
 
 		//set the domain and user uuids
 			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
@@ -102,18 +115,26 @@ class text {
 	}
 
 	/**
-	 * Get a specific item from the cache
-	 * @var string $language_code	examples: en-us, es-cl, fr-fr, pt-pt
-	 * @var string $app_path		examples: app/exec or core/domains
+	 * Get a specific language from the language file
+	 * @param string|null $language_code    examples: en-us, es-cl, fr-fr, pt-pt
+	 * @param string|null $app_path         examples: app/exec or core/domains
+	 * @param bool        $exclude_global   Exclude the global languages file
+	 *
+	 * @return array A flattened array containing the desired language
 	 */
-	public function get($language_code = null, $app_path = null, $exclude_global = false) {
+	public function get(?string $language_code = null, ?string $app_path = null, bool $exclude_global = false) {
 
 		//define the text array
-			$text = array();
+			$text = [];
 
-		//get the global app_languages.php
-			if (!$exclude_global && file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
-				require $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+		//check the session language
+			if ($language_code == null) {
+				$language_code = $this->settings->get('domain', 'language', 'en-us');
+			}
+
+		//check the language code
+			if (strlen($language_code) == 2 && array_key_exists($language_code, $this->legacy_map)) {
+				$language_code = $this->legacy_map[$language_code];
 			}
 
 		//get the app_languages.php
@@ -123,44 +144,49 @@ class text {
 			else {
 				$lang_path = getcwd();
 			}
-			if (file_exists($lang_path."/app_languages.php")) {
-				if ($lang_path != 'resources' or $exclude_global) {
-					include "{$lang_path}/app_languages.php";
-				}
+
+		//check the class cache
+			$cache_key = "text_{$language_code}_{$lang_path}";
+			if ($this->apcu_enabled && apcu_exists($cache_key)) {
+				return apcu_fetch($cache_key);
+
+			}
+			if (isset(self::$tanslated[$cache_key])) {
+				return self::$tanslated[$cache_key];
+			}
+
+		//get the global app_languages.php
+			if (!$exclude_global && file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
+				require $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+			}
+
+			if (file_exists($lang_path."/app_languages.php") && ($lang_path != 'resources' or $exclude_global)) {
+				include "{$lang_path}/app_languages.php";
 			}
 			//else {
 			//	throw new Exception("could not find app_languages for '$app_path'");
 			//}
 
-		//check the session language
-			if ($language_code == null) {
-				$language_code = $this->settings->get('domain', 'language', 'en-us');
-			}
-
-		//check the language code
-			if (strlen($language_code) == 2) {
-				if (array_key_exists($language_code, $this->legacy_map)) {
-					$language_code = $this->legacy_map[$language_code];
-				}
-			}
-
 		//reduce to specific language
-			if ($language_code != 'all') {
-				if (is_array($text)) {
-					foreach ($text as $key => $value) {
-						if (isset($value[$language_code]) && !empty($value[$language_code])) {
-							//use the selected language
-							$text[$key] = $value[$language_code];
-						}
-						elseif (isset($value['en-us'])) {
-							//fallback to en-us
-							$text[$key] = $value['en-us'];
-						}
-						else {
-							$text[$key] = '';
-						}
+			if ($language_code != 'all' && is_array($text)) {
+				foreach ($text as $key => $value) {
+					if (isset($value[$language_code]) && !empty($value[$language_code])) {
+						//use the selected language
+						$text[$key] = $value[$language_code];
+					} elseif (isset($value['en-us'])) {
+						//fallback to en-us
+						$text[$key] = $value['en-us'];
+					} else {
+						$text[$key] = '';
 					}
 				}
+			}
+
+		//cache the reduced language using the file as a key
+			if ($this->apcu_enabled) {
+				apcu_store($cache_key, $text);
+			} else {
+				self::$tanslated[$cache_key] = $text;
 			}
 
 		//return the array of translations
@@ -415,6 +441,25 @@ class text {
 			return preg_replace("/\\\'/", "'", $string);
 		//escape " as we write our strings double quoted
 			return preg_replace("/\"/", '\"', $string);
+	}
+
+	/**
+	 * The clear_cache method is called automatically for any class that implements the clear_cache interface.
+	 * The function declared here ensures that all clear_cache methods have the same number of parameters being passed, which in this case, is no parameters.
+	 */
+	public static function clear_cache() {
+		if (function_exists('apcu_enabled') && apcu_enabled()) {
+			$cache = apcu_cache_info(false);
+			if (!empty($cache['cache_list'])) {
+				//clear apcu cache of any text entries
+				foreach ($cache['cache_list'] as $entry) {
+					$key = $entry['info'];
+					if (str_starts_with($key, 'text_')) {
+						apcu_delete($key);
+					}
+				}
+			}
+		}
 	}
 }
 
