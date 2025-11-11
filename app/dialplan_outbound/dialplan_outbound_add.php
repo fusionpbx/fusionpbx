@@ -862,6 +862,9 @@
 			return;
 	}
 
+//set the defaults
+	$dialplan_enabled = $dialplan_enabled ?? true;
+
 //get the domains
 	$sql = "select * from v_domains ";
 	$sql .= "where domain_enabled = true ";
