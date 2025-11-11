@@ -232,6 +232,9 @@
 		return;
 	}
 
+//set the defaults
+	$stream_enabled = $stream_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

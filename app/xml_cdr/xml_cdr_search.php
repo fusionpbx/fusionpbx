@@ -63,6 +63,8 @@
 	$remote_media_ip = "";
 	$network_addr = "";
 	$mos_score = "";
+	$call_center_queue_uuid = "";
+	$ring_group_uuid = "";
 
 //get the list of extensions
 	$sql = "select extension_uuid, extension, number_alias from v_extensions ";

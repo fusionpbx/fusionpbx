@@ -390,15 +390,11 @@
 	unset($sql, $parameters);
 
 //set the defaults
-	if (empty($dialplan_context)) {
-		$dialplan_context = $_SESSION['domain_name'];
-	}
-	if (empty($dialplan_order)) {
-		$dialplan_order = '200';
-	}
-	if (empty($dialplan_destination)) {
-		$dialplan_destination = false;
-	}
+	$dialplan_context = $dialplan_context ?? $_SESSION['domain_name'];
+	$dialplan_order = $dialplan_order ?? '200';
+	$dialplan_destination = $dialplan_destination ?? false;
+	$dialplan_continue = $dialplan_continue ?? true;
+	$dialplan_enabled = $dialplan_enabled ?? true;
 
 //define the maximum dialplan order number
 	$dialplan_order_max = 999;

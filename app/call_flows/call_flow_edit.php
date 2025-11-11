@@ -352,6 +352,9 @@
 		unset ($sql, $parameters, $result, $row);
 	}
 
+//set the defaults
+	$call_flow_enabled = $call_flow_enabled ?? true;
+
 //set the context for users that are not in the superadmin group
 	if (empty($call_flow_context)) {
 		$call_flow_context = $_SESSION['domain_name'];

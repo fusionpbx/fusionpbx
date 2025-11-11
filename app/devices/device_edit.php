@@ -55,6 +55,7 @@
 	}
 	else {
 		$action = "add";
+		$device_uuid = uuid();
 	}
 
 //get the total device count from the database, check the limit, if defined
@@ -529,15 +530,16 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the default values
+	$device_address = $device_address ?? '';
+	$device_enabled = $device_enabled ?? true;
+
 //get device lines
 	$sql = "select * ";
 	$sql .= "from v_domains ";
 	$sql .= "order by domain_name asc ";
 	$domains = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
-
-//set the defaults
-	$device_enabled = $device_enabled ?? true;
 
 //use the device address to get the vendor
 	if (empty($device_vendor)) {
@@ -576,6 +578,8 @@
 	unset($sql, $parameters);
 
 //set the new line defaults
+	$device_lines[$x]['device_uuid'] = '';
+	$device_lines[$x]['domain_name'] = '';
 	$device_lines[$x]['line_number'] = '';
 	$device_lines[$x]['server_address'] = '';
 	$device_lines[$x]['outbound_proxy_primary'] = $settings->get('provision', 'outbound_proxy_primary', null);

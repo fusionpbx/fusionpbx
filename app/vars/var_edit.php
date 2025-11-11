@@ -175,6 +175,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	$var_enabled = $var_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

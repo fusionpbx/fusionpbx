@@ -151,6 +151,9 @@
 		unset($sql, $parameters);
 	}
 
+//set the defaults
+	$profile_param_enabled = $profile_param_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -73,8 +73,9 @@
 		$dialplan_description = $_POST["dialplan_description"];
 	}
 
-//set the default
-	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
+//set the defaults
+	$dialplan_context = $dialplan_context ?? $_SESSION['domain_name'];
+	$dialplan_enabled = $dialplan_enabled ?? true;
 
 //add or update data from http post
 	if (count($_POST)>0 && empty($_POST["persistformvar"])) {

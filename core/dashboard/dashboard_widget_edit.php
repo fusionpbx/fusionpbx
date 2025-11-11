@@ -56,6 +56,8 @@
 	$widget_label_background_color_hover = '';
 	$widget_number_text_color = '';
 	$widget_number_background_color = '';
+	$widget_background_gradient_style = '';
+	$widget_background_gradient_angle = 0;
 	$widget_column_span = '';
 	$widget_row_span = '';
 	$widget_details_state = '';
@@ -102,7 +104,7 @@
 		$widget_background_color_hover = $_POST["widget_background_color_hover"] ?? '';
 		$widget_detail_background_color = $_POST["widget_detail_background_color"] ?? '';
 		$widget_background_gradient_style = $_POST["widget_background_gradient_style"] ?? 'mirror';
-		$widget_background_gradient_angle = $_POST["widget_background_gradient_angle"] ?? '90';
+		$widget_background_gradient_angle = $_POST["widget_background_gradient_angle"] ?? '0';
 		$widget_column_span = $_POST["widget_column_span"] ?? '';
 		$widget_row_span = $_POST["widget_row_span"] ?? '';
 		$widget_details_state = $_POST["widget_details_state"] ?? '';
