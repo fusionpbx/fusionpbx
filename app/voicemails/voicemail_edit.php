@@ -377,12 +377,12 @@
 	}
 
 //set the defaults
-	if (!isset($voicemail_local_after_email)) { $voicemail_local_after_email = true; }
-	if (!isset($voicemail_enabled)) { $voicemail_enabled = $settings->get('voicemail', 'enabled_default', true); }
-	if (!isset($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $settings->get('voicemail', 'transcription_enabled_default', false); }
-	if (!isset($voicemail_tutorial)) { $voicemail_tutorial = false; }
-	if (!isset($voicemail_recording_instructions)) { $voicemail_recording_instructions = true; }
-	if (!isset($voicemail_recording_options)) { $voicemail_recording_options = true; }
+	$voicemail_local_after_email = $voicemail_local_after_email ?? true;
+	$voicemail_enabled = $voicemail_enabled ?? $settings->get('voicemail', 'enabled_default', true);
+	$voicemail_transcription_enabled = $voicemail_transcription_enabled ?? $settings->get('voicemail', 'transcription_enabled_default', false);
+	$voicemail_tutorial = $voicemail_tutorial ?? false;
+	$voicemail_recording_instructions = $voicemail_recording_instructions ?? true;
+	$voicemail_recording_options = $voicemail_recording_options ?? true;
 
 //get the greetings list
 	$sql = "select * from v_voicemail_greetings ";
