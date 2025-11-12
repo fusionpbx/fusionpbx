@@ -667,6 +667,9 @@ class domains {
 				//get the context
 					$context = $domain_name;
 
+				//get the email queue settings
+					$settings = new settings(["database" => $this->database, "domain_uuid" => $domain_uuid]);
+
 				//run the php code in app_defaults.php
 					foreach ($default_list as $default_path) {
 						include($default_path);
