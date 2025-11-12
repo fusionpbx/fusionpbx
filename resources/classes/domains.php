@@ -654,6 +654,9 @@ class domains {
 			$domains = $this->database->select($sql, null, 'all');
 			unset($sql);
 
+		//get the list of installed apps from the core and mod directories
+			$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
+
 		//loop through all domains
 			$domains_processed = 1;
 			foreach ($domains as $domain) {
@@ -665,15 +668,14 @@ class domains {
 					$context = $domain_name;
 
 				//get the email queue settings
-					$setting = new settings(["database" => $this->database, "domain_uuid" => $domain_uuid]);
+					$settings = new settings(["database" => $this->database, "domain_uuid" => $domain_uuid]);
 
-				//get the list of installed apps from the core and mod directories and run the php code in app_defaults.php
-					$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
+				//run the php code in app_defaults.php
 					foreach ($default_list as $default_path) {
 						include($default_path);
 					}
 
-				//track of the number of domains processed
+				//track the number of domains processed
 					$domains_processed++;
 			}
 
