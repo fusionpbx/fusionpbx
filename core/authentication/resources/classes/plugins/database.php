@@ -63,9 +63,9 @@ class plugin_database {
 			$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
 			$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
 			$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
-			$background_videos = $settings->get('theme', 'background_video', null);
-			$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
-			$login_domain_name_visible = $settings->get('login', 'domain_name_visible');
+			$background_videos = $settings->get('theme', 'background_video', []);
+			$theme_background_video = (isset($background_videos[0])) ? $background_videos[0] : '';
+			$login_domain_name_visible = $settings->get('login', 'domain_name_visible', false);
 			$login_domain_name = $settings->get('login', 'domain_name');
 			$login_destination = $settings->get('login', 'destination');
 			$users_unique = $settings->get('users', 'unique', '');
