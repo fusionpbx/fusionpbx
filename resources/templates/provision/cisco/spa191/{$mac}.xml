@@ -25,7 +25,7 @@ Parametersfor ProvisioningTab
 <Resync_Trigger_1 ua="na"/>
 <Resync_Trigger_2 ua="na"/>
 <Resync_Fails_On_FNF ua="na">Yes</Resync_Fails_On_FNF>
-<!--{if isset ($spa_provision_url)}-->
+{if isset ($spa_provision_url)}
 <Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
 {else}
 <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
