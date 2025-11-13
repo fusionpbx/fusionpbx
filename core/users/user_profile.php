@@ -816,7 +816,7 @@
 
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-phone']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='phone_number' id='phone_number' required='required' value='".escape(format_phone($phone_number))."'></td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='phone_number' id='phone_number' required='required' value='".escape(format_phone($phone_number ?? ''))."'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>\n";
