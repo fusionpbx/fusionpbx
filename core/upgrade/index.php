@@ -50,17 +50,35 @@
 //set a default message_timeout
 	$message_timeout = 4*1000;
 
+//get the language
+	$language = $settings->get('domain', 'language', 'en-us');
+
 //find optional apps with repos
 	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
 	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
 		foreach ($updateable_repos as $app_path => $repo) {
+			//set the value
 			$x = 0;
+
+			//skip this application if the file doesn't exist
+			if (!file_exists($app_path.'/app_config.php')) {
+				continue;
+			}
+
+			//build the $apps array
 			include $app_path.'/app_config.php';
+
+			//skip this application if the name or uuid are empty
+			if (empty($apps[$x]['name']) || empty($apps[$x]['uuid'])) { continue; }
+
+			//build the updateable_repos array
 			$updateable_repos[$app_path]['app'] = $repo[0];
 			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
 			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
-			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
-			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$settings->get('domain', 'language', 'en-us')];
+			$updateable_repos[$app_path]['version'] = $apps[$x]['version'] ?? '';
+			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$language] ?? '';
+
+			//unset the values
 			unset($apps, $updateable_repos[$app_path][0]);
 		}
 	}
@@ -323,8 +341,8 @@
 		if (!empty($updateable_repos) && is_array($updateable_repos)) {
 			foreach ($updateable_repos as $app_path => $app) {
 				$repo_info = git_repo_info($app_path);
-				$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
 				if (empty($repo_info)) { continue; }
+				$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; if (document.getElementById('do_".$app['app']."').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
 				echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
