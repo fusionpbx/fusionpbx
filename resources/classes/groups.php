@@ -472,7 +472,7 @@
 					}
 
 					//no permissions found add the defaults
-					foreach($apps as $app) {
+					foreach ($apps as $app) {
 						if (is_array($app['permissions'])) foreach ($app['permissions'] as $row) {
 							if (is_array($row['groups'])) foreach ($row['groups'] as $group) {
 								$x++;
