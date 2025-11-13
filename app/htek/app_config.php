@@ -31,13 +31,21 @@
 
 	//default settings
 		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ca6d9f21-08d0-4339-912c-771b60d5b90c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "htek_provision_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Provision URL: https://domain/app/provision";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eebecb32-7c99-4d4c-bf05-6f9ce35da6ea";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "htek_time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "18";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone 18=EST 14=CST 6=PST 9,10=MST";		
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone 18=EST 14=CST 6=PST 9,10=MST";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "25c97d75-1e20-42ae-bb38-a6eb79e5795d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -87,4 +95,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Mode of the PC network port on back of phone  Bridge=1 Router=0 ExpansionModule=2";
 		$y++;
+
 ?>
