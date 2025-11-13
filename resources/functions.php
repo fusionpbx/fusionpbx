@@ -3132,7 +3132,7 @@ if (!function_exists('git_repo_info')) {
 
 		//get the remote origin url for updates
 		exec("git config --get remote.origin.url", $git_url);
-		$repo['url'] = preg_replace('/\.git$/', '', $git_url[0] );
+		$repo['url'] = preg_replace('/\.git$/', '', $git_url[0] ?? '');
 
 		//add the path to the repo array
 		$repo['path'] = $path;
