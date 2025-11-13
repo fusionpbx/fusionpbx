@@ -13,6 +13,10 @@
 		<action application="set" data="outbound_caller_id_name=${caller_id_name}" inline="true" enabled="true"/>
 		<action application="set" data="outbound_caller_id_number=${caller_id_number}" inline="true" enabled="true"/>
 		<action application="set" data="origination_caller_id_number=${caller_destination}" inline="true" enabled="false"/>
+		<action application="answer" data="" enabled="false"/>
+		<action application="sleep" data="100" enabled="false"/>
+		<action application="deflect" data="tel:${forward_all_destination}" enabled="false"/>
+		<action application="hangup" data="NORMAL_CLEARING" enabled="false"/>
 		<action application="set" data="sip_h_Diversion=&lt;sip:${caller_id_number}@${domain_name}&gt;;reason=unconditional" enabled="false"/>
 		<action application="transfer" data="${forward_all_destination} XML ${domain_name}" enabled="true"/>
 	</condition>
