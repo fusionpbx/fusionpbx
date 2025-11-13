@@ -67,7 +67,7 @@
 		preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 		$channels = $matches[1] ? $matches[1] : 0;
 		if (permission_exists('call_active_view')) {
-			$tr_link_channels = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
+			$tr_link_channels = "href='".PROJECT_PATH."/app/active_calls/active_calls.php'";
 		}
 	}
 

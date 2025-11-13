@@ -230,7 +230,7 @@
 					echo "	<table width='100%'>\n";
 					echo "	<tr>\n";
 					echo "	<td align='center'>\n";
-					echo "		<a href='".PROJECT_PATH."/app/calls_active/calls_active.php'>".$text['label-view-calls']."</a>\n";
+					echo "		<a href='".PROJECT_PATH."/app/active_calls/active_calls.php'>".$text['label-view-calls']."</a>\n";
 					echo "	</td>\n";
 					echo "	</table>\n";
 				}
