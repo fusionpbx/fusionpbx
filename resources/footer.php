@@ -79,10 +79,21 @@
 		}
 	}
 
+//get the template_name and template_dir
+	$theme_dir = dirname(__DIR__, 1).'/themes';
+	$template_name = $settings->get('domain', 'template', 'default');
+	if (file_exists($theme_dir.'/'.$template_name.'/template.php')) {
+		$template_dir = $theme_dir.'/'.$template_name;
+	}
+	else {
+		$template_name = 'default';
+		$template_dir = $theme_dir.'/'.$template_name;
+	}
+
 //initialize a template object
 	$view = new template();
 	$view->engine = 'smarty';
-	$view->template_dir = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/themes/'.$_SESSION['domain']['template']['name'].'/';
+	$view->template_dir = $template_dir;
 	$view->cache_dir = sys_get_temp_dir();
 	$view->init();
 
