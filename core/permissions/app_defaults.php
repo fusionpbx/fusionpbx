@@ -3,15 +3,9 @@
 if ($domains_processed == 1) {
 
 	//add the permissions
-		$sql = "select * from v_permissions \n";
-		$database_permissions = $database->select($sql, null, 'all');
-
-	//get the $apps array from the installed apps from the core and mod directories
-		$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
-		$x = 0;
-		foreach ($config_list as $config_path) {
-			include($config_path);
-			$x++;
+		if (empty($database_permissions)) {
+			$sql = "select * from v_permissions \n";
+			$database_permissions = $database->select($sql, null, 'all');
 		}
 
 	//restore default permissions
