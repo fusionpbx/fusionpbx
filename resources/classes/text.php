@@ -389,7 +389,7 @@ class text {
 			}
 
 		//check every tag
-			foreach($apps as $app) {
+			foreach ($apps as $app) {
 				$language_totals['app_descriptions']['total']++;
 				foreach($app['menu'] as $menu_item) {
 					$language_totals['menu_items']['total']++;

@@ -712,7 +712,7 @@
 			//if there are no groups listed in v_menu_item_groups under menu_item_uuid then add the default groups
 				if (is_array($apps)) {
 					$x = 0;
-					foreach($apps as $app) {
+					foreach ($apps as $app) {
 						if (is_array($apps)) {
 							foreach ($app['menu'] as $sub_row) {
 								if (isset($sub_row['groups'])) {
