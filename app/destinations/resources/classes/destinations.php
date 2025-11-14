@@ -199,7 +199,8 @@
 		}
 		/**
 		* Build the destinations array
-		*/		public function get_destinations() {
+		*/
+		public function get_destinations() {
 			//set the global variables
 			global $db_type;
 
