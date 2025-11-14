@@ -180,6 +180,13 @@
 //get http_domain_filter from global settings only (can't be used per domain)
 	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', true);
 
+//check for domain name with a port number at the end
+	$domain_name = $_SERVER['HTTP_HOST'];
+	if (str_contains($domain_name, ':')) {
+		$domain_array = explode(":", $domain_name);
+		$domain_name = $domain_array[0];
+	}
+
 //get the domain_uuid, domain_name, device_name and device_vendor
 	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
