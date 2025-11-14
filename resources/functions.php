@@ -1020,7 +1020,7 @@ if (!function_exists('user_add')) {
  *
  * @return bool True if the module is running, false otherwise or if not connected to FreeSwitch.
  */
-function switch_module_is_running($mod, event_socket $esl = null): bool {
+function switch_module_is_running($mod, ?event_socket $esl = null): bool {
 	//if the object does not exist create it
 	if ($esl === null) {
 		$esl = event_socket::create();
@@ -1089,11 +1089,11 @@ function format_string(string $format, string $data): string {
 /**
  * Formats a given phone number based on user-defined formats stored in session.
  *
- * @param string $phone_number The phone number to format.
+ * @param string|null $phone_number The phone number to format.
  *
- * @return string The formatted phone number if the input matches any defined format, otherwise the original input.
+ * @return string|null The formatted phone number if the input matches any defined format, otherwise the original input.
  */
-function format_phone(string $phone_number): string {
+function format_phone(?string $phone_number): ?string {
 	if (is_numeric(trim($phone_number ?? '', ' +'))) {
 		if (isset($_SESSION["format"]["phone"])) {
 			$phone_number = trim($phone_number, ' +');
