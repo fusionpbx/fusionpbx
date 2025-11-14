@@ -335,6 +335,13 @@ class text implements clear_cache {
 			fclose($lang_file);
 	}
 
+	/**
+	 * Detect all languages from the application and session language settings.
+	 *
+	 * @param bool $no_sort Flag to prevent sorting of detected languages.
+	 *
+	 * @return void
+	 */
 	public function detect_all_languages($no_sort = false) {
 
 		//clear $text ready for the import
@@ -374,6 +381,15 @@ class text implements clear_cache {
 			$this->organize_language('resources', $no_sort);
 	}
 
+	/**
+	 * Get totals of language usage across all languages and applications.
+	 *
+	 * This method retrieves the total number of translations, menu items,
+	 * and application descriptions for each language, as well as a total count
+	 * for each category.
+	 *
+	 * @return array A nested array containing the total counts for languages, menu items, and app descriptions
+	 */
 	public function language_totals() {
 
 		//setup variables
@@ -448,19 +464,24 @@ class text implements clear_cache {
 	 * The function declared here ensures that all clear_cache methods have the same number of parameters being passed, which in this case, is no parameters.
 	 */
 	public static function clear_cache() {
-		if (function_exists('apcu_enabled') && apcu_enabled()) {
-			$cache = apcu_cache_info(false);
-			if (!empty($cache['cache_list'])) {
-				//clear apcu cache of any text entries
-				foreach ($cache['cache_list'] as $entry) {
-					$key = $entry['info'];
-					if (str_starts_with($key, 'text_')) {
-						apcu_delete($key);
-					}
-				}
+		//check for apcu extension and if is enabled
+		if (!function_exists('apcu_enabled') || !apcu_enabled()) {
+			return;
+		}
+
+		//get all cache entries
+		$cache = apcu_cache_info(false);
+		if (empty($cache['cache_list'])) {
+			//no entries to process
+			return;
+		}
+
+		//clear apcu cache of any text entries
+		foreach ($cache['cache_list'] as $entry) {
+			$key = $entry['info'];
+			if (str_starts_with($key, 'text_')) {
+				apcu_delete($key);
 			}
 		}
 	}
 }
-
-?>
