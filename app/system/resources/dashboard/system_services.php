@@ -39,9 +39,12 @@
 //function to parse a FusionPBX service from a .service file
 	if (!function_exists('get_classname')) {
 		function get_classname(string $file) {
+			if (!file_exists($file)) {
+				return '';
+			}
 			$parsed = parse_ini_file($file);
-			$exec_cmd = $parsed['ExecStart'];
-			$parts = explode(' ', $exec_cmd);
+			$exec_cmd = $parsed['ExecStart'] ?? '';
+			$parts = explode(' ', $exec_cmd ?? '');
 			$php_file = $parts[1] ?? '';
 			if (!empty($php_file)) {
 				return $php_file;

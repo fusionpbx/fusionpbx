@@ -28,6 +28,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
+
 //check permissions
 	if (!permission_exists('system_view_info')
 		|| !permission_exists('system_view_cpu')
