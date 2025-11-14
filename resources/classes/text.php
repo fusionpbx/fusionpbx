@@ -61,6 +61,7 @@ class text implements clear_cache {
 	 * @var array
 	 */
 	private static $tanslated;
+
 	/**
 	 * @var bool
 	 */
