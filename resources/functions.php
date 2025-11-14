@@ -1972,7 +1972,6 @@ if (!function_exists('send_email')) {
 		$email->attachments = $email_attachments;
 		$email->debug_level = 3;
 		$sent = $email->send();
-		$email_error = $email->email_error;
 		return true;
 	}
 
@@ -2615,7 +2614,7 @@ function escape($string) {
 * @link https://www.php.net/htmlspecialchars
 */
 function escape_textarea($string) {
-	return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+	return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
 }
 
 //output pre-formatted array keys and values
