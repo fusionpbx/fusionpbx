@@ -594,7 +594,6 @@
 	$ring_group_forward_enabled = $ring_group_forward_enabled ?? false;
 	$ring_group_context = $ring_group_context ?? $domain_name;
 	$ring_group_enabled = $ring_group_enabled ?? true;
-	$destination_enabled = $row['destination_enabled'] ?? false;
 
 //get the ring group destination array
 	if ($action == "add") {
@@ -628,6 +627,7 @@
 		$ring_group_destinations[$id]['destination_delay'] = '';
 		$ring_group_destinations[$id]['destination_timeout'] = '';
 		$ring_group_destinations[$id]['destination_prompt'] = '';
+		$ring_group_destinations[$id]['destination_enabled'] = false;
 		$id++;
 	}
 
@@ -983,8 +983,8 @@
 			echo "				<span class='switch'>\n";
 		}
 		echo "					<select class='formfld' id='ring_group_destinations_".$x."_destination_enabled' name='ring_group_destinations[".$x."][destination_enabled]'>\n";
-		echo "						<option value='true' ".($destination_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "						<option value='false' ".($destination_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "						<option value='true' ".($row['destination_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "						<option value='false' ".($row['destination_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "					</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "					<span class='slider'></span>\n";
