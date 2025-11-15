@@ -171,25 +171,11 @@
 
 //get default setting categories
 	$sql = "select ";
-	$sql .= "distinct(d1.default_setting_category), ";
-	$sql .= "( ";
-	$sql .= "	select ";
-	$sql .= "	count(d2.default_setting_category) ";
-	$sql .= "	from v_default_settings as d2 ";
-	$sql .= "	where d2.default_setting_category = d1.default_setting_category ";
-	if (!empty($search)) {
-		$sql .= "	and (";
-		$sql .= "		lower(d2.default_setting_category) like :search ";
-		$sql .= "		or lower(d2.default_setting_subcategory) like :search ";
-		$sql .= "		or lower(d2.default_setting_name) like :search ";
-		$sql .= "		or lower(d2.default_setting_value) like :search ";
-		$sql .= "		or lower(d2.default_setting_description) like :search ";
-		$sql .= "	) ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-	$sql .= ") as quantity ";
-	$sql .= "from v_default_settings as d1 ";
-	$sql .= "order by d1.default_setting_category asc ";
+	$sql .= "d.default_setting_category, ";
+	$sql .= "count(d.default_setting_category) as quantity ";
+	$sql .= "from v_default_settings as d ";
+	$sql .= "group by d.default_setting_category ";
+	$sql .= "order by d.default_setting_category asc ";
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (!empty($rows) && @sizeof($rows) != 0) {
 		foreach ($rows as $row) {
