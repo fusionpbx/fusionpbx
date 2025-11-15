@@ -43,12 +43,17 @@
 	$language = new text;
 	$text = $language->get();
 
-//set the defaults
+//initialize the variables
 	$prefix_number = '';
 	$dialplan_description = '';
 	$limit = '';
 	$accountcode = '';
 	$toll_allow = '';
+
+//set the defaults
+	$dialplan_context = $_SESSION['domain_name'];
+	$app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
+	$dialplan_enabled = true;
 
 //get the http post values and set theme as php variables
 	if (!empty($_POST)) {
@@ -434,9 +439,6 @@
 						if (empty($dialplan_order)) {
 							$dialplan_order ='300';
 						}
-						$dialplan_context = $_SESSION['domain_name'];
-						$dialplan_continue = false;
-						$app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
 
 					//set the uuid
 						$dialplan_uuid = uuid();
@@ -448,7 +450,7 @@
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
 						$array['dialplans'][$x]['dialplan_name'] = 'call_direction-outbound'.(empty($dialplan_description) && !empty($abbrv) ? '.'.$abbrv : null);
 						$array['dialplans'][$x]['dialplan_order'] = '22';
-						$array['dialplans'][$x]['dialplan_continue'] = true;
+						$array['dialplans'][$x]['dialplan_continue'] = 'true';
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
 						$array['dialplans'][$x]['dialplan_enabled'] = $dialplan_enabled;
 						$array['dialplans'][$x]['dialplan_description'] = $dialplan_description;
@@ -505,7 +507,7 @@
 						$array['dialplans'][$x]['app_uuid'] = $app_uuid;
 						$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
 						$array['dialplans'][$x]['dialplan_order'] = $dialplan_order;
-						$array['dialplans'][$x]['dialplan_continue'] = $dialplan_continue;
+						$array['dialplans'][$x]['dialplan_continue'] = 'false';
 						$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
 						$array['dialplans'][$x]['dialplan_enabled'] = $dialplan_enabled;
 						$array['dialplans'][$x]['dialplan_description'] = $dialplan_description;
@@ -861,9 +863,6 @@
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
 			return;
 	}
-
-//set the defaults
-	$dialplan_enabled = $dialplan_enabled ?? true;
 
 //get the domains
 	$sql = "select * from v_domains ";
