@@ -76,6 +76,7 @@
 //set the defaults
 	$dialplan_context = $dialplan_context ?? $_SESSION['domain_name'];
 	$dialplan_enabled = $dialplan_enabled ?? true;
+	$dialplan_continue = false;
 
 //add or update data from http post
 	if (count($_POST)>0 && empty($_POST["persistformvar"])) {
@@ -120,7 +121,7 @@
 			$array['dialplans'][0]['app_uuid'] = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 			$array['dialplans'][0]['dialplan_name'] = $dialplan_name;
 			$array['dialplans'][0]['dialplan_order'] = $dialplan_order;
-			$array['dialplans'][0]['dialplan_continue'] = false;
+			$array['dialplans'][0]['dialplan_continue'] = $dialplan_continue ? 'true': 'false';
 			$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 			$array['dialplans'][0]['dialplan_enabled'] = $dialplan_enabled;
 			$array['dialplans'][0]['dialplan_description'] = $dialplan_description;

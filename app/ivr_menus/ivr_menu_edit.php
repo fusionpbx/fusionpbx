@@ -564,7 +564,7 @@
 		$ivr_menu_options[$id]['ivr_menu_option_param'] = '';
 		$ivr_menu_options[$id]['ivr_menu_option_order'] = '';
 		$ivr_menu_options[$id]['ivr_menu_option_description'] = '';
-		$ivr_menu_options[$id]['ivr_menu_option_enabled'] = false;
+		$ivr_menu_options[$id]['ivr_menu_option_enabled'] = true;
 		$id++;
 	}
 
