@@ -121,6 +121,7 @@
 	$parameters['group_name'] = $group_name;
 	$parameters['group_uuid'] = $group_uuid;
 	$group_permissions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //process the user data and save it to the database
 	if (!empty($_POST) > 0 && empty($_POST["persistformvar"])) {
