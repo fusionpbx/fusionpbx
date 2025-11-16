@@ -45,6 +45,8 @@
 	$module_description = '';
 	$module_category = '';
 	$module_order = '';
+	$module_enabled = 'true';
+	$module_default_enabled = 'true';
 
 //determin the action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
