@@ -158,8 +158,8 @@
 			echo "		<span class='switch'>\n";
 		}
 		echo "			<select class='formfld' id='include_internal' name='include_internal'>\n";
-		echo "				<option value='false' ".($include_internal === 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "				<option value='true' ".($include_internal === 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "				<option value='false' ".(!empty($include_internal) && $include_internal === 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				<option value='true' ".(!empty($include_internal) && $include_internal === 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "			</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "			<span class='slider'></span>\n";
