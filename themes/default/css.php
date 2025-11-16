@@ -1730,7 +1730,7 @@ else { //default: white
 		else {
 			?>padding: 5px 10px 10px 10px;<?php
 		}
-		echo $body_top_style;
+		echo $body_top_style ?? '';
 		?>
 		text-align: left;
 		color: <?=$body_text_color?>;
@@ -2997,11 +2997,13 @@ else { //default: white
 	div.widget div.hud_box:first-of-type {
 		<?php
 		echo "background: ".($dashboard_background_color[0] ?? '#ffffff').";\n";
-		if ($dashboard_background_gradient_style == 'mirror') {
-			echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[1]." 0%, ".$dashboard_background_color[0]." 30%, ".$dashboard_background_color[0]." 70%, ".$dashboard_background_color[1]." 100%);\n";
-		}
-		else { //simple
-			echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[0]." 0%, ".$dashboard_background_color[1]." 100%);\n";
+		if (!empty($dashboard_background_color) && is_array($dashboard_background_color) && sizeof($dashboard_background_color) > 1) {
+			if (!empty($dashboard_background_gradient_style) && $dashboard_background_gradient_style == 'mirror') {
+				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[1]." 0%, ".$dashboard_background_color[0]." 30%, ".$dashboard_background_color[0]." 70%, ".$dashboard_background_color[1]." 100%);\n";
+			}
+			else { //simple
+				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[0]." 0%, ".$dashboard_background_color[1]." 100%);\n";
+			}
 		}
 
 		if (!empty($dashboard_shadow_color)) {
@@ -3143,11 +3145,13 @@ else { //default: white
 			display: block;
 			<?php
 			echo "background: ".($dashboard_detail_background_color[0] ?? '#ffffff').";\n";
-			if ($dashboard_background_gradient_style == 'mirror') {
-				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[1]." 0%, ".$dashboard_detail_background_color[0]." 30%, ".$dashboard_detail_background_color[0]." 70%, ".$dashboard_detail_background_color[1]." 100%);\n";
-			}
-			else { //simple
-				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[0]." 0%, ".$dashboard_detail_background_color[1]." 100%);\n";
+			if (!empty($dashboard_detail_background_color) && is_array($dashboard_detail_background_color) && sizeof($dashboard_detail_background_color) > 1) {
+				if ($dashboard_background_gradient_style == 'mirror') {
+					echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[1]." 0%, ".$dashboard_detail_background_color[0]." 30%, ".$dashboard_detail_background_color[0]." 70%, ".$dashboard_detail_background_color[1]." 100%);\n";
+				}
+				else { //simple
+					echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[0]." 0%, ".$dashboard_detail_background_color[1]." 100%);\n";
+				}
 			}
 			?>
 			}
