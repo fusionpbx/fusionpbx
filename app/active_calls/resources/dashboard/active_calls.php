@@ -195,9 +195,10 @@ if (!empty($_SESSION['user']['extension'])) {
 	foreach ($_SESSION['user']['extension'] as $user) {
 		echo "		extension_uuid: '" . $user['extension_uuid'] . "',\n";
 		echo "		extension: '" . $user['user'] . "',\n";
-		if (strlen($user['number_alias'] ?? '') > 0) {
+		if (!empty($user['number_alias'])) {
 			$user_contact = $user['number_alias'];
-		} else {
+		}
+		else {
 			$user_contact = $user['user'];
 		}
 		echo "		extension_destination: '$user_contact',\n";
