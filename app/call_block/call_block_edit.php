@@ -342,6 +342,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	$sql .= "order by voicemail_id asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$voicemails = $database->select($sql, $parameters);
+	unset($sql, $parameters);
 
 //create token
 	$object = new token;
