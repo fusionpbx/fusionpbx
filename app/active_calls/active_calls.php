@@ -254,7 +254,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	};
 
 	// show the user extensions for eavesdrop
-<?php
+	<?php
 	$user['extensions'] = [];
 	// translate the current users assigned extensions
 	if (!empty($_SESSION['user']['extension'])) {
@@ -262,9 +262,10 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		foreach ($_SESSION['user']['extension'] as $user) {
 			echo "		extension_uuid: '" . $user['extension_uuid'] . "',\n";
 			echo "		extension: '" . $user['user'] . "',\n";
-			if (strlen($user['number_alias']) > 0) {
+			if (!empty($user['number_alias'])) {
 				$user_contact = $user['number_alias'];
-			} else {
+			}
+			else {
 				$user_contact = $user['user'];
 			}
 			echo "		extension_destination: '$user_contact',\n";
@@ -273,7 +274,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		echo "	last_entry_so_no_comma: '-100'";
 		echo "	};\n";
 	}
-?>
+	?>
 
 	const colors = {
 		RINGING: 'blue',
