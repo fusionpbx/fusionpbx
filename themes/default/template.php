@@ -1201,7 +1201,7 @@
 <body>
 
 	{*//video background *}
-	{if !empty({$background_video})}
+	{if !empty($background_video)}
 		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
 			<source src="{$background_video}" type="video/mp4">
 		</video>
