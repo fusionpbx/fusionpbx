@@ -514,10 +514,10 @@
 				//get the destination label
 				foreach($destinations as $key => $value) {
 					foreach($value as $k => $row) {
-						if ($destination_value == $row['destination']) {
+						if (!empty($row['destination']) && $destination_value == $row['destination']) {
 							$destination_key = $key;
 							$destination_label = $row['label'];
-							break;
+							break 2;
 						}
 					}
 				}
