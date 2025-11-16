@@ -231,26 +231,21 @@
 	unset($sql, $parameters);
 
 //update the array to add the actions
-	if (!$show == "all") {
+	if ($show != "all") {
 		$x = 0;
 		foreach ($destinations as $row) {
+			$destinations[$x]['actions'] = '';
 			if (!empty($row['destination_actions'])) {
 				//prepare the destination actions
 				if (!empty(json_decode($row['destination_actions'], true))) {
+					//add the actions to the array
+					$destination_app_data = [];
 					foreach (json_decode($row['destination_actions'], true) as $action) {
 						$destination_app_data[] = $action['destination_app'].':'.$action['destination_data'];
 					}
+					$actions = action_name($destination_array, $destination_app_data);
+					$destinations[$x]['actions'] = (!empty($actions)) ? implode(', ', $actions) : '';
 				}
-
-				//add the actions to the array
-				$actions = action_name($destination_array, $destination_app_data);
-				$destinations[$x]['actions'] = (!empty($actions)) ? implode(', ', $actions) : '';
-
-				//empty the array before the next iteration
-				unset($destination_app_data);
-			}
-			else {
-				$destinations[$x]['actions'] = '';
 			}
 			$x++;
 		}
