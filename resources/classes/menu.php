@@ -1287,6 +1287,7 @@
 					//styles below are defined here to prevent caching (following a permission change, etc)
 					$html .= "<style>\n";
 					$html .= "div#body_header_user_menu {\n";
+					$html .= "	position: fixed;\n";
 					$html .= "	right: ".(permission_exists('domain_select') ? '170px' : '30px')." !important;\n";
 					$html .= "	}\n";
 					$html .= "@media (max-width: 575.98px) {\n";
