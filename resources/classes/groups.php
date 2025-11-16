@@ -58,7 +58,7 @@
 		/**
 		 * called when the object is created
 		 */
-		public function __construct(database $database = null, $domain_uuid = null, $user_uuid = null) {
+		public function __construct(?database $database = null, $domain_uuid = null, $user_uuid = null) {
 
 			//handle the database object
 			$this->database = $database ?? database::new();
