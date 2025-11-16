@@ -130,7 +130,7 @@
 			$destination_type_text = $_POST["destination_type_text"] ?? null;
 			$destination_type_emergency = $_POST["destination_type_emergency"] ?? null;
 			$destination_carrier = $_POST["destination_carrier"] ?? null;
-			$destination_email = $_POST["destination_email"];
+			$destination_email = $_POST["destination_email"] ?? null;
 
 		//sanitize the destination conditions
 			if (!empty($destination_conditions)) {
