@@ -179,9 +179,18 @@
 
 //get the child data
 	if (!empty($number_translation_uuid) && empty($_POST["persistformvar"])) {
-		$sql = "select * from v_number_translation_details ";
-		$sql .= "where number_translation_uuid = :number_translation_uuid ";
-		$sql .= "order by number_translation_detail_order asc";
+		$sql = "select ";
+		$sql .= "  number_translation_detail_uuid, ";
+		$sql .= "  number_translation_uuid, ";
+		$sql .= "  number_translation_detail_regex, ";
+		$sql .= "  number_translation_detail_replace, ";
+		$sql .= "  cast(number_translation_detail_order as integer) as number_translation_detail_order ";
+		$sql .= "from ";
+		$sql .= "  v_number_translation_details ";
+		$sql .= "where ";
+		$sql .= "  number_translation_uuid = :number_translation_uuid ";
+		$sql .= "order by";
+		$sql .= "  number_translation_detail_order asc";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
 		$number_translation_details = $database->select($sql, $parameters ?? null, 'all');
 		unset ($sql, $parameters);
