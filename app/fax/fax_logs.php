@@ -101,8 +101,6 @@
 		$offset = $rows_per_page * $page;
 	}
 
-			echo "	<td><a href='".$list_row_url."'>".(!empty($settings->get('domain', 'time_format')) && $settings->get('domain', 'time_format') == '12h' ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']))."</a>&nbsp;</td>\n";
-
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
