@@ -61,6 +61,13 @@
 	$available_columns[] = 'voicemail_tutorial';
 
 //define the functions
+	/**
+	 * Converts a 2D array into a CSV string.
+	 *
+	 * @param array &$array The input array to convert. Each inner array represents a row in the CSV output.
+	 *
+	 * @return string|null The CSV data as a string, or null if the input array is empty.
+	 */
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
@@ -75,6 +82,13 @@
 		return ob_get_clean();
 	}
 
+	/**
+	 * Sends HTTP headers to initiate a file download.
+	 *
+	 * @param string $filename The name of the file to be downloaded.
+	 *
+	 * @return void
+	 */
 	function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");

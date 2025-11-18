@@ -115,6 +115,13 @@
 	echo "pid_file: ".$pid_file."\n";
 
 //function to check if the process exists
+	/**
+	 * Checks if a process exists.
+	 *
+	 * @param string $file Path to the file containing the process ID (PID)
+	 *
+	 * @return bool True if the process exists, false otherwise
+	 */
 	function process_exists($file) {
 
 		//set the default exists to false
@@ -373,6 +380,13 @@
 	}
 
 //run command and capture standard output
+	/**
+	 * Execute a shell command and capture its output.
+	 *
+	 * @param string $command The shell command to execute
+	 *
+	 * @return string The output of the executed command
+	 */
 	function shell($command) {
 		ob_start();
 		$result = system($command);
@@ -381,6 +395,15 @@
 	}
 
 //block an ip address
+	/**
+	 * Execute a block command for iptables or pf based on the firewall type.
+	 *
+	 * @param string $ip_address The IP address to block
+	 * @param string $filter     The filter name for iptables or pf
+	 * @param array  $event      The event data containing 'to-user' and 'to-host'
+	 *
+	 * @return boolean True if the block command was executed successfully, false otherwise
+	 */
 	function block($ip_address, $filter, $event) {
 		//define the global variables
 		global $database, $debug, $firewall_path, $firewall_name;
@@ -434,6 +457,14 @@
 	}
 
 //unblock the ip address
+	/**
+	 * Unblock a specified IP address from a firewall.
+	 *
+	 * @param string $ip_address The IP address to unblock.
+	 * @param string $filter     The filter name used in the firewall configuration.
+	 *
+	 * @return bool True if the IP address was successfully unblocked, false otherwise.
+	 */
 	function unblock($ip_address, $filter) {
 		//define the global variables
 		global $debug, $firewall_path, $firewall_name;
@@ -470,6 +501,13 @@
 	}
 
 //is the ip address blocked
+	/**
+	 * Check if an IP address is blocked in the configured firewall.
+	 *
+	 * @param string $ip_address The IP address to check
+	 *
+	 * @return bool True if the address is blocked, False otherwise
+	 */
 	function is_blocked($ip_address) {
 		//define the global variables
 		global $firewall_path, $firewall_name;
@@ -502,6 +540,17 @@
 	}
 
 //determine if the IP address has been allowed by the access control list node cidr
+	/**
+	 * Determine if access is allowed for a given IP address.
+	 *
+	 * This method checks the cache, user logs, event guard logs, access controls,
+	 * and registration to determine if access should be granted. If no valid reason
+	 * is found to deny access, it will be automatically allowed.
+	 *
+	 * @param string $ip_address The IP address to check for access.
+	 *
+	 * @return boolean True if access is allowed, false otherwise.
+	 */
 	function access_allowed($ip_address) {
 		//define global variables
 		global $debug;
@@ -586,6 +635,13 @@
 	}
 
 //is the ip address registered
+	/**
+	 * Checks if the given IP address is registered on the network.
+	 *
+	 * @param string $ip_address The IP address to check for registration.
+	 *
+	 * @return bool True if the IP address is registered, false otherwise.
+	 */
 	function is_registered($ip_address) {
 		//invalid ip address
 		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
@@ -609,6 +665,13 @@
 	}
 
 //determine if the IP address has been allowed by the access control list node cidr
+	/**
+	 * Checks if the given IP address is authorized by any access control node.
+	 *
+	 * @param string $ip_address The IP address to check for authorization.
+	 *
+	 * @return bool True if the IP address is authorized, false otherwise.
+	 */
 	function access_control_allowed($ip_address) {
 
 		global $database;
@@ -653,6 +716,13 @@
 	}
 
 //determine if the IP address has been allowed by a successful authentication
+	/**
+	 * Determines if a user's IP address is allowed based on their login history.
+	 *
+	 * @param string $ip_address The IP address to check for access.
+	 *
+	 * @return bool True if the IP address is allowed, false otherwise.
+	 */
 	function user_log_allowed($ip_address) {
 
 		global $database, $debug;
@@ -689,6 +759,13 @@
 	}
 
 //determine if the IP address has been unblocked in the event guard log
+	/**
+	 * Determines if an IP address is allowed based on event guard logs.
+	 *
+	 * @param string $ip_address The IP address to check for access.
+	 *
+	 * @return bool True if the IP address is allowed, false otherwise.
+	 */
 	function event_guard_log_allowed($ip_address) {
 
 		global $database, $debug;
@@ -724,6 +801,13 @@
 	}
 
 //check if the iptables chain exists
+	/**
+	 * Determines if a pf table exists in the firewall configuration.
+	 *
+	 * @param string $table The name of the pf table to check for existence.
+	 *
+	 * @return bool True if the pf table exists, false otherwise.
+	 */
 	function pf_table_exists($table) {
 		//define the global variables
 		global $firewall_path, $firewall_name;
@@ -741,6 +825,13 @@
 	}
 
 //add IP table chains
+	/**
+	 * Adds a new IPtables chain and inserts it into the INPUT table.
+	 *
+	 * @param string $chain The name of the IPtables chain to add.
+	 *
+	 * @return bool True if the chain was successfully added, false otherwise.
+	 */
 	function iptables_chain_add($chain) {
 		//define the global variables
 		global $firewall_path;
@@ -769,6 +860,13 @@
 	}
 
 //check if the iptables chain exists
+	/**
+	 * Determines if a specified iptables chain exists.
+	 *
+	 * @param string $chain The name of the iptables chain to check for existence.
+	 *
+	 * @return bool True if the iptables chain exists, false otherwise.
+	 */
 	function iptables_chain_exists($chain) {
 		//define the global variables
 		global $firewall_path;
@@ -784,5 +882,3 @@
 			return false;
 		}
 	}
-
-?>

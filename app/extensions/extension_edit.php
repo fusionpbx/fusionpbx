@@ -50,6 +50,16 @@
 	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
 
 //return the first item if data type = array, returns value if data type = text
+	/**
+	 * Returns the first item of a given value.
+	 *
+	 * If the value is an array, returns the first element of the array.
+	 * Otherwise, returns the value as is.
+	 *
+	 * @param mixed $value The value to retrieve the first item from.
+	 *
+	 * @return mixed The first item of the value.
+	 */
 	function get_first_item($value) {
 		return is_array($value) ? $value[0] : $value;
 	}

@@ -25,506 +25,549 @@
 */
 
 //define the ivr_menu class
-	class ivr_menu {
+class ivr_menu {
 
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'ivr_menus';
-		const app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+	/**
+	 * declare constant variables
+	 */
+	const app_name = 'ivr_menus';
+	const app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		public $domain_uuid;
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	public $domain_uuid;
 
-		/**
-		 * declare ivr menu primary uuid key
-		 * @var string
-		 */
-		public $ivr_menu_uuid;
+	/**
+	 * declare ivr menu primary uuid key
+	 *
+	 * @var string
+	 */
+	public $ivr_menu_uuid;
 
-		/**
-		 * declare order_by variables
-		 * @var string
-		 */
-		public $order_by;
+	/**
+	 * declare order_by variables
+	 *
+	 * @var string
+	 */
+	public $order_by;
 
-		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 *
+	 * @var database Database Object
+	 */
+	private $database;
 
-		/**
-		 * Settings object set in the constructor. Must be a settings object and cannot be null.
-		 * @var settings Settings Object
-		 */
-		private $settings;
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 *
+	 * @var settings Settings Object
+	 */
+	private $settings;
 
-		/**
-		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $domain_name;
+	/**
+	 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_name;
 
-		/**
-		 * declare private variables
-		 */
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
+	/**
+	 * declare private variables
+	 */
+	private $permission_prefix;
+	private $list_page;
+	private $table;
+	private $uuid_prefix;
+	private $toggle_field;
+	private $toggle_values;
 
-		/**
-		 * called when the object is created
-		 */
-		public function __construct(array $setting_array = []) {
-			//set domain and user UUIDs
-			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+	/**
+	 * Initializes the object with setting array.
+	 *
+	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
+	 *                             an empty array.
+	 *
+	 * @return void
+	 */
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
 
-			//set objects
-			$this->database = $setting_array['database'] ?? database::new();
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
 
-			//assign private variables
-			$this->list_page = 'ivr_menus.php';
+		//assign private variables
+		$this->list_page = 'ivr_menus.php';
+	}
+
+	/**
+	 * Finds records in the v_ivr_menus table.
+	 *
+	 * @return array An array of menu items or an empty array if no records are found.
+	 */
+	public function find() {
+		$sql = "select * from v_ivr_menus ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		if (isset($this->ivr_menu_uuid)) {
+			$sql                         .= "and ivr_menu_uuid = :ivr_menu_uuid ";
+			$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
+		}
+		if (isset($this->order_by)) {
+			$sql .= $this->order_by;
+		}
+		$parameters['domain_uuid'] = $this->domain_uuid;
+		return $this->database->select($sql, $parameters, 'all');
+	}
+
+	/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		//assign private variables
+		$this->permission_prefix = 'ivr_menu_';
+		$this->table             = 'ivr_menus';
+		$this->uuid_prefix       = 'ivr_menu_';
+
+		//return if permission does not exist
+		if (!permission_exists($this->permission_prefix . 'delete')) {
+			return false;
 		}
 
-		public function find() {
-			$sql = "select * from v_ivr_menus ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			if (isset($this->ivr_menu_uuid)) {
-				$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
-				$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get();
+
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header('Location: ' . $this->list_page);
+			exit;
+		}
+
+		//delete multiple records
+		if (!empty($records)) {
+
+			//filter out unchecked ivr menus, build where clause for below
+			foreach ($records as $record) {
+				if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					$uuids[] = "'" . $record['uuid'] . "'";
+				}
 			}
-			if (isset($this->order_by)) {
-				$sql .= $this->order_by;
+
+			//get necessary ivr menu details
+			if (!empty($uuids)) {
+				$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, ivr_menu_context from v_" . $this->table . " ";
+				$sql                       .= "where (domain_uuid = :domain_uuid) ";
+				$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$rows                      = $this->database->select($sql, $parameters, 'all');
+				if (is_array($rows) && @sizeof($rows) != 0) {
+					foreach ($rows as $row) {
+						$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+						$ivr_menu_contexts[]                      = $row['ivr_menu_context'];
+					}
+				}
+				unset($sql, $parameters, $rows, $row);
 			}
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			return $this->database->select($sql, $parameters, 'all');
-		}
 
-		/**
-		 * delete records
-		 */
-		public function delete($records) {
-			//assign private variables
-				$this->permission_prefix = 'ivr_menu_';
-				$this->table = 'ivr_menus';
-				$this->uuid_prefix = 'ivr_menu_';
+			//build the delete array
+			$x = 0;
+			foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
+				$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $ivr_menu_uuid;
+				$array['ivr_menu_options'][$x]['ivr_menu_uuid']       = $ivr_menu_uuid;
+				$array['dialplans'][$x]['dialplan_uuid']              = $ivr_menu['dialplan_uuid'];
+				$x++;
+			}
 
-			//return if permission does not exist
-				if (!permission_exists($this->permission_prefix.'delete')) {
-					return false;
+			//delete the checked rows
+			if (!empty($array)) {
+
+				//grant temporary permissions
+				$p = permissions::new();
+				$p->add('ivr_menu_option_delete', 'temp');
+				$p->add('dialplan_delete', 'temp');
+
+				//execute delete
+				$this->database->delete($array);
+				unset($array);
+
+				//revoke temporary permissions
+				$p->delete('ivr_menu_option_delete', 'temp');
+				$p->delete('dialplan_delete', 'temp');
+
+				//clear the cache
+				if (is_array($ivr_menu_contexts) && @sizeof($ivr_menu_contexts) != 0) {
+					$ivr_menu_contexts = array_unique($ivr_menu_contexts);
+					$cache             = new cache;
+					foreach ($ivr_menu_contexts as $ivr_menu_context) {
+						$cache->delete("dialplan:" . $ivr_menu_context);
+					}
 				}
 
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
-			//validate the token
-				$token = new token;
-				if (!$token->validate($_SERVER['PHP_SELF'])) {
-					message::add($text['message-invalid_token'],'negative');
-					header('Location: '.$this->list_page);
-					exit;
+				//clear the destinations session array
+				if (isset($_SESSION['destinations']['array'])) {
+					unset($_SESSION['destinations']['array']);
 				}
 
-			//delete multiple records
-				if (!empty($records)) {
-
-					//filter out unchecked ivr menus, build where clause for below
-						foreach ($records as $record) {
-							if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-								$uuids[] = "'".$record['uuid']."'";
-							}
-						}
-
-					//get necessary ivr menu details
-						if (!empty($uuids)) {
-							$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ivr_menu_context from v_".$this->table." ";
-							$sql .= "where (domain_uuid = :domain_uuid) ";
-							$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-							$parameters['domain_uuid'] = $this->domain_uuid;
-							$rows = $this->database->select($sql, $parameters, 'all');
-							if (is_array($rows) && @sizeof($rows) != 0) {
-								foreach ($rows as $row) {
-									$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-									$ivr_menu_contexts[] = $row['ivr_menu_context'];
-								}
-							}
-							unset($sql, $parameters, $rows, $row);
-						}
-
-					//build the delete array
-						$x = 0;
-						foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
-							$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $ivr_menu_uuid;
-							$array['ivr_menu_options'][$x]['ivr_menu_uuid'] = $ivr_menu_uuid;
-							$array['dialplans'][$x]['dialplan_uuid'] = $ivr_menu['dialplan_uuid'];
-							$x++;
-						}
-
-					//delete the checked rows
-						if (!empty($array)) {
-
-							//grant temporary permissions
-								$p = permissions::new();
-								$p->add('ivr_menu_option_delete', 'temp');
-								$p->add('dialplan_delete', 'temp');
-
-							//execute delete
-								$this->database->delete($array);
-								unset($array);
-
-							//revoke temporary permissions
-								$p->delete('ivr_menu_option_delete', 'temp');
-								$p->delete('dialplan_delete', 'temp');
-
-							//clear the cache
-								if (is_array($ivr_menu_contexts) && @sizeof($ivr_menu_contexts) != 0) {
-									$ivr_menu_contexts = array_unique($ivr_menu_contexts);
-									$cache = new cache;
-									foreach ($ivr_menu_contexts as $ivr_menu_context) {
-										$cache->delete("dialplan:".$ivr_menu_context);
-									}
-								}
-
-							//clear the destinations session array
-								if (isset($_SESSION['destinations']['array'])) {
-									unset($_SESSION['destinations']['array']);
-								}
-
-							//set message
-								message::add($text['message-delete']);
-						}
-						unset($records, $ivr_menus);
-				}
-
-		}
-
-		public function delete_options($records) {
-			//assign private variables
-				$this->permission_prefix = 'ivr_menu_option_';
-				$this->table = 'ivr_menu_options';
-				$this->uuid_prefix = 'ivr_menu_option_';
-
-			//return if permission does not exist
-				if (!permission_exists($this->permission_prefix.'delete')) {
-					return false;
-				}
-
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
-			//validate the token
-				$token = new token;
-				if (!$token->validate($_SERVER['PHP_SELF'])) {
-					message::add($text['message-invalid_token'],'negative');
-					header('Location: '.$this->list_page);
-					exit;
-				}
-
-			//delete multiple records
-				if (!empty($records)) {
-
-					//filter out unchecked ivr menu options, build delete array
-						$x = 0;
-						foreach ($records as $record) {
-							if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-								$array[$this->table][$x]['ivr_menu_uuid'] = $this->ivr_menu_uuid;
-								$x++;
-							}
-						}
-
-					//get ivr menu context
-						if (!empty($array) && !empty($this->ivr_menu_uuid) && is_uuid($this->ivr_menu_uuid)) {
-							$sql = "select ivr_menu_context from v_ivr_menus ";
-							$sql .= "where (domain_uuid = :domain_uuid) ";
-							$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
-							$parameters['domain_uuid'] = $this->domain_uuid;
-							$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
-							$ivr_menu_context = $this->database->select($sql, $parameters, 'column');
-							unset($sql, $parameters);
-						}
-
-					//delete the checked rows
-						if (!empty($array)) {
-
-							//execute delete
-								$this->database->delete($array);
-								unset($array);
-
-							//clear the cache
-								if (!empty($ivr_menu_context)) {
-									$cache = new cache;
-									$cache->delete("dialplan:".$ivr_menu_context);
-								}
-
-						}
-						unset($records);
-				}
-		}
-
-		/**
-		 * toggle records
-		 */
-		public function toggle($records) {
-			//assign private variables
-				$this->permission_prefix = 'ivr_menu_';
-				$this->table = 'ivr_menus';
-				$this->uuid_prefix = 'ivr_menu_';
-				$this->toggle_field = 'ivr_menu_enabled';
-				$this->toggle_values = ['true','false'];
-
-			//return if permission does not exist
-				if (!permission_exists($this->permission_prefix.'edit')) {
-					return false;
-				}
-
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
-			//validate the token
-				$token = new token;
-				if (!$token->validate($_SERVER['PHP_SELF'])) {
-					message::add($text['message-invalid_token'],'negative');
-					header('Location: '.$this->list_page);
-					exit;
-				}
-
-			//toggle the checked records
-				if (!empty($records)) {
-
-					//get current toggle state
-						foreach($records as $x => $record) {
-							if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
-								$uuids[] = "'".$record['uuid']."'";
-							}
-						}
-						if (!empty($uuids)) {
-							$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
-							$sql .= "where domain_uuid = :domain_uuid ";
-							$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-							$parameters['domain_uuid'] = $this->domain_uuid;
-							$rows = $this->database->select($sql, $parameters, 'all');
-							if (is_array($rows) && @sizeof($rows) != 0) {
-								foreach ($rows as $row) {
-									$ivr_menus[$row['uuid']]['state'] = $row['toggle'];
-									$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-								}
-							}
-							unset($sql, $parameters, $rows, $row);
-						}
-
-					//build update array
-						$x = 0;
-						foreach ($ivr_menus as $uuid => $ivr_menu) {
-							$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-							$array[$this->table][$x][$this->toggle_field] = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-							$array['dialplans'][$x]['dialplan_uuid'] = $ivr_menu['dialplan_uuid'];
-							$array['dialplans'][$x]['dialplan_enabled'] = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-							$x++;
-						}
-
-					//save the changes
-						if (!empty($array)) {
-
-							//grant temporary permissions
-								$p = permissions::new();
-								$p->add('dialplan_edit', 'temp');
-
-							//save the array
-								$this->database->save($array);
-								unset($array);
-
-							//revoke temporary permissions
-								$p->delete('dialplan_edit', 'temp');
-
-							//clear the cache
-								$cache = new cache;
-								$cache->delete("dialplan:".$this->domain_name);
-								foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
-									$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
-								}
-
-							//clear the destinations session array
-								if (isset($_SESSION['destinations']['array'])) {
-									unset($_SESSION['destinations']['array']);
-								}
-
-							//set message
-								message::add($text['message-toggle']);
-						}
-						unset($records, $states);
-				}
-
-		}
-
-		/**
-		 * copy records
-		 */
-		public function copy($records) {
-			//assign private variables
-				$this->permission_prefix = 'ivr_menu_';
-				$this->table = 'ivr_menus';
-				$this->uuid_prefix = 'ivr_menu_';
-
-			//return if permission does not exist
-				if (!permission_exists($this->permission_prefix.'add')) {
-					return false;
-				}
-
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
-			//validate the token
-				$token = new token;
-				if (!$token->validate($_SERVER['PHP_SELF'])) {
-					message::add($text['message-invalid_token'],'negative');
-					header('Location: '.$this->list_page);
-					exit;
-				}
-
-			//copy the checked records
-				if (!empty($records)) {
-
-					//get checked records
-						foreach($records as $x => $record) {
-							if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
-								$uuids[] = "'".$record['uuid']."'";
-							}
-						}
-
-					//create insert array from existing data
-						if (!empty($uuids)) {
-
-							//primary table
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (!empty($rows)) {
-									$y = $z = 0;
-									foreach ($rows as $x => $row) {
-										$new_ivr_menu_uuid = uuid();
-										$new_dialplan_uuid = uuid();
-
-										//convert boolean values to a string
-											foreach($row as $key => $value) {
-												if (gettype($value) == 'boolean') {
-													$value = $value ? 'true' : 'false';
-													$row[$key] = $value;
-												}
-											}
-
-										//copy data
-											$array[$this->table][$x] = $row;
-
-										//overwrite
-											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_ivr_menu_uuid;
-											$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
-											$array[$this->table][$x]['ivr_menu_description'] = trim($row['ivr_menu_description'].' ('.$text['label-copy'].')');
-
-										//ivr menu options sub table
-											$sql_2 = "select * from v_ivr_menu_options where ivr_menu_uuid = :ivr_menu_uuid";
-											$parameters_2['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
-											$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
-											if (!empty($rows_2)) {
-												foreach ($rows_2 as $row_2) {
-													//convert boolean values to a string
-														foreach($row_2 as $key => $value) {
-															if (gettype($value) == 'boolean') {
-																$value = $value ? 'true' : 'false';
-																$row_2[$key] = $value;
-															}
-														}
-
-													//copy data
-														$array['ivr_menu_options'][$y] = $row_2;
-
-													//overwrite
-														$array['ivr_menu_options'][$y]['ivr_menu_option_uuid'] = uuid();
-														$array['ivr_menu_options'][$y]['ivr_menu_uuid'] = $new_ivr_menu_uuid;
-
-													//increment
-														$y++;
-
-												}
-											}
-											unset($sql_2, $parameters_2, $rows_2, $row_2);
-
-										//ivr menu dialplan record
-											$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
-											$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-											$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
-											if (!empty($dialplan)) {
-												//convert boolean values to a string
-													foreach($dialplan as $key => $value) {
-														if (gettype($value) == 'boolean') {
-															$value = $value ? 'true' : 'false';
-															$dialplan[$key] = $value;
-														}
-													}
-
-												//copy data
-													$array['dialplans'][$z] = $dialplan;
-
-												//overwrite
-													$array['dialplans'][$z]['dialplan_uuid'] = $new_dialplan_uuid;
-													$dialplan_xml = $dialplan['dialplan_xml'];
-													$dialplan_xml = str_replace($row['ivr_menu_uuid'], $new_ivr_menu_uuid, $dialplan_xml); //replace source ivr_menu_uuid with new
-													$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-													$array['dialplans'][$z]['dialplan_xml'] = $dialplan_xml;
-													$array['dialplans'][$z]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
-
-												//increment
-													$z++;
-											}
-											unset($sql_3, $parameters_3, $dialplan);
-
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-						}
-
-					//save the changes and set the message
-						if (!empty($array)) {
-
-							//grant temporary permissions
-								$p = permissions::new();
-								$p->add('ivr_menu_option_add', 'temp');
-								$p->add('dialplan_add', 'temp');
-
-							//save the array
-								$this->database->save($array);
-								unset($array);
-
-							//revoke temporary permissions
-								$p = permissions::new();
-								$p->delete('ivr_menu_option_add', 'temp');
-								$p->delete('dialplan_add', 'temp');
-
-							//clear the cache
-								$cache = new cache;
-								$cache->delete("dialplan:".$this->domain_name);
-
-							//set message
-								message::add($text['message-copy']);
-
-						}
-						unset($records);
-				}
-
+				//set message
+				message::add($text['message-delete']);
+			}
+			unset($records, $ivr_menus);
 		}
 
 	}
+
+	/**
+	 * Deletes one or more ivr menu options.
+	 *
+	 * @param array $records An associative array containing the uuids and checked status of the records to delete.
+	 *
+	 * @return bool True if the operation was successful, false otherwise.
+	 */
+	public function delete_options($records) {
+		//assign private variables
+		$this->permission_prefix = 'ivr_menu_option_';
+		$this->table             = 'ivr_menu_options';
+		$this->uuid_prefix       = 'ivr_menu_option_';
+
+		//return if permission does not exist
+		if (!permission_exists($this->permission_prefix . 'delete')) {
+			return false;
+		}
+
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get();
+
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header('Location: ' . $this->list_page);
+			exit;
+		}
+
+		//delete multiple records
+		if (!empty($records)) {
+
+			//filter out unchecked ivr menu options, build delete array
+			$x = 0;
+			foreach ($records as $record) {
+				if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+					$array[$this->table][$x]['ivr_menu_uuid']             = $this->ivr_menu_uuid;
+					$x++;
+				}
+			}
+
+			//get ivr menu context
+			if (!empty($array) && !empty($this->ivr_menu_uuid) && is_uuid($this->ivr_menu_uuid)) {
+				$sql                         = "select ivr_menu_context from v_ivr_menus ";
+				$sql                         .= "where (domain_uuid = :domain_uuid) ";
+				$sql                         .= "and ivr_menu_uuid = :ivr_menu_uuid ";
+				$parameters['domain_uuid']   = $this->domain_uuid;
+				$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
+				$ivr_menu_context            = $this->database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+			}
+
+			//delete the checked rows
+			if (!empty($array)) {
+
+				//execute delete
+				$this->database->delete($array);
+				unset($array);
+
+				//clear the cache
+				if (!empty($ivr_menu_context)) {
+					$cache = new cache;
+					$cache->delete("dialplan:" . $ivr_menu_context);
+				}
+
+			}
+			unset($records);
+		}
+	}
+
+	/**
+	 * Toggles the state of one or more records.
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function toggle($records) {
+		//assign private variables
+		$this->permission_prefix = 'ivr_menu_';
+		$this->table             = 'ivr_menus';
+		$this->uuid_prefix       = 'ivr_menu_';
+		$this->toggle_field      = 'ivr_menu_enabled';
+		$this->toggle_values     = ['true', 'false'];
+
+		//return if permission does not exist
+		if (!permission_exists($this->permission_prefix . 'edit')) {
+			return false;
+		}
+
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get();
+
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header('Location: ' . $this->list_page);
+			exit;
+		}
+
+		//toggle the checked records
+		if (!empty($records)) {
+
+			//get current toggle state
+			foreach ($records as $x => $record) {
+				if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
+					$uuids[] = "'" . $record['uuid'] . "'";
+				}
+			}
+			if (!empty($uuids)) {
+				$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, dialplan_uuid from v_" . $this->table . " ";
+				$sql                       .= "where domain_uuid = :domain_uuid ";
+				$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$rows                      = $this->database->select($sql, $parameters, 'all');
+				if (is_array($rows) && @sizeof($rows) != 0) {
+					foreach ($rows as $row) {
+						$ivr_menus[$row['uuid']]['state']         = $row['toggle'];
+						$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+					}
+				}
+				unset($sql, $parameters, $rows, $row);
+			}
+
+			//build update array
+			$x = 0;
+			foreach ($ivr_menus as $uuid => $ivr_menu) {
+				$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+				$array[$this->table][$x][$this->toggle_field]         = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+				$array['dialplans'][$x]['dialplan_uuid']              = $ivr_menu['dialplan_uuid'];
+				$array['dialplans'][$x]['dialplan_enabled']           = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+				$x++;
+			}
+
+			//save the changes
+			if (!empty($array)) {
+
+				//grant temporary permissions
+				$p = permissions::new();
+				$p->add('dialplan_edit', 'temp');
+
+				//save the array
+				$this->database->save($array);
+				unset($array);
+
+				//revoke temporary permissions
+				$p->delete('dialplan_edit', 'temp');
+
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("dialplan:" . $this->domain_name);
+				foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
+					$cache->delete("configuration:ivr.conf:" . $ivr_menu_uuid);
+				}
+
+				//clear the destinations session array
+				if (isset($_SESSION['destinations']['array'])) {
+					unset($_SESSION['destinations']['array']);
+				}
+
+				//set message
+				message::add($text['message-toggle']);
+			}
+			unset($records, $states);
+		}
+
+	}
+
+	/**
+	 * Copies one or more records
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function copy($records) {
+		//assign private variables
+		$this->permission_prefix = 'ivr_menu_';
+		$this->table             = 'ivr_menus';
+		$this->uuid_prefix       = 'ivr_menu_';
+
+		//return if permission does not exist
+		if (!permission_exists($this->permission_prefix . 'add')) {
+			return false;
+		}
+
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get();
+
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header('Location: ' . $this->list_page);
+			exit;
+		}
+
+		//copy the checked records
+		if (!empty($records)) {
+
+			//get checked records
+			foreach ($records as $x => $record) {
+				if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
+					$uuids[] = "'" . $record['uuid'] . "'";
+				}
+			}
+
+			//create insert array from existing data
+			if (!empty($uuids)) {
+
+				//primary table
+				$sql                       = "select * from v_" . $this->table . " ";
+				$sql                       .= "where domain_uuid = :domain_uuid ";
+				$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$rows                      = $this->database->select($sql, $parameters, 'all');
+				if (!empty($rows)) {
+					$y = $z = 0;
+					foreach ($rows as $x => $row) {
+						$new_ivr_menu_uuid = uuid();
+						$new_dialplan_uuid = uuid();
+
+						//convert boolean values to a string
+						foreach ($row as $key => $value) {
+							if (gettype($value) == 'boolean') {
+								$value     = $value ? 'true' : 'false';
+								$row[$key] = $value;
+							}
+						}
+
+						//copy data
+						$array[$this->table][$x] = $row;
+
+						//overwrite
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $new_ivr_menu_uuid;
+						$array[$this->table][$x]['dialplan_uuid']             = $new_dialplan_uuid;
+						$array[$this->table][$x]['ivr_menu_description']      = trim($row['ivr_menu_description'] . ' (' . $text['label-copy'] . ')');
+
+						//ivr menu options sub table
+						$sql_2                         = "select * from v_ivr_menu_options where ivr_menu_uuid = :ivr_menu_uuid";
+						$parameters_2['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+						$rows_2                        = $this->database->select($sql_2, $parameters_2, 'all');
+						if (!empty($rows_2)) {
+							foreach ($rows_2 as $row_2) {
+								//convert boolean values to a string
+								foreach ($row_2 as $key => $value) {
+									if (gettype($value) == 'boolean') {
+										$value       = $value ? 'true' : 'false';
+										$row_2[$key] = $value;
+									}
+								}
+
+								//copy data
+								$array['ivr_menu_options'][$y] = $row_2;
+
+								//overwrite
+								$array['ivr_menu_options'][$y]['ivr_menu_option_uuid'] = uuid();
+								$array['ivr_menu_options'][$y]['ivr_menu_uuid']        = $new_ivr_menu_uuid;
+
+								//increment
+								$y++;
+
+							}
+						}
+						unset($sql_2, $parameters_2, $rows_2, $row_2);
+
+						//ivr menu dialplan record
+						$sql_3                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+						$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
+						$dialplan                      = $this->database->select($sql_3, $parameters_3, 'row');
+						if (!empty($dialplan)) {
+							//convert boolean values to a string
+							foreach ($dialplan as $key => $value) {
+								if (gettype($value) == 'boolean') {
+									$value          = $value ? 'true' : 'false';
+									$dialplan[$key] = $value;
+								}
+							}
+
+							//copy data
+							$array['dialplans'][$z] = $dialplan;
+
+							//overwrite
+							$array['dialplans'][$z]['dialplan_uuid']        = $new_dialplan_uuid;
+							$dialplan_xml                                   = $dialplan['dialplan_xml'];
+							$dialplan_xml                                   = str_replace($row['ivr_menu_uuid'], $new_ivr_menu_uuid, $dialplan_xml); //replace source ivr_menu_uuid with new
+							$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+							$array['dialplans'][$z]['dialplan_xml']         = $dialplan_xml;
+							$array['dialplans'][$z]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
+
+							//increment
+							$z++;
+						}
+						unset($sql_3, $parameters_3, $dialplan);
+
+					}
+				}
+				unset($sql, $parameters, $rows, $row);
+			}
+
+			//save the changes and set the message
+			if (!empty($array)) {
+
+				//grant temporary permissions
+				$p = permissions::new();
+				$p->add('ivr_menu_option_add', 'temp');
+				$p->add('dialplan_add', 'temp');
+
+				//save the array
+				$this->database->save($array);
+				unset($array);
+
+				//revoke temporary permissions
+				$p = permissions::new();
+				$p->delete('ivr_menu_option_add', 'temp');
+				$p->delete('dialplan_add', 'temp');
+
+				//clear the cache
+				$cache = new cache;
+				$cache->delete("dialplan:" . $this->domain_name);
+
+				//set message
+				message::add($text['message-copy']);
+
+			}
+			unset($records);
+		}
+
+	}
+
+}

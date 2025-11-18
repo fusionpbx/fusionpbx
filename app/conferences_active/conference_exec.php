@@ -143,6 +143,13 @@
 	}
 
 //define an alternative kick all
+	/**
+	 * Ends a conference by killing all its members and destroying the session.
+	 *
+	 * @param string $name The name of the conference to end.
+	 *
+	 * @return void
+	 */
 	function conference_end($name) {
 		$switch_cmd = "conference '".$name."' xml_list";
 		$xml_str = trim(event_socket::api($switch_cmd));

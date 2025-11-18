@@ -138,6 +138,14 @@
 			case 'recorded_name':
 
 				//used below to search the array to determine if an extension is assigned to the user
+
+				/**
+				 * Checks if an extension has been assigned to the current user.
+				 *
+				 * @param string $number The number of the extension, or the name of a user who is currently assigned this extension
+				 *
+				 * @return bool True if the extension has been assigned, False otherwise
+				 */
 				function extension_assigned($number) {
 					foreach ($_SESSION['user']['extension'] as $row) {
 						if ((is_numeric($row['number_alias']) && $row['number_alias'] == $number) || $row['user'] == $number) {

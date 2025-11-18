@@ -25,753 +25,808 @@
 */
 
 //define the fax class
-	class fax {
+class fax {
 
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'fax';
-		const app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+	/**
+	 * declare constant variables
+	 */
+	const app_name = 'fax';
+	const app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		public $domain_uuid;
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	public $domain_uuid;
 
-		/**
-		* define the variables
-		*/
-		public $fax_uuid;
-		public $dialplan_uuid;
-		public $fax_name;
-		public $fax_description;
-		public $fax_extension;
-		public $fax_forward_number;
-		public $destination_number;
-		public $box;
-		public $order_by;
-		public $order;
-		public $download;
+	/**
+	 * define the variables
+	 */
+	public $fax_uuid;
+	public $dialplan_uuid;
+	public $fax_name;
+	public $fax_description;
+	public $fax_extension;
+	public $fax_forward_number;
+	public $destination_number;
+	public $box;
+	public $order_by;
+	public $order;
+	public $download;
 
-		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 *
+	 * @var database Database Object
+	 */
+	private $database;
 
-		/**
-		 * Settings object set in the constructor. Must be a settings object and cannot be null.
-		 * @var settings Settings Object
-		 */
-		private $settings;
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 *
+	 * @var settings Settings Object
+	 */
+	private $settings;
 
-		/**
-		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $user_uuid;
+	/**
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
+	 * the session global array
+	 *
+	 * @var string
+	 */
+	private $user_uuid;
 
-		/**
-		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $domain_name;
+	/**
+	 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_name;
 
-		/**
-		* declare private variables
-		*/
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-		private $forward_prefix;
+	/**
+	 * declare private variables
+	 */
+	private $permission_prefix;
+	private $list_page;
+	private $table;
+	private $uuid_prefix;
+	private $toggle_field;
+	private $toggle_values;
+	private $forward_prefix;
 
-		/**
-		* Called when the object is created
-		*/
-		public function __construct(array $setting_array = []) {
-			//set domain and user UUIDs
-			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+	/**
+	 * Initializes the object with setting array.
+	 *
+	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
+	 *                             an empty array.
+	 *
+	 * @return void
+	 */
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//set objects
-			$this->database = $setting_array['database'] ?? database::new();
-			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
+		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+	}
+
+	/**
+	 * Processes and saves a dial plan for faxing.
+	 *
+	 * This method normalizes fax forward numbers, sets the forward prefix,
+	 * builds an XML dial plan, and saves it to the database. It also clears
+	 * any existing cache and removes temporary permissions after saving.
+	 *
+	 * @return mixed|null The UUID of the saved dialplan or null if not saved.
+	 */
+	public function dialplan() {
+
+		//require the fax_extension
+		if (empty($this->fax_extension)) {
+			return false;
 		}
 
-		/**
-		* Add a dialplan for call center
-		* @var string $domain_uuid		the multi-tenant id
-		* @var string $value	string to be cached
-		*/
-		public function dialplan() {
-
-			//require the fax_extension
-				if (empty($this->fax_extension)) {
-					return false;
-				}
-
-			//require the destination_number
-				if (empty($this->destination_number)) {
-					return false;
-				}
-
-			//normalize the fax forward number
-				if (strlen($this->fax_forward_number) > 3) {
-					//$fax_forward_number = preg_replace("~[^0-9]~", "",$fax_forward_number);
-					$this->fax_forward_number = str_replace(" ", "", $this->fax_forward_number);
-					$this->fax_forward_number = str_replace("-", "", $this->fax_forward_number);
-				}
-
-			//set the forward prefix
-				if (strripos($this->fax_forward_number, '$1') === false) {
-					$this->forward_prefix = ''; //not found
-				} else {
-					$this->forward_prefix = $this->forward_prefix.$this->fax_forward_number.'#'; //found
-				}
-
-			//set the dialplan_uuid
-				if (empty($this->dialplan_uuid)) {
-					$this->dialplan_uuid = uuid();
-				}
-				else {
-					//build previous details delete array
-						$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
-						$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
-
-					//grant temporary permissions
-						$p = permissions::new();
-						$p->add('dialplan_detail_delete', 'temp');
-
-					//execute delete
-						$this->database->app_name = 'fax';
-						$this->database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-						$this->database->delete($array);
-						unset($array);
-
-					//revoke temporary permissions
-						$p->delete('dialplan_detail_delete', 'temp');
-				}
-
-			//set the fax name
-				$fax_name = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
-
-			//set the  last fax
-				if (!empty($this->settings->get('fax', 'last_fax'))) {
-					$last_fax = "last_fax=".xml::sanitize($this->settings->get('fax', 'last_fax'));
-				}
-				else {
-					$last_fax = "last_fax=\${caller_id_number}-\${strftime(%Y-%m-%d-%H-%M-%S)}";
-				}
-
-			//set the rx_fax
-				$rxfax_data = $this->settings->get('switch', 'storage').'/fax/'.$this->domain_name.'/'.xml::sanitize($this->fax_extension).'/inbox/'.xml::sanitize($this->forward_prefix).'${last_fax}.tif';
-
-			//build the xml dialplan
-				$dialplan_xml = "<extension name=\"".xml::sanitize($fax_name)."\" continue=\"false\" uuid=\"".xml::sanitize($this->dialplan_uuid)."\">\n";
-				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($this->destination_number)."$\">\n";
-				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"fax_uuid=".xml::sanitize($this->fax_uuid)."\"/>\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"api_hangup_hook=lua app/fax/resources/scripts/hangup_rx.lua\"/>\n";
-				foreach($_SESSION['fax']['variable'] as $data) {
-					if (substr($data,0,8) == "inbound:") {
-						$dialplan_xml .= "		<action application=\"set\" data=\"".xml::sanitize(substr($data,8,strlen($data)))."\"/>\n";
-					}
-					elseif (substr($data,0,9) == "outbound:") {}
-					else {
-						$dialplan_xml .= "		<action application=\"set\" data=\"".xml::sanitize($data)."\"/>\n";
-					}
-				}
-				$dialplan_xml .= "		<action application=\"set\" data=\"".$last_fax."\"/>\n";
-				$dialplan_xml .= "		<action application=\"rxfax\" data=\"$rxfax_data\"/>\n";
-				$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
-				$dialplan_xml .= "	</condition>\n";
-				$dialplan_xml .= "</extension>\n";
-
-			//build the dialplan array
-				$dialplan["app_uuid"] = "24108154-4ac3-1db6-1551-4731703a4440";
-				$dialplan["domain_uuid"] = $this->domain_uuid;
-				$dialplan["dialplan_uuid"] = $this->dialplan_uuid;
-				$dialplan["dialplan_name"] = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
-				$dialplan["dialplan_number"] = $this->fax_extension;
-				$dialplan["dialplan_context"] = $this->domain_name;
-				$dialplan["dialplan_continue"] = false;
-				$dialplan["dialplan_xml"] = $dialplan_xml;
-				$dialplan["dialplan_order"] = "40";
-				$dialplan["dialplan_enabled"] = true;
-				$dialplan["dialplan_description"] = $this->fax_description;
-				$dialplan_detail_order = 10;
-
-			//prepare the array
-				$array['dialplans'][] = $dialplan;
-
-			//add the dialplan permission
-				$p = permissions::new();
-				$p->add("dialplan_add", 'temp');
-				$p->add("dialplan_detail_add", 'temp');
-				$p->add("dialplan_edit", 'temp');
-				$p->add("dialplan_detail_edit", 'temp');
-
-			//save the dialplan
-				$this->database->app_name = 'fax';
-				$this->database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-				$this->database->save($array);
-				//$message = $this->database->message;
-
-			//remove the temporary permission
-				$p->delete("dialplan_add", 'temp');
-				$p->delete("dialplan_detail_add", 'temp');
-				$p->delete("dialplan_edit", 'temp');
-				$p->delete("dialplan_detail_edit", 'temp');
-
-			//clear the cache
-				$cache = new cache;
-				$cache->delete("dialplan:".$this->domain_name);
-
-			//return the dialplan_uuid
-				return $dialplan_response ?? null;
-
+		//require the destination_number
+		if (empty($this->destination_number)) {
+			return false;
 		}
 
-		/**
-		* delete records
-		*/
-		public function delete($records) {
+		//normalize the fax forward number
+		if (strlen($this->fax_forward_number) > 3) {
+			//$fax_forward_number = preg_replace("~[^0-9]~", "",$fax_forward_number);
+			$this->fax_forward_number = str_replace(" ", "", $this->fax_forward_number);
+			$this->fax_forward_number = str_replace("-", "", $this->fax_forward_number);
+		}
 
-			//set private variables
-				$this->permission_prefix = 'fax_extension_';
-				$this->list_page = 'fax.php';
-				$this->table = 'fax';
-				$this->uuid_prefix = 'fax_';
+		//set the forward prefix
+		if (strripos($this->fax_forward_number, '$1') === false) {
+			$this->forward_prefix = ''; //not found
+		} else {
+			$this->forward_prefix = $this->forward_prefix . $this->fax_forward_number . '#'; //found
+		}
 
-			if (permission_exists($this->permission_prefix.'delete')) {
+		//set the dialplan_uuid
+		if (empty($this->dialplan_uuid)) {
+			$this->dialplan_uuid = uuid();
+		} else {
+			//build previous details delete array
+			$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
+			$array['dialplan_details'][0]['domain_uuid']   = $this->domain_uuid;
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//grant temporary permissions
+			$p = permissions::new();
+			$p->add('dialplan_detail_delete', 'temp');
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
+			//execute delete
+			$this->database->app_name = 'fax';
+			$this->database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+			$this->database->delete($array);
+			unset($array);
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+			//revoke temporary permissions
+			$p->delete('dialplan_detail_delete', 'temp');
+		}
 
-						//filter out unchecked fax extensions, build where clause for below
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
+		//set the fax name
+		$fax_name = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 
-						//get necessary fax details
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$faxes[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
+		//set the  last fax
+		if (!empty($this->settings->get('fax', 'last_fax'))) {
+			$last_fax = "last_fax=" . xml::sanitize($this->settings->get('fax', 'last_fax'));
+		} else {
+			$last_fax = "last_fax=\${caller_id_number}-\${strftime(%Y-%m-%d-%H-%M-%S)}";
+		}
 
-						//get necessary fax file details
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select fax_file_uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_fax_files ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										if ($row['fax_mode'] == 'rx') { $fax_files[$row['uuid']]['folder'] = 'inbox'; }
-										if ($row['fax_mode'] == 'tx') { $fax_files[$row['uuid']]['folder'] = 'sent'; }
-										$fax_files[$row['uuid']]['path'] = $row['fax_file_path'];
-										$fax_files[$row['uuid']]['type'] = $row['fax_file_type'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
+		//set the rx_fax
+		$rxfax_data = $this->settings->get('switch', 'storage') . '/fax/' . $this->domain_name . '/' . xml::sanitize($this->fax_extension) . '/inbox/' . xml::sanitize($this->forward_prefix) . '${last_fax}.tif';
 
-						//delete fax file(s)
-							if (!empty($fax_files) && is_array($fax_files) && @sizeof($fax_files) != 0) {
-								foreach ($fax_files as $fax_file_uuid => $fax_file) {
-									if (substr_count($fax_file['path'], '/temp/') > 0) {
-										$fax_file['path'] = str_replace('/temp/', '/'.$fax_file['type'].'/', $fax_file['path']);
-									}
-									if (file_exists($fax_file['path'])) {
-										@unlink($fax_file['path']);
-									}
-									if ($fax_file['type'] == 'tif') {
-										$fax_file['path'] = str_replace('.tif', '.pdf', $fax_file['path']);
-										if (file_exists($fax_file['path'])) {
-											@unlink($fax_file['path']);
-										}
-									}
-									else if ($fax_file['type'] == 'pdf') {
-										$fax_file['path'] = str_replace('.pdf', '.tif', $fax_file['path']);
-										if (file_exists($fax_file['path'])) {
-											@unlink($fax_file['path']);
-										}
-									}
-								}
-							}
-
-						//build the delete array
-							$x = 0;
-							if (!empty($faxes) && is_array($faxes) && @sizeof($faxes) != 0) {
-								foreach ($faxes as $fax_uuid => $fax) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['fax_users'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array['fax_users'][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['fax_files'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array['fax_files'][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['fax_logs'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
-									$array['fax_logs'][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['dialplans'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
-									$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['dialplan_details'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
-									$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
-									$x++;
-								}
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('fax_delete', 'temp');
-									$p->add('fax_user_delete', 'temp');
-									$p->add('fax_file_delete', 'temp');
-									$p->add('fax_log_delete', 'temp');
-									$p->add('dialplan_delete', 'temp');
-									$p->add('dialplan_detail_delete', 'temp');
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('fax_delete', 'temp');
-									$p->delete('fax_user_delete', 'temp');
-									$p->delete('fax_file_delete', 'temp');
-									$p->delete('fax_log_delete', 'temp');
-									$p->delete('dialplan_delete', 'temp');
-									$p->delete('dialplan_detail_delete', 'temp');
-
-								//apply settings reminder
-									$_SESSION["reload_xml"] = true;
-
-								//clear the cache
-									$cache = new cache;
-									$cache->delete("dialplan:".$this->domain_name);
-
-								//clear the destinations session array
-									if (isset($_SESSION['destinations']['array'])) {
-										unset($_SESSION['destinations']['array']);
-									}
-
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records);
-					}
+		//build the xml dialplan
+		$dialplan_xml = "<extension name=\"" . xml::sanitize($fax_name) . "\" continue=\"false\" uuid=\"" . xml::sanitize($this->dialplan_uuid) . "\">\n";
+		$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^" . xml::sanitize($this->destination_number) . "$\">\n";
+		$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+		$dialplan_xml .= "		<action application=\"set\" data=\"fax_uuid=" . xml::sanitize($this->fax_uuid) . "\"/>\n";
+		$dialplan_xml .= "		<action application=\"set\" data=\"api_hangup_hook=lua app/fax/resources/scripts/hangup_rx.lua\"/>\n";
+		foreach ($_SESSION['fax']['variable'] as $data) {
+			if (substr($data, 0, 8) == "inbound:") {
+				$dialplan_xml .= "		<action application=\"set\" data=\"" . xml::sanitize(substr($data, 8, strlen($data))) . "\"/>\n";
+			} elseif (substr($data, 0, 9) == "outbound:") {
+			} else {
+				$dialplan_xml .= "		<action application=\"set\" data=\"" . xml::sanitize($data) . "\"/>\n";
 			}
 		}
+		$dialplan_xml .= "		<action application=\"set\" data=\"" . $last_fax . "\"/>\n";
+		$dialplan_xml .= "		<action application=\"rxfax\" data=\"$rxfax_data\"/>\n";
+		$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
+		$dialplan_xml .= "	</condition>\n";
+		$dialplan_xml .= "</extension>\n";
 
-		public function delete_files($records) {
+		//build the dialplan array
+		$dialplan["app_uuid"]             = "24108154-4ac3-1db6-1551-4731703a4440";
+		$dialplan["domain_uuid"]          = $this->domain_uuid;
+		$dialplan["dialplan_uuid"]        = $this->dialplan_uuid;
+		$dialplan["dialplan_name"]        = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
+		$dialplan["dialplan_number"]      = $this->fax_extension;
+		$dialplan["dialplan_context"]     = $this->domain_name;
+		$dialplan["dialplan_continue"]    = false;
+		$dialplan["dialplan_xml"]         = $dialplan_xml;
+		$dialplan["dialplan_order"]       = "40";
+		$dialplan["dialplan_enabled"]     = true;
+		$dialplan["dialplan_description"] = $this->fax_description;
+		$dialplan_detail_order            = 10;
 
-			//set private variables
-				$this->permission_prefix = 'fax_file_';
-				$this->list_page = 'fax_files.php?id='.urlencode($this->fax_uuid).'&box='.urlencode($this->box);
-				$this->table = 'fax_files';
-				$this->uuid_prefix = 'fax_file_';
+		//prepare the array
+		$array['dialplans'][] = $dialplan;
 
-			if (permission_exists($this->permission_prefix.'delete')) {
+		//add the dialplan permission
+		$p = permissions::new();
+		$p->add("dialplan_add", 'temp');
+		$p->add("dialplan_detail_add", 'temp');
+		$p->add("dialplan_edit", 'temp');
+		$p->add("dialplan_detail_edit", 'temp');
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+		//save the dialplan
+		$this->database->app_name = 'fax';
+		$this->database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+		$this->database->save($array);
+		//$message = $this->database->message;
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
+		//remove the temporary permission
+		$p->delete("dialplan_add", 'temp');
+		$p->delete("dialplan_detail_add", 'temp');
+		$p->delete("dialplan_edit", 'temp');
+		$p->delete("dialplan_detail_edit", 'temp');
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+		//clear the cache
+		$cache = new cache;
+		$cache->delete("dialplan:" . $this->domain_name);
 
-						//filter out unchecked fax files, build where clause for below
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
+		//return the dialplan_uuid
+		return $dialplan_response ?? null;
 
-						//get necessary fax file details
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										if ($row['fax_mode'] == 'rx') { $fax_files[$row['uuid']]['folder'] = 'inbox'; }
-										if ($row['fax_mode'] == 'tx') { $fax_files[$row['uuid']]['folder'] = 'sent'; }
-										$fax_files[$row['uuid']]['path'] = $row['fax_file_path'];
-										$fax_files[$row['uuid']]['type'] = $row['fax_file_type'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
+	}
 
-						//delete fax file(s)
-							if (is_array($fax_files) && @sizeof($fax_files) != 0) {
-								foreach ($fax_files as $fax_file_uuid => $fax_file) {
-									if (substr_count($fax_file['path'], '/temp/') > 0) {
-										$fax_file['path'] = str_replace('/temp/', '/'.$fax_file['type'].'/', $fax_file['path']);
-									}
-									if (file_exists($fax_file['path'])) {
-										@unlink($fax_file['path']);
-									}
-									if ($fax_file['type'] == 'tif') {
-										$fax_file['path'] = str_replace('.tif', '.pdf', $fax_file['path']);
-										if (file_exists($fax_file['path'])) {
-											@unlink($fax_file['path']);
-										}
-									}
-									else if ($fax_file['type'] == 'pdf') {
-										$fax_file['path'] = str_replace('.pdf', '.tif', $fax_file['path']);
-										if (file_exists($fax_file['path'])) {
-											@unlink($fax_file['path']);
-										}
-									}
-								}
-							}
+	/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
 
-						//build the delete array
-							$x = 0;
-							foreach ($fax_files as $fax_file_uuid => $fax_file) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $fax_file_uuid;
-								$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
-								$x++;
-							}
+		//set private variables
+		$this->permission_prefix = 'fax_extension_';
+		$this->list_page         = 'fax.php';
+		$this->table             = 'fax';
+		$this->uuid_prefix       = 'fax_';
 
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+		if (permission_exists($this->permission_prefix . 'delete')) {
 
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records);
-					}
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
 			}
-		}
 
-		public function delete_logs($records) {
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
 
-			//set private variables
-				$this->permission_prefix = 'fax_log_';
-				$this->list_page = 'fax_logs.php?id='.urlencode($this->fax_uuid);
-				$this->table = 'fax_logs';
-				$this->uuid_prefix = 'fax_log_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
+				//filter out unchecked fax extensions, build where clause for below
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
 					}
+				}
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked fax logs, build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
-								}
-							}
-
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records);
-					}
-			}
-		}
-
-		/**
-		* copy records
-		*/
-		public function copy($records) {
-
-			//set private variables
-				$this->permission_prefix = 'fax_extension_';
-				$this->list_page = 'fax.php';
-				$this->table = 'fax';
-				$this->uuid_prefix = 'fax_';
-
-			if (permission_exists($this->permission_prefix.'copy')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get checked records
-							foreach($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-
-						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-
-								//primary table
-									$sql = "select * from v_".$this->table." ";
-									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $this->domain_uuid;
-									$rows = $this->database->select($sql, $parameters, 'all');
-									if (is_array($rows) && @sizeof($rows) != 0) {
-										$y = 0;
-										foreach ($rows as $x => $row) {
-											$new_fax_uuid = uuid();
-											$new_dialplan_uuid = uuid();
-
-											//convert boolean values to a string
-												foreach($row as $key => $value) {
-													if (gettype($value) == 'boolean') {
-														$value = $value ? 'true' : 'false';
-														$row[$key] = $value;
-													}
-												}
-
-											//copy data
-												$array[$this->table][$x] = $row;
-
-											//overwrite
-												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_fax_uuid;
-												$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
-												if ($row['fax_forward_number'] == '') {
-													unset($array[$this->table][$x]['fax_forward_number']);
-												}
-												$array[$this->table][$x]['fax_description'] = trim($row['fax_description'].' ('.$text['label-copy'].')');
-
-											//fax users sub table
-												$sql_2 = "select e.* from v_fax_users as e, v_users as u ";
-												$sql_2 .= "where e.user_uuid = u.user_uuid  ";
-												$sql_2 .= "and e.domain_uuid = :domain_uuid ";
-												$sql_2 .= "and e.fax_uuid = :fax_uuid ";
-												$parameters_2['domain_uuid'] = $this->domain_uuid;
-												$parameters_2['fax_uuid'] = $row['fax_uuid'];
-												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
-												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
-													foreach ($rows_2 as $row_2) {
-
-														//convert boolean values to a string
-															foreach($row_2 as $key => $value) {
-																if (gettype($value) == 'boolean') {
-																	$value = $value ? 'true' : 'false';
-																	$row_2[$key] = $value;
-																}
-															}
-
-														//copy data
-															$array['fax_users'][$y] = $row_2;
-
-														//overwrite
-															$array['fax_users'][$y]['fax_user_uuid'] = uuid();
-															$array['fax_users'][$y]['fax_uuid'] = $new_fax_uuid;
-
-														//increment
-															$y++;
-
-													}
-												}
-												unset($sql_2, $parameters_2, $rows_2, $row_2);
-
-											//fax dialplan record
-												$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
-												$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-												$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
-												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
-
-													//convert boolean values to a string
-														foreach($dialplan as $key => $value) {
-															if (gettype($value) == 'boolean') {
-																$value = $value ? 'true' : 'false';
-																$dialplan[$key] = $value;
-															}
-														}
-
-													//copy data
-														$array['dialplans'][$x] = $dialplan;
-
-													//overwrite
-														$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
-														$dialplan_xml = $dialplan['dialplan_xml'];
-														$dialplan_xml = str_replace($row['fax_uuid'], $new_fax_uuid, $dialplan_xml); //replace source fax_uuid with new
-														$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-														$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
-														$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
-
-												}
-												unset($sql_3, $parameters_3, $dialplan);
-
-										}
-									}
-									unset($sql, $parameters, $rows, $row);
-							}
-
-						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('fax_add', 'temp');
-									$p->add('dialplan_add', 'temp');
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('fax_add', 'temp');
-									$p->delete('dialplan_add', 'temp');
-
-								//apply settings reminder
-									$_SESSION["reload_xml"] = true;
-
-								//clear the cache
-									$cache = new cache;
-									$cache->delete("dialplan:".$this->domain_name);
-
-								//set message
-									message::add($text['message-copy']);
-
-							}
-							unset($records);
-					}
-
-			}
-		} //method
-
-		/**
-		 * toggle read/unread
-		 */
-		public function fax_file_toggle($records) {
-
-			if (permission_exists('fax_file_edit')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					if (empty($this->download) || $this->download == false) {
-						$token = new token;
-						if (!$token->validate($_SERVER['PHP_SELF'])) {
-							message::add($text['message-invalid_token'],'negative');
-							header('Location: fax_files.php?order_by='.urlencode($this->order_by).'&order='.urlencode($this->order).'&id='.urlencode($this->fax_uuid).'&box='.urlencode($this->box));
-							exit;
+				//get necessary fax details
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid from v_" . $this->table . " ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$faxes[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
 						}
 					}
+					unset($sql, $parameters, $rows, $row);
+				}
 
-				//toggle multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked fax files, build the toggle array
-							$fax_files_toggled = 0;
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									//get current read state
-									$sql = "select read_date from v_fax_files where fax_file_uuid = :fax_file_uuid";
-									$parameters['fax_file_uuid'] = $record['uuid'];
-									$read_date = $this->database->select($sql, $parameters, 'column');
-									unset($sql, $parameters);
-
-									//toggle read state
-									$array['fax_files'][$x]['fax_file_uuid'] = $record['uuid'];
-									$array['fax_files'][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['fax_files'][$x]['read_date'] = empty($read_date) ? 'now()' : null;
-									$fax_files_toggled++;
-								}
+				//get necessary fax file details
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select fax_file_uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_fax_files ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							if ($row['fax_mode'] == 'rx') {
+								$fax_files[$row['uuid']]['folder'] = 'inbox';
 							}
-							unset($records);
-
-						//update the checked rows
-							if (!empty($array) && is_array($array)) {
-
-								//execute save
-
-									$this->database->save($array, false);
-									unset($array);
-
-								//return toggled count
-									return $fax_files_toggled;
-
+							if ($row['fax_mode'] == 'tx') {
+								$fax_files[$row['uuid']]['folder'] = 'sent';
 							}
+							$fax_files[$row['uuid']]['path'] = $row['fax_file_path'];
+							$fax_files[$row['uuid']]['type'] = $row['fax_file_type'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
 
+				//delete fax file(s)
+				if (!empty($fax_files) && is_array($fax_files) && @sizeof($fax_files) != 0) {
+					foreach ($fax_files as $fax_file_uuid => $fax_file) {
+						if (substr_count($fax_file['path'], '/temp/') > 0) {
+							$fax_file['path'] = str_replace('/temp/', '/' . $fax_file['type'] . '/', $fax_file['path']);
+						}
+						if (file_exists($fax_file['path'])) {
+							@unlink($fax_file['path']);
+						}
+						if ($fax_file['type'] == 'tif') {
+							$fax_file['path'] = str_replace('.tif', '.pdf', $fax_file['path']);
+							if (file_exists($fax_file['path'])) {
+								@unlink($fax_file['path']);
+							}
+						} elseif ($fax_file['type'] == 'pdf') {
+							$fax_file['path'] = str_replace('.pdf', '.tif', $fax_file['path']);
+							if (file_exists($fax_file['path'])) {
+								@unlink($fax_file['path']);
+							}
+						}
+					}
+				}
+
+				//build the delete array
+				$x = 0;
+				if (!empty($faxes) && is_array($faxes) && @sizeof($faxes) != 0) {
+					foreach ($faxes as $fax_uuid => $fax) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $fax_uuid;
+						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$array['fax_users'][$x][$this->uuid_prefix . 'uuid']  = $fax_uuid;
+						$array['fax_users'][$x]['domain_uuid']                = $this->domain_uuid;
+						$array['fax_files'][$x][$this->uuid_prefix . 'uuid']  = $fax_uuid;
+						$array['fax_files'][$x]['domain_uuid']                = $this->domain_uuid;
+						$array['fax_logs'][$x][$this->uuid_prefix . 'uuid']   = $fax_uuid;
+						$array['fax_logs'][$x]['domain_uuid']                 = $this->domain_uuid;
+						$array['dialplans'][$x]['dialplan_uuid']              = $fax['dialplan_uuid'];
+						$array['dialplans'][$x]['domain_uuid']                = $this->domain_uuid;
+						$array['dialplan_details'][$x]['dialplan_uuid']       = $fax['dialplan_uuid'];
+						$array['dialplan_details'][$x]['domain_uuid']         = $this->domain_uuid;
+						$x++;
+					}
+				}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('fax_delete', 'temp');
+					$p->add('fax_user_delete', 'temp');
+					$p->add('fax_file_delete', 'temp');
+					$p->add('fax_log_delete', 'temp');
+					$p->add('dialplan_delete', 'temp');
+					$p->add('dialplan_detail_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('fax_delete', 'temp');
+					$p->delete('fax_user_delete', 'temp');
+					$p->delete('fax_file_delete', 'temp');
+					$p->delete('fax_log_delete', 'temp');
+					$p->delete('dialplan_delete', 'temp');
+					$p->delete('dialplan_detail_delete', 'temp');
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					$cache = new cache;
+					$cache->delete("dialplan:" . $this->domain_name);
+
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
 					}
 
-				//return none
-					return 0;
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple fax files.
+	 *
+	 * @param array $records An array of records to delete, where each record is an associative array containing the 'checked' and 'uuid' keys.
+	 *
+	 * @return void
+	 */
+	public function delete_files($records) {
+
+		//set private variables
+		$this->permission_prefix = 'fax_file_';
+		$this->list_page         = 'fax_files.php?id=' . urlencode($this->fax_uuid) . '&box=' . urlencode($this->box);
+		$this->table             = 'fax_files';
+		$this->uuid_prefix       = 'fax_file_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked fax files, build where clause for below
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//get necessary fax file details
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_" . $this->table . " ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							if ($row['fax_mode'] == 'rx') {
+								$fax_files[$row['uuid']]['folder'] = 'inbox';
+							}
+							if ($row['fax_mode'] == 'tx') {
+								$fax_files[$row['uuid']]['folder'] = 'sent';
+							}
+							$fax_files[$row['uuid']]['path'] = $row['fax_file_path'];
+							$fax_files[$row['uuid']]['type'] = $row['fax_file_type'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//delete fax file(s)
+				if (is_array($fax_files) && @sizeof($fax_files) != 0) {
+					foreach ($fax_files as $fax_file_uuid => $fax_file) {
+						if (substr_count($fax_file['path'], '/temp/') > 0) {
+							$fax_file['path'] = str_replace('/temp/', '/' . $fax_file['type'] . '/', $fax_file['path']);
+						}
+						if (file_exists($fax_file['path'])) {
+							@unlink($fax_file['path']);
+						}
+						if ($fax_file['type'] == 'tif') {
+							$fax_file['path'] = str_replace('.tif', '.pdf', $fax_file['path']);
+							if (file_exists($fax_file['path'])) {
+								@unlink($fax_file['path']);
+							}
+						} elseif ($fax_file['type'] == 'pdf') {
+							$fax_file['path'] = str_replace('.pdf', '.tif', $fax_file['path']);
+							if (file_exists($fax_file['path'])) {
+								@unlink($fax_file['path']);
+							}
+						}
+					}
+				}
+
+				//build the delete array
+				$x = 0;
+				foreach ($fax_files as $fax_file_uuid => $fax_file) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $fax_file_uuid;
+					$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+					$x++;
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple fax log records based on user input.
+	 *
+	 * @param array $records  An array of record data, where each record is an associative array containing
+	 *                        information about the log entry to delete. Each array should have a 'checked'
+	 *                        key with a value of either true or false indicating whether the log entry
+	 *                        should be deleted, and a 'uuid' key containing the UUID of the log entry.
+	 *
+	 * @return void No return value; method only deletes records if permission is granted.
+	 */
+	public function delete_logs($records) {
+
+		//set private variables
+		$this->permission_prefix = 'fax_log_';
+		$this->list_page         = 'fax_logs.php?id=' . urlencode($this->fax_uuid);
+		$this->table             = 'fax_logs';
+		$this->uuid_prefix       = 'fax_log_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked fax logs, build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+					}
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Copies one or more records
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function copy($records) {
+
+		//set private variables
+		$this->permission_prefix = 'fax_extension_';
+		$this->list_page         = 'fax.php';
+		$this->table             = 'fax';
+		$this->uuid_prefix       = 'fax_';
+
+		if (permission_exists($this->permission_prefix . 'copy')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//copy the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get checked records
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//create insert array from existing data
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+
+					//primary table
+					$sql                       = "select * from v_" . $this->table . " ";
+					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						$y = 0;
+						foreach ($rows as $x => $row) {
+							$new_fax_uuid      = uuid();
+							$new_dialplan_uuid = uuid();
+
+							//convert boolean values to a string
+							foreach ($row as $key => $value) {
+								if (gettype($value) == 'boolean') {
+									$value     = $value ? 'true' : 'false';
+									$row[$key] = $value;
+								}
+							}
+
+							//copy data
+							$array[$this->table][$x] = $row;
+
+							//overwrite
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $new_fax_uuid;
+							$array[$this->table][$x]['dialplan_uuid']             = $new_dialplan_uuid;
+							if ($row['fax_forward_number'] == '') {
+								unset($array[$this->table][$x]['fax_forward_number']);
+							}
+							$array[$this->table][$x]['fax_description'] = trim($row['fax_description'] . ' (' . $text['label-copy'] . ')');
+
+							//fax users sub table
+							$sql_2                       = "select e.* from v_fax_users as e, v_users as u ";
+							$sql_2                       .= "where e.user_uuid = u.user_uuid  ";
+							$sql_2                       .= "and e.domain_uuid = :domain_uuid ";
+							$sql_2                       .= "and e.fax_uuid = :fax_uuid ";
+							$parameters_2['domain_uuid'] = $this->domain_uuid;
+							$parameters_2['fax_uuid']    = $row['fax_uuid'];
+							$rows_2                      = $this->database->select($sql_2, $parameters_2, 'all');
+							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+								foreach ($rows_2 as $row_2) {
+
+									//convert boolean values to a string
+									foreach ($row_2 as $key => $value) {
+										if (gettype($value) == 'boolean') {
+											$value       = $value ? 'true' : 'false';
+											$row_2[$key] = $value;
+										}
+									}
+
+									//copy data
+									$array['fax_users'][$y] = $row_2;
+
+									//overwrite
+									$array['fax_users'][$y]['fax_user_uuid'] = uuid();
+									$array['fax_users'][$y]['fax_uuid']      = $new_fax_uuid;
+
+									//increment
+									$y++;
+
+								}
+							}
+							unset($sql_2, $parameters_2, $rows_2, $row_2);
+
+							//fax dialplan record
+							$sql_3                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+							$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
+							$dialplan                      = $this->database->select($sql_3, $parameters_3, 'row');
+							if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+								//convert boolean values to a string
+								foreach ($dialplan as $key => $value) {
+									if (gettype($value) == 'boolean') {
+										$value          = $value ? 'true' : 'false';
+										$dialplan[$key] = $value;
+									}
+								}
+
+								//copy data
+								$array['dialplans'][$x] = $dialplan;
+
+								//overwrite
+								$array['dialplans'][$x]['dialplan_uuid']        = $new_dialplan_uuid;
+								$dialplan_xml                                   = $dialplan['dialplan_xml'];
+								$dialplan_xml                                   = str_replace($row['fax_uuid'], $new_fax_uuid, $dialplan_xml); //replace source fax_uuid with new
+								$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+								$array['dialplans'][$x]['dialplan_xml']         = $dialplan_xml;
+								$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
+
+							}
+							unset($sql_3, $parameters_3, $dialplan);
+
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//save the changes and set the message
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('fax_add', 'temp');
+					$p->add('dialplan_add', 'temp');
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('fax_add', 'temp');
+					$p->delete('dialplan_add', 'temp');
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					$cache = new cache;
+					$cache->delete("dialplan:" . $this->domain_name);
+
+					//set message
+					message::add($text['message-copy']);
+
+				}
+				unset($records);
 			}
 
 		}
+	} //method
 
-	} //class
+	/**
+	 * Toggles the read state of multiple fax file records based on user input.
+	 *
+	 * @param array $records An array of record data, where each record is an associative array containing information about the log entry to toggle.
+	 *                       Each array should have a 'checked' key with a value of either true or false indicating whether the log entry
+	 *                       should be toggled, and a 'uuid' key containing the UUID of the log entry.
+	 *
+	 * @return int The number of fax files toggled (0 if none were toggled).
+	 */
+	public function fax_file_toggle($records) {
+
+		if (permission_exists('fax_file_edit')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			if (empty($this->download) || $this->download == false) {
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'], 'negative');
+					header('Location: fax_files.php?order_by=' . urlencode($this->order_by) . '&order=' . urlencode($this->order) . '&id=' . urlencode($this->fax_uuid) . '&box=' . urlencode($this->box));
+					exit;
+				}
+			}
+
+			//toggle multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked fax files, build the toggle array
+				$fax_files_toggled = 0;
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						//get current read state
+						$sql                         = "select read_date from v_fax_files where fax_file_uuid = :fax_file_uuid";
+						$parameters['fax_file_uuid'] = $record['uuid'];
+						$read_date                   = $this->database->select($sql, $parameters, 'column');
+						unset($sql, $parameters);
+
+						//toggle read state
+						$array['fax_files'][$x]['fax_file_uuid'] = $record['uuid'];
+						$array['fax_files'][$x]['domain_uuid']   = $this->domain_uuid;
+						$array['fax_files'][$x]['read_date']     = empty($read_date) ? 'now()' : null;
+						$fax_files_toggled++;
+					}
+				}
+				unset($records);
+
+				//update the checked rows
+				if (!empty($array) && is_array($array)) {
+
+					//execute save
+
+					$this->database->save($array, false);
+					unset($array);
+
+					//return toggled count
+					return $fax_files_toggled;
+
+				}
+
+			}
+
+			//return none
+			return 0;
+		}
+
+	}
+
+} //class
 
 /*
 $o = new fax;

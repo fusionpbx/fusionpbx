@@ -25,427 +25,462 @@
 */
 
 //define the phrases class
-	class phrases {
+class phrases {
 
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'phrases';
-		const app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+	/**
+	 * declare constant variables
+	 */
+	const app_name = 'phrases';
+	const app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 
-		/**
-		 * declare public variables
-		 */
-		public $phrase_uuid;
+	/**
+	 * declare public variables
+	 */
+	public $phrase_uuid;
 
-		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 *
+	 * @var database Database Object
+	 */
+	private $database;
 
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $domain_uuid;
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_uuid;
 
-		/**
-		 * declare private variables
-		 */
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
+	/**
+	 * declare private variables
+	 */
+	private $permission_prefix;
+	private $list_page;
+	private $table;
+	private $uuid_prefix;
+	private $toggle_field;
+	private $toggle_values;
 
-		/**
-		 * called when the object is created
-		 */
-		public function __construct(array $setting_array = []) {
-			//set domain and user UUIDs
-			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+	/**
+	 * Initializes the object with setting array.
+	 *
+	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
+	 *                             an empty array.
+	 *
+	 * @return void
+	 */
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 
-			//set objects
-			$this->database = $setting_array['database'] ?? database::new();
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
 
-			//assign private variables
-			$this->permission_prefix = 'phrase_';
-			$this->list_page = 'phrases.php';
-			$this->table = 'phrases';
-			$this->uuid_prefix = 'phrase_';
-			$this->toggle_field = 'phrase_enabled';
-			$this->toggle_values = ['true','false'];
-		}
+		//assign private variables
+		$this->permission_prefix = 'phrase_';
+		$this->list_page         = 'phrases.php';
+		$this->table             = 'phrases';
+		$this->uuid_prefix       = 'phrase_';
+		$this->toggle_field      = 'phrase_enabled';
+		$this->toggle_values     = ['true', 'false'];
+	}
 
-		/**
-		 * delete records
-		 */
-		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
+	/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		if (permission_exists($this->permission_prefix . 'delete')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked phrases, build where clause for below
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//get phrase languages
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, phrase_language as lang from v_" . $this->table . " ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$phrase_languages[$row['uuid']] = $row['lang'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build the delete array
+				if (is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
+					$x = 0;
+					foreach ($phrase_languages as $phrase_uuid => $phrase_language) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid']     = $phrase_uuid;
+						$array[$this->table][$x]['domain_uuid']                   = $this->domain_uuid;
+						$array['phrase_details'][$x][$this->uuid_prefix . 'uuid'] = $phrase_uuid;
+						$array['phrase_details'][$x]['domain_uuid']               = $this->domain_uuid;
+						$x++;
+					}
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('phrase_detail_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('phrase_detail_delete', 'temp');
+
+					//clear the cache
+					$phrase_languages = array_unique($phrase_languages);
+					$cache            = new cache;
+					foreach ($phrase_languages as $phrase_language) {
+						$cache->delete("languages:" . $phrase_language);
 					}
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked phrases, build where clause for below
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-
-						//get phrase languages
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, phrase_language as lang from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$phrase_languages[$row['uuid']] = $row['lang'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build the delete array
-							if (is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
-								$x = 0;
-								foreach ($phrase_languages as $phrase_uuid => $phrase_language) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $phrase_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
-									$array['phrase_details'][$x][$this->uuid_prefix.'uuid'] = $phrase_uuid;
-									$array['phrase_details'][$x]['domain_uuid'] = $this->domain_uuid;
-									$x++;
-								}
-							}
-
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('phrase_detail_delete', 'temp');
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('phrase_detail_delete', 'temp');
-
-								//clear the cache
-									$phrase_languages = array_unique($phrase_languages);
-									$cache = new cache;
-									foreach ($phrase_languages as $phrase_language) {
-										$cache->delete("languages:".$phrase_language);
-									}
-
-								//clear the destinations session array
-									if (isset($_SESSION['destinations']['array'])) {
-										unset($_SESSION['destinations']['array']);
-									}
-
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records, $phrase_languages);
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
 					}
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records, $phrase_languages);
 			}
 		}
+	}
 
-		public function delete_details($records) {
-			//assign private variables
-				$this->permission_prefix = 'phrase_';
-				$this->list_page = 'phrase_edit.php?id='.$this->phrase_uuid;
-				$this->table = 'phrase_details';
-				$this->uuid_prefix = 'phrase_detail_';
+	/**
+	 * Delete multiple details records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array containing
+	 *                       the 'uuid' and optionally a 'checked' field. The 'checked' field should be set to true if the record
+	 *                       should be deleted.
+	 *
+	 * @return void
+	 */
+	public function delete_details($records) {
+		//assign private variables
+		$this->permission_prefix = 'phrase_';
+		$this->list_page         = 'phrase_edit.php?id=' . $this->phrase_uuid;
+		$this->table             = 'phrase_details';
+		$this->uuid_prefix       = 'phrase_detail_';
 
-			if (permission_exists($this->permission_prefix.'edit')) {
+		if (permission_exists($this->permission_prefix . 'edit')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked phrases, build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['phrase_uuid']               = $this->phrase_uuid;
+						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+					}
+				}
+
+				//get phrase languages
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+					$sql                       = "select phrase_language as lang from v_phrases ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and phrase_uuid = :phrase_uuid ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$parameters['phrase_uuid'] = $this->phrase_uuid;
+					$phrase_language           = $this->database->select($sql, $parameters, 'column');
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('phrase_detail_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('phrase_detail_delete', 'temp');
+
+					//clear the cache
+					if ($phrase_language != '') {
+						$cache = new cache;
+						$cache->delete("languages:" . $phrase_language);
 					}
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked phrases, build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['phrase_uuid'] = $this->phrase_uuid;
-									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
-								}
-							}
-
-						//get phrase languages
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								$sql = "select phrase_language as lang from v_phrases ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and phrase_uuid = :phrase_uuid ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$parameters['phrase_uuid'] = $this->phrase_uuid;
-								$phrase_language = $this->database->select($sql, $parameters, 'column');
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('phrase_detail_delete', 'temp');
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('phrase_detail_delete', 'temp');
-
-								//clear the cache
-									if ($phrase_language != '') {
-										$cache = new cache;
-										$cache->delete("languages:".$phrase_language);
-									}
-
-							}
-							unset($records, $phrase_language);
-					}
+				}
+				unset($records, $phrase_language);
 			}
 		}
+	}
 
-		/**
-		 * toggle records
-		 */
-		public function toggle($records) {
-			if (permission_exists($this->permission_prefix.'edit')) {
+	/**
+	 * Toggles the state of one or more records.
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function toggle($records) {
+		if (permission_exists($this->permission_prefix . 'edit')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get current toggle state and language
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, phrase_language as lang from v_" . $this->table . " ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$states[$row['uuid']] = $row['toggle'];
+							$phrase_languages[]   = $row['lang'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build update array
+				$x = 0;
+				foreach ($states as $uuid => $state) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$x++;
+				}
+
+				//save the changes
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//clear the cache
+					if (!empty($phrase_languages) && is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
+						$phrase_languages = array_unique($phrase_languages);
+						$cache            = new cache;
+						foreach ($phrase_languages as $phrase_language) {
+							$cache->delete("languages:" . $phrase_language);
+						}
 					}
 
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
 
-						//get current toggle state and language
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
+			}
+
+		}
+	}
+
+	/**
+	 * Copies one or more records
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function copy($records) {
+		if (permission_exists($this->permission_prefix . 'add')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//copy the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get checked records
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//create insert array from existing data
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+
+					//primary table
+					$sql                       = "select * from v_" . $this->table . " ";
+					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						$y = 0;
+						foreach ($rows as $x => $row) {
+							$primary_uuid = uuid();
+
+							//convert boolean values to a string
+							foreach ($row as $key => $value) {
+								if (gettype($value) == 'boolean') {
+									$value     = $value ? 'true' : 'false';
+									$row[$key] = $value;
 								}
 							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, phrase_language as lang from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
-										$phrase_languages[] = $row['lang'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
 
-						//build update array
-							$x = 0;
-							foreach($states as $uuid => $state) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$x++;
-							}
+							//copy data
+							$array[$this->table][$x] = $row;
 
-						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
+							//overwrite
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $primary_uuid;
+							$array[$this->table][$x]['phrase_description']        = trim($row['phrase_description'] . ' (' . $text['label-copy'] . ')');
 
-								//save the array
+							//details sub table
+							$sql_2                       = "select * from v_phrase_details where phrase_uuid = :phrase_uuid";
+							$parameters_2['phrase_uuid'] = $row['phrase_uuid'];
+							$rows_2                      = $this->database->select($sql_2, $parameters_2, 'all');
+							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+								foreach ($rows_2 as $row_2) {
 
-									$this->database->save($array);
-									unset($array);
-
-								//clear the cache
-									if (!empty($phrase_languages) && is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
-										$phrase_languages = array_unique($phrase_languages);
-										$cache = new cache;
-										foreach ($phrase_languages as $phrase_language) {
-											$cache->delete("languages:".$phrase_language);
+									//convert boolean values to a string
+									foreach ($row_2 as $key => $value) {
+										if (gettype($value) == 'boolean') {
+											$value       = $value ? 'true' : 'false';
+											$row_2[$key] = $value;
 										}
 									}
 
-								//clear the destinations session array
-									if (isset($_SESSION['destinations']['array'])) {
-										unset($_SESSION['destinations']['array']);
-									}
+									//copy data
+									$array['phrase_details'][$y] = $row_2;
 
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
-					}
+									//overwrite
+									$array['phrase_details'][$y]['phrase_detail_uuid'] = uuid();
+									$array['phrase_details'][$y]['phrase_uuid']        = $primary_uuid;
 
-			}
-		}
+									//increment
+									$y++;
 
-		/**
-		 * copy records
-		 */
-		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'add')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get checked records
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
+							unset($sql_2, $parameters_2, $rows_2, $row_2);
 
-						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-
-								//primary table
-									$sql = "select * from v_".$this->table." ";
-									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $this->domain_uuid;
-									$rows = $this->database->select($sql, $parameters, 'all');
-									if (is_array($rows) && @sizeof($rows) != 0) {
-										$y = 0;
-										foreach ($rows as $x => $row) {
-											$primary_uuid = uuid();
-
-											//convert boolean values to a string
-												foreach($row as $key => $value) {
-													if (gettype($value) == 'boolean') {
-														$value = $value ? 'true' : 'false';
-														$row[$key] = $value;
-													}
-												}
-
-											//copy data
-												$array[$this->table][$x] = $row;
-
-											//overwrite
-												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
-												$array[$this->table][$x]['phrase_description'] = trim($row['phrase_description'].' ('.$text['label-copy'].')');
-
-											//details sub table
-												$sql_2 = "select * from v_phrase_details where phrase_uuid = :phrase_uuid";
-												$parameters_2['phrase_uuid'] = $row['phrase_uuid'];
-												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
-												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
-													foreach ($rows_2 as $row_2) {
-
-														//convert boolean values to a string
-															foreach($row_2 as $key => $value) {
-																if (gettype($value) == 'boolean') {
-																	$value = $value ? 'true' : 'false';
-																	$row_2[$key] = $value;
-																}
-															}
-
-														//copy data
-															$array['phrase_details'][$y] = $row_2;
-
-														//overwrite
-															$array['phrase_details'][$y]['phrase_detail_uuid'] = uuid();
-															$array['phrase_details'][$y]['phrase_uuid'] = $primary_uuid;
-
-														//increment
-															$y++;
-
-													}
-												}
-												unset($sql_2, $parameters_2, $rows_2, $row_2);
-
-											//create array of languages
-												if (!empty($row['phrase_languages'])) {
-													$phrase_languages[] = $row['phrase_languages'];
-												}
-										}
-									}
-									unset($sql, $parameters, $rows, $row);
+							//create array of languages
+							if (!empty($row['phrase_languages'])) {
+								$phrase_languages[] = $row['phrase_languages'];
 							}
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
 
-						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
+				//save the changes and set the message
+				if (is_array($array) && @sizeof($array) != 0) {
 
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('phrase_detail_add', 'temp');
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('phrase_detail_add', 'temp');
 
-								//save the array
+					//save the array
 
-									$this->database->save($array);
-									unset($array);
+					$this->database->save($array);
+					unset($array);
 
-								//revoke temporary permissions
-									$p->delete('phrase_detail_add', 'temp');
+					//revoke temporary permissions
+					$p->delete('phrase_detail_add', 'temp');
 
-								//clear the cache
-									if (!empty($phrase_languages) && is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
-										$phrase_languages = array_unique($phrase_languages);
-										$cache = new cache;
-										foreach ($phrase_languages as $phrase_language) {
-											$cache->delete("languages:".$phrase_language);
-										}
-									}
-
-								//set message
-									message::add($text['message-copy']);
-
-							}
-							unset($records);
+					//clear the cache
+					if (!empty($phrase_languages) && is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
+						$phrase_languages = array_unique($phrase_languages);
+						$cache            = new cache;
+						foreach ($phrase_languages as $phrase_language) {
+							$cache->delete("languages:" . $phrase_language);
+						}
 					}
 
-			}
-		} //method
+					//set message
+					message::add($text['message-copy']);
 
-	} //class
+				}
+				unset($records);
+			}
+
+		}
+	} //method
+
+} //class

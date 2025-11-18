@@ -34,10 +34,23 @@ class event_key_filter implements filter {
 
 	private $filters;
 
+	/**
+	 * Initializes a new instance of the object with specified filters.
+	 *
+	 * @param array $filters Optional array of initial filters to be applied.
+	 */
 	public function __construct(array $filters = []) {
 		$this->add_filters($filters);
 	}
 
+	/**
+	 * Invokes a filter check with the given key and value.
+	 *
+	 * @param string $key   The key of the filter to check
+	 * @param mixed  $value The value associated with the filter key
+	 *
+	 * @return bool|null True if the filter exists, false otherwise
+	 */
 	public function __invoke(string $key, $value): ?bool {
 		return $this->has_filter_key($key);
 	}
@@ -84,6 +97,13 @@ class event_key_filter implements filter {
 		}
 	}
 
+	/**
+	 * Checks if a filter key exists.
+	 *
+	 * @param string $key The filter key to check for existence.
+	 *
+	 * @return bool True if the filter key exists, false otherwise.
+	 */
 	public function has_filter_key(string $key): bool {
 		return isset($this->filters[$key]);
 	}

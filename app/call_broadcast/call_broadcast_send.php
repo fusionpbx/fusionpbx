@@ -46,6 +46,17 @@
 	ini_set('max_execution_time',3600);
 
 //define the asynchronous command function
+	/**
+	 * Asynchronously executes a command.
+	 *
+	 * This method runs the given $cmd as an asynchronous process. On Windows, it uses
+	 * proc_open to create a new process with pipes for stdin, stdout, and stderr. On
+	 * Posix systems (e.g., Linux, macOS), it uses exec to run the command in the background.
+	 *
+	 * @param string $cmd The command to execute asynchronously.
+	 *
+	 * @return int|bool The return value of proc_close() on Windows or false on failure; null if not executed successfully.
+	 */
 	function cmd_async($cmd) {
 		//windows
 		if (stristr(PHP_OS, 'WIN')) {

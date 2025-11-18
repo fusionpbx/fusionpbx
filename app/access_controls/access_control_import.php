@@ -40,6 +40,16 @@
 
 //built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduce the functionality but requires PHP 5.1.0 or higher
 	if (!function_exists('str_getcsv')) {
+		/**
+		 * Parse a CSV string into an array.
+		 *
+		 * @param string $input     The CSV data to parse.
+		 * @param string $delimiter The field delimiter (default: ",").
+		 * @param string $enclosure The field enclosure character (default: """).
+		 * @param string $escape    The escape character (default: "\"").
+		 *
+		 * @return array An array containing the parsed CSV fields.
+		 */
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
 			fputs($fp, $input);
@@ -212,6 +222,14 @@
 	}
 
 //get the parent table
+	/**
+	 * Retrieve the parent table for a given table in a schema.
+	 *
+	 * @param array  $schema     The database schema to search in.
+	 * @param string $table_name The name of the table for which to find the parent.
+	 *
+	 * @return mixed The name of the parent table, or NULL if not found.
+	 */
 	function get_parent($schema,$table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {

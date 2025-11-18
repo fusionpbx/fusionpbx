@@ -40,7 +40,17 @@
 
 //extract dtmf from the fax number
 	if (!function_exists('fax_split_dtmf')) {
-		function fax_split_dtmf(&$fax_number, &$fax_dtmf){
+		/**
+		 * Splits the fax number and DTMF tone string.
+		 *
+		 * This function takes a fax number with an optional DTMF tone string as input,
+		 * extracts the fax number and the DTMF tone string, and stores them separately in
+		 * the provided references.
+		 *
+		 * @param string &$fax_number The fax number to split. May contain an embedded DTMF tone string.
+		 * @param string &$fax_dtmf   The extracted DTMF tone string.
+		 */
+		function fax_split_dtmf(&$fax_number, &$fax_dtmf) {
 			$tmp = array();
 			$fax_dtmf = '';
 			if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
@@ -62,6 +72,16 @@
 	}
 
 //shutdown call back function
+	/**
+	 * Performs a clean shutdown of the system.
+	 *
+	 * This function prepares for graceful termination by updating the fax queue status
+	 * and removing the pid file. It is intended to be called when the application needs
+	 * to shut down cleanly.
+	 *
+	 * @return void
+	 * @see \register_shutdown_function()
+	 */
 	function shutdown() {
 		//add global variables
 		global $database, $fax_queue_uuid;
@@ -89,6 +109,16 @@
 	//echo "pid_file: ".$pid_file."\n";
 
 //function to check if the process exists
+	/**
+	 * Checks if a process exists.
+	 *
+	 * This function checks the existence of a file containing a valid process ID,
+	 * then verifies that the corresponding process is running using the `ps` command.
+	 *
+	 * @param string $file The path to the file containing the process ID. Defaults to an empty string, which means the function will return false.
+	 *
+	 * @return bool True if the process exists and is running, false otherwise.
+	 */
 	function process_exists($file = '') {
 		//check if the file exists return false if not found
 		if (!file_exists($file)) {
@@ -112,6 +142,15 @@
 	}
 
 //remove single quote
+	/**
+	 * Escapes single quotes in a string.
+	 *
+	 * This function removes all occurrences of single quotes from the input value.
+	 *
+	 * @param string $value The value to remove single quotes from. May be empty.
+	 *
+	 * @return boolean|string True if the value was not empty, otherwise false.
+	 */
 	function escape_quote($value) {
 		if (!empty($value)) {
 			return str_replace("'", "", $value);
