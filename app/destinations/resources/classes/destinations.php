@@ -83,6 +83,7 @@
 		private $table;
 		private $uuid_prefix;
 		private $select_mode;
+		private $language;
 
 		/**
 		* Called when the object is created
@@ -113,6 +114,9 @@
 
 			//set the select_mode
 			$this->select_mode = $this->settings->get('destinations', 'select_mode', 'default');
+
+			//get the language
+			$this->language = $this->settings->get('domain', 'language');
 		}
 
 		/**
@@ -401,7 +405,7 @@
 
 					//add multi-lingual support
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
-						$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
+						$text2 = $language2->get($this->language, 'app/'.$name);
 					}
 
 					if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
@@ -536,11 +540,11 @@
 
 						//add multi-lingual support
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
-							$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$key);
+							$text2 = $language2->get($this->language, 'app/'.$key);
 							$found = 'true';
 						}
 						if ($key == 'other') {
-							$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/dialplans');
+							$text2 = $language2->get($this->language, 'app/dialplans');
 						}
 						//add the application to the select list
 						$response .= "		<option id='{$singular}' class='{$key}' value='".$key."' $selected>".$text2['title-'.$key]."</option>\n";
@@ -614,7 +618,7 @@
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
-					$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
+					$text2 = $language2->get($this->language, 'app/'.$name);
 				}
 
 				if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
@@ -726,7 +730,7 @@
 				//add multi-lingual support
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
-					$text2 = $language2->get($this->settings->get('domain', 'language'), 'app/'.$name);
+					$text2 = $language2->get($this->language, 'app/'.$name);
 				}
 
 				if (isset($row['result']) && isset($row['result']['data'][0]) && !empty($row['select_value'][$destination_type])) {
