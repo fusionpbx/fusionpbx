@@ -104,13 +104,44 @@
 		$offset = $rows_per_page * $page;
 	}
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set time format
+	$time_format = $settings->get('domain', 'time_format');
+
 //get the list
-	$sql = str_replace('count(fax_log_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= " fax_epoch, ";
+	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), 'DD Mon YYYY') as fax_date_formatted, \n";
+	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), 'HH12:MI:SS am') as fax_time_formatted, \n";
+	$sql .= " fax_success, ";
+	$sql .= " fax_result_code, ";
+	$sql .= " fax_result_text, ";
+	$sql .= " fax_file, ";
+	$sql .= " fax_ecm_used, ";
+	$sql .= " fax_local_station_id, ";
+	//$sql .= " fax_document_transferred_pages, ";
+	//$sql .= " fax_document_total_pages, ";
+	//$sql .= " fax_image_resolution, ";
+	//$sql .= " fax_image_size, ";
+	$sql .= " fax_bad_rows, ";
+	$sql .= " fax_transfer_rate, ";
+	$sql .= " fax_retry_attempts, ";
+	$sql .= " fax_retry_limit, ";
+	$sql .= " fax_retry_sleep, ";
+	$sql .= " fax_uri ";
+	$sql .= "from v_fax_logs ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and fax_uuid = :fax_uuid ";
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'fax_epoch', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset ?? 0);
-	$database = new database;
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['fax_uuid'] = $fax_uuid;
+	$parameters['time_zone'] = $time_zone;
 	$fax_logs = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	unset($sql, $parameters)
 
 //create token
 	$object = new token;
@@ -195,7 +226,8 @@
 				echo "		<input type='hidden' name='fax_logs[$x][uuid]' value='".escape($row['fax_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td><a href='".$list_row_url."'>".(!empty($_SESSION['domain']['time_format']['text']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']))."</a>&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".$row['fax_date_formatted']."</a>&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".$row['fax_time_formatted']."</a>&nbsp;</td>\n";		
 			echo "	<td>".$row['fax_success']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_code']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_text']."&nbsp;</td>\n";
@@ -212,7 +244,6 @@
 			//echo "	<td>".$row['fax_retry_limit']."&nbsp;</td>\n";
 			//echo "	<td>".$row['fax_retry_sleep']."&nbsp;</td>\n";
 			echo "	<td>".basename($row['fax_uri'])."&nbsp;</td>\n";
-			//echo "	<td>".$row['fax_epoch']."&nbsp;</td>\n";
 			if (filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'link'=>$list_row_url]);
