@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -350,6 +350,7 @@
 	$domain_setting_name = $domain_setting_name ?? '';
 	$domain_setting_value = $domain_setting_value ?? '';
 	$domain_setting_order = $domain_setting_order ?? '';
+	$domain_setting_enabled = $domain_setting_enabled ?? true;
 	$domain_setting_description = $domain_setting_description ?? '';
 
 //create token
