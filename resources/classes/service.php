@@ -123,6 +123,16 @@ abstract class service {
 		openlog('[php][' . self::class . ']', LOG_CONS | LOG_NDELAY | LOG_PID, LOG_DAEMON);
 	}
 
+	/**
+	 * Ensures the correct PID file is unlinked when this process terminates.
+	 *
+	 * This method is called automatically by PHP when an object's reference count reaches zero,
+	 * or when it's explicitly destroyed using unset(). It checks if the process is still running
+	 * and unlinks the corresponding PID file. Finally, it ensures that any open log connections
+	 * are properly closed before the script exits.
+	 *
+	 * @return void
+	 */
 	public function __destruct() {
 		//ensure we unlink the correct PID file if needed
 		if (self::is_running()) {
@@ -135,12 +145,15 @@ abstract class service {
 	}
 
 	/**
-	 * Shutdown process gracefully
+	 * Shutdown the currently running process gracefully.
 	 */
 	public static function shutdown() {
 		exit();
 	}
 
+	/**
+	 * Sends a shutdown signal to the running process.
+	 */
 	public static function send_shutdown() {
 		if (self::is_any_running()) {
 			self::send_signal(SIGTERM);
@@ -167,6 +180,7 @@ abstract class service {
 	 * Extracts the short options from the cli options array and returns a string. The resulting string must
 	 * return a single string with all options in the string such as 'rxc:'.
 	 * This can be overridden by the child class.
+	 *
 	 * @return string
 	 */
 	protected static function get_short_options(): string {
@@ -177,6 +191,7 @@ abstract class service {
 	 * Extracts the long options from the cli options array and returns an array. The resulting array must
 	 * return a single dimension array with an integer indexed key but does not have to be sequential order.
 	 * This can be overridden by the child class.
+	 *
 	 * @return array
 	 */
 	protected static function get_long_options(): array {
@@ -184,9 +199,11 @@ abstract class service {
 	}
 
 	/**
-	 * Method that will retrieve the callbacks from the cli options array
-	 * @param string $set_option
-	 * @return array
+	 * Retrieves the callback functions associated with the cli options array.
+	 *
+	 * @param string $set_option The set option to match against available options
+	 *
+	 * @return array An array of callback functions that need to be called for the matched option
 	 */
 	protected static function get_user_callbacks_from_available_options(string $set_option): array {
 		//match the available option to the set option and return the callback function that needs to be called
@@ -208,7 +225,11 @@ abstract class service {
 	}
 
 	/**
-	 *  Parse CLI options using getopt()
+	 * Parse service command options.
+	 *
+	 * This method ensures that we have a PID file and parses the short and long options from the command line.
+	 * It then logs the detected options at the DEBUG level and calls the corresponding functions to handle them.
+	 *
 	 * @return void
 	 */
 	protected static function parse_service_command_options(): void {
@@ -286,19 +307,26 @@ abstract class service {
 
 	/**
 	 * Checks the file system for a pid file that matches the process ID from this running instance
+	 *
 	 * @return bool true if pid exists and false if not
 	 */
 	public static function is_running(): bool {
 		return posix_getpid() === self::get_service_pid();
 	}
 
+	/**
+	 * Checks if any service process is running.
+	 *
+	 * @return bool True if a service process is found, false otherwise
+	 */
 	public static function is_any_running(): bool {
 		return self::get_service_pid() !== false;
 	}
 
 	/**
-	 * Returns the operating system service PID or false if it is not yet running
-	 * @return bool|int PID or false if not running
+	 * Returns the process ID of the service if it exists and is running.
+	 *
+	 * @return int|false The process ID of the service, or false if it does not exist or is not running.
 	 */
 	protected static function get_service_pid() {
 		if (file_exists(static::get_pid_filename())) {
@@ -353,6 +381,8 @@ abstract class service {
 
 	/**
 	 * Creates the service directory to store the PID
+	 *
+	 * @return void
 	 * @throws Exception thrown when the service directory is unable to be created
 	 */
 	private function create_service_directory() {
@@ -367,7 +397,10 @@ abstract class service {
 
 	/**
 	 * Parses the debug level to an integer and stores it in the class for syslog use
+	 *
 	 * @param string $debug_level Debug level with any of the Linux system log levels
+	 *
+	 * @return void
 	 */
 	protected static function set_debug_level(string $debug_level) {
 		// Map user input log level to syslog constant
@@ -415,6 +448,13 @@ abstract class service {
 		}
 	}
 
+	/**
+	 * Converts a log level integer to its corresponding string representation.
+	 *
+	 * @param int $level The log level as an integer, defaults to LOG_NOTICE (5).
+	 *
+	 * @return string The log level as a string.
+	 */
 	private static function log_level_to_string(int $level = LOG_NOTICE): string {
 		switch ($level){
 			case 0:
@@ -439,7 +479,9 @@ abstract class service {
 	}
 
 	/**
-	 * Show memory usage to the user
+	 * Logs the current and peak memory usage of the application at the INFO level.
+	 *
+	 * @return void
 	 */
 	protected static function show_mem_usage() {
 		//current memory
@@ -452,8 +494,11 @@ abstract class service {
 
 	/**
 	 * Logs to the system log or console when running in foreground
+	 *
 	 * @param string $message Message to display in the system log or console when running in foreground
-	 * @param int $level (Optional) Level to use for logging to the console or daemon. Default value is LOG_NOTICE
+	 * @param int    $level   (Optional) Level to use for logging to the console or daemon. Default value is LOG_NOTICE
+	 *
+	 * @return void
 	 */
 	protected static function log(string $message, int $level = LOG_NOTICE) {
 		// Check if we need to show the message
@@ -493,6 +538,7 @@ abstract class service {
 
 	/**
 	 * Write a standard copyright notice to the console
+	 *
 	 * @return void
 	 */
 	public static function display_copyright(): void {
@@ -563,7 +609,7 @@ abstract class service {
 	}
 
 	/**
-	 * Display a basic help message to the user for using service
+	 * Displays a help message for the available command options.
 	 */
 	protected static function display_help_message(): void {
 		//get the classname of the child class
@@ -587,6 +633,11 @@ abstract class service {
 		}
 	}
 
+	/**
+	 * Sends a reload signal to running services, or exits if no service is running.
+	 *
+	 * @return void
+	 */
 	public static function send_reload() {
 		if (self::is_any_running()) {
 			self::send_signal(10);
@@ -675,6 +726,11 @@ abstract class service {
 		return $help_options;
 	}
 
+	/**
+	 * Enables timestamp logging.
+	 *
+	 * @return void
+	 */
 	public static function show_timestamp() {
 		self::$show_timestamp_log = true;
 	}
@@ -709,14 +765,16 @@ abstract class service {
 	}
 
 	/**
-	 * Adds an option to the command line parameters
-	 * @param string $short_option
-	 * @param string $long_option
-	 * @param string $description
-	 * @param string $short_description
-	 * @param string $long_description
-	 * @param string $callback
-	 * @return int The index of the item added
+	 * Add a new command option to the available options list.
+	 *
+	 * @param string  $short_option      Short option (e.g., 'h' for '-h')
+	 * @param string  $long_option       Long option (e.g., 'help' for '--help')
+	 * @param string  $description       Brief description of the option
+	 * @param string  $short_description Short description of the short option (optional)
+	 * @param string  $long_description  Long description of the long option (optional)
+	 * @param mixed[] ...$callback       Callback function(s) associated with this option
+	 *
+	 * @return int Index of the newly added command option in self::$available_command_options array
 	 */
 	public static function add_command_option(string $short_option, string $long_option, string $description, string $short_description = '', string $long_description = '', ...$callback): int {
 		//use the option as the description if not filled in
@@ -743,8 +801,11 @@ abstract class service {
 	}
 
 	/**
-	 * Returns the process ID filename used for a service
-	 * @return string file name used for the process identifier
+	 * Returns the filename of the PID file.
+	 *
+	 * The PID file is located in /var/run/fusionpbx/ and its name is based on the base file name.
+	 *
+	 * @return string The path to the PID file
 	 */
 	public static function get_pid_filename(): string {
 		return '/var/run/fusionpbx/' . self::base_file_name() . '.pid';
@@ -791,8 +852,9 @@ abstract class service {
 	}
 
 	/**
-	 * Creates a system service that will run in the background
-	 * @return self
+	 * Creates a new instance of the service class, initializing it and returning the object.
+	 *
+	 * @return self A new instance of the service class.
 	 */
 	public static function create(): self {
 		//can only start from command line
@@ -803,7 +865,7 @@ abstract class service {
 
 		//fork process
 		if (self::$daemon_mode) {
-			//force launching in a seperate process
+			//force launching in a separate process
 			if ($pid = pcntl_fork()) {
 				exit;
 			}
@@ -832,8 +894,10 @@ abstract class service {
 	}
 
 	/**
-	 * Send a debug message to the log
-	 * @param string $message
+	 * Logs a message at the DEBUG level.
+	 *
+	 * @param string $message The debug message to be printed. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function debug(string $message = ''): void {
@@ -841,8 +905,10 @@ abstract class service {
 	}
 
 	/**
-	 * Send an info message to the log
-	 * @param string $message
+	 * Logs a message at the INFO level.
+	 *
+	 * @param string $message The message to be logged. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function info(string $message = ''): void {
@@ -850,8 +916,10 @@ abstract class service {
 	}
 
 	/**
-	 * Send a notice message to the log
-	 * @param string $message
+	 * Logs a message at the NOTICE level.
+	 * 
+	 * @param string $message The message to be logged. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function notice(string $message = ''): void {
@@ -859,8 +927,10 @@ abstract class service {
 	}
 
 	/**
-	 * Send a warning message to the log
-	 * @param string $message
+	 * Logs a message at the WARNING level.
+	 *
+	 * @param string $message The message to be logged. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function warning(string $message = ''): void {
@@ -868,8 +938,10 @@ abstract class service {
 	}
 
 	/**
-	 * Send an error message to the log
-	 * @param string $message
+	 * Logs a message at the ERROR level.
+	 *
+	 * @param string $message The message to be logged. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function error(string $message = ''): void {
@@ -877,8 +949,10 @@ abstract class service {
 	}
 
 	/**
-	 * Send a critical message to the log
-	 * @param string $message
+	 * Logs a message at the CRIT (critical) level.
+	 *
+	 * @param string $message The message to be logged. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function critical(string $message = ''): void {
@@ -886,8 +960,10 @@ abstract class service {
 	}
 
 	/**
-	 * Sends an alert message to the log
-	 * @param string $message
+	 * Logs a message at the ALERT level.
+	 *
+	 * @param string $message The message to be logged. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function alert(string $message = ''): void {
@@ -895,8 +971,10 @@ abstract class service {
 	}
 
 	/**
-	 * Sends an emergency message to the log
-	 * @param string $message
+	 * Logs a message at the EMERG (emergency) level.
+	 *
+	 * @param string $message The message to be logged. Defaults to an empty string.
+	 *
 	 * @return void
 	 */
 	protected function emergency(string $message = ''): void {
